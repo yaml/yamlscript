@@ -1,0 +1,9 @@
+# shellcheck shell=bash
+
+YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)
+
+PATH=$YAMLSCRIPT_ROOT/bin:$YAMLSCRIPT_ROOT/perl/bin:$PATH
+
+# MANPATH=$(IFS=:; set -- "$YAMLSCRIPT_ROOT/man" "$MANPATH"; echo "$*")
+
+export PATH MANPATH YAMLSCRIPT_ROOT

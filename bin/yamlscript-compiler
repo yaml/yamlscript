@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if ( which perl && which yamlscript-compiler.pl ) >/dev/null; then
+  exec yamlscript-compiler.pl "$@"
+else
+  echo "No YAMLScript compiler found"
+  exit 1
+fi
