@@ -11,7 +11,7 @@ sub call {
     my $name = $self->____;
     my $args = $self->args;
     my $func =
-        $YAMLScript::Runtime::calls{$name} ||
+        $YAMLScript::Runtime::look->{$name} ||
         die "Can't find call name '$name'";
     $func->($from, @$args);
 }

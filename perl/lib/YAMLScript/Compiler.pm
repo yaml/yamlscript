@@ -69,7 +69,7 @@ sub compile {
         }
 
         my $function = $self->parse_function($val, $key);
-        $YAMLScript::Runtime::calls{$key} = $function;
+        $YAMLScript::Runtime::look->{$key} = $function;
         $code->func->{$key} = $function;
     }
 

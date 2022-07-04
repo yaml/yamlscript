@@ -1,7 +1,7 @@
 package YAMLScript::Runtime;
 use Mo qw'default xxx';
 
-our %calls;
+our $look = {};
 
 has code => {};
 has argv => [];
@@ -17,7 +17,7 @@ sub run {
         (my $module = "$need") =~ s|-|::|g;
         (my $file = "$need.pm") =~ s|-|/|g;
         require $file or die $!;
-        $module->add(\%calls);
+        $module->add($look);
     }
 
     my $main = $code->func->{main} or
