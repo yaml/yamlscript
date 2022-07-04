@@ -1,5 +1,10 @@
 Revision history for Perl module YAMLScript
 
+0.0.4 2022-07-04 11:27:15-07:00
+
+    - Add Mo::xx to dependencies
+    - Add blib/script to PATH at cpan test time
+
 0.0.3 2022-07-04 00:38:00-07:00
 
     - Add library module loading
