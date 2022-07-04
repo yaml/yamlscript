@@ -1,5 +1,5 @@
 package YAMLScript::Function;
-use Mo qw'build xxx';
+use Mo qw'default xxx';
 
 my $func = 'YAMLScript::Function';
 my $call = 'YAMLScript::Call';
@@ -8,6 +8,10 @@ has ____ => ();
 has args => [];
 has body => [];
 has vars => {};
+has func => {};
+has need => [
+    'YAMLScript-Lib-Std',
+];
 
 sub var {
     return $_[0]->{vars}{$_[1]} unless @_ > 2;
@@ -47,8 +51,11 @@ sub val {
         $value =~ s{
             \$(\w+)
         }{
-            $self->{vars}{$1} // ZZZ 42 #XXX $value
+            $self->{vars}{$1} // ZZZ $value
         }gex;
+    }
+    elsif ($ref eq $call) {
+        $value = $value->call($self);
     }
     else {
         XXX [$ref, "ERROR: Unsupported value"];

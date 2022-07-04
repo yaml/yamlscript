@@ -18,6 +18,8 @@ my $compiler = YAMLScript::Compiler->new(
 );
 my $code = $compiler->compile;
 
+push @{$code->need}, 'YAMLScript-Lib-Test';
+
 my $runtime = YAMLScript::Runtime->new(
     code => $code,
     argv => [@ARGV],

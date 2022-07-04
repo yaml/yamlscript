@@ -1,0 +1,12 @@
+#!/usr/bin/env yamlscript-test
+
+- +is:
+  - +add: [2, 2]
+  - 4
+  - A test for add
+
+- $foo: world
+- +is:
+  - Hello $foo
+  - Hello world
+  - Testing Hello world

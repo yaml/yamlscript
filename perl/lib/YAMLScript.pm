@@ -1,45 +1,33 @@
 package YAMLScript;
-use Mo qw'build xxx';
+use Mo;
 
 our $VERSION = '0.0.2';
 
-use YAMLScript::Compiler;
-use YAMLScript::Call;
-use YAMLScript::Library;
+__END__
 
-has file => ();
-has yaml => ();
-has argv => [];
-has code => {};
+=pod
 
-sub BUILD {
-    my ($self) = @_;
-    my $file = $self->file;
-    my $yaml = $self->yaml;
-    my $compiler = YAMLScript::Compiler->new(
-        $file ? (file => $file) : (),
-        $yaml ? (yaml => $yaml) : (),
-    );
+=encoding utf-8
 
-    %YAMLScript::Call::calls = (
-        %YAMLScript::Call::calls,
-        %YAMLScript::Library::calls,
-    );
+=head1 NAME
 
-    my $func = $compiler->compile_global;
+YAMLScript - Programming in YAML
 
-    $self->code($func);
-}
+=head1 SYNOPSIS
 
-sub run {
-    my ($self) = @_;
-    my $argv = $self->argv;
-    my $code = $self->code;
-    my $main = $code->var('main') or
-        XXX [
-            $self->{code},
-            "No 'main' function to run",
-        ];
-    $main->($code, @$argv);
-}
+    #!/usr/bin/env yamlscript
+    - $greetee: world
+    - +say: Hello, $greetee!
 
+=head1 DESCRIPTION
+
+YAMLScript is a programming language encoded in YAML.
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2022 by Ingy döt Net
+
+This library is free software and may be distributed under the same terms
+as perl itself.
+
+=cut

@@ -1,9 +1,7 @@
 package YAMLScript::Call;
-use Mo qw'build xxx';
+use Mo qw'build default xxx';
 
-use YAMLScript::Library;
-
-our %calls;
+use YAMLScript::Runtime;
 
 has ____ => ();
 has args => [];
@@ -13,7 +11,7 @@ sub call {
     my $name = $self->____;
     my $args = $self->args;
     my $func =
-        $calls{$name} ||
+        $YAMLScript::Runtime::calls{$name} ||
         die "Can't find call name '$name'";
     $func->($from, @$args);
 }

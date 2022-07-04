@@ -1,5 +1,5 @@
 package YAMLScript::Compiler;
-use Mo qw'build xxx';
+use Mo qw'build default xxx';
 
 has file => ();
 has yaml => ();
@@ -44,7 +44,7 @@ sub to_json {
 
 sub to_perl {}
 
-sub compile_global {
+sub compile {
     my ($self) = @_;
 
     my $data = $self->data;
@@ -55,22 +55,25 @@ sub compile_global {
     die "Invalid YAMLScript, must be mapping or sequence"
         unless ref($data) eq 'HASH';
 
-    my $global = YAMLScript::Function->new();
+    my $code = YAMLScript::Function->new();
 
     for my $key (
-        sort {
-            $a eq 'main' ? -1 :
-            $b eq 'main' ? 1 :
-            $a cmp $b
-        } keys %$data
+        sort keys %$data
     ) {
         my $val = $data->{$key};
+
+        if ($key eq '+use') {
+            $val = [ $val ] unless ref($val) eq 'ARRAY';
+            push @{$code->need}, @$val;
+            next;
+        }
+
         my $function = $self->parse_function($val, $key);
-        $YAMLScript::Call::calls{$key} = $function;
-        $global->var($key, $function);
+        $YAMLScript::Runtime::calls{$key} = $function;
+        $code->func->{$key} = $function;
     }
 
-    return $global;
+    return $code;
 }
 
 sub parse_function {
