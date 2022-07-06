@@ -1,8 +1,0 @@
-#!/bin/sh
-
-if ( which perl && which yamlscript-test.pl ) >/dev/null; then
-  exec $(which perl) $(which yamlscript-test.pl) "$@"
-else
-  echo "No YAMLScript-Test interpreter found"
-  exit 1
-fi

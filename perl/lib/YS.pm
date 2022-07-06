@@ -1,4 +1,4 @@
-package YAMLScript::Library;
+package YS;
 use Mo qw'xxx';
 
 sub add {

@@ -10,7 +10,7 @@ has body => [];
 has vars => {};
 has func => {};
 has need => [
-    'YAMLScript-Lib-Std',
+    'YS-Stdlib',
 ];
 
 sub var {

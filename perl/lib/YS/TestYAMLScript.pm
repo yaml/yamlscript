@@ -1,6 +1,6 @@
-package YAMLScript::Lib::Test;
+package YS::TestYAMLScript;
 use Mo qw'xxx';
-extends 'YAMLScript::Library';
+extends 'YS';
 
 use Test::More ();
 

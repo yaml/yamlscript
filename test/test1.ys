@@ -1,12 +1,9 @@
-#!/usr/bin/env yamlscript-test
+#!/usr/bin/env yamlscript
 
++use: YS-TestYAMLScript
+
+main:
 - +is:
   - +add: [2, 2]
   - 4
-  - A test for add
-
-- $foo: world
-- +is:
-  - Hello $foo
-  - Hello world
-  - Testing Hello world
+  - 2 + 2 == 4

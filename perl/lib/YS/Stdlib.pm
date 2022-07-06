@@ -1,6 +1,6 @@
-package YAMLScript::Lib::Std;
+package YS::Stdlib;
 use Mo qw'xxx';
-extends 'YAMLScript::Library';
+extends 'YS';
 
 my $func = 'YAMLScript::Function';
 my $call = 'YAMLScript::Call';
