@@ -6,21 +6,20 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use YAMLScript::Compiler;
-use YAMLScript::Runtime;
+use YAMLScript;
 
-use XXX;
+# TODO Parse CLI opts/args with Getopt::Long;
 
 my $file = shift;
 
-my $compiler = YAMLScript::Compiler->new(
-    file => $file,
-);
-my $code = $compiler->compile;
-
-my $runtime = YAMLScript::Runtime->new(
-    code => $code,
-    argv => [@ARGV],
-);
-
-$runtime->run;
+if (defined $file) {
+    my $script = YAMLScript->new(
+        file => $file,
+    );
+    $script->run(@ARGV);
+}
+else {
+    require YAMLScript::REPL;
+    my $repl = YAMLScript::REPL->new();
+    $repl->run;
+}

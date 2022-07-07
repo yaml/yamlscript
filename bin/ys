@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+source "${PKGSTAR_ROOT:?}/.bpan/init" auto vars
+
+getopt="\
+ys <options> [<file...>]
+
+Options:
+--
+c,compile     Compile YAMLScript
+r,repl        Start YAMLScript REPL
+
+t,to=         Compiler output format (json,yaml,bin)
+o,out=        Compiler output file
+l,lang=       Runtime language (perl,python)
+
+help          Show the command summary
+x,debug       Enable 'ys' script Bash debugging
+"
+
+main() (
+  get-options "$@"
+  set -- "${args[@]}"
+)
+
+get-options() (
+  [[ ${YAMLSCRIPT_ROOT-} ]] ||
+    die "YAMLSCRIPT_ROOT not set. 'source /path/to/yamlscript/.rc'"
+
+  if $
+)

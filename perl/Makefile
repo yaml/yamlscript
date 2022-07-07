@@ -1,16 +1,51 @@
 SHELL := bash
 
-PACKAGE_NAME := YAMLScript
-PACKAGE_VERSION := 0.0.1
-PACKAGE_DIST := $(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz
+ZILD := \
+    clean \
+    cpan \
+    cpanshell \
+    dist \
+    distdir \
+    distshell \
+    disttest \
+    install \
+    release \
+    test \
+    update \
+
+DOCKER_IMAGE := alpine-test-yamlscript-perl
 
 default:
 
-publish: build
-	cpan-upload $(PACKAGE_DIST)
+.PHONY: test
+$(ZILD):
+	zild $@
 
-build clean::
-	dzil $@
+docker-test: docker-build dist
+	docker run --rm -it \
+	    -v $(PWD):/host \
+	    -w /host \
+	    $(DOCKER_IMAGE) \
+	    bash -c ' \
+		( \
+		    set -x && ( \
+			tar xzf YAMLScript*.tar.gz && \
+			rm YAMLScript*.tar.gz && \
+			cd YAMLScript* && \
+			ls -l t/ && \
+			perl Makefile.PL && \
+			make test \
+		    ) || true; \
+		    rm -fr YAMLScript* \
+		) \
+		'
 
-test:
-	prove -Ilib -v t/
+docker-shell: docker-build dist
+	docker run --rm -it \
+	    -v $(PWD):/host \
+	    -w /host \
+	    $(DOCKER_IMAGE) \
+	    bash
+
+docker-build:
+	docker build -t $(DOCKER_IMAGE) .

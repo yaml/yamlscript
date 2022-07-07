@@ -1,17 +1,28 @@
 package YAMLScript::Call;
-use Mo qw'build default xxx';
-
-use YAMLScript::Runtime;
+use Mo qw'default xxx';
+use YAMLScript::Base;
+extends 'YAMLScript::Base';
 
 has ____ => ();
+has code => ();     # real perl sub
 has args => [];
+has macro => ();    # call is macro
 
 sub call {
-    my ($self, $from) = @_;
+    my ($self) = @_;
     my $name = $self->____;
     my $args = $self->args;
-    my $func =
-        $YAMLScript::Runtime::look->{$name} ||
-        die "Can't find call name '$name'";
-    $func->($from, @$args);
+    if (not $self->macro) {
+        $args = [ map $self->val($_), @$args ];
+    }
+    my $func = $self->code;
+    if (ref($func) eq 'CODE') {
+        $func->(@$args);
+    }
+    elsif (ref($func) eq 'YAMLScript::Func') {
+        $func->call(@$args);
+    }
+    else {
+        XXX $func;
+    }
 }

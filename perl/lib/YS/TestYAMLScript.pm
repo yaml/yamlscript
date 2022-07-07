@@ -1,23 +1,45 @@
 package YS::TestYAMLScript;
 use Mo qw'xxx';
+use YS;
 extends 'YS';
 
 use Test::More ();
 
 my $count = 0;
-my $func = 'YAMLScript::Function';
-my $call = 'YAMLScript::Call';
 
-sub _is {
-    my ($self, $got, $want, $label) = @_;
-    Test::More::is(
-        $self->val($got),
-        $self->val($want),
-        $self->val($label),
+sub BUILD {
+    my ($self) = @_;
+
+    $self->func(
+        is =>
+        3 => sub {
+            my ($got, $want, $label) = @_;
+            Test::More::is(
+                $got,
+                $want,
+                $label,
+            );
+            $count++;
+        },
     );
-    $count++;
+
+    $self->func(
+        pass =>
+        1 => sub {
+            my ($label) = @_;
+            Test::More::pass(
+                $label,
+            );
+            $count++;
+        },
+    );
+
 }
 
 sub END {
-    Test::More::done_testing($count);
+    if ($count > 0) {
+        Test::More::done_testing($count);
+    }
 }
+
+1;

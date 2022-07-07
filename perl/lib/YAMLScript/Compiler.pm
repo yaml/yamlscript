@@ -1,157 +1,231 @@
 package YAMLScript::Compiler;
-use Mo qw'build default xxx';
+use Mo qw'default xxx';
 
-has file => ();
 has yaml => ();
-has data => {};
-has json => ();
+has from => ();
+has code => ();
+has loader => ();
+has ns   => ();
 
-my $w = qr/(?:[a-z0-9])/;
-my $p1 = qr/(?:[a-z]$w*)/;
-my $id = qr/(?:$p1(?:-$w+)*)/;
-
-
-use YAMLScript::Function;
-use YAMLScript::Call;
+use YAMLScript::NS;
+use YAMLScript::Expr;
+use YAMLScript::Func;
+use YAMLScript::Str;
 
 use YAML::PP;
 use YAML::PP::Schema;
 
-sub BUILD {
-    my ($self) = @_;
-
-    my $yaml = $self->yaml || do {
-        my $file = $self->file or die;
-        open my $fh, '<', $file or die $!;
-        my $yaml = do { local $/; <$fh> };
-        close $fh;
-        $self->yaml($yaml);
+# Apply patches for YAML::PP::Schema
+BEGIN {
+    my $create_mapping = \&YAML::PP::Schema::create_mapping;
+    my $create_sequence = \&YAML::PP::Schema::create_sequence;
+    my $load_scalar = \&YAML::PP::Schema::load_scalar;
+    no warnings 'redefine';
+    *YAML::PP::Schema::create_mapping = sub {
+        $_[2]->{tag} //= '-';
+        goto $create_mapping;
     };
-
-    my $data = YAML::PP::Load($yaml);
-    $self->data($data);
+    *YAML::PP::Schema::create_sequence = sub {
+        $_[2]->{tag} //= '-';
+        goto $create_sequence;
+    };
+    *YAML::PP::Schema::load_scalar = sub {
+        $_[2]->{tag} //= '-'
+            if $_[2]->{style} == 1;
+        goto $load_scalar;
+    };
 }
 
-sub from_yaml {
-    my ($self) = @_;
-}
+# Regex patterns for YAMLScript DSL syntax:
+my $lc = qr/(?:[a-z])/;             # lower case
+my $dg = qw/(?:[0-9])/;             # digit
+my $an = qr/(?:[a-z0-9])/;          # alphanum
+my $sp = qr/(?:[-])/;               # separator
+my $p1 = qr/(?:$lc$an*)/;           # part 1 of identifier
+my $pt = qr/(?:$an+)/;              # other part of identifier
+my $id = qr/(?:$p1(?:$sp$pt)*)/;    # identifier
 
-sub to_json {
-    my ($self) = @_;
-    require JSON::PP;
-    JSON::PP::encode_json($self->data);
-}
+my $punc = qr/(?:[\-\+\*\/\.\=\<\>\:])/;
+my $ops = {
+    '..' => 'range',
+    '+' => 'add',
+    '-' => 'sub',
+};
 
-sub to_perl {}
+my $key_defn = qr/^($id)\((.*)\)$/;
+my %exprs = (
+    def  => qr/^($id)\ *=$/,
+    defn => $key_defn,
+    op   => qr/^\(($punc+)\)$/,
+    call => qr/^($id)$/,
+);
 
+# Compile ->yaml to ->code using YAML::PP custom construction
 sub compile {
     my ($self) = @_;
 
-    my $data = $self->data;
+    # Create a YAML loader object with an empty schema:
+    my $loader = $self->{loader} =
+        YAML::PP->new(
+            schema => ['Failsafe'],
+        );
 
-    $data = { main => $data }
-        if ref($data) eq 'ARRAY';
+    # Set up the custom YAML loader:
+    $self->configure;
 
-    die "Invalid YAMLScript, must be mapping or sequence"
-        unless ref($data) eq 'HASH';
+    # Get the input YAMLScript (YAML string):
+    my $yaml = $self->yaml;
 
-    my $code = YAMLScript::Function->new();
+    # All the compilation happens in the loader:
+    my $code = $self->{code} =
+        $loader->load_string($yaml);
 
-    for my $key (
-        sort keys %$data
-    ) {
-        my $val = $data->{$key};
+    # Make a new NS (namespace) object:
+    my $ns = YAMLScript::NS->new(
+        need => ['YS-Core'],
+    );
 
-        if ($key eq '+use') {
+    while (my ($key, $val) = each %$code) {
+        if ($key eq 'use') {
             $val = [ $val ] unless ref($val) eq 'ARRAY';
-            push @{$code->need}, @$val;
-            next;
+            unshift @$val, 'YS-Core' unless
+                grep {$_ eq 'YS-Core'} @$val;
+            $ns->need($val);
         }
-
-        my $function = $self->parse_function($val, $key);
-        $YAMLScript::Runtime::look->{$key} = $function;
-        $code->func->{$key} = $function;
-    }
-
-    return $code;
-}
-
-sub parse_function {
-    my ($self, $val, $name) = @_;
-    ref($val) eq 'ARRAY' or die;
-    @$val > 0 or die;
-
-    my $args = [];
-    LOOP:
-    while (1) {
-        last if $self->is_call($val->[0]);
-        my $ref = ref($val->[0]);
-        if (not $ref) {
-            push @$args, shift @$val;
-        }
-        elsif ($ref eq 'ARRAY') {
-            for my $v (@{$val->[0]}) {
-                last LOOP if ref($v) or $v !~ /^$id$/;
-            }
-            @$args = @{shift(@$val)};
-        }
-        last;
-    }
-
-    my $body = $self->parse_values($val);
-
-    {
-        package func;
-        sub {
-            my $self = shift;
-            my @args = map $self->val($_), @_;
-            my $f = YAMLScript::Function->new(
+        else {
+            $key =~ $key_defn or
+                die "Invalid key '$key' in top level of '${\$self->from}'";
+            my $name = $1;
+            my $sign = $2;
+            $sign = [ split /\s*,\s*/, $sign ];
+            my $func = YAMLScript::Func->new(
                 ____ => $name,
-                args => $args,
-                body => $body,
-            )->call(@args);
+                sign => $sign,
+                body => $val,
+            );
+            $ns->vars->{$name} = $func;
         }
     }
+
+    # Return the NS object:
+    return $ns;
 }
 
-sub parse_values {
-    my ($self, $values) = @_;
-    $values //= [];
-    $values = [$values] unless ref($values) eq 'ARRAY';
-    [ map $self->parse_value($_), @$values ];
-}
+# Configure the YAML loader with custom constructors:
+sub configure {
+    my ($self) = @_;
 
-sub parse_value {
-    my ($self, $value) = @_;
+    my $loader = $self->loader;
+    my $schema = $loader->schema;
 
-    my ($name, $args);
-    if ($name = $self->is_call($value, qr/\+/)) {
-        $args = $self->parse_values($value->{"+$name"});
-        $value = YAMLScript::Call->new(
-            ____ => $name,
-            args => $args,
-        );
-    }
-    elsif ($name = $self->is_call($value, qr/\$/)) {
-        $args = $self->parse_values($value->{"\$$name"});
-        unshift @$args, $name;
-        $value = YAMLScript::Call->new(
-            ____ => 'set',
-            args => $args,
-        );
-    }
+    $schema->add_mapping_resolver(
+        tag => qr/^/,
+        on_create => sub {
+            my ($constructor, $event) = @_;
+            {};
+        },
+        on_data => sub {
+            my ($constructor, $ref, $data) = @_;
+            my $hash = $$ref;
+            for (my $i = 0; $i < @$data; $i += 2) {
+                my ($key, $val) = @$data[$i, $i+1];
+                $key = $$key if ref($key) eq 'YAMLScript::Str';
+                if (ref($val) eq 'YAMLScript::Str') {
+                    if ($$val !~ /\$$id/) {
+                        $val = $$val;
+                    }
+                }
+                $hash->{$key} = $val;
+            }
+            if (@$data == 2) {
+                my ($key, $val) = @$data;
+                if (ref($key) eq 'YAMLScript::Str') {
+                    $key = $$key;
+                    $val = delete $hash->{$key} or die;
+                    # YAMLScript 'def' (assignment)
+                    if ($key =~ /^([-\w]+)\s*=$/) {
+                        $hash->{____} = 'def';
+                        $hash->{args} = [$1, $val];
+                    }
+                    # YAMLScript 'defn' (function definition)
+                    elsif ($key =~ /^([-\w]+)\((.*)\)$/) {
+                        my ($name, $sign) = ($1, $2);
+                        $sign = [ split /\s*,\s*/, $sign ];
+                        $val = [ $val ] unless ref($val) eq 'ARRAY';
+                        my $func = bless {
+                            ____ => $name,
+                            sign => $sign,
+                            body => $val,
+                        }, 'YAMLScript::Func';
+                        $hash->{____} = 'defn';
+                        $hash->{args} = $func;
+                    }
+                    else {
+                        $hash->{____} = $key;
+                        $val = [ $val ] unless ref($val) eq 'ARRAY';
+                        $hash->{args} = $val;
+                    }
+                    bless $hash, 'YAMLScript::Expr';
+                }
+            }
+            return;
+        },
+    );
 
-    $value;
-}
+    $schema->add_sequence_resolver(
+        tag => qr/^/,
+        on_create => sub {
+            my $tag = $_[1]->{tag};
+            if ($tag eq '-') {
+                return [];
+            }
+            else {
+                return {____ => substr($tag, 1)};
+            }
+        },
+        on_data => sub {
+            my ($constructor, $ref, $data) = @_;
+            if (ref($$ref) eq 'HASH') {
+                my $hash = bless $$ref, 'YAMLScript::Expr';
+                my $args = [
+                    map {
+                        if (ref eq 'YAMLScript::Str') {
+                            if ($$_ !~ /\$$id/) {
+                                $_ = $$_;
+                            }
+                        }
+                        $_;
+                    } @$data
+                ];
+                $hash->{args} = $args;
+            }
+            else {
+                my $array = $$ref;
+                for my $val (@$data) {
+                    if (ref($val) eq 'YAMLScript::Str') {
+                        if ($$val !~ /\$$id/) {
+                            $val = $$val;
+                        }
+                    }
+                    push @$array, $val;
+                }
+            }
+        },
+    );
 
-sub is_call {
-    my ($self, $value, $char) = @_;
-    $char //= qr/\+/;
-    return 0 unless ref($value) eq 'HASH';
-    my @keys = keys %$value;
-    (
-        @keys == 1 and
-        $keys[0] =~ qr/^$char($id)$/
-    )
-    ? $1 : 0;
+    my $re_num = qr/^-?\d+$/;
+    $schema->add_resolver(
+        tag => '-',
+        match => [
+            all => sub {
+                my ($constructor, $event) = @_;
+                my $value = $event->{value};
+                if ($value =~ $re_num) {
+                    $value += 0;
+                    return $value;
+                }
+                return bless \$value, 'YAMLScript::Str';
+            },
+        ],
+    );
 }
