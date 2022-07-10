@@ -1,0 +1,21 @@
+SHELL := bash
+
+COFFEE := $(shell find src -type f -name '*.coffee')
+JS := $(COFFEE:%.coffee=%.js)
+JS := $(JS:src/%=lib/%)
+
+default:
+	@printf '%s\n' $(JS)
+
+build: $(JS)
+
+lib/%.js: src/%.coffee
+	@mkdir -p $(dir $@)
+	coffee -c -p $< > $@
+
+publish: build
+	npm $@
+
+clean:
+	rm -f package*
+	rm -fr node_modules

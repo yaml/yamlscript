@@ -1,0 +1,26 @@
+---
+version: 0.0.5
+date:    Sun 27 Jun 2021 01:21:34 PM PDT
+changes:
+- Add depth to dump
+---
+version: 0.0.4
+date:    Sat May  9 12:05:43 PDT 2020
+changes:
+- Use throw instead of exit for xxx and die
+- Support function and regexp YAML dumping in DUMP
+---
+version: 0.0.3
+date:    Mon Apr 27 12:20:11 PDT 2020
+changes:
+- Switch from js-yaml to yaml.js and use sprintf-js
+---
+version: 0.0.2
+date:    Sun May 27 16:28:05 PDT 2018
+changes:
+- Refactor code, add comments, fix a bug
+---
+version: 0.0.1
+date:    Sat May 26 18:20:18 PDT 2018
+changes:
+- First release
