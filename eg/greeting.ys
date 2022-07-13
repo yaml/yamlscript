@@ -1,5 +1,10 @@
 #!/usr/bin/env yamlscript
 
+###
+# This is a simple and fairly contrived program that shows some of the basic
+# YAMLScript affordances.
+###
+
 # Defined the 'main' entry-point function:
 main(name):     # main args come from ARGV
 - min =: 1      # Assign 1 to variable 'min'

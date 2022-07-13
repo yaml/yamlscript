@@ -257,6 +257,18 @@ Python or JavaScript.
     p2(): ...
   ```
 
+## Possible Use Cases
+
+We will write example YAMLScript programs for each of these use cases, in time.
+
+* Programatic, full featured, software configurations.
+* Data driven unit testing with data and assertions in same file.
+* Simple template rendering using interpolated YAML literal scalars.
+* Write (acmeist) programs that can run in multiple programming languages.
+* Write modules that can be used natively from multiple programming languages.
+* Since programs are data, YAMLScript code bases can be refactored using data
+  manipulation tools like `jq`.
+
 ## Future Plans
 
 * Write an implementation spec for YAMLScript
@@ -269,6 +281,14 @@ Python or JavaScript.
 * Write YAMLScript in YAMLScript
 * Spec the YAMLSchema (YAML Processor Config) language as a dialect of
   YAMLScript
+
+## Status
+
+This is very ALPHA software.
+
+Some of the features documented here are not yet implemented.
+
+Everything in the test files definitely works. :)
 
 ## Authors
 
