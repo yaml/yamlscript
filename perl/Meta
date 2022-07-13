@@ -1,25 +1,11 @@
 =meta: 0.0.2
 
-name: YAMLScript
-version: 0.0.5
-abstract: Program in YAML
-homepage: https://yamlscript.org
+base: ../Meta
+
 language: perl
-license: mit
-copyright: 2022
 
 author:
-  name: Ingy döt Net
-  email: ingy@cpan.org
-  github: ingydotnet
-  twitter: ingydotnet
-  freenode: ingy
-  homepage: http://ingy.net
-
-devel:
-  git: https://github.com/ingydotnet/yamlscript
-  bug: https://github.com/ingydotnet/yamlscript/issues
-  irc: irc.libera.chat#yamlscript
+  cpan: INGY
 
 requires:
   perl: 5.8.1
@@ -29,22 +15,27 @@ requires:
   XXX: 0.38
   YAML::PP: 0.034
 
-dzil:
-  nomm: 1
-  postamble: |
-    [MakeMaker::Awesome]
-    delimiter = |
-    footer = |package MY;
-    footer = |sub postamble {
-    footer = |    my $self = shift;
-    footer = |    $self->SUPER::postamble .
-    footer = |    ( $^O eq 'MSWin32' )
-    footer = |    ? <<'...'
-    footer = |PATH := blib\script;$(PATH)
-    footer = |export PATH
-    footer = |...
-    footer = |    : <<'...';
-    footer = |PATH := blib/script:$(PATH)
-    footer = |export PATH
-    footer = |...
-    footer = |}
+=zild:
+  no-about: true
+  no-readme: true
+  no-travis: true
+
+  dzil:
+    no-mm: true
+    postamble: |
+      [MakeMaker::Awesome]
+      delimiter = |
+      footer = |package MY;
+      footer = |sub postamble {
+      footer = |    my $self = shift;
+      footer = |    $self->SUPER::postamble .
+      footer = |    ( $^O eq 'MSWin32' )
+      footer = |    ? <<'...'
+      footer = |PATH := blib\script;$(PATH)
+      footer = |export PATH
+      footer = |...
+      footer = |    : <<'...';
+      footer = |PATH := blib/script:$(PATH)
+      footer = |export PATH
+      footer = |...
+      footer = |}
