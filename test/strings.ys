@@ -9,11 +9,16 @@ main():
 - !is
   - len: $var
   - 16
-  - Unquoted string is interpolated
+  - Unquoted string IS interpolated
 
 - !is
   - len: "$var"
   - 4
-  - Quoted string is not interpolated
+  - Quoted string IS NOT interpolated
+
+# - !is
+#   - len: ! "$var"
+#   - 16
+#   - Tagged quoted string IS interpolated
 
 # vim: ft=yaml:

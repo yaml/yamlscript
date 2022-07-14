@@ -10,14 +10,20 @@ ZILD := \
     disttest \
     install \
     release \
-    test \
     update \
 
 DOCKER_IMAGE := alpine-test-yamlscript-perl
 
+test ?= test/
+
+
+#------------------------------------------------------------------------------
 default:
 
 .PHONY: test
+test:
+	prove -v $(test)
+
 $(ZILD):
 	zild $@
 

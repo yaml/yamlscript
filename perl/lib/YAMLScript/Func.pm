@@ -1,5 +1,5 @@
 package YAMLScript::Func;
-use Mo qw'default xxx';
+use Mo qw(default xxx);
 extends 'YAMLScript::Expr';
 
 has ____ => ();
@@ -25,13 +25,14 @@ sub call {
         ];
     }
 
+    my $ns = ns;
     # Set arg vars:
     for my $name (@$sign) {
-        ns->vars->{$name} = shift(@args);
+        $ns->{$name} = shift(@args);
     }
 
     # Call each statement in function body:
     for my $stmt (@{$self->body}) {
-        $stmt->call();
+        my @r = $stmt->call();
     }
 }

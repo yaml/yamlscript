@@ -1,5 +1,5 @@
 package YAMLScript::Compiler;
-use Mo qw'default xxx';
+use Mo qw(default xxx);
 
 has yaml => ();
 has from => ();
@@ -11,6 +11,7 @@ use YAMLScript::NS;
 use YAMLScript::Expr;
 use YAMLScript::Func;
 use YAMLScript::Str;
+use YAMLScript::Util;
 
 use YAML::PP;
 use YAML::PP::Schema;
@@ -38,12 +39,12 @@ BEGIN {
 
 # Regex patterns for YAMLScript DSL syntax:
 my $lc = qr/(?:[a-z])/;             # lower case
-my $dg = qw/(?:[0-9])/;             # digit
+my $dg = qr/(?:[0-9])/;             # digit
 my $an = qr/(?:[a-z0-9])/;          # alphanum
 my $sp = qr/(?:[-])/;               # separator
 my $p1 = qr/(?:$lc$an*)/;           # part 1 of identifier
 my $pt = qr/(?:$an+)/;              # other part of identifier
-my $id = qr/(?:$p1(?:$sp$pt)*)/;    # identifier
+my $id = qr/(?:_|$p1(?:$sp$pt)*)/;  # identifier
 
 my $punc = qr/(?:[\-\+\*\/\.\=\<\>\:])/;
 my $ops = {
@@ -82,7 +83,7 @@ sub compile {
 
     # Make a new NS (namespace) object:
     my $ns = YAMLScript::NS->new(
-        need => ['YS-Core'],
+        NEED => ['YS-Core'],
     );
 
     while (my ($key, $val) = each %$code) {
@@ -90,7 +91,7 @@ sub compile {
             $val = [ $val ] unless ref($val) eq 'ARRAY';
             unshift @$val, 'YS-Core' unless
                 grep {$_ eq 'YS-Core'} @$val;
-            $ns->need($val);
+            $ns->NEED($val);
         }
         else {
             $key =~ $key_defn or
@@ -103,9 +104,20 @@ sub compile {
                 sign => $sign,
                 body => $val,
             );
-            $ns->vars->{$name} = $func;
+            my $arity = @$sign;
+            my $full = "${name}__$arity";
+
+            $ns->{$full} = sub {
+                YAMLScript::Call->new(
+                    ____ => $full,
+                    code => $func,
+                    args => $_[0],
+                ),
+            };
         }
     }
+
+    $ns->init;
 
     # Return the NS object:
     return $ns;

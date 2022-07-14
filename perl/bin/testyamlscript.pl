@@ -18,7 +18,7 @@ my $compiler = YAMLScript::Compiler->new(
 );
 my $code = $compiler->compile;
 
-push @{$code->need}, 'YS-TestYAMLScript';
+push @{$code->NEED}, 'YS-TestYAMLScript';
 
 my $runtime = YAMLScript::Runtime->new(
     code => $code,

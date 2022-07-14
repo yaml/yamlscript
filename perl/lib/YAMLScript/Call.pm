@@ -1,7 +1,6 @@
 package YAMLScript::Call;
-use Mo qw'default xxx';
-use YAMLScript::Base;
-extends 'YAMLScript::Base';
+use Mo qw(default xxx);
+use YAMLScript::Util;
 
 has ____ => ();
 has code => ();     # real perl sub

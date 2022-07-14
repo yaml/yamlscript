@@ -1,5 +1,5 @@
 package YAMLScript::Expr;
-use Mo qw'default xxx';
+use Mo qw(default xxx);
 
 has ____ => ();
 has args => [];
@@ -12,7 +12,9 @@ sub call {
     my $name = $self->____;
     my $args = $self->args;
     my $arity = @$args;
-    my $factory = $ns->resolve($name, $arity);
-    my $call = $factory->($args);
-    $call->call();
+    my $call =
+        $ns->{"${name}__$arity"} ||
+        $ns->{"${name}___"} or
+        die "Can't resolve call '$name' (for arity '$arity')";
+    $call->($args)->call();
 }

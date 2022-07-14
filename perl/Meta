@@ -8,12 +8,12 @@ author:
   cpan: INGY
 
 requires:
-  perl: 5.8.1
-  Mo: 0.40
-  Mo::xxx: 0.13
-  Sub::Name: 0.21
-  XXX: 0.38
-  YAML::PP: 0.034
+  perl: '5.8.1'
+  Mo: '0.40'
+  Mo::xxx: '0.13'
+  Sub::Util: '1.62'
+  XXX: '0.38'
+  YAML::PP: '0.034'
 
 =zild:
   no-about: true
