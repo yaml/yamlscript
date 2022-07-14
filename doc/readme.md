@@ -271,6 +271,8 @@ We will write example YAMLScript programs for each of these use cases, in time.
 
 ## Future Plans
 
+* Implement most of the core libraries with YAMLScript
+* Programatically port many functions from clojure/core source code
 * Write an implementation spec for YAMLScript
 * Port YAMLScript to many languages
 * Write a Test Suite for YAMLScript (in YAMLScript)
@@ -286,7 +288,12 @@ We will write example YAMLScript programs for each of these use cases, in time.
 
 This is very ALPHA software.
 
-Some of the features documented here are not yet implemented.
+Some of the features documented here are not yet implemented:
+
+* YAMLScript REPL
+* Python Port (Very soon)
+* JavaScript Port (after Python)
+* Some functions abaove
 
 Everything in the test files definitely works. :)
 

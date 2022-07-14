@@ -2,6 +2,8 @@ package YS::Core;
 use Mo qw(xxx);
 use YAMLScript::Util;
 
+use boolean;
+
 sub define {
     my ($self, $ns) = @_;
 
@@ -50,6 +52,39 @@ sub define {
             $_->call for @_;
         },
         macro => 1,
+    ],
+
+    [
+        map =>
+        2 => sub {
+            my ($fn, $list) = @_;
+            $list = $self->val($list);
+            [
+                map {
+                    $ns->{_} = $_;
+                    $fn->call($_);
+                } @$list
+            ];
+        },
+        macro => 1,
+    ],
+
+    [
+        'number?' =>
+        1 => sub {
+            $_[0] =~ /^(?:
+                (
+                    0
+                |
+                    -? [1-9] [0-9]*
+                |
+                    -?
+                    [1-9]
+                    ( \. [0-9]* [1-9] )?
+                    ( e [-+] [1-9] [0-9]* )?
+                )
+            )$ /x ? true : false;
+        },
     ],
 
     [

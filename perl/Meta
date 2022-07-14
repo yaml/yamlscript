@@ -9,6 +9,7 @@ author:
 
 requires:
   perl: '5.8.1'
+  boolean: '0.46'
   Mo: '0.40'
   Mo::xxx: '0.13'
   Sub::Util: '1.62'

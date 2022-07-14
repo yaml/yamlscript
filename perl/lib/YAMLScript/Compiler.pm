@@ -23,15 +23,15 @@ BEGIN {
     my $load_scalar = \&YAML::PP::Schema::load_scalar;
     no warnings 'redefine';
     *YAML::PP::Schema::create_mapping = sub {
-        $_[2]->{tag} //= '-';
+        $_[2]->{tag} //= '!';
         goto $create_mapping;
     };
     *YAML::PP::Schema::create_sequence = sub {
-        $_[2]->{tag} //= '-';
+        $_[2]->{tag} //= '!';
         goto $create_sequence;
     };
     *YAML::PP::Schema::load_scalar = sub {
-        $_[2]->{tag} //= '-'
+        $_[2]->{tag} //= '!'
             if $_[2]->{style} == 1;
         goto $load_scalar;
     };
@@ -47,11 +47,6 @@ my $pt = qr/(?:$an+)/;              # other part of identifier
 my $id = qr/(?:_|$p1(?:$sp$pt)*)/;  # identifier
 
 my $punc = qr/(?:[\-\+\*\/\.\=\<\>\:])/;
-my $ops = {
-    '..' => 'range',
-    '+' => 'add',
-    '-' => 'sub',
-};
 
 my $key_defn = qr/^($id)\((.*)\)$/;
 my %exprs = (
@@ -153,9 +148,9 @@ sub configure {
                 my ($key, $val) = @$data;
                 if (ref($key) eq 'YAMLScript::Str') {
                     $key = $$key;
-                    $val = delete $hash->{$key} or die;
+                    $val = delete $hash->{$key};
                     # YAMLScript 'def' (assignment)
-                    if ($key =~ /^([-\w]+)\s*=$/) {
+                    if ($key =~ /^($id)\s*=$/) {
                         $hash->{____} = 'def';
                         $hash->{args} = [$1, $val];
                     }
@@ -188,7 +183,7 @@ sub configure {
         tag => qr/^/,
         on_create => sub {
             my $tag = $_[1]->{tag};
-            if ($tag eq '-') {
+            if ($tag eq '!') {
                 return [];
             }
             else {
@@ -227,7 +222,7 @@ sub configure {
 
     my $re_num = qr/^-?\d+$/;
     $schema->add_resolver(
-        tag => '-',
+        tag => '!',
         match => [
             all => sub {
                 my ($constructor, $event) = @_;
