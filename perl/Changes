@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.8
+date:    Fri 15 Jul 2022 02:56:31 PM PDT
+changes:
+- Regenerate docs with fixed generator
+---
 version: 0.0.7
 date:    Wed 13 Jul 2022 10:13:34 AM PDT
 changes:
