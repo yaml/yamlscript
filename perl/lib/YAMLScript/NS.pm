@@ -32,12 +32,12 @@ sub init {
             # $self->NEED->[$i] = $lib;
             for my $def ($module->define($self)) {
                 my ($name, %params) = @$def;
-                my $m = delete $params{macro};
-                my @macro;
-                if (defined $m) {
-                    @macro = (macro => $m);
-                }
+                my $m = delete $params{lazy};
+                my @lazy;
+                @lazy = (lazy => $m) if defined $m;
                 my $op = delete $params{op};
+                my $alias = delete $params{alias} // [];
+
                 for my $arity (keys %params) {
                     my $sub = $params{$arity};
                     my $full = "${name}__$arity";
@@ -49,12 +49,15 @@ sub init {
                             ____ => $full,
                             code => $code,
                             args => $_[0],
-                            @macro,
+                            @lazy,
                         ),
                     };
                     $self->{$full} = $call;
                     if ($op) {
                         $self->{"($op)__$arity"} = $call;
+                    }
+                    for (@$alias) {
+                        $self->{"${_}__$arity"} = $call;
                     }
                 }
             }

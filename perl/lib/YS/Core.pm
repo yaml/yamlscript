@@ -29,6 +29,13 @@ sub define {
     ],
 
     [
+        comment =>
+        _ => sub { return },
+        lazy => 1,
+        alias => [ qw(ignore) ],
+    ],
+
+    [
         conj =>
         2 => sub {
             my ($list, $val) = @_;
@@ -51,7 +58,7 @@ sub define {
         _ => sub {
             $_->call for @_;
         },
-        macro => 1,
+        lazy => 1,
     ],
 
     [
@@ -66,7 +73,7 @@ sub define {
                 } @$list
             ];
         },
-        macro => 1,
+        lazy => 1,
     ],
 
     [
@@ -101,7 +108,7 @@ sub define {
             delete $ns->{_};
             return;
         },
-        macro => 1,
+        lazy => 1,
     ],
 
     [

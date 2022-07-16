@@ -3,15 +3,15 @@ use Mo qw(default xxx);
 use YAMLScript::Util;
 
 has ____ => ();
-has code => ();     # real perl sub
+has code => ();
 has args => [];
-has macro => ();    # call is macro
+has lazy => ();
 
 sub call {
     my ($self) = @_;
     my $name = $self->____;
     my $args = $self->args;
-    if (not $self->macro) {
+    if (not $self->lazy) {
         $args = [ map $self->val($_), @$args ];
     }
     my $func = $self->code;
