@@ -32,24 +32,14 @@ docker-test: docker-build dist
 	    -v $(PWD):/host \
 	    -w /host \
 	    $(DOCKER_IMAGE) \
-	    bash -c ' \
-		( \
-		    set -x && ( \
-			tar xzf YAMLScript*.tar.gz && \
-			rm YAMLScript*.tar.gz && \
-			cd YAMLScript* && \
-			ls -l t/ && \
-			perl Makefile.PL && \
-			make test \
-		    ) || true; \
-		    rm -fr YAMLScript* \
-		) \
-		'
+	    bash test/docker-cpan-test.sh
 
 docker-shell: docker-build dist
+	touch /tmp/yamlscript-docker-test-history; \
 	docker run --rm -it \
+	    -v /tmp/yamlscript-docker-test-history:/root/.bash_history \
 	    -v $(PWD):/host \
-	    -w /host \
+	    -w /root \
 	    $(DOCKER_IMAGE) \
 	    bash
 

@@ -1,7 +1,9 @@
 #!/bin/sh
 
-if ( which perl && which yamlscript.pl ) >/dev/null; then
-  exec $(which perl) $(which yamlscript.pl) "$@"
+PERL=$(which perl)
+
+if ( which perl && which ys-yamlscript.pl ) >/dev/null; then
+  exec "$PERL" "$(which ys-yamlscript.pl)" "$@"
 else
   echo "No YAMLScript interpreter found"
   exit 1

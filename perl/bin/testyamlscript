@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if ( which perl && which testyamlscript.pl ) >/dev/null; then
-  exec $(which perl) $(which testyamlscript.pl) "$@"
+if ( which perl && which ys-testyamlscript.pl ) >/dev/null; then
+  exec "$(which perl)" "$(which ys-testyamlscript.pl)" "$@"
 else
-  echo "No YAMLScript-Test interpreter found"
+  echo "No YAMLScript Test interpreter found"
   exit 1
 fi
