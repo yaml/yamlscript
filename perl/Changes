@@ -1,5 +1,11 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.9
+date:    Sat 16 Jul 2022 04:45:52 PM PDT
+changes:
+- Fix test fails on cpantesters
+- Add function aliasing
+---
 version: 0.0.8
 date:    Fri 15 Jul 2022 02:56:31 PM PDT
 changes:
