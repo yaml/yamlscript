@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.10
+date:    Sat 16 Jul 2022 05:23:35 PM PDT
+changes:
+- Attempt to fix a BSD Makefile error
+---
 version: 0.0.9
 date:    Sat 16 Jul 2022 04:45:52 PM PDT
 changes:
