@@ -1,0 +1,123 @@
+#!/home/ingy/perl5/perlbrew/perls/perl-5.28.0/bin/perl
+use strict;
+use warnings;
+
+use YAML::PP;
+use YAML::PP::Common qw/ YAML_FLOW_SEQUENCE_STYLE YAML_FLOW_MAPPING_STYLE /;
+use YAML::PP::Parser;
+use YAML::PP::Emitter;
+use YAML::PP::Writer;
+use Data::Dumper;
+use Encode;
+use Getopt::Long;
+Getopt::Long::Configure('bundling');
+GetOptions(
+    'help|h' => \my $help,
+    'indent=i' => \my $indent,
+    'module|M=s' => \my $module,
+    'dump|D=s' => \my $emit,
+    'verbose' => \my $verbose,
+    'flow=s' => \my $flow,
+    'width=i' => \my $width,
+) or usage(1);
+
+usage(0) if $help;
+
+$module ||= 'YAML::PP';
+$emit ||= $module;
+
+$flow ||= 'no';
+
+my ($file) = @ARGV;
+my $yaml;
+
+if ($file) {
+    open my $fh, '<', $file or die $!;
+    $yaml = do { local $/; <$fh> };
+    close $fh;
+}
+else {
+    $yaml = do { local $/; <STDIN> };
+}
+$yaml = decode_utf8($yaml);
+
+if ($emit eq 'YAML::PP::Ref') {
+    $emit = 'YAML::PP';
+}
+my $parserclass = 'YAML::PP::Parser';
+my $emitterclass = 'YAML::PP::Emitter';
+if ($module eq 'YAML::PP::LibYAML') {
+    eval { require YAML::PP::LibYAML } or die "Module $module not supported: $@";
+    $parserclass = 'YAML::PP::LibYAML::Parser';
+    $emitterclass = 'YAML::PP::LibYAML::Emitter';
+}
+elsif ($module eq 'YAML::PP::Ref') {
+    eval { require YAML::PP::Ref } or die "Module $module not supported: $@";
+    $parserclass = 'YAML::PP::Ref::Parser';
+}
+if ($emit eq 'YAML::PP::LibYAML') {
+    eval { require YAML::PP::LibYAML } or die "Module $emit not supported: $@";
+    $emitterclass = 'YAML::PP::LibYAML::Emitter';
+}
+
+my @events;
+my $parser = $parserclass->new(
+    receiver => sub {
+        my ($self, undef, $event) = @_;
+        push @events, $event;
+    },
+);
+eval {
+    $parser->parse_string($yaml);
+};
+if ($@) {
+    for (@events) {
+        print YAML::PP::Common::event_to_test_suite($_) ."\n";
+    }
+    warn "Error parsing: $@";
+    exit 1;
+}
+my $writer = YAML::PP::Writer->new;
+my $emitter = $emitterclass->new( indent => $indent, width => $width );
+$emitter->set_writer($writer);
+for my $event (@events) {
+    my $type = $event->{name};
+    my $str = YAML::PP::Common::event_to_test_suite($event);
+    print "$str\n" if $verbose;
+    if ($type eq 'sequence_start_event' or $type eq 'mapping_start_event') {
+        if ($flow eq 'no') {
+            delete $event->{style};
+        }
+        elsif ($flow eq 'yes') {
+            if ($type eq 'sequence_start_event') {
+                $event->{style} = YAML_FLOW_SEQUENCE_STYLE;
+            }
+            else {
+                $event->{style} = YAML_FLOW_MAPPING_STYLE;
+            }
+        }
+    }
+    $emitter->$type($event);
+}
+my $out_yaml = $emitter->writer->output;
+print encode_utf8 $out_yaml;
+
+sub usage {
+    my ($rc) = @_;
+    print <<"EOM";
+Usage:
+
+    $0 [options] < file
+    $0 [options] file
+
+Options:
+    --indent=             Number of spaces for indentation
+    --width=              Maximum column width (only used in flow style for now)
+    --module, -M          YAML::PP, YAML::PP::LibYAML or YAML::PP::Ref
+    --dump, -D            YAML::PP, YAML::PP::LibYAML
+    --flow                'no' (default, always output block style), 'yes'
+                          (always output flow style), 'keep' (output flow
+                          style like in the original input)
+EOM
+    exit $rc;
+}

@@ -1,0 +1,17 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::required - Adds the required feature to Mo's has
+
+=head1 Synopsis
+
+    use Mo qw'required';
+    has name => ( required => 1 );
+
+=head1 Description
+
+Adds the required parameter to has. When required is set to a positive 
+value, the constructor will die if the attribute is not set.
+
+=cut

@@ -1,0 +1,216 @@
+=head1 Overview
+
+This is the design document for the L<Mo> module.
+
+It is intended to help people understand the thinking behind Mo.
+
+Like Mo, this document is a work in progress. Nothing here is in stone.
+Everything is up for discussion. This document just explains the current
+understanding, so you'll know where to start.
+
+=head1 Design Goals
+
+Mo has the following design goals. These goals are all important and have to
+be balanced against each other.
+
+=over
+
+=item Provide usable OO for Perl modules.
+
+This includes I<at least> the following. The current implementation contains a
+bit more than this, but that is due to the other design goals.
+
+=over
+
+=item Single Inheritance
+
+Mo should provide a mechanism for inheritance. At least single inheritance.
+
+=item Object Construction
+
+Mo needs to provide a C<new()> object constructor. It should take a set of
+name/value pairs and return a new object reference, blessed into the class'
+package name.
+
+=item Attribute Declaration
+
+Mo needs to provide a way to declare attribute accessing methods. They need to
+be able to set and get values.
+
+=back
+
+=item Be minimal
+
+Mo only adds core features if they are considered very desirable B<and> can be
+implemented in a very small amount of code. Most features are in external
+C<feature> modules now.
+
+=item Be useful
+
+Mo wants to be the first module that Perl programmers reach for when they need
+simple OO. To that end, it needs to be extremely useful and support common
+idioms, even if they are not strictly minimal.
+
+=item Be fast
+
+Mo should be about as fast as if you rolled your own OO. It should be fast at
+both startup (compile) time and at run time. It should especially strive to
+have fast accessors. Speed optimizations should be simple and minimal.
+
+=item Be embeddable
+
+There may be situations where you want to inline Mo into your code. For this
+reason, Mo will try to be in one minimal pure Perl file, with no comments or
+documentation. See C<Mo::Inline>.
+
+=item Easy upgrade/downgrade path with Moo
+
+L<Moose> has become the accepted style of OO in perl. Mo will attempt to not
+do the things it does in an incompatible style to the C<Moose> family.
+    
+This is not to say that all Mo code can be switched to Moo, or vice versa.
+This I<is> to say that you should be able to find a style of coding using the
+full capabilities of Mo, that you can switch to L<Moo> (or L<Mouse> or L<Moose>),
+if you want to.
+
+This is a difficult design goal, and might sometimes lose out to the other
+goals. However, this document will attempt to explain all the decisions.
+
+=back
+
+=head1 Current Status
+
+This section will go into detail on all the current aspects of Mo, why
+decisions were made and any known concerns being thought about.
+
+=over
+
+=item Inheritance
+
+Mo uses C<extends> to name its (single inheritance) parent.
+
+In the past, Mo supported multiple inheritance. This was considered suboptimal
+for a few reasons. MI is generally frowned upon in Perl. It has problems
+that are better solved by roles. It also makes the BUILD call sequence much
+more difficult, which makes Moose compatibility hard. For these reasons, we
+removed MI as a Mo feature. As a result, the code became much simpler.
+
+It is highly doubtful that roles will be supported either. One should upgrade
+to Moo or higher when MI or roles become needed.
+
+=item Construction
+
+Mo uses a C<new> method for construction. It is super minimal and fast. It does no calling of the BUILD sequence. To get that, use:
+
+    use Mo 'build';
+
+=item Accessors
+
+Mo uses C<has> for generating accessors. Like Moose, it takes a name and a
+list of option/value pairs.
+
+All options are silently ignored. Options like C<default> and C<builder> are
+available as feature modules:
+
+    use Mo qw'default builder';
+
+The default getter/setter is optimized for speed. It does no checks and is
+always 'rw'.
+
+=item No runtime checks
+
+Mo will not check or validate its usage. It is so minimal, that it will leave
+this up to the code author. Run time checks don't offer any gain when the
+usage is already correct. In a dynamic language like Perl, they only serve to
+make code slower. Plus, runtime checks would bloat the Mo code. Where would
+you draw the line? The best option is to leave them out, document things well,
+and let people write tests for their code, if they really need to. Upgrading
+from Mo is another alternative.
+
+=item Size matters
+
+Mo.pm and its feature modules are golfed, compressed and unreadable by mere
+mortals. It has no comments or pod. The documentation is in Mo.pod and the
+comments are all in here. This makes Mo.pm a little black box of code that you
+can use anywhere.
+
+When we hack on Mo.pm we do it on src/. When we are done we run C<make -C
+src/> and it compresses stuff into C<lib/>.
+
+The package declaration and $VERSION are on their own lines. That way if
+someone inlines Mo, they can make their own package line more easily, and just
+grab line 3, the code.
+
+=item strict and warnings
+
+We turn on strict and warnings for the user of Mo because it is really easy
+and offers great value. Also, all the other Moose family does it.
+
+=back
+
+=head1 Topics, Concerns and Issues
+
+This is a list of everything else.
+
+=head2 The feature system
+
+Mo now has a decent feature system so that almost anything can be added piecemeal. To use features you say:
+
+    use Mo qw'foo bar';
+
+This loads Mo::foo and Mo::bar. It calls the C<e()> subroutine on each.
+
+=head2 1024 Size Limit
+
+Mo.pm has a goal to never be larger than 1024 bytes. It has almost never been
+larger than 500 bytes so far. It is currently under 450 and should only go
+down (assuming we have the core features nailed down).
+
+=head2 Automated Golfing
+
+I want to start a policy that all of the golfing efforts will be made via a
+script to sane code. We should automate testing both the ungolfed and golfed
+code.
+
+Golfing has now been automated using the power of PPI.
+
+=head2 Moose and Moo creators like Mo
+
+I can't (and am certain that I don't) speak for all the Moose community, But
+I(ngy) personally know that stevan (creator of Moose) and mst (creator of Moo)
+approve of Mo. They hang out on the #mo irc channel, and mst has made a large
+portion of the code commits.
+
+This is a sign of a healthy project, because hopefully we can all forge a
+clear idea of how all these modules relate to each other and support each
+other.
+
+=head2 Why not Moose?
+
+The sad fact of Perl 5 is that there's no object model built in.
+
+Moose not only added an elegant, usable object model, it took OO to a new
+level. It is indeed a postmodern system. Unfortunately this comes at a (often
+hefty) performance price.
+
+Attempts to make something similar but less hefty came in the forms of
+L<Mouse>, L<Mousse> and L<Moo>. L<Mo> is just the next attempt. It is a bare
+minimum OO framework, that still looks like Moose.
+
+I've heard people argue that Mo doesn't belong in the Moose family, but those
+same people often feel the same way about Mouse and Moo. It won't stop me from
+trying to make something wonderful, that can be fairly easily upgraded to
+something possibly more wonderful.
+
+With each of these attempts, less of the original Moose power is implemented.
+This annoys the hardcore Moose developers. But hopefully it pushes them
+towards making Moose better and better. I can imagine the day when Moose is a
+compiled in part of the C<perl> interpreter and thus faster then Mo. At that
+point, all the others will become remnants of the past.
+
+In the meantime, I hope that Mo et al, helps people to get past their Moose
+inhibitions, and start using the Mo* that makes sense. I(ngy) have authored
+other OO base modules like L<Spiffy> and L<Gloom>. There are things about those that
+I sorely miss in the Moose family, but I have decided to stopping fighting the
+Moose. I for one, welcome our new giant antlered overlord.
+

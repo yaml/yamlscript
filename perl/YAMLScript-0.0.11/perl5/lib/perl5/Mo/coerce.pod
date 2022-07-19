@@ -1,0 +1,17 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::coerce - Adds the coerce feature to Mo's has
+
+=head1 Synopsis
+
+    use Mo qw'coerce';
+    has name => ( coerce => sub { uc $_[0] } );
+
+=head1 Description
+
+Adds the coerce parameter to has, which expects a code reference, which
+is used to transform the value to be set.
+
+=cut

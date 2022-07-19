@@ -1,0 +1,63 @@
+{
+   "abstract" : "Boolean support for Perl",
+   "author" : [
+      "Ingy döt Net <ingy@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.047, CPAN::Meta::Converter version 2.150005, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "boolean",
+   "no_index" : {
+      "directory" : [
+         "example",
+         "inc",
+         "t",
+         "xt"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41"
+         }
+      },
+      "runtime" : {
+         "recommends" : {
+            "JSON::MaybeXS" : "0"
+         },
+         "requires" : {
+            "perl" : "5.008001"
+         }
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ingydotnet/boolean-pm/issues"
+      },
+      "homepage" : "https://github.com/ingydotnet/boolean-pm",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/ingydotnet/boolean-pm.git",
+         "web" : "https://github.com/ingydotnet/boolean-pm"
+      }
+   },
+   "version" : "0.46",
+   "x_serialization_backend" : "JSON::PP version 4.10"
+}

@@ -1,0 +1,43 @@
+=head1 Mo Hacking
+
+Mo is a group effort. If you want to work on it join #mo on irc.perl.org. It
+would be a good idea to read L<Mo::Design> first.
+
+Drop by and we'll give you a commit bit and put you to work!
+
+=head1 Mo Rules
+
+The first rule of Mo Club is...
+
+1) You don't talk about Moose Club
+
+j/k
+
+=over
+
+=item IRC
+
+#mo on irc.perl.org
+
+=item GitHub
+
+The code is here https://github.com/ingydotnet/mo-pm
+
+=item src/
+
+The I<code> is in C<src/>. That's where we hack on it. Running this command:
+
+    make -C src/
+
+will compress everything into lib so that you can run the tests.
+
+=item Pod and Comments
+
+We keep Mo.pm POD and comment free. We like to write lots of doc. We put it in
+separate .pod files.
+
+=item Git Branches
+
+Always do your new ideas on a branch.
+
+=back

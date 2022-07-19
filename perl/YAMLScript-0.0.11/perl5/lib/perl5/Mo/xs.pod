@@ -1,0 +1,17 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::xs - Adds faster xs components
+
+=head1 Synopsis
+
+    use Mo qw'xs';
+
+=head1 Description
+
+The goal of this module is to make things fast by using XS modules. Currently
+we use Class::XSAccessor to provide fast accessors.
+
+NOTE: This module is currently experimental and may not work with other
+features modules.

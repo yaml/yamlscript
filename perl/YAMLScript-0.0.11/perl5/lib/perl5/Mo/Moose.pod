@@ -1,0 +1,22 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::Moose - Use Moose instead of Mo
+
+=head1 Synopsis
+
+    use Mo 'Moose';
+    has foo => ();
+
+=head1 Description
+
+If you use L<Mo> and want to try L<Moose> without adding C<is> and C<lazy>
+options to all your attributes you can just do this:
+
+    use Mo 'Moose';
+    use foo => ();
+
+and everything should work, but now uses Moose instead of Mo for everything.
+
+=cut

@@ -1,0 +1,4 @@
+#!/home/ingy/perl5/perlbrew/perls/perl-5.28.0/bin/perl
+
+use Mo::Inline;
+exit Mo::Inline->new->run(@ARGV);

@@ -1,0 +1,54 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::build - Adds the build feature to Mo
+
+=head1 Synopsis
+
+    use Mo qw'build';
+    has name => ( is => 'rw' );
+
+    sub BUILD {
+        my $self = shift;
+        ...
+    }
+
+=head1 Description
+
+Adds the C<BUILD> feature to Mo when imported.
+
+If a sub called C<BUILD> exists on the
+package, it will be executed on C<$self> during instantiation.
+
+Any non-lazy C<default> and C<builder> attributes, as well as
+any value passed to C<new> will already be set when C<BUILD>
+is called.
+
+    package ABCD;
+    use Mo qw'build builder default';
+    use feature 'say';
+
+    has a => (default => 1234, lazy => 0);
+    has b => (builder => '_b', lazy => 0);
+    has c => (is => 'rw');
+    has d => (is => 'rw');
+
+    sub _b { 'blue' }
+
+    sub BUILD {
+        my ($self) = @_;
+        say $self->{a};
+        say $self->{b};
+        say $self->{c};
+        say 'undef' unless defined $self->{d};
+    }
+
+    ABCD->new(c => 'days') # => 1234
+                           #    blue
+                           #    days
+                           #    undef
+
+
+=cut
+

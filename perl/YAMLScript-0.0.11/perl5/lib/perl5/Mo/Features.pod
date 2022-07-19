@@ -1,0 +1,85 @@
+=head1 Mo Features
+
+Mo is absolutely minimal, but it let's you easily add many features like this:
+
+    use Mo qw[default builder other features];
+
+This will load the modules L<Mo::default>, etc, and have them modify your Mo
+reality.
+
+Here's a list of the current feature modules that ship with L<Mo>:
+
+=over
+
+=item L<Mo::builder>
+
+Add C<builder> feature to C<has>.
+
+=item L<Mo::chain>
+
+Add C<chain> feature to C<has>.
+
+=item L<Mo::coerce>
+
+Add C<coerce> feature to C<has>.
+
+=item L<Mo::default>
+
+Add C<default> feature to C<has>.
+
+=item L<Mo::exporter>
+
+Exporter for L<Mo::Inline> usage. Only works with inlined Mo.
+
+=item L<Mo::import>
+
+Finalizer for L<Mo::Inline> usage. Only works with inlined Mo.
+
+=item L<Mo::is>
+
+Add C<is> feature to C<has>.
+
+=item L<Mo::Moose>
+
+Use Moose in place of Mo for everything.
+
+=item L<Mo::Mouse>
+
+Use Mouse in place of Mo for everything.
+
+=item L<Mo::option>
+
+Add C<option> feature to C<has>.
+
+=item L<Mo::required>
+
+Add C<required> feature to C<has>.
+
+=item L<Mo::xs>
+
+Use XS modules to make things faster.
+
+Requires L<Class::XSAccessor>.
+
+=back
+
+There are also feature modules that ship outside of the Mo distribution. You
+can search CPAN, but here's a starter list:
+
+=over
+
+=item L<Mo::xxx>
+
+Exports the L<XXX> functions for debugging. Handy!
+
+=back
+
+=head1 NOTE
+
+Don't assume that all feature modules will work together. Sometimes the order
+you specify them in may affect how they work together. Read the feature docs
+and test your assumptions.
+
+We continue to make more and more things work together, and when they don't we
+try to document it. Let us know if you feel like something critical is broken.
+See L<Mo::Hacking>.

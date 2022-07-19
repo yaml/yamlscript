@@ -1,0 +1,37 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::import - Special import feature for Mo::Inline
+
+=head1 Synopsis
+
+    package MyMo;
+    # use Mo qw[default builder import]; 
+
+    package SomeClass;
+    use MyMo;
+
+    has foo => (builder => 'build_foo');
+
+=head1 Description
+
+If you are defining your own Mo class for a project, and you want it to always
+use a default set of features, you should add C<import> to the end of the
+list. Then by calling:
+
+    use MyMo;
+
+you get the default set: C<default> and C<builder>. If you just want
+C<default>, do this:
+
+    use MyMo 'default';
+
+If you want no features for a particular class, use:
+
+    use MyMo '';
+
+=head1 Note
+
+This feature is probably not useful, and possibly problematic, outside of
+L<Mo::Inline> usage.

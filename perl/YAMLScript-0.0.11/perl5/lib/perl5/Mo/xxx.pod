@@ -1,0 +1,29 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::xxx - Add XXX support to classes
+
+=head1 Synopsis
+
+    use Mo qw'xxx';
+    XXX my $foo = bar(WWW $baz);
+
+=head1 Description
+
+This Mo feature exports WWW, XXX, YYY and ZZZ functions to the caller.
+
+=head1 Author
+
+Ingy döt Net <ingy@cpan.org>
+
+=head1 Copyright and License
+
+Copyright (c) 2011-2020. Ingy döt Net.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+See http://www.perl.com/perl/misc/Artistic.html
+
+=cut

@@ -1,0 +1,36 @@
+---
+abstract: 'Program in YAML'
+author:
+  - 'Ingy döt Net <ingy@ingy.net>'
+build_requires: {}
+configure_requires:
+  ExtUtils::MakeMaker: '0'
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 6.025, CPAN::Meta::Converter version 2.150010'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: YAMLScript
+no_index:
+  directory:
+    - example
+    - inc
+    - t
+    - xt
+requires:
+  Mo: '0.40'
+  Mo::xxx: '0.13'
+  Sub::Util: '1.62'
+  XXX: '0.38'
+  YAML::PP: '0.034'
+  boolean: '0.46'
+  perl: v5.10.1
+resources:
+  bugtracker: https://github.com/ingydotnet/yamlscript/issues
+  homepage: https://github.com/ingydotnet/yamlscript
+  repository: https://github.com/ingydotnet/yamlscript.git
+version: 0.0.11
+x_generated_by_perl: v5.28.0
+x_serialization_backend: 'YAML::Tiny version 1.73'
+x_spdx_expression: 'Artistic-1.0-Perl OR GPL-1.0-or-later'

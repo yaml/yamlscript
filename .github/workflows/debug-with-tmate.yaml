@@ -1,0 +1,14 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    # runs-on: ubuntu-22.04
+    # runs-on: ubuntu-20.04
+    runs-on: windows-2022
+    # runs-on: windows-2019
+    # runs-on: macos-12
+    # runs-on: macos-11
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3

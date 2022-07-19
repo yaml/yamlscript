@@ -1,0 +1,10 @@
+#!/bin/sh
+
+PERL=$(which perl)
+
+if ( which perl && which ys-yamlscript.pl ) >/dev/null; then
+  exec "$PERL" "$(which ys-yamlscript.pl)" "$@"
+else
+  echo "No YAMLScript interpreter found"
+  exit 1
+fi

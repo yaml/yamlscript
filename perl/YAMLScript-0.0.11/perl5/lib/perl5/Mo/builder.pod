@@ -1,0 +1,41 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::builder - Adds the builder feature to Mo's has
+
+=head1 Synopsis
+
+    use Mo qw'builder';
+    has name => ( builder => 'name_lookup' );
+
+    sub name_lookup {
+        my ($self) = @_;
+        ...
+    }
+
+=head1 Description
+
+Adds the C<builder> parameter to has, which expects a method name, which is
+executed on C<$self> to set the attribute if it hasn't been set yet.
+
+=head1 Laziness
+
+Builders in Mo are lazy by default.
+This can be changed by explicitly setting the C<lazy> argument to false, in
+order to cause it to be initialized during instantiation.
+
+    use Mo qw'builder';
+    has status => ( builder => '_build_status' );             # lazy
+    has source => ( builder => '_build_source', lazy => 1);   # lazy
+    has target => ( builder => '_build_target', lazy => 0);   # eager
+
+To change the default behavior and make builders to be initialized eagerly
+by default, import C<nonlazy>.
+
+    use Mo qw'builder nonlazy';
+    has status => ( builder => '_build_status' );             # eager
+    has source => ( builder => '_build_source', lazy => 1);   # lazy
+    has target => ( builder => '_build_target', lazy => 0);   # eager
+
+=cut

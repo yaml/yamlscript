@@ -1,0 +1,23 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::chain - Adds the chain feature to Mo's has
+
+=head1 Synopsis
+
+    package Foo;
+
+    use Mo qw'chain';
+    has first  => ( chain => 1 );
+    has second => ( chain => 1 );
+
+    Foo->new->first('1')->second('2');
+
+=head1 Description
+
+Adds the chain parameter to has. If you set it to a true value, the accessor
+will return the class instance if values are set, instead of the value itself.
+As a result, accessors can be chained.
+
+=cut

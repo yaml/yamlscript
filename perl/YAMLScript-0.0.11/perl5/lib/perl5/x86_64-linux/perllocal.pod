@@ -1,0 +1,154 @@
+=head2 Tue Jul 19 18:19:47 2022: C<Module> L<YAML::PP|YAML::PP>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.034>
+
+=item *
+
+C<EXE_FILES: bin/yamlpp-events bin/yamlpp-highlight bin/yamlpp-load bin/yamlpp-load-dump bin/yamlpp-parse-emit>
+
+=back
+
+=head2 Tue Jul 19 18:19:48 2022: C<Module> L<XXX|XXX>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.38>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jul 19 18:19:49 2022: C<Module> L<boolean|boolean>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.46>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jul 19 18:19:52 2022: C<Module> L<List::Util|List::Util>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.62>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jul 19 18:19:55 2022: C<Module> L<Mo|Mo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.40>
+
+=item *
+
+C<EXE_FILES: bin/mo-inline>
+
+=back
+
+=head2 Tue Jul 19 18:19:57 2022: C<Module> L<Mo::xxx|Mo::xxx>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jul 19 18:19:58 2022: C<Module> L<YAMLScript|YAMLScript>
+
+=over 4
+
+=item *
+
+C<installed into: /home/ingy/src/yaml/yamlscript/perl/YAMLScript-0.0.11/perl5/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.0.11>
+
+=item *
+
+C<EXE_FILES: bin/testyamlscript bin/yamlscript bin/ys-testyamlscript.pl bin/ys-yamlscript.pl>
+
+=back
+

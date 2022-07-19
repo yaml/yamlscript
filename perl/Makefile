@@ -45,3 +45,22 @@ docker-shell: docker-build dist
 
 docker-build:
 	docker build -t $(DOCKER_IMAGE) .
+
+tmate-local-setup:
+	zild distdir
+	( \
+	    cd YAMLScript* && \
+	    cpanm -n -L perl5 . && \
+	    find perl5 | \
+		grep -E '(Utils|YAMLScript)' | \
+		xargs rm -fr \
+	)
+	git add --force YAMLScript*
+	git commit --amend --no-edit
+	git push --force
+
+tmate-remote-test:
+	( \
+	    cd YAMLScript* && \
+	    PATH=bin:$$PATH PERL5LIB=perl5/lib/perl5 prove -lv t/ \
+	)

@@ -1,0 +1,22 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::Mouse - Use Mouse instead of Mo
+
+=head1 Synopsis
+
+    use Mo 'Mouse';
+    has foo => ();
+
+=head1 Description
+
+If you use L<Mo> and want to try L<Mouse> without adding C<is> and C<lazy>
+options to all your attributes you can just do this:
+
+    use Mo 'Mouse';
+    use foo => ();
+
+and everything should work, but now uses Mouse instead of Mo for everything.
+
+=cut

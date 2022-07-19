@@ -1,0 +1,138 @@
+=encoding utf8
+
+=head1 Name
+
+Mo - Micro Objects. Mo is less.
+
+=head1 Synopsis
+
+    package Less;
+    use Mo;
+    extends 'Nothing';
+
+    has something => ();
+
+=head1 Description
+
+use Mo. Mo is less. Much less.
+
+Moose is huge. Moose led to Mouse led to Moo led to Mo. M is nothing. Mo is
+more. Not much.
+
+When Moo is more than you need, drop an 'o' and get some Mo.
+
+To get just a little Mo from Mo, use L<Mo Features> below.
+
+=head1 Core Features
+
+This is what you get. Nothing Mo.
+
+=over
+
+=item C<new> method
+
+Mo provides a C<new> object constructor. You pass it a list of name/value
+pairs and it returns a new object.
+
+Constructor will not call BUILD methods. This is available using the
+L<Mo::build> feature.
+
+=item C<extends>
+
+Mo exports the C<extends> keyword, to declare your parent class. C<Mo::Object>
+itself is your default parent class.
+
+Mo only supports single inheritance. If you need multiple inheritance or
+roles, you should upgrade to Moo.
+
+=item C<has>
+
+Mo exports a C<has> keyword, to generate accessors.
+
+These accessors always support both C<get> and C<set> operations. That's it.
+
+    has name => ();
+    has thing => (foo => 'bar');  # arguments silently ignored
+
+All arguments passed to C<has> are ignored. This makes it easier to switch
+between Mo and Moo, without having to change all your accessors.
+
+=item C<strict> and C<warnings>
+
+Mo turns on C<use strict> and C<use warnings> for you.
+
+=item Embeddable
+
+Mo is tiny. It is compressed into a single line. You can easily inline it in
+your code, should you want to do that. See L<Mo::Inline> for more information,
+including a utility that will do it for you.
+
+=back
+
+=head1 Mo Features
+
+Mo is the bare minimum needed for Perl OO. Many times you'll want just a
+couple more features. Don't worry. Mo's got you covered:
+
+    use Mo qw'build default builder coerce is required';
+    has name1 => ( default => sub { 'Joe' } );
+    has name2 => ( builder => 'name_builder' );
+    has name3 => ( coerce => sub {$_[0]} );
+    has name4 => ( is => 'ro' );
+    has name4 => ( required => 1 );
+    sub BUILD {
+        my $self = shift;
+        ...
+    }
+
+Mo simply loads the feature classes L<Mo::build>, L<Mo::default>,
+L<Mo::builder>, L<Mo::coerce>, L<Mo::is> and L<Mo::required>. 
+The first one supports BUILD constructing and the other three
+add their magics to C<has>. A L<Mo::Feature> module can enhance C<new>,
+C<extends> and C<has>, and also add new export subs, or remove existing ones.
+Features can also be combined for a single accessor.
+See L<Mo::Features> for a list of all the features and for an explanation of
+the Feature API..
+
+=head1 See
+
+L<Mo::Features>
+
+L<Mo::Inlining>
+
+L<Mo::Hacking>
+
+L<Mo::Design>
+
+=head1 Status
+
+=begin html
+
+<p><a href="https://travis-ci.org/ingydotnet/mo-pm"><img src="https://travis-ci.org/ingydotnet/mo-pm.png?branch=master" alt="Build Status" style="max-width:100%;"></a></p>
+
+=end html
+
+=head1 Authors
+
+Ingy döt Net <ingy@cpan.org>
+
+Damien 'dams' Krotkine <dams@cpan.org>
+
+Matt S. Trout (mst) <mst@shadowcat.co.uk>
+
+Christian Walde <walde.christian@googlemail.com>
+
+Alessandro Ranellucci (aar/alexrj) <aar@cpan.org>
+
+Carlos Lima (priodev) <carlos@cpan.org>
+
+=head1 Copyright and License
+
+Copyright (c) 2011-2013. Ingy döt Net.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+See http://www.perl.com/perl/misc/Artistic.html
+
+=cut

@@ -1,0 +1,27 @@
+=encoding utf8
+
+=head1 Name
+
+Mo::importer - Write your own import() extension
+
+=head1 Synopsis
+
+    package MyMo;
+
+    sub importer {
+        my ($caller, @args) = @_;
+        ...
+    }
+
+    use Mo qw[importer other features]; 
+
+=head1 Description
+
+Sometimes you need to add your own logic during Mo::import time. This feature
+lets you do that by defining your own C<importer> subroutine. It will pass you
+the original caller pkg and the args passed in.
+
+=head1 Note
+
+You need to define the C<importer> sub before you C<use Mo ...>, for
+(hopefully) obvious reasons. :\

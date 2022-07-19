@@ -1,0 +1,216 @@
+{
+   "abstract" : "YAML 1.2 Processor",
+   "author" : [
+      "Tina Müller <tinita@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 6.017, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "YAML-PP",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Pod::Wordlist" : "0",
+            "Test::More" : "0",
+            "Test::Spelling" : "0"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "B" : "0",
+            "B::Deparse" : "0",
+            "Carp" : "0",
+            "Data::Dumper" : "0",
+            "Encode" : "0",
+            "Exporter" : "0",
+            "File::Basename" : "0",
+            "Getopt::Long" : "0",
+            "MIME::Base64" : "0",
+            "Module::Load" : "0",
+            "Scalar::Util" : "1.07",
+            "Tie::Array" : "0",
+            "Tie::Hash" : "0",
+            "base" : "0",
+            "constant" : "0",
+            "overload" : "0",
+            "perl" : "5.008000",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "FindBin" : "0",
+            "IO::File" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::Deep" : "0",
+            "Test::More" : "0.98",
+            "Test::Warn" : "0",
+            "lib" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "YAML::PP" : {
+         "file" : "lib/YAML/PP.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Common" : {
+         "file" : "lib/YAML/PP/Common.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Constructor" : {
+         "file" : "lib/YAML/PP/Constructor.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Dumper" : {
+         "file" : "lib/YAML/PP/Dumper.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Emitter" : {
+         "file" : "lib/YAML/PP/Emitter.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Exception" : {
+         "file" : "lib/YAML/PP/Exception.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Grammar" : {
+         "file" : "lib/YAML/PP/Grammar.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Highlight" : {
+         "file" : "lib/YAML/PP/Highlight.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Lexer" : {
+         "file" : "lib/YAML/PP/Lexer.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Loader" : {
+         "file" : "lib/YAML/PP/Loader.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Parser" : {
+         "file" : "lib/YAML/PP/Parser.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Perl" : {
+         "file" : "lib/YAML/PP/Perl.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Preserve::Array" : {
+         "file" : "lib/YAML/PP.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Preserve::Hash" : {
+         "file" : "lib/YAML/PP.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Preserve::Scalar" : {
+         "file" : "lib/YAML/PP.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Reader" : {
+         "file" : "lib/YAML/PP/Reader.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Reader::File" : {
+         "file" : "lib/YAML/PP/Reader.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Render" : {
+         "file" : "lib/YAML/PP/Render.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Representer" : {
+         "file" : "lib/YAML/PP/Representer.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema" : {
+         "file" : "lib/YAML/PP/Schema.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Binary" : {
+         "file" : "lib/YAML/PP/Schema/Binary.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Core" : {
+         "file" : "lib/YAML/PP/Schema/Core.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Failsafe" : {
+         "file" : "lib/YAML/PP/Schema/Failsafe.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Include" : {
+         "file" : "lib/YAML/PP/Schema/Include.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::JSON" : {
+         "file" : "lib/YAML/PP/Schema/JSON.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Merge" : {
+         "file" : "lib/YAML/PP/Schema/Merge.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Perl" : {
+         "file" : "lib/YAML/PP/Schema/Perl.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::Tie::IxHash" : {
+         "file" : "lib/YAML/PP/Schema/Tie/IxHash.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Schema::YAML1_1" : {
+         "file" : "lib/YAML/PP/Schema/YAML1_1.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Type::MergeKey" : {
+         "file" : "lib/YAML/PP/Type/MergeKey.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Writer" : {
+         "file" : "lib/YAML/PP/Writer.pm",
+         "version" : "0.034"
+      },
+      "YAML::PP::Writer::File" : {
+         "file" : "lib/YAML/PP/Writer/File.pm",
+         "version" : "0.034"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/perlpunk/YAML-PP-p5/issues"
+      },
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/perlpunk/YAML-PP-p5",
+         "web" : "https://github.com/perlpunk/YAML-PP-p5"
+      }
+   },
+   "version" : "0.034",
+   "x_generated_by_perl" : "v5.30.3",
+   "x_serialization_backend" : "JSON::PP version 4.10",
+   "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later"
+}
