@@ -29,15 +29,26 @@ requires:
       footer = |package MY;
       footer = |sub postamble {
       footer = |    my $self = shift;
-      footer = |    $self->SUPER::postamble .
-      footer = |    ( $^O eq 'MSWin32' )
+      footer = |    $self->SUPER::postamble
+      footer = |    . ( $^O eq 'MSWin32' )
       footer = |    ? <<'...'
       footer = |export PATH := blib\script;$(PATH)
       footer = |
       footer = |MYPERL := $(FULLPERLRUN:"%"=%)
       footer = |
       footer = |pure_all ::
-      footer = |	$(NOECHO) $(FULLPERLRUN) -p0i -e "s(\$$PERL)($(MYPERL))" blib\script\yamlscript
+      footer = |	$(NOECHO) $(FULLPERLRUN) -p0i.bak -e "s(\$$PERL)($(MYPERL))" blib\script\yamlscript
+      footer = |...
+      footer = |    : ( $^O =~ /bsd/ )
+      footer = |    ? <<'...'
+      footer = |BPATH=$(PWD)/blib/script:$(PATH)
+      footer = |
+      footer = |export PATH=$(BPATH)
+      footer = |
+      footer = |MYPERL := $(FULLPERLRUN:"%"=%)
+      footer = |
+      footer = |pure_all ::
+      footer = |	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(MYPERL))' blib/script/yamlscript
       footer = |...
       footer = |    : <<'...';
       footer = |export PATH := blib/script:$(PATH)
