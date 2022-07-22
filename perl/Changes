@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.12
+date:    Fri 22 Jul 2022 08:16:18 AM PDT
+changes:
+- Another attempt to fix test failures on Windows
+---
 version: 0.0.11
 date:    Mon 18 Jul 2022 05:18:07 PM PDT
 changes:
