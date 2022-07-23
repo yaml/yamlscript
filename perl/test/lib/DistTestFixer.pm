@@ -76,11 +76,7 @@ pure_all ::
 
     if ( $^O =~ /bsd/ ) {
         return <<'...';
-BPATH=$(PWD)/blib/script:$(PATH)
-
-export PATH=$(BPATH)
-
-MYPERL := $(FULLPERLRUN:"%"=%)
+MYPERL := PATH=blib/script:$(PATH) $(FULLPERLRUN:"%"=%)
 
 pure_all ::
 	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(MYPERL))' blib/script/yamlscript
@@ -88,9 +84,7 @@ pure_all ::
     }
 
     return <<'...';
-export PATH := blib/script:$(PATH)
-
-MYPERL := $(FULLPERLRUN:"%"=%)
+MYPERL := PATH=blib/script:$(PATH) $(FULLPERLRUN:"%"=%)
 
 pure_all ::
 	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(MYPERL))' blib/script/yamlscript
