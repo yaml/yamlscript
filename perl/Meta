@@ -29,4 +29,4 @@ requires:
       footer = |package MY;
       footer = |use lib 't/lib';
       footer = |use DistTestFixer;
-      footer = |sub postamble { $_[0]->SUPER::postamble . DistTestFixer->fix }
+      footer = |sub postamble { $_[0]->SUPER::postamble . DistTestFixer->fix('yamlscript', 'ys-yamlscript.pl') }

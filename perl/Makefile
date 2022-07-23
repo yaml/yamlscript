@@ -39,7 +39,7 @@ docker-shell: docker-build dist
 	docker run --rm -it \
 	    -v /tmp/yamlscript-docker-test-history:/root/.bash_history \
 	    -v $(PWD):/host \
-	    -w /root \
+	    -w /host \
 	    $(DOCKER_IMAGE) \
 	    bash
 

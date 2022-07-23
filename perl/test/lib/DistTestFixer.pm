@@ -8,6 +8,60 @@ use File::Spec;
 use File::Find;
 use File::Path;
 
+sub fix {
+    my ($class, $bin_name, $perl_bin_name) = @_;
+    $perl_bin_name //= $bin_name;
+
+    my $postamble = '';
+    if ( $^O eq 'MSWin32' ) {
+        my $inc = File::Spec->catdir('inc', 'bin');
+        if (not -d $inc) {
+            File::Path::make_path($inc);
+
+            my $perl_path = File::Spec->catfile($Config::Config{'installbin'}, 'perl');
+            my $cpan_bin_path = File::Spec->catfile($inc, "$bin_name-cpan");
+            my $cpan_cmd_path = File::Spec->catfile($inc, "$bin_name-cpan.cmd");
+            my $perl_bin_path = File::Spec->catfile('bin', $perl_bin_name);
+
+            file_write($cpan_cmd_path, qq{if exist "%~dpn0" perl %0 %*$/});
+
+            my $text = file_read($perl_bin_path);
+            file_write($cpan_bin_path, "#!$perl_path\n$text", 0777);
+
+            for my $file (file_find('t', qr/\.t$/)) {
+                my $text = file_read($file);
+                if ($text =~ /\A.*$bin_name/) {
+                    file_write($file, qq{#!$cpan_bin_path$/$text});
+                }
+            }
+        }
+
+        $postamble = <<'...';
+export PATH := blib\script;$(PATH)
+
+PERLPATH := $(FULLPERLRUN:"%"=%)
+
+pure_all ::
+	$(NOECHO) $(FULLPERLRUN) -p0i.bak -e "s(\$$PERL)($(PERLPATH))" blib\script\$bin_name
+...
+    }
+
+    else {
+        $postamble = <<'...';
+PERLPATH := $(FULLPERLRUN:"%"=%)
+
+FULLPERLRUN := PATH=blib/script:$(PATH) $(PERLPATH)
+
+pure_all ::
+	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(PERLPATH))' blib/script/$bin_name
+...
+    }
+
+    $postamble =~ s/\$bin_name/$bin_name/;
+
+    return $postamble;
+}
+
 sub file_find {
     my ($dir, $pat) = @_;
     my @files;
@@ -37,64 +91,6 @@ sub file_write {
     close $out;
     chmod $mode, $file if $mode;
     return 1;
-}
-
-sub fix {
-    my ($class) = @_;
-    my $inc = File::Spec->catdir('inc', 'bin');
-    return if -d $inc;
-    File::Path::make_path($inc);
-
-    my $perl = File::Spec->catfile($Config::Config{'installbin'}, 'perl');
-
-    if ( $^O eq 'MSWin32' ) {
-        my $bin = File::Spec->catfile($inc, "yamlscript-cpan");
-        my $cmd = File::Spec->catfile($inc, "yamlscript-cpan.cmd");
-        my $ys =  File::Spec->catfile('bin', 'ys-yamlscript.pl');
-
-        file_write($cmd, qq{if exist "%~dpn0" perl %0 %*$/});
-
-        my $text = file_read($ys);
-        file_write($bin, "#!$perl\n$text", 0777);
-
-        for my $file (file_find('t', qr/\.t$/)) {
-            my $text = file_read($file);
-            if ($text =~ /\A.*yamlscript/) {
-                file_write($file, qq{#!$bin$/$text});
-            }
-        }
-
-        return <<'...';
-export PATH := blib\script;$(PATH)
-
-MYPERL := $(FULLPERLRUN:"%"=%)
-
-pure_all ::
-	$(NOECHO) $(FULLPERLRUN) -p0i.bak -e "s(\$$PERL)($(MYPERL))" blib\script\yamlscript
-...
-    }
-
-    if ( $^O =~ /bsd/ ) {
-        return <<'...';
-BPATH=$(PWD)/blib/script:$(PATH)
-
-export PATH=$(BPATH)
-
-MYPERL := $(FULLPERLRUN:"%"=%)
-
-pure_all ::
-	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(MYPERL))' blib/script/yamlscript
-...
-    }
-
-    return <<'...';
-export PATH := blib/script:$(PATH)
-
-MYPERL := $(FULLPERLRUN:"%"=%)
-
-pure_all ::
-	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(MYPERL))' blib/script/yamlscript
-...
 }
 
 1;
