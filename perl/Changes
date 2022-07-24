@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.14
+date:    Sun 24 Jul 2022 03:00:39 PM PDT
+changes:
+- Fix dashes in func names and calls with no args
+---
 version: 0.0.13
 date:    Sun 24 Jul 2022 02:21:08 PM PDT
 changes:
