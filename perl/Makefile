@@ -22,7 +22,7 @@ default:
 
 .PHONY: test
 test:
-	prove -v $(test)
+	prove -l -v $(test)
 
 $(ZILD):
 	zild $@

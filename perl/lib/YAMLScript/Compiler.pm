@@ -5,7 +5,7 @@ has yaml => ();
 has from => ();
 has code => ();
 has loader => ();
-has ns   => ();
+has ns => ();
 
 use YAMLScript::NS;
 use YAMLScript::Expr;
@@ -101,6 +101,7 @@ sub compile {
             );
             my $arity = @$sign;
             my $full = "${name}__$arity";
+            $full =~ s/-/_/g;
 
             $ns->{$full} = sub {
                 YAMLScript::Call->new(
@@ -227,6 +228,9 @@ sub configure {
             all => sub {
                 my ($constructor, $event) = @_;
                 my $value = $event->{value};
+                if ($value eq '') {
+                    return undef; # XXX maybe YAMLScript::Nil?
+                }
                 if ($value =~ $re_num) {
                     $value += 0;
                     return $value;

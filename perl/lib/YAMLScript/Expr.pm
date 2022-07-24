@@ -10,11 +10,13 @@ sub call {
     my ($self) = @_;
     my $ns = ns;
     my $name = $self->____;
+    my $sub = $name;
+    $sub =~ s/-/_/g;
     my $args = $self->args;
     my $arity = @$args;
     my $call =
-        $ns->{"${name}__$arity"} ||
-        $ns->{"${name}___"} or
+        $ns->{"${sub}__$arity"} ||
+        $ns->{"${sub}___"} or
         die "Can't resolve call '$name' (for arity '$arity')";
     $call->($args)->call();
 }
