@@ -10,6 +10,7 @@ has from => ();
 has file => ();
 has yaml => ();
 has data => {};
+has need => [];
 
 use Carp;
 
@@ -35,6 +36,11 @@ sub BUILD {
     else {
         die "YAMLScript->new requires 'file' or 'yaml' attribute";
     }
+
+    my $need = $self->need;
+    if (ref($need) ne 'ARRAY') {
+        $self->need([$need]);
+    }
 }
 
 sub run {
@@ -44,11 +50,12 @@ sub run {
         space => 'global',
         from => $self->from,
         yaml => $self->yaml,
+        need => $self->need,
     );
 
     my $ns = $compiler->compile;
 
-    ns_push($ns);
+    NS_push($ns);
 
     my $arity = @args;
     my $name = "main__$arity";
@@ -57,7 +64,18 @@ sub run {
     $call = $call->([@args]);
     $call->call();
 
-    ns_pop;
+    NS_pop;
+}
+
+# TODO Find better way to do this:
+sub ensure_main {
+    my ($self) = @_;
+    $_ = $self->yaml;
+    if (not(/^[a-z]/m) and /^- [a-z]/m) {
+        s{^- }{main():\n- }m
+            or die $_;
+        $self->yaml($_);
+    }
 }
 
 __END__

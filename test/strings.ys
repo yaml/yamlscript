@@ -1,7 +1,6 @@
 #!/usr/bin/env yamlscript
 
-use:
-- YS-TestYAMLScript
+use: YS-TestYAMLScript
 
 main():
 - var =: abcdefghijklmnop

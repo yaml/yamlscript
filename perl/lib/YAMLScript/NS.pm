@@ -4,32 +4,35 @@ use Mo qw(default xxx);
 use Exporter;
 push @YAMLScript::NS::ISA, 'Exporter';
 our @EXPORT = qw(
-    ns
-    ns_push
-    ns_pop
+    NS
+    NS_push
+    NS_pop
 );
 
 my @stack;
 
+# UPPERCASE to avoid clashes with YS vars:
 has NAME => ();
 has NEED => [];
 
 use YAMLScript::Call;
-use Sub::Util 'set_subname';
 
-sub ns { $stack[-1] }
-sub ns_push { push @stack, @_ }
-sub ns_pop  { pop  @stack }
+use List::MoreUtils qw(uniq);
+use Sub::Util qw(set_subname);
 
-sub init {
+sub NS { $stack[-1] }
+sub NS_push { push @stack, @_ }
+sub NS_pop  { pop  @stack }
+
+sub NS_init {
     my ($self) = @_;
     my $i = 0;
-    for my $lib (@{$self->NEED}) {
+    my @need = uniq(@{$self->NEED});
+    for my $lib (@need) {
         if (not ref $lib) {
             (my $module = $lib) =~ s|-|::|g;
             (my $file = "$lib.pm") =~ s|-|/|g;
             require $file or die $!;
-            # $self->NEED->[$i] = $lib;
             for my $def ($module->define($self)) {
                 my ($name, %params) = @$def;
                 my $m = delete $params{lazy};

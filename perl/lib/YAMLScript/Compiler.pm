@@ -4,6 +4,7 @@ use Mo qw(default xxx);
 has yaml => ();
 has from => ();
 has code => ();
+has need => ();
 has loader => ();
 has ns => ();
 
@@ -77,16 +78,16 @@ sub compile {
         $loader->load_string($yaml);
 
     # Make a new NS (namespace) object:
+    my $need = $self->need;
+    unshift @$need, 'YS-Core';
     my $ns = YAMLScript::NS->new(
-        NEED => ['YS-Core'],
+        NEED => $need,
     );
 
     while (my ($key, $val) = each %$code) {
         if ($key eq 'use') {
             $val = [ $val ] unless ref($val) eq 'ARRAY';
-            unshift @$val, 'YS-Core' unless
-                grep {$_ eq 'YS-Core'} @$val;
-            $ns->NEED($val);
+            push @$need, @$val;
         }
         else {
             $key =~ $key_defn or
@@ -113,7 +114,7 @@ sub compile {
         }
     }
 
-    $ns->init;
+    $ns->NS_init;
 
     # Return the NS object:
     return $ns;
@@ -147,7 +148,9 @@ sub configure {
             }
             if (@$data == 2) {
                 my ($key, $val) = @$data;
-                if (ref($key) eq 'YAMLScript::Str') {
+                if (ref($key) eq 'YAMLScript::Str' and
+                    $$key !~ $key_defn
+                ) {
                     $key = $$key;
                     $val = delete $hash->{$key};
                     # YAMLScript 'def' (assignment)

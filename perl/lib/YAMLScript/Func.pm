@@ -25,7 +25,7 @@ sub call {
         ];
     }
 
-    my $ns = ns;
+    my $ns = NS;
     # Set arg vars:
     for my $name (@$sign) {
         $ns->{$name} = shift(@args);

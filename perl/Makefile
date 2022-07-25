@@ -33,6 +33,7 @@ docker-test: docker-build dist
 	    -w /host \
 	    $(DOCKER_IMAGE) \
 	    bash test/docker-cpan-test.sh
+	rm YAMLScript-*
 
 docker-shell: docker-build dist
 	touch /tmp/yamlscript-docker-test-history; \

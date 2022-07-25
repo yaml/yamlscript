@@ -6,7 +6,7 @@ use YAMLScript::NS;
 sub val {
     my ($self) = (@_);
     my $value = $$self;
-    my $ns = YAMLScript::NS::ns();
+    my $ns = NS;
     $value =~ s{
         \$(\w+)
     }{

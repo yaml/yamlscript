@@ -185,7 +185,7 @@ Python or JavaScript.
 * Conditionals
   ```
   if:
-  - (>): [x, 50         # condition
+  - (>): [x, 50]        # condition
   - say: $x wins :)    # then
   - say: $x loses :(   # else
   ```
@@ -193,7 +193,7 @@ Python or JavaScript.
   or:
   ```
   if:
-    (>): [x, 50         # condition
+    (>): [x, 50]        # condition
   then:
     say: $x wins :)    # then
   else:

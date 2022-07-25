@@ -8,7 +8,7 @@ use YAMLScript::NS;
 
 sub call {
     my ($self) = @_;
-    my $ns = ns;
+    my $ns = NS;
     my $name = $self->____;
     my $sub = $name;
     $sub =~ s/-/_/g;

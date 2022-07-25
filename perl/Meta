@@ -10,9 +10,10 @@ author:
 requires:
   perl: '5.10.1'
   boolean: '0.46'
+  List::MoreUtils: '0.430'
   Mo: '0.40'
   Mo::xxx: '0.13'
-  Sub::Util: '1.62'
+  Scalar::Util: '1.62'
   XXX: '0.38'
   YAML::PP: '0.034'
 
