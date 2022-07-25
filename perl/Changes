@@ -1,5 +1,11 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.15
+date:    Mon 25 Jul 2022 08:53:30 AM PDT
+changes:
+- Improve YAMLScript.pm module API
+- Add if/else (==) (!=) (=~) (!~) support
+---
 version: 0.0.14
 date:    Sun 24 Jul 2022 03:00:39 PM PDT
 changes:
