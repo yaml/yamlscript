@@ -3,6 +3,7 @@ use Mo qw(xxx);
 use YAMLScript::Util;
 
 use boolean;
+use Scalar::Util qw(looks_like_number);
 
 sub define {
     my ($self, $ns) = @_;
@@ -26,6 +27,43 @@ sub define {
         div =>
         2 => sub { $_[0] / $_[1] },
         op => '/',
+    ],
+
+    [
+        eq =>
+        2 => sub {
+            return looks_like_number($_[0])
+                ? ($_[0] == $_[1])
+                : ($_[0] eq $_[1]);
+        },
+        op => '==',
+    ],
+    [
+        ne =>
+        2 => sub {
+            return looks_like_number($_[0])
+                ? ($_[0] != $_[1])
+                : ($_[0] ne $_[1]);
+        },
+        op => '!=',
+    ],
+    [
+        like =>
+        2 => sub {
+            my ($str, $re) = @_;
+            $re =~ s{^/?(.*?)/?$}{$1};
+            return $str =~ qr($re);
+        },
+        op => '=~',
+    ],
+    [
+        unlike =>
+        2 => sub {
+            my ($str, $re) = @_;
+            $re =~ s{^/?(.*?)/?$}{$1};
+            return $str !~ qr($re);
+        },
+        op => '!~',
     ],
 
     [
@@ -107,6 +145,26 @@ sub define {
             }
             delete $ns->{_};
             return;
+        },
+        lazy => 1,
+    ],
+
+    [
+        if =>
+        2 => sub {
+            my ($cond, $then) = @_;
+            if ($cond->call) {
+                $then->call;
+            }
+        },
+        3 => sub {
+            my ($cond, $then, $else) = @_;
+            if ($cond->call) {
+                $then->call;
+            }
+            else {
+                $else->call,
+            }
         },
         lazy => 1,
     ],

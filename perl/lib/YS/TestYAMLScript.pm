@@ -41,6 +41,17 @@ sub define {
             $count++;
         },
     ],
+
+    [
+        fail =>
+        1 => sub {
+            my ($label) = @_;
+            Test::More::fail(
+                $label,
+            );
+            $count++;
+        },
+    ],
 }
 
 sub END {
