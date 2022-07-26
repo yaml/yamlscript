@@ -1,0 +1,11 @@
+[package]
+name = "yamlscript"
+version = "0.0.16"
+edition = "2021"
+description = "Program in YAML"
+license = "MIT"
+readme = "ReadMe.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
