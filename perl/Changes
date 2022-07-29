@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.0.16
+date:    Fri 29 Jul 2022 02:05:31 PM PDT
+changes:
+- Add def fn and defn support
+---
 version: 0.0.15
 date:    Mon 25 Jul 2022 08:53:30 AM PDT
 changes:
