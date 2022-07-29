@@ -173,6 +173,7 @@ sub configure {
                     }
                     else {
                         $hash->{____} = $key;
+                        $val = [] if not defined $val;
                         $val = [ $val ] unless ref($val) eq 'ARRAY';
                         $hash->{args} = $val;
                     }

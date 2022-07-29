@@ -1,12 +1,50 @@
 package YS::Core;
 use Mo qw(xxx);
+
 use YAMLScript::Util;
+use YAMLScript::Native;
 
 use boolean;
 use Scalar::Util qw(looks_like_number);
 
 sub define {
     my ($self, $ns) = @_;
+
+    $YAMLScript::Native::ns = $ns;
+
+    [
+        def =>
+        2 => sub {
+            my ($name, $value) = @_;
+            if (ref($value) eq 'YAMLScript::Func') {
+                my $arity = @{$value->sign};
+                $name = "${name}__$arity";
+            }
+            $ns->{$name} = $value;
+        },
+    ],
+
+    [
+        fn =>
+        _ => \&YAMLScript::Native::fn,
+        lazy => 1,
+    ],
+
+    [
+        defn =>
+        _ => sub {
+            my ($name, $sign, @body) = @_;
+            $sign = [$sign] unless ref($sign) eq 'ARRAY';
+            my $arity = @$sign;
+            $ns->{"${name}__$arity"} = YAMLScript::Func->new(
+                ____ => $name,
+                sign => $sign,
+                body => [@body],
+            );
+        },
+        min => 0,
+        lazy => 1,
+    ],
 
     [
         add =>
@@ -79,15 +117,6 @@ sub define {
             my ($list, $val) = @_;
             push @$list, $val;
             return $list;
-        },
-    ],
-
-    [
-        def =>
-        2 => sub {
-            my ($var, $val) = @_;
-            $ns->{$var} = $val;
-            return $var;
         },
     ],
 

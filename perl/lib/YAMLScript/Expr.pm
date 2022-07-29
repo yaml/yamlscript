@@ -17,6 +17,11 @@ sub call {
     my $call =
         $ns->{"${sub}__$arity"} ||
         $ns->{"${sub}___"} or
-        die "Can't resolve call '$name' (for arity '$arity')";
-    $call->($args)->call();
+        die "Can't resolve call '$name' with $arity arguments.";
+    if (ref($call) eq 'YAMLScript::Func') {
+        $call->call(@$args);
+    }
+    else {
+        $call->($args)->call();
+    }
 }
