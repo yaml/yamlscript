@@ -1,0 +1,9 @@
+{
+	"authors": [
+		"ingy"
+	],
+	"copyright": "Copyright 2022, Ingy döt Net",
+	"description": "Program in YAML",
+	"license": "MIT",
+	"name": "yamlscript"
+}

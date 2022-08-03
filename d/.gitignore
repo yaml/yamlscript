@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/yamlscript
+yamlscript.so
+yamlscript.dylib
+yamlscript.dll
+yamlscript.a
+yamlscript.lib
+yamlscript-test-*
+*.exe
+*.o
+*.obj
+*.lst
