@@ -1,0 +1,13 @@
+{
+    "name": "yaml/yamlscript",
+    "type": "library",
+    "description": "Program in YAML",
+    "homepage": "https://github.com/yaml/yamlscript/php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ingy dot Net",
+            "email": "ingy@ingy.net"
+        }
+    ]
+}
