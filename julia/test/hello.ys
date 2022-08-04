@@ -1,0 +1,2 @@
+main(name):
+- say: Hello, $name!
