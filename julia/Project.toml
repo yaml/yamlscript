@@ -1,12 +1,13 @@
 name = "YAMLScript"
 uuid = "c6519b1f-f61a-46f8-9c82-37138c212585"
 authors = ["Ingy döt Net <ingy@ingy.net>"]
-version = "0.0.17"
+version = "0.0.18"
 
 [deps]
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
+YAML = "0.4.1"
 julia = "1"
 
 [extras]
