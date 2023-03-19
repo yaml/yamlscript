@@ -1,1 +1,1 @@
-doc/readme.md
+doc/yamlscript.md

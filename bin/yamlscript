@@ -1,10 +1,76 @@
-#!/bin/sh
+#!/bin/bash
 
-PERL=$(which perl)
+###
+# This `yamlscript` CLI command tries to call the appropriate implementation.
+# YAMLScript has many implementations in many programming languages.
+# Each implementation should install this script along with a uniquely named
+# executable file.
+# The name should start with `_yamlscript`.
+#
+# If only one _yamlscript* executable is found in your PATH, exec that one.
+# Else if YAMLSCRIPT_RUNTIME is an absolute path to an executable, exec that one.
+# Else error with helpful message.
+###
 
-if ( which perl && which ys-yamlscript.pl ) >/dev/null; then
-  exec "$PERL" "$(which ys-yamlscript.pl)" "$@"
-else
-  echo "No YAMLScript interpreter found"
-  exit 1
+# Bash strict:
+set -e -u -o pipefail
+
+# Define a 'die' function, used throughout:
+die() { printf '%s\n' "$*" >&2; exit 1; }
+
+# Get the right _yamlscript in development env:
+ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
+if [[ -f $ROOT/lib/YAMLScript.pm ]]; then
+  export PATH=$ROOT/bin:$PATH
+  export PERL5LIB=$ROOT/lib
 fi
+
+# To support CTL-C handling in the Perl YAMLScript REPL:
+export PERL_SIGNALS=unsafe
+
+if [[ ${YAMLSCRIPT_RUNTIME-} ]]; then
+  [[ $YAMLSCRIPT_RUNTIME == /* ]] ||
+    die "YAMLSCRIPT_RUNTIME set to '$YAMLSCRIPT_RUNTIME'." \
+        "Needs to be an absolute path."
+  [[ -f $YAMLSCRIPT_RUNTIME ]] ||
+    die "YAMLSCRIPT_RUNTIME set to '$YAMLSCRIPT_RUNTIME'." \
+        "File not found."
+  [[ -x $YAMLSCRIPT_RUNTIME ]] ||
+    die "YAMLSCRIPT_RUNTIME set to '$YAMLSCRIPT_RUNTIME'." \
+        "File is not executable."
+
+  exec "$YAMLSCRIPT_RUNTIME" "$@"
+fi
+
+runners=(
+  $(
+    # shellcheck disable=2046,2086
+    find $(IFS=:; echo $PATH) \
+      -name '_yamlscript*' \
+      -type f \
+      -executable \
+      2>/dev/null |
+      uniq |
+      grep '^/' || true
+  )
+)
+
+[[ ${runners[*]:+"${runners[*]}"} ]] ||
+  die "Can't find any executables named '_yamlscript*' in your PATH." \
+      "You can specify one with 'export YAMLSCRIPT_RUNTIME=/path/to/_yamlscript.xxx'."
+
+if [[ ${#runners[*]} -gt 1 && ! ${YAMLSCRIPT_TEST-} ]]; then
+    echo "Multiple _yamlscript* executables found."
+    echo
+    echo "Set 'export YAMLSCRIPT_RUNTIME=/path/to/_yamlscript.xxx' to one of:"
+    echo
+    i=1
+    for runner in "${runners[@]}"; do
+      printf '%d) %s\n' $((i++)) "$runner"
+    done
+    echo
+    echo "Using the first: '${runners[0]}'..."
+    echo
+fi
+
+exec "${runners[0]}" "$@"

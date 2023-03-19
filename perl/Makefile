@@ -1,5 +1,7 @@
 SHELL := bash
 
+ROOT := $(shell pwd -P)
+
 ZILD := \
     clean \
     cpan \
@@ -12,9 +14,9 @@ ZILD := \
     release \
     update \
 
-DOCKER_IMAGE := alpine-test-yamlscript-perl
-
 test ?= test/
+
+export PATH := $(ROOT)/bin:$(PATH)
 
 
 #------------------------------------------------------------------------------
@@ -26,23 +28,3 @@ test:
 
 $(ZILD):
 	zild $@
-
-docker-test: docker-build dist
-	docker run --rm -it \
-	    -v $(PWD):/host \
-	    -w /host \
-	    $(DOCKER_IMAGE) \
-	    bash test/docker-cpan-test.sh
-	rm YAMLScript-*
-
-docker-shell: docker-build dist
-	touch /tmp/yamlscript-docker-test-history; \
-	docker run --rm -it \
-	    -v /tmp/yamlscript-docker-test-history:/root/.bash_history \
-	    -v $(PWD):/host \
-	    -w /host \
-	    $(DOCKER_IMAGE) \
-	    bash
-
-docker-build:
-	docker build -t $(DOCKER_IMAGE) .
