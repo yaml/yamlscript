@@ -7,11 +7,15 @@ use base 'Exporter';
 
 use Test::More;
 
-use YAMLScript::RT;
-use YAMLScript::Reader;
+use Lingy::Printer;
 use Lingy::Common;
 
+use YAMLScript::Reader;
+use YAMLScript::RT;
+
 our $rt = YAMLScript::RT->init;
+
+my $reader = YAMLScript::Reader->new;
 
 $ENV{YAMLSCRIPT_TEST} = 1;
 
@@ -28,6 +32,7 @@ our $eg =
 our @EXPORT = (
     @Lingy::Test::EXPORT,
     '$yamlscript',
+    'expr',
 );
 
 sub collapse {
@@ -63,6 +68,20 @@ sub test {
     } else {
         is $got, $want, $label;
     }
+}
+
+sub expr {
+    my ($ys, $ly, $label) = @_;
+
+    $ys =~ s/\A\s+//;
+    $ly =~ s/\A\s+//;
+
+    $label //= "'${\ collapse($ys)}' -> '${\line $ly}'";
+
+    my $ast = $reader->read_ys("$ys\n");
+    my $got = Lingy::Printer::pr_str($ast);
+
+    is $got, $ly, $label;
 }
 
 1;

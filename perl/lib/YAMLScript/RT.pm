@@ -13,8 +13,8 @@ use constant reader_class => 'YAMLScript::Reader';
 our ($rt, $reader);
 
 sub new {
-    my ($class) = @_;
-    $rt = bless {}, $class;
+    my $class = shift;
+    $rt = $class->SUPER::new(@_);
 }
 
 sub rt { $rt }

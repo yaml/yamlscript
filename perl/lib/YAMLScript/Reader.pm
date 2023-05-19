@@ -49,7 +49,7 @@ sub read_ys {
     my $dom = $self->compose_dom;
     my $ast = $file
         ? $self->construct_ast($dom)
-        : $self->construct($dom);
+        : $self->construct_expr($dom);
 
     return $ast;
 }
@@ -128,6 +128,8 @@ sub parse_yaml_pp {
 # AST Implicit Typing Methods
 #------------------------------------------------------------------------------
 
+my $bp = $RE{balanced}{-parens=>'()'};
+
 my $E_GROUP = 'event'->new("=xxx\t-1\t-1\t-1\t-1\t-1\t-1\t-\t-\t-\t-");
 my $E_PLAIN = 'event'->new("=xxx\t-1\t-1\t-1\t-1\t-1\t-1\t-\t-\t:\t-");
 my $E_QUOTE = 'event'->new("=xxx\t-1\t-1\t-1\t-1\t-1\t-1\t-\t-\t'\t-");
@@ -151,7 +153,7 @@ sub FN { S 'fn*' }
 sub IF { S 'if' }
 sub LET { S 'let*' }
 
-my $sym = qr<[-\w\/]+[\?\!\*]?>;
+my $sym = qr<[-\w\.\/]+[\?\!\*]?>;
 
 sub error($m) { die "YS Error: $m\n" }
 sub event($n) { $events{refaddr($n)} }
@@ -188,8 +190,16 @@ sub text($v) { assert_val($v); $v->{text} }
 sub first_elem($n) { assert_elems($n); (elems($n))[0] }
 sub first_pair($n) { assert_pairs($n); (pairs($n))[0] }
 
+sub construct_expr($s, $n) {
+    my @ast = $s->construct($n);
+
+    @ast == 1
+        ? $ast[0]
+        : L(DO, @ast);
+}
+
 sub construct_ast($s, $n) {
-    my $ast = $s->construct($n);
+    my $ast = $s->construct_expr($n);
 
     if (not $main_called and has_main($ast)) {
         $ast = L(
@@ -259,8 +269,7 @@ sub get_sig {
     while ($sig =~ s/^($sym)=(\S+),?\s*//) {
         my ($s, $x) = ($1, $2);
         push @$dargs, $1;
-        my ($form) = read_ysexpr($x);
-        push @$dargs, $form;
+        push @$dargs, read_ysexpr($x);
     }
     err "Can't parse function signature '$_[0]'"
         if length($sig);
@@ -295,7 +304,7 @@ sub construct_do($s, $n) {
 
 sub construct_if($s, $p) {
     my ($key, $value) = @$p;
-    "$key" =~ /^if +(.*)/ or die;
+    "$key" =~ /^if +($bp)/ or die;
     my $cond = read_ysexpr($1);
     L(
         S('if'),
@@ -306,7 +315,6 @@ sub construct_if($s, $p) {
 
 sub construct_int($s, $n) { N("$n") }
 
-my $bp = $RE{balanced}{-parens=>'()'};
 sub construct_istr($s, $n) {
     my @list;
     local $_ = "$n";
@@ -400,7 +408,9 @@ sub construct_ysexpr($s, $n) {
 }
 
 sub construct_module($s, $n) {
-    L(DO, map $s->construct($_), pairs($n));
+    my @forms = map $s->construct($_), pairs($n);
+    return $forms[0] if @forms == 1;
+    L(DO, @forms);
 }
 
 sub construct_str($s, $n) {
@@ -484,25 +494,31 @@ sub tokenize {
 
 sub read_ysexpr($expr) {
     return Lingy::Reader->new->read_str($expr)
-        unless $expr =~ qr<^$sym?\(>;
+        unless $expr =~ qr<^($sym?\()>;
 
-    my $tokens = tokenize($expr);
-    my $self = bless { tokens => $tokens }, __PACKAGE__;
-    my $group = eval {
-        my $group = $self->group;
-        die "Leftover tokens '@$tokens'"
-            if @$tokens;
-        $group;
-    };
-    die "Failed to parser expr '$expr': '$@'" if $@;
-    $expr = $self->group_print($group);
+    $expr = lingy_expr($expr);
 
     my @ast = Lingy::Reader->new->read_str($expr);
 
-    XXX [@ast, "Should have got exactly one result"]
+    return @ast if wantarray;
+
+    ZZZ [@ast, "Should have got exactly one result"]
         unless @ast == 1;
 
     return $ast[0];
+}
+
+sub lingy_expr($expr) {
+    my $tokens = tokenize($expr);
+    my $self = bless { tokens => $tokens }, __PACKAGE__;
+    my @groups;
+    while (@$tokens) {
+        push @groups, eval { $self->group };
+        die "Failed to parser expr '$expr': '$@'" if $@;
+    }
+    join ' ', map {
+        $self->group_print($_);
+    } @groups;
 }
 
 sub group($s) {
@@ -552,11 +568,13 @@ sub group_rest($s) {
 }
 
 sub group_print($s, $g) {
-    my $t = '(';
-    for my $e (@$g) {
-        $t .= ' ' . (ref($e) ? $s->group_print($e) : $e);
-    }
-    $t .= ')';
+    '(' .
+    join(' ',
+        map {
+            ref ? $s->group_print($_) : $_;
+        } @$g
+    )
+    . ')';
 }
 
 
