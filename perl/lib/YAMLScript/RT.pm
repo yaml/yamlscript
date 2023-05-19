@@ -24,23 +24,13 @@ sub init {
     $self->SUPER::init(@_);
     $reader = $self->require_new($self->reader_class);
     $self->rep(q<
-      (def! load-file (fn* [f]
+      (def load-file (fn [f]
         (cond
           (ends-with? f ".ys")
-          (eval
-            (read-file-ys f))
-
-          (ends-with? f ".t")
-          (eval
-            (read-file-ys f))
+          (eval (read-file-ys f))
 
           (ends-with? f ".ly")
-          (eval
-            (read-string
-              (str
-                "(do "
-                (slurp f)
-                "\nnil)")))
+          (-load-file-ly f)
 
           :else
           (throw (str "Can't load-file '" f "'\n"))
@@ -66,5 +56,66 @@ sub repl {
     my $self = shift;
     $self->SUPER::repl(@_);
 }
+
+
+# TODO Find cleaner way to override 'require' to support .ys files.
+use Lingy::Lang::RT;
+package Lingy::Lang::RT;
+use Lingy::Common;
+
+no warnings 'redefine';
+
+sub require {
+    outer:
+    for my $spec (@_) {
+        err "'require' only works with symbols"
+            unless ref($spec) eq SYMBOL;
+
+        return nil if $Lingy::RT::ns{$$spec};
+
+        my $name = $$spec;
+
+        my $path = $name;
+        $path =~ s/^lingy\.lang\./Lingy.Lang\./;
+        $path =~ s/^lingy\./Lingy\./;
+        my $module = $path;
+        $path =~ s/\./\//g;
+
+        for my $inc (@INC) {
+            $inc =~ s{^([^/.])}{./$1};
+            my $inc_path = "$inc/$path";
+            if (-f "$inc_path.pm" or
+                -f "$inc_path.ly" or
+                -f "$inc_path.ys"
+            ) {
+                if (-f "$inc_path.pm") {
+                    CORE::require("$inc_path.pm");
+                    $module =~ s/\./::/g;
+                    err "Can't require $name. " .
+                        "$module is not a Lingy::Namespace."
+                        unless $module->isa('Lingy::Namespace');
+                    $module->new(
+                        name => symbol($name),
+                        refer => Lingy::RT->core,
+                    );
+                }
+                if (-f "$inc_path.ly") {
+                    my $ns = $Lingy::RT::ns{$Lingy::RT::ns};
+                    Lingy::RT->rep(qq< (load-file "$inc_path.ly") >);
+                    $ns->current;
+                }
+                if (-f "$inc_path.ys") {
+                    my $ns = $Lingy::RT::ns{$Lingy::RT::ns};
+                    Lingy::RT->rep(qq< (load-file "$inc_path.ys") >);
+                    $ns->current;
+                }
+                next outer;
+            }
+        }
+        err "Can't find library for (require '$name)";
+    }
+    return nil;
+}
+
 
 1;
