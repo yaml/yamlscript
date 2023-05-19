@@ -683,6 +683,7 @@ sub tag_val {
     if (e_tag($_) ne '-') {
         $_->{ytag} = substr(e_tag($_), 1);
     } elsif (is_double($_) or is_literal($_)) {
+        ($_->{xtop} and tag_ysexpr()) or
         tag_istr() or
         tag_str();
     } elsif (is_plain($_)) {
@@ -756,7 +757,7 @@ sub tag_ysexpr {
     $text =~ s/^[ ,]*//;
     return unless
         $text =~ /^[\\\(]/ or
-        $text =~ /^$sym\(.*\)$/;;
+        $text =~ /^$sym\(.*\)$/s;
     $text =~ s/^\\//;
     $_->{text} = $text;
     $_->{ytag} = 'ysexpr';
