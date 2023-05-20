@@ -21,7 +21,7 @@ my $main_called = 0;
 our $read_ys = 0;
 
 #------------------------------------------------------------------------------
-# Convert YAMLScript into a Mal Lisp AST
+# Convert YAMLScript into a Lingy AST
 #------------------------------------------------------------------------------
 sub new { bless {}, shift }
 
@@ -153,7 +153,15 @@ sub FN { S 'fn*' }
 sub IF { S 'if' }
 sub LET { S 'let*' }
 
-my $sym = qr<[-\w\.\/]+[\?\!\*]?>;
+my $sym = qr<(?:
+    [-:.]?
+    \w+
+    (?:
+        (?:[-./]|::)
+        \w+
+    )*
+    [\?\!\*]?
+)>x;
 
 sub error($m) { die "YS Error: $m\n" }
 sub event($n) { $events{refaddr($n)} }
@@ -167,7 +175,10 @@ sub is_key($n) { $n->{xkey} }
 sub is_plain($n) { is_val($n) and e_style($n) eq ':' }
 sub is_double($n) { is_val($n) and e_style($n) eq '"' }
 sub is_literal($n) { is_val($n) and e_style($n) eq '|' }
-sub is_single($n) { is_map($n) and pairs($n) == 1 }
+sub is_single($n) {
+    return unless is_map($n) and pairs($n) == 1;
+    @{$n->{pair}[0]};
+}
 sub is_assign($n) {
   is_single($n) and
   text(key(first_pair($n))) =~ /^$sym\s+=$/;
@@ -201,7 +212,7 @@ sub construct_expr($s, $n) {
 sub construct_ast($s, $n) {
     my $ast = $s->construct_expr($n);
 
-    if (not $main_called and has_main($ast)) {
+    if (need_main_call($ast)) {
         $ast = L(
             DO,
             $ast,
@@ -219,16 +230,8 @@ sub construct_ast($s, $n) {
 
 sub construct($s, $n) {
     my $tag = is_pair($n) ? tag(key($n)) : tag($n);
-    my $constructor;
-    if (not $tag) {
-        if (is_seq($n)) {
-            $constructor = 'construct_do';
-        } else {
-            XXX $n, "Node has no tag";
-        }
-    } else {
-        $constructor = "construct_$tag";
-    }
+    XXX $n, "No tag for node" unless $tag;
+    my $constructor = "construct_$tag";
     $s->$constructor($n);
 }
 
@@ -239,20 +242,20 @@ sub construct_boolean($s, $n) {
 }
 
 sub construct_call($s, $p) {
-    my ($key, $value) = @$p;
-    "$key" =~ /^($sym):?$/ or die;
+    my ($k, $v) = @$p;
+    "$k" =~ /^($sym):?$/ or die;
     my $fn = $1;
     $fn =~ s/^(let|try|catch)$/$1*/;
     $main_called = 1 if $fn eq 'main';
-    $value = SEQ($value) unless is_seq($value);
-    L(S($fn), map $s->construct($_), elems($value));
+    $v = SEQ($v) unless is_seq($v);
+    L(S($fn), map $s->construct($_), elems($v));
 }
 
 sub construct_def($s, $p) {
-    my ($key, $value) = @$p;
-    "$key" =~ /^($sym)\s*=$/ or die;
+    my ($k, $v) = @$p;
+    "$k" =~ /^($sym)\s*=$/ or die;
     my $sym = S($1);
-    my $rhs = $s->construct($value);
+    my $rhs = $s->construct($v);
     return L(DEF, $sym, $rhs);
 }
 
@@ -263,13 +266,18 @@ sub get_sig {
     while ($sig =~ s/^($sym)(?=,?\s|$),?\s*//) {
         push @$args, symbol($1);
     }
-    if ($sig =~ /^($sym)=/) {
-        push @$args, symbol('&'), symbol('_args_');
+    if ($sig =~ s/^\*($sym)//) {
+        push @$args, symbol('&'), symbol($1);
     }
-    while ($sig =~ s/^($sym)=(\S+),?\s*//) {
-        my ($s, $x) = ($1, $2);
-        push @$dargs, $1;
-        push @$dargs, read_ysexpr($x);
+    else {
+        if ($sig =~ /^($sym)=/) {
+            push @$args, symbol('&'), symbol('_args_');
+        }
+        while ($sig =~ s/^($sym)=(\S+),?\s*//) {
+            my ($s, $x) = ($1, $2);
+            push @$dargs, $1;
+            push @$dargs, read_ysexpr($x);
+        }
     }
     err "Can't parse function signature '$_[0]'"
         if length($sig);
@@ -277,17 +285,44 @@ sub get_sig {
 }
 
 sub construct_defn($s, $p) {
-    my ($key, $value) = @$p;
-    text($key) =~ /^($sym)\((.*)\)$/ or die;
+    my ($k, $v) = @$p;
+    my ($def, $name, $args, $body) = $s->_defn_parse($k, $v);
+    return L($def, $name, V(@$args), @$body);
+}
+
+sub construct_defn_multi($s, $p) {
+    my ($k, $v) = @$p;
+    my $def = S('defn');
+    my $name = S($k);
+    my @defs = map {
+        my ($k, $v) = @$_;
+        my ($def, undef, $args, $body) = $s->_defn_parse($k, $v);
+        L(V(@$args), @$body);
+    } pairs($v);
+    return L($def, $name, @defs);
+}
+
+sub _defn_parse($s, $k, $v) {
+    my $macro = 0;
+    text($k) =~ /^($sym?)\((.*)\)$/ or die;
     my $name = S($1);
-    my ($args, $dargs) = get_sig($2);
+    my $sig = $2;
+    if ($sig =~ s/^\(//) {
+        die "Bad defmacro syntax '$k'"
+            unless $sig =~ s/\)$//;
+        $macro = 1;
+    }
+    my ($args, $dargs) = get_sig($sig);
     my $defn = L( DEF, $name, L( FN, L, nil ) );
-    my $seq = is_seq($value) ? $value : SEQ($value);
+    my $seq = is_seq($v) ? $v: SEQ($v);
     my $first = first_elem($seq);
-    my @body = (@$dargs or is_def($first) or is_map($first))
-        ? ($s->construct_let($seq, $args, $dargs))
-        : map $s->construct($_), @{$seq->elem};
-    return L(DEF, $name, L(FN, V(@$args), @body));
+    my $body = [
+        (@$dargs or is_def($first) or is_map($first))
+            ? ($s->construct_let($seq, $args, $dargs))
+            : map $s->construct($_), @{$seq->elem},
+    ];
+    my $def = $macro ? S('defmacro') : S('defn');
+    return $def, $name, $args, $body;
 }
 
 sub construct_do($s, $n) {
@@ -303,13 +338,13 @@ sub construct_do($s, $n) {
 }
 
 sub construct_if($s, $p) {
-    my ($key, $value) = @$p;
-    "$key" =~ /^if +($bp)/ or die;
+    my ($k, $v) = @$p;
+    "$k" =~ /^if +($bp)/ or die;
     my $cond = read_ysexpr($1);
     L(
         S('if'),
         $cond,
-        map $s->construct($_), elems($value),
+        map $s->construct($_), elems($v),
     );
 }
 
@@ -338,10 +373,10 @@ sub construct_keyword($s, $n) {
 }
 
 sub construct_lambda($s, $p) {
-    my ($key, $value) = @$p;
-    text($key) =~ /^\\\((.*)\)$/ or die;
+    my ($k, $v) = @$p;
+    text($k) =~ /^\\\((.*)\)$/ or die;
     my $sig = V(map symbol($_), split /\s+/, $1);
-    my $seq = is_seq($value) ? $value : SEQ($value);
+    my $seq = is_seq($v) ? $v : SEQ($v);
     my $first = first_elem($seq);
     my @body = (is_def($first) or is_map($first))
         ? ($s->construct_let($seq, [], []))
@@ -365,11 +400,14 @@ sub construct_let($s, $n, $a, $d) {
     while (@$d) {
         my ($sym, $form) = splice(@$d, 0, 2);
         push @defs, S($sym), L(S('nth'), S('_args_'), N($i), $form);
+        $i++;
     }
     while (@elems and is_def($elems[0])) {
-        my $def = $s->construct(shift @elems)->[-1];
-        shift @$def;
-        push @defs, @$def;
+        my $d = shift @elems;
+        my ($p) = pairs($d);
+        my ($k, $v) = @$p;
+        (my $sym = "$k") =~ s/\s+=$// or die;
+        push @defs, S($sym), $s->construct($v);
     }
     L(
         S('let*'),
@@ -384,11 +422,11 @@ sub construct_let1($s, $n) {
     my $defs = [];
     if (is_map($assigns)) {
         for my $pair (pairs($assigns)) {
-            my ($key, $val) = @$pair;
-            $key = "$key";
-            $key =~ s/\ +=$// or die;
-            push @$defs, S($key);
-            push @$defs, $s->construct($val);
+            my ($k, $v) = @$pair;
+            $k = "$k";
+            $k =~ s/\ +=$// or die;
+            push @$defs, S($k);
+            push @$defs, $s->construct($v);
         }
     } elsif (is_seq($assigns)) {
         XXX $n;
@@ -440,20 +478,26 @@ sub construct_catch($s, $p) {
     );
 }
 
+sub construct_use($s, $p) {
+    my ($k, $v) = @$p;
+    $v = $s->construct($v);
+    if (ref($v) eq SYMBOL) {
+        $v = L(S('quote'), $v);
+    }
+    L(S("$k"), $v);
+}
+
 sub is_main($n) {
     ref($n) eq LIST and
-    @$n == 3 and
+    @$n >= 2 and
     ref($n->[0]) eq SYMBOL and
-    "$n->[0]" eq 'def!' and
+    "$n->[0]" eq 'defn' and
     ref($n->[1]) eq SYMBOL and
     "$n->[1]" eq 'main' and
-    ref($n->[2]) eq LIST and
-    @{$n->[2]} >= 3 and
-    "$n->[2][0]" eq 'fn*' and
     1;
 }
 
-sub has_main($ast) {
+sub need_main_call($ast) {
     return 0 if $main_called;
     return 1 if is_main($ast);
     return 0 unless ref($ast) eq LIST;
@@ -473,39 +517,47 @@ sub has_main($ast) {
 # x(y + z)      -> (x (+ y z))
 #------------------------------------------------------------------------------
 
+my $dyn = qr<(?:\*$sym\*)>;
 my $op = qr{(?:[-+*/]|[<>=]=?|and|or)};
+
+my $pn = qr=(?:->|~@|[\'\`\[\]\{\}\(\)\~\^\@])=;
+# my $pn = qr<(?:~@|[\'\`\[\]\{\}\(\)\~\^\@])>;
+
+my $re = qr<(?:/(?:\\.|[^\\\/])*/)>;
+my $str = qr<(?:#?"(?:\\.|[^\\"])*"?)>;
+my $tok = qr<[^\s\[\]{}('",;)]>;
+my $ws = qr<(?:[\s,])>;
+
 sub tokenize {
-    my $ws = qr<(?:]\s,])>;
-    my $pn = qr<(?:\('\s|~@|[\[\]\{\}\(\)\~^@])>;
-    my $str = qr<"(?:\\.|[^\\"])*"?>;
-    my $tok = qr<[^\s\[\]{}('",;)]+>;
-    [ $_[0] =~ /
-        $ws*
-        (
-            $pn |
-            $str |
-            $op(?=\s) |
-            $sym\( |
-            '?$sym |
-            '?$tok
-        )
-    /xog ];
+    [
+        map {
+            s/::/./g if /^\w+(?:::\w+)+$/;
+            $_;
+        }
+        $_[0] =~ /
+            $ws*
+            (
+                $re |
+                $pn |
+                $str |
+                $dyn |
+                $op(?=\s) |
+                $sym\( |
+                '?$sym |
+                '?$tok
+            )
+        /xog
+    ];
 }
 
 sub read_ysexpr($expr) {
-    return Lingy::Reader->new->read_str($expr)
-        unless $expr =~ qr<^($sym?\()>;
-
     $expr = lingy_expr($expr);
-
     my @ast = Lingy::Reader->new->read_str($expr);
-
     return @ast if wantarray;
-
     ZZZ [@ast, "Should have got exactly one result"]
         unless @ast == 1;
-
     return $ast[0];
+    Lingy::Reader->new->read_str($expr)
 }
 
 sub lingy_expr($expr) {
@@ -517,17 +569,29 @@ sub lingy_expr($expr) {
         die "Failed to parser expr '$expr': '$@'" if $@;
     }
     join ' ', map {
-        $self->group_print($_);
+        ref($_) ? $self->group_print($_) : $_;
     } @groups;
 }
 
 sub group($s) {
     my $tokens = $s->{tokens};
     my $token = shift @$tokens;
+    if (@$tokens >= 2 and
+        $tokens->[0] eq '->' and
+        $tokens->[1] =~ /^$sym\($/
+    ) {
+        shift(@$tokens);
+        my $method = shift(@$tokens);
+        $method =~ s/\($// or die;
+        return [ '.', $token, $s->group_call($method) ];
+    }
     $token =~ s/^($sym)\($/$1/ ? $s->group_call($token) :
     $token =~ /^\('\s$/ ? $s->group_list(1) :
     $token eq '(' ? $s->group_list(0) :
-    die "Unknown token '$token'";
+    $token eq '`' ? $token :
+    $token =~ /^$re$/ ? '#"' . substr($token, 1, length($token) - 2) . '"' :
+    $token;
+#     die "Unknown token '$token'";
 }
 
 sub group_list($s, $l) {
@@ -539,9 +603,9 @@ sub group_list($s, $l) {
     [ $group->[1], $group->[0], $group->[2] ];
 }
 
-sub group_call($s, $t) {
+sub group_call($s, @t) {
     my $tokens = $s->{tokens};
-    my $group = [$t];
+    my $group = [@t];
     my $rest = $s->group_rest;
     if (@$rest == 3 and $rest->[1] =~ qr<^$op$>) {
         $rest = [ $rest->[1], $rest->[0], $rest->[2] ];
@@ -583,21 +647,24 @@ sub group_print($s, $g) {
 #------------------------------------------------------------------------------
 sub compose_dom {
     my ($self) = @_;
-    my $node = $self->compose_node('top');
+    my $node = $self->compose_node;
+    $node->{xtop} = 1;
+    tag_node($node);
     return $node;
 }
 
 sub compose_node {
-    my ($self, $flag) = (@_, '');
+    my ($self) = (@_, '');
     my $events = $self->{events};
     while (@$events) {
         my $event = shift(@$events);
         if ($event->{type} =~ /^[+=](map|seq|val|ali)$/) {
             my $composer = "compose_$1";
             my $node = $self->$composer($event);
-            $node->{xtop} = 1 if $flag eq 'top';
-            $node->{xkey} = 1 if $flag eq 'key';
-            $self->tag_node($node);
+            if ((my $ytag = $event->{ytag}) ne '-') {
+                $ytag =~ s/^!(\w+)$/$1/ or XXX $event;
+                $node->{ytag} = $ytag;
+            }
             return $node;
         }
     }
@@ -609,9 +676,10 @@ sub compose_map {
     my $events = $self->{events};
     while (@$events) {
         shift(@$events), return $map if $events->[0]{type} eq '-map';
-        my $key = $self->compose_node('key');
-        my $val = $self->compose_node;
-        my $pair = 'pair'->new($key, $val);
+        my $k = $self->compose_node;
+        $k->{xkey} = 1;
+        my $v = $self->compose_node;
+        my $pair = 'pair'->new($k, $v);
         $map->add($pair);
     }
     XXX $map, "problem composing map";
@@ -642,125 +710,169 @@ sub compose_ali {
 #------------------------------------------------------------------------------
 # AST Tag Resolution Methods
 #------------------------------------------------------------------------------
-
-sub tag_node($s, $n) {
-    local $_ = $n;
-    is_map($n) ? tag_map() :
-    is_seq($n) ? tag_seq() :
-    is_val($n) ? tag_val() :
-    ();
+{
+    no warnings 'redefine';
+    sub Lingy::Common::_dump {
+        (my $type = (caller(1))[3]) =~ s/.*://;
+        my $sub = (caller(2))[3];
+        my $line = (caller(1))[2];
+        require YAML::PP;
+        my $dump = YAML::PP->new(
+            schema => ['Core', 'Perl', '-dumpcode'],
+        )->dump_string(@_) . "\e[0;33m... $type $sub $line\e[0m\n\n";
+        $dump =~ s/\A(.*)/\n\e[0;33m$1\e[0m/;
+        $dump;
+    }
 }
 
 sub tag_error($msg) { ZZZ "$msg: '$_'" }
 
-sub tag_map {
-    for my $pair (pairs($_)) {
-        tag_pair($pair, $_);
+sub o {
+    my $f = (caller(1))[3];
+    my $t = $_[0] // '';
+#     warn "\n--> $f $t\n";
+    return 0;
+}
+
+sub tag_node($n) { o;
+    if (is_map($n)) {
+        for my $p (pairs($n)) {
+            tag_catch($p) or
+            tag_defn_multi($p) or
+            tag_defn($p) or
+            tag_def($p) or
+            tag_if($p) or
+            tag_lambda($p) or
+            tag_let($p) or
+            tag_try($p) or
+            tag_call($p) or
+            XXX $p, "Unable to implicitly tag this map pair.";
+        }
+        $n->{ytag} = 'module';
     }
-    $_->{ytag} = 'module';
+    elsif (is_seq($n)) {
+        for my $e (@{$n->{elem}}) {
+            tag_node($e);
+        }
+        $n->{ytag} = 'do';
+    }
+    else {
+        tag_val($n);
+    }
+
+    1;
 }
 
-sub tag_pair {
-    my ($pair, $parent) = @_;
-    local $_ = key($pair);
-    return if $_->{ytag};
-    my $text = "$_";
-    tag_catch() or
-    tag_def() or
-    tag_defn() or
-    tag_if() or
-    tag_lambda() or
-    tag_let() or
-    tag_try() or
-
-    tag_call($pair) or
-    XXX $pair, "Unable to implicitly tag this map pair.";
+sub tag_map($n) { o;
 }
 
-sub tag_seq {}
+sub tag_seq($n) { o;
+}
 
-sub tag_val {
-    if (e_tag($_) ne '-') {
-        $_->{ytag} = substr(e_tag($_), 1);
-    } elsif (is_double($_) or is_literal($_)) {
-        ($_->{xtop} and tag_ysexpr()) or
-        tag_istr() or
-        tag_str();
-    } elsif (is_plain($_)) {
-        is_key($_) or
-        tag_ysexpr() or
-        tag_scalar() or
-        tag_sym() or
+sub tag_val($n) { o($n);
+    if (e_tag($n) ne '-') {
+        $n->{ytag} = substr(e_tag($n), 1);
+    } elsif (is_double($n) or is_literal($n)) {
+        ($n->{xtop} and tag_ysexpr($n)) or
+        tag_istr($n) or
+        tag_str($n);
+    } elsif (is_plain($n)) {
+        is_key($n) or
+        tag_scalar($n) or
+        tag_ysexpr($n) or
         tag_error("Unresolvable plain scalar");
     } else {
-        tag_str();
+        tag_str($n);
     }
 }
 
-sub tag_call {
-    $_->{ytag} = 'call' if /^$sym$/;
+sub tag_call($p) {
+    my ($k, $v) = @$p;
+    if ($k =~ /^$sym$/) {
+        $k->{ytag} =
+            "$k" eq 'use'
+                ? "$k" :'call';
+        tag_node($v);
+    }
 }
 
-sub tag_catch {
-    $_->{ytag} = 'catch' if /^catch\($sym\)$/;
+sub tag_catch($n) {
+    $n->{ytag} = 'catch' if $n =~ /^catch\($sym\)$/;
 }
 
-sub tag_def {
-    $_->{ytag} = 'def' if /^$sym\s*=$/;
+sub tag_def($p) {
+    my ($k, $v) = @$p;
+    return unless $k =~ /^$sym\s*=$/;
+    $k->{ytag} = 'def';
+    tag_node($v);
 }
 
-sub tag_defn {
-    $_->{ytag} = 'defn' if /^$sym\((.*)\)$/;
+sub tag_defn($p) {
+    my ($k, $v) = @$p;
+    return unless $k =~ /^$sym\((.*)\)$/;
+    $k->{ytag} = 'defn';
+    tag_node($v);
 }
 
-sub tag_if {
-    $_->{ytag} = 'if' if /^if +\S/;
+sub tag_defn_multi($p) {
+    my ($k, $v) = @$p;
+    return unless $k =~ /$sym/ and is_map($v);
+    for my $p (pairs($v)) {
+        return unless $p->[0] =~ /^$bp$/;
+    }
+    $k->{ytag} = 'defn_multi';
+    for my $p (pairs($v)) {
+        my ($k, $v) = @$p;
+        tag_node($v);
+    }
+    return 1;
 }
 
-sub tag_istr {
-    $_->{ytag} = 'istr' if /(\$$sym|\$\()/;
+sub tag_if($p) { o;
+    my ($k, $v) = @$p;
+    return unless $k =~ /^if +\S/;
+    $k->{ytag} = 'if';
+    tag_node($v);
 }
 
-sub tag_lambda {
-    $_->{ytag} = 'lambda' if /^\\\((.*)\)$/;
+sub tag_istr($n) {
+    $n->{ytag} = 'istr' if $n =~ /(\$$sym|\$\()/;
 }
 
-sub tag_let {
-    $_->{ytag} = 'let1' if /^let$/;
+sub tag_lambda($n) {
+    $n->{ytag} = 'lambda' if $n =~ /^\\\((.*)\)$/;
 }
 
-sub tag_scalar {
-    $_->{ytag} =
+sub tag_let($n) {
+    $n->{ytag} = 'let1' if $n =~ /^let$/;
+}
+
+sub tag_scalar($n) {
+    local $_ = $n;
+    $n->{ytag} =
         /^(true|false)$/ ? 'boolean' :
         /^-?\d+$/ ? 'int' :
         /^-?\d+\.\d*$/ ? 'float' :
         /^:$sym$/ ? 'keyword' :
         /^null$/ ? 'null' :
+        /^$sym$/ ? do {
+            $n->{text} =~ s/::/./g;
+            'sym';
+        } :
         return;
 }
 
-sub tag_str {
-    $_->{ytag} = 'str';
+sub tag_str($n) {
+    $n->{ytag} = 'str';
 }
 
-sub tag_sym {
-    $_->{ytag} = 'sym' if /^$sym$/;
+sub tag_try($n) {
+    $n->{ytag} = 'try' if $n =~ /^try$/;
 }
 
-sub tag_try {
-    $_->{ytag} = 'try' if /^try$/;
-}
-
-sub tag_ysexpr {
-    my $text = $_->{text};
-    $text =~ s/^(?: *;.*\n)+//;
-    $text =~ s/^[ ,]*//;
-    return unless
-        $text =~ /^[\\\(]/ or
-        $text =~ /^$sym\(.*\)$/s;
-    $text =~ s/^\\//;
-    $_->{text} = $text;
-    $_->{ytag} = 'ysexpr';
+sub tag_ysexpr($n) {
+    $n->{text} =~ s/^\\//;
+    $n->{ytag} = 'ysexpr';
 }
 
 #------------------------------------------------------------------------------
@@ -780,8 +892,8 @@ sub tag_ysexpr {
 {
     package pair;
     sub new {
-        my ($class, $key, $value) = @_;
-        bless [$key, $value], $class;
+        my ($class, $k, $v) = @_;
+        bless [$k, $v], $class;
     }
     sub key($p) { $p->[0] }
     sub val($p) { $p->[1] }
@@ -819,8 +931,8 @@ sub tag_ysexpr {
         return $self;
     }
     sub add {
-        my ($self, $val) = @_;
-        push @{$self->{elem}}, $val;
+        my ($self, $value) = @_;
+        push @{$self->{elem}}, $value;
         return $self;
     }
     sub elem { $_[0]->{elem} }

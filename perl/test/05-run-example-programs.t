@@ -23,3 +23,24 @@ Take one down, pass it around.
 No more bottles of beer on the wall.
 
 ...
+
+my $want = "1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+16
+";
+
+cmd "$yamlscript $eg/fizzbuzz.ys 16 1", $want;
+cmd "$yamlscript $eg/fizzbuzz.ys 16 2", $want;

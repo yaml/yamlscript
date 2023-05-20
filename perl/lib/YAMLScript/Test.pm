@@ -6,6 +6,7 @@ use Lingy::Test;
 use base 'Exporter';
 
 use Test::More;
+use YAML::PP;
 
 use Lingy::Printer;
 use Lingy::Common;
@@ -31,57 +32,92 @@ our $eg =
 
 our @EXPORT = (
     @Lingy::Test::EXPORT,
-    '$yamlscript',
-    'expr',
+    qw<
+        $yamlscript
+        test_eval
+        test_ys_to_ly
+    >,
 );
 
-sub collapse {
-    local $_ = shift;
-    s/\s\s+/ /g;
-    s/^ //;
-    chomp;
-    $_;
-}
-
-sub line {
+sub fmt {
     local $_ = shift;
     s/\n/\\n/g;
+    s/^\s+//;
+    s/\s+$//;
     $_;
 }
 
-no warnings 'redefine';
-sub test {
-    my ($input, $want, $label) = @_;
-    $label //= "'${\ collapse($input)}' -> '${\line $want}'";
+sub label {
+    local $_ = shift;
+    my ($got, $want) = @_;
+    s/\$GOT/$got/g;
+    s/\$WANT/$want/g;
+    $_;
+}
 
-    my $got = eval {
-        local $YAMLScript::Reader::read_ys = 1;
-        join("\n", $rt->rep($input));
-    };
-    $got = $@ if $@;
-    chomp $got;
-
-    $got =~ s/^Error: //;
-
-    if (ref($want) eq 'Regexp') {
-        like $got, $want, $label;
-    } else {
-        is $got, $want, $label;
+sub map_yaml_tests {
+    my ($func, $yaml) = @_;
+    my $data = YAML::PP->new->load_string($yaml);
+    if (my $last = $ENV{LAST}) {
+        $data = [$data->[0 - $last]];
+    } elsif (length(my $only = $ENV{ONLY})) {
+        die "Invalid setting ONLY='$only'" unless
+            $only =~ /^[1-9]\d*$/;
+        my $max = @$data;
+        die "You said ONLY='$only', but only $max tests"
+            if $only > $max;
+        $data = [$data->[$only - 1]];
+    }
+    for my $test (@$data) {
+        $func->(@$test);
     }
 }
 
-sub expr {
-    my ($ys, $ly, $label) = @_;
+no warnings 'redefine';
+sub test_eval {
+    map_yaml_tests sub {
+        my ($input, $want, $label) =
+            (@_ == 2) ? @_ :
+            (@_ == 3) ? ($_[1], $_[2], $_[0]) :
+            die;
+        $label //= "'${\fmt($input)}' -> '${\fmt($want)}'";
 
-    $ys =~ s/\A\s+//;
-    $ly =~ s/\A\s+//;
+        my $got = eval {
+            local $YAMLScript::Reader::read_ys = 1;
+            join("\n", $rt->rep($input));
+        };
+        $got = $@ if $@;
+        chomp $got;
 
-    $label //= "'${\ collapse($ys)}' -> '${\line $ly}'";
+        $got =~ s/^Error: //;
 
-    my $ast = $reader->read_ys("$ys\n");
-    my $got = Lingy::Printer::pr_str($ast);
+        $label = label($label. $got, $want);
+        if (ref($want) eq 'Regexp') {
+            like $got, $want, $label;
+        } else {
+            is $got, $want, $label;
+        }
+    }, @_;
+}
 
-    is $got, $ly, $label;
+sub test_ys_to_ly {
+    map_yaml_tests sub {
+        my ($ys, $ly, $label) =
+            (@_ == 2) ? @_ :
+            (@_ == 3) ? ($_[1], $_[2], $_[0]) :
+            die;
+
+        $ys =~ s/\A\s+//;
+        $ly =~ s/\A\s+//;
+
+        $label //= "'${\fmt($ys)}' -> '${\fmt($ly)}'";
+
+        my $ast = $reader->read_ys("$ys\n");
+        my $got = Lingy::Printer::pr_str($ast);
+
+        $label = label($label, $got, $ly);
+        is $got, $ly, $label;
+    }, @_;
 }
 
 1;
