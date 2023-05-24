@@ -1,7 +1,9 @@
 main(number=99):
   map:
   - println
-  - map(paragraph, range(number, 0, -1))
+  - map:
+    - paragraph
+    - range(number 0 -1)
 
 paragraph(num): |
   $(bottles, num) of beer on the wall,

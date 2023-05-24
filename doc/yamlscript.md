@@ -4,22 +4,25 @@ YAMLScript
 Programming in YAML
 
 
-## Synopsis
+# Synopsis
 
 A YAMLScript program `99-bottles.ys`:
+
 ```
 #!/usr/bin/env yamlscript
 
 main(number=99):
   map:
   - println
-  - map(paragraph, range(number, 0, -1))
+  - map:
+    - paragraph
+    - range(number, 0, -1)
 
 paragraph(num): |
-  $(bottles, num) of beer on the wall,
-  $(bottles, num) of beer.
+  $(bottles num) of beer on the wall,
+  $(bottles num) of beer.
   Take one down, pass it around.
-  $(bottles, (num - 1)) of beer on the wall.
+  $(bottles (num - 1)) of beer on the wall.
 
 bottles(n):
   cond: [
@@ -48,6 +51,7 @@ No more bottles of beer on the wall.
 ```
 
 Use the YAMLScript REPL:
+
 ```
 $ yamlscript
 Welcome to YAMLScript [perl]
@@ -56,35 +60,42 @@ user=> nums =: range(1 4)
 user/nums
 user=> nums
 (1 2 3)
-user=> map: [ println, nums ]
-1
-2
-3
-(nil nil nil)
+user=> map(inc nums)
+(2 3 4)
 user=> <ctrl-D>         # to exit
 $
 ```
 
 
-## Status
+# Status
 
 This is very ALPHA software.
 Expect things to change.
 
 
-## Description
+# Description
 
-YAMLScript is a programming language that uses YAML as a base syntax.
-It feels like a YAML encoded Lisp, but with fewer parentheses.
+**YAMLScript** is a programming language that uses YAML as a base syntax. It
+feels like a *YAML encoded Lisp*, but with fewer parentheses.
 
-In fact YAMLScript *is* a Lisp.
-It's a YAML-based specialized syntax reader for the [Lingy](
-https://metacpan.org/dist/Lingy/view/lib/Lingy.pod) programming language.
-**Lingy** is a port of the **Clojure** language to other languages (like Perl).
-Clojure is a Lisp hosted by the Java JVM.
+In fact, YAMLScript *is* a Lisp.
+It's a YAML-based specialized syntax reader for the **Clojure** programming
+language.
+Clojure is a Lisp hosted by the Java JVM and also by JavaScript where it's
+called **ClojureScript**.
+
+YAMLScript (in its current early stages) is only available in Perl where it
+targets a *Perl port of Clojure* called **Lingy**.
+
+[Lingy](https://metacpan.org/pod/Lingy) intends to be ported to many other host
+programming languages.
+YAMLScript intends to work anywhere there is a Clojure or Lingy available.
+
+For the remainder of this document when we say **Clojure** it also means
+**Lingy**.
 
 
-## Installation
+# Installation
 
 YAMLScript is currently only available as a Perl CPAN module.
 You install it like so:
@@ -93,128 +104,497 @@ You install it like so:
 $ cpanm YAMLScript
 ```
 
+
+# Command Line Usage
+
 Once installed you will have access to the `yamlscript` CLI command.
-You will also have library support to invoke YAMLScript directly from Perl.
+
+* Run a YAMLScript program (with arguments):
+
+  ```
+  $ yamlscript my-prog.ys foo 42
+  ```
+
+* Start the YAMLScript REPL:
+
+  ```
+  $ yamlscript
+  ```
+
+* Run a YAMLScript one line evaluation:
+
+  ```
+  $ yamlscript -e 'println: "Hello"'
+  ```
 
 
-## YAMLScript Language Capabilities
+# YAMLScript Documentation
 
-* Variable binding
+Since the YAMLScript programming language is just a different syntax for the
+Clojure programming language, you should read the Clojure documentation to see
+what it can do.
+
+And since Lingy is just a port of the Clojure programming language, you can
+read the Lingy documentation to see how Lingy currently works or differs from
+Clojure.
+
+To be good at programming in YAMLScript you need to be fairly well versed in 3
+things:
+
+1. **YAML**
+
+  Many people see YAML as obvious and trivial, but YAMLScript takes advantage
+  of some aspects of YAML that you might not be aware of.
+  We'll cover those things in the following sections.
+
+2. **Clojure**
+
+  Since YAMLScript is really just a friendly Clojure syntax, you need to know
+  what you're really saying and how to do things in Clojure.
+  We'll cover Clojure basics and things to know about it.
+
+3. **YAMLScript to Clojure Transformation**
+
+  The key to learning YAMLScript is knowing how to best say the things you
+  want, using the YAMLScript syntax forms.
+  The main part of this documentation is describing each syntax feature.
+
+
+## YAML Basics
+
+Again, YAMLScript programs are encoded in YAML.
+It follows that every valid YAMLScript program must also be valid YAML.
+
+The YAML data model consists of a graph composed by using 3 kinds of nodes:
+
+* Mappings (hashes, dictionaries, associative arrays)
+* Sequences (arrays, lists)
+* Scalars (single atomic values)
+
+Most YAML documents in the wild are top level mapping or sequence nodes, but a
+YAML document can also be a top level scalar (just a big string).
+
+Consider this (valid) YAML document (also a YAMLScript program):
+
+```
+; A YAMLScript Program
+
+(def name "YAMLScript")
+(println (str "Hello, " name))
+```
+
+That doesn't look like a valid YAML file (no colons or dashes) but it is.
+It's just a single string:
+
+```
+"; A YAMLScript Program\n(def name \"YAMLScript\") (println (str \"Hello, \" name))"
+```
+
+Notice how the lines got joined together. 2 consecutive newlines got turned
+into 1 newline, and 1 newline got turned into a space.
+If there was no blank line after the first (comment) line, then the entire
+program would be read as a single comment line.
+
+Writing YAMLScript programs as top level scalars (though possible) is not a
+great idea, but understanding how YAML scalars work in YAMLScript is very
+important.
+
+In YAMLScript, at any structural level, expressions can be written either as a
+YAML data structure or just a Clojure s-expression written as a YAML plain
+(unquoted) scalar.
+
+Let's write the above YAMLScript program in a different, more idiomatic style:
+
+```
+# A YAMLScript Program
+name =: 'YAMLScript'
+println: "Hello, $name"
+```
+
+This probably looks more like a YAML file to you.
+There's a few interesting things to notice.
+
+* We changed the `;` comment to a YAML `#` comment.
+  No blank line is needed after it.
+* What is the `=:` token about?
+  It's not a token at all.
+  The `=` is just the last character of the key string `name =`.
+  But that is what signals YAMLScript to generate a `def` expression.
+* The scalar `'YAMLScript'` is quoted even though it doesn't need to be in
+  YAML.
+  In YAMLScript all scalars that are meant to be Clojure strings are quoted.
+  If `'YAMLScript'` were unquoted it would be recognized as a Clojure symbol.
+* YAMLScript supports string interpolation in double quoted strings.
+  See the `$name` variable in `"Hello, $name"`.
+* The program is written as one mapping but it represents 2 Clojure statements.
+  Also key/pair order must be honored here, obviously.
+  YAML mappings don't guarantee key order.
+  This will be explained more below in "YAMLScript Implementation Details".
+
+Here's the same program written differently:
+
+```
+- comment: 'A YAMLScript Program'
+- name =: 'YAMLScript'
+- println: str("Hello, ", name)
+```
+
+Notes:
+
+* Instead of a top level mapping, this is written as a top level sequence (of
+  single pair mappings).
+* The comment was written as a function.
+  The `comment` function is a core Clojure function and often used to comment
+  out sections of code.
+* The Clojure expression `(str "Hello, " name)` was written as
+  `str("Hello, ", name)`.
+  This is a ysexpr ("Yes" Expression) which is documented below.
+  In Clojure a comma is whitespace, so `str("Hello, " name)` would also work.
+
+There are many ways to write almost any expression in YAMLScript.
+YAMLScript tries to offer lots of syntax variants and alternatives to help make
+your code read and feel more natural, while still being valid YAML (as is
+required).
+
+One thing you might run into is when you need to use a scalar or a sequence
+line when you are working in a mapping structure.
+
+Consider this invalid YAML:
+
+```
+x =: 5                              # Start a mapping
+(println "$x + $x = $(x + x)")      # Err, a scalar line
+- println: "$x * $x = $(x * x)"     # Err, a sequence line
+```
+
+You can easily fix this by using the Clojure `do` function which evaluates a
+list of expressions in order:
+
+```
+x =: 5                              # Start a mapping
+do:                                 # `do` is a mapping key here
+- (println "$x + $x = $(x + x)")    # OK, a sequence line
+- println: "$x * $x = $(x * x)"     # OK, another sequence line
+```
+
+Another thing you'll likely run into is places where Clojure syntax collides
+with YAML syntax.
+
+```
+- (def vec1 [5 7 9])                # Define a variable bound to a vector
+- vec2: [5 7 9]                     # Bad. YAML sees it as `["5 7 9"]`
+- vec3: \[5 7 9]                    # Good. Backslash makes value a YAML scalar
+```
+
+Use a backslash at the start of a value so that YAML will consider the value to
+be a scalar, thus interpreted as a Clojure expression.
+
+What if you want to use YAML to define an actual data structure in your
+YAMLScript program?
+
+You can use the YAML tag `!` to indicate that the particular data structure is
+just YAML data.
+
+```
+array =: ! [ one, two, three ]
+dict =: !
+  name: Pat
+  age: 42
+  colors:
+  - blue
+  - green
+```
+
+
+## Clojure Basics
+
+Syntactically Clojure is a Lisp.
+This means that all code expressions are written as lists in parentheses.
+
+```
+(println (str "2 + 2 = " (+ 2 2)))
+```
+
+In each of the nested expression lists here, the function name comes first
+(`println`, `str`, `+`) followed by its arguments.
+When an expression is evaluated, its arguments are evaluated first.
+
+Note: Some Clojure expressions are "Macros" or "Special Forms" rather than
+functions, and evaluation happens differently.
+That's a more advanced Clojure topic and not covered here.
+
+Mostly Clojure code is not affected by whitespace; a program can possibly be
+joined together onto a single line and still work.
+An exception is comments which start with a semicolon and consume the rest of
+the line.
+
+```
+; A full line comment
+
+(prn "ok")  ; A comment after code
+```
+
+A logical unit in Clojure is called a "form".
+Clojure forms include:
+
+* Lists - Parenthesized sets
+* Tokens - Single values
+* Structures - Vectors (arrays) and HashMaps (hashes / dictionaries)
+
+Here's a list of the common Clojure tokens:
+
+* Symbol
+
+  A word like `foo` that acts like a variable and is bound to other values.
+  Symbol words can contain many non-word characters like `-`, `.`, `/`, `:` and
+  `?`.
+  For instance `user/is-boolean?` is a valid Clojure symbol.
+  Also math operators like `+` and `-` are symbols.
+  YAMLScript and Lingy are more strict about symbols and use a subset of the
+  combinations that are valid in Clojure.
+
+* Number
+
+  Things like `123` and `-1.23`.
+
+* String
+
+  Like `"foo"`. Always double quoted.
+
+* Character
+
+  A character is expressed as a sequence using a backslash followed by the
+  character, like `\a \b \c`.
+  A few special characters like tab and newline have the forms `\tab` and
+  `\newline`.
+  Strings are sequences of characters (using the `yamlscript` REPL):
+  ```
+  user=> (seq "Hello\n")
+  (\H \e \l \l \o \newline)
+  ```
+
+* Keyword
+
+  A keyword starts with a colon like `:foo` and is commonly used for HashMap
+  keys.
+
+* Regular Expression (Regex)
+
+  A regex is written like `#"^foo.*bar"`; a string preceded by a hash mark.
+  YAMLScript lets you write them like `/^foo.*bar/` as described later.
+
+
+Common Clojure data structures are:
+
+* Vector
+
+  An array using square brackets: `[1 foo :whee]`.
+  Commas (whitespace) can be used for clarity: `[1, foo, :whee]`.
+
+* HashMap
+
+  A hashmap is a set of pairs in curly braces: `{:foo 1, :bar x}`.
+
+* Quoted list
+
+  A single quote before a list causes is to not be evaluated, and thus can be
+  used like a vector as a collection of things: `'(1 foo :whee)`.
+
+As was just said single quote is used (in all Lisps) to cause whatever follows
+to not be immediately evaluated.
+
+```
+user=> (def x (+ 1 2)) x
+user/x
+3
+user=> (def x '(+ 1 2))
+user/x
+user=> x
+(+ 1 2)
+user=> 'x
+x
+```
+
+We won't go deeper into Clojure here but it has lots of great documentation
+online.
+
+
+## YAMLScript to Clojure Transformations
+
+The final piece to understanding how to program in YAMLScript is the learning
+how various YAML things are transformed into Clojure code.
+
+This section covers all the various transforms.
+Each item below shows a code snippet containing a YAMLScript form followed by
+its transformation to Clojure code.
+
+* Tokens
+
+```
+list:
+- 'string'
+- "another\nstring"
+- /^a.*regex$/
+- :keyword
+- symbol
+- 1337
+- 3.1415
+
+(list "string" "another\nstring" #"a.*regex$" :keyword symbol 1337 3.1415)
+```
+
+* Variable Binding
 
   ```
   name =: 'world'
+
+  (def name "world")
   ```
 
   Variable names use lowercase letters `a-z`, digits `0-9` and must start with
   a letter.
   Name parts may be separated by a dash `-`.
 
-* Variable dereferencing
+* Variable Dereferencing
 
   ```
   the-value =: name
+
+  (def the-value name)
   ```
 
-  Unquoted words are treated as Lingy symbols.
+  Unquoted words are treated as Clojure symbols.
 
-* Lingy Expressions
+* Clojure Expressions
 
-  Plain (unquoted) scalars are treated as Lingy syntax.
-  Scalars starting with `(` are Lingy expressions.
-
-  ```
-  answer =: (2 * 3 * 7)
-  ```
-
-  You can use a backslash to indicate turn YAML syntax into a Lingy syntax:
+  Plain (unquoted) scalars are treated as Clojure syntax.
+  Scalars starting with `(` are Clojure expressions.
 
   ```
-  my-vector =: \[1 2 3]
+  prn: (+ (* 2 3) 4)
+
+  (prn (+ (* 2 3) 4))
   ```
 
-  Without the `\` it would be read by YAML as `[ "1 2 3" ]`.
+* Yes Expressions
+
+  YAMLScript allows you to write many Clojure expressions in forms more
+  familiar in common non-Lisp languages.
+
+  ```
+  prn: abs(inc(41) * 9)
+
+  (prn (abs (* (inc 41) 9)))
+  ```
+
+  This includes function symbol before opening paren, and infix math operators.
+
+  "Yes Expressions" are descibed more completely in their own section below.
+
 
 * String interpolation
 
   YAMLScript strings need to be quoted, since plain (unquoted) strings are seen
-  as Lingy symbols (variables) or syntax.
+  as Clojure symbols (variables) or syntax.
 
-  Lingy symbols or expressions preceded by a `$` are interpolated into double
+  Clojure symbols or expressions preceded by a `$` are interpolated into double
   quoted and literal style YAML scalars.
 
   ```
   # Double quoted strings are interpolated
-  - greeting =: "Hello, $name!"
+  - prn: "Hello, $name!"
   # Multiline literal scalars are interpolated
-  - hi-bye =: |
-    Hello, $name.
-    Goodbye, $name.
+  - prn: |
+      Hello, $name.
+      Goodbye, $name.
   # Single quoted strings are NOT interpolated
-  - string =: 'Hello, $name!'
+  - prn: 'Hello, $name!'
+
+  (prn (str "Hello, " name "!"))
+  (prn (str "Hello, " name ".\nGoodbye, " name ".\n"))
+  (prn "Hello, $name!")
   ```
 
-* Fixity:
+* Function Calls
 
-  In Lingy (a Lisp) you say things like:
   ```
-  (println (* 3 7))
-  ```
-
-  YAMLScript lets you say:
-  ```
-  println(3 * 7)
-  ```
-
-  That is function symbols can be placed before the opening paren.
-  And prefix math operations can be made infix.
-
-* Function calls
-  ```
-  say:
+  prn:
     join: [' ', "Hello", "world!"]
+
+  (prn (join " " ["Hello" "world!"]))
   ```
 
-  or
+  A YAML mapping pair with a symbol for a key (unquoted word) and a sequence of
+  arguments.
+  If a single argument is used then it doesn't need to be in a sequence.
 
   ```
-  say(join(' ' ["Hello" "world!"]))
+  - foo:
+  - bar: []
+  - baz()
+
+  (foo) (bar) (baz)
   ```
 
-* Define functions
+  Above are 3 different ways to call a function with no arguments.
+
+* Function Definition
+
   ```
-  square-and-add(x,y):
-    ((x ^ 2) + y)
+  double-and-add(x, y): ((x * 2) + y)
+
+  (defn double-and-add [x y] (+ (* x 2) y))
   ```
 
 * Define multiple arity functions
+
   ```
   sum:
     (): 0
     (x): x
     (x, y): (x + y)
-    (x, y, z*): (x + (y + (sum z*)))
+    (x, y, *z): (x + (y + apply(sum z)))
+
+  (defn sum
+    ([] 0)
+    ([x] x)
+    ([x y] (+ x y))
+    ([x y & z] (+ x y (apply sum z))))
   ```
 
 * Conditionals
+
   ```
-  if:
-  - (x > 50)            # condition
-  - say("$x wins :)")   # then
-  - say("$x loses :(")  # else
+  if (x > 50):          # condition
+  - prn("$x wins :)")   # then
+  - prn("$x loses :(")  # else
+
+  (is (> x 50)
+    (prn (str x " wins :)"))
+    (prn (str x " loses :(")))
   ```
 
 * Try / Catch
+
   ```
   - try: (42 / 0)
-    catch(e):
-      say: "Caught error '$e'"
+    catch(Exception e):
+      prn: "Caught error '$e'"
+
+  (try (/ 42 0)
+    (catch Exception e
+      (prn (str "Caught error '" e "'"))))
   ```
 
 * Iteration
+
   ```
   for (name):
-  - [Alice, Bob, Curly]
-  - say: Hello, $name!
+  - ! [Alice, Bob, Curly]
+  - prn: "Hello, $name!"
+
+  (for [name ["Alice", "Bob", "Curly"]]
+    (prn (str "Hello, " name "!")))
   ```
 
 * Namespacing and Importing Modules
@@ -222,19 +602,256 @@ You will also have library support to invoke YAMLScript directly from Perl.
   ```
   ns My::Package:
     use:
-    - Foo::Bar
+    - Some::Module
     - Another::Module: [this, that]
+    require: A::Module
+    import: A::Class
+
+  (ns My.Package
+    (:use
+      [Some.Module]
+      [Another.Module this that])
+    (:require [A.Module])
+    (:import [A.Class]))
   ```
 
-  YAMLScript modules may be written in YAMLScript, Lingy or Perl.
+  Perl YAMLScript modules may be written in YAMLScript, Lingy or Perl.
+
+* Method Invocation
+
+  ```
+  obj =: Foo::Bar->new()
+  prn: obj->method(42)
+
+  (def obj (.new Foo.Bar))
+  (prn (. obj (method 42))
+  ```
+
+### yexprs - "Yes Expressions"
+
+Coming from non-Lisp programming languages, Lisp "sexpr" (S Expression) syntax
+can feel awkward with the function name going inside the parens and the math
+operators coming first.
+
+YAMLScript has an optional "ysexpr" (Yes Expression) form for many common Lisp
+patterns that may feel more natural to you.
+
+They are just a set of simple transformations that we'll describe here.
+
+* Function calls
+
+  ```
+  foo(123 "xyz")
+
+  (foo 123 "xyz")
+  ```
+
+  The funtion word can come before the opening paren instead of after it.
+  It's a simple switcheroo.
+  Note: there should be no space between the function name and the `(`.
+
+* Nested calls
+
+  ```
+  foo(123, bar(456), baz())
+
+  (foo 123, (bar 456), (baz))
+  ```
+
+  Just as you would expect.
+  Commas were added for readability in this example.
+
+* Infix Operators
+
+  ```
+  (a + b)
+
+  (+ a b)
+  ```
+
+  If the second token in a 3 element list is an operator, then it gets swapped
+  with the first.
+
+  This doesn't work for longer expressions:
+
+  ```
+  (a + b * c)       # Err
+
+  (a + (b * c))     # OK
+
+  (+ a (* b c))     # Clojure
+  ```
+
+* Keep Prefix
+
+  In the very rare case you actually want the operator to be second you can:
+
+  ```
+  (, a + b)
+
+  (a + b)
+  ```
+
+* Method Calling
+
+  In clojure you can call a host object method:
+
+  ```
+  (.method object (1 2))
+  ; or (the above expands to this)
+  (. object (method 1 2))
+  ```
+
+  They both are hard for non-Lisp programmers to read.
+
+  YAMLScript provides:
+
+  ```
+  object->method(1, 2)
+  ```
+
+Note that in any situation you are free to use either a regular Clojure sexpr
+or a YAMLScript ysexpr and you can even use both in nested expressions.
+
+# YAMLScript Implementation Details
+
+Most people use YAML to `load` YAML files or strings into native data
+structures.
+The code to do this is something simple like:
+
+```
+data = yaml.load-file("foo.yaml")
+```
+
+But the YAML load process is far from simple.
+It goes something like this:
+
+* Read YAML text from a file
+* Parse YAML text into a stream of events
+* Compose the events into a graph
+* Assign a tag to every node in the graph (Tag Resolution)
+* Construct a native data structure by applying the functions associated with
+  each tag to the node, in a depth first order.
+
+Although it may seem like YAMLScript is loading a program into memory and then
+applying various tricks to make it do what it wants, that's not really what's
+happening.
+
+The Perl module YAMLScript::Reader is actually a special YAML Loader module
+that follows all the steps above.
+It's the tag resolution part that is vastly different than the typical rules
+used by a generic YAML loader.
+
+YAMLScript::Reader uses the Perl module YAML::PP to turn YAML into an event
+stream, but then it takes control from that point.
+
+First it composes the YAML into a graph which is very simple.
+
+Here it is important to note that since we don't intend to load the YAMLScript
+as a native language data structure, we can make use of YAML properties that
+ordinary YAML loaders are not supposed to.
+
+These include:
+
+* Mapping Key Order
+
+  The YAML parser reports all the info (parse events) it creates in the same
+  order as it was parsed from the YAML source, including mapping keys.
+  Since YAMLScript is not trying to turn this info into a normal mapping, it is
+  ok for the reader to make use of and preserve this order int the Clojure AST
+  it is making.
+
+* Mapping Key Duplication
+
+  In the same regard, YAMLScript doesn't care if you use the same key, as long
+  as it makes sense to YAMLScript.
+
+  ```
+  # Execute in order:
+  prn: "one"
+  prn: "two"
+  ```
+
+* Scalar Quoting Style
+
+  YAML has 5 syntax forms to represent scalars:
+
+  1. Plain (unquoted)
+  2. Single Quoted
+  3. Double Quoted
+  4. Literal (like a heredoc)
+  5. Folded
+
+  A typical YAML loader only considers (for tag resolution) whether a scalar
+  was plain or not-plain.
+  In other words it should never treat a scalar differently if it used
+  single-quoted as opposed to double-quoted.
+  The default rule is that all non-plain scalars are loaded as strings, where
+  plaiun scalars might load as numbers, dates, booleans etc.
+
+  YAMLScript on the other hand treats scalars differently depending on quoting
+  style (and several other things).
+
+After YAMLScript creates the compostion graph, it analyzes each node in the
+graph and assigns it a unique YAMLScript YAML tag (tag resolution).
+
+```
+name =: 'YAMLScript'
+println: "Hello, $name"
+```
+
+becomes something like this fully tagged YAML structure:
+
+```
+--- !program
+!def  "name"    : !str  "YAMLScript"
+!call "println" : !istr "Hello, $name"
+```
+
+The construction phase of turning this into a Lingy AST is just applying the
+functions associated with these tags.
+
+The result is a data structure of the same form that Lingy::Reader would
+produce form Clojure code.
+It is fed directly into the Lingy evaluation loop.
 
 
-## Authors
+# YAMLScript Programs
+
+The YAMLScript source repository contains [example YAMLScript programs](
+https://github.com/yaml/yamlscript/tree/main/eg).
+
+
+## Test::More::YAMLScript
+
+YAMLScript (like Clojure) is designed to both use the host language and be used
+by the host language.
+
+An great example is the CPAN module [Test::More::YAMLScript](
+https://metacpan.org/pod/Test::More::YAMLScript).
+This module lets Perl programmers write their unit tests in YAMLScript.
+
+The [module itself](
+https://metacpan.org/dist/Test-More-YAMLScript/source/lib/Test/More/YAMLScript.ys)
+is also written in YAMLScript!
+
+And of course, its tests are written in YAMLScript.
+
+
+# See Also
+
+* [YAML](https://yaml.org)
+* [Clojure](https://clojure.org)
+* [Lingy](https://metacpan.org/pod/Lingy)
+* [Test::More::YAMLScript](https://metacpan.org/pod/Test::More::YAMLScript)
+
+
+# Authors
 
 * Ingy döt Net <ingy@ingy.net>
 
 
-## Copyright and License
+# Copyright and License
 
 Copyright 2022-2023 by Ingy döt Net
 
