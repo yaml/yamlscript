@@ -488,6 +488,10 @@ sub construct_use($s, $p) {
     L(S("$k"), $v);
 }
 
+sub construct_val($s, $n) {
+    T("$n");
+}
+
 sub is_main($n) {
     ref($n) eq LIST and
     @$n >= 2 and
@@ -663,8 +667,8 @@ sub compose_node {
             my $composer = "compose_$1";
             my $node = $self->$composer($event);
             if ((my $ytag = $event->{ytag}) ne '-') {
-                $ytag =~ s/^!(\w+)$/$1/ or XXX $event;
-                $node->{ytag} = $ytag;
+                $ytag =~ s/^!(\w*)$/$1/ or XXX $event;
+                $node->{ytag} = $ytag || ref($node);
             }
             return $node;
         }
@@ -736,6 +740,7 @@ sub o {
 }
 
 sub tag_node($n) { o;
+    return 1 if $n->{ytag};
     if (is_map($n)) {
         for my $p (pairs($n)) {
             tag_catch($p) or
