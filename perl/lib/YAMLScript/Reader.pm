@@ -341,10 +341,11 @@ sub construct_if($s, $p) {
     my ($k, $v) = @$p;
     "$k" =~ /^if +($bp)/ or die;
     my $cond = read_ysexpr($1);
+    my @elems = is_seq($v) ? elems($v) : $v;
     L(
         S('if'),
         $cond,
-        map $s->construct($_), elems($v),
+        map $s->construct($_), @elems,
     );
 }
 

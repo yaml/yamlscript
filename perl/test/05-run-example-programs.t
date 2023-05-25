@@ -6,7 +6,7 @@ sub cmd {
     is $got, $want, "Program works: '$cmd'";
 }
 
-cmd "$yamlscript $eg/99-bottles.ys 3", <<'...';
+my $want1 = <<'...';
 3 bottles of beer on the wall,
 3 bottles of beer.
 Take one down, pass it around.
@@ -24,7 +24,10 @@ No more bottles of beer on the wall.
 
 ...
 
-my $want = "1
+cmd "$yamlscript $eg/99-bottles.ys 3", $want1;
+cmd "$eg/99-bottles.ys 3", $want1;
+
+my $want2 = "1
 2
 Fizz
 4
@@ -42,5 +45,6 @@ FizzBuzz
 16
 ";
 
-cmd "$yamlscript $eg/fizzbuzz.ys 16 1", $want;
-cmd "$yamlscript $eg/fizzbuzz.ys 16 2", $want;
+cmd "$yamlscript $eg/fizzbuzz.ys 16 1", $want2;
+cmd "$yamlscript $eg/fizzbuzz.ys 16 2", $want2;
+cmd "$yamlscript $eg/fizzbuzz.ys 16 3", $want2;
