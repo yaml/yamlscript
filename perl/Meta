@@ -8,8 +8,8 @@ author:
   cpan: INGY
 
 requires:
-  perl: '5.10.1'
-  Lingy: '0.1.4'
+  perl: 5.16.0
+  Lingy: 0.1.6
   Regexp::Common: 2017060201
   XXX: '0.38'
   YAML::PP: '0.034'
