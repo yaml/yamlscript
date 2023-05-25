@@ -9,10 +9,10 @@ author:
 
 requires:
   perl: 5.16.0
-  Lingy: 0.1.6
+  Lingy: 0.1.7
   Regexp::Common: 2017060201
   XXX: '0.38'
-  YAML::PP: '0.034'
+  YAML::PP: '0.036'
 
 =zild:
   no-about: true

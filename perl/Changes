@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.1.2
+date:    Thu May 25 04:20:21 PM PDT 2023
+changes:
+- Support '!' tag for loading a node as data
+---
 version: 0.1.1
 date:    Thu May 25 09:11:07 AM PDT 2023
 changes:
