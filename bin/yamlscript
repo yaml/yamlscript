@@ -21,8 +21,8 @@ die() { printf '%s\n' "$*" >&2; exit 1; }
 # Get the right _yamlscript in development env:
 ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
 if [[ -f $ROOT/lib/YAMLScript.pm ]]; then
-  export PATH=$ROOT/bin:$PATH
-  export PERL5LIB=$ROOT/lib
+  export PATH=$ROOT/bin:$ROOT/script:$PATH
+  export PERL5LIB=${PERL5LIB:+$PERL5LIB:}$ROOT/lib
 fi
 
 # To support CTL-C handling in the Perl YAMLScript REPL:
@@ -48,9 +48,9 @@ runners=(
     find $(IFS=:; echo $PATH) \
       -name '_yamlscript*' \
       -type f \
-      -executable \
       2>/dev/null |
       uniq |
+      grep -v '\.plenv/versions/' |
       grep '^/' || true
   )
 )
