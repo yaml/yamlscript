@@ -1,2 +1,2 @@
 package YAMLScript;
-our $VERSION = '0.1.2';
+our $VERSION = '0.1.3';
