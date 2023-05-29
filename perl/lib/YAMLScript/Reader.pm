@@ -147,7 +147,7 @@ sub S { symbol($_[0]) }
 sub T { string(@_) }
 sub V { vector([@_]) }
 
-sub DEF { S 'def!' }
+sub DEF { S 'def' }
 sub DO { S 'do' }
 sub FN { S 'fn*' }
 sub IF { S 'if' }

@@ -24,8 +24,8 @@ sub ends_with_q {
 
 sub read_file_ys {
     my ($file) = @_;
-    my $text = YAMLScript::RT->slurp($file);
-    my $reader = $YAMLScript::RT::reader;
+    my $text = YAMLScript::Main->slurp($file);
+    my $reader = $YAMLScript::Main::reader;
     my $ast = $reader->read_ys($text, $file);
     return $ast;
 }

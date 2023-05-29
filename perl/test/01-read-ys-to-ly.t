@@ -17,7 +17,7 @@ test_ys_to_ly <<'...';
 
 
 - - 'x =: 7'
-  - (def! x 7)
+  - (def x 7)
 
 
 - - (1 + 2)
@@ -75,7 +75,7 @@ test_ys_to_ly <<'...';
       - foo(x):
         - y =: inc(x)
         - (x * 5)
-  - (do (def! x 111) (defn foo [x] (let* [y (inc x)] (* x 5))))
+  - (do (def x 111) (defn foo [x] (let* [y (inc x)] (* x 5))))
 
 
 - - Multi-arity defn

@@ -1,7 +1,7 @@
 use strict; use warnings;
-package YAMLScript::RT;
+package YAMLScript::Main;
 
-use base 'Lingy::RT';
+use base 'Lingy::Main';
 
 use Lingy::Common;
 use YAMLScript::Core;
@@ -71,7 +71,7 @@ sub require {
         err "'require' only works with symbols"
             unless ref($spec) eq SYMBOL;
 
-        return nil if $Lingy::RT::ns{$$spec};
+        return nil if $Lingy::Main::ns{$$spec};
 
         my $name = $$spec;
 
@@ -96,17 +96,17 @@ sub require {
                         unless $module->isa('Lingy::Namespace');
                     $module->new(
                         name => symbol($name),
-                        refer => Lingy::RT->core,
+                        refer => Lingy::Main->core,
                     );
                 }
                 if (-f "$inc_path.ly") {
-                    my $ns = $Lingy::RT::ns{$Lingy::RT::ns};
-                    Lingy::RT->rep(qq< (load-file "$inc_path.ly") >);
+                    my $ns = $Lingy::Main::ns{$Lingy::Main::ns};
+                    Lingy::Main->rep(qq< (load-file "$inc_path.ly") >);
                     $ns->current;
                 }
                 if (-f "$inc_path.ys") {
-                    my $ns = $Lingy::RT::ns{$Lingy::RT::ns};
-                    Lingy::RT->rep(qq< (load-file "$inc_path.ys") >);
+                    my $ns = $Lingy::Main::ns{$Lingy::Main::ns};
+                    Lingy::Main->rep(qq< (load-file "$inc_path.ys") >);
                     $ns->current;
                 }
                 next outer;

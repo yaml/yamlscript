@@ -11,10 +11,10 @@ use YAML::PP;
 use Lingy::Printer;
 use Lingy::Common;
 
+use YAMLScript::Main;
 use YAMLScript::Reader;
-use YAMLScript::RT;
 
-our $rt = YAMLScript::RT->init;
+our $rt = YAMLScript::Main->init;
 
 my $reader = YAMLScript::Reader->new;
 

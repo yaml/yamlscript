@@ -6,9 +6,9 @@ use lib "$ENV{HOME}/src/lingy/perl/lib";
 
 use base 'Lingy::CLI';
 
-sub rt {
-    require YAMLScript::RT;
-    return YAMLScript::RT->new;
+sub main {
+    require YAMLScript::Main;
+    return YAMLScript::Main->new;
 }
 
 1;
