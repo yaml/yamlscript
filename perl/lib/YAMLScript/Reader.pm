@@ -302,9 +302,15 @@ sub construct_defn_multi($s, $p) {
     return L($def, $name, @defs);
 }
 
+sub construct_fn($s, $p) {
+    my ($k, $v) = @$p;
+    my ($def, $name, $args, $body) = $s->_defn_parse($k, $v);
+    return L(FN, V(@$args), @$body);
+}
+
 sub _defn_parse($s, $k, $v) {
     my $macro = 0;
-    text($k) =~ /^($sym?)\((.*)\)$/ or die;
+    text($k) =~ /^($sym?)?\((.*)\)$/ or die;
     my $name = S($1);
     my $sig = $2;
     if ($sig =~ s/^\(//) {
@@ -314,7 +320,7 @@ sub _defn_parse($s, $k, $v) {
     }
     my ($args, $dargs) = get_sig($sig);
     my $defn = L( DEF, $name, L( FN, L, nil ) );
-    my $seq = is_seq($v) ? $v: SEQ($v);
+    my $seq = is_seq($v) ? $v : SEQ($v);
     my $first = first_elem($seq);
     my $body = [
         (@$dargs or is_def($first) or is_map($first))
@@ -371,18 +377,6 @@ sub construct_istr($s, $n) {
 
 sub construct_keyword($s, $n) {
     K("$n");
-}
-
-sub construct_lambda($s, $p) {
-    my ($k, $v) = @$p;
-    text($k) =~ /^\\\((.*)\)$/ or die;
-    my $sig = V(map symbol($_), split /\s+/, $1);
-    my $seq = is_seq($v) ? $v : SEQ($v);
-    my $first = first_elem($seq);
-    my @body = (is_def($first) or is_map($first))
-        ? ($s->construct_let($seq, [], []))
-        : map $s->construct($_), @{$seq->elem};
-    return L(FN, $sig, @body);
 }
 
 sub construct_let($s, $n, $a, $d) {
@@ -748,7 +742,7 @@ sub tag_node($n) { o;
             tag_defn($p) or
             tag_def($p) or
             tag_if($p) or
-            tag_lambda($p) or
+            tag_fn($p) or
             tag_let($p) or
             tag_try($p) or
             tag_call($p) or
@@ -815,7 +809,7 @@ sub tag_def($p) {
 
 sub tag_defn($p) {
     my ($k, $v) = @$p;
-    return unless $k =~ /^$sym\((.*)\)$/;
+    return unless $k =~ /^$sym$bp$/;
     $k->{ytag} = 'defn';
     tag_node($v);
 }
@@ -845,8 +839,11 @@ sub tag_istr($n) {
     $n->{ytag} = 'istr' if $n =~ /(\$$sym|\$\()/;
 }
 
-sub tag_lambda($n) {
-    $n->{ytag} = 'lambda' if $n =~ /^\\\((.*)\)$/;
+sub tag_fn($p) {
+    my ($k, $v) = @$p;
+    return unless $k =~ /^$bp$/;
+    $k->{ytag} = 'fn';
+    tag_node($v);
 }
 
 sub tag_let($n) {

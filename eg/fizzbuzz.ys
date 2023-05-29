@@ -19,12 +19,12 @@ main(count=100, impl="1"):
 
 fizzbuzz-1(n):
   map:
-  - fn([x]
+  - (x):
       cond(
         zero?(mod(x 15)) "FizzBuzz"
         zero?(mod(x 5))  "Buzz"
         zero?(mod(x 3))  "Fizz"
-        :else x))
+        :else x)
   - range(1, inc(n))
 
 fizzbuzz-2(n):
