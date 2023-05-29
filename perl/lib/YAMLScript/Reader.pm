@@ -129,6 +129,7 @@ sub parse_yaml_pp {
 #------------------------------------------------------------------------------
 
 my $bp = $RE{balanced}{-parens=>'()'};
+my $bs = $RE{balanced}{-parens=>'[]'};
 
 my $E_GROUP = 'event'->new("=xxx\t-1\t-1\t-1\t-1\t-1\t-1\t-\t-\t-\t-");
 my $E_PLAIN = 'event'->new("=xxx\t-1\t-1\t-1\t-1\t-1\t-1\t-\t-\t:\t-");
@@ -436,8 +437,16 @@ sub construct_let1($s, $n) {
     );
 }
 
-sub construct_ysexpr($s, $n) {
-    read_ysexpr($n);
+sub construct_loop($s, $p) {
+    my ($k, $v) = @$p;
+    "$k" =~ /^loop +($bs)/ or die;
+    my $bindings = read_ysexpr($1);
+    my @elems = is_seq($v) ? elems($v) : $v;
+    L(
+        S('loop'),
+        $bindings,
+        map $s->construct($_), @elems,
+    );
 }
 
 sub construct_module($s, $n) {
@@ -484,6 +493,10 @@ sub construct_use($s, $p) {
 
 sub construct_val($s, $n) {
     T("$n");
+}
+
+sub construct_ysexpr($s, $n) {
+    read_ysexpr($n);
 }
 
 sub is_main($n) {
@@ -744,6 +757,7 @@ sub tag_node($n) { o;
             tag_if($p) or
             tag_fn($p) or
             tag_let($p) or
+            tag_loop($p) or
             tag_try($p) or
             tag_call($p) or
             XXX $p, "Unable to implicitly tag this map pair.";
@@ -848,6 +862,13 @@ sub tag_fn($p) {
 
 sub tag_let($n) {
     $n->{ytag} = 'let1' if $n =~ /^let$/;
+}
+
+sub tag_loop($p) { o;
+    my ($k, $v) = @$p;
+    return unless $k =~ /^loop +\S/;
+    $k->{ytag} = 'loop';
+    tag_node($v);
 }
 
 sub tag_scalar($n) {

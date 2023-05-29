@@ -28,8 +28,7 @@ fizzbuzz-1(n):
   - range(1, inc(n))
 
 fizzbuzz-2(n):
-  loop:
-  - \[i 1, l []]
+  loop [i 1, l []]:
   - if (i <= n):
     - recur:
       - inc(i)
@@ -43,10 +42,11 @@ fizzbuzz-2(n):
     - l
 
 fizzbuzz-3(n):
-  f(x):
-  - s =:
-      str:
-      - if (zero? mod(x 3)): "Fizz"
-      - if (zero? mod(x 5)): "Buzz"
-  - if (empty? s): [x, s]
-  map: [f, range(1 inc(n))]
+  map:
+  - (x):
+    - s =:
+        str:
+        - if (zero? mod(x 3)): "Fizz"
+        - if (zero? mod(x 5)): "Buzz"
+    - if (empty? s): [x, s]
+  - range(1 inc(n))
