@@ -1,6 +1,7 @@
 use strict; use warnings;
 package YAMLScript::Test;
 
+use YAMLScript::Main;
 use Lingy::Test;
 
 use base 'Exporter';
@@ -11,10 +12,8 @@ use YAML::PP;
 use Lingy::Printer;
 use Lingy::Common;
 
-use YAMLScript::Main;
+use YAMLScript::Lang::RT;
 use YAMLScript::Reader;
-
-our $rt = YAMLScript::Main->init;
 
 my $reader = YAMLScript::Reader->new;
 
@@ -84,7 +83,7 @@ sub test_eval {
 
         my $got = eval {
             local $YAMLScript::Reader::read_ys = 1;
-            join("\n", $rt->rep($input));
+            join("\n", RT->rep($input));
         };
         $got = $@ if $@;
         chomp $got;
@@ -113,7 +112,7 @@ sub test_ys_to_ly {
         $label //= "'${\fmt($ys)}' -> '${\fmt($ly)}'";
 
         my $ast = $reader->read_ys("$ys\n");
-        my $got = Lingy::Printer::pr_str($ast);
+        my $got = Lingy::Printer->pr_str($ast);
 
         $label = label($label, $got, $ly);
         is $got, $ly, $label;

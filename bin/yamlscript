@@ -8,69 +8,122 @@
 # The name should start with `_yamlscript`.
 #
 # If only one _yamlscript* executable is found in your PATH, exec that one.
-# Else if YAMLSCRIPT_RUNTIME is an absolute path to an executable, exec that one.
+# Else if YAMLSCRIPT_EXEC is an absolute path to an executable, exec that one.
 # Else error with helpful message.
 ###
 
 # Bash strict:
 set -e -u -o pipefail
 
+YAMLSCRIPT_USAGE="
+Usage: yamlscript [<opts>] [<yamlscript-file-name>]
+
+Options:
+  -e, --eval      Eval a YAMLScript source string
+  --repl          Start YAMLScript REPL (default w/ no args)
+  --run           Run a YAMLScript program (default w/ file name)
+
+  -D, --dev       Load the lingy.devel library
+  -C, --clojure   Enalble Clojure mode in REPL
+  --ppp           Compile file and print AST (YAMLScript)
+  --xxx           Compile file and dump internal AST (YAML)
+
+  --execs         List executables for setting YAMLSCRIPT_EXEC
+  --version       Print version
+  -h, --help      Print help and exit
+"
+
+main() {
+  setup "$@"
+
+  export YAMLSCRIPT_USAGE
+
+  exec "$executable" "$@"
+}
+
+setup() {
+  # Get the right _yamlscript in development env:
+  local root
+  root=$(cd "$(dirname "$0")/.." && pwd -P)
+  if [[ -f $root/lib/YAMLScript.pm ]]; then
+    export PATH=$root/bin:$root/script:$PATH
+    export PERL5LIB=${PERL5LIB:+$PERL5LIB:}$root/lib
+  fi
+
+  for arg; do
+    if [[ $arg == --execs ]]; then
+      get-executables
+      print-executables
+      exit 0
+    fi
+  done
+
+  get-executable
+}
+
+get-executable() {
+  if [[ ${YAMLSCRIPT_EXEC-} ]]; then
+    [[ $YAMLSCRIPT_EXEC == /* ]] ||
+      die "YAMLSCRIPT_EXEC set to '$YAMLSCRIPT_EXEC'." \
+          "Needs to be an absolute path."
+    [[ -f $YAMLSCRIPT_EXEC ]] ||
+      die "YAMLSCRIPT_EXEC set to '$YAMLSCRIPT_EXEC'." \
+          "File not found."
+    [[ -x $YAMLSCRIPT_EXEC ]] ||
+      die "YAMLSCRIPT_EXEC set to '$YAMLSCRIPT_EXEC'." \
+          "File is not executable."
+
+    executable=$YAMLSCRIPT_EXEC
+
+    return
+  fi
+
+  get-executables
+
+  [[ ${executables[*]:+"${executables[*]}"} ]] ||
+    die "Can't find any executables named '_yamlscript*' in your PATH." \
+        "You can specify one with 'export YAMLSCRIPT_EXEC=/path/to/_yamlscript.xxx'."
+
+  if [[ ${#executables[*]} -gt 1 && ! ${YAMLSCRIPT_TEST-} ]]; then
+    echo "Multiple _yamlscript* executables found."
+    echo
+    echo "Set 'export YAMLSCRIPT_EXEC=/path/to/_yamlscript.xxx' to one of:"
+    echo
+    print-executables
+    echo
+    echo "Using the first one..."
+    echo
+  fi
+
+  executable=${executables[0]}
+}
+
+get-executables() {
+  executables=(
+    $(
+      # shellcheck disable=2046,2086
+      find $(IFS=:; echo $PATH) \
+        -name '_yamlscript*' \
+        -type f \
+        2>/dev/null |
+        uniq |
+        grep -v '\.plenv/versions/' |
+        grep '^/' || true
+    )
+  )
+}
+
+print-executables() (
+  i=1
+  for executable in "${executables[@]}"; do
+    printf '  %d) %s\n' $((i++)) "$executable"
+  done
+)
+
+# To support CTL-C handling in the Perl YAMLScript Executable:
+export PERL_SIGNALS=unsafe
+
 # Define a 'die' function, used throughout:
 die() { printf '%s\n' "$*" >&2; exit 1; }
 
-# Get the right _yamlscript in development env:
-ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
-if [[ -f $ROOT/lib/YAMLScript.pm ]]; then
-  export PATH=$ROOT/bin:$ROOT/script:$PATH
-  export PERL5LIB=${PERL5LIB:+$PERL5LIB:}$ROOT/lib
-fi
-
-# To support CTL-C handling in the Perl YAMLScript REPL:
-export PERL_SIGNALS=unsafe
-
-if [[ ${YAMLSCRIPT_RUNTIME-} ]]; then
-  [[ $YAMLSCRIPT_RUNTIME == /* ]] ||
-    die "YAMLSCRIPT_RUNTIME set to '$YAMLSCRIPT_RUNTIME'." \
-        "Needs to be an absolute path."
-  [[ -f $YAMLSCRIPT_RUNTIME ]] ||
-    die "YAMLSCRIPT_RUNTIME set to '$YAMLSCRIPT_RUNTIME'." \
-        "File not found."
-  [[ -x $YAMLSCRIPT_RUNTIME ]] ||
-    die "YAMLSCRIPT_RUNTIME set to '$YAMLSCRIPT_RUNTIME'." \
-        "File is not executable."
-
-  exec "$YAMLSCRIPT_RUNTIME" "$@"
-fi
-
-runners=(
-  $(
-    # shellcheck disable=2046,2086
-    find $(IFS=:; echo $PATH) \
-      -name '_yamlscript*' \
-      -type f \
-      2>/dev/null |
-      uniq |
-      grep -v '\.plenv/versions/' |
-      grep '^/' || true
-  )
-)
-
-[[ ${runners[*]:+"${runners[*]}"} ]] ||
-  die "Can't find any executables named '_yamlscript*' in your PATH." \
-      "You can specify one with 'export YAMLSCRIPT_RUNTIME=/path/to/_yamlscript.xxx'."
-
-if [[ ${#runners[*]} -gt 1 && ! ${YAMLSCRIPT_TEST-} ]]; then
-    echo "Multiple _yamlscript* executables found."
-    echo
-    echo "Set 'export YAMLSCRIPT_RUNTIME=/path/to/_yamlscript.xxx' to one of:"
-    echo
-    i=1
-    for runner in "${runners[@]}"; do
-      printf '%d) %s\n' $((i++)) "$runner"
-    done
-    echo
-    echo "Using the first: '${runners[0]}'..."
-    echo
-fi
-
-exec "${runners[0]}" "$@"
+[[ ${BASH_SOURCE[0]} != "$0" ]] || main "$@"

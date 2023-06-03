@@ -2,6 +2,8 @@
 
 use strict; use warnings;
 
-use YAMLScript::CLI;
+use YAMLScript::Main;
 
-YAMLScript::CLI->new->run(@ARGV);
+$ENV{LINGY_USAGE} = $ENV{YAMLSCRIPT_USAGE};
+
+YAMLScript::Main->new->run(@ARGV);

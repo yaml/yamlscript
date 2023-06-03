@@ -140,13 +140,13 @@ sub SEQ { 'seq'->new($E_GROUP, @_) }
 sub VAL { 'val'->new($E_PLAIN, @_) }
 sub STR { 'val'->new($E_QUOTE, @_) }
 
-sub B { boolean($_[0]) }
-sub K { keyword(@_) }
-sub L { list([@_]) }
-sub N { number(@_) }
-sub S { symbol($_[0]) }
-sub T { string(@_) }
-sub V { vector([@_]) }
+sub B { BOOLEAN->new($_[0]) }
+sub K { KEYWORD->new(@_) }
+sub L { LIST->new([@_]) }
+sub N { NUMBER->new($_[0]) }
+sub S { SYMBOL->new($_[0]) }
+sub T { STRING->new($_[0]) }
+sub V { VECTOR->new([@_]) }
 
 sub DEF { S 'def' }
 sub DO { S 'do' }
