@@ -1,9 +1,6 @@
 use strict; use warnings;
 package YAMLScript::Main;
 
-# XXX Local dev lib:
-use lib "$ENV{HOME}/src/lingy/perl/lib";
-
 use Lingy::Common;
 use YAMLScript::Reader;
 
