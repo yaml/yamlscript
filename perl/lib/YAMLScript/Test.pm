@@ -12,7 +12,7 @@ use YAML::PP;
 use Lingy::Printer;
 use Lingy::Common;
 
-use YAMLScript::Lang::RT;
+use YAMLScript::RT;
 use YAMLScript::Reader;
 
 my $reader = YAMLScript::Reader->new;

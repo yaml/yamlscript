@@ -1,10 +1,8 @@
 use strict; use warnings;
-package YAMLScript::Lang::RT;
+package YAMLScript::RT;
 
-use constant LRT => 'Lingy::Lang::RT';
-
-use Lingy::Lang::RT;
-use base LRT;
+use Lingy::RT;
+use base 'Lingy::RT';
 
 use Lingy::Common;
 use YAMLScript;
@@ -16,8 +14,8 @@ use constant reader_class => 'YAMLScript::Reader';
 
 sub class_names {
     [
-        @{Lingy::Lang::RT::class_names()},
-        'Lingy::Lang::RT',
+        @{Lingy::RT::class_names()},
+        'Lingy::RT',
     ];
 }
 
@@ -53,13 +51,13 @@ sub core_namespace {
 
 sub is_lingy_class {
     my ($self, $class) = @_;
-    $class->isa(CLASS) or $class =~ /^(?:Lingy|YAMLScript)::(Lang::)?\w/;
+    $class->isa(CLASS) or $class =~ /^(?:Lingy|YAMLScript)::\w/;
 }
 
 
 # TODO Find cleaner way to override 'require' to support .ys files.
-use Lingy::Lang::RT;
-package Lingy::Lang::RT;
+use Lingy::RT;
+package Lingy::RT;
 use Lingy::Common;
 
 no warnings 'redefine';
@@ -75,8 +73,8 @@ sub require {
         my $name = $$spec;
 
         my $path = $name;
-        $path =~ s/^lingy\.lang\./Lingy.Lang\./;
-        $path =~ s/^lingy\./Lingy\./;
+        $path =~ s/^lingy\.lang\./Lingy./;
+        $path =~ s/^lingy\./Lingy./;
         my $module = $path;
         $path =~ s/\./\//g;
 

@@ -10,10 +10,10 @@ use YAMLScript::Reader;
 BEGIN {
     package Lingy::Common;
     no warnings 'redefine';
-    sub RT() { 'YAMLScript::Lang::RT' }
+    sub RT() { 'YAMLScript::RT' }
 }
 
-use YAMLScript::Lang::RT;
+use YAMLScript::RT;
 use Lingy::Main;
 
 use base 'Lingy::Main';
