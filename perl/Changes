@@ -1,5 +1,12 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.1.5
+date:    Thu Jun  8 08:08:57 AM PDT 2023
+changes:
+- Print correct YAMLScript version in REPL startup
+- Remove dev code from YAMLScript::Main
+- Rename YAMLScript/Lang/RT.pm -> YAMLScript/RT.pm
+---
 version: 0.1.4
 date:    Sat Jun  3 03:26:02 PM PDT 2023
 changes:
