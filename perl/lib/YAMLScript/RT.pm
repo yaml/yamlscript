@@ -12,6 +12,9 @@ use YAMLScript::Reader;
 use constant LANG => 'YAMLScript';
 use constant reader_class => 'YAMLScript::Reader';
 
+use constant repl_intro_command =>
+    q<(println (str *LANG* " " (yamlscript-version) " [" *HOST* "]\n"))>;
+
 sub class_names {
     [
         @{Lingy::RT::class_names()},
