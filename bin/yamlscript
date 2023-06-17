@@ -78,6 +78,16 @@ get-executable() {
     return
   fi
 
+  if [[ $0 == */* ]]; then
+    executable=$(
+      shopt -s nullglob
+      printf '%s\n' "$(dirname "$0")/_yamlscript."*
+    )
+    if [[ -f $executable ]]; then
+      return 0
+    fi
+  fi
+
   get-executables
 
   [[ ${executables[*]:+"${executables[*]}"} ]] ||
