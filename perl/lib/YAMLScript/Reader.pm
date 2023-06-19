@@ -220,7 +220,7 @@ sub construct_ast($s, $n) {
             L(
                 S('apply'),
                 S('main'),
-                S('*ARGV*'),
+                S('*command-line-args*'),
             ),
 
         );
