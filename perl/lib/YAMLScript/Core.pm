@@ -5,11 +5,9 @@ use Lingy::Common;
 
 sub ends_with_q {
     my ($str, $substr) = @_;
-    $str = $$str;
-    $substr = $$substr;
     BOOLEAN->new(
-      length($str) >= length($substr) and
-      substr($str, 0-length($substr)) eq $substr
+      length("$str") >= length("$substr") and
+      substr("$str", 0-length("$substr")) eq "$substr"
     );
 }
 

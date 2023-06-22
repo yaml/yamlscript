@@ -19,6 +19,7 @@ sub class_names {
     [
         @{Lingy::RT::class_names()},
         'Lingy::RT',
+        'YAMLScript::Core',
     ];
 }
 

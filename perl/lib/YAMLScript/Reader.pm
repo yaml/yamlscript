@@ -647,7 +647,7 @@ sub group_print($s, $g) {
     '(' .
     join(' ',
         map {
-            ref ? $s->group_print($_) : $_;
+            ref($_) ? $s->group_print($_) : $_;
         } @$g
     )
     . ')';

@@ -1,7 +1,10 @@
 (ns YAMLScript.Core)
 
-(defn ends-with? [str substr] (. YAMLScript.Core (ends_with_q str substr)))
-(defn read-file-ys [file] (. YAMLScript.Core read_file_ys file))
+(defn ends-with? [str substr]
+  (. YAMLScript.Core (ends_with_q str substr)))
+
+(defn read-file-ys [file]
+  (. YAMLScript.Core read_file_ys file))
 
 (def load-file (fn [f]
   (cond
