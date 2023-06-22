@@ -1,5 +1,14 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.1.6
+date:    Thu Jun 22 07:51:14 PM EDT 2023
+changes:
+- Make bin/yamlscript smarter about multiples
+- Change *ARGV* to *command-line-args*
+- Bash change to appease shellcheck
+- Add support for using YAMLScript from Perl code
+- Add a YAMLScript::Common (subclass of Lingy::Common)
+---
 version: 0.1.5
 date:    Thu Jun  8 08:08:57 AM PDT 2023
 changes:

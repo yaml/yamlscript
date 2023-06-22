@@ -42,7 +42,7 @@ export PATH := blib\script;$(PATH)
 PERLPATH := $(FULLPERLRUN:"%"=%)
 
 pure_all ::
-	$(NOECHO) $(FULLPERLRUN) -p0i.bak -e "s(\$$PERL)($(PERLPATH))" blib\script\$bin_name
+	$(NOECHO) $(FULLPERLRUN) -p0i.bak -e "s(\$$PERL\b)($(PERLPATH))" blib\script\$bin_name
 ...
     }
 
@@ -53,7 +53,7 @@ PERLPATH := $(FULLPERLRUN:"%"=%)
 FULLPERLRUN := PATH=blib/script:$(PATH) $(PERLPATH)
 
 pure_all ::
-	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL)($(PERLPATH))' blib/script/$bin_name
+	$(NOECHO) $(FULLPERLRUN) -p0i -e 's(\$$PERL\b)($(PERLPATH))' blib/script/$bin_name
 ...
     }
 
