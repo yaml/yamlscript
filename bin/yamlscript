@@ -109,17 +109,17 @@ get-executable() {
 }
 
 get-executables() {
-  executables=(
-    $(
-      # shellcheck disable=2046,2086
-      find $(IFS=:; echo $PATH) \
-        -name '_yamlscript*' \
-        -type f \
-        2>/dev/null |
-        uniq |
-        grep -v '\.plenv/versions/' |
-        grep '^/' || true
-    )
+  executables=()
+  local line
+  while IFS='' read -r line; do executables+=("$line"); done < <(
+    # shellcheck disable=2046,2086
+    find $(IFS=:; echo $PATH) \
+      -name '_yamlscript*' \
+      -type f \
+      2>/dev/null |
+      uniq |
+      grep -v '\.plenv/versions/' |
+      grep '^/' || true
   )
 }
 
