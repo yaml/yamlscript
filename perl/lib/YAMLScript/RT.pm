@@ -4,8 +4,8 @@ package YAMLScript::RT;
 use Lingy::RT;
 use base 'Lingy::RT';
 
-use Lingy::Common;
 use YAMLScript;
+use YAMLScript::Common;
 use YAMLScript::Core;
 use YAMLScript::Reader;
 
@@ -62,7 +62,6 @@ sub is_lingy_class {
 # TODO Find cleaner way to override 'require' to support .ys files.
 use Lingy::RT;
 package Lingy::RT;
-use Lingy::Common;
 
 no warnings 'redefine';
 

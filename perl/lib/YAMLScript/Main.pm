@@ -1,17 +1,9 @@
 use strict; use warnings;
 package YAMLScript::Main;
 
-use Lingy::Common;
+use YAMLScript::Common;
 use YAMLScript::Reader;
-
-BEGIN {
-    package Lingy::Common;
-    no warnings 'redefine';
-    sub RT() { 'YAMLScript::RT' }
-}
-
 use YAMLScript::RT;
-use Lingy::Main;
 
 use base 'Lingy::Main';
 

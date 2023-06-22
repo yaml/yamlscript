@@ -4,7 +4,7 @@ use feature 'signatures';
 
 package YAMLScript::Reader;
 
-use Lingy::Common;
+use YAMLScript::Common;
 use Lingy::Reader;
 
 use base 'Lingy::Reader';
@@ -724,7 +724,7 @@ sub compose_ali {
 #------------------------------------------------------------------------------
 {
     no warnings 'redefine';
-    sub Lingy::Common::_dump {
+    sub YAMLScript::Common::_dump {
         (my $type = (caller(1))[3]) =~ s/.*://;
         my $sub = (caller(2))[3];
         my $line = (caller(1))[2];
@@ -742,7 +742,6 @@ sub tag_error($msg) { ZZZ "$msg: '$_'" }
 sub o {
     my $f = (caller(1))[3];
     my $t = $_[0] // '';
-#     warn "\n--> $f $t\n";
     return 0;
 }
 

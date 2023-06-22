@@ -10,8 +10,8 @@ use Test::More;
 use YAML::PP;
 
 use Lingy::Printer;
-use Lingy::Common;
 
+use YAMLScript::Common;
 use YAMLScript::RT;
 use YAMLScript::Reader;
 

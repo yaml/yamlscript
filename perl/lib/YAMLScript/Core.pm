@@ -1,7 +1,7 @@
 use strict; use warnings;
 package YAMLScript::Core;
 
-use Lingy::Common;
+use YAMLScript::Common;
 
 sub ends_with_q {
     my ($str, $substr) = @_;
