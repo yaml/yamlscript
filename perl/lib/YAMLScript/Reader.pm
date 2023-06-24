@@ -1,5 +1,10 @@
 use strict; use warnings;
-no warnings 'experimental::signatures';
+
+# Needed for Perl versions < 5.20
+BEGIN {
+    warnings->unimport('experimental::signatures')
+        if eval "use warnings 'experimental::signatures'; 1";
+}
 use feature 'signatures';
 
 package YAMLScript::Reader;
