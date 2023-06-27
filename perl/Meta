@@ -9,7 +9,7 @@ author:
 
 requires:
   perl: 5.16.0
-  Lingy: 0.1.12
+  Lingy: 0.1.15
   Regexp::Common: 2017060201
 
 =zild:
