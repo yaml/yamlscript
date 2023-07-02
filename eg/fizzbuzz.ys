@@ -11,7 +11,7 @@ main(count=100, impl="1"):
   function =: resolve(symbol(fizzbuzz))
   result   =: function(number(count))
 
-  if (not (getenv "YAMLSCRIPT_TEST")):
+  (getenv "YAMLSCRIPT_TEST") |:
     say: "Running function '$fizzbuzz' with count=$count"
 
   map: [say, result]
@@ -50,7 +50,7 @@ fizzbuzz-3(n):
   - (x):
       s =:
         str:
-        - if (zero? mod(x 3)): "Fizz"
-        - if (zero? mod(x 5)): "Buzz"
+        - (zero? mod(x 3))?: "Fizz"
+        - (zero? mod(x 5))?: "Buzz"
       if (empty? s): [x, s]
   - (1 .. n)

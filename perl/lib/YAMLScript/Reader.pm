@@ -500,6 +500,19 @@ sub construct_val($s, $n) {
     T("$n");
 }
 
+sub construct_when($s, $p) {
+    my ($k, $v) = @$p;
+    (my $expr = "$k") =~ s/ ?([?|])$// or die;
+    my $fn = $1 eq '?' ? 'when' : 'when-not';
+    my $cond = read_ysexpr($expr);
+    my @elems = is_seq($v) ? elems($v) : $v;
+    L(
+        S($fn),
+        $cond,
+        map $s->construct($_), @elems,
+    );
+}
+
 sub construct_ysexpr($s, $n) {
     read_ysexpr($n);
 }
@@ -767,6 +780,7 @@ sub tag_node($n) { o;
             tag_let($p) or
             tag_loop($p) or
             tag_try($p) or
+            tag_when($p) or
             tag_call($p) or
             XXX $p, "Unable to implicitly tag this map pair.";
         }
@@ -923,6 +937,13 @@ sub tag_str($n) {
 
 sub tag_try($n) {
     $n->{ytag} = 'try' if $n =~ /^try$/;
+}
+
+sub tag_when($p) { o;
+    my ($k, $v) = @$p;
+    return unless $k =~ /(?:\)|. )[?|]$/;
+    $k->{ytag} = 'when';
+    tag_node($v);
 }
 
 sub tag_ysexpr($n) {
