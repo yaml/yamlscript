@@ -11,7 +11,7 @@ main(count=100, impl="1"):
   function =: resolve(symbol(fizzbuzz))
   result =: function(number(count))
 - if (not (getenv "YAMLSCRIPT_TEST")):
-  - println: "Running function '$fizzbuzz' with count=$count"
+    println: "Running function '$fizzbuzz' with count=$count"
 - map(println, result)
 
 # These implementation functions were adapted from
@@ -31,7 +31,7 @@ fizzbuzz-2(n):
   loop [i 1, l []]:
     if (i <= n):
     - recur:
-      - inc(i)
+      - inc: i
       - conj:
         - l
         - cond(
@@ -44,9 +44,9 @@ fizzbuzz-2(n):
 fizzbuzz-3(n):
   map:
   - (x):
-    - s =:
+      s =:
         str:
         - if (zero? mod(x 3)): "Fizz"
         - if (zero? mod(x 5)): "Buzz"
-    - if (empty? s): [x, s]
-  - range(1 inc(n))
+      if (empty? s): [x, s]
+  - range: [1, inc(n)]
