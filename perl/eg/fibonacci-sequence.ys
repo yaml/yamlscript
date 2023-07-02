@@ -1,0 +1,5 @@
+main(n=10):
+  loop [a 0, b 1, c 1]:
+  - println: a
+  - if (c < n):
+    - recur: [ b, (a + b), (c + 1) ]

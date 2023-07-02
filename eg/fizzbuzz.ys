@@ -29,7 +29,7 @@ fizzbuzz-1(n):
 
 fizzbuzz-2(n):
   loop [i 1, l []]:
-  - if (i <= n):
+    if (i <= n):
     - recur:
       - inc(i)
       - conj:
