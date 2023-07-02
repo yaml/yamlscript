@@ -6,6 +6,8 @@ sub cmd {
     is $got, $want, "Program works: '$cmd'";
 }
 
+cmd "$yamlscript $eg/hello-world.ys", "Hello world!\n";
+
 my $want1 = <<'...';
 3 bottles of beer on the wall,
 3 bottles of beer.

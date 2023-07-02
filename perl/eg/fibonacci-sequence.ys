@@ -1,5 +1,4 @@
-main(n=10):
-  loop [a 0, b 1, c 1]:
-  - println: a
-  - if (c < n):
-    - recur: [ b, (a + b), (c + 1) ]
+loop [a 0, b 1, i 1 ]:
+  println: a
+  if (i < 10):
+    recur: [ b, (a + b), (i + 1) ]
