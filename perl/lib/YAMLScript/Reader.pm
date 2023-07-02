@@ -583,7 +583,7 @@ sub lingy_expr($expr) {
     my @groups;
     while (@$tokens) {
         push @groups, eval { $self->group };
-        die "Failed to parser expr '$expr': '$@'" if $@;
+        die "Failed to parse expr '$expr': '$@'" if $@;
     }
     join ' ', map {
         ref($_) ? $self->group_print($_) : $_;

@@ -8,6 +8,8 @@ sub cmd {
 
 cmd "$yamlscript $eg/hello-world.ys", "Hello world!\n";
 
+cmd "$yamlscript $eg/factorial.ys", "3628800\n";
+
 my $want1 = <<'...';
 3 bottles of beer on the wall,
 3 bottles of beer.
