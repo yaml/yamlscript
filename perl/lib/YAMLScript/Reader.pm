@@ -752,6 +752,7 @@ sub o {
 
 sub tag_node($n) { o;
     return 1 if $n->{ytag};
+    $n = transform($n);
     if (is_map($n)) {
         for my $p (pairs($n)) {
             tag_catch($p) or
@@ -779,6 +780,30 @@ sub tag_node($n) { o;
     }
 
     1;
+}
+
+sub transform($n) {
+    if (is_map($n)) {
+        for my $p (pairs($n)) {
+            my ($k, $v) = @$p;
+
+            $k->{text} =
+                "$k" eq '???' ? 'cond' :
+                "$k" eq '^^^' ? 'recur' :
+                $k->{text};
+
+            if ("$k" eq 'cond' and is_map($v)) {
+                $p->[1] = bless {
+                    elem => [
+                        map { delete($_->{xkey}); $_ }
+                        map { @$_ } @{$v->{pair}}
+                    ],
+                }, 'seq';
+            }
+        }
+    }
+
+    return $n;
 }
 
 sub tag_map($n) { o;
