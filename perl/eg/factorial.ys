@@ -1,6 +1,6 @@
 factorial(x):
   apply:
-  - \*
-  - range(2, inc(x))
+  - .*
+  - (2 .. x)
 
 prn: factorial(10)

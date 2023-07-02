@@ -1,10 +1,15 @@
 (ns YAMLScript.Core)
 
+(defn -range [start end]
+  (cond
+    (<= (number start) (number end))
+      (range start (inc end))
+    :else
+      (range start (dec end) -1)))
+
+; XXX 'ends-with?' belongs in lingy.string when that is ready
 (defn ends-with? [str substr]
   (. YAMLScript.Core (ends_with_q str substr)))
-
-(defn read-file-ys [file]
-  (. YAMLScript.Core read_file_ys file))
 
 (def load-file (fn [f]
   (cond
@@ -16,6 +21,14 @@
 
     :else
     (throw (str "Can't load-file '" f "'\n")))))
+
+(defn read-file-ys [file]
+  (. YAMLScript.Core read_file_ys file))
+
+(defn read-string-ys [string]
+  (. YAMLScript.Core read_string_ys string))
+
+(defn say [& xs] (apply println xs))
 
 (defn yamlscript-version []
   (str

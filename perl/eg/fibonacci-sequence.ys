@@ -1,4 +1,4 @@
 loop [a 0, b 1, i 1 ]:
-  println: a
+  say: a
   if (i < 10):
     recur: [ b, (a + b), (i + 1) ]

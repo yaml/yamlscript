@@ -2,7 +2,7 @@ use YAMLScript::Test;
 
 test_ys_to_ly <<'...';
 
-- - \#"foo"
+- - .#"foo"
   - '#"foo"'
 
 
@@ -12,7 +12,7 @@ test_ys_to_ly <<'...';
 
 
 - - Dynamic symbol
-  - \*foo*
+  - .*foo*
   - '*foo*'
 
 
@@ -50,7 +50,7 @@ test_ys_to_ly <<'...';
 
 
 - - |
-    require: \'Foo::Bar
+    require: .'Foo::Bar
   - (require (quote Foo.Bar))
 
 
@@ -65,7 +65,7 @@ test_ys_to_ly <<'...';
 - - foo((x y)) - defmacro
   - |
     todo((label, *tests)):
-      \`(.todo_skip t ~label)
+      .`(.todo_skip t ~label)
   - (defmacro todo [label & tests] (quasiquote (.todo_skip t (unquote label))))
 
 
@@ -89,7 +89,7 @@ test_ys_to_ly <<'...';
   - (defn add ([] 0) ([x] (cast Number x)) ([x y] (+ x y)) ([x y & more] (reduce + (+ x y) more)))
 
 
-- - \`(.foo Abc::Def::Ghi t ~a)
+- - .`(.foo Abc::Def::Ghi t ~a)
   - (quasiquote (.foo Abc.Def.Ghi t (unquote a)))
 
 
@@ -99,6 +99,10 @@ test_ys_to_ly <<'...';
 
 - - foo->bar(baz 123)
   - (. foo (bar baz 123))
+
+
+- - (1 .. 10)
+  - (-range 1 10)
 
 
 # - - foo->bar()->baz()

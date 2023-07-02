@@ -12,9 +12,9 @@ main(count=100, impl="1"):
   result   =: function(number(count))
 
   if (not (getenv "YAMLSCRIPT_TEST")):
-    println: "Running function '$fizzbuzz' with count=$count"
+    say: "Running function '$fizzbuzz' with count=$count"
 
-  map: [println, result]
+  map: [say, result]
 
 # These implementation functions were adapted from
 # https://rosettacode.org/wiki/FizzBuzz#Clojure
@@ -27,7 +27,7 @@ fizzbuzz-1(n):
         zero?(mod(x 5))  : "Buzz"
         zero?(mod(x 3))  : "Fizz"
         :else: x
-  - range(1, (n + 1))
+  - (1 .. n)
 
 
 fizzbuzz-2(n):
@@ -53,4 +53,4 @@ fizzbuzz-3(n):
         - if (zero? mod(x 3)): "Fizz"
         - if (zero? mod(x 5)): "Buzz"
       if (empty? s): [x, s]
-  - range: [1, inc(n)]
+  - (1 .. n)

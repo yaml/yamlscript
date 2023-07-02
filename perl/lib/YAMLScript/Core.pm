@@ -17,4 +17,9 @@ sub read_file_ys {
     RT->reader->read_ys($text, $file);
 }
 
+sub read_string_ys {
+    my ($string) = @_;
+    RT->reader->read_ys($string, undef);
+}
+
 1;

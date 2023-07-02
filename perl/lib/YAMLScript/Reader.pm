@@ -535,7 +535,7 @@ sub need_main_call($ast) {
 #------------------------------------------------------------------------------
 
 my $dyn = qr<(?:\*$sym\*)>;
-my $op = qr{(?:[-+*/]|[<>=]=?|and|or)};
+my $op = qr{(?:[-+*/]|[<>=]=?|and|or|\.\.)};
 
 my $pn = qr=(?:->|~@|[\'\`\[\]\{\}\(\)\~\^\@])=;
 # my $pn = qr<(?:~@|[\'\`\[\]\{\}\(\)\~\^\@])>;
@@ -616,8 +616,11 @@ sub group_list($s, $l) {
     my $group = $s->group_rest;
     return $group if $l or @$group != 3 or $group->[1] !~ qr<^$op$>;
 
+    my $oper = $group->[1];
+    $oper = '-range' if $oper eq '..';
+
     # TODO Support infix group > 3
-    [ $group->[1], $group->[0], $group->[2] ];
+    [ $oper, $group->[0], $group->[2] ];
 }
 
 sub group_call($s, @t) {
@@ -822,8 +825,7 @@ sub tag_val($n) { o($n);
     } elsif (is_plain($n)) {
         is_key($n) or
         tag_scalar($n) or
-        tag_ysexpr($n) or
-        tag_error("Unresolvable plain scalar");
+        tag_ysexpr($n);
     } else {
         tag_str($n);
     }
@@ -924,7 +926,7 @@ sub tag_try($n) {
 }
 
 sub tag_ysexpr($n) {
-    $n->{text} =~ s/^\\//;
+    $n->{text} =~ s/^\.(?!\d)//;
     $n->{ytag} = 'ysexpr';
 }
 
