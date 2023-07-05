@@ -1,6 +1,4 @@
 defn factorial(x):
-  apply:
-  - .*
-  - (2 .. x)
+  apply(*): (2 .. x)
 
-prn: factorial(10)
+say: factorial(10)

@@ -111,11 +111,21 @@ sub test_ys_to_ly {
 
         $label //= "'${\fmt($ys)}' -> '${\fmt($ly)}'";
 
-        my $ast = $reader->read_ys("$ys\n");
-        my $got = Lingy::Printer->pr_str($ast);
+        my $got;
+        eval {
+            my $ast = $reader->read_ys("$ys\n");
+            $got = Lingy::Printer->pr_str($ast);
+        };
+        $got = $@ if $@;
 
+        my $want = $ly;
         $label = label($label, $got, $ly);
-        is $got, $ly, $label;
+
+        if ($want =~ s{^/(.*)/$}{$1}) {
+            like $got, qr/$want/, $label;
+        } else {
+            is $got, $ly, $label;
+        }
     }, @_;
 }
 

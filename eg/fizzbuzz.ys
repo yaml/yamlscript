@@ -8,13 +8,14 @@
 # for a certain requested number (default is 100).
 defn main(count=100, impl="1"):
   fizzbuzz =: "fizzbuzz-$impl"
+
+  getenv("YAMLSCRIPT_TEST") |:
+    say: "Running function '$fizzbuzz' with count=$count"
+
   function =: resolve(symbol(fizzbuzz))
   result   =: function(number(count))
 
-  (getenv "YAMLSCRIPT_TEST") |:
-    say: "Running function '$fizzbuzz' with count=$count"
-
-  map: [say, result]
+  map(say): result
 
 # These implementation functions were adapted from
 # https://rosettacode.org/wiki/FizzBuzz#Clojure
@@ -34,7 +35,7 @@ defn fizzbuzz-2(n):
   loop [i 1, l []]:
     if (i <= n):
     - ^^^:
-      - inc: i
+      - inc(i)
       - conj:
         - l
         - ???:
@@ -50,7 +51,7 @@ defn fizzbuzz-3(n):
   - fn (x):
       s =:
         str:
-        - (zero? mod(x 3))?: "Fizz"
-        - (zero? mod(x 5))?: "Buzz"
-      if (empty? s): [x, s]
+        - (zero? mod(x 3)) ?: "Fizz"
+        - (zero? mod(x 5)) ?: "Buzz"
+      if (empty? s): x, s
   - (1 .. n)

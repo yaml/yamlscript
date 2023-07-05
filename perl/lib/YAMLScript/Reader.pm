@@ -249,12 +249,18 @@ sub construct_boolean($s, $n) {
 
 sub construct_call($s, $p) {
     my ($k, $v) = @$p;
-    "$k" =~ /^($sym):?$/ or die;
+    "$k" =~ /^($sym)($bp?)$/ or die;
     my $fn = $1;
+    my $args = $2;  # TODO add these args to value args
+    if ($args) {
+        $args =~ s/^\((.*)\)$/$1/ or die;
+    }
     $fn =~ s/^(let|try|catch)$/$1*/;
     $main_called = 1 if $fn eq 'main';
+    $args = 'val'->new(undef, $args);
+    $args->{ytag} = 'ysexpr';
     $v = SEQ($v) unless is_seq($v);
-    L(S($fn), map $s->construct($_), elems($v));
+    L(S($fn), map $s->construct($_), $args, elems($v));
 }
 
 sub construct_def($s, $p) {
@@ -850,10 +856,18 @@ sub tag_val($n) { o($n);
 
 sub tag_call($p) {
     my ($k, $v) = @$p;
-    if ($k =~ /^$sym$/) {
+    if ($k =~ /^$sym($bp?)$/) {
+        my $args = $1;
         $k->{ytag} =
             "$k" eq 'use'
                 ? "$k" :'call';
+
+        # Empty (null) value
+        if (is_plain($v) and text($v) eq '') {
+            err "Use 'foo():' for a call with no args"
+                if $args eq '';
+        }
+
         tag_node($v);
     }
 }
@@ -1004,9 +1018,11 @@ sub tag_ysexpr($n) {
         my $self = bless {
             elem => [@elems],
         }, $class;
-        $refs{$event->{anch}} = $self
-            if $event->{anch} ne '-';
-        $events{Scalar::Util::refaddr($self)} = $event;
+        if ($event) {
+            $refs{$event->{anch}} = $self
+                if $event->{anch} ne '-';
+            $events{Scalar::Util::refaddr($self)} = $event;
+        }
         return $self;
     }
     sub add {
@@ -1028,15 +1044,17 @@ sub tag_ysexpr($n) {
     );
     sub new {
         my ($class, $event, $text) = @_;
-        $text //= $event->{valu};
+        $text //= $event->{valu} // '';
         $text =~ s/\\([nt\\\"])/$escapes{$1}/g;
         my $self = bless {
             text => $text,
         }, $class;
-        delete $event->{valu};
-        $refs{$event->{anch}} = $self
-            if $event->{anch} ne '-';
-        $events{Scalar::Util::refaddr($self)} = $event;
+        if ($event) {
+            delete $event->{valu};
+            $refs{$event->{anch}} = $self
+                if $event->{anch} ne '-';
+            $events{Scalar::Util::refaddr($self)} = $event;
+        }
         return $self;
     }
 }
