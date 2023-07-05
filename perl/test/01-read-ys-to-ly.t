@@ -37,7 +37,7 @@ test_ys_to_ly <<'...';
   - (do (prn 123) (prn 456))
 
 
-- - 'add(x, y): (x + y)'
+- - 'defn add(x, y): (x + y)'
   - (defn add [x y] (+ x y))
 
 
@@ -54,17 +54,17 @@ test_ys_to_ly <<'...';
   - (require (quote Foo.Bar))
 
 
-- - 'main(n=99): nil'
+- - 'defn main(n=99): nil'
   - (defn main [& _args_] (let* [n (nth _args_ 0 99)] nil))
 
 
-- - 'foo(x, *xs): nil'
+- - 'defn foo(x, *xs): nil'
   - (defn foo [x & xs] nil)
 
 
 - - foo((x y)) - defmacro
   - |
-    todo((label, *tests)):
+    defmacro todo(label, *tests):
       .`(.todo_skip t ~label)
   - (defmacro todo [label & tests] (quasiquote (.todo_skip t (unquote label))))
 
@@ -72,7 +72,7 @@ test_ys_to_ly <<'...';
 - - Nested sequences
   - |
     - - x =: 111
-      - foo(x):
+      - defn foo(x):
         - y =: inc(x)
         - (x * 5)
   - (do (def x 111) (defn foo [x] (let* [y (inc x)] (* x 5))))
@@ -80,7 +80,7 @@ test_ys_to_ly <<'...';
 
 - - Multi-arity defn
   - |
-    add:
+    defn add:
       (): 0
       (x): cast(Number x)
       (x, y): (x + y)

@@ -292,17 +292,18 @@ sub get_sig {
 
 sub construct_defn($s, $p) {
     my ($k, $v) = @$p;
-    my ($def, $name, $args, $body) = $s->_defn_parse($k, $v);
+    my ($def, $name, $args, $body) = $s->_defn_parse($k, $v, 0);
     return L($def, $name, V(@$args), @$body);
 }
 
 sub construct_defn_multi($s, $p) {
     my ($k, $v) = @$p;
-    my $def = S('defn');
-    my $name = S($k);
+    text($k) =~ /^(defn|defmacro)\s+($sym)$/ or die;
+    my $def = $1;
+    my $name = S($2);
     my @defs = map {
         my ($k, $v) = @$_;
-        my ($def, undef, $args, $body) = $s->_defn_parse($k, $v);
+        my (undef, undef, $args, $body) = $s->_defn_parse($k, $v, 1);
         L(V(@$args), @$body);
     } pairs($v);
     return L($def, $name, @defs);
@@ -310,19 +311,22 @@ sub construct_defn_multi($s, $p) {
 
 sub construct_fn($s, $p) {
     my ($k, $v) = @$p;
-    my ($def, $name, $args, $body) = $s->_defn_parse($k, $v);
+    my ($def, $name, $args, $body) = $s->_defn_parse($k, $v, 0);
     return L(FN, V(@$args), @$body);
 }
 
-sub _defn_parse($s, $k, $v) {
-    my $macro = 0;
-    text($k) =~ /^($sym?)?\((.*)\)$/ or die;
-    my $name = S($1);
-    my $sig = $2;
-    if ($sig =~ s/^\(//) {
-        die "Bad defmacro syntax '$k'"
-            unless $sig =~ s/\)$//;
-        $macro = 1;
+sub _defn_parse($s, $k, $v, $m) {
+    my ($def, $name, $sig);
+    if ($m) {
+        text($k) =~ /^($sym?)?\((.*)\)$/ or XXX $k;
+        $def = '';
+        $name = S($1);
+        $sig = $2;
+    } else {
+        text($k) =~ /^(fn|defn|defmacro)\s+($sym?)?\((.*)\)$/ or XXX $k;
+        $def = S($1);
+        $name = S($2);
+        $sig = $3;
     }
     my ($args, $dargs) = get_sig($sig);
     my $defn = L( DEF, $name, L( FN, L, nil ) );
@@ -333,7 +337,6 @@ sub _defn_parse($s, $k, $v) {
             ? ($s->construct_let($seq, $args, $dargs))
             : map $s->construct($_), @{$seq->elem},
     ];
-    my $def = $macro ? S('defmacro') : S('defn');
     return $def, $name, $args, $body;
 }
 
@@ -868,14 +871,14 @@ sub tag_def($p) {
 
 sub tag_defn($p) {
     my ($k, $v) = @$p;
-    return unless $k =~ /^$sym$bp$/;
+    return unless $k =~ /^(?:defn|defmacro)\s+$sym$bp$/;
     $k->{ytag} = 'defn';
     tag_node($v);
 }
 
 sub tag_defn_multi($p) {
     my ($k, $v) = @$p;
-    return unless $k =~ /$sym/ and is_map($v);
+    return unless $k =~ /^(?:defn|defmacro)\s+$sym$/ and is_map($v);
     for my $p (pairs($v)) {
         return unless $p->[0] =~ /^$bp$/;
     }
@@ -900,7 +903,7 @@ sub tag_istr($n) {
 
 sub tag_fn($p) {
     my ($k, $v) = @$p;
-    return unless $k =~ /^$bp$/;
+    return unless $k =~ /^fn\s+$bp$/;
     $k->{ytag} = 'fn';
     tag_node($v);
 }

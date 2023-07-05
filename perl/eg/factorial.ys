@@ -1,4 +1,4 @@
-factorial(x):
+defn factorial(x):
   apply:
   - .*
   - (2 .. x)

@@ -17,7 +17,7 @@ test_eval <<'...';
   - 333
 
 - - |
-    add(x, y): (x + y)
+    defn add(x, y): (x + y)
     do: add(3,4)
   - 7
 ...

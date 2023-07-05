@@ -5,20 +5,20 @@
 # usage:
 #   yamlscript 99-bottles.ys [<count>]
 
-main(number=99):
+defn main(number=99):
   map:
   - say
   - map:
     - paragraph
     - (number .. 1)
 
-paragraph(num): |
+defn paragraph(num): |
   $(bottles num) of beer on the wall,
   $(bottles num) of beer.
   Take one down, pass it around.
   $(bottles (num - 1)) of beer on the wall.
 
-bottles(n):
+defn bottles(n):
   ???:
     (n == 0) : "No more bottles"
     (n == 1) : "1 bottle"
