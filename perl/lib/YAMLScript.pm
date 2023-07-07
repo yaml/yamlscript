@@ -1,5 +1,5 @@
 package YAMLScript;
-our $VERSION = '0.1.8';
+our $VERSION = '0.1.9';
 
 use Lingy;
 use YAMLScript::RT;
