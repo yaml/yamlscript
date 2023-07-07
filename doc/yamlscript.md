@@ -11,24 +11,22 @@ A YAMLScript program `99-bottles.ys`:
 ```
 #!/usr/bin/env yamlscript
 
-main(number=99):
-  map:
-  - println
-  - map:
-    - paragraph
-    - range(number, 0, -1)
+defn main(number=99):
+  map(say):
+    map(paragraph):
+      (number .. 1)
 
-paragraph(num): |
+defn paragraph(num): |
   $(bottles num) of beer on the wall,
   $(bottles num) of beer.
   Take one down, pass it around.
   $(bottles (num - 1)) of beer on the wall.
 
-bottles(n):
-  cond: [
-    (n == 0), "No more bottles",
-    (n == 1), "1 bottle",
-    :else,    "$n bottles" ]
+defn bottles(n):
+  ???:
+    (n == 0) : "No more bottles"
+    (n == 1) : "1 bottle"
+    :else    : "$n bottles"
 ```
 
 Run: `yamlscript 99-bottles.ys 3`

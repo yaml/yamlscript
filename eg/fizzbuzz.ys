@@ -33,7 +33,8 @@ defn fizzbuzz-1(n):
 
 defn fizzbuzz-2(n):
   loop [i 1, l []]:
-    if (i <= n):
+    if (i > n):
+    - l
     - ^^^:
       - inc(i)
       - conj:
@@ -43,7 +44,6 @@ defn fizzbuzz-2(n):
             zero?(mod(i 5))  : "Buzz"
             zero?(mod(i 3))  : "Fizz"
             :else: i
-    - l
 
 
 defn fizzbuzz-3(n):

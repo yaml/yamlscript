@@ -7,7 +7,8 @@
 
 defn main(number=99):
   map(say):
-    map(paragraph): (number .. 1)
+    map(paragraph):
+      (number .. 1)
 
 defn paragraph(num): |
   $(bottles num) of beer on the wall,

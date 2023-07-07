@@ -1,1 +1,11 @@
-say: "Hello world!"
+- (println "Hello world!")
+- (say "Hello world!")
+- say("Hello world!")
+- say("Hello world!"):
+- say:
+  - "Hello world!"
+- say: ["Hello world!"]
+- say: "Hello world!"
+- say("Hello"): "world!"
+- say: ["Hello", "world!"]
+- say: ."Hello", "world!"
