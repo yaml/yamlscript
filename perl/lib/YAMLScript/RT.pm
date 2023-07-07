@@ -8,9 +8,11 @@ use YAMLScript;
 use YAMLScript::Common;
 use YAMLScript::Core;
 use YAMLScript::Reader;
+use YAMLScript::ReadLine;
 
 use constant LANG => 'YAMLScript';
 use constant reader_class => 'YAMLScript::Reader';
+use constant RL => YAMLScript::ReadLine->new;
 
 use constant repl_intro_command =>
     q<(println (str *LANG* " " (yamlscript-version) " [" *HOST* "]\n"))>;
