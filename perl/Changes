@@ -1,5 +1,11 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.1.10
+date:    Fri Jul  7 08:15:39 PM EDT 2023
+changes:
+- Refactor all the YAMLScript program examples
+- Documentation overhaul
+---
 version: 0.1.9
 date:    Fri Jul  7 11:23:10 AM EDT 2023
 changes:

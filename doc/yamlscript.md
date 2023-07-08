@@ -155,6 +155,36 @@ In other words, when you press up-arrow, the entire multi-line value will come
 up for editing and re-evaluation.
 
 
+# YAMLScript Core Library
+
+YAMLScript has it's own core library with a small set of functions that differ
+from Clojure and Lingy core.
+This library is automatically required by the YAMLScript Runtime.
+
+The YAMLScript Core Functions are:
+
+* `read-file-ys`
+
+  Reads and evaluates a YAMLScript `.ys` file.
+
+* `read-string-ys`
+
+  Reads and evaluates a YAMLScript code string.
+
+* `say`
+
+  An alias for `println`.
+
+* `yamlscript-version`
+
+  Returns the YAMLScript version mapping.
+
+* `..`
+
+  The YAMLScript infix range operator.
+  Described below.
+
+
 # YAMLScript Documentation
 
 Since the YAMLScript programming language is just a different syntax for the

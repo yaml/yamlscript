@@ -6,7 +6,17 @@ sub cmd {
     is $got, $want, "Program works: '$cmd'";
 }
 
-cmd "$yamlscript $eg/hello-world.ys", "Hello world!\n";
+cmd "$yamlscript $eg/hello-world.ys", "Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+Hello world!
+";
 
 cmd "$yamlscript $eg/factorial.ys", "3628800\n";
 
