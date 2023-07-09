@@ -80,6 +80,7 @@ sub require {
         my $path = $name;
         $path =~ s/^lingy\.lang\./Lingy./;
         $path =~ s/^lingy\./Lingy./;
+        $path =~ s/^ys\./YAMLScript./;
         my $module = $path;
         $path =~ s/\./\//g;
 
