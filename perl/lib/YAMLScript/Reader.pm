@@ -163,7 +163,7 @@ my $sym = qr<(?:
     [-:.]?
     \w+
     (?:
-        (?:[-./]|::)
+        (?:[-+./]|::)
         \w+
     )*
     [\?\!\*]?
@@ -522,8 +522,62 @@ sub construct_when($s, $p) {
     );
 }
 
+sub construct_yamlscript($s, $n) {
+    my @forms = map $s->construct($_), pairs($n);
+    return $forms[0] if @forms == 1;
+    L(DO, @forms);
+}
+
 sub construct_ysexpr($s, $n) {
     read_ysexpr($n);
+}
+
+# Plain YAML data constructors:
+sub construct_map($s, $n) {
+    my $map = [];
+    for my $p (pairs($n)) {
+        my ($k, $v) = @$p;
+        is_val($k) or XXX $k, "!map keys must be strings";
+        push @$map, STRING->new("$k");
+        push @$map, $s->construct_value($v);
+    }
+    HASHMAP->new($map);
+}
+
+sub construct_seq($s, $n) {
+    my $seq = [];
+    for my $v (elems($n)) {
+        push @$seq, $s->construct_value($v);
+    }
+    VECTOR->new($seq);
+}
+
+sub construct_value($s, $v) {
+    my $t = ref($v);
+    if ($t eq 'val') {
+        my $s = e_style($v);
+        if ($s eq ':') {
+            return
+                ($v =~ /^-?\d+(\.d+)?$/) ? NUMBER->new("$v") :
+                ("$v" eq 'true') ? true :
+                ("$v" eq 'false') ? false :
+                ("$v" eq 'null') ? nil :
+                STRING->new("$v");
+        } else {
+            return STRING->new("$v");
+        }
+    }
+    elsif ($t eq 'map') {
+        $v->{ytag} = 'map';
+        return $s->construct_map($v);
+    }
+    elsif ($t eq 'seq') {
+        $v->{ytag} = 'seq';
+        return $s->construct_seq($v);
+    }
+    else {
+        XXX $v, "Don't know how to contruct this";;
+    }
 }
 
 sub is_main($n) {
@@ -769,14 +823,12 @@ sub compose_ali {
 
 sub tag_error($msg) { ZZZ "$msg: '$_'" }
 
-sub o {
-    my $f = (caller(1))[3];
-    my $t = $_[0] // '';
-    return 0;
-}
-
-sub tag_node($n) { o;
-    return 1 if $n->{ytag};
+sub tag_node($n) {
+    if ($n->{ytag}) {
+        if ($n->{ytag} ne 'yamlscript') {
+            return 1;
+        }
+    }
     $n = transform($n);
     if (is_map($n)) {
         for my $p (pairs($n)) {
@@ -793,7 +845,7 @@ sub tag_node($n) { o;
             tag_call($p) or
             XXX $p, "Unable to implicitly tag this map pair.";
         }
-        $n->{ytag} = 'module';
+        $n->{ytag} //= 'module';
     }
     elsif (is_seq($n)) {
         for my $e (@{$n->{elem}}) {
@@ -832,13 +884,7 @@ sub transform($n) {
     return $n;
 }
 
-sub tag_map($n) { o;
-}
-
-sub tag_seq($n) { o;
-}
-
-sub tag_val($n) { o($n);
+sub tag_val($n) {
     if (e_tag($n) ne '-') {
         $n->{ytag} = substr(e_tag($n), 1);
     } elsif (is_double($n) or is_literal($n)) {
@@ -904,7 +950,7 @@ sub tag_defn_multi($p) {
     return 1;
 }
 
-sub tag_if($p) { o;
+sub tag_if($p) {
     my ($k, $v) = @$p;
     return unless $k =~ /^if +\S/;
     $k->{ytag} = 'if';
@@ -926,7 +972,7 @@ sub tag_let($n) {
     $n->{ytag} = 'let1' if $n =~ /^let$/;
 }
 
-sub tag_loop($p) { o;
+sub tag_loop($p) {
     my ($k, $v) = @$p;
     return unless $k =~ /^loop +\S/;
     $k->{ytag} = 'loop';
@@ -956,7 +1002,7 @@ sub tag_try($n) {
     $n->{ytag} = 'try' if $n =~ /^try$/;
 }
 
-sub tag_when($p) { o;
+sub tag_when($p) {
     my ($k, $v) = @$p;
     return unless $k =~ /(?:\)|. )[?|]$/;
     $k->{ytag} = 'when';

@@ -7,6 +7,9 @@
     :else
       (range start (dec end) -1)))
 
+(defn dirname [file-path]
+  (. YAMLScript.Core dirname file-path))
+
 ; XXX 'ends-with?' belongs in lingy.string when that is ready
 (defn ends-with? [str substr]
   (. YAMLScript.Core (ends_with_q str substr)))
@@ -21,6 +24,10 @@
 
     :else
     (throw (str "Can't load-file '" f "'\n")))))
+
+(defn load-file-ys [f]
+  (def *file* f)
+  (eval (read-file-ys f)))
 
 (defn read-file-ys [file]
   (. YAMLScript.Core read_file_ys file))

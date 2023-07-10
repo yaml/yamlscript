@@ -1,7 +1,16 @@
 use strict; use warnings;
 package YAMLScript::Core;
 
+use File::Spec;
+
 use YAMLScript::Common;
+
+sub dirname {
+    my ($file_path) = @_;
+    use File::Spec;
+    my(undef, $dirname, undef) = File::Spec->splitpath($file_path);
+    STRING->new($dirname);
+}
 
 sub ends_with_q {
     my ($str, $substr) = @_;

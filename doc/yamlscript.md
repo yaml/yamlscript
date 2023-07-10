@@ -1004,7 +1004,7 @@ extends the basic functionality of Test::More::YAMLScript.
 * [Clojure](https://clojure.org)
 * [Lingy](https://metacpan.org/pod/Lingy)
 * [Test::More::YAMLScript](https://metacpan.org/pod/Test::More::YAMLScript)
-* [YAMLTest](https://metacpan.org/pod/iYAMLTest)
+* [YAMLTest](https://metacpan.org/pod/YAMLTest)
 
 
 # Authors
