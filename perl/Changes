@@ -1,5 +1,12 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.1.11
+date:    Tue Jul 11 07:54:17 AM EDT 2023
+changes:
+- Make ys.foo an alias for YAMLScript::foo
+- Add blank line in example program
+- Support for YAML nodes using ! tag
+---
 version: 0.1.10
 date:    Fri Jul  7 08:15:39 PM EDT 2023
 changes:
