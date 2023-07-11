@@ -1,5 +1,10 @@
 # Revision history for Perl module YAMLScript
 ---
+version: 0.1.12
+date:    Tue Jul 11 11:14:25 AM EDT 2023
+changes:
+- Depend on Lingy 0.1.18
+---
 version: 0.1.11
 date:    Tue Jul 11 07:54:17 AM EDT 2023
 changes:
