@@ -1,21 +1,30 @@
-SHELL := bash
-ROOT := $(shell pwd)
+include ../.common.mk
 
 PYTHON := $(shell command -v python3)
 PYTHON ?= $(shell command -v python)
 
+PYTHON_VENV := $(ROOT)/python/.venv
+
 VERSION := $(shell head -n1 setup.py | cut -d"'" -f2)
 
-export PYTHONPATH := $(ROOT)/lib
+export PYTHONPATH := $(ROOT)/python/lib
 
-
-default:
+#------------------------------------------------------------------------------
+version:
 	@echo $(VERSION)
 
 .PHONY: test
-test: .venv
-	source .venv/bin/activate && \
+test:: test-pytest test-ffi
+
+test-pytest: $(PYTHON_VENV)
+	source $</bin/activate && \
 	pytest -v test/*.py
+
+test-ffi: $(LIBYAMLSCRIPT_SO_PATH)
+	$(PYTHON) -c 'import yamlscript; print(yamlscript.load("inc: 41"))'
+
+$(LIBYAMLSCRIPT_SO_PATH): $(ROOT)/libyamlscript
+	make -C $< build
 
 pkg-test: venv
 	make clean
@@ -41,26 +50,28 @@ push:
 	-git push
 	-git push --tag
 
-clean:
-	rm -f MANIFEST* .long_description.md
-	rm -fr dist/ .pytest_cache/ yamlscript-0.*/
-	rm -fr lib/yamlscript.egg-info/ .eggs/
-	find . -name '__pycache__' | xargs rm -fr
+clean::
+	$(RM) MANIFEST* .long_description.md
+	$(RM) -r dist/ .pytest_cache/ yamlscript-0.*/
+	$(RM) -r lib/yamlscript.egg-info/ .eggs/
+	find . -name '__pycache__' | xargs $(RM) -r
+	$(RM) -r $(LIBRARY_PATH)
+	@echo
 
-realclean: clean
-	rm -fr .venv/
+distclean:: clean
+	$(RM) -r $(PYTHON_VENV)
 
-venv: .venv
-	@[[ $$VIRTUAL_ENV == $$PWD/.venv ]] || { \
+venv: $(PYTHON_VENV)
+	@[[ $$VIRTUAL_ENV == $< ]] || { \
 	    echo; \
-	    echo "Run 'source .venv/bin/activate'"; \
+	    echo "Run 'source $</bin/activate'"; \
 	    echo; \
 	    exit 1; \
 	}
 
-.venv:
+$(PYTHON_VENV):
 	$(PYTHON) -mvenv $@
-	source .venv/bin/activate && \
+	source $@/bin/activate && \
 	    pip install \
 	        pytest \
 		pyyaml \

@@ -1,9 +1,6 @@
-SHELL := bash
-
-ROOT := $(shell pwd -P)
+include ../.common.mk
 
 ZILD := \
-    clean \
     cpan \
     cpanshell \
     dist \
@@ -16,15 +13,15 @@ ZILD := \
 
 test ?= test/
 
-export PATH := $(ROOT)/bin:$(PATH)
+export PATH := $(ROOT)/perl/bin:$(PATH)
 
 
 #------------------------------------------------------------------------------
-default:
-
-.PHONY: test
-test:
+test::
 	prove -l -v $(test)
 
-$(ZILD):
+clean::
+	$(RM) -r cpan YAMLScript*
+
+$(ZILD)::
 	zild $@

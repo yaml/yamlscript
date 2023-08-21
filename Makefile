@@ -1,19 +1,19 @@
 SHELL := bash
 
-LANG := \
+DIRS := \
+    clojure \
+    libyamlscript \
     perl \
     python \
-    js \
 
-BUILD := $(LANG:%=build-%)
-TEST := $(LANG:%=test-%)
-PUBLISH := $(LANG:%=publish-%)
-CLEAN := $(LANG:%=clean-%)
+TEST := $(DIRS:%=test-%)
+PUBLISH := $(DIRS:%=publish-%)
+CLEAN := $(DIRS:%=clean-%)
+DISTCLEAN := $(DIRS:%=distclean-%)
 
 default:
 
-build: $(BUILD)
-build-%: %
+build: libyamlscript
 	$(MAKE) -C $< build
 
 test: $(TEST)
@@ -23,3 +23,7 @@ test-%: %
 clean: $(CLEAN)
 clean-%: %
 	$(MAKE) -C $< clean
+
+distclean: $(DISTCLEAN)
+distclean-%: %
+	$(MAKE) -C $< distclean

@@ -1,0 +1,14 @@
+# Copyright 2023 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+- name: Test label / description
+  yamlscript: |
+  clojure: |
+  TEMPLATE: true
+
+
+- name: Simple map pair expression
+  yamlscript: |
+    foo: bar
+  clojure: |
+    (foo bar)

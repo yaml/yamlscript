@@ -10,4 +10,4 @@ repl:
 	julia --project=.
 
 clean:
-	rm -fr Manifest.toml
+	$(RM) -r Manifest.toml

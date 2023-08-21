@@ -6,4 +6,4 @@ build clean publish test::
 	cargo $@
 
 clean::
-	rm -f Cargo.lock
+	$(RM) Cargo.lock

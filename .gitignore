@@ -1,0 +1,8 @@
+.calva/
+.clj-kondo/
+.lsp/
+.nrepl-port
+.nrepl-pid
+.vscode/
+
+note/

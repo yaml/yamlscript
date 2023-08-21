@@ -8,8 +8,8 @@ publish: build
 	mix hex.publish
 
 clean:
-	rm -fr _build deps doc
-	rm -f yamlscript-*.tar
+	$(RM) -r _build deps doc
+	$(RM) yamlscript-*.tar
 
 _build: deps
 	mix hex.build

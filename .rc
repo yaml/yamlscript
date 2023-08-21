@@ -1,9 +1,36 @@
 # shellcheck shell=bash
 
-YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)
+YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
 
-PATH=$YAMLSCRIPT_ROOT/bin:$YAMLSCRIPT_ROOT/perl/bin:$PATH
+[[ :$PATH: == *:"$YAMLSCRIPT_ROOT/bin":* ]] ||
+  PATH=$YAMLSCRIPT_ROOT/bin:$PATH
+[[ :$PATH: == *:"$YAMLSCRIPT_ROOT/perl/bin":* ]] ||
+  PATH=$YAMLSCRIPT_ROOT/perl/bin:$PATH
 
-# MANPATH=$(IFS=:; set -- "$YAMLSCRIPT_ROOT/man" "$MANPATH"; echo "$*")
+GRAALVM_HOME=/tmp/graalvm
+[[ $OSTYPE == darwin* ]] &&
+  GRAALVM_HOME+=/Contents/Home
+JAVA_HOME=$GRAALVM_HOME
+[[ :$PATH: == *:"$GRAALVM_HOME/bin":* ]] ||
+  PATH=$GRAALVM_HOME/bin:$PATH
 
-export PATH MANPATH YAMLSCRIPT_ROOT
+PYTHONPATH=$YAMLSCRIPT_ROOT/python/lib
+
+export \
+  GRAALVM_HOME \
+  JAVA_HOME \
+  PATH \
+  PYTHONPATH \
+  YAMLSCRIPT_ROOT \
+
+test-ys-string() (
+  set -x
+  python3 -c 'import sys,yamlscript; print(yamlscript.load(sys.argv[1]))' "$@"
+)
+
+test-ys-file() (
+  set -x
+  python3 -c 'import sys,yamlscript; print(yamlscript.load(open(sys.argv[1], "r")))' "$@"
+)
+
+# vim: ft=sh:

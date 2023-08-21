@@ -1,2 +1,4 @@
 /.venv/
 /.eggs/
+__pycache__/
+/libyamlscript.so

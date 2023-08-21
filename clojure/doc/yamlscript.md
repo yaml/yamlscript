@@ -1,7 +1,7 @@
 YAMLScript
 ==========
 
-Programming in YAML
+Program in YAML
 
 
 # Synopsis

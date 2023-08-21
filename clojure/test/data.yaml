@@ -1,0 +1,236 @@
+# Copyright 2023 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+- name: Test label / description
+    # Each test block defines a set of test cases.
+    # A test file usually require 1 input and 1 output field.
+    # For instance parser_test.clj requires a yamlscript and a parse field.
+    # A test block need not specify all fields for every test file.
+  yamlscript: |
+    # YAMScript code compilation input
+  parse: |
+    # YAML Parser events
+  compose: |
+    # YAML Composer tree
+  resolve: |
+    # Composed tree with tags resolved
+  build: |
+    # Read each scalar into Clojure AST forms
+  expand: |
+    # Expand the YS macros (defsyn)
+  construct: |
+    # Construct a full Clojure AST
+  clojure: |
+    # Clojure code compilation output
+  TEMPLATE: true
+    # 'TEMPLATE: true' is here to ignore this test block
+
+
+
+- name: Most YAML syntax forms in one example
+  yamlscript: |
+    --- !YS/0
+    a: 'b'
+    "c": |
+      d
+    ? - e: >
+          f
+    : - {g: !h &i j}
+      - [*k, [l]]
+  parse: |
+    "+MAP", :! "YS/0"
+    "=VAL", := "a"
+    "=VAL", :' "b"
+    "=VAL", :$ "c"
+    "=VAL", :| "d\n"
+    "+SEQ"
+    "+MAP"
+    "=VAL", := "e"
+    "=VAL", :> "f\n"
+    "-MAP"
+    "-SEQ"
+    "+SEQ"
+    "+MAP", :flow true
+    "=VAL", := "g"
+    "=VAL", :& "i", :! "h", := "j"
+    "-MAP"
+    "+SEQ", :flow true
+    "=ALI", :* "k"
+    "+SEQ", :flow true
+    "=VAL", := "l"
+    "-SEQ"
+    "-SEQ"
+    "-SEQ"
+    "-MAP"
+  compose: |
+    {:! "YS/0" :% [
+      {:= "a"}
+      {:' "b"}
+      {:$ "c"}
+      {:| "d\n"}
+      {:- [
+        {:% [
+          {:= "e"}
+          {:> "f\n"} ]} ]}
+      {:- [
+        {:<% [
+          {:= "g"}
+          {:& "i", :! "h", := "j"} ]}
+        {:<- [
+          {:* "k"}
+          {:<- [
+            {:= "l"}
+          ]} ]} ]} ]}
+
+
+
+- name: Nested parse events test
+  yamlscript: |
+    a:
+      b:
+        c: d
+      e: f
+    g: h
+  parse: |
+    "+MAP"
+    "=VAL", := "a"
+    "+MAP"
+    "=VAL", := "b"
+    "+MAP"
+    "=VAL", := "c"
+    "=VAL", := "d"
+    "-MAP"
+    "=VAL", := "e"
+    "=VAL", := "f"
+    "-MAP"
+    "=VAL", := "g"
+    "=VAL", := "h"
+    "-MAP"
+
+
+
+- name: Basic function call with 2 args (test all phases)
+  yamlscript: |
+    --- !yamlscript/v0
+    a: b c
+  parse: |
+    "+MAP", :! "yamlscript/v0"
+    "=VAL", := "a"
+    "=VAL", := "b c"
+    "-MAP"
+  compose: |
+    {:! "yamlscript/v0", :% [
+      {:= "a"} {:= "b c"} ]}
+  resolve: |
+    {:pairs [
+      {:exprs "a"}
+      {:exprs "b c"}
+    ]}
+  build: |
+    {:pairs [
+      {:Sym a}
+      [{:Sym b} {:Sym c}] ]}
+  expand: |
+    {:do [
+      {:Sym a}
+      [{:Sym b} {:Sym c}] ]}
+  construct: |
+    {:List [ {:Sym a} {:Sym b} {:Sym c} ]}
+  clojure: |
+    (a b c)
+
+
+
+- name: Dot escaping
+  yamlscript: |
+    --- !yamlscript/v0
+    map(inc): .[2 4 6 8]
+  parse: |
+    "+MAP", :! "yamlscript/v0"
+    "=VAL", := "map(inc)"
+    "=VAL", := ".[2 4 6 8]"
+    "-MAP"
+  compose: |
+    {:! "yamlscript/v0" :% [
+      {:= "map(inc)"}
+      {:= "[2 4 6 8]"} ]}
+  Xclojure: |
+    (map inc [2 4 6 8])
+
+
+
+- name: YS reader forms
+  yamlscript: |
+    --- !yamlscript/v0
+    prn: .["str" \c 42 foo true false nil]
+    prn: .{:a 1 :c 2 :b 3}
+    prn: ."A longer string"
+  build: |
+    {:pairs [
+     {:Sym prn}
+     {:Vec
+      [{:Str "str"}
+       {:Char c}
+       {:LNum 42}
+       {:Sym foo}
+       :True
+       :False
+       :Nil ]}
+     {:Sym prn}
+     {:Map
+      [{:Key :a}
+       {:LNum 1}
+       {:Key :c}
+       {:LNum 2}
+       {:Key :b}
+       {:LNum 3} ]}
+     {:Sym prn}
+     {:Str "A longer string"} ]}
+  clojure: |
+    (do (prn ["str" \c 42 foo true false nil])
+        (prn {:a 1, :c 2, :b 3})
+        (prn "A longer string"))
+
+
+
+# - name: Basic function call
+#   yamlscript: |
+#     println: 42
+#   resolve: |
+#     {:! "yx" := "println" :! "yx" := 42}
+#   clojure: |
+#     (println 42)
+
+
+# - name: Basic math ysexpr
+#   yamlscript: |
+#     inc: (6 * 7) # XXX
+#   clojure: |
+#     (inc (6 * 7))
+
+
+# - name: Dot escaping
+#   yamlscript: |
+#     map(inc): .[2 4 6 8]
+#   clojure: |
+#     (map inc [2 4 6 8 10])
+#   SKIP: true
+
+
+# - name: The 'if' special form
+#   yamlscript: |
+#     if (a > b):
+#       foo(a b)
+#       bar(a b)
+#   clojure: |
+#     (if (> a b) (foo a b) (bar a b))
+#   SKIP: true
+
+# - name: YAMLScript top level scalar
+#   yamlscript: |
+#     ; comment
+#     (foo bar)
+#   parse: |
+#     :; comment\n(foo bar)
+#   XXXclojure: |
+#     (foo bar)

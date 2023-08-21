@@ -1,0 +1,1 @@
+FROM clojure:latest

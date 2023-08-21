@@ -17,5 +17,5 @@ publish: build
 	npm $@
 
 clean:
-	rm -f package*
-	rm -fr node_modules
+	$(RM) package*
+	$(RM) -r node_modules
