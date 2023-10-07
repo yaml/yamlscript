@@ -14,8 +14,7 @@
     {:Map (->> list
             (apply array-map)
             (mapcat seq)
-            vec
-            #__)}
+            vec)}
     (throw (Exception. "Odd number of elements in map"))))
 
 (defn True [] :True)

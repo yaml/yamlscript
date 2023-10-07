@@ -6,6 +6,8 @@ SHELL := bash
 ROOT := $(shell cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 export PATH := $(ROOT)/bin:$(PATH)
 
+export YAMLSCRIPT_ROOT ?= $(ROOT)
+
 ifdef v
   export TEST_VERBOSE := 1
 endif

@@ -1,15 +1,32 @@
 include ../.common.mk
 
-GRAALVM_PATH ?= /tmp/graalvm
+### For Orable GraalVM No-Fee #################################################
+ifndef GRAALVM_CE
+GRAALVM_SRC := https://download.oracle.com/graalvm
+GRAALVM_VER ?= 21
+GRAALVM_TAR := graalvm-jdk-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
+GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/latest/$(GRAALVM_TAR)
+GRAALVM_PATH ?= /tmp/graalvm-oracle-$(GRAALVM_VER)
 
-GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
+### For GraalVM CE (Community Edition) ########################################
+else
 GRAALVM_SRC := https://github.com/graalvm/graalvm-ce-builds/releases/download
-GRAALVM_VER := jdk-17.0.8
-# GRAALVM_VER := jdk-20.0.2
+GRAALVM_VER ?= 21
+  ifeq (21,$(GRAALVM_VER))
+    override GRAALVM_VER := jdk-21.0.0
+  endif
+  ifeq (17,$(GRAALVM_VER))
+    override GRAALVM_VER := jdk-17.0.8
+  endif
 GRAALVM_TAR := graalvm-community-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
 GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/$(GRAALVM_TAR)
+GRAALVM_PATH ?= /tmp/graalvm-ce-$(GRAALVM_VER)
+endif
 
+GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
 GRAALVM_DOWNLOAD := /tmp/$(GRAALVM_TAR)
+
+GRAALVM_O ?= 1
 
 BUILD_TARGETS := \
   $(LIBYAMLSCRIPT_SO_PATH) \
@@ -21,7 +38,7 @@ LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-0.1.0-standalone.jar
 SVM_JAR_PATH := $(GRAALVM_PATH)/lib/svm/builder/svm.jar
 
 YAMLSCRIPT_CORE_INSTALLED := \
-    $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
+  $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
 YAMLSCRIPT_CORE_SRC := ../clojure/src/yamlscript/*
 
 #------------------------------------------------------------------------------
@@ -44,6 +61,7 @@ $(LIBYAMLSCRIPT_SO_PATH): $(LIBYAMLSCRIPT_JAR_PATH) $(GRAALVM_PATH)
 	# The next command may take a long time (a minute or so)
 	time \
 	native-image \
+	    -O$(GRAALVM_O) \
 	    --verbose \
 	    --native-image-info \
 	    --no-fallback \
@@ -71,7 +89,7 @@ $(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 
 $(GRAALVM_PATH): $(GRAALVM_DOWNLOAD)
 	tar xzf $<
-	mv graalvm-community-openjdk-* $@
+	mv graalvm-* $@
 
 $(GRAALVM_DOWNLOAD):
 	curl -L -o $@ $(GRAALVM_URL)

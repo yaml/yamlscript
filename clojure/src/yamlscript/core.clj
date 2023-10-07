@@ -7,9 +7,10 @@
 ;; This library reads YAMLScript code and converts it into Clojure code."
 
 (ns yamlscript.core
-  (:use yamlscript.debug)
   (:require
+   [a0.patch-pprint]
    [clojure.edn :as edn]
+   [yamlscript.debug :refer [www]]
    [yamlscript.compiler :as compiler])
   (:refer-clojure :exclude [compile load-file read-string]))
 

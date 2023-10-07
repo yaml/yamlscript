@@ -35,5 +35,4 @@
      (require 'pjstadig.humane-test-output)
      (pjstadig.humane-test-output/activate!)
      (require 'yamlscript.test-runner))}
-  :global-vars {*warn-on-reflection*
-                (some? (System/getenv "WARN_ON_REFLECTION"))})
+  :global-vars {*warn-on-reflection* true})

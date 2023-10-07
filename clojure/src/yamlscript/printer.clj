@@ -46,14 +46,17 @@
               (Exception. (str "Unknown AST node type:"
                             node))))))
 
+(defn pretty-format [s]
+  (let [s (with-out-str (pp/write s))]
+    (str s "\n")))
+
 (defn print
   "Render a YAMLScript AST as Clojure code."
   [node]
-  (with-out-str
-    (-> node
-      print-node
-      edn/read-string
-      pp/pprint)))
+  (-> node
+    print-node
+    edn/read-string
+    pretty-format))
 
 (comment
   (print

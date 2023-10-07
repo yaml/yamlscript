@@ -92,8 +92,7 @@
 (defn read-string [string]
   (let [forms (->> string
                 lex-tokens
-                read-forms
-                #__)]
+                read-forms)]
     (case (count forms)
       0 nil
       1 (first forms)
