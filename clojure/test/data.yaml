@@ -187,9 +187,10 @@
      {:Sym prn}
      {:Str "A longer string"} ]}
   clojure: |
-    (do (prn ["str" \c 42 foo true false nil])
-        (prn {:a 1, :c 2, :b 3})
-        (prn "A longer string"))
+    (do
+     (prn ["str" \c 42 foo true false nil])
+     (prn {:a 1, :c 2, :b 3})
+     (prn "A longer string"))
 
 
 

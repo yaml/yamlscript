@@ -15,7 +15,6 @@
   :dependencies
   [[org.clojure/clojure "1.11.1"]
    [clj-commons/clj-yaml "1.0.27"]
-   [zprint "1.2.8"]
    [org.snakeyaml/snakeyaml-engine "2.6"]
    [pjstadig/humane-test-output "0.11.0"]]
 

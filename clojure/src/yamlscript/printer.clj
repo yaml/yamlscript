@@ -6,7 +6,7 @@
   (:require
    [clojure.edn :as edn]
    [clojure.string :as str]
-   [zprint.core :as zp])
+   [clojure.pprint :as pp])
   (:refer-clojure :exclude [print]))
 
 (defn print-node [node]
@@ -51,6 +51,6 @@
     (-> node
       print-node
       edn/read-string
-      zp/zprint)))
+      pp/pprint)))
 
 nil
