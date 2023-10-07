@@ -34,4 +34,5 @@
   :plugins [[lein-exec "0.3.7"]]
   :repositories [["public-github" {:url "git://github.com"}]]
   :repl-options {:init-ns libyamlscript.core}
-  :global-vars {*warn-on-reflection* true})
+  :global-vars {*warn-on-reflection*
+                (some? (System/getenv "WARN_ON_REFLECTION"))})

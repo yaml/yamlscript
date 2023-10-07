@@ -9,6 +9,9 @@ export PATH := $(ROOT)/bin:$(PATH)
 ifdef v
   export TEST_VERBOSE := 1
 endif
+ifdef w
+  export WARN_ON_REFLECTION := 1
+endif
 
 #------------------------------------------------------------------------------
 # Set machine specific variables:
