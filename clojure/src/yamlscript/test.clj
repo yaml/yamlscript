@@ -181,4 +181,9 @@
           value)))
     node))
 
-nil
+(comment
+  (do
+    (require '[yamlscript.core :as ys])
+    (->> "foo: bar baz"
+      ys/compile))
+  )

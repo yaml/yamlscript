@@ -27,5 +27,3 @@
 (comment
   (expand {:pairs [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
   )
-
-nil

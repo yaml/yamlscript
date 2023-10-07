@@ -32,4 +32,16 @@
 
 (defn Key [s] {:Key (keyword s)})
 
-nil
+(comment
+  [(List [1 2 3])
+   (Vec [1 2 3])
+   (Map [1 2 3 4 5 6])
+   (True)
+   (False)
+   (Nil)
+   (Sym "foo")
+   (Char "a")
+   (LNum "123")
+   (Str "foo")
+   (Key "foo")]
+  )

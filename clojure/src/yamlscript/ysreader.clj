@@ -99,4 +99,8 @@
       1 (first forms)
       (vec forms))))
 
-nil
+(comment
+  (read-string
+    "[\"a\" :b \\c 42 true false nil
+     (a b c) [a b c] {:a b :c \"d\"}]")
+  )

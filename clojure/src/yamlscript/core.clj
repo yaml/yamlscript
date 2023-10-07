@@ -7,7 +7,6 @@
 ;; This library reads YAMLScript code and converts it into Clojure code."
 
 (ns yamlscript.core
-  #_{:clj-kondo/ignore [:use]}
   (:use yamlscript.debug)
   (:require
    [clojure.edn :as edn]
@@ -20,19 +19,24 @@
   (->> ys-string
     compiler/compile))
 
-(defn read-string
-  "Read a YAMLScript string as Clojure forms in a do block."
-  [ys-string]
-  (->> ys-string
-    compile
-    edn/read-string))
-
 (defn load-file
   "YAMLScript equivalent of clojure.core/load-file."
   [ys-file]
   (->> ys-file
     slurp
-    read-string
+    compile
+    edn/read-string
     eval))
 
-nil
+(comment
+  (do
+    (require '[yamlscript.core :as ys])
+    (ys/load-file "test/hello.ys"))
+
+  (->> "foo: bar baz"
+    compile
+    println)
+
+  (->> "test/hello.ys"
+    load-file)
+  )

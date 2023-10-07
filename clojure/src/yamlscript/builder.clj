@@ -29,4 +29,8 @@
   (build {:pairs [{:exprs "a"} {:exprs "b c"}]})
   )
 
-nil
+(comment
+  (build
+    {:pairs [{:exprs "a"}
+             {:exprs "b c"}]})
+  )

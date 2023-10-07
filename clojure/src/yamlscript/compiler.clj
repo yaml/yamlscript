@@ -28,4 +28,12 @@
           yamlscript.printer/print)]
     clojure-string))
 
-nil
+(comment
+  (->> "foo: bar baz"
+    compile
+    println)
+
+  (->> "test/hello.ys"
+    slurp
+    compile
+    println))

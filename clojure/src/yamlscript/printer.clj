@@ -6,7 +6,9 @@
   (:require
    [clojure.edn :as edn]
    [clojure.string :as str]
-   [clojure.pprint :as pp])
+   [clojure.pprint :as pp]
+   [yamlscript.builder :as builder]
+   [clj-yaml.core :as yaml])
   (:refer-clojure :exclude [print]))
 
 (defn print-node [node]
@@ -53,4 +55,7 @@
       edn/read-string
       pp/pprint)))
 
-nil
+(comment
+  (print
+    {:List [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
+  )

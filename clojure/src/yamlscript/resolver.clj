@@ -110,4 +110,7 @@
   [node]
   (resolve-ys-node node))
 
-nil
+(comment
+  (resolve
+    {:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]})
+  )
