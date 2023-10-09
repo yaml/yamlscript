@@ -47,7 +47,7 @@ build:: $(BUILD_TARGETS)
 graalvm: $(GRAALVM_PATH)
 
 clean::
-	$(RM) -r lib target .lein-*
+	$(RM) -r lib/ target/ .lein-* .cpcache/
 	$(RM) src/libyamlscript/Core.class
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)

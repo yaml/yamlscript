@@ -1,5 +1,6 @@
 (defproject yamlscript/core "0.1.0"
   :description "Program in YAML"
+
   :url "https://github.com/yaml/yamlscript"
 
   :license
@@ -19,9 +20,12 @@
    [pjstadig/humane-test-output "0.11.0"]]
 
   :plugins
-  [[reifyhealth/lein-git-down "0.4.1"]
+  [[lein-exec "0.3.7"]
+   [reifyhealth/lein-git-down "0.4.1"]
    [dev.weavejester/lein-cljfmt "0.11.2"]
-   [lein-exec "0.3.7"]]
+   [io.github.borkdude/lein-lein2deps "0.1.0"]]
+
+  :prep-tasks [["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
 
   :injections [(require 'pjstadig.humane-test-output)
                (pjstadig.humane-test-output/activate!)]
@@ -35,4 +39,5 @@
      (require 'pjstadig.humane-test-output)
      (pjstadig.humane-test-output/activate!)
      (require 'yamlscript.test-runner))}
+
   :global-vars {*warn-on-reflection* true})

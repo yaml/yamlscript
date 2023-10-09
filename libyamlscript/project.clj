@@ -1,5 +1,6 @@
 (defproject yamlscript/libyamlscript "0.1.0"
   :description "Shared Library for YAMLScript"
+
   :url "https://yamlscript.org"
 
   :license
@@ -18,8 +19,14 @@
    [org.clojure/data.json "2.4.0"]
    [yamlscript/core "0.1.0"]]
 
-  :java-source-paths ["src"]
+  :plugins
+  [[lein-exec "0.3.7"]
+   [io.github.borkdude/lein-lein2deps "0.1.0"]]
+
   :prep-tasks [["compile"] ["javac"]]
+
+  :java-source-paths ["src"]
+
   :profiles
   {:uberjar
    {:aot [libyamlscript.core]
@@ -31,7 +38,8 @@
     ["-Dclojure.compiler.direct-linking=true"
      "-Dclojure.spec.skip-macros=true"]}}
 
-  :plugins [[lein-exec "0.3.7"]]
   :repositories [["public-github" {:url "git://github.com"}]]
+
   :repl-options {:init-ns libyamlscript.core}
+
   :global-vars {*warn-on-reflection* true})

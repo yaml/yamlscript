@@ -8,7 +8,7 @@ DOCKER_HISTORY := /tmp/yamlscript-clojure-bash-history
 #------------------------------------------------------------------------------
 clean:: nrepl-stop
 	$(RM) .lein-failures .lein-repl-history pom.xml
-	$(RM) -r .calva/ .clj-kondo/ .lsp/ .vscode/
+	$(RM) -r .calva/ .clj-kondo/ .lsp/ .vscode/ .cpcache/ .portal/
 	$(RM) -r target/
 
 test:

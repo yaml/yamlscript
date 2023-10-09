@@ -1,5 +1,6 @@
 .calva/
 .clj-kondo/
+.cpcache/
 .lsp/
 .nrepl-port
 .nrepl-pid
