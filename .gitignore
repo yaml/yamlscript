@@ -4,6 +4,7 @@
 .lsp/
 .nrepl-port
 .nrepl-pid
+.portal/
 .vscode/
 
 note/

@@ -10,4 +10,3 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 /.prepl-port
-/.portal/

@@ -1,4 +1,5 @@
 include ../.common.mk
+include ../.common-clj.mk
 
 export PATH := $(ROOT)/clojure/bin:$(PATH)
 

@@ -1,4 +1,5 @@
 include ../.common.mk
+include ../.common-clj.mk
 
 ### For Orable GraalVM No-Fee #################################################
 ifndef GRAALVM_CE
