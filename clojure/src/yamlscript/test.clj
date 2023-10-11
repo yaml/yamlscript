@@ -11,8 +11,16 @@
 ;; ----------------------------------------------------------------------------
 ;; Key binding helpers
 ;; ----------------------------------------------------------------------------
+(defn get-test-ns [ns]
+  (let [from-ns-name (str (ns-name ns))]
+    (if (str/ends-with? from-ns-name "-test")
+      ns
+      (find-ns (symbol (str from-ns-name "-test"))))))
+
 (def short-keys {:v :verbose
-                 :a :all})
+                 :a :all
+                 :l :list
+                 :r :reload})
 (def test-opts
   (atom {:verbose (System/getenv "TEST_VERBOSE")}))
 
@@ -47,6 +55,23 @@
         (require ns :reload)
         (println (str "Reloaded " ns))))))
 
+(defn do-list-tests [ns]
+  (let [ns (get-test-ns ns)
+        tests
+        (->> ns
+          ns-publics
+          keys
+          (filter #(re-matches #"test-.*-\d+" (str %)))
+          sort)]
+    (doseq [test tests]
+      (let [label (:name (meta test))]
+        (println
+          (str "* " test " - " label))))
+    nil))
+
+(defmacro list-tests []
+  `(do-list-tests ~*ns*))
+
 ;; ----------------------------------------------------------------------------
 
 ;; Modified version of clojure.test/run-test-var
@@ -76,10 +101,7 @@
 
         opts (merge @test-opts opts)
 
-        ns (let [from-ns-name (str (ns-name *ns*))]
-             (if (str/ends-with? from-ns-name "-test")
-               *ns*
-               (find-ns (symbol (str from-ns-name "-test")))))
+        ns (get-test-ns *ns*)
 
         tests (if (nil? ns)
                 []
@@ -90,7 +112,7 @@
                     vec)
                   (->> ns
                     ns-interns
-                    (filter #(str/starts-with? (str (first %)) "test-"))
+                    (filter #(re-matches #"test-.*-\d+" (str (first %))))
                     (sort-by first)
                     (map second)
                     vec)))]
@@ -124,62 +146,43 @@
       sym assoc :test #(testfn))
     testfn))
 
-(defn remove-tests [ns]
+(defn do-remove-tests [ns]
   (->> ns
     ns-publics
     keys
-    (filter #(str/starts-with? % "test-"))
+    (filter #(re-matches #"test-.*-\d+" (str %)))
     (map #(ns-unmap ns %))
     vec))
 
+(defmacro remove-tests []
+  `(do-remove-tests ~*ns*))
+
 (defn do-load-yaml-tests
   [ns o]
-  (remove-tests ns)
   (let [{:keys [yaml-file pick-func test-func want-func]} o
-        tests (read-tests yaml-file pick-func)]
+        tests (read-tests yaml-file pick-func)
+        file-name (str (last (str/split yaml-file #"/")))
+        file-name (str/replace file-name #"\..*$" "")]
     (doseq [test tests]
-      (add-test-to-ns
-        ns
-        (with-meta
-          (symbol (str "test-" (:num test)))
-          {:name (:name test)})
-        (fn []
-          (when (:verbose @test-opts)
-            (println
-              (str "* test-" (:num test) ":") (:name test)))
-          (let [got (test-func test)
-                want (want-func test)]
-            (test/is (= want got))))))))
+      (let [test-name (str "test-" file-name "-" (:num test))]
+        (add-test-to-ns
+          ns
+          (with-meta
+            (symbol test-name)
+            {:name (:name test)})
+          (fn []
+            (when (:verbose @test-opts)
+              (println (str "* " test-name " - " (:name test))))
+            (let [got (test-func test)
+                  want (want-func test)]
+              (test/is (= want got)))))))))
 
 (defmacro load-yaml-tests [o]
-  `(do
-     (remove-tests ~*ns*)
-     (do-load-yaml-tests ~*ns* ~o)))
+  `(do-load-yaml-tests ~*ns* ~o))
 
 ;; ----------------------------------------------------------------------------
 (defn has-keys? [keys map]
   (every? #(contains? map %) keys))
-
-(defn prn-data [n]
-  (with-out-str
-    (pp/pprint n)))
-
-(defn str-esc [s]
-  (str/escape s
-    {\newline "\\n"
-     \tab "\\t"
-     \" "\\\""
-     \\ "\\\\"}))
-
-(defn conj-meta [node & ignore]
-  (walk/prewalk
-    (fn [value]
-      (let [meta (apply dissoc (meta value) ignore)]
-        (if (seq meta)
-          {:M meta
-           :V (with-meta value nil)}
-          value)))
-    node))
 
 (comment
   (do

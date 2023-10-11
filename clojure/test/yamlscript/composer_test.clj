@@ -9,15 +9,17 @@
    [yamlscript.composer :as composer]
    [yamlscript.test :as test]))
 
-(test/load-yaml-tests
-  {:yaml-file "test/data.yaml"
-   :pick-func #(test/has-keys? [:yamlscript :compose] %)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose))
-   :want-func (fn [test]
-                (->> test
-                  :compose
-                  edn/read-string))})
+(do
+  (test/remove-tests)
+  (test/load-yaml-tests
+      {:yaml-file "test/data.yaml"
+       :pick-func #(test/has-keys? [:yamlscript :compose] %)
+       :test-func (fn [test]
+                    (->> test
+                      :yamlscript
+                      parser/parse
+                      composer/compose))
+       :want-func (fn [test]
+                    (->> test
+                      :compose
+                      edn/read-string))}))

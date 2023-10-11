@@ -13,19 +13,21 @@
    [yamlscript.printer :as printer]
    [yamlscript.test :as test]))
 
-(test/load-yaml-tests
-  {:yaml-file "test/data.yaml"
-   :pick-func #(test/has-keys? [:yamlscript :clojure] %)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose
-                  resolver/resolve
-                  builder/build
-                  expander/expand
-                  constructor/construct
-                  printer/print))
-   :want-func (fn [test]
-                (->> test
-                  :clojure))})
+(do
+  (test/remove-tests)
+  (test/load-yaml-tests
+    {:yaml-file "test/data.yaml"
+     :pick-func #(test/has-keys? [:yamlscript :clojure] %)
+     :test-func (fn [test]
+                  (->> test
+                    :yamlscript
+                    parser/parse
+                    composer/compose
+                    resolver/resolve
+                    builder/build
+                    expander/expand
+                    constructor/construct
+                    printer/print))
+     :want-func (fn [test]
+                  (->> test
+                    :clojure))}))

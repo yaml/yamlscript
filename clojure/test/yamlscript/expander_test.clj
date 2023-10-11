@@ -12,18 +12,20 @@
    [yamlscript.test :as test]
    [clojure.edn :as edn]))
 
-(test/load-yaml-tests
-  {:yaml-file "test/data.yaml"
-   :pick-func #(test/has-keys? [:yamlscript :expand] %)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose
-                  resolver/resolve
-                  builder/build
-                  expander/expand))
-   :want-func (fn [test]
-                (->> test
-                  :expand
-                  edn/read-string))})
+(do
+  (test/remove-tests)
+  (test/load-yaml-tests
+    {:yaml-file "test/data.yaml"
+     :pick-func #(test/has-keys? [:yamlscript :expand] %)
+     :test-func (fn [test]
+                  (->> test
+                    :yamlscript
+                    parser/parse
+                    composer/compose
+                    resolver/resolve
+                    builder/build
+                    expander/expand))
+     :want-func (fn [test]
+                  (->> test
+                    :expand
+                    edn/read-string))}))

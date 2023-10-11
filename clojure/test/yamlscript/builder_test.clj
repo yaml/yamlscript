@@ -11,17 +11,19 @@
    [yamlscript.builder :as builder]
    [yamlscript.test :as test]))
 
-(test/load-yaml-tests
-  {:yaml-file "test/data.yaml"
-   :pick-func #(test/has-keys? [:yamlscript :build] %)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose
-                  resolver/resolve
-                  builder/build))
-   :want-func (fn [test]
-                (->> test
-                  :build
-                  edn/read-string))})
+(do
+  (test/remove-tests)
+  (test/load-yaml-tests
+    {:yaml-file "test/data.yaml"
+     :pick-func #(test/has-keys? [:yamlscript :build] %)
+     :test-func (fn [test]
+                  (->> test
+                    :yamlscript
+                    parser/parse
+                    composer/compose
+                    resolver/resolve
+                    builder/build))
+     :want-func (fn [test]
+                  (->> test
+                    :build
+                    edn/read-string))}))

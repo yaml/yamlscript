@@ -8,16 +8,18 @@
    [yamlscript.parser :as parser]
    [yamlscript.test :as test]))
 
-(test/load-yaml-tests
-  {:yaml-file "test/data.yaml"
-   :pick-func #(test/has-keys? [:yamlscript :parse] %)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  (map pr-str)
-                  (map #(subs % 4 (dec (count %))))))
-   :want-func (fn [test]
-                (->> test
-                  :parse
-                  str/split-lines))})
+(do
+  (test/remove-tests)
+  (test/load-yaml-tests
+    {:yaml-file "test/data.yaml"
+     :pick-func #(test/has-keys? [:yamlscript :parse] %)
+     :test-func (fn [test]
+                  (->> test
+                    :yamlscript
+                    parser/parse
+                    (map pr-str)
+                    (map #(subs % 4 (dec (count %))))))
+     :want-func (fn [test]
+                  (->> test
+                    :parse
+                    str/split-lines))}))

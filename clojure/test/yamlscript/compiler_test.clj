@@ -7,13 +7,15 @@
    [yamlscript.compiler :as compiler]
    [yamlscript.test :as test]))
 
-(test/load-yaml-tests
-  {:yaml-file "test/compiler.yaml"
-   :pick-func #(test/has-keys? [:yamlscript :clojure] %)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  yamlscript.compiler/compile))
-   :want-func (fn [test]
-                (->> test
-                  :clojure))})
+(do
+  (test/remove-tests)
+  (test/load-yaml-tests
+    {:yaml-file "test/compiler.yaml"
+     :pick-func #(test/has-keys? [:yamlscript :clojure] %)
+     :test-func (fn [test]
+                  (->> test
+                    :yamlscript
+                    yamlscript.compiler/compile))
+     :want-func (fn [test]
+                  (->> test
+                    :clojure))}))
