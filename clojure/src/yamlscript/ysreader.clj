@@ -1,44 +1,57 @@
 (ns yamlscript.ysreader
   (:use yamlscript.debug)
-  (:require [yamlscript.ast :refer :all])
+  (:require
+   [clojure.string :as str]
+   [yamlscript.ast :refer :all])
   (:refer-clojure :exclude [read-string resolve]))
 
-(def re-ignore
-  #"(?x)
-    (?:                       # Ignorables
-      \#\!.*\n? |               # hashbang line
-      [\s,]+    |               # whitespace, commas,
-      ;.*\n?                    # comments
-    )
-  ")
+(def re-map
+  {:ignr #"(?x)
+         (?:                  # Ignorables
+           \#\!.*\n? |          # hashbang line
+           [\s,]+    |          # whitespace, commas,
+           ;.*\n?               # comments
+         )"
+   :char #"\\."               ; Character token
+   :keyw #"(?:\:\w+(?:-\w+)*)"     ; Keyword token
+   :oper #"[-+*/<=>|&]{1,3}"  ; Operator token
+   :sym #"\w+(?:-\w+)*[?!]?"  ; Symbol token
+   :symp #"[-+*/<=>|&]{1,3}"  ; Symbol followed by paren
+   })
+
+(defn re-expand [re]
+  (re-pattern
+    (reduce
+      (fn [re [k v]]
+        (let [pat (re-pattern (str #"\$" (subs (str k) 1)))]
+          (str/replace re pat (str/re-quote-replacement v))))
+      re re-map)))
 
 (def re-tokenize
-  (re-pattern
-    (str
-      re-ignore "|"
-      #"(?x)
-      (?:                       # Symbols and operators
-        :\w+(?:-\w+)*[?!]? |      # Keyword token
-        \w+(?:-\w+)*[?!]?\( |     # Symbol followed by paren
-        \w+(?:-\w+)*[?!]? |       # Symbol token
-        [-+*/<=>|&]{1,3} |        # Operator token
-        \\[^\s] |                 # Character token
-                                # Reader macros
-        \#\_ |                    # Ignore next form
-        \#\' |                    # Var
-        \#\( |                    # Lambda
-        \#\{ |                    # HashSet
-        \#\? |                    # Reader conditional
-                                # Other tokens
-        ~@ |                      # Unquote-splice token
-        [\[\]{}()'`~^@] |         # Single character tokens
-        \#?                       # Possibly a regex
+  (re-expand
+    #"(?x)
+    (?:                       # Symbols and operators
+      $keyw |                   # Keyword token
+      $symp |                   # Symbol followed by paren
+      $sym |                    # Symbol token
+      $oper |                   # Operator token
+      $char |                   # Character token
+                              # Reader macros
+      \#\_ |                    # Ignore next form
+      \#\' |                    # Var
+      \#\( |                    # Lambda
+      \#\{ |                    # HashSet
+      \#\? |                    # Reader conditional
+                              # Other tokens
+      ~@ |                      # Unquote-splice token
+      [\[\]{}()'`~^@] |         # Single character tokens
+      \#?                       # Possibly a regex
 
-        \"(?:                   # Quoted string
-          \\. |                   # Escaped char
-          [^\\\"]                 # Any other char
-        )*\"?                     # Ending quote
-      )")))
+      \"(?:                   # Quoted string
+        \\. |                   # Escaped char
+        [^\\\"]                 # Any other char
+      )*\"?                     # Ending quote
+    )"))
 
 (defn wrap-parens [expr]
   (str "(" expr "\n)"))
@@ -46,7 +59,7 @@
 (defn lex-tokens [expr]
   (->> expr
     (re-seq re-tokenize)
-    (remove #(re-matches re-ignore %1))))
+    (remove #(re-matches (:ignr re-map) %1))))
 
 (declare read-form)
 
