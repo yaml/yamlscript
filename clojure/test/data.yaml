@@ -194,20 +194,16 @@
 
 
 
-# - name: Basic function call
-#   yamlscript: |
-#     println: 42
-#   resolve: |
-#     {:! "yx" := "println" :! "yx" := 42}
-#   clojure: |
-#     (println 42)
+- name: Basic math ysexpr
+  yamlscript: |
+    inc: (6 * 7)
+  build: |
+    {:pairs
+     [{:Sym inc}
+      {:List [{:Sym *} {:LNum 6} {:LNum 7}]}]}
+  clojure: |
+    (inc (* 6 7))
 
-
-# - name: Basic math ysexpr
-#   yamlscript: |
-#     inc: (6 * 7) # XXX
-#   clojure: |
-#     (inc (6 * 7))
 
 
 # - name: Dot escaping

@@ -26,10 +26,10 @@
       :exprs (build-exprs node))))
 
 (comment
-  (build {:pairs [{:exprs "a"} {:exprs "b c"}]})
-  )
+  (build {:pairs [{:exprs "inc"} {:exprs "(6 * 7)"}]})
 
-(comment
+  (build {:pairs [{:exprs "a"} {:exprs "b c"}]})
+
   (build
     {:pairs [{:exprs "a"}
              {:exprs "b c"}]})

@@ -15,9 +15,37 @@
    :char #"\\."               ; Character token
    :keyw #"(?:\:\w+(?:-\w+)*)"     ; Keyword token
    :oper #"[-+*/<=>|&]{1,3}"  ; Operator token
+   :str  #"(?x)
+         \#?                     # Possibly a regex
+         \"(?:                   # Quoted string
+           \\. |                   # Escaped char
+           [^\\\"]                 # Any other char
+         )*\"?                     # Ending quote
+         "
    :sym #"\w+(?:-\w+)*[?!]?"  ; Symbol token
    :symp #"[-+*/<=>|&]{1,3}"  ; Symbol followed by paren
    })
+
+(defn is-character? [token]
+  (and token (re-matches (:char re-map) (str token))))
+
+(defn is-keyword? [token]
+  (and token (re-matches (:keyw re-map) (str token))))
+
+(defn is-number? [token]
+  (and token (re-matches #"-?\d+" (str token))))
+
+(defn is-operator? [token]
+  (and token (re-matches (:oper re-map) (str token))))
+
+(defn is-string? [token]
+  (and token (re-matches (:str re-map) (str token))))
+
+(defn is-symbol? [token]
+  (and token (re-matches (:sym re-map) (str token))))
+
+(defn is-symbol-paren? [token]
+  (and token (re-matches (:symp re-map) (str token))))
 
 (defn re-expand [re]
   (re-pattern
@@ -45,12 +73,8 @@
                               # Other tokens
       ~@ |                      # Unquote-splice token
       [\[\]{}()'`~^@] |         # Single character tokens
-      \#?                       # Possibly a regex
 
-      \"(?:                   # Quoted string
-        \\. |                   # Escaped char
-        [^\\\"]                 # Any other char
-      )*\"?                     # Ending quote
+      $str                    # String token
     )"))
 
 (defn wrap-parens [expr]
@@ -63,6 +87,14 @@
 
 (declare read-form)
 
+(defn yes-expr [expr]
+  (if (= (count expr) 3)
+    (let [[a b c] expr]
+      (if (is-operator? (:Sym b))
+        [b a c]
+        expr))
+    expr))
+
 (defn read-list [[_ & tokens] type end]
   (loop [tokens tokens
          list []]
@@ -70,7 +102,10 @@
       (throw (Exception. "Unexpected end of input")))
 
     (if (= (first tokens) end)
-      [(type list) (rest tokens)]
+      (let [list (if (= type List)
+                   (yes-expr list)
+                   list)]
+        [(type list) (rest tokens)])
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
@@ -79,11 +114,12 @@
     (= "true" token) [(True) tokens]
     (= "false" token) [(False) tokens]
     (= "nil" token) [(Nil) tokens]
-    (re-find #"^\"" token) [(Str (subs token 1 (- (count token) 1))) tokens]
-    (re-find #"^:\w" token) [(Key (subs token 1)) tokens]
-    (re-find #"^-?\d+$" token) [(LNum token) tokens]
-    (re-find #"^\w" token) [(Sym token) tokens]
-    (re-find #"^\\.$" token) [(Char (subs token 1)) tokens]
+    (is-operator? token) [(Sym token) tokens]
+    (is-string? token) [(Str (subs token 1 (- (count token) 1))) tokens]
+    (is-keyword? token) [(Key (subs token 1)) tokens]
+    (is-number? token) [(LNum token) tokens]
+    (is-symbol? token) [(Sym token) tokens]
+    (is-character? token) [(Char (subs token 1)) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 
 (defn read-form [tokens]
