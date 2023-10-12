@@ -206,6 +206,21 @@
 
 
 
+- name: Function call ysexpr
+  yamlscript: |
+    say: str("The number is:\ " inc(41))
+  build: |
+    {:pairs
+     [{:Sym say}
+      {:List
+       [{:Sym str}
+        {:Str "The number is: "}
+        {:List [{:Sym inc} {:LNum 41}]}]}]}
+  clojure: |
+    (say (str "The number is: " (inc 41)))
+
+
+
 # - name: Dot escaping
 #   yamlscript: |
 #     map(inc): .[2 4 6 8]

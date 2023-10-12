@@ -7,23 +7,23 @@
 
 (def re-map
   {:ignr #"(?x)
-         (?:                  # Ignorables
-           \#\!.*\n? |          # hashbang line
-           [\s,]+    |          # whitespace, commas,
-           ;.*\n?               # comments
+         (?:                      # Ignorables
+           \#\!.*\n? |              # hashbang line
+           [\s,]+    |              # whitespace, commas,
+           ;.*\n?                   # comments
          )"
-   :char #"\\."               ; Character token
-   :keyw #"(?:\:\w+(?:-\w+)*)"     ; Keyword token
-   :oper #"[-+*/<=>|&]{1,3}"  ; Operator token
+   :char #"\\."                   ; Character token
+   :keyw #"(?:\:\w+(?:-\w+)*)"    ; Keyword token
+   :oper #"[-+*/<=>|&]{1,3}"      ; Operator token
    :str  #"(?x)
-         \#?                     # Possibly a regex
-         \"(?:                   # Quoted string
-           \\. |                   # Escaped char
-           [^\\\"]                 # Any other char
-         )*\"?                     # Ending quote
+         \#?                      # Possibly a regex
+         \"(?:                    # Quoted string
+           \\. |                    # Escaped char
+           [^\\\"]                  # Any other char
+         )*\"?                      # Ending quote
          "
-   :sym #"\w+(?:-\w+)*[?!]?"  ; Symbol token
-   :symp #"[-+*/<=>|&]{1,3}"  ; Symbol followed by paren
+   :sym  #"\w+(?:-\w+)*[?!]?"     ; Symbol token
+   :symp #"\w+(?:-\w+)*[?!]?\("   ; Symbol followed by paren
    })
 
 (defn is-character? [token]
@@ -51,7 +51,7 @@
   (re-pattern
     (reduce
       (fn [re [k v]]
-        (let [pat (re-pattern (str #"\$" (subs (str k) 1)))]
+        (let [pat (re-pattern (str #"\$" (subs (str k) 1) #"(?!\w)"))]
           (str/replace re pat (str/re-quote-replacement v))))
       re re-map)))
 
@@ -109,21 +109,31 @@
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
+(defn normalize-string [string]
+  (-> string
+    (subs 1 (- (count string) 1))
+    (str/replace #"\\ " " ")))
+
 (defn read-scalar [[token & tokens]]
   (cond
+    (= "nil" token) [(Nil) tokens]
     (= "true" token) [(True) tokens]
     (= "false" token) [(False) tokens]
-    (= "nil" token) [(Nil) tokens]
-    (is-operator? token) [(Sym token) tokens]
-    (is-string? token) [(Str (subs token 1 (- (count token) 1))) tokens]
-    (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-number? token) [(LNum token) tokens]
-    (is-symbol? token) [(Sym token) tokens]
+    (is-operator? token) [(Sym token) tokens]
+    (is-string? token) [(Str (normalize-string token)) tokens]
+    (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Char (subs token 1)) tokens]
+    (is-symbol? token) [(Sym token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 
 (defn read-form [tokens]
-  (let [token (first tokens)]
+  (let [token (first tokens)
+        [token tokens]
+        (if (is-symbol-paren? token)
+          (let [sym (subs token 0 (-> token count dec))]
+            ["(" (conj (rest tokens) sym "(")])
+          [token tokens])]
     (case token
       "(" (read-list tokens List ")")
       "[" (read-list tokens Vec "]")
