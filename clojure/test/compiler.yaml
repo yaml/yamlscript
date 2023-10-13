@@ -12,3 +12,13 @@
     foo: bar
   clojure: |
     (foo bar)
+
+
+- name: An 'if' statement
+  yamlscript: |
+    if (x > 10):
+      foo(x)
+      bar(x)
+
+  clojure: |
+    (if (> x 10) (foo x) (bar x))

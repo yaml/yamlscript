@@ -20,10 +20,9 @@
     (when m
       [(tag-node key "def") val])))
 
-(defn tag-call [[key val]]
-  (let [m (re-matches #"\w+" (:exprs key))]
-    (when m
-      [(set/rename-keys key {:exprs :exprs}) val])))
+(defn tag-expr [[key val]]
+  (when (and (contains? key :exprs) (contains? val :exprs))
+    [key val]))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))
@@ -38,8 +37,7 @@
               (resolve-ys-node val)]]
     ((some-fn
        tag-def
-       tag-call
-       tag-error) pair)))
+       tag-expr) pair)))
 
 (defn resolve-ys-mapping [node]
   (let [node (dissoc node :tag)]
