@@ -1,13 +1,7 @@
 #------------------------------------------------------------------------------
 # Set machine specific variables:
 #------------------------------------------------------------------------------
-ostype := $(shell /bin/bash -c 'echo $$OSTYPE')
-machtype := $(shell /bin/bash -c 'echo $$MACHTYPE')
-
 ifneq (,$(findstring linux,$(ostype)))
-  GCC := gcc -std=gnu99 -fPIC -shared
-  SO := so
-  DY :=
   GRAALVM_SUBDIR :=
 
   ifeq (x86_64-pc-linux-gnu,$(machtype))
@@ -18,9 +12,6 @@ ifneq (,$(findstring linux,$(ostype)))
   endif
 
 else ifneq (,$(findstring darwin,$(ostype)))
-  GCC := gcc -dynamiclib
-  SO := dylib
-  DY := DY
   GRAALVM_SUBDIR := /Contents/Home
 
   ifneq (,$(findstring arm64-apple-darwin,$(machtype)))
@@ -38,12 +29,43 @@ else
 endif
 
 #------------------------------------------------------------------------------
-# Set shared variables:
+# Set GRAALVM variables:
 #------------------------------------------------------------------------------
-LIBRARY_PATH := $(ROOT)/libyamlscript/lib
-LIBYAMLSCRIPT_SO_PATH := $(LIBRARY_PATH)/libyamlscript.$(SO)
-LIBYAMLSCRIPT_SO_NAME := $(LIBRARY_PATH)/libyamlscript
-export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
+
+### For Orable GraalVM No-Fee #################################################
+ifndef GRAALVM_CE
+GRAALVM_SRC := https://download.oracle.com/graalvm
+GRAALVM_VER ?= 21
+GRAALVM_TAR := graalvm-jdk-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
+GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/latest/$(GRAALVM_TAR)
+GRAALVM_PATH ?= /tmp/graalvm-oracle-$(GRAALVM_VER)
+
+### For GraalVM CE (Community Edition) ########################################
+else
+GRAALVM_SRC := https://github.com/graalvm/graalvm-ce-builds/releases/download
+GRAALVM_VER ?= 21
+  ifeq (21,$(GRAALVM_VER))
+    override GRAALVM_VER := jdk-21.0.0
+  endif
+  ifeq (17,$(GRAALVM_VER))
+    override GRAALVM_VER := jdk-17.0.8
+  endif
+GRAALVM_TAR := graalvm-community-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
+GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/$(GRAALVM_TAR)
+GRAALVM_PATH ?= /tmp/graalvm-ce-$(GRAALVM_VER)
+endif
+
+GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
+GRAALVM_DOWNLOAD := /tmp/$(GRAALVM_TAR)
+
+GRAALVM_O ?= 1
+
+export JAVA_HOME := $(GRAALVM_HOME)
+export PATH := $(GRAALVM_HOME)/bin:$(PATH)
+
+YAMLSCRIPT_CORE_INSTALLED := \
+  $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
+YAMLSCRIPT_CORE_SRC := ../clojure/src/yamlscript/*
 
 ifdef w
   export WARN_ON_REFLECTION := 1
@@ -56,14 +78,62 @@ LEIN_COMMANDS := \
     deps \
     deploy \
     install \
-    jar \
     run \
+
+#------------------------------------------------------------------------------
+# Common Clojure Targets
+#------------------------------------------------------------------------------
+
+force:
+	$(RM) $(YAMLSCRIPT_CORE_INSTALLED)
+
+$(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
+	$(MAKE) -C ../clojure install
+
+graalvm:: $(GRAALVM_PATH)
 
 $(LEIN_COMMANDS)::
 	lein $@
 
-repl:: repl-deps
-repl-deps::
+$(GRAALVM_PATH): $(GRAALVM_DOWNLOAD)
+	tar xzf $<
+	mv graalvm-* $@
 
+$(GRAALVM_DOWNLOAD):
+	curl -L -o $@ $(GRAALVM_URL)
 deps-graph::
 	lein deps :tree
+
+repl:: repl-deps
+ifneq (,$(wildcard .nrepl-pid))
+	@echo "Connecting to nREPL server on port $$(< .nrepl-port)"
+	lein repl :connect
+endif
+
+repl-deps::
+
+nrepl: .nrepl-pid
+	@echo "nREPL server running on port $$(< .nrepl-port)"
+
+nrepl-stop:
+ifneq (,$(wildcard .nrepl-pid))
+	@( \
+	  pid=$$(< .nrepl-pid); \
+	  read -r pid1 <<<"$$(ps --ppid $$pid -o pid=)"; \
+	  read -r pid2 <<<"$$(ps --ppid $$pid1 -o pid=)"; \
+	  set -x; \
+	  kill -9 $$pid $$pid1 $$pid2; \
+	)
+	$(RM) .nrepl-*
+endif
+
+.nrepl-pid:
+	( \
+	  lein repl :headless & \
+	  echo $$! > $@ \
+	)
+	@( \
+	  while [[ ! -f .nrepl-port ]]; do \
+	    sleep 0.3; \
+	  done; \
+	)

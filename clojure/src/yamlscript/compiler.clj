@@ -29,7 +29,11 @@
     clojure-string))
 
 (comment
-  (->> "foo: bar baz"
+  (->> ["foo: bar baz"
+        "if (x > y): x (inc y)"
+        "if(x > y): x (inc y)"
+        #__]
+    last
     compile
     println)
 
