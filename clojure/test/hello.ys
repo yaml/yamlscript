@@ -1,2 +1,2 @@
-println: ."Hello"
+println: "Hello"
 identity: 12345

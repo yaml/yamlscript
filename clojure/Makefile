@@ -7,13 +7,15 @@ DOCKER_IMAGE := yamlscript-clojure:latest
 DOCKER_HISTORY := /tmp/yamlscript-clojure-bash-history
 
 #------------------------------------------------------------------------------
+build:: $(YAMLSCRIPT_CORE_INSTALLED)
+
+test:
+	lein test
+
 clean:: nrepl-stop
 	$(RM) .lein-failures .lein-repl-history pom.xml
 	$(RM) -r .calva/ .clj-kondo/ .lsp/ .vscode/ .cpcache/ .portal/
 	$(RM) -r target/
-
-test:
-	lein test
 
 docker-build:
 	docker build --tag $(DOCKER_IMAGE) .

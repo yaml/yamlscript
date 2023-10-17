@@ -19,6 +19,12 @@
     if (x > 10):
       foo(x)
       bar(x)
-
   clojure: |
     (if (> x 10) (foo x) (bar x))
+
+
+- name: Double quoted string
+  yamlscript: |
+    println: "foo"
+  clojure: |
+    (println "foo")

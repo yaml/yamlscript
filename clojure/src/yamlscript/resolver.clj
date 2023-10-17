@@ -21,8 +21,9 @@
       [(tag-node key "def") val])))
 
 (defn tag-expr [[key val]]
-  (when (and (contains? key :exprs) (contains? val :exprs))
-    [key val]))
+  (cond
+    (and (contains? key :exprs) (contains? val :exprs)) [key val]
+    (and (contains? key :exprs) (contains? val :str)) [key val]))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))
@@ -66,6 +67,7 @@
         node (dissoc node :style)]
     (cond
       (contains? node :=) (set/rename-keys node {:= :exprs})
+      (contains? node :$) (set/rename-keys node {:$ :str})
       :else (throw (Exception. (str "XXX"))))))
 
 

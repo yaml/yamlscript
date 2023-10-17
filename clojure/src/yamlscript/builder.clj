@@ -4,6 +4,7 @@
 (ns yamlscript.builder
   (:use yamlscript.debug)
   (:require
+   [yamlscript.ast :refer :all]
    [yamlscript.ysreader :as ysreader]))
 
 (declare build)
@@ -23,9 +24,13 @@
   (let [[key] (first node)]
     (case key
       :pairs (build-pairs node)
-      :exprs (build-exprs node))))
+      :exprs (build-exprs node)
+      :str (Str (:str node))
+      (throw (Exception. (str "Don't know how to build node: " node))))))
 
 (comment
+  (build {:pairs [{:exprs "println"} {:str "Hello"}]})
+
   (build {:pairs [{:exprs "inc"} {:exprs "(6 * 7)"}]})
 
   (build {:pairs [{:exprs "a"} {:exprs "b c"}]})
