@@ -58,11 +58,11 @@
 (def cli-options
   [;
    [nil "--run" "Compile and run a YAMLScript file"]
-   ["-c" "--compile" "Compile YAMLScript to Clojure"]
    ["-e" "--eval YSEXPR" "Evaluate a YAMLScript expression"
     :default []
     :update-fn conj
     :multi true]
+   ["-c" "--compile" "Compile YAMLScript to Clojure"]
    ["-r" "--return" "Print the return value"]
 
    ["-N" "--nrepl" "Start a new nREPL server"]
@@ -149,7 +149,7 @@
             (run-clj opts))]
     (when (or (seq (:eval opts)) (:return opts))
       (when (or result (:return opts))
-        (println result)))))
+        (pp/pprint result)))))
 
 (defn do-compile [opts args]
   (-> (get-code opts args)
