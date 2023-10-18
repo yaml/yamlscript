@@ -164,9 +164,10 @@
   (try
     (reduce
      (fn [stage-input [stage-name stage-fn]]
+       (when (get (:debug-stage opts) stage-name)
+         (println (str "*** " stage-name " output ***")))
        (let [stage-output (stage-fn stage-input)]
          (when (get (:debug-stage opts) stage-name)
-           (println (str "*** " stage-name " output ***"))
            (pp/pprint stage-output)
            (println ""))
          stage-output)
@@ -272,7 +273,7 @@
   (-main "--repl" "-t" "json")
   (-main "--repl")
   (-main "-Q")
-  (-main "-xAll" "-e" "println: 123")
+  (-main "-xall" "-e" "println: 123")
   (-main "--load" "test/hello.ys")
   (-main)
   *file*
