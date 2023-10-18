@@ -26,11 +26,11 @@ ys -e 'println: "Hello, World!"' -e 'identity: 12345'
 
 ys -e 'println: "Hello, World!"' -e 'identity: 12345' test/hello.ys
 
-ys -e 'range: 30' --json
+ys -e 'range: 25' --json
 
-ys -Y -e 'range: 30'
+ys -Ye 'range: 10'
 
-ys -e 'range: 30' --edn
+ys -Ee 'range: 30'
 
 ys --compile test/hello.ys
 
@@ -42,6 +42,6 @@ ys -c -e 'println: "Hello, World!"' \
       -e 'println: "YAMLScript!!"' \
       test/hello.ys
 
-ys -c -s parse -e 'println: "Hello, World!"'
+ys -c -x parse -x build -x print -e 'println: "Hello, World!"'
 
-ys -s all -e 'println: inc(41)'
+ys -x all -e 'println: inc(41)'

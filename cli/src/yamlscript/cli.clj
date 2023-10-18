@@ -57,17 +57,6 @@
         (apply conj ["Stack trace:"] (.getStackTrace e))))))
   (exit 1)))
 
-(defn print-data [data opts]
-  (case (:to opts)
-    "yaml" (println
-            (str/trim-newline
-             (yaml/generate-string
-              data
-              :dumper-options {:flow-style :block})))
-    "json" (println (json/write-str data))
-    "edn"  (pp/pprint data)
-    ,      (println (json/write-str data))))
-
 (comment
   (-main "--help")
   (-main "test/hello.ys")
@@ -100,7 +89,7 @@
     :update-fn conj
     :multi true]
    ["-c" "--compile"
-    "Compile YAMLScript to Clojure\n"]
+    "Compile YAMLScript to Clojure"]
 
    ["-N" "--nrepl"
     "Start a new nREPL server"]
@@ -123,15 +112,17 @@
      (str "must be one of: " (str/join ", " to-fmts))]]
    ["-o" "--output"
     "Output file for --load or --compile"]
-   ["-s" "--stage STAGE"
+
+   ["-x" "--debug-stage STAGE"
     "Display the result of stage(s)"
     :default {}
     :update-fn #(if (= "all" %2) stages (assoc %1 %2 true))
     :multi true
     :validate
     [#(or (contains? stages %) (= % "all"))
-     (str "must be one of: " (str/join ", " (keys stages)))]]
-
+     (str "must be one of: "
+          (str/join ", " (keys stages))
+          " or all")]]
    ["-X" "--debug"
     "Debug mode: print full stack trace for errors"]
 
@@ -174,7 +165,7 @@
     (reduce
      (fn [stage-input [stage-name stage-fn]]
        (let [stage-output (stage-fn stage-input)]
-         (when (get (:stage opts) stage-name)
+         (when (get (:debug-stage opts) stage-name)
            (println (str "*** " stage-name " output ***"))
            (pp/pprint stage-output)
            (println ""))
@@ -193,15 +184,22 @@
         result))))
 
 (defn do-run [opts args]
-  ;; XXX add a try/catch here
-  (let [result
-        (-> (get-code opts args)
-            (compile-code opts)
-            (run-clj opts))]
-    (when (or
-           (seq (:eval opts))
-           (seq (filter #(% opts) [:load :to])))
-      (print-data result opts))))
+  (try
+    (let [result
+          (-> (get-code opts args)
+              (compile-code opts)
+              (run-clj opts))]
+      (when (seq (filter #(% opts) [:load :to]))
+        (case (:to opts)
+          "yaml" (println
+                  (str/trim-newline
+                   (yaml/generate-string
+                    result
+                    :dumper-options {:flow-style :block})))
+          "json" (json/pprint result)
+          "edn"  (pp/pprint result)
+          ,      (println (json/write-str result)))))
+    (catch Exception e (print-exception e opts nil))))
 
 (defn do-compile [opts args]
   (-> (get-code opts args)
@@ -255,16 +253,16 @@
 (comment
   (-> "(do (println \"abcd\") 123)\n"
       (#(let [sw (java.io.StringWriter.)]
-           (sci/binding [sci/out sw]
-             (let [result (sci/eval-string %)]
-               (println (str sw))
-               result)))))
+          (sci/binding [sci/out sw]
+            (let [result (sci/eval-string %)]
+              (println (str sw))
+              result)))))
   (-main "-e" "println: 12345" "-e" "identity: 67890")
   (-main "--compile=foo")
   (-main "--compile-to=parse")
   (-main "--help")
   (-main "--version")
-  (-main "-e" "range: 30" "-Y")
+  (-main "-Je" "range: 30")
   (-main "-c" "test/hello.ys")
   (-main "test/hello.ys")
   (-main "test/hello.ys")
@@ -274,7 +272,7 @@
   (-main "--repl" "-t" "json")
   (-main "--repl")
   (-main "-Q")
-  (-main "-s" "all" "-e" "println: 123")
+  (-main "-xAll" "-e" "println: 123")
   (-main "--load" "test/hello.ys")
   (-main)
   *file*
