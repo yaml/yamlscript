@@ -18,13 +18,19 @@ cat test/hello.ys
 
 ys test/hello.ys
 
-ys --return test/hello.ys
+ys --load test/hello.ys
 
 ys --eval 'println: "Hello, World!"'
 
 ys -e 'println: "Hello, World!"' -e 'identity: 12345'
 
 ys -e 'println: "Hello, World!"' -e 'identity: 12345' test/hello.ys
+
+ys -e 'range: 30' --json
+
+ys -Y -e 'range: 30'
+
+ys -e 'range: 30' --edn
 
 ys --compile test/hello.ys
 

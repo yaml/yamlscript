@@ -38,11 +38,15 @@
           (List (flatten [(Sym "do") body])))))))
 
 (defn construct-node [node]
-  (let [[key] (first node)]
-    (case key
-      :do (construct-do node)
-      ,   node)))
+  (if (keyword? node)
+    node
+    (let [[key] (first node)]
+      (case key
+        :do (construct-do node)
+        ,   node))))
 
 (comment
+  (construct :Nil)
   (construct {:do [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
-  *e)
+  *e
+  )

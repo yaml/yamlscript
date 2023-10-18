@@ -19,11 +19,14 @@
     (->> node
       (map expand)
       (vec))
-    (let [[key] (first node)]
-      (case key
-        :pairs (expand-pairs node)
-        ,      node))))
+    (if (keyword? node)
+      node
+      (let [[key] (first node)]
+        (case key
+          :pairs (expand-pairs node)
+          ,      node)))))
 
 (comment
   (expand {:pairs [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
+  (expand :Nil)
   )

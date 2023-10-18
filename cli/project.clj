@@ -15,8 +15,10 @@
 
   :dependencies
   [[org.clojure/clojure "1.11.1"]
+   [org.clojure/data.json "2.4.0"]
    [org.clojure/tools.cli "1.0.219"]
    [org.babashka/sci "0.8.40"]
+   [clj-commons/clj-yaml "1.0.27"]
    [yamlscript/core "0.1.0"]]
 
   :main ^:skip-aot yamlscript.cli

@@ -1,11 +1,28 @@
 (ns yamlscript.cli
   (:gen-class)
   (:require
-   [yamlscript.core :as core]
-   [sci.core :as sci]
+   ;; This goes first for pprint/graalvm patch (prevents binary bloating)
+   [yamlscript.core]
+   ;; For www debugging
+   [yamlscript.debug :refer [www]]
+   ;; Data printers
+   [clj-yaml.core :as yaml]
+   [clojure.data.json :as json]
    [clojure.pprint :as pp]
+   ;; String helper functions
    [clojure.string :as str]
-   [clojure.tools.cli :as cli]))
+   ;; Command line options parser
+   [clojure.tools.cli :as cli]
+   ;; Small Clojure interpreter runtime for YAMLScript evaluation
+   [sci.core :as sci]
+   ;; YAMLScript compiler stack stages (in order)
+   [yamlscript.parser]
+   [yamlscript.composer]
+   [yamlscript.resolver]
+   [yamlscript.builder]
+   [yamlscript.expander]
+   [yamlscript.constructor]
+   [yamlscript.printer]))
 
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
@@ -27,8 +44,6 @@
 (defn todo [s]
   (die "--" s " not implemented yet."))
 
-(defn www [o] (println (str "---\n" o "\n...")) o)
-
 (defn print-exception
   ([^String s opts] (print-exception (Exception. s) opts nil))
   ([^Exception e opts _]
@@ -42,8 +57,26 @@
         (apply conj ["Stack trace:"] (.getStackTrace e))))))
   (exit 1)))
 
+(defn print-data [data opts]
+  (case (:to opts)
+    "yaml" (println
+            (str/trim-newline
+             (yaml/generate-string
+              data
+              :dumper-options {:flow-style :block})))
+    "json" (println (json/write-str data))
+    "edn"  (pp/pprint data)
+    ,      (println (json/write-str data))))
+
+(comment
+  (-main "--help")
+  (-main "test/hello.ys")
+  (-main "-e" "(range 10)")
+  (-main "-e" "(range 10)" "-t" "edn")
+  )
+
 ;; ----------------------------------------------------------------------------
-(def to-fmts #{"json" "yaml"})
+(def to-fmts #{"json" "yaml" "edn"})
 (def stages
   {"parse" yamlscript.parser/parse
    "compose" yamlscript.composer/compose
@@ -57,24 +90,41 @@
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
   [;
-   [nil "--run" "Compile and run a YAMLScript file"]
-   ["-e" "--eval YSEXPR" "Evaluate a YAMLScript expression"
+   ["-r" "--run"
+    "Compile and evaluate a YAMLScript file"]
+   ["-l" "--load"
+    "Output the evaluated YAMLScript value"]
+   ["-e" "--eval YSEXPR"
+    "Evaluate a YAMLScript expression"
     :default []
     :update-fn conj
     :multi true]
-   ["-c" "--compile" "Compile YAMLScript to Clojure"]
-   ["-r" "--return" "Print the return value"]
+   ["-c" "--compile"
+    "Compile YAMLScript to Clojure\n"]
 
-   ["-N" "--nrepl" "Start a new nREPL server"]
-   ["-R" "--repl" "Connect console to the current nREPL server"]
-   ["-K" "--kill" "Stop the nREPL server"]
+   ["-N" "--nrepl"
+    "Start a new nREPL server"]
+   ["-R" "--repl"
+    "Connect console to the current nREPL server"]
+   ["-K" "--kill"
+    "Stop the nREPL server"]
 
-   ["-o" "--file" "YAMLScript file to compile into"]
-   ["-t" "--to FORMAT" "Output format"
+   ["-J" "--json"
+    "Output JSON"]
+   ["-Y" "--yaml"
+    "Output YAML"]
+   ["-E" "--edn"
+    "Output EDN"]
+
+   ["-t" "--to FORMAT"
+    "Output format"
     :validate
     [#(contains? to-fmts %)
      (str "must be one of: " (str/join ", " to-fmts))]]
-   ["-s" "--stage STAGE" "Display the result of stage(s)"
+   ["-o" "--output"
+    "Output file for --load or --compile"]
+   ["-s" "--stage STAGE"
+    "Display the result of stage(s)"
     :default {}
     :update-fn #(if (= "all" %2) stages (assoc %1 %2 true))
     :multi true
@@ -82,10 +132,13 @@
     [#(or (contains? stages %) (= % "all"))
      (str "must be one of: " (str/join ", " (keys stages)))]]
 
-   ["-X" "--debug" "Debug mode: print full stack trace for errors"]
+   ["-X" "--debug"
+    "Debug mode: print full stack trace for errors"]
 
-   ["-V" "--version" "Print version and exit"]
-   ["-h" "--help"]])
+   ["-V" "--version"
+    "Print version and exit"]
+   ["-h" "--help"
+    "Print this help and exit"]])
 
 (defn unsupported-opts [opts unsupported]
   (doall
@@ -130,9 +183,6 @@
      code stages)
     (catch Exception e (print-exception e opts nil))))
 
-(comment
-  (-main "-s" "all" "-e" "println: 123"))
-
 (defn run-clj [clj opts]
   (let [sw (java.io.StringWriter.)
         clj (str/trim-newline clj)]
@@ -143,13 +193,15 @@
         result))))
 
 (defn do-run [opts args]
+  ;; XXX add a try/catch here
   (let [result
         (-> (get-code opts args)
             (compile-code opts)
             (run-clj opts))]
-    (when (or (seq (:eval opts)) (:return opts))
-      (when (or result (:return opts))
-        (pp/pprint result)))))
+    (when (or
+           (seq (:eval opts))
+           (seq (filter #(% opts) [:load :to])))
+      (print-data result opts))))
 
 (defn do-compile [opts args]
   (-> (get-code opts args)
@@ -183,18 +235,22 @@
         {opts :options
          args :arguments
          help :summary
-         errs :errors} options]
-    (when-not (cond (seq errs) (do-error errs help)
-                    (:help opts) (do-help help)
-                    (:version opts) (do-version)
-                    (:run opts) (do-run opts args)
-                    (:repl opts) (do-repl opts)
-                    (:connect opts) (do-connect opts args)
-                    (:kill opts) (do-kill opts args)
-                    (:compile opts) (do-compile opts args)
-                    (:nrepl opts) (do-nrepl opts args)
-                    (:compile-to opts) (do-compile-to opts args)
-                    :else (do-default opts args)))))
+         errs :errors} options
+        opts (if (:json opts) (assoc opts :to "json") opts)
+        opts (if (:yaml opts) (assoc opts :to "yaml") opts)
+        opts (if (:edn opts) (assoc opts :to "edn") opts)]
+    (cond (seq errs) (do-error errs help)
+          (:help opts) (do-help help)
+          (:version opts) (do-version)
+          (:run opts) (do-run opts args)
+          (:load opts) (do-run opts args)
+          (:repl opts) (do-repl opts)
+          (:connect opts) (do-connect opts args)
+          (:kill opts) (do-kill opts args)
+          (:compile opts) (do-compile opts args)
+          (:nrepl opts) (do-nrepl opts args)
+          (:compile-to opts) (do-compile-to opts args)
+          :else (do-default opts args))))
 
 (comment
   (-> "(do (println \"abcd\") 123)\n"
@@ -208,7 +264,7 @@
   (-main "--compile-to=parse")
   (-main "--help")
   (-main "--version")
-  (-main "--to=json")
+  (-main "-e" "range: 30" "-Y")
   (-main "-c" "test/hello.ys")
   (-main "test/hello.ys")
   (-main "test/hello.ys")
@@ -218,6 +274,8 @@
   (-main "--repl" "-t" "json")
   (-main "--repl")
   (-main "-Q")
+  (-main "-s" "all" "-e" "println: 123")
+  (-main "--load" "test/hello.ys")
   (-main)
   *file*
   )
