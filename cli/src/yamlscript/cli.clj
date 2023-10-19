@@ -26,8 +26,7 @@
 
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
-  (some
-   #(and
+  (some #(and
      (= "clojure.main$repl" (.getClassName ^StackTraceElement %))
      (= "doInvoke" (.getMethodName ^StackTraceElement %)))
    (.getStackTrace (Thread/currentThread))))
@@ -43,6 +42,11 @@
 
 (defn todo [s]
   (die "--" s " not implemented yet."))
+
+(defn stdin-ready? []
+  (try
+    (.ready ^clojure.lang.LineNumberingPushbackReader *in*)
+    (catch Exception e false)))
 
 (defn print-exception
   ([^String s opts] (print-exception (Exception. s) opts nil))
@@ -157,7 +161,15 @@
         code (if (:eval opts)
                (->> opts :eval (str/join "\n"))
                code)
-        code (str code "\n" (str/join "\n" (map slurp args)))]
+        code
+        (str code "\n"
+             (str/join "\n"
+                       (map
+                        #(if (= "-" %) (slurp *in*) (slurp %))
+                        args)))
+        code (if (stdin-ready?)
+               (str code "\n" (slurp *in*))
+               code)]
     code))
 
 (defn compile-code [code opts]
@@ -225,7 +237,10 @@
   (todo "compile-to"))
 
 (defn do-default [opts args]
-  (if (or (seq (:eval opts)) (seq args))
+  (if (or
+       (seq (:eval opts))
+       (seq args)
+       (stdin-ready?))
     (do-run opts args)
     (do-repl opts)))
 
@@ -265,7 +280,6 @@
   (-main "--version")
   (-main "-Je" "range: 30")
   (-main "-c" "test/hello.ys")
-  (-main "test/hello.ys")
   (-main "test/hello.ys")
   (-main "-e" "println: 123")
   (-main "-ce" "foo:")

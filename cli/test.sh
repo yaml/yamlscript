@@ -45,3 +45,9 @@ ys -c -e 'println: "Hello, World!"' \
 ys -c -x parse -x build -x print -e 'println: "Hello, World!"'
 
 ys -x all -e 'println: inc(41)'
+
+echo 42 | ys -E
+
+echo 42 | ys -E -
+
+ys <(echo 'println: 333') <<<'println: 222' -e 'println: 111'
