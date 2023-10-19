@@ -26,6 +26,7 @@
       :pairs (build-pairs node)
       :exprs (build-exprs node)
       :str (Str (:str node))
+      :istr (Str (:istr node))
       (throw (Exception. (str "Don't know how to build node: " node))))))
 
 (comment

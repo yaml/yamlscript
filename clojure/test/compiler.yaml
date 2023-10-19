@@ -28,3 +28,26 @@
     println: "foo"
   clojure: |
     (println "foo")
+
+
+- name: Single quoted string
+  yamlscript: |
+    println: 'foo'
+  clojure: |
+    (println "foo")
+
+
+- name: Literal style string
+  yamlscript: |
+    println: |-
+      foo
+  clojure: |
+    (println "foo")
+
+
+- name: Folded style string
+  yamlscript: |
+    println: >-
+      foo
+  clojure: |
+    (println "foo")

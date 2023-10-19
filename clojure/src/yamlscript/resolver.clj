@@ -23,7 +23,8 @@
 (defn tag-expr [[key val]]
   (cond
     (and (contains? key :exprs) (contains? val :exprs)) [key val]
-    (and (contains? key :exprs) (contains? val :str)) [key val]))
+    (and (contains? key :exprs) (contains? val :str)) [key val]
+    (and (contains? key :exprs) (contains? val :istr)) [key val]))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))
@@ -63,12 +64,14 @@
           (assoc node :coll new))))))
 
 (defn resolve-ys-scalar [node]
-  (let [style (:style node)
-        node (dissoc node :style)]
-    (cond
-      (contains? node :=) (set/rename-keys node {:= :exprs})
-      (contains? node :$) (set/rename-keys node {:$ :str})
-      :else (throw (Exception. (str "XXX"))))))
+  (let [style (-> node keys first)]
+    (case style
+      := (set/rename-keys node {:= :exprs})
+      :$ (set/rename-keys node {:$ :istr})
+      :' (set/rename-keys node {:' :str})
+      :| (set/rename-keys node {:| :istr})
+      :> (set/rename-keys node {:> :str})
+      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
 
 
 ;; ----------------------------------------------------------------------------
