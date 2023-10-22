@@ -2,66 +2,38 @@
   (:use yamlscript.debug)
   (:require
    [clojure.string :as str]
-   [yamlscript.ast :refer :all])
+   [yamlscript.ast :refer :all]
+   [yamlscript.re :as re])
   (:refer-clojure :exclude [read-string resolve]))
 
-(def re-map
-  {:ignr #"(?x)
-         (?:                      # Ignorables
-           \#\!.*\n? |              # hashbang line
-           [\s,]+    |              # whitespace, commas,
-           ;.*\n?                   # comments
-         )"
-   :char #"\\."                   ; Character token
-   :keyw #"(?:\:\w+(?:-\w+)*)"    ; Keyword token
-   :oper #"[-+*/<=>|&]{1,3}"      ; Operator token
-   :str  #"(?x)
-         \#?                      # Possibly a regex
-         \"(?:                    # Quoted string
-           \\. |                    # Escaped char
-           [^\\\"]                  # Any other char
-         )*\"?                      # Ending quote
-         "
-   :sym  #"\w+(?:-\w+)*[?!]?"     ; Symbol token
-   :symp #"\w+(?:-\w+)*[?!]?\("   ; Symbol followed by paren
-   })
-
 (defn is-character? [token]
-  (and token (re-matches (:char re-map) (str token))))
+  (and token (re-matches re/char (str token))))
 
 (defn is-keyword? [token]
-  (and token (re-matches (:keyw re-map) (str token))))
+  (and token (re-matches re/keyw (str token))))
 
 (defn is-number? [token]
-  (and token (re-matches #"-?\d+" (str token))))
+  (and token (re-matches re/lnum (str token))))
 
 (defn is-operator? [token]
-  (and token (re-matches (:oper re-map) (str token))))
+  (and token (re-matches re/oper (str token))))
 
 (defn is-string? [token]
-  (and token (re-matches (:str re-map) (str token))))
+  (and token (re-matches re/strg (str token))))
 
 (defn is-symbol? [token]
-  (and token (re-matches (:sym re-map) (str token))))
+  (and token (re-matches re/symb (str token))))
 
 (defn is-symbol-paren? [token]
-  (and token (re-matches (:symp re-map) (str token))))
-
-(defn re-expand [re]
-  (re-pattern
-    (reduce
-      (fn [re [k v]]
-        (let [pat (re-pattern (str #"\$" (subs (str k) 1) #"(?!\w)"))]
-          (str/replace re pat (str/re-quote-replacement v))))
-      re re-map)))
+  (and token (re-matches re/symp (str token))))
 
 (def re-tokenize
-  (re-expand
+  (re/re
     #"(?x)
     (?:                       # Symbols and operators
       $keyw |                   # Keyword token
       $symp |                   # Symbol followed by paren
-      $sym |                    # Symbol token
+      $symb |                   # Symbol token
       $oper |                   # Operator token
       $char |                   # Character token
                               # Reader macros
@@ -74,7 +46,7 @@
       ~@ |                      # Unquote-splice token
       [\[\]{}()'`~^@] |         # Single character tokens
 
-      $str                    # String token
+      $strg                   # String token
     )"))
 
 (defn wrap-parens [expr]
@@ -83,7 +55,7 @@
 (defn lex-tokens [expr]
   (->> expr
     (re-seq re-tokenize)
-    (remove #(re-matches (:ignr re-map) %1))))
+    (remove #(re-matches re/ignr %1))))
 
 (declare read-form)
 

@@ -2,6 +2,5 @@
  :deps
  {org.clojure/clojure {:mvn/version "1.11.1"},
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
-  org.snakeyaml/snakeyaml-engine {:mvn/version "2.6"},
-  pjstadig/humane-test-output {:mvn/version "0.11.0"}},
+  org.snakeyaml/snakeyaml-engine {:mvn/version "2.6"}},
  :mvn/repos {"public-github" {:url "git://github.com"}}}

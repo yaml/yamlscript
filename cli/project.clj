@@ -46,6 +46,4 @@
 
   :repositories [["public-github" {:url "git://github.com"}]]
 
-  :repl-options {:init-ns yamlscript.cli}
-
   :global-vars {*warn-on-reflection* true})

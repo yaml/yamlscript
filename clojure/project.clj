@@ -16,8 +16,7 @@
   :dependencies
   [[org.clojure/clojure "1.11.1"]
    [clj-commons/clj-yaml "1.0.27"]
-   [org.snakeyaml/snakeyaml-engine "2.6"]
-   [pjstadig/humane-test-output "0.11.0"]]
+   [org.snakeyaml/snakeyaml-engine "2.6"]]
 
   :plugins
   [[lein-exec "0.3.7"]
@@ -27,17 +26,21 @@
 
   :prep-tasks [["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
 
-  :injections [(require 'pjstadig.humane-test-output)
-               (pjstadig.humane-test-output/activate!)]
-
   :repositories [["public-github" {:url "git://github.com"}]]
 
-  :repl-options
-  {:init-ns yamlscript.core
-   :init
-   (do
-     (require 'pjstadig.humane-test-output)
-     (pjstadig.humane-test-output/activate!)
-     (require 'yamlscript.test-runner))}
+  :global-vars {*warn-on-reflection* true}
 
-  :global-vars {*warn-on-reflection* true})
+  :profiles
+  {:dev
+   {:dependencies
+    [[pjstadig/humane-test-output "0.11.0"]]
+    :injections [(require 'pjstadig.humane-test-output)
+                 (pjstadig.humane-test-output/activate!)]}
+
+   :repl
+   {:repl-options
+    {:init
+     (do
+       (require 'pjstadig.humane-test-output)
+       (pjstadig.humane-test-output/activate!)
+       (require 'yamlscript.test-runner))}}})

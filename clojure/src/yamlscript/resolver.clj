@@ -10,7 +10,7 @@
 ;; Generic helpers:
 ;; ----------------------------------------------------------------------------
 (defn tag-node [node tag]
-  (assoc node :tag tag))
+  (set/rename-keys node {:exprs tag}))
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for ys mode:
@@ -18,9 +18,14 @@
 (defn tag-def [[key val]]
   (let [m (re-matches #"\w+ +=" (:exprs key))]
     (when m
-      [(tag-node key "def") val])))
+      [(tag-node key :def) val])))
 
-(defn tag-expr [[key val]]
+(defn tag-defn [[key val]]
+  (let [m (re-matches #"\w+ +=" (:exprs key))]
+    (when m
+      [(tag-node key :def) val])))
+
+(defn tag-exprs [[key val]]
   (cond
     (and (contains? key :exprs) (contains? val :exprs)) [key val]
     (and (contains? key :exprs) (contains? val :str)) [key val]
@@ -39,7 +44,8 @@
               (resolve-ys-node val)]]
     ((some-fn
        tag-def
-       tag-expr) pair)))
+       tag-defn
+       tag-exprs) pair)))
 
 (defn resolve-ys-mapping [node]
   (let [node (dissoc node :tag)]

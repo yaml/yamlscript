@@ -72,18 +72,40 @@ ifdef w
 endif
 
 LEIN_COMMANDS := \
-    check \
-    classpath \
-    compile \
-    deps \
-    deploy \
-    install \
-    run \
+  check \
+  classpath \
+  compile \
+  deps \
+  deploy \
+  install \
+  run \
+  show-profiles \
+
+define HUMANE_TEST_INIT
+(do \
+  (require 'pjstadig.humane-test-output) \
+  (pjstadig.humane-test-output/activate!) \
+  (require 'yamlscript.test-runner))
+endef
+
+LEIN_REPL_OPTIONS := \
+  update-in :dependencies conj '[nrepl,"1.0.0"]' -- \
+  update-in :nrepl-middleware conj '["cider.nrepl/cider-middleware"]' -- \
+  update-in :plugins conj '[cider/cider-nrepl,"0.28.5"]' -- \
+  update-in :repl-options conj '["cider.nrepl/cider-middleware"]' -- \
 
 #------------------------------------------------------------------------------
 # Common Clojure Targets
 #------------------------------------------------------------------------------
 
+# Leiningen targets
+$(LEIN_COMMANDS)::
+	lein $@
+
+deps-graph::
+	lein deps :tree
+
+# Build/GraalVM targets
 force:
 	$(RM) $(YAMLSCRIPT_CORE_INSTALLED)
 
@@ -92,18 +114,14 @@ $(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 
 graalvm:: $(GRAALVM_PATH)
 
-$(LEIN_COMMANDS)::
-	lein $@
-
 $(GRAALVM_PATH): $(GRAALVM_DOWNLOAD)
 	tar xzf $<
 	mv graalvm-* $@
 
 $(GRAALVM_DOWNLOAD):
 	curl -L -o $@ $(GRAALVM_URL)
-deps-graph::
-	lein deps :tree
 
+# REPL/nREPL management targets
 repl:: repl-deps
 ifneq (,$(wildcard .nrepl-pid))
 	@echo "Connecting to nREPL server on port $$(< .nrepl-port)"

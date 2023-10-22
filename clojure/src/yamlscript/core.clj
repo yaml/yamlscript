@@ -1,5 +1,5 @@
-;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
+;; Copyright 2023 Ingy dot Net
 
 ;; YAMLScript is a programming language that is hosted by Clojure platforms.
 ;; It can be used to add scripting to abilities to YAML files.

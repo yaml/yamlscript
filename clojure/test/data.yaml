@@ -221,12 +221,64 @@
 
 
 
-# - name: Dot escaping
-#   yamlscript: |
-#     map(inc): .[2 4 6 8]
-#   clojure: |
-#     (map inc [2 4 6 8 10])
-#   SKIP: true
+- name: def/let expression
+  yamlscript: |
+    !yamlscript/v0
+    foo =: 123
+    defn bar(a b):
+      c =: (a + b)
+      .*: 2 c
+    bar: 10 20
+  parse: |
+    "+MAP", :! "yamlscript/v0"
+    "=VAL", := "foo ="
+    "=VAL", := "123"
+    "=VAL", := "defn bar(a b)"
+    "+MAP"
+    "=VAL", := "c ="
+    "=VAL", := "(a + b)"
+    "=VAL", := ".*"
+    "=VAL", := "2 c"
+    "-MAP"
+    "=VAL", := "bar"
+    "=VAL", := "10 20"
+    "-MAP"
+  compose: |
+    {:! "yamlscript/v0" :% [
+      {:= "foo ="}
+      {:= "123"}
+      {:= "defn bar(a b)"}
+      {:% [
+        {:= "c ="}
+        {:= "(a + b)"}
+        {:= "*"}
+        {:= "2 c"} ]}
+      {:= "bar"}
+      {:= "10 20"} ]}
+  resolve: |
+    {:pairs [
+      {:def "foo ="}
+      {:exprs "123"}
+      {:defn "defn bar(a b)"}
+      {:pairs [
+        {:let "c ="}
+        {:exprs "(a + b)"}
+        {:exprs "*"}
+        {:exprs "2 c"} ]}
+      {:exprs "bar"}
+      {:exprs "10 20"} ]}
+# build: |
+# expand: |
+# construct: |
+# print: |
+#   (def foo 123)
+#   (defn bar [a b]
+#     (let [c (+ a b)]
+#       (* 2 c)))
+#   bar: 10 20
+#  ONLY: true
+  SKIP: true
+
 
 
 # - name: The 'if' special form
