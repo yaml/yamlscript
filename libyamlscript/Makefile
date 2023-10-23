@@ -1,5 +1,5 @@
-include ../.common.mk
-include ../.common-clj.mk
+include ../common/base.mk
+include ../common/clojure.mk
 
 LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-0.1.0-standalone.jar
 

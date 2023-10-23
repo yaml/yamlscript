@@ -1,5 +1,5 @@
-include ../.common.mk
-include ../.common-clj.mk
+include ../common/base.mk
+include ../common/clojure.mk
 
 YAMLSCRIPT_CLI_BIN := ./ys
 YAMLSCRIPT_CLI_SRC := src/yamlscript/cli.clj

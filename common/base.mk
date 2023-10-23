@@ -4,7 +4,8 @@ endif
 
 SHELL := bash
 
-ROOT := $(shell cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
+ROOT := $(shell \
+  cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))/..' && pwd -P)
 
 export PATH := $(ROOT)/bin:$(PATH)
 

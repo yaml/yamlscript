@@ -1,4 +1,4 @@
-include ../.common.mk
+include ../common/base.mk
 
 PYTHON := $(shell command -v python3)
 PYTHON ?= $(shell command -v python)
