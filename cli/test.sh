@@ -8,8 +8,6 @@ export PATH=$ROOT:$PATH
 
 set -x
 
-make ys
-
 ys --help
 
 ys --version

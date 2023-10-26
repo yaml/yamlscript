@@ -6,6 +6,9 @@ SHELL := bash
 
 ROOT := $(shell \
   cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))/..' && pwd -P)
+COMMON := $(ROOT)/common
+SUBDIR = $(shell pwd)
+SUBDIR := $(SUBDIR:$(ROOT)/%=%)
 
 export PATH := $(ROOT)/bin:$(PATH)
 
@@ -51,5 +54,14 @@ clean::
 
 distclean:: clean
 
+chown::
+	$(MAKE) -C $(ROOT) $@
+
 clean-all::
 	$(MAKE) -C $(ROOT) $@
+
+docker-build::
+
+docker-test::
+
+always:

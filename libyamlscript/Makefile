@@ -1,10 +1,18 @@
 include ../common/base.mk
 include ../common/clojure.mk
+include ../common/docker.mk
 
 LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-0.1.0-standalone.jar
 
 BUILD_TARGETS := \
   $(LIBYAMLSCRIPT_SO_PATH) \
+
+# Avoid rebuild in ephemerally created Docker container.
+ifdef DOCKERENV
+ifneq (,$(wildcard $(LIBYAMLSCRIPT_SO_PATH)))
+LIBYAMLSCRIPT_JAR_PATH :=
+endif
+endif
 
 #------------------------------------------------------------------------------
 build:: $(BUILD_TARGETS)
@@ -12,6 +20,9 @@ build:: $(BUILD_TARGETS)
 clean::
 	$(RM) -r lib/ target/ .lein-* .cpcache/
 	$(RM) src/libyamlscript/Core.class
+
+test:: $(LIBYAMLSCRIPT_SO_PATH)
+	ls -lh lib
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
@@ -44,3 +55,15 @@ $(LIBYAMLSCRIPT_SO_PATH): $(LIBYAMLSCRIPT_JAR_PATH) $(GRAALVM_PATH)
 
 $(LIBYAMLSCRIPT_JAR_PATH): $(YAMLSCRIPT_CORE_INSTALLED) $(GRAALVM_PATH)
 	lein uberjar
+
+Dockerfile:: $(COMMON) Makefile
+	cat \
+	  $</docker-from-ubuntu.dockerfile \
+	  $</docker-apt-base.dockerfile \
+	  $</docker-useradd.dockerfile \
+	  $</docker-apt-clojure.dockerfile \
+	  $</docker-install-graalvm.dockerfile \
+	  $</docker-copy-project-deps.dockerfile \
+	  $</docker-deps-clojure.dockerfile \
+	  $</docker-apt-dev.dockerfile \
+		> $@

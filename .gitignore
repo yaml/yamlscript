@@ -1,10 +1,11 @@
 .calva/
 .clj-kondo/
 .cpcache/
+Dockerfile
 .lsp/
+note/
 .nrepl-port
 .nrepl-pid
 .portal/
+.project.clj
 .vscode/
-
-note/

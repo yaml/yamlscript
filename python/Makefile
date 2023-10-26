@@ -1,9 +1,14 @@
 include ../common/base.mk
+include ../common/docker.mk
 
 PYTHON := $(shell command -v python3)
 PYTHON ?= $(shell command -v python)
 
-PYTHON_VENV := $(ROOT)/python/.venv
+ifdef DOCKERENV
+  PYTHON_VENV := /tmp/venv
+else
+  PYTHON_VENV := $(ROOT)/python/.venv
+endif
 
 VERSION := $(shell head -n1 setup.py | cut -d"'" -f2)
 
@@ -18,18 +23,18 @@ test:: test-pytest test-ffi
 
 test-pytest: $(PYTHON_VENV)
 	source $</bin/activate && \
-	pytest -v test/*.py
+	pytest-3 $${TEST_VERBOSE:+'-v'} test/*.py
 
 test-ffi: $(LIBYAMLSCRIPT_SO_PATH)
 	$(PYTHON) -c 'import yamlscript; print(yamlscript.load("inc: 41"))'
 
 $(LIBYAMLSCRIPT_SO_PATH): $(ROOT)/libyamlscript
-	make -C $< build
+	$(MAKE) -C $< build
 
 pkg-test: venv
-	make clean
-	make test
-	make dist
+	$(MAKE) clean
+	$(MAKE) test
+	$(MAKE) dist
 	pip install dist/yamlscript-*.tar.gz
 	tar xzf dist/yamlscript-*.tar.gz
 	cat yamlscript-*/PKG-INFO
@@ -87,3 +92,17 @@ MANIFEST.in:
 	    grep -B999 '## Features' | \
 	    head -n-2 \
 	> $@
+
+Dockerfile:: $(COMMON) Makefile
+	cat \
+	  $</docker-from-ubuntu.dockerfile \
+	  $</docker-apt-base.dockerfile \
+	  $</docker-useradd.dockerfile \
+	  $</docker-apt-python.dockerfile \
+	  $</docker-deps-python.dockerfile \
+	  $</docker-apt-clojure.dockerfile \
+	  $</docker-copy-project-deps.dockerfile \
+	  $</docker-deps-clojure.dockerfile \
+	  $</docker-install-graalvm.dockerfile \
+	  $</docker-apt-dev.dockerfile \
+		> $@

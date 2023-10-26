@@ -1,10 +1,8 @@
 include ../common/base.mk
 include ../common/clojure.mk
+include ../common/docker.mk
 
 export PATH := $(ROOT)/clojure/bin:$(PATH)
-
-DOCKER_IMAGE := yamlscript-clojure:latest
-DOCKER_HISTORY := /tmp/yamlscript-clojure-bash-history
 
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CORE_INSTALLED)
@@ -17,14 +15,13 @@ clean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .lsp/ .vscode/ .cpcache/ .portal/
 	$(RM) -r target/
 
-docker-build:
-	docker build --tag $(DOCKER_IMAGE) .
-
-docker-shell: docker-build
-	touch $(DOCKER_HISTORY)
-	docker run --rm -it \
-	    --volume $(ROOT):/host \
-	    --volume $(DOCKER_HISTORY):/root/.bash_history \
-	    --workdir /host/clojure \
-	    --entrypoint /bin/bash \
-	    $(DOCKER_IMAGE)
+Dockerfile:: $(COMMON) Makefile
+	cat \
+	  $</docker-from-ubuntu.dockerfile \
+	  $</docker-apt-base.dockerfile \
+	  $</docker-useradd.dockerfile \
+	  $</docker-apt-clojure.dockerfile \
+	  $</docker-copy-project-clj.dockerfile \
+	  $</docker-deps-clojure.dockerfile \
+	  $</docker-apt-dev.dockerfile \
+		> $@

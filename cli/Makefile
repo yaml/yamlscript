@@ -1,17 +1,25 @@
 include ../common/base.mk
 include ../common/clojure.mk
+include ../common/docker.mk
 
-YAMLSCRIPT_CLI_BIN := ./ys
+YAMLSCRIPT_CLI_BIN := ys
 YAMLSCRIPT_CLI_SRC := src/yamlscript/cli.clj
 YAMLSCRIPT_CLI_JAR_PATH := \
   target/uberjar/yamlscript.cli-0.1.0-SNAPSHOT-standalone.jar
+
+# Avoid rebuild in ephemerally created Docker container.
+ifdef DOCKERENV
+ifneq (,$(wildcard $(YAMLSCRIPT_CLI_BIN)))
+YAMLSCRIPT_CLI_JAR_PATH :=
+endif
+endif
 
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CLI_BIN)
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 
-test:
+test: $(YAMLSCRIPT_CLI_BIN)
 	./test.sh
 
 $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(GRAALVM_PATH)
@@ -39,9 +47,22 @@ $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(GRAALVM_PATH)
 clean::
 	$(RM) -r reports/ target/ .lein-* .cpcache/
 	$(RM) $(YAMLSCRIPT_CLI_BIN)
+	$(RM) Dockerfile  # XXX
 
 distclean::
 	$(RM) -r .calva/ .clj-kondo/ .lsp/
 
 $(YAMLSCRIPT_CLI_JAR_PATH): $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	lein uberjar
+
+Dockerfile:: $(COMMON) Makefile
+	cat \
+	  $</docker-from-ubuntu.dockerfile \
+	  $</docker-apt-base.dockerfile \
+	  $</docker-useradd.dockerfile \
+	  $</docker-apt-clojure.dockerfile \
+	  $</docker-install-graalvm.dockerfile \
+	  $</docker-copy-project-deps.dockerfile \
+	  $</docker-deps-clojure.dockerfile \
+	  $</docker-apt-dev.dockerfile \
+		> $@
