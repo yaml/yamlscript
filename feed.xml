@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>YAMLScript</title>
+  <subtitle></subtitle>
+  <link href="https://yamlscript.org/feed.xml" rel="self"/>
+  <link href="https://yamlscript.org/"/>
+  
+    <updated>2023-10-26T00:00:00Z</updated>
+  
+  <id>https://yamlscript.org</id>
+  <author>
+    <name>Ingy döt Net</name>
+    <email>ingy@yaml.com</email>
+  </author>
+  
+    
+    <entry>
+      <title>Welcome to the YAMLScript Blog</title>
+      <link href="https://yamlscript.org/posts/welcome-to-the-yamlscript-blog/"/>
+      <updated>2023-10-26T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/welcome-to-the-yamlscript-blog/</id>
+      <content type="html">
+        <![CDATA[
+      <p><strong>Greetings!</strong></p>
+<p>Welcome to the YAMLScript blog. This is where we will introduce you to novel concepts about YAMLScript as the language evolves.</p>
+
+    ]]>
+      </content>
+    </entry>
+  
+</feed>

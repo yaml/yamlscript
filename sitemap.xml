@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+    
+      <url>
+        <loc>https://yamlscript.org/posts/welcome-to-the-yamlscript-blog/</loc>
+        
+          <lastmod>2023-10-26T00:00:00.000Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/about/</loc>
+        
+          <lastmod>2023-10-26T16:19:59.995Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/blog/</loc>
+        
+          <lastmod>2023-10-26T16:19:59.995Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/</loc>
+        
+          <lastmod>2023-10-26T16:19:59.995Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/robots.txt</loc>
+        
+          <lastmod>2023-10-26T16:19:59.999Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/tags/blog/</loc>
+        
+          <lastmod>2023-10-26T16:19:59.999Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/tags/about/</loc>
+        
+          <lastmod>2023-10-26T16:19:59.999Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+</urlset>
