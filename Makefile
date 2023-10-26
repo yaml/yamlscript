@@ -1,11 +1,11 @@
 SHELL := bash
 
 DIRS := \
-    cli \
     clojure \
     libyamlscript \
     perl \
     python \
+    ys \
 
 BUILD := $(DIRS:%=build-%)
 TEST := $(DIRS:%=test-%)
