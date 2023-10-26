@@ -14,7 +14,7 @@
 (do
   (test/remove-tests)
   (test/load-yaml-tests
-    {:yaml-file "test/data.yaml"
+    {:yaml-file "test/compiler-stack.yaml"
      :pick-func #(test/has-keys? [:yamlscript :build] %)
      :test-func (fn [test]
                   (->> test
