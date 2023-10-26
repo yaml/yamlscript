@@ -1,0 +1,8 @@
+/build/
+/gh-pages/
+/main/
+/node_modules/
+npm-debug.*
+*.log
+/queue/
+/yamlscript-1920x1080.png

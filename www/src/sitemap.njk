@@ -1,0 +1,25 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% for item in collections.all %}
+    {% if not item.data.sitemap.ignore == true %}
+      <url>
+        <loc>{{ site.url }}{{ item.url | url }}</loc>
+        {% if item.data.updated %}
+          <lastmod>{{ item.data.updated | dateToIso }}</lastmod>
+        {% else %}
+          <lastmod>{{ item.date | dateToIso }}</lastmod>
+        {% endif %}
+        {% if item.data.sitemap.changefreq %}
+          <changefreq>{{ item.data.sitemap.changefreq }}</changefreq>
+        {% endif %}
+        {% if item.data.sitemap.priority %}
+          <priority>{{ item.data.sitemap.priority }}</priority>
+        {% endif %}
+      </url>
+    {% endif %}
+  {% endfor %}
+</urlset>

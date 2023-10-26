@@ -1,0 +1,38 @@
+---
+layout: base
+---
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="intro">
+      {{ content | safe }}
+    </div>
+
+    {% if site.socialLinks %}
+      <ul class="hero__social-links">
+        {% for item in site.socialLinks %}
+          {% set externalAttribute = '' %}
+
+          {% if item.external %}
+            {% set externalAttribute = 'target="_blank" rel="noopener noreferrer"' %}
+          {% endif %}
+
+          <li>
+            <a href="{{ item.url | url }}" {{ externalAttribute | safe }}>{{ item.text }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+</header>
+
+<section class="post-list__wrapper">
+  <h2 class="post-list__heading">Recent Posts</h2>
+
+  {% set postslist = collections.posts | head(-10) %}
+  {% include "posts-list.njk" %}
+
+</section>
+
+<a class="all-posts-link" href="{{ '/blog/' | url }}">View All Posts</a>

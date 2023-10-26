@@ -12,6 +12,8 @@ DIRS := \
     perl-alien \
     python \
     raku \
+    ruby \
+    rust \
     ys \
 
 BUILD_DIRS := \
@@ -106,11 +108,14 @@ clean-%: %
 
 $(REALCLEAN):
 realclean: clean $(REALCLEAN)
+	$(MAKE) -C www $@
 realclean-%: %
 	$(MAKE) -C $< realclean
 
 $(DISTCLEAN):
 distclean: realclean $(DISTCLEAN)
+	$(MAKE) -C www $@
+	$(RM) -r bin/ lib/
 distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/ .lsp/

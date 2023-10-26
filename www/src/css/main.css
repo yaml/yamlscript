@@ -1,0 +1,30 @@
+@import 'global.css';
+@import 'variable.css';
+@import 'prism-theme.css';
+@import 'typography.css';
+@import 'post-list.css';
+@import 'hero.css';
+@import 'header.css';
+@import 'footer.css';
+@import 'post.css';
+@import 'about.css';
+
+.layout-wrapper {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 100%;
+}
+
+.main {
+  display: flex;
+  padding-bottom: 4rem;
+  flex-direction: column;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  min-width: 0;
+  max-width: 48.75rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+strong { font-weight: 1000 }
