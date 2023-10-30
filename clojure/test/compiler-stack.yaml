@@ -20,7 +20,7 @@
     # Expand the YS macros (defsyn)
   construct: |
     # Construct a full Clojure AST
-  clojure: |
+  print: |
     # Clojure code compilation output
   TEMPLATE: true
     # 'TEMPLATE: true' is here to ignore this test block
@@ -136,7 +136,7 @@
       [{:Sym b} {:Sym c}] ]}
   construct: |
     {:List [ {:Sym a} {:Sym b} {:Sym c} ]}
-  clojure: |
+  print: |
     (a b c)
 
 
@@ -154,7 +154,7 @@
     {:! "yamlscript/v0" :% [
       {:= "map(inc)"}
       {:= "[2 4 6 8]"} ]}
-  Xclojure: |
+  Xprint: |
     (map inc [2 4 6 8])
 
 
@@ -186,7 +186,7 @@
        {:LNum 3} ]}
      {:Sym prn}
      {:Str "A longer string"} ]}
-  clojure: |
+  print: |
     (do
      (prn ["str" \c 42 foo true false nil])
      (prn {:a 1, :c 2, :b 3})
@@ -202,7 +202,7 @@
     {:pairs
      [{:Sym inc}
       {:List [{:Sym *} {:LNum 6} {:LNum 7}]}]}
-  clojure: |
+  print: |
     (inc (* 6 7))
 
 
@@ -218,7 +218,7 @@
        [{:Sym str}
         {:Str "The number is: "}
         {:List [{:Sym inc} {:LNum 41}]}]}]}
-  clojure: |
+  print: |
     (say (str "The number is: " (inc 41)))
 
 
@@ -288,7 +288,7 @@
 #     if (a > b):
 #       foo(a b)
 #       bar(a b)
-#   clojure: |
+#   print: |
 #     (if (> a b) (foo a b) (bar a b))
 #   SKIP: true
 
@@ -298,5 +298,5 @@
 #     (foo bar)
 #   parse: |
 #     :; comment\n(foo bar)
-#   XXXclojure: |
+#   XXXprint: |
 #     (foo bar)

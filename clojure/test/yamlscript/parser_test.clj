@@ -8,18 +8,22 @@
    [yamlscript.parser :as parser]
    [yamlscript.test :as test]))
 
-(do
-  (test/remove-tests)
+(def test-files
+  ["test/compiler-stack.yaml"])
+
+(test/remove-tests)
+
+(doseq [test-file test-files]
   (test/load-yaml-tests
-    {:yaml-file "test/compiler-stack.yaml"
-     :pick-func #(test/has-keys? [:yamlscript :parse] %)
-     :test-func (fn [test]
-                  (->> test
-                    :yamlscript
-                    parser/parse
-                    (map pr-str)
-                    (map #(subs % 4 (dec (count %))))))
-     :want-func (fn [test]
-                  (->> test
-                    :parse
-                    str/split-lines))}))
+   {:yaml-file test-file
+    :pick-func #(test/has-keys? [:yamlscript :parse] %)
+    :test-func (fn [test]
+                 (->> test
+                      :yamlscript
+                      parser/parse
+                      (map pr-str)
+                      (map #(subs % 4 (dec (count %))))))
+    :want-func (fn [test]
+                 (->> test
+                      :parse
+                      str/split-lines))}))

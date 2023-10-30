@@ -13,11 +13,15 @@
    [yamlscript.printer :as printer]
    [yamlscript.test :as test]))
 
-(do
-  (test/remove-tests)
+(def test-files
+  ["test/compiler-stack.yaml"])
+
+(test/remove-tests)
+
+(doseq [test-file test-files]
   (test/load-yaml-tests
-    {:yaml-file "test/compiler-stack.yaml"
-     :pick-func #(test/has-keys? [:yamlscript :clojure] %)
+    {:yaml-file test-file
+     :pick-func #(test/has-keys? [:yamlscript :print] %)
      :test-func (fn [test]
                   (->> test
                     :yamlscript
@@ -30,4 +34,4 @@
                     printer/print))
      :want-func (fn [test]
                   (->> test
-                    :clojure))}))
+                    :print))}))

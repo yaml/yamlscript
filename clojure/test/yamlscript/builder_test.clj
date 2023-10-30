@@ -16,6 +16,7 @@
    "test/yaml-mode.yaml"])
 
 (test/remove-tests)
+
 (doseq [test-file test-files]
   (test/load-yaml-tests
    {:yaml-file test-file
