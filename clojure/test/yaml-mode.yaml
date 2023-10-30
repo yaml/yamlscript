@@ -1,0 +1,55 @@
+# Copyright 2023 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+- name: yaml-mode mapping
+  yamlscript: |
+    foo: 42
+    bar: 3.1415
+    baz: true
+  resolve: |
+    {:map
+     [{:str "foo"}
+      {:int "42"}
+      {:str "bar"}
+      {:float "3.1415"}
+      {:str "baz"}
+      {:bool "true"}]}
+  build: |
+    {:Map
+     [{:Str "foo"}
+      {:LNum 42}
+      {:Str "bar"}
+      {:DNum 3.1415}
+      {:Str "baz"}
+      :True]}
+
+- name: yaml-mode sequence
+  yamlscript: |
+    - foo
+    - 42
+    - 3.1415
+    - true
+    - false
+    - null
+    - ~
+    -
+  resolve: |
+    {:seq
+     [{:str "foo"}
+      {:int "42"}
+      {:float "3.1415"}
+      {:bool "true"}
+      {:bool "false"}
+      {:null "null"}
+      {:null "~"}
+      {:null ""}]}
+  build: |
+    {:Vec
+     [{:Str "foo"}
+      {:LNum 42}
+      {:DNum 3.1415}
+      :True
+      :False
+      :Nil
+      :Nil
+      :Nil]}

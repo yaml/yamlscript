@@ -9,6 +9,7 @@
 
 - name: Simple map pair expression
   yamlscript: |
+    !yamlscript/v0
     foo: bar
   clojure: |
     (foo bar)
@@ -16,6 +17,7 @@
 
 - name: An 'if' statement
   yamlscript: |
+    !yamlscript/v0
     if (x > 10):
       foo(x)
       bar(x)
@@ -25,6 +27,7 @@
 
 - name: Double quoted string
   yamlscript: |
+    !yamlscript/v0
     println: "foo"
   clojure: |
     (println "foo")
@@ -32,6 +35,7 @@
 
 - name: Single quoted string
   yamlscript: |
+    !yamlscript/v0
     println: 'foo'
   clojure: |
     (println "foo")
@@ -39,6 +43,7 @@
 
 - name: Literal style string
   yamlscript: |
+    !yamlscript/v0
     println: |-
       foo
   clojure: |
@@ -47,6 +52,7 @@
 
 - name: Folded style string
   yamlscript: |
+    !yamlscript/v0
     println: >-
       foo
   clojure: |

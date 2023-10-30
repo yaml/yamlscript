@@ -12,6 +12,17 @@
 (defn tag-node [node tag]
   (set/rename-keys node {:exprs tag}))
 
+(defn node-type [node]
+  (cond
+    (:% node)  :map
+    (:%% node) :map
+    (:- node)  :seq
+    (:-- node) :seq
+    :else      :val))
+
+(defn script-mode [node]
+  (= (:! node) "yamlscript/v0"))
+
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for ys mode:
 ;; ----------------------------------------------------------------------------
@@ -48,7 +59,9 @@
        tag-exprs) pair)))
 
 (defn resolve-ys-mapping [node]
-  (let [node (dissoc node :tag)]
+  (when (:%% node)
+    (throw (Exception. "Flow mappings not allowed in script-mode")))
+  (let [node (dissoc node :! :&)]
     (loop [coll (:% node)
            new []]
       (let [[key val & coll] coll]
@@ -59,15 +72,7 @@
           {:pairs new})))))
 
 (defn resolve-ys-sequence [node]
-  (let [node (dissoc node :tag)]
-    (loop [coll (:coll node)
-           new []]
-      (let [[val & coll] coll]
-        (if val
-          (recur
-            coll
-            (conj new (resolve-ys-node val)))
-          (assoc node :coll new))))))
+  (throw (Exception. "Sequences (block and flow) not allowed in script-mode")))
 
 (defn resolve-ys-scalar [node]
   (let [style (-> node keys first)]
@@ -79,45 +84,76 @@
       :> (set/rename-keys node {:> :str})
       ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
 
-
-;; ----------------------------------------------------------------------------
-;; Public API functions:
-;; ----------------------------------------------------------------------------
-(defn node-type [node]
-  (cond
-    (:% node) :map
-    (:# node) :seq
-    :else     :scalar))
-
 (defn resolve-ys-node
   "Resolve nodes recursively in 'ys' mode"
   [node]
   (case (node-type node)
     :map (resolve-ys-mapping node)
     :seq (resolve-ys-sequence node)
-    :scalar (resolve-ys-scalar node)))
+    :val (resolve-ys-scalar node)))
 
-(defn resolve-data-mapping [node]
-  (throw (Exception. "TODO")))
-(defn resolve-data-sequence [node]
-  (throw (Exception. "TODO")))
-(defn resolve-data-scalar [node]
-  (throw (Exception. "TODO")))
+;; ----------------------------------------------------------------------------
+;; Resolve dispatchers for yaml mode:
+;; ----------------------------------------------------------------------------
+(declare resolve-yaml-node)
 
-(defn resolve-data-node
-  "Resolve nodes recursively in 'data' mode"
+(defn resolve-yaml-mapping [node]
+  (let [node (dissoc node :! :&)]
+    (loop [coll (or (:% node) (:%% node))
+           new []]
+      (let [[key val & coll] coll]
+        (if key
+          (let [key (resolve-yaml-node key)
+                val (resolve-yaml-node val)]
+            (recur coll (apply conj new [key val])))
+          {:map new})))))
+
+(defn resolve-yaml-sequence [node]
+  (let [node (dissoc node :! :&)]
+    (loop [coll (or (:- node) (:-- node))
+           new []]
+      (let [[val & coll] coll]
+        (if val
+          (let [val (resolve-yaml-node val)]
+            (recur coll (conj new val)))
+          {:seq new})))))
+
+(defn resolve-plain-scalar [node]
+  (let [val (:= node)]
+    (cond
+      (re-matches #"-?\d+" val) :int
+      (re-matches #"-?\d+\.\d+" val) :float
+      (re-matches #"(true|True|TRUE|false|False|FALSE)" val) :bool
+      (re-matches #"(|~|null|Null|NULL)" val) :null
+      :else :str)))
+
+(defn resolve-yaml-scalar [node]
+  (let [style (-> node keys first)]
+    (case style
+      := (set/rename-keys node {:= (resolve-plain-scalar node)})
+      :$ (set/rename-keys node {:$ :str})
+      :' (set/rename-keys node {:' :str})
+      :| (set/rename-keys node {:| :str})
+      :> (set/rename-keys node {:> :str})
+      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
+
+(defn resolve-yaml-node
+  "Resolve nodes recursively in 'yaml' mode"
   [node]
-  (let [node (dissoc node :anchor)
-        node (case (:type node)
-               "Mapping" (resolve-data-mapping node)
-               "Scalar" (resolve-data-scalar node)
-               "Sequence" (resolve-data-sequence node))]
-    node))
+  (case (node-type node)
+    :map (resolve-yaml-mapping node)
+    :seq (resolve-yaml-sequence node)
+    :val (resolve-yaml-scalar node)))
 
+;; ----------------------------------------------------------------------------
+;; Public API functions:
+;; ----------------------------------------------------------------------------
 (defn resolve
   "Walk YAML tree and tag all nodes according to YAMLScript rules."
   [node]
-  (resolve-ys-node node))
+  (if (script-mode node)
+    (resolve-ys-node node)
+    (resolve-yaml-node node)))
 
 (comment
   (resolve

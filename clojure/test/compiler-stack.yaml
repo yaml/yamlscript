@@ -29,7 +29,7 @@
 
 - name: Most YAML syntax forms in one example
   yamlscript: |
-    --- !YS/0
+    --- !yamlscript/v0
     a: 'b'
     "c": |
       d
@@ -38,7 +38,7 @@
     : - {g: !h &i j}
       - [*k, [l]]
   parse: |
-    "+MAP", :! "YS/0"
+    "+MAP", :! "yamlscript/v0"
     "=VAL", := "a"
     "=VAL", :' "b"
     "=VAL", :$ "c"
@@ -63,7 +63,7 @@
     "-SEQ"
     "-MAP"
   compose: |
-    {:! "YS/0" :% [
+    {:! "yamlscript/v0" :% [
       {:= "a"}
       {:' "b"}
       {:$ "c"}
@@ -73,12 +73,12 @@
           {:= "e"}
           {:> "f\n"} ]} ]}
       {:- [
-        {:<% [
+        {:%% [
           {:= "g"}
           {:& "i", :! "h", := "j"} ]}
-        {:<- [
+        {:-- [
           {:* "k"}
-          {:<- [
+          {:-- [
             {:= "l"}
           ]} ]} ]} ]}
 
@@ -196,6 +196,7 @@
 
 - name: Basic math ysexpr
   yamlscript: |
+    --- !yamlscript/v0
     inc: (6 * 7)
   build: |
     {:pairs
@@ -208,6 +209,7 @@
 
 - name: Function call ysexpr
   yamlscript: |
+    --- !yamlscript/v0
     say: str("The number is:\ " inc(41))
   build: |
     {:pairs

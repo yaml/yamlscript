@@ -7,27 +7,54 @@
    [yamlscript.ast :refer :all]
    [yamlscript.ysreader :as ysreader]))
 
-(declare build)
+(declare build-node)
 
 (defn build-pairs [node]
   (let [pairs (-> node first second)]
     (loop [[key val & pairs] pairs
            new []]
       (if key
-        (recur pairs (conj new (build key) (build val)))
+        (recur pairs (conj new (build-node key) (build-node val)))
         {:pairs new}))))
 
 (defn build-exprs [node]
   (ysreader/read-string (-> node first second)))
 
-(defn build [node]
+(defn build-map [node]
+  (loop [coll (:map node)
+         new []]
+    (let [[key val & coll] coll]
+      (if key
+        (let [key (build-node key)
+              val (build-node val)]
+          (recur coll (apply conj new [key val])))
+        (Map new)))))
+
+(defn build-vect [node]
+  (loop [coll (:seq node)
+         new []]
+    (let [[val & coll] coll]
+      (if val
+        (let [val (build-node val)]
+          (recur coll (conj new val)))
+        (Vect new)))))
+
+(defn build-node [node]
   (let [[key] (first node)]
     (case key
       :pairs (build-pairs node)
       :exprs (build-exprs node)
-      :str (Str (:str node))
       :istr (Str (:istr node))
+      :str (Str (:str node))
+      :map (build-map node)
+      :seq (build-vect node)
+      :int (LNum (:int node))
+      :float (DNum (:float node))
+      :bool (Bool (:bool node))
+      :null (Nil)
       (throw (Exception. (str "Don't know how to build node: " node))))))
+
+(defn build [node] (build-node node))
 
 (comment
   (build {:pairs [{:exprs "println"} {:str "Hello"}]})

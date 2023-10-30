@@ -108,7 +108,7 @@
           [token tokens])]
     (case token
       "(" (read-list tokens List ")")
-      "[" (read-list tokens Vec "]")
+      "[" (read-list tokens Vect "]")
       "{" (read-list tokens Map "}")
       ,   (read-scalar tokens))))
 

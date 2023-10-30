@@ -8,8 +8,8 @@
   [;
    :%  ; block mapping
    :-  ; block sequence
-   :<% ; flow mapping
-   :<- ; flow sequence
+   :%% ; flow mapping
+   :-- ; flow sequence
 
    :=  ; plain scalar
    :$  ; double quoted scalar
@@ -29,7 +29,7 @@
   (let [[event & events] events
         {anchor :& tag :! flow :flow} event
         {start :<} (meta event)
-        mark (if flow :<% :%)]
+        mark (if flow :%% :%)]
     (loop [coll []
            events events]
       (let [event (first events)]
@@ -52,7 +52,7 @@
   (let [[event & events] events
         {anchor :& tag :! flow :flow} event
         {start :<} (meta event)
-        mark (if flow :<- :-)]
+        mark (if flow :-- :-)]
     (loop [coll []
            events events]
       (let [event (first events)]

@@ -2,12 +2,11 @@
 ;; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.ast
-  (:use yamlscript.debug)
-  (:refer-clojure :exclude [Long]))
+  (:use yamlscript.debug))
 
 (defn List [list] {:List (vec list)})
 
-(defn Vec [list] {:Vec (vec list)})
+(defn Vect [list] {:Vec (vec list)})
 
 (defn Map [list]
   (if (even? (count list))
@@ -20,12 +19,16 @@
 (defn True [] :True)
 (defn False [] :False)
 (defn Nil [] :Nil)
+(defn Bool [b]
+  (if (re-matches #"(true|True|TRUE)" b) :True :False))
 
 (defn Sym [s] {:Sym (symbol s)})
 
 (defn Char [s] {:Char (symbol s)})
 
 (defn LNum [s] {:LNum (parse-long s)})
+
+(defn DNum [s] {:DNum (parse-double s)})
 
 (defn Str [s] {:Str (str s)})
 
