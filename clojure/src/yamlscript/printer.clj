@@ -39,6 +39,7 @@
       :Sym (str val)
       :Key (str val)
       :LNum (str val)
+      :DNum (str val)
       :True "true"
       :False "false"
       :Nil "nil"

@@ -22,6 +22,8 @@
       {:DNum 3.1415}
       {:Str "baz"}
       :True]}
+  print: |
+    {"foo" 42, "bar" 3.1415, "baz" true}
 
 - name: yaml-mode sequence
   yamlscript: |
@@ -53,3 +55,17 @@
       :Nil
       :Nil
       :Nil]}
+  print: |
+    ["foo" 42 3.1415 true false nil nil nil]
+
+- name: yaml-mode nested collections
+  yamlscript: |
+    foo:
+    - -42
+    - bar: 3.1415
+      baz:
+      - True
+      - False
+      - :string
+  print: |
+    {"foo" [-42 {"bar" 3.1415, "baz" [true false ":string"]}]}
