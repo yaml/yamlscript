@@ -145,9 +145,13 @@ ifneq (,$(wildcard .nrepl-pid))
 	$(RM) .nrepl-*
 endif
 
+ifdef PORT
+  repl-port := :port $(PORT)
+endif
+
 .nrepl-pid:
 	( \
-	  lein repl :headless & \
+	  lein repl :headless $(repl-port) & \
 	  echo $$! > $@ \
 	)
 	@( \
