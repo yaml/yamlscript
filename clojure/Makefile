@@ -7,13 +7,8 @@ export PATH := $(ROOT)/clojure/bin:$(PATH)
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CORE_INSTALLED)
 
-test:
-	lein test
-
-clean:: nrepl-stop
-	$(RM) .lein-failures .lein-repl-history pom.xml
-	$(RM) -r .calva/ .clj-kondo/ .lsp/ .vscode/ .cpcache/ .portal/
-	$(RM) -r target/
+install test:
+	lein $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

@@ -1,6 +1,6 @@
 include ../common/base.mk
-include ../common/clojure.mk
-include ../common/docker.mk
+include $(COMMON)/clojure.mk
+include $(COMMON)/docker.mk
 
 YAMLSCRIPT_CLI_BIN := ys
 YAMLSCRIPT_CLI_SRC := src/yamlscript/cli.clj
@@ -16,6 +16,9 @@ endif
 
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CLI_BIN)
+
+install: build
+	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(prefix)/bin/
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 
@@ -45,15 +48,17 @@ $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(GRAALVM_PATH)
 			-o $@
 
 clean::
-	$(RM) -r reports/ target/ .lein-* .cpcache/
 	$(RM) $(YAMLSCRIPT_CLI_BIN)
-	$(RM) Dockerfile  # XXX
 
 distclean::
 	$(RM) -r .calva/ .clj-kondo/ .lsp/
 
+ifeq (true,$(IS_ROOT))
+$(YAMLSCRIPT_CLI_JAR_PATH):
+else
 $(YAMLSCRIPT_CLI_JAR_PATH): $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	lein uberjar
+endif
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

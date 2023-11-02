@@ -2,26 +2,26 @@
 
 YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
 
-[[ :$PATH: == *:"$YAMLSCRIPT_ROOT/bin":* ]] ||
-  PATH=$YAMLSCRIPT_ROOT/bin:$PATH
+[[ :$PATH: == *:"$YAMLSCRIPT_ROOT/install/bin":* ]] ||
+  PATH=$YAMLSCRIPT_ROOT/install/bin:$PATH
+
+# XXX This goes away after perl binding to libyamlscript is implemented.
 [[ :$PATH: == *:"$YAMLSCRIPT_ROOT/perl/bin":* ]] ||
   PATH=$YAMLSCRIPT_ROOT/perl/bin:$PATH
 
-GRAALVM_HOME=/tmp/graalvm
-[[ $OSTYPE == darwin* ]] &&
-  GRAALVM_HOME+=/Contents/Home
-JAVA_HOME=$GRAALVM_HOME
-[[ :$PATH: == *:"$GRAALVM_HOME/bin":* ]] ||
-  PATH=$GRAALVM_HOME/bin:$PATH
-
-PYTHONPATH=$YAMLSCRIPT_ROOT/python/lib
+[[ :$PYTHONPATH: == *:"$YAMLSCRIPT_ROOT/python/lib":* ]] ||
+  PYTHONPATH=$YAMLSCRIPT_ROOT/python/lib
 
 export \
-  GRAALVM_HOME \
-  JAVA_HOME \
   PATH \
   PYTHONPATH \
   YAMLSCRIPT_ROOT \
+
++ys() (
+  set -x
+  make -C $YAMLSCRIPT_ROOT/ys jar
+  java -jar $YAMLSCRIPT_ROOT/ys/target/uberjar/yamlscript.cli-*-SNAPSHOT-standalone.jar "$@"
+)
 
 test-ys-string() (
   set -x
@@ -30,7 +30,7 @@ test-ys-string() (
 
 test-ys-file() (
   set -x
-  python3 -c 'import sys,yamlscript; print(yamlscript.load(open(sys.argv[1], "r")))' "$@"
+  python3 -c 'import sys,yamlscript; print(yamlscript.load(open(sys.argv[1])))' "$@"
 )
 
 # vim: ft=sh:

@@ -1,6 +1,6 @@
 include ../common/base.mk
-include ../common/clojure.mk
-include ../common/docker.mk
+include $(COMMON)/clojure.mk
+include $(COMMON)/docker.mk
 
 LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-0.1.0-standalone.jar
 
@@ -15,10 +15,15 @@ endif
 endif
 
 #------------------------------------------------------------------------------
+default::
+
 build:: $(BUILD_TARGETS)
 
+install:: $(LIBYAMLSCRIPT_SO_PATH)
+	install -m 644 $< $(prefix)/lib/
+
 clean::
-	$(RM) -r lib/ target/ .lein-* .cpcache/
+	$(RM) -r lib/
 	$(RM) src/libyamlscript/Core.class
 
 test:: $(LIBYAMLSCRIPT_SO_PATH)
@@ -53,8 +58,12 @@ $(LIBYAMLSCRIPT_SO_PATH): $(LIBYAMLSCRIPT_JAR_PATH) $(GRAALVM_PATH)
 	    -jar $(LIBYAMLSCRIPT_JAR_PATH) \
 	    -H:Name=$(LIBYAMLSCRIPT_SO_NAME)
 
+ifeq (true,$(IS_ROOT))
+$(LIBYAMLSCRIPT_JAR_PATH):
+else
 $(LIBYAMLSCRIPT_JAR_PATH): $(YAMLSCRIPT_CORE_INSTALLED) $(GRAALVM_PATH)
 	lein uberjar
+endif
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

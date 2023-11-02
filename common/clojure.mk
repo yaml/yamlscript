@@ -77,7 +77,6 @@ LEIN_COMMANDS := \
   compile \
   deps \
   deploy \
-  install \
   run \
   show-profiles \
 
@@ -97,6 +96,14 @@ LEIN_REPL_OPTIONS := \
 #------------------------------------------------------------------------------
 # Common Clojure Targets
 #------------------------------------------------------------------------------
+
+clean:: nrepl-stop
+	$(RM) pom.xml
+	$(RM) -r .lein-*
+	$(RM) -r reports/ target/
+
+distclean::
+	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
 # Leiningen targets
 $(LEIN_COMMANDS)::
@@ -135,7 +142,7 @@ nrepl: .nrepl-pid
 
 nrepl-stop:
 ifneq (,$(wildcard .nrepl-pid))
-	@( \
+	-@( \
 	  pid=$$(< .nrepl-pid); \
 	  read -r pid1 <<<"$$(ps --ppid $$pid -o pid=)"; \
 	  read -r pid2 <<<"$$(ps --ppid $$pid1 -o pid=)"; \

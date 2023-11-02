@@ -1,5 +1,10 @@
 SHELL := bash
 
+ROOT := $(shell \
+	cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
+
+include $(ROOT)/common/vars.mk
+
 DIRS := \
     clojure \
     libyamlscript \
@@ -7,7 +12,12 @@ DIRS := \
     python \
     ys \
 
-BUILD := $(DIRS:%=build-%)
+BUILD_DIRS := \
+		libyamlscript \
+		ys \
+
+BUILD := $(BUILD_DIRS:%=build-%)
+INSTALL := $(BUILD_DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
@@ -24,7 +34,20 @@ chown:
 $(BUILD):
 build: $(BUILD)
 build-%: %
-	$(MAKE) -C $< build
+	-$(MAKE) -C $< build
+
+install-local: install/bin/ys install/lib/libyamlscript.$(SO)
+install/bin/ys: ys/ys install/bin
+	cp $< $@
+install/lib/libyamlscript.$(SO): libyamlscript/lib/libyamlscript.$(SO) install/lib
+	cp $< $@
+install/bin install/lib:
+	mkdir -p $@
+
+$(INSTALL):
+install: $(INSTALL)
+install-%: % build-%
+	-$(MAKE) -C $< install
 
 $(TEST):
 test: $(TEST)
@@ -33,13 +56,17 @@ test-%: %
 
 $(CLEAN):
 clean: $(CLEAN)
+	$(RM) -r install/
 clean-%: %
 	$(MAKE) -C $< clean
+
+clean-install:
+	$(RM) -r install/
 
 clean-all: $(DISTCLEAN)
 
 $(DISTCLEAN):
-distclean: $(DISTCLEAN)
+distclean: clean $(DISTCLEAN)
 distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/ .lsp/

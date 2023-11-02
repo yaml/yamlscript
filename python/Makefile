@@ -63,7 +63,7 @@ clean::
 	$(RM) -r $(LIBRARY_PATH)
 	@echo
 
-distclean:: clean
+distclean::
 	$(RM) -r $(PYTHON_VENV)
 
 venv: $(PYTHON_VENV)

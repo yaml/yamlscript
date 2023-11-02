@@ -35,5 +35,4 @@ docker-shell:: docker-build
 	    $(DOCKER_IMAGE)
 
 clean::
-	# $(RM) Dockerfile
 	$(RM) .project.clj

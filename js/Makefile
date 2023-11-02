@@ -5,7 +5,6 @@ JS := $(COFFEE:%.coffee=%.js)
 JS := $(JS:src/%=lib/%)
 
 default:
-	@printf '%s\n' $(JS)
 
 build: $(JS)
 
