@@ -61,13 +61,6 @@
         (apply conj ["Stack trace:"] (.getStackTrace e))))))
   (exit 1)))
 
-(comment
-  (-main "--help")
-  (-main "test/hello.ys")
-  (-main "-e" "(range 10)")
-  (-main "-e" "(range 10)" "-t" "edn")
-  )
-
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
 (def stages
@@ -87,36 +80,38 @@
     "Compile and evaluate a YAMLScript file"]
    ["-l" "--load"
     "Output the evaluated YAMLScript value"]
+   ["-c" "--compile"
+    "Compile YAMLScript to Clojure"]
    ["-e" "--eval YSEXPR"
     "Evaluate a YAMLScript expression"
     :default []
     :update-fn conj
     :multi true]
-   ["-c" "--compile"
-    "Compile YAMLScript to Clojure"]
 
-   ["-N" "--nrepl"
-    "Start a new nREPL server"]
-   ["-R" "--repl"
-    "Connect console to the current nREPL server"]
-   ["-K" "--kill"
-    "Stop the nREPL server"]
-
-   ["-J" "--json"
-    "Output JSON"]
-   ["-Y" "--yaml"
-    "Output YAML"]
-   ["-E" "--edn"
-    "Output EDN"]
-
+   ["-o" "--output"
+    "Output file for --load or --compile"]
    ["-t" "--to FORMAT"
-    "Output format"
+    "Output format for --load"
     :validate
     [#(contains? to-fmts %)
      (str "must be one of: " (str/join ", " to-fmts))]]
-   ["-o" "--output"
-    "Output file for --load or --compile"]
 
+   ["-J" "--json"
+    "Output JSON for --load"]
+   ["-Y" "--yaml"
+    "Output YAML for --load"]
+   ["-E" "--edn"
+    "Output EDN for --load"]
+
+   ["-R" "--repl"
+    "Start an interactive YAMLScript REPL"]
+   ["-N" "--nrepl"
+    "Start a new nREPL server"]
+   ["-K" "--kill"
+    "Stop the nREPL server"]
+
+   ["-X" "--debug"
+    "Debug mode: print full stack trace for errors"]
    ["-x" "--debug-stage STAGE"
     "Display the result of stage(s)"
     :default {}
@@ -127,10 +122,8 @@
      (str "must be one of: "
           (str/join ", " (keys stages))
           " or all")]]
-   ["-X" "--debug"
-    "Debug mode: print full stack trace for errors"]
 
-   ["-V" "--version"
+   [nil "--version"
     "Print version and exit"]
    ["-h" "--help"
     "Print this help and exit"]])
@@ -158,15 +151,19 @@
 
 (defn get-code [opts args]
   (let [code ""
-        code (if (:eval opts)
-               (->> opts :eval (str/join "\n"))
+        code (if (seq (:eval opts))
+               (let [eval (->> opts :eval (str/join "\n"))
+                     eval (if (or (= "" eval)
+                                  (re-find #"^(--- |!yamlscript)" eval))
+                            eval
+                            (str "--- !yamlscript/v0\n" eval))]
+                 eval)
                code)
-        code
-        (str code "\n"
-             (str/join "\n"
-                       (map
-                        #(if (= "-" %) (slurp *in*) (slurp %))
-                        args)))
+        code (str code "\n"
+                  (str/join "\n"
+                            (map
+                             #(if (= "-" %) (slurp *in*) (slurp %))
+                             args)))
         code (if (stdin-ready?)
                (str code "\n" (slurp *in*))
                code)]
@@ -187,22 +184,24 @@
      code stages)
     (catch Exception e (print-exception e opts nil))))
 
-(defn run-clj [clj opts]
+(defn run-clj [clj]
   (let [sw (java.io.StringWriter.)
         clj (str/trim-newline clj)]
-    (sci/binding [sci/out sw]
-      (let [result (sci/eval-string clj)]
-        (print (str sw))
-        (flush)
-        result))))
+    (if (= "" clj)
+      ""
+      (sci/binding [sci/out sw]
+        (let [result (sci/eval-string clj)]
+          (print (str sw))
+          (flush)
+          result)))))
 
 (defn do-run [opts args]
   (try
-    (let [result
-          (-> (get-code opts args)
-              (compile-code opts)
-              (run-clj opts))]
-      (when (seq (filter #(% opts) [:load :to]))
+    (let [clj (-> (get-code opts args)
+                  (compile-code opts))
+          is-empty (= "" clj)
+          result (run-clj clj)]
+      (when (and (not is-empty) (seq (filter #(% opts) [:load :to])))
         (case (:to opts)
           "yaml" (println
                   (str/trim-newline
@@ -236,13 +235,13 @@
 (defn do-compile-to [opts args]
   (todo "compile-to"))
 
-(defn do-default [opts args]
+(defn do-default [opts args help]
   (if (or
        (seq (:eval opts))
        (seq args)
        (stdin-ready?))
     (do-run opts args)
-    (do-repl opts)))
+    (do-help help)))
 
 (defn -main [& args]
   (let [options (cli/parse-opts args cli-options)
@@ -252,7 +251,16 @@
          errs :errors} options
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
-        opts (if (:edn opts) (assoc opts :to "edn") opts)]
+        opts (if (:edn opts) (assoc opts :to "edn") opts)
+        help (str/replace help #"^"
+                          "Usage: ys [options] [file]\n\nOptions:\n")
+        help (str/replace help #"\[\]" "  ")
+        help (str/replace help #"\{\}" "  ")
+        help (str/replace help #"\n  -o" "\n\n  -o")
+        help (str/replace help #"\n  -J" "\n\n  -J")
+        help (str/replace help #"\n  -R" "\n\n  -R")
+        help (str/replace help #"\n  -X" "\n\n  -X")
+        help (str/replace help #"    ([A-Z])" #(second %))]
     (cond (seq errs) (do-error errs help)
           (:help opts) (do-help help)
           (:version opts) (do-version)
@@ -264,7 +272,7 @@
           (:compile opts) (do-compile opts args)
           (:nrepl opts) (do-nrepl opts args)
           (:compile-to opts) (do-compile-to opts args)
-          :else (do-default opts args))))
+          :else (do-default opts args help))))
 
 (comment
   (-> "(do (println \"abcd\") 123)\n"
