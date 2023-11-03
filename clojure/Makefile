@@ -7,8 +7,8 @@ export PATH := $(ROOT)/clojure/bin:$(PATH)
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CORE_INSTALLED)
 
-install test:
-	lein $@
+install test: $(LEIN)
+	$< $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

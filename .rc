@@ -5,6 +5,9 @@ YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
 [[ :$PATH: == *:"$YAMLSCRIPT_ROOT/install/bin":* ]] ||
   PATH=$YAMLSCRIPT_ROOT/install/bin:$PATH
 
+[[ :$LD_LIBRARY_PATH: == *:"$YAMLSCRIPT_ROOT/install/lib":* ]] ||
+  LD_LIBRARY_PATH=$YAMLSCRIPT_ROOT/install/lib:$PATH
+
 # XXX This goes away after perl binding to libyamlscript is implemented.
 [[ :$PATH: == *:"$YAMLSCRIPT_ROOT/perl/bin":* ]] ||
   PATH=$YAMLSCRIPT_ROOT/perl/bin:$PATH
@@ -13,6 +16,7 @@ YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
   PYTHONPATH=$YAMLSCRIPT_ROOT/python/lib
 
 export \
+  LD_LIBRARY_PATH \
   PATH \
   PYTHONPATH \
   YAMLSCRIPT_ROOT \

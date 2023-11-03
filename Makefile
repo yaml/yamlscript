@@ -34,7 +34,7 @@ chown:
 $(BUILD):
 build: $(BUILD)
 build-%: %
-	-$(MAKE) -C $< build
+	$(MAKE) -C $< build
 
 install-local: install/bin/ys install/lib/libyamlscript.$(SO)
 install/bin/ys: ys/ys install/bin

@@ -25,7 +25,10 @@ jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 test: $(YAMLSCRIPT_CLI_BIN)
 	./test.sh
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(GRAALVM_PATH)
+$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+ifneq (true,$(LIBZ))
+	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
+endif
 	mkdir -p $(dir $@)
 	time \
 	native-image \
@@ -56,8 +59,8 @@ distclean::
 ifeq (true,$(IS_ROOT))
 $(YAMLSCRIPT_CLI_JAR_PATH):
 else
-$(YAMLSCRIPT_CLI_JAR_PATH): $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
-	lein uberjar
+$(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
+	$< uberjar
 endif
 
 Dockerfile:: $(COMMON) Makefile

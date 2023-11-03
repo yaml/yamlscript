@@ -11,7 +11,7 @@ ifneq (,$(findstring linux,$(ostype)))
     $(error Unsupported Linux MACHTYPE: $machtype)
   endif
 
-else ifneq (,$(findstring darwin,$(ostype)))
+else ifeq (true,$(IS_MACOS))
   GRAALVM_SUBDIR := /Contents/Home
 
   ifneq (,$(findstring arm64-apple-darwin,$(machtype)))
@@ -57,6 +57,7 @@ endif
 
 GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
 GRAALVM_DOWNLOAD := /tmp/$(GRAALVM_TAR)
+GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
 
 GRAALVM_O ?= 1
 
@@ -70,6 +71,9 @@ YAMLSCRIPT_CORE_SRC := ../clojure/src/yamlscript/*
 ifdef w
   export WARN_ON_REFLECTION := 1
 endif
+
+LEIN := $(BUILD_BIN)/lein
+LEIN_URL := https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
 LEIN_COMMANDS := \
   check \
@@ -105,12 +109,22 @@ clean:: nrepl-stop
 distclean::
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
-# Leiningen targets
-$(LEIN_COMMANDS)::
-	lein $@
+$(LEIN): $(BUILD_BIN) $(GRAALVM_INSTALLED)
+ifeq (,$(CURL))
+	$(error *** 'curl' is required but not installed)
+endif
+	$(CURL) -L -o $@ $(LEIN_URL)
+	chmod +x $@
 
-deps-graph::
-	lein deps :tree
+$(BUILD_BIN):
+	mkdir -p $@
+
+# Leiningen targets
+$(LEIN_COMMANDS):: $(LEIN)
+	$< $@
+
+deps-graph:: $(LEIN)
+	$< deps :tree
 
 # Build/GraalVM targets
 force:
@@ -119,20 +133,22 @@ force:
 $(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 	$(MAKE) -C ../clojure install
 
-graalvm:: $(GRAALVM_PATH)
-
-$(GRAALVM_PATH): $(GRAALVM_DOWNLOAD)
+$(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
 	tar xzf $<
-	mv graalvm-* $@
+	mv graalvm-* $(GRAALVM_PATH)
+	touch $@
 
 $(GRAALVM_DOWNLOAD):
-	curl -L -o $@ $(GRAALVM_URL)
+ifeq (,$(CURL))
+	$(error *** 'curl' is required but not installed)
+endif
+	$(CURL) -L -o $@ $(GRAALVM_URL)
 
 # REPL/nREPL management targets
-repl:: repl-deps
+repl:: $(LEIN) repl-deps
 ifneq (,$(wildcard .nrepl-pid))
 	@echo "Connecting to nREPL server on port $$(< .nrepl-port)"
-	lein repl :connect
+	$< repl :connect
 endif
 
 repl-deps::
@@ -156,9 +172,9 @@ ifdef PORT
   repl-port := :port $(PORT)
 endif
 
-.nrepl-pid:
+.nrepl-pid: $(LEIN)
 	( \
-	  lein repl :headless $(repl-port) & \
+	  $< repl :headless $(repl-port) & \
 	  echo $$! > $@ \
 	)
 	@( \

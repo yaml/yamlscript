@@ -33,7 +33,10 @@ repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
 distclean::
 
-$(LIBYAMLSCRIPT_SO_PATH): $(LIBYAMLSCRIPT_JAR_PATH) $(GRAALVM_PATH)
+$(LIBYAMLSCRIPT_SO_PATH): $(GRAALVM_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
+ifneq (true,$(LIBZ))
+	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
+endif
 	mkdir -p $(dir $@)
 	# The next command may take a long time (a minute or so)
 	time \
@@ -60,9 +63,12 @@ $(LIBYAMLSCRIPT_SO_PATH): $(LIBYAMLSCRIPT_JAR_PATH) $(GRAALVM_PATH)
 
 ifeq (true,$(IS_ROOT))
 $(LIBYAMLSCRIPT_JAR_PATH):
+ifeq (true,$(IS_ROOT))
+	$(error *** YAMLScript 'make build' must be run as non-root user)
+endif
 else
-$(LIBYAMLSCRIPT_JAR_PATH): $(YAMLSCRIPT_CORE_INSTALLED) $(GRAALVM_PATH)
-	lein uberjar
+$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
+	$< uberjar
 endif
 
 Dockerfile:: $(COMMON) Makefile
