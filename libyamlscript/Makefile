@@ -20,7 +20,7 @@ default::
 build:: $(BUILD_TARGETS)
 
 install:: $(LIBYAMLSCRIPT_SO_PATH)
-	install -m 644 $< $(prefix)/lib/
+	install -m 644 $< $(PREFIX)/lib/
 
 clean::
 	$(RM) -r lib/

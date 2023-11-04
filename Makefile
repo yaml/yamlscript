@@ -36,14 +36,6 @@ build: $(BUILD)
 build-%: %
 	$(MAKE) -C $< build
 
-install-local: install/bin/ys install/lib/libyamlscript.$(SO)
-install/bin/ys: ys/ys install/bin
-	cp $< $@
-install/lib/libyamlscript.$(SO): libyamlscript/lib/libyamlscript.$(SO) install/lib
-	cp $< $@
-install/bin install/lib:
-	mkdir -p $@
-
 $(INSTALL):
 install: $(INSTALL)
 install-%: % build-%
@@ -56,12 +48,8 @@ test-%: %
 
 $(CLEAN):
 clean: $(CLEAN)
-	$(RM) -r install/
 clean-%: %
 	$(MAKE) -C $< clean
-
-clean-install:
-	$(RM) -r install/
 
 clean-all: $(DISTCLEAN)
 

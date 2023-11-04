@@ -18,7 +18,7 @@ endif
 build:: $(YAMLSCRIPT_CLI_BIN)
 
 install: build
-	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(prefix)/bin/
+	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(PREFIX)/bin/
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 

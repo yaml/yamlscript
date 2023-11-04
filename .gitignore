@@ -4,7 +4,6 @@ classes/
 .clj-kondo/
 .cpcache/
 Dockerfile
-/install/
 *.jar
 .lein-*
 .lsp/

@@ -4,74 +4,230 @@ YAMLScript
 Program in YAML
 
 
-## Abstract
+## About YAMLScript
 
-YAMLScript is programming language with a stylized YAML syntax.
+YAMLScript is a functional programming language with a stylized YAML syntax.
 
 YAMLScript can be used for:
 
-* Writing entire programs (apps)
+* Writing programs and apps
 * Writing reusable libraries
-* Embedding in YAML data files
+* Functional operations in YAML data files
 
 
-## Synopsis
+### Run or Load?
 
-A complete YAMLScript program `99-bottles.ys`:
+YAMLScript programs can either be "run" or "loaded".
+When a YAMLScript program is run, it is executed as a normal program.
+When a YAMLScript program is loaded, it evaluates to a JSON-model data
+structure.
 
-```
-#!/usr/bin/env yamlscript
+Most existing YAML files in the wild are already valid YAMLScript programs.
+If you have a valid YAML ([1.2 Core Schema](
+https://yaml.org/spec/1.2.2/#103-core-schema)) file that doesn't use custom
+tags, and loads to a value expressable in JSON, then it is a valid YAMLScript
+program.
+YAMLScript's `load` operation will evaluate that file exactly the same in any
+programming language / environment.
 
-defn main(number=99):
-  map(say):
-    map(paragraph):
-      (number .. 1)
+These existing YAML files obviously can't use YAMLScript's functional
+programming features since that would be ambiguous.
+For example, what is the JSON value when "loading" this YAMLScript program?
 
-defn paragraph(num): |
-  $(bottles num) of beer on the wall,
-  $(bottles num) of beer.
-  Take one down, pass it around.
-  $(bottles (num - 1)) of beer on the wall.
-
-defn bottles(n):
-  ???:
-    (n == 0) : "No more bottles"
-    (n == 1) : "1 bottle"
-    :else    : "$n bottles"
+```yaml
+foo: inc(41)
 ```
 
-Run: `yamlscript 99-bottles.ys 3`
+Is it `{"foo": "inc(41)"}` or `{"foo": 42}`?
 
-```
-3 bottles of beer on the wall,
-3 bottles of beer.
-Take one down, pass it around.
-2 bottles of beer on the wall.
+YAMLScript programs must start with a special YAML tag `!yamlscript-0` to
+indicate that they have functional capabilities.
 
-2 bottles of beer on the wall,
-2 bottles of beer.
-Take one down, pass it around.
-1 bottle of beer on the wall.
-
-1 bottle of beer on the wall,
-1 bottle of beer.
-Take one down, pass it around.
-No more bottles of beer on the wall.
+```yaml
+!yamlscript-0
+foo: inc(41)
 ```
 
-
-## YAMLScript Example Programs
-
-The YAMLScript source repository contains [example YAMLScript programs](
-https://github.com/yaml/yamlscript/tree/main/perl/eg).
-
-These programs are also available on RosettaCode.org [here](
-https://rosettacode.org/wiki/Category:YAMLScript).
+> Note: The extra `-0` on the tag indicates the YAMLScript API version.
+This is so that future versions of YAMLScript can run programs written to an
+older API version, and also so that older versions of YAMLScript don't try to
+run programs written to a newer API version.
 
 
-## YAMLScript Documentation
+### YAMLScript is a Lisp
 
-* [Test::More::YAMLScript](https://metacpan.org/pod/Test::More::YAMLScript)
+Even though YAMLScript often has the look of an imperative programming language,
+it actually is just a (YAML based) syntax that *compiles* to
+[Clojure](https://clojure.org/) code.
+The resulting Clojure code is then run by a native-machine-code Clojure runtime
+called [Small Clojure Interpreter (SCI)](https://github.com/babashka/sci).
+
+Clojure is a functional programming language with its own Lisp syntax.
+Therefore it is fair to say that YAMLScript is a (functional) Lisp, despite its
+lack of Lisp's obligatory parentheses.
+
+Typically Clojure produces Java bytecode that is run on the JVM, but for
+YAMLScript there is no Java or JVM involved.
+In testing so far, YAMLScript programs tend to run as faster or faster than
+equivalent Perl or Python programs.
+
+For getting started with YAMLScript, you don't need to know anything about Lisp
+or Clojure.
+You can use it with as much or as little Lisp-ness as you want; the
+syntax is quite flexible (*and even programmable!*).
+As your YAMLScript programming requirements grow, you can rest assured that you
+have the full power of Clojure at your disposal.
+
+
+### Using YAMLScript
+
+There are two primary ways to use YAMLScript:
+
+* Using the `ys` command line runner / loader / compiler
+* Using it a library in your own programming language
+
+The `ys` command line tool is the easiest way to get started with YAMLScript.
+It has these main modes of operation:
+
+* `ys --run <file>` - Run a YAMLScript program
+* `ys --load <file>` - Load a YAMLScript program
+* `ys --compile <file>` - Compile a YAMLScript program to Clojure
+* `ys --eval '<expr>'` - Evaluate a YAMLScript expression string
+* `ys --repl` - Start an interactive YAMLScript REPL session
+* `ys --help` - Show the `ys` command help
+
+You can also use YAMLScript as a library in your own programming language.
+For example, in Python you can use the `yamlscript` module like this:
+
+```python
+import yamlscript
+ys = yamlscript.new(v=0)
+text = open("foo.yaml").read()
+data = ys.load(text)
+```
+
+
+### Supported Operating Systems
+
+YAMLScript is supported on these operating systems:
+
+* Linux
+* macOS
+* Windows  (work in progress)
+
+YAMLScript is supported on these architectures:
+
+* x86-64
+* ARM64
+
+For now other systems cannot be supported because `ys` and `libyamlscript` are
+compiled by GraalVM's `native-image` tool, which only supports the above
+systems.
+
+
+## Installing YAMLScript
+
+At the moment, the best way to install YAMLScript is to build it from source.
+
+This is very easy to do because YAMLScript has very few dependencies:
+
+* `bash` (your interactive shell can be any shell)
+* `curl`
+* `git`
+* `make`
+* `zlib-dev` (need this installed on Linux)
+
+To install the `ys` command line tool, and `libyamlscript` shared library,
+run these commands:
+
+```bash
+git clone https://github.com/yaml/yamlscript
+cd yamlscript
+make build
+sudo make install
+```
+
+The `make install` command will install `ys` and `libyamlscript` to
+`/usr/local/bin` and `/usr/local/lib` respectively, by default.
+This means that you will need to run `make install` with `sudo` or as root.
+To install to a different location, run `make install PREFIX=/some/path`.
+
+> Notes:
+> * `make install` triggers a `make build` if needed, but...
+> * You need to run `make build` not as root
+> * The build can take several minutes (`native-image` is slow)
+> * If you install to a custom location, you will need to add that location to
+>   your `PATH` and `LD_LIBRARY_PATH` environment variables
+
+
+### Installing a YAMLScript Binding for a Programming Language
+
+> Note: This is still a work in progress.
+
+For Python you can simply install the `yamlscript` module from
+[PyPI](https://pypi.org/search/?q=yamlscript), like any other Python module:
+
+```bash
+pip install yamlscript
+```
+
+**But** you will also need to install the `libyamlscript` shared library as
+detailed above.
+
+The shared library is not installed along with the Python module for many
+reasons, but the good news is that you can install it once and use it with any
+YAMLScript binding for any programming language.
+
+
+## The YAMLScript Repository
+
+The [YAMLScript source code repository](https://github.com/yaml/yamlscript)
+is a mono-repo containing:
+
+* The YAMLScript compiler code
+* The YAMLScript shared library code
+* A YAMLScript binding module for each programming language
+* The YAMLScript test suite
+* The YAMLScript documentation
+* The yamlscript.org website (with docs, blog, wiki, etc)
+
+
+### `make` It So
+
+The YAMLScript repository uses a `Makefile` system to build, test and install
+its various offerings.
+There is a top level `Makefile` and each repo subdirectory has its own
+`Makefile`.
+When run at the top level, many `make` targets like `test`, `build`, `install`,
+`clean`, `distclean`, etc will invoke that target in each relevant subdirectory.
+
+Given that this repository has so few dependencies, you should be able to clone
+it and run `make` targets (try `make test`) without any problems.
+
+
+### Contributing to YAMLScript
+
+To ensure that YAMLScript libraries work the same across all languages, this
+project aims to have a binding implementaion for each programming language.
+
+If you would like to contribute a new YAMLScript binding for a programming
+language, you are encouraged to
+[submit a pull request](https://github.com/yaml/yamlscript/pulls) to this
+repository.
+
+
+## YAMLScript Resources
+
+> Note: The documentaion linked to below is out of date, but should give you a
+decent idea of what YAMLScript is about.
+It will be rewritten soon.
+
+* [YAMLScript Documentation](
+  https://metacpan.org/pod/Test::More::YAMLScript)
+* [Example YAMLScript Programs](
+  https://rosettacode.org/wiki/Category:YAMLScript)
+* [YAMLScript Presentation Video](
+  https://www.youtube.com/watch?v=9OcFh-HaCyI)
 
 
 ## Authors

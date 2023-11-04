@@ -50,4 +50,4 @@ export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
 LIBYAMLSCRIPT_SO_PATH := $(LIBRARY_PATH)/libyamlscript.$(SO)
 LIBYAMLSCRIPT_SO_NAME := $(LIBRARY_PATH)/libyamlscript
 
-prefix ?= /usr/local
+PREFIX ?= /usr/local
