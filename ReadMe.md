@@ -40,43 +40,18 @@ foo: inc(41)
 
 Is it `{"foo": "inc(41)"}` or `{"foo": 42}`?
 
-YAMLScript programs must start with a special YAML tag `!yamlscript-0` to
+YAMLScript programs must start with a special YAML tag `!yamlscript/v0` to
 indicate that they have functional capabilities.
 
 ```yaml
-!yamlscript-0
-foo: inc(41)
+!yamlscript/v0:
+foo: ! inc(41)
 ```
 
-> Note: The extra `-0` on the tag indicates the YAMLScript API version.
+> Note: The `/v0` in the tag indicates the YAMLScript API version.
 This is so that future versions of YAMLScript can run programs written to an
 older API version, and also so that older versions of YAMLScript don't try to
 run programs written to a newer API version.
-
-
-### YAMLScript is a Lisp
-
-Even though YAMLScript often has the look of an imperative programming language,
-it actually is just a (YAML based) syntax that *compiles* to
-[Clojure](https://clojure.org/) code.
-The resulting Clojure code is then run by a native-machine-code Clojure runtime
-called [Small Clojure Interpreter (SCI)](https://github.com/babashka/sci).
-
-Clojure is a functional programming language with its own Lisp syntax.
-Therefore it is fair to say that YAMLScript is a (functional) Lisp, despite its
-lack of Lisp's obligatory parentheses.
-
-Typically Clojure produces Java bytecode that is run on the JVM, but for
-YAMLScript there is no Java or JVM involved.
-In testing so far, YAMLScript programs tend to run as faster or faster than
-equivalent Perl or Python programs.
-
-For getting started with YAMLScript, you don't need to know anything about Lisp
-or Clojure.
-You can use it with as much or as little Lisp-ness as you want; the
-syntax is quite flexible (*and even programmable!*).
-As your YAMLScript programming requirements grow, you can rest assured that you
-have the full power of Clojure at your disposal.
 
 
 ### Using YAMLScript
@@ -123,6 +98,31 @@ YAMLScript is supported on these architectures:
 For now other systems cannot be supported because `ys` and `libyamlscript` are
 compiled by GraalVM's `native-image` tool, which only supports the above
 systems.
+
+
+### YAMLScript is a Lisp
+
+Even though YAMLScript often has the look of an imperative programming language,
+it actually is just a (YAML based) syntax that *compiles* to
+[Clojure](https://clojure.org/) code.
+The resulting Clojure code is then run by a native-machine-code Clojure runtime
+called [Small Clojure Interpreter (SCI)](https://github.com/babashka/sci).
+
+Clojure is a functional programming language with its own Lisp syntax.
+Therefore it is fair to say that YAMLScript is a (functional) Lisp, even though
+it commonly doesn't look like one syntactically.
+
+Typically Clojure produces Java bytecode that is run on the JVM, but for
+YAMLScript there is no Java or JVM involved.
+In testing so far, YAMLScript programs tend to run as faster or faster than
+equivalent Perl or Python programs.
+
+For getting started with YAMLScript, you don't need to know anything about Lisp
+or Clojure.
+You can use it with as much or as little Lisp-ness as you want; the
+syntax is quite flexible (*and even programmable!*).
+As your YAMLScript programming requirements grow, you can rest assured that you
+have the full power of Clojure at your disposal.
 
 
 ## Installing YAMLScript
@@ -218,7 +218,7 @@ repository.
 
 ## YAMLScript Resources
 
-> Note: The documentaion linked to below is out of date, but should give you a
+> Note: The documentation linked to below is out of date, but should give you a
 decent idea of what YAMLScript is about.
 It will be rewritten soon.
 
