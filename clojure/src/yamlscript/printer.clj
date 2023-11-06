@@ -17,6 +17,7 @@
                node)
         [type val] (first node)]
     (case type
+      :Empty ""
       :List (str
               "("
               (str/join " " (map print-node val))
@@ -54,12 +55,13 @@
 (defn print
   "Render a YAMLScript AST as Clojure code."
   [node]
-  (-> node
-    print-node
-    edn/read-string
-    pretty-format))
+  (let [string (print-node node)]
+    (if (= string "")
+      ""
+      (-> string edn/read-string pretty-format))))
 
 (comment
+  (print :Empty)
   (print
     {:List [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
   )

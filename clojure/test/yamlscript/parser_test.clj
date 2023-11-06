@@ -27,3 +27,8 @@
                  (->> test
                       :parse
                       str/split-lines))}))
+
+(comment
+  *file*
+  *compile-path*
+  )

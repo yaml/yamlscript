@@ -96,3 +96,7 @@
 (defmethod ys-event ScalarEvent        [event] (scalar-val event))
 (defmethod ys-event AliasEvent         [event] (alias-val  event))
 (defmethod ys-event :default [_] nil)
+
+(comment
+  (parse "a")
+  )

@@ -75,7 +75,8 @@
   (throw (Exception. "Sequences (block and flow) not allowed in script-mode")))
 
 (defn resolve-ys-scalar [node]
-  (let [style (-> node keys first)]
+  (let [node (dissoc node :! :&)
+        style (-> node keys first)]
     (case style
       := (set/rename-keys node {:= :exprs})
       :$ (set/rename-keys node {:$ :istr})
@@ -128,7 +129,8 @@
       :else :str)))
 
 (defn resolve-yaml-scalar [node]
-  (let [style (-> node keys first)]
+  (let [node (dissoc node :! :&)
+        style (-> node keys first)]
     (case style
       := (set/rename-keys node {:= (resolve-plain-scalar node)})
       :$ (set/rename-keys node {:$ :str})
@@ -157,5 +159,6 @@
 
 (comment
   (resolve
-    {:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]})
-  )
+   #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
+   {:! "yamlscript/v0", := ""}
+   #__))

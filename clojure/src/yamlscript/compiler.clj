@@ -29,15 +29,35 @@
     clojure-string))
 
 (comment
-  (->> ["foo: bar baz"
-        "if (x > y): x (inc y)"
-        "if(x > y): x (inc y)"
-        #__]
-    last
-    compile
-    println)
+  (->>
+   ""
+   #_"!yamlscript/v0"
+
+   yamlscript.parser/parse
+   yamlscript.composer/compose
+   yamlscript.resolver/resolve
+   yamlscript.builder/build
+   yamlscript.expander/expand
+   yamlscript.constructor/construct
+   yamlscript.printer/print
+
+   www)
+
+  (-> "" compile)
+  (-> "!yamlscript/v0" compile)
+  (-> "a: b" compile)
+
+  (-> [#__
+       "foo: bar baz"
+       "if (x > y): x (inc y)"
+       "if(x > y): x (inc y)"
+       #__]
+      (nth 2)
+      compile
+      println)
 
   (->> "test/hello.ys"
-    slurp
-    compile
-    println))
+       slurp
+       compile
+       println)
+  )

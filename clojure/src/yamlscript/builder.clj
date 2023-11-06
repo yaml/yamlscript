@@ -18,7 +18,10 @@
         {:pairs new}))))
 
 (defn build-exprs [node]
-  (ysreader/read-string (-> node first second)))
+  (let [string (-> node first second)]
+    (if (= string "")
+      :Empty
+      (ysreader/read-string (-> node first second)))))
 
 (defn build-map [node]
   (loop [coll (:map node)
@@ -57,6 +60,8 @@
 (defn build [node] (build-node node))
 
 (comment
+  (build {:exprs ""})
+
   (build {:pairs [{:exprs "println"} {:str "Hello"}]})
 
   (build {:pairs [{:exprs "inc"} {:exprs "(6 * 7)"}]})
@@ -64,6 +69,6 @@
   (build {:pairs [{:exprs "a"} {:exprs "b c"}]})
 
   (build
-    {:pairs [{:exprs "a"}
-             {:exprs "b c"}]})
+   {:pairs [{:exprs "a"}
+            {:exprs "b c"}]})
   )

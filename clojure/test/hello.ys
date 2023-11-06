@@ -1,2 +1,3 @@
+--- !yamlscript/v0
 println: "Hello"
 identity: 12345

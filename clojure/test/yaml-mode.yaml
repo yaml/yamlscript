@@ -69,3 +69,24 @@
       - :string
   print: |
     {"foo" [-42 {"bar" 3.1415, "baz" [true false ":string"]}]}
+
+- name: Empty YAMLScript File
+  yamlscript: ""
+  build: |
+    :Empty
+  print: |
+
+- name: Empty YAMLScript File w/ yamlscript Tag
+  yamlscript: ""
+  build: |
+    :Empty
+  print: |
+
+- name: yaml-mode with script-mode
+  yamlscript: |
+    !yamlscript/0
+    foo: !ys inc(41)
+    bar: ! dec(43)
+  print: |
+    {"foo" (inc 41), "bar" (dec 43)}
+  SKIP: true

@@ -103,7 +103,12 @@
 (defn compose
   "Compose YAML parse events into a tree."
   [events]
-  (->>
-    events
-    compose-events
-    first))
+  (if (seq events)
+    (->>
+     events
+     compose-events
+     first)
+    {:! "yamlscript/v0", := ""}))
+
+(comment
+  )
