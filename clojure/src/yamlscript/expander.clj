@@ -11,7 +11,8 @@
     (loop [[key val & pairs] pairs
            new []]
       (if key
-        (recur pairs (conj new (expand key) (expand val)))
+        (recur pairs (conj new
+                           [(expand key) (expand val)]))
         {:do new}))))
 
 (defn expand [node]

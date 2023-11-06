@@ -19,7 +19,7 @@
   (let [l (last o)
         o (if (= 1 (count o)) (first o) o)]
     (binding [*out* *err*]
-      (println (dump o)))
+      (print (dump o)))
     l))
 
 (defn xxx+ [& o]

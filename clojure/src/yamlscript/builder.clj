@@ -4,6 +4,7 @@
 (ns yamlscript.builder
   (:use yamlscript.debug)
   (:require
+   [clojure.string :as str]
    [yamlscript.ast :refer :all]
    [yamlscript.ysreader :as ysreader]))
 
@@ -14,7 +15,12 @@
     (loop [[key val & pairs] pairs
            new []]
       (if key
-        (recur pairs (conj new (build-node key) (build-node val)))
+        (let [key (if (:let key)
+                    (let [sym (str/replace (:let key) #" +=" "")]
+                      {:Let sym})
+                    (build-node key))
+              val (build-node val)]
+          (recur pairs (conj new key val)))
         {:pairs new}))))
 
 (defn build-exprs [node]

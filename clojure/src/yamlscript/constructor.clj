@@ -14,21 +14,27 @@
   [node]
   (construct-node node))
 
-(defn construct-err [o]
-  (throw (Exception. (str "Can't construct " o))))
+(defn construct-let [pair]
+  (let [[key val] pair]
+    (when (:Let key)
+      (List [(Sym "def") (Sym (:Let key)) val]))))
 
 (defn construct-call [pair]
   (List (flatten [pair])))
 
+(defn construct-err [o]
+  (throw (Exception. (str "Can't construct " o))))
+
 (defn construct-pair [pair]
   ((some-fn
+     construct-let
      construct-call
      construct-err)
     pair))
 
 (defn construct-do [node]
-  (let [pairs (:do node)]
-    (loop [[key val & pairs] pairs
+  (let [pairs (node :do)]
+    (loop [[[key val] & pairs] pairs
            body []]
       (if key
         (recur pairs

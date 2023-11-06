@@ -132,8 +132,8 @@
       [{:Sym b} {:Sym c}] ]}
   expand: |
     {:do [
-      {:Sym a}
-      [{:Sym b} {:Sym c}] ]}
+      [{:Sym a}
+       [{:Sym b} {:Sym c}]] ]}
   construct: |
     {:List [ {:Sym a} {:Sym b} {:Sym c} ]}
   print: |
@@ -220,6 +220,15 @@
         {:List [{:Sym inc} {:LNum 41}]}]}]}
   print: |
     (say (str "The number is: " (inc 41)))
+
+
+
+- name: def expression
+  yamlscript: |
+    !yamlscript/v0
+    foo =: 123
+  print: |
+    (def foo 123)
 
 
 

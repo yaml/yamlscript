@@ -11,7 +11,8 @@
    [yamlscript.builder]
    [yamlscript.expander]
    [yamlscript.constructor]
-   [yamlscript.printer])
+   [yamlscript.printer]
+   [clojure.pprint :as pp])
   (:refer-clojure :exclude [compile]))
 
 (defn compile
@@ -30,18 +31,26 @@
 
 (comment
   (->>
-   ""
+   #_""
    #_"!yamlscript/v0"
+   "!yamlscript/v0
+a =: 123"
 
    yamlscript.parser/parse
+   (www :parse)
    yamlscript.composer/compose
+   (www :compose)
    yamlscript.resolver/resolve
+   (www :resolve)
    yamlscript.builder/build
+   (www :build)
    yamlscript.expander/expand
+   (www :expand)
    yamlscript.constructor/construct
+   (www :construct)
    yamlscript.printer/print
-
-   www)
+   (www :print)
+   #__)
 
   (-> "" compile)
   (-> "!yamlscript/v0" compile)

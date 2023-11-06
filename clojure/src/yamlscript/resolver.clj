@@ -26,13 +26,13 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for ys mode:
 ;; ----------------------------------------------------------------------------
-(defn tag-def [[key val]]
+(defn tag-let [[key val]]
   (let [m (re-matches #"\w+ +=" (:exprs key))]
     (when m
-      [(tag-node key :def) val])))
+      [(tag-node key :let) val])))
 
 (defn tag-defn [[key val]]
-  (let [m (re-matches #"\w+ +=" (:exprs key))]
+  (let [m (re-matches #"XXX \w+ +=" (:exprs key))]
     (when m
       [(tag-node key :def) val])))
 
@@ -54,7 +54,7 @@
   (let [pair [(resolve-ys-node key)
               (resolve-ys-node val)]]
     ((some-fn
-       tag-def
+       tag-let
        tag-defn
        tag-exprs) pair)))
 
