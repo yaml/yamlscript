@@ -11,17 +11,17 @@
      [{:str "foo"}
       {:int "42"}
       {:str "bar"}
-      {:float "3.1415"}
+      {:flt "3.1415"}
       {:str "baz"}
-      {:bool "true"}]}
+      {:bln "true"}]}
   build: |
     {:Map
      [{:Str "foo"}
-      {:LNum 42}
+      {:Int 42}
       {:Str "bar"}
-      {:DNum 3.1415}
+      {:Flt 3.1415}
       {:Str "baz"}
-      :True]}
+      {:Bln true}]}
   print: |
     {"foo" 42, "bar" 3.1415, "baz" true}
 
@@ -39,22 +39,22 @@
     {:seq
      [{:str "foo"}
       {:int "42"}
-      {:float "3.1415"}
-      {:bool "true"}
-      {:bool "false"}
+      {:flt "3.1415"}
+      {:bln "true"}
+      {:bln "false"}
       {:null "null"}
       {:null "~"}
       {:null ""}]}
   build: |
     {:Vec
      [{:Str "foo"}
-      {:LNum 42}
-      {:DNum 3.1415}
-      :True
-      :False
-      :Nil
-      :Nil
-      :Nil]}
+      {:Int 42}
+      {:Flt 3.1415}
+      {:Bln true}
+      {:Bln false}
+      {:Nil nil}
+      {:Nil nil}
+      {:Nil nil}]}
   print: |
     ["foo" 42 3.1415 true false nil nil nil]
 
@@ -73,13 +73,13 @@
 - name: Empty YAMLScript File
   yamlscript: ""
   build: |
-    :Empty
+    {:Empty nil}
   print: |
 
 - name: Empty YAMLScript File w/ yamlscript Tag
   yamlscript: ""
   build: |
-    :Empty
+    {:Empty nil}
   print: |
 
 - name: yaml-mode with script-mode

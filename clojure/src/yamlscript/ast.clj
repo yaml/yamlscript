@@ -1,12 +1,15 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.ast library defines the YAMLScript AST nodes.
+
 (ns yamlscript.ast
-  (:use yamlscript.debug))
+  (:use yamlscript.debug)
+  (:refer-clojure :exclude [Vec]))
 
-(defn List [list] {:List (vec list)})
+(defn Lst [list] {:Lst (vec list)})
 
-(defn Vect [list] {:Vec (vec list)})
+(defn Vec [list] {:Vec (vec list)})
 
 (defn Map [list]
   (if (even? (count list))
@@ -16,34 +19,37 @@
             vec)}
     (throw (Exception. "Odd number of elements in map"))))
 
-(defn True [] :True)
-(defn False [] :False)
-(defn Nil [] :Nil)
-(defn Bool [b]
-  (if (re-matches #"(true|True|TRUE)" b) :True :False))
-
 (defn Sym [s] {:Sym (symbol s)})
 
-(defn Char [s] {:Char (symbol s)})
+(defn Chr [s] {:Chr (symbol s)})
 
-(defn LNum [s] {:LNum (parse-long s)})
+(defn Int [s] {:Int (parse-long s)})
 
-(defn DNum [s] {:DNum (parse-double s)})
+(defn Flt [s] {:Flt (parse-double s)})
 
 (defn Str [s] {:Str (str s)})
 
 (defn Key [s] {:Key (keyword s)})
 
+(defn Bln [b]
+  (if (re-matches #"(true|True|TRUE)" b)
+    {:Bln true}
+    {:Bln false}))
+
+(defn Nil []
+  {:Nil nil})
+
 (comment
-  [(List [1 2 3])
+  [(Lst [1 2 3])
    (Vec [1 2 3])
    (Map [1 2 3 4 5 6])
-   (True)
-   (False)
+   (Bln "true")
+   (Bln "false")
    (Nil)
    (Sym "foo")
-   (Char "a")
-   (LNum "123")
+   (Chr "a")
+   (Int "123")
+   (Flt "1.23")
    (Str "foo")
    (Key "foo")]
   )

@@ -1,28 +1,26 @@
 ; Copyright 2023 Ingy dot Net
 ; This code is licensed under MIT license (See License for details)
 
-(ns yamlscript.constructor-test
+(ns yamlscript.transformer-test
   (:use yamlscript.debug)
   (:require
-   [clojure.edn :as edn]
    [yamlscript.parser :as parser]
    [yamlscript.composer :as composer]
    [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
    [yamlscript.transformer :as transformer]
-   [yamlscript.constructor :as constructor]
-   [yamlscript.test :as test]))
+   [yamlscript.test :as test]
+   [clojure.edn :as edn]))
 
 (def test-files
-  ["test/compiler-stack.yaml"
-   "test/yaml-mode.yaml"])
+  ["test/compiler-stack.yaml"])
 
 (test/remove-tests)
 
 (doseq [test-file test-files]
   (test/load-yaml-tests
     {:yaml-file test-file
-     :pick-func #(test/has-keys? [:yamlscript :construct] %)
+     :pick-func #(test/has-keys? [:yamlscript :transform] %)
      :test-func (fn [test]
                   (->> test
                     :yamlscript
@@ -30,9 +28,8 @@
                     composer/compose
                     resolver/resolve
                     builder/build
-                    transformer/transform
-                    constructor/construct))
+                    transformer/transform))
      :want-func (fn [test]
                   (->> test
-                    :construct
+                    :transform
                     edn/read-string))}))

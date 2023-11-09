@@ -1,3 +1,9 @@
+;; Copyright 2023 Ingy dot Net
+;; This code is licensed under MIT license (See License for details)
+
+;; The yamlscript.cli library compiles into the `ys` command line binary for
+;; YAMLScript.
+
 (ns yamlscript.cli
   (:gen-class)
   (:require
@@ -20,16 +26,16 @@
    [yamlscript.composer]
    [yamlscript.resolver]
    [yamlscript.builder]
-   [yamlscript.expander]
+   [yamlscript.transformer]
    [yamlscript.constructor]
    [yamlscript.printer]))
 
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
   (some #(and
-     (= "clojure.main$repl" (.getClassName ^StackTraceElement %))
-     (= "doInvoke" (.getMethodName ^StackTraceElement %)))
-   (.getStackTrace (Thread/currentThread))))
+           (= "clojure.main$repl" (.getClassName ^StackTraceElement %))
+           (= "doInvoke" (.getMethodName ^StackTraceElement %)))
+    (.getStackTrace (Thread/currentThread))))
 
 (defn exit [n]
   (if (in-repl)
@@ -54,12 +60,12 @@
    (println (str "Error: " (or (.getCause e) (.getMessage e))))
    (when (:debug opts)
      (println
-      (apply
-       str
-       (interpose
-        "\n"
-        (apply conj ["Stack trace:"] (.getStackTrace e))))))
-  (exit 1)))
+       (apply
+         str
+         (interpose
+           "\n"
+           (apply conj ["Stack trace:"] (.getStackTrace e))))))
+   (exit 1)))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
@@ -68,10 +74,9 @@
    "compose" yamlscript.composer/compose
    "resolve" yamlscript.resolver/resolve
    "build" yamlscript.builder/build
-   "expand" yamlscript.expander/expand
+   "transform" yamlscript.transformer/transform
    "construct" yamlscript.constructor/construct
-   "print" yamlscript.printer/print
-   })
+   "print" yamlscript.printer/print})
 
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
@@ -120,8 +125,8 @@
     :validate
     [#(or (contains? stages %) (= % "all"))
      (str "must be one of: "
-          (str/join ", " (keys stages))
-          " or all")]]
+       (str/join ", " (keys stages))
+       " or all")]]
 
    [nil "--version"
     "Print version and exit"]
@@ -130,12 +135,12 @@
 
 (defn unsupported-opts [opts unsupported]
   (doall
-   (for [opt unsupported
-         :let [kw (keyword (subs opt 2))]
-         :when (kw opts)]
-     (print-exception
-      (str "Option " opt " is not supported in this context.")
-      opts))))
+    (for [opt unsupported
+          :let [kw (keyword (subs opt 2))]
+          :when (kw opts)]
+      (print-exception
+        (str "Option " opt " is not supported in this context.")
+        opts))))
 
 (defn do-error [errs help]
   (let [errs (apply list "Error(s):" errs)]
@@ -154,16 +159,16 @@
         code (if (seq (:eval opts))
                (let [eval (->> opts :eval (str/join "\n"))
                      eval (if (or (= "" eval)
-                                  (re-find #"^(--- |!yamlscript)" eval))
+                                (re-find #"^(--- |!yamlscript)" eval))
                             eval
                             (str "--- !yamlscript/v0\n" eval))]
                  eval)
                code)
         code (str code "\n"
-                  (str/join "\n"
-                            (map
-                             #(if (= "-" %) (slurp *in*) (slurp %))
-                             args)))
+               (str/join "\n"
+                 (map
+                   #(if (= "-" %) (slurp *in*) (slurp %))
+                   args)))
         code (if (stdin-ready?)
                (str code "\n" (slurp *in*))
                code)]
@@ -172,16 +177,16 @@
 (defn compile-code [code opts]
   (try
     (reduce
-     (fn [stage-input [stage-name stage-fn]]
-       (when (get (:debug-stage opts) stage-name)
-         (println (str "*** " stage-name " output ***")))
-       (let [stage-output (stage-fn stage-input)]
-         (when (get (:debug-stage opts) stage-name)
-           (pp/pprint stage-output)
-           (println ""))
-         stage-output)
-       (stage-fn stage-input))
-     code stages)
+      (fn [stage-input [stage-name stage-fn]]
+        (when (get (:debug-stage opts) stage-name)
+          (println (str "*** " stage-name " output ***")))
+        (let [stage-output (stage-fn stage-input)]
+          (when (get (:debug-stage opts) stage-name)
+            (pp/pprint stage-output)
+            (println ""))
+          stage-output)
+        (stage-fn stage-input))
+      code stages)
     (catch Exception e (print-exception e opts nil))))
 
 (defn run-clj [clj]
@@ -198,16 +203,16 @@
 (defn do-run [opts args]
   (try
     (let [clj (-> (get-code opts args)
-                  (compile-code opts))
+                (compile-code opts))
           is-empty (= "" clj)
           result (run-clj clj)]
       (when (and (not is-empty) (seq (filter #(% opts) [:load :to])))
         (case (:to opts)
           "yaml" (println
-                  (str/trim-newline
-                   (yaml/generate-string
-                    result
-                    :dumper-options {:flow-style :block})))
+                   (str/trim-newline
+                     (yaml/generate-string
+                       result
+                       :dumper-options {:flow-style :block})))
           "json" (json/pprint result)
           "edn"  (pp/pprint result)
           ,      (println (json/write-str result)))))
@@ -215,9 +220,9 @@
 
 (defn do-compile [opts args]
   (-> (get-code opts args)
-      (compile-code opts)
-      str/trim-newline
-      println))
+    (compile-code opts)
+    str/trim-newline
+    println))
 
 (defn do-repl [opts]
   (unsupported-opts opts ["--to"])
@@ -237,9 +242,9 @@
 
 (defn do-default [opts args help]
   (if (or
-       (seq (:eval opts))
-       (seq args)
-       (stdin-ready?))
+        (seq (:eval opts))
+        (seq args)
+        (stdin-ready?))
     (do-run opts args)
     (do-help help)))
 
@@ -253,7 +258,7 @@
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
         opts (if (:edn opts) (assoc opts :to "edn") opts)
         help (str/replace help #"^"
-                          "Usage: ys [options] [file]\n\nOptions:\n")
+               "Usage: ys [options] [file]\n\nOptions:\n")
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
         help (str/replace help #"\n  -o" "\n\n  -o")
@@ -276,11 +281,11 @@
 
 (comment
   (-> "(do (println \"abcd\") 123)\n"
-      (#(let [sw (java.io.StringWriter.)]
-          (sci/binding [sci/out sw]
-            (let [result (sci/eval-string %)]
-              (println (str sw))
-              result)))))
+    (#(let [sw (java.io.StringWriter.)]
+        (sci/binding [sci/out sw]
+          (let [result (sci/eval-string %)]
+            (println (str sw))
+            result)))))
   (-main "-e" "println: 12345" "-e" "identity: 67890")
   (-main "--compile=foo")
   (-main "--compile-to=parse")

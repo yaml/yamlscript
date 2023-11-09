@@ -1,3 +1,6 @@
+;; This code is licensed under MIT license (See License for details)
+;; Copyright 2023 Ingy dot Net
+
 (defproject yamlscript/core "0.1.0"
   :description "Program in YAML"
 

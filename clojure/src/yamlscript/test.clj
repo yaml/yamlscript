@@ -1,3 +1,9 @@
+;; Copyright 2023 Ingy dot Net
+;; This code is licensed under MIT license (See License for details)
+
+;; The yamlscript.test library defines a yaml based testing framework that is
+;; used to test the YAMLScript compiler.
+
 (ns yamlscript.test
   (:use yamlscript.debug)
   (:require

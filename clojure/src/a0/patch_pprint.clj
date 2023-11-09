@@ -1,3 +1,6 @@
+;; This code is licensed under MIT license (See License for details)
+;; Copyright 2023 Ingy dot Net
+
 (ns a0.patch-pprint
   (:require [clojure.pprint :as pprint]))
 

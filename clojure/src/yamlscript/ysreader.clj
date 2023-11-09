@@ -1,3 +1,9 @@
+;; Copyright 2023 Ingy dot Net
+;; This code is licensed under MIT license (See License for details)
+
+;; The yamlscript.ysreader is responsible for reading YAMLScript ysexpr (yes
+;; expression) strings into a set of Clojure AST nodes.
+
 (ns yamlscript.ysreader
   (:use yamlscript.debug)
   (:require
@@ -74,7 +80,7 @@
       (throw (Exception. "Unexpected end of input")))
 
     (if (= (first tokens) end)
-      (let [list (if (= type List)
+      (let [list (if (= type Lst)
                    (yes-expr list)
                    list)]
         [(type list) (rest tokens)])
@@ -89,13 +95,13 @@
 (defn read-scalar [[token & tokens]]
   (cond
     (= "nil" token) [(Nil) tokens]
-    (= "true" token) [(True) tokens]
-    (= "false" token) [(False) tokens]
-    (is-number? token) [(LNum token) tokens]
+    (= "true" token) [(Bln token) tokens]
+    (= "false" token) [(Bln token) tokens]
+    (is-number? token) [(Int token) tokens]
     (is-operator? token) [(Sym token) tokens]
     (is-string? token) [(Str (normalize-string token)) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
-    (is-character? token) [(Char (subs token 1)) tokens]
+    (is-character? token) [(Chr (subs token 1)) tokens]
     (is-symbol? token) [(Sym token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 
@@ -107,8 +113,8 @@
             ["(" (conj (rest tokens) sym "(")])
           [token tokens])]
     (case token
-      "(" (read-list tokens List ")")
-      "[" (read-list tokens Vect "]")
+      "(" (read-list tokens Lst ")")
+      "[" (read-list tokens Vec "]")
       "{" (read-list tokens Map "}")
       ,   (read-scalar tokens))))
 

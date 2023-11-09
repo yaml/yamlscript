@@ -1,6 +1,10 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.compiler is responsible for converting YAMLScript code to
+;; Clojure code. It does this by sending the input through a stack of 7
+;; transformation libraries.
+
 (ns yamlscript.compiler
   (:use yamlscript.debug)
   (:require
@@ -9,7 +13,7 @@
    [yamlscript.composer]
    [yamlscript.resolver]
    [yamlscript.builder]
-   [yamlscript.expander]
+   [yamlscript.transformer]
    [yamlscript.constructor]
    [yamlscript.printer]
    [clojure.pprint :as pp])
@@ -24,33 +28,37 @@
           yamlscript.composer/compose
           yamlscript.resolver/resolve
           yamlscript.builder/build
-          yamlscript.expander/expand
+          yamlscript.transformer/transform
           yamlscript.constructor/construct
           yamlscript.printer/print)]
     clojure-string))
 
 (comment
+; {:do [[{:Sym a} {:Sym b}]]}
+; (:construct {:Lst [{:Sym a} {:Sym b}]})
   (->>
-   #_""
-   #_"!yamlscript/v0"
-   "!yamlscript/v0
-a =: 123"
+    "!yamlscript/v0
+foo =: 123
+defn bar(a b):
+  c =: (a + b)
+  .*: 2 c
+bar: 10 20"
 
-   yamlscript.parser/parse
-   (www :parse)
-   yamlscript.composer/compose
-   (www :compose)
-   yamlscript.resolver/resolve
-   (www :resolve)
-   yamlscript.builder/build
-   (www :build)
-   yamlscript.expander/expand
-   (www :expand)
-   yamlscript.constructor/construct
-   (www :construct)
-   yamlscript.printer/print
-   (www :print)
-   #__)
+    yamlscript.parser/parse
+    (www :parse)
+    yamlscript.composer/compose
+    (www :compose)
+    yamlscript.resolver/resolve
+    (www :resolve)
+    yamlscript.builder/build
+    (www :build)
+    yamlscript.transformer/transform
+    (www :transform)
+    yamlscript.constructor/construct
+    (www :construct)
+    yamlscript.printer/print
+    (www :print)
+    #__)
 
   (-> "" compile)
   (-> "!yamlscript/v0" compile)
@@ -61,12 +69,12 @@ a =: 123"
        "if (x > y): x (inc y)"
        "if(x > y): x (inc y)"
        #__]
-      (nth 2)
-      compile
-      println)
+    (nth 2)
+    compile
+    println)
 
   (->> "test/hello.ys"
-       slurp
-       compile
-       println)
+    slurp
+    compile
+    println)
   )

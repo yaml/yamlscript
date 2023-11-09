@@ -8,7 +8,7 @@
    [yamlscript.composer :as composer]
    [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
-   [yamlscript.expander :as expander]
+   [yamlscript.transformer :as transformer]
    [yamlscript.constructor :as constructor]
    [yamlscript.printer :as printer]
    [yamlscript.test :as test]))
@@ -30,7 +30,7 @@
                     composer/compose
                     resolver/resolve
                     builder/build
-                    expander/expand
+                    transformer/transform
                     constructor/construct
                     printer/print))
      :want-func (fn [test]

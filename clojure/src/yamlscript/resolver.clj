@@ -1,17 +1,39 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.resolver is responsible for tagging each node in the YAML
+;; node tree.
+;;
+;; The tags used by YAMLScript are:
+;; * !map - YAML mapping
+;; * !seq - YAML sequence
+;; * !str - YAML string scalar
+;; * !int - YAML integer scalar
+;; * !flt - YAML floating point scalar
+;; * !bln - YAML boolean scalar
+;; * !nil - YAML null scalar
+;;
+;; * !ysm - YAMLScript mapping
+;; * !ysx - YAMLScript expression
+;; * !ysi - YAMLScript interpolated string
+;;
+;; * !empty - YAML empty stream
+;;
+;; The resolver transforms the keys of the YAMLScript special forms:
+;;
+;; * def - 'foo =' -> !ysx 'def foo'
+;; * defn - 'defn foo(...)' -> !ysx 'defn foo [...]'
+
 (ns yamlscript.resolver
   (:use yamlscript.debug)
-  (:require [clojure.set :as set])
+  (:require
+   [clojure.set :as set]
+   [clojure.string :as str])
   (:refer-clojure :exclude [resolve]))
 
 ;; ----------------------------------------------------------------------------
 ;; Generic helpers:
 ;; ----------------------------------------------------------------------------
-(defn tag-node [node tag]
-  (set/rename-keys node {:exprs tag}))
-
 (defn node-type [node]
   (cond
     (:% node)  :map
@@ -26,21 +48,27 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for ys mode:
 ;; ----------------------------------------------------------------------------
-(defn tag-let [[key val]]
-  (let [m (re-matches #"\w+ +=" (:exprs key))]
-    (when m
-      [(tag-node key :let) val])))
+(defn tag-def [[key val]]
+  (let [key (:ysx key)
+        old key
+        key (str/replace key #"^(\w+) +=$" "def $1")]
+    (when (not= old key)
+      ; [{:def key} val])))
+      [{:ysx key} val])))
 
 (defn tag-defn [[key val]]
-  (let [m (re-matches #"XXX \w+ +=" (:exprs key))]
-    (when m
-      [(tag-node key :def) val])))
+  (let [key (:ysx key)
+        old key
+        key (str/replace key #"^defn (\w+)\((.*)\)$" "defn $1 [$2]")]
+    (when (not= old key)
+      ; [{:defn key} val])))
+      [{:ysx key} val])))
 
-(defn tag-exprs [[key val]]
+(defn tag-ysx [[key val]]
   (cond
-    (and (contains? key :exprs) (contains? val :exprs)) [key val]
-    (and (contains? key :exprs) (contains? val :str)) [key val]
-    (and (contains? key :exprs) (contains? val :istr)) [key val]))
+    (and (contains? key :ysx) (contains? val :ysx)) [key val]
+    (and (contains? key :ysx) (contains? val :str)) [key val]
+    (and (contains? key :ysx) (contains? val :ysi)) [key val]))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))
@@ -48,15 +76,24 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for ys mode:
 ;; ----------------------------------------------------------------------------
-(declare resolve-ys-node)
+(declare
+  resolve-ys-node
+  resolve-yaml-node)
+
+(defn resolve
+  "Walk YAML tree and tag all nodes according to YAMLScript rules."
+  [node]
+  (if (script-mode node)
+    (resolve-ys-node node)
+    (resolve-yaml-node node)))
 
 (defn resolve-ys-pair [key val]
   (let [pair [(resolve-ys-node key)
               (resolve-ys-node val)]]
     ((some-fn
-       tag-let
+       tag-def
        tag-defn
-       tag-exprs) pair)))
+       tag-ysx) pair)))
 
 (defn resolve-ys-mapping [node]
   (when (:%% node)
@@ -69,7 +106,7 @@
           (recur
             coll
             (apply conj new (resolve-ys-pair key val)))
-          {:pairs new})))))
+          {:ysm new})))))
 
 (defn resolve-ys-sequence [node]
   (throw (Exception. "Sequences (block and flow) not allowed in script-mode")))
@@ -78,10 +115,10 @@
   (let [node (dissoc node :! :&)
         style (-> node keys first)]
     (case style
-      := (set/rename-keys node {:= :exprs})
-      :$ (set/rename-keys node {:$ :istr})
+      := (set/rename-keys node {:= :ysx})
+      :$ (set/rename-keys node {:$ :ysi})
       :' (set/rename-keys node {:' :str})
-      :| (set/rename-keys node {:| :istr})
+      :| (set/rename-keys node {:| :ysi})
       :> (set/rename-keys node {:> :str})
       ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
 
@@ -96,8 +133,6 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for yaml mode:
 ;; ----------------------------------------------------------------------------
-(declare resolve-yaml-node)
-
 (defn resolve-yaml-mapping [node]
   (let [node (dissoc node :! :&)]
     (loop [coll (or (:% node) (:%% node))
@@ -123,8 +158,8 @@
   (let [val (:= node)]
     (cond
       (re-matches #"-?\d+" val) :int
-      (re-matches #"-?\d+\.\d+" val) :float
-      (re-matches #"(true|True|TRUE|false|False|FALSE)" val) :bool
+      (re-matches #"-?\d+\.\d+" val) :flt
+      (re-matches #"(true|True|TRUE|false|False|FALSE)" val) :bln
       (re-matches #"(|~|null|Null|NULL)" val) :null
       :else :str)))
 
@@ -147,18 +182,8 @@
     :seq (resolve-yaml-sequence node)
     :val (resolve-yaml-scalar node)))
 
-;; ----------------------------------------------------------------------------
-;; Public API functions:
-;; ----------------------------------------------------------------------------
-(defn resolve
-  "Walk YAML tree and tag all nodes according to YAMLScript rules."
-  [node]
-  (if (script-mode node)
-    (resolve-ys-node node)
-    (resolve-yaml-node node)))
-
 (comment
   (resolve
-   #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
-   {:! "yamlscript/v0", := ""}
-   #__))
+    #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
+    {:! "yamlscript/v0", := ""}
+    #__))

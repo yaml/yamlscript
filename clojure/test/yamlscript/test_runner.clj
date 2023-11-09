@@ -1,3 +1,6 @@
+;; This code is licensed under MIT license (See License for details)
+;; Copyright 2023 Ingy dot Net
+
 (ns yamlscript.test-runner
   (:require
    [yamlscript.test :as test]
@@ -6,7 +9,7 @@
    [yamlscript.composer-test]
    [yamlscript.resolver-test]
    [yamlscript.builder-test]
-   [yamlscript.expander-test]
+   [yamlscript.transformer-test]
    [yamlscript.constructor-test]
    [yamlscript.printer-test]))
 

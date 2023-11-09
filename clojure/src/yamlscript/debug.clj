@@ -1,10 +1,12 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.debug library defines a set of Clojure debugging functions.
+
 (ns yamlscript.debug
   (:require [clojure.pprint :as pp]))
 
-(defn- dump [o]
+(defn dump [o]
   (str
     "---\n"
     (with-out-str

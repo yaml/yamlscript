@@ -938,7 +938,7 @@ These include:
   In other words it should never treat a scalar differently if it used
   single-quoted as opposed to double-quoted.
   The default rule is that all non-plain scalars are loaded as strings, where
-  plaiun scalars might load as numbers, dates, booleans etc.
+  plain scalars might load as numbers, dates, booleans etc.
 
   YAMLScript on the other hand treats scalars differently depending on quoting
   style (and several other things).
@@ -956,7 +956,7 @@ becomes something like this fully tagged YAML structure:
 ```
 --- !program
 !def  "name"    : !str  "YAMLScript"
-!call "println" : !istr "Hello, $name"
+!call "println" : !ysi "Hello, $name"
 ```
 
 The construction phase of turning this into a Lingy AST is just applying the

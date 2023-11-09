@@ -1,6 +1,9 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.parser is responsible for parsing YAML into a sequence of
+;; event objects.
+
 ;; TODO
 ;; - switch from snakeyaml to libfyaml (ffi)
 

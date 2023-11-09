@@ -1,10 +1,7 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; YAMLScript is a programming language that is hosted by Clojure platforms.
-;; It can be used to add scripting to abilities to YAML files.
-;;
-;; This library reads YAMLScript code and converts it into Clojure code.
+;; This library compiles into the `libyamlscript.so` shared library.
 
 (ns libyamlscript.core
   (:require
@@ -21,17 +18,17 @@
 
   (try
     (->> ys-str
-         ys/compile
-         (assoc {} :clojure)
-         json/write-str)
+      ys/compile
+      (assoc {} :clojure)
+      json/write-str)
 
     (catch Exception e
       ;; XXX throw errors for now
       (throw e)
 
       (json/write-str
-       {:error (str (type e))
-        :message (.getMessage e)}))))
+        {:error (str (type e))
+         :message (.getMessage e)}))))
 
 (defn -evalYsToJson
   "Convert a YAMLScript code string to Clojure, eval the Clojure code with
@@ -40,14 +37,17 @@
   (sci/binding [sci/out *out*]
     (try
       (->> ys-str
-           ys/compile
-           sci/eval-string
-           json/write-str)
+        ys/compile
+        sci/eval-string
+        json/write-str)
 
       (catch Exception e
         ;; XXX throw errors for now
         (throw e)
 
         (json/write-str
-         {:error (str (type e))
-          :message (.getMessage e)})))))
+          {:error (str (type e))
+           :message (.getMessage e)})))))
+
+(comment
+  )

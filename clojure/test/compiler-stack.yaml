@@ -15,9 +15,9 @@
   resolve: |
     # Composed tree with tags resolved
   build: |
-    # Read each scalar into Clojure AST forms
-  expand: |
-    # Expand the YS macros (defsyn)
+    # Read each !ysx scalar into Clojure AST forms
+  transform: |
+    # Transform the YS macros (defsyn)
   construct: |
     # Construct a full Clojure AST
   print: |
@@ -122,20 +122,20 @@
     {:! "yamlscript/v0", :% [
       {:= "a"} {:= "b c"} ]}
   resolve: |
-    {:pairs [
-      {:exprs "a"}
-      {:exprs "b c"}
+    {:ysm [
+      {:ysx "a"}
+      {:ysx "b c"}
     ]}
   build: |
-    {:pairs [
+    {:ysm [
       {:Sym a}
       [{:Sym b} {:Sym c}] ]}
-  expand: |
-    {:do [
-      [{:Sym a}
-       [{:Sym b} {:Sym c}]] ]}
+  transform: |
+    {:ysm [
+      {:Sym a}
+      [{:Sym b} {:Sym c}] ]}
   construct: |
-    {:List [ {:Sym a} {:Sym b} {:Sym c} ]}
+    {:Lst [ {:Sym a} {:Sym b} {:Sym c} ]}
   print: |
     (a b c)
 
@@ -144,17 +144,17 @@
 - name: Dot escaping
   yamlscript: |
     --- !yamlscript/v0
-    map(inc): .[2 4 6 8]
+    map inc: .[2 4 6 8]
   parse: |
     "+MAP", :! "yamlscript/v0"
-    "=VAL", := "map(inc)"
+    "=VAL", := "map inc"
     "=VAL", := ".[2 4 6 8]"
     "-MAP"
   compose: |
     {:! "yamlscript/v0" :% [
-      {:= "map(inc)"}
+      {:= "map inc"}
       {:= "[2 4 6 8]"} ]}
-  Xprint: |
+  print: |
     (map inc [2 4 6 8])
 
 
@@ -166,31 +166,30 @@
     prn: .{:a 1 :c 2 :b 3}
     prn: ."A longer string"
   build: |
-    {:pairs [
+    {:ysm [
      {:Sym prn}
      {:Vec
       [{:Str "str"}
-       {:Char c}
-       {:LNum 42}
+       {:Chr c}
+       {:Int 42}
        {:Sym foo}
-       :True
-       :False
-       :Nil ]}
+       {:Bln true}
+       {:Bln false}
+       {:Nil nil} ]}
      {:Sym prn}
      {:Map
       [{:Key :a}
-       {:LNum 1}
+       {:Int 1}
        {:Key :c}
-       {:LNum 2}
+       {:Int 2}
        {:Key :b}
-       {:LNum 3} ]}
+       {:Int 3} ]}
      {:Sym prn}
      {:Str "A longer string"} ]}
   print: |
-    (do
-     (prn ["str" \c 42 foo true false nil])
-     (prn {:a 1, :c 2, :b 3})
-     (prn "A longer string"))
+    (prn ["str" \c 42 foo true false nil])
+    (prn {:a 1, :c 2, :b 3})
+    (prn "A longer string")
 
 
 
@@ -199,9 +198,9 @@
     --- !yamlscript/v0
     inc: (6 * 7)
   build: |
-    {:pairs
+    {:ysm
      [{:Sym inc}
-      {:List [{:Sym *} {:LNum 6} {:LNum 7}]}]}
+      {:Lst [{:Sym *} {:Int 6} {:Int 7}]}]}
   print: |
     (inc (* 6 7))
 
@@ -212,12 +211,12 @@
     --- !yamlscript/v0
     say: str("The number is:\ " inc(41))
   build: |
-    {:pairs
+    {:ysm
      [{:Sym say}
-      {:List
+      {:Lst
        [{:Sym str}
         {:Str "The number is: "}
-        {:List [{:Sym inc} {:LNum 41}]}]}]}
+        {:Lst [{:Sym inc} {:Int 41}]}]}]}
   print: |
     (say (str "The number is: " (inc 41)))
 
@@ -227,8 +226,45 @@
   yamlscript: |
     !yamlscript/v0
     foo =: 123
+  resolve: |
+    {:ysm [{:ysx "def foo"} {:ysx "123"}]}
+  build: |
+    {:ysm
+     [[{:Sym def} {:Sym foo}]
+     {:Int 123}]}
   print: |
     (def foo 123)
+
+
+
+- name: defn expression
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(a b): (a + b)
+  resolve: |
+    {:ysm [{:ysx "defn foo [a b]"} {:ysx "(a + b)"}]}
+  build: |
+    {:ysm
+     [[{:Sym defn} {:Sym foo} {:Vec [{:Sym a} {:Sym b}]}]
+      {:Lst [{:Sym +} {:Sym a} {:Sym b}]}]}
+  print: |
+    (defn foo [a b] (+ a b))
+
+
+
+- name: Structured defn expression
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(a b):
+      add: a b
+  build: |
+    {:ysm
+     [[{:Sym defn} {:Sym foo} {:Vec [{:Sym a} {:Sym b}]}]
+      {:ysm
+       [{:Sym add}
+        [{:Sym a} {:Sym b}]]}]}
+  print: |
+    (defn foo [a b] (add a b))
 
 
 
@@ -267,45 +303,53 @@
       {:= "bar"}
       {:= "10 20"} ]}
   resolve: |
-    {:pairs [
-      {:def "foo ="}
-      {:exprs "123"}
-      {:defn "defn bar(a b)"}
-      {:pairs [
-        {:let "c ="}
-        {:exprs "(a + b)"}
-        {:exprs "*"}
-        {:exprs "2 c"} ]}
-      {:exprs "bar"}
-      {:exprs "10 20"} ]}
-# build: |
-# expand: |
+    {:ysm [
+      {:ysx "def foo"}
+      {:ysx "123"}
+      {:ysx "defn bar [a b]"}
+      {:ysm [
+        {:ysx "def c"}
+        {:ysx "(a + b)"}
+        {:ysx "*"}
+        {:ysx "2 c"} ]}
+      {:ysx "bar"}
+      {:ysx "10 20"} ]}
+  build: |
+    {:ysm
+     [[{:Sym def} {:Sym foo}]
+      {:Int 123}
+      [{:Sym defn} {:Sym bar} {:Vec [{:Sym a} {:Sym b}]}]
+      {:ysm
+       [[{:Sym def} {:Sym c}]
+        {:Lst [{:Sym +} {:Sym a} {:Sym b}]}
+        {:Sym *}
+        [{:Int 2} {:Sym c}]]}
+      {:Sym bar}
+      [{:Int 10} {:Int 20}]]}
+# transform: |
 # construct: |
-# print: |
-#   (def foo 123)
-#   (defn bar [a b]
-#     (let [c (+ a b)]
-#       (* 2 c)))
-#   bar: 10 20
-#  ONLY: true
-  SKIP: true
+  Xprint: |
+    (def foo 123)
+    (defn bar [a b]
+      (let [c (+ a b)]
+        (* 2 c)))
+    bar: 10 20
 
 
 
-# - name: The 'if' special form
-#   yamlscript: |
-#     if (a > b):
-#       foo(a b)
-#       bar(a b)
-#   print: |
-#     (if (> a b) (foo a b) (bar a b))
-#   SKIP: true
+- name: The 'if' special form
+  yamlscript: |
+    if (a > b):
+      foo(a b)
+      bar(a b)
+  Xprint: |
+    (if (> a b) (foo a b) (bar a b))
 
-# - name: YAMLScript top level scalar
-#   yamlscript: |
-#     ; comment
-#     (foo bar)
-#   parse: |
-#     :; comment\n(foo bar)
-#   XXXprint: |
-#     (foo bar)
+- name: YAMLScript top level scalar
+  yamlscript: |
+    ; comment
+    (foo bar)
+  parse: |
+    "=VAL", := "; comment (foo bar)"
+  Xprint: |
+    (foo bar)

@@ -4,7 +4,10 @@
 ;; YAMLScript is a programming language that is hosted by Clojure platforms.
 ;; It can be used to add scripting to abilities to YAML files.
 ;;
-;; This library reads YAMLScript code and converts it into Clojure code."
+;; This is the main API library for YAMLScript. It provides the following:
+;;
+;; * `compile` - Converts YAMLScript code to Clojure code
+;; * `load-file` - Reads and evaluates a YAMLScript file
 
 (ns yamlscript.core
   (:require
@@ -12,7 +15,7 @@
    [clojure.edn :as edn]
    [yamlscript.debug :refer [www]]
    [yamlscript.compiler :as compiler])
-  (:refer-clojure :exclude [compile load-file read-string]))
+  (:refer-clojure :exclude [compile load-file]))
 
 (defn compile
   "Compile a YAMLScript code string to an equivalent Clojure code string."
