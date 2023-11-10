@@ -12,6 +12,9 @@
    [yamlscript.re :as re])
   (:refer-clojure :exclude [read-string resolve]))
 
+(defn is-comment? [token]
+  (and token (re-matches re/comm (str token))))
+
 (defn is-character? [token]
   (and token (re-matches re/char (str token))))
 
@@ -36,7 +39,9 @@
 (def re-tokenize
   (re/re
     #"(?x)
-    (?:                       # Symbols and operators
+    (?:
+      $comm |                 # Comment
+                              # Symbols and operators
       $keyw |                   # Keyword token
       $symp |                   # Symbol followed by paren
       $symb |                   # Symbol token
@@ -48,6 +53,7 @@
       \#\( |                    # Lambda
       \#\{ |                    # HashSet
       \#\? |                    # Reader conditional
+      ; |
                               # Other tokens
       ~@ |                      # Unquote-splice token
       [\[\]{}()'`~^@] |         # Single character tokens
@@ -62,6 +68,11 @@
   (->> expr
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))))
+
+(comment
+  re-tokenize
+  (lex-tokens "; a b c\na ; b c")
+  )
 
 (declare read-form)
 
@@ -94,6 +105,7 @@
 
 (defn read-scalar [[token & tokens]]
   (cond
+    (is-comment? token) []
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]

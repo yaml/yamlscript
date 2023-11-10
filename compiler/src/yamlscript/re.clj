@@ -12,6 +12,7 @@
    [clojure.string :as str])
   (:refer-clojure :exclude [char]))
 
+(def comm #";.*(?:\n|\z)")         ; Comment token
 (def char #"\\.")                  ; Character token
 (def ignr #"(?x)
             (?:                    # Ignorables
@@ -34,6 +35,7 @@
 
 (def dict
   {:char char
+   :comm comm
    :ignr ignr
    :keyw keyw
    :lnum lnum

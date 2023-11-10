@@ -25,6 +25,8 @@
   print: |
     {"foo" 42, "bar" 3.1415, "baz" true}
 
+
+
 - name: yaml-mode sequence
   yamlscript: |
     - foo
@@ -58,6 +60,8 @@
   print: |
     ["foo" 42 3.1415 true false nil nil nil]
 
+
+
 - name: yaml-mode nested collections
   yamlscript: |
     foo:
@@ -70,17 +74,34 @@
   print: |
     {"foo" [-42 {"bar" 3.1415, "baz" [true false ":string"]}]}
 
+
+
 - name: Empty YAMLScript File
-  yamlscript: ""
+  yamlscript: ''
   build: |
     {:Empty nil}
   print: |
 
+
+
 - name: Empty YAMLScript File w/ yamlscript Tag
-  yamlscript: ""
+  yamlscript: |
+    !yamlscript/v0
   build: |
     {:Empty nil}
   print: |
+
+
+
+- name: Just a comment
+  yamlscript: |
+    !yamlscript/v0
+    ; just a comment
+  build: |
+    {:Empty nil}
+  print: |
+
+
 
 - name: yaml-mode with script-mode
   yamlscript: |

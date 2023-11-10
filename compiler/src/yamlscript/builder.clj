@@ -27,7 +27,8 @@
   (let [string (-> node first val)]
     (if (= string "")
       {:Empty nil}
-      (ysreader/read-string string))))
+      (or (ysreader/read-string string)
+        {:Empty nil}))))
 
 (defn build-map [node]
   (loop [coll (:map node)
@@ -65,6 +66,8 @@
 
 (comment
   (build {:ysx ""})
+
+  (build {:ysx "; comment (foo bar)"})
 
   (build {:ysm [{:ysx "println"} {:str "Hello"}]})
 

@@ -339,17 +339,47 @@
 
 - name: The 'if' special form
   yamlscript: |
+    !yamlscript/v0
     if (a > b):
       foo(a b)
       bar(a b)
-  Xprint: |
+  print: |
     (if (> a b) (foo a b) (bar a b))
 
-- name: YAMLScript top level scalar
+
+
+- name: Top level scalar in yaml mode
   yamlscript: |
-    ; comment
     (foo bar)
   parse: |
-    "=VAL", := "; comment (foo bar)"
-  Xprint: |
+    "=VAL", := "(foo bar)"
+  resolve: |
+    {:str "(foo bar)"}
+  print: |
+    "(foo bar)"
+
+
+
+- name: Top level scalar in script mode
+  yamlscript: |
+    !yamlscript/v0
     (foo bar)
+  parse: |
+    "=VAL", :! "yamlscript/v0", := "(foo bar)"
+  resolve: |
+    {:ysx "(foo bar)"}
+  print: |
+    (foo bar)
+
+
+
+- name: Top level comment eats following lines
+  yamlscript: |
+    !yamlscript/v0
+    ; comment
+    (foo bar)
+  resolve: |
+    {:ysx "; comment (foo bar)"}
+  parse: |
+    "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
+  print: |
