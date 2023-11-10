@@ -2,7 +2,7 @@ include ../common/base.mk
 include ../common/clojure.mk
 include ../common/docker.mk
 
-export PATH := $(ROOT)/clojure/bin:$(PATH)
+export PATH := $(ROOT)/compiler/bin:$(PATH)
 
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CORE_INSTALLED)

@@ -9,11 +9,10 @@ Ways to test YAMLScript
 The following coomand line tools are required for YAMLScript testing:
 
 * GNU `make`
-* `clojure`
-  * Clojure's `lein`
 * `python3`
 * `perl`
 * `bash` (Not required to be your shell, just installed)
+* `git`
 * `curl`
 * `tar`
 
@@ -74,23 +73,23 @@ nil
 libyamlscript.core=>
 ```
 
-Clojure REPL test the `yamlscript.core` library:
+Clojure REPL test the `yamlscript.compiler` library:
 ```
-$ make -C clojure/ repl
-yamlscript.core=> (->> "range: 10" yamlscript.core/ys-to-clj)
+$ make -C compiler/ repl
+yamlscript.compiler=> (->> "range: 10" yamlscript.compiler/ys-to-clj)
 "(range 10)\n"
-yamlscript.core=> (->> "range: 10" yamlscript.core/ys-to-clj println)
+yamlscript.compiler=> (->> "range: 10" yamlscript.compiler/ys-to-clj println)
 (range 10)
 
 nil
-yamlscript.core=>
+yamlscript.compiler=>
 ```
 
 
 ## Running Unit Tests
 ```
 $ make test                 # Run all unit tests
-$ make -C clojure/ test     # Run Clojure unit tests
+$ make -C compiler/ test    # Run the compiler unit tests
 $ make -C perl/ test        # Run Perl unit tests
 $ make -C python/ test      # Run Python unit tests
 ```

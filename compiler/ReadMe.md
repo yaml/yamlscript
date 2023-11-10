@@ -1,5 +1,5 @@
-yamlscript/clojure
-==================
+yamlscript/compiler
+===================
 
 The YAMLScript compiler written in Clojure
 

@@ -6,7 +6,7 @@ ROOT := $(shell \
 include $(ROOT)/common/vars.mk
 
 DIRS := \
-    clojure \
+    compiler \
     libyamlscript \
     perl \
     python \

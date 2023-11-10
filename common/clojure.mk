@@ -66,7 +66,7 @@ export PATH := $(GRAALVM_HOME)/bin:$(PATH)
 
 YAMLSCRIPT_CORE_INSTALLED := \
   $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
-YAMLSCRIPT_CORE_SRC := ../clojure/src/yamlscript/*
+YAMLSCRIPT_CORE_SRC := ../compiler/src/yamlscript/*
 
 ifdef w
   export WARN_ON_REFLECTION := 1
@@ -131,7 +131,7 @@ force:
 	$(RM) $(YAMLSCRIPT_CORE_INSTALLED)
 
 $(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
-	$(MAKE) -C ../clojure install
+	$(MAKE) -C ../compiler install
 
 $(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
 	tar xzf $<
