@@ -8,7 +8,7 @@ The YAMLScript compiler written in Clojure
 
 ```clj
 (do
-  (require '[yamlscript.core :as ys])
+  (require '[yamlscript.compiler :as ys])
   (-> "foo: bar baz"
     ys/compile))
 => "(foo bar baz)\n"
@@ -19,7 +19,7 @@ The YAMLScript compiler written in Clojure
 
 This directory builds the YAMLScript compiler written in Clojure.
 
-The `yamlscript.core/compile` function takes a YAMLScript input string and
+The `yamlscript.compiler/compile` function takes a YAMLScript input string and
 compiles it to a Clojure code string.
 
 

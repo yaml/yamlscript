@@ -192,7 +192,7 @@
 
 (comment
   (do
-    (require '[yamlscript.core :as ys])
+    (require '[yamlscript.compiler :as ys])
     (->> "foo: bar baz"
       ys/compile))
   )

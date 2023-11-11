@@ -65,7 +65,7 @@ export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(GRAALVM_HOME)/bin:$(PATH)
 
 YAMLSCRIPT_CORE_INSTALLED := \
-  $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
+  $(HOME)/.m2/repository/yamlscript/compiler/maven-metadata-local.xml
 YAMLSCRIPT_CORE_SRC := ../compiler/src/yamlscript/*
 
 ifdef w

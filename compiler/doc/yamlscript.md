@@ -157,8 +157,8 @@ up for editing and re-evaluation.
 
 # YAMLScript Core Library
 
-YAMLScript has it's own core library with a small set of functions that differ
-from Clojure and Lingy core.
+YAMLScript has it's own `ys.core` library with a small set of functions that
+differ from `clojure.core`.
 This library is automatically required by the YAMLScript Runtime.
 
 The YAMLScript Core Functions are:
@@ -881,8 +881,13 @@ It goes something like this:
 * Parse YAMLScript text into a stream of events
 * Compose the events into a graph
 * Assign a tag to every node in the graph (Tag Resolution)
+* Build a YAMLScript AST (Abstract Syntax Tree) from the graph
+* Transform / optimize the AST
 * Construct a native data structure by applying the functions associated with
-  each tag to the node, in a depth first order.
+  each tag to the node, in a depth first order
+* Send the AST to Clojure code
+* Evaluate the Clojure code
+* Return the resulting value
 
 Although it may seem like YAMLScript is loading a program into memory and then
 applying various tricks to make it do what it wants, that's not really what's

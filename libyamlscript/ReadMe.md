@@ -19,7 +19,7 @@ library for binding to other porgramming languages.
 The compilation is acheived by using the GraalVM native-image tool to compile
 the compiled Clojure code into a shared library.
 
-The `yamlscript.core/compile` function takes a YAMLScript input string and
+The `yamlscript.compiler/compile` function takes a YAMLScript input string and
 compiles it to a Clojure code string.
 
 

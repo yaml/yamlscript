@@ -8,9 +8,9 @@
   (:gen-class)
   (:require
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
-   [yamlscript.core]
+   [yamlscript.compiler]
    ;; For www debugging
-   [yamlscript.debug :refer [www]]
+   #_[yamlscript.debug :refer [www]]
    ;; Data printers
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]

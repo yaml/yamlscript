@@ -5,7 +5,7 @@
 
 (ns libyamlscript.core
   (:require
-   [yamlscript.core :as ys]
+   [yamlscript.compiler :as ys]
    [clojure.data.json :as json]
    [sci.core :as sci])
   (:gen-class
