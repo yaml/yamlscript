@@ -168,7 +168,7 @@
       (re-matches re-int val) :int
       (re-matches re-float val) :flt
       (re-matches re-bool val) :bln
-      (re-matches re-null val) :null
+      (re-matches re-null val) :nil
       :else :str)))
 
 (defn resolve-yaml-scalar [node]

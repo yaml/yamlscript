@@ -61,7 +61,7 @@
       :int (Int (:int node))
       :flt (Flt (:flt node))
       :bln (Bln (:bln node))
-      :null (Nil)
+      :nil (Nil)
       (throw (Exception. (str "Don't know how to build node: " node))))))
 
 (comment

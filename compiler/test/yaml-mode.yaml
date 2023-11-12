@@ -44,9 +44,9 @@
       {:flt "3.1415"}
       {:bln "true"}
       {:bln "false"}
-      {:null "null"}
-      {:null "~"}
-      {:null ""}]}
+      {:nil "null"}
+      {:nil "~"}
+      {:nil ""}]}
   build: |
     {:Vec
      [{:Str "foo"}
