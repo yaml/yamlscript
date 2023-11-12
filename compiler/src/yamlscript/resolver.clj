@@ -113,14 +113,19 @@
 
 (defn resolve-ys-scalar [node]
   (let [node (dissoc node :! :&)
-        style (-> node keys first)]
-    (case style
-      := (set/rename-keys node {:= :ysx})
+        [key val] (-> node first)]
+    (case key
+      := (let [node
+               ;; Remove leading escape character from value
+               (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
+                 (assoc node := (subs val 1))
+                 node)]
+           (set/rename-keys node {:= :ysx}))
       :$ (set/rename-keys node {:$ :ysi})
       :' (set/rename-keys node {:' :str})
       :| (set/rename-keys node {:| :ysi})
       :> (set/rename-keys node {:> :str})
-      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
+      ,  (throw (Exception. (str "Scalar has unknown style: " key))))))
 
 (defn resolve-ys-node
   "Resolve nodes recursively in 'ys' mode"
@@ -173,7 +178,7 @@
 
 (defn resolve-yaml-scalar [node]
   (let [node (dissoc node :! :&)
-        style (-> node keys first)]
+        style (-> node first key)]
     (case style
       := (set/rename-keys node {:= (resolve-plain-scalar node)})
       :$ (set/rename-keys node {:$ :str})

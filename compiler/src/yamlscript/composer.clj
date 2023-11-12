@@ -88,10 +88,6 @@
         {anchor :& tag :!} event
         key (some #{:= :$ :' :| :>} (keys event))
         {value key} event
-        ;; Remove leading escape character from value
-        value (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" value)
-                (subs value 1)
-                value)
         node {}
         node (if anchor (assoc node :& anchor) node)
         node (if tag (assoc node :! tag) node)
