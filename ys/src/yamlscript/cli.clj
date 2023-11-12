@@ -10,7 +10,7 @@
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
    [yamlscript.compiler]
    ;; For www debugging
-   #_[yamlscript.debug :refer [www]]
+   [yamlscript.debug :refer [www]]
    ;; Data printers
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
@@ -101,6 +101,11 @@
     [#(contains? to-fmts %)
      (str "must be one of: " (str/join ", " to-fmts))]]
 
+   ["-M" "--mode MODE"
+    "Add a mode tag: script, yaml, or data"
+    :validate
+    [#(some #{%} ["s" "script", "y" "yaml", "d" "data"])
+     (str "must be one of: s, script, y, yaml, d or data")]]
    ["-J" "--json"
     "Output JSON for --load"]
    ["-Y" "--yaml"
@@ -156,12 +161,17 @@
 
 (defn get-code [opts args]
   (let [code ""
+        mode (:mode opts)
         code (if (seq (:eval opts))
                (let [eval (->> opts :eval (str/join "\n"))
-                     eval (if (or (= "" eval)
-                                (re-find #"^(--- |!yamlscript)" eval))
-                            eval
-                            (str "--- !yamlscript/v0\n" eval))]
+                     eval (case mode
+                            "s" (str "--- !yamlscript/v0\n" eval)
+                            "script" (str "--- !yamlscript/v0\n" eval)
+                            "y" (str "--- !yamlscript/v0/\n" eval)
+                            "yaml" (str "--- !yamlscript/v0/\n" eval)
+                            "d" (str "--- !yamlscript/v0/data\n" eval)
+                            "data" (str "--- !yamlscript/v0/data\n" eval)
+                            eval)]
                  eval)
                code)
         code (str code "\n"
@@ -302,6 +312,7 @@
   (-main "-Q")
   (-main "-xall" "-e" "println: 123")
   (-main "--load" "test/hello.ys")
+  (-main "--load" "-Ms" "-e" "identity: inc(41)")
   (-main)
   *file*
   )

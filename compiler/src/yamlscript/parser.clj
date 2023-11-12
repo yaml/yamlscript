@@ -72,7 +72,12 @@
                      nil)))
         obj (if flow (assoc obj :flow true) obj)
         obj (if (= "" anchor) obj (assoc obj :& anchor))
-        obj (if (= "" tag) obj (assoc obj :! (subs tag 1)))]
+        obj (if (= "" tag)
+              obj
+              (if (re-find #"^tag:" tag)
+                (assoc obj :! tag )
+                (assoc obj :! (subs tag 1))
+                ))]
     obj))
 
 (defn map-start [^MappingStartEvent event] (event-start event))

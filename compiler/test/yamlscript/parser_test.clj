@@ -9,7 +9,8 @@
    [yamlscript.test :as test]))
 
 (def test-files
-  ["test/compiler-stack.yaml"])
+  ["test/compiler-stack.yaml"
+   "test/resolver.yaml"])
 
 (test/remove-tests)
 

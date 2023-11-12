@@ -61,3 +61,105 @@
       {:map [{:str "key"} {:str "value"}]}
       {:map [{:str "key"} {:str "value"}]}
       {:map [{:str "key"} {:str "value"}]}]}
+
+
+
+- name: Start in script mode
+  yamlscript: |
+    !yamlscript/v0
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:ysm [{:ysx "prn"} {:str "Hello"} {:ysx "die"} {:ysi "Noooo"}]}
+
+
+
+- name: Start in yaml mode
+  yamlscript: |
+    !yamlscript/v0/
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Start in yaml mode with !map tag
+  yamlscript: |
+    !yamlscript/v0/map
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Start in data mode
+  yamlscript: |
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Start in data mode explicitly
+  yamlscript: |
+    !yamlscript/v0/data
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Start in data mode with !!map tag
+  yamlscript: |
+    !!map
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Can't use ! tag in data mode
+  error: true
+  yamlscript: |
+    prn: ! inc(41)
+  resolve: |
+    "Unrecognized tag in data mode: !"
+
+
+
+- name: Tag ! switches from yaml mode to script mode
+  yamlscript: |
+    !yamlscript/v0/
+    num: ! inc(41)
+  resolve: |
+    {:map [{:str "num"} {:ysx "inc(41)"}]}
+
+
+
+- name: Tag ! switches from script mode to yaml mode
+  yamlscript: |
+    !yamlscript/v0
+    num: ! inc(41)
+  resolve: |
+    {:ysm [{:ysx "num"} {:str "inc(41)"}]}
+
+
+
+- name: Sequence in yaml mode after switch
+  yamlscript: |
+    !yamlscript/v0
+    list =: !
+    - 1
+    - 2
+    - 3
+  resolve: |
+  SKIP: true
+
+
+
+- name: Explicit tags in input

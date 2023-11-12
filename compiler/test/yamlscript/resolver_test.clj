@@ -22,11 +22,16 @@
     {:yaml-file test-file
      :pick-func #(test/has-keys? [:yamlscript :resolve] %)
      :test-func (fn [test]
-                  (->> test
-                    :yamlscript
-                    parser/parse
-                    composer/compose
-                    resolver/resolve))
+                  (try
+                    (->> test
+                      :yamlscript
+                      parser/parse
+                      composer/compose
+                      resolver/resolve)
+                    (catch Exception e
+                      (if (:error test)
+                        (.getMessage e)
+                        (throw e)))))
      :want-func (fn [test]
                   (->> test
                     :resolve
