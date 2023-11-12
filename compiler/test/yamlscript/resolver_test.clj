@@ -12,7 +12,8 @@
 
 (def test-files
   ["test/compiler-stack.yaml"
-   "test/yaml-mode.yaml"])
+   "test/yaml-mode.yaml"
+   "test/resolver.yaml"])
 
 (test/remove-tests)
 

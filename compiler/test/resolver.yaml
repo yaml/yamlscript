@@ -1,0 +1,63 @@
+# Copyright 2023 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+- name: YAML 1.2 core schema
+  yamlscript: |
+    - plain scalar
+    - "double quoted"
+    - 'single quoted'
+    - |
+      literal
+      block scalar
+    - >
+      folded
+      block scalar
+    - [41, -42, +43, +0, -0, 0o1337, 0xcafebabe]
+    - [.1, -.2, +.3, 4.00, -5.99]
+    - [.1e-00, -.2e+3, +.3e11, 4.00E-4, -5.99E99]
+    - [true, True, TRUE]
+    - [false, False, FALSE]
+    - [null, Null, NULL, ~]
+    -     # Empty scalar is null
+    - key: value
+    - {key: value}
+    - ? key
+      : value
+  resolve: |
+    {:seq
+     [{:str "plain scalar"}
+      {:str "double quoted"}
+      {:str "single quoted"}
+      {:str "literal\nblock scalar\n"}
+      {:str "folded block scalar\n"}
+      {:seq
+       [{:int "41"}
+        {:int "-42"}
+        {:int "+43"}
+        {:int "+0"}
+        {:int "-0"}
+        {:int "0o1337"}
+        {:int "0xcafebabe"}]}
+      {:seq
+       [{:flt ".1"}
+        {:flt "-.2"}
+        {:flt "+.3"}
+        {:flt "4.00"}
+        {:flt "-5.99"}]}
+      {:seq
+       [{:flt ".1e-00"}
+        {:flt "-.2e+3"}
+        {:flt "+.3e11"}
+        {:flt "4.00E-4"}
+        {:flt "-5.99E99"}]}
+      {:seq [{:bln "true"} {:bln "True"} {:bln "TRUE"}]}
+      {:seq [{:bln "false"} {:bln "False"} {:bln "FALSE"}]}
+      {:seq
+       [{:nil "null"}
+        {:nil "Null"}
+        {:nil "NULL"}
+        {:nil "~"}]}
+      {:nil ""}
+      {:map [{:str "key"} {:str "value"}]}
+      {:map [{:str "key"} {:str "value"}]}
+      {:map [{:str "key"} {:str "value"}]}]}

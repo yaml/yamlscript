@@ -154,13 +154,21 @@
             (recur coll (conj new val)))
           {:seq new})))))
 
+(def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
+(def re-float #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+(def re-bool #"(?:true|True|TRUE|false|False|FALSE)")
+(def re-null #"(?:|~|null|Null|NULL)")
+(def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
+
 (defn resolve-plain-scalar [node]
   (let [val (:= node)]
+    (when (re-matches re-inf-nan val)
+      (throw (Exception. (str "Inf and NaN not supported in YAMLScript"))))
     (cond
-      (re-matches #"-?\d+" val) :int
-      (re-matches #"-?\d+\.\d+" val) :flt
-      (re-matches #"(true|True|TRUE|false|False|FALSE)" val) :bln
-      (re-matches #"(|~|null|Null|NULL)" val) :null
+      (re-matches re-int val) :int
+      (re-matches re-float val) :flt
+      (re-matches re-bool val) :bln
+      (re-matches re-null val) :null
       :else :str)))
 
 (defn resolve-yaml-scalar [node]

@@ -89,7 +89,7 @@
         key (some #{:= :$ :' :| :>} (keys event))
         {value key} event
         ;; Remove leading escape character from value
-        value (if (re-find #"^\.[`!@#%&*-\{\[|:'\",>?]" value)
+        value (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" value)
                 (subs value 1)
                 value)
         node {}
