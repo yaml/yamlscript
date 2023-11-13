@@ -12,8 +12,8 @@
    [clojure.string :as str])
   (:refer-clojure :exclude [char]))
 
-(def comm #";.*(?:\n|\z)")         ; Comment token
 (def char #"\\.")                  ; Character token
+(def comm #";.*(?:\n|\z)")         ; Comment token
 (def ignr #"(?x)
             (?:                    # Ignorables
               \#\!.*\n? |            # hashbang line

@@ -45,8 +45,7 @@
 (declare
   resolve-data-node
   resolve-yaml-node
-  resolve-script-node
-  )
+  resolve-script-node)
 
 (defn resolve
   "Walk YAML tree and tag all nodes according to YAMLScript rules."

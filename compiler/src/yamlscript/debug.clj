@@ -6,6 +6,8 @@
 (ns yamlscript.debug
   (:require [clojure.pprint :as pp]))
 
+(def ^:dynamic *www* nil)
+
 (defn dump [o]
   (str
     "---\n"
@@ -20,7 +22,7 @@
 (defn www [& o]
   (let [l (last o)
         o (if (= 1 (count o)) (first o) o)]
-    (binding [*out* *err*]
+    (binding [*out* (or *www* *err*)]
       (print (dump o)))
     l))
 

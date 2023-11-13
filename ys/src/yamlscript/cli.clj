@@ -176,13 +176,16 @@
                               (str "--- !yamlscript/v0\n" eval)))]
                  eval)
                code)
-        code (str code "\n"
+        code (str
+               (when-not (empty? code) (str code "\n"))
                (str/join "\n"
                  (map
                    #(if (= "-" %) (slurp *in*) (slurp %))
                    args)))
         code (if (stdin-ready?)
-               (str code "\n" (slurp *in*))
+               (str
+                 (when-not (empty? code) (str code "\n"))
+                 (slurp *in*))
                code)]
     code))
 
@@ -261,33 +264,34 @@
     (do-help help)))
 
 (defn -main [& args]
-  (let [options (cli/parse-opts args cli-options)
-        {opts :options
-         args :arguments
-         help :summary
-         errs :errors} options
-        opts (if (:json opts) (assoc opts :to "json") opts)
-        opts (if (:yaml opts) (assoc opts :to "yaml") opts)
-        opts (if (:edn opts) (assoc opts :to "edn") opts)
-        help (str/replace help #"^"
-               "Usage: ys [options] [file]\n\nOptions:\n")
-        help (str/replace help #"\[\]" "  ")
-        help (str/replace help #"\{\}" "  ")
-        ;; Insert blank lines in help text
-        help (str/replace help #"\n  (-[oMJRX])" "\n\n  $1")
-        help (str/replace help #"    ([A-Z])" #(second %))]
-    (cond (seq errs) (do-error errs help)
-          (:help opts) (do-help help)
-          (:version opts) (do-version)
-          (:run opts) (do-run opts args)
-          (:load opts) (do-run opts args)
-          (:repl opts) (do-repl opts)
-          (:connect opts) (do-connect opts args)
-          (:kill opts) (do-kill opts args)
-          (:compile opts) (do-compile opts args)
-          (:nrepl opts) (do-nrepl opts args)
-          (:compile-to opts) (do-compile-to opts args)
-          :else (do-default opts args help))))
+  (binding [yamlscript.debug/*www* *out*]
+    (let [options (cli/parse-opts args cli-options)
+          {opts :options
+           args :arguments
+           help :summary
+           errs :errors} options
+          opts (if (:json opts) (assoc opts :to "json") opts)
+          opts (if (:yaml opts) (assoc opts :to "yaml") opts)
+          opts (if (:edn opts) (assoc opts :to "edn") opts)
+          help (str/replace help #"^"
+                 "Usage: ys [options] [file]\n\nOptions:\n")
+          help (str/replace help #"\[\]" "  ")
+          help (str/replace help #"\{\}" "  ")
+          ;; Insert blank lines in help text
+          help (str/replace help #"\n  (-[oMJRX])" "\n\n  $1")
+          help (str/replace help #"    ([A-Z])" #(second %))]
+      (cond (seq errs) (do-error errs help)
+            (:help opts) (do-help help)
+            (:version opts) (do-version)
+            (:run opts) (do-run opts args)
+            (:load opts) (do-run opts args)
+            (:repl opts) (do-repl opts)
+            (:connect opts) (do-connect opts args)
+            (:kill opts) (do-kill opts args)
+            (:compile opts) (do-compile opts args)
+            (:nrepl opts) (do-nrepl opts args)
+            (:compile-to opts) (do-compile-to opts args)
+            :else (do-default opts args help)))))
 
 (comment
   (-> "(do (println \"abcd\") 123)\n"
