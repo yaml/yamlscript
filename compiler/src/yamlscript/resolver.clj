@@ -51,8 +51,7 @@
 (defn resolve
   "Walk YAML tree and tag all nodes according to YAMLScript rules."
   [node]
-  (let [tag (:! node)
-        node-no-tag (dissoc node :!)]
+  (let [tag (:! node)]
     (if (and tag (re-find #"^yamlscript/v0" tag))
       (let [tag (subs tag (count "yamlscript/v0"))]
         (case tag
@@ -60,7 +59,7 @@
           "/" (resolve-yaml-node node)
           "/map" (resolve-yaml-node node)
           "/seq" (resolve-yaml-node node)
-          "/data" (resolve-data-node node-no-tag)
+          "/data" (resolve-data-node (dissoc node :!))
           (throw (Exception. (str "Unknown yamlscript tag: " tag)))))
       (resolve-data-node node))))
 
@@ -139,10 +138,9 @@
   "Resolve nodes recursively in script-mode"
   [node]
   (let [tag (:! node)
-        node (dissoc node :&)
-        node-no-tag (dissoc node :!)]
+        node (dissoc node :&)]
     (if (= tag "")
-      (resolve-yaml-node node-no-tag)
+      (resolve-yaml-node (dissoc node :!))
       (case (node-type node)
         :map (resolve-script-mapping node)
         :seq (resolve-script-sequence node)
@@ -204,10 +202,9 @@
   "Resolve nodes recursively in 'yaml' mode"
   [node]
   (let [tag (:! node)
-        node (dissoc node :&)
-        node-no-tag (dissoc node :!)]
+        node (dissoc node :&)]
     (if (= tag "")
-      (resolve-script-node node-no-tag)
+      (resolve-script-node (dissoc node :!))
       (case (node-type node)
         :map (resolve-yaml-mapping node)
         :seq (resolve-yaml-sequence node)
