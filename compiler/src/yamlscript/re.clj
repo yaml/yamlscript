@@ -9,8 +9,24 @@
 
 (ns yamlscript.re
   (:require
-   [clojure.string :as str])
+   [clojure.string :as str]
+   [yamlscript.debug :refer :all])
   (:refer-clojure :exclude [char]))
+
+(defn re [rgx]
+  (loop [rgx (str rgx)]
+    (let [match (re-find #"\$(\w+)" rgx)]
+      (if match
+        (let [var (second match)
+              val (var-get
+                    (resolve
+                      (symbol (str "yamlscript.re/" var))))
+              rgx (str/replace
+                    rgx
+                    (re-pattern (str #"\$" var #"(?!\w)"))
+                    (str/re-quote-replacement val))]
+          (recur rgx))
+        (re-pattern rgx)))))
 
 (def char #"\\.")                  ; Character token
 (def comm #";.*(?:\n|\z)")         ; Comment token
@@ -32,25 +48,6 @@
             ")
 (def symb #"\w+(?:-\w+)*[?!]?")    ; Symbol token
 (def symp #"\w+(?:-\w+)*[?!]?\(")  ; Symbol followed by paren
-
-(def dict
-  {:char char
-   :comm comm
-   :ignr ignr
-   :keyw keyw
-   :lnum lnum
-   :oper oper
-   :strg strg
-   :symb symb
-   :symp symp})
-
-(defn re [s]
-  (re-pattern
-    (reduce
-      (fn [re [k v]]
-        (let [pat (re-pattern (str #"\$" (subs (str k) 1) #"(?!\w)"))]
-          (str/replace re pat (str/re-quote-replacement v))))
-      s dict)))
 
 (comment
   )
