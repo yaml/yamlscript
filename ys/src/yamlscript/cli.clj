@@ -171,7 +171,9 @@
                             "yaml" (str "--- !yamlscript/v0/\n" eval)
                             "d" (str "--- !yamlscript/v0/data\n" eval)
                             "data" (str "--- !yamlscript/v0/data\n" eval)
-                            eval)]
+                            (if (some opts [:load :to])
+                              eval
+                              (str "--- !yamlscript/v0\n" eval)))]
                  eval)
                code)
         code (str code "\n"
@@ -216,7 +218,7 @@
                 (compile-code opts))
           is-empty (= "" clj)
           result (run-clj clj)]
-      (when (and (not is-empty) (seq (filter #(% opts) [:load :to])))
+      (when (and (not is-empty) (some opts [:load :to]))
         (case (:to opts)
           "yaml" (println
                    (str/trim-newline
@@ -271,10 +273,8 @@
                "Usage: ys [options] [file]\n\nOptions:\n")
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
-        help (str/replace help #"\n  -o" "\n\n  -o")
-        help (str/replace help #"\n  -J" "\n\n  -J")
-        help (str/replace help #"\n  -R" "\n\n  -R")
-        help (str/replace help #"\n  -X" "\n\n  -X")
+        ;; Insert blank lines in help text
+        help (str/replace help #"\n  (-[oMJRX])" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %))]
     (cond (seq errs) (do-error errs help)
           (:help opts) (do-help help)

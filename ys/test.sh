@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 ROOT=$(cd -P "$(dirname "${BASH_SOURCE[0]}")"; pwd -P)
 
 cd "$ROOT" || exit
@@ -7,6 +9,8 @@ cd "$ROOT" || exit
 export PATH=$ROOT:$PATH
 
 set -x
+
+[[ -x ys ]]
 
 ys --help
 

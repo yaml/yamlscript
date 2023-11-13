@@ -21,6 +21,7 @@ install: build
 	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(PREFIX)/bin/
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
+	@:
 
 test: $(YAMLSCRIPT_CLI_BIN)
 	./test.sh
