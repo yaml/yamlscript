@@ -28,26 +28,30 @@
           (recur rgx))
         (re-pattern rgx)))))
 
-(def char #"\\.")                  ; Character token
-(def comm #";.*(?:\n|\z)")         ; Comment token
+(def char #"\\.")                      ; Character token
+(def comm #";.*(?:\n|\z)")             ; Comment token
 (def ignr #"(?x)
-            (?:                    # Ignorables
-              \#\!.*\n? |            # hashbang line
-              [\s,]+    |            # whitespace, commas,
-              ;.*\n?                 # comments
+            (?:                        # Ignorables
+              \#\!.*\n? |                # hashbang line
+              [\s,]+    |                # whitespace, commas,
+              ;.*\n?                     # comments
             )")
-(def keyw #"(?:\:\w+(?:-\w+)*)")   ; Keyword token
-(def lnum #"-?\d+")                ; Integer token
-(def oper #"[-+*/<=>|&]{1,3}")     ; Operator token
+(def lnum #"-?\d+")                    ; Integer token
+(def oper #"[-+*/<=>|&]{1,3}")         ; Operator token
 (def strg #"(?x)
-            \#?                    # Possibly a regex
-            \"(?:                  # Quoted string
-              \\. |                  # Escaped char
-              [^\\\"]                # Any other char
-            )*\"?                    # Ending quote
+            \#?                        # Possibly a regex
+            \"(?:                      # Quoted string
+              \\. |                      # Escaped char
+              [^\\\"]                    # Any other char
+            )*\"?                        # Ending quote
             ")
-(def symb #"\w+(?:-\w+)*[?!]?")    ; Symbol token
-(def symp #"\w+(?:-\w+)*[?!]?\(")  ; Symbol followed by paren
+(def symw #"\w+(?:-\w+)*")             ; Symbol word
+(def keyw (re #"(?:\:$symw)"))         ; Keyword token
+(def symb (re #"$symw[?!]?"))          ; Symbol token
+(def symp (re #"$symb\("))             ; Symbol followed by paren
+(def nspc (re #"$symw(?:\.$symw)+"))   ; Namespace symbol
+(def fqsm (re #"$nspc/$symb"))         ; Fully qualified symbol
+(def dyns (re #"\*$symw\*"))           ; Dynamic symbol
 
 (comment
   )

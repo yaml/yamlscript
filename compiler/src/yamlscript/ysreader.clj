@@ -21,17 +21,27 @@
 (defn is-keyword? [token]
   (and token (re-matches re/keyw (str token))))
 
+(defn is-namespace? [token]
+  (and token (re-matches re/nspc (str token))))
+
 (defn is-number? [token]
   (and token (re-matches re/lnum (str token))))
 
 (defn is-operator? [token]
   (and token (re-matches re/oper (str token))))
 
+(defn is-quote? [token]
+  (and token (= "'" (str token))))
+
 (defn is-string? [token]
   (and token (re-matches re/strg (str token))))
 
 (defn is-symbol? [token]
-  (and token (re-matches re/symb (str token))))
+  (and token
+    (or
+      (re-matches re/fqsm (str token))
+      (re-matches re/dyns (str token))
+      (re-matches re/symb (str token)))))
 
 (defn is-symbol-paren? [token]
   (and token (re-matches re/symp (str token))))
@@ -43,6 +53,9 @@
       $comm |                 # Comment
                               # Symbols and operators
       $keyw |                   # Keyword token
+      $fqsm |                   # Fully qualified symbol
+      $dyns |                   # Dynamic symbol
+      $nspc |                   # Namespace symbol
       $symp |                   # Symbol followed by paren
       $symb |                   # Symbol token
       $oper |                   # Operator token
@@ -68,11 +81,6 @@
   (->> expr
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))))
-
-(comment
-  re-tokenize
-  (lex-tokens "; a b c\na ; b c")
-  )
 
 (declare read-form)
 
@@ -115,7 +123,12 @@
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
     (is-symbol? token) [(Sym token) tokens]
+    (is-namespace? token) [(Sym token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
+
+(defn read-quoted-form [[_ & tokens]]
+  (let [[form tokens] (read-form tokens)]
+    [(Lst [(Sym "quote") form]) tokens]))
 
 (defn read-form [tokens]
   (let [token (first tokens)
@@ -128,6 +141,7 @@
       "(" (read-list tokens Lst ")")
       "[" (read-list tokens Vec "]")
       "{" (read-list tokens Map "}")
+      "'" (read-quoted-form tokens)
       ,   (read-scalar tokens))))
 
 (defn read-forms [tokens]
