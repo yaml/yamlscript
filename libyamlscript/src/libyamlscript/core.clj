@@ -12,6 +12,13 @@
    :methods [^{:static true} [compileYsToClj [String] String]
              ^{:static true} [evalYsToJson [String] String]]))
 
+(defn json-write-str [data]
+  (json/write-str
+    data
+    {:escape-unicode false
+     :escape-js-separators false
+     :escape-slash false}))
+
 (defn -compileYsToClj
   "Compile a YAMLScript code string to a Clojure code string."
   [^String ys-str]
@@ -20,13 +27,13 @@
     (->> ys-str
       ys/compile
       (assoc {} :clojure)
-      json/write-str)
+      json-write-str)
 
     (catch Exception e
       ;; XXX throw errors for now
       (throw e)
 
-      (json/write-str
+      (json-write-str
         {:error (str (type e))
          :message (.getMessage e)}))))
 
@@ -39,13 +46,13 @@
       (->> ys-str
         ys/compile
         sci/eval-string
-        json/write-str)
+        json-write-str)
 
       (catch Exception e
         ;; XXX throw errors for now
         (throw e)
 
-        (json/write-str
+        (json-write-str
           {:error (str (type e))
            :message (.getMessage e)})))))
 

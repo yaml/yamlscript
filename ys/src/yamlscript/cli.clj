@@ -215,6 +215,11 @@
           (flush)
           result)))))
 
+(def json-options
+  {:escape-unicode false
+   :escape-js-separators false
+   :escape-slash false})
+
 (defn do-run [opts args]
   (try
     (let [clj (-> (get-code opts args)
@@ -228,9 +233,9 @@
                      (yaml/generate-string
                        result
                        :dumper-options {:flow-style :block})))
-          "json" (json/pprint result)
+          "json" (json/pprint result json-options)
           "edn"  (pp/pprint result)
-          ,      (println (json/write-str result)))))
+          ,      (println (json/write-str result json-options)))))
     (catch Exception e (print-exception e opts nil))))
 
 (defn do-compile [opts args]
