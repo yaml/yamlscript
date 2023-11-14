@@ -158,6 +158,23 @@
     - 2
     - 3
   resolve: |
+    {:ysm
+     [{:ysx "def list"}
+      {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
+
+
+
+- name: Key syntax to switch to yaml mode
+  yamlscript: |
+    !yamlscript/v0
+    list =::
+    - 1
+    - 2
+    - 3
+  resolve: |
+    {:ysm
+     [{:ysx "def list"}
+      {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
   SKIP: true
 
 
