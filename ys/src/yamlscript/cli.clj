@@ -8,7 +8,7 @@
   (:gen-class)
   (:require
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
-   [yamlscript.compiler]
+   [yamlscript.compiler :as compiler]
    ;; For www debugging
    [yamlscript.debug :refer [www]]
    ;; Data printers
@@ -21,14 +21,7 @@
    [clojure.tools.cli :as cli]
    ;; Small Clojure interpreter runtime for YAMLScript evaluation
    [sci.core :as sci]
-   ;; YAMLScript compiler stack stages (in order)
-   [yamlscript.parser]
-   [yamlscript.composer]
-   [yamlscript.resolver]
-   [yamlscript.builder]
-   [yamlscript.transformer]
-   [yamlscript.constructor]
-   [yamlscript.printer]))
+   [ys.core]))
 
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
@@ -69,14 +62,6 @@
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
-(def stages
-  {"parse" yamlscript.parser/parse
-   "compose" yamlscript.composer/compose
-   "resolve" yamlscript.resolver/resolve
-   "build" yamlscript.builder/build
-   "transform" yamlscript.transformer/transform
-   "construct" yamlscript.constructor/construct
-   "print" yamlscript.printer/print})
 
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
@@ -125,12 +110,12 @@
    ["-x" "--debug-stage STAGE"
     "Display the result of stage(s)"
     :default {}
-    :update-fn #(if (= "all" %2) stages (assoc %1 %2 true))
+    :update-fn #(if (= "all" %2) compiler/stages (assoc %1 %2 true))
     :multi true
     :validate
-    [#(or (contains? stages %) (= % "all"))
+    [#(or (contains? compiler/stages %) (= % "all"))
      (str "must be one of: "
-       (str/join ", " (keys stages))
+       (str/join ", " (keys compiler/stages))
        " or all")]]
 
    [nil "--version"
@@ -191,29 +176,39 @@
 
 (defn compile-code [code opts]
   (try
-    (reduce
-      (fn [stage-input [stage-name stage-fn]]
-        (when (get (:debug-stage opts) stage-name)
-          (println (str "*** " stage-name " output ***")))
-        (let [stage-output (stage-fn stage-input)]
-          (when (get (:debug-stage opts) stage-name)
-            (pp/pprint stage-output)
-            (println ""))
-          stage-output)
-        (stage-fn stage-input))
-      code stages)
+    (if (empty? (:debug-stage opts))
+      (compiler/compile code)
+      (binding [compiler/*debug* (:debug-stage opts)]
+        (compiler/compile-debug code)))
     (catch Exception e (print-exception e opts nil))))
 
+(sci/alter-var-root sci/out (constantly *out*))
+(sci/alter-var-root sci/err (constantly *err*))
+(sci/alter-var-root sci/in (constantly *in*))
+(def clojure-core (sci/create-ns 'clojure.core))
+(def clojure-core-vars
+  {#__
+   'pprint (sci/copy-var clojure.pprint/pprint clojure-core)
+   'slurp (sci/copy-var clojure.core/slurp clojure-core)
+   'spit (sci/copy-var clojure.core/spit clojure-core)
+   'say (sci/copy-var ys.core/say clojure-core)
+   #__})
+(def ys-core (sci/create-ns 'clojure.core))
+(def ys-core-vars (sci/copy-ns ys.core ys-core))
+
+(def sci-ctx
+  (sci/init {:namespaces
+             {#__
+              'clojure.core clojure-core-vars
+              'ys.core ys-core-vars
+              #__}}))
+
 (defn run-clj [clj]
-  (let [sw (java.io.StringWriter.)
-        clj (str/trim-newline clj)]
+  (let [clj (str/trim-newline clj)]
     (if (= "" clj)
       ""
-      (sci/binding [sci/out sw]
-        (let [result (sci/eval-string clj)]
-          (print (str sw))
-          (flush)
-          result)))))
+      (let [result (sci/eval-string* sci-ctx clj)]
+        result))))
 
 (def json-options
   {:escape-unicode false

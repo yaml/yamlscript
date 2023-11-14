@@ -24,6 +24,23 @@
    [yamlscript.debug :refer :all])
   (:refer-clojure :exclude [compile]))
 
+(def ^:dynamic *debug* {})
+
+(def stages
+  {"parse" true
+   "compose" true
+   "resolve" true
+   "build" true
+   "transform" true
+   "construct" true
+   "print" true
+   "final" true})
+
+(defn final [code]
+  (str
+    "(ns main (:use ys.core))\n"
+    code))
+
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
@@ -35,35 +52,53 @@
           yamlscript.builder/build
           yamlscript.transformer/transform
           yamlscript.constructor/construct
-          yamlscript.printer/print)]
+          yamlscript.printer/print
+          final)]
+    clojure-string))
+
+(defn debug-print [stage data]
+  (when (get *debug* stage)
+    (println (str "*** " stage " output ***"))
+    (clojure.pprint/pprint data)
+    (println ""))
+  data)
+
+(defn compile-debug
+  "Convert YAMLScript code string to an equivalent Clojure code string."
+  [^String yamlscript-string]
+  (let [^String clojure-string
+        (->> yamlscript-string
+          yamlscript.parser/parse
+          (debug-print "parse")
+          yamlscript.composer/compose
+          (debug-print "compose")
+          yamlscript.resolver/resolve
+          (debug-print "resolve")
+          yamlscript.builder/build
+          (debug-print "build")
+          yamlscript.transformer/transform
+          (debug-print "transform")
+          yamlscript.constructor/construct
+          (debug-print "construct")
+          yamlscript.printer/print
+          (debug-print "print")
+          final
+          (debug-print "final"))]
     clojure-string))
 
 (comment
 ; {:do [[{:Sym a} {:Sym b}]]}
 ; (:construct {:Lst [{:Sym a} {:Sym b}]})
-  (->>
-    "!yamlscript/v0
+  (binding [*debug* stages]
+    (->>
+      "!yamlscript/v0
 foo =: 123
 defn bar(a b):
   c =: (a + b)
   .*: 2 c
 bar: 10 20"
-
-    yamlscript.parser/parse
-    (www :parse)
-    yamlscript.composer/compose
-    (www :compose)
-    yamlscript.resolver/resolve
-    (www :resolve)
-    yamlscript.builder/build
-    (www :build)
-    yamlscript.transformer/transform
-    (www :transform)
-    yamlscript.constructor/construct
-    (www :construct)
-    yamlscript.printer/print
-    (www :print)
-    #__)
+      compile-debug
+      print))
 
   (-> "" compile)
   (-> "!yamlscript/v0" compile)

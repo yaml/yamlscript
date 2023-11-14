@@ -66,7 +66,9 @@ export PATH := $(GRAALVM_HOME)/bin:$(PATH)
 
 YAMLSCRIPT_CORE_INSTALLED := \
   $(HOME)/.m2/repository/yamlscript/compiler/maven-metadata-local.xml
-YAMLSCRIPT_CORE_SRC := ../compiler/src/yamlscript/*
+YAMLSCRIPT_CORE_SRC := \
+  ../compiler/src/yamlscript/* \
+  ../compiler/src/ys/* \
 
 ifdef w
   export WARN_ON_REFLECTION := 1
