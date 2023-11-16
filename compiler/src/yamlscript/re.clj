@@ -28,7 +28,17 @@
           (recur rgx))
         (re-pattern rgx)))))
 
-(def char #"\\.")                      ; Character token
+(def char #"(?x)
+            \\
+            (?:
+              newline |
+              space |
+              tab |
+              formfeed |
+              backspace |
+              return |
+              .
+            )")                        ; Character token
 (def comm #";.*(?:\n|\z)")             ; Comment token
 (def ignr #"(?x)
             (?:                        # Ignorables

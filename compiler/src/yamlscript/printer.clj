@@ -14,6 +14,10 @@
    [clj-yaml.core :as yaml])
   (:refer-clojure :exclude [print]))
 
+(def string-escape
+  {\\ "\\\\"
+   \" "\\\""})
+
 (defn print-node [node]
   (let [node (if (keyword? node)
                {node true}
@@ -38,7 +42,7 @@
                                       " "
                                       (print-node (second %))))))
              "}")
-      :Str (str \" val \")
+      :Str (str \" (str/escape val string-escape) \")
       :Chr (str "\\" val)
       :Sym (str val)
       :Key (str val)
@@ -72,4 +76,5 @@
   (print :Empty)
   (print
     {:Lst [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
+  (print {:Map [{:Str "foo"} {:Str "\\a"}]})
   )
