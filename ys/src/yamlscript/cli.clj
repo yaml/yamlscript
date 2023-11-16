@@ -77,6 +77,14 @@
     :default []
     :update-fn conj
     :multi true]
+   [nil "--clj CLJEXPR"
+    "Evaluate a Clojure expression"]
+
+   ["-m" "--mode MODE"
+    "Add a mode tag: script, yaml, or data"
+    :validate
+    [#(some #{%} ["s" "script", "y" "yaml", "d" "data"])
+     (str "must be one of: s, script, y, yaml, d or data")]]
 
    ["-o" "--output"
     "Output file for --load or --compile"]
@@ -86,11 +94,6 @@
     [#(contains? to-fmts %)
      (str "must be one of: " (str/join ", " to-fmts))]]
 
-   ["-M" "--mode MODE"
-    "Add a mode tag: script, yaml, or data"
-    :validate
-    [#(some #{%} ["s" "script", "y" "yaml", "d" "data"])
-     (str "must be one of: s, script, y, yaml, d or data")]]
    ["-J" "--json"
     "Output JSON for --load"]
    ["-Y" "--yaml"
@@ -217,8 +220,10 @@
 
 (defn do-run [opts args]
   (try
-    (let [clj (-> (get-code opts args)
-                (compile-code opts))
+    (let [clj (if (:clj opts)
+                (:clj opts)
+                (-> (get-code opts args)
+                  (compile-code opts)))
           is-empty (= "" clj)
           result (run-clj clj)]
       (when (and (not is-empty) (some opts [:load :to]))
@@ -277,13 +282,14 @@
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
           ;; Insert blank lines in help text
-        help (str/replace help #"\n  (-[oMJRX])" "\n\n  $1")
+        help (str/replace help #"\n  (-[omJRX])" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %))]
     (cond (seq errs) (do-error errs help)
           (:help opts) (do-help help)
           (:version opts) (do-version)
           (:run opts) (do-run opts args)
           (:load opts) (do-run opts args)
+          (:clj opts) (do-run opts args)
           (:repl opts) (do-repl opts)
           (:connect opts) (do-connect opts args)
           (:kill opts) (do-kill opts args)
@@ -293,12 +299,6 @@
           :else (do-default opts args help))))
 
 (comment
-  (-> "(do (println \"abcd\") 123)\n"
-    (#(let [sw (java.io.StringWriter.)]
-        (sci/binding [sci/out sw]
-          (let [result (sci/eval-string %)]
-            (println (str sw))
-            result)))))
   (-main "-e" "println: 12345" "-e" "identity: 67890")
   (-main "--compile=foo")
   (-main "--compile-to=parse")
