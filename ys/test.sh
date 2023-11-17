@@ -22,11 +22,11 @@ ys test/hello.ys
 
 ys --load test/hello.ys
 
-ys --eval 'println: "Hello, World!"'
+ys --eval 'say: "Hello, World!"'
 
-ys -e 'println: "Hello, World!"' -e 'identity: 12345'
+ys -e 'say: "Hello, World!"' -e 'identity: 12345'
 
-ys -e 'println: "Hello, World!"' -e 'identity: 12345' test/hello.ys
+ys -e 'say: "Hello, World!"' -e 'identity: 12345' test/hello.ys
 
 ys -e 'range: 25' --json
 
@@ -36,20 +36,20 @@ ys -Ee 'range: 30'
 
 ys --compile test/hello.ys
 
-ys -ce 'println: "Hello, World!"'
+ys -ce 'say: "Hello, World!"'
 
-ys -c -e 'println: "Hello, World!"' -e 'identity: 12345'
+ys -c -e 'say: "Hello, World!"' -e 'identity: 12345'
 
-ys -c -e 'println: "Hello, World!"' \
-      -e 'println: "YAMLScript!!"' \
+ys -c -e 'say: "Hello, World!"' \
+      -e 'say: "YAMLScript!!"' \
       test/hello.ys
 
-ys -c -x parse -x build -x print -e 'println: "Hello, World!"'
+ys -c -x parse -x build -x print -e 'say: "Hello, World!"'
 
-ys -x all -e 'println: inc(41)'
+ys -x all -e 'say: inc(41)'
 
 echo 42 | ys -E
 
 echo 42 | ys -E -
 
-ys <(echo 'println: 333') <<<'println: 222' -e 'println: 111'
+ys <(echo 'say: 333') <<<'say: 222' -e 'say: 111'

@@ -14,6 +14,7 @@
    ;; Data printers
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
+   [clojure.set :as set]
    [clojure.pprint :as pp]
    ;; String helper functions
    [clojure.string :as str]
@@ -35,9 +36,20 @@
     (str "*** exit " n " ***")
     (System/exit n)))
 
-(defn die [& msg]
-  (println (apply str msg))
-  (exit 1))
+(defn die
+  ([^String s] (die (Exception. s) {} nil))
+  ([^String s opts] (die (Exception. s) opts nil))
+  ([^Exception e opts _]
+   (let [msg (str "Error: " (or (.getCause e) (.getMessage e)))
+         msg (if (:debug opts)
+               (apply
+                 str
+                 msg
+                 (interpose
+                   "\n"
+                   (apply conj ["Stack trace:"] (.getStackTrace e))))
+               msg)]
+     (throw (Exception. ^String msg)))))
 
 (defn todo [s]
   (die "--" s " not implemented yet."))
@@ -47,19 +59,6 @@
     (.ready ^clojure.lang.LineNumberingPushbackReader *in*)
     (catch Exception e false)))
 
-(defn print-exception
-  ([^String s opts] (print-exception (Exception. s) opts nil))
-  ([^Exception e opts _]
-   (println (str "Error: " (or (.getCause e) (.getMessage e))))
-   (when (:debug opts)
-     (println
-       (apply
-         str
-         (interpose
-           "\n"
-           (apply conj ["Stack trace:"] (.getStackTrace e))))))
-   (exit 1)))
-
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
 
@@ -67,7 +66,7 @@
 (def cli-options
   [;
    ["-r" "--run"
-    "Compile and evaluate a YAMLScript file"]
+    "Compile and evaluate a YAMLScript file (default)"]
    ["-l" "--load"
     "Output the evaluated YAMLScript value"]
    ["-c" "--compile"
@@ -85,6 +84,8 @@
     :validate
     [#(some #{%} ["s" "script", "y" "yaml", "d" "data"])
      (str "must be one of: s, script, y, yaml, d or data")]]
+   ["-p" "--print"
+    "Print the result of --run in script mode"]
 
    ["-o" "--output"
     "Output file for --load or --compile"]
@@ -126,20 +127,13 @@
    ["-h" "--help"
     "Print this help and exit"]])
 
-(defn unsupported-opts [opts unsupported]
-  (doall
-    (for [opt unsupported
-          :let [kw (keyword (subs opt 2))]
-          :when (kw opts)]
-      (print-exception
-        (str "Option " opt " is not supported in this context.")
-        opts))))
-
 (defn do-error [errs help]
-  (let [errs (apply list "Error(s):" errs)]
+  (let [errs (if (> (count errs) 1)
+               (apply list "Error(s):" errs)
+               errs)]
     (println (str/join "\n* " errs))
-    (println (str "\nOptions:\n" help))
-    (exit 1)))
+    (println (str "\n" help)))
+  (exit 1))
 
 (defn do-version []
   (println "YAMLScript 0.1.0"))
@@ -147,23 +141,29 @@
 (defn do-help [help]
   (println help))
 
+(defn add-ys-mode-tag [opts code]
+  (let [mode (:mode opts)]
+    (str/join ""
+      [(cond
+         (or (str/starts-with? code "--- !yamlscript/v0")
+           (str/starts-with? code "!yamlscript/v0"))
+         ""
+         (or (= "s" mode) (= "script" mode))
+         "--- !yamlscript/v0\n"
+         (or (= "y" mode) (= "yaml" mode))
+         "--- !yamlscript/v0/\n"
+         (or (= "d" mode) (= "data" mode))
+         "--- !yamlscript/v0/data\n"
+         (some opts [:load :to :json :yaml :edn])
+         ""
+         :else "--- !yamlscript/v0\n")
+       code])))
+
 (defn get-code [opts args]
-  (let [code ""
-        mode (:mode opts)
+  (let [
         code (if (seq (:eval opts))
-               (let [eval (->> opts :eval (str/join "\n"))
-                     eval (case mode
-                            "s" (str "--- !yamlscript/v0\n" eval)
-                            "script" (str "--- !yamlscript/v0\n" eval)
-                            "y" (str "--- !yamlscript/v0/\n" eval)
-                            "yaml" (str "--- !yamlscript/v0/\n" eval)
-                            "d" (str "--- !yamlscript/v0/data\n" eval)
-                            "data" (str "--- !yamlscript/v0/data\n" eval)
-                            (if (some opts [:load :to])
-                              eval
-                              (str "--- !yamlscript/v0\n" eval)))]
-                 eval)
-               code)
+               (->> opts :eval (str/join "\n") (add-ys-mode-tag opts))
+               "")
         code (str
                (when-not (empty? code) (str code "\n"))
                (str/join "\n"
@@ -183,11 +183,20 @@
       (compiler/compile code)
       (binding [compiler/*debug* (:debug-stage opts)]
         (compiler/compile-debug code)))
-    (catch Exception e (print-exception e opts nil))))
+    (catch Exception e (die e opts nil))))
 
 (sci/alter-var-root sci/out (constantly *out*))
 (sci/alter-var-root sci/err (constantly *err*))
 (sci/alter-var-root sci/in (constantly *in*))
+
+(def ys-ns (sci/create-ns 'ys))
+(def ys-ns-vars
+  {#__
+   'compile (sci/copy-var ys.core/ys-compile ys-ns)
+   'eval (sci/copy-var ys.core/ys-eval ys-ns)
+   'load (sci/copy-var ys.core/ys-load ys-ns)
+   #__})
+
 (def clojure-core (sci/create-ns 'clojure.core))
 (def clojure-core-vars
   {#__
@@ -196,6 +205,7 @@
    'spit (sci/copy-var clojure.core/spit clojure-core)
    'say (sci/copy-var ys.core/say clojure-core)
    #__})
+
 (def ys-core (sci/create-ns 'clojure.core))
 (def ys-core-vars (sci/copy-ns ys.core ys-core))
 
@@ -204,6 +214,7 @@
              {#__
               'clojure.core clojure-core-vars
               'ys.core ys-core-vars
+              'ys ys-ns-vars
               #__}}))
 
 (defn run-clj [clj]
@@ -224,19 +235,22 @@
                 (:clj opts)
                 (-> (get-code opts args)
                   (compile-code opts)))
-          is-empty (= "" clj)
           result (run-clj clj)]
-      (when (and (not is-empty) (some opts [:load :to]))
-        (case (:to opts)
-          "yaml" (println
-                   (str/trim-newline
-                     (yaml/generate-string
-                       result
-                       :dumper-options {:flow-style :block})))
-          "json" (json/pprint result json-options)
-          "edn"  (pp/pprint result)
-          ,      (println (json/write-str result json-options)))))
-    (catch Exception e (print-exception e opts nil))))
+      (if (:print opts)
+        (println result)
+        (when (or (:print opts)
+                (and (not (= "" clj))
+                  (some opts [:load :to :json :yaml :edn])))
+          (case (:to opts)
+            "yaml" (println
+                     (str/trim-newline
+                       (yaml/generate-string
+                         result
+                         :dumper-options {:flow-style :block})))
+            "json" (json/pprint result json-options)
+            "edn"  (pp/pprint result)
+            ,      (println (json/write-str result json-options))))))
+    (catch Exception e (die e opts nil))))
 
 (defn do-compile [opts args]
   (-> (get-code opts args)
@@ -245,7 +259,6 @@
     println))
 
 (defn do-repl [opts]
-  (unsupported-opts opts ["--to"])
   (todo "repl"))
 
 (defn do-nrepl [opts args]
@@ -268,12 +281,98 @@
     (do-run opts args)
     (do-help help)))
 
+(defn mutex [opts keys]
+  (let [omap (reduce #(if (%2 opts)
+                        (assoc %1 %2 true)
+                        %1) {} keys)]
+    (when (> (count omap) 1)
+      (let [[first second] (seq omap)
+            first (str "--" (name (key first)))
+            second (str "--" (name (key second)))]
+        (die (str "Options " first " and " second
+               " are mutually exclusive."))))))
+
+(defn mutex1 [opts opt keys]
+  (let [omap (reduce #(if (%2 opts)
+                        (assoc %1 %2 true)
+                        %1) {} keys)]
+    (when (and (opt opts) (> (count omap) 0))
+      (let [[second] (seq omap)
+            first (str "--" (name opt))
+            second (str "--" (name (key second)))]
+        (die (str "Options " first " and " second
+               " are mutually exclusive."))))))
+
+(comment (-main "--mode=script"))
+
+(defn k2o [k]
+  (str "--" (name k)))
+
+(defn needs [opts opt keys]
+  (let [omap (set keys)]
+    (when (and (opt opts) (not (some opts keys)))
+      (let [first (str "--" (name opt))]
+        (die (str "Option " first " requires "
+               (if (= 1 (count keys))
+                 (k2o (clojure.core/first keys))
+                 " one of ...")))))))
+
+(def all-opts
+  #{:run :load :compile :eval
+    :clj :mode :print :output
+    :to :json :yaml :edn
+    :repl :nrepl :kill
+    :debug :debug-stage
+    :version :help})
+
+(def action-opts
+  #{:run :load :compile :clj
+    :repl :nrepl :kill
+    :version :help})
+
+(def eval-action-opts
+  #{:run :load :compile :clj})
+
+(def format-opts
+  #{:to :json :yaml :edn})
+
+(def repl-opts
+  #{:repl :nrepl :kill})
+
+(def info-opts
+  #{:version :help})
+
+(defn elide-empty [opt opts]
+  (if (empty? (get opts opt))
+    (dissoc opts opt)
+    opts))
+
+(defn validate-opts [opts]
+  (let [opts (elide-empty :eval opts)
+        opts (elide-empty :debug-stage opts)]
+    (try
+      (mutex opts action-opts)
+      (mutex opts format-opts)
+      (mutex1 opts :help (set/difference all-opts #{:help}))
+      (mutex1 opts :version (set/difference all-opts #{:version}))
+      (mutex1 opts :mode (set/union info-opts repl-opts))
+      (mutex1 opts :eval (set/difference action-opts eval-action-opts))
+      (needs opts :mode #{:eval})
+      (mutex1 opts :print (set/difference action-opts #{:run}))
+      (mutex1 opts :to (set/difference action-opts #{:load :compile}))
+      nil
+      (catch Exception e (.getMessage e)))))
+
 (defn -main [& args]
   (let [options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
+        opts (if (not (some opts (vec (seq action-opts))))
+               (assoc opts :run true)
+               opts)
+        error (validate-opts opts)
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
         opts (if (:edn opts) (assoc opts :to "edn") opts)
@@ -284,27 +383,40 @@
           ;; Insert blank lines in help text
         help (str/replace help #"\n  (-[omJRX])" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %))]
-    (cond (seq errs) (do-error errs help)
-          (:help opts) (do-help help)
-          (:version opts) (do-version)
-          (:run opts) (do-run opts args)
-          (:load opts) (do-run opts args)
-          (:clj opts) (do-run opts args)
-          (:repl opts) (do-repl opts)
-          (:connect opts) (do-connect opts args)
-          (:kill opts) (do-kill opts args)
-          (:compile opts) (do-compile opts args)
-          (:nrepl opts) (do-nrepl opts args)
-          (:compile-to opts) (do-compile-to opts args)
-          :else (do-default opts args help))))
+    (cond
+      error (do-error [error] help)
+      (seq errs) (do-error errs help)
+      (:help opts) (do-help help)
+      (:version opts) (do-version)
+      (:run opts) (do-run opts args)
+      (:load opts) (do-run opts args)
+      (:clj opts) (do-run opts args)
+      (:repl opts) (do-repl opts)
+      (:connect opts) (do-connect opts args)
+      (:kill opts) (do-kill opts args)
+      (:compile opts) (do-compile opts args)
+      (:nrepl opts) (do-nrepl opts args)
+      (:compile-to opts) (do-compile-to opts args)
+      :else (do-default opts args help))))
 
 (comment
-  (-main "-e" "println: 12345" "-e" "identity: 67890")
+  (-main)
+  (-main
+    ;"--run"
+    ;"--load"
+    ;"--to=json"
+    ;"--compile"
+    "--mode=script"
+    ;"--help"
+    "-e" "say: 123"
+    ;"ys.load"
+    )
+  (-main "-ms" "-le" "println: 12345" "-e" "identity: 67890")
   (-main "--compile=foo")
   (-main "--compile-to=parse")
   (-main "--help")
   (-main "--version")
-  (-main "-Je" "range: 30")
+  (-main "-ms" "-Je" "range: 30")
   (-main "-c" "test/hello.ys")
   (-main "test/hello.ys")
   (-main "-e" "println: 123")
@@ -315,7 +427,7 @@
   (-main "-Q")
   (-main "-xall" "-e" "println: 123")
   (-main "--load" "test/hello.ys")
-  (-main "--load" "-Ms" "-e" "identity: inc(41)")
-  (-main)
+  (-main "--load" "-ms" "-e" "identity: inc(41)")
+  (-main "-e" "say((ys.compile \"[2,4,6]\"))")
   *file*
   )
