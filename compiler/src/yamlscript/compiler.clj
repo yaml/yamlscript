@@ -33,13 +33,7 @@
    "build" true
    "transform" true
    "construct" true
-   "print" true
-   "final" true})
-
-(defn final [code]
-  (str
-    "(ns main (:use ys.core))\n"
-    code))
+   "print" true})
 
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
@@ -52,8 +46,7 @@
           yamlscript.builder/build
           yamlscript.transformer/transform
           yamlscript.constructor/construct
-          yamlscript.printer/print
-          final)]
+          yamlscript.printer/print)]
     clojure-string))
 
 (defn debug-print [stage data]
@@ -81,9 +74,7 @@
           yamlscript.constructor/construct
           (debug-print "construct")
           yamlscript.printer/print
-          (debug-print "print")
-          final
-          (debug-print "final"))]
+          (debug-print "print"))]
     clojure-string))
 
 (comment

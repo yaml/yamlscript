@@ -7,8 +7,6 @@
    [yamlscript.compiler :as compiler]
    [yamlscript.test :as test]))
 
-(def head "(ns main (:use ys.core))\n")
-
 (do
   (test/remove-tests)
   (test/load-yaml-tests
@@ -19,4 +17,4 @@
                     :yamlscript
                     yamlscript.compiler/compile))
      :want-func (fn [test]
-                  (str head (:clojure test)))}))
+                  (:clojure test))}))

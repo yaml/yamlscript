@@ -303,8 +303,6 @@
         (die (str "Options " first " and " second
                " are mutually exclusive."))))))
 
-(comment (-main "--mode=script"))
-
 (defn k2o [k]
   (str "--" (name k)))
 
@@ -369,9 +367,12 @@
          args :arguments
          help :summary
          errs :errors} options
-        opts (if (not (some opts (vec (seq action-opts))))
-               (assoc opts :run true)
-               opts)
+         opts (if (not (seq (elide-empty :eval
+                              (elide-empty :debug-stage opts))))
+                (assoc opts :help true)
+                (if (not (some opts (vec (seq action-opts))))
+                  (assoc opts :run true)
+                  opts))
         error (validate-opts opts)
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
