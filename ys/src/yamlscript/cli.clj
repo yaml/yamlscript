@@ -154,9 +154,10 @@
          "--- !yamlscript/v0/\n"
          (or (= "d" mode) (= "data" mode))
          "--- !yamlscript/v0/data\n"
-         (some opts [:load :to :json :yaml :edn])
+         (:load opts)
          ""
-         :else "--- !yamlscript/v0\n")
+         :else
+         "--- !yamlscript/v0\n")
        code])))
 
 (defn get-code [opts args]
@@ -238,9 +239,7 @@
           result (run-clj clj)]
       (if (:print opts)
         (println result)
-        (when (or (:print opts)
-                (and (not (= "" clj))
-                  (some opts [:load :to :json :yaml :edn])))
+        (when (and (:load opts) (not (= "" clj)))
           (case (:to opts)
             "yaml" (println
                      (str/trim-newline
@@ -377,6 +376,7 @@
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
         opts (if (:edn opts) (assoc opts :to "edn") opts)
+        opts (if (:to opts) (assoc opts :load true) opts)
         help (str/replace help #"^"
                "Usage: ys [options] [file]\n\nOptions:\n")
         help (str/replace help #"\[\]" "  ")

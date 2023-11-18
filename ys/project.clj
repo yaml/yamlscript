@@ -45,7 +45,21 @@
      *warn-on-reflection* true}
     :jvm-opts
     ["-Dclojure.compiler.direct-linking=true"
-     "-Dclojure.spec.skip-macros=true"]}}
+     "-Dclojure.spec.skip-macros=true"]}
+
+   :dev
+   {:dependencies
+    [[pjstadig/humane-test-output "0.11.0"]]
+    :injections [(require 'pjstadig.humane-test-output)
+                 (pjstadig.humane-test-output/activate!)]}
+
+   :repl
+   {:repl-options
+    {:init
+     (do
+       (require 'pjstadig.humane-test-output)
+       (pjstadig.humane-test-output/activate!)
+       #_(require 'yamlscript.test-runner))}}}
 
   :repositories [["public-github" {:url "git://github.com"}]]
 

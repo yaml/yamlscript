@@ -23,7 +23,10 @@ install: build
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 	@:
 
-test: $(YAMLSCRIPT_CLI_BIN)
+test:
+	lein test
+
+test-ys: $(YAMLSCRIPT_CLI_BIN)
 	./test.sh
 
 $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
