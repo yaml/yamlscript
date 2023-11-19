@@ -20,7 +20,7 @@
   [[org.clojure/clojure "1.11.1"]
    [org.babashka/sci "0.8.40"]
    [org.clojure/data.json "2.4.0"]
-   [yamlscript/compiler "0.1.0"]]
+   [yamlscript/lang "0.1.0"]]
 
   :plugins
   [[lein-exec "0.3.7"]

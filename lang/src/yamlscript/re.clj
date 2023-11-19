@@ -58,9 +58,9 @@
 (def symw #"\w+(?:-\w+)*")             ; Symbol word
 (def keyw (re #"(?:\:$symw)"))         ; Keyword token
 (def symb (re #"$symw[?!]?"))          ; Symbol token
-(def symp (re #"$symb\("))             ; Symbol followed by paren
-(def nspc (re #"$symw(?:\.$symw)+"))   ; Namespace symbol
+(def nspc (re #"$symw(?:\.$symw)*"))   ; Namespace symbol
 (def fqsm (re #"$nspc/$symb"))         ; Fully qualified symbol
+(def symp (re #"(?:$fqsm|$symb)\("))   ; Symbol followed by paren
 (def dyns (re #"\*$symw\*"))           ; Dynamic symbol
 
 (comment

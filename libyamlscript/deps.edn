@@ -14,4 +14,4 @@
    {:src-dirs ["src"], :class-dir "target/classes"}}},
  :deps/prep-lib
  {:ensure "target/classes", :alias :lein2deps, :fn compile-java},
- :mvn/repos {"public-github" {:url "git://github.com"}}}
+ #_#_:mvn/repos {"public-github" {:url "git://github.com"}}}

@@ -150,6 +150,15 @@
 
 
 
+- name: Tag ! switches from yaml mode to script mode
+  yamlscript: |
+    !yamlscript/v0/
+    num: ! inc(41)
+  resolve: |
+    {:map [{:str "num"} {:ysx "inc(41)"}]}
+
+
+
 - name: Sequence in yaml mode after switch
   yamlscript: |
     !yamlscript/v0

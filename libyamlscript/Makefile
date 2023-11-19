@@ -31,8 +31,6 @@ test:: $(LIBYAMLSCRIPT_SO_PATH)
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
-distclean::
-
 $(LIBYAMLSCRIPT_SO_PATH): $(GRAALVM_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
@@ -67,7 +65,7 @@ ifeq (true,$(IS_ROOT))
 	$(error *** YAMLScript 'make build' must be run as non-root user)
 endif
 else
-$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
+$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_LANG_INSTALLED)
 	$< uberjar
 endif
 

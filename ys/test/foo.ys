@@ -1,1 +1,5 @@
-println: inc(41)
+!yamlscript/v0/
+
+foo: This is a string
+bar: ! load("./bar.ys")
+# baz: ! load("bar.ys" "foo.bar")

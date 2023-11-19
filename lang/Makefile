@@ -2,10 +2,10 @@ include ../common/base.mk
 include ../common/clojure.mk
 include ../common/docker.mk
 
-export PATH := $(ROOT)/compiler/bin:$(PATH)
+export PATH := $(ROOT)/lang/bin:$(PATH)
 
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CORE_INSTALLED)
+build:: $(YAMLSCRIPT_LANG_INSTALLED)
 
 install test: $(LEIN)
 	$< $@

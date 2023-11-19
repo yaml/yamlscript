@@ -53,10 +53,10 @@
       $comm |                 # Comment
                               # Symbols and operators
       $keyw |                   # Keyword token
-      $fqsm |                   # Fully qualified symbol
       $dyns |                   # Dynamic symbol
-      $nspc |                   # Namespace symbol
       $symp |                   # Symbol followed by paren
+      $fqsm |                   # Fully qualified symbol
+      $nspc |                   # Namespace symbol
       $symb |                   # Symbol token
       $oper |                   # Operator token
       $char |                   # Character token

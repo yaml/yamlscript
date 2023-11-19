@@ -6,7 +6,7 @@ ROOT := $(shell \
 include $(ROOT)/common/vars.mk
 
 DIRS := \
-    compiler \
+    lang \
     libyamlscript \
     perl \
     python \
@@ -21,6 +21,7 @@ INSTALL := $(BUILD_DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
+REALCLEAN := $(DIRS:%=realclean-%)
 DISTCLEAN := $(DIRS:%=distclean-%)
 DOCKER_BUILD := $(DIRS:%=docker-build-%)
 DOCKER_TEST := $(DIRS:%=docker-test-%)
@@ -43,6 +44,10 @@ install-%: % build-%
 
 $(TEST):
 test: $(TEST)
+	@echo
+	@echo 'ALL TESTS PASSED!'
+test-ys:
+	$(MAKE) -C ys test-all v=$v
 test-%: %
 	$(MAKE) -C $< test v=$v
 
@@ -51,13 +56,19 @@ clean: $(CLEAN)
 clean-%: %
 	$(MAKE) -C $< clean
 
-clean-all: $(DISTCLEAN)
+$(REALCLEAN):
+realclean: clean $(REALCLEAN)
+realclean-%: %
+	$(MAKE) -C $< realclean
 
 $(DISTCLEAN):
-distclean: clean $(DISTCLEAN)
+distclean: realclean $(DISTCLEAN)
 distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/ .lsp/
+
+sysclean: distclean
+	$(RM) -r ~/.m2/ /tmp/graalvm* /tmp/yamlscript/
 
 $(DOCKER_BUILD):
 docker-build: $(DOCKER_BUILD)

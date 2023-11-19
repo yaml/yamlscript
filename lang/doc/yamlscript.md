@@ -155,13 +155,13 @@ In other words, when you press up-arrow, the entire multi-line value will come
 up for editing and re-evaluation.
 
 
-# YAMLScript Core Library
+# YAMLScript Standard Library
 
-YAMLScript has it's own `ys.core` library with a small set of functions that
+YAMLScript has it's own `ys.std` library with a small set of functions that
 differ from `clojure.core`.
 This library is automatically required by the YAMLScript Runtime.
 
-The YAMLScript Core Functions are:
+The YAMLScript Standard Functions are:
 
 * `read-file-ys`
 

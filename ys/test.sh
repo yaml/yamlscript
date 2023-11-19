@@ -28,11 +28,15 @@ ys -e 'say: "Hello, World!"' -e 'identity: 12345'
 
 ys -e 'say: "Hello, World!"' -e 'identity: 12345' test/hello.ys
 
-ys -e 'range: 25' --json
+ys -pe 'range: 25'
 
-ys -Ye 'range: 10'
+ys -le 'range: 25'
 
-ys -Ee 'range: 30'
+ys -ms -le 'range: 25'
+
+ys -ms -Ye 'range: 10'
+
+ys -ms -Ee 'range: 30'
 
 ys --compile test/hello.ys
 
@@ -53,3 +57,5 @@ echo 42 | ys -E
 echo 42 | ys -E -
 
 ys <(echo 'say: 333') <<<'say: 222' -e 'say: 111'
+
+ys -Y test/foo.ys

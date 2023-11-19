@@ -1,7 +1,7 @@
-yamlscript/compiler
-===================
+yamlscript/lang
+===============
 
-The YAMLScript compiler written in Clojure
+The YAMLScript compiler and runtime written in Clojure
 
 
 ## Synopsis
@@ -17,7 +17,7 @@ The YAMLScript compiler written in Clojure
 
 ## Description
 
-This directory builds the YAMLScript compiler written in Clojure.
+This directory builds the YAMLScript language written in Clojure.
 
 The `yamlscript.compiler/compile` function takes a YAMLScript input string and
 compiles it to a Clojure code string.

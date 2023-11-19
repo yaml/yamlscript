@@ -1,4 +1,4 @@
-BUILD_BIN := /tmp/yamlscript/bbin
+BUILD_BIN := /tmp/yamlscript/bin
 
 COMMON := $(ROOT)/common
 

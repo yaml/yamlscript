@@ -3,7 +3,9 @@ include $(COMMON)/clojure.mk
 include $(COMMON)/docker.mk
 
 YAMLSCRIPT_CLI_BIN := ys
-YAMLSCRIPT_CLI_SRC := src/yamlscript/cli.clj
+YAMLSCRIPT_CLI_SRC := \
+  src/yamlscript/cli.clj \
+
 YAMLSCRIPT_CLI_JAR_PATH := \
   target/uberjar/yamlscript.cli-0.1.0-SNAPSHOT-standalone.jar
 
@@ -23,11 +25,17 @@ install: build
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 	@:
 
-test:
-	lein test
+test: test-unit
+
+test-all: test-unit test-ys
+
+test-unit: $(LEIN)
+	$< test
 
 test-ys: $(YAMLSCRIPT_CLI_BIN)
 	./test.sh
+	@echo
+	@echo "*** test.sh completed successfully"
 
 $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
 ifneq (true,$(LIBZ))
@@ -57,13 +65,10 @@ endif
 clean::
 	$(RM) $(YAMLSCRIPT_CLI_BIN)
 
-distclean::
-	$(RM) -r .calva/ .clj-kondo/ .lsp/
-
 ifeq (true,$(IS_ROOT))
 $(YAMLSCRIPT_CLI_JAR_PATH):
 else
-$(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
+$(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_LANG_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	$< uberjar
 endif
 

@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023 Ingy dot Net
 
-(defproject yamlscript/compiler "0.1.0"
+(defproject yamlscript/lang "0.1.0"
   :description "Program in YAML"
 
   :url "https://github.com/yaml/yamlscript"
@@ -19,7 +19,8 @@
   :dependencies
   [[org.clojure/clojure "1.11.1"]
    [clj-commons/clj-yaml "1.0.27"]
-   [org.snakeyaml/snakeyaml-engine "2.6"]]
+   [org.snakeyaml/snakeyaml-engine "2.6"]
+   [org.babashka/sci "0.8.40"]]
 
   :plugins
   [[lein-exec "0.3.7"]

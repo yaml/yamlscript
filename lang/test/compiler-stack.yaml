@@ -383,3 +383,39 @@
   parse: |
     "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
   print: |
+
+
+
+
+- name: Switch to script mode
+  yamlscript: |
+    !yamlscript/v0/
+    str: foo bar
+    num: ! inc(41)
+    bar: ! ys/load("bar.yaml")
+  resolve: |
+    {:map
+     [{:str "str"}
+      {:str "foo bar"}
+      {:str "num"}
+      {:ysx "inc(41)"}
+      {:str "bar"}
+      {:ysx "ys/load(\"bar.yaml\")"}]}
+  build: |
+    {:Map
+     [{:Str "str"}
+      {:Str "foo bar"}
+      {:Str "num"}
+      {:Lst [{:Sym inc} {:Int 41}]}
+      {:Str "bar"}
+      {:Lst [{:Sym ys/load} {:Str "bar.yaml"}]}]}
+  construct: |
+    {:Map
+     [{:Str "str"}
+      {:Str "foo bar"}
+      {:Str "num"}
+      {:Lst [{:Sym inc} {:Int 41}]}
+      {:Str "bar"}
+      {:Lst [{:Sym ys/load} {:Str "bar.yaml"}]}]}
+  print: |
+    {"str" "foo bar", "num" (inc 41), "bar" (ys/load "bar.yaml")}

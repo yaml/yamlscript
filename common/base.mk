@@ -26,7 +26,9 @@ build::
 
 clean::
 
-distclean:: clean
+realclean:: clean
+
+distclean:: realclean
 
 chown::
 	$(MAKE) -C $(ROOT) $@

@@ -9,20 +9,20 @@
   (:require
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
    [yamlscript.compiler :as compiler]
+   [yamlscript.runtime :as runtime]
    ;; For www debugging
    [yamlscript.debug :refer [www]]
    ;; Data printers
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
-   [clojure.set :as set]
    [clojure.pprint :as pp]
+   [clojure.set :as set]
    ;; String helper functions
    [clojure.string :as str]
    ;; Command line options parser
-   [clojure.tools.cli :as cli]
-   ;; Small Clojure interpreter runtime for YAMLScript evaluation
-   [sci.core :as sci]
-   [ys.core]))
+   [clojure.tools.cli :as cli]))
+
+(def testing (atom false))
 
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
@@ -32,7 +32,7 @@
     (.getStackTrace (Thread/currentThread))))
 
 (defn exit [n]
-  (if (in-repl)
+  (if (or (in-repl) @testing)
     (str "*** exit " n " ***")
     (System/exit n)))
 
@@ -40,24 +40,24 @@
   ([^String s] (die (Exception. s) {} nil))
   ([^String s opts] (die (Exception. s) opts nil))
   ([^Exception e opts _]
-   (let [msg (str "Error: " (or (.getCause e) (.getMessage e)))
+   (let [msg (str "Error: "
+               (or (.getCause e)
+                 (.getMessage e)))
          msg (if (:debug opts)
-               (apply
-                 str
-                 msg
-                 (interpose
-                   "\n"
-                   (apply conj ["Stack trace:"] (.getStackTrace e))))
+               (apply str msg
+                 (interpose "\n"
+                   (apply conj ["Stack trace:"]
+                     (.getStackTrace e))))
                msg)]
      (throw (Exception. ^String msg)))))
 
-(defn todo [s]
+(defn todo [s & _]
   (die "--" s " not implemented yet."))
 
 (defn stdin-ready? []
   (try
     (.ready ^clojure.lang.LineNumberingPushbackReader *in*)
-    (catch Exception e false)))
+    (catch Exception _ false)))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
@@ -76,8 +76,8 @@
     :default []
     :update-fn conj
     :multi true]
-   [nil "--clj CLJEXPR"
-    "Evaluate a Clojure expression"]
+   ["-C" "--clj CLJEXPR"
+    "Evaluate a Clojure expression in the YS Runtime"]
 
    ["-m" "--mode MODE"
     "Add a mode tag: script, yaml, or data"
@@ -138,8 +138,22 @@
 (defn do-version []
   (println "YAMLScript 0.1.0"))
 
+(def help-heading
+  "ys - The YAMLScript (YS) Command Line Tool
+
+Usage: ys [options] [file]
+
+Options:
+")
+
 (defn do-help [help]
-  (println help))
+  (let [help (str/replace help #"^" help-heading)
+        help (str/replace help #"\[\]" "  ")
+        help (str/replace help #"\{\}" "  ")
+        ;; Insert blank lines in help text
+        help (str/replace help #"\n  (-[omJRX])" "\n\n  $1")
+        help (str/replace help #"    ([A-Z])" #(second %))]
+    (println help)))
 
 (defn add-ys-mode-tag [opts code]
   (let [mode (:mode opts)]
@@ -161,8 +175,7 @@
        code])))
 
 (defn get-code [opts args]
-  (let [
-        code (if (seq (:eval opts))
+  (let [code (if (seq (:eval opts))
                (->> opts :eval (str/join "\n") (add-ys-mode-tag opts))
                "")
         code (str
@@ -186,45 +199,6 @@
         (compiler/compile-debug code)))
     (catch Exception e (die e opts nil))))
 
-(sci/alter-var-root sci/out (constantly *out*))
-(sci/alter-var-root sci/err (constantly *err*))
-(sci/alter-var-root sci/in (constantly *in*))
-
-(def ys-ns (sci/create-ns 'ys))
-(def ys-ns-vars
-  {#__
-   'compile (sci/copy-var ys.core/ys-compile ys-ns)
-   'eval (sci/copy-var ys.core/ys-eval ys-ns)
-   'load (sci/copy-var ys.core/ys-load ys-ns)
-   #__})
-
-(def clojure-core (sci/create-ns 'clojure.core))
-(def clojure-core-vars
-  {#__
-   'pprint (sci/copy-var clojure.pprint/pprint clojure-core)
-   'slurp (sci/copy-var clojure.core/slurp clojure-core)
-   'spit (sci/copy-var clojure.core/spit clojure-core)
-   'say (sci/copy-var ys.core/say clojure-core)
-   #__})
-
-(def ys-core (sci/create-ns 'clojure.core))
-(def ys-core-vars (sci/copy-ns ys.core ys-core))
-
-(def sci-ctx
-  (sci/init {:namespaces
-             {#__
-              'clojure.core clojure-core-vars
-              'ys.core ys-core-vars
-              'ys ys-ns-vars
-              #__}}))
-
-(defn run-clj [clj]
-  (let [clj (str/trim-newline clj)]
-    (if (= "" clj)
-      ""
-      (let [result (sci/eval-string* sci-ctx clj)]
-        result))))
-
 (def json-options
   {:escape-unicode false
    :escape-js-separators false
@@ -236,9 +210,10 @@
                 (:clj opts)
                 (-> (get-code opts args)
                   (compile-code opts)))
-          result (run-clj clj)]
+          file (first args)
+          result (runtime/eval-string clj file)]
       (if (:print opts)
-        (println result)
+        (pp/pprint result)
         (when (and (:load opts) (not (= "" clj)))
           (case (:to opts)
             "yaml" (println
@@ -258,19 +233,19 @@
     println))
 
 (defn do-repl [opts]
-  (todo "repl"))
+  (todo "repl" opts))
 
 (defn do-nrepl [opts args]
-  (todo "nrepl"))
+  (todo "nrepl" opts args))
 
 (defn do-connect [opts args]
-  (todo "connect"))
+  (todo "connect" opts args))
 
 (defn do-kill [opts args]
-  (todo "kill"))
+  (todo "kill" opts args))
 
 (defn do-compile-to [opts args]
-  (todo "compile-to"))
+  (todo "compile-to" opts args))
 
 (defn do-default [opts args help]
   (if (or
@@ -306,13 +281,12 @@
   (str "--" (name k)))
 
 (defn needs [opts opt keys]
-  (let [omap (set keys)]
-    (when (and (opt opts) (not (some opts keys)))
-      (let [first (str "--" (name opt))]
-        (die (str "Option " first " requires "
-               (if (= 1 (count keys))
-                 (k2o (clojure.core/first keys))
-                 " one of ...")))))))
+  (when (and (opt opts) (not (some opts keys)))
+    (let [first (str "--" (name opt))]
+      (die (str "Option " first " requires "
+             (if (= 1 (count keys))
+               (k2o (clojure.core/first keys))
+               " one of ..."))))))
 
 (def all-opts
   #{:run :load :compile :eval
@@ -355,7 +329,7 @@
       (mutex1 opts :mode (set/union info-opts repl-opts))
       (mutex1 opts :eval (set/difference action-opts eval-action-opts))
       (needs opts :mode #{:eval})
-      (mutex1 opts :print (set/difference action-opts #{:run}))
+      (mutex1 opts :print (set/difference action-opts #{:run :clj}))
       (mutex1 opts :to (set/difference action-opts #{:load :compile}))
       nil
       (catch Exception e (.getMessage e)))))
@@ -366,24 +340,21 @@
          args :arguments
          help :summary
          errs :errors} options
-         opts (if (not (seq (elide-empty :eval
-                              (elide-empty :debug-stage opts))))
-                (assoc opts :help true)
-                (if (not (some opts (vec (seq action-opts))))
-                  (assoc opts :run true)
-                  opts))
+        opts (if (and
+                   (not (seq args))
+                   (not
+                     (seq (elide-empty
+                            :eval
+                            (elide-empty :debug-stage opts)))))
+               (assoc opts :help true)
+               (if (not (some opts (vec (seq action-opts))))
+                 (assoc opts :run true)
+                 opts))
         error (validate-opts opts)
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
         opts (if (:edn opts) (assoc opts :to "edn") opts)
-        opts (if (:to opts) (assoc opts :load true) opts)
-        help (str/replace help #"^"
-               "Usage: ys [options] [file]\n\nOptions:\n")
-        help (str/replace help #"\[\]" "  ")
-        help (str/replace help #"\{\}" "  ")
-          ;; Insert blank lines in help text
-        help (str/replace help #"\n  (-[omJRX])" "\n\n  $1")
-        help (str/replace help #"    ([A-Z])" #(second %))]
+        opts (if (:to opts) (assoc opts :load true) opts)]
     (cond
       error (do-error [error] help)
       (seq errs) (do-error errs help)
@@ -409,26 +380,5 @@
     ;"--compile"
     "--mode=script"
     ;"--help"
-    "-e" "say: 123"
-    ;"ys.load"
-    )
-  (-main "-ms" "-le" "println: 12345" "-e" "identity: 67890")
-  (-main "--compile=foo")
-  (-main "--compile-to=parse")
-  (-main "--help")
-  (-main "--version")
-  (-main "-ms" "-Je" "range: 30")
-  (-main "-c" "test/hello.ys")
-  (-main "test/hello.ys")
-  (-main "-e" "println: 123")
-  (-main "-ce" "foo:")
-  (-main "-Xce" "foo:")
-  (-main "--repl" "-t" "json")
-  (-main "--repl")
-  (-main "-Q")
-  (-main "-xall" "-e" "println: 123")
-  (-main "--load" "test/hello.ys")
-  (-main "--load" "-ms" "-e" "identity: inc(41)")
-  (-main "-e" "say((ys.compile \"[2,4,6]\"))")
-  *file*
+    "-e" "say: 123")
   )

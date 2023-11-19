@@ -64,11 +64,11 @@ GRAALVM_O ?= 1
 export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(GRAALVM_HOME)/bin:$(PATH)
 
-YAMLSCRIPT_CORE_INSTALLED := \
-  $(HOME)/.m2/repository/yamlscript/compiler/maven-metadata-local.xml
+YAMLSCRIPT_LANG_INSTALLED := \
+  $(HOME)/.m2/repository/yamlscript/lang/maven-metadata-local.xml
 YAMLSCRIPT_CORE_SRC := \
-  ../compiler/src/yamlscript/* \
-  ../compiler/src/ys/* \
+  ../lang/src/yamlscript/* \
+  ../lang/src/ys/* \
 
 ifdef w
   export WARN_ON_REFLECTION := 1
@@ -103,12 +103,12 @@ LEIN_REPL_OPTIONS := \
 # Common Clojure Targets
 #------------------------------------------------------------------------------
 
-clean:: nrepl-stop
-	$(RM) pom.xml
+clean::
+	$(RM) pom.xml Dockerfile
 	$(RM) -r .lein-*
 	$(RM) -r reports/ target/
 
-distclean::
+distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
 $(LEIN): $(BUILD_BIN) $(GRAALVM_INSTALLED)
@@ -130,10 +130,10 @@ deps-graph:: $(LEIN)
 
 # Build/GraalVM targets
 force:
-	$(RM) $(YAMLSCRIPT_CORE_INSTALLED)
+	$(RM) $(YAMLSCRIPT_LANG_INSTALLED)
 
-$(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
-	$(MAKE) -C ../compiler install
+$(YAMLSCRIPT_LANG_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
+	$(MAKE) -C ../lang install
 
 $(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
 	tar xzf $<
