@@ -1,4 +1,4 @@
-#!/usr/bin/env yamlscript
+#!/usr/bin/env ys+0
 
 # This program has multiple implementations of "fizzbuzz".
 
@@ -7,10 +7,12 @@
 # The main function runs a certain requested fizzbuzz implementation function
 # for a certain requested number (default is 100).
 
+!yamlscript/v0
+
 defn main(count=100, impl="1"):
   fizzbuzz =: "fizzbuzz-$impl"
 
-  getenv("YAMLSCRIPT_TEST") |:
+  when-not getenv("YAMLSCRIPT_TEST"):
     say: "Running function '$fizzbuzz' with count=$count"
 
   function =: resolve(symbol(fizzbuzz))
@@ -22,25 +24,24 @@ defn main(count=100, impl="1"):
 # https://rosettacode.org/wiki/FizzBuzz#Clojure
 
 defn fizzbuzz-1(n):
-  map:
-  - fn (x):
-      ???:
-        zero?(mod(x 15)) : "FizzBuzz"
-        zero?(mod(x 5))  : "Buzz"
-        zero?(mod(x 3))  : "Fizz"
+  map @:
+    fn(x):
+      cond @:
+        zero?(x % 15) : "FizzBuzz"
+        zero?(x % 5)  : "Buzz"
+        zero?(x % 3)  : "Fizz"
         :else: x
-  - (1 .. n)
+    =>: (1 .. n)
 
 
 defn fizzbuzz-2(n):
   loop [i 1, l []]:
-    if (i > n):
-    - l
-    - ^^^:
-      - inc(i)
-      - conj:
-        - l
-        - ???:
+    if (i > n): l
+    else:
+      recur:
+        inc: i
+        conj l:
+          cond:
             zero?(mod(i 15)) : "FizzBuzz"
             zero?(mod(i 5))  : "Buzz"
             zero?(mod(i 3))  : "Fizz"
@@ -49,10 +50,11 @@ defn fizzbuzz-2(n):
 
 defn fizzbuzz-3(n):
   map:
-  - fn (x):
-      s =:
+    fn(x):
+      if empty?(s):
+        =>: x
+      else:
         str:
-        - (zero? mod(x 3)) ?: "Fizz"
-        - (zero? mod(x 5)) ?: "Buzz"
-      if (empty? s): x, s
-  - (1 .. n)
+          when (zero? mod(x 3)): "Fizz"
+          when (zero? mod(x 5)): "Buzz"
+    range: 1, n++

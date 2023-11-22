@@ -104,7 +104,7 @@ bar: 10 20"
     compile
     println)
 
-  (->> "test/hello.ys"
+  (->> "../test/hello.ys"
     slurp
     compile
     println)

@@ -1,0 +1,5 @@
+!yamlscript/v0/
+
+foo: This is a string
+bar: ! load("./loadme.ys")
+# baz: ! load("loadme.ys" "foo.bar")

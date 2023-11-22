@@ -8,31 +8,25 @@
    [yamlscript.parser :as parser]
    [yamlscript.composer :as composer]
    [yamlscript.resolver :as resolver]
-   [yamlscript.test :as test]))
+   [yamltest.core :as test]))
 
-(def test-files
+(test/load-yaml-test-files
   ["test/compiler-stack.yaml"
    "test/yaml-mode.yaml"
-   "test/resolver.yaml"])
-
-(test/remove-tests)
-
-(doseq [test-file test-files]
-  (test/load-yaml-tests
-    {:yaml-file test-file
-     :pick-func #(test/has-keys? [:yamlscript :resolve] %)
-     :test-func (fn [test]
-                  (try
-                    (->> test
-                      :yamlscript
-                      parser/parse
-                      composer/compose
-                      resolver/resolve)
-                    (catch Exception e
-                      (if (:error test)
-                        (.getMessage e)
-                        (throw e)))))
-     :want-func (fn [test]
+   "test/resolver.yaml"]
+  {:pick-func #(test/has-keys? [:yamlscript :resolve] %)
+   :test-func (fn [test]
+                (try
                   (->> test
-                    :resolve
-                    edn/read-string))}))
+                    :yamlscript
+                    parser/parse
+                    composer/compose
+                    resolver/resolve)
+                  (catch Exception e
+                    (if (:error test)
+                      (.getMessage e)
+                      (throw e)))))
+   :want-func (fn [test]
+                (->> test
+                  :resolve
+                  edn/read-string))})

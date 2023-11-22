@@ -9,26 +9,20 @@
    [yamlscript.composer :as composer]
    [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
-   [yamlscript.test :as test]))
+   [yamltest.core :as test]))
 
-(def test-files
+(test/load-yaml-test-files
   ["test/compiler-stack.yaml"
-   "test/yaml-mode.yaml"])
-
-(test/remove-tests)
-
-(doseq [test-file test-files]
-  (test/load-yaml-tests
-    {:yaml-file test-file
-     :pick-func #(test/has-keys? [:yamlscript :build] %)
-     :test-func (fn [test]
-                  (->> test
-                    :yamlscript
-                    parser/parse
-                    composer/compose
-                    resolver/resolve
-                    builder/build))
-     :want-func (fn [test]
-                  (->> test
-                    :build
-                    edn/read-string))}))
+   "test/yaml-mode.yaml"]
+  {:pick-func #(test/has-keys? [:yamlscript :build] %)
+   :test-func (fn [test]
+                (->> test
+                  :yamlscript
+                  parser/parse
+                  composer/compose
+                  resolver/resolve
+                  builder/build))
+   :want-func (fn [test]
+                (->> test
+                  :build
+                  edn/read-string))})

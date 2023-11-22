@@ -39,13 +39,13 @@
   (is (ys "-pe" "(+ 1 2)")
     "3")
 
-  (is (ys "test/hello.ys")
+  (is (ys "../test/hello.ys")
     "Hello")
 
-  (is (ys "-l" "test/hello.ys")
+  (is (ys "-l" "../test/hello.ys")
     "Hello\n12345")
 
-  (is (ys "-p" "test/hello.ys")
+  (is (ys "-p" "../test/hello.ys")
     "Hello\n12345")
 
   (like (ys "-pe" "say")
@@ -87,7 +87,7 @@
   (has (ys "--to=json" "...")
     "Error: Options --to and --run are mutually exclusive")
 
-  (is (ys "-Y" "test/foo.ys")
+  (is (ys "-Y" "../test/loader.ys")
 "foo: This is a string
 bar:
   foo:

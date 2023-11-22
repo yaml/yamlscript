@@ -3,7 +3,7 @@
 
 (ns yamlscript.test-runner
   (:require
-   [yamlscript.test :as test]
+   [yamltest.core :as test]
    [yamlscript.compiler-test]
    [yamlscript.parser-test]
    [yamlscript.composer-test]

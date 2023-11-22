@@ -10,5 +10,4 @@
 (defn say [& more]
   (apply clojure.core/println more))
 
-(comment
-  )
+(comment)

@@ -63,5 +63,4 @@
 (def symp (re #"(?:$fqsm|$symb)\("))   ; Symbol followed by paren
 (def dyns (re #"\*$symw\*"))           ; Dynamic symbol
 
-(comment
-  )
+(comment)

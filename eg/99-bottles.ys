@@ -1,13 +1,15 @@
-#!/usr/bin/env yamlscript
+#!/usr/bin/env ys+0
 
 # Print the verses to "99 Bottles of Beer"
 #
 # usage:
 #   yamlscript 99-bottles.ys [<count>]
 
+!yamlscript/v0
+
 defn main(number=99):
-  map(say):
-    map(paragraph):
+  map say:
+    map paragraph:
       (number .. 1)
 
 defn paragraph(num): |
@@ -17,7 +19,7 @@ defn paragraph(num): |
   $(bottles (num - 1)) of beer on the wall.
 
 defn bottles(n):
-  ???:
+  cond @:
     (n == 0) : "No more bottles"
     (n == 1) : "1 bottle"
     :else    : "$n bottles"

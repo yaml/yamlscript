@@ -11,28 +11,22 @@
    [yamlscript.transformer :as transformer]
    [yamlscript.constructor :as constructor]
    [yamlscript.printer :as printer]
-   [yamlscript.test :as test]))
+   [yamltest.core :as test]))
 
-(def test-files
+(test/load-yaml-test-files
   ["test/compiler-stack.yaml"
-   "test/yaml-mode.yaml"])
-
-(test/remove-tests)
-
-(doseq [test-file test-files]
-  (test/load-yaml-tests
-    {:yaml-file test-file
-     :pick-func #(test/has-keys? [:yamlscript :print] %)
-     :test-func (fn [test]
-                  (->> test
-                    :yamlscript
-                    parser/parse
-                    composer/compose
-                    resolver/resolve
-                    builder/build
-                    transformer/transform
-                    constructor/construct
-                    printer/print))
-     :want-func (fn [test]
-                  (->> test
-                    :print))}))
+   "test/yaml-mode.yaml"]
+  {:pick-func #(test/has-keys? [:yamlscript :print] %)
+   :test-func (fn [test]
+                (->> test
+                  :yamlscript
+                  parser/parse
+                  composer/compose
+                  resolver/resolve
+                  builder/build
+                  transformer/transform
+                  constructor/construct
+                  printer/print))
+   :want-func (fn [test]
+                (->> test
+                  :print))})

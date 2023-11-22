@@ -1,16 +1,14 @@
 ;; Copyright 2023 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.test library defines a yaml based testing framework that is
+;; The yamltest.core library defines a yaml based testing framework that is
 ;; used to test the YAMLScript compiler.
 
-(ns yamlscript.test
+(ns yamltest.core
   (:use yamlscript.debug)
   (:require
-   [clojure.pprint :as pp]
    [clojure.string :as str]
    [clojure.test :as test]
-   [clojure.walk :as walk]
    [clj-yaml.core :as yaml]))
 
 
@@ -58,8 +56,12 @@
     (map ns-name)
     sort
     (#(doseq [ns %]
-        (require ns :reload)
-        (println (str "Reloaded " ns))))))
+        (println (str "Reloading " ns))
+        (try
+          (require ns :reload)
+          (catch Exception e
+            (println (str "Error reloading " ns ": " (.getMessage e)))
+            nil))))))
 
 (defn do-list-tests [ns]
   (let [ns (get-test-ns ns)
@@ -163,36 +165,44 @@
 (defmacro remove-tests []
   `(do-remove-tests ~*ns*))
 
-(defn do-load-yaml-tests
-  [ns o]
-  (let [{:keys [yaml-file pick-func test-func want-func]} o
-        tests (read-tests yaml-file pick-func)
-        file-name (str (last (str/split yaml-file #"/")))
-        file-name (str/replace file-name #"\..*$" "")]
-    (doseq [test tests]
-      (let [test-name (str "test-" file-name "-" (:num test))]
-        (add-test-to-ns
-          ns
-          (with-meta
-            (symbol test-name)
-            {:name (:name test)})
-          (fn []
-            (when (:verbose @test-opts)
-              (println (str "* " test-name " - " (:name test))))
-            (let [got (test-func test)
-                  want (want-func test)]
-              (test/is (= want got)))))))))
+(defn do-load-yaml-test-files
+  [ns files conf]
+  (do-remove-tests ns)
+  (some
+    (fn [file]
+      (let [conf (assoc conf :yaml-file file)
+            {:keys [yaml-file pick-func test-func want-func]} conf
+            tests (read-tests yaml-file pick-func)
+            only (vec (filter :ONLY tests))
+            tests (if (seq only)
+                    (do (do-remove-tests ns) only)
+                    tests)
+            file-name (str (last (str/split yaml-file #"/")))
+            file-name (str/replace file-name #"\..*$" "")]
+        (doseq [test tests]
+          (let [test-name (str "test-" file-name "-" (:num test))]
+            (add-test-to-ns
+              ns
+              (with-meta
+                (symbol test-name)
+                {:name (:name test)})
+              (fn []
+                (when (:verbose @test-opts)
+                  (println (str "* " test-name " - " (:name test))))
+                (let [got (test-func test)
+                      want (want-func test)]
+                  (test/is (= want got)))))))
+        (when (seq only)
+          (let [note (str "Note: ONLY is set in " yaml-file)]
+            (println note)
+            note))))
+    files))
 
-(defmacro load-yaml-tests [o]
-  `(do-load-yaml-tests ~*ns* ~o))
+(defmacro load-yaml-test-files [files conf]
+  `(do-load-yaml-test-files ~*ns* ~files ~conf))
 
 ;; ----------------------------------------------------------------------------
 (defn has-keys? [keys map]
   (every? #(contains? map %) keys))
 
-(comment
-  (do
-    (require '[yamlscript.compiler :as ys])
-    (->> "foo: bar baz"
-      ys/compile))
-  )
+(comment)

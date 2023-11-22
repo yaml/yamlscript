@@ -5,16 +5,14 @@
   (:use yamlscript.debug)
   (:require
    [yamlscript.compiler :as compiler]
-   [yamlscript.test :as test]))
+   [yamltest.core :as test]))
 
-(do
-  (test/remove-tests)
-  (test/load-yaml-tests
-    {:yaml-file "test/compiler.yaml"
-     :pick-func #(test/has-keys? [:yamlscript :clojure] %)
-     :test-func (fn [test]
-                  (->> test
-                    :yamlscript
-                    yamlscript.compiler/compile))
-     :want-func (fn [test]
-                  (:clojure test))}))
+(test/load-yaml-test-files
+  ["test/compiler.yaml"]
+  {:pick-func #(test/has-keys? [:yamlscript :clojure] %)
+   :test-func (fn [test]
+                (->> test
+                  :yamlscript
+                  compiler/compile))
+   :want-func (fn [test]
+                (:clojure test))})

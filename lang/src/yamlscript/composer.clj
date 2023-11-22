@@ -109,5 +109,4 @@
     "=VAL" (compose-scalar events)
     "=ALI" (compose-alias events)))
 
-(comment
-  )
+(comment)

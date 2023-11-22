@@ -6,30 +6,19 @@
   (:require
    [clojure.string :as str]
    [yamlscript.parser :as parser]
-   [yamlscript.test :as test]))
+   [yamltest.core :as test]))
 
-(def test-files
+(test/load-yaml-test-files
   ["test/compiler-stack.yaml"
-   "test/resolver.yaml"])
-
-(test/remove-tests)
-
-(doseq [test-file test-files]
-  (test/load-yaml-tests
-    {:yaml-file test-file
-     :pick-func #(test/has-keys? [:yamlscript :parse] %)
-     :test-func (fn [test]
-                  (->> test
-                    :yamlscript
-                    parser/parse
-                    (map pr-str)
-                    (map #(subs % 4 (dec (count %))))))
-     :want-func (fn [test]
-                  (->> test
-                    :parse
-                    str/split-lines))}))
-
-(comment
-  *file*
-  *compile-path*
-  )
+   "test/resolver.yaml"]
+  {:pick-func #(test/has-keys? [:yamlscript :parse] %)
+   :test-func (fn [test]
+                (->> test
+                  :yamlscript
+                  parser/parse
+                  (map pr-str)
+                  (map #(subs % 4 (dec (count %))))))
+   :want-func (fn [test]
+                (->> test
+                  :parse
+                  str/split-lines))})

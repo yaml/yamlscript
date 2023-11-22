@@ -67,7 +67,7 @@ distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/ .lsp/
 
-sysclean: distclean
+sysclean: realclean
 	$(RM) -r ~/.m2/ /tmp/graalvm* /tmp/yamlscript/
 
 $(DOCKER_BUILD):

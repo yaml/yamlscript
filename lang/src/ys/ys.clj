@@ -10,5 +10,4 @@
 (defn compile [code]
   (yamlscript.compiler/compile code))
 
-(comment
-  )
+(comment)
