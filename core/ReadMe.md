@@ -1,4 +1,4 @@
-yamlscript/lang
+yamlscript/core
 ===============
 
 The YAMLScript compiler and runtime written in Clojure

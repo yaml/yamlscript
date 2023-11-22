@@ -65,10 +65,10 @@ export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(GRAALVM_HOME)/bin:$(PATH)
 
 YAMLSCRIPT_LANG_INSTALLED := \
-  $(HOME)/.m2/repository/yamlscript/lang/maven-metadata-local.xml
+  $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
 YAMLSCRIPT_CORE_SRC := \
-  ../lang/src/yamlscript/* \
-  ../lang/src/ys/* \
+  ../core/src/yamlscript/* \
+  ../core/src/ys/* \
 
 ifdef w
   export WARN_ON_REFLECTION := 1
@@ -133,7 +133,7 @@ force:
 	$(RM) $(YAMLSCRIPT_LANG_INSTALLED)
 
 $(YAMLSCRIPT_LANG_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
-	$(MAKE) -C ../lang install
+	$(MAKE) -C ../core install
 
 $(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
 	tar xzf $<

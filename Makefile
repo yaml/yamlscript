@@ -6,7 +6,7 @@ ROOT := $(shell \
 include $(ROOT)/common/vars.mk
 
 DIRS := \
-    lang \
+    core \
     libyamlscript \
     perl \
     python \

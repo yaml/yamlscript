@@ -2,7 +2,7 @@ include ../common/base.mk
 include ../common/clojure.mk
 include ../common/docker.mk
 
-export PATH := $(ROOT)/lang/bin:$(PATH)
+export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_LANG_INSTALLED)
