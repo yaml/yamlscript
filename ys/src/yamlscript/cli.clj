@@ -174,21 +174,30 @@ Options:
          "--- !yamlscript/v0\n")
        code])))
 
-(defn get-code [opts args]
-  (let [code (if (seq (:eval opts))
-               (->> opts :eval (str/join "\n") (add-ys-mode-tag opts))
-               "")
-        code (str
-               (when-not (empty? code) (str code "\n"))
-               (str/join "\n"
-                 (map
-                   #(if (= "-" %) (slurp *in*) (slurp %))
-                   args)))
-        code (if (stdin-ready?)
-               (str
-                 (when-not (empty? code) (str code "\n"))
-                 (slurp *in*))
-               code)]
+(defn get-code [opts file]
+  (let [code
+        (cond
+          (seq (:eval opts))
+          (str
+            (->> opts
+              :eval
+              (str/join "\n")
+              (add-ys-mode-tag opts))
+            "\n")
+          ,
+          file
+          (str
+            (if (= "-" file)
+              (slurp *in*)
+              (slurp file))
+            "\n")
+          ,
+          (stdin-ready?)
+          (str
+            (slurp *in*)
+            "\n")
+          ,
+          :else "")]
     code))
 
 (defn compile-code [code opts]
@@ -206,12 +215,15 @@ Options:
 
 (defn do-run [opts args]
   (try
-    (let [clj (if (:clj opts)
+    (let [[file & args] (if (or (seq (:eval opts))
+                              (stdin-ready?))
+                          (cons nil args)
+                          args)
+          clj (if (:clj opts)
                 (:clj opts)
-                (-> (get-code opts args)
+                (-> (get-code opts file)
                   (compile-code opts)))
-          file (first args)
-          result (runtime/eval-string clj file)]
+          result (runtime/eval-string clj file args)]
       (if (:print opts)
         (pp/pprint result)
         (when (and (:load opts) (not (= "" clj)))
@@ -227,10 +239,13 @@ Options:
     (catch Exception e (die e opts nil))))
 
 (defn do-compile [opts args]
-  (-> (get-code opts args)
-    (compile-code opts)
-    str/trim-newline
-    println))
+  (let [[file args] args]
+    (when (seq args)
+      (die "Usage: ys -c <file>"))
+    (-> (get-code opts file)
+      (compile-code opts)
+      str/trim-newline
+      println)))
 
 (defn do-repl [opts]
   (todo "repl" opts))
@@ -243,9 +258,6 @@ Options:
 
 (defn do-kill [opts args]
   (todo "kill" opts args))
-
-(defn do-compile-to [opts args]
-  (todo "compile-to" opts args))
 
 (defn do-default [opts args help]
   (if (or
@@ -362,13 +374,12 @@ Options:
       (:version opts) (do-version)
       (:run opts) (do-run opts args)
       (:load opts) (do-run opts args)
+      (:compile opts) (do-compile opts args)
       (:clj opts) (do-run opts args)
       (:repl opts) (do-repl opts)
       (:connect opts) (do-connect opts args)
       (:kill opts) (do-kill opts args)
-      (:compile opts) (do-compile opts args)
       (:nrepl opts) (do-nrepl opts args)
-      (:compile-to opts) (do-compile-to opts args)
       :else (do-default opts args help))))
 
 (comment
