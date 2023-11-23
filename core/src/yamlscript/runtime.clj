@@ -36,9 +36,12 @@
 (def argv (sci/new-dynamic-var 'ARGV nil))
 (def env (sci/new-dynamic-var 'ENV nil))
 
+(declare ys-load)
+
 (defn clojure-core-vars []
   (let [core {'ARGV argv
               'ENV env
+              'load (sci/copy-var ys-load nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
               'slurp (sci/copy-var clojure.core/slurp nil)
               'spit (sci/copy-var clojure.core/spit nil)
@@ -46,8 +49,6 @@
         std (ns-publics 'ys.std)
         std (update-vals std #(sci/copy-var* % nil))]
     (merge core std)))
-
-(declare ys-load)
 
 (defn sci-ctx []
   {:namespaces
