@@ -1,37 +1,44 @@
+;; Copyright 2023 Ingy dot Net
+;; This code is licensed under MIT license (See License for details)
+
 (ns yamlscript.runtime
   (:require
    [yamlscript.debug :refer [www]]
-   ;; Small Clojure Interpreter runtime for YAMLScript evaluation
+   [clojure.java.io :as io]
+   [clojure.pprint]
+   [clojure.string :as str]
    [sci.core :as sci]
    [ys.std]
-   [ys.ys]
-   [clojure.java.io :as io]
-   [clojure.pprint :as pp]
-   [clojure.string :as str]
-   ))
+   [ys.json]
+   [ys.yaml]
+   [ys.ys]))
 
 (sci/alter-var-root sci/out (constantly *out*))
 (sci/alter-var-root sci/err (constantly *err*))
 (sci/alter-var-root sci/in (constantly *in*))
 
-(def ys-ys (sci/create-ns 'ys))
-(def ys-ys-vars (sci/copy-ns ys.ys ys-ys))
-
 (def ys-std (sci/create-ns 'std))
 (def ys-std-vars (sci/copy-ns ys.std ys-std))
 
-(declare ys-load sci-ctx)
+(def ys-json (sci/create-ns 'json))
+(def ys-json-vars (sci/copy-ns ys.json ys-json))
+
+(def ys-yaml (sci/create-ns 'yaml))
+(def ys-yaml-vars (sci/copy-ns ys.yaml ys-yaml))
+
+(def ys-ys (sci/create-ns 'ys))
+(def ys-ys-vars (sci/copy-ns ys.ys ys-ys))
+
+
+(declare ys-load)
 
 (defn sci-ctx []
   {:namespaces
-   {'ys ys-ys-vars
-    'std ys-std-vars
-    'clojure.core
-    {'load (sci/copy-var ys-load nil)
-     'pprint (sci/copy-var clojure.pprint/pprint nil)
-     'slurp (sci/copy-var clojure.core/slurp nil)
-     'spit (sci/copy-var clojure.core/spit nil)
-     'say (sci/copy-var ys.std/say nil)}}})
+   {'std ys-std-vars
+    'json ys-json-vars
+    'yaml ys-yaml-vars
+    'ys ys-ys-vars
+    'clojure.core (clojure-core-vars)}})
 
 (defn ys-load
   ([file]
@@ -65,6 +72,5 @@
        [sci/file file]
         (sci/eval-string clj (sci-ctx))))))
 
-(comment
-  (eval-string "(say (inc 123))")
-  )
+  (comment
+    (eval-string "(say (inc 123))"))
