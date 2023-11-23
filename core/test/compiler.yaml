@@ -57,3 +57,11 @@
       foo
   clojure: |
     (println "foo")
+
+
+- name: rng operator
+  yamlscript: |
+    !yamlscript/v0
+    say: (1 .. 10)
+  clojure: |
+    (say (rng 1 10))

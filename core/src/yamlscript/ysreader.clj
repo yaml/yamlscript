@@ -88,7 +88,10 @@
   (if (= (count expr) 3)
     (let [[a b c] expr]
       (if (is-operator? (:Sym b))
-        [b a c]
+        (let [op (cond
+                   (= b (Sym '..)) (Sym 'rng)
+                   :else b)]
+          [op a c])
         expr))
     expr))
 
@@ -162,6 +165,7 @@
       (vec forms))))
 
 (comment
+  (read-string "(1 .. 5)")
   (read-string
     "[\"a\" :b \\c 42 true false nil
      (a b c) [a b c] {:a b :c \"d\"}]")

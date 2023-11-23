@@ -47,7 +47,7 @@
               ;.*\n?                     # comments
             )")
 (def lnum #"-?\d+")                    ; Integer token
-(def oper #"[-+*/<=>|&]{1,3}")         ; Operator token
+(def oper #"(?:[-+*/<=>|&]{1,3}|\.\.)")         ; Operator token
 (def strg #"(?x)
             \#?                        # Possibly a regex
             \"(?:                      # Quoted string

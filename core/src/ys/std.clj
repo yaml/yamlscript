@@ -10,4 +10,9 @@
 (defn say [& more]
   (apply clojure.core/println more))
 
+(defn rng [x y]
+  (if (> y x)
+    (range x (inc y))
+    (range x (dec y) -1)))
+
 (comment)
