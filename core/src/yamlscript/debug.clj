@@ -20,9 +20,9 @@
 (defn www [& o]
   (let [l (last o)
         o (if (= 1 (count o)) (first o) o)]
-    ;; XXX need to print to stderr (with sci)
-    (binding [*out* *out*]
-      (print (dump o)))
+    (binding [*out* *err*]
+      (print (dump o))
+      (flush))
     l))
 
 (defn xxx+ [& o]
