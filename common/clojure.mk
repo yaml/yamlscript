@@ -4,11 +4,11 @@
 ifneq (,$(findstring linux,$(ostype)))
   GRAALVM_SUBDIR :=
 
-  ifeq (x86_64-pc-linux-gnu,$(machtype))
+  ifeq (ok,$(shell [[ $(machtype) == x86_64-*-linux-* ]] && echo ok))
     GRAALVM_ARCH := linux-x64
 
   else
-    $(error Unsupported Linux MACHTYPE: $machtype)
+    $(error Unsupported Linux MACHTYPE: $(machtype))
   endif
 
 else ifeq (true,$(IS_MACOS))
@@ -21,11 +21,11 @@ else ifeq (true,$(IS_MACOS))
     GRAALVM_ARCH := macos-x64
 
   else
-    $(error Unsupported MacOS MACHTYPE: $machtype)
+    $(error Unsupported MacOS MACHTYPE: $(machtype))
   endif
 
 else
-  $(error Unsupported OSTYPE: $ostype)
+  $(error Unsupported OSTYPE: $(ostype))
 endif
 
 #------------------------------------------------------------------------------
