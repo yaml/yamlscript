@@ -23,7 +23,7 @@ test:: test-pytest test-ffi
 
 test-pytest: $(PYTHON_VENV)
 	source $</bin/activate && \
-	pytest-3 $${TEST_VERBOSE:+'-v'} test/*.py
+	pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
 test-ffi: $(LIBYAMLSCRIPT_SO_PATH)
 	$(PYTHON) -c 'import yamlscript; print(yamlscript.load("inc: 41"))'
