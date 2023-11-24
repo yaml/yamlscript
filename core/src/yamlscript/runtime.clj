@@ -38,9 +38,20 @@
 
 (declare ys-load)
 
+(def sci-version
+  (sci/new-var '*sci-version*
+    (->>
+      (io/resource "SCI_VERSION")
+      slurp
+      str/trim-newline
+      (#(str/split % #"\."))
+      (map #(if (re-matches #"\d+" %) (parse-long %) %))
+      (zipmap [:major :minor :incremental :qualifier]))))
+
 (defn clojure-core-vars []
   (let [core {'ARGV argv
               'ENV env
+              '*sci-version* sci-version
               'load (sci/copy-var ys-load nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
               'slurp (sci/copy-var clojure.core/slurp nil)
