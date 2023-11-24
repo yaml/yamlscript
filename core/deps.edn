@@ -3,6 +3,6 @@
  {org.clojure/clojure {:mvn/version "1.11.1"},
   org.clojure/data.json {:mvn/version "2.4.0"},
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
-  org.snakeyaml/snakeyaml-engine {:mvn/version "2.6"},
-  org.babashka/sci {:mvn/version "0.8.40"}},
+  org.snakeyaml/snakeyaml-engine {:mvn/version "2.7"},
+  org.babashka/sci {:mvn/version "0.8.41"}},
  :mvn/repos {"public-github" {:url "git://github.com"}}}

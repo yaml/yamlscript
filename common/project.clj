@@ -5,7 +5,7 @@
   :description "Program in YAML"
   :dependencies
   [#__
-   [borkdude/edamame "1.3.22"]
+   [borkdude/edamame "1.3.23"]
    [clj-commons/clj-yaml "1.0.27"]
    [commons-codec/commons-codec "1.11"]
    [dev.weavejester/lein-cljfmt "0.11.2"]
@@ -13,7 +13,7 @@
    [lein-exec "0.3.7"]
    [org.apache.httpcomponents/httpclient "4.5.13"]
    [org.apache.httpcomponents/httpcore "4.4.15"]
-   [org.babashka/sci "0.8.40"]
+   [org.babashka/sci "0.8.41"]
    [org.clojure/clojure "1.11.1"]
    [org.clojure/data.json "2.4.0"]
    [org.clojure/tools.gitlibs "1.0.100"]

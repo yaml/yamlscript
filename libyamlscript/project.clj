@@ -18,7 +18,7 @@
 
   :dependencies
   [[org.clojure/clojure "1.11.1"]
-   [org.babashka/sci "0.8.40"]
+   [org.babashka/sci "0.8.41"]
    [org.clojure/data.json "2.4.0"]
    [yamlscript/core "0.1.0"]]
 
