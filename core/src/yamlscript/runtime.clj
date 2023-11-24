@@ -55,8 +55,7 @@
               'load (sci/copy-var ys-load nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
               'slurp (sci/copy-var clojure.core/slurp nil)
-              'spit (sci/copy-var clojure.core/spit nil)
-              'time (sci/copy-var clojure.core/time nil)}
+              'spit (sci/copy-var clojure.core/spit nil)}
         std (ns-publics 'ys.std)
         std (update-vals std #(sci/copy-var* % nil))]
     (merge core std)))
