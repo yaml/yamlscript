@@ -12,14 +12,11 @@
    [yamlscript.runtime :as runtime]
    ;; For www debugging
    [yamlscript.debug :refer [www]]
-   ;; Data printers
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
    [clojure.pprint :as pp]
    [clojure.set :as set]
-   ;; String helper functions
    [clojure.string :as str]
-   ;; Command line options parser
    [clojure.tools.cli :as cli]))
 
 (def testing (atom false))
@@ -54,10 +51,16 @@
 (defn todo [s & _]
   (die "--" s " not implemented yet."))
 
-(defn stdin-ready? []
-  (try
-    (.ready ^clojure.lang.LineNumberingPushbackReader *in*)
-    (catch Exception _ false)))
+(defn daemon-thread [^Runnable f]
+  (.start (doto (new Thread f)
+            (.setDaemon true))))
+
+(defn get-stdin []
+  (let [stdin (promise)]
+    (daemon-thread #(do (Thread/sleep 500)
+                        (deliver stdin nil)))
+    (daemon-thread #(do (deliver stdin (slurp *in*))))
+    @stdin))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
@@ -76,8 +79,8 @@
     :default []
     :update-fn conj
     :multi true]
-   ["-C" "--clj CLJEXPR"
-    "Evaluate a Clojure expression in the YS Runtime"]
+   ["-C" "--clj"
+    "Treat input as Clojure code"]
 
    ["-m" "--mode MODE"
     "Add a mode tag: script, yaml, or data"
@@ -160,7 +163,8 @@ Options:
     (str/join ""
       [(cond
          (or (str/starts-with? code "--- !yamlscript/v0")
-           (str/starts-with? code "!yamlscript/v0"))
+           (str/starts-with? code "!yamlscript/v0")
+           (:clj opts))
          ""
          (or (= "s" mode) (= "script" mode))
          "--- !yamlscript/v0\n"
@@ -174,39 +178,48 @@ Options:
          "--- !yamlscript/v0\n")
        code])))
 
-(defn get-code [opts file]
-  (let [code
-        (cond
-          (seq (:eval opts))
-          (str
-            (->> opts
-              :eval
-              (str/join "\n")
-              (add-ys-mode-tag opts))
-            "\n")
-          ,
-          file
-          (str
-            (if (= "-" file)
-              (slurp *in*)
-              (slurp file))
-            "\n")
-          ,
-          (stdin-ready?)
-          (str
-            (slurp *in*)
-            "\n")
-          ,
-          :else "")]
-    code))
+(defn get-code [opts args]
+  (cond
+    (seq (:eval opts))
+    [(str
+       (->> opts
+         :eval
+         (str/join "\n")
+         (add-ys-mode-tag opts))
+       "\n")
+     "EVAL" args]
+    ,
+    (seq args)
+    (let [[file & args] args
+          code (str
+                 (if (= "-" file)
+                   (slurp *in*)
+                   (slurp file))
+                 "\n")]
+      [code file args])
+    ,
+    (:stdin opts)
+    [(:stdin opts) "STDIN" args]
+    ,
+    :else
+    (let [code (get-stdin)]
+      (if code
+        [code "STDIN" args]
+        (do
+          (binding [*out* *err*]
+            (println "Warning: No input found."))
+          ["" "EMPTY" args])))))
+
 
 (defn compile-code [code opts]
-  (try
-    (if (empty? (:debug-stage opts))
-      (compiler/compile code)
-      (binding [compiler/*debug* (:debug-stage opts)]
-        (compiler/compile-debug code)))
-    (catch Exception e (die e opts nil))))
+  (if (:clj opts)
+    code
+    (try
+      (if (empty? (:debug-stage opts))
+        (compiler/compile code)
+        (binding [compiler/*debug* (:debug-stage opts)]
+          (compiler/compile-debug code)))
+      (catch Exception e (die e opts nil)))))
 
 (def json-options
   {:escape-unicode false
@@ -214,35 +227,25 @@ Options:
    :escape-slash false})
 
 (defn do-run [opts args]
-  (try
-    (let [[file & args] (if (or (seq (:eval opts))
-                              (stdin-ready?))
-                          (cons nil args)
-                          args)
-          clj (if (:clj opts)
-                (:clj opts)
-                (-> (get-code opts file)
-                  (compile-code opts)))
-          result (runtime/eval-string clj file args)]
-      (if (:print opts)
-        (pp/pprint result)
-        (when (and (:load opts) (not (= "" clj)))
-          (case (:to opts)
-            "yaml" (println
-                     (str/trim-newline
-                       (yaml/generate-string
-                         result
-                         :dumper-options {:flow-style :block})))
-            "json" (json/pprint result json-options)
-            "edn"  (pp/pprint result)
-            ,      (println (json/write-str result json-options))))))
-    (catch Exception e (die e opts nil))))
+  (let [[code file args] (get-code opts args)
+        clj (compile-code code opts)
+        result (runtime/eval-string clj file args)]
+    (if (:print opts)
+      (pp/pprint result)
+      (when (and (:load opts) (not (= "" clj)))
+        (case (:to opts)
+          "yaml" (println
+                   (str/trim-newline
+                     (yaml/generate-string
+                       result
+                       :dumper-options {:flow-style :block})))
+          "json" (json/pprint result json-options)
+          "edn"  (pp/pprint result)
+          ,      (println (json/write-str result json-options)))))))
 
 (defn do-compile [opts args]
-  (let [[file args] args]
-    (when (seq args)
-      (die "Usage: ys -c <file>"))
-    (-> (get-code opts file)
+  (let [[code file args] (get-code opts args)]
+    (-> code
       (compile-code opts)
       str/trim-newline
       println)))
@@ -259,13 +262,25 @@ Options:
 (defn do-kill [opts args]
   (todo "kill" opts args))
 
+(defn elide-empty [opt opts]
+  (if (empty? (get opts opt))
+    (dissoc opts opt)
+    opts))
+
 (defn do-default [opts args help]
   (if (or
-        (seq (:eval opts))
-        (seq args)
-        (stdin-ready?))
+        (seq (elide-empty
+               :eval
+               (elide-empty :debug-stage opts)))
+        (seq args))
     (do-run opts args)
-    (do-help help)))
+    (if (let [stdin (get-stdin)
+              opts (assoc opts :stdin stdin)]
+          (when stdin
+            (do-run opts args))
+          stdin)
+      true
+      (do-help help))))
 
 (defn mutex [opts keys]
   (let [omap (reduce #(if (%2 opts)
@@ -309,12 +324,12 @@ Options:
     :version :help})
 
 (def action-opts
-  #{:run :load :compile :clj
+  #{:run :load :compile
     :repl :nrepl :kill
     :version :help})
 
 (def eval-action-opts
-  #{:run :load :compile :clj})
+  #{:run :load :compile})
 
 (def format-opts
   #{:to :json :yaml :edn})
@@ -324,11 +339,6 @@ Options:
 
 (def info-opts
   #{:version :help})
-
-(defn elide-empty [opt opts]
-  (if (empty? (get opts opt))
-    (dissoc opts opt)
-    opts))
 
 (defn validate-opts [opts]
   (let [opts (elide-empty :eval opts)
@@ -341,7 +351,7 @@ Options:
       (mutex1 opts :mode (set/union info-opts repl-opts))
       (mutex1 opts :eval (set/difference action-opts eval-action-opts))
       (needs opts :mode #{:eval})
-      (mutex1 opts :print (set/difference action-opts #{:run :clj}))
+      (mutex1 opts :print (set/difference action-opts #{:run}))
       (mutex1 opts :to (set/difference action-opts #{:load :compile}))
       nil
       (catch Exception e (.getMessage e)))))
@@ -352,16 +362,6 @@ Options:
          args :arguments
          help :summary
          errs :errors} options
-        opts (if (and
-                   (not (seq args))
-                   (not
-                     (seq (elide-empty
-                            :eval
-                            (elide-empty :debug-stage opts)))))
-               (assoc opts :help true)
-               (if (not (some opts (vec (seq action-opts))))
-                 (assoc opts :run true)
-                 opts))
         error (validate-opts opts)
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
@@ -375,7 +375,6 @@ Options:
       (:run opts) (do-run opts args)
       (:load opts) (do-run opts args)
       (:compile opts) (do-compile opts args)
-      (:clj opts) (do-run opts args)
       (:repl opts) (do-repl opts)
       (:connect opts) (do-connect opts args)
       (:kill opts) (do-kill opts args)
@@ -385,11 +384,13 @@ Options:
 (comment
   (-main)
   (-main
+    "-e" "say: 123"
     ;"--run"
     ;"--load"
     ;"--to=json"
     ;"--compile"
-    "--mode=script"
+    ; "--mode=script"
     ;"--help"
-    "-e" "say: 123")
+    ; "-e" "say: 123"
+    #__)
   )

@@ -105,7 +105,7 @@
     "Error: Options --print and --load are mutually exclusive"
     "Can't use --print with --load")
 
-  (has (ys "--to=json" "...")
+  (has (ys "--run" "--to=json" "-e" "...")
     "Error: Options --to and --run are mutually exclusive"
     "Can't use --to with --run")
 
