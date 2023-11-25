@@ -6,16 +6,33 @@
    [clojure.test :as test]
    [clojure.string :as str]))
 
-(defn is [got want]
+(def test-opts
+  (atom {:verbose (System/getenv "TEST_VERBOSE")}))
+
+(defn do-verbose [label want]
+  (when (:verbose @test-opts)
+    (let [label (if label
+                  label
+                  (let [label (str/replace want #"\n" "\\n")
+                        label (if (> (count label) 50)
+                                (str (subs label 0 50) "...")
+                                label)]
+                    (str "'" label "'")))]
+      (println (str "* Testing: " label)))))
+
+(defn is [got want & [label]]
   (let [want (str/replace want #"''" "\"")]
+    (do-verbose label want)
     (test/is (= want got))))
 
-(defn like [got & wanted]
-  (doseq [want wanted]
-    (test/is (re-find want got))))
+(count "I like pie")
 
-(defn has [got & wanted]
-  (doseq [want wanted]
-    (test/is (str/index-of got want))))
+(defn like [got want & [label]]
+  (do-verbose label want)
+  (test/is (re-find want got)))
+
+(defn has [got want & [label]]
+  (do-verbose label want)
+  (test/is (str/index-of got want)))
 
 (comment)
