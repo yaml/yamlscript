@@ -86,3 +86,15 @@
     {:ysm [{:ysx "foo"} {:ysm [{:ysx "bar"} {:ysx "baz"}]}]}
   clojure: |
     (foo (bar baz))
+
+
+- name: String interpolation
+  yamlscript: |
+    !yamlscript/v0
+    say: "Hello $name"
+  resolve: |
+    {:ysm [{:ysx "say"} {:ysi "Hello $name"}]}
+  build: |
+  clojure: |
+    (foo (str "Hello " name))
+  SKIP: true

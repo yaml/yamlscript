@@ -13,7 +13,8 @@
 
 (test/load-yaml-test-files
   ["test/compiler-stack.yaml"
-   "test/yaml-mode.yaml"]
+   "test/yaml-mode.yaml"
+   "test/compiler.yaml"]
   {:pick-func #(test/has-keys? [:yamlscript :build] %)
    :test-func (fn [test]
                 (->> test

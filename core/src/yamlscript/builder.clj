@@ -20,7 +20,7 @@
 (defn build-ysm [node]
   (let [ysm (-> node first val)]
     (->> ysm
-      (reduce #(conj %1 (build-node %2)) [])
+      (map build-node)
       (hash-map :ysm))))
 
 (defn build-ysx [node]
@@ -31,23 +31,10 @@
         {:Empty nil}))))
 
 (defn build-map [node]
-  (loop [coll (:map node)
-         new []]
-    (let [[key val & coll] coll]
-      (if key
-        (let [key (build-node key)
-              val (build-node val)]
-          (recur coll (apply conj new [key val])))
-        (Map new)))))
+  (Map (map build-node (:map node))))
 
 (defn build-vec [node]
-  (loop [coll (:seq node)
-         new []]
-    (let [[val & coll] coll]
-      (if val
-        (let [val (build-node val)]
-          (recur coll (conj new val)))
-        (Vec new)))))
+  (Vec (map build-node (:seq node))))
 
 (defn build-node [node]
   (let [[key] (first node)]

@@ -80,9 +80,8 @@
   ([file path]
    (let [data (ys-load file)
          path
-         (reduce
-           #(conj %1 (if (re-matches #"\d+" %2) (parse-long %2) %2))
-           [] (str/split path #"\."))]
+         (map #(if (re-matches #"\d+" %) (parse-long %) %)
+           (str/split path #"\."))]
      (get-in data path))))
 
 (def no-file "NO_SOURCE_PATH")

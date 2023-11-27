@@ -23,7 +23,7 @@
 (defn transform-ysm [node]
   (let [ysm (-> node first val)]
     (->> ysm
-      (reduce #(conj %1 (transform-node %2)) [])
+      (map transform-node)
       (hash-map :ysm))))
 
 (defn transform-lst [node]
@@ -38,7 +38,7 @@
 
 (defn transform-node [node]
   (if (vector? node)
-    (reduce conj [] (map transform-node node))
+    (vec (map transform-node node))
     (let [[key] (first node)]
       (case key
         :ysm (transform-ysm node)

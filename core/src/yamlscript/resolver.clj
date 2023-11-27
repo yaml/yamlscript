@@ -105,12 +105,9 @@
 (defn resolve-script-mapping [node]
   (when (:%% node)
     (throw (Exception. "Flow mappings not allowed in script-mode")))
-  (let [node (dissoc node :!)]
-    {:ysm (reduce
-            (fn [new [key val]]
-              (apply conj new (resolve-script-pair key val)))
-            []
-            (partition 2 (:% node)))}))
+    {:ysm (mapcat
+            (fn [[key val]] (resolve-script-pair key val))
+            (partition 2 (:% node)))})
 
 (defn resolve-script-sequence [node]
   (throw (Exception. "Sequences (block and flow) not allowed in script-mode")))
@@ -147,22 +144,12 @@
 ;; Resolve dispatchers for yaml mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-yaml-mapping [node]
-  (let [node (dissoc node :!)]
-    {:map (reduce
-            (fn [new [key val]]
-              (conj new
-                (resolve-yaml-node key)
-                (resolve-yaml-node val)))
-            []
-            (partition 2 (or (:% node) (:%% node))))}))
+  {:map (map resolve-yaml-node
+          (or (:% node) (:%% node)))})
 
 (defn resolve-yaml-sequence [node]
-  (let [node (dissoc node :!)]
-    {:seq (reduce
-            (fn [new val]
-              (conj new (resolve-yaml-node val)))
-            []
-            (or (:- node) (:-- node)))}))
+  {:seq (map resolve-yaml-node
+          (or (:- node) (:-- node)))})
 
 (def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
 (def re-float #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?")
@@ -182,8 +169,7 @@
       :else :str)))
 
 (defn resolve-yaml-scalar [node]
-  (let [node (dissoc node :!)
-        style (-> node first key)]
+  (let [style (-> node first key)]
     (case style
       := (set/rename-keys node {:= (resolve-plain-scalar node)})
       :$ (set/rename-keys node {:$ :str})
@@ -209,26 +195,15 @@
 ;; Resolve dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-data-mapping [node]
-  (let [node (dissoc node :!)]
-    {:map (reduce
-            (fn [new [key val]]
-              (apply conj new
-                [(resolve-data-node key)
-                 (resolve-data-node val)]))
-            []
-            (partition 2 (or (:% node) (:%% node))))}))
+  {:map (vec (map resolve-data-node
+               (or (:% node) (:%% node))))})
 
 (defn resolve-data-sequence [node]
-  (let [node (dissoc node :!)]
-    {:seq (reduce
-            (fn [new val]
-              (conj new (resolve-data-node val)))
-            []
-            (or (:- node) (:-- node)))}))
+  {:seq (map resolve-data-node
+          (or (:- node) (:-- node)))})
 
 (defn resolve-data-scalar [node]
-  (let [node (dissoc node :!)
-        style (-> node first key)]
+  (let [style (-> node first key)]
     (case style
       := (set/rename-keys node {:= (resolve-plain-scalar node)})
       :$ (set/rename-keys node {:$ :str})
@@ -254,7 +229,6 @@
       :seq (resolve-data-sequence node)
       :val (resolve-data-scalar node))))
 
-(some #{"xmap"} ["map" "seq"])
 (comment
   (resolve
     #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
