@@ -85,7 +85,8 @@
   (cond
     (and (contains? key :ysx) (contains? val :ysx)) [key val]
     (and (contains? key :ysx) (contains? val :str)) [key val]
-    (and (contains? key :ysx) (contains? val :ysi)) [key val]))
+    (and (contains? key :ysx) (contains? val :ysi)) [key val]
+    (and (contains? key :ysx) (contains? val :ysm)) [key val]))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))

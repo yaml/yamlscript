@@ -83,6 +83,6 @@
     foo:
       bar: baz
   resolve: |
+    {:ysm [{:ysx "foo"} {:ysm [{:ysx "bar"} {:ysx "baz"}]}]}
   clojure: |
     (foo (bar baz))
-  SKIP: true
