@@ -105,14 +105,11 @@
   (when (:%% node)
     (throw (Exception. "Flow mappings not allowed in script-mode")))
   (let [node (dissoc node :!)]
-    (loop [coll (:% node)
-           new []]
-      (let [[key val & coll] coll]
-        (if key
-          (recur
-            coll
-            (apply conj new (resolve-script-pair key val)))
-          {:ysm new})))))
+    {:ysm (reduce
+            (fn [new [key val]]
+              (apply conj new (resolve-script-pair key val)))
+            []
+            (partition 2 (:% node)))}))
 
 (defn resolve-script-sequence [node]
   (throw (Exception. "Sequences (block and flow) not allowed in script-mode")))
@@ -150,24 +147,21 @@
 ;; ----------------------------------------------------------------------------
 (defn resolve-yaml-mapping [node]
   (let [node (dissoc node :!)]
-    (loop [coll (or (:% node) (:%% node))
-           new []]
-      (let [[key val & coll] coll]
-        (if key
-          (let [key (resolve-yaml-node key)
-                val (resolve-yaml-node val)]
-            (recur coll (apply conj new [key val])))
-          {:map new})))))
+    {:map (reduce
+            (fn [new [key val]]
+              (conj new
+                (resolve-yaml-node key)
+                (resolve-yaml-node val)))
+            []
+            (partition 2 (or (:% node) (:%% node))))}))
 
 (defn resolve-yaml-sequence [node]
   (let [node (dissoc node :!)]
-    (loop [coll (or (:- node) (:-- node))
-           new []]
-      (let [[val & coll] coll]
-        (if val
-          (let [val (resolve-yaml-node val)]
-            (recur coll (conj new val)))
-          {:seq new})))))
+    {:seq (reduce
+            (fn [new val]
+              (conj new (resolve-yaml-node val)))
+            []
+            (or (:- node) (:-- node)))}))
 
 (def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
 (def re-float #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?")
@@ -215,24 +209,21 @@
 ;; ----------------------------------------------------------------------------
 (defn resolve-data-mapping [node]
   (let [node (dissoc node :!)]
-    (loop [coll (or (:% node) (:%% node))
-           new []]
-      (let [[key val & coll] coll]
-        (if key
-          (let [key (resolve-data-node key)
-                val (resolve-data-node val)]
-            (recur coll (apply conj new [key val])))
-          {:map new})))))
+    {:map (reduce
+            (fn [new [key val]]
+              (apply conj new
+                [(resolve-data-node key)
+                 (resolve-data-node val)]))
+            []
+            (partition 2 (or (:% node) (:%% node))))}))
 
 (defn resolve-data-sequence [node]
   (let [node (dissoc node :!)]
-    (loop [coll (or (:- node) (:-- node))
-           new []]
-      (let [[val & coll] coll]
-        (if val
-          (let [val (resolve-data-node val)]
-            (recur coll (conj new val)))
-          {:seq new})))))
+    {:seq (reduce
+            (fn [new val]
+              (conj new (resolve-data-node val)))
+            []
+            (or (:- node) (:-- node)))}))
 
 (defn resolve-data-scalar [node]
   (let [node (dissoc node :!)

@@ -75,3 +75,14 @@
     {:Lst [{:Sym times} {:Str "foo"} {:Int 3}]}
   clojure: |
     (times "foo" 3)
+
+
+- name: Nested mappings
+  yamlscript: |
+    !yamlscript/v0
+    foo:
+      bar: baz
+  resolve: |
+  clojure: |
+    (foo (bar baz))
+  SKIP: true
