@@ -202,7 +202,7 @@
      [{:Sym inc}
       {:Lst [{:Sym *} {:Int 6} {:Int 7}]}]}
   print: |
-    (inc (* 6 7))
+    (inc (times 6 7))
 
 
 
@@ -332,7 +332,7 @@
     (def foo 123)
     (defn bar [a b]
       (let [c (+ a b)]
-        (* 2 c)))
+        (times 2 c)))
     bar: 10 20
 
 

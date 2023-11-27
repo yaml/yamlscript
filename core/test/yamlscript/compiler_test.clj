@@ -8,7 +8,8 @@
    [yamltest.core :as test]))
 
 (test/load-yaml-test-files
-  ["test/compiler.yaml"]
+  ["test/compiler.yaml"
+   "test/compiler-stack.yaml"]
   {:pick-func #(test/has-keys? [:yamlscript :clojure] %)
    :test-func (fn [test]
                 (->> test

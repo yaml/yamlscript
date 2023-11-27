@@ -13,7 +13,8 @@
    [clojure.edn :as edn]))
 
 (test/load-yaml-test-files
-  ["test/compiler-stack.yaml"]
+  ["test/compiler-stack.yaml"
+   "test/compiler.yaml"]
   {:pick-func #(test/has-keys? [:yamlscript :transform] %)
    :test-func (fn [test]
                 (->> test

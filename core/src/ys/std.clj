@@ -51,6 +51,11 @@
 (defn say [& xs]
   (apply clojure.core/println xs))
 
+(defn times [x y]
+  (if (and (string? x) (number? y))
+    (apply str (repeat y x))
+    (* x y)))
+
 (defn warn [& xs]
   (binding [*out* *err*]
     (apply clojure.core/println xs)

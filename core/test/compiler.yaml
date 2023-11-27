@@ -65,3 +65,13 @@
     say: (1 .. 10)
   clojure: |
     (say (rng 1 10))
+
+
+- name: String repeat operator
+  yamlscript: |
+    !yamlscript/v0
+    ("foo" * 3)
+  transform: |
+    {:Lst [{:Sym times} {:Str "foo"} {:Int 3}]}
+  clojure: |
+    (times "foo" 3)
