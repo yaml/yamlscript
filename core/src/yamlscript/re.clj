@@ -38,29 +38,58 @@
               backspace |
               return |
               .
-            )")                        ; Character token
-(def comm #";.*(?:\n|\z)")             ; Comment token
+            )")                            ; Character token
+(def comm #";.*(?:\n|\z)")                 ; Comment token
 (def ignr #"(?x)
-            (?:                        # Ignorables
-              \#\!.*\n? |                # hashbang line
-              [\s,]+    |                # whitespace, commas,
-              ;.*\n?                     # comments
+            (?:                            # Ignorables
+              \#\!.*\n? |                    # hashbang line
+              [\s,]+    |                    # whitespace, commas,
+              ;.*\n?                         # comments
             )")
-(def lnum #"-?\d+")                    ; Integer token
-(def oper #"(?:[-+*/<=>|&]{1,3}|\.\.)")         ; Operator token
+(def lnum #"-?\d+")                        ; Integer token
+(def oper #"(?:[-+*/<=>|&]{1,3}|\.\.)")    ; Operator token
 (def strg #"(?x)
-            \#?                        # Possibly a regex
-            \"(?:                      # Quoted string
-              \\. |                      # Escaped char
-              [^\\\"]                    # Any other char
-            )*\"?                        # Ending quote
+            \#?                            # Possibly a regex
+            \"(?:                          # Quoted string
+              \\. |                          # Escaped char
+              [^\\\"]                        # Any other char
+            )*\"?                            # Ending quote
             ")
-(def symw #"\w+(?:-\w+)*")             ; Symbol word
-(def keyw (re #"(?:\:$symw)"))         ; Keyword token
-(def symb (re #"$symw[?!]?"))          ; Symbol token
-(def nspc (re #"$symw(?:\.$symw)*"))   ; Namespace symbol
-(def fqsm (re #"$nspc/$symb"))         ; Fully qualified symbol
-(def symp (re #"(?:$fqsm|$symb)\("))   ; Symbol followed by paren
-(def dyns (re #"\*$symw\*"))           ; Dynamic symbol
+(def symw #"(?:\w+(?:-\w+)*)")             ; Symbol word
+(def keyw (re #"(?:\:$symw)"))             ; Keyword token
+(def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
+(def nspc (re #"(?:$symw(?:\.$symw)*)"))   ; Namespace symbol
+(def fqsm (re #"(?:$nspc/$symb)"))         ; Fully qualified symbol
+(def symp (re #"(?:(?:$fqsm|$symb)\()"))   ; Symbol followed by paren
+(def dyns (re #"(?:\*$symw\*)"))           ; Dynamic symbol
+; Balanced parens
+(def bpar #"(?x)
+            (?:\(
+              [^)(]*(?:\(
+                [^)(]*(?:\(
+                  [^)(]*(?:\(
+                    [^)(]*(?:\(
+                      [^)(]*(?:\(
+                        [^)(]*
+                      \)[^)(]*)*
+                    \)[^)(]*)*
+                  \)[^)(]*)*
+                \)[^)(]*)*
+              \)[^)(]*)*
+            \))
+          ")
 
-(comment)
+(def re-ysi
+  (re
+    #"(?x)
+    (?:
+      \$ $symw |
+      \$ $bpar |
+      .+?(?= \$ $symw | \$ $bpar | $)
+    )"))
+
+(comment
+  re-ysi
+  (re-seq re-ysi "foo $(bar()) , $baz")
+  (re-seq bpar "(a(b(c(d))e)f(g(h)i)j(k(l)m)n)o(p(q)r)s(t(u)v)w(x(y)z))")
+  )

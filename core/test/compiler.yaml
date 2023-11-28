@@ -91,10 +91,6 @@
 - name: String interpolation
   yamlscript: |
     !yamlscript/v0
-    say: "Hello $name"
-  resolve: |
-    {:ysm [{:ysx "say"} {:ysi "Hello $name"}]}
-  build: |
+    say: "Hello $name $(inc 41) $dec(43)!"
   clojure: |
-    (foo (str "Hello " name))
-  SKIP: true
+    (say (str "Hello " name " " (inc 41) " " (dec 43) "!"))
