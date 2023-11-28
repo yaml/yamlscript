@@ -2,12 +2,12 @@ include ../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/docker.mk
 
-YAMLSCRIPT_CLI_BIN := ys
+YAMLSCRIPT_CLI_BIN := bin/ys-$(YS_VERSION)
 YAMLSCRIPT_CLI_SRC := \
   src/yamlscript/cli.clj \
 
 YAMLSCRIPT_CLI_JAR_PATH := \
-  target/uberjar/yamlscript.cli-0.1.0-SNAPSHOT-standalone.jar
+  target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
 # Avoid rebuild in ephemerally created Docker container.
 ifdef DOCKERENV
@@ -19,8 +19,11 @@ endif
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CLI_BIN)
 
-install: build
-	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(PREFIX)/bin/
+install: $(YAMLSCRIPT_CLI_BIN)
+	mkdir -p $(PREFIX)/bin
+	install -m 755 $< $(PREFIX)/bin/
+	ln -fs $(notdir $<) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $<) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 	@:
@@ -33,7 +36,7 @@ test-unit: $(LEIN)
 	$< test
 
 test-ys: $(YAMLSCRIPT_CLI_BIN)
-	./test.sh
+	./test/test.sh
 	@echo
 	@echo "*** test.sh completed successfully"
 
@@ -60,10 +63,12 @@ endif
 	    -J-Xmx3g \
 	\
 	    -jar $< \
-			-o $@
+	    -o $@
+	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 
 clean::
-	$(RM) $(YAMLSCRIPT_CLI_BIN)
+	$(RM) -r bin
 
 ifeq (true,$(IS_ROOT))
 $(YAMLSCRIPT_CLI_JAR_PATH):

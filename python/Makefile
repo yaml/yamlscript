@@ -25,10 +25,10 @@ test-pytest: $(PYTHON_VENV)
 	source $</bin/activate && \
 	pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
-test-ffi: $(LIBYAMLSCRIPT_SO_PATH)
+test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
 	$(PYTHON) -c 'import yamlscript; print(yamlscript.load("inc: 41"))'
 
-$(LIBYAMLSCRIPT_SO_PATH): $(ROOT)/libyamlscript
+$(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
 	$(MAKE) -C $< build
 
 pkg-test: venv

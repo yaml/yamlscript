@@ -5,6 +5,9 @@ ROOT := $(shell \
 
 include $(ROOT)/common/vars.mk
 
+old ?= $(YS_VERSION)
+new ?=
+
 DIRS := \
     core \
     libyamlscript \
@@ -26,7 +29,14 @@ DOCKER_BUILD := $(DIRS:%=docker-build-%)
 DOCKER_TEST := $(DIRS:%=docker-test-%)
 DOCKER_SHELL := $(DIRS:%=docker-shell-%)
 
+ifdef PREFIX
+override PREFIX := $(abspath $(PREFIX))
+endif
+
 default:
+
+bump:
+	version-bump $(old) $(new)
 
 chown:
 	sudo chown -R $(USER):$(USER) .
@@ -39,7 +49,7 @@ build-%: %
 $(INSTALL):
 install: $(INSTALL)
 install-%: % build-%
-	-$(MAKE) -C $< install
+	-$(MAKE) -C $< install PREFIX=$(PREFIX)
 
 $(TEST):
 test: $(TEST)

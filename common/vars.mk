@@ -2,9 +2,12 @@ BUILD_BIN := /tmp/yamlscript/bin
 
 COMMON := $(ROOT)/common
 
-export PATH := $(ROOT)/bin:$(BUILD_BIN):$(PATH)
+export PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(BUILD_BIN):$(PATH)
 
 export YAMLSCRIPT_ROOT ?= $(ROOT)
+
+export API_VERSION := 0
+export YS_VERSION := $(shell grep '^version:' $(ROOT)/Meta | cut -d' ' -f2)
 
 ifdef v
   export TEST_VERBOSE := 1
@@ -47,7 +50,9 @@ CURL := $(shell command -v curl)
 
 LIBRARY_PATH := $(ROOT)/libyamlscript/lib
 export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
-LIBYAMLSCRIPT_SO_PATH := $(LIBRARY_PATH)/libyamlscript.$(SO)
 LIBYAMLSCRIPT_SO_NAME := $(LIBRARY_PATH)/libyamlscript
+LIBYAMLSCRIPT_SO_FQNP := $(LIBYAMLSCRIPT_SO_NAME).$(SO).$(YS_VERSION)
+LIBYAMLSCRIPT_SO_BASE := $(LIBRARY_PATH)/libyamlscript.$(SO)
+LIBYAMLSCRIPT_SO_APIP := $(LIBYAMLSCRIPT_SO_BASE).$(API_VERSION)
 
 PREFIX ?= /usr/local

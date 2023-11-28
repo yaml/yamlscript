@@ -19,3 +19,4 @@ profiles.clj
 reports/
 target/
 .vscode/
+/www

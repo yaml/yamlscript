@@ -2,14 +2,14 @@ include ../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/docker.mk
 
-LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-0.1.0-standalone.jar
+LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-$(YS_VERSION)-standalone.jar
 
 BUILD_TARGETS := \
-  $(LIBYAMLSCRIPT_SO_PATH) \
+  $(LIBYAMLSCRIPT_SO_FQNP) \
 
 # Avoid rebuild in ephemerally created Docker container.
 ifdef DOCKERENV
-ifneq (,$(wildcard $(LIBYAMLSCRIPT_SO_PATH)))
+ifneq (,$(wildcard $(LIBYAMLSCRIPT_SO_FQNP)))
 LIBYAMLSCRIPT_JAR_PATH :=
 endif
 endif
@@ -19,19 +19,22 @@ default::
 
 build:: $(BUILD_TARGETS)
 
-install:: $(LIBYAMLSCRIPT_SO_PATH)
+install:: $(LIBYAMLSCRIPT_SO_FQNP)
+	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/
+	ln -s $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
+	ln -s $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_APIP))
 
 clean::
 	$(RM) -r lib/
 	$(RM) src/libyamlscript/Core.class
 
-test:: $(LIBYAMLSCRIPT_SO_PATH)
+test:: $(LIBYAMLSCRIPT_SO_FQNP)
 	ls -lh lib
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
-$(LIBYAMLSCRIPT_SO_PATH): $(GRAALVM_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
+$(LIBYAMLSCRIPT_SO_FQNP): $(GRAALVM_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
@@ -58,6 +61,9 @@ endif
 	    --shared \
 	    -jar $(LIBYAMLSCRIPT_JAR_PATH) \
 	    -H:Name=$(LIBYAMLSCRIPT_SO_NAME)
+	mv $(LIBYAMLSCRIPT_SO_BASE) $@
+	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_APIP)
+	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_BASE)
 
 ifeq (true,$(IS_ROOT))
 $(LIBYAMLSCRIPT_JAR_PATH):
