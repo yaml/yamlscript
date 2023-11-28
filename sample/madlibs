@@ -1,0 +1,18 @@
+#!/usr/bin/env ys
+
+!yamlscript/v0
+
+data =:
+  load: "madlibs-data.yaml"
+
+defn word(kind):
+  rand-nth:
+    get: data name(kind)
+
+say: |
+  Dear $word(:name),
+
+  You should go to $word(:city).
+  I really think you would $word(:feel) it there.
+
+  Sincerely, $word(:name)
