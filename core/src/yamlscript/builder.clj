@@ -18,13 +18,13 @@
   "Parse all the !ysx nodes into YAMLScript AST nodes."
   [node] (build-node node))
 
-(defn build-ysm [node]
+(defn build-ys-mapping [node]
   (let [ysm (-> node first val)]
     (->> ysm
       (map build-node)
       (hash-map :ysm))))
 
-(defn build-ysx [node]
+(defn build-ys-expression [node]
   (let [string (-> node first val)]
     (if (= string "")
       {:Empty nil}
@@ -39,29 +39,33 @@
 (defn build-vec [node]
   (Vec (map build-node (:seq node))))
 
-(def re-ysi
+;; XXX This is a hack. It should be done with a proper parser.
+(def re-interpolated-string
   (re/re
-    #"(?x)
+    #"(?sx)
     (?:
+      (?:
+        (?: \\\$ | [^\$] )+?
+        (?= \$ $symw | \$ $bpar | $)
+      ) |
       \$ $symw $bpar |
       \$ $symw |
-      \$ $bpar |
-      .+?(?= \$ $symw | \$ $bpar | $)
+      \$ $bpar
     )"))
 
-(defn build-ysi [node]
+(defn build-interpolated-string [node]
   (let [string (:ysi node)
-        parts (re-seq re-ysi string)
+        parts (re-seq re-interpolated-string string)
         exprs (map
                 #(cond
                    (re-matches (re/re #"\$$symw$bpar") %)
-                   (build-ysx {:ysx (subs % 1)})
+                   (build-ys-expression {:ysx (subs % 1)})
                    (re-matches (re/re #"\$$symw") %)
                    (Sym (subs % 1))
                    (re-matches (re/re #"\$$bpar") %)
-                   (build-ysx {:ysx (subs % 1)})
+                   (build-ys-expression {:ysx (subs % 1)})
                    :else
-                   (Str %))
+                   (Str (str/replace % #"\\(\$)" "$1")))
                 parts)]
     (if (= 1 (count exprs))
       (first exprs)
@@ -70,9 +74,9 @@
 (defn build-node [node]
   (let [[key] (first node)]
     (case key
-      :ysm (build-ysm node)
-      :ysx (build-ysx node)
-      :ysi (build-ysi node)
+      :ysm (build-ys-mapping node)
+      :ysx (build-ys-expression node)
+      :ysi (build-interpolated-string node)
       :str (Str (:str node))
       :map (build-map node)
       :seq (build-vec node)

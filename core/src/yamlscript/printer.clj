@@ -18,6 +18,10 @@
   {\\ "\\\\"
    \" "\\\""})
 
+(defn pr-string [s]
+  (-> s
+    (str/escape string-escape)))
+
 (defn print-node [node]
   (let [node (if (keyword? node)
                {node true}
@@ -42,7 +46,7 @@
                                       " "
                                       (print-node (second %))))))
              "}")
-      :Str (str \" (str/escape val string-escape) \")
+      :Str (str \" (pr-string val) \")
       :Chr (str "\\" val)
       :Sym (str val)
       :Key (str val)

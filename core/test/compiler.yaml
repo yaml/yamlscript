@@ -94,3 +94,22 @@
     say: "Hello $name $(inc 41) $dec(43)!"
   clojure: |
     (say (str "Hello " name " " (inc 41) " " (dec 43) "!"))
+
+
+- name: Multi-line string interpolation
+  yamlscript: |
+    !yamlscript/v0
+    say: |
+      Dear $word(:name),
+
+      Sincerely, $word(:name)
+  clojure: |
+    (say (str "Dear " (word :name) ",\n\nSincerely, " (word :name) "\n"))
+
+
+- name: String interpolation escaped $
+  yamlscript: |
+    !yamlscript/v0
+    say: "Hello \\$name"
+  clojure: |
+    (say "Hello $name")

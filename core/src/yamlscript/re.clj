@@ -81,7 +81,7 @@
 
 (def re-ysi
   (re
-    #"(?x)
+    #"(?sx)
     (?:
       \$ $symw |
       \$ $bpar |
