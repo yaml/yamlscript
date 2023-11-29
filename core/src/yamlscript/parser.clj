@@ -30,11 +30,25 @@
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
-  (let [parser (new Parse (.build (LoadSettings/builder)))]
-    (->> yaml-string
-      (.parseString parser)
-      (map ys-event)
-      (remove nil?))))
+  (let [parser (new Parse (.build (LoadSettings/builder)))
+        has-script-mode-shebang (re-find
+                                  #"^#!.*ys-0"
+                                  yaml-string)
+        events (->> yaml-string
+                 (.parseString parser)
+                 (map ys-event)
+                 (remove nil?))
+        [first-event & rest-events] events
+        first-event-tag (:! first-event)
+        first-event (if (and has-script-mode-shebang
+                          (not (and first-event-tag
+                                 (re-find
+                                   #"^yamlscript/v0"
+                                   first-event-tag))))
+                      (assoc first-event :! "yamlscript/v0")
+                      first-event)
+        events (cons first-event rest-events)]
+    (remove nil? events)))
 
 ;;
 ;; Functions to turn Java event objects into Clojure objects

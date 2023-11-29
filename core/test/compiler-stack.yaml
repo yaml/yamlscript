@@ -419,3 +419,29 @@
       {:Lst [{:Sym ys/load} {:Str "bar.yaml"}]}]}
   print: |
     {"str" "foo bar", "num" (inc 41), "bar" (ys/load "bar.yaml")}
+
+
+
+- name: Shebang line with ys-0 implies !yamlscript/v0
+  yamlscript: |
+    #!/usr/bin/env ys-0
+
+    say: "Hi"
+  parse: |
+    "+MAP", :! "yamlscript/v0"
+    "=VAL", := "say"
+    "=VAL", :$ "Hi"
+    "-MAP"
+
+
+
+- name: Shebang line with ys-0 and !yamlscript/... tag ignored
+  yamlscript: |
+    #!/usr/bin/env ys-0
+    !yamlscript/v0/
+    say: "Hi"
+  parse: |
+    "+MAP", :! "yamlscript/v0/"
+    "=VAL", := "say"
+    "=VAL", :$ "Hi"
+    "-MAP"

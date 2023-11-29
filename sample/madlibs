@@ -1,6 +1,4 @@
-#!/usr/bin/env ys
-
-!yamlscript/v0
+#!/usr/bin/env ys-0
 
 data =:
   load: "madlibs-data.yaml"
