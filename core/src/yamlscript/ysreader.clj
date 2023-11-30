@@ -93,7 +93,19 @@
                    :else b)]
           [op a c])
         expr))
-    expr))
+    (if (and (> (count expr) 3)
+          (some #(->> expr
+                   (partition 2)
+                   (map second)
+                   (apply = %))
+            (map Sym '[+ - * /])))
+      (let [op (second expr)]
+        (->> expr
+          (cons nil)
+          (partition 2)
+          (map second)
+          (cons op)))
+      expr)))
 
 (defn read-list [[_ & tokens] type end]
   (loop [tokens tokens

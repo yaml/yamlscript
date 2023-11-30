@@ -135,3 +135,23 @@
   clojure: |
     (def x 41)
     (+ x 1)
+
+
+- name: (a + b + c) -> (+ a b c)
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a + b + c)
+  clojure: |
+    (+ a b c)
+
+
+- name: Default args
+  yamlscript: |
+    !yamlscript/v0
+    defn increase(x n=1):
+      =>: x + n
+  clojure: |
+    (defn increase
+      ([x] (let [n 1] (increase x n)))
+      ([x n] (+ x n)))
+  SKIP: true
