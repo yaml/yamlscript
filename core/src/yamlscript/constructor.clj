@@ -12,6 +12,46 @@
 
 (declare construct-node)
 
+(defn get-undefined [node defn-names defined undefined]
+  #_(www "get-undefined" [node defn-names defined undefined])
+  (if (:Lst node)
+    (loop [nodes (:Lst node)
+           defined defined
+           undefined undefined]
+      (let [[node & rest] nodes]
+        (if (nil? node)
+          undefined
+          (let [defined (if (= 'defn (get-in node [:Lst 0 :Sym]))
+                          (assoc defined (get-in node [:Lst 1 :Sym]) true)
+                          defined)
+                undefined (let [name (get-in node [:Lst 0 :Sym])]
+                            (if (and (get defn-names name)
+                                  (not (get defined name)))
+                              (assoc undefined name true)
+                              undefined))]
+            (recur rest defined
+              (merge
+                undefined
+                (get-undefined node defn-names defined undefined)))))))
+    undefined))
+
+(defn declare-undefined [node]
+  #_(www "declare-undefined" node)
+  (let [defn-names (map #(get-in % [:Lst 1 :Sym])
+                     (filter #(= 'defn (get-in % [:Lst 0 :Sym]))
+                       (rest (get-in node [:Lst]))))
+        defn-names (zipmap defn-names (repeat true))
+        undefined (map Sym
+                    (keys (get-undefined node defn-names {} {})))
+        form (Lst (cons (Sym 'declare) undefined))]
+    (if (seq undefined)
+      (update-in
+        node
+        [:Lst]
+        #(let [[a b] (split-at 1 %)]
+           (vec (concat a [form] b))))
+      node)))
+
 (defn call-main []
   (Lst [(Sym 'apply)
         (Sym 'main)
@@ -32,6 +72,7 @@
   [node]
   (->> node
     construct-node
+    declare-undefined
     maybe-call-main))
 
 (defn construct-call [pair]

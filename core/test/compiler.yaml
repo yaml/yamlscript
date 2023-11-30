@@ -145,6 +145,19 @@
     (+ a b c)
 
 
+- name: Pre-declare top level functions as needed
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      bar: 123
+    defn bar(n):
+      =>: 321
+  clojure: |
+    (declare bar)
+    (defn foo [] (bar 123))
+    (defn bar [n] 321)
+
+
 - name: Default args
   yamlscript: |
     !yamlscript/v0
