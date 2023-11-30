@@ -13,10 +13,17 @@
   "Transform special rules for YAMLScript AST."
   [node] (transform-node node))
 
-(defn string-repeat [{lst :Lst}]
-  (let [[v1 v2 v3] lst]
+(defn add-num-or-string [{list :Lst}]
+  (let [[v1 & rest] list]
     (when (and
-            (= (count lst) 3)
+            (>= (count list) 3)
+            (= v1 {:Sym '+}))
+      {:Lst (cons {:Sym 'add} rest)})))
+
+(defn string-repeat [{list :Lst}]
+  (let [[v1 v2 v3] list]
+    (when (and
+            (= (count list) 3)
             (= v1 {:Sym '*}))
       {:Lst [{:Sym 'times} v2 v3]})))
 
@@ -26,8 +33,9 @@
       (map transform-node)
       (hash-map :ysm))))
 
-(defn transform-lst [node]
+(defn transform-list [node]
   (or
+    (add-num-or-string node)
     (string-repeat node)
     node))
 
@@ -42,7 +50,7 @@
     (let [[key] (first node)]
       (case key
         :ysm (transform-ysm node)
-        :Lst (transform-lst node)
+        :Lst (transform-list node)
         ,    node))))
 
 (comment)

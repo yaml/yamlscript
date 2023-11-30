@@ -248,7 +248,7 @@
      [[{:Sym defn} {:Sym foo} {:Vec [{:Sym a} {:Sym b}]}]
       {:Lst [{:Sym +} {:Sym a} {:Sym b}]}]}
   print: |
-    (defn foo [a b] (+ a b))
+    (defn foo [a b] (add a b))
 
 
 

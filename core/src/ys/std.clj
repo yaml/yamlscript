@@ -25,6 +25,11 @@
 
 (defn => [this] this)
 
+(defn add [x & xs]
+  (if (string? x)
+    (apply str x xs)
+    (apply + x xs)))
+
 (defn err [& xs]
   (binding [*out* *err*]
     (apply clojure.core/print xs)

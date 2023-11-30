@@ -67,6 +67,14 @@
     (say (rng 1 10))
 
 
+- name: String concat operator
+  yamlscript: |
+    !yamlscript/v0
+    (a + "-" + b)
+  clojure: |
+    (add a "-" b)
+
+
 - name: String repeat operator
   yamlscript: |
     !yamlscript/v0
@@ -134,7 +142,7 @@
     =>: (x + 1)
   clojure: |
     (def x 41)
-    (+ x 1)
+    (add x 1)
 
 
 - name: (a + b + c) -> (+ a b c)
@@ -142,7 +150,7 @@
     !yamlscript/v0
     =>: (a + b + c)
   clojure: |
-    (+ a b c)
+    (add a b c)
 
 
 - name: Pre-declare top level functions as needed
