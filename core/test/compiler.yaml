@@ -125,3 +125,13 @@
     (defn main [name] (say (str "Hello " name)))
     (def x 1)
     (apply main ARGV)
+
+
+- name: The => operator
+  yamlscript: |
+    !yamlscript/v0
+    x =: 41
+    =>: (x + 1)
+  clojure: |
+    (def x 41)
+    (+ x 1)

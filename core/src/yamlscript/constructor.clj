@@ -35,7 +35,13 @@
     maybe-call-main))
 
 (defn construct-call [pair]
-  (Lst (flatten [pair])))
+  (let [pair (if (= '=> (get-in pair [0 :Sym]))
+               (rest pair)
+               pair)
+        pair (if (= 1 (count pair))
+               (first pair)
+               (Lst (flatten [pair])))]
+    pair))
 
 (defn construct-err [o]
   (throw (Exception. (str "Can't construct " o))))
