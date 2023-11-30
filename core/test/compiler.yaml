@@ -113,3 +113,15 @@
     say: "Hello \\$name"
   clojure: |
     (say "Hello $name")
+
+
+- name: Automatically call the main function when defined
+  yamlscript: |
+    !yamlscript/v0
+    defn main(name):
+      say: "Hello $name"
+    x =: 1
+  clojure: |
+    (defn main [name] (say (str "Hello " name)))
+    (def x 1)
+    (apply main ARGV)

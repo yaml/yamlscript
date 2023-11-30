@@ -12,10 +12,27 @@
 
 (declare construct-node)
 
+(defn call-main []
+  (Lst [(Sym 'apply)
+        (Sym 'main)
+        (Sym 'ARGV)]))
+
+(defn maybe-call-main [node]
+  (if (and (= 'do (get-in node [:Lst 0 :Sym]))
+        (seq
+          (filter #(and
+                     (= 'defn (get-in % [:Lst 0 :Sym]))
+                     (= 'main (get-in % [:Lst 1 :Sym])))
+            (node :Lst))))
+    (update-in node [:Lst] conj (call-main))
+    node))
+
 (defn construct
   "Construct resolved YAML tree into a YAMLScript AST."
   [node]
-  (construct-node node))
+  (->> node
+    construct-node
+    maybe-call-main))
 
 (defn construct-call [pair]
   (Lst (flatten [pair])))
@@ -58,5 +75,4 @@
 (comment
   (construct :Nil)
   (construct {:do [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
-  *e
   )
