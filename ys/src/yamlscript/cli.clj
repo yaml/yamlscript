@@ -33,20 +33,10 @@
     (str "*** exit " n " ***")
     (System/exit n)))
 
-(defn die
-  ([^String s] (die (Exception. s) {} nil))
-  ([^String s opts] (die (Exception. s) opts nil))
-  ([^Exception e opts _]
-   (let [msg (str "Error: "
-               (or (.getCause e)
-                 (.getMessage e)))
-         msg (if (:debug opts)
-               (apply str msg
-                 (interpose "\n"
-                   (apply conj ["Stack trace:"]
-                     (.getStackTrace e))))
-               msg)]
-     (throw (Exception. ^String msg)))))
+(defn die [& xs]
+  (binding [*out* *err*]
+    (println (apply str "Error: " xs))
+    (exit 1)))
 
 (defn todo [s & _]
   (die "--" s " not implemented yet."))
@@ -219,7 +209,7 @@ Options:
         (compiler/compile code)
         (binding [compiler/*debug* (:debug-stage opts)]
           (compiler/compile-debug code)))
-      (catch Exception e (die e opts nil)))))
+      (catch Exception e (die e opts)))))
 
 (def json-options
   {:escape-unicode false
@@ -290,8 +280,8 @@ Options:
       (let [[first second] (seq omap)
             first (str "--" (name (key first)))
             second (str "--" (name (key second)))]
-        (die (str "Options " first " and " second
-               " are mutually exclusive."))))))
+        (str "Options " first " and " second
+          " are mutually exclusive.")))))
 
 (defn mutex1 [opts opt keys]
   (let [omap (reduce #(if (%2 opts)
@@ -301,8 +291,8 @@ Options:
       (let [[second] (seq omap)
             first (str "--" (name opt))
             second (str "--" (name (key second)))]
-        (die (str "Options " first " and " second
-               " are mutually exclusive."))))))
+        (str "Options " first " and " second
+          " are mutually exclusive.")))))
 
 (defn k2o [k]
   (str "--" (name k)))
@@ -310,10 +300,10 @@ Options:
 (defn needs [opts opt keys]
   (when (and (opt opts) (not (some opts keys)))
     (let [first (str "--" (name opt))]
-      (die (str "Option " first " requires "
-             (if (= 1 (count keys))
-               (k2o (clojure.core/first keys))
-               " one of ..."))))))
+      (str "Option " first " requires "
+        (if (= 1 (count keys))
+          (k2o (clojure.core/first keys))
+          " one of ...")))))
 
 (def all-opts
   #{:run :load :compile :eval
@@ -343,7 +333,7 @@ Options:
 (defn validate-opts [opts]
   (let [opts (elide-empty :eval opts)
         opts (elide-empty :debug-stage opts)]
-    (try
+    (or
       (mutex opts action-opts)
       (mutex opts format-opts)
       (mutex1 opts :help (set/difference all-opts #{:help}))
@@ -352,9 +342,7 @@ Options:
       (mutex1 opts :eval (set/difference action-opts eval-action-opts))
       (needs opts :mode #{:eval})
       (mutex1 opts :print (set/difference action-opts #{:run}))
-      (mutex1 opts :to (set/difference action-opts #{:load :compile}))
-      nil
-      (catch Exception e (.getMessage e)))))
+      (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
 
 (defn -main [& args]
   (let [options (cli/parse-opts args cli-options)
@@ -368,7 +356,7 @@ Options:
         opts (if (:edn opts) (assoc opts :to "edn") opts)
         opts (if (:to opts) (assoc opts :load true) opts)]
     (cond
-      error (do-error [error] help)
+      error (do-error [(str "Error: " error)] help)
       (seq errs) (do-error errs help)
       (:help opts) (do-help help)
       (:version opts) (do-version)
