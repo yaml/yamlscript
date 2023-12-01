@@ -16,7 +16,8 @@
 
 (def string-escape
   {\\ "\\\\"
-   \" "\\\""})
+   \" "\\\""
+   \newline "\\n"})
 
 (defn pr-string [s]
   (-> s

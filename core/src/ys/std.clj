@@ -5,10 +5,13 @@
 
 (ns ys.std
   (:require
-   [yamlscript.debug :refer [www]]
+   [yamlscript.debug]
    [clojure.pprint :as pp]
    [clojure.string :as str])
   (:refer-clojure :exclude [print]))
+
+(defn www [& xs]
+  (apply yamlscript.debug/www xs))
 
 (defn B [x] boolean x)
 
@@ -34,6 +37,9 @@
   (binding [*out* *err*]
     (apply clojure.core/print xs)
     (flush)))
+
+(defn join [sep xs]
+  (str/join sep xs))
 
 (defn out [& xs]
   (apply clojure.core/print xs)

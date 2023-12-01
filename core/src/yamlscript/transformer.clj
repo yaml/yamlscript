@@ -14,14 +14,16 @@
   [node] (transform-node node))
 
 (defn add-num-or-string [{list :Lst}]
-  (let [[v1 & rest] list]
+  (let [list (map transform-node list)
+        [v1 & rest] list]
     (when (and
             (>= (count list) 3)
             (= v1 {:Sym '+}))
       {:Lst (cons {:Sym 'add} rest)})))
 
 (defn string-repeat [{list :Lst}]
-  (let [[v1 v2 v3] list]
+  (let [list (map transform-node list)
+        [v1 v2 v3] list]
     (when (and
             (= (count list) 3)
             (= v1 {:Sym '*}))

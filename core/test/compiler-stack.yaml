@@ -445,3 +445,24 @@
     "=VAL", := "say"
     "=VAL", :$ "Hi"
     "-MAP"
+
+
+
+- name: Double quoted string with escaped newline
+  yamlscript: |
+    #!/usr/bin/env ys-0
+    x =: "a\nb"
+    y =: ("c" + "d\ne")
+  parse: |
+    "+MAP", :! "yamlscript/v0"
+    "=VAL", := "x ="
+    "=VAL", :$ "a\nb"
+    "=VAL", := "y ="
+    "=VAL", := "(\"c\" + \"d\\ne\")"
+    "-MAP"
+  build: |
+    {:ysm
+     ([{:Sym def} {:Sym x}]
+      {:Str "a\nb"}
+      [{:Sym def} {:Sym y}]
+      {:Lst [{:Sym +} {:Str "c"} {:Str "d\ne"}]})}

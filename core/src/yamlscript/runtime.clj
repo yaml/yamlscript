@@ -104,7 +104,10 @@
        ""
        (sci/binding
         [sci/file file
-         argv (vec args)
+        ;; XXX - This is a temporary hack to make numeric args into longs.
+         argv (vec
+                (map #(if (re-matches #"\d+" %) (parse-long %) %)
+                  args))
          env (into {} (System/getenv))]
          (sci/eval-string clj (sci-ctx)))))))
 

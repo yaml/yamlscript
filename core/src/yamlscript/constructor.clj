@@ -13,7 +13,6 @@
 (declare construct-node)
 
 (defn get-undefined [node defn-names defined undefined]
-  #_(www "get-undefined" [node defn-names defined undefined])
   (if (:Lst node)
     (loop [nodes (:Lst node)
            defined defined
@@ -36,7 +35,6 @@
     undefined))
 
 (defn declare-undefined [node]
-  #_(www "declare-undefined" node)
   (let [defn-names (map #(get-in % [:Lst 1 :Sym])
                      (filter #(= 'defn (get-in % [:Lst 0 :Sym]))
                        (rest (get-in node [:Lst]))))

@@ -124,7 +124,8 @@
 (defn normalize-string [string]
   (-> string
     (subs 1 (- (count string) 1))
-    (str/replace #"\\ " " ")))
+    (str/replace #"\\ " " ")
+    (str/replace #"\\n" "\n")))
 
 (defn read-scalar [[token & tokens]]
   (cond
