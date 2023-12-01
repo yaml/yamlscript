@@ -90,7 +90,11 @@
       (if (is-operator? (:Sym b))
         (let [op (cond
                    (= b (Sym '..)) (Sym 'rng)
-                   :else b)]
+                   :else b)
+              op (cond
+                   (= op (Sym '||)) (Sym 'or)
+                   (= op (Sym '&&)) (Sym 'and)
+                   :else op)]
           [op a c])
         expr))
     (if (and (> (count expr) 3)
@@ -98,8 +102,13 @@
                    (partition 2)
                    (map second)
                    (apply = %))
-            (map Sym '[+ - * /])))
-      (let [op (second expr)]
+            (map Sym '[+ - * / || &&])))
+      (let [op (second expr)
+            op (cond
+                 (= op (Sym '||)) (Sym 'or)
+                 (= op (Sym '&&)) (Sym 'and)
+                 :else op)
+            ]
         (->> expr
           (cons nil)
           (partition 2)

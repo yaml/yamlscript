@@ -166,6 +166,22 @@
     (defn bar [n] 321)
 
 
+- name: The || or operator
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a || b)
+  clojure: |
+    (or a b)
+
+
+- name: Multiple && and operators
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a && b && c)
+  clojure: |
+    (and a b c)
+
+
 - name: Default args
   yamlscript: |
     !yamlscript/v0
