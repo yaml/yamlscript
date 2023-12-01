@@ -76,7 +76,7 @@ And they evaluate to the same result that a YAML loader would produce.</p>
 <p>But why would anything happen? The program doesn't do anything!</p>
 <p>It's the same as running this Python program:</p>
 <pre class="language-python"><code class="language-python">$ python <span class="token operator">-</span>c <span class="token string">'["apple", "banana", "cherry"]'</span><br>$</code></pre>
-<p>To evaluate a YAMLScript program, we need to use the <code>--load</code> option:</p>
+<p>To <em>evaluate</em> a YAMLScript program, we need to use the <code>--load</code> option:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> fruits.yaml<br><span class="token punctuation">[</span><span class="token string">"apple"</span>, <span class="token string">"banana"</span>, <span class="token string">"cherry"</span><span class="token punctuation">]</span><br>$</code></pre>
 <p>We got some JSON back!
 That's because by default, <code>--load</code> evaluates the YAMLScript and prints the
