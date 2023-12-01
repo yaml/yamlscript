@@ -40,12 +40,40 @@
 <p>What if I told you that you could write a <strong>program in YAML</strong> that would
 generate a Christmas tree?</p>
 <p>Well, you can! Here's how:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br>defn main(&amp;<span class="token punctuation">[</span>width<span class="token punctuation">]</span>)<span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span><br>      <span class="token key atrule">or</span><span class="token punctuation">:</span> width<span class="token punctuation">,</span> <span class="token number">5</span><br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  ( join("" map(fn(<span class="token punctuation">[</span>n<span class="token punctuation">]</span> line(width<span class="token punctuation">,</span> n)) (width .. 0)))<br>  + (trunk(width) * 2))<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  ("<span class="token important">*"</span> * inc(num))<br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> (" " * num)<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  (spaces(num) + "<span class="token important">*\n")</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  ( spaces(num)<br>  + stars(((width <span class="token punctuation">-</span> num) * 2))<br>  + "\n")</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br>defn main(&amp;<span class="token punctuation">[</span>width<span class="token punctuation">]</span>)<span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width <span class="token punctuation">|</span><span class="token punctuation">|</span> 5<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  join(<br>    map(<br>      fn(<span class="token punctuation">[</span>n<span class="token punctuation">]</span> line(width<span class="token punctuation">,</span> n))<br>      (width .. 1)))<br>  + (trunk(width) * 2)<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  inc(num) * "<span class="token important">*"</span><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  ( spaces(num)<br>  + stars(((width <span class="token punctuation">-</span> num) * 2))<br>  + "\n")</code></pre>
+<!--
 <details><summary><strong style="color:green">Secret Santa Surprise!</strong></summary>
-<p>Here's the slightly better version of the program that I was planning to give
-you today, but the elves are still working on it:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br><span class="token key atrule">defn main(width=5)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">join +</span><span class="token punctuation">:</span><br>    <span class="token key atrule">join</span><span class="token punctuation">:</span><br>      map \(line(width<span class="token punctuation">,</span> %))<span class="token punctuation">:</span> width .. 0<br>    <span class="token key atrule">trunk</span><span class="token punctuation">:</span> width<br>    <span class="token key atrule">trunk</span><span class="token punctuation">:</span> width<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  inc(num) * "<span class="token important">*"</span><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">join +</span><span class="token punctuation">:</span><br>    <span class="token key atrule">spaces</span><span class="token punctuation">:</span> num<br>    <span class="token key atrule">stars</span><span class="token punctuation">:</span> (width <span class="token punctuation">-</span> num) * 2<br>    <span class="token key atrule">=></span><span class="token punctuation">:</span> <span class="token string">"\n"</span></code></pre>
-<p>I'll continue to update this post as the elves make progress.</p>
+
+Here's the slightly better version of the program that I was planning to give
+you today, but the elves are still working on it:
+
+```yaml
+#!/usr/bin/env ys-0
+
+defn main(width=5):
+  say:
+    tree: width
+
+defn tree(width):
+  join +:
+    join:
+      map \(line(width, %)): width .. 0
+    trunk: width
+    trunk: width
+
+defn stars(num):  inc(num) * "*"
+defn spaces(num): num * " "
+defn trunk(num):  spaces(num) + "*\n"
+
+defn line(width, num):
+  join +:
+    spaces: num
+    stars: (width - num) * 2
+    =>: "\n"
+```
+
+I'll continue to update this post as the elves make progress.
+-->
 <!--
 ```yaml
 #!/usr/bin/env ys-0
