@@ -184,7 +184,16 @@
     (case (count forms)
       0 nil
       1 (first forms)
-      (vec forms))))
+      (if (and
+            (= 3 (count forms))
+            (is-operator? (:Sym (second forms))))
+        (let [op (second forms)
+              op (cond
+                   (= op (Sym '||)) (Sym 'or)
+                   (= op (Sym '&&)) (Sym 'and)
+                   :else op)]
+          (Lst [op (first forms) (last forms)]))
+        (vec forms)))))
 
 (comment
   (read-string "(1 .. 5)")

@@ -182,6 +182,14 @@
     (and a b c)
 
 
+- name: Triplets without parens
+  yamlscript: |
+    !yamlscript/v0
+    =>: a + b
+  clojure: |
+    (add a b)
+
+
 - name: Default args
   yamlscript: |
     !yamlscript/v0

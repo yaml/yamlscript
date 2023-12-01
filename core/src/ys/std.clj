@@ -38,8 +38,10 @@
     (apply clojure.core/print xs)
     (flush)))
 
-(defn join [sep xs]
-  (str/join sep xs))
+(defn join
+  ([xs] (join "" xs))
+  ([sep xs]
+   (str/join sep xs)))
 
 (defn out [& xs]
   (apply clojure.core/print xs)
@@ -65,7 +67,9 @@
 (defn times [x y]
   (if (and (string? x) (number? y))
     (apply str (repeat y x))
-    (* x y)))
+    (if (and (string? y) (number? x))
+      (apply str (repeat x y))
+      (* x y))))
 
 (defn warn [& xs]
   (binding [*out* *err*]
