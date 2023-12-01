@@ -40,7 +40,36 @@
 <p>What if I told you that you could write a <strong>program in YAML</strong> that would
 generate a Christmas tree?</p>
 <p>Well, you can! Here's how:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br><span class="token comment"># tree.ys -- Generate a Christmas tree of width n * 2 - 1</span><br><br><span class="token key atrule">defn main(width=5)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span> tree(width)<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">stars =</span><span class="token punctuation">:</span> \("<span class="token important">*"</span> * %)<br>  <span class="token key atrule">spaces =</span><span class="token punctuation">:</span> \(" " * %)<br>  <span class="token key atrule">line =</span><span class="token punctuation">:</span><br>    <span class="token key atrule">fn(num)</span><span class="token punctuation">:</span><br>      spaces(width <span class="token punctuation">-</span> 1) +<br>      stars(1 + (2 * (num <span class="token punctuation">-</span> width))) +<br>      "\n"<br>  <span class="token key atrule">trunk =</span><span class="token punctuation">:</span> \(spaces(%) + "<span class="token important">*\n")</span><br><br>  <span class="token key atrule">join</span><span class="token punctuation">:</span><br>    <span class="token key atrule">map line</span><span class="token punctuation">:</span> (width .. <span class="token punctuation">-</span>1)<br>    <span class="token key atrule">trunk</span><span class="token punctuation">:</span> width<br>    <span class="token key atrule">trunk</span><span class="token punctuation">:</span> width</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br>defn main(&amp;<span class="token punctuation">[</span>width<span class="token punctuation">]</span>)<span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span><br>      <span class="token key atrule">or</span><span class="token punctuation">:</span> width<span class="token punctuation">,</span> <span class="token number">5</span><br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  ( join("" map(fn(<span class="token punctuation">[</span>n<span class="token punctuation">]</span> line(width<span class="token punctuation">,</span> n)) (width .. 0)))<br>  + (trunk(width) * 2))<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  ("<span class="token important">*"</span> * inc(num))<br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> (" " * num)<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  (spaces(num) + "<span class="token important">*\n")</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  ( spaces(num)<br>  + stars(((width <span class="token punctuation">-</span> num) * 2))<br>  + "\n")</code></pre>
+<details><summary><strong style="color:green">Secret Santa Surprise!</strong></summary>
+<p>Here's the slightly better version of the program that I was planning to give
+you today, but the elves are still working on it:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br><span class="token key atrule">defn main(width=5)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">join +</span><span class="token punctuation">:</span><br>    <span class="token key atrule">join</span><span class="token punctuation">:</span><br>      map \(line(width<span class="token punctuation">,</span> %))<span class="token punctuation">:</span> width .. 0<br>    <span class="token key atrule">trunk</span><span class="token punctuation">:</span> width<br>    <span class="token key atrule">trunk</span><span class="token punctuation">:</span> width<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  inc(num) * "<span class="token important">*"</span><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">join +</span><span class="token punctuation">:</span><br>    <span class="token key atrule">spaces</span><span class="token punctuation">:</span> num<br>    <span class="token key atrule">stars</span><span class="token punctuation">:</span> (width <span class="token punctuation">-</span> num) * 2<br>    <span class="token key atrule">=></span><span class="token punctuation">:</span> <span class="token string">"\n"</span></code></pre>
+<p>I'll continue to update this post as the elves make progress.</p>
+<!--
+```yaml
+#!/usr/bin/env ys-0
+
+defn main(width=5):
+  say: tree(width)
+
+defn tree(width):
+  stars =: \("*" * %)
+  spaces =: \(" " * %)
+  line =:
+    fn(num):
+      spaces(width - 1) +
+      stars(1 + (2 * (num - width))) +
+      "\n"
+  trunk =: \(spaces(%) + "*\n")
+
+  join:
+    map line: (width .. -1)
+    trunk: width
+    trunk: width
+```
+-->
+</details>
 <p>Let's get a tree!</p>
 <pre class="language-bash"><code class="language-bash">$ ys tree.ys<br>     *<br>    ***<br>   *****<br>  *******<br> *********<br>     *<br>     *</code></pre>
 <p>That's a pretty nice tree, but it's a little small. Let's make it bigger!</p>
