@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2023-12-03T00:00:00Z</updated>
+    <updated>2023-12-24T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -42,7 +42,8 @@ generate a Christmas tree?</p>
 <p>Well, you can! Here's how:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br>defn main(&amp;<span class="token punctuation">[</span>width<span class="token punctuation">]</span>)<span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width <span class="token punctuation">|</span><span class="token punctuation">|</span> 5<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  join(<br>    map(<br>      fn(<span class="token punctuation">[</span>n<span class="token punctuation">]</span> line(width<span class="token punctuation">,</span> n))<br>      (width .. 1)))<br>  + (trunk(width) * 2)<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  inc(num) * "<span class="token important">*"</span><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  ( spaces(num)<br>  + stars(((width <span class="token punctuation">-</span> num) * 2))<br>  + "\n")</code></pre>
 <!--
-<details><summary><strong style="color:green">Secret Santa Surprise!</strong></summary>
+<details>
+<summary><strong style="color:green">Secret Santa Surprise!</strong></summary>
 
 Here's the slightly better version of the program that I was planning to give
 you today, but the elves are still working on it:
@@ -188,6 +189,42 @@ Well at least until December 25th, but I might keep going after that. :-)</p>
 </ul>
 <p>Hopefully you're as excited as I am to learn more about YAMLScript!</p>
 <p>See you tomorrow!</p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
 
     ]]>
       </content>
@@ -226,7 +263,8 @@ YAMLScript on your side!</p>
 <h3>Welcome to day 2 of YAMLScript Advent 2023!</h3>
 <p>Today we're going to write a program that generates a winter holiday poem in the
 Mad Libs style.
-Along the way, we'll learn about several of YAMLScript's basic language features, including:</p>
+Along the way, we'll learn about several of YAMLScript's basic language
+features, including:</p>
 <ul>
 <li>The <code>load</code> function</li>
 <li>Defining functions</li>
@@ -359,7 +397,8 @@ immediately followed by the variable or expression.</p>
 <pre class="language-bash"><code class="language-bash"><span class="token assign-left variable">name</span><span class="token operator">=</span>World<br><span class="token builtin class-name">echo</span> <span class="token string">"Hello <span class="token variable">$name</span>. The answer is <span class="token variable"><span class="token variable">$((</span><span class="token number">43</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token variable">))</span></span>."</span></code></pre>
 <p>The equivalent YAMLScript code would be:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">name =</span><span class="token punctuation">:</span> <span class="token string">"World"</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $name. The answer is $(43 - 1)."</span></code></pre>
-<p>You can also interpolate a YAMLScript function call (symbol followed by argument list) like this:</p>
+<p>You can also interpolate a YAMLScript function call (symbol followed by argument
+list) like this:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $inc(41)."</span></code></pre>
 <p>In most langauages that support interpolation <code>inc</code> would expand as a variable,
 but in YAMLScript it's a function and the parenthesized argument list is part of
@@ -390,6 +429,42 @@ Gave the lustre of mid-day to flowers below.<br>
 When what to my wondering eyes should materialize?<br>
 But a miniature train, and eight tiny oxen.</p>
 </blockquote>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
 
     ]]>
       </content>
@@ -584,6 +659,1156 @@ did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merg
 It's polymorphic for numbers, strings, sequences and mappings.</p>
 <p>As ususal, I hope you enjoyed today's post.
 I'll see you tomorrow for day 4 of YAMLScript Advent 2023!</p>
+<!--
+refactor this into a template and include it.
+https://github.com/11ty/eleventy/issues/658#issuecomment-599142642
+-->
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title></title>
+      <link href="https://yamlscript.org/posts/advent-2023/"/>
+      <updated>2023-12-03T23:40:04Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Welcome to the 2023 YAMLScript Advent Calendar!</h3>
+<p>&nbsp;</p>
+<h3><a href="/posts/advent-2023/dec-01">Dec 1 - YAMLScript Advent 2023</a></h3>
+<h3><a href="/posts/advent-2023/dec-02">Dec 2 - Twas a Bit</a></h3>
+<h3><a href="/posts/advent-2023/dec-03">Dec 3 - Load em Up!</a></h3>
+<h3><a href="/posts/advent-2023/dec-04">Dec 4 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-05">Dec 5 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-06">Dec 6 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-07">Dec 7 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-08">Dec 8 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-09">Dec 9 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-10">Dec 10 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-11">Dec 11 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-12">Dec 12 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-13">Dec 13 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-14">Dec 14 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-15">Dec 15 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-16">Dec 16 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-17">Dec 17 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-18">Dec 18 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-19">Dec 19 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-20">Dec 20 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-21">Dec 21 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-22">Dec 22 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-23">Dec 23 - ???</a></h3>
+<h3><a href="/posts/advent-2023/dec-24">Dec 24 - ???</a></h3>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-04/"/>
+      <updated>2023-12-04T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-04/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-05/"/>
+      <updated>2023-12-05T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-05/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-06/"/>
+      <updated>2023-12-06T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-06/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-07/"/>
+      <updated>2023-12-07T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-07/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-08/"/>
+      <updated>2023-12-08T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-08/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-09/"/>
+      <updated>2023-12-09T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-09/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-10/"/>
+      <updated>2023-12-10T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-10/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-11/"/>
+      <updated>2023-12-11T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-11/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-12/"/>
+      <updated>2023-12-12T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-12/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-13/"/>
+      <updated>2023-12-13T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-13/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-14/"/>
+      <updated>2023-12-14T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-14/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-15/"/>
+      <updated>2023-12-15T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-15/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-16/"/>
+      <updated>2023-12-16T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-16/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-17/"/>
+      <updated>2023-12-17T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-17/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-18/"/>
+      <updated>2023-12-18T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-18/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-19/"/>
+      <updated>2023-12-19T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-19/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-20/"/>
+      <updated>2023-12-20T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-20/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-21/"/>
+      <updated>2023-12-21T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-21/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-22/"/>
+      <updated>2023-12-22T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-22/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-23/"/>
+      <updated>2023-12-23T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-23/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Welcome to the Future</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-24/"/>
+      <updated>2023-12-24T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-24/</id>
+      <content type="html">
+        <![CDATA[
+      <h3>Ho, Ho Ho!</h3>
+<p><em>Patience, young hacker...</em></p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
 
     ]]>
       </content>
