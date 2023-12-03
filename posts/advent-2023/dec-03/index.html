@@ -127,9 +127,11 @@ from the same JSON input.</p>
 <p>This YAML/JSON relationship has some interesting implications for people
 interacting with systems that read YAML or JSON as input.</p>
 <p>People often prefer to read or write data in YAML because it's more
-human-friendly, while JSON is more machine-friendly because of its sheer
-simplicity and robust tooling.
-It's quite common to see people configure their systems that have JSON inputs by
+human-friendly with its structured indentation, lack of excessive punctuation
+and its support for comments.
+JSON is more machine-friendly due to its simplicity and robust tooling, thus
+often prererable for machine-to-machine communication.</p>
+<p>It's quite common to see people configure their systems that have JSON inputs by
 using YAML instead, and setting things up to convert the hand maintained YAML to
 JSON before the system sees it.
 It can also be helpful to format large JSON API responses as YAML so that they
@@ -140,8 +142,8 @@ then converting the data back to YAML.</p>
 <p>YAMLScript is an ideal technology for performing these kinds of conversions and
 manipulations.</p>
 <h3>Loading vs Running YAMLScript</h3>
-<p>On one hand, YAMLScript is a complete programming language that you can use to
-for writing new applications (and libraries).
+<p>On one hand, YAMLScript is a complete programming language that you can use for
+writing new applications (and libraries).
 In YAMLScript jargon, we &quot;run&quot; these applications.
 We'll discuss YAMLScript apps and &quot;running&quot; them extensively in the coming days.</p>
 <p>Today we are covering YAMLScript's purpose we just described: reading YAML
@@ -177,7 +179,7 @@ libraries be the best way to load YAML config files in all modern programming
 languages.
 This will be a big improvement over the current situation where every YAML
 framework has its own API and its own set of bugs and quirks.</p>
-<h3>Loading YAMLScript From the Command Line</h3>
+<h3>Loading YAMLScript from the Command Line</h3>
 <p>The Python and other language bindings are not ready yet, but we can still load
 YAMLScript.
 We can do it from the command line using the <code>ys</code> command with the <code>--load</code>
