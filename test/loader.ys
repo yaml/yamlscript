@@ -1,4 +1,4 @@
-!yamlscript/v0/
+!yamlscript/v0/data
 
 foo: This is a string
 bar: ! load("./loadme.ys")

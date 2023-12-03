@@ -44,7 +44,7 @@ YAMLScript programs must start with a special YAML tag `!yamlscript/v0` to
 indicate that they have functional capabilities.
 
 ```yaml
-!yamlscript/v0:
+!yamlscript/v0/data
 foo: ! inc(41)
 ```
 

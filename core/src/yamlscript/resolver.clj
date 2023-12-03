@@ -43,9 +43,9 @@
     :else      :val))
 
 (declare
+  resolve-bare-node
   resolve-data-node
-  resolve-yaml-node
-  resolve-script-node)
+  resolve-code-node)
 
 (defn resolve
   "Walk YAML tree and tag all nodes according to YAMLScript rules."
@@ -54,16 +54,16 @@
     (if (and tag (re-find #"^yamlscript/v0" tag))
       (let [tag (subs tag (count "yamlscript/v0"))]
         (case tag
-          "" (resolve-script-node node)
-          "/" (resolve-yaml-node node)
-          "/map" (resolve-yaml-node node)
-          "/seq" (resolve-yaml-node node)
+          "" (resolve-code-node node)
+          "/:" (resolve-data-node node)
+          "/code" (resolve-code-node (dissoc node :!))
           "/data" (resolve-data-node (dissoc node :!))
+          "/bare" (resolve-bare-node (dissoc node :!))
           (throw (Exception. (str "Unknown yamlscript tag: " tag)))))
-      (resolve-data-node node))))
+      (resolve-bare-node node))))
 
 ;; ----------------------------------------------------------------------------
-;; Resolve taggers for ys mode:
+;; Resolve taggers for code mode:
 ;; ----------------------------------------------------------------------------
 (defn tag-def [[key val]]
   (let [key (:ysx key)
@@ -92,27 +92,27 @@
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))
 
 ;; ----------------------------------------------------------------------------
-;; Resolve dispatchers for ys mode:
+;; Resolve dispatchers for code mode:
 ;; ----------------------------------------------------------------------------
-(defn resolve-script-pair [key val]
-  (let [pair [(resolve-script-node key)
-              (resolve-script-node val)]]
+(defn resolve-code-pair [key val]
+  (let [pair [(resolve-code-node key)
+              (resolve-code-node val)]]
     ((some-fn
        tag-def
        tag-defn
        tag-ysx) pair)))
 
-(defn resolve-script-mapping [node]
+(defn resolve-code-mapping [node]
   (when (:%% node)
-    (throw (Exception. "Flow mappings not allowed in script-mode")))
+    (throw (Exception. "Flow mappings not allowed in code mode")))
     {:ysm (mapcat
-            (fn [[key val]] (resolve-script-pair key val))
+            (fn [[key val]] (resolve-code-pair key val))
             (partition 2 (:% node)))})
 
-(defn resolve-script-sequence [node]
-  (throw (Exception. "Sequences (block and flow) not allowed in script-mode")))
+(defn resolve-code-sequence [node]
+  (throw (Exception. "Sequences (block and flow) not allowed in code mode")))
 
-(defn resolve-script-scalar [node]
+(defn resolve-code-scalar [node]
   (let [node (dissoc node :!)
         [key val] (-> node first)]
     (case key
@@ -128,27 +128,27 @@
       :> (set/rename-keys node {:> :str})
       ,  (throw (Exception. (str "Scalar has unknown style: " key))))))
 
-(defn resolve-script-node
-  "Resolve nodes recursively in script-mode"
+(defn resolve-code-node
+  "Resolve nodes recursively in code mode"
   [node]
   (let [tag (:! node)
         node (dissoc node :&)]
     (if (= tag "")
-      (resolve-yaml-node (dissoc node :!))
+      (resolve-data-node (dissoc node :!))
       (case (node-type node)
-        :map (resolve-script-mapping node)
-        :seq (resolve-script-sequence node)
-        :val (resolve-script-scalar node)))))
+        :map (resolve-code-mapping node)
+        :seq (resolve-code-sequence node)
+        :val (resolve-code-scalar node)))))
 
 ;; ----------------------------------------------------------------------------
-;; Resolve dispatchers for yaml mode:
+;; Resolve dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
-(defn resolve-yaml-mapping [node]
-  {:map (map resolve-yaml-node
+(defn resolve-data-mapping [node]
+  {:map (map resolve-data-node
           (or (:% node) (:%% node)))})
 
-(defn resolve-yaml-sequence [node]
-  {:seq (map resolve-yaml-node
+(defn resolve-data-sequence [node]
+  {:seq (map resolve-data-node
           (or (:- node) (:-- node)))})
 
 (def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
@@ -168,40 +168,6 @@
       (re-matches re-null val) :nil
       :else :str)))
 
-(defn resolve-yaml-scalar [node]
-  (let [style (-> node first key)]
-    (case style
-      := (set/rename-keys node {:= (resolve-plain-scalar node)})
-      :$ (set/rename-keys node {:$ :str})
-      :' (set/rename-keys node {:' :str})
-      :| (set/rename-keys node {:| :str})
-      :> (set/rename-keys node {:> :str})
-      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
-
-(defn resolve-yaml-node
-  "Resolve nodes recursively in 'yaml' mode"
-  [node]
-  (let [tag (:! node)
-        node (dissoc node :&)]
-    (if (= tag "")
-      (resolve-script-node (dissoc node :!))
-      (case (node-type node)
-        :map (resolve-yaml-mapping node)
-        :seq (resolve-yaml-sequence node)
-        :val (resolve-yaml-scalar node)))))
-
-
-;; ----------------------------------------------------------------------------
-;; Resolve dispatchers for data mode:
-;; ----------------------------------------------------------------------------
-(defn resolve-data-mapping [node]
-  {:map (vec (map resolve-data-node
-               (or (:% node) (:%% node))))})
-
-(defn resolve-data-sequence [node]
-  {:seq (map resolve-data-node
-          (or (:- node) (:-- node)))})
-
 (defn resolve-data-scalar [node]
   (let [style (-> node first key)]
     (case style
@@ -212,22 +178,56 @@
       :> (set/rename-keys node {:> :str})
       ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
 
-(def data-mode-tags
-  ["tag:yaml.org,2002:map"
-   "tag:yaml.org,2002:seq"])
-
 (defn resolve-data-node
-  "Resolve nodes recursively in 'data' mode"
+  "Resolve nodes recursively in 'yaml' mode"
   [node]
   (let [tag (:! node)
         node (dissoc node :&)]
-    (when (and tag (not (some #{tag} data-mode-tags)))
+    (if (= tag "")
+      (resolve-code-node (dissoc node :!))
+      (case (node-type node)
+        :map (resolve-data-mapping node)
+        :seq (resolve-data-sequence node)
+        :val (resolve-data-scalar node)))))
+
+
+;; ----------------------------------------------------------------------------
+;; Resolve dispatchers for bare mode:
+;; ----------------------------------------------------------------------------
+(defn resolve-bare-mapping [node]
+  {:map (vec (map resolve-bare-node
+               (or (:% node) (:%% node))))})
+
+(defn resolve-bare-sequence [node]
+  {:seq (map resolve-bare-node
+          (or (:- node) (:-- node)))})
+
+(defn resolve-bare-scalar [node]
+  (let [style (-> node first key)]
+    (case style
+      := (set/rename-keys node {:= (resolve-plain-scalar node)})
+      :$ (set/rename-keys node {:$ :str})
+      :' (set/rename-keys node {:' :str})
+      :| (set/rename-keys node {:| :str})
+      :> (set/rename-keys node {:> :str})
+      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
+
+(def bare-mode-tags
+  ["tag:yaml.org,2002:map"
+   "tag:yaml.org,2002:seq"])
+
+(defn resolve-bare-node
+  "Resolve nodes recursively in 'bare' mode"
+  [node]
+  (let [tag (:! node)
+        node (dissoc node :&)]
+    (when (and tag (not (some #{tag} bare-mode-tags)))
       (throw (Exception.
-               (str "Unrecognized tag in data mode: !" tag))))
+               (str "Unrecognized tag in bare mode: !" tag))))
     (case (node-type node)
-      :map (resolve-data-mapping node)
-      :seq (resolve-data-sequence node)
-      :val (resolve-data-scalar node))))
+      :map (resolve-bare-mapping node)
+      :seq (resolve-bare-sequence node)
+      :val (resolve-bare-scalar node))))
 
 (comment
   (resolve

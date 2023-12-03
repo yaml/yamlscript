@@ -1,7 +1,7 @@
 # Copyright 2023 Ingy dot Net
 # This code is licensed under MIT license (See License for details)
 
-- name: yaml-mode mapping
+- name: data-mode mapping
   yamlscript: |
     foo: 42
     bar: 3.1415
@@ -27,7 +27,7 @@
 
 
 
-- name: yaml-mode sequence
+- name: data-mode sequence
   yamlscript: |
     - foo
     - 42
@@ -62,7 +62,7 @@
 
 
 
-- name: yaml-mode nested collections
+- name: data-mode nested collections
   yamlscript: |
     foo:
     - -42
@@ -103,10 +103,10 @@
 
 
 
-- name: yaml-mode with script-mode
+- name: data mode with code mode
   yamlscript: |
-    !yamlscript/0
-    foo: !ys inc(41)
+    !yamlscript/v0/data
+    foo: ! inc(41)
     bar: ! dec(43)
   print: |
     {"foo" (inc 41), "bar" (dec 43)}

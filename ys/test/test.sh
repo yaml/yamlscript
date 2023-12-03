@@ -32,11 +32,11 @@ ys -pe 'range: 25'
 
 ys -le 'range: 25'
 
-ys -ms -le 'range: 25'
+ys -mc -le 'range: 25'
 
-ys -ms -Ye 'range: 10'
+ys -mc -Ye 'range: 10'
 
-ys -ms -Ee 'range: 30'
+ys -mc -Ee 'range: 30'
 
 ys --compile "$ROOT/test/hello.ys"
 

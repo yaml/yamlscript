@@ -35,11 +35,11 @@
 
   (is (ys "-le" "a: b")
     "{\"a\":\"b\"}"
-    "-l uses data mode and prints json")
+    "-l uses bare mode and prints json")
 
   (is (ys "-e" "say: \"Hello\"")
     "Hello"
-    "-e uses script mode")
+    "-e uses code mode")
 
   (is (ys "-pe" "(+ 1 2)")
     "3"
@@ -69,9 +69,9 @@
     "123"
     "std/say is the YS std println")
 
-  (is (ys "-ms" "-le" "say: 12345" "-e" "=>: 67890")
+  (is (ys "-mc" "-le" "say: 12345" "-e" "=>: 67890")
     "12345\n67890"
-    "-l in script mode")
+    "-l in code mode")
 
   (has (ys "--to=foo")
     "must be one of: json, yaml, edn"
@@ -93,9 +93,9 @@
     "Error: Options --version and --debug are mutually exclusive"
     "Can't use other options with --version")
 
-  (has (ys "--mode=script" "--nrepl" "...")
+  (has (ys "--mode=code" "--nrepl" "...")
     "Error: Options --mode and --nrepl are mutually exclusive"
-    "Can't use i--mode with certain actions")
+    "Can't use --mode with certain actions")
 
   (has (ys "--kill" "-e" "...")
     "Error: Options --eval and --kill are mutually exclusive"

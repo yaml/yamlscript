@@ -12,7 +12,7 @@
 
 (test/load-yaml-test-files
   ["test/compiler-stack.yaml"
-   "test/yaml-mode.yaml"
+   "test/data-mode.yaml"
    "test/resolver.yaml"
    "test/compiler.yaml"]
   {:pick-func #(test/has-keys? [:yamlscript :resolve] %)

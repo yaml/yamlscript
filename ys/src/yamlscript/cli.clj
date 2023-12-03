@@ -73,12 +73,12 @@
     "Treat input as Clojure code"]
 
    ["-m" "--mode MODE"
-    "Add a mode tag: script, yaml, or data"
+    "Add a mode tag: code, data, or bare (only for --eval/-e)"
     :validate
-    [#(some #{%} ["s" "script", "y" "yaml", "d" "data"])
-     (str "must be one of: s, script, y, yaml, d or data")]]
+    [#(some #{%} ["c" "code", "d" "data", "b" "bare"])
+     (str "must be one of: c, code, d, data, b or bare")]]
    ["-p" "--print"
-    "Print the result of --run in script mode"]
+    "Print the result of --run in code mode"]
 
    ["-o" "--output"
     "Output file for --load or --compile"]
@@ -156,12 +156,12 @@ Options:
            (str/starts-with? code "!yamlscript/v0")
            (:clj opts))
          ""
-         (or (= "s" mode) (= "script" mode))
-         "--- !yamlscript/v0\n"
-         (or (= "y" mode) (= "yaml" mode))
-         "--- !yamlscript/v0/\n"
+         (or (= "c" mode) (= "code" mode))
+         "--- !yamlscript/v0/code\n"
          (or (= "d" mode) (= "data" mode))
          "--- !yamlscript/v0/data\n"
+         (or (= "b" mode) (= "bare" mode))
+         "--- !yamlscript/v0/bare\n"
          (:load opts)
          ""
          :else
@@ -377,7 +377,7 @@ Options:
     ;"--load"
     ;"--to=json"
     ;"--compile"
-    ; "--mode=script"
+    ; "--mode=code"
     ;"--help"
     ; "-e" "say: 123"
     #__)

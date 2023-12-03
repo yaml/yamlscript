@@ -64,7 +64,7 @@
 
 
 
-- name: Start in script mode
+- name: Start in code mode
   yamlscript: |
     !yamlscript/v0
     prn: 'Hello'
@@ -74,9 +74,19 @@
 
 
 
-- name: Start in yaml mode
+- name: Start in code mode with /code tag
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0/code
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:ysm [{:ysx "prn"} {:str "Hello"} {:ysx "die"} {:ysi "Noooo"}]}
+
+
+
+- name: Start in bare mode
+  yamlscript: |
+    !yamlscript/v0/bare
     prn: 'Hello'
     die: "Noooo"
   resolve: |
@@ -84,26 +94,7 @@
 
 
 
-- name: Start in yaml mode with !map tag
-  yamlscript: |
-    !yamlscript/v0/map
-    prn: 'Hello'
-    die: "Noooo"
-  resolve: |
-    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
-
-
-
-- name: Start in data mode
-  yamlscript: |
-    prn: 'Hello'
-    die: "Noooo"
-  resolve: |
-    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
-
-
-
-- name: Start in data mode explicitly
+- name: Start in data mode with !data tag
   yamlscript: |
     !yamlscript/v0/data
     prn: 'Hello'
@@ -113,7 +104,26 @@
 
 
 
-- name: Start in data mode with !!map tag
+- name: Start in bare mode
+  yamlscript: |
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Start in bare mode explicitly
+  yamlscript: |
+    !yamlscript/v0/bare
+    prn: 'Hello'
+    die: "Noooo"
+  resolve: |
+    {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
+
+
+
+- name: Start in bare mode with !!map tag
   yamlscript: |
     !!map
     prn: 'Hello'
@@ -123,25 +133,25 @@
 
 
 
-- name: Can't use ! tag in data mode
+- name: Can't use ! tag in bare mode
   error: true
   yamlscript: |
     prn: ! inc(41)
   resolve: |
-    "Unrecognized tag in data mode: !"
+    "Unrecognized tag in bare mode: !"
 
 
 
-- name: Tag ! switches from yaml mode to script mode
+- name: Tag ! switches from data mode to code mode
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0/data
     num: ! inc(41)
   resolve: |
     {:map [{:str "num"} {:ysx "inc(41)"}]}
 
 
 
-- name: Tag ! switches from script mode to yaml mode
+- name: Tag ! switches from code mode to data mode
   yamlscript: |
     !yamlscript/v0
     num: ! inc(41)
@@ -150,16 +160,16 @@
 
 
 
-- name: Tag ! switches from yaml mode to script mode
+- name: Tag ! switches from data mode to code mode
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0/data
     num: ! inc(41)
   resolve: |
     {:map [{:str "num"} {:ysx "inc(41)"}]}
 
 
 
-- name: Sequence in yaml mode after switch
+- name: Sequence in data mode after switch
   yamlscript: |
     !yamlscript/v0
     list =: !
@@ -173,7 +183,7 @@
 
 
 
-- name: Key syntax to switch to yaml mode
+- name: Key syntax to switch to data mode
   parse: true
   compose: true
   yamlscript: |

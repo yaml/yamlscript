@@ -1,11 +1,9 @@
-#!/usr/bin/env ys+0
+#!/usr/bin/env ys-0
 
 # Print the verses to "99 Bottles of Beer"
 #
 # usage:
 #   yamlscript 99-bottles.ys [<count>]
-
-!yamlscript/v0
 
 defn main(number=99):
   map say:

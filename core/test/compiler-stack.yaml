@@ -348,7 +348,7 @@
 
 
 
-- name: Top level scalar in yaml mode
+- name: Top level scalar in data mode
   yamlscript: |
     (foo bar)
   parse: |
@@ -360,7 +360,7 @@
 
 
 
-- name: Top level scalar in script mode
+- name: Top level scalar in code mode
   yamlscript: |
     !yamlscript/v0
     (foo bar)
@@ -387,9 +387,9 @@
 
 
 
-- name: Switch to script mode
+- name: Switch to code mode
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0/data
     str: foo bar
     num: ! inc(41)
     bar: ! ys/load("bar.yaml")
@@ -438,10 +438,10 @@
 - name: Shebang line with ys-0 and !yamlscript/... tag ignored
   yamlscript: |
     #!/usr/bin/env ys-0
-    !yamlscript/v0/
+    !yamlscript/v0/:
     say: "Hi"
   parse: |
-    "+MAP", :! "yamlscript/v0/"
+    "+MAP", :! "yamlscript/v0/:"
     "=VAL", := "say"
     "=VAL", :$ "Hi"
     "-MAP"
