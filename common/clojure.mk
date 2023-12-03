@@ -4,7 +4,7 @@
 ifneq (,$(findstring linux,$(ostype)))
   GRAALVM_SUBDIR :=
 
-  ifeq (ok,$(shell [[ $(machtype) == x86_64-*-linux-* ]] && echo ok))
+  ifeq (ok,$(shell [[ $(machtype) == x86_64-*-linux* ]] && echo ok))
     GRAALVM_ARCH := linux-x64
 
   else
