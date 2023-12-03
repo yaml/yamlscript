@@ -149,14 +149,14 @@ We wanted the contents of the fruits list to be included in the grocery list.</p
 Since every YAML file is a valid YAMLScript program, it certainly should be
 loaded just like any other YAML loader would do it.</p>
 <p>Let's fix this to do what we want:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token tag">!yamlscript/v0/</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token tag">!yamlscript/v0/data</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
 <p>Now when we run it:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-l</span> <span class="token parameter variable">-Y</span> grocery-list.yaml<br>- bread<br>- fruits:<br>  - apple<br>  - banana<br>  - cherry<br>- milk<br>$</code></pre>
 <p>There we go! We got our fruits!</p>
 <p>So what did we do here?
 We added 2 things:</p>
 <ul>
-<li>A <code>!yamlscript/v0/</code> tag at the top</li>
+<li>A <code>!yamlscript/v0/data</code> tag at the top</li>
 <li>A <code>!</code> tag before the <code>load</code> function call</li>
 </ul>
 <p>We won't get into the details of what these tags mean today, but you'll learn
@@ -513,7 +513,7 @@ You may ask it (politely) in one of these ways:</p>
 <li>Words are commands by default</li>
 </ul>
 </li>
-<li>Start the YS with the <code>!yamlscript/v0/</code> tag
+<li>Start the YS with the <code>!yamlscript/v0/data</code> tag
 <ul>
 <li>Words are data by default</li>
 </ul>
@@ -533,7 +533,7 @@ You may ask it (politely) in one of these ways:</p>
 <p>Imagine we have YAML files containing top level mappings such as:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># map1.yaml</span><br><span class="token key atrule">reindeer</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Dancer<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Blitzen<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Rudolph<br>  <span class="token key atrule">nosy</span><span class="token punctuation">:</span> <span class="token boolean important">true</span></code></pre>
 <p>We can pull data from these files into our YAML dynamically:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file1.ys</span><br><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">key1</span><span class="token punctuation">:</span> val1<br><span class="token key atrule">key2</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml")<br><span class="token key atrule">key3</span><span class="token punctuation">:</span> val3</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file1.ys</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">key1</span><span class="token punctuation">:</span> val1<br><span class="token key atrule">key2</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml")<br><span class="token key atrule">key3</span><span class="token punctuation">:</span> val3</code></pre>
 <p>Now if we &quot;ran&quot; the YS nothing would happen, but when we &quot;load&quot; it, we get the
 data we expect.</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> file1.ys<br><span class="token punctuation">{</span><span class="token string">"key1"</span><span class="token builtin class-name">:</span> <span class="token string">"val1"</span>, <span class="token string">"key2"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><span class="token string">"reindeer"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Dancer"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Blitzen"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Rudolph"</span>, <span class="token string">"nosy"</span><span class="token builtin class-name">:</span> true<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span>, <span class="token string">"key3"</span><span class="token builtin class-name">:</span> <span class="token string">"val3"</span><span class="token punctuation">}</span></code></pre>
@@ -546,10 +546,10 @@ Or it could be a mapping pair with the key <code>say</code> and the value <code>
 The starting tag tells us which it is.
 The <code>!yamlscript/v0</code> tag means that we start off things in a state where plain
 (unquoted) YAML scalars are code.
-OTOH, with <code>!yamlscript/v0/</code> these scalars are data like in normal YAML.</p>
+OTOH, with <code>!yamlscript/v0/data</code> these scalars are data like in normal YAML.</p>
 <p>The <code>!</code> tag is how we switch back and forth (toggle) between these two states.
 If you have existing YAML files and you want to use a couple of YS functions in
-them, start them with <code>!yamlscript/v0/</code> and then use <code>!</code> tags before the
+them, start them with <code>!yamlscript/v0/data</code> and then use <code>!</code> tags before the
 functional parts.</p>
 <p>Another way to accomplish the same result is:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file2.ys</span><br><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">map1 =</span><span class="token punctuation">:</span> load("map1.yaml")<br><br><span class="token key atrule">=></span><span class="token punctuation">:</span><br>  .<span class="token punctuation">{</span><br>    <span class="token punctuation">:</span>key1 "val1"<br>    <span class="token punctuation">:</span>key2 map1<br>    <span class="token punctuation">:</span>key3 "val3"<br>  <span class="token punctuation">}</span></code></pre>
@@ -563,7 +563,7 @@ More on keywords another day.</p>
 <h3>Merging Mappings and Joining Sequences</h3>
 <p>I'll leave you with the two most frequent requests that Santa gets from YAML
 kids: <code>merge</code> and <code>concat</code>.</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file3.ys</span><br><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>    load("map1.yaml")<br>    load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">concat</span><span class="token punctuation">:</span><br>    load("seq1.yaml")<br>    load("seq2.yaml")</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file3.ys</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>    load("map1.yaml")<br>    load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">concat</span><span class="token punctuation">:</span><br>    load("seq1.yaml")<br>    load("seq2.yaml")</code></pre>
 <p>When we were inventing YAML 20 years ago, one of the most confusing things we
 did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merge operation.</p>
 <p>It wasn't a good idea because:</p>
@@ -579,7 +579,7 @@ did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merg
 100s more (standard functions) in fact!
 (All in good time, my patient Advent-urers.)</p>
 <p>Let's end this day by making that last YS file even cooler than Rudolph's toes!</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml") + load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("seq1.yaml") + load("seq2.yaml")</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml") + load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("seq1.yaml") + load("seq2.yaml")</code></pre>
 <p>YAMLScript's <code>+</code> operator is a general purpose joiner.
 It's polymorphic for numbers, strings, sequences and mappings.</p>
 <p>As ususal, I hope you enjoyed today's post.
