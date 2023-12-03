@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2023-12-02T00:00:00Z</updated>
+    <updated>2023-12-03T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -37,7 +37,7 @@
       <content type="html">
         <![CDATA[
       <h3>Seasons Greetings, my YAML friends!</h3>
-<p>What if I told you that you could write a <strong>program in YAML</strong> that would<br>
+<p>What if I told you that you could write a <strong>program in YAML</strong> that would
 generate a Christmas tree?</p>
 <p>Well, you can! Here's how:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br>defn main(&amp;<span class="token punctuation">[</span>width<span class="token punctuation">]</span>)<span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width <span class="token punctuation">|</span><span class="token punctuation">|</span> 5<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  join(<br>    map(<br>      fn(<span class="token punctuation">[</span>n<span class="token punctuation">]</span> line(width<span class="token punctuation">,</span> n))<br>      (width .. 1)))<br>  + (trunk(width) * 2)<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  inc(num) * "<span class="token important">*"</span><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  ( spaces(num)<br>  + stars(((width <span class="token punctuation">-</span> num) * 2))<br>  + "\n")</code></pre>
@@ -102,11 +102,11 @@ defn tree(width):
 <pre class="language-bash"><code class="language-bash">$ ys tree.ys<br>     *<br>    ***<br>   *****<br>  *******<br> *********<br>     *<br>     *</code></pre>
 <p>That's a pretty nice tree, but it's a little small. Let's make it bigger!</p>
 <pre class="language-bash"><code class="language-bash">$ ys tree.ys <span class="token number">10</span><br>          *<br>         ***<br>        *****<br>       *******<br>      *********<br>     ***********<br>    *************<br>   ***************<br>  *****************<br> *******************<br>          *<br>          *</code></pre>
-<p>Welcome to the first day of YAMLScript Advent 2023!<br>
+<p>Welcome to the first day of YAMLScript Advent 2023!
 We're going to be writing a lot of YAMLScript this month, so let's get started…</p>
 <p>Wait! What is YAMLScript?</p>
-<p>YAMLScript is a new programming language that uses YAML as its syntax.<br>
-You can do anything in YAMLScript that you can do in a language like<br>
+<p>YAMLScript is a new programming language that uses YAML as its syntax.
+You can do anything in YAMLScript that you can do in a language like
 Python or JavaScript such as:</p>
 <ul>
 <li>Defining functions</li>
@@ -116,14 +116,14 @@ Python or JavaScript such as:</p>
 <li>Importing modules</li>
 <li>And more!</li>
 </ul>
-<p>YAMLScript looks and feels like an imperative programming language, but it's<br>
-actually a functional programming language.<br>
-This means that YAMLScript programs are made up of expressions that are<br>
+<p>YAMLScript looks and feels like an imperative programming language, but it's
+actually a functional programming language.
+This means that YAMLScript programs are made up of expressions that are
 evaluated to produce a result.</p>
 <p>But why would you even want to write a program in YAML?</p>
-<p>YAMLScript is a full-featured, general purpose programming language, but it's<br>
-also designed to be a great language for writing YAML configuration files.<br>
-To that point, almost all YAML files are valid YAMLScript programs!<br>
+<p>YAMLScript is a full-featured, general purpose programming language, but it's
+also designed to be a great language for writing YAML configuration files.
+To that point, almost all YAML files are valid YAMLScript programs!
 And they evaluate to the same result that a YAML loader would produce.</p>
 <p>For example, here's a YAML file that defines a list of fruits:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># fruits.yaml</span><br><span class="token punctuation">-</span> apple<br><span class="token punctuation">-</span> banana<br><span class="token punctuation">-</span> cherry</code></pre>
@@ -135,43 +135,43 @@ And they evaluate to the same result that a YAML loader would produce.</p>
 <pre class="language-python"><code class="language-python">$ python <span class="token operator">-</span>c <span class="token string">'["apple", "banana", "cherry"]'</span><br>$</code></pre>
 <p>To <em>evaluate</em> a YAMLScript program, we need to use the <code>--load</code> option:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> fruits.yaml<br><span class="token punctuation">[</span><span class="token string">"apple"</span>, <span class="token string">"banana"</span>, <span class="token string">"cherry"</span><span class="token punctuation">]</span><br>$</code></pre>
-<p>We got some JSON back!<br>
-That's because by default, <code>--load</code> evaluates the YAMLScript and prints the<br>
+<p>We got some JSON back!
+That's because by default, <code>--load</code> evaluates the YAMLScript and prints the
 result as JSON.</p>
-<p>What if we want to include these fruits in our YAML grocery list?<br>
+<p>What if we want to include these fruits in our YAML grocery list?
 Let's try it:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
 <p>Let's add the <code>--yaml</code> option to print the result as YAML:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> grocery-list.yaml <span class="token parameter variable">--yaml</span><br>- bread<br>- fruits: load<span class="token punctuation">(</span><span class="token string">"fruits.yaml"</span><span class="token punctuation">)</span><br>- milk<br>$</code></pre>
-<p>That's not what we wanted!<br>
+<p>That's not what we wanted!
 We wanted the contents of the fruits list to be included in the grocery list.</p>
-<p>But if you think about it, this is exactly what we asked for.<br>
-Since every YAML file is a valid YAMLScript program, it certainly should be<br>
+<p>But if you think about it, this is exactly what we asked for.
+Since every YAML file is a valid YAMLScript program, it certainly should be
 loaded just like any other YAML loader would do it.</p>
 <p>Let's fix this to do what we want:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token tag">!yamlscript/v0/</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
 <p>Now when we run it:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-l</span> <span class="token parameter variable">-Y</span> grocery-list.yaml<br>- bread<br>- fruits:<br>  - apple<br>  - banana<br>  - cherry<br>- milk<br>$</code></pre>
 <p>There we go! We got our fruits!</p>
-<p>So what did we do here?<br>
+<p>So what did we do here?
 We added 2 things:</p>
 <ul>
 <li>A <code>!yamlscript/v0/</code> tag at the top</li>
 <li>A <code>!</code> tag before the <code>load</code> function call</li>
 </ul>
-<p>We won't get into the details of what these tags mean today, but you'll learn<br>
+<p>We won't get into the details of what these tags mean today, but you'll learn
 about them soon enough.</p>
 <h3>YAMLScript Advent 2023 Teasers</h3>
-<p>My name is <a href="https://github.com/ingydotnet">Ingy döt Net</a>.<br>
+<p>My name is <a href="https://github.com/ingydotnet">Ingy döt Net</a>.
 I'm one of the original creators of the <a href="https://yaml.org/">YAML data language</a> and I lead the <a href="https://yaml.org/spec/1.2.2/ext/team/">YAML Language Development Team</a>.</p>
-<p>I've been working on YAMLScript for about a year now, and I'm excited to finally<br>
-share it with you.<br>
-I believe that YAMLScript is going to take YAML to exciting new places, while<br>
-remedying many of its shortcomings, limitations and frustrations.<br>
-I hope you'll come to agree as you join me on this holiday season unwrapping of<br>
+<p>I've been working on YAMLScript for about a year now, and I'm excited to finally
+share it with you.
+I believe that YAMLScript is going to take YAML to exciting new places, while
+remedying many of its shortcomings, limitations and frustrations.
+I hope you'll come to agree as you join me on this holiday season unwrapping of
 the gift that is YAMLScript!</p>
-<p>I also hope that you enjoyed this first day of the <strong>YAMLScript Advent 2023</strong>!<br>
-I'll be posting a new blog article every day this month, so stay tuned!<br>
+<p>I also hope that you enjoyed this first day of the <strong>YAMLScript Advent 2023</strong>!
+I'll be posting a new blog article every day this month, so stay tuned!
 Well at least until December 25th, but I might keep going after that. :-)</p>
 <p>Here's a sneak peek of some of the things to come:</p>
 <ul>
@@ -219,13 +219,13 @@ Gave the lustre of mid-day to dirt below.<br>
 When what to my wondering eyes should materialize?<br>
 But a miniature car, and eight tiny elephants.</p>
 </blockquote>
-<p>Well that was a bit weird.<br>
-Let's try again.<br>
-Don't worry, it's not that hard to write Winter holiday poetry when you have<br>
+<p>Well that was a bit weird.
+Let's try again.
+Don't worry, it's not that hard to write Winter holiday poetry when you have
 YAMLScript on your side!</p>
 <h3>Welcome to day 2 of YAMLScript Advent 2023!</h3>
-<p>Today we're going to write a program that generates a winter holiday poem in the<br>
-Mad Libs style.<br>
+<p>Today we're going to write a program that generates a winter holiday poem in the
+Mad Libs style.
 Along the way, we'll learn about several of YAMLScript's basic language features, including:</p>
 <ul>
 <li>The <code>load</code> function</li>
@@ -235,125 +235,125 @@ Along the way, we'll learn about several of YAMLScript's basic language features
 <li>Random numbers</li>
 <li>String interpolation</li>
 </ul>
-<p>So where is this awesome YAMLScript poetry generator?<br>
-Well, it's right here, of course; wrapped up in a nice little package for you to<br>
+<p>So where is this awesome YAMLScript poetry generator?
+Well, it's right here, of course; wrapped up in a nice little package for you to
 open and enjoy!</p>
 <details><summary><strong style="color:green">Open Me!!!</strong></summary>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><span class="token comment"># twas-a-bit -- Generate a winter-holiday poem in the Mad Libs style</span><br><br><span class="token key atrule">defn main()</span><span class="token punctuation">:</span><br>  <span class="token key atrule">-></span><span class="token punctuation">:</span> poem() say<br><br><span class="token key atrule">database =</span><span class="token punctuation">:</span> load("a<span class="token punctuation">-</span>bit<span class="token punctuation">-</span>of<span class="token punctuation">-</span>data.yaml")<br><br><span class="token comment"># Fetch a random word from the database:</span><br><span class="token key atrule">defn W(kind)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">rand-nth</span><span class="token punctuation">:</span> get(database<span class="token punctuation">,</span> name(kind))<br><br><span class="token key atrule">defn poem()</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string"><br>  'Twas a bit before $W(:holiday), and all through the $W(:place),<br>  not a creature was stirring, not even a $W(:animal).<br>  The stockings were hung by the $W(:hang-by) with care,<br>  In hopes that St. $W(:saint) soon would be there.<br>  The $W(:children) were nestled all snug in their $W(:beds),<br>  While visions of $W(:adj)-$W(:candies) danced in their heads.<br>  And $W(:relative) in their 'kerchief, and I in my $W(:hat),<br>  Had just settled down for a long winter's $W(:slumber).<br>  When out on the $W(:outside) there arose such a clatter,<br>  I sprang from my $W(:seat) to see what was the matter.<br>  Away to the window, I flew like a $W(:flyer),<br>  Tore open the $W(:covers) and threw up the $W(:cover).<br>  The $W(:luminary) on the breast of the new-fallen $W(:fallers),<br>  Gave the lustre of mid-day to $W(:outers) below.<br>  When what to my wondering eyes should $W(:arrive)?<br>  But a miniature $W(:vehicle), and eight tiny $W(:service-animals).</span></code></pre>
 </details>
 <p>You can run this program with one of the following commands:</p>
 <pre class="language-bash"><code class="language-bash">$ ys twas-a-bit<br><br>$ <span class="token function">chmod</span> +x twas-a-bit <span class="token operator">&amp;&amp;</span> ./twas-a-bit</code></pre>
-<p>and you'll (very likely) get a different version of the poem every time you run<br>
+<p>and you'll (very likely) get a different version of the poem every time you run
 it!</p>
-<p>You might be wondering where all the data for this poem comes from.<br>
+<p>You might be wondering where all the data for this poem comes from.
 I hid it in a secret place... see if you can find it!</p>
 <details><summary><strong style="color:red">Don't Open Me!!!</strong></summary>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># a-bit-of-data.yaml -- Data for a-bit-before</span><br><br><span class="token key atrule">holiday</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>Christmas<span class="token punctuation">,</span> Hanukkah<span class="token punctuation">,</span> Kwanzaa<span class="token punctuation">,</span> Winter<span class="token punctuation">,</span> Solstice<span class="token punctuation">,</span> Yule<span class="token punctuation">,</span> Saturnalia<span class="token punctuation">]</span><br><span class="token key atrule">place</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>house<span class="token punctuation">,</span> apartment<span class="token punctuation">,</span> condo<span class="token punctuation">,</span> igloo<span class="token punctuation">,</span> cave<span class="token punctuation">,</span> castle<span class="token punctuation">,</span> mansion<span class="token punctuation">,</span> tent<span class="token punctuation">,</span> hut<span class="token punctuation">]</span><br><span class="token key atrule">animal</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>mouse<span class="token punctuation">,</span> cat<span class="token punctuation">,</span> dog<span class="token punctuation">,</span> bird<span class="token punctuation">,</span> fish<span class="token punctuation">,</span> snake<span class="token punctuation">,</span> lizard<span class="token punctuation">,</span> frog<span class="token punctuation">,</span> turtle<span class="token punctuation">,</span> rabbit<span class="token punctuation">]</span><br><span class="token key atrule">hang-by</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>chimney<span class="token punctuation">,</span> fireplace<span class="token punctuation">,</span> window<span class="token punctuation">,</span> toilet<span class="token punctuation">,</span> door<span class="token punctuation">,</span> wall<span class="token punctuation">,</span> faucet<span class="token punctuation">,</span> tree<span class="token punctuation">]</span><br><span class="token key atrule">saint</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>Nicholas<span class="token punctuation">,</span> Claus<span class="token punctuation">,</span> Krampus<span class="token punctuation">,</span> Frost<span class="token punctuation">,</span> Jack<span class="token punctuation">,</span> Frosty<span class="token punctuation">,</span> Santa<span class="token punctuation">,</span> Bernard<span class="token punctuation">]</span><br><span class="token key atrule">children</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>children<span class="token punctuation">,</span> kids<span class="token punctuation">,</span> tots<span class="token punctuation">,</span> babies<span class="token punctuation">,</span> offspring<span class="token punctuation">,</span> spawn<span class="token punctuation">,</span> progeny<span class="token punctuation">,</span> brats<span class="token punctuation">]</span><br><span class="token key atrule">beds</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>beds<span class="token punctuation">,</span> bunks<span class="token punctuation">,</span> cots<span class="token punctuation">,</span> hammocks<span class="token punctuation">,</span> pallets<span class="token punctuation">,</span> mats<span class="token punctuation">,</span> futons<span class="token punctuation">,</span> blankets<span class="token punctuation">]</span><br><span class="token key atrule">adj</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>sweet<span class="token punctuation">,</span> sour<span class="token punctuation">,</span> salty<span class="token punctuation">,</span> bitter<span class="token punctuation">,</span> spicy<span class="token punctuation">,</span> savory<span class="token punctuation">,</span> pungent<span class="token punctuation">,</span> tart<span class="token punctuation">,</span> tangy<span class="token punctuation">]</span><br><span class="token key atrule">candies</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>candies<span class="token punctuation">,</span> chocolates<span class="token punctuation">,</span> sweets<span class="token punctuation">,</span> cookies<span class="token punctuation">,</span> cakes<span class="token punctuation">,</span> pies<span class="token punctuation">,</span> pastries<span class="token punctuation">]</span><br><span class="token key atrule">relative</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>mamma<span class="token punctuation">,</span> papa<span class="token punctuation">,</span> sis<span class="token punctuation">,</span> bro<span class="token punctuation">,</span> aunty<span class="token punctuation">,</span> uncle<span class="token punctuation">,</span> cuz<span class="token punctuation">,</span> gram<span class="token punctuation">,</span> gramps<span class="token punctuation">]</span><br><span class="token key atrule">hat</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>cap<span class="token punctuation">,</span> hat<span class="token punctuation">,</span> bonnet<span class="token punctuation">,</span> beanie<span class="token punctuation">,</span> beret<span class="token punctuation">,</span> fedora<span class="token punctuation">,</span> sombrero<span class="token punctuation">,</span> helmet<span class="token punctuation">,</span> crown<span class="token punctuation">]</span><br><span class="token key atrule">slumber</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>nap<span class="token punctuation">,</span> sleep<span class="token punctuation">,</span> slumber<span class="token punctuation">,</span> snooze<span class="token punctuation">,</span> rest<span class="token punctuation">,</span> hibernation<span class="token punctuation">,</span> siesta<span class="token punctuation">,</span> doze<span class="token punctuation">]</span><br><span class="token key atrule">outside</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>lawn<span class="token punctuation">,</span> yard<span class="token punctuation">,</span> field<span class="token punctuation">,</span> forest<span class="token punctuation">,</span> woods<span class="token punctuation">,</span> jungle<span class="token punctuation">,</span> desert<span class="token punctuation">,</span> tundra<span class="token punctuation">,</span> ocean<span class="token punctuation">]</span><br><span class="token key atrule">seat</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>bed<span class="token punctuation">,</span> chair<span class="token punctuation">,</span> couch<span class="token punctuation">,</span> sofa<span class="token punctuation">,</span> futon<span class="token punctuation">,</span> hammock<span class="token punctuation">,</span> bench<span class="token punctuation">,</span> stool<span class="token punctuation">,</span> throne<span class="token punctuation">]</span><br><span class="token key atrule">flyer</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>flash<span class="token punctuation">,</span> bolt<span class="token punctuation">,</span> bullet<span class="token punctuation">,</span> rocket<span class="token punctuation">,</span> plane<span class="token punctuation">,</span> jet<span class="token punctuation">,</span> eagle<span class="token punctuation">,</span> hawk<span class="token punctuation">,</span> falcon<span class="token punctuation">]</span><br><span class="token key atrule">covers</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>shutters<span class="token punctuation">,</span> blinds<span class="token punctuation">,</span> curtains<span class="token punctuation">,</span> shades<span class="token punctuation">,</span> drapes<span class="token punctuation">,</span> screens<span class="token punctuation">,</span> panels<span class="token punctuation">]</span><br><span class="token key atrule">cover</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>shutter<span class="token punctuation">,</span> blind<span class="token punctuation">,</span> curtain<span class="token punctuation">,</span> shade<span class="token punctuation">,</span> drape<span class="token punctuation">,</span> screen<span class="token punctuation">,</span> panel<span class="token punctuation">]</span><br><span class="token key atrule">luminary</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>moon<span class="token punctuation">,</span> sun<span class="token punctuation">,</span> star<span class="token punctuation">,</span> planet<span class="token punctuation">,</span> comet<span class="token punctuation">,</span> asteroid<span class="token punctuation">,</span> meteor<span class="token punctuation">,</span> satellite<span class="token punctuation">]</span><br><span class="token key atrule">fallers</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>snow<span class="token punctuation">,</span> rain<span class="token punctuation">,</span> hail<span class="token punctuation">,</span> sleet<span class="token punctuation">,</span> ice<span class="token punctuation">,</span> slush<span class="token punctuation">,</span> frost<span class="token punctuation">,</span> dew<span class="token punctuation">,</span> fog<span class="token punctuation">,</span> mist<span class="token punctuation">]</span><br><span class="token key atrule">outers</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>trees<span class="token punctuation">,</span> bushes<span class="token punctuation">,</span> shrubs<span class="token punctuation">,</span> flowers<span class="token punctuation">,</span> grass<span class="token punctuation">,</span> weeds<span class="token punctuation">,</span> rocks<span class="token punctuation">,</span> dirt<span class="token punctuation">,</span> sand<span class="token punctuation">]</span><br><span class="token key atrule">arrive</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>appear<span class="token punctuation">,</span> arrive<span class="token punctuation">,</span> come<span class="token punctuation">,</span> materialize<span class="token punctuation">,</span> manifest<span class="token punctuation">,</span> show up<span class="token punctuation">,</span> land<span class="token punctuation">]</span><br><span class="token key atrule">vehicle</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>sleigh<span class="token punctuation">,</span> car<span class="token punctuation">,</span> truck<span class="token punctuation">,</span> van<span class="token punctuation">,</span> bus<span class="token punctuation">,</span> train<span class="token punctuation">,</span> plane<span class="token punctuation">,</span> boat<span class="token punctuation">,</span> ship<span class="token punctuation">,</span> rocket<span class="token punctuation">]</span><br><span class="token key atrule">service-animals</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>reindeer<span class="token punctuation">,</span> horses<span class="token punctuation">,</span> camels<span class="token punctuation">,</span> elephants<span class="token punctuation">,</span> oxen<span class="token punctuation">,</span> donkeys<span class="token punctuation">,</span> mules<span class="token punctuation">]</span></code></pre>
 </details>
 <h3>The <code>load</code> Function</h3>
-<p>If you found the secret database you can see that it's just a YAML file.<br>
-Our YAMLScript program loads this file using the <code>load</code> function.<br>
-The <code>load</code> function is one of the most important functions in YAMLScript.<br>
+<p>If you found the secret database you can see that it's just a YAML file.
+Our YAMLScript program loads this file using the <code>load</code> function.
+The <code>load</code> function is one of the most important functions in YAMLScript.
 It reads a YAMLScript file, evaluates it, and returns the result.</p>
-<p>But we loaded a YAML file, not a YAMLScript file.<br>
-How did that work?<br>
-Remember that (almost) every YAML file is a valid YAMLScript program, so it just<br>
+<p>But we loaded a YAML file, not a YAMLScript file.
+How did that work?
+Remember that (almost) every YAML file is a valid YAMLScript program, so it just
 works.</p>
-<p>We can also use it to load a JSON data file.<br>
-Why?<br>
-Because JSON is a subset of YAML.<br>
-That means that (absolutely) every JSON file is a valid YAML file, and therefore<br>
+<p>We can also use it to load a JSON data file.
+Why?
+Because JSON is a subset of YAML.
+That means that (absolutely) every JSON file is a valid YAML file, and therefore
 every JSON file is a valid YAMLScript program!</p>
-<p>The <code>load</code> function is just one of literally hundreds of core functions<br>
-available to you by default in YAMLScript.<br>
-It's part of the YAMLScript standard library.<br>
-These functions give you the ability to code anything possible in any modern<br>
-programming language.<br>
+<p>The <code>load</code> function is just one of literally hundreds of core functions
+available to you by default in YAMLScript.
+It's part of the YAMLScript standard library.
+These functions give you the ability to code anything possible in any modern
+programming language.
 We'll be learning more about them in the coming days.</p>
 <h3>Defining Functions</h3>
-<p>We defined 3 functions in our poem generator: <code>main</code>, <code>W</code>, and <code>poem</code>.<br>
+<p>We defined 3 functions in our poem generator: <code>main</code>, <code>W</code>, and <code>poem</code>.
 We did this using <code>defn</code>, which is short for &quot;define function&quot;.</p>
-<p>Here's a simple function that tells you how far away you are from the answer to<br>
+<p>Here's a simple function that tells you how far away you are from the answer to
 life, the universe, and everything:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">defn how-far-away(n)</span><span class="token punctuation">:</span> abs(42 <span class="token punctuation">-</span> n)</code></pre>
-<p>In YAML terms this is a mapping pair whose key is a plain (unquoted) string<br>
-containing <code>defn</code>, the function name, and the function parameters.<br>
+<p>In YAML terms this is a mapping pair whose key is a plain (unquoted) string
+containing <code>defn</code>, the function name, and the function parameters.
 The mapping pair's value is the function body, which is a YAMLScript expression.</p>
 <p>A YAMLScript function returns the value of its last evaluated expression.</p>
 <h3>Calling Functions</h3>
-<p>There are a lot of ways to call a function in YAMLScript.<br>
-In fact, there are a lot of ways to do almost everything in YAMLScript.<br>
+<p>There are a lot of ways to call a function in YAMLScript.
+In fact, there are a lot of ways to do almost everything in YAMLScript.
 The only hard and fast rule is that the entire program must be valid YAML.</p>
 <p>Consider this expression:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">map inc</span><span class="token punctuation">:</span> range(1<span class="token punctuation">,</span> 10)</code></pre>
-<p>Here we are calling 2 functions: <code>map</code> and <code>range</code>.<br>
+<p>Here we are calling 2 functions: <code>map</code> and <code>range</code>.
 Another way to write this would be:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">map inc</span><span class="token punctuation">:</span><br>  <span class="token key atrule">range</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">10</span></code></pre>
 <p>or:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">=></span><span class="token punctuation">:</span> map(inc<span class="token punctuation">,</span> range(1<span class="token punctuation">,</span> 10))</code></pre>
 <p>or:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">-></span><span class="token punctuation">:</span> range(1<span class="token punctuation">,</span> 10)<span class="token punctuation">,</span> map(inc)</code></pre>
-<p>There's actually many more ways to write this, but this is only day 2 of<br>
+<p>There's actually many more ways to write this, but this is only day 2 of
 YAMLScript Advent 2023, so we'll save those for later.</p>
 <p>In general, these 2 forms are equivalent:</p>
 <pre class="language-yaml"><code class="language-yaml">a b<span class="token punctuation">,</span> <span class="token key atrule">c</span><span class="token punctuation">:</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> f<br><span class="token punctuation">---</span><br>a(b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">,</span> e<span class="token punctuation">,</span> f)</code></pre>
-<p>In YAMLScript, a function call is either a mapping pair or a scalar.<br>
-When it is a mapping pair, the key and the value can both have 1 or more<br>
-expressions.<br>
-The first expression on the key side is the function name and all the rest of<br>
-the expressions on both sides are the function arguments.<br>
-When it is a scalar, a function name is followed by a parenthesized list of<br>
-arguments.<br>
-Note that the opening parenthesis must immediately follow the function name<br>
+<p>In YAMLScript, a function call is either a mapping pair or a scalar.
+When it is a mapping pair, the key and the value can both have 1 or more
+expressions.
+The first expression on the key side is the function name and all the rest of
+the expressions on both sides are the function arguments.
+When it is a scalar, a function name is followed by a parenthesized list of
+arguments.
+Note that the opening parenthesis must immediately follow the function name
 without any intervening whitespace.</p>
-<p>You may have noticed a few more functions just now: <code>inc</code>, <code>=&gt;</code>, and <code>-&gt;</code>.<br>
-Well, <code>inc</code> is a function but we didn't call it directly.<br>
+<p>You may have noticed a few more functions just now: <code>inc</code>, <code>=&gt;</code>, and <code>-&gt;</code>.
+Well, <code>inc</code> is a function but we didn't call it directly.
 We passed it as an argument to the <code>map</code> function.</p>
 <p>I'll tell you about <code>=&gt;</code> and <code>-&gt;</code> later.</p>
 <blockquote>
 <h3>Comma Chameleon</h3>
 <p>I was going to save this for later, but I just can't wait...</p>
 <p><strong>Commas are a Lie!</strong></p>
-<p>In YAMLScript, commas are optional whitespace.<br>
-You can use them to make your code more readable, if that's your thing.<br>
+<p>In YAMLScript, commas are optional whitespace.
+You can use them to make your code more readable, if that's your thing.
 It's not my thing, so I won't use them much from here on out.</p>
 </blockquote>
 <h3>Variables</h3>
-<p>One of my favorite things about YAMLScript is that you can use any word as a<br>
-variable or function name.<br>
+<p>One of my favorite things about YAMLScript is that you can use any word as a
+variable or function name.
 We call these names &quot;symbols&quot;.</p>
-<p>For example almost every language has an <code>if</code> keyword, and (since it is a<br>
-special keyword) you can't use it for a name.<br>
-In YAMLScript you are free to use the <code>if</code> symbol (as a variable or function<br>
-name) as long as you don't need to use the standard <code>if</code> function in the same<br>
+<p>For example almost every language has an <code>if</code> keyword, and (since it is a
+special keyword) you can't use it for a name.
+In YAMLScript you are free to use the <code>if</code> symbol (as a variable or function
+name) as long as you don't need to use the standard <code>if</code> function in the same
 scope.</p>
 <p>We assign a value to a variable like so:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">foo =</span><span class="token punctuation">:</span> <span class="token number">42</span></code></pre>
-<p>This is a mapping pair whose key is a plain string containing the variable name<br>
-followed by <code>=:</code> separated by at least one space character.<br>
-The pair value is the assignment value.<br>
+<p>This is a mapping pair whose key is a plain string containing the variable name
+followed by <code>=:</code> separated by at least one space character.
+The pair value is the assignment value.
 Simple!</p>
 <h3>Strings</h3>
-<p>If you know your YAML, you know that YAML has 5 different styles to represent<br>
-a scalar value (a string, number, boolean, etc).<br>
-The styles are called &quot;plain&quot; (unquoted), &quot;single-quoted&quot;, &quot;double-quoted&quot;,<br>
-&quot;literal&quot;, and &quot;folded&quot;.<br>
-Plain scalar turns strings, numbers, booleans, etc.<br>
+<p>If you know your YAML, you know that YAML has 5 different styles to represent
+a scalar value (a string, number, boolean, etc).
+The styles are called &quot;plain&quot; (unquoted), &quot;single-quoted&quot;, &quot;double-quoted&quot;,
+&quot;literal&quot;, and &quot;folded&quot;.
+Plain scalar turns strings, numbers, booleans, etc.
 The other 4 styles are always strings.</p>
-<p>In YAMLScript code, the scalar style is very important.<br>
-Symbols and expressions are always plain scalars.<br>
+<p>In YAMLScript code, the scalar style is very important.
+Symbols and expressions are always plain scalars.
 The 4 other styles are used for strings.</p>
 <h3>Random Numbers</h3>
-<p>We used the <code>rand-nth</code> function to select a random value from a list.<br>
-Not much to say about that, except that it's a function that takes a list as an<br>
+<p>We used the <code>rand-nth</code> function to select a random value from a list.
+Not much to say about that, except that it's a function that takes a list as an
 argument and returns a random value from it.</p>
 <h3>String Interpolation</h3>
-<p>YAMLScript strings written in the &quot;single-quoted&quot; or &quot;folded&quot; styles are just<br>
-strings, but when you use the &quot;double-quoted&quot; or &quot;literal&quot; styles, the strings<br>
+<p>YAMLScript strings written in the &quot;single-quoted&quot; or &quot;folded&quot; styles are just
+strings, but when you use the &quot;double-quoted&quot; or &quot;literal&quot; styles, the strings
 have interpolation super powers!</p>
-<p>Interpolation is the process of inserting the value of variables or expressions<br>
-into a string in the place where they appear.<br>
-In YAMLScript, these expanding objects are indicated by a <code>$</code> character<br>
+<p>Interpolation is the process of inserting the value of variables or expressions
+into a string in the place where they appear.
+In YAMLScript, these expanding objects are indicated by a <code>$</code> character
 immediately followed by the variable or expression.</p>
 <p>This is pretty much the same as string interpolation in a shell like Bash:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token assign-left variable">name</span><span class="token operator">=</span>World<br><span class="token builtin class-name">echo</span> <span class="token string">"Hello <span class="token variable">$name</span>. The answer is <span class="token variable"><span class="token variable">$((</span><span class="token number">43</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token variable">))</span></span>."</span></code></pre>
@@ -361,15 +361,15 @@ immediately followed by the variable or expression.</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">name =</span><span class="token punctuation">:</span> <span class="token string">"World"</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $name. The answer is $(43 - 1)."</span></code></pre>
 <p>You can also interpolate a YAMLScript function call (symbol followed by argument list) like this:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $inc(41)."</span></code></pre>
-<p>In most langauages that support interpolation <code>inc</code> would expand as a variable,<br>
-but in YAMLScript it's a function and the parenthesized argument list is part of<br>
+<p>In most langauages that support interpolation <code>inc</code> would expand as a variable,
+but in YAMLScript it's a function and the parenthesized argument list is part of
 the expression.</p>
 <p>This is the kind of interpolation syntax we used in our poem generator program.</p>
 <h3>Conclusion</h3>
-<p>Well that wraps up day 2 of the YAMLScript Advent 2023.<br>
+<p>Well that wraps up day 2 of the YAMLScript Advent 2023.
 I hope you enjoyed it, and learned a bit more about YAMLScript.</p>
-<p>Honestly, at this point you probaby have more questions than answers.<br>
-Luckily for you, December has more than 2 days in it.<br>
+<p>Honestly, at this point you probaby have more questions than answers.
+Luckily for you, December has more than 2 days in it.
 See you tomorrow!</p>
 <p>I'll leave you with a little poem that a close friend of mine just wrote:</p>
 <blockquote>
@@ -390,6 +390,198 @@ Gave the lustre of mid-day to flowers below.<br>
 When what to my wondering eyes should materialize?<br>
 But a miniature train, and eight tiny oxen.</p>
 </blockquote>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Load em Up!</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-03/"/>
+      <updated>2023-12-03T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-03/</id>
+      <content type="html">
+        <![CDATA[
+      <blockquote>
+<p>On the 3rd day of Advent, my YS gave to me...<br>
+A sequence in a map tree!</p>
+</blockquote>
+<p>Did you know that all JSON <em>is</em> YAML?
+You should, because I told you that <a href="/posts/advent-2023/dec-02/">yesterday</a>!</p>
+<p>It's true.
+YAML is a superset of JSON.
+Both in terms of syntax and data model.</p>
+<p>This means that any possible valid JSON input is also valid as a YAML input.
+A proper YAML loader and a JSON loader should produce the same data structure
+from the same JSON input.</p>
+<blockquote>
+<p>Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema</p>
+</blockquote>
+<h3>Welcome to day 3 of YAMLScript Advent 2023!</h3>
+<p>This YAML/JSON relationship has some interesting implications for people
+interacting with systems that read YAML or JSON as input.</p>
+<p>People often prefer to read or write data in YAML because it's more
+human-friendly, while JSON is more machine-friendly because of its sheer
+simplicity and robust tooling.
+It's quite common to see people configure their systems that have JSON inputs by
+using YAML instead, and setting things up to convert the hand maintained YAML to
+JSON before the system sees it.
+It can also be helpful to format large JSON API responses as YAML so that they
+are easier to read.</p>
+<p>Going the other way, people can refactor large YAML configurations by first
+converting them to JSON, using JSON tools like <code>jq</code> to manipulate the data and
+then converting the data back to YAML.</p>
+<p>YAMLScript is an ideal technology for performing these kinds of conversions and
+manipulations.</p>
+<h3>Loading vs Running YAMLScript</h3>
+<p>On one hand, YAMLScript is a complete programming language that you can use to
+for writing new applications (and libraries).
+In YAMLScript jargon, we &quot;run&quot; these applications.
+We'll discuss YAMLScript apps and &quot;running&quot; them extensively in the coming days.</p>
+<p>Today we are covering YAMLScript's purpose we just described: reading YAML
+files into data; possibly transforming the data dynamically along the way.</p>
+<p>This use of YAMLScript is called &quot;loading&quot; and can be done on most existing YAML
+files and all existing JSON files.</p>
+<details><summary>What does "most" mean?</summary>
+<p>When I say &quot;most YAML input files&quot; I mean YAML input that fits into the JSON
+data model.
+Almost all YAML files used for configuration purposes fall into this category.</p>
+<p>Specifically:</p>
+<ul>
+<li>Mapping keys must be strings.</li>
+<li>Aliases may not create circular references.</li>
+<li>Custom tags (those beyond the YAML 1.2 JSON Schema) must not be used.</li>
+</ul>
+<p>I've never seen any of those things used in a configuration file.</p>
+<hr>
+</details>
+<p>Let's look at an example.</p>
+<p>YAML uses the term &quot;load&quot; to refer to the process of a computer program
+converting a YAML text into a data structure in memory.
+It is common for a YAML framework to have a <code>load</code> (and <code>dump</code>) function or
+method as its primary API.</p>
+<p>Here's a Python single line program that loads a YAML text into a Python
+dictionary and and then prints it.</p>
+<pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yaml; print(yaml.safe_load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
+<p>YAMLScript will soon offer a binding in your favorite language that will do the
+same thing:</p>
+<pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yamlscript; print(yamlscript.load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
+<p>A major goal of the YAMLScript project is to have these YAMLScript binding
+libraries be the best way to load YAML config files in all modern programming
+languages.
+This will be a big improvement over the current situation where every YAML
+framework has its own API and its own set of bugs and quirks.</p>
+<h3>Loading YAMLScript From the Command Line</h3>
+<p>The Python and other language bindings are not ready yet, but we can still load
+YAMLScript.
+We can do it from the command line using the <code>ys</code> command with the <code>--load</code>
+option.</p>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-le</span> <span class="token string">'Advent day: 3'</span><br><span class="token punctuation">{</span><span class="token string">"Advent day"</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
+<blockquote>
+<p>Note: The <code>-le</code> option is a short for <code>-l</code> (short for <code>--load</code>) and <code>-e</code>.</p>
+</blockquote>
+<p>Since the command line doesn't have any way to store the loaded YAML (like a
+programming language would as a data structure) we have to get it back as text.
+By default, <code>ys</code> prints the loaded YAML as JSON.</p>
+<p>That may seem strange; a YAML loader defaulting to JSON.
+But it's not strange at all, for two reasons:</p>
+<ul>
+<li>JSON <em>is</em> YAML. Remember?!</li>
+<li>JSON is the de facto Lingua Franca of inter-program communication.</li>
+</ul>
+<p>Put another way, <code>ys</code> outputs YAML in its most compatible format.</p>
+<p>In a programming language, we load YAML data into an object and pass it to some
+function to do something with it.
+In the CLI-as-programming-language analogy, the functions are other programs!</p>
+<h3>Loading YAML Dynamically</h3>
+<p>The main point of today's post is to show how YAMLScript can be used as a normal
+YAML loader.
+But of course, YS has SuperPowers™ that other YAML loaders don't have.</p>
+<blockquote>
+<p>NOTE: From now on I will sometimes use &quot;YS&quot; as shorthand for &quot;YAMLScript&quot;.
+This is distinct from <code>ys</code> which is the command-line tool that runs/loads YS.</p>
+</blockquote>
+<p>With great SuperPowers comes SuperResponsibility.
+YS won't use its SuperPowers unless you ask it to.
+You may ask it (politely) in one of these ways:</p>
+<ul>
+<li>Start the YS with the <code>!yamlscript/v0</code> tag
+<ul>
+<li>Words are commands by default</li>
+</ul>
+</li>
+<li>Start the YS with the <code>!yamlscript/v0/</code> tag
+<ul>
+<li>Words are data by default</li>
+</ul>
+</li>
+<li>Use a <code>ys-0</code> shebang line like: <code>#!/usr/bin/env ys-0</code>
+<ul>
+<li>Implicitly defaults to <code>!yamlscript/v0</code></li>
+</ul>
+</li>
+<li>Use the <code>-e</code> option for YS one-liners
+<ul>
+<li>Imlicitly defaults to <code>!yamlscript/v0</code> (for one-liner convenience)</li>
+</ul>
+</li>
+</ul>
+<p>After that you are good to go!</p>
+<p>Imagine we have YAML files containing top level mappings such as:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># map1.yaml</span><br><span class="token key atrule">reindeer</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Dancer<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Blitzen<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Rudolph<br>  <span class="token key atrule">nosy</span><span class="token punctuation">:</span> <span class="token boolean important">true</span></code></pre>
+<p>We can pull data from these files into our YAML dynamically:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file1.ys</span><br><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">key1</span><span class="token punctuation">:</span> val1<br><span class="token key atrule">key2</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml")<br><span class="token key atrule">key3</span><span class="token punctuation">:</span> val3</code></pre>
+<p>Now if we &quot;ran&quot; the YS nothing would happen, but when we &quot;load&quot; it, we get the
+data we expect.</p>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> file1.ys<br><span class="token punctuation">{</span><span class="token string">"key1"</span><span class="token builtin class-name">:</span> <span class="token string">"val1"</span>, <span class="token string">"key2"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><span class="token string">"reindeer"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Dancer"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Blitzen"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Rudolph"</span>, <span class="token string">"nosy"</span><span class="token builtin class-name">:</span> true<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span>, <span class="token string">"key3"</span><span class="token builtin class-name">:</span> <span class="token string">"val3"</span><span class="token punctuation">}</span></code></pre>
+<p>Now I can explain those pesky YAML tags!
+What does this YS mapping pair mean?</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token number">123</span></code></pre>
+<p>Well, it depends.
+It could be a command to print the number 123 as text to the console.
+Or it could be a mapping pair with the key <code>say</code> and the value <code>123</code>.
+The starting tag tells us which it is.
+The <code>!yamlscript/v0</code> tag means that we start off things in a state where plain
+(unquoted) YAML scalars are code.
+OTOH, with <code>!yamlscript/v0/</code> these scalars are data like in normal YAML.</p>
+<p>The <code>!</code> tag is how we switch back and forth (toggle) between these two states.
+If you have existing YAML files and you want to use a couple of YS functions in
+them, start them with <code>!yamlscript/v0/</code> and then use <code>!</code> tags before the
+functional parts.</p>
+<p>Another way to accomplish the same result is:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file2.ys</span><br><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">map1 =</span><span class="token punctuation">:</span> load("map1.yaml")<br><br><span class="token key atrule">=></span><span class="token punctuation">:</span><br>  .<span class="token punctuation">{</span><br>    <span class="token punctuation">:</span>key1 "val1"<br>    <span class="token punctuation">:</span>key2 map1<br>    <span class="token punctuation">:</span>key3 "val3"<br>  <span class="token punctuation">}</span></code></pre>
+<p>Here everything is code, and the final expression is the data we want to load.
+When you run <code>ys --load file2.ys</code> you get the same result as before.</p>
+<blockquote>
+<p>Note: The things starting with <code>:</code> are called keywords, and they turn into one
+word strings on output.
+More on keywords another day.</p>
+</blockquote>
+<h3>Merging Mappings and Joining Sequences</h3>
+<p>I'll leave you with the two most frequent requests that Santa gets from YAML
+kids: <code>merge</code> and <code>concat</code>.</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file3.ys</span><br><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>    load("map1.yaml")<br>    load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">concat</span><span class="token punctuation">:</span><br>    load("seq1.yaml")<br>    load("seq2.yaml")</code></pre>
+<p>When we were inventing YAML 20 years ago, one of the most confusing things we
+did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merge operation.</p>
+<p>It wasn't a good idea because:</p>
+<ul>
+<li>It's the only dynamic thing we put in YAML</li>
+<li>It actually wasn't in the spec proper</li>
+<li>It's not well defined at all</li>
+<li>Many YAML frameworks don't support it at all</li>
+<li>The ones that do it, all do it differently</li>
+</ul>
+<p>But people love it, and they want more!</p>
+<p>Well... YS gives you more.
+100s more (standard functions) in fact!
+(All in good time, my patient Advent-urers.)</p>
+<p>Let's end this day by making that last YS file even cooler than Rudolph's toes!</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml") + load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("seq1.yaml") + load("seq2.yaml")</code></pre>
+<p>YAMLScript's <code>+</code> operator is a general purpose joiner.
+It's polymorphic for numbers, strings, sequences and mappings.</p>
+<p>As ususal, I hope you enjoyed today's post.
+I'll see you tomorrow for day 4 of YAMLScript Advent 2023!</p>
 
     ]]>
       </content>

@@ -109,7 +109,7 @@
 
   <main class="post__content">
     <h3>Seasons Greetings, my YAML friends!</h3>
-<p>What if I told you that you could write a <strong>program in YAML</strong> that would<br>
+<p>What if I told you that you could write a <strong>program in YAML</strong> that would
 generate a Christmas tree?</p>
 <p>Well, you can! Here's how:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br>defn main(&amp;<span class="token punctuation">[</span>width<span class="token punctuation">]</span>)<span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width <span class="token punctuation">|</span><span class="token punctuation">|</span> 5<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  join(<br>    map(<br>      fn(<span class="token punctuation">[</span>n<span class="token punctuation">]</span> line(width<span class="token punctuation">,</span> n))<br>      (width .. 1)))<br>  + (trunk(width) * 2)<br><br><span class="token key atrule">defn stars(num)</span><span class="token punctuation">:</span>  inc(num) * "<span class="token important">*"</span><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  ( spaces(num)<br>  + stars(((width <span class="token punctuation">-</span> num) * 2))<br>  + "\n")</code></pre>
@@ -174,11 +174,11 @@ defn tree(width):
 <pre class="language-bash"><code class="language-bash">$ ys tree.ys<br>     *<br>    ***<br>   *****<br>  *******<br> *********<br>     *<br>     *</code></pre>
 <p>That's a pretty nice tree, but it's a little small. Let's make it bigger!</p>
 <pre class="language-bash"><code class="language-bash">$ ys tree.ys <span class="token number">10</span><br>          *<br>         ***<br>        *****<br>       *******<br>      *********<br>     ***********<br>    *************<br>   ***************<br>  *****************<br> *******************<br>          *<br>          *</code></pre>
-<p>Welcome to the first day of YAMLScript Advent 2023!<br>
+<p>Welcome to the first day of YAMLScript Advent 2023!
 We're going to be writing a lot of YAMLScript this month, so let's get started…</p>
 <p>Wait! What is YAMLScript?</p>
-<p>YAMLScript is a new programming language that uses YAML as its syntax.<br>
-You can do anything in YAMLScript that you can do in a language like<br>
+<p>YAMLScript is a new programming language that uses YAML as its syntax.
+You can do anything in YAMLScript that you can do in a language like
 Python or JavaScript such as:</p>
 <ul>
 <li>Defining functions</li>
@@ -188,14 +188,14 @@ Python or JavaScript such as:</p>
 <li>Importing modules</li>
 <li>And more!</li>
 </ul>
-<p>YAMLScript looks and feels like an imperative programming language, but it's<br>
-actually a functional programming language.<br>
-This means that YAMLScript programs are made up of expressions that are<br>
+<p>YAMLScript looks and feels like an imperative programming language, but it's
+actually a functional programming language.
+This means that YAMLScript programs are made up of expressions that are
 evaluated to produce a result.</p>
 <p>But why would you even want to write a program in YAML?</p>
-<p>YAMLScript is a full-featured, general purpose programming language, but it's<br>
-also designed to be a great language for writing YAML configuration files.<br>
-To that point, almost all YAML files are valid YAMLScript programs!<br>
+<p>YAMLScript is a full-featured, general purpose programming language, but it's
+also designed to be a great language for writing YAML configuration files.
+To that point, almost all YAML files are valid YAMLScript programs!
 And they evaluate to the same result that a YAML loader would produce.</p>
 <p>For example, here's a YAML file that defines a list of fruits:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># fruits.yaml</span><br><span class="token punctuation">-</span> apple<br><span class="token punctuation">-</span> banana<br><span class="token punctuation">-</span> cherry</code></pre>
@@ -207,43 +207,43 @@ And they evaluate to the same result that a YAML loader would produce.</p>
 <pre class="language-python"><code class="language-python">$ python <span class="token operator">-</span>c <span class="token string">'["apple", "banana", "cherry"]'</span><br>$</code></pre>
 <p>To <em>evaluate</em> a YAMLScript program, we need to use the <code>--load</code> option:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> fruits.yaml<br><span class="token punctuation">[</span><span class="token string">"apple"</span>, <span class="token string">"banana"</span>, <span class="token string">"cherry"</span><span class="token punctuation">]</span><br>$</code></pre>
-<p>We got some JSON back!<br>
-That's because by default, <code>--load</code> evaluates the YAMLScript and prints the<br>
+<p>We got some JSON back!
+That's because by default, <code>--load</code> evaluates the YAMLScript and prints the
 result as JSON.</p>
-<p>What if we want to include these fruits in our YAML grocery list?<br>
+<p>What if we want to include these fruits in our YAML grocery list?
 Let's try it:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
 <p>Let's add the <code>--yaml</code> option to print the result as YAML:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> grocery-list.yaml <span class="token parameter variable">--yaml</span><br>- bread<br>- fruits: load<span class="token punctuation">(</span><span class="token string">"fruits.yaml"</span><span class="token punctuation">)</span><br>- milk<br>$</code></pre>
-<p>That's not what we wanted!<br>
+<p>That's not what we wanted!
 We wanted the contents of the fruits list to be included in the grocery list.</p>
-<p>But if you think about it, this is exactly what we asked for.<br>
-Since every YAML file is a valid YAMLScript program, it certainly should be<br>
+<p>But if you think about it, this is exactly what we asked for.
+Since every YAML file is a valid YAMLScript program, it certainly should be
 loaded just like any other YAML loader would do it.</p>
 <p>Let's fix this to do what we want:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token tag">!yamlscript/v0/</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
 <p>Now when we run it:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-l</span> <span class="token parameter variable">-Y</span> grocery-list.yaml<br>- bread<br>- fruits:<br>  - apple<br>  - banana<br>  - cherry<br>- milk<br>$</code></pre>
 <p>There we go! We got our fruits!</p>
-<p>So what did we do here?<br>
+<p>So what did we do here?
 We added 2 things:</p>
 <ul>
 <li>A <code>!yamlscript/v0/</code> tag at the top</li>
 <li>A <code>!</code> tag before the <code>load</code> function call</li>
 </ul>
-<p>We won't get into the details of what these tags mean today, but you'll learn<br>
+<p>We won't get into the details of what these tags mean today, but you'll learn
 about them soon enough.</p>
 <h3>YAMLScript Advent 2023 Teasers</h3>
-<p>My name is <a href="https://github.com/ingydotnet">Ingy döt Net</a>.<br>
+<p>My name is <a href="https://github.com/ingydotnet">Ingy döt Net</a>.
 I'm one of the original creators of the <a href="https://yaml.org/">YAML data language</a> and I lead the <a href="https://yaml.org/spec/1.2.2/ext/team/">YAML Language Development Team</a>.</p>
-<p>I've been working on YAMLScript for about a year now, and I'm excited to finally<br>
-share it with you.<br>
-I believe that YAMLScript is going to take YAML to exciting new places, while<br>
-remedying many of its shortcomings, limitations and frustrations.<br>
-I hope you'll come to agree as you join me on this holiday season unwrapping of<br>
+<p>I've been working on YAMLScript for about a year now, and I'm excited to finally
+share it with you.
+I believe that YAMLScript is going to take YAML to exciting new places, while
+remedying many of its shortcomings, limitations and frustrations.
+I hope you'll come to agree as you join me on this holiday season unwrapping of
 the gift that is YAMLScript!</p>
-<p>I also hope that you enjoyed this first day of the <strong>YAMLScript Advent 2023</strong>!<br>
-I'll be posting a new blog article every day this month, so stay tuned!<br>
+<p>I also hope that you enjoyed this first day of the <strong>YAMLScript Advent 2023</strong>!
+I'll be posting a new blog article every day this month, so stay tuned!
 Well at least until December 25th, but I might keep going after that. :-)</p>
 <p>Here's a sneak peek of some of the things to come:</p>
 <ul>

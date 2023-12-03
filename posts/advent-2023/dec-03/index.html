@@ -32,9 +32,9 @@
       
     
     
-      <meta name="description" content="Load em Up! 03 Dec 2023 | 3 min read On the 3rd day of Advent, my YS gave to me... A sequence in a map tree! Did you know that all JSON is...">
-      <meta property="og:description" content="Load em Up! 03 Dec 2023 | 3 min read On the 3rd day of Advent, my YS gave to me... A sequence in a map tree! Did you know that all JSON is...">
-      <meta name="description" content="Load em Up! 03 Dec 2023 | 3 min read On the 3rd day of Advent, my YS gave to me... A sequence in a map tree! Did you know that all JSON is..."/>
+      <meta name="description" content="Load em Up! 03 Dec 2023 | 5 min read On the 3rd day of Advent, my YS gave to me... A sequence in a map tree! Did you know that all JSON is...">
+      <meta property="og:description" content="Load em Up! 03 Dec 2023 | 5 min read On the 3rd day of Advent, my YS gave to me... A sequence in a map tree! Did you know that all JSON is...">
+      <meta name="description" content="Load em Up! 03 Dec 2023 | 5 min read On the 3rd day of Advent, my YS gave to me... A sequence in a map tree! Did you know that all JSON is..."/>
     
 
     
@@ -62,17 +62,6 @@
           
             <nav class="nav">
               <ul class="nav__list">
-                
-                  
-                  
-
-                  
-
-                  
-
-                  <li class="nav-item">
-                    <a href="/doc"  >Docs</a>
-                  </li>
                 
                   
                   
@@ -114,7 +103,7 @@
         03 Dec 2023
       </time>
       <span> | </span>
-      <span>3 min read</span>
+      <span>5 min read</span>
     </div>
   </header>
 
@@ -123,45 +112,46 @@
 <p>On the 3rd day of Advent, my YS gave to me...<br>
 A sequence in a map tree!</p>
 </blockquote>
-<p>Did you know that all JSON <em>is</em> YAML?<br>
+<p>Did you know that all JSON <em>is</em> YAML?
 You should, because I told you that <a href="/posts/advent-2023/dec-02/">yesterday</a>!</p>
-<p>It's true.<br>
-YAML is a superset of JSON.<br>
+<p>It's true.
+YAML is a superset of JSON.
 Both in terms of syntax and data model.</p>
-<p>This means that any possible valid JSON input is also valid as a YAML input.<br>
-A proper YAML loader and a JSON loader should produce the same data structure<br>
+<p>This means that any possible valid JSON input is also valid as a YAML input.
+A proper YAML loader and a JSON loader should produce the same data structure
 from the same JSON input.</p>
 <blockquote>
 <p>Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema</p>
 </blockquote>
 <h3>Welcome to day 3 of YAMLScript Advent 2023!</h3>
-<p>This YAML/JSON relationship has some interesting implications for people<br>
+<p>This YAML/JSON relationship has some interesting implications for people
 interacting with systems that read YAML or JSON as input.</p>
-<p>People often prefer to read or write data in YAML because it's more<br>
-human-friendly, while JSON is more machine-friendly because of its sheer<br>
-simplicity and robust tooling.<br>
-It's quite common to see people configure their systems that have JSON inputs by<br>
-using YAML instead, and setting things up to convert the hand maintained YAML to<br>
-JSON before the system sees it.<br>
-It can also be helpful to format large JSON API responses as YAML so that they<br>
+<p>People often prefer to read or write data in YAML because it's more
+human-friendly, while JSON is more machine-friendly because of its sheer
+simplicity and robust tooling.
+It's quite common to see people configure their systems that have JSON inputs by
+using YAML instead, and setting things up to convert the hand maintained YAML to
+JSON before the system sees it.
+It can also be helpful to format large JSON API responses as YAML so that they
 are easier to read.</p>
-<p>Going the other way, people can refactor large YAML configurations by first<br>
-converting them to JSON, using JSON tools like <code>jq</code> to manipulate the data and<br>
+<p>Going the other way, people can refactor large YAML configurations by first
+converting them to JSON, using JSON tools like <code>jq</code> to manipulate the data and
 then converting the data back to YAML.</p>
-<p>YAMLScript is an ideal technology for performing these kinds of conversions and<br>
+<p>YAMLScript is an ideal technology for performing these kinds of conversions and
 manipulations.</p>
 <h3>Loading vs Running YAMLScript</h3>
-<p>On one hand, YAMLScript is a complete programming language that you can use to<br>
-for writing new applications and libraries.<br>
-We'll cover that extensively in the coming days.<br>
-But today we are covering YAMLScript's purpose we just described: reading YAML<br>
-files; possibly transforming them dynamically along the way.</p>
-<p>This use of YAMLScript is calling &quot;loading&quot; and can be done on most existing<br>
-YAML files and all existing JSON files.</p>
+<p>On one hand, YAMLScript is a complete programming language that you can use to
+for writing new applications (and libraries).
+In YAMLScript jargon, we &quot;run&quot; these applications.
+We'll discuss YAMLScript apps and &quot;running&quot; them extensively in the coming days.</p>
+<p>Today we are covering YAMLScript's purpose we just described: reading YAML
+files into data; possibly transforming the data dynamically along the way.</p>
+<p>This use of YAMLScript is called &quot;loading&quot; and can be done on most existing YAML
+files and all existing JSON files.</p>
 <details><summary>What does "most" mean?</summary>
-<p>When I say &quot;most YAML input files&quot; I mean YAML input that fits into the JSON<br>
-data model.<br>
-Almost all YAML files used for configuration purposes fit into this category.</p>
+<p>When I say &quot;most YAML input files&quot; I mean YAML input that fits into the JSON
+data model.
+Almost all YAML files used for configuration purposes fall into this category.</p>
 <p>Specifically:</p>
 <ul>
 <li>Mapping keys must be strings.</li>
@@ -169,30 +159,134 @@ Almost all YAML files used for configuration purposes fit into this category.</p
 <li>Custom tags (those beyond the YAML 1.2 JSON Schema) must not be used.</li>
 </ul>
 <p>I've never seen any of those things used in a configuration file.</p>
+<hr>
 </details>
 <p>Let's look at an example.</p>
-<p>YAML uses the term &quot;load&quot; to refer to the process of a computer program<br>
-converting a YAML text to a data structure in memory.<br>
-It is common for a YAML framework to have a <code>load</code> (and <code>dump</code>) function or<br>
+<p>YAML uses the term &quot;load&quot; to refer to the process of a computer program
+converting a YAML text into a data structure in memory.
+It is common for a YAML framework to have a <code>load</code> (and <code>dump</code>) function or
 method as its primary API.</p>
-<p>Here's a Python single line program that loads a YAML text into a Python<br>
+<p>Here's a Python single line program that loads a YAML text into a Python
 dictionary and and then prints it.</p>
 <pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yaml; print(yaml.safe_load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
-<p>YAMLScript will soon offer a binding in your favorite language that will do the<br>
+<p>YAMLScript will soon offer a binding in your favorite language that will do the
 same thing:</p>
 <pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yamlscript; print(yamlscript.load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
-<p>A major goal of the YAMLScript project is to have these YAMLScript binding<br>
-libraries be the best way to load YAML config files in all modern programming<br>
-languages.<br>
-This will be a big improvement over the current situation where every YAML<br>
-framework has its own API and its own set of bugs and quirks.<br>
-YAMLScript loaders will all support YAML 1.2 and the YAML 1.2 JSON Schema.<br>
-They use an underlying YAML parser that can pass all of the <a href="https://matrix.yaml.info/">YAML Test Suite</a>.</p>
+<p>A major goal of the YAMLScript project is to have these YAMLScript binding
+libraries be the best way to load YAML config files in all modern programming
+languages.
+This will be a big improvement over the current situation where every YAML
+framework has its own API and its own set of bugs and quirks.</p>
+<h3>Loading YAMLScript From the Command Line</h3>
+<p>The Python and other language bindings are not ready yet, but we can still load
+YAMLScript.
+We can do it from the command line using the <code>ys</code> command with the <code>--load</code>
+option.</p>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-le</span> <span class="token string">'Advent day: 3'</span><br><span class="token punctuation">{</span><span class="token string">"Advent day"</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
 <blockquote>
-<p>NOTE: From now on I will often use &quot;YS&quot; to refer to &quot;YAMLScript&quot;.<br>
-This is distinct from &quot;ys&quot; which is the command-line tool that runs/loads<br>
-YAMLScript.</p>
+<p>Note: The <code>-le</code> option is a short for <code>-l</code> (short for <code>--load</code>) and <code>-e</code>.</p>
 </blockquote>
+<p>Since the command line doesn't have any way to store the loaded YAML (like a
+programming language would as a data structure) we have to get it back as text.
+By default, <code>ys</code> prints the loaded YAML as JSON.</p>
+<p>That may seem strange; a YAML loader defaulting to JSON.
+But it's not strange at all, for two reasons:</p>
+<ul>
+<li>JSON <em>is</em> YAML. Remember?!</li>
+<li>JSON is the de facto Lingua Franca of inter-program communication.</li>
+</ul>
+<p>Put another way, <code>ys</code> outputs YAML in its most compatible format.</p>
+<p>In a programming language, we load YAML data into an object and pass it to some
+function to do something with it.
+In the CLI-as-programming-language analogy, the functions are other programs!</p>
+<h3>Loading YAML Dynamically</h3>
+<p>The main point of today's post is to show how YAMLScript can be used as a normal
+YAML loader.
+But of course, YS has SuperPowers™ that other YAML loaders don't have.</p>
+<blockquote>
+<p>NOTE: From now on I will sometimes use &quot;YS&quot; as shorthand for &quot;YAMLScript&quot;.
+This is distinct from <code>ys</code> which is the command-line tool that runs/loads YS.</p>
+</blockquote>
+<p>With great SuperPowers comes SuperResponsibility.
+YS won't use its SuperPowers unless you ask it to.
+You may ask it (politely) in one of these ways:</p>
+<ul>
+<li>Start the YS with the <code>!yamlscript/v0</code> tag
+<ul>
+<li>Words are commands by default</li>
+</ul>
+</li>
+<li>Start the YS with the <code>!yamlscript/v0/</code> tag
+<ul>
+<li>Words are data by default</li>
+</ul>
+</li>
+<li>Use a <code>ys-0</code> shebang line like: <code>#!/usr/bin/env ys-0</code>
+<ul>
+<li>Implicitly defaults to <code>!yamlscript/v0</code></li>
+</ul>
+</li>
+<li>Use the <code>-e</code> option for YS one-liners
+<ul>
+<li>Imlicitly defaults to <code>!yamlscript/v0</code> (for one-liner convenience)</li>
+</ul>
+</li>
+</ul>
+<p>After that you are good to go!</p>
+<p>Imagine we have YAML files containing top level mappings such as:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># map1.yaml</span><br><span class="token key atrule">reindeer</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Dancer<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Blitzen<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Rudolph<br>  <span class="token key atrule">nosy</span><span class="token punctuation">:</span> <span class="token boolean important">true</span></code></pre>
+<p>We can pull data from these files into our YAML dynamically:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file1.ys</span><br><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">key1</span><span class="token punctuation">:</span> val1<br><span class="token key atrule">key2</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml")<br><span class="token key atrule">key3</span><span class="token punctuation">:</span> val3</code></pre>
+<p>Now if we &quot;ran&quot; the YS nothing would happen, but when we &quot;load&quot; it, we get the
+data we expect.</p>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> file1.ys<br><span class="token punctuation">{</span><span class="token string">"key1"</span><span class="token builtin class-name">:</span> <span class="token string">"val1"</span>, <span class="token string">"key2"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><span class="token string">"reindeer"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Dancer"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Blitzen"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Rudolph"</span>, <span class="token string">"nosy"</span><span class="token builtin class-name">:</span> true<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span>, <span class="token string">"key3"</span><span class="token builtin class-name">:</span> <span class="token string">"val3"</span><span class="token punctuation">}</span></code></pre>
+<p>Now I can explain those pesky YAML tags!
+What does this YS mapping pair mean?</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token number">123</span></code></pre>
+<p>Well, it depends.
+It could be a command to print the number 123 as text to the console.
+Or it could be a mapping pair with the key <code>say</code> and the value <code>123</code>.
+The starting tag tells us which it is.
+The <code>!yamlscript/v0</code> tag means that we start off things in a state where plain
+(unquoted) YAML scalars are code.
+OTOH, with <code>!yamlscript/v0/</code> these scalars are data like in normal YAML.</p>
+<p>The <code>!</code> tag is how we switch back and forth (toggle) between these two states.
+If you have existing YAML files and you want to use a couple of YS functions in
+them, start them with <code>!yamlscript/v0/</code> and then use <code>!</code> tags before the
+functional parts.</p>
+<p>Another way to accomplish the same result is:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file2.ys</span><br><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">map1 =</span><span class="token punctuation">:</span> load("map1.yaml")<br><br><span class="token key atrule">=></span><span class="token punctuation">:</span><br>  .<span class="token punctuation">{</span><br>    <span class="token punctuation">:</span>key1 "val1"<br>    <span class="token punctuation">:</span>key2 map1<br>    <span class="token punctuation">:</span>key3 "val3"<br>  <span class="token punctuation">}</span></code></pre>
+<p>Here everything is code, and the final expression is the data we want to load.
+When you run <code>ys --load file2.ys</code> you get the same result as before.</p>
+<blockquote>
+<p>Note: The things starting with <code>:</code> are called keywords, and they turn into one
+word strings on output.
+More on keywords another day.</p>
+</blockquote>
+<h3>Merging Mappings and Joining Sequences</h3>
+<p>I'll leave you with the two most frequent requests that Santa gets from YAML
+kids: <code>merge</code> and <code>concat</code>.</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file3.ys</span><br><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>    load("map1.yaml")<br>    load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">concat</span><span class="token punctuation">:</span><br>    load("seq1.yaml")<br>    load("seq2.yaml")</code></pre>
+<p>When we were inventing YAML 20 years ago, one of the most confusing things we
+did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merge operation.</p>
+<p>It wasn't a good idea because:</p>
+<ul>
+<li>It's the only dynamic thing we put in YAML</li>
+<li>It actually wasn't in the spec proper</li>
+<li>It's not well defined at all</li>
+<li>Many YAML frameworks don't support it at all</li>
+<li>The ones that do it, all do it differently</li>
+</ul>
+<p>But people love it, and they want more!</p>
+<p>Well... YS gives you more.
+100s more (standard functions) in fact!
+(All in good time, my patient Advent-urers.)</p>
+<p>Let's end this day by making that last YS file even cooler than Rudolph's toes!</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml") + load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("seq1.yaml") + load("seq2.yaml")</code></pre>
+<p>YAMLScript's <code>+</code> operator is a general purpose joiner.
+It's polymorphic for numbers, strings, sequences and mappings.</p>
+<p>As ususal, I hope you enjoyed today's post.
+I'll see you tomorrow for day 4 of YAMLScript Advent 2023!</p>
 
   </main>
 
