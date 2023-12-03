@@ -71,17 +71,6 @@
                   
 
                   <li class="nav-item">
-                    <a href="/doc"  >Docs</a>
-                  </li>
-                
-                  
-                  
-
-                  
-
-                  
-
-                  <li class="nav-item">
                     <a href="/blog"  >Blog</a>
                   </li>
                 
@@ -110,14 +99,14 @@
   <div class="hero-content">
     <div class="intro">
       <h4>YAMLScript — Program in YAML</h4>
-<p>YAMLScript is a functional programming language whose syntax is encoded in YAML.
+<p>YAMLScript is a functional programming language whose syntax is encoded in YAML.<br>
 YAMLScript can be used for writing new software applications and libraries.</p>
 <p>Here's an example of a YAMLScript program called <code>hello.ys</code>:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">---</span> <span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">defn main(name="world")</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello, $name!"</span></code></pre>
 <p>You can run this program from the command line:</p>
 <pre class="language-bash"><code class="language-bash">$ ys hello.ys<br>Hello, world<span class="token operator">!</span><br>$ ys hello.ys Bob<br>Hello, Bob<span class="token operator">!</span></code></pre>
-<p>YAMLScript can also be used in plain YAML files to add dynamic operations at any
-level.
+<p>YAMLScript can also be used in plain YAML files to add dynamic operations at any<br>
+level.<br>
 Here's an example of using YAMLScript in a YAML file <code>db-config.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">---</span> <span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">require</span><span class="token punctuation">:</span> ys.yaml<br><br>base =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">ys.yaml/load-file</span><span class="token punctuation">:</span> <span class="token string">"db-defaults.yaml"</span><br>  <span class="token comment"># host: localhost</span><br>  <span class="token comment"># port: 12345</span><br>  <span class="token comment"># user: app</span><br>  <span class="token comment"># password: secret</span><br><br>do<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">development</span><span class="token punctuation">:</span><br>    <span class="token tag">!</span> merge base<span class="token punctuation">:</span><span class="token punctuation">:</span><br>      <span class="token key atrule">user</span><span class="token punctuation">:</span> dev<br>      <span class="token key atrule">password</span><span class="token punctuation">:</span> devsecret<br><br>  <span class="token key atrule">staging</span><span class="token punctuation">:</span><br>    <span class="token tag">!</span> merge base<span class="token punctuation">:</span><span class="token punctuation">:</span><br>      <span class="token key atrule">host</span><span class="token punctuation">:</span> staging<span class="token punctuation">-</span>db.myapp.com<br><br>  <span class="token key atrule">production</span><span class="token punctuation">:</span><br>    <span class="token tag">!</span> merge base<span class="token punctuation">:</span><span class="token punctuation">:</span><br>      <span class="token key atrule">host</span><span class="token punctuation">:</span> prod<span class="token punctuation">-</span>db.myapp.com<br>      <span class="token key atrule">user</span><span class="token punctuation">:</span> prod<br>      <span class="token key atrule">password</span><span class="token punctuation">:</span> prodsecret</code></pre>
 <p>From the command line, run:</p>
@@ -126,7 +115,9 @@ Here's an example of using YAMLScript in a YAML file <code>db-config.yaml</code>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> <span class="token parameter variable">--yaml</span> db-config.yaml</code></pre>
 <p>You can also use YAMLScript as a module in another language like Python:</p>
 <pre class="language-python"><code class="language-python"><span class="token keyword">import</span> yamlscript <span class="token keyword">as</span> ys<br>config <span class="token operator">=</span> ys<span class="token punctuation">.</span>load_file<span class="token punctuation">(</span><span class="token string">"db-config.yaml"</span><span class="token punctuation">)</span></code></pre>
-<p>See the <a href="https://yamlscript.org/doc/">YAMLScript Docs</a> for more information.</p>
+<!--
+See the [YAMLScript Docs](https://yamlscript.org/doc/) for more information.
+-->
 
     </div>
 
@@ -144,40 +135,6 @@ Here's an example of using YAMLScript in a YAML file <code>db-config.yaml</code>
 
   
   <ul class="post-list">
-  
-    <li class="post-list__item">
-      <div>
-        <div class="post-list__meta">
-          <time datetime="2023-12-03">
-            03 Dec 2023
-          </time>
-          <span> | </span>
-          <span>3 min read</span>
-        </div>
-
-        <div class="post-list__tags">
-          
-              <a href="/tags/blog/">#blog</a>
-              <a href="/tags/advent-2023/">#advent-2023</a>
-        </div>
-      </div>
-
-      <h3 class="post-list__title">
-        <a  href="/posts/advent-2023/dec-03/">Load em Up!</a>
-      </h3>
-
-      <p class="post-list__excerpt">
-On the 3rd day of Advent, my YS gave to me...
-A sequence in a map tree!
-
-Did you know that all JSON is YAML?
-You should, because I told you that yesterday!
-It's true.
-YAML is a superset of JSON.
-Both...</p>
-
-      <a class="post-list__read-more" href="/posts/advent-2023/dec-03/">read article</a>
-    </li>
   
     <li class="post-list__item">
       <div>

@@ -123,42 +123,44 @@
 <p>On the 3rd day of Advent, my YS gave to me...<br>
 A sequence in a map tree!</p>
 </blockquote>
-<p>Did you know that all JSON <em>is</em> YAML?
+<p>Did you know that all JSON <em>is</em> YAML?<br>
 You should, because I told you that <a href="/posts/advent-2023/dec-02/">yesterday</a>!</p>
-<p>It's true.
-YAML is a superset of JSON.
+<p>It's true.<br>
+YAML is a superset of JSON.<br>
 Both in terms of syntax and data model.</p>
-<p>This means that any possible valid JSON input is also valid YAML input.
-A proper <strong>YAML 1.2</strong> loader can load a given JSON input into a data structure
-that is perfectly equivalent to the data structure that a JSON loader would have
-produced from the same input.</p>
+<p>This means that any possible valid JSON input is also valid as a YAML input.<br>
+A proper YAML loader and a JSON loader should produce the same data structure<br>
+from the same JSON input.</p>
+<blockquote>
+<p>Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema</p>
+</blockquote>
 <h3>Welcome to day 3 of YAMLScript Advent 2023!</h3>
-<p>The YAML/JSON relationship has some interesting implications for people
+<p>This YAML/JSON relationship has some interesting implications for people<br>
 interacting with systems that read YAML or JSON as input.</p>
-<p>In general people prefer to read or write YAML because it's more human-friendly,
-while JSON is more machine-friendly because of its sheer simplicity and robust
-tooling.
-It's quite common to see people configure their systems that have JSON inputs
-by using YAML instead, and setting things up to convert the hand maintined YAML
-to JSON before the system sees it.
-It can also be helpful to format large JSON API responses as YAML so that they
+<p>People often prefer to read or write data in YAML because it's more<br>
+human-friendly, while JSON is more machine-friendly because of its sheer<br>
+simplicity and robust tooling.<br>
+It's quite common to see people configure their systems that have JSON inputs by<br>
+using YAML instead, and setting things up to convert the hand maintained YAML to<br>
+JSON before the system sees it.<br>
+It can also be helpful to format large JSON API responses as YAML so that they<br>
 are easier to read.</p>
-<p>Going the other way, people can refactor large YAML configurations by first
-converting them to JSON, using JSON tools like <code>jq</code> to manipulate them and then
-converting them back to YAML.</p>
-<p>YAMLScript is an ideal technology for performing these kinds of conversions and
+<p>Going the other way, people can refactor large YAML configurations by first<br>
+converting them to JSON, using JSON tools like <code>jq</code> to manipulate the data and<br>
+then converting the data back to YAML.</p>
+<p>YAMLScript is an ideal technology for performing these kinds of conversions and<br>
 manipulations.</p>
 <h3>Loading vs Running YAMLScript</h3>
-<p>On one hand, YAMLScript is a complete programming language that you can use to
-for writing new applications and libraries.
-We'll cover that extensively in the coming days.
-But today we are covering YAMLScript's purpose we just described: loading YAML
+<p>On one hand, YAMLScript is a complete programming language that you can use to<br>
+for writing new applications and libraries.<br>
+We'll cover that extensively in the coming days.<br>
+But today we are covering YAMLScript's purpose we just described: reading YAML<br>
 files; possibly transforming them dynamically along the way.</p>
-<p>This use of YAMLScript is calling &quot;loading&quot; and can be done on most existing
+<p>This use of YAMLScript is calling &quot;loading&quot; and can be done on most existing<br>
 YAML files and all existing JSON files.</p>
-<details><summary><What does "most" mean?</summary>
-<p>When I say &quot;most YAML input files&quot; I mean YAML input that fits into the JSON
-data model.
+<details><summary>What does "most" mean?</summary>
+<p>When I say &quot;most YAML input files&quot; I mean YAML input that fits into the JSON<br>
+data model.<br>
 Almost all YAML files used for configuration purposes fit into this category.</p>
 <p>Specifically:</p>
 <ul>
@@ -169,26 +171,26 @@ Almost all YAML files used for configuration purposes fit into this category.</p
 <p>I've never seen any of those things used in a configuration file.</p>
 </details>
 <p>Let's look at an example.</p>
-<p>YAML uses the term &quot;load&quot; to refer to the process of a computer program
-converting a YAML text to a data structure in memory.
-It is common for a YAML framework to have a <code>load</code> (and <code>dump</code>) function or
+<p>YAML uses the term &quot;load&quot; to refer to the process of a computer program<br>
+converting a YAML text to a data structure in memory.<br>
+It is common for a YAML framework to have a <code>load</code> (and <code>dump</code>) function or<br>
 method as its primary API.</p>
-<p>Here's a Python single line program that loads a YAML text into a Python
-dictionary and prints the Python serialization of it:</p>
+<p>Here's a Python single line program that loads a YAML text into a Python<br>
+dictionary and and then prints it.</p>
 <pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yaml; print(yaml.safe_load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
-<p>YAMLScript will soon offer a binding in your favorite language that will do the
+<p>YAMLScript will soon offer a binding in your favorite language that will do the<br>
 same thing:</p>
-<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> <span class="token string">'foo: bar'</span><br>$ python <span class="token parameter variable">-c</span> <span class="token string">'import yamlscript; print(yamlscript.load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
-<p>A major goal of the YAMLScript project is to have these YAMLScript binding
-libraries be the best way to load YAML config files in all modern programming
-languages.
-This will be a big improvement over the current situation where every YAML
-framework has its own API and its own set of bugs and quirks.
-YAMLScript loaders will all support YAML 1.2 and the YAML 1.2 JSON Schema.
+<pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yamlscript; print(yamlscript.load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
+<p>A major goal of the YAMLScript project is to have these YAMLScript binding<br>
+libraries be the best way to load YAML config files in all modern programming<br>
+languages.<br>
+This will be a big improvement over the current situation where every YAML<br>
+framework has its own API and its own set of bugs and quirks.<br>
+YAMLScript loaders will all support YAML 1.2 and the YAML 1.2 JSON Schema.<br>
 They use an underlying YAML parser that can pass all of the <a href="https://matrix.yaml.info/">YAML Test Suite</a>.</p>
 <blockquote>
-<p>NOTE: From now on I will often use &quot;YS&quot; to refer to &quot;YAMLScript&quot;.
-This is distinct from &quot;ys&quot; which is the command-line tool that runs/loads
+<p>NOTE: From now on I will often use &quot;YS&quot; to refer to &quot;YAMLScript&quot;.<br>
+This is distinct from &quot;ys&quot; which is the command-line tool that runs/loads<br>
 YAMLScript.</p>
 </blockquote>
 
