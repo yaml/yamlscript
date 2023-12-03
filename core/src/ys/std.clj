@@ -29,9 +29,11 @@
 (defn => [this] this)
 
 (defn add [x & xs]
-  (if (string? x)
-    (apply str x xs)
-    (apply + x xs)))
+  (cond
+    (string? x) (apply str x xs)
+    (vector? x) (apply concat x xs)
+    (map? x) (apply merge x xs)
+    :else (apply + x xs)))
 
 (defn err [& xs]
   (binding [*out* *err*]

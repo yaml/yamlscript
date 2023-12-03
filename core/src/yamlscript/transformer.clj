@@ -41,6 +41,10 @@
     (string-repeat node)
     node))
 
+(defn transform-map [node]
+  (let [lst (:Map node)]
+    {:Map (map transform-node lst)}))
+
 ; TODO:
 ; Change def to let if not in top level.
 ; Collapse multiple consecutive lets into one.
@@ -53,6 +57,16 @@
       (case key
         :ysm (transform-ysm node)
         :Lst (transform-list node)
+        :Map (transform-map node)
         ,    node))))
 
-(comment)
+(comment
+  (->>
+    {:Map
+     [{:Str "my-seq"}
+      {:Lst
+       [{:Sym '+}
+        {:Lst [{:Sym 'load} {:Str "seq1.yaml"}]}
+        {:Lst [{:Sym 'load} {:Str "seq2.yaml"}]}]}]}
+    transform)
+  )
