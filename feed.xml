@@ -830,6 +830,10 @@ friends puts it, &quot;a cheat code&quot;!
 GraalVM's <code>native-image</code> compiler can magically turn anything Java into native
 machine code on Linux, macOS and Windows.
 <strong>Wow!</strong></p>
+<p>A very noticeable difference between YAMLScript and Clojure is startup time:</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">time</span> ys <span class="token parameter variable">-e</span> <span class="token number">1</span><br>real    0m0.044s<br>$ <span class="token function">time</span> perl <span class="token parameter variable">-e</span> <span class="token number">1</span>    <span class="token comment"># for comparison</span><br>real    0m0.048s<br>$ <span class="token function">time</span> clojure <span class="token parameter variable">-M</span> <span class="token parameter variable">-e</span> <span class="token number">1</span><br><span class="token number">1</span><br>real    0m0.637s</code></pre>
+<p>Clojure's not 10 times slower than YS (or Perl).
+It just takes 10 times longer to start up a JVM.</p>
 <p><strong>Do you need to know Clojure to use YAMLScript?</strong></p>
 <p>No, not at first.
 Proof?
