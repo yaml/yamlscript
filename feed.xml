@@ -795,7 +795,7 @@ It embraces diversity. (As long as that diversity can be written as YAML!)
 One of the ways to write code in YAMLScript is in Clojure syntax!</p>
 <p>This YAMLScript prints 3 symbol names available in the current namespace:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-e</span> <span class="token string">'(say (take (+ 1 2) (keys (ns-map *ns*))))'</span><br><span class="token punctuation">(</span>+' decimal? sort-by<span class="token punctuation">)</span></code></pre>
-<p>In Lisp every expression (function cal) is a paranthesized list where the first
+<p>In Lisp every expression (function call) is a paranthesized list where the first
 word is the function name and the rest are the arguments.
 That means arithmetic expressions like <code>1 + 2</code> are written as <code>(+ 1 2)</code>.</p>
 <p>This feels very natural to Lisp programmers, but it can be a bit of a shock to
@@ -840,7 +840,7 @@ Proof?
 I just got through 3 days of YAMLScript Advent without mentioning Clojure once.</p>
 <p>If you just want to make your out of control YAML files more manageable,
 composable and maintainable, you can easily learn how to wield YAMLScript
-without knowning a lick of Clojure.</p>
+without knowing a lick of Clojure.</p>
 <p>When you need more power it's there for you because Clojure is there for you.
 But you have to learn some new things first.</p>
 <p>I honestly think YS can be a great introduction to Clojure.
