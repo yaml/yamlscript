@@ -4,6 +4,7 @@ set -e -u -o pipefail
 
 branch=main
 branch=install
+export download=libyamlscript
 
 url=https://raw.githubusercontent.com/yaml/yamlscript/$branch/common/install
 

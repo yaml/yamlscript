@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -e -u -o pipefail
+
+branch=main
+branch=install
+export download=ys
+
+url=https://raw.githubusercontent.com/yaml/yamlscript/$branch/common/install
+
+main() (
+  command -v curl >/dev/null ||
+    die "curl not found"
+
+  set -x
+
+  install=$(mktemp)
+
+  curl -sLo "$install" "$url"
+
+  bash "$install"
+
+  if [[ $? -eq 0 ]]l then
+    rm -f "$install"
+  fi
+)
+
+die() (
+  printf '%s\n' "$@" >&2
+  exit 1
+)
+
+main "$@"
