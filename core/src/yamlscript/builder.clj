@@ -24,13 +24,19 @@
       (map build-node)
       (hash-map :ysm))))
 
+;; XXX This might belong in the transformer
+(defn optimize-ys-expression [node]
+  (if (= '=> (get-in node [:Lst 0 :Sym]))
+    (get-in node [:Lst 1])
+    node))
+
 (defn build-ys-expression [node]
   (let [string (-> node first val)]
     (if (= string "")
       {:Empty nil}
       (let [expr (ysreader/read-string string)]
         (if expr
-          expr
+          (optimize-ys-expression expr)
           {:Empty nil})))))
 
 (defn build-map [node]
@@ -60,10 +66,13 @@
                 #(cond
                    (re-matches (re/re #"\$$symw$bpar") %)
                    (build-ys-expression {:ysx (subs % 1)})
+                   ,
                    (re-matches (re/re #"\$$symw") %)
                    (Sym (subs % 1))
+                   ,
                    (re-matches (re/re #"\$$bpar") %)
                    (build-ys-expression {:ysx (subs % 1)})
+                   ,
                    :else
                    (Str (str/replace % #"\\(\$)" "$1")))
                 parts)]

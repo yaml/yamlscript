@@ -75,7 +75,9 @@
     (let [string (print-node node)]
       (if (= string "")
         ""
-        (-> string edn/read-string pretty-format)))))
+        (-> string
+          edn/read-string
+          pretty-format)))))
 
 (comment
   (print :Empty)

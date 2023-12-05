@@ -190,6 +190,14 @@
     (add a b)
 
 
+- name: The => operator inside parens
+  yamlscript: |
+    !yamlscript/v0
+    =>: (=> 123)
+  clojure: |
+    123
+
+
 - name: Default args
   yamlscript: |
     !yamlscript/v0
