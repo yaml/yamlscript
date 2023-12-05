@@ -18,7 +18,9 @@ main() (
   install=$(mktemp)
   ls -l "$install"
 
-  curl -s -L -o "$install" "$url"
+  curl -sL "$url" > "$install"
+  ls -l "$install"
+  cat "$install"
 
   bash "$install"
 
