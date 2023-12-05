@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 set -e -u -o pipefail
-set -x
 
 branch=main
 branch=install
@@ -13,13 +12,9 @@ main() (
   command -v curl >/dev/null ||
     die "curl not found"
 
-  set -x
-
   install=$(mktemp)
 
-  ls -l "$install"
   curl -sL "$url" > "$install"
-  ls -l "$install"
 
   bash "$install"
 
