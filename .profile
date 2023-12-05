@@ -13,4 +13,4 @@ YS() (
   java -jar "$base/target/uberjar/$jar" "$@"
 )
 
-alias mtv='time make test v=1'
+alias mtv='time -p make test v=1'

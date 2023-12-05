@@ -25,7 +25,7 @@ structure.
 Most existing YAML files in the wild are already valid YAMLScript programs.
 If you have a valid YAML ([1.2 Core Schema](
 https://yaml.org/spec/1.2.2/#103-core-schema)) file that doesn't use custom
-tags, and loads to a value expressable in JSON, then it is a valid YAMLScript
+tags, and loads to a value expressible in JSON, then it is a valid YAMLScript
 program.
 YAMLScript's `load` operation will evaluate that file exactly the same in any
 programming language / environment.
@@ -127,7 +127,8 @@ have the full power of Clojure at your disposal.
 
 ## Installing YAMLScript
 
-At the moment, the best way to install YAMLScript is to build it from source.
+At the moment, the best way to install YAMLScript is to build it from source,
+but see the section "YAMLScript Releases" below.
 
 This is very easy to do because YAMLScript has very few dependencies:
 
@@ -158,6 +159,26 @@ To install to a different location, run `make install PREFIX=/some/path`.
 > * The build can take several minutes (`native-image` is slow)
 > * If you install to a custom location, you will need to add that location to
 >   your `PATH` and `LD_LIBRARY_PATH` environment variables
+
+
+### Installing YAMLScript Releases
+
+YAMLScript now ships binary releases for a couple platforms [here](
+https://github.com/yaml/yamlscript/releases).
+
+To install a latest release for your machine platform, try one of these:
+
+```
+curl https://github.com/yaml/yamlscript/install-ys | bash
+curl https://github.com/yaml/yamlscript/install-libyamlscript | bash
+```
+
+depending on what you are installing, `ys` or `libyamlscript`.
+
+This will attempt to install stuff under `/usr/local` so you probably need to
+use `... | sudo bash` to install as root.
+
+To install to some other place use `... | PREFIX=other/place bash`.
 
 
 ### Installing a YAMLScript Binding for a Programming Language

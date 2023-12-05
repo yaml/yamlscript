@@ -35,9 +35,6 @@ endif
 
 default:
 
-bump:
-	version-bump $(old) $(new)
-
 chown:
 	sudo chown -R $(USER):$(USER) .
 
@@ -56,12 +53,44 @@ test: $(TEST)
 	@echo
 	@echo 'ALL TESTS PASSED!'
 test-ys:
-	$(MAKE) -C ys test-all v=$v
+	$(MAKE) -C ys test-all v=$v GRAALVM_O=b
 test-%: %
-	$(MAKE) -C $< test v=$v
+	$(MAKE) -C $< test v=$v GRAALVM_O=b
+
+release-publish: $(RELEASE_YS_NAME).tar.xz $(RELEASE_LYS_NAME).tar.xz
+	publish-release $^
+
+release-clean:
+	$(RM) -r $(RELEASE_YS_NAME)* $(RELEASE_LYS_NAME)*
+
+$(RELEASE_YS_NAME).tar.xz: $(RELEASE_YS_NAME)
+	mkdir -p $<
+	cp -pP ys/bin/ys* $</
+	cp common/install.mk $</Makefile
+	$(TIME) tar -I'xz -0' -cf $@ $<
+
+$(RELEASE_LYS_NAME).tar.xz: $(RELEASE_LYS_NAME)
+	mkdir -p $<
+	cp -pP libyamlscript/lib/libyamlscript.$(SO)* $</
+	cp common/install.mk $</Makefile
+	$(TIME) tar -I'xz -0' -cf $@ $<
+
+$(RELEASE_YS_NAME): build-ys
+
+$(RELEASE_LYS_NAME): build-libyamlscript
+
+delete-tag:
+	-git tag --delete $(YS_VERSION)
+	-git push --delete origin $(YS_VERSION)
+
+bump:
+ifeq (,$(new))
+	$(error new= is required)
+endif
+	version-bump $(old) $(new)
 
 $(CLEAN):
-clean: $(CLEAN)
+clean: $(CLEAN) release-clean
 clean-%: %
 	$(MAKE) -C $< clean
 

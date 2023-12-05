@@ -20,7 +20,8 @@ update-file() {
   local file=$1 old=$2 new=$3
 
   perl -i -pe "s/(yamlscript.*)$old(?=[\ \-\"\']|$)/\${1}$new/gim" "$file"
-  perl -i -pe "s/^(version: )$old$/\${1}$new/gm" "$file"
+  perl -i -pe "s/^(version: )$old$/\${1}$new/m" "$file"
+  perl -i -pe "s/^(VERSION=)$old$/\${1}$new/m" "$file"
 
   if git diff --quiet "$file"; then
     echo "* No changes to $file"
@@ -45,6 +46,7 @@ setup() {
     Meta
     .profile
     core/project.clj
+    common/install
     common/project.clj
     libyamlscript/project.clj
     ys/src/yamlscript/cli.clj

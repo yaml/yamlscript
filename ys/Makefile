@@ -45,7 +45,7 @@ ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
 	mkdir -p $(dir $@)
-	time \
+	$(TIME) \
 	native-image \
 	    -O$(GRAALVM_O) \
 	    --verbose \

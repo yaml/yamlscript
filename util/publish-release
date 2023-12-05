@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+main() (
+  setup "$@"
+  git-tag
+  release
+  update "$@"
+)
+
+update() (
+  for RELEASE_TAR_PATH; do
+    RELEASE_TAR_FILE=$(basename "$RELEASE_TAR_PATH")
+    api-upload-assets
+  done
+)
+
+release() {
+  api-new-release
+
+  if [[ $error ]]; then
+    if [[ $error == 'already_exists' ]]; then
+      api-get-release
+    else
+      die "Error: $error"
+    fi
+  fi
+
+  if [[ ! $id ]]; then
+    if [[ $error ]]; then
+      die "Error: $error"
+    else
+      die "Error: No release id found in response: $resp_json"
+    fi
+  fi
+}
+
+git-tag() {
+  if [[ $(git tag -l "$VERSION") ]]; then
+    die "Error: Tag '$VERSION' already exists." \
+      "Delete it with 'git tag -d $VERSION' or" \
+      "Use 'make version-bump new=1.2.3' to bump the version."
+  fi
+  if [[ $(git diff --stat) ]]; then
+    die "Error: Working directory is not clean. Commit changes first."
+  fi
+  git tag "$VERSION"
+}
+
+setup() {
+  ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
+
+  cd "$ROOT" || exit
+
+  RELEASE_TAR_PATH=${1:?Usage: $0 <yamlscript-release-tar-file>}
+  RELEASE_TAR_FILE=$(basename "$RELEASE_TAR_PATH")
+
+  GH_REPO_USER=yaml
+  GH_REPO=yamlscript
+  GH_USER=${GH_USER:-$(git hub config login)}
+  GH_TOKEN=${GH_TOKEN:-$(git hub config api-token)}
+  GH_TARGET=main
+
+  [[ $GH_USER && $GH_TOKEN ]] ||
+    die "Error: GH_USER and GH_TOKEN must be set in the environment."
+
+  if [[ $RELEASE_TAR_FILE == libyamlscript-* ]]; then
+    VERSION=${RELEASE_TAR_FILE#libyamlscript-}
+  elif [[ $RELEASE_TAR_FILE == ys-* ]]; then
+    VERSION=${RELEASE_TAR_FILE#ys-}
+  else
+    die "Error: Release file must be named libyamlscript-* or ys-*"
+  fi
+  VERSION=${VERSION%%-*}
+
+  GH_API_PATH=repos/$GH_REPO_USER/$GH_REPO/releases
+  GH_API_URL=https://api.github.com/$GH_API_PATH
+}
+
+api-new-release() {
+  id= error=
+
+  resp_json=$(
+    set -x
+    curl -sL \
+      --user "$GH_USER:$GH_TOKEN" \
+      -X POST \
+      "$GH_API_URL" \
+      -d "{
+        \"tag_name\": \"$VERSION\",
+        \"target_commitish\": \"$GH_TARGET\",
+        \"name\": \"$VERSION\",
+        \"body\": \"YAMLScript Release - version $VERSION\",
+        \"draft\": false,
+        \"prerelease\": false
+      }"
+  )
+
+  error=$(jq -r '.errors[0]' <<<"$resp_json")
+  [[ $error == null ]] && error=
+  if ! [[ $error ]]; then
+    id=$(jq -r .id <<<"$resp_json")
+  fi
+
+  [[ $id || $error ]] ||
+    die "Error: No release id or error found in response: $resp_json"
+
+  echo "Release id: $id"
+}
+
+api-get-release() {
+  id= error=
+
+  resp_json=$(
+    set -x
+    curl -sL \
+      --user "$GH_USER:$GH_TOKEN" \
+      -X GET \
+      "$GH_API_URL/tags/$VERSION"
+  )
+
+  error=$(jq -r '.errors[0]' <<<"$resp_json")
+  [[ $error == null ]] && error=
+  if ! [[ $error ]]; then
+    id=$(jq -r .id <<<"$resp_json")
+  fi
+
+  [[ $id || $error ]] ||
+    die "Error: No release id or error found in response: $resp_json"
+}
+
+api-upload-assets() (
+  GH_ASSET_URL=https://uploads.github.com/$GH_API_PATH/
+  GH_ASSET_URL+=$id/assets?name=$RELEASE_TAR_FILE
+  resp_json=$(
+    set -x
+    curl -sL \
+      --user "$GH_USER:$GH_TOKEN" \
+      -X POST "$GH_ASSET_URL" \
+      --header 'Content-Type: text/javascript' \
+      --upload-file "$RELEASE_TAR_PATH"
+  )
+  echo "Published $RELEASE_TAR_PATH"
+  jq -r .browser_download_url <<<"$resp_json"
+)
+
+die() {
+  echo "$*" >&2
+  exit 1
+}
+
+[[ $0 != "${BASH_SOURCE[0]}" ]] || main "$@"

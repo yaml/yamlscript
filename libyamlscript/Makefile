@@ -40,7 +40,7 @@ ifneq (true,$(LIBZ))
 endif
 	mkdir -p $(dir $@)
 	# The next command may take a long time (a minute or so)
-	time \
+	$(TIME) \
 	native-image \
 	    -O$(GRAALVM_O) \
 	    --verbose \

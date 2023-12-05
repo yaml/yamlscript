@@ -1,65 +1,6 @@
 #------------------------------------------------------------------------------
-# Set machine specific variables:
+# Set Clojure / Java specific variables:
 #------------------------------------------------------------------------------
-ifneq (,$(findstring linux,$(ostype)))
-  GRAALVM_SUBDIR :=
-
-  ifeq (ok,$(shell [[ $(machtype) == x86_64-*-linux* ]] && echo ok))
-    GRAALVM_ARCH := linux-x64
-
-  else
-    $(error Unsupported Linux MACHTYPE: $(machtype))
-  endif
-
-else ifeq (true,$(IS_MACOS))
-  GRAALVM_SUBDIR := /Contents/Home
-
-  ifneq (,$(findstring arm64-apple-darwin,$(machtype)))
-    GRAALVM_ARCH := macos-aarch64
-
-  else ifneq (,$(findstring x86_64-apple-darwin,$(machtype)))
-    GRAALVM_ARCH := macos-x64
-
-  else
-    $(error Unsupported MacOS MACHTYPE: $(machtype))
-  endif
-
-else
-  $(error Unsupported OSTYPE: $(ostype))
-endif
-
-#------------------------------------------------------------------------------
-# Set GRAALVM variables:
-#------------------------------------------------------------------------------
-
-### For Orable GraalVM No-Fee #################################################
-ifndef GRAALVM_CE
-GRAALVM_SRC := https://download.oracle.com/graalvm
-GRAALVM_VER ?= 21
-GRAALVM_TAR := graalvm-jdk-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
-GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/latest/$(GRAALVM_TAR)
-GRAALVM_PATH ?= /tmp/graalvm-oracle-$(GRAALVM_VER)
-
-### For GraalVM CE (Community Edition) ########################################
-else
-GRAALVM_SRC := https://github.com/graalvm/graalvm-ce-builds/releases/download
-GRAALVM_VER ?= 21
-  ifeq (21,$(GRAALVM_VER))
-    override GRAALVM_VER := jdk-21.0.0
-  endif
-  ifeq (17,$(GRAALVM_VER))
-    override GRAALVM_VER := jdk-17.0.8
-  endif
-GRAALVM_TAR := graalvm-community-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
-GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/$(GRAALVM_TAR)
-GRAALVM_PATH ?= /tmp/graalvm-ce-$(GRAALVM_VER)
-endif
-
-GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
-GRAALVM_DOWNLOAD := /tmp/$(GRAALVM_TAR)
-GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
-
-GRAALVM_O ?= 1
 
 export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(GRAALVM_HOME)/bin:$(PATH)
