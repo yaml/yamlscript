@@ -16,16 +16,15 @@ main() (
   set -x
 
   install=$(mktemp)
-  ls -l "$install"
 
+  ls -l "$install"
   curl -sL "$url" > "$install"
   ls -l "$install"
-  cat "$install"
 
   bash "$install"
 
   if [[ $? -eq 0 ]]; then
-    rm -f "$install"
+    : rm -f "$install"
   fi
 )
 
