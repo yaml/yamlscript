@@ -16,8 +16,9 @@ main() (
   set -x
 
   install=$(mktemp)
+  ls -l "$install"
 
-  curl -sLo "$install" "$url"
+  curl -s -L -o "$install" "$url"
 
   bash "$install"
 
