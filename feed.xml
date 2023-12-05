@@ -936,7 +936,7 @@ release</a>.
 What a coincidence!</p>
 <p>At he moment there are only releases published for Linux x86_64 and macOS
 aarch64.
-If you happen to be running on one of those platforms, you run the following
+If you happen to be running on one of those platforms, you can run the following
 command to install YAMLScript's CLI, <code>ys</code>:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install-ys <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
 <p>This installer defaults to installing <code>ys</code> into <code>/usr/local/bin</code> so you probably
