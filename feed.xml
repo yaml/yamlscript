@@ -950,6 +950,8 @@ need to run it as root or with <code>sudo</code>:</p>
 library.
 You can install it like above but with (some variation of):</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install-libyamlscript <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
+<p>We'll be using the shared library soon when we start playing around with using
+YAMLScript from other programming languages.</p>
 <h3>Building from Source</h3>
 <p>The most reliable way to install YAMLScript is to build it from source.
 We've put a lot of effort into making this as easy as possible.
@@ -957,7 +959,9 @@ You don't need any special prerequisites; just bash, curl and make.</p>
 <p>The first thing you need to do is clone the YAMLScript repo:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/yaml/yamlscript</code></pre>
 <p>Then you can build and install the CLI with:</p>
-<pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> yamlscript<br>$ <span class="token function">make</span> build<br>$ <span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span></code></pre>
+<pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> yamlscript<br>$ <span class="token function">make</span> build<br>$ <span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span><br>or<br>$ <span class="token function">make</span> <span class="token function">install</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=</span><span class="token punctuation">..</span>.</code></pre>
+<p>The <code>make install</code> command will install both <code>ys</code> and <code>libyamlscript.so</code> into
+<code>$PREFIX/bin</code> and <code>$PREFIX/lib</code> respectively.</p>
 <blockquote>
 <p>Note: Currently you should take care not to run <code>make build</code> as root.
 Since <code>make install</code> triggers <code>make build</code>, running <code>sudo make install</code>
