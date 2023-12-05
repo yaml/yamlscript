@@ -13,7 +13,7 @@ main() (
 
   install=$(mktemp)
 
-  curl -sL "$url" "$install"
+  curl -sL "$url" > "$install"
 
   bash "$install"
 

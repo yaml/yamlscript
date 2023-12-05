@@ -18,7 +18,7 @@ main() (
   bash "$install"
 
   if [[ $? -eq 0 ]]; then
-    : rm -f "$install"
+    rm -f "$install"
   fi
 )
 
