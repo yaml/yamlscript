@@ -67,13 +67,21 @@ $(RELEASE_YS_NAME).tar.xz: $(RELEASE_YS_NAME)
 	mkdir -p $<
 	cp -pP ys/bin/ys* $</
 	cp common/install.mk $</Makefile
+ifeq (true,$(IS_MACOS))
+	$(TIME) tar -J -cf $@ $<
+else
 	$(TIME) tar -I'xz -0' -cf $@ $<
+endif
 
 $(RELEASE_LYS_NAME).tar.xz: $(RELEASE_LYS_NAME)
 	mkdir -p $<
 	cp -pP libyamlscript/lib/libyamlscript.$(SO)* $</
 	cp common/install.mk $</Makefile
+ifeq (true,$(IS_MACOS))
+	$(TIME) tar -J -cf $@ $<
+else
 	$(TIME) tar -I'xz -0' -cf $@ $<
+endif
 
 $(RELEASE_YS_NAME): build-ys
 

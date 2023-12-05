@@ -5,7 +5,7 @@ set -euo pipefail
 main() (
   setup "$@"
   git-tag
-  release
+  [[ $id ]] || release
   update "$@"
 )
 
@@ -76,6 +76,8 @@ setup() {
 
   GH_API_PATH=repos/$GH_REPO_USER/$GH_REPO/releases
   GH_API_URL=https://api.github.com/$GH_API_PATH
+
+  id=${RELEASE_ID-}
 }
 
 api-new-release() {
@@ -123,11 +125,13 @@ api-get-release() {
   error=$(jq -r '.errors[0]' <<<"$resp_json")
   [[ $error == null ]] && error=
   if ! [[ $error ]]; then
-    id=$(jq -r .id <<<"$resp_json")
+    id=$(jq -r '.[0].id' <<<"$resp_json")
   fi
 
   [[ $id || $error ]] ||
     die "Error: No release id or error found in response: $resp_json"
+
+  echo "Release id: $id"
 }
 
 api-upload-assets() (
