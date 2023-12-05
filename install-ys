@@ -3,7 +3,6 @@
 set -e -u -o pipefail
 
 branch=main
-branch=install
 export download=ys
 
 url=https://raw.githubusercontent.com/yaml/yamlscript/$branch/common/install
