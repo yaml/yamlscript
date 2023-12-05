@@ -25,7 +25,7 @@ install:: $(LIBYAMLSCRIPT_SO_FQNP)
 	ln -s $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
 	ln -s $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_APIP))
 
-clean::
+realclean::
 	$(RM) -r lib/
 	$(RM) src/libyamlscript/Core.class
 

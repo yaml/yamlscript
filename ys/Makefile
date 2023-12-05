@@ -67,7 +67,7 @@ endif
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 
-clean::
+realclean::
 	$(RM) -r bin
 
 ifeq (true,$(IS_ROOT))
