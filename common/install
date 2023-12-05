@@ -38,7 +38,7 @@ setup() {
 
   if [[ $MACHTYPE == *x86_64* ]]; then
     arch=x64
-  elif [[ $MACHTYPE == *arm64* ]]; then
+  elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
     arch=aarch64
   else
     die "Unknown machine type: $MACHTYPE"
