@@ -20,7 +20,7 @@ main() (
 
   bash "$install"
 
-  if [[ $? -eq 0 ]]l then
+  if [[ $? -eq 0 ]]; then
     rm -f "$install"
   fi
 )
