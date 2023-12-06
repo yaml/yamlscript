@@ -3,6 +3,10 @@ use std::sync::OnceLock;
 use dlopen::symbor::Library;
 use libc::{c_int, c_void as void};
 
+mod error;
+
+pub use error::Error;
+
 /// A wrapper around libyamlscript.
 #[allow(dead_code)]
 struct LibYamlscript {
@@ -21,61 +25,6 @@ struct LibYamlscript {
 unsafe impl Send for LibYamlscript {}
 unsafe impl Sync for LibYamlscript {}
 
-/// An error with libyamlscript.
-#[derive(Debug)]
-pub enum Error {
-    /// An error while loading the library.
-    ///
-    /// This error is unrecoverable and any further attempt to call any libyamlscript function will
-    /// fail.
-    Load(dlopen::Error),
-    /// An error while initializing the library.
-    ///
-    /// The library has been correctly found and opened, but attempting to initialize it has
-    /// failed.
-    Init(i32),
-    /// An error while calling a libyamlscript function.
-    Yamlscript(String),
-}
-
-impl From<dlopen::Error> for Error {
-    fn from(value: dlopen::Error) -> Self {
-        Self::Load(value)
-    }
-}
-
-/// Attempt to clone a `std::io::Error`.
-///
-/// Type information of the underlying error, if any, will be lost.
-fn clone_std_io_error(err: &std::io::Error) -> std::io::Error {
-    std::io::Error::new(
-        err.kind(),
-        err.get_ref().map(|e| format!("{e}")).unwrap_or_default(),
-    )
-}
-
-/// Clone a `dlopen::Error`.
-fn clone_dl_error(err: &dlopen::Error) -> dlopen::Error {
-    type DErr = dlopen::Error;
-    match err {
-        DErr::NullCharacter(x) => DErr::NullCharacter(x.clone()),
-        DErr::OpeningLibraryError(x) => DErr::OpeningLibraryError(clone_std_io_error(x)),
-        DErr::SymbolGettingError(x) => DErr::SymbolGettingError(clone_std_io_error(x)),
-        DErr::NullSymbol => DErr::NullSymbol,
-        DErr::AddrNotMatchingDll(x) => DErr::AddrNotMatchingDll(clone_std_io_error(x)),
-    }
-}
-
-impl Clone for Error {
-    fn clone(&self) -> Self {
-        match self {
-            Self::Load(x) => Self::Load(clone_dl_error(x)),
-            Self::Init(x) => Self::Init(*x),
-            Self::Yamlscript(x) => Self::Yamlscript(x.clone()),
-        }
-    }
-}
-
 /// Prototype of the `graal_create_isolate` function.
 type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
 /// Prototype of the `eval_ys_to_json` function.
@@ -92,7 +41,7 @@ impl LibYamlscript {
         let isolate = std::ptr::null_mut();
         let isolate_thread = std::ptr::null_mut();
 
-        // Fetch symbols
+        // Fetch symbols.
         let create_isolate_fn =
             unsafe { handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")? };
         let eval_ys_to_json_fn =
@@ -104,7 +53,7 @@ impl LibYamlscript {
         }
 
         // We are doing 2 things here:
-        //   1. Remove the borrow of the function pointers on the `Library`
+        //   1. Remove the borrow of the function pointers on the `Library`.
         //   2. Convert them to the correct Rust type.
         //
         // 1. By copying the pointers, we remove the borrow `PtrOrNull` has on `Library`. Without
@@ -117,12 +66,12 @@ impl LibYamlscript {
         //    pointer to pointer to a regular pointer. This means converting a pointer to its
         //    pointee, which clippy does not like at all, but it is valid in this context.
         //    Note that we dereference (`*`) the `_fn` bindings to retrieve the raw pointer from
-        //    the `PtrOrNull` struct. There is no pointer dereferencement here.
+        //    the `PtrOrNull` wrapper. There is no pointer dereferencement here.
         let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
         let eval_ys_to_json_fn: EvalYsToJsonFn =
             unsafe { std::mem::transmute(*eval_ys_to_json_fn) };
 
-        // Initialize the thread
+        // Initialize the thread.
         let x = unsafe { create_isolate_fn(std::ptr::null_mut(), &isolate, &isolate_thread) };
         if x != 0 {
             return Err(Error::Init(x));
@@ -145,32 +94,33 @@ impl LibYamlscript {
             Err(e) => Err(e.clone()),
         }
     }
-
-    /// Evaluate a YS string, returning a JSON string.
-    pub fn eval_ys_to_json(ys: &str) -> Result<String, Error> {
-        Self::with_library(|yamlscript| {
-            // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-            let input = std::ffi::CString::new(ys).map_err(|_| {
-                Error::Yamlscript("eval_ys_to_json: input contains a nil-byte".to_string())
-            })?;
-            let json = unsafe {
-                (yamlscript.eval_ys_to_json_fn)(
-                    yamlscript.isolate_thread as libc::c_longlong,
-                    input.as_bytes().as_ptr(),
-                )
-            };
-            if json.is_null() {
-                Err(Error::Yamlscript(
-                    "eval_ys_to_json: returned null pointer".to_string(),
-                ))
-            } else {
-                let json = unsafe { std::ffi::CStr::from_ptr(json) };
-                Ok(json.to_string_lossy().to_string())
-            }
-        })?
-    }
 }
 
-fn main() {
-    dbg!(LibYamlscript::eval_ys_to_json("Advent day: 3").unwrap());
+/// Evaluate a YS string, returning a JSON string.
+pub fn load(ys: &str) -> Result<String, Error> {
+    LibYamlscript::with_library(|yamlscript| {
+        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+        let input = std::ffi::CString::new(ys).map_err(|_| {
+            Error::Yamlscript("eval_ys_to_json: input contains a nil-byte".to_string())
+        })?;
+        let json = unsafe {
+            (yamlscript.eval_ys_to_json_fn)(
+                yamlscript.isolate_thread as libc::c_longlong,
+                input.as_bytes().as_ptr(),
+            )
+        };
+        if json.is_null() {
+            Err(Error::Yamlscript(
+                "eval_ys_to_json: returned null pointer".to_string(),
+            ))
+        } else {
+            let json = unsafe { std::ffi::CStr::from_ptr(json) };
+            Ok(json.to_string_lossy().to_string())
+        }
+    })?
+}
+
+/// Evaluate a YS string, discarding the result.
+pub fn run(ys: &str) -> Result<(), Error> {
+    load(ys).map(|_| ())
 }
