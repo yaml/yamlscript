@@ -6,11 +6,11 @@
 
 (ns yamlscript.printer
   (:use yamlscript.debug)
-  (:require [clj-yaml.core :as yaml]
-            [clojure.edn :as edn]
-            [clojure.pprint :as pp]
-            [clojure.string :as str]
-            [yamlscript.builder :as builder])
+  (:require
+   [clj-yaml.core :as yaml]
+   [clojure.edn :as edn]
+   [clojure.pprint :as pp]
+   [clojure.string :as str])
   (:refer-clojure :exclude [print]))
 
 (declare print-node)
