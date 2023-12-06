@@ -111,8 +111,7 @@
             op (cond
                  (= op (Sym '||)) (Sym 'or)
                  (= op (Sym '&&)) (Sym 'and)
-                 :else op)
-            ]
+                 :else op)]
         (->> expr
           (cons nil)
           (partition 2)

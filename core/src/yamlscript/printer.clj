@@ -20,7 +20,7 @@
 
 (defn pr-string [s]
   (-> s
-      (str/escape string-escape)))
+    (str/escape string-escape)))
 
 (defn print-node [node]
   (let [node (if (keyword? node)
@@ -30,35 +30,36 @@
     (case type
       :Empty ""
       :Lst (str
-            "("
-            (str/join " " (map print-node val))
-            ")")
-      :Lam (do (println val) (str
-                              "(fn ["
-                              (str/join " "
-                                        (map #(str "_" (if (str/blank? (subs % 1)) "1" (subs % 1)))
-                                             (filter #(str/starts-with? % "%") (map print-node val))))
-                              "] ("
-                              (str/join " " (map #(if (str/starts-with? % "%")
-                                                    (if (str/blank? (subs % 1))
-                                                      "_1"
-                                                      (str "_" (subs % 1)))
-                                                    %)
-                                                 (map print-node val)))
-                              ")))"))
+             "("
+             (str/join " " (map print-node val))
+             ")")
+      :Lam (do (println val)
+               (str
+                 "(fn ["
+                 (str/join " "
+                   (map #(str "_" (if (str/blank? (subs % 1)) "1" (subs % 1)))
+                     (filter #(str/starts-with? % "%") (map print-node val))))
+                 "] ("
+                 (str/join " " (map #(if (str/starts-with? % "%")
+                                       (if (str/blank? (subs % 1))
+                                         "_1"
+                                         (str "_" (subs % 1)))
+                                       %)
+                                 (map print-node val)))
+                 ")))"))
       :Vec (str
-            "["
-            (str/join " " (map print-node val))
-            "]")
+             "["
+             (str/join " " (map print-node val))
+             "]")
       :Map (str
-            "{"
-            (str/join ", " (->> val
-                                (partition 2)
-                                (map #(str
-                                       (print-node (first %))
-                                       " "
-                                       (print-node (second %))))))
-            "}")
+             "{"
+             (str/join ", " (->> val
+                              (partition 2)
+                              (map #(str
+                                      (print-node (first %))
+                                      " "
+                                      (print-node (second %))))))
+             "}")
       :Str (str \" (pr-string val) \")
       :Chr (str "\\" val)
       :Sym (str val)
@@ -67,9 +68,9 @@
       :Flt (str val)
       :Bln (str val)
       :Nil "nil"
-      , (throw
-         (Exception. (str "Unknown AST node type:"
-                          node))))))
+      ,    (throw
+             (Exception. (str "Unknown AST node type:"
+                           node))))))
 
 (defn pretty-format [s]
   (let [s (with-out-str (pp/write s))]
@@ -81,18 +82,19 @@
   (if (= 'do (get-in node [:Lst 0 :Sym]))
     (let [nodes (rest (get-in node [:Lst]))]
       (->> nodes
-           (map print-node)
-           (str/join "\n")
-           (#(str % "\n"))))
+        (map print-node)
+        (str/join "\n")
+        (#(str % "\n"))))
     (let [string (print-node node)]
       (if (= string "")
         ""
         (-> string
-            edn/read-string
-            pretty-format)))))
+          edn/read-string
+          pretty-format)))))
 
 (comment
   (print :Empty)
   (print
-   {:Lst [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
-  (print {:Map [{:Str "foo"} {:Str "\\a"}]}))
+    {:Lst [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
+  (print {:Map [{:Str "foo"} {:Str "\\a"}]})
+  )

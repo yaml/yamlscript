@@ -57,7 +57,7 @@
             )*\"?                            # Ending quote
             ")
 (def symw #"(?:\w+(?:-\w+)*)")             ; Symbol word
-(def perc #"(?:\%(?:[1-9]|1[0-9]|20)?)")          ; Percent symbol (for lambdas)
+(def perc #"(?:\%(?:[1-9]|1[0-9]|20)?)")   ; Percent symbol (for lambdas)
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
 (def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
 (def nspc (re #"(?:$symw(?:\.$symw)*)"))   ; Namespace symbol
