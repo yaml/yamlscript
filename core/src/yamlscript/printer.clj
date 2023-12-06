@@ -13,6 +13,8 @@
             [yamlscript.builder :as builder])
   (:refer-clojure :exclude [print]))
 
+(declare print-node)
+
 (def string-escape
   {\\ "\\\\"
    \" "\\\""
@@ -21,6 +23,21 @@
 (defn pr-string [s]
   (-> s
     (str/escape string-escape)))
+
+(defn pr-lambda [val]
+  (str
+    "(fn ["
+    (str/join " "
+      (map #(str "_" (if (str/blank? (subs % 1)) "1" (subs % 1)))
+        (filter #(str/starts-with? % "%") (map print-node val))))
+    "] ("
+    (str/join " " (map #(if (str/starts-with? % "%")
+                          (if (str/blank? (subs % 1))
+                            "_1"
+                            (str "_" (subs % 1)))
+                          %)
+                    (map print-node val)))
+    ")))"))
 
 (defn print-node [node]
   (let [node (if (keyword? node)
@@ -33,31 +50,20 @@
              "("
              (str/join " " (map print-node val))
              ")")
-      :Lam (str
-             "(fn ["
-             (str/join " "
-               (map #(str "_" (if (str/blank? (subs % 1)) "1" (subs % 1)))
-                 (filter #(str/starts-with? % "%") (map print-node val))))
-             "] ("
-             (str/join " " (map #(if (str/starts-with? % "%")
-                                   (if (str/blank? (subs % 1))
-                                     "_1"
-                                     (str "_" (subs % 1)))
-                                   %)
-                             (map print-node val)))
-             ")))")
+      :Lam (pr-lambda val)
       :Vec (str
              "["
              (str/join " " (map print-node val))
              "]")
       :Map (str
              "{"
-             (str/join ", " (->> val
-                              (partition 2)
-                              (map #(str
-                                      (print-node (first %))
-                                      " "
-                                      (print-node (second %))))))
+             (str/join ", "
+               (->> val
+                 (partition 2)
+                 (map #(str
+                         (print-node (first %))
+                         " "
+                         (print-node (second %))))))
              "}")
       :Str (str \" (pr-string val) \")
       :Chr (str "\\" val)
@@ -68,8 +74,9 @@
       :Bln (str val)
       :Nil "nil"
       ,    (throw
-             (Exception. (str "Unknown AST node type:"
-                           node))))))
+             (Exception.
+               (str "Unknown AST node type:"
+                 node))))))
 
 (defn pretty-format [s]
   (let [s (with-out-str (pp/write s))]
