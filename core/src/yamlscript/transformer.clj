@@ -14,25 +14,28 @@
   [node] (transform-node node))
 
 (defn add-num-or-string [{list :Lst}]
-  (let [list (map transform-node list)
-        [v1 & rest] list]
-    (when (and
-            (>= (count list) 3)
-            (= v1 {:Sym '+}))
-      {:Lst (cons {:Sym 'add} rest)})))
+  (when (and
+          (>= (count list) 3)
+          (= (first list) {:Sym '+}))
+    (let [list (map transform-node list)
+          [_ & rest] list]
+      {:Lst (cons {:Sym '_+} rest)})))
 
 (defn string-repeat [{list :Lst}]
-  (let [list (map transform-node list)
-        [v1 v2 v3] list]
-    (when (and
-            (= (count list) 3)
-            (= v1 {:Sym '*}))
-      {:Lst [{:Sym 'times} v2 v3]})))
+  (when (and
+          (= (count list) 3)
+          (= (first list) {:Sym '*}))
+    (let [list (map transform-node list)
+          [_ v2 v3] list]
+      {:Lst [{:Sym '_*} v2 v3]})))
 
 (defn transform-ysm [node]
-  (let [ysm (-> node first val)]
-    (->> ysm
-      (map transform-node)
+  (let [list (-> node first val)]
+    (->> list
+      (map
+        #(if (vector? %)
+           (vec (map transform-node %))
+           (transform-node %)))
       (hash-map :ysm))))
 
 (defn transform-list [node]
@@ -42,8 +45,8 @@
     node))
 
 (defn transform-map [node]
-  (let [lst (:Map node)]
-    {:Map (map transform-node lst)}))
+  (let [list (:Map node)]
+    {:Map (map transform-node list)}))
 
 ; TODO:
 ; Change def to let if not in top level.
@@ -51,14 +54,12 @@
 ; Turn :ysm mappings into :ysg groups when appropriate.
 
 (defn transform-node [node]
-  (if (vector? node)
-    (vec (map transform-node node))
-    (let [[key] (first node)]
-      (case key
-        :ysm (transform-ysm node)
-        :Lst (transform-list node)
-        :Map (transform-map node)
-        ,    node))))
+  (let [[key] (first node)]
+    (case key
+      :ysm (transform-ysm node)
+      :Lst (transform-list node)
+      :Map (transform-map node)
+      ,    node)))
 
 (comment
   (->>

@@ -202,7 +202,7 @@
      [{:Sym inc}
       {:Lst [{:Sym *} {:Int 6} {:Int 7}]}]}
   print: |
-    (inc (times 6 7))
+    (inc (_* 6 7))
 
 
 
@@ -248,7 +248,7 @@
      [[{:Sym defn} {:Sym foo} {:Vec [{:Sym a} {:Sym b}]}]
       {:Lst [{:Sym +} {:Sym a} {:Sym b}]}]}
   print: |
-    (defn foo [a b] (add a b))
+    (defn foo [a b] (_+ a b))
 
 
 
@@ -332,7 +332,7 @@
     (def foo 123)
     (defn bar [a b]
       (let [c (+ a b)]
-        (times 2 c)))
+        (_* 2 c)))
     bar: 10 20
 
 

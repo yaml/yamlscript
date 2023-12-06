@@ -102,22 +102,34 @@
 (defn construct-ysm [node]
   (let [ysm (-> node first val)]
     (->> ysm
-      (reduce #(conj %1 (construct-node %2)) [])
+      (reduce
+        #(conj %1
+           (if (vector? %2)
+             (map construct-node %2)
+             (construct-node %2)))
+        [])
       (partition 2)
       (map vec)
       (hash-map :do)
       construct-do)))
 
 (defn construct-node [node]
-  (if (vector? node)
-    (->> node
-      (map construct-node))
-    (let [key (-> node first key)]
-      (case key
-        :ysm (construct-ysm node)
-             node))))
+  (let [key (-> node first key)]
+    (case key
+      :ysm (construct-ysm node)
+      ,    node)))
 
 (comment
+  (construct
+    {:ysm
+     ([{:Sym 'defn} {:Sym 'foo} {:Vec [{:Sym 'x}]}]
+      {:ysm
+       '([{:Sym 'def} {:Sym 'y}]
+        {:Lst ({:Sym 'add} {:Sym 'x} {:Int 1})}
+        [{:Sym 'def} {:Sym 'x}]
+        {:Lst [{:Sym 'times} {:Sym 'y} {:Sym 'x}]}
+        {:Sym '=>}
+        {:Sym 'y})})})
   (construct :Nil)
   (construct {:do [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
   )

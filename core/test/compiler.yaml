@@ -72,7 +72,7 @@
     !yamlscript/v0
     (a + "-" + b)
   clojure: |
-    (add a "-" b)
+    (_+ a "-" b)
 
 
 - name: String repeat operator
@@ -80,9 +80,9 @@
     !yamlscript/v0
     ("foo" * 3)
   transform: |
-    {:Lst [{:Sym times} {:Str "foo"} {:Int 3}]}
+    {:Lst [{:Sym _*} {:Str "foo"} {:Int 3}]}
   clojure: |
-    (times "foo" 3)
+    (_* "foo" 3)
 
 
 - name: Nested mappings
@@ -142,7 +142,7 @@
     =>: (x + 1)
   clojure: |
     (def x 41)
-    (add x 1)
+    (_+ x 1)
 
 
 - name: (a + b + c) -> (+ a b c)
@@ -150,7 +150,7 @@
     !yamlscript/v0
     =>: (a + b + c)
   clojure: |
-    (add a b c)
+    (_+ a b c)
 
 
 - name: Pre-declare top level functions as needed
@@ -187,7 +187,7 @@
     !yamlscript/v0
     =>: a + b
   clojure: |
-    (add a b)
+    (_+ a b)
 
 
 - name: The => operator inside parens
@@ -196,6 +196,18 @@
     =>: (=> 123)
   clojure: |
     123
+
+
+- name: Code generation for let
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(x):
+      y =: x + 1
+      x =: y * x
+      =>: y
+  clojure: |
+    (defn foo [x] (let [y (_+ x 1) x (_* y x)] y))
+  SKIP: true
 
 
 - name: Default args

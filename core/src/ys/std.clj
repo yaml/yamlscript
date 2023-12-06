@@ -28,12 +28,19 @@
 
 (defn => [this] this)
 
-(defn add [x & xs]
+(defn _+ [x & xs]
   (cond
     (string? x) (apply str x xs)
     (vector? x) (apply concat x xs)
     (map? x) (apply merge x xs)
     :else (apply + x xs)))
+
+(defn _* [x y]
+  (if (and (string? x) (number? y))
+    (apply str (repeat y x))
+    (if (and (string? y) (number? x))
+      (apply str (repeat x y))
+      (* x y))))
 
 (defn err [& xs]
   (binding [*out* *err*]
@@ -65,13 +72,6 @@
 
 (defn say [& xs]
   (apply clojure.core/println xs))
-
-(defn times [x y]
-  (if (and (string? x) (number? y))
-    (apply str (repeat y x))
-    (if (and (string? y) (number? x))
-      (apply str (repeat x y))
-      (* x y))))
 
 (defn warn [& xs]
   (binding [*out* *err*]
