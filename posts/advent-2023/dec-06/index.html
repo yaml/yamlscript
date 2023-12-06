@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href=https://yamlscript.org/posts/advent-2023/dec-06/>
+
+    <link href="/assets/main.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+
+    <title>
+      Modes of Transportation
+      
+         | YAMLScript
+      
+    </title>
+
+    <link rel="icon" type= “image/x-icon” href="/images/favicon.ico">
+
+    <meta property="og:title" content="Modes of Transportation">
+    <meta property="og:site_name" content="YAMLScript"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://yamlscript.org/posts/advent-2023/dec-06/"/>
+    <meta name="twitter:card" content="summary_large_image">
+
+    
+
+    
+    
+      
+    
+    
+      <meta name="description" content="Modes of Transportation 06 Dec 2023 | 4 min read How do you get around? Some people walk, some ride bikes, some drive cars (or the cars...">
+      <meta property="og:description" content="Modes of Transportation 06 Dec 2023 | 4 min read How do you get around? Some people walk, some ride bikes, some drive cars (or the cars...">
+      <meta name="description" content="Modes of Transportation 06 Dec 2023 | 4 min read How do you get around? Some people walk, some ride bikes, some drive cars (or the cars..."/>
+    
+
+    
+      
+    
+    
+
+    
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>mermaid.initialize({startOnLoad:true});</script>
+    
+  </head>
+  <body>
+    <div class="layout-wrapper">
+
+      <header class="header">
+        <div class="header__content">
+          <h1 class="site-title">
+            <a href=/>
+              <img src="/images/yamlscript.svg">
+              <!-- YAMLScript -->
+            </a>
+          </h1>
+
+          
+            <nav class="nav">
+              <ul class="nav__list">
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/blog"  >Blog</a>
+                  </li>
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/about"  >About</a>
+                  </li>
+                
+              </ul>
+            </nav>
+
+          
+
+        </div>
+      </header>
+
+      <main class="main">
+        
+<article class="post">
+  <header class="post__header">
+    <h1>Modes of Transportation</h1>
+    <div class="post__details">
+      <time datetime="2023-12-06">
+        06 Dec 2023
+      </time>
+      <span> | </span>
+      <span>4 min read</span>
+    </div>
+  </header>
+
+  <main class="post__content">
+    <p>How do you get around?
+Some people walk, some ride bikes, some drive cars (or the cars drive them),
+some take trains, some in planes, so many ways, even some in sleighs.</p>
+<p>In YAMLScript, data gets around via various modes of transportation...
+3 modes to be exact.</p>
+<p>Rememeber back on December 3rd when we talked about the 2 different states that
+a YAMLScript program can be in?
+In one state <code>say</code> is a function, and in the other it's just a plain string.</p>
+<p>We call these states &quot;modes&quot;, and there is actually three of them.</p>
+<h3>Welcome to Day 6 of the YAMLScript Advent Calendar</h3>
+<p>YAMLScript has these 3 modes:</p>
+<ul>
+<li>
+<p>Code Mode</p>
+<p>A starting <code>!yamlscript/v0</code> tag puts the YS file into Code Mode.
+Unquoted strings are code expressions which are further parsed into AST
+forms.
+A <code>!</code> tag can switch the mode to Data Mode.</p>
+</li>
+<li>
+<p>Data Mode</p>
+<p>A starting <code>!yamlscript/v0/data</code> tag puts the YS file into Data Mode.
+Everything is the regular YAML data language that you are used to.
+But a <code>!</code> tag can switch the mode to Code Mode.</p>
+</li>
+<li>
+<p>Bare Mode</p>
+<p>Without a magic starting <code>!yamlscript</code> tag, the YS file is in Bare Mode.
+This is like Data Mode but you aren't allowed to ever switch to Code Mode.
+This is the default mode for YAMLScript files, and the reason we can claim
+that almost all existing YAML files are valid YAMLScript files.
+<em>Specifically all those that adhere to the JSON data model, which is almost
+all YAML config files.</em></p>
+</li>
+</ul>
+<p>The <code>ys</code> CLI tool will implicitly add a <code>!yamlscript/v0</code> tag when you use the
+<code>--eval</code> (aka <code>-e</code>) option, unless you actually provide a tag yourself.
+This is simply for convenience when you are testing out code snippets.</p>
+<p>Note that you can use multiple <code>-e</code> options and each one acts like a separate
+line of code in a file.</p>
+<p>So <code>ys -e 'say: &quot;Hello&quot;' -e 'say: &quot;World&quot;'</code> is the same as this YS program:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello"</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"World"</span></code></pre>
+<p>If you wanted to write a <code>ys</code> one-liner that used Data Mode, you could do this:
+<code>ys --load -e '!yamlscript/v0/data' -e 'foo: 111' -e 'bar: 222'</code> which is the
+same as this YS program:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/data</span><br><span class="token key atrule">foo</span><span class="token punctuation">:</span> <span class="token number">111</span><br><span class="token key atrule">bar</span><span class="token punctuation">:</span> <span class="token number">222</span></code></pre>
+<p>If you wanted to write a <code>ys</code> one-liner that used Bare Mode, you could do this:
+<code>ys --load -e </code>!yamlscript/v0/bare<code> -e 'foo: 111' -e 'bar: 222'</code> which is the
+same as the Data Mode example above.</p>
+<p>There's actually a better way to write Data and Bare Mode one-liners.
+The <code>ys</code> command has a <code>--mode</code> (aka <code>-m</code>) option that lets you set the mode to
+<code>code</code> (<code>c</code>), <code>data</code> (<code>d</code>) or <code>bare</code> (<code>b</code>).</p>
+<p>Thus the last one liner could be written as:
+<code>ys -mb -l -e 'foo: 111' -e 'bar: 222'</code>.</p>
+<blockquote>
+<p>Note: The <code>-m</code> option only works with the <code>-e</code> option.
+You can't use it to change the mode of a file that you are loading or running.</p>
+</blockquote>
+<h3>Switching Modes</h3>
+<p>In YAML tags are words that start with <code>!</code>.
+They are instructions to the YAML loader (specifically to the constructor phase)
+about what exactly to construct.</p>
+<p>It's quite rare to see a YAML tag in the wild.
+But here's something you probably didn't know...
+Every untagged node in an internal YAML loader tree is implicitly assigned a
+tag.
+This process (of a YAML loader) is called &quot;tag resolution&quot;.
+This is how the unquoted string <code>123</code> becomes the integer <code>123</code>.
+It is implicitly tagged with <code>!!int</code>, which happens to be shorthand for
+<code>tag:yaml.org,2002:int</code>.</p>
+<p>All YAML loaders understand the set of <code>yaml.org,2002</code> tags: <code>!!map</code>, <code>!!seq</code>,
+<code>!!str</code>, etc.
+In fact you are free to use these tags in YAMLScript programs, even in Bare
+Mode.
+But there is really no good reason to do so.</p>
+<p>The <code>!</code> tag is a valid YAML tag, but it is special in YAMLScript.
+It switches between Code Mode and Data Mode.</p>
+<p>If you think <code>!</code> looks weird, there is another cleaner looking way to switch
+from Code Mode to Data Mode.</p>
+<p>You can use <code>::</code> instead of <code>:</code> to separate the key and value of a mapping.</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0</span><br>my<span class="token punctuation">-</span>map =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  foo = 111<br>  bar = 222</code></pre>
+<p>is the same as:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">my-map =</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">foo</span><span class="token punctuation">:</span> <span class="token number">111</span><br>  <span class="token key atrule">bar</span><span class="token punctuation">:</span> <span class="token number">222</span></code></pre>
+<p>At this point you can't do the same thing to switch from Data Mode to Code Mode.</p>
+<p>Well that concludes our coverage of YAMLScript a la Mode!
+Mmmm... Now doesn't that just sound delicious? (or at least fashionable!)</p>
+<p>I'll see you tomorrow for day 7 of YAMLScript Advent 2023!</p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+  </main>
+
+  <aside class="post__aside">
+    <div class="post__tags">
+      
+        
+        <a href="/tags/blog/">#blog</a>
+      
+        
+        <a href="/tags/advent-2023/">#advent-2023</a>
+      
+    </div>
+
+    <nav class="post__pagination">
+
+        <a href="/posts/advent-2023/index/">
+          <span>←</span>
+          <span>2023 Advent Index</span>
+        </a>
+
+      
+
+        <a href="/posts/advent-2023/dec-05/">
+          <span>Unwrapping Gifts</span>
+          <span>→</span>
+        </a>
+
+      
+    </nav>
+  </aside>
+
+</article>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+
+          <ul class="hero__social-links">
+            
+              
+            
+
+            
+
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://github.com/yaml/yamlscript" target="_blank" rel="noopener noreferrer" >GitHub</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="/feed.xml" target="_blank" rel="noopener noreferrer" >RSS</a>
+                </li>
+              
+            
+          </ul>
+
+          
+            <p class="footer__attribution">
+      Powered by
+      <a href="https://www.11ty.dev" target="_blank" rel="noopener">Eleventy</a>.
+      Theme:
+      <a href="https://github.com/yinkakun/eleventy-duo" target="_blank" rel="noopener noreferrer">Eleventy Duo</a>.
+            </p>
+          
+
+        </div>
+      </div>
+
+    </footer>
+
+    <script src="/assets/main.js"></script>
+  </body>
+</html>
