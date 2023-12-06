@@ -33,20 +33,19 @@
              "("
              (str/join " " (map print-node val))
              ")")
-      :Lam (do (println val)
-               (str
-                 "(fn ["
-                 (str/join " "
-                   (map #(str "_" (if (str/blank? (subs % 1)) "1" (subs % 1)))
-                     (filter #(str/starts-with? % "%") (map print-node val))))
-                 "] ("
-                 (str/join " " (map #(if (str/starts-with? % "%")
-                                       (if (str/blank? (subs % 1))
-                                         "_1"
-                                         (str "_" (subs % 1)))
-                                       %)
-                                 (map print-node val)))
-                 ")))"))
+      :Lam (str
+             "(fn ["
+             (str/join " "
+               (map #(str "_" (if (str/blank? (subs % 1)) "1" (subs % 1)))
+                 (filter #(str/starts-with? % "%") (map print-node val))))
+             "] ("
+             (str/join " " (map #(if (str/starts-with? % "%")
+                                   (if (str/blank? (subs % 1))
+                                     "_1"
+                                     (str "_" (subs % 1)))
+                                   %)
+                             (map print-node val)))
+             ")))")
       :Vec (str
              "["
              (str/join " " (map print-node val))
