@@ -9,6 +9,8 @@
 
 (defn Lst [list] {:Lst (vec list)})
 
+(defn Lam [list] {:Lam (vec list)})
+
 (defn Vec [list] {:Vec (vec list)})
 
 (defn Map [list]

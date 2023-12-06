@@ -210,6 +210,14 @@
   SKIP: true
 
 
+- name: Lambda definition
+  yamlscript: |
+    !yamlscript/v0
+    =>: \(+ % %2)
+  clojure: |
+    (fn [_1 _2] (+ _1 _2))
+
+
 - name: Default args
   yamlscript: |
     !yamlscript/v0

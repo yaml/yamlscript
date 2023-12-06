@@ -30,6 +30,9 @@
 (defn is-operator? [token]
   (and token (re-matches re/oper (str token))))
 
+(defn is-percent? [token]
+  (and token (re-matches re/perc (str token))))
+
 (defn is-quote? [token]
   (and token (= "'" (str token))))
 
@@ -52,6 +55,7 @@
     (?:
       $comm |                 # Comment
                               # Symbols and operators
+      $perc |                   # Percent symbol
       $keyw |                   # Keyword token
       $dyns |                   # Dynamic symbol
       $symp |                   # Symbol followed by paren
@@ -147,6 +151,7 @@
     (is-string? token) [(Str (normalize-string token)) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
+    (is-percent? token) [(Sym token) tokens]
     (is-symbol? token) [(Sym token) tokens]
     (is-namespace? token) [(Sym token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
@@ -163,6 +168,7 @@
             ["(" (conj (rest tokens) sym "(")])
           [token tokens])]
     (case token
+      "\\(" (read-list tokens Lam ")")
       "(" (read-list tokens Lst ")")
       "[" (read-list tokens Vec "]")
       "{" (read-list tokens Map "}")
@@ -196,6 +202,7 @@
         (vec forms)))))
 
 (comment
+  (read-string "\\(% + %2)")
   (read-string "(1 .. 5)")
   (read-string
     "[\"a\" :b \\c 42 true false nil
