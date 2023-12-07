@@ -63,7 +63,11 @@
                      (= 'main (get-in % [:Lst 1 :Sym])))
             (node :Lst))))
     (update-in node [:Lst] conj (call-main))
-    node))
+    (if (and
+          (= 'defn (get-in node [:Lst 0 :Sym]))
+          (= 'main (get-in node [:Lst 1 :Sym])))
+      (Lst [(Sym 'do) node (call-main)])
+      node)))
 
 (defn construct
   "Construct resolved YAML tree into a YAMLScript AST."

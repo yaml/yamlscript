@@ -1,8 +1,10 @@
 - version: 0.1.21
   date:    wip
   changes:
-  - Collapse (=> ...) -> ...
+  - core: Collapse (=> ...) -> ...
   - Start logging project changes in Changes yaml file
+  - ys: Disable -R -N -K repl options for now
+  - core: Add call to main when only one top level form
 
 - version: 0.1.20
   date:    Wed Dec  6 08:39:19 AM PST 2023
