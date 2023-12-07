@@ -93,11 +93,11 @@
     "Error: Options --version and --debug are mutually exclusive"
     "Can't use other options with --version")
 
-  (has (ys "--mode=code" "--nrepl" "...")
-    "Error: Options --mode and --nrepl are mutually exclusive"
+  #_(has (ys "--mode=code" "--run" "...")
+    "Error: Options --mode and --run are mutually exclusive"
     "Can't use --mode with certain actions")
 
-  (has (ys "--kill" "-e" "...")
+  #_(has (ys "--kill" "-e" "...")
     "Error: Options --eval and --kill are mutually exclusive"
     "Can't --eval with certain actions")
 

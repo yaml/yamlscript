@@ -95,11 +95,11 @@
    ["-E" "--edn"
     "Output EDN for --load"]
 
-   ["-R" "--repl"
+   #_["-R" "--repl"
     "Start an interactive YAMLScript REPL"]
-   ["-N" "--nrepl"
+   #_["-N" "--nrepl"
     "Start a new nREPL server"]
-   ["-K" "--kill"
+   #_["-K" "--kill"
     "Stop the nREPL server"]
 
    ["-X" "--debug"
