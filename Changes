@@ -1,4 +1,9 @@
 
+- version: 0.1.22
+  date:    wip
+  changes:
+  - core: YS namespaces now start with `ys.`
+
 - version: 0.1.21
   date:    Wed Dec  6 07:35:15 PM PST 2023
   changes:

@@ -60,10 +60,10 @@
 
 (defn sci-ctx []
   {:namespaces
-   {'std ys-std-vars
-    'json ys-json-vars
-    'yaml ys-yaml-vars
-    'ys ys-ys-vars
+   {'ys.std ys-std-vars
+    'ys.json ys-json-vars
+    'ys.yaml ys-yaml-vars
+    'ys.ys ys-ys-vars
     'clojure.core (clojure-core-vars)}})
 
 (defn ys-load
