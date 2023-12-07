@@ -1,5 +1,6 @@
+
 - version: 0.1.21
-  date:    wip
+  date:    Wed Dec  6 07:35:15 PM PST 2023
   changes:
   - core: Collapse (=> ...) -> ...
   - Start logging project changes in Changes yaml file
