@@ -1,0 +1,20 @@
+{:paths ["src" "resources" "target/classes"],
+ :deps
+ {org.clojure/clojure {:mvn/version "1.11.1"},
+  org.clojure/core.async {:mvn/version "1.6.681"},
+  org.clojure/data.json {:mvn/version "2.4.0"},
+  org.clojure/tools.cli {:mvn/version "1.0.219"},
+  org.babashka/sci {:mvn/version "0.8.41"},
+  clj-commons/clj-yaml {:mvn/version "1.0.27"},
+  yamlscript/core {:mvn/version "0.1.21"}},
+ :aliases
+ {:lein2deps
+  {:deps
+   {io.github.borkdude/lein2deps
+    {:git/sha "1bcf2fbbcbef611381e5e9ccdc77bec1e62ea5e5"}},
+   :ns-default lein2deps.build,
+   :lein2deps/compile-java
+   {:src-dirs ["src"], :class-dir "target/classes"}}},
+ :deps/prep-lib
+ {:ensure "target/classes", :alias :lein2deps, :fn compile-java},
+ :mvn/repos {"public-github" {:url "git://github.com"}}}

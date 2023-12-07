@@ -33,7 +33,9 @@
   [[lein-exec "0.3.7"]
    [io.github.borkdude/lein-lein2deps "0.1.0"]]
 
-  :prep-tasks [["compile"] ["javac"]]
+  :prep-tasks
+  [["compile"] ["javac"]
+   ["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
 
   :java-source-paths ["src"]
 
