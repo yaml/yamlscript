@@ -3,6 +3,7 @@
   date:    wip
   changes:
   - core: YS namespaces now start with `ys.`
+  - core: Allow =>(...) form
 
 - version: 0.1.21
   date:    Wed Dec  6 07:35:15 PM PST 2023

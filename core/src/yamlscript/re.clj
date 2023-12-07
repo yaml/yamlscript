@@ -61,7 +61,8 @@
 (def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
 (def nspc (re #"(?:$symw(?:\.$symw)*)"))   ; Namespace symbol
 (def fqsm (re #"(?:$nspc/$symb)"))         ; Fully qualified symbol
-(def symp (re #"(?:(?:$fqsm|$symb)\()"))   ; Symbol followed by paren
+                                           ; Symbol followed by paren
+(def symp (re #"(?:(?:$fqsm|$symb|=>)\()"))
 (def dyns (re #"(?:\*$symw\*)"))           ; Dynamic symbol
 ; Balanced parens
 (def bpar #"(?x)
@@ -80,16 +81,15 @@
             \))
           ")
 
-(def re-ysi
-  (re
-    #"(?sx)
-    (?:
-      \$ $symw |
-      \$ $bpar |
-      .+?(?= \$ $symw | \$ $bpar | $)
-    )"))
-
 (comment
+  (def re-ysi
+    (re #"(?sx)
+          (?:
+            \$ $symw |
+            \$ $bpar |
+            .+?(?= \$ $symw | \$ $bpar | $)
+          )"))
+
   re-ysi
   (re-seq re-ysi "foo $(bar()) , -1 $baz")
   (re-seq bpar "(a(b(c(d))e)f(g(h)i)j(k(l)m)n)o(p(q)r)s(t(u)v)w(x(y)z))")

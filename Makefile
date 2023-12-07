@@ -56,12 +56,15 @@ test-ys:
 	$(MAKE) -C ys test-all v=$v GRAALVM_O=b
 test-%: %
 	$(MAKE) -C $< test v=$v GRAALVM_O=b
+test-unit:
+	$(MAKE) -C core test v=$v
+	$(MAKE) -C ys test v=$v
 
 release-publish: $(RELEASE_YS_NAME).tar.xz $(RELEASE_LYS_NAME).tar.xz
 	publish-release $^
 
 release-clean:
-	$(RM) -r $(RELEASE_YS_NAME)* $(RELEASE_LYS_NAME)*
+	$(RM) -r libyamlscript-0* ys-0*
 
 $(RELEASE_YS_NAME).tar.xz: $(RELEASE_YS_NAME)
 	mkdir -p $<
