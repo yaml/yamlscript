@@ -229,3 +229,14 @@
   clojure: |
     (defn main [] (say "Hello World"))
     (apply main ARGV)
+
+
+- name: Interpolate variable with - in it
+  yamlscript: |
+    !yamlscript/v0
+    foo-bar =: "World"
+    defn say-hi():
+      say: "Hello $foo-bar!!"
+  clojure: |
+    (def foo-bar "World")
+    (defn say-hi [] (say (str "Hello " foo-bar "!!")))

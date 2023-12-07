@@ -28,7 +28,8 @@
   (:use yamlscript.debug)
   (:require
    [clojure.set :as set]
-   [clojure.string :as str])
+   [clojure.string :as str]
+   [yamlscript.re :as re])
   (:refer-clojure :exclude [resolve]))
 
 ;; ----------------------------------------------------------------------------
@@ -68,7 +69,8 @@
 (defn tag-def [[key val]]
   (let [key (:ysx key)
         old key
-        key (str/replace key #"^(\w+) +=$" "def $1")]
+        rgx (re/re #"^($symw) +=$")
+        key (str/replace key rgx "def $1")]
     (when (not= old key)
       ; [{:def key} val])))
       [{:ysx key} val])))
@@ -76,7 +78,8 @@
 (defn tag-defn [[key val]]
   (let [key (:ysx key)
         old key
-        key (str/replace key #"^defn (\w+)\((.*)\)$" "defn $1 [$2]")]
+        rgx (re/re #"^defn ($symb)\((.*)\)$")
+        key (str/replace key rgx "defn $1 [$2]")]
     (when (not= old key)
       ; [{:defn key} val])))
       [{:ysx key} val])))
