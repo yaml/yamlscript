@@ -20,6 +20,8 @@ struct LibYamlscript {
     create_isolate_fn: CreateIsolateFn,
     /// Pointer to the `eval_ys_to_json` function in libyamlscript.
     eval_ys_to_json_fn: EvalYsToJsonFn,
+    /// Pointer to the `compile_ys_to_clj` function in libyamlscript.
+    compile_ys_to_clj_fn: CompileYsToClj,
 }
 
 unsafe impl Send for LibYamlscript {}
@@ -29,6 +31,8 @@ unsafe impl Sync for LibYamlscript {}
 type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
 /// Prototype of the `eval_ys_to_json` function.
 type EvalYsToJsonFn = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
+/// Prototype of the `compile_ys_to_clj` function.
+type CompileYsToClj = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
 
 impl LibYamlscript {
     /// Find and open the `libyamlscript` file and load functions into memory.
@@ -46,9 +50,14 @@ impl LibYamlscript {
             unsafe { handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")? };
         let eval_ys_to_json_fn =
             unsafe { handle.ptr_or_null::<EvalYsToJsonFn>("eval_ys_to_json")? };
+        let compile_ys_to_clj_fn =
+            unsafe { handle.ptr_or_null::<CompileYsToClj>("compile_ys_to_clj")? };
 
         // Check for null-ness.
-        if create_isolate_fn.is_null() || eval_ys_to_json_fn.is_null() {
+        if create_isolate_fn.is_null()
+            || eval_ys_to_json_fn.is_null()
+            || compile_ys_to_clj_fn.is_null()
+        {
             return Err(Error::Load(dlopen::Error::NullSymbol));
         }
 
@@ -70,6 +79,8 @@ impl LibYamlscript {
         let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
         let eval_ys_to_json_fn: EvalYsToJsonFn =
             unsafe { std::mem::transmute(*eval_ys_to_json_fn) };
+        let compile_ys_to_clj_fn: CompileYsToClj =
+            unsafe { std::mem::transmute(*compile_ys_to_clj_fn) };
 
         // Initialize the thread.
         let x = unsafe { create_isolate_fn(std::ptr::null_mut(), &isolate, &isolate_thread) };
@@ -83,6 +94,7 @@ impl LibYamlscript {
             isolate_thread,
             create_isolate_fn,
             eval_ys_to_json_fn,
+            compile_ys_to_clj_fn,
         })
     }
 
@@ -123,4 +135,28 @@ pub fn load(ys: &str) -> Result<String, Error> {
 /// Evaluate a YS string, discarding the result.
 pub fn run(ys: &str) -> Result<(), Error> {
     load(ys).map(|_| ())
+}
+
+/// Compile a YS string to CLJ.
+pub fn compile(ys: &str) -> Result<String, Error> {
+    LibYamlscript::with_library(|yamlscript| {
+        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+        let input = std::ffi::CString::new(ys).map_err(|_| {
+            Error::Yamlscript("compile_ys_to_clj_fn: input contains a nil-byte".to_string())
+        })?;
+        let clj = unsafe {
+            (yamlscript.compile_ys_to_clj_fn)(
+                yamlscript.isolate_thread as libc::c_longlong,
+                input.as_bytes().as_ptr(),
+            )
+        };
+        if clj.is_null() {
+            Err(Error::Yamlscript(
+                "compile_ys_to_clj_fn: returned null pointer".to_string(),
+            ))
+        } else {
+            let clj = unsafe { std::ffi::CStr::from_ptr(clj) };
+            Ok(clj.to_string_lossy().to_string())
+        }
+    })?
 }
