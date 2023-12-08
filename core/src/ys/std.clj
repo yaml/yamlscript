@@ -13,18 +13,18 @@
 (defn www [& xs]
   (apply yamlscript.debug/www xs))
 
-(defn B [x] boolean x)
+(defn toB [x] boolean x)
 
-(defn F [x] (parse-double x))
+(defn toF [x] (parse-double x))
 
-(defn I [x] (parse-long x))
+(defn toI [x] (parse-long x))
 
-(defn M
+(defn toM
   ([] {})
   ([x] (apply hash-map x))
   ([k v & xs] (apply hash-map k v xs)))
 
-(defn S [& xs] (apply str xs))
+(defn toS [& xs] (apply str xs))
 
 (defn => [this] this)
 

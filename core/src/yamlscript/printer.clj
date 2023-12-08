@@ -49,6 +49,7 @@
              "}")
       :Str (str \" (pr-string val) \")
       :Chr (str "\\" val)
+      :Spc (str/replace val #"::" ".")
       :Sym (str val)
       :Key (str val)
       :Int (str val)

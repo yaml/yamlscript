@@ -36,6 +36,10 @@
 (defn is-string? [token]
   (and token (re-matches re/strg (str token))))
 
+(defn is-fq-symbol? [token]
+  (and token
+    (re-matches re/fqsm (str token))))
+
 (defn is-symbol? [token]
   (and token
     (or
@@ -80,7 +84,10 @@
 (defn lex-tokens [expr]
   (->> expr
     (re-seq re-tokenize)
-    (remove #(re-matches re/ignr %1))))
+    (remove #(re-matches re/ignr %1))
+    (#(if (System/getenv "YS_LEX_DEBUG")
+        (www %)
+        %))))
 
 (declare read-form)
 
@@ -147,8 +154,14 @@
     (is-string? token) [(Str (normalize-string token)) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
+    ,
+    (is-fq-symbol? token)
+    (let [sym (str/replace token #"\." "/")
+          sym (str/replace sym #"::" ".")]
+      [(Sym sym) tokens])
+    ,
     (is-symbol? token) [(Sym token) tokens]
-    (is-namespace? token) [(Sym token) tokens]
+    (is-namespace? token) [(Spc token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 
 (defn read-quoted-form [[_ & tokens]]

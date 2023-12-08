@@ -49,6 +49,7 @@
 (def lnum #"-?\d+")                        ; Integer token
                                            ; Operator token
 (def oper #"(?:[-+*/<=>|&]{1,3}|\.\.|\|\||&&)")
+(def fops #"(?:=>|->)")
 (def strg #"(?x)
             \#?                            # Possibly a regex
             \"(?:                          # Quoted string
@@ -59,10 +60,10 @@
 (def symw #"(?:\w+(?:-\w+)*)")             ; Symbol word
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
 (def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
-(def nspc (re #"(?:$symw(?:\.$symw)*)"))   ; Namespace symbol
-(def fqsm (re #"(?:$nspc/$symb)"))         ; Fully qualified symbol
+(def nspc (re #"(?:$symw(?:\:\:$symw)*)")) ; Namespace symbol
+(def fqsm (re #"(?:$nspc\.$symb)"))        ; Fully qualified symbol
                                            ; Symbol followed by paren
-(def symp (re #"(?:(?:$fqsm|$symb|=>)\()"))
+(def symp (re #"(?:(?:$fqsm|$symb|$fops)\()"))
 (def dyns (re #"(?:\*$symw\*)"))           ; Dynamic symbol
 ; Balanced parens
 (def bpar #"(?x)

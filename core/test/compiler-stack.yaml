@@ -392,7 +392,7 @@
     !yamlscript/v0/data
     str: foo bar
     num: ! inc(41)
-    bar: ! ys/load("bar.yaml")
+    bar: ! load("bar.yaml")
   resolve: |
     {:map
      [{:str "str"}
@@ -400,7 +400,7 @@
       {:str "num"}
       {:ysx "inc(41)"}
       {:str "bar"}
-      {:ysx "ys/load(\"bar.yaml\")"}]}
+      {:ysx "load(\"bar.yaml\")"}]}
   build: |
     {:Map
      [{:Str "str"}
@@ -408,7 +408,7 @@
       {:Str "num"}
       {:Lst [{:Sym inc} {:Int 41}]}
       {:Str "bar"}
-      {:Lst [{:Sym ys/load} {:Str "bar.yaml"}]}]}
+      {:Lst [{:Sym load} {:Str "bar.yaml"}]}]}
   construct: |
     {:Map
      [{:Str "str"}
@@ -416,9 +416,9 @@
       {:Str "num"}
       {:Lst [{:Sym inc} {:Int 41}]}
       {:Str "bar"}
-      {:Lst [{:Sym ys/load} {:Str "bar.yaml"}]}]}
+      {:Lst [{:Sym load} {:Str "bar.yaml"}]}]}
   print: |
-    {"str" "foo bar", "num" (inc 41), "bar" (ys/load "bar.yaml")}
+    {"str" "foo bar", "num" (inc 41), "bar" (load "bar.yaml")}
 
 
 

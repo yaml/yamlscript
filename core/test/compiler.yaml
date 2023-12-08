@@ -240,3 +240,11 @@
   clojure: |
     (def foo-bar "World")
     (defn say-hi [] (say (str "Hello " foo-bar "!!")))
+
+
+- name: Fully qualified symbols
+  yamlscript: |
+    !yamlscript/v0
+    ys::std.say: ys
+  clojure: |
+    (ys.std/say ys)
