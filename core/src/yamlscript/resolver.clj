@@ -108,9 +108,10 @@
 (defn resolve-code-mapping [node]
   (when (:%% node)
     (throw (Exception. "Flow mappings not allowed in code mode")))
-    {:ysm (mapcat
+  {:ysm (vec
+          (mapcat
             (fn [[key val]] (resolve-code-pair key val))
-            (partition 2 (:% node)))})
+            (partition 2 (:% node))))})
 
 (defn resolve-code-sequence [node]
   (throw (Exception. "Sequences (block and flow) not allowed in code mode")))

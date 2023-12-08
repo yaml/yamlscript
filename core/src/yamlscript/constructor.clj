@@ -103,6 +103,25 @@
           (first %)
           (Lst (flatten [(Sym "do") %])))))))
 
+(comment
+  (www
+    (construct
+      {:ysm
+       [{:Sym 'a}
+        {:ysm
+         [[{:Sym 'b} {:Sym 'c}]
+          {:Sym 'd}
+          {:Sym 'e}
+          [{:Sym 'f} {:Sym 'g}]]}]}))
+
+  {:Lst
+   [{:Sym a}
+    {:Lst
+     [{:Sym do}
+      {:Lst [{:Sym 'b} {:Sym 'c} {:Sym 'd}]}
+      {:Lst [{:Sym 'e} {:Sym 'f} {:Sym 'g}]}]}]}
+  )
+
 (defn construct-ysm [node]
   (let [ysm (-> node first val)]
     (->> ysm

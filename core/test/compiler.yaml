@@ -248,3 +248,20 @@
     ys::std.say: ys
   clojure: |
     (ys.std/say ys)
+
+
+- name: Default mapping semantic is a list of pairs
+  yamlscript: |
+    !yamlscript/v0
+    a:
+      b c: d
+      e: f g
+  build: |
+  construct: |
+    {:Lst
+     [{:Sym a}
+      {:Lst [{:Sym 'b} {:Sym 'c} {:Sym 'd}]}
+      {:Lst [{:Sym 'e} {:Sym 'f} {:Sym 'g}]}]}
+  transform: |
+  clojure: |
+  SKIP: true

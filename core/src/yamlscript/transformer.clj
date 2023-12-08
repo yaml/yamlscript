@@ -13,11 +13,13 @@
   "Transform special rules for YAMLScript AST."
   [node] (transform-node node))
 
+(defn map-vec [f coll] (->> coll (map f) vec))
+
 (defn add-num-or-string [{list :Lst}]
   (when (and
           (>= (count list) 3)
           (= (first list) {:Sym '+}))
-    (let [list (map transform-node list)
+    (let [list (map-vec transform-node list)
           [_ & rest] list]
       {:Lst (cons {:Sym '_+} rest)})))
 
@@ -25,16 +27,16 @@
   (when (and
           (= (count list) 3)
           (= (first list) {:Sym '*}))
-    (let [list (map transform-node list)
+    (let [list (map-vec transform-node list)
           [_ v2 v3] list]
       {:Lst [{:Sym '_*} v2 v3]})))
 
 (defn transform-ysm [node]
   (let [list (-> node first val)]
     (->> list
-      (map
+      (map-vec
         #(if (vector? %)
-           (vec (map transform-node %))
+           (map-vec transform-node %)
            (transform-node %)))
       (hash-map :ysm))))
 
@@ -46,7 +48,7 @@
 
 (defn transform-map [node]
   (let [list (:Map node)]
-    {:Map (map transform-node list)}))
+    {:Map (map-vec transform-node list)}))
 
 ; TODO:
 ; Change def to let if not in top level.
