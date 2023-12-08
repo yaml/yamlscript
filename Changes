@@ -1,10 +1,11 @@
 
 - version: 0.1.22
-  date:    wip
+  date:    Thu Dec  7 08:48:20 PM EST 2023
   changes:
   - core: YS namespaces now start with `ys.`
   - core: Allow =>(...) form
   - ys: Generate deps.edn for ys directory
+  - core: Implement namespace symbols like foo::bar
 
 - version: 0.1.21
   date:    Wed Dec  6 07:35:15 PM PST 2023
