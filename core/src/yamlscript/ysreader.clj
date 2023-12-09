@@ -204,6 +204,7 @@
               op (cond
                    (= op (Sym '||)) (Sym 'or)
                    (= op (Sym '&&)) (Sym 'and)
+                   (= op (Sym '..)) (Sym 'rng)
                    :else op)]
           (Lst [op (first forms) (last forms)]))
         (vec forms)))))
