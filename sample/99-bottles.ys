@@ -3,12 +3,15 @@
 # Print the verses to "99 Bottles of Beer"
 #
 # usage:
-#   yamlscript 99-bottles.ys [<count>]
+#   ys 99-bottles.ys [<count>]
 
-defn main(number=99):
-  map say:
-    map paragraph:
-      (number .. 1)
+declare: paragraph
+
+defn main(&[number]):
+  doall:
+    map say:
+      map paragraph:
+        (number || 99) .. 1
 
 defn paragraph(num): |
   $(bottles num) of beer on the wall,
@@ -17,7 +20,7 @@ defn paragraph(num): |
   $(bottles (num - 1)) of beer on the wall.
 
 defn bottles(n):
-  cond @:
-    (n == 0) : "No more bottles"
-    (n == 1) : "1 bottle"
-    :else    : "$n bottles"
+  cond:
+    (n == 0) "No more bottles"
+    (n == 1) "1 bottle"
+    :else    str(n " bottles")
