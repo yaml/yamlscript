@@ -49,8 +49,9 @@ setup() {
     common/install
     common/project.clj
     libyamlscript/project.clj
-    ys/src/yamlscript/cli.clj
+    ys/deps.edn
     ys/project.clj
+    ys/src/yamlscript/cli.clj
   )
 }
 
