@@ -1,6 +1,8 @@
 /// An error with libyamlscript.
 #[derive(Debug)]
 pub enum Error {
+    /// The library was not found.
+    NotFound,
     /// An error while loading the library.
     ///
     /// This error is unrecoverable and any further attempt to call any libyamlscript function will
@@ -49,6 +51,7 @@ impl Clone for Error {
             Self::Load(x) => Self::Load(clone_dl_error(x)),
             Self::Init(x) => Self::Init(*x),
             Self::Yamlscript(x) => Self::Yamlscript(x.clone()),
+            Self::NotFound => Self::NotFound,
         }
     }
 }

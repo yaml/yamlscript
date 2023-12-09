@@ -1,4 +1,4 @@
-use std::sync::OnceLock;
+use std::{path::Path, sync::OnceLock};
 
 use dlopen::symbor::Library;
 use libc::{c_int, c_void as void};
@@ -91,10 +91,8 @@ impl LibYamlscript {
     /// Find and open the `libyamlscript` file and load functions into memory.
     #[allow(clippy::crosspointer_transmute)]
     fn load() -> Result<Self, Error> {
-        const PATH: &str = "..//libyamlscript/lib/libyamlscript.so.0.1.20";
-
         // Open library and create pointers the library needs.
-        let handle = Library::open(PATH).map_err(Error::Load)?;
+        let handle = Self::open_library()?;
         let isolate = std::ptr::null_mut();
         let isolate_thread = std::ptr::null_mut();
 
@@ -157,6 +155,40 @@ impl LibYamlscript {
         match CELL.get_or_init(Self::load) {
             Ok(yaml_lib) => Ok(f(yaml_lib)),
             Err(e) => Err(e.clone()),
+        }
+    }
+
+    /// Open the library found at the first matching path in `LD_LIBRARY_PATH`.
+    fn open_library() -> Result<Library, Error> {
+        let mut first_error = None;
+        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
+
+        // Iterate over segments of `LD_LIBRARY_PATH`.
+        for path in library_path.split(':') {
+            // Try to open the library, if it exists.
+            let path = Path::new(path).join("libyamlscript.so");
+            if !path.is_file() {
+                continue;
+            }
+            let library = Library::open(path);
+
+            // Store the error that happened if we haven't encountered one.
+            // The error we store always happened while trying to open an existing
+            // `libyamlscript.so` file. It should be helpful.
+            match library {
+                Ok(x) => return Ok(x),
+                Err(x) => {
+                    if first_error.is_none() {
+                        first_error = Some(x)
+                    }
+                }
+            }
+        }
+
+        // If `first_error` wasn't assigned, we found no matching path.
+        match first_error {
+            Some(x) => Err(x.into()),
+            None => Err(Error::NotFound),
         }
     }
 }
