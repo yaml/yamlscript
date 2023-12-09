@@ -7,6 +7,59 @@ mod error;
 
 pub use error::Error;
 
+/// Evaluate a YS string, returning a JSON string.
+pub fn load(ys: &str) -> Result<String, Error> {
+    LibYamlscript::with_library(|yamlscript| {
+        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+        let input = std::ffi::CString::new(ys).map_err(|_| {
+            Error::Yamlscript("eval_ys_to_json: input contains a nil-byte".to_string())
+        })?;
+        let json = unsafe {
+            (yamlscript.eval_ys_to_json_fn)(
+                yamlscript.isolate_thread as libc::c_longlong,
+                input.as_bytes().as_ptr(),
+            )
+        };
+        if json.is_null() {
+            Err(Error::Yamlscript(
+                "eval_ys_to_json: returned null pointer".to_string(),
+            ))
+        } else {
+            let json = unsafe { std::ffi::CStr::from_ptr(json) };
+            Ok(json.to_string_lossy().to_string())
+        }
+    })?
+}
+
+/// Evaluate a YS string, discarding the result.
+pub fn run(ys: &str) -> Result<(), Error> {
+    load(ys).map(|_| ())
+}
+
+/// Compile a YS string to CLJ.
+pub fn compile(ys: &str) -> Result<String, Error> {
+    LibYamlscript::with_library(|yamlscript| {
+        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+        let input = std::ffi::CString::new(ys).map_err(|_| {
+            Error::Yamlscript("compile_ys_to_clj_fn: input contains a nil-byte".to_string())
+        })?;
+        let clj = unsafe {
+            (yamlscript.compile_ys_to_clj_fn)(
+                yamlscript.isolate_thread as libc::c_longlong,
+                input.as_bytes().as_ptr(),
+            )
+        };
+        if clj.is_null() {
+            Err(Error::Yamlscript(
+                "compile_ys_to_clj_fn: returned null pointer".to_string(),
+            ))
+        } else {
+            let clj = unsafe { std::ffi::CStr::from_ptr(clj) };
+            Ok(clj.to_string_lossy().to_string())
+        }
+    })?
+}
+
 /// A wrapper around libyamlscript.
 #[allow(dead_code)]
 struct LibYamlscript {
@@ -106,57 +159,4 @@ impl LibYamlscript {
             Err(e) => Err(e.clone()),
         }
     }
-}
-
-/// Evaluate a YS string, returning a JSON string.
-pub fn load(ys: &str) -> Result<String, Error> {
-    LibYamlscript::with_library(|yamlscript| {
-        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-        let input = std::ffi::CString::new(ys).map_err(|_| {
-            Error::Yamlscript("eval_ys_to_json: input contains a nil-byte".to_string())
-        })?;
-        let json = unsafe {
-            (yamlscript.eval_ys_to_json_fn)(
-                yamlscript.isolate_thread as libc::c_longlong,
-                input.as_bytes().as_ptr(),
-            )
-        };
-        if json.is_null() {
-            Err(Error::Yamlscript(
-                "eval_ys_to_json: returned null pointer".to_string(),
-            ))
-        } else {
-            let json = unsafe { std::ffi::CStr::from_ptr(json) };
-            Ok(json.to_string_lossy().to_string())
-        }
-    })?
-}
-
-/// Evaluate a YS string, discarding the result.
-pub fn run(ys: &str) -> Result<(), Error> {
-    load(ys).map(|_| ())
-}
-
-/// Compile a YS string to CLJ.
-pub fn compile(ys: &str) -> Result<String, Error> {
-    LibYamlscript::with_library(|yamlscript| {
-        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-        let input = std::ffi::CString::new(ys).map_err(|_| {
-            Error::Yamlscript("compile_ys_to_clj_fn: input contains a nil-byte".to_string())
-        })?;
-        let clj = unsafe {
-            (yamlscript.compile_ys_to_clj_fn)(
-                yamlscript.isolate_thread as libc::c_longlong,
-                input.as_bytes().as_ptr(),
-            )
-        };
-        if clj.is_null() {
-            Err(Error::Yamlscript(
-                "compile_ys_to_clj_fn: returned null pointer".to_string(),
-            ))
-        } else {
-            let clj = unsafe { std::ffi::CStr::from_ptr(clj) };
-            Ok(clj.to_string_lossy().to_string())
-        }
-    })?
 }
