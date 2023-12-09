@@ -955,7 +955,7 @@ YAMLScript from other programming languages.</p>
 <h3>Building from Source</h3>
 <p>The most reliable way to install YAMLScript is to build it from source.
 We've put a lot of effort into making this as easy as possible.
-You don't need any special prerequisites; just bash, curl and make.</p>
+You don't need any special prerequisites; just git, bash, curl and make.</p>
 <p>The first thing you need to do is clone the YAMLScript repo:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/yaml/yamlscript</code></pre>
 <p>Then you can build and install the CLI with:</p>
