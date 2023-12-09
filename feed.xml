@@ -998,10 +998,6 @@ Options:
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
 
-  -R, --repl               Start an interactive YAMLScript REPL
-  -N, --nrepl              Start a new nREPL server
-  -K, --kill               Stop the nREPL server
-
   -X, --debug              Debug mode: print full stack trace for errors
   -x, --debug-stage STAGE  Display the result of stage(s)
       --version            Print version and exit
