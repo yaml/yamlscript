@@ -4,7 +4,7 @@ set -euo pipefail
 
 main() (
   setup "$@"
-  [[ $RELEASE_ID ]] || git-tag
+  [[ ${RELEASE_ID-} ]] || git-tag
   [[ $id ]] || release
   update "$@"
 )
