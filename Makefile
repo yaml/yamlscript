@@ -99,6 +99,7 @@ ifeq (,$(new))
 	$(error new= is required)
 endif
 	version-bump $(old) $(new)
+	$(RM) -r ~/.m2/repository/yamlscript
 
 $(CLEAN):
 clean: $(CLEAN) release-clean

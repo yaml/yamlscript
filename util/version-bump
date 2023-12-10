@@ -38,7 +38,7 @@ setup() {
     die "Error: old version must be of the form #.#.#"
   [[ $new =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
     die "Error: new version must be of the form #.#.#"
-  [[ $old != $new ]] ||
+  [[ $old != "$new" ]] ||
     die "Error: old and new must be different"
   old=${1//./\\.}
 

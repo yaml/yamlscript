@@ -1,4 +1,10 @@
 
+- version: 0.1.24
+  date:    wip
+  changes:
+  - core: Refactor removing unnecessary let forms
+  - release: Improve release process
+
 - version: 0.1.23
   date:    Fri Dec  8 10:13:14 PM EST 2023
   changes:

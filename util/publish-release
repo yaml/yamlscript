@@ -4,7 +4,7 @@ set -euo pipefail
 
 main() (
   setup "$@"
-  git-tag
+  [[ $RELEASE_ID ]] || git-tag
   [[ $id ]] || release
   update "$@"
 )
@@ -45,6 +45,9 @@ git-tag() {
   if [[ $(git diff --stat) ]]; then
     die "Error: Working directory is not clean. Commit changes first."
   fi
+  if grep -q 'date: .*wip' Changes; then
+    die "Error: Changes file contains 'wip' entry."
+  fi
   git tag "$VERSION"
 }
 
@@ -81,7 +84,7 @@ setup() {
 }
 
 api-new-release() {
-  id= error=
+  id='' error=''
 
   resp_json=$(
     set -x
@@ -112,7 +115,7 @@ api-new-release() {
 }
 
 api-get-release() {
-  id= error=
+  id='' error=''
 
   resp_json=$(
     set -x
@@ -136,7 +139,7 @@ api-get-release() {
 
 api-upload-assets() (
   GH_ASSET_URL=https://uploads.github.com/$GH_API_PATH/
-  GH_ASSET_URL+=$id/assets?name=$RELEASE_TAR_FILE
+  GH_ASSET_URL+="$id/assets?name=$RELEASE_TAR_FILE"
   resp_json=$(
     set -x
     curl -sL \
