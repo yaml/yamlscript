@@ -2,7 +2,7 @@
 
 set -e -u -o pipefail
 
-VERSION=0.1.23
+VERSION=0.1.24
 
 main() (
   setup "$@"
