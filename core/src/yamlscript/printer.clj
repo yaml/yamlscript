@@ -61,8 +61,9 @@
                             node))))))
 
 (defn pretty-format [s]
-  (let [s (with-out-str (pp/write s))]
-    (str s "\n")))
+  (str
+    (with-out-str (pp/write s))
+    "\n"))
 
 (defn print
   "Render a YAMLScript AST as Clojure code."

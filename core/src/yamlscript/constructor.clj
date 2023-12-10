@@ -96,12 +96,12 @@
    pair))
 
 (defn construct-do [node]
-  (let [ysm (node :do)]
-    (->> ysm
-      (reduce #(conj %1 (construct-pair %2)) [])
-      (#(if (= 1 (count %))
-          (first %)
-          (Lst (flatten [(Sym "do") %])))))))
+  (->> node
+    :do
+    (reduce #(conj %1 (construct-pair %2)) [])
+    (#(if (= 1 (count %))
+        (first %)
+        (Lst (flatten [(Sym "do") %]))))))
 
 (comment
   (www
@@ -123,22 +123,25 @@
   )
 
 (defn construct-ysm [node]
-  (let [ysm (-> node first val)]
-    (->> ysm
-      (reduce
-        #(conj %1
-           (if (vector? %2)
-             (map construct-node %2)
-             (construct-node %2)))
-        [])
-      (partition 2)
-      (map vec)
-      (hash-map :do)
-      construct-do)))
+  (->> node
+    first
+    val
+    (reduce
+      #(conj %1
+         (if (vector? %2)
+           (map construct-node %2)
+           (construct-node %2)))
+      [])
+    (partition 2)
+    (map vec)
+    (hash-map :do)
+    construct-do))
 
 (defn construct-node [node]
-  (let [key (-> node first key)]
-    (case key
+  (-> node
+    first
+    key
+    (case
       :ysm (construct-ysm node)
       ,    node)))
 

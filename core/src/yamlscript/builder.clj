@@ -19,10 +19,11 @@
   [node] (build-node node))
 
 (defn build-ys-mapping [node]
-  (let [ysm (-> node first val)]
-    (->> ysm
-      (map build-node)
-      (hash-map :ysm))))
+  (->> node
+    first
+    val
+    (map build-node)
+    (hash-map :ysm)))
 
 ;; XXX This might belong in the transformer
 (defn optimize-ys-expression [node]
@@ -81,8 +82,8 @@
       (Lst (cons (Sym 'str) exprs)))))
 
 (defn build-node [node]
-  (let [[key] (first node)]
-    (case key
+  (let [[tag] (first node)]
+    (case tag
       :ysm (build-ys-mapping node)
       :ysx (build-ys-expression node)
       :ysi (build-interpolated-string node)

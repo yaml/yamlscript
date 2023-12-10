@@ -32,13 +32,14 @@
       {:Lst [{:Sym '_*} v2 v3]})))
 
 (defn transform-ysm [node]
-  (let [list (-> node first val)]
-    (->> list
-      (map-vec
-        #(if (vector? %)
-           (map-vec transform-node %)
-           (transform-node %)))
-      (hash-map :ysm))))
+  (->> node
+    first
+    val
+    (map-vec
+      #(if (vector? %)
+         (map-vec transform-node %)
+         (transform-node %)))
+    (hash-map :ysm)))
 
 (defn transform-list [node]
   (or
@@ -47,8 +48,9 @@
     node))
 
 (defn transform-map [node]
-  (let [list (:Map node)]
-    {:Map (map-vec transform-node list)}))
+  {:Map (map-vec
+          transform-node
+          (:Map node))})
 
 ; TODO:
 ; Change def to let if not in top level.

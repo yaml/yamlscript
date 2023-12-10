@@ -38,16 +38,14 @@
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
-  (let [^String clojure-string
-        (->> yamlscript-string
-          yamlscript.parser/parse
-          yamlscript.composer/compose
-          yamlscript.resolver/resolve
-          yamlscript.builder/build
-          yamlscript.transformer/transform
-          yamlscript.constructor/construct
-          yamlscript.printer/print)]
-    clojure-string))
+  (->> yamlscript-string
+    yamlscript.parser/parse
+    yamlscript.composer/compose
+    yamlscript.resolver/resolve
+    yamlscript.builder/build
+    yamlscript.transformer/transform
+    yamlscript.constructor/construct
+    yamlscript.printer/print))
 
 (defn debug-print [stage data]
   (when (get *debug* stage)
@@ -59,23 +57,21 @@
 (defn compile-debug
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
-  (let [^String clojure-string
-        (->> yamlscript-string
-          yamlscript.parser/parse
-          (debug-print "parse")
-          yamlscript.composer/compose
-          (debug-print "compose")
-          yamlscript.resolver/resolve
-          (debug-print "resolve")
-          yamlscript.builder/build
-          (debug-print "build")
-          yamlscript.transformer/transform
-          (debug-print "transform")
-          yamlscript.constructor/construct
-          (debug-print "construct")
-          yamlscript.printer/print
-          (debug-print "print"))]
-    clojure-string))
+  (->> yamlscript-string
+    yamlscript.parser/parse
+    (debug-print "parse")
+    yamlscript.composer/compose
+    (debug-print "compose")
+    yamlscript.resolver/resolve
+    (debug-print "resolve")
+    yamlscript.builder/build
+    (debug-print "build")
+    yamlscript.transformer/transform
+    (debug-print "transform")
+    yamlscript.constructor/construct
+    (debug-print "construct")
+    yamlscript.printer/print
+    (debug-print "print")))
 
 (comment
 ; {:do [[{:Sym a} {:Sym b}]]}
