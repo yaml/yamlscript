@@ -1,0 +1,30 @@
+#!/usr/bin/env ys-0
+# a-bit-before -- Generate a winter-holiday poem in the Mad Libs style
+
+declare: poem
+
+defn main():
+  ->: poem() say
+
+data =: load("a-bit-of-data.ys")
+
+defn W(kind):
+  rand-nth: get(data, name(kind))
+
+defn poem(): |
+  'Twas a bit before $W(:holiday), and all through the $W(:place),
+  not a creature was stirring, not even a $W(:animal).
+  The stockings were hung by the $W(:hang-by) with care,
+  In hopes that St. $W(:saint) soon would be there.
+  The $W(:children) were nestled all snug in their $W(:beds),
+  While visions of $W(:adj)-$W(:candies) danced in their heads.
+  And $W(:relative) in their 'kerchief, and I in my $W(:hat),
+  Had just settled down for a long winter's $W(:activity).
+  When out on the $W(:outside) there arose such a clatter,
+  I sprang from my $W(:seat) to see what was the matter.
+  Away to the window, I flew like a $W(:flyer),
+  Tore open the $W(:covers) and threw up the $W(:cover).
+  The $W(:luminary) on the breast of the new-fallen $W(:fallers),
+  Gave the lustre of mid-day to $W(:outers) below.
+  When what to my wondering eyes should $W(:arrive)?
+  But a miniature $W(:vehicle), and eight tiny $W(:service-animals).

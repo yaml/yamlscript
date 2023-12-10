@@ -1,0 +1,21 @@
+#!/usr/bin/env ys-0
+
+defn main(&[width]):
+  say:
+    tree: width || 5
+
+defn tree(width):
+  join(
+    map(
+      fn([n] line(width, n))
+      (width .. 1)))
+  + (trunk(width) * 2)
+
+defn stars(num):  inc(num) * "*"
+defn spaces(num): num * " "
+defn trunk(num):  spaces(num) + "*\n"
+
+defn line(width, num):
+  ( spaces(num)
+  + stars(((width - num) * 2))
+  + "\n")

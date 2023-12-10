@@ -1,0 +1,29 @@
+#!/usr/bin/env ys-0
+
+my-yaml =: |
+  - Hello
+  - Salutations
+  - Ho Ho Ho
+  - Merry Christmas
+  - Happy Holidays
+  - Seasons Greetings
+  - Happy New Year
+  - Happy Hanukkah
+  - Happy Kwanzaa
+
+my-json =: |
+  [ "World",
+    "Santa",
+    "Elves",
+    "Reindeer",
+    "Snowman",
+    "Mrs. Claus",
+    "Rudolph",
+    "Frosty",
+    "Kids" ]
+
+greets =: ys::yaml.load(my-yaml)
+
+names =: ys::json.load(my-json)
+
+say: "$rand-nth(greets), $rand-nth(names)!!"

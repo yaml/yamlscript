@@ -4,6 +4,7 @@
   changes:
   - core: Refactor removing unnecessary let forms
   - release: Improve release process
+  - sample: Add more sample YS programs
 
 - version: 0.1.23
   date:    Fri Dec  8 10:13:14 PM EST 2023
