@@ -1,4 +1,9 @@
 
+- version: 0.1.25
+  date:    wip
+  changes:
+  - core: Improve error messages
+
 - version: 0.1.24
   date:    Sat Dec  9 10:28:21 PM PST 2023
   changes:

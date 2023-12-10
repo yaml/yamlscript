@@ -177,7 +177,7 @@ Options:
          (str/join "\n")
          (add-ys-mode-tag opts))
        "\n")
-     "EVAL" args]
+     "/EVAL" args]
     ,
     (seq args)
     (let [[file & args] args
@@ -189,12 +189,12 @@ Options:
       [code file args])
     ,
     (:stdin opts)
-    [(:stdin opts) "STDIN" args]
+    [(:stdin opts) "/STDIN" args]
     ,
     :else
     (let [code (get-stdin)]
       (if code
-        [code "STDIN" args]
+        [code "/STDIN" args]
         (do
           (binding [*out* *err*]
             (println "Warning: No input found."))
@@ -217,21 +217,44 @@ Options:
    :escape-slash false})
 
 (defn do-run [opts args]
-  (let [[code file args] (get-code opts args)
-        clj (compile-code code opts)
-        result (runtime/eval-string clj file args)]
-    (if (:print opts)
-      (pp/pprint result)
-      (when (and (:load opts) (not (= "" clj)))
-        (case (:to opts)
-          "yaml" (println
-                   (str/trim-newline
-                     (yaml/generate-string
-                       result
-                       :dumper-options {:flow-style :block})))
-          "json" (json/pprint result json-options)
-          "edn"  (pp/pprint result)
-          ,      (println (json/write-str result json-options)))))))
+  (try
+    (let [[code file args] (get-code opts args)
+          clj (compile-code code opts)
+          result (runtime/eval-string clj file args)]
+      (if (:print opts)
+        (pp/pprint result)
+        (when (and (:load opts) (not (= "" clj)))
+          (case (:to opts)
+            "yaml" (println
+                     (str/trim-newline
+                       (yaml/generate-string
+                         result
+                         :dumper-options {:flow-style :block})))
+            "json" (json/pprint result json-options)
+            "edn"  (pp/pprint result)
+            ,      (println (json/write-str result json-options))))))
+    (catch Exception e
+      (let [{:keys [cause data trace]} (Throwable->map e)
+            {:keys [file line column]} data
+            debug (:debug opts)
+            msg (if debug
+                  (with-out-str
+                    (pp/pprint
+                        {:debug true
+                         :cause cause
+                         :file file
+                         :line line
+                         :column column
+                         :trace trace}))
+                  (str cause "\n"
+                    (if (seq file)
+                      (str
+                        "  in file '" file "'"
+                        " line " line
+                        " column " column "\n")
+                      "")))]
+        (die msg)))))
+
 
 (defn do-compile [opts args]
   (let [[code file args] (get-code opts args)]

@@ -68,8 +68,11 @@
 
 (defn ys-load
   ([file]
-   (let [path (.getAbsolutePath (io/file @sci/file))
-         path (.getParent (io/file path))
+   (let [path (if (or (= "/EVAL" file) (= "/STDIN" file))
+                file
+                (.getParent
+                  (io/file
+                    (.getAbsolutePath (io/file @sci/file)))))
          file (io/file path file)
          ys-code (slurp file)
          clj-code (ys.ys/compile ys-code)]
