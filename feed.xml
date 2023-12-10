@@ -977,32 +977,7 @@ In fact, even if you have them installed, the build will ignore them.</p>
 Try:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--help</span></code></pre>
 <p>It should display:</p>
-<pre><code>ys - The YAMLScript (YS) Command Line Tool
-
-Usage: ys [options] [file]
-
-Options:
-  -r, --run                Compile and evaluate a YAMLScript file (default)
-  -l, --load               Output the evaluated YAMLScript value
-  -c, --compile            Compile YAMLScript to Clojure
-  -e, --eval YSEXPR        Evaluate a YAMLScript expression
-  -C, --clj                Treat input as Clojure code
-
-  -m, --mode MODE          Add a mode tag: code, data, or bare (only for --eval/-e)
-  -p, --print              Print the result of --run in code mode
-
-  -o, --output             Output file for --load or --compile
-  -t, --to FORMAT          Output format for --load
-
-  -J, --json               Output JSON for --load
-  -Y, --yaml               Output YAML for --load
-  -E, --edn                Output EDN for --load
-
-  -X, --debug              Debug mode: print full stack trace for errors
-  -x, --debug-stage STAGE  Display the result of stage(s)
-      --version            Print version and exit
-  -h, --help               Print this help and exit
-</code></pre>
+<pre class="language-text"><code class="language-text">ys - The YAMLScript (YS) Command Line Tool<br><br>Usage: ys [options] [file]<br><br>Options:<br>  -r, --run                Compile and evaluate a YAMLScript file (default)<br>  -l, --load               Output the evaluated YAMLScript value<br>  -c, --compile            Compile YAMLScript to Clojure<br>  -e, --eval YSEXPR        Evaluate a YAMLScript expression<br>  -C, --clj                Treat input as Clojure code<br><br>  -m, --mode MODE          Add a mode tag: code, data, or bare (only for --eval/-e)<br>  -p, --print              Print the result of --run in code mode<br><br>  -o, --output             Output file for --load or --compile<br>  -t, --to FORMAT          Output format for --load<br><br>  -J, --json               Output JSON for --load<br>  -Y, --yaml               Output YAML for --load<br>  -E, --edn                Output EDN for --load<br><br>  -X, --debug              Debug mode: print full stack trace for errors<br>  -x, --debug-stage STAGE  Display the result of stage(s)<br>      --version            Print version and exit<br>  -h, --help               Print this help and exit</code></pre>
 <p>In the next day or two we'll go over all of these options in detail.</p>
 <p>Here's a quick example of how to run YAMLScript to process a file from the
 internet that Google just told me about:</p>
@@ -1760,7 +1735,10 @@ This is because every node in the AST is essentially a token that knows how to
 print itself!</p>
 <p>Again here's our final AST:</p>
 <pre class="language-clojure"><code class="language-clojure"><span class="token punctuation">{</span><span class="token symbol">:Lst</span><br> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token symbol">:Sym</span> do<span class="token punctuation">}</span><br>  <span class="token punctuation">{</span><span class="token symbol">:Lst</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token symbol">:Sym</span> def<span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token symbol">:Sym</span> name<span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token symbol">:Str</span> <span class="token string">"Clojure"</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span><br>  <span class="token punctuation">{</span><span class="token symbol">:Lst</span><br>   <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token symbol">:Sym</span> say<span class="token punctuation">}</span><br>    <span class="token punctuation">{</span><span class="token symbol">:Lst</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token symbol">:Sym</span> str<span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token symbol">:Str</span> <span class="token string">"Hello, "</span><span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token symbol">:Sym</span> name<span class="token punctuation">}</span> <span class="token punctuation">{</span><span class="token symbol">:Str</span> <span class="token string">"!"</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span></code></pre>
-<p>And here's the code it &quot;prints&quot; to:</p>
+<p>The <code>yamlscript.printer/print</code> function converts that to this string (of Clojure
+code):</p>
+<pre class="language-clojure"><code class="language-clojure"><span class="token string">"(def name \"Clojure\")\n(say (str \"Hello, \" name \"!\"))\n"</span></code></pre>
+<p>When that string is printed out, it looks like this:</p>
 <pre class="language-clojure"><code class="language-clojure"><span class="token punctuation">(</span><span class="token keyword">def</span> name <span class="token string">"Clojure"</span><span class="token punctuation">)</span><br><span class="token punctuation">(</span><span class="token function">say</span> <span class="token punctuation">(</span><span class="token keyword">str</span> <span class="token string">"Hello, "</span> name <span class="token string">"!"</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 <p>Aaaand, we're done!</p>
 <h3>Transformation 1-7: Compile</h3>
