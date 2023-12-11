@@ -1809,7 +1809,7 @@ He doesn't have time to deal with confusing maps and directions.</p>
 <p>Lisp has other-worldly powers of abstraction, but when it comes to reading
 syntax, most people prefer the familiarity of this world.</p>
 <p>YAMLScript fully embraces all that Clojure has to offer, but syntax-wise it
-strives to offer a more familiar face.</p>
+also offers a more familiar face.</p>
 <h3>Welcome to Day 11 of the YAMLScript Advent Calendar!</h3>
 <p>Today we'll look at YAMLScript Expressions, aka YeS-Expressions.
 Lisp has S-Expressions, YAMLScript has YeS-Expressions!</p>
@@ -1817,10 +1817,10 @@ Lisp has S-Expressions, YAMLScript has YeS-Expressions!</p>
 3 basic YAML elements:</p>
 <ul>
 <li>YAML Block Mappings - The indented style <code>key: value</code> pairs</li>
+<li>YAML Quoted Scalars - String literals</li>
 <li>YAML Plain Scalars - The unquoted <code>value</code> scalars</li>
-<li>YAML Quoted Scalars - The quoted <code>&quot;value&quot;</code> scalars</li>
 </ul>
-<p>YAMLScript treats all plain scalars as YeS-Expressions (ysexprs).</p>
+<p>YAMLScript treats all YAML plain scalars as YeS-Expressions (ysexprs).</p>
 <p>Let's look at some examples.</p>
 <h3>Infix Expressions</h3>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">x =</span><span class="token punctuation">:</span> (y * 2)<br><span class="token key atrule">z =</span><span class="token punctuation">:</span> (x + 5 + y)</code></pre>
@@ -1829,8 +1829,8 @@ Lisp has S-Expressions, YAMLScript has YeS-Expressions!</p>
 <p>YeS-Expressions support infix operators for very simple expressions.
 If you put exactly 3 forms in parentheses, and the second one is an operator,
 then the first and third forms are operands.
-The compiler will effectively swap the first and second forms making it work
-like Lisp wants it to.</p>
+The compiler will swap the first and second forms making it work like Lisp wants
+it to.</p>
 <p>If you have a parenthesized expression with more than 2 operands and the
 operators are all the same, then the compiler will make a Lisp form starting
 with the operator and followed by the operands.</p>
@@ -1853,7 +1853,7 @@ You must use parentheses to group expressions and group operations in triplets.<
 <p>YAMLScript supports this style of function call as well.</p>
 <p>YAMLScript is very flexible about how you can write function calls.
 You could do the above in all the ways below:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">path1 =</span><span class="token punctuation">:</span> abspath(join("/" <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span>))<br><span class="token key atrule">path2 =</span><span class="token punctuation">:</span> (abspath (join "/" <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span>))<br><span class="token key atrule">path3 =</span><span class="token punctuation">:</span><br>  <span class="token key atrule">abspath</span><span class="token punctuation">:</span><br>    <span class="token key atrule">join "/"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span><br>(def path4 abspath(join("/" <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span>)))</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">path1 =</span><span class="token punctuation">:</span> abspath(join("/" <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span>))<br><span class="token key atrule">path2 =</span><span class="token punctuation">:</span> (abspath (join "/" <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span>))<br><span class="token key atrule">path3 =</span><span class="token punctuation">:</span><br>  <span class="token key atrule">abspath</span><span class="token punctuation">:</span><br>    <span class="token key atrule">join "/"</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span><br><span class="token key atrule">=></span><span class="token punctuation">:</span> (def path4 abspath(join("/" <span class="token punctuation">[</span>"foo" "bar"<span class="token punctuation">]</span>)))</code></pre>
 <p>Look closely at the last example (<code>path4</code>).
 It looks like a Clojure form, but it actually makes use of prefix function
 calls.</p>
@@ -1862,7 +1862,8 @@ calls.</p>
 <p>The <code>..</code> operator is used to create a range of consectutive integers.
 The expression <code>(1 .. 3)</code> is equivalent to the Clojure form <code>(range 1 4)</code> and
 evaluates to the list <code>(1 2 3)</code>.
-The expression <code>(3 .. 1)</code> is equivalent to the Clojure form <code>(range 3 0 -1)</code> and evaluates to the list <code>(3 2 1)</code>.</p>
+The expression <code>(3 .. 1)</code> is equivalent to the Clojure form <code>(range 3 0 -1)</code> and
+evaluates to the list <code>(3 2 1)</code>.</p>
 <p>The <code>+</code> and <code>*</code> operators are polymorphic.</p>
 <ul>
 <li><code>&quot;x&quot; * 3</code> -&gt; <code>&quot;xxx&quot;</code></li>
