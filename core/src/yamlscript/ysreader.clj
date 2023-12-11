@@ -8,6 +8,7 @@
   (:use yamlscript.debug)
   (:require
    [clojure.string :as str]
+   [clojure.walk :as walk]
    [yamlscript.ast :refer :all]
    [yamlscript.re :as re])
   (:refer-clojure :exclude [read-string resolve]))
@@ -23,6 +24,9 @@
 
 (defn is-namespace? [token]
   (and token (re-matches re/nspc (str token))))
+
+(defn is-narg? [token]
+  (and token (re-matches re/narg (str token))))
 
 (defn is-number? [token]
   (and token (re-matches re/lnum (str token))))
@@ -64,6 +68,8 @@
       $symb |                   # Symbol token
       $oper |                   # Operator token
       $char |                   # Character token
+      $lamb |                   # Lambda start token
+      $narg |                   # Numbered argument token
                               # Reader macros
       \#\_ |                    # Ignore next form
       \#\' |                    # Var
@@ -123,6 +129,40 @@
           (cons op)))
       expr)))
 
+(defn lambda-arg-list [node]
+  (let [args (atom {})
+        maxn (atom 0)]
+    (walk/prewalk
+      #(if (map? %)
+         (let [[[key val]] (seq %)
+               val (str val)]
+           (if (and (= :Sym key) (re-matches #"_\d+" val))
+             (let [n (parse-long (subs val 1))]
+               (swap! args assoc n true)
+               (swap! maxn max n))
+             %))
+         %)
+      node)
+    (map
+      #(if (get @args %)
+         (Sym (str "_" %))
+         (Sym "_"))
+      (range 1 (inc @maxn)))))
+
+(defn read-lambda [[_ & tokens]]
+  (loop [tokens tokens
+         list []]
+    (when (not (seq tokens))
+      (throw (Exception. "Unexpected end of input")))
+
+    (if (= (first tokens) ")")
+      (let [form (yes-expr list)
+            args (lambda-arg-list form)
+            expr (Lst [(Sym 'fn) (Vec args) (Lst form)])]
+        [expr (rest tokens)])
+      (let [[form tokens] (read-form tokens)]
+        (recur tokens (conj list form))))))
+
 (defn read-list [[_ & tokens] type end]
   (loop [tokens tokens
          list []]
@@ -149,6 +189,14 @@
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
+    (is-narg? token) (let [n (subs token 1)
+                           n (if (empty? n) 1 (parse-long n))
+                           _ (when (or (<= n 0) (> n 20))
+                               (throw (Exception.
+                                        (str "Invalid numbered argument: "
+                                          token))))
+                           n (str "_" n)]
+                       [(Sym n) tokens])
     (is-number? token) [(Int token) tokens]
     (is-operator? token) [(Sym token) tokens]
     (is-string? token) [(Str (normalize-string token)) tokens]
@@ -176,6 +224,7 @@
             ["(" (conj (rest tokens) sym "(")])
           [token tokens])]
     (case token
+      "\\(" (read-lambda tokens)
       "(" (read-list tokens Lst ")")
       "[" (read-list tokens Vec "]")
       "{" (read-list tokens Map "}")

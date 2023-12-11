@@ -266,6 +266,29 @@
     (ys.std/say ys)
 
 
+- name: Lambda function
+  yamlscript: |
+    !yamlscript/v0
+    foo =: \(% + %4)
+  build: |
+    {:ysm
+     ([{:Sym def} {:Sym foo}]
+      {:Lst
+       [{:Sym fn}
+        {:Vec [{:Sym _1} {:Sym _} {:Sym _} {:Sym _4}]}
+        {:Lst [{:Sym +} {:Sym _1} {:Sym _4}]}]})}
+  clojure: |
+    (def foo (fn [_1 _ _ _4] (+ _1 _4)))
+
+
+- name: Lambda function 2
+  yamlscript: |
+    !yamlscript/v0
+    map: \(str ((% / %3) + %2)) (1 .. 3)
+  clojure: |
+    (map (fn [_1 _2 _3] (str (+ (/ _1 _3) _2))) (rng 1 3))
+
+
 - name: Default mapping semantic is a list of pairs
   yamlscript: |
     !yamlscript/v0
