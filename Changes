@@ -3,6 +3,7 @@
   date:    wip
   changes:
   - core: Improve error messages
+  - core: Fix bugs with auto-declare
 
 - version: 0.1.24
   date:    Sat Dec  9 10:28:21 PM PST 2023

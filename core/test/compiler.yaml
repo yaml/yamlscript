@@ -166,6 +166,22 @@
     (defn bar [n] 321)
 
 
+- name: Pre-declare symbols not called as functions
+  yamlscript: |
+    !yamlscript/v0
+    defn a():
+      map b: (1 .. 3)
+    defn b():
+      c()
+    defn c():
+      =>: 123
+  clojure: |
+    (declare b c)
+    (defn a [] (map b (rng 1 3)))
+    (defn b [] (c))
+    (defn c [] 123)
+
+
 - name: The || or operator
   yamlscript: |
     !yamlscript/v0

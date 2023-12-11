@@ -8,47 +8,10 @@
   (:use yamlscript.debug)
   (:require
    [clojure.string :as str]
+   [clojure.walk :as walk]
    [yamlscript.ast :refer :all]))
 
-(declare construct-node)
-
-(defn get-undefined [node defn-names defined undefined]
-  (if (:Lst node)
-    (loop [nodes (:Lst node)
-           defined defined
-           undefined undefined]
-      (let [[node & rest] nodes]
-        (if (nil? node)
-          undefined
-          (let [defined (if (= 'defn (get-in node [:Lst 0 :Sym]))
-                          (assoc defined (get-in node [:Lst 1 :Sym]) true)
-                          defined)
-                undefined (let [name (get-in node [:Lst 0 :Sym])]
-                            (if (and (get defn-names name)
-                                  (not (get defined name)))
-                              (assoc undefined name true)
-                              undefined))]
-            (recur rest defined
-              (merge
-                undefined
-                (get-undefined node defn-names defined undefined)))))))
-    undefined))
-
-(defn declare-undefined [node]
-  (let [defn-names (map #(get-in % [:Lst 1 :Sym])
-                     (filter #(= 'defn (get-in % [:Lst 0 :Sym]))
-                       (rest (get-in node [:Lst]))))
-        defn-names (zipmap defn-names (repeat true))
-        undefined (map Sym
-                    (keys (get-undefined node defn-names {} {})))
-        form (Lst (cons (Sym 'declare) undefined))]
-    (if (seq undefined)
-      (update-in
-        node
-        [:Lst]
-        #(let [[a b] (split-at 1 %)]
-           (vec (concat a [form] b))))
-      node)))
+(declare construct-node declare-undefined)
 
 (defn call-main []
   (Lst [(Sym 'apply)
@@ -144,6 +107,36 @@
     (case
       :ysm (construct-ysm node)
       ,    node)))
+
+(defn get-declares [node defns]
+  (let [declare (atom {})
+        defined (atom {})]
+    (walk/prewalk
+      #(let [defn-name (when (= 'defn (get-in % [:Lst 0 :Sym]))
+                         (get-in % [:Lst 1 :Sym]))
+             sym-name (get-in % [:Sym])]
+         (when defn-name (swap! defined assoc defn-name true))
+         (when (and sym-name
+                 (get defns sym-name)
+                 (not (get @defined sym-name)))
+           (swap! declare assoc sym-name true))
+         %)
+      node)
+    @declare))
+
+(defn declare-undefined [node]
+  (let [defn-names (map #(get-in % [:Lst 1 :Sym])
+                     (filter #(= 'defn (get-in % [:Lst 0 :Sym]))
+                       (rest (get-in node [:Lst]))))
+        defn-names (zipmap defn-names (repeat true))
+        declares (map Sym
+                    (keys (get-declares node defn-names)))
+        form (Lst (cons (Sym 'declare) declares))]
+    (if (seq declares)
+      (update-in node [:Lst]
+        #(let [[a b] (split-at 1 %)]
+           (vec (concat a [form] b))))
+      node)))
 
 (comment
   (construct

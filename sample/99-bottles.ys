@@ -5,8 +5,6 @@
 # usage:
 #   ys 99-bottles.ys [<count>]
 
-declare: paragraph
-
 defn main(&[number]):
   doall:
     map say:
