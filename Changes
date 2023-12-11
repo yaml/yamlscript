@@ -1,4 +1,9 @@
 
+- version: 0.1.26
+  date:    wip
+  changes:
+  - core: Rewrite constructor w/ pair expr semantics
+
 - version: 0.1.25
   date:    Sun Dec 10 09:44:09 PM PST 2023
   changes:

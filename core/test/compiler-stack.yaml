@@ -135,7 +135,7 @@
       {:Sym a}
       [{:Sym b} {:Sym c}] ]}
   construct: |
-    {:Lst [ {:Sym a} {:Sym b} {:Sym c} ]}
+    {:Top [{:Lst [ {:Sym a} {:Sym b} {:Sym c} ]}]}
   print: |
     (a b c)
 
@@ -410,13 +410,14 @@
       {:Str "bar"}
       {:Lst [{:Sym load} {:Str "bar.yaml"}]}]}
   construct: |
-    {:Map
-     [{:Str "str"}
-      {:Str "foo bar"}
-      {:Str "num"}
-      {:Lst [{:Sym inc} {:Int 41}]}
-      {:Str "bar"}
-      {:Lst [{:Sym load} {:Str "bar.yaml"}]}]}
+    {:Top
+     [{:Map
+       [{:Str "str"}
+        {:Str "foo bar"}
+        {:Str "num"}
+        {:Lst [{:Sym inc} {:Int 41}]}
+        {:Str "bar"}
+        {:Lst [{:Sym load} {:Str "bar.yaml"}]}]}]}
   print: |
     {"str" "foo bar", "num" (inc 41), "bar" (load "bar.yaml")}
 

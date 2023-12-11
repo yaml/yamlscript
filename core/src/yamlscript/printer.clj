@@ -68,18 +68,16 @@
 (defn print
   "Render a YAMLScript AST as Clojure code."
   [node]
-  (if (= 'do (get-in node [:Lst 0 :Sym]))
-    (let [nodes (rest (get-in node [:Lst]))]
-      (->> nodes
-        (map print-node)
-        (str/join "\n")
-        (#(str % "\n"))))
-    (let [string (print-node node)]
-      (if (= string "")
-        ""
-        (-> string
-          edn/read-string
-          pretty-format)))))
+  (let [list (:Top node)
+        code (->> list
+               (map print-node)
+               (str/join "\n")
+               (#(str "(do " % "\n)\n"))
+               edn/read-string
+               rest
+               (map pretty-format)
+               (str/join ""))]
+    code))
 
 (comment
   (print :Empty)

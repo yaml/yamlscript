@@ -11,32 +11,20 @@
    [clojure.walk :as walk]
    [yamlscript.ast :refer :all]))
 
-(declare construct-node declare-undefined)
-
-(defn call-main []
-  (Lst [(Sym 'apply)
-        (Sym 'main)
-        (Sym 'ARGV)]))
-
-(defn maybe-call-main [node]
-  (if (and (= 'do (get-in node [:Lst 0 :Sym]))
-        (seq
-          (filter #(and
-                     (= 'defn (get-in % [:Lst 0 :Sym]))
-                     (= 'main (get-in % [:Lst 1 :Sym])))
-            (node :Lst))))
-    (update-in node [:Lst] conj (call-main))
-    (if (and
-          (= 'defn (get-in node [:Lst 0 :Sym]))
-          (= 'main (get-in node [:Lst 1 :Sym])))
-      (Lst [(Sym 'do) node (call-main)])
-      node)))
+(declare
+  construct-node
+  declare-undefined
+  maybe-call-main)
 
 (defn construct
   "Construct resolved YAML tree into a YAMLScript AST."
   [node]
   (->> node
     construct-node
+    (#(if (vector? %)
+        %
+        [%]))
+    (hash-map :Top)
     declare-undefined
     maybe-call-main))
 
@@ -52,62 +40,54 @@
 (defn construct-err [o]
   (throw (Exception. (str "Can't construct " o))))
 
-(defn construct-pair [pair]
-  ((some-fn
-     construct-call
-     construct-err)
-   pair))
-
-(defn construct-do [node]
-  (->> node
-    :do
-    (reduce #(conj %1 (construct-pair %2)) [])
-    (#(if (= 1 (count %))
-        (first %)
-        (Lst (flatten [(Sym "do") %]))))))
-
-(comment
-  (www
-    (construct
-      {:ysm
-       [{:Sym 'a}
-        {:ysm
-         [[{:Sym 'b} {:Sym 'c}]
-          {:Sym 'd}
-          {:Sym 'e}
-          [{:Sym 'f} {:Sym 'g}]]}]}))
-
-  {:Lst
-   [{:Sym a}
-    {:Lst
-     [{:Sym do}
-      {:Lst [{:Sym 'b} {:Sym 'c} {:Sym 'd}]}
-      {:Lst [{:Sym 'e} {:Sym 'f} {:Sym 'g}]}]}]}
-  )
-
 (defn construct-ysm [node]
-  (->> node
-    first
-    val
-    (reduce
-      #(conj %1
-         (if (vector? %2)
-           (map construct-node %2)
-           (construct-node %2)))
-      [])
-    (partition 2)
-    (map vec)
-    (hash-map :do)
-    construct-do))
+  (let [nodes (:ysm node)
+        pairs (partition 2 nodes)
+        construct-side #(if (vector? %)
+                          (vec (map construct-node %))
+                          (construct-node %))
+        node (loop [pairs pairs, new []]
+               (if (seq pairs)
+                 (let [[[lhs rhs] & pairs] pairs
+                       lhs (construct-side lhs)
+                       rhs (construct-side rhs)
+                       pair [lhs rhs]
+                       new (conj new (construct-call pair))]
+                   (recur pairs, new))
+                 new))]
+    node))
+
+#_(defn construct-ysm [node]
+  (let [pairs (:ysm node)]
+    (->> pairs
+      (reduce
+        #(conj %1
+           (if (vector? %2)
+             (map construct-node %2)
+             (construct-node %2)))
+        [])
+      (partition 2)
+      (map vec)
+      (reduce #(conj %1
+                 ((some-fn
+                    construct-call
+                    construct-err)
+                  %2))
+        [])
+      (#(if (= 1 (count %))
+          (first %)
+          (Lst (flatten [(Sym "do") %])))))))
+
 
 (defn construct-node [node]
-  (-> node
-    first
-    key
-    (case
+  (let [[[key]] (seq node)]
+    (case key
       :ysm (construct-ysm node)
       ,    node)))
 
+;;------------------------------------------------------------------------------
+;; Fix-up functions
+;;------------------------------------------------------------------------------
 (defn get-declares [node defns]
   (let [declare (atom {})
         defined (atom {})]
@@ -127,15 +107,31 @@
 (defn declare-undefined [node]
   (let [defn-names (map #(get-in % [:Lst 1 :Sym])
                      (filter #(= 'defn (get-in % [:Lst 0 :Sym]))
-                       (rest (get-in node [:Lst]))))
+                       (rest (get-in node [:Top]))))
         defn-names (zipmap defn-names (repeat true))
         declares (map Sym
                     (keys (get-declares node defn-names)))
         form (Lst (cons (Sym 'declare) declares))]
     (if (seq declares)
-      (update-in node [:Lst]
-        #(let [[a b] (split-at 1 %)]
-           (vec (concat a [form] b))))
+      (update-in node [:Top]
+        #(vec (concat [form] %)))
+      node)))
+
+(def call-main
+  (Lst [(Sym 'apply)
+        (Sym 'main)
+        (Sym 'ARGV)]))
+
+(defn maybe-call-main [node]
+  (let [need-call-main (atom false)]
+    (walk/prewalk
+      #(let [main (and (= 'defn (get-in % [:Lst 0 :Sym]))
+                    (= 'main (get-in % [:Lst 1 :Sym])))]
+         (when main (reset! need-call-main true))
+         %)
+      node)
+    (if @need-call-main
+      (update-in node [:Top] conj call-main)
       node)))
 
 (comment
