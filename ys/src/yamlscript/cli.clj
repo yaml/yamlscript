@@ -129,7 +129,7 @@
   (exit 1))
 
 (defn do-version []
-  (println "YAMLScript 0.1.25"))
+  (println "YAMLScript 0.1.26"))
 
 (def help-heading
   "ys - The YAMLScript (YS) Command Line Tool
