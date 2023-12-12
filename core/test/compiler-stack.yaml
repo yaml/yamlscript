@@ -274,7 +274,7 @@
     foo =: 123
     defn bar(a b):
       c =: (a + b)
-      .*: 2 c
+      =>: 2 * c
     bar: 10 20
   parse: |
     "+MAP", :! "yamlscript/v0"
@@ -284,8 +284,8 @@
     "+MAP"
     "=VAL", := "c ="
     "=VAL", := "(a + b)"
-    "=VAL", := ".*"
-    "=VAL", := "2 c"
+    "=VAL", := "=>"
+    "=VAL", := "2 * c"
     "-MAP"
     "=VAL", := "bar"
     "=VAL", := "10 20"
@@ -298,8 +298,8 @@
       {:% [
         {:= "c ="}
         {:= "(a + b)"}
-        {:= ".*"}
-        {:= "2 c"} ]}
+        {:= "=>"}
+        {:= "2 * c"} ]}
       {:= "bar"}
       {:= "10 20"} ]}
   resolve: |
@@ -310,24 +310,23 @@
       {:ysm [
         {:ysx "def c"}
         {:ysx "(a + b)"}
-        {:ysx "*"}
-        {:ysx "2 c"} ]}
+        {:ysx "=>"}
+        {:ysx "2 * c"} ]}
       {:ysx "bar"}
       {:ysx "10 20"} ]}
   build: |
     {:ysm
-     [[{:Sym def} {:Sym foo}]
+     ([{:Sym def} {:Sym foo}]
       {:Int 123}
       [{:Sym defn} {:Sym bar} {:Vec [{:Sym a} {:Sym b}]}]
       {:ysm
-       [[{:Sym def} {:Sym c}]
+       ([{:Sym def} {:Sym c}]
         {:Lst [{:Sym +} {:Sym a} {:Sym b}]}
-        {:Sym *}
-        [{:Int 2} {:Sym c}]]}
+        {:Sym =>}
+        {:Lst [{:Sym *} {:Int 2} {:Sym c}]})}
       {:Sym bar}
-      [{:Int 10} {:Int 20}]]}
-# transform: |
-# construct: |
+      [{:Int 10} {:Int 20}])}
+  Xconstruct: |
   Xprint: |
     (def foo 123)
     (defn bar [a b]
