@@ -298,11 +298,18 @@
       b c: d
       e: f g
   build: |
+    {:ysm
+     ({:Sym a}
+      {:ysm
+       ([{:Sym b} {:Sym c}]
+        {:Sym d}
+        {:Sym e}
+        [{:Sym f} {:Sym g}])})}
   construct: |
-    {:Lst
-     [{:Sym a}
-      {:Lst [{:Sym 'b} {:Sym 'c} {:Sym 'd}]}
-      {:Lst [{:Sym 'e} {:Sym 'f} {:Sym 'g}]}]}
-  transform: |
+    {:Top
+     [{:Lst
+       [{:Sym a}
+        {:Lst [{:Sym b} {:Sym c} {:Sym d}]}
+        {:Lst [{:Sym e} {:Sym f} {:Sym g}]}]}]}
   clojure: |
-  SKIP: true
+    (a (b c d) (e f g))
