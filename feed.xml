@@ -1925,6 +1925,111 @@ It's important to be transparent with you about where things are at.</p>
   
     
     <entry>
+      <title>Future Proof</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-12/"/>
+      <updated>2023-12-12T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-12/</id>
+      <content type="html">
+        <![CDATA[
+      <p>Santa has very little margin for error.
+He has to get everything just right all in one night.</p>
+<p>YAMLScript is a work in progress, and will be for a long time.
+I'm trying to get it right, but I'm no Santa!
+In fact I'm quite sure I'll get some things wrong.
+That's just the nature of the beast when you're a programmer.</p>
+<p>Also, have you ever wondered why the magic YAMLScript starter tag has that <code>/v0</code>
+at the end?</p>
+<h3>Welcome to Day 12 of the YAMLScript Advent Calendar!</h3>
+<p>Today we'll discuss how YAMLScript is designed to be future proof.</p>
+<p>I've been programming for quite a long time now.
+I've learned that no matter how good I think an idea it today, I'll almost
+certainly think of a better way to do it in the future.</p>
+<p>The means I'll almost certainly want to make big changes to YAMLScript long
+after it's in use in the real world.</p>
+<p>I also believe that it is really important for things like APIs and progamming
+languages to be stable and backwards compatible, basically forever.</p>
+<p>If I could always have the freedom to make big changes to YAMLScript, but never
+break backwards compatibility, then I could have my cake and eat it too.
+And I think I can!</p>
+<h3>The YAMLScript API Version</h3>
+<p>I call <code>v0</code> the YAMLScript API version.
+YAMLScript v0 isn't done yet, but it should be in the next couple months.
+At that point I'll release it as a stable version of the API version <code>0</code>.</p>
+<p>So you've seen that to make a <code>.ys</code> file executable, you need to add a special
+starter tag to the top of the file:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">---</span> <span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello!"</span></code></pre>
+<p>Or you can write it with the shebang line:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello!"</span></code></pre>
+<p>Leaving off that <code>0</code> here will make things not work as you intended.</p>
+<p>You might also have noticed that when you install the <code>ys</code> binary CLI is is a
+symlink to <code>ys-0.1.26</code>.
+And there is another symlink called <code>ys-0</code> that points to <code>ys-0.1.26</code>.</p>
+<p>This is all by design.</p>
+<p>The leading <code>0</code> in <code>!yamlscript/v0</code> and in <code>bin/ys-0</code> and also in <code>0.1.26</code> is
+the YAMLScript API version.</p>
+<p>When YAMLScript v0 is declared stable, there will never be changes that break
+backwards compatibility with the <code>v0</code> API version.</p>
+<p>That means you can write YAMLScript programs today, and they will continue to
+work forever, even if you upgrade to a new version of YAMLScript.</p>
+<h3>New Versions of YAMLScript</h3>
+<p>At some point after YAMLScript v0 is released as stable, I'll start working on
+YAMLScript v1.</p>
+<p>I can make any changes I want in YAMLScript v1, even ones that break backwards
+compatibility with YAMLScript v0.
+That's because I set up the rules such that you need to declare the version when
+you write a YAMLScript program.</p>
+<h3>Conclusion</h3>
+<p>This doesn't mean that I don't think extremely carefully about every change I
+make to YAMLScript.
+But it does mean that I don't have to worry about everything being perfect
+before I release stable v0.</p>
+<p>That's exciting as I strive to make YAMLScript a great language today and a
+better language in the future.</p>
+<p>I hope that also encorages you write more YAMLScript today, knowing that it will
+continue to work in the future.</p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's vaporware, or a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
       <title>2023 Advent Index</title>
       <link href="https://yamlscript.org/posts/advent-2023/index/"/>
       <updated>2023-12-25T00:00:00Z</updated>
@@ -1933,6 +2038,7 @@ It's important to be transparent with you about where things are at.</p>
         <![CDATA[
       <h3>Welcome to the 2023 YAMLScript Advent Calendar!</h3>
 <p>&nbsp;</p>
+<h3><a href="/posts/advent-2023/dec-12">Dec 12 - Future Proof</a></h3>
 <h3><a href="/posts/advent-2023/dec-11">Dec 11 - The YeS Express</a></h3>
 <h3><a href="/posts/advent-2023/dec-10">Dec 10 - States and Ladders</a></h3>
 <h3><a href="/posts/advent-2023/dec-09">Dec 9 - Coding with Style</a></h3>
@@ -1945,7 +2051,6 @@ It's important to be transparent with you about where things are at.</p>
 <h3><a href="/posts/advent-2023/dec-02">Dec 2 - Twas a Bit</a></h3>
 <h3><a href="/posts/advent-2023/dec-01">Dec 1 - YAMLScript Advent 2023</a></h3>
 <!--
-### [Dec 12 - ???](/posts/advent-2023/dec-12)
 ### [Dec 13 - ???](/posts/advent-2023/dec-13)
 ### [Dec 14 - ???](/posts/advent-2023/dec-14)
 ### [Dec 15 - ???](/posts/advent-2023/dec-15)
