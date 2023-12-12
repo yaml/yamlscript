@@ -42,6 +42,11 @@
       (apply str (repeat x y))
       (* x y))))
 
+(defmacro each [bindings & body]
+  `(do
+     (doall (for [~@bindings] (do ~@body)))
+     nil))
+
 (defn err [& xs]
   (binding [*out* *err*]
     (apply clojure.core/print xs)

@@ -6,10 +6,9 @@
 #   ys 99-bottles.ys [<count>]
 
 defn main(&[number]):
-  doall:
-    map say:
-      map paragraph:
-        (number || 99) .. 1
+  each [n ((number || 99) .. 1)]:
+    say:
+      paragraph: n
 
 defn paragraph(num): |
   $(bottles num) of beer on the wall,
