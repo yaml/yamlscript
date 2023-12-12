@@ -14,19 +14,21 @@
 (declare
   construct-node
   declare-undefined
-  maybe-call-main)
+  maybe-call-main
+  check-let-bindings)
 
 (defn construct
   "Construct resolved YAML tree into a YAMLScript AST."
   [node]
-  (->> node
-    construct-node
-    (#(if (vector? %)
-        %
-        [%]))
-    (hash-map :Top)
-    declare-undefined
-    maybe-call-main))
+  (let [ctx {:lvl 0 :defn false}]
+       (->> node
+         (#(construct-node % ctx))
+         (#(if (vector? %)
+             %
+             [%]))
+         (hash-map :Top)
+         declare-undefined
+         maybe-call-main)))
 
 (defn construct-call [pair]
   (let [pair (if (= '=> (get-in pair [0 :Sym]))
@@ -37,57 +39,58 @@
                (Lst (flatten [pair])))]
     pair))
 
-(defn construct-err [o]
-  (throw (Exception. (str "Can't construct " o))))
-
-(defn construct-ysm [node]
+(defn construct-ysm [node ctx]
   (let [nodes (:ysm node)
-        pairs (partition 2 nodes)
-        construct-side #(if (vector? %)
-                          (vec (map construct-node %))
-                          (construct-node %))
+        pairs (vec (map vec (partition 2 nodes)))
+        construct-side (fn [n c] (if (vector? n)
+                                   (vec (map #(construct-node % c) n))
+                                   (construct-node n c)))
         node (loop [pairs pairs, new []]
                (if (seq pairs)
-                 (let [[[lhs rhs] & pairs] pairs
-                       lhs (construct-side lhs)
-                       rhs (construct-side rhs)
+                 (let [pairs (if (> (:lvl ctx) 1)
+                               (check-let-bindings pairs ctx)
+                               pairs)
+                       [[lhs rhs] & pairs] pairs
+                       lhs (construct-side lhs ctx)
+                       rhs (construct-side rhs ctx)
                        pair [lhs rhs]
                        new (conj new (construct-call pair))]
                    (recur pairs, new))
                  new))]
     node))
 
-#_(defn construct-ysm [node]
-  (let [pairs (:ysm node)]
-    (->> pairs
-      (reduce
-        #(conj %1
-           (if (vector? %2)
-             (map construct-node %2)
-             (construct-node %2)))
-        [])
-      (partition 2)
-      (map vec)
-      (reduce #(conj %1
-                 ((some-fn
-                    construct-call
-                    construct-err)
-                  %2))
-        [])
-      (#(if (= 1 (count %))
-          (first %)
-          (Lst (flatten [(Sym "do") %])))))))
-
-
-(defn construct-node [node]
-  (let [[[key]] (seq node)]
+(defn construct-node [node ctx]
+  (when (vector? ctx) (throw (Exception. "ctx is a vector")))
+  (let [[[key]] (seq node)
+        ctx (update-in ctx [:lvl] inc)]
     (case key
-      :ysm (construct-ysm node)
+      :ysm (construct-ysm node ctx)
       ,    node)))
 
 ;;------------------------------------------------------------------------------
 ;; Fix-up functions
 ;;------------------------------------------------------------------------------
+(defn apply-let-bindings [lets rest ctx]
+  [[(Sym "let")
+    (vec
+      (concat
+        [(Vec (->>
+                lets
+                flatten
+                (filter #(not= {:Sym 'def} %))
+                vec))]
+        (construct-ysm {:ysm (mapcat identity rest)} ctx)))]])
+
+(defn check-let-bindings [pairs ctx]
+  (let [[lets rest]
+        (map vec
+          (split-with
+            #(= 'def (get-in % [0 0 :Sym]))
+            pairs))]
+    (if (seq lets)
+      (apply-let-bindings lets rest ctx)
+      pairs)))
+
 (defn get-declares [node defns]
   (let [declare (atom {})
         defined (atom {})]

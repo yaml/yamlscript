@@ -221,11 +221,60 @@
       y =: x + 1
       x =: y * x
       =>: x
-  build:
-  construct:
   clojure: |
-    (defn foo [x] (let [y (_+ x 1) x (_* y x)] y))
-  SKIP: true
+    (defn foo [x] (let [y (_+ x 1) x (_* y x)] x))
+
+
+- name: Multiple pairs in let
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(x):
+      y =: x + 1
+      prn: y
+      prn: x
+      =>: x
+  clojure: |
+    (defn foo [x] (let [y (_+ x 1)] (prn y) (prn x) x))
+
+
+- name: let in let
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(x):
+      y =: x + 1
+      prn: y
+      x =: y * x
+      prn: x
+      =>: x
+  clojure: |
+    (defn foo [x] (let [y (_+ x 1)] (prn y) (let [x (_* y x)] (prn x) x)))
+
+
+- name: let not first in defn
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(x):
+      prn: x
+      y =: x + 1
+      prn: y
+      =>: x + y
+  clojure: |
+    (defn foo [x] (prn x) (let [y (_+ x 1)] (prn y) (_+ x y)))
+
+
+- name: let over lambda
+  yamlscript: |
+    !yamlscript/v0
+
+    defn lol(x):
+      y =: 2 * x
+      =>: \(% + y)
+
+    say:
+      lol(10): 4
+  clojure: |
+    (defn lol [x] (let [y (_* 2 x)] (fn [_1] (+ _1 y))))
+    (say ((lol 10) 4))
 
 
 - name: Default args
