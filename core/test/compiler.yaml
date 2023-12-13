@@ -362,3 +362,37 @@
         {:Lst [{:Sym e} {:Sym f} {:Sym g}]}]}]}
   clojure: |
     (a (b c d) (e f g))
+
+
+- name: let with function call in yaml
+  yamlscript: |
+    !yamlscript/v0
+    defn a():
+      b =:
+        c: d
+      =>: b
+  clojure: |
+    (defn a [] (let [b (c d)] b))
+
+
+- name: let with function call in yaml
+  yamlscript: |
+    !yamlscript/v0
+    defn tree(width):
+      stars =:  \(inc(%) * "*")
+      spaces =: \(% * " ")
+      top =:
+        join:
+          map:
+            \(line width, %): (width..1)
+  clojure: |
+    (defn
+     tree
+     [width]
+     (let
+      [stars
+       (fn [_1] (* (inc _1) "*"))
+       spaces
+       (fn [_1] (* _1 " "))
+       top
+       (join (map ((fn [_1] (line width _1)) (rng width 1))))]))

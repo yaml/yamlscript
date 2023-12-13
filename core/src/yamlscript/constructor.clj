@@ -21,14 +21,14 @@
   "Construct resolved YAML tree into a YAMLScript AST."
   [node]
   (let [ctx {:lvl 0 :defn false}]
-       (->> node
-         (#(construct-node % ctx))
-         (#(if (vector? %)
-             %
-             [%]))
-         (hash-map :Top)
-         declare-undefined
-         maybe-call-main)))
+    (->> node
+      (#(construct-node % ctx))
+      (#(if (vector? %)
+          %
+          [%]))
+      (hash-map :Top)
+      declare-undefined
+      maybe-call-main)))
 
 (defn construct-call [pair]
   (let [pair (if (= '=> (get-in pair [0 :Sym]))
@@ -78,8 +78,19 @@
                 lets
                 flatten
                 (filter #(not= {:Sym 'def} %))
+                ;; Handle RHS is mapping
+                (partition 2)
+                (map #(let [[k v] %]
+                        (if (:ysm v)
+                          [k (Lst (get-in
+                                    (construct-ysm v ctx)
+                                    [0 :Lst]))]
+                          %)))
+                (mapcat identity)
                 vec))]
         (construct-ysm {:ysm (mapcat identity rest)} ctx)))]])
+
+(mapcat identity [{:Sym 'b} {:Lst [{:Sym 'c} {:Sym 'd}]}])
 
 (defn check-let-bindings [pairs ctx]
   (let [[lets rest]
@@ -113,7 +124,7 @@
                        (rest (get-in node [:Top]))))
         defn-names (zipmap defn-names (repeat true))
         declares (map Sym
-                    (keys (get-declares node defn-names)))
+                   (keys (get-declares node defn-names)))
         form (Lst (cons (Sym 'declare) declares))]
     (if (seq declares)
       (update-in node [:Top]
@@ -143,11 +154,11 @@
      ([{:Sym 'defn} {:Sym 'foo} {:Vec [{:Sym 'x}]}]
       {:ysm
        '([{:Sym 'def} {:Sym 'y}]
-        {:Lst ({:Sym 'add} {:Sym 'x} {:Int 1})}
-        [{:Sym 'def} {:Sym 'x}]
-        {:Lst [{:Sym 'times} {:Sym 'y} {:Sym 'x}]}
-        {:Sym '=>}
-        {:Sym 'y})})})
+         {:Lst ({:Sym 'add} {:Sym 'x} {:Int 1})}
+         [{:Sym 'def} {:Sym 'x}]
+         {:Lst [{:Sym 'times} {:Sym 'y} {:Sym 'x}]}
+         {:Sym '=>}
+         {:Sym 'y})})})
   (construct :Nil)
   (construct {:do [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
   )
