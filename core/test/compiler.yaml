@@ -273,7 +273,7 @@
     say:
       lol(10): 4
   clojure: |
-    (defn lol [x] (let [y (_* 2 x)] (fn [_1] (+ _1 y))))
+    (defn lol [x] (let [y (_* 2 x)] (fn [_1] (_+ _1 y))))
     (say ((lol 10) 4))
 
 
@@ -329,7 +329,7 @@
         {:Vec [{:Sym _1} {:Sym _} {:Sym _} {:Sym _4}]}
         {:Lst [{:Sym +} {:Sym _1} {:Sym _4}]}]})}
   clojure: |
-    (def foo (fn [_1 _ _ _4] (+ _1 _4)))
+    (def foo (fn [_1 _ _ _4] (_+ _1 _4)))
 
 
 - name: Lambda function 2
@@ -337,7 +337,7 @@
     !yamlscript/v0
     map: \(str ((% / %3) + %2)) (1 .. 3)
   clojure: |
-    (map (fn [_1 _2 _3] (str (+ (/ _1 _3) _2))) (rng 1 3))
+    (map (fn [_1 _2 _3] (str (_+ (/ _1 _3) _2))) (rng 1 3))
 
 
 - name: Default mapping semantic is a list of pairs
@@ -375,7 +375,7 @@
     (defn a [] (let [b (c d)] b))
 
 
-- name: let with function call in yaml
+- name: multi-let with function call in yaml
   yamlscript: |
     !yamlscript/v0
     defn tree(width):
@@ -391,8 +391,16 @@
      [width]
      (let
       [stars
-       (fn [_1] (* (inc _1) "*"))
+       (fn [_1] (_* (inc _1) "*"))
        spaces
-       (fn [_1] (* _1 " "))
+       (fn [_1] (_* _1 " "))
        top
        (join (map ((fn [_1] (line width _1)) (rng width 1))))]))
+
+
+- name: Star operator in lambda
+  yamlscript: |
+    !yamlscript/v0
+    say: \(inc(%) * 2)
+  clojure: |
+    (say (fn [_1] (_* (inc _1) 2)))

@@ -54,8 +54,10 @@
 
 (defn join
   ([xs] (join "" xs))
-  ([sep xs]
-   (str/join sep xs)))
+  ([sep & xs]
+    (if (= 1 (count xs))
+      (str/join sep (first xs))
+      (str/join sep xs))))
 
 (defn out [& xs]
   (apply clojure.core/print xs)

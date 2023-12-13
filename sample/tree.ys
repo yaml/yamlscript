@@ -5,18 +5,23 @@ defn main(&[width]):
     tree: width || 5
 
 defn tree(width):
-  stars =:  \(inc(%) * "*")
-  spaces =: \(% * " ")
   top =:
-    join:
-      map:
-        \(line width, %): (width..1)
+    join "\n":
+      mapv \(line width, %): width..1
 
-  =>: top + (trunk(width) * 2)
+  trunk =: trunk(width) * 2
 
-defn trunk(num):  spaces(num) + "*\n"
+  =>: "$top\n$trunk"
+
+defn trunk(num):
+  spaces(num) + "*\n"
 
 defn line(width, num):
-  ( spaces(num)
-  + stars(((width - num) * 2))
-  + "\n")
+  # stars is a lexically defined function
+  stars =: \(inc(%) * "*")
+
+  join "":
+    spaces: num
+    stars: (width - num) * 2
+
+defn spaces(num): num * " "

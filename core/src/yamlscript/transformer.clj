@@ -45,7 +45,10 @@
   (or
     (add-num-or-string node)
     (string-repeat node)
-    node))
+    ;(if (= 'fn (get-in node [:Lst 0 :Sym]))
+    (if (:Lst node)
+      {:Lst (map-vec transform-node (:Lst node))}
+      node)))
 
 (defn transform-map [node]
   {:Map (map-vec
