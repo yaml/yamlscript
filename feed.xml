@@ -2117,6 +2117,7 @@ the end of June.</p>
 A lot more views on youtube than any other talk at the conference.
 I realized this was happening because the words &quot;Clojure&quot; and &quot;Java&quot; were in the
 talk description.</p>
+<h3>The Clojure Community</h3>
 <p>A lovely man named Peter Strömberg reached out to me and asked if I would be
 interested in joining the <a href="https://clojurians.slack.com/">Clojure Community Slack</a>.
 Peter is the author of <a href="https://calva.io/">Calva</a>, a Clojure IDE for VS Code,
@@ -2125,11 +2126,13 @@ I joined right away and he pointed me in all the right directions and got me
 talking to all the right people.</p>
 <p>I soon learned about <a href="https://www.graalvm.org/">GraalVM</a> and <a href="https://github.com/babashka/sci">SCI</a> written by Michiel Borkent, a man to whom I owe
 much credit for helping me with many deep technical issues I encountered.
-Michiel is the author of <a href="https://babashka.org/">Babashka</a>, a very popular way
-to do shell scripting in Clojure.</p>
+Michiel is the author of <a href="https://babashka.org/">Babashka</a>, a popular way to do
+shell scripting in Clojure.
+SCI is the Clojure runtime engine that Babashka uses and that YAMLScript now
+uses as well!</p>
 <p>All the pieces started falling into place, and I got a clear vision of what
 YAMLScript should become... AND how relatively easy it would be to make it
-happen in the Clojure ecosystem.
+happen thanks to the Clojure ecosystem.
 I started rewriting the YAMLScript compiler and runtime in Clojure and
 rebuilding it into what it is today.</p>
 <h3>December 1st, 2023</h3>
