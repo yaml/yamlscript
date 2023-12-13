@@ -1,9 +1,13 @@
 
 - version: 0.1.27
-  date:    wip
+  date:    Wed Dec 13 10:35:17 AM PST 2023
   changes:
   - core: Add `each` general eager loop to ys::std
+  - test: Small change to a test
+  - test: Un-SKIP a test that is implemented now
+  - core: Implement yamlscript let bindings
   - core: Handle let RHS is mapping
+  - core: Fix bug in ys::std.join
 
 - version: 0.1.26
   date:    Mon Dec 11 10:24:17 PM PST 2023
