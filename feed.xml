@@ -2300,7 +2300,7 @@ It really just compiles to <code>(ys.std/rng 0 4)</code> which is a standard YAM
 function that returns a range from 0 to 4.</p>
 <p>It also works in reverse:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-e</span> <span class="token string">'each [i (4..0)]: say(i)'</span><br><span class="token number">4</span><br><span class="token number">3</span><br><span class="token number">2</span><br><span class="token number">1</span><br><span class="token number">0</span></code></pre>
-<p>TO do that in Clojure you'd have to write:</p>
+<p>To do that in Clojure you'd have to write:</p>
 <pre class="language-clojure"><code class="language-clojure"><span class="token punctuation">(</span><span class="token keyword">doall</span><br>  <span class="token punctuation">(</span><span class="token keyword">for</span> <span class="token punctuation">[</span>i <span class="token punctuation">(</span><span class="token keyword">range</span> <span class="token number">4</span> -<span class="token number">1</span> -<span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span><br>    <span class="token punctuation">(</span><span class="token keyword">println</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 <p>Sheesh!</p>
 <hr>
