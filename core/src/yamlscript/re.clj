@@ -48,7 +48,7 @@
             )")
 (def lnum #"-?\d+")                        ; Integer token
                                            ; Operator token
-(def oper #"(?:[-+*/<=>|&]{1,3}|\.\.|\|\||&&)")
+(def oper #"(?:[-+*/<=>|&.]{1,3})")
 (def lamb #"(?:\\\()")                     ; Lambda start token
 (def narg #"(?:%\d*)")                     ; Numbered argument token
 (def fops #"(?:=>|->)")

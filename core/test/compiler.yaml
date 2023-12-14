@@ -206,6 +206,14 @@
     (_+ a b)
 
 
+- name: Multiple same operators without parens
+  yamlscript: |
+    !yamlscript/v0
+    =>: a + b + c
+  clojure: |
+    (_+ a b c)
+
+
 - name: The => operator inside parens
   yamlscript: |
     !yamlscript/v0

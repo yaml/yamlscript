@@ -99,16 +99,14 @@
 
 (defn yes-expr [expr]
   (if (= (count expr) 3)
-    (let [[a b c] expr]
-      (if (is-operator? (:Sym b))
+    (let [[a op b] expr]
+      (if (is-operator? (:Sym op))
         (let [op (cond
-                   (= b (Sym '..)) (Sym 'rng)
-                   :else b)
-              op (cond
+                   (= op (Sym '..)) (Sym 'rng)
                    (= op (Sym '||)) (Sym 'or)
                    (= op (Sym '&&)) (Sym 'and)
                    :else op)]
-          [op a c])
+          [op a b])
         expr))
     (if (and (> (count expr) 3)
           (some #(->> expr
@@ -256,10 +254,23 @@
                    (= op (Sym '..)) (Sym 'rng)
                    :else op)]
           (Lst [op (first forms) (last forms)]))
-        (vec forms)))))
+        (if (and
+              (> (count forms) 3)
+              (some #(->> forms
+                       (partition 2)
+                       (map second)
+                       (apply = %))
+                (map Sym '[+ - * / || && .])))
+          (let [op (second forms)
+                op (cond
+                     (= op (Sym '||)) (Sym 'or)
+                     (= op (Sym '&&)) (Sym 'and)
+                     :else op)]
+            (Lst (cons op (vec (map second (partition 2 (cons nil forms)))))))
+          (vec forms))))))
 
 (comment
-  (read-string "(1 .. 5)")
+  (read-string "1 + 2")
   (read-string
     "[\"a\" :b \\c 42 true false nil
      (a b c) [a b c] {:a b :c \"d\"}]")

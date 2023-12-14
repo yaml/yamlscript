@@ -1,4 +1,10 @@
 
+- version: 0.1.28
+  date:    wip
+  changes:
+  - core: Fix bug in namespace token regex
+  - core: Support 'a + b + c' with no parens
+
 - version: 0.1.27
   date:    Wed Dec 13 10:35:17 AM PST 2023
   changes:
