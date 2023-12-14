@@ -2249,7 +2249,7 @@ a form:</p>
 calling a function <code>a</code> with 3 arguments: <code>b</code>, <code>c</code> and <code>d</code>.</p>
 <p>The <code>=&gt;</code> symbol is a special YAMLScript key symbol that can be used when you
 only care about using a scalar in that spot.
-Since YAMLScript needs to always be valid YAML this can often be useful.</p>
+Since YAMLScript always needs to be valid YAML, this can often be useful.</p>
 <p>So now you can see what I was talking about with all the ways to write an <code>if</code>
 statement.
 Only the <code>a b: c d</code> forms look normal to most programmers.</p>
