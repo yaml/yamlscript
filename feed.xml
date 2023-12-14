@@ -2156,7 +2156,7 @@ What <code>if</code>!</p>
 <p>Let's start out by looking at some of the various ways you can write the
 ubiquituous <code>if</code> statement in YAMLScript.</p>
 <p>To set the tone here, let's code an <code>if</code> in another simple language, Python,
-since if can often be used as pseudocode:</p>
+since it can often be used as pseudocode:</p>
 <pre class="language-python"><code class="language-python"><span class="token keyword">if</span> a <span class="token operator">></span> b<span class="token punctuation">:</span><br>  <span class="token keyword">print</span><span class="token punctuation">(</span>a <span class="token operator">+</span> <span class="token string">" is greater than "</span> <span class="token operator">+</span> b<span class="token punctuation">)</span><br><span class="token keyword">else</span><span class="token punctuation">:</span><br>  <span class="token keyword">print</span><span class="token punctuation">(</span>b <span class="token operator">+</span> <span class="token string">" is greater than or equal to "</span> <span class="token operator">+</span> a<span class="token punctuation">)</span></code></pre>
 <p>Abstractly we are saying that if some condition is true, then do one thing,
 otherwise do another thing.</p>
