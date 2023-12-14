@@ -404,3 +404,11 @@
     say: \(inc(%) * 2)
   clojure: |
     (say (fn [_1] (_* (inc _1) 2)))
+
+
+- name: Function call symbol ends with ?
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a? b)
+  clojure: |
+    (a? b)
