@@ -2293,7 +2293,7 @@ It has an <code>each</code> command that calls <code>doall</code> and <code>for<
 <pre class="language-yaml"><code class="language-yaml">each <span class="token punctuation">[</span>i range(5)<span class="token punctuation">]</span><span class="token punctuation">:</span> say(i)</code></pre>
 <p>or:</p>
 <pre class="language-yaml"><code class="language-yaml">each <span class="token punctuation">[</span>i (0..4)<span class="token punctuation">]</span><span class="token punctuation">:</span> say(i)</code></pre>
-<p>Doens't it seem strange to you that <code>(range 5)</code> really means 0 to 4?
+<p>Doesn't it seem strange to you that <code>(range 5)</code> really means 0 to 4?
 There are technical reasons for this, but it's not very intuitive.</p>
 <p>YAMLScript's <code>..</code> operator does what you told it to.
 It really just compiles to <code>(ys.std/rng 0 4)</code> which is a standard YAMLScript
