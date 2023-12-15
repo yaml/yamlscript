@@ -2516,7 +2516,7 @@ The Clojure people I've interacted so far tend to avoid <code>declare</code> and
 bottom-up.</p>
 <p>YAMLScript wants you to be you!</p>
 <p>You can write things in any order you want to.</p>
-<p>A big advantage of transpiling to an existing language is that you are free to
+<p>A big advantage of compiling to an existing language is that you are free to
 generate uglier output code (that is rarely seen) to support prettier input code
 (that you have to look at all the time).</p>
 <p>In this case, the YS compiler scans the AST near the end of the compilation and
