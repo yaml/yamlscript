@@ -2444,7 +2444,7 @@ feels needed.</p>
 <p>Maybe you think I'm being Naughty.
 I am, but… <strong>Naughty is Nice!</strong></p>
 <h3>The Naughty List (aka The Nice List :- )</h3>
-<p>say wany you want…</p>
+<p>say what you want…</p>
 <p>No, literally…</p>
 <p><code>say</code> it!</p>
 <p>In Clojure you use <code>println</code> to print a string with a newline added to the end.
