@@ -1,8 +1,0 @@
-!yamlscript/v0
-
-defn lol(x):
-  y =: 2 * x
-  defn f(z): z + y
-
-say:
-  lol(10): 4

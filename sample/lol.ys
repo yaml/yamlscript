@@ -1,8 +1,9 @@
 !yamlscript/v0
 
-defn lol(x):
-  y =: 2 * x
-  =>: \(% + y)
+do:
+  count =: atom(0)
+  counter =: \(swap! count inc)
 
-say:
-  lol(10): 4
+  say: counter()
+  say: counter()
+  say: counter()
