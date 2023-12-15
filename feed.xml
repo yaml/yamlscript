@@ -2376,12 +2376,12 @@ needs to become valid Clojure.</p>
 However, remember that JSON is a subset of YAML and JSON does look a little bit
 more like a Lisp (Clojure is a Lisp).
 YAML's data model is a superset of JSON's data model.
-So there are pathways and connections to be made to Clojure.</p>
+So there are pathways and connections to be made between YAMLScript and Clojure.</p>
 <p>Given that, my next move could have been to make YAMLScript be as close to
 Clojure as possible (while still satifying those constraints).
 I did try that for about 7 minutes...
-The results were just not feel-good.</p>
-<p>Let me tell you what my plan B was...</p>
+The results were just not &quot;feel good&quot;.</p>
+<p>Time for Plan B.</p>
 <h3>mal.ys</h3>
 <p>I mentioned this in my recent <a href="/blog/advent-2023/dec-13/">History Lesson</a>...
 I had just finished my Perl implementation of <a href="https://github.com/kanaka/mal">Make a Lisp</a> (mal) and I decided to try to make a YAMLScript
