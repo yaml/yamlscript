@@ -28,6 +28,16 @@
 
 (defn => [this] this)
 
+(defn _get [coll key]
+  (if (string? key)
+    (or (get coll (keyword key))
+      (get coll key))
+    (get coll key))
+  )
+
+(defn _. [x & xs]
+  (reduce _get x xs))
+
 (defn _+ [x & xs]
   (cond
     (string? x) (apply str x xs)

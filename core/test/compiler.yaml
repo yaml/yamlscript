@@ -420,3 +420,11 @@
     =>: (a? b)
   clojure: |
     (a? b)
+
+
+- name: Chained path lookup
+  yamlscript: |
+    !yamlscript/v0
+    =>: a.5."x y".z
+  clojure: |
+    (_. a 5 "x y" "z")

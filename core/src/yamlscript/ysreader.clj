@@ -34,6 +34,9 @@
 (defn is-operator? [token]
   (and token (re-matches re/oper (str token))))
 
+(defn is-path? [token]
+  (and token (re-matches re/path (str token))))
+
 (defn is-quote? [token]
   (and token (= "'" (str token))))
 
@@ -65,6 +68,7 @@
       $symp |                   # Symbol followed by paren
       $fqsm |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
+      $path |                   # Lookup path
       $symb |                   # Symbol token
       $oper |                   # Operator token
       $char |                   # Character token
@@ -181,6 +185,19 @@
     (str/replace #"\\ " " ")
     (str/replace #"\\n" "\n")))
 
+(defn make-path [token]
+  (let
+   [[value & keys] (str/split token #"\.")
+    form (map
+           #(cond
+              (is-number? %) (Int %)
+              (is-symbol? %) (Str %)
+              (is-string? %) (Str (normalize-string %))
+              :else (throw (Exception. (str "Invalid path token: " %))))
+           keys)
+    form (cons (Sym '_.) (cons (Sym value) form))]
+    (Lst form)))
+
 (defn read-scalar [[token & tokens]]
   (cond
     (is-comment? token) []
@@ -200,7 +217,7 @@
     (is-string? token) [(Str (normalize-string token)) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
-    ,
+    (is-path? token) [(make-path token) tokens]
     (is-fq-symbol? token)
     (let [sym (str/replace token #"\." "/")
           sym (str/replace sym #"::" ".")]

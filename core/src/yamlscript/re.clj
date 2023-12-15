@@ -59,7 +59,10 @@
               [^\\\"]                        # Any other char
             )*\"?                            # Ending quote
             ")
+(def pnum #"(?:\d+)")                      ; Positive integer
 (def symw #"(?:\w+(?:-\w+)*)")             ; Symbol word
+(def pkey (re #"(?:$symw|$pnum|$strg)"))   ; Path key
+(def path (re #"(?:$symw(?:\.$pkey)+)"))   ; Lookup path
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
 (def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
