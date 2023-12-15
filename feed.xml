@@ -2502,7 +2502,8 @@ where things get messy.</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">val =</span><span class="token punctuation">:</span> obj.foo.3."bar baz".map(inc)</code></pre>
 <p>This a is very readable, obvious and powerful way to chain lookups and function
 calls together.</p>
-<p>But it's really just using the same infix syntax as above with the <code>.</code> operator!</p>
+<p>But it's really just using the same infix syntax as above with the YAMLScript
+<code>.</code>  chaining operator!</p>
 <hr>
 <p>How do you usually structure your programs?</p>
 <p>I'm a top-down kind of guy.
