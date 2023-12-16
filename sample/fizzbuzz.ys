@@ -7,52 +7,53 @@
 # The main function runs a certain requested fizzbuzz implementation function
 # for a certain requested number (default is 100).
 
-defn main(count=100, impl="1"):
+defn main(&[count impl]):
+  count =: count || 100
+  impl =:
+    str: impl || "1"
   fizzbuzz =: "fizzbuzz-$impl"
 
-  when-not getenv("YAMLSCRIPT_TEST"):
+  when-not ENV."YS_TEST":
     say: "Running function '$fizzbuzz' with count=$count"
 
-  function =: resolve(symbol(fizzbuzz))
-  result   =: function(number(count))
+  function =: resolve(fizzbuzz)
+  result   =: function(count)
 
-  map(say): result
+  mapv say: result
+
 
 # These implementation functions were adapted from
 # https://rosettacode.org/wiki/FizzBuzz#Clojure
 
 defn fizzbuzz-1(n):
-  map @:
-    fn(x):
-      cond @:
-        zero?(x % 15) : "FizzBuzz"
-        zero?(x % 5)  : "Buzz"
-        zero?(x % 3)  : "Fizz"
-        :else: x
+  map:
+    fn [x]:
+      cond:
+        zero?(mod(x 15)) "FizzBuzz"
+        zero?(mod(x 5))  "Buzz"
+        zero?(mod(x 3))  "Fizz"
+        :else            x
     =>: (1 .. n)
-
 
 defn fizzbuzz-2(n):
   loop [i 1, l []]:
-    if (i > n): l
-    else:
+    if (i > n):
+      =>: l
       recur:
         inc: i
         conj l:
           cond:
-            zero?(mod(i 15)) : "FizzBuzz"
-            zero?(mod(i 5))  : "Buzz"
-            zero?(mod(i 3))  : "Fizz"
-            :else: i
-
+            zero?(mod(i 15)) "FizzBuzz"
+            zero?(mod(i 5))  "Buzz"
+            zero?(mod(i 3))  "Fizz"
+            :else            i
 
 defn fizzbuzz-3(n):
   map:
-    fn(x):
-      if empty?(s):
-        =>: x
-      else:
+    fn [x]:
+      s =:
         str:
-          when (zero? mod(x 3)): "Fizz"
-          when (zero? mod(x 5)): "Buzz"
-    range: 1, n++
+          when zero?(mod(x 3)): "Fizz"
+          when zero?(mod(x 5)): "Buzz"
+      if empty?(s): x s
+    rng: 1, n
