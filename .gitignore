@@ -20,6 +20,9 @@ reports/
 target/
 .vscode/
 
+/*.clj
+/*.yaml
+/*.ys
 /libyamlscript-*
 /www
 /ys-*

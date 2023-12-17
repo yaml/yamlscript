@@ -1,3 +1,10 @@
 {
-  "calva.fmt.configPath": ".cljfmt.edn"
+  "calva.fmt.configPath": ".cljfmt.edn",
+  "cSpell.words": [
+    "cond",
+    "defn",
+    "fizzbuzz",
+    "mapv",
+    "yamlscript"
+  ]
 }

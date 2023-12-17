@@ -16,7 +16,7 @@ defn main(&[count impl]):
   when-not ENV."YS_TEST":
     say: "Running function '$fizzbuzz' with count=$count"
 
-  function =: resolve(fizzbuzz)
+  function =: resolve(symbol(fizzbuzz))
   result   =: function(count)
 
   mapv say: result
