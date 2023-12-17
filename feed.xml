@@ -2821,12 +2821,19 @@ It's a pretty terrible plain text editor, but scroll way down to where
 the YAMLScript solutions should go and add this:</p>
 <pre class="language-text"><code class="language-text">=={&lcub;header|YAMLScript}}==<br>&lt;syntaxhighlight lang="yaml"><br>!yamlscript/v0<br><br>defn main():<br>  say:<br>    "Open doors after 100 passes:<br>    $(apply str interpose(\", \" open-doors()))"<br><br>defn open-doors():<br>  for: .[[d n] map(vector doors() iterate(inc 1)) :when d] n<br><br>defn doors():<br>  reduce:<br>    fn [doors idx]: assoc(doors idx true)<br>    into []: repeat(100 false)<br>    map \(dec (% * %)): (1 .. 10)<br>&lt;/syntaxhighlight><br>{&lcub;out}}<br>&lt;pre><br>$ ys 100-doors.ys<br>Open doors after 100 passes: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100<br>&lt;/pre></code></pre>
 <p>Click &quot;Save changes&quot; and you're done!</p>
-<p><a href="https://rosettacode.org/wiki/100_doors#YAMLScript">https://rosettacode.org/wiki/100_doors#YAMLScript</a></p>
-<p>We did it!</p>
+<ul>
+<li><a href="https://rosettacode.org/wiki/100_doors#YAMLScript">https://rosettacode.org/wiki/100_doors#YAMLScript</a></li>
+<li><a href="https://github.com/acmeism/RosettaCodeData/blob/main/Task/100-doors/YAMLScript/100-doors.ys">https://github.com/acmeism/RosettaCodeData/blob/main/Task/100-doors/YAMLScript/100-doors.ys</a>
+<ul>
+<li>I updated the repo (not automatic yet)</li>
+</ul>
+</li>
+</ul>
+<p><strong>We did it!</strong></p>
 <hr>
 <p>Don't wait for me to add more YAMLScript solutions to Rosetta Code.
 You can do it yourself!
-If you do, send me a DM on the <a href="https://discord.com/channels/1011262808001880065/">Rosetta Code Discord</a> server and I'll update the
+If you do, send me (<code>@ingydotnet</code>) a DM on the <a href="https://discord.com/channels/1011262808001880065/">Rosetta Code Discord</a> server and I'll update the
 Rosetta Code Data Project repo with your solutions.</p>
 <p>If you had never heard of Rosetta Code before, I hope you'll find it as
 interesting as I do.</p>
