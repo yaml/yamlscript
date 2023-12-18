@@ -102,8 +102,8 @@
    #_["-K" "--kill"
     "Stop the nREPL server"]
 
-   ["-X" "--debug"
-    "Debug mode: print full stack trace for errors"]
+   ["-X" "--stack-trace"
+    "Print full stack trace for errors"]
    ["-x" "--debug-stage STAGE"
     "Display the result of stage(s)"
     :default {}
@@ -236,11 +236,11 @@ Options:
     (catch Exception e
       (let [{:keys [cause data trace]} (Throwable->map e)
             {:keys [file line column]} data
-            debug (:debug opts)
-            msg (if debug
+            stack-trace (:stack-trace opts)
+            msg (if stack-trace
                   (with-out-str
                     (pp/pprint
-                        {:debug true
+                        {:stack-trace true
                          :cause cause
                          :file file
                          :line line
@@ -333,7 +333,7 @@ Options:
     :clj :mode :print :output
     :to :json :yaml :edn
     :repl :nrepl :kill
-    :debug :debug-stage
+    :stack-trace :debug-stage
     :version :help})
 
 (def action-opts
