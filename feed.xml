@@ -2936,7 +2936,7 @@ The program started of in <code>bare</code> mode, which is just a YAML mapping.<
 <p>Let's write a program to dynamically generate a list of numbers:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># map.ys</span><br><span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">map inc</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>1 2 3<span class="token punctuation">]</span></code></pre>
 <p>This program doesn't <code>say</code> anything.
-That's because we are using to generate data, so we'll <code>--load</code> it:</p>
+That's because we are using it to generate data, so we'll <code>--load</code> it:</p>
 <pre class="language-bash"><code class="language-bash">$ ys map.ys <span class="token parameter variable">-l</span><br>Error: java.lang.Exception: Sequences <span class="token punctuation">(</span>block and flow<span class="token punctuation">)</span> not allowed <span class="token keyword">in</span> code mode<span class="token punctuation">{</span>:eval <span class="token punctuation">[</span><span class="token punctuation">]</span>, :debug-stage <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre>
 <p>That's scary!
 And what's up with Java?!
