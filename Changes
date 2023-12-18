@@ -1,9 +1,15 @@
 
 - version: 0.1.28
-  date:    wip
+  date:    Mon Dec 18 08:57:06 AM PST 2023
   changes:
   - core: Fix bug in namespace token regex
   - core: Support 'a + b + c' with no parens
+  - sample: Update lol.ys (let over lambda)
+  - core: Implement `.` operator for path chain lookup
+  - sample: Update fizzbuzz.ys
+  - ys: Change --debug to --stack-trace
+  - core: Add yyy and zzz to ys::std and yamlscript::debug
+  - sample: Add sample programs from advent blog posts
 
 - version: 0.1.27
   date:    Wed Dec 13 10:35:17 AM PST 2023
