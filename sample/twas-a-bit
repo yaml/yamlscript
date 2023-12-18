@@ -1,10 +1,8 @@
 #!/usr/bin/env ys-0
-# a-bit-before -- Generate a winter-holiday poem in the Mad Libs style
-
-declare: poem
+# twas-a-bit -- Generate a winter-holiday poem in the Mad Libs style
 
 defn main():
-  ->: poem() say
+  say: poem()
 
 data =: load("a-bit-of-data.ys")
 
