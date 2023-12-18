@@ -4,7 +4,9 @@
 ;; The yamlscript.debug library defines a set of Clojure debugging functions.
 
 (ns yamlscript.debug
-  (:require [clojure.pprint :as pp]))
+  (:require
+   [ys.yaml :as yaml]
+   [clojure.pprint :as pp]))
 
 (defn dump [o]
   (str
@@ -13,10 +15,6 @@
       (pp/pprint o))
     "...\n"))
 
-(defn xxx [& o]
-  (let [o (if (= 1 (count o)) (first o) o)]
-    (throw (Exception. ^String (dump o)))))
-
 (defn www [& o]
   (let [l (last o)
         o (if (= 1 (count o)) (first o) o)]
@@ -24,6 +22,21 @@
       (print (dump o))
       (flush))
     l))
+
+(defn xxx [& o]
+  (let [o (if (= 1 (count o)) (first o) o)]
+    (throw (Exception. ^String (str "\n" (dump o))))))
+
+(defn yyy [& o]
+  (let [l (last o)
+        o (if (= 1 (count o)) (first o) o)]
+    (print (dump o))
+    (flush)
+    l))
+
+(defn zzz [& o]
+  (let [o (if (= 1 (count o)) (first o) o)]
+    (throw (Exception. ^String (str "\n" (dump o))))))
 
 (defn xxx+ [& o]
   (binding [*print-meta* true]

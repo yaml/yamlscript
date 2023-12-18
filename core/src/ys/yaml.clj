@@ -3,7 +3,6 @@
 
 (ns ys.yaml
   (:require
-   [yamlscript.debug :refer [www]]
    [clj-yaml.core :as yaml])
   (:refer-clojure :exclude [load]))
 
