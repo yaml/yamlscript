@@ -6,18 +6,22 @@
 
 (ns yamlscript.cli
   (:gen-class)
+  (:import java.lang.ProcessHandle)
   (:require
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
    [yamlscript.compiler :as compiler]
    [yamlscript.runtime :as runtime]
    ;; For www debugging
    [yamlscript.debug :refer [www]]
+   [babashka.process :refer [exec]]
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
    [clojure.pprint :as pp]
    [clojure.set :as set]
    [clojure.string :as str]
    [clojure.tools.cli :as cli]))
+
+(def yamlscript-version "0.1.28")
 
 (def testing (atom false))
 
@@ -62,14 +66,17 @@
     "Compile and evaluate a YAMLScript file (default)"]
    ["-l" "--load"
     "Output the evaluated YAMLScript value"]
-   ["-c" "--compile"
-    "Compile YAMLScript to Clojure"]
    ["-e" "--eval YSEXPR"
     "Evaluate a YAMLScript expression"
     :default []
     :update-fn conj
     :multi true]
-   ["-C" "--clj"
+
+   ["-c" "--compile"
+    "Compile YAMLScript to Clojure"]
+   ["-C" "--native"
+    "Compile to a native binary executable"]
+   [nil "--clj"
     "Treat input as Clojure code"]
 
    ["-m" "--mode MODE"
@@ -80,8 +87,8 @@
    ["-p" "--print"
     "Print the result of --run in code mode"]
 
-   ["-o" "--output"
-    "Output file for --load or --compile"]
+   ["-o" "--output FILE"
+    "Output file for --load, --compile or --native"]
    ["-t" "--to FORMAT"
     "Output format for --load"
     :validate
@@ -96,11 +103,11 @@
     "Output EDN for --load"]
 
    #_["-R" "--repl"
-    "Start an interactive YAMLScript REPL"]
+      "Start an interactive YAMLScript REPL"]
    #_["-N" "--nrepl"
-    "Start a new nREPL server"]
+      "Start a new nREPL server"]
    #_["-K" "--kill"
-    "Stop the nREPL server"]
+      "Stop the nREPL server"]
 
    ["-X" "--stack-trace"
     "Print full stack trace for errors"]
@@ -128,8 +135,46 @@
     (println (str "\n" help)))
   (exit 1))
 
+(declare add-ys-mode-tag)
+(defn get-native-info [opts args]
+  (let [in-file (when (seq args) (first args))
+        code (when (seq (:eval opts))
+               (str
+                 (->> opts
+                   :eval
+                   (str/join "\n"))
+                 "\n"))]
+    (or in-file code
+      (die "No input file specified"))
+    (let [in-file (if code "EVAL.ys" in-file)]
+      (or (re-find #"\.ys$" in-file)
+        (die "Input file must end in .ys"))
+      [in-file code])))
+
+(defn do-native [opts args]
+  (let [path (-> (java.lang.ProcessHandle/current) .info .command .get)
+        cmd (if (re-find #"-openjdk-" path)
+              (str "ys-sh-" yamlscript-version)
+              (str/replace path #"/[^/]*$"
+                (str "/ys-sh-" yamlscript-version)))
+        [in-file code] (get-native-info opts args)
+        out-file (some identity
+                   [(:output opts)
+                    (and in-file (str/replace in-file #"\.ys$" ""))])
+        path (if (re-find #"-openjdk-" path) "ys" path)]
+    #_(print
+      (str
+        (format "Compiling '%s' -> '%s'\n\n" in-file out-file)
+        (format "$ %s --compile-to-native %s %s %s\n\n"
+          cmd in-file out-file yamlscript-version)))
+    (flush)
+    (exec {:extra-env {"YS_BIN" path
+                       "YS_CODE" (or code "")}}
+      cmd "--compile-to-native"
+      in-file out-file yamlscript-version)))
+
 (defn do-version []
-  (println "YAMLScript 0.1.28"))
+  (println (str "YAMLScript " yamlscript-version)))
 
 (def help-heading
   "ys - The YAMLScript (YS) Command Line Tool
@@ -144,7 +189,7 @@ Options:
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
         ;; Insert blank lines in help text
-        help (str/replace help #"\n  (-[omJRX])" "\n\n  $1")
+        help (str/replace help #"\n  (-[comJRX])" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %))]
     (println help)))
 
@@ -383,6 +428,7 @@ Options:
       (seq errs) (do-error errs help)
       (:help opts) (do-help help)
       (:version opts) (do-version)
+      (:native opts) (do-native opts args)
       (:run opts) (do-run opts args)
       (:load opts) (do-run opts args)
       (:compile opts) (do-compile opts args)

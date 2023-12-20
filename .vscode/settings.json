@@ -1,8 +1,11 @@
 {
   "calva.fmt.configPath": ".cljfmt.edn",
   "cSpell.words": [
+    "concat",
     "cond",
+    "defmacro",
     "defn",
+    "doall",
     "fizzbuzz",
     "mapv",
     "yamlscript"

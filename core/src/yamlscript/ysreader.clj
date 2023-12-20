@@ -40,6 +40,12 @@
 (defn is-quote? [token]
   (and token (= "'" (str token))))
 
+(defn is-syntax-quote? [token]
+  (and token (= "`" (str token))))
+
+(defn is-unquote-splice? [token]
+  (and token (= "~@" (str token))))
+
 (defn is-string? [token]
   (and token (re-matches re/strg (str token))))
 
@@ -69,6 +75,7 @@
       $fqsm |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
       $path |                   # Lookup path
+      $lnum |                   # Number token
       $symb |                   # Symbol token
       $oper |                   # Operator token
       $char |                   # Character token
@@ -195,7 +202,7 @@
               (is-string? %) (Str (normalize-string %))
               :else (throw (Exception. (str "Invalid path token: " %))))
            keys)
-    form (cons (Sym '_.) (cons (Sym value) form))]
+    form (cons (Sym '__) (cons (Sym value) form))]
     (Lst form)))
 
 (defn read-scalar [[token & tokens]]
@@ -214,6 +221,8 @@
                        [(Sym n) tokens])
     (is-number? token) [(Int token) tokens]
     (is-operator? token) [(Sym token) tokens]
+    (is-unquote-splice? token) [(Tok token) tokens]
+    (is-syntax-quote? token) [(Tok token) tokens]
     (is-string? token) [(Str (normalize-string token)) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]

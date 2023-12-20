@@ -427,4 +427,13 @@
     !yamlscript/v0
     =>: a.5."x y".z
   clojure: |
-    (_. a 5 "x y" "z")
+    (__ a 5 "x y" "z")
+
+
+- name: Operator symbol with underscore prefix
+  yamlscript: |
+    !yamlscript/v0
+    defn _+(a b): (+ a b)
+  clojure: |
+    (defn _+ [a b] (+ a b))
+  SKIP: true

@@ -22,20 +22,18 @@
 (defn zzz [& xs]
   (apply yamlscript.debug/zzz xs))
 
-(defn toB [x] boolean x)
+(defn toBoo [x] boolean x)
 
-(defn toF [x] (parse-double x))
+(defn toFlt [x] (parse-double x))
 
-(defn toI [x] (parse-long x))
+(defn toInt [x] (parse-long x))
 
-(defn toM
+(defn toMap
   ([] {})
   ([x] (apply hash-map x))
   ([k v & xs] (apply hash-map k v xs)))
 
-(defn toS [& xs] (apply str xs))
-
-(defn => [this] this)
+(defn toStr [& xs] (apply str xs))
 
 (defn _get [coll key]
   (if (string? key)
@@ -44,7 +42,7 @@
     (get coll key))
   )
 
-(defn _. [x & xs]
+(defn __ [x & xs]
   (reduce _get x xs))
 
 (defn _+ [x & xs]

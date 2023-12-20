@@ -29,8 +29,6 @@
 (def ys-ys (sci/create-ns 'ys))
 (def ys-ys-vars (sci/copy-ns ys.ys ys-ys))
 
- cast unquote-splicing update-keys update-vals
-
 (def argv (sci/new-dynamic-var 'ARGV nil))
 (def env (sci/new-dynamic-var 'ENV nil))
 

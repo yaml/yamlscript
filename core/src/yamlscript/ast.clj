@@ -33,6 +33,8 @@
 
 (defn Key [s] {:Key (keyword s)})
 
+(defn Tok [s] {:Tok (str s)})
+
 (defn Bln [b]
   (if (re-matches #"(true|True|TRUE)" b)
     {:Bln true}

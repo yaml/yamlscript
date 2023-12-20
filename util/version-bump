@@ -45,12 +45,13 @@ setup() {
   files=(
     Meta
     .profile
-    core/project.clj
     common/install
     common/project.clj
+    core/project.clj
     libyamlscript/project.clj
     ys/deps.edn
     ys/project.clj
+    ys/share/ys-0.bash
     ys/src/yamlscript/cli.clj
   )
 }

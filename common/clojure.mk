@@ -8,8 +8,8 @@ export PATH := $(GRAALVM_HOME)/bin:$(PATH)
 YAMLSCRIPT_LANG_INSTALLED := \
   $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
 YAMLSCRIPT_CORE_SRC := \
-  ../core/src/yamlscript/* \
-  ../core/src/ys/* \
+  ../core/src/yamlscript/*.clj \
+  ../core/src/ys/*.clj \
 
 ifdef w
   export WARN_ON_REFLECTION := 1

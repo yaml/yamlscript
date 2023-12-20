@@ -1,4 +1,9 @@
 
+- version: 0.1.29
+  date:    Wed Dec 20 10:12:44 AM PST 2023
+  changes:
+  - core: Support --native for compiling YS to machine code
+
 - version: 0.1.28
   date:    Mon Dec 18 08:57:06 AM PST 2023
   changes:

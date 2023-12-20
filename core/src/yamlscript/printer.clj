@@ -7,11 +7,8 @@
 (ns yamlscript.printer
   (:use yamlscript.debug)
   (:require
-   [clojure.edn :as edn]
    [clojure.string :as str]
-   [clojure.pprint :as pp]
-   [yamlscript.builder :as builder]
-   [clj-yaml.core :as yaml])
+   [clojure.pprint :as pp])
   (:refer-clojure :exclude [print]))
 
 (def string-escape
@@ -51,6 +48,7 @@
       :Chr (str "\\" val)
       :Spc (str/replace val #"::" ".")
       :Sym (str val)
+      :Tok (str val)
       :Key (str val)
       :Int (str val)
       :Flt (str val)
@@ -60,10 +58,16 @@
               (Exception. (str "Unknown AST node type:"
                             node))))))
 
-(defn pretty-format [s]
-  (str
-    (with-out-str (pp/write s))
-    "\n"))
+(defn pretty-format [code]
+  (->> code
+    (#(str "(do " % "\n)\n"))
+    read-string
+    rest
+    (map #(str
+            (with-out-str (pp/write %))
+            "\n"))
+    (str/join "")))
+
 
 (defn print
   "Render a YAMLScript AST as Clojure code."
@@ -72,15 +76,16 @@
         code (->> list
                (map print-node)
                (str/join "\n")
-               (#(str "(do " % "\n)\n"))
-               edn/read-string
-               rest
-               (map pretty-format)
-               (str/join ""))]
+               pretty-format)]
     code))
 
 (comment
   (print :Empty)
+  (read-string "
+(defmacro each [bindings & body]
+  `(do
+     (doall (for [~@bindings] (do ~@body)))
+     nil)))")
   (print
     {:Lst [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
   (print {:Map [{:Str "foo"} {:Str "\\a"}]})

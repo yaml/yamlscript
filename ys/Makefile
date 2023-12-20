@@ -6,6 +6,9 @@ YAMLSCRIPT_CLI_BIN := bin/ys-$(YS_VERSION)
 YAMLSCRIPT_CLI_SRC := \
   src/yamlscript/cli.clj \
 
+YAMLSCRIPT_CLI_BIN_BASH := bin/ys-sh-$(YS_VERSION)
+YAMLSCRIPT_CLI_BIN_BASH_SRC := share/ys-0.bash
+
 YAMLSCRIPT_CLI_JAR_PATH := \
   target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
@@ -17,13 +20,14 @@ endif
 endif
 
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CLI_BIN)
+build:: $(YAMLSCRIPT_CLI_BIN_BASH) $(YAMLSCRIPT_CLI_BIN)
 
-install: $(YAMLSCRIPT_CLI_BIN)
+install: build
 	mkdir -p $(PREFIX)/bin
-	install -m 755 $< $(PREFIX)/bin/
-	ln -fs $(notdir $<) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
-	ln -fs $(notdir $<) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
+	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(PREFIX)/bin/
+	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
+	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) $(PREFIX)/bin/
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 	@:
@@ -66,6 +70,11 @@ endif
 	    -o $@
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
+
+$(YAMLSCRIPT_CLI_BIN_BASH): $(YAMLSCRIPT_CLI_BIN_BASH_SRC)
+	mkdir -p $(dir $@)
+	cp $< $@
+	chmod 755 $@
 
 realclean::
 	$(RM) -r bin

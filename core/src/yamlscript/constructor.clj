@@ -127,8 +127,11 @@
                    (keys (get-declares node defn-names)))
         form (Lst (cons (Sym 'declare) declares))]
     (if (seq declares)
-      (update-in node [:Top]
-        #(vec (concat [form] %)))
+      (if (= 'ns (get-in node [:Top 0 :Lst 0 :Sym]))
+        (update-in node [:Top]
+          #(vec (concat [(first %)] [form] (rest %))))
+        (update-in node [:Top]
+          #(vec (concat [form] %))))
       node)))
 
 (def call-main
