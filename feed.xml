@@ -3226,7 +3226,7 @@ binary so there is no JVM involved for us in the end.</p>
 <p>It's all pretty complicated.</p>
 <p>But I was talking about YAMLScript programs being run by the YAMLScript CLI
 <code>ys</code>.
-You can think of <code>ys</code> as an interpreter like Python, Perl or Ruby.
+You can think of <code>ys</code> as an interpreter like Python, Perl, Ruby or Java.
 Sure, those languages <em>compile</em> to an intermediate AST/opcode-tree to be faster,
 but the programs are still interpreted (not binary compiled).</p>
 <p>What if you could compile your YAMLScript program to a native binary?
