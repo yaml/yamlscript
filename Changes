@@ -1,4 +1,9 @@
 
+- version: 0.1.30
+  date:    Wed Dec 20 10:46:04 AM PST 2023
+  changes:
+  - bug: Minor fix for --native on macos
+
 - version: 0.1.29
   date:    Wed Dec 20 10:12:44 AM PST 2023
   changes:
