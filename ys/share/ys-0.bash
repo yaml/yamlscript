@@ -153,7 +153,7 @@ write-profile() (
   :dependencies
   [[org.clojure/clojure "1.11.1"]
    [org.babashka/sci "0.8.41"]
-   [yamlscript/core "0.1.28"]]
+   [yamlscript/core "0.1.29"]]
 
   :main ^:skip-aot program
 
@@ -245,7 +245,7 @@ assert-yamlscript-repo() (
     mkdir -p "$repo_path"
     (
       set -x
-      git clone --branch=0.1.28 --depth=1 --quiet \
+      git clone --branch=0.1.29 --depth=1 --quiet \
         https://github.com/yaml/yamlscript \
         "$repo_path"
     )
