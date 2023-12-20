@@ -3256,7 +3256,7 @@ Errr... never mind.</p>
 <p>You may have noticed that the native binary is 13 megabytes.
 That's because it contains the entire YAMLScript runtime.
 Hopefully we can get that down to a smaller size in the future.</p>
-<p>Also did you notice that it took an annoying about of time to compile?</p>
+<p>Also did you notice that it took an annoying amount of time to compile?</p>
 <p>Let's time native compiling a minimal program:</p>
 <pre class="language-bash"><code class="language-bash">$ <span class="token function">time</span> ys <span class="token parameter variable">-Ce</span> <span class="token string">'say: "Hello, world!"'</span><br>* Compiling YAMLScript <span class="token string">'-e'</span> to <span class="token string">'./EVAL'</span> executable<br>* Setting up build <span class="token function">env</span> <span class="token keyword">in</span> <span class="token string">'/tmp/tmp.mahWVLE9gi'</span><br>Could not <span class="token function">find</span> main <span class="token keyword">function</span> <span class="token keyword">in</span> <span class="token string">'-e'</span><br><br>real    0m0.103s</code></pre>
 <p>I forgot to mention.
