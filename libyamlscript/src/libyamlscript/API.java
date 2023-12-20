@@ -16,9 +16,10 @@ public final class API {
     ) {
         String ys = CTypeConversion.toJavaString(s);
         String json = libyamlscript.core.evalYsToJson(ys);
-        CTypeConversion.CCharPointerHolder holder = CTypeConversion.toCString(json);
-        CCharPointer value = holder.get();
-        return value;
+        try (CTypeConversion.CCharPointerHolder holder = CTypeConversion.toCString(json)) {
+            CCharPointer value = holder.get();
+            return value;
+        }
     }
 
     @CEntryPoint(name = "compile_ys_to_clj")
@@ -28,8 +29,9 @@ public final class API {
     ) {
         String ys = CTypeConversion.toJavaString(s);
         String json = libyamlscript.core.compileYsToClj(ys);
-        CTypeConversion.CCharPointerHolder holder = CTypeConversion.toCString(json);
-        CCharPointer value = holder.get();
-        return value;
+        try (CTypeConversion.CCharPointerHolder holder = CTypeConversion.toCString(json)) {
+            CCharPointer value = holder.get();
+            return value;
+        }
     }
 }
