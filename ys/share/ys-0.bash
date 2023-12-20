@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+yamlscript_version=0.1.29
+
 main() (
   setup "$@"
 
@@ -80,7 +82,7 @@ setup() {
     fi
   elif [[ $OSTYPE == *darwin* ]]; then
     graalvm_subdir=/Contents/Home
-    if [[ $MACHTYPE == *arm-apple-darwin* ]]; then
+    if [[ $MACHTYPE == *arm*-apple-darwin* ]]; then
       graalvm_arch=macos-aarch64
     elif [[ $MACHTYPE == *x86_64-*-darwin* ]]; then
       graalvm_arch=macos-x64
@@ -146,14 +148,14 @@ EOF
 )
 
 write-profile() (
-  cat > project.clj <<'EOF'
+  cat > project.clj <<EOF
 (defproject program "ys-native"
   :description "Compile a YAMLScript program to native machine code"
 
   :dependencies
   [[org.clojure/clojure "1.11.1"]
    [org.babashka/sci "0.8.41"]
-   [yamlscript/core "0.1.29"]]
+   [yamlscript/core "$yamlscript_version"]]
 
   :main ^:skip-aot program
 
@@ -245,7 +247,7 @@ assert-yamlscript-repo() (
     mkdir -p "$repo_path"
     (
       set -x
-      git clone --branch=0.1.29 --depth=1 --quiet \
+      git clone --branch=$yamlscript_version --depth=1 --quiet \
         https://github.com/yaml/yamlscript \
         "$repo_path"
     )
