@@ -6,11 +6,13 @@
 (ns libyamlscript.core
   (:require
    [yamlscript.compiler :as ys]
+   [yamlscript.runtime :as run]
    [clojure.data.json :as json]
-   [sci.core :as sci])
+   [sci.core :as sci]
+   [clojure.pprint :as pp])
   (:gen-class
    :methods [^{:static true} [compileYsToClj [String] String]
-             ^{:static true} [evalYsToJson [String] String]]))
+             ^{:static true} [loadYsToJson [String] String]]))
 
 (defn json-write-str [data]
   (json/write-str
@@ -19,25 +21,13 @@
      :escape-js-separators false
      :escape-slash false}))
 
-(defn -compileYsToClj
-  "Compile a YAMLScript code string to a Clojure code string."
-  [^String ys-str]
+(defn error-map [e]
+  (let [err (Throwable->map e)]
+    {:error {:cause (:cause err)
+             :type (get-in err [:via 0 :type])
+             :trace (get-in err [:trace])}}))
 
-  (try
-    (->> ys-str
-      ys/compile
-      (assoc {} :clojure)
-      json-write-str)
-
-    (catch Exception e
-      ;; XXX throw errors for now
-      (throw e)
-
-      (json-write-str
-        {:error (str (type e))
-         :message (.getMessage e)}))))
-
-(defn -evalYsToJson
+(defn -loadYsToJson
   "Convert a YAMLScript code string to Clojure, eval the Clojure code with
   SCI, encode the resulting value as JSON and return the JSON string."
   [^String ys-str]
@@ -45,15 +35,30 @@
     (try
       (->> ys-str
         ys/compile
-        sci/eval-string
+        run/eval-string
+        (assoc {} :data)
         json-write-str)
 
       (catch Exception e
-        ;; XXX throw errors for now
-        (throw e)
+        (->> e
+          error-map
+          json-write-str)))))
 
-        (json-write-str
-          {:error (str (type e))
-           :message (.getMessage e)})))))
+(defn -compileYsToClj
+  "Compile a YAMLScript code string to a Clojure code string."
+  [^String ys-str]
 
-(comment)
+  (try
+    (->> ys-str
+      ys/compile
+      (assoc {} :code)
+      json-write-str)
+
+    (catch Exception e
+      (->> e
+        error-map
+        json-write-str))))
+
+(comment
+  (-loadYsToJson "!yamlscript/v0\nXsay: 42")
+  )

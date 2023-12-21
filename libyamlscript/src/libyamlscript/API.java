@@ -9,14 +9,16 @@ import org.graalvm.nativeimage.c.type.CTypeConversion;
 import org.graalvm.nativeimage.c.type.CConst;
 
 public final class API {
-    @CEntryPoint(name = "eval_ys_to_json")
-    public static @CConst CCharPointer evalYsToJson(
+    @CEntryPoint(name = "load_ys_to_json")
+    public static @CConst CCharPointer loadYsToJson(
         @CEntryPoint.IsolateThreadContext long isolateId,
         @CConst CCharPointer s
     ) {
         String ys = CTypeConversion.toJavaString(s);
-        String json = libyamlscript.core.evalYsToJson(ys);
-        try (CTypeConversion.CCharPointerHolder holder = CTypeConversion.toCString(json)) {
+        String json = libyamlscript.core.loadYsToJson(ys);
+        try (CTypeConversion.CCharPointerHolder holder =
+                CTypeConversion.toCString(json)
+        ) {
             CCharPointer value = holder.get();
             return value;
         }
@@ -29,7 +31,9 @@ public final class API {
     ) {
         String ys = CTypeConversion.toJavaString(s);
         String json = libyamlscript.core.compileYsToClj(ys);
-        try (CTypeConversion.CCharPointerHolder holder = CTypeConversion.toCString(json)) {
+        try (CTypeConversion.CCharPointerHolder holder =
+                CTypeConversion.toCString(json)
+        ) {
             CCharPointer value = holder.get();
             return value;
         }
