@@ -103,7 +103,8 @@
     ((some-fn
        tag-def
        tag-defn
-       tag-ysx) pair)))
+       tag-ysx
+       identity) pair)))
 
 (defn resolve-code-mapping [node]
   (when (:%% node)

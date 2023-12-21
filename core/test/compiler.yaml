@@ -437,3 +437,14 @@
   clojure: |
     (defn _+ [a b] (+ a b))
   SKIP: true
+
+
+- name: Switching to data mode
+  yamlscript: |
+    !yamlscript/v0
+    d =: load("data.yaml")
+    =>: !
+      foo: ! d.bar
+  clojure: |
+    (def d (load "data.yaml"))
+    {"foo" (__ d "bar")}
