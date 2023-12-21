@@ -1,4 +1,10 @@
 
+- version: 0.1.31
+  date:    Wed Dec 20 08:51:20 PM PST 2023
+  changes:
+  - libyamlscript: Fix memory leak when returning strings
+  - python: Updates for next release
+
 - version: 0.1.30
   date:    Wed Dec 20 10:46:04 AM PST 2023
   changes:

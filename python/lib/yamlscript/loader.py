@@ -2,7 +2,7 @@ import os, sys
 import ctypes
 import json
 
-yamlscript_version = '0.1.30'
+yamlscript_version = '0.1.31'
 
 so = 'dylib' if sys.platform == 'darwin' else 'so'
 libys_name = 'libyamlscript.' + so + '.' + yamlscript_version
