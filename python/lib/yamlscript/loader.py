@@ -32,11 +32,11 @@ libys.graal_create_isolate(
   ctypes.byref(isolatethread),
 )
 
+load_ys_to_json = libys.load_ys_to_json
+load_ys_to_json.restype = ctypes.c_char_p
+
 compile_ys_to_clj = libys.compile_ys_to_clj
 compile_ys_to_clj.restype = ctypes.c_char_p
-
-eval_ys_to_json = libys.eval_ys_to_json
-eval_ys_to_json.restype = ctypes.c_char_p
 
 # User API class:
 class Loader():
@@ -47,30 +47,18 @@ class Loader():
   Load the returned JSON into a Python value and return that.
   """
 
-  def compile(self, ys_str):
-    ys_input = ys_str.rstrip().replace("\n", "\\n")
+  def load(self, ys_input):
+    data_json = load_ys_to_json(
+      isolatethread,
+      ctypes.c_char_p(bytes(ys_input, "utf8")),
+    ).decode()
 
+    return json.loads(data_json)
+
+  def compile(self, ys_input):
     data_json = compile_ys_to_clj(
       isolatethread,
       ctypes.c_char_p(bytes(ys_input, "utf8")),
     ).decode()
 
-    data_value = json.loads(data_json)
-
-    # free_buffer(data_buffer)
-
-    return data_value.get("clojure")
-
-  def load(self, ys_str):
-    ys_input = ys_str.rstrip().replace("\n", "\\n")
-
-    data_json = eval_ys_to_json(
-      isolatethread,
-      ctypes.c_char_p(bytes(ys_input, "utf8")),
-    ).decode()
-
-    data_value = json.loads(data_json)
-
-    # free_buffer(data_buffer)
-
-    return data_value
+    return json.loads(data_json)
