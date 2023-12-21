@@ -1,4 +1,16 @@
 
+- version: 0.1.33
+  date:    Thu Dec 21 12:09:16 PM PST 2023
+  changes:
+  - core: Fix a bug switching from code mode to data mode
+
+- version: 0.1.32
+  date:    Thu Dec 21 09:01:18 PM PST 2023
+  changes:
+  - python: Remove 'compile' from API for now
+  - python: Rework API
+  - libyamlscript: Use yamlscript.runtime instead of raw sci
+
 - version: 0.1.31
   date:    Wed Dec 20 08:51:20 PM PST 2023
   changes:
