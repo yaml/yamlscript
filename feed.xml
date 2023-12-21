@@ -3341,6 +3341,122 @@ It's important to be transparent with you about where things are at.</p>
   
     
     <entry>
+      <title>YAML, Python and the Holy Graal</title>
+      <link href="https://yamlscript.org/posts/advent-2023/dec-21/"/>
+      <updated>2023-12-21T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/advent-2023/dec-21/</id>
+      <content type="html">
+        <![CDATA[
+      <p>Which has a greater airspeed velocity... an unladen swallow or Santa's sleigh?</p>
+<p>Well, that depends... are we talking about an African or European swallow?</p>
+<p> </p>
+<details><summary><strong style="color:red">Huh?</strong></summary>
+&nbsp;
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uio1J2PKzLI?si=QA1x920QfN1GlkRs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</details>
+<h3>Welcome to Day 21 of the YAMLScript Advent Blog!</h3>
+<p>So far we've been using the YAMLScript CLI <code>ys</code> to run (or load) our YAMLScript
+programs.
+YAML users are used to using a YAML framework module inside their programs.
+For example, in Python you might do:</p>
+<pre class="language-python"><code class="language-python"><span class="token keyword">import</span> yaml<br><br>yaml_text <span class="token operator">=</span> <span class="token triple-quoted-string string">"""<br>- 40<br>- 50<br>- 60<br>"""</span><br><br>data <span class="token operator">=</span> yaml<span class="token punctuation">.</span>safe_load<span class="token punctuation">(</span>yaml_text<span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><br><span class="token comment"># => [40, 50, 60]</span></code></pre>
+<p>Wouldn't it be nice if we could do the same thing in YAMLScript?
+As of today, we can!</p>
+<pre class="language-python"><code class="language-python"><span class="token keyword">import</span> yamlscript<br><br>yaml_text <span class="token operator">=</span> <span class="token triple-quoted-string string">"""<br>- 40<br>- 50<br>- 60<br>"""</span><br><br>data <span class="token operator">=</span> yamlscript<span class="token punctuation">.</span>load<span class="token punctuation">(</span>yaml_text<span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><br><span class="token comment"># => [40, 50, 60]</span></code></pre>
+<p>The only thing that changed was the name of the module.</p>
+<p>But this module has super powers.</p>
+<pre class="language-python"><code class="language-python"><span class="token keyword">import</span> yamlscript<br><br>yaml_text <span class="token operator">=</span> <span class="token triple-quoted-string string">"""<br>!yamlscript/v0<br>mapv \(% * 10): 4..6<br>"""</span><br><br>data <span class="token operator">=</span> yamlscript<span class="token punctuation">.</span>load<span class="token punctuation">(</span>yaml_text<span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><br><span class="token comment"># => [40, 50, 60]</span></code></pre>
+<p>We can use YAMLScript functions in our YAML text to generate or manipulate data.</p>
+<p>That example was a bit contrived, but I just wanted to show how easy it is to
+load plain old YAML or super powered YAML with the new <code>yamlscript</code> Python
+module.</p>
+<p>Here's an example that might be more exciting.</p>
+<p>Say we have this normal YAML file with some data in it:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># db.yaml</span><br><span class="token key atrule">cars</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> <span class="token key atrule">make</span><span class="token punctuation">:</span> Ford<br>  <span class="token key atrule">model</span><span class="token punctuation">:</span> Mustang<br>  <span class="token key atrule">year</span><span class="token punctuation">:</span> <span class="token number">1967</span><br>  <span class="token key atrule">color</span><span class="token punctuation">:</span> red<br><span class="token punctuation">-</span> <span class="token key atrule">make</span><span class="token punctuation">:</span> Dodge<br>  <span class="token key atrule">model</span><span class="token punctuation">:</span> Charger<br>  <span class="token key atrule">year</span><span class="token punctuation">:</span> <span class="token number">1969</span><br>  <span class="token key atrule">color</span><span class="token punctuation">:</span> orange<br><span class="token punctuation">-</span> <span class="token key atrule">make</span><span class="token punctuation">:</span> Chevrolet<br>  <span class="token key atrule">model</span><span class="token punctuation">:</span> Camaro<br>  <span class="token key atrule">year</span><span class="token punctuation">:</span> <span class="token number">1969</span><br>  <span class="token key atrule">color</span><span class="token punctuation">:</span> blue</code></pre>
+<p>We could have another YAML file that uses YAMLScript:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># racers.yaml</span><br><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">db =</span><span class="token punctuation">:</span> load("db.yaml")<br><br><span class="token key atrule">=></span><span class="token punctuation">:</span> <span class="token tag">!</span><br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Ingy döt Net<br>  <span class="token key atrule">car</span><span class="token punctuation">:</span> <span class="token tag">!</span> db.cars.0<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Santa Claus<br>  <span class="token key atrule">car</span><span class="token punctuation">:</span> <span class="token tag">!</span> db.cars.1<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Sir Lancelot<br>  <span class="token key atrule">car</span><span class="token punctuation">:</span> <span class="token tag">!</span> db.cars.2</code></pre>
+<p>Then we could load the data into Python and print it out:</p>
+<pre class="language-python"><code class="language-python"><span class="token comment"># race-report.py</span><br><span class="token keyword">import</span> yaml<span class="token punctuation">,</span> yamlscript<br><br>data <span class="token operator">=</span> yamlscript<span class="token punctuation">.</span>load<span class="token punctuation">(</span><span class="token string">'racers.yaml'</span><span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>yaml<span class="token punctuation">.</span>dump<span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+<p>And we get:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Ingy döt Net<br>  <span class="token key atrule">car</span><span class="token punctuation">:</span><br>    <span class="token key atrule">make</span><span class="token punctuation">:</span> Ford<br>    <span class="token key atrule">model</span><span class="token punctuation">:</span> Mustang<br>    <span class="token key atrule">year</span><span class="token punctuation">:</span> <span class="token number">1967</span><br>    <span class="token key atrule">color</span><span class="token punctuation">:</span> red<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Santa Claus<br>  <span class="token key atrule">car</span><span class="token punctuation">:</span><br>    <span class="token key atrule">make</span><span class="token punctuation">:</span> Dodge<br>    <span class="token key atrule">model</span><span class="token punctuation">:</span> Charger<br>    <span class="token key atrule">year</span><span class="token punctuation">:</span> <span class="token number">1969</span><br>    <span class="token key atrule">color</span><span class="token punctuation">:</span> orange<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Sir Lancelot<br>  <span class="token key atrule">car</span><span class="token punctuation">:</span><br>    <span class="token key atrule">make</span><span class="token punctuation">:</span> Chevrolet<br>    <span class="token key atrule">model</span><span class="token punctuation">:</span> Camaro<br>    <span class="token key atrule">year</span><span class="token punctuation">:</span> <span class="token number">1969</span><br>    <span class="token key atrule">color</span><span class="token punctuation">:</span> blue</code></pre>
+<p>Pretty cool, huh?</p>
+<p>There's no end to the things you can do with this.</p>
+<p>Today we're showing off the <a href="https://pypi.org/project/yamlscript/">Python YAMLScript module</a> but soon this module will be available in
+every language that has a need for it.</p>
+<h3>Installing the <code>yamlscript</code> Python Module</h3>
+<p>Normally to install a Python module you would do:</p>
+<pre class="language-sh"><code class="language-sh">pip <span class="token function">install</span> a-python-module</code></pre>
+<p>With YAMLScript, you do the same:</p>
+<pre class="language-sh"><code class="language-sh">pip <span class="token function">install</span> yamlscript</code></pre>
+<p>But you also need to install the <code>libyamlscript</code> shared library.</p>
+<p>You can do that with:</p>
+<pre class="language-sh"><code class="language-sh"><span class="token function">curl</span> <span class="token parameter variable">-s</span> https://yamlscript.org/install-libyamlscript <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">bash</span></code></pre>
+<p>That will install the latest version of <code>libyamlscript</code> for your platform in
+<code>/usr/local/lib</code>.</p>
+<p>If you want to install it somewhere else, you can set the <code>PREFIX</code> option:</p>
+<pre class="language-sh"><code class="language-sh"><span class="token function">curl</span> <span class="token parameter variable">-s</span> https://yamlscript.org/install-libyamlscript <span class="token operator">|</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=~</span>/ys <span class="token function">bash</span></code></pre>
+<p>But then you'll need to set the <code>LD_LIBRARY_PATH</code> environment variable to point
+to it:</p>
+<pre class="language-sh"><code class="language-sh"><span class="token builtin class-name">export</span> <span class="token assign-left variable">LD_LIBRARY_PATH</span><span class="token operator">=~</span>/ys/lib</code></pre>
+<p>Eventually we may package the yamlscript.py module with wheels (binary assets)
+for libyamlscript, but for now you'll need to install it yourself.</p>
+<p>If you're a polyglot like me, at least you only have to install it once. :- )</p>
+<h3>The Holy Graal</h3>
+<p>This magic is all possible because of the <a href="https://www.graalvm.org/">GraalVM</a>
+project.
+Not only does GraalVM's <code>native-image</code> tool compile to binary executables, it
+also can compile to shared libraries.</p>
+<p>YAMLScript generates and publishes the <code>libyamlscript</code> shared library and then
+offers binding modules for it in many languages.</p>
+<hr>
+<p>I hope you are starting to see the power of YAMLScript.
+Not only as a new programming language, but also as a new way to work with YAML
+files that you already have.</p>
+<p>Join me tomorrow for Day 22 of the YAMLScript Advent Blog!</p>
+<p>&nbsp;</p>
+<details><summary style="color:#888">Santa's little secrets...</summary>
+<p>In December 2023 YAMLScript is a work in progress.</p>
+<p>This is not to say that it's a toy proof of concept.
+It has a working compiler, runtime and CLI.
+It has unit tests that must pass for every commit pushed to the main branch.
+It's well thought out and has a clear direction that I continually vet with a
+small group of talented and trusted people.
+It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
+<p>But that in turn not to say that you should use it in production today.
+I encourage you to start playing with it, and I'm committed to backwards
+compatibility for stable releases.
+But we're not quite there yet.
+Caveat usor!</p>
+<p>YAMLScript is evolving fast.
+While I'm writing these posts, I'm also writing the code for new features and
+fixing bugs as I go.
+I've had the Advent plan for over a month now, and I had planned to be further
+along before December 1st, but such are the time estimates of hackers.</p>
+<p>I am attempting to make sure that the code examples in these posts are always
+using the implemented features, but sometimes I may fall a few hours behind.
+Often I need to write the examples using code patterns that actually work but
+are not the ones I preferred to best make a point.</p>
+<p>As I fix bugs, implement features and tweak the language, I will update the
+posts accordingly.
+If you see something that bugs you, try taking another look after a few days.
+It probably bugged me too!</p>
+<p>Be patient with me.</p>
+<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
+sometime before March 2024.
+I'll continue blogging the progress as I go, so it shouldn't be hard for you to
+decide when to start using YAMLScript for real.</p>
+<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
+It's important to be transparent with you about where things are at.</p>
+<p>Stick with me... This is going to be awesome!</p>
+<p>— Ingy döt Net</p>
+</details>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
       <title>2023 Advent Index</title>
       <link href="https://yamlscript.org/posts/advent-2023/index/"/>
       <updated>2023-12-25T00:00:00Z</updated>
@@ -3349,6 +3465,7 @@ It's important to be transparent with you about where things are at.</p>
         <![CDATA[
       <h3>Welcome to the 2023 YAMLScript Advent Blog!</h3>
 <p>&nbsp;</p>
+<h3><a href="/posts/advent-2023/dec-21">Dec 21 - YAML, Python and the Holy Graal</a></h3>
 <h3><a href="/posts/advent-2023/dec-20">Dec 20 - Godspeed</a></h3>
 <h3><a href="/posts/advent-2023/dec-19">Dec 19 - Reindeer All The Way Down</a></h3>
 <h3><a href="/posts/advent-2023/dec-18">Dec 18 - Santa's in d-buggy</a></h3>
@@ -3369,12 +3486,6 @@ It's important to be transparent with you about where things are at.</p>
 <h3><a href="/posts/advent-2023/dec-03">Dec 3 - Load em Up!</a></h3>
 <h3><a href="/posts/advent-2023/dec-02">Dec 2 - Twas a Bit</a></h3>
 <h3><a href="/posts/advent-2023/dec-01">Dec 1 - YAMLScript Advent 2023</a></h3>
-<!--
-### [Dec 21 - ???](/posts/advent-2023/dec-21)
-### [Dec 22 - ???](/posts/advent-2023/dec-22)
-### [Dec 23 - ???](/posts/advent-2023/dec-23)
-### [Dec 24 - ???](/posts/advent-2023/dec-24)
--->
 
     ]]>
       </content>
