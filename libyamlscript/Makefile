@@ -22,8 +22,8 @@ build:: $(BUILD_TARGETS)
 install:: $(LIBYAMLSCRIPT_SO_FQNP)
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/
-	ln -s $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
-	ln -s $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_APIP))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_APIP))
 
 realclean::
 	$(RM) -r lib/

@@ -2,15 +2,24 @@ import os, sys
 import ctypes
 import json
 
-# XXX At the moment it is proving difficult to use a LIBRARY_PATH variable
-# to find our libyamlscript library, so we are just using the full path.
+yamlscript_version = '0.1.30'
 
-root_path = os.environ['YAMLSCRIPT_ROOT']
 so = 'dylib' if sys.platform == 'darwin' else 'so'
-libys_path = root_path + '/libyamlscript/lib/libyamlscript.' + so
+libys_name = 'libyamlscript.' + so + '.' + yamlscript_version
 
-if not os.path.isfile(libys_path):
-  raise Exception("Shared library file '%s' not found." % libys_path)
+ld_library_path = os.environ.get('LD_LIBRARY_PATH')
+ld_library_paths = ld_library_path.split(':') if ld_library_path else []
+ld_library_paths.append('/usr/local/lib')
+
+libys_path = ''
+for path in ld_library_paths:
+  path = path + '/' + libys_name
+  if os.path.isfile(path):
+    libys_path = path
+    break
+
+if not libys_path:
+  raise Exception("Shared library file '%s' not found." % libys_name)
 
 # Load libyamlscript shared library:
 libys = ctypes.CDLL(libys_path)

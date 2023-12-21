@@ -10,9 +10,14 @@ YAMLScript is a functional programming language with a stylized YAML syntax.
 
 YAMLScript can be used for:
 
-* Writing programs and apps
-* Writing reusable libraries
-* Functional operations in YAML data files
+* Writing new programs and applications
+  * Run with `ys file.ys`
+  * Or compile to binary with `ys -C file.ys`
+* Writing reusable shared libraries
+  * Bindable to almost any programming language
+* Using as a YAML loader module in many programming languages
+  * Plain / existing YAML files
+  * YAML files with new functional magics
 
 
 ### Run or Load?
@@ -169,8 +174,8 @@ https://github.com/yaml/yamlscript/releases).
 To install a latest release for your machine platform, try one of these:
 
 ```
-curl https://github.com/yaml/yamlscript/install-ys | bash
-curl https://github.com/yaml/yamlscript/install-libyamlscript | bash
+curl https://yamlscript.org/install-ys | bash
+curl https://yamlscript.org/install-libyamlscript | bash
 ```
 
 depending on what you are installing, `ys` or `libyamlscript`.

@@ -49,6 +49,8 @@ setup() {
     common/project.clj
     core/project.clj
     libyamlscript/project.clj
+    python/setup.py
+    python/lib/yamlscript/loader.py
     ys/deps.edn
     ys/project.clj
     ys/share/ys-0.bash

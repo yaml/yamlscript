@@ -47,7 +47,7 @@ setup() {
   download_url=https://github.com/yaml/yamlscript/releases/download/
   download_url+=$vers/$download-$vers-$os-$arch.tar.xz
 
-  if [[ $PREFIX && $PREFIX != /* ]]; then
+  if [[ ${PREFIX-} && $PREFIX != /* ]]; then
     export PREFIX=$PWD/$PREFIX
   fi
 }
