@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use std::{path::Path, sync::OnceLock};
 
 use dlopen::symbor::Library;
@@ -8,12 +10,16 @@ mod error;
 pub use error::Error;
 
 /// Evaluate a YS string, returning a JSON string.
+///
+/// # Errors
+/// This function returns an error if the library was not correctly loaded, if the input string is
+/// invalid (contains a nil-byte or if the Yamlscript engine has returned an error. Unfortunately,
+/// in the latter case, there is no way to precisely inspect the error that happened.
 pub fn load(ys: &str) -> Result<String, Error> {
     LibYamlscript::with_library(|yamlscript| {
         // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-        let input = std::ffi::CString::new(ys).map_err(|_| {
-            Error::Yamlscript("eval_ys_to_json: input contains a nil-byte".to_string())
-        })?;
+        let input = std::ffi::CString::new(ys)
+            .map_err(|_| Error::Yamlscript("load: input contains a nil-byte".to_string()))?;
         let json = unsafe {
             (yamlscript.eval_ys_to_json_fn)(
                 yamlscript.isolate_thread as libc::c_longlong,
@@ -22,7 +28,7 @@ pub fn load(ys: &str) -> Result<String, Error> {
         };
         if json.is_null() {
             Err(Error::Yamlscript(
-                "eval_ys_to_json: returned null pointer".to_string(),
+                "eval_ys_to_json: returned a null pointer".to_string(),
             ))
         } else {
             let json = unsafe { std::ffi::CStr::from_ptr(json) };
@@ -32,17 +38,26 @@ pub fn load(ys: &str) -> Result<String, Error> {
 }
 
 /// Evaluate a YS string, discarding the result.
+///
+/// # Errors
+/// This function returns an error if the library was not correctly loaded, if the input string is
+/// invalid (contains a nil-byte or if the Yamlscript engine has returned an error. Unfortunately,
+/// in the latter case, there is no way to precisely inspect the error that happened.
 pub fn run(ys: &str) -> Result<(), Error> {
     load(ys).map(|_| ())
 }
 
 /// Compile a YS string to CLJ.
+///
+/// # Errors
+/// This function returns an error if the library was not correctly loaded, if the input string is
+/// invalid (contains a nil-byte or if the Yamlscript engine has returned an error. Unfortunately,
+/// in the latter case, there is no way to precisely inspect the error that happened.
 pub fn compile(ys: &str) -> Result<String, Error> {
     LibYamlscript::with_library(|yamlscript| {
         // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-        let input = std::ffi::CString::new(ys).map_err(|_| {
-            Error::Yamlscript("compile_ys_to_clj_fn: input contains a nil-byte".to_string())
-        })?;
+        let input = std::ffi::CString::new(ys)
+            .map_err(|_| Error::Yamlscript("compile: input contains a nil-byte".to_string()))?;
         let clj = unsafe {
             (yamlscript.compile_ys_to_clj_fn)(
                 yamlscript.isolate_thread as libc::c_longlong,
@@ -51,7 +66,7 @@ pub fn compile(ys: &str) -> Result<String, Error> {
         };
         if clj.is_null() {
             Err(Error::Yamlscript(
-                "compile_ys_to_clj_fn: returned null pointer".to_string(),
+                "compile_ys_to_clj_fn: returned a null pointer".to_string(),
             ))
         } else {
             let clj = unsafe { std::ffi::CStr::from_ptr(clj) };
@@ -179,7 +194,7 @@ impl LibYamlscript {
                 Ok(x) => return Ok(x),
                 Err(x) => {
                     if first_error.is_none() {
-                        first_error = Some(x)
+                        first_error = Some(x);
                     }
                 }
             }
