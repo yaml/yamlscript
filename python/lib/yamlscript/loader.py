@@ -35,9 +35,6 @@ libys.graal_create_isolate(
 load_ys_to_json = libys.load_ys_to_json
 load_ys_to_json.restype = ctypes.c_char_p
 
-compile_ys_to_clj = libys.compile_ys_to_clj
-compile_ys_to_clj.restype = ctypes.c_char_p
-
 # User API class:
 class Loader():
   """
@@ -49,14 +46,6 @@ class Loader():
 
   def load(self, ys_input):
     data_json = load_ys_to_json(
-      isolatethread,
-      ctypes.c_char_p(bytes(ys_input, "utf8")),
-    ).decode()
-
-    return json.loads(data_json)
-
-  def compile(self, ys_input):
-    data_json = compile_ys_to_clj(
       isolatethread,
       ctypes.c_char_p(bytes(ys_input, "utf8")),
     ).decode()

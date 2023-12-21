@@ -51,15 +51,25 @@ Us the `yamlscript` module in your Python program like this:
 ```python
 import yamlscript
 
-ys = yamlscript.YAMLScript(options_dict)
-
+ys_file = open('file.ys')
 ys_code = open('file.ys').read()
 
-ys.run(ys_code)
+# Class method
+data = yamlscript.load(ys_file)
+data = yamlscript.load(ys_code)
 
+# Instance method
+ys = yamlscript.YAMLScript()
+data = ys.load(ys_file)
 data = ys.load(ys_code)
 
-clojure_code = ys.compile(ys_code)
+# Error handling
+try:
+    yamlscript.load("a: b: c")
+except Exception as e:
+    print(e)
+    print(ys.error['cause'])
+    print(ys.error['trace'])
 ```
 
 
