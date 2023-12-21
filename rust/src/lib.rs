@@ -9,7 +9,7 @@ mod error;
 
 pub use error::Error;
 
-/// Evaluate a YS string, returning a JSON string.
+/// Load a YS string, returning a JSON string.
 ///
 /// # Errors
 /// This function returns an error if the library was not correctly loaded, if the input string is
@@ -21,14 +21,14 @@ pub fn load(ys: &str) -> Result<String, Error> {
         let input = std::ffi::CString::new(ys)
             .map_err(|_| Error::Yamlscript("load: input contains a nil-byte".to_string()))?;
         let json = unsafe {
-            (yamlscript.eval_ys_to_json_fn)(
+            (yamlscript.load_ys_to_json_fn)(
                 yamlscript.isolate_thread as libc::c_longlong,
                 input.as_bytes().as_ptr(),
             )
         };
         if json.is_null() {
             Err(Error::Yamlscript(
-                "eval_ys_to_json: returned a null pointer".to_string(),
+                "load_ys_to_json: returned a null pointer".to_string(),
             ))
         } else {
             let json = unsafe { std::ffi::CStr::from_ptr(json) };
@@ -37,7 +37,7 @@ pub fn load(ys: &str) -> Result<String, Error> {
     })?
 }
 
-/// Evaluate a YS string, discarding the result.
+/// Load a YS string, discarding the result.
 ///
 /// # Errors
 /// This function returns an error if the library was not correctly loaded, if the input string is
@@ -86,8 +86,8 @@ struct LibYamlscript {
     isolate_thread: *mut void,
     /// Pointer to the function in GraalVM to create the isolate and its thread.
     create_isolate_fn: CreateIsolateFn,
-    /// Pointer to the `eval_ys_to_json` function in libyamlscript.
-    eval_ys_to_json_fn: EvalYsToJsonFn,
+    /// Pointer to the `load_ys_to_json` function in libyamlscript.
+    load_ys_to_json_fn: LoadYsToJsonFn,
     /// Pointer to the `compile_ys_to_clj` function in libyamlscript.
     compile_ys_to_clj_fn: CompileYsToClj,
 }
@@ -97,8 +97,8 @@ unsafe impl Sync for LibYamlscript {}
 
 /// Prototype of the `graal_create_isolate` function.
 type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
-/// Prototype of the `eval_ys_to_json` function.
-type EvalYsToJsonFn = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
+/// Prototype of the `load_ys_to_json` function.
+type LoadYsToJsonFn = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
 /// Prototype of the `compile_ys_to_clj` function.
 type CompileYsToClj = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
 
@@ -114,14 +114,14 @@ impl LibYamlscript {
         // Fetch symbols.
         let create_isolate_fn =
             unsafe { handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")? };
-        let eval_ys_to_json_fn =
-            unsafe { handle.ptr_or_null::<EvalYsToJsonFn>("eval_ys_to_json")? };
+        let load_ys_to_json_fn =
+            unsafe { handle.ptr_or_null::<LoadYsToJsonFn>("load_ys_to_json")? };
         let compile_ys_to_clj_fn =
             unsafe { handle.ptr_or_null::<CompileYsToClj>("compile_ys_to_clj")? };
 
         // Check for null-ness.
         if create_isolate_fn.is_null()
-            || eval_ys_to_json_fn.is_null()
+            || load_ys_to_json_fn.is_null()
             || compile_ys_to_clj_fn.is_null()
         {
             return Err(Error::Load(dlopen::Error::NullSymbol));
@@ -143,8 +143,8 @@ impl LibYamlscript {
         //    Note that we dereference (`*`) the `_fn` bindings to retrieve the raw pointer from
         //    the `PtrOrNull` wrapper. There is no pointer dereferencement here.
         let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
-        let eval_ys_to_json_fn: EvalYsToJsonFn =
-            unsafe { std::mem::transmute(*eval_ys_to_json_fn) };
+        let load_ys_to_json_fn: LoadYsToJsonFn =
+            unsafe { std::mem::transmute(*load_ys_to_json_fn) };
         let compile_ys_to_clj_fn: CompileYsToClj =
             unsafe { std::mem::transmute(*compile_ys_to_clj_fn) };
 
@@ -159,7 +159,7 @@ impl LibYamlscript {
             isolate,
             isolate_thread,
             create_isolate_fn,
-            eval_ys_to_json_fn,
+            load_ys_to_json_fn,
             compile_ys_to_clj_fn,
         })
     }
