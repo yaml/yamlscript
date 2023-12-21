@@ -9,6 +9,9 @@ mod error;
 
 pub use error::Error;
 
+/// The name of the yamlscript library to load.
+const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.33";
+
 /// Load a YS string, returning a JSON string.
 ///
 /// # Errors
@@ -181,7 +184,7 @@ impl LibYamlscript {
         // Iterate over segments of `LD_LIBRARY_PATH`.
         for path in library_path.split(':') {
             // Try to open the library, if it exists.
-            let path = Path::new(path).join("libyamlscript.so");
+            let path = Path::new(path).join(LIBYAMLSCRIPT_FILENAME);
             if !path.is_file() {
                 continue;
             }
