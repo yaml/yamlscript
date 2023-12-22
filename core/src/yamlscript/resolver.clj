@@ -97,8 +97,20 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for code mode:
 ;; ----------------------------------------------------------------------------
+(defn resolve-mode-swap [key val]
+  (let [key-text (:= key)
+        [key val] (if (re-find #":$" key-text)
+                    (let [key (assoc key
+                                :=
+                                (str/replace key-text #"\s*:$" ""))
+                          val (assoc val :! "")]
+                      [key val])
+                    [key val])]
+    [key val]))
+
 (defn resolve-code-pair [key val]
-  (let [pair [(resolve-code-node key)
+  (let [[key val] (resolve-mode-swap key val)
+        pair [(resolve-code-node key)
               (resolve-code-node val)]]
     ((some-fn
        tag-def
@@ -149,8 +161,14 @@
 ;; Resolve dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-data-mapping [node]
-  {:map (map resolve-data-node
-          (or (:% node) (:%% node)))})
+  {:map (vec
+          (mapcat
+            (fn [[key val]]
+              (let [[key val]
+                    (resolve-mode-swap key val)]
+                 [(resolve-data-node key)
+                  (resolve-data-node val)]))
+            (partition 2 (or (:% node) (:%% node)))))})
 
 (defn resolve-data-sequence [node]
   {:seq (map resolve-data-node
@@ -239,5 +257,5 @@
     #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
     {:! "yamlscript/v0", := ""}
     #__)
-  (set/rename-keys {:> 42} {:> :str})
-  )
+  (set/rename-keys {:> 42} {:> :str}))
+  

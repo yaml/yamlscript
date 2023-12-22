@@ -9,8 +9,8 @@ author:
 
 requires:
   perl: 5.16.0
-  Lingy: 0.1.18
-  Regexp::Common: 2017060201
+  FFI::Platyplus: 0
+  JSON: 0
 
 =zild:
   no-about: true

@@ -448,3 +448,24 @@
   clojure: |
     (def d (load "data.yaml"))
     {"foo" (__ d "bar")}
+
+
+- name: Switching to data mode with '::'
+  yamlscript: |
+    !yamlscript/v0
+    d =: load("data.yaml")
+    =>::
+      foo:: d.bar
+  clojure: |
+    (def d (load "data.yaml"))
+    {"foo" (__ d "bar")}
+
+
+- name: Switch modes with '::' for def/let '=::'
+  yamlscript: |
+    !yamlscript/v0
+    nums =:: [1, 2, 3]
+    =>:: {foo:: nums}
+  clojure: |
+    (def nums [1 2 3])
+    {"foo" nums}
