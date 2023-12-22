@@ -23,6 +23,7 @@ target/
 /*.clj
 /*.yaml
 /*.ys
+/issue-*
 /libyamlscript-*
 /www
 /ys-*
