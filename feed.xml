@@ -3470,18 +3470,18 @@ I always pictured Santa wearing moon boots around the workshop.</p>
 <h3>Welcome to Day 22 of the YAMLScript Advent Blog!</h3>
 <p>Remember way back in <a href="../dec-06/">Day 6</a> when we talked about the 3 different
 YAMLScript modes?
-They were <code>bare</code>, <code>data</code> and <code>code</code>.
+They were <strong>bare</strong>, <strong>data</strong> and <strong>code</strong>.
 The bare mode was what you got then you ran (or loaded) a YAMLScript program
 with no <code>!yamlscript/v0</code> tag at the top.
 It just meant that you were effectively stuck in data mode, with no possibility
 of executing any code.</p>
-<p>There's actually comfort in bare mode.
+<p>There's actually comfort in <strong>bare</strong> mode.
 You are using YAMLScript to process your data because it is one of the best
 YAML loaders available, but you don't have to worry about any code being
 run accidentally.</p>
 <p>Today's post is about the other two modes.
-Either you are writing a program (thus starting in <code>code</code> mode) or you are doing
-cool stuff with your data files (thus starting in <code>data</code> mode).</p>
+Either you are writing a program (thus starting in <strong>code</strong> mode) or you are
+doing cool stuff with your data files (thus starting in <strong>data</strong> mode).</p>
 <p>In either case you are going to want to switch modes at various places in your
 YAMLScript.
 We learned before that you could switch modes by using the <code>!</code> tag.
