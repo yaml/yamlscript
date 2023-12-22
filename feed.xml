@@ -3471,10 +3471,10 @@ I always pictured Santa wearing moon boots around the workshop.</p>
 <p>Remember way back in <a href="../dec-06/">Day 6</a> when we talked about the 3 different
 YAMLScript modes?
 They were <code>bare</code>, <code>data</code> and <code>code</code>.
-The <code>bare</code> mode was what you got then you ran (or loaded) a YAMLScript program
+The bare mode was what you got then you ran (or loaded) a YAMLScript program
 with no <code>!yamlscript/v0</code> tag at the top.
-It just meant that you were effectively stuck in <code>data</code> mode, with no
-possibility of executing any code.</p>
+It just meant that you were effectively stuck in data mode, with no possibility
+of executing any code.</p>
 <p>There's actually comfort in bare mode.
 You are using YAMLScript to process your data because it is one of the best
 YAML loaders available, but you don't have to worry about any code being
