@@ -1,4 +1,9 @@
 
+- version: 0.1.34
+  date:    Thu Dec 21 11:21:14 PM PST 2023
+  changes:
+  - core: Implement mode swapping with '::'
+
 - version: 0.1.33
   date:    Thu Dec 21 12:09:16 PM PST 2023
   changes:
