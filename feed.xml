@@ -3639,7 +3639,7 @@ He got it done in no time, and now I'm writing about it!!!</p>
 <p>Just like the Python binding, the Perl module has a <code>load</code> method that takes a
 YAMLScript program as a string and returns the result as a Perl data structure.</p>
 <p>Also like the Python binding, the Perl module (and all the other bindings)
-currently require that you install <code>libyamlscript.so</code> yourself.</p>
+currently requires that you install <code>libyamlscript.so</code> yourself.</p>
 <p>You can do this easily with:</p>
 <pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> <span class="token parameter variable">-s</span> https://yamlscript.org/install-libyamlscript <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
 <p>Remember that this installs to <code>/usr/local/lib</code> by default, so you'll need to
@@ -3654,8 +3654,8 @@ YAMLScript::FFI will likely become YAMLScript.pm next month when I have the
 time to sort out the details.</p>
 </blockquote>
 <h3>Rust</h3>
-<p>@ethiraric is a Rust programmer who dropped by the YAML matrix chat a couple of
-weeks ago looking to improve the Rust's YAML support.
+<p>@ethiraric is a Rust programmer who dropped by the <a href="https://matrix.to/#/#chat:yaml.io">YAML matrix chat</a> a couple of weeks ago looking to improve the
+Rust's YAML support.
 I told him about YAMLScript and suggested he write a Rust binding for it since
 it's just one FFI call.</p>
 <p>He did and today we get to show it off.</p>
