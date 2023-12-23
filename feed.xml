@@ -3598,8 +3598,8 @@ gets from Perl to Rust.</p>
 <h3>Welcome to Day 23 of the YAMLScript Advent Blog!</h3>
 <p>A couple of days ago we showed you how to use YAMLScript from Python.</p>
 <p>One language binding down, forty-one to go!</p>
-<p>Today we'll show you how to use YAMLScript from Perl, Rust and Raku (aka Perl
-6).</p>
+<p>Today we'll show you how to use YAMLScript with 3 new programming language
+bindings: Perl, Rust and Raku (aka Perl 6).</p>
 <p>YAMLScript gets by with a little help from its friends:</p>
 <ul>
 <li><a href="https://github.com/tony-o">@tony-o</a> - Raku binding</li>
