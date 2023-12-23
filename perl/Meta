@@ -1,0 +1,35 @@
+=meta: 0.0.2
+
+base: ../Meta
+
+name: YAMLScript::FFI
+version: 0.1.0
+
+language: perl
+
+author:
+  cpan: INGY
+
+requires:
+  perl: 5.16.0
+  FFI::Platyplus: 2.08
+  FFI::Checklib: 0.31
+  JSON: 4.10
+
+test:
+  requires:
+    Test2::V0: 0.000159
+
+=zild:
+  no-about: true
+  no-readme: true
+  no-travis: true
+  test-000: none
+
+  dzil:
+    no-mm: true
+    postamble: |
+      [MakeMaker::Awesome]
+      delimiter = |
+      footer = |package MY; use lib 't/lib'; use DistTestFixer;
+      footer = |sub postamble { $_[0]->SUPER::postamble . DistTestFixer->fix('yamlscript') }
