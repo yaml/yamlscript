@@ -3669,6 +3669,19 @@ Then edit <code>hearsay/Cargo.toml</code> to look like this:</p>
 <pre class="language-bash"><code class="language-bash">$ <span class="token assign-left variable">LD_LIBRARY_PATH</span><span class="token operator">=</span>/usr/local/lib <span class="token function">cargo</span> run<br>    Finished dev <span class="token punctuation">[</span>unoptimized + debuginfo<span class="token punctuation">]</span> target<span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token number">0</span>.01s<br>     Running <span class="token variable"><span class="token variable">`</span>target/debug/hearsay<span class="token variable">`</span></span><br><span class="token punctuation">{</span><span class="token string">"data"</span><span class="token builtin class-name">:</span><span class="token string">"I heard that @ethiraric uses YAMLScript in their Python code!"</span><span class="token punctuation">}</span></code></pre>
 <p>That's not quite right, but that's where things are at this moment.
 I'm sure @ethiraric will fix it soon!!!</p>
+<p>It's actually fortunate the Rust binding is not working yet, because it shows us
+<em>how</em> libyamlscript actually works.</p>
+<p>The libyamlscript library currently has a single function that takes a
+YAMLScript string and returns a JSON string.
+Internally it compiles the YAMLScript to Clojure and evaluates the code using
+SCI.
+Then it converts the result to JSON and returns it.
+If the evaluation fails it returns JSON with all the error information under an
+<code>&quot;error&quot;</code> key.
+If successful, it returns JSON with all the result information under a <code>&quot;data&quot;</code>
+key.</p>
+<p>The above call was successful, so that's why we see our expected result under
+the <code>&quot;data&quot;</code> key.</p>
 <h3>Raku</h3>
 <p>Raku is the new name for Perl 6.
 It's a completely different language than Perl 5, but it's still a lot like
