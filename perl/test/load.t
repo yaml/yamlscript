@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use XXX;
+
 BEGIN {
     if (not $ENV{PERL_YAMLSCRIPT_DEVEL}) {
         require Test::More;
@@ -13,26 +15,30 @@ BEGIN {
 use Test2::V0 -target => 'YAMLScript::FFI';
 use YAMLScript::FFI;
 
-is YAMLScript::FFI::load(<<'YS'
+my $program = <<'...';
 !yamlscript/v0/data
 foo:: 1..10
-YS
-), {
-    data => {
-        foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
-    },
-}, 'Returns data';
+...
 
-is YAMLScript::FFI::load(<<'YS'
-yamlscript/v0/data
-foo:: 1..10
-YS
-), {
-    error => {
-        type  => E,
-        trace => E,
-        cause => E,
-    },
-}, 'Returns error';
+my $want = {
+    foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+};
+my $got = YAMLScript::FFI->new->load($program);
+
+is $got, $want, 'Returns data';
+
+# XXX Need Try::Tiny to catch error?
+
+# is YAMLScript::FFI->new->load(<<'...'
+# yamlscript/v0/data
+# foo:: 1..10
+# ...
+# ), {
+#     error => {
+#         type  => E,
+#         trace => E,
+#         cause => E,
+#     },
+# }, 'Returns error';
 
 done_testing;

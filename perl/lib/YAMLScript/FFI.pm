@@ -9,6 +9,10 @@ use FFI::Platypus;
 use FFI::CheckLib ();
 use JSON ();
 
+sub new {
+    bless {}, shift;
+}
+
 my $ffi = FFI::Platypus->new(
     api => 2,
     lib => FFI::CheckLib::find_lib_or_die(
@@ -29,7 +33,7 @@ $ffi->attach(
 );
 
 sub load {
-    my ($ys_code) = @_;
+    my ($self, $ys_code) = @_;
     my $resp = _load($ys_code);
     if (my $data = $resp->{data}) {
         return $data;
