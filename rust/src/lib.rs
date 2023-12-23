@@ -182,7 +182,10 @@ impl LibYamlscript {
         let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
 
         // Iterate over segments of `LD_LIBRARY_PATH`.
-        for path in library_path.split(':') {
+        for path in library_path
+            .split(':')
+            .chain(std::iter::once("/usr/local/lib"))
+        {
             // Try to open the library, if it exists.
             let path = Path::new(path).join(LIBYAMLSCRIPT_FILENAME);
             if !path.is_file() {
