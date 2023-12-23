@@ -1,0 +1,18 @@
+# ys --load hearsay.ys | jq -r .
+
+!yamlscript/v0
+
+hackers =::
+- ethiraric
+- ingydotnet
+- jjatria
+- tony-o
+
+languages =::
+- Perl
+- Python
+- Raku
+- Rust
+
+=>: "I heard that @$rand-nth(hackers) uses YAMLScript
+    in their $rand-nth(languages) code!"
