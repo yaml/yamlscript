@@ -10,7 +10,7 @@ mod error;
 pub use error::Error;
 
 /// The name of the yamlscript library to load.
-const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.33";
+const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.34";
 
 /// Load a YS string, returning a JSON string.
 ///
