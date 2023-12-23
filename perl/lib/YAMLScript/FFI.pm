@@ -3,6 +3,8 @@ package YAMLScript::FFI;
 use strict;
 use warnings;
 
+our $VERSION = '0.1.0';
+
 use FFI::Platypus;
 use FFI::CheckLib ();
 use JSON ();

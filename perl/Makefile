@@ -16,12 +16,10 @@ test ?= test/
 
 export PATH := $(ROOT)/perl/bin:$(PATH)
 
-export PERL_YAMLSCRIPT_DEVEL := 1
-
 
 #------------------------------------------------------------------------------
 test:: $(LIBYAMLSCRIPT_SO_FQNP)
-	prove -l $${TEST_VERBOSE:+'-v'} $(test)
+	PERL_YAMLSCRIPT_DEVEL=1 prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
 	$(RM) -r cpan YAMLScript*

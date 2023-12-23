@@ -1,6 +1,7 @@
 
-- version: 0.1.0
-  date:    Sat Dec 23 05:37:16 AM PST 2023
-  changes:
-  - Initial Release
-  - Initial code written by @jjatria++
+---
+version: 0.1.0
+date:    Sat Dec 23 06:53:30 AM PST 2023
+changes:
+- Initial Release
+- Initial code written by @jjatria++
