@@ -3638,6 +3638,8 @@ He got it done in no time, and now I'm writing about it!!!</p>
 <pre class="language-bash"><code class="language-bash">$ perl hearsay.pl<br>I heard that @ethiraric uses YAMLScript <span class="token keyword">in</span> their Rust code<span class="token operator">!</span><br>$ perl hearsay.pl<br>I heard that @ingydotnet uses YAMLScript <span class="token keyword">in</span> their Python code<span class="token operator">!</span></code></pre>
 <p>Just like the Python binding, the Perl module has a <code>load</code> method that takes a
 YAMLScript program as a string and returns the result as a Perl data structure.</p>
+<p>Install YAMLScript::FFI with:</p>
+<pre class="language-bash"><code class="language-bash">$ cpanm YAMLScript::FFI</code></pre>
 <p>Also like the Python binding, the Perl module (and all the other bindings)
 currently requires that you install <code>libyamlscript.so</code> yourself.</p>
 <p>You can do this easily with:</p>
