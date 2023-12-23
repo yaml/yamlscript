@@ -1,9 +1,14 @@
-SHELL := bash
+include ../common/base.mk
 
-default:
+CARGO := \
+    build \
+    clean \
+    install \
+    publish \
+    test \
 
-build clean publish test::
+default::
+
+$(CARGO)::
 	cargo $@
 
-clean::
-	$(RM) Cargo.lock

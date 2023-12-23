@@ -26,13 +26,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hearsay-rust"
-version = "0.1.0"
-dependencies = [
- "yamlscript",
-]
-
-[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -104,8 +97,6 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 [[package]]
 name = "yamlscript"
 version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30047861724afa2fb5bae4acd423e518bdda29b5965d35a79b202a66a46a3ab5"
 dependencies = [
  "dlopen",
  "libc",
