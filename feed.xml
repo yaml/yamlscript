@@ -3670,6 +3670,8 @@ Then edit <code>hearsay/Cargo.toml</code> to look like this:</p>
 <p>Now run <code>cargo run</code> and you should see something like this:</p>
 <pre class="language-bash"><code class="language-bash">$ <span class="token function">cargo</span> run<br>    Finished dev <span class="token punctuation">[</span>unoptimized + debuginfo<span class="token punctuation">]</span> target<span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token number">0</span>.01s<br>     Running <span class="token variable"><span class="token variable">`</span>target/debug/hearsay<span class="token variable">`</span></span><br><span class="token punctuation">{</span><span class="token string">"data"</span><span class="token builtin class-name">:</span><span class="token string">"I heard that @ethiraric uses YAMLScript in their Python code!"</span><span class="token punctuation">}</span></code></pre>
 <p>That's not quite right, but that's where things are at this moment.
+The <code>load</code> function is returning a JSON string, but it should be returning a
+Rust data structure for whatever was under the <code>&quot;data&quot;</code> JSON key.
 I'm sure @ethiraric will fix it soon!!!</p>
 <p>It's actually fortunate that the Rust binding is not working yet, because it
 shows us <em>how</em> libyamlscript actually works.</p>
