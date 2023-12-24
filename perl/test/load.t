@@ -1,32 +1,18 @@
 #!/usr/bin/env perl
 
 use Test2::V0 -target => 'YAMLScript::FFI';
-use YAMLScript::FFI;
 
 my $program = <<'...';
 !yamlscript/v0/data
 foo:: 1..10
 ...
 
-my $want = {
-    foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
-};
-my $got = YAMLScript::FFI->new->load($program);
+is CLASS->new->load($program),
+    { foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] },
+    'Returns data';
 
-is $got, $want, 'Returns data';
-
-# XXX Need Try::Tiny to catch error?
-
-# is YAMLScript::FFI->new->load(<<'...'
-# yamlscript/v0/data
-# foo:: 1..10
-# ...
-# ), {
-#     error => {
-#         type  => E,
-#         trace => E,
-#         cause => E,
-#     },
-# }, 'Returns error';
+like dies { CLASS->new->load("mapping\nerror::") },
+    qr/libyamlscript: mapping values are not allowed/,
+    'Dies with libyaml error';
 
 done_testing;
