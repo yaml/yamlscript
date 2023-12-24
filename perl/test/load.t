@@ -1,17 +1,5 @@
 #!/usr/bin/env perl
 
-use XXX;
-
-BEGIN {
-    if (not $ENV{PERL_YAMLSCRIPT_DEVEL}) {
-        require Test::More;
-        Test::More->import;
-        pass("XXX - Tests need libyamlscript.so");
-        done_testing();
-        exit 0;
-    }
-}
-
 use Test2::V0 -target => 'YAMLScript::FFI';
 use YAMLScript::FFI;
 

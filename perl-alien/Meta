@@ -2,7 +2,7 @@
 
 base: ../Meta
 
-name: YAMLScript-FFI
+name: Alien-YAMLScript
 version: 0.1.1
 
 language: perl
@@ -12,14 +12,12 @@ author:
 
 requires:
   perl: 5.16.0
-  Alien::YAMLScript: 0.1.1
-  FFI::Platyplus: 2.08
-  FFI::Checklib: 0.31
   JSON: 4.10
 
 test:
   requires:
     Test2::V0: 0.000159
+    Test::Alien: 2.80
 
 =zild:
   no-git-update: true
@@ -27,3 +25,7 @@ test:
   no-readme: true
   no-travis: true
   test-000: none
+
+dzil:
+  postamble: |
+    [AlienBuild]

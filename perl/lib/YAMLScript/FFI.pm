@@ -5,6 +5,7 @@ use warnings;
 
 our $VERSION = '0.1.1';
 
+use Alien::YAMLScript;
 use FFI::Platypus;
 use FFI::CheckLib ();
 use JSON ();
@@ -13,11 +14,14 @@ sub new {
     bless {}, shift;
 }
 
+unless ( Alien::YAMLScript->exact_version($VERSION) ) {
+    my $have = Alien::YAMLScript->version;
+    die "YAMLScript::FFI $VERSION requires Alien::YAMLScript $VERSION, but you have $have";
+}
+
 my $ffi = FFI::Platypus->new(
     api => 2,
-    lib => FFI::CheckLib::find_lib_or_die(
-        lib => 'yamlscript',
-    ),
+    lib => [ Alien::YAMLScript->dynamic_libs ],
 );
 
 $ffi->function( graal_create_isolate => [qw( opaque opaque* opaque* )] => 'int' )

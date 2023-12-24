@@ -1,0 +1,28 @@
+use alienfile;
+
+# Always use a share install
+# We cannot use a system install, because we need to know exactly
+# which version we are installing.
+probe sub { 'share' };
+
+share {
+    my $os = $^O;
+    $os = 'macos' unless $os eq 'linux';
+
+    my $arch = meta->prop->{platform}{cpu}{arch}{name};
+    $arch = 'x64' unless $arch eq 'aarch64';
+
+    my $libyamlscript_version = '0.1.34';
+
+    plugin 'Download::GitHub' => (
+        github_user  => 'yaml',
+        github_repo  => 'yamlscript',
+        asset        => 1,
+        asset_name   => qr/^libyamlscript-\Q$libyamlscript_version\E-$os-$arch/,
+        asset_format => 'tar.xz',
+    );
+
+    build [
+        '%{make} install PREFIX=%{.install.prefix}',
+    ];
+};

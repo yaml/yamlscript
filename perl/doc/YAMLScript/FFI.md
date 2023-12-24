@@ -90,7 +90,7 @@ Proper docs coming soon.
 # Authors
 
 * Ingy döt Net <ingy@ingy.net>
-* José Joaquín Atria <jjattria@cpan.org>
+* José Joaquín Atria <jjatria@cpan.org>
 
 
 # Copyright and License
