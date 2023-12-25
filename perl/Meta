@@ -21,7 +21,7 @@ test:
     Test2::V0: 0.000159
 
 =zild:
-  skip_tag_check: true
+  no-git-update: true
   no-about: true
   no-readme: true
   no-travis: true
