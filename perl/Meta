@@ -12,7 +12,7 @@ author:
 
 requires:
   perl: 5.16.0
-  FFI::Platyplus: 2.08
+  FFI::Platypus: 2.08
   FFI::Checklib: 0.31
   JSON: 4.10
 
