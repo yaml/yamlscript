@@ -14,6 +14,7 @@ api_files=(
   core/project.clj
   libyamlscript/deps.edn
   libyamlscript/project.clj
+  perl/lib/YAMLScript/FFI.pm
   perl-alien/alienfile
   python/lib/yamlscript/loader.py
   raku/lib/YAMLScript.rakumod
@@ -62,6 +63,7 @@ yamlscript_files=(
 
 YAMLSCRIPT_files=(
   raku/lib/YAMLScript.rakumod
+  perl/lib/YAMLScript/FFI.pm
 )
 
 yamlscript_core_files=(

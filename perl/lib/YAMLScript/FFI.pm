@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 our $VERSION = '0.1.1';
+our $LIBYAMLSCRIPT_VERSION = '0.1.34';
 
 use Alien::YAMLScript;
 use FFI::Platypus;
@@ -14,9 +15,10 @@ sub new {
     bless {}, shift;
 }
 
-unless ( Alien::YAMLScript->exact_version($VERSION) ) {
+unless ( Alien::YAMLScript->exact_version($LIBYAMLSCRIPT_VERSION) ) {
     my $have = Alien::YAMLScript->version;
-    die "YAMLScript::FFI $VERSION requires Alien::YAMLScript $VERSION, but you have $have";
+    die "YAMLScript::FFI $VERSION requires Alien::YAMLScript libyamlscript version\n" .
+        "$LIBYAMLSCRIPT_VERSION, but you have $have";
 }
 
 my $ffi = FFI::Platypus->new(
