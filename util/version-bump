@@ -39,17 +39,21 @@ main() (
 )
 
 apply() (
-  [[ " ${yamlscript_files[*]} " == *" $file "* ]] &&
+  if [[ " ${version_files[*]} " == *" $file "* ]]; then
+    bump 's{(\bversion\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+
+  elif [[ " ${VERSION_files[*]} " == *" $file "* ]]; then
+    bump 's{(\bVERSION\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+
+  elif [[ " ${yamlscript_files[*]} " == *" $file "* ]]; then
     bump 's{(yamlscript.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  [[ " ${YAMLSCRIPT_files[*]} " == *" $file "* ]] &&
+
+  elif [[ " ${YAMLSCRIPT_files[*]} " == *" $file "* ]]; then
     bump 's{(YAMLSCRIPT.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  [[ " ${yamlscript_core_files[*]} " == *" $file "* ]] &&
+
+  elif [[ " ${yamlscript_core_files[*]} " == *" $file "* ]]; then
     bump 's{(yamlscript.*core.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  [[ " ${version_files[*]} " == *" $file "* ]] &&
-    bump 's{(version.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  [[ " ${VERSION_files[*]} " == *" $file "* ]] &&
-    bump 's{(VERSION.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  true
+  fi
 )
 
 bump() (
