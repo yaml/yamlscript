@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+[[ ${X-} == 1 ]] && set -x
+
 set -e -u -o pipefail
 
-branch=main
+branch=${YS_BRANCH:-main}
 export download=libyamlscript
 
 url=https://raw.githubusercontent.com/yaml/yamlscript/$branch/common/install
