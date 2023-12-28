@@ -13,6 +13,6 @@ is CLASS->new->load($program),
 
 like dies { CLASS->new->load("mapping\nerror::") },
     qr/libyamlscript: mapping values are not allowed/,
-    'Dies with libyaml error';
+    'Dies with libyamlscript error';
 
 done_testing;
