@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+[[ ${X-} == 1 ]] && set -x
+
 set -e -u -o pipefail
 
-VERSION=${VERSION:-0.1.34}
+VERSION=${YS_VERSION:-0.1.34}
 
 main() (
   setup "$@"
