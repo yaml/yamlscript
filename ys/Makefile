@@ -76,6 +76,9 @@ $(YAMLSCRIPT_CLI_BIN_BASH): $(YAMLSCRIPT_CLI_BIN_BASH_SRC)
 	cp $< $@
 	chmod 755 $@
 
+clean::
+	$(RM) -r .cpcache/
+
 realclean::
 	$(RM) -r bin
 

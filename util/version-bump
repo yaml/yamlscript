@@ -3,60 +3,59 @@
 set -euo pipefail
 
 main() (
-  setup "$@"
+  root=$(cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd -P)
+  source "$root/.version.sh"
 
-  for file in "${files[@]}"; do
-    update-file "$file" "$old" "$new"
+  version=$v_api
+  for file in "${api_files[@]}"; do
+    apply "$file" "$v_api"
   done
 
-  echo
-  echo "Done. Review changes:"
-  git diff --minimal |
-    grep -E '^(diff|-|\+)' |
-    grep -Ev '^(---|\+\+\+)'
+  version=$v_perl
+  for file in "${perl_files[@]}"; do
+    apply "$file" "$v_perl"
+  done
+
+  version=$v_python
+  for file in "${python_files[@]}"; do
+    apply "$file" "$v_python"
+  done
+
+  version=$v_raku
+  for file in "${raku_files[@]}"; do
+    apply "$file" "$v_raku"
+  done
+
+  version=$v_rust
+  for file in "${rust_files[@]}"; do
+    apply "$file" "$v_rust"
+  done
+
+  (
+    set -x
+    cd rust || exit
+    cargo update
+  )
 )
 
-update-file() {
-  local file=$1 old=$2 new=$3
+apply() (
+  [[ " ${yamlscript_files[*]} " == *" $file "* ]] &&
+    bump 's{(yamlscript.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+  [[ " ${YAMLSCRIPT_files[*]} " == *" $file "* ]] &&
+    bump 's{(YAMLSCRIPT.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+  [[ " ${yamlscript_core_files[*]} " == *" $file "* ]] &&
+    bump 's{(yamlscript.*core.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+  [[ " ${version_files[*]} " == *" $file "* ]] &&
+    bump 's{(version.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+  [[ " ${VERSION_files[*]} " == *" $file "* ]] &&
+    bump 's{(VERSION.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+  true
+)
 
-  perl -i -pe "s/(yamlscript.*)$old(?=[\ \-\"\']|$)/\${1}$new/gim" "$file"
-  perl -i -pe "s/^(version: )$old$/\${1}$new/m" "$file"
-  perl -i -pe "s/^(VERSION=)$old$/\${1}$new/m" "$file"
-
-  if git diff --quiet "$file"; then
-    echo "* No changes to $file"
-  else
-    echo "* Updated $file"
-  fi
-}
-
-setup() {
-  old=${1-} new=${2-}
-  [[ $old && $new ]] ||
-    die "usage: $0 <old-version> <new-version>"
-  [[ $old =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
-    die "Error: old version must be of the form #.#.#"
-  [[ $new =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
-    die "Error: new version must be of the form #.#.#"
-  [[ $old != "$new" ]] ||
-    die "Error: old and new must be different"
-  old=${1//./\\.}
-
-  files=(
-    Meta
-    .profile
-    common/install
-    common/project.clj
-    core/project.clj
-    libyamlscript/project.clj
-    python/setup.py
-    python/lib/yamlscript/loader.py
-    ys/deps.edn
-    ys/project.clj
-    ys/share/ys-0.bash
-    ys/src/yamlscript/cli.clj
-  )
-}
+bump() (
+  set -x
+  perl -p0i -e "$1" "$file"
+)
 
 die() {
   echo "$*" >&2

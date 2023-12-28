@@ -5,13 +5,11 @@ ROOT := $(shell \
 
 include $(ROOT)/common/vars.mk
 
-old ?= $(YS_VERSION)
-new ?=
-
 DIRS := \
     core \
     libyamlscript \
     python \
+    raku \
     ys \
 
 BUILD_DIRS := \
@@ -95,14 +93,12 @@ delete-tag:
 	-git push --delete origin $(YS_VERSION)
 
 bump:
-ifeq (,$(new))
-	$(error new= is required)
-endif
-	version-bump $(old) $(new)
+	version-bump
 	$(RM) -r ~/.m2/repository/yamlscript
 
 $(CLEAN):
 clean: $(CLEAN) release-clean
+	$(RM) -r sample/advent/hearsay-rust/target/
 clean-%: %
 	$(MAKE) -C $< clean
 
