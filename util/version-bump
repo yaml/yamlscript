@@ -41,6 +41,7 @@ main() (
 apply() (
   if [[ " ${version_files[*]} " == *" $file "* ]]; then
     bump 's{(\bversion\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
+    bump 's{(::YAMLScript\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
 
   elif [[ " ${VERSION_files[*]} " == *" $file "* ]]; then
     bump 's{(\bVERSION\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
