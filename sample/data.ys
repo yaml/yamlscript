@@ -1,0 +1,4 @@
+!yamlscript/v0/data
+
+foods:: load("./food.yaml")
+numbers:: 6..9

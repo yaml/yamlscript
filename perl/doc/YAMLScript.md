@@ -6,69 +6,68 @@ Program in YAML
 
 # Synopsis
 
-A YAMLScript program `99-bottles.ys`:
+A YAML file:
 
-```
-#!/usr/bin/env yamlscript
-
-defn main(number=99):
-  map(say):
-    map(paragraph):
-      (number .. 1)
-
-defn paragraph(num): |
-  $(bottles num) of beer on the wall,
-  $(bottles num) of beer.
-  Take one down, pass it around.
-  $(bottles (num - 1)) of beer on the wall.
-
-defn bottles(n):
-  ???:
-    (n == 0) : "No more bottles"
-    (n == 1) : "1 bottle"
-    :else    : "$n bottles"
+```yaml
+# food.yaml
+fruit:
+- apple
+- banana
+nuts:
+- cashew
+- drupe
 ```
 
-Run: `yamlscript 99-bottles.ys 3`
+A YAMLScript file:
 
-```
-3 bottles of beer on the wall,
-3 bottles of beer.
-Take one down, pass it around.
-2 bottles of beer on the wall.
+```yaml
+# data.ys
+!yamlscript/v0/data
 
-2 bottles of beer on the wall,
-2 bottles of beer.
-Take one down, pass it around.
-1 bottle of beer on the wall.
-
-1 bottle of beer on the wall,
-1 bottle of beer.
-Take one down, pass it around.
-No more bottles of beer on the wall.
+foods:: load("food.yaml")
+numbers:: 6..9
 ```
 
-Use the YAMLScript REPL:
+Perl code:
 
+```perl
+# script.pl
+use strict; use warnings;
+use YAMLScript;
+use IO::All;
+use Data::Dumper qw(Dumper);
+$Data::Dumper::Indent = 1;
+$Data::Dumper::Terse = 1;
+
+my $ys = io('data.ys')->all;
+my $data = YAMLScript->load($ys);
+
+print Dumper($data);
 ```
-$ yamlscript
-Welcome to YAMLScript [perl]
 
-user=> nums =: (1 .. 3)
-user/nums
-user=> nums
-(1 2 3)
-user=> map(inc nums)
-(2 3 4)
-user=> <CTL-D>         # to exit
-$
+Run it:
+
+```text
+$ perl script.pl
+{
+  'foods' => {
+    'fruit' => [
+      'apple',
+      'banana'
+    ],
+    'nuts' => [
+      'cashew',
+      'drupe'
+    ]
+  },
+  'numbers' => [
+    6,
+    7,
+    8,
+    9
+  ]
+}
 ```
-
-
-# Status
-
-This is ALPHA software.
-Expect things to change.
 
 
 # Description
