@@ -1,7 +1,7 @@
 # Used by util/version-bump to update versions in repo
 
 v_api=0.1.34
-v_perl=0.1.2
+v_perl=0.1.3
 v_python=0.1.4
 v_raku=0.1.0
 v_rust=0.1.2
