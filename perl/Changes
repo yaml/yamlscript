@@ -1,5 +1,11 @@
 
 ---
+version: 0.1.2
+date:    Thu Dec 28 04:26:11 PM PST 2023
+changes:
+- Integrate with Alien::YAMLScript
+
+---
 version: 0.1.1
 date:    Sat Dec 23 07:32:11 AM PST 2023
 changes:
