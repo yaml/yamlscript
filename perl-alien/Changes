@@ -3,7 +3,7 @@
 version: 0.1.3
 date:    Thu Dec 28 06:26:39 PM PST 2023
 changes:
-- Fix YAMLScript::FFI dependencies
+- Fix YAMLScript::FFI dependencies - @jbarrett++
 
 ---
 version: 0.1.2

@@ -8,6 +8,8 @@ include $(ROOT)/common/vars.mk
 DIRS := \
     core \
     libyamlscript \
+    perl \
+    perl-alien \
     python \
     raku \
     ys \

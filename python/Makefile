@@ -60,7 +60,6 @@ clean::
 	$(RM) -r dist/ .pytest_cache/ yamlscript-0.*/
 	$(RM) -r lib/yamlscript.egg-info/ .eggs/
 	find . -name '__pycache__' | xargs $(RM) -r
-	$(RM) -r $(LIBRARY_PATH)
 	@echo
 
 realclean::

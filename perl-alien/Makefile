@@ -18,11 +18,10 @@ export PATH := $(ROOT)/perl/bin:$(PATH)
 
 
 #------------------------------------------------------------------------------
-test:: $(LIBYAMLSCRIPT_SO_FQNP)
-	PERL_YAMLSCRIPT_DEVEL=1 prove -l $${TEST_VERBOSE:+'-v'} $(test)
+test::
 
 clean::
-	$(RM) -r cpan YAMLScript*
+	$(RM) -r cpan Alien-YAMLScript*
 
 $(ZILD)::
 	zild $@
