@@ -1,5 +1,5 @@
-YAMLScript::FFI
-===============
+YAMLScript
+==========
 
 Program in YAML
 

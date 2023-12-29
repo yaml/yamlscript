@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test2::V0 -target => 'YAMLScript::FFI';
+use Test2::V0 -target => 'YAMLScript';
 
 my $program = <<'...';
 !yamlscript/v0/data

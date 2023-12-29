@@ -22,7 +22,7 @@ test:: $(LIBYAMLSCRIPT_SO_FQNP)
 	PERL_YAMLSCRIPT_DEVEL=1 prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
-	$(RM) -r cpan YAMLScript-FFI*
+	$(RM) -r cpan YAMLScript-*
 
 $(ZILD)::
 	zild $@

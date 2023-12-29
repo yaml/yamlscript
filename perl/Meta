@@ -2,7 +2,7 @@
 
 base: ../Meta
 
-name: YAMLScript-FFI
+name: YAMLScript
 version: 0.1.3
 
 language: perl
@@ -13,8 +13,8 @@ author:
 requires:
   perl: 5.16.0
   Alien::YAMLScript: 0.1.3
-  FFI::Platypus: 2.08
   FFI::CheckLib: 0.31
+  FFI::Platypus: 2.08
   JSON: 4.10
 
 test:
@@ -22,8 +22,8 @@ test:
     Test2::V0: 0.000159
 
 =zild:
-  no-git-update: true
   no-about: true
+  no-git-update: true
   no-readme: true
   no-travis: true
   test-000: none

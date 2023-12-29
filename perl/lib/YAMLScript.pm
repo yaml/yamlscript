@@ -1,4 +1,4 @@
-package YAMLScript::FFI;
+package YAMLScript;
 
 use strict;
 use warnings;
@@ -17,7 +17,7 @@ sub new {
 
 unless ( Alien::YAMLScript->exact_version($libyamlscript_version) ) {
     my $have = Alien::YAMLScript->version;
-    die "YAMLScript::FFI $VERSION requires Alien::YAMLScript libyamlscript version\n" .
+    die "YAMLScript $VERSION requires Alien::YAMLScript libyamlscript version\n" .
         "$libyamlscript_version, but you have $have";
 }
 
@@ -41,7 +41,7 @@ $ffi->attach(
             die "libyamlscript: $error";
         }
 
-        die "YAMLScript::FFI unkown error";
+        die "YAMLScript unkown error";
     }
 );
 
