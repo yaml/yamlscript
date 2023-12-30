@@ -2,8 +2,10 @@
 # Set Clojure / Java specific variables:
 #------------------------------------------------------------------------------
 
-export JAVA_HOME := $(GRAALVM_HOME)
-export PATH := $(GRAALVM_HOME)/bin:$(PATH)
+ifeq (false,$(IS_NIX))
+  export JAVA_HOME := $(GRAALVM_HOME)
+  export PATH := $(GRAALVM_HOME)/bin:$(PATH)
+endif
 
 YAMLSCRIPT_LANG_INSTALLED := \
   $(HOME)/.m2/repository/yamlscript/core/maven-metadata-local.xml
@@ -17,6 +19,9 @@ endif
 
 LEIN := $(BUILD_BIN)/lein
 LEIN_URL := https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+ifeq (true,$(IS_NIX))
+  LEIN := $(shell which lein)
+endif
 
 LEIN_COMMANDS := \
   check \
@@ -52,12 +57,16 @@ clean::
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
+ifeq (true,$(IS_NIX))
+$(LEIN):
+else
 $(LEIN): $(BUILD_BIN) $(GRAALVM_INSTALLED)
 ifeq (,$(CURL))
 	$(error *** 'curl' is required but not installed)
 endif
 	$(CURL) -L -o $@ $(LEIN_URL)
 	chmod +x $@
+endif
 
 $(BUILD_BIN):
 	mkdir -p $@
@@ -76,10 +85,14 @@ force:
 $(YAMLSCRIPT_LANG_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 	$(MAKE) -C ../core install
 
+ifeq (true,$(IS_NIX))
+$(GRAALVM_INSTALLED):
+else
 $(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
 	tar xzf $<
 	mv graalvm-* $(GRAALVM_PATH)
 	touch $@
+endif
 
 $(GRAALVM_DOWNLOAD):
 ifeq (,$(CURL))

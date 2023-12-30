@@ -13,8 +13,23 @@ ifdef v
   export TEST_VERBOSE := 1
 endif
 
-ostype := $(shell /bin/bash -c 'echo $$OSTYPE')
-machtype := $(shell /bin/bash -c 'echo $$MACHTYPE')
+# Prefer /bin/bash if available:
+ifeq (,$(wildcard /bin/bash))
+  BASH := $(shell which bash)
+else
+  BASH := /bin/bash
+endif
+
+ifndef IS_NIX
+ifeq (/bin/bash,$(BASH))
+  IS_NIX := false
+else
+  IS_NIX := true
+endif
+endif
+
+ostype := $(shell $(BASH) -c 'echo $$OSTYPE')
+machtype := $(shell $(BASH) -c 'echo $$MACHTYPE')
 
 ifneq (,$(findstring linux,$(ostype)))
   IS_LINUX := true
@@ -36,13 +51,24 @@ ifeq (0,$(shell id -u))
   IS_ROOT := true
 endif
 endif
+ifeq (true,$(IS_NIX))
+  IS_ROOT := false
+endif
 
 LIBZ := false
+ifneq (/bin/bash,$(BASH))
+  LIBZ := true
+else
+ifeq (true,$(IS_NIX))
+  LIBZ := true
+else
 ifeq (true,$(IS_MACOS))
   LIBZ := true
 else
 ifneq (,$(shell ldconfig -p | grep $$'^\tlibz.$(SO) '))
   LIBZ := true
+endif
+endif
 endif
 endif
 
