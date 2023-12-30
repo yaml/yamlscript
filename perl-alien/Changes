@@ -1,5 +1,12 @@
 
 ---
+version: 0.1.21
+date:    Sat Dec 30 10:22:38 AM PST 2023
+changes:
+- Renamed YAMLScript::FFI to YAMLScript.pm
+- Replacing old CPAN module YAMLScript.pm which is now YAMLScript::Lingy
+
+---
 version: 0.1.3
 date:    Thu Dec 28 06:26:39 PM PST 2023
 changes:

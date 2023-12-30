@@ -3,7 +3,7 @@ package YAMLScript;
 use strict;
 use warnings;
 
-our $VERSION = '0.1.3';
+our $VERSION = '0.1.21';
 our $libyamlscript_version = '0.1.34';
 
 use Alien::YAMLScript;
