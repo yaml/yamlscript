@@ -6,6 +6,6 @@ $Data::Dumper::Indent = 1;
 $Data::Dumper::Terse = 1;
 
 my $ys = io('data.ys')->all;
-my $data = YAMLScript->load($ys);
+my $data = YAMLScript->new->load($ys);
 
 print Dumper($data);
