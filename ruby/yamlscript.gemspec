@@ -4,9 +4,9 @@ require_relative "lib/yamlscript/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "yamlscript"
-  spec.version       = Yamlscript::VERSION
-  spec.authors       = ["Ingy döt Net"]
-  spec.email         = ["ingy@ingy.net"]
+  spec.version       = YAMLScript::VERSION
+  spec.authors       = ["Ingy döt Net", "Delon Newman"]
+  spec.email         = ["ingy@ingy.net", "contact@delonnewman.name"]
 
   spec.summary       = "Program in YAML"
   spec.description   = "Program in YAML"
