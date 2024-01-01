@@ -1,3 +1,5 @@
+use yamlscript::Error;
+
 #[test]
 fn load_sample_ys() {
     let ret = yamlscript::load::<serde_json::Value>(
@@ -44,4 +46,14 @@ fn load_sample_ys_serde() {
     assert_eq!(ret.say, "Hello");
     assert_eq!(ret.key, 43);
     assert_eq!(ret.baz, &[1, 2, 3, 4, 5]);
+}
+
+#[test]
+fn load_sample_error() {
+    let result = yamlscript::load::<Response>(
+        r#"!yamlscript/v0/data
+           : : : : : :
+        "#,
+    );
+    assert!(matches!(result, Err(Error::Yamlscript(_))));
 }

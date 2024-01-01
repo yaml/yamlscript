@@ -36,11 +36,13 @@ use crate::error::LibInitError;
 /// Upon error, we keep an opaque [`serde_json::Value`] object so as to not further depend on
 /// specifics of `libyamlscript.so`.
 #[derive(Deserialize)]
-struct YsResponse<T> {
+enum YsResponse<T> {
     /// If present, a JSON object containing the result of evaluating the yamlscript.
-    data: Option<T>,
+    #[serde(rename = "data")]
+    Data(T),
     /// If present, an error object.
-    error: Option<serde_json::Value>,
+    #[serde(rename = "error")]
+    Error(serde_json::Value),
 }
 
 /// The name of the yamlscript library to load.
@@ -60,16 +62,9 @@ where
     let response = serde_json::from_str::<YsResponse<T>>(raw)?;
 
     // Check for errors.
-    if let Some(err) = response.error {
-        return Err(Error::Yamlscript(err));
-    }
-
-    if let Some(value) = response.data {
-        Ok(value)
-    } else {
-        Err(Error::Ffi(format!(
-            "load: no `data` or `error` field: {raw}"
-        )))
+    match response {
+        YsResponse::Data(value) => Ok(value),
+        YsResponse::Error(err) => Err(Error::Yamlscript(err)),
     }
 }
 
