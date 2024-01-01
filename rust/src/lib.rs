@@ -10,6 +10,8 @@ mod error;
 pub use error::Error;
 use serde::Deserialize;
 
+use crate::error::LibInitError;
+
 /// A response from the yamlscript library.
 ///
 /// The library reports success with an object resembling:
@@ -129,7 +131,7 @@ type CompileYsToClj = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut 
 impl LibYamlscript {
     /// Find and open the `libyamlscript` file and load functions into memory.
     #[allow(clippy::crosspointer_transmute)]
-    fn load() -> Result<Self, Error> {
+    fn load() -> Result<Self, LibInitError> {
         // Open library and create pointers the library needs.
         let handle = Self::open_library()?;
         let isolate = std::ptr::null_mut();
@@ -148,7 +150,7 @@ impl LibYamlscript {
             || load_ys_to_json_fn.is_null()
             || compile_ys_to_clj_fn.is_null()
         {
-            return Err(Error::Load(dlopen::Error::NullSymbol));
+            return Err(LibInitError::Load(dlopen::Error::NullSymbol));
         }
 
         // We are doing 2 things here:
@@ -175,7 +177,7 @@ impl LibYamlscript {
         // Initialize the thread.
         let x = unsafe { create_isolate_fn(std::ptr::null_mut(), &isolate, &isolate_thread) };
         if x != 0 {
-            return Err(Error::Init(x));
+            return Err(LibInitError::Init(x));
         }
 
         Ok(Self {
@@ -190,17 +192,17 @@ impl LibYamlscript {
 
     /// Execute a callback with an instance of the library.
     fn with_library<T, F: FnOnce(&Self) -> T>(f: F) -> Result<T, Error> {
-        static CELL: OnceLock<Result<LibYamlscript, Error>> = OnceLock::new();
+        static CELL: OnceLock<Result<LibYamlscript, LibInitError>> = OnceLock::new();
         match CELL.get_or_init(Self::load) {
             Ok(yaml_lib) => Ok(f(yaml_lib)),
-            Err(e) => Err(e.clone()),
+            Err(e) => Err(e.clone().into()),
         }
     }
 
     /// Open the library found at the first matching path in `LD_LIBRARY_PATH`.
-    fn open_library() -> Result<Library, Error> {
+    fn open_library() -> Result<Library, LibInitError> {
         let mut first_error = None;
-        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
+        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| LibInitError::NotFound)?;
 
         // Iterate over segments of `LD_LIBRARY_PATH`.
         for path in library_path
@@ -230,7 +232,7 @@ impl LibYamlscript {
         // If `first_error` wasn't assigned, we found no matching path.
         match first_error {
             Some(x) => Err(x.into()),
-            None => Err(Error::NotFound),
+            None => Err(LibInitError::NotFound),
         }
     }
 }
