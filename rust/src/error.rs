@@ -1,3 +1,5 @@
+use std::{str::Utf8Error, sync::Arc};
+
 /// An error with libyamlscript.
 #[derive(Debug)]
 pub enum Error {
@@ -13,13 +15,34 @@ pub enum Error {
     /// The library has been correctly found and opened, but attempting to initialize it has
     /// failed.
     Init(i32),
-    /// An error while calling a libyamlscript function.
-    Yamlscript(String),
+    /// An error in the FFI while calling a libyamlscript function.
+    Ffi(String),
+    /// An error from the libyamlscript library.
+    ///
+    /// This variant is used when we have successfully resolved the function we want to call in
+    /// `libyamlscript.so`, but the engine returned an error, that we successfully parsed.
+    Yamlscript(serde_json::Value),
+    /// An error with serde_json while deserializing.
+    Serde(Arc<serde_json::Error>),
+    /// An error while decoding strings returned from libyamlscript.
+    Utf8(Utf8Error),
 }
 
 impl From<dlopen::Error> for Error {
     fn from(value: dlopen::Error) -> Self {
         Self::Load(value)
+    }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(value: serde_json::Error) -> Self {
+        Self::Serde(Arc::new(value))
+    }
+}
+
+impl From<Utf8Error> for Error {
+    fn from(value: Utf8Error) -> Self {
+        Self::Utf8(value)
     }
 }
 
@@ -50,8 +73,11 @@ impl Clone for Error {
         match self {
             Self::Load(x) => Self::Load(clone_dl_error(x)),
             Self::Init(x) => Self::Init(*x),
+            Self::Ffi(x) => Self::Ffi(x.clone()),
             Self::Yamlscript(x) => Self::Yamlscript(x.clone()),
             Self::NotFound => Self::NotFound,
+            Self::Serde(x) => Self::Serde(x.clone()),
+            Self::Utf8(x) => Self::Utf8(*x),
         }
     }
 }
