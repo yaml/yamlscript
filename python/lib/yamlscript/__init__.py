@@ -78,7 +78,7 @@ class YAMLScript():
 
   Usage:
     import yamlscript
-    ys = YAMLScript()
+    ys = yamlscript.YAMLScript()
     data = ys.load(open('file.ys').read())
   """
 
