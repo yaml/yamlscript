@@ -1,5 +1,5 @@
 use v5.16.0;
-use YAMLScript::FFI;
+use YAMLScript;
 use Slurp;
 my $program = slurp 'hearsay.ys';
-say YAMLScript::FFI->new->load($program);
+say YAMLScript->new->load($program);

@@ -3,7 +3,9 @@ Alien::YAMLScript
 
 Find or install libyamlscript
 
+
 # Synopsis
+
 
 ```
 use Alien::YAMLScript;
@@ -13,17 +15,21 @@ say $alien->libs;
 say $alien->cflags;
 ```
 
+
 # Status
 
 This is ALPHA software.
 Expect things to change.
 
+
 # Description
 
 This [Alien](https://metacpan.org/pod/Alien) module provides access to the
 libyamlscript shared library. You are unlikely to need to use this module
-directly. See [YAMLScript::FFI](https://metacpan.org/pod/YAMLScript::FFI)
-for a more likely entrypoint.
+directly.
+See [YAMLScript](https://metacpan.org/pod/YAMLScript) for a more likely
+entrypoint.
+
 
 # See Also
 
@@ -31,10 +37,12 @@ for a more likely entrypoint.
 * [YAML](https://yaml.org)
 * [Clojure](https://clojure.org)
 
+
 # Authors
 
 * Ingy döt Net <ingy@ingy.net>
 * José Joaquín Atria <jjatria@cpan.org>
+
 
 # Copyright and License
 
