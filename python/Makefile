@@ -50,7 +50,7 @@ dist: venv MANIFEST.in .long_description.md
 release: publish tag push
 
 publish: dist
-	twine upload -u $${PYPI_USER:-$$USER} dist/*
+	twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz
 
 tag:
 	-git add . && git commit -m $(VERSION)
