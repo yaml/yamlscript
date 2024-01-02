@@ -26,7 +26,12 @@ test-pytest: $(PYTHON_VENV)
 	pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
 test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
-	$(PYTHON) -c 'import yamlscript; print(yamlscript.load("inc: 41"))'
+	$(PYTHON) \
+	  -c 'import yamlscript; \
+	      print(yamlscript.YAMLScript().load("inc: 41"))'
+	$(PYTHON) \
+	  -c 'import yamlscript; \
+	      print(yamlscript.YAMLScript().load("!yamlscript/v0\ninc: 41"))'
 
 $(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
 	$(MAKE) -C $< build
