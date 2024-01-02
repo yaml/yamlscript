@@ -2,7 +2,7 @@
 
 v_api=0.1.34
 v_perl=0.1.21
-v_python=0.1.4
+v_python=0.1.5
 v_raku=0.1.0
 v_rust=0.1.2
 
@@ -16,7 +16,7 @@ api_files=(
   libyamlscript/project.clj
   perl/lib/YAMLScript/FFI.pm
   perl-alien/alienfile
-  python/lib/yamlscript/loader.py
+  python/lib/yamlscript.py
   raku/lib/YAMLScript.rakumod
   rust/src/lib.rs
   ys/deps.edn
@@ -53,7 +53,7 @@ yamlscript_files=(
   libyamlscript/deps.edn
   libyamlscript/project.clj
   perl-alien/alienfile
-  python/lib/yamlscript/loader.py
+  python/lib/yamlscript.py
   rust/src/lib.rs
   ys/deps.edn
   ys/project.clj
