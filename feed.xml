@@ -3633,13 +3633,13 @@ out a Perl programmer named <a href="https://metacpan.org/author/JJATRIA">JJ</a>
 I did and he was happy to help.
 He got it done in no time, and now I'm writing about it!!!</p>
 <p>JJ used the newer Perl FFI binding framework called <a href="https://metacpan.org/pod/FFI::Platypus">FFI::Platypus</a>.</p>
-<p>Let's use the new CPAN module YAMLScript::FFI to run our <code>hearsay.ys</code> program:</p>
+<p>Let's use the new CPAN module YAMLScript to run our <code>hearsay.ys</code> program:</p>
 <pre class="language-perl"><code class="language-perl"><span class="token comment"># hearsay.pl</span><br><span class="token keyword">use</span> <span class="token v-string string">v5.16.0</span><span class="token punctuation">;</span><br><span class="token keyword">use</span> YAMLScript<span class="token punctuation">:</span><span class="token punctuation">:</span>FFI<span class="token punctuation">;</span><br><span class="token keyword">use</span> Slurp<span class="token punctuation">;</span><br><span class="token keyword">my</span> <span class="token variable">$program</span> <span class="token operator">=</span> slurp <span class="token string">'hearsay.ys'</span><span class="token punctuation">;</span><br><span class="token keyword">say</span> YAMLScript<span class="token punctuation">:</span><span class="token punctuation">:</span>FFI<span class="token operator">-></span>new<span class="token operator">-></span>load<span class="token punctuation">(</span><span class="token variable">$program</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br></code></pre>
 <pre class="language-bash"><code class="language-bash">$ perl hearsay.pl<br>I heard that @ethiraric uses YAMLScript <span class="token keyword">in</span> their Rust code<span class="token operator">!</span><br>$ perl hearsay.pl<br>I heard that @ingydotnet uses YAMLScript <span class="token keyword">in</span> their Python code<span class="token operator">!</span></code></pre>
 <p>Just like the Python binding, the Perl module has a <code>load</code> method that takes a
 YAMLScript program as a string and returns the result as a Perl data structure.</p>
-<p>Install YAMLScript::FFI with:</p>
-<pre class="language-bash"><code class="language-bash">$ cpanm YAMLScript::FFI</code></pre>
+<p>Install YAMLScript with:</p>
+<pre class="language-bash"><code class="language-bash">$ cpanm YAMLScript</code></pre>
 <p>Also like the Python binding, the Perl module (and all the other bindings)
 currently requires that you install <code>libyamlscript.so</code> yourself.</p>
 <p>You can do this easily with:</p>
@@ -3647,14 +3647,6 @@ currently requires that you install <code>libyamlscript.so</code> yourself.</p>
 <p>Remember that this installs to <code>/usr/local/lib</code> by default, so you'll need to
 run this as root.
 (Or use the PREFIX option and set <code>LD_LIBRARY_PATH</code> yourself.)</p>
-<blockquote>
-<p>NOTE: The name of the Perl module is <code>YAMLScript::FFI</code> because there is
-already a <code>YAMLScript.pm</code> CPAN module.
-YAMLScript.pm was the original pure Perl implementation of YAMLScript,
-before I saw the light. (Clojure, GraalVM, SCI, etc.)
-YAMLScript::FFI will likely become YAMLScript.pm next month when I have the
-time to sort out the details.</p>
-</blockquote>
 <h3>Rust</h3>
 <p>@ethiraric is a Rust programmer who dropped by the <a href="https://matrix.to/#/#chat:yaml.io">YAML matrix chat</a> a couple of weeks ago looking to improve
 Rust's YAML support.
