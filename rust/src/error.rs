@@ -43,15 +43,6 @@ pub struct LibYamlscriptError {
     pub type_: String,
 }
 
-impl From<LibInitError> for Error {
-    fn from(value: LibInitError) -> Self {
-        match value {
-            LibInitError::NotFound => Self::NotFound,
-            LibInitError::Load(x) => Self::Load(x),
-        }
-    }
-}
-
 impl From<dlopen::Error> for Error {
     fn from(value: dlopen::Error) -> Self {
         Self::Load(value)
@@ -67,56 +58,5 @@ impl From<serde_json::Error> for Error {
 impl From<Utf8Error> for Error {
     fn from(value: Utf8Error) -> Self {
         Self::Utf8(value)
-    }
-}
-
-// A subset of [`Error`] with variants dedicated to loading `libyamlscript.so`.
-//
-// This allows us to require that [`LibInitError`] be `Clone`, but not [`Error`].
-#[derive(Debug)]
-pub(crate) enum LibInitError {
-    /// The library was not found.
-    NotFound,
-    /// An error while loading the library.
-    ///
-    /// This error is unrecoverable and any further attempt to call any libyamlscript function will
-    /// fail.
-    Load(dlopen::Error),
-}
-
-impl From<dlopen::Error> for LibInitError {
-    fn from(value: dlopen::Error) -> Self {
-        Self::Load(value)
-    }
-}
-
-impl Clone for LibInitError {
-    fn clone(&self) -> Self {
-        match self {
-            Self::NotFound => Self::NotFound,
-            Self::Load(x) => Self::Load(clone_dl_error(x)),
-        }
-    }
-}
-
-/// Attempt to clone a `std::io::Error`.
-///
-/// Type information of the underlying error, if any, will be lost.
-fn clone_std_io_error(err: &std::io::Error) -> std::io::Error {
-    std::io::Error::new(
-        err.kind(),
-        err.get_ref().map(|e| format!("{e}")).unwrap_or_default(),
-    )
-}
-
-/// Clone a `dlopen::Error`.
-fn clone_dl_error(err: &dlopen::Error) -> dlopen::Error {
-    type DErr = dlopen::Error;
-    match err {
-        DErr::NullCharacter(x) => DErr::NullCharacter(x.clone()),
-        DErr::OpeningLibraryError(x) => DErr::OpeningLibraryError(clone_std_io_error(x)),
-        DErr::SymbolGettingError(x) => DErr::SymbolGettingError(clone_std_io_error(x)),
-        DErr::NullSymbol => DErr::NullSymbol,
-        DErr::AddrNotMatchingDll(x) => DErr::AddrNotMatchingDll(clone_std_io_error(x)),
     }
 }

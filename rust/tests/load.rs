@@ -2,13 +2,15 @@ use yamlscript::Error;
 
 #[test]
 fn load_sample_ys() {
-    let ret = yamlscript::load::<serde_json::Value>(
-        r#"!yamlscript/v0/data
-           say: "Hello"
-           key: ! inc(42)
-           baz: ! range(1 6)"#,
-    )
-    .unwrap();
+    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ret = ys
+        .load::<serde_json::Value>(
+            r#"!yamlscript/v0/data
+               say: "Hello"
+               key: ! inc(42)
+               baz: ! range(1 6)"#,
+        )
+        .unwrap();
 
     let obj = ret.as_object().unwrap();
     assert!(obj.contains_key("say"));
@@ -36,13 +38,15 @@ struct Response {
 
 #[test]
 fn load_sample_ys_serde() {
-    let ret = yamlscript::load::<Response>(
-        r#"!yamlscript/v0/data
-           say: "Hello"
-           key: ! inc(42)
-           baz: ! range(1 6)"#,
-    )
-    .unwrap();
+    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ret = ys
+        .load::<Response>(
+            r#"!yamlscript/v0/data
+               say: "Hello"
+               key: ! inc(42)
+               baz: ! range(1 6)"#,
+        )
+        .unwrap();
     assert_eq!(ret.say, "Hello");
     assert_eq!(ret.key, 43);
     assert_eq!(ret.baz, &[1, 2, 3, 4, 5]);
@@ -50,7 +54,8 @@ fn load_sample_ys_serde() {
 
 #[test]
 fn load_sample_error() {
-    let result = yamlscript::load::<Response>(
+    let ys = yamlscript::Yamlscript::new().unwrap();
+    let result = ys.load::<Response>(
         r#"!yamlscript/v0/data
            : : : : : :
         "#,

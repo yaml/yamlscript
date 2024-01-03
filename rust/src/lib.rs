@@ -1,6 +1,54 @@
+//! Rust binding/API for the libyamlscript shared library.
+//!
+//! # Loading a Yamlscript file
+//! The [`Yamlscript::load`] function is the main entrypoint of the library. It allows loading
+//! Yamlscript and returns a JSON object. `serde_json` is used to deserialize the JSON. One can
+//! either use `serde_json::Value` as a return type or a custom `serde::Deserialize`able type.
+//!
+//! ## Using `serde_json::Value`
+//! ```
+//! // Create an instance of a Yamlscript object.
+//! // This object holds data from the library and all execution context.
+//! let ys = yamlscript::Yamlscript::new().unwrap();
+//! // Load some Yamlscript.
+//! let data = ys.load::<serde_json::Value>(
+//!         r#"!yamlscript/v0/data
+//!            key: ! inc(42)"#
+//!     )
+//!     .unwrap();
+//!
+//! // Our Yamlscript returns a `serde_json::Value` which holds an object.
+//! let data = data.as_object().unwrap();
+//! // We have a `key` field which holds the value 43.
+//! assert_eq!(data.get("key").unwrap().as_u64().unwrap(), 43);
+//! ```
+//!
+//! ## Using a user-defined type
+//! ```
+//! # use serde::Deserialize;
+//! #
+//! #[derive(Deserialize)]
+//! struct Foo {
+//!   key: u64,
+//! }
+//!
+//! // Create an instance of a Yamlscript object.
+//! // This object holds data from the library and all execution context.
+//! let ys = yamlscript::Yamlscript::new().unwrap();
+//! // Load some Yamlscript and deserialize as `Foo`.
+//! let foo = ys.load::<Foo>(
+//!         r#"!yamlscript/v0/data
+//!            key: ! inc(42)"#
+//!     )
+//!     .unwrap();
+//!
+//! // Our `foo` object has its key field set to 43.
+//! assert_eq!(foo.key, 43);
+//! ```
+
 #![warn(clippy::pedantic)]
 
-use std::{path::Path, sync::OnceLock};
+use std::path::Path;
 
 use dlopen::symbor::Library;
 use libc::{c_int, c_void as void};
@@ -10,95 +58,14 @@ mod error;
 pub use error::Error;
 use serde::Deserialize;
 
-use crate::error::{LibInitError, LibYamlscriptError};
-
-/// A response from the yamlscript library.
-///
-/// The library reports success with an object resembling:
-/// ```json
-/// {
-///   "data": {
-///     // JSON value after evaluating the yamlscript
-///   }
-/// }
-/// ```
-///
-/// The library reports failure with an object resembling:
-/// ```json
-/// {
-///   "error": {
-///     // An error object (see [`LibYamlscriptError`]).
-///   }
-/// }
-/// ```
-///
-/// Upon success, we can directly deserialize the `data` object into the target type.
-/// Upon error, we deserialize the error as [`LibYamlscriptError`] so that it can be inspected.
-/// We however do not provide any inspection helpers.
-#[derive(Deserialize)]
-enum YsResponse<T> {
-    /// A JSON object containing the result of evaluating the yamlscript.
-    #[serde(rename = "data")]
-    Data(T),
-    /// An error object.
-    #[serde(rename = "error")]
-    Error(LibYamlscriptError),
-}
+use crate::error::LibYamlscriptError;
 
 /// The name of the yamlscript library to load.
 const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.34";
 
-/// Load a YS string, returning the result deserialized.
-///
-/// # Errors
-/// This function returns an error if the library was not correctly loaded, if the input string is
-/// invalid (contains a nil-byte) or if the Yamlscript engine has returned an error.
-pub fn load<T>(ys: &str) -> Result<T, Error>
-where
-    T: serde::de::DeserializeOwned,
-{
-    LibYamlscript::with_library(|yamlscript, isolate_thread| {
-        // Library responds with a JSON string. Parse it.
-        let raw = unsafe { std::ffi::CStr::from_ptr(load_raw(ys, yamlscript, isolate_thread)?) }.to_str()?;
-        let response = serde_json::from_str::<YsResponse<T>>(raw)?;
-
-        // Check for errors.
-        match response {
-            YsResponse::Data(value) => Ok(value),
-            YsResponse::Error(err) => Err(Error::Yamlscript(err)),
-        }
-    })?
-}
-
-/// Load a YS string, returning the raw buffer from the library.
-///
-/// # Errors
-/// This function returns an error if the library was not correctly loaded, if the input string is
-/// invalid (contains a nil-byte).
-///
-/// If the yamlscript engine returned an error, this function will succeed.
-fn load_raw(
-    ys: &str,
-    yamlscript: &LibYamlscript,
-    isolate_thread: *mut void,
-) -> Result<*mut i8, Error> {
-    // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-    let input = std::ffi::CString::new(ys)
-        .map_err(|_| Error::Ffi("load: input contains a nil-byte".to_string()))?;
-    let json =
-        unsafe { (yamlscript.load_ys_to_json_fn)(isolate_thread, input.as_bytes().as_ptr()) };
-    if json.is_null() {
-        Err(Error::Ffi(
-            "load_ys_to_json: returned a null pointer".to_string(),
-        ))
-    } else {
-        Ok(json)
-    }
-}
-
 /// A wrapper around libyamlscript.
 #[allow(dead_code)]
-struct LibYamlscript {
+pub struct Yamlscript {
     /// A handle to the opened dynamic library.
     handle: Library,
     /// A GraalVM isolate.
@@ -113,9 +80,6 @@ struct LibYamlscript {
     compile_ys_to_clj_fn: CompileYsToClj,
 }
 
-unsafe impl Send for LibYamlscript {}
-unsafe impl Sync for LibYamlscript {}
-
 /// Prototype of the `graal_create_isolate` function.
 type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
 /// Prototype of the `graal_tear_down_isolate` function.
@@ -125,10 +89,14 @@ type LoadYsToJsonFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 /// Prototype of the `compile_ys_to_clj` function.
 type CompileYsToClj = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 
-impl LibYamlscript {
-    /// Find and open the `libyamlscript` file and load functions into memory.
+impl Yamlscript {
+    /// Create a new instance of a Yamlscript loader.
+    ///
+    /// # Errors
+    /// This function may return an error if we fail to open the library. Namely, it returns
+    /// [`Error::NotFound`] if the library cannot be found.
     #[allow(clippy::crosspointer_transmute)]
-    fn load() -> Result<Self, LibInitError> {
+    pub fn new() -> Result<Self, Error> {
         // Open library and create pointers the library needs.
         let handle = Self::open_library()?;
         let isolate = std::ptr::null_mut();
@@ -149,7 +117,7 @@ impl LibYamlscript {
             || load_ys_to_json_fn.is_null()
             || compile_ys_to_clj_fn.is_null()
         {
-            return Err(LibInitError::Load(dlopen::Error::NullSymbol));
+            return Err(Error::Load(dlopen::Error::NullSymbol));
         }
 
         // We are doing 2 things here:
@@ -185,24 +153,66 @@ impl LibYamlscript {
         })
     }
 
-    /// Execute a callback with an instance of the library.
-    fn with_library<T, F>(f: F) -> Result<T, Error>
+    /// Load a Yamlscript string, returning the result deserialized.
+    ///
+    /// # Errors
+    /// This function returns an error if the input string is invalid (contains a nil-byte) or if
+    /// the Yamlscript engine has returned an error.
+    pub fn load<T>(&self, ys: &str) -> Result<T, Error>
     where
-        F: FnOnce(&Self, *mut void) -> T,
+        T: serde::de::DeserializeOwned,
     {
-        static CELL: OnceLock<Result<LibYamlscript, LibInitError>> = OnceLock::new();
-        match CELL.get_or_init(Self::load) {
-            Ok(yaml_lib) => {
-                let isolate_thread = yaml_lib.new_isolate_thread()?;
-                let result = f(yaml_lib, isolate_thread);
-                let x = unsafe { (yaml_lib.tear_down_isolate_fn)(isolate_thread) };
-                if x == 0 {
-                    Ok(result)
-                } else {
-                    Err(Error::GraalVM(x))
-                }
+        self.with_isolate_thread(|isolate_thread| {
+            // Library responds with a JSON string. Parse it.
+            let raw =
+                unsafe { std::ffi::CStr::from_ptr(self.load_raw(ys, isolate_thread)?) }.to_str()?;
+            let response = serde_json::from_str::<YsResponse<T>>(raw)?;
+
+            // Check for errors.
+            match response {
+                YsResponse::Data(value) => Ok(value),
+                YsResponse::Error(err) => Err(Error::Yamlscript(err)),
             }
-            Err(e) => Err(e.clone().into()),
+        })?
+    }
+
+    /// Load a Yamlscript string, returning the raw buffer from the library.
+    ///
+    /// # Errors
+    /// This function returns an error if the input string is invalid (contains a nil-byte).
+    ///
+    /// If the yamlscript engine returned an error, this function will succeed.
+    fn load_raw(&self, ys: &str, isolate_thread: *mut void) -> Result<*mut i8, Error> {
+        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+        let input = std::ffi::CString::new(ys)
+            .map_err(|_| Error::Ffi("load: input contains a nil-byte".to_string()))?;
+        let json = unsafe { (self.load_ys_to_json_fn)(isolate_thread, input.as_bytes().as_ptr()) };
+        if json.is_null() {
+            Err(Error::Ffi(
+                "load_ys_to_json: returned a null pointer".to_string(),
+            ))
+        } else {
+            Ok(json)
+        }
+    }
+
+    /// Execute a callback with an instance of an isolate thread.
+    ///
+    /// The isolate thread is automatically torn down once the callable returned.
+    ///
+    /// # Errors
+    /// This function returns an error if creating or tearing down the isolate thread fails.
+    fn with_isolate_thread<T, F>(&self, f: F) -> Result<T, Error>
+    where
+        F: FnOnce(*mut void) -> T,
+    {
+        let isolate_thread = self.new_isolate_thread()?;
+        let result = f(isolate_thread);
+        let x = unsafe { (self.tear_down_isolate_fn)(isolate_thread) };
+        if x == 0 {
+            Ok(result)
+        } else {
+            Err(Error::GraalVM(x))
         }
     }
 
@@ -222,9 +232,9 @@ impl LibYamlscript {
     }
 
     /// Open the library found at the first matching path in `LD_LIBRARY_PATH`.
-    fn open_library() -> Result<Library, LibInitError> {
+    fn open_library() -> Result<Library, Error> {
         let mut first_error = None;
-        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| LibInitError::NotFound)?;
+        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
 
         // Iterate over segments of `LD_LIBRARY_PATH`.
         for path in library_path
@@ -254,7 +264,40 @@ impl LibYamlscript {
         // If `first_error` wasn't assigned, we found no matching path.
         match first_error {
             Some(x) => Err(x.into()),
-            None => Err(LibInitError::NotFound),
+            None => Err(Error::NotFound),
         }
     }
+}
+
+/// A response from the yamlscript library.
+///
+/// The library reports success with an object resembling:
+/// ```json
+/// {
+///   "data": {
+///     // JSON value after evaluating the yamlscript
+///   }
+/// }
+/// ```
+///
+/// The library reports failure with an object resembling:
+/// ```json
+/// {
+///   "error": {
+///     // An error object (see [`LibYamlscriptError`]).
+///   }
+/// }
+/// ```
+///
+/// Upon success, we can directly deserialize the `data` object into the target type.
+/// Upon error, we deserialize the error as [`LibYamlscriptError`] so that it can be inspected.
+/// We however do not provide any inspection helpers.
+#[derive(Deserialize)]
+enum YsResponse<T> {
+    /// A JSON object containing the result of evaluating the yamlscript.
+    #[serde(rename = "data")]
+    Data(T),
+    /// An error object.
+    #[serde(rename = "error")]
+    Error(LibYamlscriptError),
 }
