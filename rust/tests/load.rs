@@ -63,3 +63,41 @@ fn load_sample_error() {
     dbg!(&result);
     assert!(matches!(result, Err(Error::Yamlscript(_))));
 }
+
+#[test]
+fn load_multiple() {
+    let data = r#"!yamlscript/v0/data
+               say: "Hello"
+               key: ! inc(42)
+               baz: ! range(1 6)"#;
+    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ret = ys.load::<Response>(data).unwrap();
+    assert_eq!(ret.say, "Hello");
+    assert_eq!(ret.key, 43);
+    assert_eq!(ret.baz, &[1, 2, 3, 4, 5]);
+    let ret = ys.load::<Response>(data).unwrap();
+    assert_eq!(ret.say, "Hello");
+    assert_eq!(ret.key, 43);
+    assert_eq!(ret.baz, &[1, 2, 3, 4, 5]);
+}
+
+#[test]
+#[ignore]
+fn load_loop() {
+    let ys = yamlscript::Yamlscript::new().unwrap();
+    let begin = std::time::Instant::now();
+    let _ = (0..80000)
+        .map(|i| {
+            ys.load::<Response>(&format!(
+                r#"!yamlscript/v0/data
+                   say: "Hello"
+                   key: ! inc({i})
+                   baz: ! range(1 6)"#
+            ))
+            .unwrap()
+        })
+        .map(|_| ())
+        .collect::<Vec<_>>();
+    let end = std::time::Instant::now();
+    dbg!(end - begin);
+}

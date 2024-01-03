@@ -70,6 +70,8 @@ pub struct Yamlscript {
     handle: Library,
     /// A GraalVM isolate.
     isolate: *mut void,
+    /// A GraalVM isolate thread.
+    isolate_thread: *mut void,
     /// Pointer to the function in GraalVM to create the isolate and its thread.
     create_isolate_fn: CreateIsolateFn,
     /// Pointer to the function in GraalVM to free an isolate thread.
@@ -100,6 +102,7 @@ impl Yamlscript {
         // Open library and create pointers the library needs.
         let handle = Self::open_library()?;
         let isolate = std::ptr::null_mut();
+        let isolate_thread = std::ptr::null_mut();
 
         // Fetch symbols.
         let create_isolate_fn =
@@ -143,9 +146,15 @@ impl Yamlscript {
         let compile_ys_to_clj_fn: CompileYsToClj =
             unsafe { std::mem::transmute(*compile_ys_to_clj_fn) };
 
+        let x = unsafe { (create_isolate_fn)(std::ptr::null_mut(), &isolate, &isolate_thread) };
+        if x != 0 {
+            return Err(Error::GraalVM(x));
+        }
+
         Ok(Self {
             handle,
             isolate,
+            isolate_thread,
             create_isolate_fn,
             tear_down_isolate_fn,
             load_ys_to_json_fn,
@@ -162,18 +171,16 @@ impl Yamlscript {
     where
         T: serde::de::DeserializeOwned,
     {
-        self.with_isolate_thread(|isolate_thread| {
-            // Library responds with a JSON string. Parse it.
-            let raw =
-                unsafe { std::ffi::CStr::from_ptr(self.load_raw(ys, isolate_thread)?) }.to_str()?;
-            let response = serde_json::from_str::<YsResponse<T>>(raw)?;
+        // Library responds with a JSON string. Parse it.
+        let raw = unsafe { std::ffi::CStr::from_ptr(self.load_raw(ys, self.isolate_thread)?) }
+            .to_str()?;
+        let response = serde_json::from_str::<YsResponse<T>>(raw)?;
 
-            // Check for errors.
-            match response {
-                YsResponse::Data(value) => Ok(value),
-                YsResponse::Error(err) => Err(Error::Yamlscript(err)),
-            }
-        })?
+        // Check for errors.
+        match response {
+            YsResponse::Data(value) => Ok(value),
+            YsResponse::Error(err) => Err(Error::Yamlscript(err)),
+        }
     }
 
     /// Load a Yamlscript string, returning the raw buffer from the library.
@@ -193,41 +200,6 @@ impl Yamlscript {
             ))
         } else {
             Ok(json)
-        }
-    }
-
-    /// Execute a callback with an instance of an isolate thread.
-    ///
-    /// The isolate thread is automatically torn down once the callable returned.
-    ///
-    /// # Errors
-    /// This function returns an error if creating or tearing down the isolate thread fails.
-    fn with_isolate_thread<T, F>(&self, f: F) -> Result<T, Error>
-    where
-        F: FnOnce(*mut void) -> T,
-    {
-        let isolate_thread = self.new_isolate_thread()?;
-        let result = f(isolate_thread);
-        let x = unsafe { (self.tear_down_isolate_fn)(isolate_thread) };
-        if x == 0 {
-            Ok(result)
-        } else {
-            Err(Error::GraalVM(x))
-        }
-    }
-
-    /// Create a new GraalVM isolate thread.
-    #[allow(clippy::doc_markdown)]
-    fn new_isolate_thread(&self) -> Result<*mut void, Error> {
-        // Initialize a new thread.
-        let isolate_thread = std::ptr::null_mut();
-        let x = unsafe {
-            (self.create_isolate_fn)(std::ptr::null_mut(), &self.isolate, &isolate_thread)
-        };
-        if x == 0 {
-            Ok(isolate_thread)
-        } else {
-            Err(Error::GraalVM(x))
         }
     }
 
@@ -265,6 +237,15 @@ impl Yamlscript {
         match first_error {
             Some(x) => Err(x.into()),
             None => Err(Error::NotFound),
+        }
+    }
+}
+
+impl Drop for Yamlscript {
+    fn drop(&mut self) {
+        let res = unsafe { (self.tear_down_isolate_fn)(self.isolate_thread) };
+        if res != 0 {
+            eprintln!("Warning: Failed to tear down yamlscript's GraalVM isolate");
         }
     }
 }
