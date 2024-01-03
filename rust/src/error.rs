@@ -10,11 +10,8 @@ pub enum Error {
     /// This error is unrecoverable and any further attempt to call any libyamlscript function will
     /// fail.
     Load(dlopen::Error),
-    /// An error while initializing the library.
-    ///
-    /// The library has been correctly found and opened, but attempting to initialize it has
-    /// failed.
-    Init(i32),
+    /// An error with GraalVM.
+    GraalVM(i32),
     /// An error in the FFI while calling a libyamlscript function.
     Ffi(String),
     /// An error from the libyamlscript library.
@@ -33,7 +30,6 @@ impl From<LibInitError> for Error {
         match value {
             LibInitError::NotFound => Self::NotFound,
             LibInitError::Load(x) => Self::Load(x),
-            LibInitError::Init(x) => Self::Init(x),
         }
     }
 }
@@ -68,11 +64,6 @@ pub(crate) enum LibInitError {
     /// This error is unrecoverable and any further attempt to call any libyamlscript function will
     /// fail.
     Load(dlopen::Error),
-    /// An error while initializing the library.
-    ///
-    /// The library has been correctly found and opened, but attempting to initialize it has
-    /// failed.
-    Init(i32),
 }
 
 impl From<dlopen::Error> for LibInitError {
@@ -86,7 +77,6 @@ impl Clone for LibInitError {
         match self {
             Self::NotFound => Self::NotFound,
             Self::Load(x) => Self::Load(clone_dl_error(x)),
-            Self::Init(x) => Self::Init(*x),
         }
     }
 }
