@@ -10,7 +10,7 @@ mod error;
 pub use error::Error;
 use serde::Deserialize;
 
-use crate::error::LibInitError;
+use crate::error::{LibInitError, LibYamlscriptError};
 
 /// A response from the yamlscript library.
 ///
@@ -26,23 +26,23 @@ use crate::error::LibInitError;
 /// The library reports failure with an object resembling:
 /// ```json
 /// {
-///   "error: {
-///     // An object we leave as-is.
+///   "error": {
+///     // An error object (see [`LibYamlscriptError`]).
 ///   }
 /// }
 /// ```
 ///
 /// Upon success, we can directly deserialize the `data` object into the target type.
-/// Upon error, we keep an opaque [`serde_json::Value`] object so as to not further depend on
-/// specifics of `libyamlscript.so`.
+/// Upon error, we deserialize the error as [`LibYamlscriptError`] so that it can be inspected.
+/// We however do not provide any inspection helpers.
 #[derive(Deserialize)]
 enum YsResponse<T> {
-    /// If present, a JSON object containing the result of evaluating the yamlscript.
+    /// A JSON object containing the result of evaluating the yamlscript.
     #[serde(rename = "data")]
     Data(T),
-    /// If present, an error object.
+    /// An error object.
     #[serde(rename = "error")]
-    Error(serde_json::Value),
+    Error(LibYamlscriptError),
 }
 
 /// The name of the yamlscript library to load.
