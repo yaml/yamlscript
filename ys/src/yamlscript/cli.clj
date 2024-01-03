@@ -1,4 +1,4 @@
-;; Copyright 2023 Ingy dot Net
+;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
 ;; The yamlscript.cli library compiles into the `ys` command line binary for

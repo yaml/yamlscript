@@ -1,5 +1,5 @@
 ;; This code is licensed under MIT license (See License for details)
-;; Copyright 2023 Ingy dot Net
+;; Copyright 2023-2024 Ingy dot Net
 
 (defproject yamlscript.cli "0.1.34-SNAPSHOT"
   :description "YAMLScript Command Line Tool"
