@@ -57,15 +57,17 @@ pub fn load<T>(ys: &str) -> Result<T, Error>
 where
     T: serde::de::DeserializeOwned,
 {
-    // Library responds with a JSON string. Parse it.
-    let raw = unsafe { std::ffi::CStr::from_ptr(load_raw(ys)?) }.to_str()?;
-    let response = serde_json::from_str::<YsResponse<T>>(raw)?;
+    LibYamlscript::with_library(|yamlscript, isolate_thread| {
+        // Library responds with a JSON string. Parse it.
+        let raw = unsafe { std::ffi::CStr::from_ptr(load_raw(ys, yamlscript, isolate_thread)?) }.to_str()?;
+        let response = serde_json::from_str::<YsResponse<T>>(raw)?;
 
-    // Check for errors.
-    match response {
-        YsResponse::Data(value) => Ok(value),
-        YsResponse::Error(err) => Err(Error::Yamlscript(err)),
-    }
+        // Check for errors.
+        match response {
+            YsResponse::Data(value) => Ok(value),
+            YsResponse::Error(err) => Err(Error::Yamlscript(err)),
+        }
+    })?
 }
 
 /// Load a YS string, returning the raw buffer from the library.
@@ -75,25 +77,23 @@ where
 /// invalid (contains a nil-byte).
 ///
 /// If the yamlscript engine returned an error, this function will succeed.
-fn load_raw(ys: &str) -> Result<*mut i8, Error> {
-    LibYamlscript::with_library(|yamlscript| {
-        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-        let input = std::ffi::CString::new(ys)
-            .map_err(|_| Error::Ffi("load: input contains a nil-byte".to_string()))?;
-        let json = unsafe {
-            (yamlscript.load_ys_to_json_fn)(
-                yamlscript.isolate_thread as libc::c_longlong,
-                input.as_bytes().as_ptr(),
-            )
-        };
-        if json.is_null() {
-            Err(Error::Ffi(
-                "load_ys_to_json: returned a null pointer".to_string(),
-            ))
-        } else {
-            Ok(json)
-        }
-    })?
+fn load_raw(
+    ys: &str,
+    yamlscript: &LibYamlscript,
+    isolate_thread: *mut void,
+) -> Result<*mut i8, Error> {
+    // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+    let input = std::ffi::CString::new(ys)
+        .map_err(|_| Error::Ffi("load: input contains a nil-byte".to_string()))?;
+    let json =
+        unsafe { (yamlscript.load_ys_to_json_fn)(isolate_thread, input.as_bytes().as_ptr()) };
+    if json.is_null() {
+        Err(Error::Ffi(
+            "load_ys_to_json: returned a null pointer".to_string(),
+        ))
+    } else {
+        Ok(json)
+    }
 }
 
 /// A wrapper around libyamlscript.
@@ -103,10 +103,10 @@ struct LibYamlscript {
     handle: Library,
     /// A GraalVM isolate.
     isolate: *mut void,
-    /// A GrallVM thread attached to the isolate.
-    isolate_thread: *mut void,
     /// Pointer to the function in GraalVM to create the isolate and its thread.
     create_isolate_fn: CreateIsolateFn,
+    /// Pointer to the function in GraalVM to free an isolate thread.
+    tear_down_isolate_fn: TearDownIsolateFn,
     /// Pointer to the `load_ys_to_json` function in libyamlscript.
     load_ys_to_json_fn: LoadYsToJsonFn,
     /// Pointer to the `compile_ys_to_clj` function in libyamlscript.
@@ -118,10 +118,12 @@ unsafe impl Sync for LibYamlscript {}
 
 /// Prototype of the `graal_create_isolate` function.
 type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
+/// Prototype of the `graal_tear_down_isolate` function.
+type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 /// Prototype of the `load_ys_to_json` function.
-type LoadYsToJsonFn = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
+type LoadYsToJsonFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 /// Prototype of the `compile_ys_to_clj` function.
-type CompileYsToClj = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
+type CompileYsToClj = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 
 impl LibYamlscript {
     /// Find and open the `libyamlscript` file and load functions into memory.
@@ -130,11 +132,12 @@ impl LibYamlscript {
         // Open library and create pointers the library needs.
         let handle = Self::open_library()?;
         let isolate = std::ptr::null_mut();
-        let isolate_thread = std::ptr::null_mut();
 
         // Fetch symbols.
         let create_isolate_fn =
             unsafe { handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")? };
+        let tear_down_isolate_fn =
+            unsafe { handle.ptr_or_null::<TearDownIsolateFn>("graal_tear_down_isolate")? };
         let load_ys_to_json_fn =
             unsafe { handle.ptr_or_null::<LoadYsToJsonFn>("load_ys_to_json")? };
         let compile_ys_to_clj_fn =
@@ -142,6 +145,7 @@ impl LibYamlscript {
 
         // Check for null-ness.
         if create_isolate_fn.is_null()
+            || tear_down_isolate_fn.is_null()
             || load_ys_to_json_fn.is_null()
             || compile_ys_to_clj_fn.is_null()
         {
@@ -164,33 +168,56 @@ impl LibYamlscript {
         //    Note that we dereference (`*`) the `_fn` bindings to retrieve the raw pointer from
         //    the `PtrOrNull` wrapper. There is no pointer dereferencement here.
         let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
+        let tear_down_isolate_fn: TearDownIsolateFn =
+            unsafe { std::mem::transmute(*tear_down_isolate_fn) };
         let load_ys_to_json_fn: LoadYsToJsonFn =
             unsafe { std::mem::transmute(*load_ys_to_json_fn) };
         let compile_ys_to_clj_fn: CompileYsToClj =
             unsafe { std::mem::transmute(*compile_ys_to_clj_fn) };
 
-        // Initialize the thread.
-        let x = unsafe { create_isolate_fn(std::ptr::null_mut(), &isolate, &isolate_thread) };
-        if x != 0 {
-            return Err(LibInitError::Init(x));
-        }
-
         Ok(Self {
             handle,
             isolate,
-            isolate_thread,
             create_isolate_fn,
+            tear_down_isolate_fn,
             load_ys_to_json_fn,
             compile_ys_to_clj_fn,
         })
     }
 
     /// Execute a callback with an instance of the library.
-    fn with_library<T, F: FnOnce(&Self) -> T>(f: F) -> Result<T, Error> {
+    fn with_library<T, F>(f: F) -> Result<T, Error>
+    where
+        F: FnOnce(&Self, *mut void) -> T,
+    {
         static CELL: OnceLock<Result<LibYamlscript, LibInitError>> = OnceLock::new();
         match CELL.get_or_init(Self::load) {
-            Ok(yaml_lib) => Ok(f(yaml_lib)),
+            Ok(yaml_lib) => {
+                let isolate_thread = yaml_lib.new_isolate_thread()?;
+                let result = f(yaml_lib, isolate_thread);
+                let x = unsafe { (yaml_lib.tear_down_isolate_fn)(isolate_thread) };
+                if x == 0 {
+                    Ok(result)
+                } else {
+                    Err(Error::GraalVM(x))
+                }
+            }
             Err(e) => Err(e.clone().into()),
+        }
+    }
+
+    /// Create a new GraalVM isolate thread.
+    #[allow(clippy::doc_markdown)]
+    fn new_isolate_thread(&self) -> Result<*mut void, Error> {
+        // Initialize a new thread.
+        let isolate_thread = std::ptr::null_mut();
+        let x = unsafe {
+            (self.create_isolate_fn)(std::ptr::null_mut(), &self.isolate, &isolate_thread)
+        };
+        if x == 0 {
+            Ok(isolate_thread)
+        } else {
+            Err(Error::GraalVM(x))
         }
     }
 
