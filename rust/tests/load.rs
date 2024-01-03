@@ -27,7 +27,7 @@ fn load_sample_ys() {
     assert_eq!(arr[4].as_u64().unwrap(), 5);
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct Response {
     say: String,
     key: u64,
@@ -55,5 +55,6 @@ fn load_sample_error() {
            : : : : : :
         "#,
     );
+    dbg!(&result);
     assert!(matches!(result, Err(Error::Yamlscript(_))));
 }

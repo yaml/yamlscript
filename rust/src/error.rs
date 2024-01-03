@@ -1,5 +1,7 @@
 use std::str::Utf8Error;
 
+use serde::Deserialize;
+
 /// An error with libyamlscript.
 #[derive(Debug)]
 pub enum Error {
@@ -18,11 +20,27 @@ pub enum Error {
     ///
     /// This variant is used when we have successfully resolved the function we want to call in
     /// `libyamlscript.so`, but the engine returned an error, that we successfully parsed.
-    Yamlscript(serde_json::Value),
+    Yamlscript(LibYamlscriptError),
     /// An error with serde_json while deserializing.
     Serde(serde_json::Error),
     /// An error while decoding strings returned from libyamlscript.
     Utf8(Utf8Error),
+}
+
+/// An error from libyamlscript.
+///
+/// This gets returned from libyamlscript functions that were successfully called but the engine
+/// returned an error.
+#[allow(clippy::module_name_repetitions)]
+#[derive(Deserialize, Debug)]
+pub struct LibYamlscriptError {
+    /// The error message.
+    pub cause: String,
+    /// The stack trace within libyamlscript.
+    pub trace: Vec<(String, String, Option<String>, i64)>,
+    /// The internal type of the error.
+    #[serde(rename = "type")]
+    pub type_: String,
 }
 
 impl From<LibInitError> for Error {
