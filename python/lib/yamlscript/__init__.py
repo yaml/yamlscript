@@ -85,36 +85,31 @@ class YAMLScript():
   # YAMLScript instance constructor:
   def __init__(self, config={}):
     # config not used yet
-    self.config = config
-    # Create a new GraalVM isolate for life of the YAMLScript instance:
-    self.isolate = ctypes.c_void_p()
+    # self.config = config
+
+    # Create a new GraalVM isolatethread for life of the YAMLScript instance:
+    self.isolatethread = ctypes.c_void_p()
+
+    # Create a new GraalVM isolate:
+    libyamlscript.graal_create_isolate(
+      None,
+      None,
+      ctypes.byref(self.isolatethread),
+    )
 
   # Compile and eval a YAMLScript string and return the result:
   def load(self, input):
     # Reset any previous error:
     self.error = None
 
-    # Create a new GraalVM isolate thread for each call to load():
-    isolatethread = ctypes.c_void_p()
-    libyamlscript.graal_create_isolate(
-      None,
-      ctypes.byref(self.isolate),
-      ctypes.byref(isolatethread),
-    )
-
     # Call 'load_ys_to_json' function in libyamlscript shared library:
     data_json = load_ys_to_json(
-      isolatethread,
+      self.isolatethread,
       ctypes.c_char_p(bytes(input, "utf8")),
     ).decode()
 
     # Decode the JSON response:
     resp = json.loads(data_json)
-
-    # Tear down the isolate thread to free resources:
-    ret = libyamlscript.graal_tear_down_isolate(isolatethread)
-    if ret != 0:
-      raise Exception("Failed to tear down isolate.")
 
     # Check for libyamlscript error in JSON response:
     self.error = resp.get('error')
@@ -128,3 +123,10 @@ class YAMLScript():
 
     # Return the response object:
     return data
+
+  # YAMLScript instance destructor:
+  def __del__(self):
+    # Tear down the isolate thread to free resources:
+    ret = libyamlscript.graal_tear_down_isolate(self.isolatethread)
+    if ret != 0:
+      raise Exception("Failed to tear down isolate.")
