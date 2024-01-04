@@ -1,7 +1,7 @@
 # Used by util/version-bump to update versions in repo
 
-v_api=0.1.34
-v_perl=0.1.21
+v_api=0.1.35
+v_perl=0.1.22
 v_python=0.1.5
 v_raku=0.1.0
 v_rust=0.1.2
@@ -16,7 +16,7 @@ api_files=(
   libyamlscript/project.clj
   perl-alien/lib/Alien/YAMLScript.pm
   perl-alien/alienfile
-  python/lib/yamlscript.py
+  python/lib/yamlscript/__init__.py
   raku/lib/YAMLScript.rakumod
   rust/src/lib.rs
   ys/deps.edn
@@ -54,7 +54,7 @@ yamlscript_files=(
   libyamlscript/project.clj
   perl-alien/alienfile
   perl-alien/lib/Alien/YAMLScript.pm
-  python/lib/yamlscript.py
+  python/lib/yamlscript/__init__.py
   rust/src/lib.rs
   ys/deps.edn
   ys/project.clj
@@ -63,6 +63,7 @@ yamlscript_files=(
 )
 
 YAMLSCRIPT_files=(
+  common/install
   raku/lib/YAMLScript.rakumod
 )
 
@@ -81,7 +82,6 @@ version_files=(
 )
 
 VERSION_files=(
-  common/install
   perl/lib/YAMLScript.pm
   perl-alien/lib/Alien/YAMLScript.pm
 )
