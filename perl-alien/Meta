@@ -29,3 +29,5 @@ test:
 dzil:
   postamble: |
     [AlienBuild]
+    [Prereqs / ConfigureRequires]
+    Alien::Build::Plugin::Download::GitHub = 0.10
