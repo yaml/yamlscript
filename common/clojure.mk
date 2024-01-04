@@ -15,7 +15,7 @@ ifdef w
   export WARN_ON_REFLECTION := 1
 endif
 
-LEIN := $(BUILD_BIN)/lein
+LEIN ?= $(BUILD_BIN)/lein
 LEIN_URL := https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
 LEIN_COMMANDS := \
@@ -52,7 +52,7 @@ clean::
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
-$(LEIN): $(BUILD_BIN) $(GRAALVM_INSTALLED)
+$(LEIN): | $(BUILD_BIN) $(GRAALVM_INSTALLED)
 ifeq (,$(CURL))
 	$(error *** 'curl' is required but not installed)
 endif
@@ -76,7 +76,7 @@ force:
 $(YAMLSCRIPT_LANG_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 	$(MAKE) -C ../core install
 
-$(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
+$(GRAALVM_INSTALLED): | $(GRAALVM_DOWNLOAD)
 	tar xzf $<
 	mv graalvm-* $(GRAALVM_PATH)
 	touch $@
