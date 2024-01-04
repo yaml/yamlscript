@@ -1,11 +1,13 @@
 include ../common/base.mk
 # include ../common/docker.mk
 
-test ?= test/
+test ?= t/*
 
+export RAKULIB=$(ROOT)/raku/lib
 
 #------------------------------------------------------------------------------
-test::
+test:: $(LIBYAMLSCRIPT_SO_FQNP)
+	prove $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
 	$(RM) -r lib/.precomp/
