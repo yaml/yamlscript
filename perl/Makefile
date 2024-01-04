@@ -19,9 +19,15 @@ export PATH := $(ROOT)/perl/bin:$(PATH)
 #------------------------------------------------------------------------------
 test::
 	$(MAKE) -C $(ROOT)/perl-alien distdir
-	(cd $(ROOT)/perl-alien/Alien-YAMLScript-* && perl Makefile.PL && make)
+	( \
+	    cd "$$(echo "$(ROOT)/perl-alien/Alien-YAMLScript-"*)" && \
+	    pwd && \
+	    perl Makefile.PL && \
+	    make \
+	)
+	prove -I"$$(echo "$(ROOT)/perl-alien/Alien-YAMLScript-"*)/blib/lib" \
+	    -l $${TEST_VERBOSE:+'-v'} $(test)
 	PERL5LIB=$(ROOT)/perl-alien/Alien-YAMLScript-*/blib/lib \
-	    prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
 	$(RM) -r cpan YAMLScript-*
