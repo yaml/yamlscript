@@ -44,38 +44,35 @@ sub new {
     }, $class;
 }
 
-# YAMLScript->load method.
-# Load a YAMLScript code string to produce a Perl object:
-sub _load {
-    my ($xsub, $self, $ys) = @_;
-    $self->{error} = undef;
-
-    my $resp = JSON::decode_json(
-        $xsub->(${$self->{isolatethread}}, $ys)
-    );
-
-    return $resp->{data} if exists $resp->{data};
-
-    if ($self->{error} = $resp->{error}) {
-        die "libyamlscript: $self->{error}{cause}";
-    }
-
-    die "Unexpected response from 'libyamlscript'";
-}
-
-# Attach the YAMLScript->load method to the libyamlscript load_ys_to_json
-# function:
-$ffi->attach(
-    [load_ys_to_json => 'load'] =>
-        ['sint64', 'string'] => 'string' =>
-        \&_load,
-);
-
 # Tear down the graal isolate when the YAMLScript object goes out of scope:
 sub DESTROY {
     my ($self) = @_;
     $graal_tear_down_isolate->(${$self->{isolatethread}}) == 0
         or die "Failed to tear down graal isolate";
 }
+
+sub load;
+# "load" method wrapper for FFI.
+# It calls the libyamlscript load_ys_to_json function.
+$ffi->attach(
+    [load_ys_to_json => 'load'] =>
+    ['sint64', 'string'] => 'string' =>
+    sub {
+        my ($xsub, $self, $ys) = @_;
+        $self->{error} = undef;
+
+        my $resp = JSON::decode_json(
+            $xsub->(${$self->{isolatethread}}, $ys)
+        );
+
+        return $resp->{data} if exists $resp->{data};
+
+        if ($self->{error} = $resp->{error}) {
+            die "libyamlscript: $self->{error}{cause}";
+        }
+
+        die "Unexpected response from 'libyamlscript'";
+    },
+);
 
 1;
