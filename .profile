@@ -8,7 +8,8 @@ YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
 YS() (
   set -e
   base=$YAMLSCRIPT_ROOT/ys
-  jar=yamlscript.cli-0.1.34-SNAPSHOT-standalone.jar
+  libyamlscript_version=0.1.34
+  jar=yamlscript.cli-$libyamlscript_version-SNAPSHOT-standalone.jar
   make --no-print-directory -C "$base" jar
   java -jar "$base/target/uberjar/$jar" "$@"
 )
