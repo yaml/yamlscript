@@ -10,4 +10,4 @@ test:: $(LIBYAMLSCRIPT_SO_FQNP)
 	prove $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
-	$(RM) -r lib/.precomp/
+	$(RM) -r .precomp/ lib/.precomp/
