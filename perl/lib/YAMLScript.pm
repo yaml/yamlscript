@@ -30,7 +30,7 @@ my $graal_create_isolate = $ffi->function(
 
 my $graal_tear_down_isolate = $ffi->function(
     graal_tear_down_isolate =>
-        ['opaque*'] => 'int',
+        ['opaque'] => 'int',
 );
 
 # YAMLScript object constuctor. Creates and saves a graal isolate thread:
