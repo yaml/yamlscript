@@ -8,11 +8,9 @@
    [yamlscript.compiler :as ys]
    [yamlscript.runtime :as run]
    [clojure.data.json :as json]
-   [sci.core :as sci]
-   [clojure.pprint :as pp])
+   [sci.core :as sci])
   (:gen-class
-   :methods [^{:static true} [compileYsToClj [String] String]
-             ^{:static true} [loadYsToJson [String] String]]))
+   :methods [^{:static true} [loadYsToJson [String] String]]))
 
 (defn json-write-str [data]
   (json/write-str
@@ -44,21 +42,6 @@
           error-map
           json-write-str)))))
 
-(defn -compileYsToClj
-  "Compile a YAMLScript code string to a Clojure code string."
-  [^String ys-str]
-
-  (try
-    (->> ys-str
-      ys/compile
-      (assoc {} :code)
-      json-write-str)
-
-    (catch Exception e
-      (->> e
-        error-map
-        json-write-str))))
-
 (comment
-  (-loadYsToJson "!yamlscript/v0\nXsay: 42")
+  (-loadYsToJson "!yamlscript/v0/data\nsay: 42")
   )
