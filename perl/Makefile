@@ -20,10 +20,17 @@ PERL_VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
 ALIEN_DIST_DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL_VERSION)
 ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
 
+ifeq (,$(shell command -v zild))
+    ALIEN_DIST_DIR :=
+    ALIEN_BLIB_LIB :=
+endif
+
 
 #------------------------------------------------------------------------------
+ifdef ALIEN_DIST_DIR
 test:: $(ALIEN_BLIB_LIB) $(LIBYAMLSCRIPT_SO_FQNP)
 	prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
+endif
 
 clean::
 	$(RM) -r cpan YAMLScript-*
