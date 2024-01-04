@@ -16,25 +16,31 @@ test ?= test/
 
 export PATH := $(ROOT)/perl/bin:$(PATH)
 
+PERL_VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
+ALIEN_DIST_DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL_VERSION)
+ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
+
 
 #------------------------------------------------------------------------------
-test:: $(LIBYAMLSCRIPT_SO_FQNP)
-	$(MAKE) -C $(ROOT)/perl-alien distdir
-	( \
-	    cd "$$(echo "$(ROOT)/perl-alien/Alien-YAMLScript-"*)" && \
-	    pwd && \
-	    perl Makefile.PL && \
-	    make \
-	)
-	prove -I"$$(echo "$(ROOT)/perl-alien/Alien-YAMLScript-"*)/blib/lib" \
-	    -l $${TEST_VERBOSE:+'-v'} $(test)
-	PERL5LIB=$(ROOT)/perl-alien/Alien-YAMLScript-*/blib/lib \
+test:: $(ALIEN_BLIB_LIB) $(LIBYAMLSCRIPT_SO_FQNP)
+	prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
 	$(RM) -r cpan YAMLScript-*
 
 $(ZILD)::
 	zild $@
+
+$(ALIEN_BLIB_LIB): $(ALIEN_DIST_DIR)
+	( \
+	    cd $< && \
+	    perl Makefile.PL && \
+	    make \
+	)
+	touch $@
+
+$(ALIEN_DIST_DIR):
+	$(MAKE) -C $(ROOT)/perl-alien distdir
 
 $(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
 	$(MAKE) -C $< build
