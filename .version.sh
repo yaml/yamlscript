@@ -14,7 +14,7 @@ api_files=(
   core/project.clj
   libyamlscript/deps.edn
   libyamlscript/project.clj
-  perl/lib/YAMLScript/FFI.pm
+  perl-alien/lib/Alien/YAMLScript.pm
   perl-alien/alienfile
   python/lib/yamlscript.py
   raku/lib/YAMLScript.rakumod
@@ -27,7 +27,7 @@ api_files=(
 
 perl_files=(
   perl/Meta
-  perl/lib/YAMLScript/FFI.pm
+  perl/lib/YAMLScript.pm
   perl-alien/Meta
   perl-alien/lib/Alien/YAMLScript.pm
 )
@@ -53,6 +53,7 @@ yamlscript_files=(
   libyamlscript/deps.edn
   libyamlscript/project.clj
   perl-alien/alienfile
+  perl-alien/lib/Alien/YAMLScript.pm
   python/lib/yamlscript.py
   rust/src/lib.rs
   ys/deps.edn
@@ -63,7 +64,6 @@ yamlscript_files=(
 
 YAMLSCRIPT_files=(
   raku/lib/YAMLScript.rakumod
-  perl/lib/YAMLScript/FFI.pm
 )
 
 yamlscript_core_files=(
@@ -82,6 +82,6 @@ version_files=(
 
 VERSION_files=(
   common/install
-  perl/lib/YAMLScript/FFI.pm
+  perl/lib/YAMLScript.pm
   perl-alien/lib/Alien/YAMLScript.pm
 )
