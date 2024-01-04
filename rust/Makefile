@@ -10,6 +10,7 @@ CARGO := \
 
 default::
 
+ifneq (,$(shell command -v cargo))
 $(CARGO)::
 	cargo $@
-
+endif
