@@ -1,5 +1,7 @@
 use alienfile;
 
+my $libyamlscript_version = '0.1.34';
+
 # Always use a share install
 # We cannot use a system install, because we need to know exactly
 # which version we are installing.
@@ -11,8 +13,6 @@ share {
 
     my $arch = meta->prop->{platform}{cpu}{arch}{name};
     $arch = 'x64' unless $arch eq 'aarch64';
-
-    my $libyamlscript_version = '0.1.34';
 
     plugin 'Download::GitHub' => (
         github_user  => 'yaml',
