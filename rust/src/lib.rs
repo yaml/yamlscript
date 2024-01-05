@@ -1,25 +1,25 @@
 //! Rust binding/API for the libyamlscript shared library.
 //!
-//! # Loading a Yamlscript file
-//! The [`Yamlscript::load`] function is the main entrypoint of the library.
-//! It allows loading Yamlscript and returns a JSON object.
+//! # Loading a YAMLScript file
+//! The [`YAMLScript::load`] function is the main entrypoint of the library.
+//! It allows loading YAMLScript and returns a JSON object.
 //! `serde_json` is used to deserialize the JSON.
 //! One can either use `serde_json::Value` as a return type or a custom `serde::Deserialize`able
 //! type.
 //!
 //! ## Using `serde_json::Value`
 //! ```
-//! // Create an instance of a Yamlscript object.
+//! // Create an instance of a YAMLScript object.
 //! // This object holds data from the library and all execution context.
-//! let ys = yamlscript::Yamlscript::new().unwrap();
-//! // Load some Yamlscript.
+//! let ys = yamlscript::YAMLScript::new().unwrap();
+//! // Load some YAMLScript.
 //! let data = ys.load::<serde_json::Value>(
 //!         r#"!yamlscript/v0/data
 //!            key: ! inc(42)"#
 //!     )
 //!     .unwrap();
 //!
-//! // Our Yamlscript returns a `serde_json::Value` which holds an object.
+//! // Our YAMLScript returns a `serde_json::Value` which holds an object.
 //! let data = data.as_object().unwrap();
 //! // We have a `key` field which holds the value 43.
 //! assert_eq!(data.get("key").unwrap().as_u64().unwrap(), 43);
@@ -34,10 +34,10 @@
 //!   key: u64,
 //! }
 //!
-//! // Create an instance of a Yamlscript object.
+//! // Create an instance of a YAMLScript object.
 //! // This object holds data from the library and all execution context.
-//! let ys = yamlscript::Yamlscript::new().unwrap();
-//! // Load some Yamlscript and deserialize as `Foo`.
+//! let ys = yamlscript::YAMLScript::new().unwrap();
+//! // Load some YAMLScript and deserialize as `Foo`.
 //! let foo = ys.load::<Foo>(
 //!         r#"!yamlscript/v0/data
 //!            key: ! inc(42)"#
@@ -60,13 +60,13 @@ mod error;
 pub use error::Error;
 use serde::Deserialize;
 
-use crate::error::LibYamlscriptError;
+use crate::error::LibYAMLScriptError;
 
 /// The name of the yamlscript library to load.
 const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.34";
 
 /// A wrapper around libyamlscript.
-pub struct Yamlscript {
+pub struct YAMLScript {
     /// A handle to the opened dynamic library.
     _handle: Library,
     /// A GraalVM isolate.
@@ -88,8 +88,8 @@ type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 /// Prototype of the `load_ys_to_json` function.
 type LoadYsToJsonFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 
-impl Yamlscript {
-    /// Create a new instance of a Yamlscript loader.
+impl YAMLScript {
+    /// Create a new instance of a YAMLScript loader.
     ///
     /// # Errors
     /// This function may return an error if we fail to open the library
@@ -155,11 +155,11 @@ impl Yamlscript {
         })
     }
 
-    /// Load a Yamlscript string, returning the result deserialized.
+    /// Load a YAMLScript string, returning the result deserialized.
     ///
     /// # Errors
     /// This function returns an error if the input string is invalid (contains a nil-byte) or if
-    /// the Yamlscript engine has returned an error.
+    /// the YAMLScript engine has returned an error.
     pub fn load<T>(&self, ys: &str) -> Result<T, Error>
     where
         T: serde::de::DeserializeOwned,
@@ -173,11 +173,11 @@ impl Yamlscript {
         // Check for errors.
         match response {
             YsResponse::Data(value) => Ok(value),
-            YsResponse::Error(err) => Err(Error::Yamlscript(err)),
+            YsResponse::Error(err) => Err(Error::YAMLScript(err)),
         }
     }
 
-    /// Load a Yamlscript string, returning the raw buffer from the library.
+    /// Load a YAMLScript string, returning the raw buffer from the library.
     ///
     /// # Errors
     /// This function returns an error if the input string is invalid (contains a nil-byte).
@@ -236,7 +236,7 @@ impl Yamlscript {
     }
 }
 
-impl Drop for Yamlscript {
+impl Drop for YAMLScript {
     fn drop(&mut self) {
         let res = unsafe { (self.tear_down_isolate_fn)(self.isolate_thread) };
         if res != 0 {
@@ -260,13 +260,13 @@ impl Drop for Yamlscript {
 /// ```json
 /// {
 ///   "error": {
-///     // An error object (see [`LibYamlscriptError`]).
+///     // An error object (see [`LibYAMLScriptError`]).
 ///   }
 /// }
 /// ```
 ///
 /// Upon success, we can directly deserialize the `data` object into the target type.
-/// Upon error, we deserialize the error as [`LibYamlscriptError`] so that it can be inspected.
+/// Upon error, we deserialize the error as [`LibYAMLScriptError`] so that it can be inspected.
 /// We however do not provide any inspection helpers.
 #[derive(Deserialize)]
 enum YsResponse<T> {
@@ -275,5 +275,5 @@ enum YsResponse<T> {
     Data(T),
     /// An error object.
     #[serde(rename = "error")]
-    Error(LibYamlscriptError),
+    Error(LibYAMLScriptError),
 }

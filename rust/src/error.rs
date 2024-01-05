@@ -20,7 +20,7 @@ pub enum Error {
     ///
     /// This variant is used when we have successfully resolved the function we want to call in
     /// `libyamlscript.so`, but the engine returned an error, that we successfully parsed.
-    Yamlscript(LibYamlscriptError),
+    YAMLScript(LibYAMLScriptError),
     /// An error with serde_json while deserializing.
     Serde(serde_json::Error),
     /// An error while decoding strings returned from libyamlscript.
@@ -33,7 +33,7 @@ pub enum Error {
 /// returned an error.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, Debug)]
-pub struct LibYamlscriptError {
+pub struct LibYAMLScriptError {
     /// The error message.
     pub cause: String,
     /// The stack trace within libyamlscript.
