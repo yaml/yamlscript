@@ -64,16 +64,15 @@ use crate::error::LibYamlscriptError;
 const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.34";
 
 /// A wrapper around libyamlscript.
-#[allow(dead_code)]
 pub struct Yamlscript {
     /// A handle to the opened dynamic library.
-    handle: Library,
+    _handle: Library,
     /// A GraalVM isolate.
-    isolate: *mut void,
+    _isolate: *mut void,
     /// A GraalVM isolate thread.
     isolate_thread: *mut void,
     /// Pointer to the function in GraalVM to create the isolate and its thread.
-    create_isolate_fn: CreateIsolateFn,
+    _create_isolate_fn: CreateIsolateFn,
     /// Pointer to the function in GraalVM to free an isolate thread.
     tear_down_isolate_fn: TearDownIsolateFn,
     /// Pointer to the `load_ys_to_json` function in libyamlscript.
@@ -143,10 +142,10 @@ impl Yamlscript {
         }
 
         Ok(Self {
-            handle,
-            isolate,
+            _handle: handle,
+            _isolate: isolate,
             isolate_thread,
-            create_isolate_fn,
+            _create_isolate_fn: create_isolate_fn,
             tear_down_isolate_fn,
             load_ys_to_json_fn,
         })
