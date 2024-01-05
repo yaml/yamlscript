@@ -78,8 +78,6 @@ pub struct Yamlscript {
     tear_down_isolate_fn: TearDownIsolateFn,
     /// Pointer to the `load_ys_to_json` function in libyamlscript.
     load_ys_to_json_fn: LoadYsToJsonFn,
-    /// Pointer to the `compile_ys_to_clj` function in libyamlscript.
-    compile_ys_to_clj_fn: CompileYsToClj,
 }
 
 /// Prototype of the `graal_create_isolate` function.
@@ -88,8 +86,6 @@ type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const 
 type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 /// Prototype of the `load_ys_to_json` function.
 type LoadYsToJsonFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
-/// Prototype of the `compile_ys_to_clj` function.
-type CompileYsToClj = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 
 impl Yamlscript {
     /// Create a new instance of a Yamlscript loader.
@@ -111,14 +107,11 @@ impl Yamlscript {
             unsafe { handle.ptr_or_null::<TearDownIsolateFn>("graal_tear_down_isolate")? };
         let load_ys_to_json_fn =
             unsafe { handle.ptr_or_null::<LoadYsToJsonFn>("load_ys_to_json")? };
-        let compile_ys_to_clj_fn =
-            unsafe { handle.ptr_or_null::<CompileYsToClj>("compile_ys_to_clj")? };
 
         // Check for null-ness.
         if create_isolate_fn.is_null()
             || tear_down_isolate_fn.is_null()
             || load_ys_to_json_fn.is_null()
-            || compile_ys_to_clj_fn.is_null()
         {
             return Err(Error::Load(dlopen::Error::NullSymbol));
         }
@@ -143,8 +136,6 @@ impl Yamlscript {
             unsafe { std::mem::transmute(*tear_down_isolate_fn) };
         let load_ys_to_json_fn: LoadYsToJsonFn =
             unsafe { std::mem::transmute(*load_ys_to_json_fn) };
-        let compile_ys_to_clj_fn: CompileYsToClj =
-            unsafe { std::mem::transmute(*compile_ys_to_clj_fn) };
 
         let x = unsafe { (create_isolate_fn)(std::ptr::null_mut(), &isolate, &isolate_thread) };
         if x != 0 {
@@ -158,7 +149,6 @@ impl Yamlscript {
             create_isolate_fn,
             tear_down_isolate_fn,
             load_ys_to_json_fn,
-            compile_ys_to_clj_fn,
         })
     }
 
