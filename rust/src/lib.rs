@@ -1,9 +1,11 @@
 //! Rust binding/API for the libyamlscript shared library.
 //!
 //! # Loading a Yamlscript file
-//! The [`Yamlscript::load`] function is the main entrypoint of the library. It allows loading
-//! Yamlscript and returns a JSON object. `serde_json` is used to deserialize the JSON. One can
-//! either use `serde_json::Value` as a return type or a custom `serde::Deserialize`able type.
+//! The [`Yamlscript::load`] function is the main entrypoint of the library.
+//! It allows loading Yamlscript and returns a JSON object.
+//! `serde_json` is used to deserialize the JSON.
+//! One can either use `serde_json::Value` as a return type or a custom `serde::Deserialize`able
+//! type.
 //!
 //! ## Using `serde_json::Value`
 //! ```
@@ -90,8 +92,8 @@ impl Yamlscript {
     /// Create a new instance of a Yamlscript loader.
     ///
     /// # Errors
-    /// This function may return an error if we fail to open the library. Namely, it returns
-    /// [`Error::NotFound`] if the library cannot be found.
+    /// This function may return an error if we fail to open the library
+    /// Namely, it returns [`Error::NotFound`] if the library cannot be found.
     #[allow(clippy::crosspointer_transmute)]
     pub fn new() -> Result<Self, Error> {
         // Open library and create pointers the library needs.
@@ -119,17 +121,19 @@ impl Yamlscript {
         //   1. Remove the borrow of the function pointers on the `Library`.
         //   2. Convert them to the correct Rust type.
         //
-        // 1. By copying the pointers, we remove the borrow `PtrOrNull` has on `Library`. Without
-        //    this, we would be unable to move `handle` to return our `Self` at the end of this
-        //    function, because the `Library` would be moved while still borrowed.
+        // 1. By copying the pointers, we remove the borrow `PtrOrNull` has on `Library`.
+        //    Without this, we would be unable to move `handle` to return our `Self` at the end of
+        //    this function, because the `Library` would be moved while still borrowed.
         //    We have checked the pointers to be valid and they are stored alongside the `Library`
         //    and hence do not outlive it.
-        // 2. Rust considers that the type `fn()` is akin to a function pointer. When we retrieve a
-        //    `*const fn()`, this is thus a pointer to a function pointer. We need to transmute the
-        //    pointer to pointer to a regular pointer. This means converting a pointer to its
-        //    pointee, which clippy does not like at all, but it is valid in this context.
+        // 2. Rust considers that the type `fn()` is akin to a function pointer.
+        //    When we retrieve a `*const fn()`, this is thus a pointer to a function pointer.
+        //    We need to transmute the pointer to pointer to a regular pointer.
+        //    This means converting a pointer to its pointee, which clippy does not like at all,
+        //    but it is valid in this context.
         //    Note that we dereference (`*`) the `_fn` bindings to retrieve the raw pointer from
-        //    the `PtrOrNull` wrapper. There is no pointer dereferencement here.
+        //    the `PtrOrNull` wrapper
+        //    There is no pointer dereferencement here.
         let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
         let tear_down_isolate_fn: TearDownIsolateFn =
             unsafe { std::mem::transmute(*tear_down_isolate_fn) };
@@ -160,7 +164,8 @@ impl Yamlscript {
     where
         T: serde::de::DeserializeOwned,
     {
-        // Library responds with a JSON string. Parse it.
+        // Library responds with a JSON string.
+        // Parse it.
         let raw = unsafe { std::ffi::CStr::from_ptr(self.load_raw(ys, self.isolate_thread)?) }
             .to_str()?;
         let response = serde_json::from_str::<YsResponse<T>>(raw)?;
@@ -211,7 +216,8 @@ impl Yamlscript {
 
             // Store the error that happened if we haven't encountered one.
             // The error we store always happened while trying to open an existing
-            // `libyamlscript.so` file. It should be helpful.
+            // `libyamlscript.so` file.
+            // It should be helpful.
             match library {
                 Ok(x) => return Ok(x),
                 Err(x) => {
