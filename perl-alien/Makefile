@@ -1,33 +1,19 @@
 include ../common/base.mk
 include ../common/docker.mk
 
-ZILD := \
-    cpan \
-    cpanshell \
-    dist \
-    distdir \
-    distshell \
-    disttest \
-    install \
-    release \
-    update \
-
 test ?= test/
 
-export PATH := $(ROOT)/perl/bin:$(PATH)
-
-
 #------------------------------------------------------------------------------
-test::
-
 clean::
-	$(RM) -r cpan Alien-YAMLScript*
+	$(RM) -r cpan share Alien-YAMLScript*
 
 $(ZILD)::
 	zild $@
 
-$(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
-	$(MAKE) -C $< build
+share/$(RELEASE_LYS_TAR):
+	make -C $(ROOT) $(@:share/%=%)
+	mkdir -p share
+	mv $(ROOT)/$(@:share/%=%) $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

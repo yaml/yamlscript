@@ -135,3 +135,19 @@ RELEASE_YS_TAR := $(RELEASE_YS_NAME).tar.xz
 
 RELEASE_LYS_NAME := libyamlscript-$(YS_VERSION)-$(GRAALVM_ARCH)
 RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
+
+
+#------------------------------------------------------------------------------
+# Perl ZILD
+#------------------------------------------------------------------------------
+
+ZILD := \
+    cpan \
+    cpanshell \
+    dist \
+    distdir \
+    distshell \
+    disttest \
+    install \
+    release \
+    update

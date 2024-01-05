@@ -9,10 +9,8 @@ DIRS := \
     core \
     libyamlscript \
     perl \
-    perl-alien \
     python \
     raku \
-    ruby \
     rust \
     ys \
 

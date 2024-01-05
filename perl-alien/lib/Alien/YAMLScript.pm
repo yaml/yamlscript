@@ -5,6 +5,7 @@ our $VERSION = '0.1.21';
 use strict;
 use warnings;
 
+use alienfile;
 use parent 'Alien::Base';
 
 our $libyamlscript_version = '0.1.34';

@@ -10,10 +10,12 @@ use FFI::CheckLib ();
 use FFI::Platypus;
 use JSON ();
 
+use XXX; XXX \%INC, \@INC;
+
 # Alien::YAMLScript finds the proper libyamlscript version, but we need to be
 # using the proper version of Alien::YAMLScript:
 die "\$YAMLScript::VERSION ($YAMLScript::VERSION) and " .
-    "\$Alien::YAMLScript::VERSION($Alien::YAMLScript::VERSION) " .
+    "\$Alien::YAMLScript::VERSION ($Alien::YAMLScript::VERSION) " .
     "must be the same version"
     unless $YAMLScript::VERSION eq $Alien::YAMLScript::VERSION;
 
