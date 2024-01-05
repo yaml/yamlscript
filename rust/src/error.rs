@@ -3,16 +3,19 @@
 pub enum Error {
     /// The library was not found.
     NotFound,
+
     /// An error while loading the library.
     ///
-    /// This error is unrecoverable and any further attempt to call any libyamlscript function will
-    /// fail.
+    /// This error is unrecoverable and any further attempt to call any
+    /// libyamlscript function will fail.
     Load(dlopen::Error),
+
     /// An error while initializing the library.
     ///
-    /// The library has been correctly found and opened, but attempting to initialize it has
-    /// failed.
+    /// The library has been correctly found and opened, but attempting to
+    /// initialize it has failed.
     Init(i32),
+
     /// An error while calling a libyamlscript function.
     Yamlscript(String),
 }
@@ -37,11 +40,16 @@ fn clone_std_io_error(err: &std::io::Error) -> std::io::Error {
 fn clone_dl_error(err: &dlopen::Error) -> dlopen::Error {
     type DErr = dlopen::Error;
     match err {
-        DErr::NullCharacter(x) => DErr::NullCharacter(x.clone()),
-        DErr::OpeningLibraryError(x) => DErr::OpeningLibraryError(clone_std_io_error(x)),
-        DErr::SymbolGettingError(x) => DErr::SymbolGettingError(clone_std_io_error(x)),
-        DErr::NullSymbol => DErr::NullSymbol,
-        DErr::AddrNotMatchingDll(x) => DErr::AddrNotMatchingDll(clone_std_io_error(x)),
+        DErr::NullCharacter(x) =>
+            DErr::NullCharacter(x.clone()),
+        DErr::OpeningLibraryError(x) =>
+            DErr::OpeningLibraryError(clone_std_io_error(x)),
+        DErr::SymbolGettingError(x) =>
+            DErr::SymbolGettingError(clone_std_io_error(x)),
+        DErr::NullSymbol =>
+            DErr::NullSymbol,
+        DErr::AddrNotMatchingDll(x) =>
+            DErr::AddrNotMatchingDll(clone_std_io_error(x)),
     }
 }
 

@@ -15,14 +15,19 @@ const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.34";
 /// Load a YS string, returning a JSON string.
 ///
 /// # Errors
-/// This function returns an error if the library was not correctly loaded, if the input string is
-/// invalid (contains a nil-byte or if the Yamlscript engine has returned an error. Unfortunately,
-/// in the latter case, there is no way to precisely inspect the error that happened.
+/// This function returns an error if the library was not correctly loaded, if
+/// the input string is invalid (contains a nil-byte or if the Yamlscript engine
+/// has returned an error.
+/// Unfortunately, in the latter case, there is no way to precisely inspect the
+/// error that happened.
 pub fn load(ys: &str) -> Result<String, Error> {
     LibYamlscript::with_library(|yamlscript| {
-        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
+        // We need to create a `CString` because `ys` is not necessarily
+        // nil-terminated.
         let input = std::ffi::CString::new(ys)
-            .map_err(|_| Error::Yamlscript("load: input contains a nil-byte".to_string()))?;
+            .map_err(|_|
+                Error::Yamlscript("load: input contains a nil-byte".to_string())
+            )?;
         let json = unsafe {
             (yamlscript.load_ys_to_json_fn)(
                 yamlscript.isolate_thread as libc::c_longlong,
@@ -43,39 +48,13 @@ pub fn load(ys: &str) -> Result<String, Error> {
 /// Load a YS string, discarding the result.
 ///
 /// # Errors
-/// This function returns an error if the library was not correctly loaded, if the input string is
-/// invalid (contains a nil-byte or if the Yamlscript engine has returned an error. Unfortunately,
-/// in the latter case, there is no way to precisely inspect the error that happened.
+/// This function returns an error if the library was not correctly loaded, if
+/// the input string is invalid (contains a nil-byte or if the Yamlscript engine
+/// has returned an error.
+/// Unfortunately, in the latter case, there is no way to precisely inspect the
+/// error that happened.
 pub fn run(ys: &str) -> Result<(), Error> {
     load(ys).map(|_| ())
-}
-
-/// Compile a YS string to CLJ.
-///
-/// # Errors
-/// This function returns an error if the library was not correctly loaded, if the input string is
-/// invalid (contains a nil-byte or if the Yamlscript engine has returned an error. Unfortunately,
-/// in the latter case, there is no way to precisely inspect the error that happened.
-pub fn compile(ys: &str) -> Result<String, Error> {
-    LibYamlscript::with_library(|yamlscript| {
-        // We need to create a `CString` because `ys` is not necessarily nil-terminated.
-        let input = std::ffi::CString::new(ys)
-            .map_err(|_| Error::Yamlscript("compile: input contains a nil-byte".to_string()))?;
-        let clj = unsafe {
-            (yamlscript.compile_ys_to_clj_fn)(
-                yamlscript.isolate_thread as libc::c_longlong,
-                input.as_bytes().as_ptr(),
-            )
-        };
-        if clj.is_null() {
-            Err(Error::Yamlscript(
-                "compile_ys_to_clj_fn: returned a null pointer".to_string(),
-            ))
-        } else {
-            let clj = unsafe { std::ffi::CStr::from_ptr(clj) };
-            Ok(clj.to_string_lossy().to_string())
-        }
-    })?
 }
 
 /// A wrapper around libyamlscript.
@@ -91,19 +70,19 @@ struct LibYamlscript {
     create_isolate_fn: CreateIsolateFn,
     /// Pointer to the `load_ys_to_json` function in libyamlscript.
     load_ys_to_json_fn: LoadYsToJsonFn,
-    /// Pointer to the `compile_ys_to_clj` function in libyamlscript.
-    compile_ys_to_clj_fn: CompileYsToClj,
 }
 
 unsafe impl Send for LibYamlscript {}
 unsafe impl Sync for LibYamlscript {}
 
 /// Prototype of the `graal_create_isolate` function.
-type CreateIsolateFn = unsafe extern "C" fn(*mut void, *const *mut void, *const *mut void) -> c_int;
+type CreateIsolateFn =
+    unsafe extern "C"
+    fn(*mut void, *const *mut void, *const *mut void) -> c_int;
 /// Prototype of the `load_ys_to_json` function.
-type LoadYsToJsonFn = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
-/// Prototype of the `compile_ys_to_clj` function.
-type CompileYsToClj = unsafe extern "C" fn(libc::c_longlong, *const u8) -> *mut i8;
+type LoadYsToJsonFn =
+    unsafe extern "C"
+    fn(libc::c_longlong, *const u8) -> *mut i8;
 
 impl LibYamlscript {
     /// Find and open the `libyamlscript` file and load functions into memory.
@@ -116,16 +95,17 @@ impl LibYamlscript {
 
         // Fetch symbols.
         let create_isolate_fn =
-            unsafe { handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")? };
+            unsafe {
+                handle.ptr_or_null::<CreateIsolateFn>("graal_create_isolate")?
+            };
         let load_ys_to_json_fn =
-            unsafe { handle.ptr_or_null::<LoadYsToJsonFn>("load_ys_to_json")? };
-        let compile_ys_to_clj_fn =
-            unsafe { handle.ptr_or_null::<CompileYsToClj>("compile_ys_to_clj")? };
+            unsafe {
+                handle.ptr_or_null::<LoadYsToJsonFn>("load_ys_to_json")?
+            };
 
         // Check for null-ness.
         if create_isolate_fn.is_null()
             || load_ys_to_json_fn.is_null()
-            || compile_ys_to_clj_fn.is_null()
         {
             return Err(Error::Load(dlopen::Error::NullSymbol));
         }
@@ -134,25 +114,34 @@ impl LibYamlscript {
         //   1. Remove the borrow of the function pointers on the `Library`.
         //   2. Convert them to the correct Rust type.
         //
-        // 1. By copying the pointers, we remove the borrow `PtrOrNull` has on `Library`. Without
-        //    this, we would be unable to move `handle` to return our `Self` at the end of this
-        //    function, because the `Library` would be moved while still borrowed.
-        //    We have checked the pointers to be valid and they are stored alongside the `Library`
-        //    and hence do not outlive it.
-        // 2. Rust considers that the type `fn()` is akin to a function pointer. When we retrieve a
-        //    `*const fn()`, this is thus a pointer to a function pointer. We need to transmute the
-        //    pointer to pointer to a regular pointer. This means converting a pointer to its
-        //    pointee, which clippy does not like at all, but it is valid in this context.
-        //    Note that we dereference (`*`) the `_fn` bindings to retrieve the raw pointer from
-        //    the `PtrOrNull` wrapper. There is no pointer dereferencement here.
-        let create_isolate_fn: CreateIsolateFn = unsafe { std::mem::transmute(*create_isolate_fn) };
+        // 1. By copying the pointers, we remove the borrow `PtrOrNull` has on
+        //    `Library`.
+        //    Without this, we would be unable to move `handle` to return our
+        //    `Self` at the end of this function, because the `Library` would be
+        //    moved while still borrowed.
+        //    We have checked the pointers to be valid and they are stored
+        //    alongside the `Library` and hence do not outlive it.
+        // 2. Rust considers that the type `fn()` is akin to a function pointer.
+        //    When we retrieve a `*const fn()`, this is thus a pointer to a
+        //    function pointer.
+        //    We need to transmute the pointer to pointer to a regular pointer.
+        //    This means converting a pointer to its pointee, which clippy does
+        //    not like at all, but it is valid in this context.
+        //    Note that we dereference (`*`) the `_fn` bindings to retrieve the
+        //    raw pointer from the `PtrOrNull` wrapper.
+        //    There is no pointer dereferencement here.
+        let create_isolate_fn: CreateIsolateFn =
+            unsafe { std::mem::transmute(*create_isolate_fn) };
         let load_ys_to_json_fn: LoadYsToJsonFn =
             unsafe { std::mem::transmute(*load_ys_to_json_fn) };
-        let compile_ys_to_clj_fn: CompileYsToClj =
-            unsafe { std::mem::transmute(*compile_ys_to_clj_fn) };
 
         // Initialize the thread.
-        let x = unsafe { create_isolate_fn(std::ptr::null_mut(), &isolate, &isolate_thread) };
+        let x =
+            unsafe {
+                create_isolate_fn(std::ptr::null_mut(),
+                &isolate,
+                &isolate_thread)
+            };
         if x != 0 {
             return Err(Error::Init(x));
         }
@@ -163,7 +152,6 @@ impl LibYamlscript {
             isolate_thread,
             create_isolate_fn,
             load_ys_to_json_fn,
-            compile_ys_to_clj_fn,
         })
     }
 
@@ -179,7 +167,8 @@ impl LibYamlscript {
     /// Open the library found at the first matching path in `LD_LIBRARY_PATH`.
     fn open_library() -> Result<Library, Error> {
         let mut first_error = None;
-        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
+        let library_path =
+            std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
 
         // Iterate over segments of `LD_LIBRARY_PATH`.
         for path in library_path
@@ -194,8 +183,9 @@ impl LibYamlscript {
             let library = Library::open(path);
 
             // Store the error that happened if we haven't encountered one.
-            // The error we store always happened while trying to open an existing
-            // `libyamlscript.so` file. It should be helpful.
+            // The error we store always happened while trying to open an
+            // existing `libyamlscript.so` file.
+            // It should be helpful.
             match library {
                 Ok(x) => return Ok(x),
                 Err(x) => {
