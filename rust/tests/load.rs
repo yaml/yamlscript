@@ -2,7 +2,7 @@ use yamlscript::Error;
 
 #[test]
 fn load_sample_ys() {
-    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ys = yamlscript::YAMLScript::new().unwrap();
     let ret = ys
         .load::<serde_json::Value>(
             r#"!yamlscript/v0/data
@@ -38,7 +38,7 @@ struct Response {
 
 #[test]
 fn load_sample_ys_serde() {
-    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ys = yamlscript::YAMLScript::new().unwrap();
     let ret = ys
         .load::<Response>(
             r#"!yamlscript/v0/data
@@ -54,7 +54,7 @@ fn load_sample_ys_serde() {
 
 #[test]
 fn load_sample_error() {
-    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ys = yamlscript::YAMLScript::new().unwrap();
     let result = ys.load::<Response>(
         r#"!yamlscript/v0/data
            : : : : : :
@@ -70,7 +70,7 @@ fn load_multiple() {
                say: "Hello"
                key: ! inc(42)
                baz: ! range(1 6)"#;
-    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ys = yamlscript::YAMLScript::new().unwrap();
     let ret = ys.load::<Response>(data).unwrap();
     assert_eq!(ret.say, "Hello");
     assert_eq!(ret.key, 43);
@@ -84,7 +84,7 @@ fn load_multiple() {
 #[test]
 #[ignore]
 fn load_loop() {
-    let ys = yamlscript::Yamlscript::new().unwrap();
+    let ys = yamlscript::YAMLScript::new().unwrap();
     let begin = std::time::Instant::now();
     let _ = (0..80000)
         .map(|i| {

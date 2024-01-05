@@ -11,7 +11,7 @@
 //! ```
 //! // Create an instance of a Yamlscript object.
 //! // This object holds data from the library and all execution context.
-//! let ys = yamlscript::Yamlscript::new().unwrap();
+//! let ys = yamlscript::YAMLScript::new().unwrap();
 //! // Load some Yamlscript.
 //! let data = ys.load::<serde_json::Value>(
 //!         r#"!yamlscript/v0/data
@@ -36,7 +36,7 @@
 //!
 //! // Create an instance of a Yamlscript object.
 //! // This object holds data from the library and all execution context.
-//! let ys = yamlscript::Yamlscript::new().unwrap();
+//! let ys = yamlscript::YAMLScript::new().unwrap();
 //! // Load some Yamlscript and deserialize as `Foo`.
 //! let foo = ys.load::<Foo>(
 //!         r#"!yamlscript/v0/data
@@ -66,7 +66,7 @@ use crate::error::LibYamlscriptError;
 const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.34";
 
 /// A wrapper around libyamlscript.
-pub struct Yamlscript {
+pub struct YAMLScript {
     /// A handle to the opened dynamic library.
     _handle: Library,
     /// A GraalVM isolate.
@@ -88,7 +88,7 @@ type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 /// Prototype of the `load_ys_to_json` function.
 type LoadYsToJsonFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 
-impl Yamlscript {
+impl YAMLScript {
     /// Create a new instance of a Yamlscript loader.
     ///
     /// # Errors
@@ -236,7 +236,7 @@ impl Yamlscript {
     }
 }
 
-impl Drop for Yamlscript {
+impl Drop for YAMLScript {
     fn drop(&mut self) {
         let res = unsafe { (self.tear_down_isolate_fn)(self.isolate_thread) };
         if res != 0 {
