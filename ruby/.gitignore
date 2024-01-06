@@ -4,6 +4,7 @@
 /coverage/
 /doc/
 /pkg/
+/.rake_tasks*
 /spec/reports/
 /tmp/
 /Gemfile.lock

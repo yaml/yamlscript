@@ -8,8 +8,6 @@ CARGO := \
     publish \
     test \
 
-default::
-
 ifneq (,$(shell command -v cargo))
 $(CARGO)::
 	cargo $@

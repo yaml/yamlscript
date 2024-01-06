@@ -15,8 +15,6 @@ endif
 endif
 
 #------------------------------------------------------------------------------
-default::
-
 build:: $(BUILD_TARGETS)
 
 install:: $(LIBYAMLSCRIPT_SO_FQNP)
