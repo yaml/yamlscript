@@ -9,5 +9,7 @@ ZILD := \
     release \
     update \
 
+ifneq (,$(shell command -v zild))
 $(ZILD)::
 	zild $@
+endif
