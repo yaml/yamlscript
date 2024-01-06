@@ -20,8 +20,8 @@ test:
     Test::Alien: 2.80
 
 =zild:
-  no-git-update: true
   no-about: true
+  no-git-update: true
   no-readme: true
   no-travis: true
   test-000: none

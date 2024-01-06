@@ -1,16 +1,6 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-
-ZILD := \
-    cpan \
-    cpanshell \
-    dist \
-    distdir \
-    distshell \
-    disttest \
-    install \
-    release \
-    update \
+include $(COMMON)/zild.mk
 
 test ?= test/
 
@@ -21,14 +11,13 @@ ALIEN_DIST_DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL_VERSION)
 ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
 
 #------------------------------------------------------------------------------
-test:: $(ALIEN_BLIB_LIB)
+test:: test-alien
+
+test-alien: $(ALIEN_BLIB_LIB)
 	prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
 	$(RM) -r cpan YAMLScript-*
-
-$(ZILD)::
-	zild $@
 
 $(ALIEN_BLIB_LIB): $(ALIEN_DIST_DIR)
 	( \
