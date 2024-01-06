@@ -1,5 +1,5 @@
 include ../common/base.mk
-include ../common/docker.mk
+include $(COMMON)/binding.mk
 
 ZILD := \
     cpan \
@@ -16,9 +16,8 @@ test ?= test/
 
 export PATH := $(ROOT)/perl/bin:$(PATH)
 
-
 #------------------------------------------------------------------------------
-test:: $(LIBYAMLSCRIPT_SO_FQNP)
+test::
 	prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
@@ -26,9 +25,6 @@ clean::
 
 $(ZILD)::
 	zild $@
-
-$(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
-	$(MAKE) -C $< build
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

@@ -1,19 +1,11 @@
 include ../common/base.mk
 include ../common/docker.mk
 
-ifndef DOCKERENV
-ifeq (,$(shell command -v node))
-  $(error "node is not available please install node")
-endif
-ifeq (,$(shell command -v yarn))
-  $(error "yarn is not available please install yarn")
-endif
-endif
-
 build:: node_modules main
 ifdef DOCKERENV
 	source ~/.bashrc && yarn build
 else
+	$(call check-yarn)
 	yarn build
 endif
 	cp src/install-* build/
@@ -21,6 +13,7 @@ endif
 	cp src/advent-redirect-html build/posts/advent-2023/index.html
 
 serve:: build
+	$(call check-yarn)
 	yarn dev
 
 site:: build gh-pages
@@ -46,6 +39,7 @@ node_modules: package.json
 ifdef DOCKERENV
 	ln -s /$@ $@
 else
+	$(call check-yarn)
 	yarn install
 endif
 
@@ -78,3 +72,9 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-deps-node.dockerfile \
 	  $</docker-apt-dev.dockerfile \
 		> $@
+
+define check-yarn
+ifeq (,$(shell command -v yarn))
+  $(error "yarn is not available please install yarn")
+endif
+endef

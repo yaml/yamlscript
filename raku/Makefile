@@ -1,12 +1,12 @@
 include ../common/base.mk
-# include ../common/docker.mk
+include $(COMMON)/binding.mk
 
 test ?= t/*
 
 export RAKULIB=$(ROOT)/raku/lib
 
 #------------------------------------------------------------------------------
-test:: $(LIBYAMLSCRIPT_SO_FQNP)
+test::
 	prove $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::

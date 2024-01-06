@@ -1,5 +1,5 @@
 include ../common/base.mk
-include ../common/docker.mk
+include $(COMMON)/binding.mk
 
 PYTHON := $(shell command -v python3)
 PYTHON ?= $(shell command -v python)
@@ -32,9 +32,6 @@ test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
 	$(PYTHON) \
 	  -c 'import yamlscript; \
 	      print(yamlscript.YAMLScript().load("!yamlscript/v0\ninc: 41"))'
-
-$(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
-	$(MAKE) -C $< build
 
 pkg-test: venv
 	$(MAKE) clean

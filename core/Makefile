@@ -1,6 +1,6 @@
 include ../common/base.mk
-include ../common/clojure.mk
-include ../common/docker.mk
+include $(COMMON)/clojure.mk
+include $(COMMON)/docker.mk
 
 export PATH := $(ROOT)/core/bin:$(PATH)
 
