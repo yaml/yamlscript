@@ -28,6 +28,7 @@ api_files=(
 perl_files=(
   perl/Meta
   perl/lib/YAMLScript.pm
+  perl/lib/YAMLScript/Alien.pm
   perl-alien/Meta
   perl-alien/lib/Alien/YAMLScript.pm
 )
@@ -52,6 +53,7 @@ yamlscript_files=(
   core/project.clj
   libyamlscript/deps.edn
   libyamlscript/project.clj
+  perl/lib/YAMLScript/Alien.pm
   perl-alien/alienfile
   perl-alien/lib/Alien/YAMLScript.pm
   python/lib/yamlscript/__init__.py

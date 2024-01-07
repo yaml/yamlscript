@@ -11,10 +11,13 @@ ALIEN_DIST_DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL_VERSION)
 ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
 
 #------------------------------------------------------------------------------
-test:: test-alien
+test::
+	prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
 
 test-alien: $(ALIEN_BLIB_LIB)
-	prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
+	LD_LIBRARY_PATH= \
+	    DYLD_LIBRARY_PATH= \
+	    prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
 
 clean::
 	$(RM) -r cpan YAMLScript-*

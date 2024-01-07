@@ -1,26 +1,28 @@
-package YAMLScript;
-
 use strict;
 use warnings;
 
-our $VERSION = '0.1.21';
+package YAMLScript;
 
-use Alien::YAMLScript;
 use FFI::CheckLib ();
 use FFI::Platypus;
 use JSON ();
 
-# Alien::YAMLScript finds the proper libyamlscript version, but we need to be
-# using the proper version of Alien::YAMLScript:
-die "\$YAMLScript::VERSION ($YAMLScript::VERSION) and " .
-    "\$Alien::YAMLScript::VERSION($Alien::YAMLScript::VERSION) " .
-    "must be the same version"
-    unless $YAMLScript::VERSION eq $Alien::YAMLScript::VERSION;
+our $VERSION = '0.1.21';
+
+our $libyamlscript_version = '0.1.34';
+
+
+#------------------------------------------------------------------------------
+# libyamlscript FFI setup:
+#------------------------------------------------------------------------------
+
+# Find the proper libyamlscript version:
+my $libyamlscript = find_libyamlscript();
 
 # Set up FFI functions:
 my $ffi = FFI::Platypus->new(
     api => 2,
-    lib => [ Alien::YAMLScript->dynamic_libs ],
+    lib => $libyamlscript,
 );
 
 my $graal_create_isolate = $ffi->function(
@@ -32,6 +34,11 @@ my $graal_tear_down_isolate = $ffi->function(
     graal_tear_down_isolate =>
         ['opaque'] => 'int',
 );
+
+
+#------------------------------------------------------------------------------
+# YAMLScript object constructor and destructor:
+#------------------------------------------------------------------------------
 
 # YAMLScript object constuctor. Creates and saves a graal isolate thread:
 sub new {
@@ -51,6 +58,9 @@ sub DESTROY {
         or die "Failed to tear down graal isolate";
 }
 
+#------------------------------------------------------------------------------
+# YAMLScript API methods:
+#------------------------------------------------------------------------------
 sub load;
 # "load" method wrapper for FFI.
 # It calls the libyamlscript load_ys_to_json function.
@@ -74,5 +84,40 @@ $ffi->attach(
         die "Unexpected response from 'libyamlscript'";
     },
 );
+
+#------------------------------------------------------------------------------
+# Helper functions:
+#------------------------------------------------------------------------------
+# Look for the local libyamlscript first, then look for the Alien version:
+sub find_libyamlscript {
+    my $so = $^O eq 'darwin' ? 'dylib' : 'so';
+    my $name = "libyamlscript.$so.$libyamlscript_version";
+    my @paths;
+    if (my $path = $ENV{LD_LIBRARY_PATH}) {
+        @paths = split /:/, $path;
+    }
+    push @paths, qw(
+        /usr/local/lib
+        /usr/local/lib64
+        /usr/lib
+        /usr/lib64
+    );
+    for my $path (@paths) {
+        if (-e "$path/$name") {
+            return "$path/$name";
+        }
+    }
+
+    require Alien::YAMLScript;
+
+    for my $path (Alien::YAMLScript->dynamic_libs) {
+        if ($path =~ /\Q$name\E$/ && -r $path) {
+            return $path;
+        }
+    }
+
+    die "Unable to find $name";
+}
+
 
 1;
