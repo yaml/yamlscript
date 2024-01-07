@@ -37,8 +37,10 @@ class YAMLScript
       "libyamlscript.#{extension}.#{YAML_SCRIPT_VERSION}"
     end
 
-    # Returns an array of library paths extracted from the LD_LIBRARY_PATH environment variable.
-    # If the environment variable is not set will return an array with `/usr/local/lib` only.
+    # Returns an array of library paths extracted from the LD_LIBRARY_PATH
+    # environment variable.
+    # If the environment variable is not set will return an array with
+    # `/usr/local/lib` only.
     def self.ld_library_paths
       env_value = ENV.fetch('LD_LIBRARY_PATH', '')
       paths = env_value.split(':')
@@ -48,7 +50,9 @@ class YAMLScript
     # Find the libyamlscript shared library file path
     def self.path
       name = filename
-      path = ld_library_paths.map { |dir| File.join(dir, name) }.detect { |file| File.exist?(file) }
+      path = ld_library_paths.map {
+        |dir| File.join(dir, name) }.detect { |file| File.exist?(file)
+      }
 
       raise Error, "Shared library file `#{name}` not found" unless path
 
@@ -57,7 +61,8 @@ class YAMLScript
 
     dlload path
 
-    extern 'int graal_create_isolate(void* params, void** isolate, void** thread)'
+    extern \
+      'int graal_create_isolate(void* params, void** isolate, void** thread)'
     extern 'int graal_tear_down_isolate(void* thread)'
     extern 'char* load_ys_to_json(void* thread, char* yamlscript)'
   end
@@ -92,7 +97,8 @@ class YAMLScript
     # Call 'load_ys_to_json' function in libyamlscript shared library
     json_data = LibYAMLScript.load_ys_to_json(thread, ys_code)
     resp = JSON.parse(json_data.to_s)
-    raise Error, 'Failed to tear down isolate' unless LibYAMLScript.graal_tear_down_isolate(thread).zero?
+    raise Error, 'Failed to tear down isolate' \
+      unless LibYAMLScript.graal_tear_down_isolate(thread).zero?
     raise Error, @error['cause'] if (@error = resp['error'])
     data = resp.fetch('data') do
       raise Error, 'Unexpected response from libyamlscript'

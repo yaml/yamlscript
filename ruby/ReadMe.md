@@ -32,8 +32,8 @@ YAMLScript can be used for:
 
 ## Installing `yamlscript`
 
-You can install this module from https://rubygems.org like any other Ruby library,
-but you will need to have a system install of `libyamlscript.so`.
+You can install this module from https://rubygems.org like any other Ruby
+library, but you will need to have a system install of `libyamlscript.so`.
 
 One simple way to do that is with:
 
