@@ -1,4 +1,4 @@
-BUILD_BIN := /tmp/yamlscript/bin
+BUILD_BIN ?= /tmp/yamlscript/bin
 
 COMMON := $(ROOT)/common
 
@@ -13,8 +13,8 @@ ifdef v
   export TEST_VERBOSE := 1
 endif
 
-ostype := $(shell /bin/bash -c 'echo $$OSTYPE')
-machtype := $(shell /bin/bash -c 'echo $$MACHTYPE')
+ostype := $(shell echo $${OSTYPE})
+machtype := $(shell echo $${MACHTYPE})
 
 ifneq (,$(findstring linux,$(ostype)))
   IS_LINUX := true
@@ -37,13 +37,9 @@ ifeq (0,$(shell id -u))
 endif
 endif
 
-LIBZ := false
-ifeq (true,$(IS_MACOS))
-  LIBZ := true
-else
-ifneq (,$(shell ldconfig -p | grep $$'^\tlibz.$(SO) '))
-  LIBZ := true
-endif
+LIBZ ?= $(IS_MACOS)
+ifeq (false,$(IS_MACOS))
+  LIBZ := $(shell pkg-config --exists zlib && echo true || echo false)
 endif
 
 CURL := $(shell command -v curl)
@@ -118,7 +114,7 @@ GRAALVM_PATH ?= /tmp/graalvm-ce-$(GRAALVM_VER)
 endif
 
 GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
-GRAALVM_DOWNLOAD := /tmp/$(GRAALVM_TAR)
+GRAALVM_DOWNLOAD ?= /tmp/$(GRAALVM_TAR)
 GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
 
 GRAALVM_O ?= 1
