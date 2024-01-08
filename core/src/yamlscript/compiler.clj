@@ -9,7 +9,6 @@
 ;; transformation libraries.
 
 (ns yamlscript.compiler
-  (:use yamlscript.debug)
   (:require
    [a0.patch-pprint]
    [clojure.pprint]
@@ -21,7 +20,7 @@
    [yamlscript.transformer]
    [yamlscript.constructor]
    [yamlscript.printer]
-   [yamlscript.debug :refer :all])
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [compile]))
 
 (def ^:dynamic *debug* {})
@@ -74,6 +73,7 @@
     (debug-print "print")))
 
 (comment
+  www
 ; {:do [[{:Sym a} {:Sym b}]]}
 ; (:construct {:Lst [{:Sym a} {:Sym b}]})
   (binding [*debug* stages]

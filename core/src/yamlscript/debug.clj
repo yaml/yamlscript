@@ -5,7 +5,6 @@
 
 (ns yamlscript.debug
   (:require
-   [ys.yaml :as yaml]
    [clojure.pprint :as pp]))
 
 (defn dump [o]

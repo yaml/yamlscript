@@ -33,6 +33,7 @@
 (def new-write
   (fn [object & kw-args]
     (let [options (merge {:stream true} (apply hash-map kw-args))]
+      #_:clj-kondo/ignore
       (with-bindings (new-table-ize pprint/write-option-table options)
         (with-bindings
           (if (or (not (= pprint/*print-base* 10)) pprint/*print-radix*)
@@ -49,7 +50,7 @@
                 (pprint/write-out object))
               (binding [*out* base-writer]
                 (pr object)))
-            (if (nil? optval)
+            (when (nil? optval)
               (.toString ^java.io.StringWriter base-writer))))))))
 
 (when-not @patched?

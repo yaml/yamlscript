@@ -25,11 +25,11 @@
 ;; * defn - 'defn foo(...)' -> !ysx 'defn foo [...]'
 
 (ns yamlscript.resolver
-  (:use yamlscript.debug)
   (:require
    [clojure.set :as set]
    [clojure.string :as str]
-   [yamlscript.re :as re])
+   [yamlscript.re :as re]
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [resolve]))
 
 ;; ----------------------------------------------------------------------------
@@ -126,7 +126,7 @@
             (fn [[key val]] (resolve-code-pair key val))
             (partition 2 (:% node))))})
 
-(defn resolve-code-sequence [node]
+(defn resolve-code-sequence [_]
   (throw (Exception. "Sequences (block and flow) not allowed in code mode")))
 
 (defn resolve-code-scalar [node]
@@ -253,9 +253,10 @@
       :val (resolve-bare-scalar node))))
 
 (comment
+  www
   (resolve
     #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
     {:! "yamlscript/v0", := ""}
     #__)
-  (set/rename-keys {:> 42} {:> :str}))
-  
+  (set/rename-keys {:> 42} {:> :str})
+  )

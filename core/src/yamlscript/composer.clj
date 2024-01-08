@@ -5,7 +5,8 @@
 ;; parse events into a tree of nodes.
 
 (ns yamlscript.composer
-  (:use yamlscript.debug))
+  (:require
+   [yamlscript.debug :refer [www]]))
 
 (comment
   [;
@@ -109,4 +110,6 @@
     "=VAL" (compose-scalar events)
     "=ALI" (compose-alias events)))
 
-(comment)
+(comment
+  www
+  )

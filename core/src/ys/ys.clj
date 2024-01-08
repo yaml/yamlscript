@@ -3,11 +3,13 @@
 
 (ns ys.ys
   (:require
-   [yamlscript.debug :refer [www]]
-   [yamlscript.compiler])
+   [yamlscript.compiler]
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [compile]))
 
 (defn compile [code]
   (yamlscript.compiler/compile code))
 
-(comment)
+(comment
+  www
+  )

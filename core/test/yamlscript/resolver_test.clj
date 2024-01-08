@@ -2,7 +2,7 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.resolver-test
-  (:use yamlscript.debug)
+  #_(:use yamlscript.debug)
   (:require
    [clojure.edn :as edn]
    [yamlscript.parser :as parser]

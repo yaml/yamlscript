@@ -2,7 +2,7 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.parser-test
-  (:use yamlscript.debug)
+  #_(:use yamlscript.debug)
   (:require
    [clojure.string :as str]
    [yamlscript.parser :as parser]

@@ -5,7 +5,8 @@
 ;; according to certain special rules.
 
 (ns yamlscript.transformer
-  (:use yamlscript.debug))
+  (:require
+   [yamlscript.debug :refer [www]]))
 
 (declare transform-node)
 
@@ -69,6 +70,7 @@
       ,    node)))
 
 (comment
+  www
   (->>
     {:Map
      [{:Str "my-seq"}

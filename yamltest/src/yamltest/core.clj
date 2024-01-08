@@ -5,7 +5,7 @@
 ;; used to test the YAMLScript compiler.
 
 (ns yamltest.core
-  (:use yamlscript.debug)
+  #_(:use yamlscript.debug)
   (:require
    [clojure.string :as str]
    [clojure.test :as test]

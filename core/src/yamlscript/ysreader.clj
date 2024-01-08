@@ -5,12 +5,13 @@
 ;; expression) strings into a set of Clojure AST nodes.
 
 (ns yamlscript.ysreader
-  (:use yamlscript.debug)
   (:require
    [clojure.string :as str]
    [clojure.walk :as walk]
-   [yamlscript.ast :refer :all]
-   [yamlscript.re :as re])
+   [yamlscript.ast :refer
+    [Bln Chr Int Key Lst Map Nil Spc Str Sym Tok Vec]]
+   [yamlscript.re :as re]
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [read-string resolve]))
 
 (defn is-comment? [token]
@@ -296,6 +297,7 @@
           (vec forms))))))
 
 (comment
+  www
   (read-string "1 + 2")
   (read-string
     "[\"a\" :b \\c 42 true false nil

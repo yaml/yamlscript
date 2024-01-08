@@ -6,7 +6,6 @@
 
 (ns yamlscript.cli
   (:gen-class)
-  (:import java.lang.ProcessHandle)
   (:require
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
    [yamlscript.compiler :as compiler]
@@ -302,7 +301,7 @@ Options:
 
 
 (defn do-compile [opts args]
-  (let [[code file args] (get-code opts args)]
+  (let [[code _ _ #_file #_args] (get-code opts args)]
     (-> code
       (compile-code opts)
       str/trim-newline
@@ -439,6 +438,7 @@ Options:
       :else (do-default opts args help))))
 
 (comment
+  www
   (-main)
   (-main
     "-e" "say: 123"

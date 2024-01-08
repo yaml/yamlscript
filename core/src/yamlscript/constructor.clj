@@ -5,11 +5,10 @@
 ;; into a Clojure AST.
 
 (ns yamlscript.constructor
-  (:use yamlscript.debug)
   (:require
-   [clojure.string :as str]
    [clojure.walk :as walk]
-   [yamlscript.ast :refer :all]))
+   [yamlscript.ast :refer [Lst Sym Vec]]
+   [yamlscript.debug :refer [www]]))
 
 (declare
   construct-node
@@ -152,6 +151,7 @@
       node)))
 
 (comment
+  www
   (construct
     {:ysm
      ([{:Sym 'defn} {:Sym 'foo} {:Vec [{:Sym 'x}]}]

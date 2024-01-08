@@ -8,7 +8,8 @@
 ;; - switch from snakeyaml to libfyaml (ffi)
 
 (ns yamlscript.parser
-  (:use yamlscript.debug)
+  (:require
+   [yamlscript.debug :refer [www]])
   (:import
    (java.util Optional)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -120,5 +121,6 @@
 (defmethod ys-event :default [_] nil)
 
 (comment
+  www
   (parse "a")
   )

@@ -4,7 +4,8 @@
 ;; The yamlscript.ast library defines the YAMLScript AST nodes.
 
 (ns yamlscript.ast
-  (:use yamlscript.debug)
+  (:require
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [Vec]))
 
 (defn Lst [list] {:Lst (vec list)})
@@ -44,6 +45,7 @@
   {:Nil nil})
 
 (comment
+  www
   [(Lst [1 2 3])
    (Vec [1 2 3])
    (Map [1 2 3 4 5 6])

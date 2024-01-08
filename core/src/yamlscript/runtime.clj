@@ -112,5 +112,7 @@
          env (into {} (System/getenv))]
          (sci/eval-string clj (sci-ctx)))))))
 
-  (comment
-    (eval-string "(say (inc 123))"))
+(comment
+  www
+  (eval-string "(say (inc 123))")
+  )

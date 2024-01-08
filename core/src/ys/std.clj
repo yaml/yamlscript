@@ -22,7 +22,7 @@
 (defn zzz [& xs]
   (apply yamlscript.debug/zzz xs))
 
-(defn toBoo [x] boolean x)
+(defn toBoo [x] (boolean x))
 
 (defn toFlt [x] (parse-double x))
 

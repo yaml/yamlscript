@@ -10,7 +10,7 @@
 (ns yamlscript.re
   (:require
    [clojure.string :as str]
-   [yamlscript.debug :refer :all])
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [char]))
 
 (defn re [rgx]
@@ -88,6 +88,7 @@
           ")
 
 (comment
+  www
   (def re-ysi
     (re #"(?sx)
           (?:

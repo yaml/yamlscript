@@ -2,7 +2,7 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.compiler-test
-  (:use yamlscript.debug)
+  #_(:use yamlscript.debug)
   (:require
    [yamlscript.compiler :as compiler]
    [yamltest.core :as test]))

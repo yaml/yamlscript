@@ -6,7 +6,7 @@
    [clojure.test :as test]
    [clojure.string :as str]
    [yamlscript.cli :as cli]
-   [yamlscript.test :refer :all]))
+   [yamlscript.test :refer [has is like]]))
 
 (defn ys [& args]
   (let [out (try

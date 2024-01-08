@@ -5,10 +5,11 @@
 ;; YAMLScript AST nodes.
 
 (ns yamlscript.builder
-  (:use yamlscript.debug)
   (:require
    [clojure.string :as str]
-   [yamlscript.ast :refer :all]
+   [yamlscript.debug :refer [www]]
+   [yamlscript.ast :refer
+    [Bln Flt Int Lst Map Nil Str Sym Vec]]
    [yamlscript.re :as re]
    [yamlscript.ysreader :as ysreader]))
 
@@ -97,6 +98,8 @@
       (throw (Exception. (str "Don't know how to build node: " node))))))
 
 (comment
+  www
+
   (build {:ysx ""})
 
   (re-seq #"(?:bar|.+?(?=bar|$))" "foo bar baz")

@@ -5,10 +5,10 @@
 ;; into Clojure code.
 
 (ns yamlscript.printer
-  (:use yamlscript.debug)
   (:require
    [clojure.string :as str]
-   [clojure.pprint :as pp])
+   [clojure.pprint :as pp]
+   [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [print]))
 
 (def string-escape
@@ -80,6 +80,7 @@
     code))
 
 (comment
+  www
   (print :Empty)
   (read-string "
 (defmacro each [bindings & body]
