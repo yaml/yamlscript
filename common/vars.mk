@@ -41,7 +41,7 @@ LIBZ := false
 ifeq (true,$(IS_MACOS))
   LIBZ := true
 else
-ifneq (,$(shell ldconfig -p | grep $$'^\tlibz.$(SO) '))
+ifneq (,$(shell ldconfig -p | grep $$'^\tlibz.so'))
   LIBZ := true
 endif
 endif
@@ -66,8 +66,11 @@ PREFIX ?= /usr/local
 ifneq (,$(findstring linux,$(ostype)))
   GRAALVM_SUBDIR :=
 
-  ifeq (ok,$(shell [[ $(machtype) == x86_64-*-linux* ]] && echo ok))
+  ifneq (,$(findstring x86_64,$(machtype)))
     GRAALVM_ARCH := linux-x64
+
+  else ifneq (,$(findstring aarch64,$(machtype)))
+    GRAALVM_ARCH := linux-aarch64
 
   else
     $(error Unsupported Linux MACHTYPE: $(machtype))
