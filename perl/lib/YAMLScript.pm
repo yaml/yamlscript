@@ -7,7 +7,7 @@ use FFI::CheckLib ();
 use FFI::Platypus;
 use JSON ();
 
-our $VERSION = '0.1.21';
+our $VERSION = '0.1.22';
 
 our $libyamlscript_version = '0.1.34';
 

@@ -1,5 +1,12 @@
 
 ---
+version: 0.1.22
+date:    Thu Jan 11 03:32:50 PM EST 2024
+changes:
+- Only use Alien when local libyamlscript not installed
+- Fix bug loading null
+
+---
 version: 0.1.21
 date:    Sat Dec 30 10:22:38 AM PST 2023
 changes:
