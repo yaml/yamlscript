@@ -27,8 +27,8 @@
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
   (some #(and
-           (= "clojure.main$repl" (.getClassName ^StackTraceElement %))
-           (= "doInvoke" (.getMethodName ^StackTraceElement %)))
+           (= "clojure.main$repl" (.getClassName ^StackTraceElement %1))
+           (= "doInvoke" (.getMethodName ^StackTraceElement %1)))
     (.getStackTrace (Thread/currentThread))))
 
 (defn exit [n]
@@ -81,7 +81,7 @@
    ["-m" "--mode MODE"
     "Add a mode tag: code, data, or bare (only for --eval/-e)"
     :validate
-    [#(some #{%} ["c" "code", "d" "data", "b" "bare"])
+    [#(some #{%1} ["c" "code", "d" "data", "b" "bare"])
      (str "must be one of: c, code, d, data, b or bare")]]
    ["-p" "--print"
     "Print the result of --run in code mode"]
@@ -91,7 +91,7 @@
    ["-t" "--to FORMAT"
     "Output format for --load"
     :validate
-    [#(contains? to-fmts %)
+    [#(contains? to-fmts %1)
      (str "must be one of: " (str/join ", " to-fmts))]]
 
    ["-J" "--json"
@@ -116,7 +116,7 @@
     :update-fn #(if (= "all" %2) compiler/stages (assoc %1 %2 true))
     :multi true
     :validate
-    [#(or (contains? compiler/stages %) (= % "all"))
+    [#(or (contains? compiler/stages %1) (= %1 "all"))
      (str "must be one of: "
        (str/join ", " (keys compiler/stages))
        " or all")]]
@@ -189,7 +189,7 @@ Options:
         help (str/replace help #"\{\}" "  ")
         ;; Insert blank lines in help text
         help (str/replace help #"\n  (-[comJRX])" "\n\n  $1")
-        help (str/replace help #"    ([A-Z])" #(second %))]
+        help (str/replace help #"    ([A-Z])" #(second %1))]
     (println help)))
 
 (defn add-ys-mode-tag [opts code]

@@ -37,9 +37,9 @@
     first
     val
     (map-vec
-      #(if (vector? %)
-         (map-vec transform-node %)
-         (transform-node %)))
+      #(if (vector? %1)
+         (map-vec transform-node %1)
+         (transform-node %1)))
     (hash-map :ysm)))
 
 (defn transform-list [node]

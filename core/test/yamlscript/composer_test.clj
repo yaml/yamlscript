@@ -13,7 +13,7 @@
   ["test/compiler-stack.yaml"
    "test/resolver.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :compose] %)
+  {:pick-func #(test/has-keys? [:yamlscript :compose] %1)
    :test-func (fn [test]
                 (->> test
                   :yamlscript

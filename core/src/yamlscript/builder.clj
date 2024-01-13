@@ -66,17 +66,17 @@
         parts (re-seq re-interpolated-string string)
         exprs (map
                 #(cond
-                   (re-matches (re/re #"\$$symw$bpar") %)
-                   (build-ys-expression {:ysx (subs % 1)})
+                   (re-matches (re/re #"\$$symw$bpar") %1)
+                   (build-ys-expression {:ysx (subs %1 1)})
                    ,
-                   (re-matches (re/re #"\$$symw") %)
-                   (Sym (subs % 1))
+                   (re-matches (re/re #"\$$symw") %1)
+                   (Sym (subs %1 1))
                    ,
-                   (re-matches (re/re #"\$$bpar") %)
-                   (build-ys-expression {:ysx (subs % 1)})
+                   (re-matches (re/re #"\$$bpar") %1)
+                   (build-ys-expression {:ysx (subs %1 1)})
                    ,
                    :else
-                   (Str (str/replace % #"\\(\$)" "$1")))
+                   (Str (str/replace %1 #"\\(\$)" "$1")))
                 parts)]
     (if (= 1 (count exprs))
       (first exprs)

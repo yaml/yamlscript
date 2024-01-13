@@ -104,8 +104,8 @@
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))
     (#(if (System/getenv "YS_LEX_DEBUG")
-        (www %)
-        %))))
+        (www %1)
+        %1))))
 
 (declare read-form)
 
@@ -124,7 +124,7 @@
           (some #(->> expr
                    (partition 2)
                    (map second)
-                   (apply = %))
+                   (apply = %1))
             (map Sym '[+ - * / || &&])))
       (let [op (second expr)
             op (cond
@@ -143,19 +143,19 @@
   (let [args (atom {})
         maxn (atom 0)]
     (walk/prewalk
-      #(if (map? %)
-         (let [[[key val]] (seq %)
+      #(if (map? %1)
+         (let [[[key val]] (seq %1)
                val (str val)]
            (if (and (= :Sym key) (re-matches #"_\d+" val))
              (let [n (parse-long (subs val 1))]
                (swap! args assoc n true)
                (swap! maxn max n))
-             %))
-         %)
+             %1))
+         %1)
       node)
     (map
-      #(if (get @args %)
-         (Sym (str "_" %))
+      #(if (get @args %1)
+         (Sym (str "_" %1))
          (Sym "_"))
       (range 1 (inc @maxn)))))
 
@@ -198,10 +198,10 @@
    [[value & keys] (str/split token #"\.")
     form (map
            #(cond
-              (is-number? %) (Int %)
-              (is-symbol? %) (Str %)
-              (is-string? %) (Str (normalize-string %))
-              :else (throw (Exception. (str "Invalid path token: " %))))
+              (is-number? %1) (Int %1)
+              (is-symbol? %1) (Str %1)
+              (is-string? %1) (Str (normalize-string %1))
+              :else (throw (Exception. (str "Invalid path token: " %1))))
            keys)
     form (cons (Sym '__) (cons (Sym value) form))]
     (Lst form)))
@@ -286,7 +286,7 @@
               (some #(->> forms
                        (partition 2)
                        (map second)
-                       (apply = %))
+                       (apply = %1))
                 (map Sym '[+ - * / || && .])))
           (let [op (second forms)
                 op (cond

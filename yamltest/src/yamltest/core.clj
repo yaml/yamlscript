@@ -52,10 +52,10 @@
 
 (defn reload-all []
   (->> (all-ns)
-    (filter #(re-find #"yamlscript\..*-test$" (str (ns-name %))))
+    (filter #(re-find #"yamlscript\..*-test$" (str (ns-name %1))))
     (map ns-name)
     sort
-    (#(doseq [ns %]
+    (#(doseq [ns %1]
         (println (str "Reloading " ns))
         (try
           (require ns :reload)
@@ -69,7 +69,7 @@
         (->> ns
           ns-publics
           keys
-          (filter #(re-matches #"test-.*-\d+" (str %)))
+          (filter #(re-matches #"test-.*-\d+" (str %1)))
           sort)]
     (doseq [test tests]
       (let [label (:name (meta test))]
@@ -99,13 +99,13 @@
 (defmacro run [& opts]
   (let [want (->> opts
                (filter pos-int?)
-               (map #(str "test-" %))
+               (map #(str "test-" %1))
                vec)
 
         opts (->> opts
                (filter keyword?)
-               (map #(or (get short-keys %) %))
-               (#(zipmap % (repeat true))))
+               (map #(or (get short-keys %1) %1))
+               (#(zipmap %1 (repeat true))))
 
         opts (merge @test-opts opts)
 
@@ -115,12 +115,12 @@
                 []
                 (if (seq want)
                   (->> want
-                    (map #(ns-resolve ns (symbol %)))
+                    (map #(ns-resolve ns (symbol %1)))
                     (remove nil?)
                     vec)
                   (->> ns
                     ns-interns
-                    (filter #(re-matches #"test-.*-\d+" (str (first %))))
+                    (filter #(re-matches #"test-.*-\d+" (str (first %1))))
                     (sort-by first)
                     (map second)
                     vec)))]
@@ -158,8 +158,8 @@
   (->> ns
     ns-publics
     keys
-    (filter #(re-matches #"test-.*-\d+" (str %)))
-    (map #(ns-unmap ns %))
+    (filter #(re-matches #"test-.*-\d+" (str %1)))
+    (map #(ns-unmap ns %1))
     vec))
 
 (defmacro remove-tests []
@@ -203,6 +203,6 @@
 
 ;; ----------------------------------------------------------------------------
 (defn has-keys? [keys map]
-  (every? #(contains? map %) keys))
+  (every? #(contains? map %1) keys))
 
 (comment)

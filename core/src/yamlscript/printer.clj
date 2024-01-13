@@ -40,9 +40,9 @@
              (str/join ", " (->> val
                               (partition 2)
                               (map #(str
-                                      (print-node (first %))
+                                      (print-node (first %1))
                                       " "
-                                      (print-node (second %))))))
+                                      (print-node (second %1))))))
              "}")
       :Str (str \" (pr-string val) \")
       :Chr (str "\\" val)
@@ -60,11 +60,11 @@
 
 (defn pretty-format [code]
   (->> code
-    (#(str "(do " % "\n)\n"))
+    (#(str "(do " %1 "\n)\n"))
     read-string
     rest
     (map #(str
-            (with-out-str (pp/write %))
+            (with-out-str (pp/write %1))
             "\n"))
     (str/join "")))
 

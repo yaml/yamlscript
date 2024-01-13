@@ -40,8 +40,8 @@
       (io/resource "SCI_VERSION")
       slurp
       str/trim-newline
-      (#(str/split % #"\."))
-      (map #(if (re-matches #"\d+" %) (parse-long %) %))
+      (#(str/split %1 #"\."))
+      (map #(if (re-matches #"\d+" %1) (parse-long %1) %1))
       (zipmap [:major :minor :incremental :qualifier]))))
 
 (defn clojure-core-vars []
@@ -53,7 +53,7 @@
               'slurp (sci/copy-var clojure.core/slurp nil)
               'spit (sci/copy-var clojure.core/spit nil)}
         std (ns-publics 'ys.std)
-        std (update-vals std #(sci/copy-var* % nil))]
+        std (update-vals std #(sci/copy-var* %1 nil))]
     (merge core std)))
 
 (defn sci-ctx []
@@ -81,7 +81,7 @@
   ([file path]
    (let [data (ys-load file)
          path
-         (map #(if (re-matches #"\d+" %) (parse-long %) %)
+         (map #(if (re-matches #"\d+" %1) (parse-long %1) %1)
            (str/split path #"\."))]
      (get-in data path))))
 
@@ -107,7 +107,7 @@
         [sci/file file
         ;; XXX - This is a temporary hack to make numeric args into longs.
          argv (vec
-                (map #(if (re-matches #"\d+" %) (parse-long %) %)
+                (map #(if (re-matches #"\d+" %1) (parse-long %1) %1)
                   args))
          env (into {} (System/getenv))]
          (sci/eval-string clj (sci-ctx)))))))

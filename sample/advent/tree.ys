@@ -7,7 +7,7 @@ defn main(&[width]):
 defn tree(width):
   top =:
     join "\n":
-      mapv \(line width, %): width..1
+      mapv \(line width, %1): width..1
 
   trunk =: trunk(width) * 2
 
@@ -18,7 +18,7 @@ defn trunk(num):
 
 defn line(width, num):
   # stars is a lexically defined function
-  stars =: \(inc(%) * "*")
+  stars =: \(inc(%1) * "*")
 
   join "":
     spaces: num

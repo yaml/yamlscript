@@ -7,7 +7,6 @@
 (ns yamlscript.composer
   (:require
    [yamlscript.debug :refer [www]]))
-
 (comment
   [;
    :%  ; block mapping

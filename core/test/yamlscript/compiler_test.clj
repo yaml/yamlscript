@@ -10,7 +10,7 @@
 (test/load-yaml-test-files
   ["test/compiler.yaml"
    "test/compiler-stack.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :clojure] %)
+  {:pick-func #(test/has-keys? [:yamlscript :clojure] %1)
    :test-func (fn [test]
                 (->> test
                   :yamlscript

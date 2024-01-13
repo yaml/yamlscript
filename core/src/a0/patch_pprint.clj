@@ -19,7 +19,7 @@
   (fn [t m]
     (apply hash-map
       (mapcat
-        #(when-let [v (get t (key %))] [v (val %)])
+        #(when-let [v (get t (key %1))] [v (val %1)])
         m))))
 
 (when-not @patched?

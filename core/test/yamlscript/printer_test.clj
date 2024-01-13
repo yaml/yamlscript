@@ -17,7 +17,7 @@
   ["test/compiler-stack.yaml"
    "test/data-mode.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :print] %)
+  {:pick-func #(test/has-keys? [:yamlscript :print] %1)
    :test-func (fn [test]
                 (->> test
                   :yamlscript

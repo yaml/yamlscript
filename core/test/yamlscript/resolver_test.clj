@@ -15,7 +15,7 @@
    "test/data-mode.yaml"
    "test/resolver.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :resolve] %)
+  {:pick-func #(test/has-keys? [:yamlscript :resolve] %1)
    :test-func (fn [test]
                 (try
                   (->> test
