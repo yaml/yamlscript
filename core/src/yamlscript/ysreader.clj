@@ -168,7 +168,7 @@
     (if (= (first tokens) ")")
       (let [form (yes-expr list)
             args (lambda-arg-list form)
-            expr (Lst [(Sym 'fn) (Vec args) (Lst form)])]
+            expr (Lst [(Sym 'fn) (Vec [(Sym "&")(Vec args)]) (Lst form)])]
         [expr (rest tokens)])
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
