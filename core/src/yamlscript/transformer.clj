@@ -57,7 +57,7 @@
           (:Map node))})
 
 (defn transform-sym [node]
-  (let [sym (str node)]
+  (let [sym (str (:Sym node))]
     (when (= sym "%")
       (throw (Exception. "Invalid symbol '%'. Did you mean '%1'?")))
     node))
