@@ -213,7 +213,10 @@
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
     (is-narg? token) (let [n (subs token 1)
-                           n (if (empty? n) 1 (parse-long n))
+                           n (if (empty? n)
+                               (throw (Exception.
+                                        "% argument not supported, use %1"))
+                               (parse-long n))
                            _ (when (or (<= n 0) (> n 20))
                                (throw (Exception.
                                         (str "Invalid numbered argument: "
