@@ -493,5 +493,5 @@
   yamlscript: |
     !yamlscript/v0
     =>: \(inc(%) * 2)
-  error: |-
-    Invalid symbol '%'. Did you mean '%1'?
+  error: |
+    ~~ Invalid symbol '%'. Did you mean '%1'?
