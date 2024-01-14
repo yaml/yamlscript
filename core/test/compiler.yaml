@@ -325,7 +325,7 @@
     (ys.std/say ys)
 
 
-- name: Lambda function
+- name: Anonymous function
   yamlscript: |
     !yamlscript/v0
     foo =: \(%1 + %4)
@@ -342,7 +342,7 @@
     (def foo (fn [& [_1 _ _ _4]] (_+ _1 _4)))
 
 
-- name: Lambda function 2
+- name: Anonymous function 2
   yamlscript: |
     !yamlscript/v0
     map: \(str ((%1 / %3) + %2)) (1 .. 3)
@@ -408,7 +408,7 @@
        (join (map ((fn [& [_1]] (line width _1)) (rng width 1))))]))
 
 
-- name: Star operator in lambda
+- name: Star operator in anonymous function
   yamlscript: |
     !yamlscript/v0
     say: \(inc(%1) * 2)
@@ -471,3 +471,19 @@
   clojure: |
     (def nums [1 2 3])
     {"foo" nums}
+
+
+- name: rem operator
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a % b)
+  clojure: |
+    (rem a b)
+
+
+- name: mod operator
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a %% b)
+  clojure: |
+    (mod a b)

@@ -78,14 +78,14 @@
       $path |                   # Lookup path
       $lnum |                   # Number token
       $symb |                   # Symbol token
+      $narg |                   # Numbered argument token
       $oper |                   # Operator token
       $char |                   # Character token
-      $lamb |                   # Lambda start token
-      $narg |                   # Numbered argument token
+      $anon |                   # Anonymous fn start token
                               # Reader macros
       \#\_ |                    # Ignore next form
       \#\' |                    # Var
-      \#\( |                    # Lambda
+      \#\( |                    # Anonymous fn
       \#\{ |                    # HashSet
       \#\? |                    # Reader conditional
       ; |
@@ -117,6 +117,8 @@
                    (= op (Sym '..)) (Sym 'rng)
                    (= op (Sym '||)) (Sym 'or)
                    (= op (Sym '&&)) (Sym 'and)
+                   (= op (Sym '%))  (Sym 'rem)
+                   (= op (Sym '%%)) (Sym 'mod)
                    :else op)]
           [op a b])
         expr))
@@ -139,7 +141,7 @@
           (cons op)))
       expr)))
 
-(defn lambda-arg-list [node]
+(defn anon-fn-arg-list [node]
   (let [args (atom {})
         maxn (atom 0)]
     (walk/prewalk
@@ -159,7 +161,7 @@
          (Sym "_"))
       (range 1 (inc @maxn)))))
 
-(defn read-lambda [[_ & tokens]]
+(defn read-anon-fn [[_ & tokens]]
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
@@ -167,7 +169,7 @@
 
     (if (= (first tokens) ")")
       (let [form (yes-expr list)
-            args (lambda-arg-list form)
+            args (anon-fn-arg-list form)
             expr (Lst [(Sym 'fn) (Vec [(Sym "&")(Vec args)]) (Lst form)])]
         [expr (rest tokens)])
       (let [[form tokens] (read-form tokens)]
@@ -213,10 +215,7 @@
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
     (is-narg? token) (let [n (subs token 1)
-                           n (if (empty? n)
-                               (throw (Exception.
-                                        "% argument not supported, use %1"))
-                               (parse-long n))
+                           n (parse-long n)
                            _ (when (or (<= n 0) (> n 20))
                                (throw (Exception.
                                         (str "Invalid numbered argument: "
@@ -252,7 +251,7 @@
             ["(" (conj (rest tokens) sym "(")])
           [token tokens])]
     (case token
-      "\\(" (read-lambda tokens)
+      "\\(" (read-anon-fn tokens)
       "(" (read-list tokens Lst ")")
       "[" (read-list tokens Vec "]")
       "{" (read-list tokens Map "}")
