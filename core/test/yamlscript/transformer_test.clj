@@ -15,16 +15,16 @@
 (test/load-yaml-test-files
   ["test/compiler-stack.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :transform] %1)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose
-                  resolver/resolve
-                  builder/build
-                  transformer/transform))
-   :want-func (fn [test]
-                (->> test
-                  :transform
-                  edn/read-string))})
+  {:pick #(test/has-keys? [:yamlscript :transform] %1)
+   :test (fn [test]
+           (->> test
+             :yamlscript
+             parser/parse
+             composer/compose
+             resolver/resolve
+             builder/build
+             transformer/transform))
+   :want (fn [test]
+           (->> test
+             :transform
+             edn/read-string))})

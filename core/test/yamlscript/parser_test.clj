@@ -12,14 +12,14 @@
   ["test/compiler-stack.yaml"
    "test/resolver.yaml"
    "test/data-mode.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :parse] %1)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  (map pr-str)
-                  (map #(subs %1 4 (dec (count %1))))))
-   :want-func (fn [test]
-                (->> test
-                  :parse
-                  str/split-lines))})
+  {:pick #(test/has-keys? [:yamlscript :parse] %1)
+   :test (fn [test]
+           (->> test
+             :yamlscript
+             parser/parse
+             (map pr-str)
+             (map #(subs %1 4 (dec (count %1))))))
+   :want (fn [test]
+           (->> test
+             :parse
+             str/split-lines))})

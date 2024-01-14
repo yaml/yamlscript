@@ -17,17 +17,15 @@
   ["test/compiler-stack.yaml"
    "test/data-mode.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :print] %1)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose
-                  resolver/resolve
-                  builder/build
-                  transformer/transform
-                  constructor/construct
-                  printer/print))
-   :want-func (fn [test]
-                (->> test
-                  :print))})
+  {:pick #(test/has-keys? [:yamlscript :print] %1)
+   :test (fn [test]
+           (->> test
+             :yamlscript
+             parser/parse
+             composer/compose
+             resolver/resolve
+             builder/build
+             transformer/transform
+             constructor/construct
+             printer/print))
+   :want :print})

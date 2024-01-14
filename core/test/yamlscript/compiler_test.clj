@@ -10,26 +10,24 @@
 (test/load-yaml-test-files
   ["test/compiler.yaml"
    "test/compiler-stack.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :clojure] %1)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  compiler/compile))
-   :want-func (fn [test]
-                (:clojure test))})
+  {:pick #(test/has-keys? [:yamlscript :clojure] %1)
+   :test (fn [test]
+           (->> test
+             :yamlscript
+             compiler/compile))
+   :want :clojure})
 
 (test/load-yaml-test-files
   ["test/compiler.yaml"
    "test/compiler-stack.yaml"]
   {:add-tests true
-   :pick-func #(test/has-keys? [:yamlscript :error] %1)
-   :test-func (fn [test]
-                (try
-                  (->> test
-                    :yamlscript
-                    compiler/compile)
-                  ""
-                  (catch Exception e
-                    (:cause (Throwable->map e)))))
-   :want-func (fn [test]
-                (:error test))})
+   :pick #(test/has-keys? [:yamlscript :error] %1)
+   :test (fn [test]
+           (try
+             (->> test
+               :yamlscript
+               compiler/compile)
+             ""
+             (catch Exception e
+               (:cause (Throwable->map e)))))
+   :want :error})

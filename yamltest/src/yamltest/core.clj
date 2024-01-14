@@ -133,7 +133,7 @@
            (str "No tests found to run. (" ~ns ")"))))))
 
 ;; ----------------------------------------------------------------------------
-(defn read-tests [file pick-func]
+(defn read-tests [file pick]
   (let [tests (->> file
                 slurp
                 yaml/parse-string
@@ -144,7 +144,7 @@
                 (filter :ONLY tests)
                 tests)
         tests (->> tests
-                (filter pick-func))]
+                (filter pick))]
     tests))
 
 (defn add-test-to-ns [ns sym testfn]
@@ -173,10 +173,11 @@
     (fn [file]
       (let [conf (assoc conf :yaml-file file)
             {:keys [yaml-file
-                    pick-func
-                    test-func
-                    want-func]} conf
-            tests (read-tests yaml-file pick-func)
+                    pick
+                    test
+                    want]} conf
+            test-fn test
+            tests (read-tests yaml-file pick)
             only (vec (filter :ONLY tests))
             tests (if (seq only)
                     (do (do-remove-tests ns) only)
@@ -193,8 +194,8 @@
               (fn []
                 (when (:verbose @test-opts)
                   (println (str "* " test-name " - " (:name test))))
-                (let [got (test-func test)
-                      want (want-func test)]
+                (let [got (test-fn test)
+                      want (want test)]
                   (cond
                     (and (string? want) (re-find #"^=~\s*" want))
                     (let [want (str/replace want #"^=~\s*" "")

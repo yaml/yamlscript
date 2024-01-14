@@ -15,19 +15,19 @@
    "test/data-mode.yaml"
    "test/resolver.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :resolve] %1)
-   :test-func (fn [test]
-                (try
-                  (->> test
-                    :yamlscript
-                    parser/parse
-                    composer/compose
-                    resolver/resolve)
-                  (catch Exception e
-                    (if (:error test)
-                      (.getMessage e)
-                      (throw e)))))
-   :want-func (fn [test]
-                (->> test
-                  :resolve
-                  edn/read-string))})
+  {:pick #(test/has-keys? [:yamlscript :resolve] %1)
+   :test (fn [test]
+           (try
+             (->> test
+               :yamlscript
+               parser/parse
+               composer/compose
+               resolver/resolve)
+             (catch Exception e
+               (if (:error test)
+                 (.getMessage e)
+                 (throw e)))))
+   :want (fn [test]
+           (->> test
+             :resolve
+             edn/read-string))})

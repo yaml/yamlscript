@@ -15,15 +15,15 @@
   ["test/compiler-stack.yaml"
    "test/data-mode.yaml"
    "test/compiler.yaml"]
-  {:pick-func #(test/has-keys? [:yamlscript :build] %1)
-   :test-func (fn [test]
-                (->> test
-                  :yamlscript
-                  parser/parse
-                  composer/compose
-                  resolver/resolve
-                  builder/build))
-   :want-func (fn [test]
-                (->> test
-                  :build
-                  edn/read-string))})
+  {:pick #(test/has-keys? [:yamlscript :build] %1)
+   :test (fn [test]
+           (->> test
+             :yamlscript
+             parser/parse
+             composer/compose
+             resolver/resolve
+             builder/build))
+   :want (fn [test]
+           (->> test
+             :build
+             edn/read-string))})
