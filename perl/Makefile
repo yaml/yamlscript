@@ -12,7 +12,7 @@ ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
 
 #------------------------------------------------------------------------------
 test::
-	prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
+	prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
 test-alien: $(ALIEN_BLIB_LIB)
 	LD_LIBRARY_PATH= \
