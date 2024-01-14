@@ -56,9 +56,13 @@
           transform-node
           (:Map node))})
 
+(defn transform-sym [node]
+  (let [sym (str node)]
+    (when (= sym "%")
+      (throw (Exception. "Invalid symbol '%'. Did you mean '%1'?")))
+    node))
+
 ; TODO:
-; Change def to let if not in top level.
-; Collapse multiple consecutive lets into one.
 ; Turn :ysm mappings into :ysg groups when appropriate.
 
 (defn transform-node [node]
@@ -67,6 +71,7 @@
       :ysm (transform-ysm node)
       :Lst (transform-list node)
       :Map (transform-map node)
+      :Sym (transform-sym node)
       ,    node)))
 
 (comment

@@ -47,10 +47,7 @@
       :Str (str \" (pr-string val) \")
       :Chr (str "\\" val)
       :Spc (str/replace val #"::" ".")
-      :Sym (do
-             (when (= (str val) "%")
-               (throw (Exception. "Invalid symbol '%'. Did you mean '%1'?")))
-             (str val))
+      :Sym (str val)
       :Tok (str val)
       :Key (str val)
       :Int (str val)
