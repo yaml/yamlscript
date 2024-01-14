@@ -167,11 +167,15 @@
 
 (defn do-load-yaml-test-files
   [ns files conf]
-  (do-remove-tests ns)
+  (when-not (contains? conf :add-tests)
+    (do-remove-tests ns))
   (some
     (fn [file]
       (let [conf (assoc conf :yaml-file file)
-            {:keys [yaml-file pick-func test-func want-func]} conf
+            {:keys [yaml-file
+                    pick-func
+                    test-func
+                    want-func]} conf
             tests (read-tests yaml-file pick-func)
             only (vec (filter :ONLY tests))
             tests (if (seq only)
@@ -191,7 +195,19 @@
                   (println (str "* " test-name " - " (:name test))))
                 (let [got (test-func test)
                       want (want-func test)]
-                  (test/is (= want got)))))))
+                  (cond
+                    (and (string? want) (re-find #"^=~\s*" want))
+                    (let [want (str/replace want #"^=~\s*" "")
+                          want (str/trim-newline want)]
+                      (test/is (re-find (re-pattern want) got)))
+                    ,
+                    (and (string? want) (re-find #"^~~\s*" want))
+                    (let [want (str/replace want #"^~~\s*" "")
+                          want (str/trim-newline want)]
+                      (test/is (str/includes? got want)))
+                    ,
+                    :else
+                    (test/is (= want got))))))))
         (when (seq only)
           (let [note (str "Note: ONLY is set in " yaml-file)]
             (println note)

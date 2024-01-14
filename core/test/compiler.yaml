@@ -487,3 +487,11 @@
     =>: (a %% b)
   clojure: |
     (mod a b)
+
+
+- name: Error on % in anonymous function
+  yamlscript: |
+    !yamlscript/v0
+    =>: \(inc(%) * 2)
+  error: |-
+    Invalid symbol '%'. Did you mean '%1'?
