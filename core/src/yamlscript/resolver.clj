@@ -29,6 +29,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [yamlscript.re :as re]
+   [yamlscript.util :refer [when-let*]]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [resolve]))
 
@@ -66,13 +67,20 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for code mode:
 ;; ----------------------------------------------------------------------------
+(defn tag-str [[key val]]
+  (when-let*
+    [str (:ysi key)
+     _ (= "" (:ysx val))]
+    [{:str str} {:str ""}]
+  ))
+
 (defn tag-def [[key val]]
-  (let [key (:ysx key)
-        old key
-        rgx (re/re #"^($symw) +=$")
-        key (str/replace key rgx "def $1")]
+  (when-let*
+    [key (:ysx key)
+     old key
+     rgx (re/re #"^($symw) +=$")
+     key (str/replace key rgx "def $1")]
     (when (not= old key)
-      ; [{:def key} val])))
       [{:ysx key} val])))
 
 (defn tag-defn [[key val]]
@@ -99,7 +107,7 @@
 ;; ----------------------------------------------------------------------------
 (defn resolve-mode-swap [key val]
   (let [key-text (:= key)
-        [key val] (if (re-find #":$" key-text)
+        [key val] (if (and key-text (re-find #":$" key-text))
                     (let [key (assoc key
                                 :=
                                 (str/replace key-text #"\s*:$" ""))
@@ -113,6 +121,7 @@
         pair [(resolve-code-node key)
               (resolve-code-node val)]]
     ((some-fn
+       tag-str
        tag-def
        tag-defn
        tag-ysx

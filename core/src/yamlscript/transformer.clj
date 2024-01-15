@@ -42,7 +42,8 @@
          (map-vec transform-node %1)
          (transform-node %1)))
     (hash-map :ysm)
-    ymac/defn-docstring))
+    ymac/defn-docstring
+    ymac/defn-docstring-arrow))
 
 (defn transform-list [node]
   (or

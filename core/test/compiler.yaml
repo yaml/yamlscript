@@ -515,8 +515,7 @@
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      "This is a doc string": 1
+      "This is a doc string":
       say: "Hello World"
   clojure: |
     (defn foo "This is a doc string" [] (say "Hello World"))
-  SKIP: true
