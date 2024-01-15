@@ -18,8 +18,15 @@
         ~else)
      then)))
 
-(defn defn-docstring [node]
-  (if-let*
+(defmacro when-let*
+  ([bindings & body]
+   (if (seq bindings)
+     `(when-let [~(first bindings) ~(second bindings)]
+        (when-let* ~(drop 2 bindings) ~@body))
+     `(do ~@body))))
+
+(defn is-defn [node]
+  (when-let*
     [pair (:ysm node)
      _ (= 2 (count pair))
      [key val] pair
@@ -29,15 +36,20 @@
      _ (= 'defn (:Sym key1))
      _ (:Sym key2)
      _ (:Vec key3)
-     val (:ysm val)
-     _ (vector? val)
-     [arrow doc-string & val] val
+     body (:ysm val)
+     _ (vector? body)]
+    [[key1 key2 key3] body]))
+
+(defn defn-docstring [node]
+  (if-let*
+    [[[key1 key2 key3]
+      [arrow doc-string & body]] (is-defn node)
      _ (= '=> (:Sym arrow))
      _ (:Str doc-string)]
 
     {:ysm
      [[key1 key2 doc-string key3]
-      {:ysm val}]}
+      {:ysm body}]}
 
     node))
 
