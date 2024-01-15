@@ -6,6 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
+   [yamlscript.macros :as ymac]
    [yamlscript.debug :refer [www]]))
 
 (declare transform-node)
@@ -40,7 +41,8 @@
       #(if (vector? %1)
          (map-vec transform-node %1)
          (transform-node %1)))
-    (hash-map :ysm)))
+    (hash-map :ysm)
+    ymac/defn-docstring))
 
 (defn transform-list [node]
   (or

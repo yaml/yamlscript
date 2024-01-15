@@ -495,3 +495,17 @@
     =>: \(inc(%) * 2)
   error: |
     ~~ Invalid symbol '%'. Did you mean '%1'?
+
+
+- name: Support doc string in defn
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      =>: "This is a doc string"
+      say: "Hello World"
+  transform: |
+    {:ysm
+     [[{:Sym defn} {:Sym foo} {:Str "This is a doc string"} {:Vec []}]
+      {:ysm ({:Sym say} {:Str "Hello World"})}]}
+  clojure: |
+    (defn foo "This is a doc string" [] (say "Hello World"))
