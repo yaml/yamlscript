@@ -509,3 +509,14 @@
       {:ysm ({:Sym say} {:Str "Hello World"})}]}
   clojure: |
     (defn foo "This is a doc string" [] (say "Hello World"))
+
+
+- name: Support doc string as key
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      "This is a doc string": 1
+      say: "Hello World"
+  clojure: |
+    (defn foo "This is a doc string" [] (say "Hello World"))
+  SKIP: true

@@ -6,27 +6,39 @@
 
 (ns yamlscript.macros
   (:require
-   [clojure.string :as str]
    [yamlscript.debug :refer [www]]))
 
+(defmacro if-let*
+  ([bindings then]
+   `(if-let* ~bindings ~then nil))
+  ([bindings then else]
+   (if (seq bindings)
+     `(if-let [~(first bindings) ~(second bindings)]
+        (if-let* ~(drop 2 bindings) ~then ~else)
+        ~else)
+     then)))
+
 (defn defn-docstring [node]
-  (if-let
-   [new-node
-    (when-let [ysm (get-in node [:ysm])]
-      (when-let [[key val] (and (= 2 (count ysm)) ysm)]
-        (when (and
-                (= 'defn (get-in key [0 :Sym]))
-                (get-in key [1 :Sym])
-                (get-in key [2 :Vec]))
-          (when-let [doc-string (and
-                                  (= '=> (get-in val [:ysm 0 :Sym]))
-                                  (get-in val [:ysm 1 :Str]))]
-            (let [[a b c] key
-                  node (update-in node [:ysm 1 :ysm] #(drop 2 %1))
-                  node (update-in node [:ysm 0]
-                         (fn [_] [a b {:Str doc-string} c]))]
-              node)))))]
-    new-node
+  (if-let*
+    [pair (:ysm node)
+     _ (= 2 (count pair))
+     [key val] pair
+     _ (vector? key)
+     _ (map? val)
+     [key1 key2 key3] key
+     _ (= 'defn (:Sym key1))
+     _ (:Sym key2)
+     _ (:Vec key3)
+     val (:ysm val)
+     _ (vector? val)
+     [arrow doc-string & val] val
+     _ (= '=> (:Sym arrow))
+     _ (:Str doc-string)]
+
+    {:ysm
+     [[key1 key2 doc-string key3]
+      {:ysm val}]}
+
     node))
 
 (comment
