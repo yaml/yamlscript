@@ -519,3 +519,11 @@
       say: "Hello World"
   clojure: |
     (defn foo "This is a doc string" [] (say "Hello World"))
+
+
+- name: Error on `a+b`
+  yamlscript: |
+    !yamlscript/v0
+    =>: a+b
+  error: |-
+    Invalid symbol: 'a+b'

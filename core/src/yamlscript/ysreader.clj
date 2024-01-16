@@ -47,6 +47,9 @@
 (defn is-unquote-splice? [token]
   (and token (= "~@" (str token))))
 
+(defn is-clojure-symbol? [token]
+  (and token (re-matches re/csym (str token))))
+
 (defn is-string? [token]
   (and token (re-matches re/strg (str token))))
 
@@ -77,7 +80,7 @@
       $nspc |                   # Namespace symbol
       $path |                   # Lookup path
       $lnum |                   # Number token
-      $symb |                   # Symbol token
+      $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $oper |                   # Operator token
       $char |                   # Character token
@@ -236,6 +239,9 @@
       [(Sym sym) tokens])
     ,
     (is-symbol? token) [(Sym token) tokens]
+    (is-clojure-symbol? token)
+    (throw (Exception. (str "Invalid symbol: '" token "'")))
+    ,
     (is-namespace? token) [(Spc token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 
