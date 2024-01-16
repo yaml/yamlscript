@@ -1,0 +1,2 @@
+{:lint-as {yamlscript.util/when-let* clojure.core/let}}
+

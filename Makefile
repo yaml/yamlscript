@@ -118,7 +118,7 @@ distclean: realclean $(DISTCLEAN)
 	$(RM) -r bin/ lib/
 distclean-%: %
 	$(MAKE) -C $< distclean
-	$(RM) -r .calva/ .clj-kondo/ .lsp/
+	$(RM) -r .calva/ .clj-kondo/cache .lsp/
 
 sysclean: realclean
 	$(RM) -r ~/.m2/ /tmp/graalvm* /tmp/yamlscript/
