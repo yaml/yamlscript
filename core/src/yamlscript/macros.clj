@@ -9,7 +9,9 @@
    [yamlscript.util :refer [if-let* when-let*]]
    [yamlscript.debug :refer [www]]))
 
-(defn is-defn [node]
+;; XXX Figure out how to make this work with clj-kondo config file.
+#_:clj-kondo/ignore
+(defn ysm-is-defn [node]
   (when-let*
     [pair (:ysm node)
      _ (= 2 (count pair))
@@ -22,29 +24,46 @@
      _ (:Vec key3)
      body (:ysm val)
      _ (vector? body)]
+
     [[key1 key2 key3] body]))
 
-(defn defn-docstring [node]
-  (if-let*
+#_:clj-kondo/ignore
+(defn ysm-defn-docstring [node]
+  (when-let*
     [[[key1 key2 key3]
-      [doc-string empty & body]] (is-defn node)
+      [doc-string empty & body]] (ysm-is-defn node)
      _ (:Str doc-string)
      _ (= "" (:Str empty))]
+
     {:ysm
      [[key1 key2 doc-string key3]
-      {:ysm body}]}
-    node))
+      {:ysm body}]}))
 
-(defn defn-docstring-arrow [node]
-  (if-let*
+#_:clj-kondo/ignore
+(defn ysm-defn-docstring-arrow [node]
+  (when-let*
     [[[key1 key2 key3]
-      [arrow doc-string & body]] (is-defn node)
+      [arrow doc-string & body]] (ysm-is-defn node)
      _ (= '=> (:Sym arrow))
      _ (:Str doc-string)]
+
     {:ysm
      [[key1 key2 doc-string key3]
-      {:ysm body}]}
-    node))
+      {:ysm body}]}))
+
+(def macros-by-tag
+  {:ysm
+   [ysm-defn-docstring
+    ysm-defn-docstring-arrow]})
+
+(defn apply-macros [tag node]
+  (let
+   [macro-list (get macros-by-tag tag)]
+    (reduce
+      (fn [node macro]
+        (or (macro node) node))
+      node
+      macro-list)))
 
 (comment
   www)
