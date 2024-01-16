@@ -71,8 +71,7 @@
   (when-let*
     [str (:ysi key)
      _ (= "" (:ysx val))]
-    [{:str str} {:str ""}]
-  ))
+    [{:str str} {:str ""}]))
 
 (defn tag-def [[key val]]
   (when-let*

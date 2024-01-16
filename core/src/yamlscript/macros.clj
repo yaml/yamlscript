@@ -6,11 +6,9 @@
 
 (ns yamlscript.macros
   (:require
-   [yamlscript.util :refer [if-let* when-let*]]
+   [yamlscript.util :refer [when-let*]]
    [yamlscript.debug :refer [www]]))
 
-;; XXX Figure out how to make this work with clj-kondo config file.
-#_:clj-kondo/ignore
 (defn ysm-is-defn [node]
   (when-let*
     [pair (:ysm node)
@@ -27,7 +25,6 @@
 
     [[key1 key2 key3] body]))
 
-#_:clj-kondo/ignore
 (defn ysm-defn-docstring [node]
   (when-let*
     [[[key1 key2 key3]
@@ -39,7 +36,6 @@
      [[key1 key2 doc-string key3]
       {:ysm body}]}))
 
-#_:clj-kondo/ignore
 (defn ysm-defn-docstring-arrow [node]
   (when-let*
     [[[key1 key2 key3]
