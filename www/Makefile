@@ -5,15 +5,13 @@ build:: node_modules main
 ifdef DOCKERENV
 	source ~/.bashrc && yarn build
 else
-	$(call check-yarn)
 	yarn build
 endif
-	cp src/install-* build/
+	cp src/install* build/
 	cp src/blog-redirect-html build/posts/index.html
 	cp src/advent-redirect-html build/posts/advent-2023/index.html
 
 serve:: build
-	$(call check-yarn)
 	yarn dev
 
 site:: build gh-pages
@@ -29,7 +27,8 @@ test::
 
 clean::
 	[[ -h node_modules ]] && $(RM) node_modules || true
-	$(RM) -r build/ gh-pages/ main/
+	$(RM) -r build/ gh-pages/
+	$(RM) main
 	$(RM) yamlscript-1920x1080.png
 
 distclean::
@@ -39,14 +38,14 @@ node_modules: package.json
 ifdef DOCKERENV
 	ln -s /$@ $@
 else
-	$(call check-yarn)
 	yarn install
 endif
 
 main:
-	git worktree add -f $@
+	ln -s .. main
 
 gh-pages:
+	git branch --track $@ origin/$@ 2>/dev/null || true
 	git worktree prune
 	git worktree add $@
 
@@ -72,9 +71,3 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-deps-node.dockerfile \
 	  $</docker-apt-dev.dockerfile \
 		> $@
-
-define check-yarn
-ifeq (,$(shell command -v yarn))
-  $(error "yarn is not available please install yarn")
-endif
-endef

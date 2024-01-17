@@ -187,7 +187,7 @@ But you also need to install the `libyamlscript` shared library.
 You can do that with:
 
 ```sh
-curl -s https://yamlscript.org/install-libyamlscript | bash
+curl https://yamlscript.org/install | bash
 ```
 
 That will install the latest version of `libyamlscript` for your platform in
@@ -197,7 +197,7 @@ You'll need to have root access to do this.
 If you want to install it somewhere else, you can set the `PREFIX` option:
 
 ```sh
-curl -s https://yamlscript.org/install-libyamlscript | PREFIX=~/ys bash
+curl https://yamlscript.org/install | PREFIX=~/ys bash
 ```
 
 But then you'll need to set the `LD_LIBRARY_PATH` environment variable to point

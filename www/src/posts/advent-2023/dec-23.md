@@ -119,7 +119,7 @@ currently requires that you install `libyamlscript.so` yourself.
 You can do this easily with:
 
 ```bash
-$ curl -s https://yamlscript.org/install-libyamlscript | bash
+$ curl https://yamlscript.org/install | bash
 ```
 
 Remember that this installs to `/usr/local/lib` by default, so you'll need to

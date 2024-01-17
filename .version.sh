@@ -6,6 +6,8 @@ v_python=0.1.5
 v_raku=0.1.0
 v_rust=0.1.2
 
+# add ReadMe.md and www/src/index.md to this list
+
 api_files=(
   .profile
   Meta

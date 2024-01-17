@@ -38,7 +38,7 @@ but you will need to have a system install of `libyamlscript.so`.
 One simple way to do that is with:
 
 ```
-curl https://yamlscript.org/install-libyamlscript | sudo bash
+curl https://yamlscript.org/install | sudo bash
 ```
 
 See: https://github.com/yaml/yamlscript for more info

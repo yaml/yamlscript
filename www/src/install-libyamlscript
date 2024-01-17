@@ -1,32 +1,13 @@
 #!/usr/bin/env bash
 
-[[ ${X-} == 1 ]] && set -x
+cat <<...
 
-set -e -u -o pipefail
+--------------------------------------------------------------------------------
+ERROR: 'install-libyamlscript' has been renamed to 'install'.
 
-branch=${YS_BRANCH:-main}
-export download=libyamlscript
+Use:
 
-url=https://raw.githubusercontent.com/yaml/yamlscript/$branch/common/install
+  curl https://yamlscript.org/install | LIB=1 bash
+--------------------------------------------------------------------------------
 
-main() (
-  command -v curl >/dev/null ||
-    die "curl not found"
-
-  install=$(mktemp)
-
-  curl -sL "$url" > "$install"
-
-  bash "$install"
-
-  if [[ $? -eq 0 ]]; then
-    rm -f "$install"
-  fi
-)
-
-die() (
-  printf '%s\n' "$@" >&2
-  exit 1
-)
-
-main "$@"
+...

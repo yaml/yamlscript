@@ -34,20 +34,20 @@ If you happen to be running on one of those platforms, you can run the following
 command to install YAMLScript's CLI, `ys`:
 
 ```bash
-curl https://yamlscript.org/install-ys | bash
+curl https://yamlscript.org/install | bash
 ```
 
 This installer defaults to installing `ys` into `/usr/local/bin` so you probably
 need to run it as root or with `sudo`:
 
 ```bash
-curl https://yamlscript.org/install-ys | sudo bash
+curl https://yamlscript.org/install | sudo bash
 ```
 
 If you want to install it somewhere else, like say `~/local/bin`, you can do:
 
 ```bash
-curl https://yamlscript.org/install-ys | PREFIX=~/local bash
+curl https://yamlscript.org/install | PREFIX=~/local bash
 ```
 
 Whereever you install it, make sure that the `$PREFIX/bin` directory is in your
@@ -58,7 +58,7 @@ library.
 You can install it like above but with (some variation of):
 
 ```bash
-curl https://yamlscript.org/install-libyamlscript | bash
+curl https://yamlscript.org/install | bash
 ```
 
 We'll be using the shared library soon when we start playing around with using
@@ -146,7 +146,7 @@ Here's a quick example of how to run YAMLScript to process a file from the
 internet that Google just told me about:
 
 ```bash
-$ curl -s https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml |
+$ curl https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml |
   ys -J | jq .classes
 {
   "nfs::server": {

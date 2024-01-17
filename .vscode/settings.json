@@ -5,12 +5,14 @@
     "cond",
     "defmacro",
     "defn",
+    "distclean",
     "doall",
     "fizzbuzz",
     "Ingy",
     "isolatethread",
     "libyamlscript",
     "mapv",
+    "Raku",
     "yamlscript"
   ]
 }

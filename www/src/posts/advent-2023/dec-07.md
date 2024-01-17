@@ -22,7 +22,7 @@ On Tuesday you learned how to install YAMLScript.
 Reminder, here's the quick way to install the latest version:
 
 ```bash
-$ curl https://yamlscript.org/install-ys | PREFIX=~/.yamlscript bash
+$ curl https://yamlscript.org/install | PREFIX=~/.yamlscript bash
 $ export PATH=$HOME/.yamlscript/bin:$PATH
 $ ys --version
 YAMLScript v0.1.21

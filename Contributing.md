@@ -104,7 +104,7 @@ Here's what's in the non-binding directories:
 * `sample/`
 
   This directory contains various example YAMLScript programs.
-  They are orgamized into subdirectories.
+  They are organized into subdirectories.
   The example programs get used in YAMLScript documentation and blog posts.
   Some are also cross posted to [Rosetta Code](
   https://rosettacode.org/wiki/Category:YAMLScript).
@@ -138,7 +138,7 @@ We use GNU make extensively for task automation in this project.
 Almost every directory has a `Makefile`.
 Common Makefile code is refactored into `common/*.mk` files.
 
-To find the make targets available for a Makfile, type `make <TAB><TAB>` in the
+To find the make targets available for a Makefile, type `make <TAB><TAB>` in the
 directory containing the Makefile.
 Or use `make -C <directory> <TAB><TAB>` to find the make targets available for
 some other directory.

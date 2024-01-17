@@ -17,7 +17,7 @@ YAMLScript has [usable releases](https://github.com/yaml/yamlscript/releases)
 that you can install with:
 
 ```bash
-$ curl -s https://yamlscript.org/install-ys | PREFIX=~/.local bash
+$ curl https://yamlscript.org/install | PREFIX=~/.local bash
 ```
 
 **YAMLScript is a Work In Progress.**

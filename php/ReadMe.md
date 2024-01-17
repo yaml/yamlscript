@@ -4,12 +4,12 @@ YAMLScript
 Program in YAML
 
 
-# Authors
+## Authors
 
-* Ingy döt Net <ingy@ingy.net>
+* [Ingy döt Net](https://github.com/ingydotnet)
 
 
-# Copyright and License
+## Copyright and License
 
 Copyright 2022-2024 by Ingy döt Net
 

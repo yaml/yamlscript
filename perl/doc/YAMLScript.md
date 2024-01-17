@@ -4,7 +4,7 @@ YAMLScript
 Program in YAML
 
 
-# Synopsis
+## Synopsis
 
 A YAML file:
 
@@ -70,7 +70,7 @@ $ perl script.pl
 ```
 
 
-# Description
+## Description
 
 **YAMLScript** is a programming language that uses YAML as a base syntax.
 
@@ -79,20 +79,20 @@ See https://yamlscript.org for more info.
 Proper docs coming soon.
 
 
-# See Also
+## See Also
 
 * [YAMLScript Site](https://yamlscript.org)
 * [YAML](https://yaml.org)
 * [Clojure](https://clojure.org)
 
 
-# Authors
+## Authors
 
-* Ingy döt Net <ingy@ingy.net>
-* José Joaquín Atria <jjatria@cpan.org>
+* [Ingy döt Net](https://github.com/ingydotnet)
+* [José Joaquín Atria](https://github.com/jjatria)
 
 
-# Copyright and License
+## Copyright and License
 
 Copyright 2022-2024 by Ingy döt Net
 

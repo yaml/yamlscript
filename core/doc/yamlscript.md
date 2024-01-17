@@ -4,7 +4,7 @@ YAMLScript
 Program in YAML
 
 
-# Synopsis
+## Synopsis
 
 A YAMLScript program `99-bottles.ys`:
 
@@ -65,13 +65,13 @@ $
 ```
 
 
-# Status
+## Status
 
 This is ALPHA software.
 Expect things to change.
 
 
-# Description
+## Description
 
 **YAMLScript** is a programming language that uses YAML as a base syntax. It
 feels like a *YAML encoded Lisp*, but with fewer parentheses.
@@ -94,7 +94,7 @@ For the remainder of this document when we say **Clojure** it means any
 **Clojure Platform** (including **Lingy**).
 
 
-# Installation
+## Installation
 
 YAMLScript is currently only available as a Perl CPAN module.
 You install it like so:
@@ -104,7 +104,7 @@ $ cpanm YAMLScript
 ```
 
 
-# Command Line Usage
+## Command Line Usage
 
 Once installed you will have access to the `yamlscript` CLI command.
 
@@ -127,7 +127,7 @@ Once installed you will have access to the `yamlscript` CLI command.
   ```
 
 
-# REPL Usage
+## REPL Usage
 
 YAMLScript has REPL that is a modified version of the Lingy REPL.
 
@@ -155,7 +155,7 @@ In other words, when you press up-arrow, the entire multi-line value will come
 up for editing and re-evaluation.
 
 
-# YAMLScript Standard Library
+## YAMLScript Standard Library
 
 YAMLScript has it's own `ys.std` library with a small set of functions that
 differ from `clojure.core`.
@@ -185,7 +185,7 @@ The YAMLScript Standard Functions are:
   Described below.
 
 
-# YAMLScript Documentation
+## YAMLScript Documentation
 
 Since the YAMLScript programming language is just a different syntax for the
 Clojure programming language, you should read the Clojure documentation to see
@@ -263,7 +263,7 @@ YAML data structure or just a Clojure s-expression written as a YAML plain
 Let's write the above YAMLScript program in a different, more idiomatic style:
 
 ```
-# A YAMLScript Program
+## A YAMLScript Program
 name =: 'YAMLScript'
 println: "Hello, $name"
 ```
@@ -864,7 +864,7 @@ Note that in any situation you are free to use either a regular Clojure sexpr
 or a YAMLScript ysexpr and you can even use both in nested expressions.
 
 
-# YAMLScript Implementation Details
+## YAMLScript Implementation Details
 
 Most people use YAML to `load` YAML files or strings into native data
 structures.
@@ -972,7 +972,7 @@ produce form Clojure code.
 It is fed directly into the Lingy evaluation loop.
 
 
-# YAMLScript Programs
+## YAMLScript Programs
 
 The YAMLScript source repository contains [example YAMLScript programs](
 https://github.com/yaml/yamlscript/tree/main/perl/eg).
@@ -1003,7 +1003,7 @@ And of course, its tests are written in YAMLScript.
 extends the basic functionality of Test::More::YAMLScript.
 
 
-# See Also
+## See Also
 
 * [YAML](https://yaml.org)
 * [Clojure](https://clojure.org)
@@ -1012,12 +1012,13 @@ extends the basic functionality of Test::More::YAMLScript.
 * [YAMLTest](https://metacpan.org/pod/YAMLTest)
 
 
-# Authors
+## Authors
 
-* Ingy döt Net <ingy@ingy.net>
+* [Ingy döt Net](https://github.com/ingydotnet) - Creator / Lead
+* [Ven de Thiel](https://github.com/vendethiel) - Language design
 
 
-# Copyright and License
+## Copyright and License
 
 Copyright 2022-2024 by Ingy döt Net
 

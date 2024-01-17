@@ -37,7 +37,7 @@ pip3 -q install yamlscript
 
 prefix=$PWD/install
 
-curl -s https://yamlscript.org/install-libyamlscript | PREFIX=$prefix bash
+curl https://yamlscript.org/install | PREFIX=$prefix bash
 
 (
   tree install

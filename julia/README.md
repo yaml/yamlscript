@@ -40,7 +40,7 @@ This is very ALPHA software.
 
 ## Authors
 
-* Ingy döt Net <ingy@ingy.net>
+* [Ingy döt Net](https://github.com/ingydotnet)
 
 
 ## Copyright and License

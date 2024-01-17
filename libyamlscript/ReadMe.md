@@ -14,9 +14,9 @@ $ make build
 ## Description
 
 This directory builds the YAMLScript compiler (written in Clojure) into a shared
-library for binding to other porgramming languages.
+library for binding to other programming languages.
 
-The compilation is acheived by using the GraalVM native-image tool to compile
+The compilation is achieved by using the GraalVM native-image tool to compile
 the compiled Clojure code into a shared library.
 
 The `yamlscript.compiler/compile` function takes a YAMLScript input string and
@@ -50,7 +50,7 @@ $ make build GRAALVM_CE=1               # GraalVM CE jdk-21.0.0
 $ make build GRAALVM_CE=1 GRAAL_VER=17  # GraalVM CE jdk-17.0.8
 ```
 
-The Makefile system will download and the approriate GraalVM version according
+The Makefile system will download and the appropriate GraalVM version according
 to your OS type and your intended GraalVM version.
 It then sets the appropriate environment variables for the GraalVM build system
 to work, so there is no need to install GraalVM yourself.
