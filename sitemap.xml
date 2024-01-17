@@ -58,83 +58,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/about/</loc>
-        
-          <lastmod>2023-12-04T00:09:40.121Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/blog/</loc>
-        
-          <lastmod>2023-12-04T00:09:40.121Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/</loc>
-        
-          <lastmod>2023-12-04T00:09:40.129Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/robots.txt</loc>
-        
-          <lastmod>2023-12-04T00:09:40.133Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/tags/blog/</loc>
-        
-          <lastmod>2023-12-04T00:09:40.133Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/tags/about/</loc>
-        
-          <lastmod>2023-12-04T00:09:40.133Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/tags/advent-2023/</loc>
-        
-          <lastmod>2023-12-04T00:09:40.133Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/posts/advent-2023/dec-05/</loc>
         
           <lastmod>2023-12-05T00:00:00.000Z</lastmod>
@@ -278,17 +201,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/santa-secrets/</loc>
-        
-          <lastmod>2023-12-17T16:06:00.768Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/posts/advent-2023/dec-18/</loc>
         
           <lastmod>2023-12-18T00:00:00.000Z</lastmod>
@@ -369,6 +281,94 @@
         <loc>https://yamlscript.org/posts/advent-2023/index/</loc>
         
           <lastmod>2023-12-25T00:00:00.000Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/blog/</loc>
+        
+          <lastmod>2024-01-12T12:34:56.258Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/robots.txt</loc>
+        
+          <lastmod>2024-01-12T12:34:56.290Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/santa-secrets/</loc>
+        
+          <lastmod>2024-01-12T12:34:56.290Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/tags/blog/</loc>
+        
+          <lastmod>2024-01-12T12:34:56.290Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/tags/about/</loc>
+        
+          <lastmod>2024-01-12T12:34:56.290Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/tags/advent-2023/</loc>
+        
+          <lastmod>2024-01-12T12:34:56.290Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/</loc>
+        
+          <lastmod>2024-01-17T16:37:42.244Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/about/</loc>
+        
+          <lastmod>2024-01-17T16:38:12.145Z</lastmod>
         
         
         
