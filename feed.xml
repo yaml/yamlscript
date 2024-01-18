@@ -880,21 +880,24 @@ You don't even have YS installed yet!</p>
 <p>Luckily for you I just finished creating the <a href="https://github.com/yaml/yamlscript/releases/tag/0.1.20">first official YAMLScript
 release</a>.
 What a coincidence!</p>
-<p>At he moment there are only releases published for Linux and macOS on
-<code>x86_64</code> and <code>aarch64</code>.
+<p>At he moment there are only releases published for Linux x86_64 and macOS
+aarch64.
 If you happen to be running on one of those platforms, you can run the following
-command to install YAMLScript's CLI, <code>bin/ys</code> and its shared library,
-<code>lib/libyamlscript.so</code>:</p>
+command to install YAMLScript's CLI, <code>ys</code>:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
-<p>This installer defaults to installing <code>ys</code> into <code>/usr/local/bin</code> and
-<code>libyamlscript.so</code> into <code>/usr/local/lib</code> so you probably need to run it as root
-or with <code>sudo</code>:</p>
+<p>This installer defaults to installing <code>ys</code> into <code>/usr/local/bin</code> so you probably
+need to run it as root or with <code>sudo</code>:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">bash</span></code></pre>
-<p>If you want to install them somewhere else, like say <code>~/local/bin</code> and
-<code>~/local/lib</code>, you can do:</p>
+<p>If you want to install it somewhere else, like say <code>~/local/bin</code>, you can do:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=~</span>/local <span class="token function">bash</span></code></pre>
 <p>Whereever you install it, make sure that the <code>$PREFIX/bin</code> directory is in your
 <code>PATH</code> environment variable.</p>
+<p>YAMLScript also provides a release for <code>libyamlscript.so</code>, the YAMLScript shared
+library.
+You can install it like above but with (some variation of):</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
+<p>We'll be using the shared library soon when we start playing around with using
+YAMLScript from other programming languages.</p>
 <h3>Building from Source</h3>
 <p>The most reliable way to install YAMLScript is to build it from source.
 We've put a lot of effort into making this as easy as possible.
@@ -924,7 +927,7 @@ Try:</p>
 <p>In the next day or two we'll go over all of these options in detail.</p>
 <p>Here's a quick example of how to run YAMLScript to process a file from the
 internet that Google just told me about:</p>
-<pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> <span class="token parameter variable">-s</span> https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml <span class="token operator">|</span><br>  ys <span class="token parameter variable">-J</span> <span class="token operator">|</span> jq .classes<br><span class="token punctuation">{</span><br>  <span class="token string">"nfs::server"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><br>    <span class="token string">"exports"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><br>      <span class="token string">"/srv/share1"</span>,<br>      <span class="token string">"/srv/share3"</span><br>    <span class="token punctuation">]</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml <span class="token operator">|</span><br>  ys <span class="token parameter variable">-J</span> <span class="token operator">|</span> jq .classes<br><span class="token punctuation">{</span><br>  <span class="token string">"nfs::server"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><br>    <span class="token string">"exports"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><br>      <span class="token string">"/srv/share1"</span>,<br>      <span class="token string">"/srv/share3"</span><br>    <span class="token punctuation">]</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
 <p>When <code>ys</code> notices there is data on STDIN, it will read the YS program from
 there.
 The <code>-J</code> option tells <code>ys</code> to <code>--load</code> the YS and output the evaluation to JSON.</p>
