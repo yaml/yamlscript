@@ -1,91 +1,93 @@
 # Used by util/version-bump to update versions in repo
 
 v_api=0.1.34
-v_perl=0.1.22
-v_python=0.1.5
-v_raku=0.1.0
-v_rust=0.1.2
+
+v_perl=$v_api
+v_python=$v_api
+v_raku=$v_api
+v_ruby=$v_api
+v_rust=$v_api
 
 # add ReadMe.md and www/src/index.md to this list
 
-api_files=(
-  .profile
-  Meta
-  common/install
-  common/project.clj
-  core/project.clj
-  libyamlscript/deps.edn
-  libyamlscript/project.clj
-  perl-alien/lib/Alien/YAMLScript.pm
-  perl-alien/alienfile
-  python/lib/yamlscript/__init__.py
-  raku/lib/YAMLScript.rakumod
-  rust/src/lib.rs
-  ys/deps.edn
-  ys/project.clj
-  ys/share/ys-0.bash
-  ys/src/yamlscript/cli.clj
-)
-
-perl_files=(
-  perl/Meta
-  perl/lib/YAMLScript.pm
-  perl/lib/YAMLScript/Alien.pm
-  perl-alien/Meta
-  perl-alien/lib/Alien/YAMLScript.pm
-)
-
-python_files=(
-  python/setup.py
-)
-
-raku_files=(
-  raku/META6.json
-)
-
-rust_files=(
-  rust/Cargo.toml
-  rust/Cargo.lock
-)
+vp='0\.[01]\.[0-9]+'
 
 #------------------------------------------------------------------------------
-yamlscript_files=(
-  .profile
-  common/project.clj
-  core/project.clj
-  libyamlscript/deps.edn
-  libyamlscript/project.clj
-  perl/lib/YAMLScript/Alien.pm
-  perl-alien/alienfile
-  perl-alien/lib/Alien/YAMLScript.pm
-  python/lib/yamlscript/__init__.py
-  rust/src/lib.rs
-  ys/deps.edn
-  ys/project.clj
-  ys/share/ys-0.bash
-  ys/src/yamlscript/cli.clj
-)
+version=$v_api
 
-YAMLSCRIPT_files=(
-  common/install
-  raku/lib/YAMLScript.rakumod
-)
+pattern='(yamlscript.*)'"$vp"'(.*)'
 
-yamlscript_core_files=(
-  libyamlscript/project.clj
-  ys/project.clj
-)
+bump .profile
+bump common/project.clj
+bump core/project.clj
+bump libyamlscript/deps.edn
+bump libyamlscript/project.clj
+bump perl/lib/YAMLScript.pm
+bump perl-alien/alienfile
+bump perl-alien/lib/Alien/YAMLScript.pm
+bump python/lib/yamlscript/__init__.py
+bump rust/src/lib.rs
+bump ys/deps.edn
+bump ys/project.clj
+bump ys/share/ys-0.bash
+bump ys/src/yamlscript/cli.clj
 
-version_files=(
-  Meta
-  perl/Meta
-  perl-alien/Meta
-  python/setup.py
-  raku/META6.json
-  rust/Cargo.toml
-)
+pattern='(yamlscript\/core.*)'"$vp"'(.*)'
 
-VERSION_files=(
-  perl/lib/YAMLScript.pm
-  perl-alien/lib/Alien/YAMLScript.pm
-)
+bump libyamlscript/project.clj
+bump ys/project.clj
+
+pattern='(YAMLSCRIPT.*)'"$vp"'(.*)'
+
+bump raku/lib/YAMLScript.rakumod
+bump ruby/lib/yamlscript.rb
+
+pattern='(YAMLScript.*)'"$vp"'(.*)'
+
+bump ReadMe.md
+bump www/src/index.md
+
+pattern='(version.*)'"$vp"'(.*)'
+
+bump Meta
+
+#------------------------------------------------------------------------------
+version=$v_perl
+
+pattern='(version.*)'"$vp"'(.*)'
+
+bump perl/Meta
+bump perl-alien/Meta
+
+pattern='(VERSION.*)'"$vp"'(.*)'
+
+bump perl/lib/YAMLScript.pm
+bump perl-alien/lib/Alien/YAMLScript.pm
+
+#------------------------------------------------------------------------------
+version=$v_python
+
+pattern='(version.*)'"$vp"'(.*)'
+
+bump python/setup.py
+
+#------------------------------------------------------------------------------
+version=$v_raku
+
+pattern='(version.*)'"$vp"'(.*)'
+
+bump raku/META6.json
+
+#------------------------------------------------------------------------------
+version=$v_ruby
+
+pattern='(VERSION.*)'"$vp"'(.*)'
+
+bump ruby/lib/yamlscript/version.rb
+
+#------------------------------------------------------------------------------
+version=$v_rust
+
+pattern='(version.*)'"$vp"'(.*)'
+
+bump rust/Cargo.toml

@@ -98,7 +98,7 @@ delete-tag:
 
 bump:
 	version-bump
-	$(RM) -r ~/.m2/repository/yamlscript
+	$(RM) -r libyamlscript/lib ys/bin ~/.m2/repository/yamlscript
 
 $(CLEAN):
 clean: $(CLEAN) release-clean

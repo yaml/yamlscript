@@ -6,31 +6,6 @@ main() (
   root=$(cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd -P)
   source "$root/.version.sh"
 
-  version=$v_api
-  for file in "${api_files[@]}"; do
-    apply-api "$file" "$v_api"
-  done
-
-  version=$v_perl
-  for file in "${perl_files[@]}"; do
-    apply "$file" "$v_perl"
-  done
-
-  version=$v_python
-  for file in "${python_files[@]}"; do
-    apply "$file" "$v_python"
-  done
-
-  version=$v_raku
-  for file in "${raku_files[@]}"; do
-    apply "$file" "$v_raku"
-  done
-
-  version=$v_rust
-  for file in "${rust_files[@]}"; do
-    apply "$file" "$v_rust"
-  done
-
   (
     set -x
     cd rust || exit
@@ -38,46 +13,11 @@ main() (
   )
 )
 
-apply() (
-  if [[ " ${version_files[*]} " == *" $file "* ]]; then
-    bump 's{(\bversion\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-    bump 's{(::YAMLScript\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-
-  if [[ " ${VERSION_files[*]} " == *" $file "* ]]; then
-    bump 's{(\bVERSION\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-
-  if [[ " ${YAMLSCRIPT_files[*]} " == *" $file "* ]]; then
-    bump 's{(YAMLSCRIPT.*VERSION.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-
-  if [[ " ${yamlscript_core_files[*]} " == *" $file "* ]]; then
-    bump 's{(yamlscript.*core.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-)
-
-apply-api() (
-  if [[ " ${YAMLSCRIPT_files[*]} " == *" $file "* ]]; then
-    bump 's{(YAMLSCRIPT.*VERSION.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-
-  if [[ " ${version_files[*]} " == *" $file "* ]]; then
-    bump 's{(\bversion\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-    bump 's{(::YAMLScript\b.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-
-  if [[ " ${yamlscript_files[*]} " == *" $file "* ]]; then
-    bump 's{(yamlscript.*version.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-    bump 's{(yamlscript/\w+.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-    bump 's{(YAMLSCRIPT_FILENAME.*)\d+\.\d+\.\d+}{${1}'"$version"'}'
-  fi
-)
-
 bump() (
-  perl -n0e "$1 or exit 1" "$file" || return 0
+  file=$1
+  perl -n0e "m/$pattern/ or exit 1" "$file" || return 0
   set -x
-  perl -p0i -e "$1" "$file"
+  perl -p0i -e "s/$pattern/\${1}$version\$2/" "$file"
 )
 
 die() {
