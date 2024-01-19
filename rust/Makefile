@@ -1,14 +1,16 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
-CARGO := \
+CARGO := $(shell command -v cargo)
+
+CARGO_CMDS := \
     build \
     clean \
     install \
     publish \
     test \
 
-ifneq (,$(shell command -v cargo))
-$(CARGO)::
+ifdef CARGO
+$(CARGO_CMDS)::
 	cargo $@
 endif

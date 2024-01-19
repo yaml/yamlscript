@@ -1,18 +1,20 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
-RAKE := \
+RUBY := $(shell command -v bundle)
+
+RAKE_CMDS := \
     build \
     clean \
     test \
 
 #------------------------------------------------------------------------------
 
-ifneq (,$(shell command -v bundle))
+ifdef RUBY
 update:
 	bundle install
 
-$(RAKE)::
+$(RAKE_CMDS)::
 	bundle exec rake $@
 
 endif

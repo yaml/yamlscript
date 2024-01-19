@@ -5,9 +5,13 @@ test ?= t/*
 
 export RAKULIB=$(ROOT)/raku/lib
 
+RAKU := $(shell command -v raku)
+
 #------------------------------------------------------------------------------
 test::
+ifdef RAKU
 	prove $${TEST_VERBOSE:+'-v'} $(test)
+endif
 
 dist::
 	fez upload --dry-run

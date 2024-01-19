@@ -19,7 +19,9 @@ version:
 	@echo $(VERSION)
 
 .PHONY: test
+ifdef PYTHON
 test:: test-pytest test-ffi
+endif
 
 test-pytest: $(PYTHON_VENV)
 	source $</bin/activate && \
