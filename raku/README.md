@@ -54,28 +54,15 @@ $ ys --compile file.ys
 ```
 
 
-## Rust Usage
+## Raku Usage
 
-File `prog.rs`:
+File `prog.raku`:
 
-```rust
-use std::fs::File;
-use std::io::prelude::*;
-use yamlscript::YAMLScript;
-
-fn main() -> std::io::Result<()> {
-    let mut file = File::open("file.ys")?;
-    let mut input = String::new();
-    file.read_to_string(&mut input)?;
-
-    let docs = YAMLScript::load(&input).unwrap();
-
-    for doc in &docs {
-        println!("{:?}", doc);
-    }
-
-    Ok(())
-}
+```perl6
+use YAMLScript;
+my $program = slurp 'file.ys';
+my YAMLScript $ys .= new;
+say $ys.load($program);
 ```
 
 File `file.ys`:
@@ -100,17 +87,17 @@ oh: Hello
 Run:
 
 ```text
-$ cargo run prog.rs
-{"foo":[1,2,42],"bar":{"oh":"Hello"},"baz":"Hello, World!"}
+$ raku prog.raku
+{bar => {oh => Hello}, baz => Hello, World!, foo => [1 2 42]}
 ```
 
 
 ## Installation
 
-You can install this module like any other Rust module:
+You can install this module like any other Python module:
 
 ```bash
-$ cargo install yamlscript
+$ zef install YAMLScript
 ```
 
 but you will need to have a system install of `libyamlscript.so`.
@@ -140,7 +127,7 @@ See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 ## Authors
 
 * [Ingy döt Net](https://github.com/ingydotnet)
-* [Ethiraric](https://github.com/Ethiraric)
+* [tony-o](https://github.com/tony-o)
 
 
 ## License & Copyright

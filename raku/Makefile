@@ -9,5 +9,8 @@ export RAKULIB=$(ROOT)/raku/lib
 test::
 	prove $${TEST_VERBOSE:+'-v'} $(test)
 
+dist::
+	fez upload --dry-run
+
 clean::
-	$(RM) -r .precomp/ lib/.precomp/
+	$(RM) -r .precomp/ lib/.precomp/ sdist/

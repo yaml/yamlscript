@@ -6,7 +6,7 @@ Program in YAML
 
 ## Synopsis
 
-```
+```yaml
 #!/usr/bin/env ys-0
 
 defn main(name):
@@ -22,51 +22,107 @@ YAMLScript can be used for:
 
 * Writing new programs and applications
   * Run with `ys file.ys`
-  * Or compile to binary with `ys -C file.ys`
+  * Or compile to binary executable with `ys -C file.ys`
+* Enhancing ordinary YAML files with new functional magics
+  * Import parts of other YAML files to any node
+  * String interpolation including function calls
+  * Any other functionality you can dream up!
 * Writing reusable shared libraries
+  * High level code instead of C
   * Bindable to almost any programming language
-* Using as a YAML loader module in many programming languages
-  * Plain / existing YAML files
-  * YAML files with new functional magics
 
+YAMLScript should be a drop-in replacement for your YAML loader!
 
-## Installing `yamlscript`
+Most existing YAML files are already valid YAMLScript files.
+This means that YAMLScript works as a normal YAML loader, but can also evaluate
+functional expressions if asked to.
 
-You can install this module from https://rubygems.org like any other Ruby
-library, but you will need to have a system install of `libyamlscript.so`.
+Under the hood, YAMLScript code compiles to the Clojure programming language.
+This makes YAMLScript a complete functional programming language right out of
+the box.
 
-One simple way to do that is with:
+Even though YAMLScript compiles to Clojure, and Clojure compiles to Java, there
+is no dependency on Java or the JVM.
+YAMLScript is compiled to a native shared library (`libyamlscript.so`) that can
+be used by any programming language that can load shared libraries.
 
+To see the Clojure code that YAMLScript compiles to, you can use the YAMLScript
+command line utility, `ys`, to run:
+
+```text
+$ ys --compile file.ys
 ```
-curl https://yamlscript.org/install | sudo bash
-```
-
-See: https://github.com/yaml/yamlscript for more info
 
 
-## API
+## Ruby Usage
 
-Use the `yamlscript` library in your Ruby program like this:
+File `prog.rb`:
 
 ```ruby
 require 'yamlscript'
-
-ys_code = IO.read('file.ys')
-
-# Class method
-data = YAMLScript.load(ys_code)
-
-# Instance method
+input = IO.read('file.ys')
 ys = YAMLScript.new
-data = ys.load(ys_code)
-
-# Error handling
-begin
-  ys.load("a: b: c")
-rescue Exception => e:
-  puts e
-end
+data = ys.load(input)
+puts data
 ```
+
+File `file.ys`:
+
+```yaml
+!yamlscript/v0
+
+name =: "World"
+
+=>::
+  foo: [1, 2, ! inc(41)]
+  bar:: load("other.yaml")
+  baz:: "Hello, $name!"
+```
+
+File `other.yaml`:
+
+```yaml
+oh: Hello
+```
+
+Run:
+
+```text
+$ ruby prog.rb
+{"foo"=>[1, 2, 42], "bar"=>{"oh"=>"Hello"}, "baz"=>"Hello, World!"}
+```
+
+
+## Installation
+
+You can install this module like any other Ruby module:
+
+```bash
+$ gem install yamlscript
+```
+
+but you will need to have a system install of `libyamlscript.so`.
+
+One simple way to do that is with:
+
+```bash
+$ curl https://yamlscript.org/install | sudo PREFIX=/usr/local bash
+```
+
+> Note: The above command will install the latest version of the YAMLScript
+command line utility, `ys`, and the shared library, `libyamlscript.so`, into
+`/usr/local/bin` and `/usr/local/lib` respectively.
+
+See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
+
+
+## See Also
+
+* [The YAMLScript Web Site](https://yamlscript.org)
+* [The YAMLScript Blog](https://yamlscript.org/blog)
+* [The YAMLScript Source Code](https://github.com/yaml/yamlscript)
+* [YAML](https://yaml.org)
+* [Clojure](https://clojure.org)
 
 
 ## Authors
@@ -75,10 +131,10 @@ end
 * [Delon R.Newman](https://github.com/delonnewman)
 
 
-## Copyright and License
+## License & Copyright
 
-Copyright 2022-2024 by Ingy döt Net
+Copyright 2022-2024 Ingy döt Net <ingy@ingy.net>
 
-This is free software, licensed under:
-
-The MIT (X11) License
+This project is licensed under the terms of the `MIT` license.
+See [LICENSE](https://github.com/yaml/yamlscript/blob/main/License) for
+more details.
