@@ -5,7 +5,7 @@ package YAMLScript;
 
 use FFI::CheckLib ();
 use FFI::Platypus;
-use JSON ();
+use Cpanel::JSON::XS ();
 
 our $VERSION = '0.1.22';
 
@@ -71,7 +71,7 @@ $ffi->attach(
         my ($xsub, $self, $ys) = @_;
         $self->{error} = undef;
 
-        my $resp = JSON::decode_json(
+        my $resp = Cpanel::JSON::XS::decode_json(
             $xsub->(${$self->{isolatethread}}, $ys)
         );
 

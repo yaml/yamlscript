@@ -2,7 +2,7 @@
 
 use Test2::V0 -target => 'Alien::YAMLScript';
 use Test::Alien;
-use JSON::PP;
+use Cpanel::JSON::XS;
 
 alien_ok $CLASS;
 
