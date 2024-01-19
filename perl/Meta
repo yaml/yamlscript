@@ -3,7 +3,7 @@
 base: ../Meta
 
 name: YAMLScript
-version: 0.1.22
+version: 0.1.34
 
 language: perl
 

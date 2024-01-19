@@ -16,7 +16,7 @@ class YAMLScript
   # TODO: This value is automatically updated by 'make bump'.
   # The version number is used to find the correct shared library file.
   # We currently only support binding to an exact version of libyamlscript.
-  YAML_SCRIPT_VERSION = '0.1.34'
+  YAMLSCRIPT_VERSION = '0.1.34'
 
   # A low-level interface to the native library
   module LibYAMLScript
@@ -34,7 +34,7 @@ class YAMLScript
     end
 
     def self.filename
-      "libyamlscript.#{extension}.#{YAML_SCRIPT_VERSION}"
+      "libyamlscript.#{extension}.#{YAMLSCRIPT_VERSION}"
     end
 
     # Returns an array of library paths extracted from the LD_LIBRARY_PATH
