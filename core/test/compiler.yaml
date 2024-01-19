@@ -527,3 +527,27 @@
     =>: a+b
   error: |-
     Invalid symbol: 'a+b'
+
+
+- name: Underscore not allowed in symbol - A
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a _+ b)
+  error: |-
+    Invalid symbol: '_+'
+
+
+- name: Underscore not allowed in symbol - B
+  yamlscript: |
+    !yamlscript/v0
+    =>: (_+ a b)
+  error: |-
+    Invalid symbol: '_+'
+
+
+- name: Underscore not allowed in symbol - C
+  yamlscript: |
+    !yamlscript/v0
+    =>: (a + b_c)
+  error: |-
+    Invalid symbol: 'b_c'

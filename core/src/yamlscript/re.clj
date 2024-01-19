@@ -15,7 +15,7 @@
 
 (defn re [rgx]
   (loop [rgx (str rgx)]
-    (let [match (re-find #"\$(\w+)" rgx)]
+    (let [match (re-find #"\$([a-zA-Z]+)" rgx)]
       (if match
         (let [var (second match)
               val (var-get
@@ -23,7 +23,7 @@
                       (symbol (str "yamlscript.re/" var))))
               rgx (str/replace
                     rgx
-                    (re-pattern (str #"\$" var #"(?!\w)"))
+                    (re-pattern (str #"\$" var #"(?![a-zA-Z])"))
                     (str/re-quote-replacement val))]
           (recur rgx))
         (re-pattern rgx)))))
@@ -60,12 +60,13 @@
             )*\"?                            # Ending quote
             ")
 (def pnum #"(?:\d+)")                      ; Positive integer
-(def symw #"(?:\w+(?:-\w+)*)")             ; Symbol word
+(def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
+(def symw #"(?:$anum+(?:-$anum+)*)")       ; Symbol word
 (def pkey (re #"(?:$symw|$pnum|$strg)"))   ; Path key
 (def path (re #"(?:$symw(?:\.$pkey)+)"))   ; Lookup path
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
 (def csym #"(?:[-a-zA-Z0-9_'*+?!<=>]+)")   ; Clojure symbol
-(def symb (re #"(?:_[*+.]|$symw[?!]?)"))   ; Symbol token
+(def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fqsm (re #"(?:$nspc\.$symb)"))        ; Fully qualified symbol
                                            ; Symbol followed by paren
