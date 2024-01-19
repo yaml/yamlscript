@@ -299,12 +299,12 @@ Options:
                       "")))]
         (die msg)))))
 
-
 (defn do-compile [opts args]
   (let [[code _ _ #_file #_args] (get-code opts args)]
     (-> code
       (compile-code opts)
       str/trim-newline
+      compiler/pretty-format
       println)))
 
 (defn do-repl [opts]

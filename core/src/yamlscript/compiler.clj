@@ -72,6 +72,16 @@
     yamlscript.printer/print
     (debug-print "print")))
 
+(defn pretty-format [code]
+  (->> code
+    (#(str "(do " %1 "\n)\n"))
+    read-string
+    rest
+    (map #(str
+            (with-out-str (clojure.pprint/write %1))
+            "\n"))
+    (apply str)))
+
 (comment
   www
 ; {:do [[{:Sym a} {:Sym b}]]}

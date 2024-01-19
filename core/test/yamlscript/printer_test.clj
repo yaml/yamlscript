@@ -4,6 +4,7 @@
 (ns yamlscript.printer-test
   #_(:use yamlscript.debug)
   (:require
+   [yamlscript.compiler :as compiler]
    [yamlscript.parser :as parser]
    [yamlscript.composer :as composer]
    [yamlscript.resolver :as resolver]
@@ -27,5 +28,6 @@
              builder/build
              transformer/transform
              constructor/construct
-             printer/print))
+             printer/print
+             compiler/pretty-format))
    :want :print})

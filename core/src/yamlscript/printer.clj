@@ -7,7 +7,6 @@
 (ns yamlscript.printer
   (:require
    [clojure.string :as str]
-   [clojure.pprint :as pp]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [print]))
 
@@ -58,25 +57,13 @@
               (Exception. (str "Unknown AST node type:"
                             node))))))
 
-(defn pretty-format [code]
-  (->> code
-    (#(str "(do " %1 "\n)\n"))
-    read-string
-    rest
-    (map #(str
-            (with-out-str (pp/write %1))
-            "\n"))
-    (str/join "")))
-
-
 (defn print
   "Render a YAMLScript AST as Clojure code."
   [node]
   (let [list (:Top node)
         code (->> list
                (map print-node)
-               (str/join "\n")
-               pretty-format)]
+               (apply str))]
     code))
 
 (comment

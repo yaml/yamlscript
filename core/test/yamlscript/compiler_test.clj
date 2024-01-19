@@ -14,7 +14,8 @@
    :test (fn [test]
            (->> test
              :yamlscript
-             compiler/compile))
+             compiler/compile
+             compiler/pretty-format))
    :want :clojure})
 
 (test/load-yaml-test-files
