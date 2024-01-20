@@ -1,4 +1,32 @@
 
+- version: 0.1.35
+  date:    Sat Jan 20 01:03:51 PM EST 2024
+  changes:
+  - sample: Add sample/ directory
+  - Release a Perl binding to libyamlscript
+  - Release a Rust binding to libyamlscript
+  - Release a Raku binding to libyamlscript
+  - Release a Ruby binding to libyamlscript
+  - libyamlscript: Remove compile function from API for now
+  - www: Move www website branch into main
+  - core: Fix all warnings and errors found by clj-kondo
+  - make: Support linux aarch64 builds
+  - core: Anonymous fns are multi arity; % must be %1
+  - core: Error when `%` used as anon fn arg
+  - core: Add % (rem) and %% (mod) infix operators
+  - test: Add support for substring and regex matching
+  - core: Add first transformer "macro" for defn docstrings
+  - core: Support defn transform macros for docstring
+  - meta: Add a Code of Conduct statement
+  - meta: Add Contributing.md doc
+  - core: Error on valid Clojure symbols but invalid YS
+  - core: Don't pretty print Clojure compilation by default
+  - build: Simplify the version bump utility
+  - build: Make all binding versions match libyamlscript version
+  - core: Don't allow underscore in YS symbols
+  - doc: Update binding documentation for all bindings
+  - test: Don't run binding tests when language not installed
+
 - version: 0.1.34
   date:    Thu Dec 21 11:21:14 PM PST 2023
   changes:

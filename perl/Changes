@@ -1,5 +1,12 @@
 
 ---
+version: 0.1.35
+date:    Sat Jan 20 01:03:51 PM EST 2024
+changes:
+- libyamlscript 0.1.35
+- Use Cpanel::JSON::XS for faster JSON
+
+---
 version: 0.1.22
 date:    Thu Jan 11 03:32:19 PM EST 2024
 changes:

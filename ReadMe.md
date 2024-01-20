@@ -204,7 +204,7 @@ the above command.
 You can use the following environment variables to control the installation:
 
 * `PREFIX=...` - The directory to install to. Default: `/usr/local`
-* `VERSION=...` - The YAMLScript version to install. Default: `0.1.34`
+* `VERSION=...` - The YAMLScript version to install. Default: `0.1.35`
 * `BIN=1` - Only install the `PREFIX/bin/ys` command line tool.
 * `LIB=1` - Only install the `PREFIX/lib/libyamlscript` shared library.
 * `DEBUG=1` - Print the Bash commands that are being run.
