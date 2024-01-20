@@ -40,7 +40,7 @@ git-tag() {
   if [[ $(git tag -l "$VERSION") ]]; then
     die "Error: Tag '$VERSION' already exists." \
       "Delete it with 'git tag -d $VERSION' or" \
-      "Use 'make version-bump new=1.2.3' to bump the version."
+      "Use 'make bump' to bump the version."
   fi
   if [[ $(git diff --stat) ]]; then
     die "Error: Working directory is not clean. Commit changes first."

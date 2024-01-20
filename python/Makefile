@@ -46,18 +46,10 @@ pkg-test: venv
 dist: venv MANIFEST.in .long_description.md
 	$(PYTHON) setup.py sdist
 
-release: publish tag push
+release: publish
 
 publish: dist
 	twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz
-
-tag:
-	-git add . && git commit -m $(VERSION)
-	git tag $(VERSION)
-
-push:
-	-git push
-	-git push --tag
 
 clean::
 	$(RM) MANIFEST* .long_description.md

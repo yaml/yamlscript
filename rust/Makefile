@@ -13,4 +13,6 @@ CARGO_CMDS := \
 ifdef CARGO
 $(CARGO_CMDS)::
 	cargo $@
+
+release: publish
 endif

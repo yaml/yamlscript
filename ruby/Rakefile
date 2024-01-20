@@ -3,6 +3,24 @@
 require "bundler/gem_tasks"
 require "minitest/test_task"
 
+Rake::Task["release:guard_clean"].clear
+
+# Disable tagging for `rake release`
+namespace :release do
+  task :commit do
+    puts "Overriding commit task"
+  end
+  task :guard_clean do
+    puts "Overriding guard_clean task"
+  end
+  task :tag do
+    puts "Overriding tag task"
+  end
+  task :push do
+    puts "Overriding push task"
+  end
+end
+
 Minitest::TestTask.create(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
