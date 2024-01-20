@@ -64,6 +64,10 @@ pattern='(VERSION.*)'"$vp"'(.*)'
 bump perl/lib/YAMLScript.pm
 bump perl-alien/lib/Alien/YAMLScript.pm
 
+pattern='(Alien::YAMLScript:.*)'"$vp"'(.*)'
+
+bump perl/Meta
+
 #------------------------------------------------------------------------------
 version=$v_python
 

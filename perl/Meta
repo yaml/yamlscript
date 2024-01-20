@@ -12,7 +12,7 @@ author:
 
 requires:
   perl: 5.16.0
-  Alien::YAMLScript: 0.1.22
+  Alien::YAMLScript: 0.1.34
   FFI::CheckLib: 0.31
   FFI::Platypus: 2.08
   Cpanel::JSON::XS: 4.37
