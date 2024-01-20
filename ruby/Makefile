@@ -6,6 +6,7 @@ RUBY := $(shell command -v bundle)
 RAKE_CMDS := \
     build \
     clean \
+    release \
     test \
 
 #------------------------------------------------------------------------------
@@ -21,3 +22,4 @@ endif
 
 clean::
 	$(RM) Gemfile.lock .rake_tasks*
+	$(RM) -r pkg
