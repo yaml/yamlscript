@@ -27,7 +27,7 @@ defn main(&[count impl]):
 defn fizzbuzz-1(n):
   map:
     fn(x):
-      cond %:
+      cond:
         zero?(mod(x 15)): "FizzBuzz"
         zero?(mod(x 5)):  "Buzz"
         zero?(mod(x 3)):  "Fizz"
@@ -41,7 +41,7 @@ defn fizzbuzz-2(n):
       recur:
         inc: i
         conj l:
-          cond %:
+          cond:
             zero?(mod(i 15)): "FizzBuzz"
             zero?(mod(i 5)):  "Buzz"
             zero?(mod(i 3)):  "Fizz"

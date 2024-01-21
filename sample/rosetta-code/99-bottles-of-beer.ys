@@ -17,7 +17,7 @@ defn paragraph(num): |
   $(bottles (num - 1)) of beer on the wall.
 
 defn bottles(n):
-  cond %:
+  cond:
     (n == 0): "No more bottles"
     (n == 1): "1 bottle"
     :else   : "$n bottles"
