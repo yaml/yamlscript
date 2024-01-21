@@ -26,7 +26,6 @@
     # 'TEMPLATE: true' is here to ignore this test block
 
 
-
 - name: Most YAML syntax forms in one example
   yamlscript: |
     --- !yamlscript/v0
@@ -83,7 +82,6 @@
           ]} ]} ]} ]}
 
 
-
 - name: Nested parse events test
   yamlscript: |
     a:
@@ -106,7 +104,6 @@
     "=VAL", := "g"
     "=VAL", := "h"
     "-MAP"
-
 
 
 - name: Basic function call with 2 args (test all phases)
@@ -140,7 +137,6 @@
     (a b c)
 
 
-
 - name: Dot escaping
   yamlscript: |
     --- !yamlscript/v0
@@ -156,7 +152,6 @@
       {:= ".[2 4 6 8]"} ]}
   print: |
     (map inc [2 4 6 8])
-
 
 
 - name: YS reader forms
@@ -192,7 +187,6 @@
     (prn "A longer string")
 
 
-
 - name: Basic math ysexpr
   yamlscript: |
     --- !yamlscript/v0
@@ -203,7 +197,6 @@
       {:Lst [{:Sym *} {:Int 6} {:Int 7}]}]}
   print: |
     (inc (_* 6 7))
-
 
 
 - name: Function call ysexpr
@@ -221,7 +214,6 @@
     (say (str "The number is: " (inc 41)))
 
 
-
 - name: def expression
   yamlscript: |
     !yamlscript/v0
@@ -234,7 +226,6 @@
      {:Int 123}]}
   print: |
     (def foo 123)
-
 
 
 - name: defn expression
@@ -251,7 +242,6 @@
     (defn foo [a b] (_+ a b))
 
 
-
 - name: Structured defn expression
   yamlscript: |
     !yamlscript/v0
@@ -265,7 +255,6 @@
         [{:Sym a} {:Sym b}]]}]}
   print: |
     (defn foo [a b] (add a b))
-
 
 
 - name: def/let expression
@@ -335,7 +324,6 @@
     bar: 10 20
 
 
-
 - name: The 'if' special form
   yamlscript: |
     !yamlscript/v0
@@ -344,7 +332,6 @@
       bar(a b)
   print: |
     (if (> a b) (foo a b) (bar a b))
-
 
 
 - name: Top level scalar in data mode
@@ -356,7 +343,6 @@
     {:str "(foo bar)"}
   print: |
     "(foo bar)"
-
 
 
 - name: Top level scalar in code mode
@@ -371,7 +357,6 @@
     (foo bar)
 
 
-
 - name: Top level comment eats following lines
   yamlscript: |
     !yamlscript/v0
@@ -382,8 +367,6 @@
   parse: |
     "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
   print: |
-
-
 
 
 - name: Switch to code mode
@@ -421,7 +404,6 @@
     {"str" "foo bar", "num" (inc 41), "bar" (load "bar.yaml")}
 
 
-
 - name: Shebang line with ys-0 implies !yamlscript/v0
   yamlscript: |
     #!/usr/bin/env ys-0
@@ -434,7 +416,6 @@
     "-MAP"
 
 
-
 - name: Shebang line with ys-0 and !yamlscript/... tag ignored
   yamlscript: |
     #!/usr/bin/env ys-0
@@ -445,7 +426,6 @@
     "=VAL", := "say"
     "=VAL", :$ "Hi"
     "-MAP"
-
 
 
 - name: Double quoted string with escaped newline
