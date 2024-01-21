@@ -27,7 +27,7 @@ defn main(&[count impl]):
 
 defn fizzbuzz-1(n):
   map:
-    fn [x]:
+    fn(x):
       cond:
         zero?(mod(x 15)) "FizzBuzz"
         zero?(mod(x 5))  "Buzz"
@@ -50,7 +50,7 @@ defn fizzbuzz-2(n):
 
 defn fizzbuzz-3(n):
   map:
-    fn [x]:
+    fn(x):
       s =:
         str:
           when zero?(mod(x 3)): "Fizz"

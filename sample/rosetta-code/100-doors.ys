@@ -10,6 +10,6 @@ defn open-doors():
 
 defn doors():
   reduce:
-    fn [doors idx]: assoc(doors idx true)
+    fn(doors idx): assoc(doors idx true)
     into []: repeat(100 false)
     map \(dec (%1 * %1)): 1..10
