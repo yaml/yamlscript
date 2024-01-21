@@ -19,12 +19,19 @@
   "Parse all the !ysx nodes into YAMLScript AST nodes."
   [node] (build-node node))
 
-(defn build-ys-mapping [node]
+(defn build-ysm [node]
   (->> node
     first
     val
     (map build-node)
     (hash-map :ysm)))
+
+(defn build-ysg [node]
+  (->> node
+    first
+    val
+    (map build-node)
+    (hash-map :ysg)))
 
 ;; XXX This might belong in the transformer
 (defn optimize-ys-expression [node]
@@ -32,7 +39,7 @@
     (get-in node [:Lst 1])
     node))
 
-(defn build-ys-expression [node]
+(defn build-ysx [node]
   (let [string (-> node first val)]
     (if (= string "")
       {:Empty nil}
@@ -61,19 +68,19 @@
       \$ $bpar
     )"))
 
-(defn build-interpolated-string [node]
+(defn build-ysi [node]
   (let [string (:ysi node)
         parts (re-seq re-interpolated-string string)
         exprs (map
                 #(cond
                    (re-matches (re/re #"\$$symw$bpar") %1)
-                   (build-ys-expression {:ysx (subs %1 1)})
+                   (build-ysx {:ysx (subs %1 1)})
                    ,
                    (re-matches (re/re #"\$$symw") %1)
                    (Sym (subs %1 1))
                    ,
                    (re-matches (re/re #"\$$bpar") %1)
-                   (build-ys-expression {:ysx (subs %1 1)})
+                   (build-ysx {:ysx (subs %1 1)})
                    ,
                    :else
                    (Str (str/replace %1 #"\\(\$)" "$1")))
@@ -85,9 +92,10 @@
 (defn build-node [node]
   (let [[tag] (first node)]
     (case tag
-      :ysm (build-ys-mapping node)
-      :ysx (build-ys-expression node)
-      :ysi (build-interpolated-string node)
+      :ysm (build-ysm node)
+      :ysg (build-ysg node)
+      :ysx (build-ysx node)
+      :ysi (build-ysi node)
       :str (Str (:str node))
       :map (build-map node)
       :seq (build-vec node)

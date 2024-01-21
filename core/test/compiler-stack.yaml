@@ -478,3 +478,33 @@
      [{:ysx "def add"} {:ysm [{:ysx "fn [a b]"} {:ysx "a + b"}]}]}
   clojure: |
     (def add (fn [a b] (_+ a b)))
+
+
+- name: Support '%:' for left/right grouping
+  yamlscript: |
+    !yamlscript/v0
+    foo %:
+      (a > b): c
+      (a < d): e
+      =>: f
+  resolve: |
+    {:ysm
+     [{:ysx "foo"}
+      {:ysg
+       [{:ysx "(a > b)"}
+        {:ysx "c"}
+        {:ysx "(a < d)"}
+        {:ysx "e"}
+        {:ysx "=>"}
+        {:ysx "f"}]}]}
+  construct: |
+    {:Top
+     [{:Lst
+       [{:Sym foo}
+        {:Lst [{:Sym >} {:Sym a} {:Sym b}]}
+        {:Sym c}
+        {:Lst [{:Sym <} {:Sym a} {:Sym d}]}
+        {:Sym e}
+        {:Sym f}]}]}
+  print: |
+    (foo (> a b) c (< a d) e f)

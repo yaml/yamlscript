@@ -52,11 +52,22 @@
                        [[lhs rhs] & pairs] pairs
                        lhs (construct-side lhs ctx)
                        rhs (construct-side rhs ctx)
-                       pair [lhs rhs]
-                       new (conj new (construct-call pair))]
+                       rhs (or (:ysg rhs) rhs)
+                       new (conj new (construct-call [lhs rhs]))]
                    (recur pairs, new))
                  new))]
     node))
+
+(defn construct-ysg [node ctx]
+  (let [nodes (:ysg node)
+        nodes (reduce
+                (fn [nodes node]
+                  (let [node (construct-node node ctx)]
+                    (if (not= '=> (:Sym node))
+                      (conj nodes node)
+                      nodes)))
+                [] nodes)]
+    {:ysg nodes}))
 
 (defn construct-node [node ctx]
   (when (vector? ctx) (throw (Exception. "ctx is a vector")))
@@ -64,6 +75,7 @@
         ctx (update-in ctx [:lvl] inc)]
     (case key
       :ysm (construct-ysm node ctx)
+      :ysg (construct-ysg node ctx)
       ,    node)))
 
 ;;------------------------------------------------------------------------------

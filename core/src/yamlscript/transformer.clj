@@ -33,7 +33,7 @@
           [_ v2 v3] list]
       {:Lst [{:Sym '_*} v2 v3]})))
 
-(defn transform-ysm [node]
+(defn transform-ysm [node key]
   (->> node
     first
     val
@@ -41,8 +41,8 @@
       #(if (vector? %1)
          (map-vec transform-node %1)
          (transform-node %1)))
-    (hash-map :ysm)
-    (yamlscript.macros/apply-macros :ysm)))
+    (hash-map key)
+    (yamlscript.macros/apply-macros key)))
 
 (defn transform-list [node]
   (or
@@ -70,7 +70,8 @@
 (defn transform-node [node]
   (let [[key] (first node)]
     (case key
-      :ysm (transform-ysm node)
+      :ysm (transform-ysm node :ysm)
+      :ysg (transform-ysm node :ysg)
       :Lst (transform-list node)
       :Map (transform-map node)
       :Sym (transform-sym node)

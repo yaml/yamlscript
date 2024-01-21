@@ -14,7 +14,9 @@
 ;; * !nil - YAML null scalar
 ;;
 ;; * !ysm - YAMLScript mapping
+;; * !ysg - YAMLScript mapping with left/right grouping
 ;; * !ysx - YAMLScript expression
+;; * !ysl - YAMLScript expression left side group
 ;; * !ysi - YAMLScript interpolated string
 ;;
 ;; * !empty - YAML empty stream
@@ -52,15 +54,16 @@
 (defn resolve
   "Walk YAML tree and tag all nodes according to YAMLScript rules."
   [node]
-  (let [tag (:! node)]
+  (let [tag (:! node)
+        node (dissoc node :!)]
     (if (and tag (re-find #"^yamlscript/v0" tag))
       (let [tag (subs tag (count "yamlscript/v0"))]
         (case tag
           "" (resolve-code-node node)
           "/:" (resolve-data-node node)
-          "/code" (resolve-code-node (dissoc node :!))
-          "/data" (resolve-data-node (dissoc node :!))
-          "/bare" (resolve-bare-node (dissoc node :!))
+          "/code" (resolve-code-node node)
+          "/data" (resolve-data-node node)
+          "/bare" (resolve-bare-node node)
           (throw (Exception. (str "Unknown yamlscript tag: " tag)))))
       (resolve-bare-node node))))
 
@@ -98,12 +101,19 @@
     (when (not= old key)
       [{:ysx key} val])))
 
+(defn tag-ysg [[key val]]
+  (when (and
+          (contains? key :ysx)
+          (contains? val :ysm)
+          (re-find #" +%$" (:ysx key)))
+    (let [key (assoc key :ysx (str/replace (:ysx key) #" +%$" ""))
+          val (set/rename-keys val {:ysm :ysg})]
+      [key val])))
+
 (defn tag-ysx [[key val]]
-  (cond
-    (and (contains? key :ysx) (contains? val :ysx)) [key val]
-    (and (contains? key :ysx) (contains? val :str)) [key val]
-    (and (contains? key :ysx) (contains? val :ysi)) [key val]
-    (and (contains? key :ysx) (contains? val :ysm)) [key val]))
+  (when (and (contains? key :ysx)
+          (some val [:ysx :str :ysi :ysm]))
+    [key val]))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))
@@ -131,6 +141,7 @@
        tag-fn
        tag-def
        tag-defn
+       tag-ysg
        tag-ysx
        identity) pair)))
 
