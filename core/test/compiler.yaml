@@ -567,3 +567,14 @@
     when (a =~ b): c()
   clojure: |
     (when (=-- a b) (c))
+
+
+- name: Macros for cond and case
+  yamlscript: |
+    !yamlscript/v0
+    cond:
+      (a > b): c
+      (a < d): e
+      true: f
+  clojure: |
+    (cond (> a b) c (< a d) e true f)

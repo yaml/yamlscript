@@ -9,7 +9,7 @@
    [yamlscript.util :refer [when-let*]]
    [yamlscript.debug :refer [www]]))
 
-(defn ysm-is-defn [node]
+(defn check-is-defn [node]
   (when-let*
     [pair (:ysm node)
      _ (= 2 (count pair))
@@ -25,10 +25,28 @@
 
     [[key1 key2 key3] body]))
 
+(defn check-cond-case [node]
+  (when-let*
+    [pair (:ysm node)
+     _ (= 2 (count pair))
+     [key val] pair
+     _ (map? key)
+     _ (map? val)
+     _ (or (= 'cond (:Sym key))
+          (= 'case (:Sym key)))
+     body (:ysm val)]
+
+    [key body]))
+
+(defn ysm-cond-case [node]
+  (when-let*
+    [[sym body] (check-cond-case node)]
+    {:ysm [[sym] {:ysg body}]}))
+
 (defn ysm-defn-docstring [node]
   (when-let*
     [[[key1 key2 key3]
-      [doc-string empty & body]] (ysm-is-defn node)
+      [doc-string empty & body]] (check-is-defn node)
      _ (:Str doc-string)
      _ (= "" (:Str empty))]
 
@@ -39,7 +57,7 @@
 (defn ysm-defn-docstring-arrow [node]
   (when-let*
     [[[key1 key2 key3]
-      [arrow doc-string & body]] (ysm-is-defn node)
+      [arrow doc-string & body]] (check-is-defn node)
      _ (= '=> (:Sym arrow))
      _ (:Str doc-string)]
 
@@ -50,7 +68,8 @@
 (def macros-by-tag
   {:ysm
    [ysm-defn-docstring
-    ysm-defn-docstring-arrow]})
+    ysm-defn-docstring-arrow
+    ysm-cond-case]})
 
 (defn apply-macros [tag node]
   (let
