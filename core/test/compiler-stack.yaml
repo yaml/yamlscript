@@ -466,3 +466,15 @@
       {:Str "a\nb"}
       [{:Sym def} {:Sym y}]
       {:Lst [{:Sym +} {:Str "c"} {:Str "d\ne"}]})}
+
+
+- name: fn special form
+  yamlscript: |
+    !yamlscript/v0
+    add =:
+      fn(a b): a + b
+  resolve: |
+    {:ysm
+     [{:ysx "def add"} {:ysm [{:ysx "fn [a b]"} {:ysx "a + b"}]}]}
+  clojure: |
+    (def add (fn [a b] (_+ a b)))

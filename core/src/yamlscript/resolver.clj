@@ -88,7 +88,14 @@
         rgx (re/re #"^defn ($symb)\((.*)\)$")
         key (str/replace key rgx "defn $1 [$2]")]
     (when (not= old key)
-      ; [{:defn key} val])))
+      [{:ysx key} val])))
+
+(defn tag-fn [[key val]]
+  (let [key (:ysx key)
+        old key
+        rgx (re/re #"^fn\((.*)\)$")
+        key (str/replace key rgx "fn [$1]")]
+    (when (not= old key)
       [{:ysx key} val])))
 
 (defn tag-ysx [[key val]]
@@ -121,6 +128,7 @@
               (resolve-code-node val)]]
     ((some-fn
        tag-str
+       tag-fn
        tag-def
        tag-defn
        tag-ysx
