@@ -9,8 +9,7 @@
 
 defn main(&[count impl]):
   count =: count || 100
-  impl =:
-    str: impl || "1"
+  impl =: impl || "1"
   fizzbuzz =: "fizzbuzz-$impl"
 
   when-not ENV."YS_TEST":
@@ -28,11 +27,11 @@ defn main(&[count impl]):
 defn fizzbuzz-1(n):
   map:
     fn(x):
-      cond:
-        zero?(mod(x 15)) "FizzBuzz"
-        zero?(mod(x 5))  "Buzz"
-        zero?(mod(x 3))  "Fizz"
-        :else            x
+      cond %:
+        zero?(mod(x 15)): "FizzBuzz"
+        zero?(mod(x 5)):  "Buzz"
+        zero?(mod(x 3)):  "Fizz"
+        :else:            x
     =>: (1 .. n)
 
 defn fizzbuzz-2(n):
@@ -42,11 +41,11 @@ defn fizzbuzz-2(n):
       recur:
         inc: i
         conj l:
-          cond:
-            zero?(mod(i 15)) "FizzBuzz"
-            zero?(mod(i 5))  "Buzz"
-            zero?(mod(i 3))  "Fizz"
-            :else            i
+          cond %:
+            zero?(mod(i 15)): "FizzBuzz"
+            zero?(mod(i 5)):  "Buzz"
+            zero?(mod(i 3)):  "Fizz"
+            :else:            i
 
 defn fizzbuzz-3(n):
   map:
@@ -56,4 +55,4 @@ defn fizzbuzz-3(n):
           when zero?(mod(x 3)): "Fizz"
           when zero?(mod(x 5)): "Buzz"
       if empty?(s): x s
-    rng: 1, n
+    =>: 1..n

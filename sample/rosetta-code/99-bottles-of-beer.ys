@@ -6,9 +6,9 @@
 #   ys 99-bottles.ys [<count>]
 
 defn main(&[number]):
-  each [n ((number || 99) .. 1)]:
-    say:
-      paragraph: n
+  number =: number || 99
+  each [n (number .. 1)]:
+    say: paragraph(n)
 
 defn paragraph(num): |
   $(bottles num) of beer on the wall,
@@ -17,7 +17,7 @@ defn paragraph(num): |
   $(bottles (num - 1)) of beer on the wall.
 
 defn bottles(n):
-  cond:
-    (n == 0) "No more bottles"
-    (n == 1) "1 bottle"
-    :else    str(n " bottles")
+  cond %:
+    (n == 0): "No more bottles"
+    (n == 1): "1 bottle"
+    :else   : "$n bottles"

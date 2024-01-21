@@ -6,7 +6,8 @@ defn main():
     $(apply str interpose(\", \" open-doors()))"
 
 defn open-doors():
-  for: .[[d n] map(vector doors() iterate(inc 1)) :when d] n
+  for [[d n] map(vector doors() iterate(inc 1)) :when d]:
+    n
 
 defn doors():
   reduce:
