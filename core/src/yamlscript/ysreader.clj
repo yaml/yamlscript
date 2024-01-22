@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :refer
-    [Bln Chr Int Key Lst Map Nil Spc Str Sym Tok Vec]]
+    [Bln Chr Int Key Lst Map Nil Rgx Spc Str Sym Tok Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [read-string resolve]))
@@ -50,6 +50,9 @@
 (defn is-clojure-symbol? [token]
   (and token (re-matches re/csym (str token))))
 
+(defn is-regex? [token]
+  (and token (re-matches re/regx (str token))))
+
 (defn is-string? [token]
   (and token (re-matches re/strg (str token))))
 
@@ -80,6 +83,7 @@
       $nspc |                   # Namespace symbol
       $path |                   # Lookup path
       $lnum |                   # Number token
+      $regx |                   # Regex token
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $oper |                   # Operator token
@@ -194,7 +198,7 @@
 
 (defn normalize-string [string]
   (-> string
-    (subs 1 (- (count string) 1))
+    (subs 1 (dec (count string)))
     (str/replace #"\\ " " ")
     (str/replace #"\\n" "\n")))
 
@@ -233,6 +237,7 @@
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
     (is-path? token) [(make-path token) tokens]
+    (is-regex? token) [(Rgx (->> (subs token 1 (dec (count token))))) tokens]
     (is-fq-symbol? token)
     (let [sym (str/replace token #"\." "/")
           sym (str/replace sym #"::" ".")]

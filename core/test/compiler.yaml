@@ -551,3 +551,11 @@
     =>: (a + b_c)
   error: |-
     Invalid symbol: 'b_c'
+
+
+- name: Regex literal syntax
+  yamlscript: |
+    !yamlscript/v0
+    re1 =: /foo\t"bar".*/
+  clojure: |
+    (def re1 #"foo\t\"bar\".*")

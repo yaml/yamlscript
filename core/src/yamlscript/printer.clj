@@ -11,13 +11,19 @@
   (:refer-clojure :exclude [print]))
 
 (def string-escape
-  {\\ "\\\\"
-   \" "\\\""
+  {\" "\\\""
    \newline "\\n"})
 
 (defn pr-string [s]
   (-> s
     (str/escape string-escape)))
+
+(def regex-escape
+  {\" "\\\""})
+
+(defn pr-regex [s]
+  (-> s
+    (str/escape regex-escape)))
 
 (defn print-node [node]
   (let [node (if (keyword? node)
@@ -44,6 +50,7 @@
                                       (print-node (second %1))))))
              "}")
       :Str (str \" (pr-string val) \")
+      :Rgx (str \# \" (pr-regex val) \")
       :Chr (str "\\" val)
       :Spc (str/replace val #"::" ".")
       :Sym (str val)

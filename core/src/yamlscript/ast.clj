@@ -36,6 +36,8 @@
 
 (defn Tok [s] {:Tok (str s)})
 
+(defn Rgx [s] {:Rgx (str s)})
+
 (defn Bln [b]
   (if (re-matches #"(true|True|TRUE)" b)
     {:Bln true}

@@ -52,12 +52,19 @@
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def narg #"(?:%\d+)")                     ; Numbered argument token
 (def fops #"(?:=>|->)")
+(def regx #"(?x)                           # Regular expression
+            / (?=\S)                         # opening slash
+            (?:
+              \\. |                          # Escaped char
+              [^\\\/\n]                      # Any other char
+            )+/                              # Ending slash
+            ")
 (def strg #"(?x)
             \#?                            # Possibly a regex
             \"(?:                          # Quoted string
               \\. |                          # Escaped char
               [^\\\"]                        # Any other char
-            )*\"?                            # Ending quote
+            )*\"                             # Ending quote
             ")
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
