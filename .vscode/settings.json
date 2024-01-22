@@ -3,6 +3,7 @@
   "cSpell.words": [
     "concat",
     "cond",
+    "condp",
     "debuginfo",
     "defmacro",
     "defn",

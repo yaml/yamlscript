@@ -6,11 +6,12 @@
 
 (ns yamlscript.macros
   (:require
-   [yamlscript.util :refer [when-let*]]
+   [yamlscript.ast :refer [Sym]]
+   [yamlscript.util :refer [when-lets]]
    [yamlscript.debug :refer [www]]))
 
 (defn check-is-defn [node]
-  (when-let*
+  (when-lets
     [pair (:ysm node)
      _ (= 2 (count pair))
      [key val] pair
@@ -26,25 +27,34 @@
     [[key1 key2 key3] body]))
 
 (defn check-cond-case [node]
-  (when-let*
+  (when-lets
     [pair (:ysm node)
      _ (= 2 (count pair))
      [key val] pair
      _ (map? key)
      _ (map? val)
-     _ (or (= 'cond (:Sym key))
-          (= 'case (:Sym key)))
+     sym (:Sym key)
+     _ (contains? #{'case 'cond 'condp} sym)
      body (:ysm val)]
 
     [key body]))
 
-(defn ysm-cond-case [node]
-  (when-let*
-    [[sym body] (check-cond-case node)]
+(defn ysm-case-cond-condp [node]
+  (when-lets
+    [[sym body] (check-cond-case node)
+     len (count body)
+     _ (>= len 2)
+     last-key-pos (- len 2)
+     last-key (nth body last-key-pos)
+     name (:Sym sym)
+     body (if (and (contains? #{'cond 'condp} name)
+                (= '=> (:Sym last-key)))
+            (update-in body [last-key-pos] (fn [_] (Sym "true")))
+            body)]
     {:ysm [[sym] {:ysg body}]}))
 
 (defn ysm-defn-docstring [node]
-  (when-let*
+  (when-lets
     [[[key1 key2 key3]
       [doc-string empty & body]] (check-is-defn node)
      _ (:Str doc-string)
@@ -55,7 +65,7 @@
       {:ysm body}]}))
 
 (defn ysm-defn-docstring-arrow [node]
-  (when-let*
+  (when-lets
     [[[key1 key2 key3]
       [arrow doc-string & body]] (check-is-defn node)
      _ (= '=> (:Sym arrow))
@@ -69,7 +79,7 @@
   {:ysm
    [ysm-defn-docstring
     ysm-defn-docstring-arrow
-    ysm-cond-case]})
+    ysm-case-cond-condp]})
 
 (defn apply-macros [tag node]
   (let

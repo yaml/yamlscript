@@ -31,7 +31,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [when-let*]]
+   [yamlscript.util :refer [when-lets]]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [resolve]))
 
@@ -71,13 +71,13 @@
 ;; Resolve taggers for code mode:
 ;; ----------------------------------------------------------------------------
 (defn tag-str [[key val]]
-  (when-let*
+  (when-lets
     [str (:ysi key)
      _ (= "" (:ysx val))]
     [{:str str} {:str ""}]))
 
 (defn tag-def [[key val]]
-  (when-let*
+  (when-lets
     [key (:ysx key)
      old key
      rgx (re/re #"^($symw) +=$")
