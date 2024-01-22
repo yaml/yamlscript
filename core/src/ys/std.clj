@@ -59,6 +59,9 @@
       (apply str (repeat x y))
       (* x y))))
 
+(defn =-- [str rgx]
+  (re-find rgx str))
+
 (defmacro each [bindings & body]
   `(do
      (doall (for [~@bindings] (do ~@body)))

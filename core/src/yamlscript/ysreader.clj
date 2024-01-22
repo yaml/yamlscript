@@ -84,6 +84,7 @@
       $path |                   # Lookup path
       $lnum |                   # Number token
       $regx |                   # Regex token
+      $spop |                   # Special operators (=~ etc)
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $oper |                   # Operator token

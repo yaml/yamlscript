@@ -47,8 +47,9 @@
               ;.*\n?                         # comments
             )")
 (def lnum #"-?\d+")                        ; Integer token
+(def spop #"(?:\=\~)")                     ; Special operator token
                                            ; Operator token
-(def oper #"(?:[-+*/%<=>|&.]{1,3})")
+(def oper #"(?:[-+*/%<=>~|&.]{1,3})")
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def narg #"(?:%\d+)")                     ; Numbered argument token
 (def fops #"(?:=>|->)")

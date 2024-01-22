@@ -559,3 +559,11 @@
     re1 =: /foo\t"bar".*/
   clojure: |
     (def re1 #"foo\t\"bar\".*")
+
+
+- name: Regex operator
+  yamlscript: |
+    !yamlscript/v0
+    when (a =~ b): c()
+  clojure: |
+    (when (=-- a b) (c))

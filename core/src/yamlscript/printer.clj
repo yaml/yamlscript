@@ -53,7 +53,7 @@
       :Rgx (str \# \" (pr-regex val) \")
       :Chr (str "\\" val)
       :Spc (str/replace val #"::" ".")
-      :Sym (str val)
+      :Sym (str (str/replace val #"~" "--"))
       :Tok (str val)
       :Key (str val)
       :Int (str val)
@@ -83,5 +83,4 @@
      nil)))")
   (print
     {:Lst [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
-  (print {:Map [{:Str "foo"} {:Str "\\a"}]})
-  )
+  (print {:Map [{:Str "foo"} {:Str "\\a"}]}))
