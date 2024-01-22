@@ -56,7 +56,14 @@ $ ys --compile file.ys
 
 ## Rust Usage
 
-File `prog.rs`:
+Create a new Rust project:
+
+```text
+$ cargo new --bin prog
+$ cd prog
+```
+
+Add the file `src/main.rs`:
 
 ```rust
 use std::fs::File;
@@ -67,18 +74,14 @@ fn main() -> std::io::Result<()> {
     let mut file = File::open("file.ys")?;
     let mut input = String::new();
     file.read_to_string(&mut input)?;
-
-    let docs = YAMLScript::load(&input).unwrap();
-
-    for doc in &docs {
-        println!("{:?}", doc);
-    }
-
+    let ys = YAMLScript::new().unwrap();
+    let data = ys.load::<serde_json::Value>(&input).unwrap();
+    println!("{data:?}");
     Ok(())
 }
 ```
 
-File `file.ys`:
+Add file `file.ys`:
 
 ```yaml
 !yamlscript/v0
@@ -91,7 +94,7 @@ name =: "World"
   baz:: "Hello, $name!"
 ```
 
-File `other.yaml`:
+Add file `other.yaml`:
 
 ```yaml
 oh: Hello
@@ -100,8 +103,13 @@ oh: Hello
 Run:
 
 ```text
-$ cargo run prog.rs
-{"foo":[1,2,42],"bar":{"oh":"Hello"},"baz":"Hello, World!"}
+$ curl https://yamlscript.org/install | sudo PREFIX=/usr/local bash
+$ cargo add yamlscript
+$ cargo add serde_json
+$ cargo run
+    Finished dev [unoptimized + debuginfo] target(s) in 0.02s
+     Running `target/debug/prog`
+Object {"bar": Object {"oh": String("Hello")}, "baz": String("Hello, World!"), "foo": Array [Number(1), Number(2), Number(42)]}
 ```
 
 
@@ -110,7 +118,7 @@ $ cargo run prog.rs
 You can install this module like any other Rust module:
 
 ```bash
-$ cargo install yamlscript
+$ cargo add yamlscript
 ```
 
 but you will need to have a system install of `libyamlscript.so`.

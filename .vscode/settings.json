@@ -3,6 +3,7 @@
   "cSpell.words": [
     "concat",
     "cond",
+    "debuginfo",
     "defmacro",
     "defn",
     "distclean",
@@ -13,6 +14,8 @@
     "libyamlscript",
     "mapv",
     "Raku",
+    "serde",
+    "unoptimized",
     "yamlscript"
   ]
 }

@@ -6,12 +6,8 @@ fn main() -> std::io::Result<()> {
     let mut file = File::open("file.ys")?;
     let mut input = String::new();
     file.read_to_string(&mut input)?;
-
-    let docs = YAMLScript::load(&input).unwrap();
-
-    for doc in &docs {
-        println!("{:?}", doc);
-    }
-
+    let ys = YAMLScript::new().unwrap();
+    let data = ys.load::<serde_json::Value>(&input).unwrap();
+    println!("{data:?}");
     Ok(())
 }
