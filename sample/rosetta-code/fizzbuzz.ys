@@ -31,8 +31,8 @@ defn fizzbuzz-1(n):
         zero?(mod(x 15)): "FizzBuzz"
         zero?(mod(x 5)):  "Buzz"
         zero?(mod(x 3)):  "Fizz"
-        :else:            x
-    =>: (1 .. n)
+        =>: x
+    =>: 1 .. n
 
 defn fizzbuzz-2(n):
   loop [i 1, l []]:
@@ -45,7 +45,7 @@ defn fizzbuzz-2(n):
             zero?(mod(i 15)): "FizzBuzz"
             zero?(mod(i 5)):  "Buzz"
             zero?(mod(i 3)):  "Fizz"
-            :else:            i
+            =>: i
 
 defn fizzbuzz-3(n):
   map:
@@ -55,4 +55,4 @@ defn fizzbuzz-3(n):
           when zero?(mod(x 3)): "Fizz"
           when zero?(mod(x 5)): "Buzz"
       if empty?(s): x s
-    =>: 1..n
+    rng: 1 n
