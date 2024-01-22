@@ -41,6 +41,7 @@ pattern='(YAMLSCRIPT.*)'"$vp"'(.*)'
 
 bump raku/lib/YAMLScript.rakumod
 bump ruby/lib/yamlscript.rb
+bump www/src/install
 
 pattern='(YAMLScript.*)'"$vp"'(.*)'
 
