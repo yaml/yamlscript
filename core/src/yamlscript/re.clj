@@ -73,8 +73,9 @@
 (def pkey (re #"(?:$symw|$pnum|$strg)"))   ; Path key
 (def path (re #"(?:$symw(?:\.$pkey)+)"))   ; Lookup path
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
-(def csym #"(?:[-a-zA-Z0-9_'*+?!<=>]+)")   ; Clojure symbol
-(def symb (re #"(?:$symw[?!]?)"))          ; Symbol token
+                                           ; Clojure symbol
+(def csym #"(?:[-a-zA-Z0-9_'*+?!<=>]+(?:\.(?=\ ))?)")
+(def symb (re #"(?:$symw[?!.]?)"))         ; Symbol token
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fqsm (re #"(?:$nspc\.$symb)"))        ; Fully qualified symbol
                                            ; Symbol followed by paren
