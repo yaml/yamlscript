@@ -62,6 +62,9 @@
 (defn =-- [str rgx]
   (re-find rgx str))
 
+(defn die [msg]
+  (throw (Exception. msg)))
+
 (defmacro each [bindings & body]
   `(do
      (doall (for [~@bindings] (do ~@body)))
