@@ -1,7 +1,7 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.builder is responsible parsing all the !ysx nodes into
+;; The yamlscript.builder is responsible parsing all the !exp nodes into
 ;; YAMLScript AST nodes.
 
 (ns yamlscript.builder
@@ -16,22 +16,22 @@
 (declare build-node)
 
 (defn build
-  "Parse all the !ysx nodes into YAMLScript AST nodes."
+  "Parse all the !exp nodes into YAMLScript AST nodes."
   [node] (build-node node))
 
-(defn build-ysm [node]
+(defn build-pairs [node]
   (->> node
     first
     val
     (map build-node)
-    (hash-map :ysm)))
+    (hash-map :pairs)))
 
-(defn build-ysg [node]
+(defn build-forms [node]
   (->> node
     first
     val
     (map build-node)
-    (hash-map :ysg)))
+    (hash-map :forms)))
 
 ;; XXX This might belong in the transformer
 (defn optimize-ys-expression [node]
@@ -39,13 +39,13 @@
     (get-in node [:Lst 1])
     node))
 
-(defn build-ysx [node]
+(defn build-exp [node]
   (let [string (-> node first val)]
     (if (= string "")
       {:Empty nil}
-      (let [expr (ysreader/read-string string)]
-        (if expr
-          (optimize-ys-expression expr)
+      (let [exp (ysreader/read-string string)]
+        (if exp
+          (optimize-ys-expression exp)
           {:Empty nil})))))
 
 (defn build-map [node]
@@ -68,19 +68,19 @@
       \$ $bpar
     )"))
 
-(defn build-ysi [node]
-  (let [string (:ysi node)
+(defn build-vstr [node]
+  (let [string (:vstr node)
         parts (re-seq re-interpolated-string string)
         exprs (map
                 #(cond
                    (re-matches (re/re #"\$$symw$bpar") %1)
-                   (build-ysx {:ysx (subs %1 1)})
+                   (build-exp {:exp (subs %1 1)})
                    ,
                    (re-matches (re/re #"\$$symw") %1)
                    (Sym (subs %1 1))
                    ,
                    (re-matches (re/re #"\$$bpar") %1)
-                   (build-ysx {:ysx (subs %1 1)})
+                   (build-exp {:exp (subs %1 1)})
                    ,
                    :else
                    (Str (str/replace %1 #"\\(\$)" "$1")))
@@ -92,10 +92,10 @@
 (defn build-node [node]
   (let [[tag] (first node)]
     (case tag
-      :ysm (build-ysm node)
-      :ysg (build-ysg node)
-      :ysx (build-ysx node)
-      :ysi (build-ysi node)
+      :pairs (build-pairs node)
+      :forms (build-forms node)
+      :exp (build-exp node)
+      :vstr (build-vstr node)
       :str (Str (:str node))
       :map (build-map node)
       :seq (build-vec node)
@@ -108,19 +108,19 @@
 (comment
   www
 
-  (build {:ysx ""})
+  (build {:exp ""})
 
   (re-seq #"(?:bar|.+?(?=bar|$))" "foo bar baz")
 
-  (build {:ysx "; comment (foo bar)"})
+  (build {:exp "; comment (foo bar)"})
 
-  (build {:ysm [{:ysx "println"} {:str "Hello"}]})
+  (build {:pairs [{:exp "println"} {:str "Hello"}]})
 
-  (build {:ysm [{:ysx "inc"} {:ysx "(6 * 7)"}]})
+  (build {:pairs [{:exp "inc"} {:exp "(6 * 7)"}]})
 
-  (build {:ysm [{:ysx "a"} {:ysx "b c"}]})
+  (build {:pairs [{:exp "a"} {:exp "b c"}]})
 
   (build
-    {:ysm [{:ysx "a"}
-           {:ysx "b c"}]})
+    {:pairs [{:exp "a"}
+             {:exp "b c"}]})
   )

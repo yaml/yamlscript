@@ -99,15 +99,4 @@
 
 (comment
   www
-  (def re-ysi
-    (re #"(?sx)
-          (?:
-            \$ $symw |
-            \$ $bpar |
-            .+?(?= \$ $symw | \$ $bpar | $)
-          )"))
-
-  re-ysi
-  (re-seq re-ysi "foo $(bar()) , -1 $baz")
-  (re-seq bpar "(a(b(c(d))e)f(g(h)i)j(k(l)m)n)o(p(q)r)s(t(u)v)w(x(y)z))")
   )

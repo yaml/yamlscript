@@ -70,7 +70,7 @@
     prn: 'Hello'
     die: "Noooo"
   resolve: |
-    {:ysm [{:ysx "prn"} {:str "Hello"} {:ysx "die"} {:ysi "Noooo"}]}
+    {:pairs [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
 
 
 
@@ -80,7 +80,7 @@
     prn: 'Hello'
     die: "Noooo"
   resolve: |
-    {:ysm [{:ysx "prn"} {:str "Hello"} {:ysx "die"} {:ysi "Noooo"}]}
+    {:pairs [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
 
 
 
@@ -147,7 +147,7 @@
     !yamlscript/v0/data
     num: ! inc(41)
   resolve: |
-    {:map [{:str "num"} {:ysx "inc(41)"}]}
+    {:map [{:str "num"} {:exp "inc(41)"}]}
 
 
 
@@ -156,7 +156,7 @@
     !yamlscript/v0
     num: ! inc(41)
   resolve: |
-    {:ysm [{:ysx "num"} {:str "inc(41)"}]}
+    {:pairs [{:exp "num"} {:str "inc(41)"}]}
 
 
 
@@ -165,7 +165,7 @@
     !yamlscript/v0/data
     num: ! inc(41)
   resolve: |
-    {:map [{:str "num"} {:ysx "inc(41)"}]}
+    {:map [{:str "num"} {:exp "inc(41)"}]}
 
 
 
@@ -177,8 +177,8 @@
     - 2
     - 3
   resolve: |
-    {:ysm
-     [{:ysx "def list"}
+    {:pairs
+     [{:exp "def list"}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
 
 
@@ -193,8 +193,8 @@
     - 2
     - 3
   resolve: |
-    {:ysm
-     [{:ysx "def list"}
+    {:pairs
+     [{:exp "def list"}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
   SKIP: true
 

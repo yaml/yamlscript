@@ -13,18 +13,18 @@
 ;; * !bln - YAML boolean scalar
 ;; * !nil - YAML null scalar
 ;;
-;; * !ysm - YAMLScript mapping
-;; * !ysg - YAMLScript mapping with left/right grouping
-;; * !ysx - YAMLScript expression
-;; * !ysl - YAMLScript expression left side group
-;; * !ysi - YAMLScript interpolated string
+;; * !pairs - YAMLScript mapping - pair creates form
+;; * !forms - YAMLScript mapping - lhs and rhs create separate forms
+;; * !exp   - YAMLScript expression
+;; * !form  - YAMLScript expression - node creates form
+;; * !vstr  - YAMLScript interpolated string
 ;;
 ;; * !empty - YAML empty stream
 ;;
 ;; The resolver transforms the keys of the YAMLScript special forms:
 ;;
-;; * def - 'foo =' -> !ysx 'def foo'
-;; * defn - 'defn foo(...)' -> !ysx 'defn foo [...]'
+;; * def  - 'foo =' -> !exp 'def foo'
+;; * defn - 'defn foo(...)' -> !exp 'defn foo [...]'
 
 (ns yamlscript.resolver
   (:require
@@ -72,47 +72,47 @@
 ;; ----------------------------------------------------------------------------
 (defn tag-str [[key val]]
   (when-lets
-    [str (:ysi key)
-     _ (= "" (:ysx val))]
+    [str (:vstr key)
+     _ (= "" (:exp val))]
     [{:str str} {:str ""}]))
 
 (defn tag-def [[key val]]
   (when-lets
-    [key (:ysx key)
+    [key (:exp key)
      old key
      rgx (re/re #"^($symw) +=$")
      key (str/replace key rgx "def $1")]
     (when (not= old key)
-      [{:ysx key} val])))
+      [{:exp key} val])))
 
 (defn tag-defn [[key val]]
-  (let [key (:ysx key)
+  (let [key (:exp key)
         old key
         rgx (re/re #"^defn ($symb)\((.*)\)$")
         key (str/replace key rgx "defn $1 [$2]")]
     (when (not= old key)
-      [{:ysx key} val])))
+      [{:exp key} val])))
 
 (defn tag-fn [[key val]]
-  (let [key (:ysx key)
+  (let [key (:exp key)
         old key
         rgx (re/re #"^fn\((.*)\)$")
         key (str/replace key rgx "fn [$1]")]
     (when (not= old key)
-      [{:ysx key} val])))
+      [{:exp key} val])))
 
-(defn tag-ysg [[key val]]
+(defn tag-forms [[key val]]
   (when (and
-          (contains? key :ysx)
-          (contains? val :ysm)
-          (re-find #" +%$" (:ysx key)))
-    (let [key (assoc key :ysx (str/replace (:ysx key) #" +%$" ""))
-          val (set/rename-keys val {:ysm :ysg})]
+          (contains? key :exp)
+          (contains? val :pairs)
+          (re-find #" +%$" (:exp key)))
+    (let [key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
+          val (set/rename-keys val {:pairs :forms})]
       [key val])))
 
-(defn tag-ysx [[key val]]
-  (when (and (contains? key :ysx)
-          (some val [:ysx :str :ysi :ysm]))
+(defn tag-exp [[key val]]
+  (when (and (contains? key :exp)
+          (some val [:exp :str :vstr :pairs]))
     [key val]))
 
 (defn tag-error [[key val]]
@@ -141,14 +141,14 @@
        tag-fn
        tag-def
        tag-defn
-       tag-ysg
-       tag-ysx
+       tag-forms
+       tag-exp
        identity) pair)))
 
 (defn resolve-code-mapping [node]
   (when (:%% node)
     (throw (Exception. "Flow mappings not allowed in code mode")))
-  {:ysm (vec
+  {:pairs (vec
           (mapcat
             (fn [[key val]] (resolve-code-pair key val))
             (partition 2 (:% node))))})
@@ -165,10 +165,10 @@
                (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
                  (assoc node := (subs val 1))
                  node)]
-           (set/rename-keys node {:= :ysx}))
-      :$ (set/rename-keys node {:$ :ysi})
+           (set/rename-keys node {:= :exp}))
+      :$ (set/rename-keys node {:$ :vstr})
       :' (set/rename-keys node {:' :str})
-      :| (set/rename-keys node {:| :ysi})
+      :| (set/rename-keys node {:| :vstr})
       :> (set/rename-keys node {:> :str})
       ,  (throw (Exception. (str "Scalar has unknown style: " key))))))
 

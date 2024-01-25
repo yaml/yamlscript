@@ -91,7 +91,7 @@
     foo:
       bar: baz
   resolve: |
-    {:ysm [{:ysx "foo"} {:ysm [{:ysx "bar"} {:ysx "baz"}]}]}
+    {:pairs [{:exp "foo"} {:pairs [{:exp "bar"} {:exp "baz"}]}]}
   clojure: |
     (foo (bar baz))
 
@@ -330,7 +330,7 @@
     !yamlscript/v0
     foo =: \(%1 + %4)
   build: |
-   {:ysm
+   {:pairs
     ([{:Sym def} {:Sym foo}]
      {:Lst
       [{:Sym fn}
@@ -357,9 +357,9 @@
       b c: d
       e: f g
   build: |
-    {:ysm
+    {:pairs
      ({:Sym a}
-      {:ysm
+      {:pairs
        ([{:Sym b} {:Sym c}]
         {:Sym d}
         {:Sym e}
@@ -504,9 +504,9 @@
       =>: "This is a doc string"
       say: "Hello World"
   transform: |
-    {:ysm
+    {:pairs
      [[{:Sym defn} {:Sym foo} {:Str "This is a doc string"} {:Vec []}]
-      {:ysm ({:Sym say} {:Str "Hello World"})}]}
+      {:pairs ({:Sym say} {:Str "Hello World"})}]}
   clojure: |
     (defn foo "This is a doc string" [] (say "Hello World"))
 

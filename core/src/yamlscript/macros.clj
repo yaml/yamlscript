@@ -12,7 +12,7 @@
 
 (defn check-is-defn [node]
   (when-lets
-    [pair (:ysm node)
+    [pair (:pairs node)
      _ (= 2 (count pair))
      [key val] pair
      _ (vector? key)
@@ -21,25 +21,25 @@
      _ (= 'defn (:Sym key1))
      _ (:Sym key2)
      _ (:Vec key3)
-     body (:ysm val)
+     body (:pairs val)
      _ (vector? body)]
 
     [[key1 key2 key3] body]))
 
 (defn check-cond-case [node]
   (when-lets
-    [pair (:ysm node)
+    [pair (:pairs node)
      _ (= 2 (count pair))
      [key val] pair
      _ (map? key)
      _ (map? val)
      sym (:Sym key)
      _ (contains? #{'case 'cond 'condp} sym)
-     body (:ysm val)]
+     body (:pairs val)]
 
     [key body]))
 
-(defn ysm-case-cond-condp [node]
+(defn pairs-case-cond-condp [node]
   (when-lets
     [[sym body] (check-cond-case node)
      len (count body)
@@ -51,35 +51,35 @@
                 (= '=> (:Sym last-key)))
             (update-in body [last-key-pos] (fn [_] (Sym "true")))
             body)]
-    {:ysm [[sym] {:ysg body}]}))
+    {:pairs [[sym] {:forms body}]}))
 
-(defn ysm-defn-docstring [node]
+(defn pairs-defn-docstring [node]
   (when-lets
     [[[key1 key2 key3]
       [doc-string empty & body]] (check-is-defn node)
      _ (:Str doc-string)
      _ (= "" (:Str empty))]
 
-    {:ysm
+    {:pairs
      [[key1 key2 doc-string key3]
-      {:ysm body}]}))
+      {:pairs body}]}))
 
-(defn ysm-defn-docstring-arrow [node]
+(defn pairs-defn-docstring-arrow [node]
   (when-lets
     [[[key1 key2 key3]
       [arrow doc-string & body]] (check-is-defn node)
      _ (= '=> (:Sym arrow))
      _ (:Str doc-string)]
 
-    {:ysm
+    {:pairs
      [[key1 key2 doc-string key3]
-      {:ysm body}]}))
+      {:pairs body}]}))
 
 (def macros-by-tag
-  {:ysm
-   [ysm-defn-docstring
-    ysm-defn-docstring-arrow
-    ysm-case-cond-condp]})
+  {:pairs
+   [pairs-defn-docstring
+    pairs-defn-docstring-arrow
+    pairs-case-cond-condp]})
 
 (defn apply-macros [tag node]
   (let

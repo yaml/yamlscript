@@ -961,7 +961,7 @@ becomes something like this fully tagged YAML structure:
 ```
 --- !program
 !def  "name"    : !str  "YAMLScript"
-!call "println" : !ysi "Hello, $name"
+!call "println" : !vstr "Hello, $name"
 ```
 
 The construction phase of turning this into a Lingy AST is just applying the

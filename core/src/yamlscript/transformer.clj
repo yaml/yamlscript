@@ -33,7 +33,7 @@
           [_ v2 v3] list]
       {:Lst [{:Sym '_*} v2 v3]})))
 
-(defn transform-ysm [node key]
+(defn transform-pairs [node key]
   (->> node
     first
     val
@@ -65,13 +65,13 @@
     node))
 
 ; TODO:
-; Turn :ysm mappings into :ysg groups when appropriate.
+; Turn :pairs mappings into :forms groups when appropriate.
 
 (defn transform-node [node]
   (let [[key] (first node)]
     (case key
-      :ysm (transform-ysm node :ysm)
-      :ysg (transform-ysm node :ysg)
+      :pairs (transform-pairs node :pairs)
+      :forms (transform-pairs node :forms)
       :Lst (transform-list node)
       :Map (transform-map node)
       :Sym (transform-sym node)

@@ -38,8 +38,8 @@
                (Lst (flatten [pair])))]
     pair))
 
-(defn construct-ysm [node ctx]
-  (let [nodes (:ysm node)
+(defn construct-pairs [node ctx]
+  (let [nodes (:pairs node)
         pairs (vec (map vec (partition 2 nodes)))
         construct-side (fn [n c] (if (vector? n)
                                    (vec (map #(construct-node %1 c) n))
@@ -52,14 +52,14 @@
                        [[lhs rhs] & pairs] pairs
                        lhs (construct-side lhs ctx)
                        rhs (construct-side rhs ctx)
-                       rhs (or (:ysg rhs) rhs)
+                       rhs (or (:forms rhs) rhs)
                        new (conj new (construct-call [lhs rhs]))]
                    (recur pairs, new))
                  new))]
     node))
 
-(defn construct-ysg [node ctx]
-  (let [nodes (:ysg node)
+(defn construct-forms [node ctx]
+  (let [nodes (:forms node)
         nodes (reduce
                 (fn [nodes node]
                   (let [node (construct-node node ctx)]
@@ -67,15 +67,15 @@
                       (conj nodes node)
                       nodes)))
                 [] nodes)]
-    {:ysg nodes}))
+    {:forms nodes}))
 
 (defn construct-node [node ctx]
   (when (vector? ctx) (throw (Exception. "ctx is a vector")))
   (let [[[key]] (seq node)
         ctx (update-in ctx [:lvl] inc)]
     (case key
-      :ysm (construct-ysm node ctx)
-      :ysg (construct-ysg node ctx)
+      :pairs (construct-pairs node ctx)
+      :forms (construct-forms node ctx)
       ,    node)))
 
 ;;------------------------------------------------------------------------------
@@ -92,14 +92,14 @@
                 ;; Handle RHS is mapping
                 (partition 2)
                 (map #(let [[k v] %1]
-                        (if (:ysm v)
+                        (if (:pairs v)
                           [k (Lst (get-in
-                                    (construct-ysm v ctx)
+                                    (construct-pairs v ctx)
                                     [0 :Lst]))]
                           %1)))
                 (mapcat identity)
                 vec))]
-        (construct-ysm {:ysm (mapcat identity rest)} ctx)))]])
+        (construct-pairs {:pairs (mapcat identity rest)} ctx)))]])
 
 (mapcat identity [{:Sym 'b} {:Lst [{:Sym 'c} {:Sym 'd}]}])
 
@@ -165,9 +165,9 @@
 (comment
   www
   (construct
-    {:ysm
+    {:pairs
      ([{:Sym 'defn} {:Sym 'foo} {:Vec [{:Sym 'x}]}]
-      {:ysm
+      {:pairs
        '([{:Sym 'def} {:Sym 'y}]
          {:Lst ({:Sym 'add} {:Sym 'x} {:Int 1})}
          [{:Sym 'def} {:Sym 'x}]
