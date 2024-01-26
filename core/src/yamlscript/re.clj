@@ -60,21 +60,26 @@
               [^\\\/\n]                      # Any other char
             )+/                              # Ending slash
             ")
-(def strg #"(?x)
-            \#?                            # Possibly a regex
-            \"(?:                          # Quoted string
+(def dstr #"(?x)
+            \"(?:                          # Double quoted string
               \\. |                          # Escaped char
               [^\\\"]                        # Any other char
             )*\"                             # Ending quote
             ")
+(def sstr #"(?x)
+            '(?:                          # Sinlge quoted string
+              '' |                           # Escaped single quote
+              [^']                           # Any other char
+            )*'                              # Ending quote
+            ")
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
 (def symw #"(?:$anum+(?:-$anum+)*)")       ; Symbol word
-(def pkey (re #"(?:$symw|$pnum|$strg)"))   ; Path key
+(def pkey (re #"(?:$symw|$pnum|$dstr|$sstr)"))   ; Path key
 (def path (re #"(?:$symw(?:\.$pkey)+)"))   ; Lookup path
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
-(def csym #"(?:[-a-zA-Z0-9_'*+?!<=>]+(?:\.(?=\ ))?)")
+(def csym #"(?:[-a-zA-Z0-9_*+?!<=>]+(?:\.(?=\ ))?)")
 (def symb (re #"(?:$symw[?!.]?)"))         ; Symbol token
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fqsm (re #"(?:$nspc\.$symb)"))        ; Fully qualified symbol

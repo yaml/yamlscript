@@ -578,3 +578,11 @@
       =>: f
   clojure: |
     (cond (> a b) c (< a d) e true f)
+
+
+- name: Single quoted string
+  yamlscript: |
+    !yamlscript/v0
+    say: 123 + 'let''s go'
+  clojure: |
+    (say (_+ 123 "let's go"))

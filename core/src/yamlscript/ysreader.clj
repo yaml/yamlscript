@@ -38,9 +38,6 @@
 (defn is-path? [token]
   (and token (re-matches re/path (str token))))
 
-(defn is-quote? [token]
-  (and token (= "'" (str token))))
-
 (defn is-syntax-quote? [token]
   (and token (= "`" (str token))))
 
@@ -54,7 +51,10 @@
   (and token (re-matches re/regx (str token))))
 
 (defn is-string? [token]
-  (and token (re-matches re/strg (str token))))
+  (and token (re-matches re/dstr (str token))))
+
+(defn is-single? [token]
+  (and token (re-matches re/sstr (str token))))
 
 (defn is-fq-symbol? [token]
   (and token
@@ -99,9 +99,10 @@
       ; |
                               # Other tokens
       ~@ |                      # Unquote-splice token
-      [\[\]{}()'`~^@] |         # Single character tokens
+      [\[\]{}()`~^@] |          # Single character tokens
 
-      $strg                   # String token
+      $dstr |                 # String token
+      $sstr |                 # String token
     )"))
 
 (defn wrap-parens [expr]
@@ -111,6 +112,7 @@
   (->> expr
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))
+    (remove empty?)
     (#(if (System/getenv "YS_LEX_DEBUG")
         (www %1)
         %1))))
@@ -203,6 +205,11 @@
     (str/replace #"\\ " " ")
     (str/replace #"\\n" "\n")))
 
+(defn normalize-single [string]
+  (-> string
+    (subs 1 (dec (count string)))
+    (str/replace #"''" "'")))
+
 (defn make-path [token]
   (let
    [[value & keys] (str/split token #"\.")
@@ -211,6 +218,7 @@
               (is-number? %1) (Int %1)
               (is-symbol? %1) (Str %1)
               (is-string? %1) (Str (normalize-string %1))
+              (is-single? %1) (Str (normalize-single %1))
               :else (throw (Exception. (str "Invalid path token: " %1))))
            keys)
     form (cons (Sym '__) (cons (Sym value) form))]
@@ -235,6 +243,7 @@
     (is-unquote-splice? token) [(Tok token) tokens]
     (is-syntax-quote? token) [(Tok token) tokens]
     (is-string? token) [(Str (normalize-string token)) tokens]
+    (is-single? token) [(Str (normalize-single token)) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
     (is-path? token) [(make-path token) tokens]
@@ -251,10 +260,6 @@
     (is-namespace? token) [(Spc token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 
-(defn read-quoted-form [[_ & tokens]]
-  (let [[form tokens] (read-form tokens)]
-    [(Lst [(Sym "quote") form]) tokens]))
-
 (defn read-form [tokens]
   (let [token (first tokens)
         [token tokens]
@@ -267,7 +272,6 @@
       "(" (read-list tokens Lst ")")
       "[" (read-list tokens Vec "]")
       "{" (read-list tokens Map "}")
-      "'" (read-quoted-form tokens)
       ,   (read-scalar tokens))))
 
 (defn read-forms [tokens]
