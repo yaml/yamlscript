@@ -583,6 +583,8 @@
 - name: Single quoted string
   yamlscript: |
     !yamlscript/v0
-    say: 123 + 'let''s go'
+    say: ."123" + ' let''s go'
+    say: '123 let''s go'
   clojure: |
-    (say (_+ 123 "let's go"))
+    (say (_+ "123" " let's go"))
+    (say "123 let's go")
