@@ -135,7 +135,6 @@ and `bash`.
 Test your new `ys` installation by running:
 
 ```text
-$ ys --help
 ys - The YAMLScript (YS) Command Line Tool
 
 Usage: ys [options] [file]
@@ -159,8 +158,10 @@ Options:
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
 
-  -X, --stack-trace        Print full stack trace for errors
   -x, --debug-stage STAGE  Display the result of stage(s)
+  -X                       Same as '-x all'
+  -S, --stack-trace        Print full stack trace for errors
+
       --version            Print version and exit
   -h, --help               Print this help and exit
 ```

@@ -108,8 +108,6 @@
    #_["-K" "--kill"
       "Stop the nREPL server"]
 
-   ["-X" "--stack-trace"
-    "Print full stack trace for errors"]
    ["-x" "--debug-stage STAGE"
     "Display the result of stage(s)"
     :default {}
@@ -120,6 +118,12 @@
      (str "must be one of: "
        (str/join ", " (keys compiler/stages))
        " or all")]]
+   ["-X" nil
+    "Same as '-x all'"
+    :id :debug-stage
+    :update-fn (fn [_] compiler/stages)]
+   ["-S" "--stack-trace"
+    "Print full stack trace for errors"]
 
    [nil "--version"
     "Print version and exit"]
@@ -188,7 +192,8 @@ Options:
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
         ;; Insert blank lines in help text
-        help (str/replace help #"\n  (-[comJRX])" "\n\n  $1")
+        help (str/replace help #"\n  (-[comJRx])" "\n\n  $1")
+        help (str/replace help #"\n  (.*--version)" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %1))]
     (println help)))
 
