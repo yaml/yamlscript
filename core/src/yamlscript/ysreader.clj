@@ -15,60 +15,58 @@
   (:refer-clojure :exclude [read-string resolve]))
 
 (defn is-comment? [token]
-  (and token (re-matches re/comm (str token))))
+  (re-matches re/comm (str token)))
 
 (defn is-character? [token]
-  (and token (re-matches re/char (str token))))
+  (re-matches re/char (str token)))
 
 (defn is-keyword? [token]
-  (and token (re-matches re/keyw (str token))))
+  (re-matches re/keyw (str token)))
 
 (defn is-namespace? [token]
-  (and token (re-matches re/nspc (str token))))
+  (re-matches re/nspc (str token)))
 
 (defn is-narg? [token]
-  (and token (re-matches re/narg (str token))))
+  (re-matches re/narg (str token)))
 
 (defn is-number? [token]
-  (and token (re-matches re/lnum (str token))))
+  (re-matches re/numb (str token)))
 
 (defn is-operator? [token]
-  (and token (re-matches re/oper (str token))))
+  (re-matches re/osym (str token)))
 
 (defn is-path? [token]
-  (and token (re-matches re/path (str token))))
+  (re-matches re/path (str token)))
 
 (defn is-syntax-quote? [token]
-  (and token (= "`" (str token))))
+  (= "`" (str token)))
 
 (defn is-unquote-splice? [token]
-  (and token (= "~@" (str token))))
+  (= "~@" (str token)))
 
 (defn is-clojure-symbol? [token]
-  (and token (re-matches re/csym (str token))))
+  (re-matches re/csym (str token)))
 
 (defn is-regex? [token]
-  (and token (re-matches re/regx (str token))))
+  (re-matches re/regx (str token)))
 
 (defn is-string? [token]
-  (and token (re-matches re/dstr (str token))))
+  (re-matches re/dstr (str token)))
 
 (defn is-single? [token]
-  (and token (re-matches re/sstr (str token))))
+  (re-matches re/sstr (str token)))
 
 (defn is-fq-symbol? [token]
-  (and token
-    (re-matches re/fqsm (str token))))
+  (re-matches re/fsym (str token)))
 
 (defn is-symbol? [token]
-  (and token
-    (or
-      (re-matches re/fqsm (str token))
-      (re-matches re/dyns (str token))
-      (re-matches re/symb (str token)))))
+  (or
+    (re-matches re/fsym (str token))
+    (re-matches re/esym (str token))
+    (re-matches re/ysym (str token))))
 
 (defn is-symbol-paren? [token]
-  (and token (re-matches re/symp (str token))))
+  (re-matches re/psym (str token)))
 
 (def re-tokenize
   (re/re
@@ -77,32 +75,24 @@
       $comm |                 # Comment
                               # Symbols and operators
       $keyw |                   # Keyword token
-      $dyns |                   # Dynamic symbol
-      $symp |                   # Symbol followed by paren
-      $fqsm |                   # Fully qualified symbol
+      $esym |                   # Earmuff symbol
+      $psym |                   # Symbol followed by paren
+      $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
       $path |                   # Lookup path
-      $lnum |                   # Number token
+      $numb |                   # Numeric literal token
       $regx |                   # Regex token
-      $spop |                   # Special operators (=~ etc)
+      $xsym |                   # Special operators (=~ etc)
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
-      $oper |                   # Operator token
+      $osym |                   # Operator symbol token
       $char |                   # Character token
       $anon |                   # Anonymous fn start token
-                              # Reader macros
-      \#\_ |                    # Ignore next form
-      \#\' |                    # Var
-      \#\( |                    # Anonymous fn
-      \#\{ |                    # HashSet
-      \#\? |                    # Reader conditional
-      ; |
+      $dstr |                 # String token
+      $sstr |                 # String token
                               # Other tokens
       ~@ |                      # Unquote-splice token
       [\[\]{}()`~^@] |          # Single character tokens
-
-      $dstr |                 # String token
-      $sstr |                 # String token
     )"))
 
 (defn wrap-parens [expr]
@@ -112,7 +102,6 @@
   (->> expr
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))
-    (remove empty?)
     (#(if (System/getenv "YS_LEX_DEBUG")
         (www %1)
         %1))))
@@ -223,6 +212,8 @@
            keys)
     form (cons (Sym '__) (cons (Sym value) form))]
     (Lst form)))
+
+(declare read-form)
 
 (defn read-scalar [[token & tokens]]
   (cond

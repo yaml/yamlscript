@@ -42,17 +42,16 @@
 (def comm #";.*(?:\n|\z)")                 ; Comment token
 (def ignr #"(?x)
             (?:                            # Ignorables
+              |                              # Empty
               \#\!.*\n? |                    # hashbang line
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
-(def lnum #"-?\d+")                        ; Integer token
-(def spop #"(?:\=\~)")                     ; Special operator token
-                                           ; Operator token
-(def oper #"(?:[-+*/%<=>~|&.]{1,3})")
+(def numb #"-?\d+")                        ; Numeric literal token
+(def xsym #"(?:\=\~)")                     ; Special operator token
+(def osym #"(?:[-+*/%<=>~|&.]{1,3})")      ; Operator symbol token
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def narg #"(?:%\d+)")                     ; Numbered argument token
-(def fops #"(?:=>|->)")
 (def regx #"(?x)                           # Regular expression
             / (?=\S)                         # opening slash
             (?:
@@ -80,12 +79,12 @@
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>]+(?:\.(?=\ ))?)")
-(def symb (re #"(?:$symw[?!.]?)"))         ; Symbol token
+(def ysym (re #"(?:$symw[?!.]?)"))         ; YS symbol token
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
-(def fqsm (re #"(?:$nspc\.$symb)"))        ; Fully qualified symbol
+(def fsym (re #"(?:$nspc\.$ysym)"))        ; Fully qualified symbol
                                            ; Symbol followed by paren
-(def symp (re #"(?:(?:$fqsm|$symb|$fops)\()"))
-(def dyns (re #"(?:\*$symw\*)"))           ; Dynamic symbol
+(def psym (re #"(?:(?:$fsym|$ysym)\()"))
+(def esym (re #"(?:\*$symw\*)"))           ; Earmuff symbol
 ; Balanced parens
 (def bpar #"(?x)
             (?:\(

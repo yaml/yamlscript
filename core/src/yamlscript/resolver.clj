@@ -88,7 +88,7 @@
 (defn tag-defn [[key val]]
   (let [key (:exp key)
         old key
-        rgx (re/re #"^defn ($symb)\((.*)\)$")
+        rgx (re/re #"^defn ($ysym)\((.*)\)$")
         key (str/replace key rgx "defn $1 [$2]")]
     (when (not= old key)
       [{:exp key} val])))
