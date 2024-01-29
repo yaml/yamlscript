@@ -10,4 +10,7 @@ _yamlscript-try-ys
 unset -f _yamlscript-try-ys
 
 echo
-echo 'Try: ys --help'
+echo 'Try:'
+echo
+echo '    ys --help'
+echo
