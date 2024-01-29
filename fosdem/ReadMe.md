@@ -43,6 +43,13 @@ Try the example `make` commands.
 
 ## Using the Makefile
 
+These make commands were tested on an Ubuntu docker container with just these
+installs:
+
+```
+apt install -y build-essential curl python3{,-pip} jq git
+```
+
 * `make dependencies`
 
   Install needed programs and modules locally in current directory.

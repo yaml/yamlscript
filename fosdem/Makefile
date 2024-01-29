@@ -9,6 +9,7 @@ LIB_DIR := $(INSTALL_DIR)/lib
 
 export PATH := $(BIN_DIR):$(PATH)
 export PYTHONPATH := $(LIB_DIR)
+export LD_LIBRARY_PATH := $(LIB_DIR)
 
 default:
 
