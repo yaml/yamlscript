@@ -148,6 +148,26 @@ As your YAMLScript programming requirements grow, you can rest assured that you
 have the full power of Clojure at your disposal.
 
 
+## Try the YAMLScript `ys` Command
+
+You can try out the latest version of the `ys` command without actually
+"installing" it.
+
+If you run this command in Bash or Zsh:
+
+```
+. <(curl -sL yamlscript.org/try-ys)
+```
+
+it will install the `ys` command in a temporary directory (under `/tmp/`) and
+then add the directory to your current `PATH` shell variable.
+
+This will allow you to try the `ys` command in your current shell only.
+No other present or future shell session will be affected.
+
+Try it out!
+
+
 ## Installing YAMLScript
 
 At the moment, the best way to install YAMLScript is to build it from source,

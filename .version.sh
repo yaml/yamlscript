@@ -39,6 +39,7 @@ bump ys/project.clj
 
 pattern='(YAMLSCRIPT.*)'"$vp"'(.*)'
 
+bump common/install.mk
 bump raku/lib/YAMLScript.rakumod
 bump ruby/lib/yamlscript.rb
 bump www/src/install

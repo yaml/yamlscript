@@ -31,6 +31,13 @@ DOCKER_BUILD := $(DIRS:%=docker-build-%)
 DOCKER_TEST := $(DIRS:%=docker-test-%)
 DOCKER_SHELL := $(DIRS:%=docker-shell-%)
 
+YS_RELEASE := $(RELEASE_YS_NAME).tar.xz
+LYS_RELEASE := $(RELEASE_LYS_NAME).tar.xz
+
+RELEASE_ASSETS := \
+    $(YS_RELEASE) \
+    $(LYS_RELEASE) \
+
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
 endif
@@ -62,11 +69,17 @@ test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
 
-release-publish: $(RELEASE_YS_NAME).tar.xz $(RELEASE_LYS_NAME).tar.xz
-	publish-release $^
+release: release-clean $(RELEASE_ASSETS)
+	publish-release $(RELEASE_ASSETS)
+
+release-build: release-build-ys release-build-libyamlscript
+
+release-build-ys: $(YS_RELEASE)
+
+release-build-libyamlscript: $(LYS_RELEASE)
 
 release-clean:
-	$(RM) -r libyamlscript-0* ys-0*
+	$(RM) -r libyamlscript/lib ys/bin ~/.m2/repository/yamlscript
 
 $(RELEASE_YS_NAME).tar.xz: $(RELEASE_YS_NAME)
 	mkdir -p $<
@@ -98,11 +111,12 @@ delete-tag:
 
 bump:
 	version-bump
-	$(RM) -r libyamlscript/lib ys/bin ~/.m2/repository/yamlscript
 
 $(CLEAN):
 clean: $(CLEAN) release-clean
+	$(RM) -r libyamlscript-0* ys-0*
 	$(RM) -r sample/advent/hearsay-rust/target/
+	$(RM) EVAL
 clean-%: %
 	$(MAKE) -C $< clean
 

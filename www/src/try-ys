@@ -1,0 +1,32 @@
+_yamlscript-try-ys() {
+  local tmp dir
+  tmp=${TMPDIR:-/tmp}
+  tmp=${tmp%/}
+  dir=$(mktemp -d "$tmp/yamlscript-try-ys-XXXXXXXXXX") &&
+  curl -s https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
+  export PATH=$dir/bin:$PATH
+}
+
+_yamlscript-try-ys
+
+unset -f _yamlscript-try-ys
+
+cat <<'...'
+
+Try out these commands:
+
+    ys --help
+    ys -e 'each [i (1..5)]: say("Hello!")'
+    ys -e 'each [i (1..5)]:' -e '  say: "Hello!"'
+    ys -c -e 'each [i (1..5)]:' -e '  say: "Hello!"'
+    ys -l 'each [i (1..5)]:' -e '  say: "Hello!"'
+    curl -sL yamlscript.org/try/99-bottles.ys | ys - 3
+    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c
+
+For more information about YAMLScript and ys:
+
+* https://github.com/yaml/yamlscript#readme
+* https://yamlscript.org/
+* https://yamlscript.org/blog/
+
+...
