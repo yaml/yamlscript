@@ -8,3 +8,6 @@ _yamlscript-try-ys() {
 _yamlscript-try-ys
 
 unset -f _yamlscript-try-ys
+
+echo
+echo 'Try: ys --help'
