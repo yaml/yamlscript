@@ -34,7 +34,7 @@ install() (
   (
     cd "$release_dir" || exit
 
-    make -C "$name"-* install
+    make -s --no-print-directory -C "$name"-* install
   )
 )
 
