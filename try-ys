@@ -1,0 +1,10 @@
+_yamlscript-try-ys() {
+  local dir
+  dir=$(mktemp -t -d yamlscript-try-ys-XXXXXXXXXX) &&
+  curl -s https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
+  export PATH=$dir/bin:$PATH
+}
+
+_yamlscript-try-ys
+
+unset -f _yamlscript-try-ys
