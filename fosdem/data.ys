@@ -1,0 +1,16 @@
+!yamlscript/v0
+
+people =: load("people.yaml")
+places =: load("places.yaml")
+
+defn other(n)::
+  number:: int(rand(n)) + 1
+  some: String Value
+
+take (ARGV.0 || 5):
+  shuffle:
+    for [person people, place places]:
+      merge:
+        person
+        place
+        other(10)
