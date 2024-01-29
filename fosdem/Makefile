@@ -20,7 +20,7 @@ data-python:
 	python3 data.py | jq
 
 dependencies:
-	pip install yamlscript==$(YS_VERSION) --target $(LIB_DIR)
+	pip3 install yamlscript==$(YS_VERSION) --target $(LIB_DIR)
 	curl -s https://yamlscript.org/install | \
 	    VERSION=$(YS_VERSION) PREFIX=$(INSTALL_DIR) bash
 
