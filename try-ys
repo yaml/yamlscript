@@ -9,12 +9,14 @@ _yamlscript-try-ys
 
 unset -f _yamlscript-try-ys
 
-echo
-echo 'Try out these commands:'
-echo
-echo '    ys --help'
-echo '    ys -e 'for [i (1..5)]: say("Hello!")''
-echo '    ys -e 'each [i (1..5)]:' -e '  say: "Hello!"''
-echo '    ys -c -e 'each [i (1..5)]:' -e '  say: "Hello!"''
-echo '    curl -sL yamlscript.org/99-bottles.ys | ys - 3'
-echo
+cat <<'...'
+
+Try out these commands:
+
+    ys --help
+    ys -e 'each [i (1..5)]: say("Hello!")'
+    ys -e 'each [i (1..5)]:' -e '  say: "Hello!"'
+    ys -c -e 'each [i (1..5)]:' -e '  say: "Hello!"'
+    curl -sL yamlscript.org/try/99-bottles.ys | ys - 3
+
+...
