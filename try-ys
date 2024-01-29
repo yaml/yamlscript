@@ -13,4 +13,8 @@ echo
 echo 'Try:'
 echo
 echo '    ys --help'
+echo '    ys -e 'for [i (1..5)]: say("Hello!")''
+echo '    ys -e 'each [i (1..5)]:' -e '  say: "Hello!"''
+echo '    ys -c -e 'each [i (1..5)]:' -e '  say: "Hello!"''
+echo '    curl -s https://raw.githubusercontent.com/yaml/yamlscript/main/sample/rosetta-code/99-bottles-of-beer.ys | ys - 3'
 echo
