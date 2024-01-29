@@ -17,6 +17,14 @@ Try out these commands:
     ys -e 'each [i (1..5)]: say("Hello!")'
     ys -e 'each [i (1..5)]:' -e '  say: "Hello!"'
     ys -c -e 'each [i (1..5)]:' -e '  say: "Hello!"'
+    ys -l 'each [i (1..5)]:' -e '  say: "Hello!"'
     curl -sL yamlscript.org/try/99-bottles.ys | ys - 3
+    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c
+
+For more information about YAMLScript and ys:
+
+* https://github.com/yaml/yamlscript#readme
+* https://yamlscript.org/
+* https://yamlscript.org/blog/
 
 ...
