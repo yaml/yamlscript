@@ -1,5 +1,12 @@
 !yamlscript/v0
 
+ns: foo::bar
+
+require: quote([clojure::string :as str])
+
+# words =:
+#   str:split-lines: slurp("/usr/share/dict/words")
+
 data =: load("database.yaml")
 people =: data.people
 places =: data.places
