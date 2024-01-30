@@ -118,6 +118,14 @@ bar:
     - bbb: 2"
     "Testing the 'load' function to load another YS file")
 
+  (like (ys "-pe" "find-ns: quote(str)")
+    #"sci\.lang\.Namespace"
+    "clojure.string ns available as str")
+
+  (like (ys "-pe" ".[Character Long Double String Boolean]")
+    #"(?s)Character.*Long.*Double.*String.*Boolean"
+    "Standard java classes available")
+
   #__)
 
 (swap! cli/testing (constantly true))

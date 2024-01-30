@@ -29,6 +29,9 @@
 (def ys-ys (sci/create-ns 'ys))
 (def ys-ys-vars (sci/copy-ns ys.ys ys-ys))
 
+(def clj-str (sci/create-ns 'str))
+(def clj-str-vars (sci/copy-ns clojure.string clj-str))
+
 (def argv (sci/new-dynamic-var 'ARGV nil))
 (def env (sci/new-dynamic-var 'ENV nil))
 
@@ -62,7 +65,15 @@
     'ys.json ys-json-vars
     'ys.yaml ys-yaml-vars
     'ys.ys ys-ys-vars
-    'clojure.core (clojure-core-vars)}})
+    'str clj-str-vars
+    'clojure.core (clojure-core-vars)}
+   :classes
+   {'Boolean java.lang.Boolean
+    'java.lang.Boolean java.lang.Boolean
+    'Character java.lang.Character
+    'java.lang.Character java.lang.Character
+    'Long java.lang.Long
+    'java.lang.Long java.lang.Long}})
 
 (defn ys-load
   ([file]
