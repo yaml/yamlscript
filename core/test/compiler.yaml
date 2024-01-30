@@ -320,9 +320,11 @@
 - name: Fully qualified symbols
   yamlscript: |
     !yamlscript/v0
-    ys::std.say: ys
+    ys::std/say: ys
+    foo/bar: baz
   clojure: |
     (ys.std/say ys)
+    (foo/bar baz)
 
 
 - name: Anonymous function

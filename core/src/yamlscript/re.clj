@@ -82,7 +82,7 @@
 (def ysym (re #"(?:$symw[?!.]?)"))         ; YS symbol token
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
-(def fsym (re #"(?:$nspc\.$ysym)"))        ; Fully qualified symbol
+(def fsym (re #"(?:(?:$nspc|$symw)\/$ysym)"))  ; Fully qualified symbol
                                            ; Symbol followed by paren
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))
 (def esym (re #"(?:\*$symw\*)"))           ; Earmuff symbol
