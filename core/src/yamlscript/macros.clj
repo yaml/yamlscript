@@ -10,27 +10,16 @@
    [yamlscript.util :refer [when-lets]]
    [yamlscript.debug :refer [www]]))
 
-(defn check-is-defn [node]
+(defn single-pair? [node]
   (when-lets
-    [pair (:pairs node)
-     _ (= 2 (count pair))
-     [key val] pair
-     _ (vector? key)
-     _ (map? val)
-     [key1 key2 key3] key
-     _ (= 'defn (:Sym key1))
-     _ (:Sym key2)
-     _ (:Vec key3)
-     body (:pairs val)
-     _ (vector? body)]
+    [nodes (:pairs node)
+     _ (= 2 (count nodes))
+     [key val] nodes]
+    [key val]))
 
-    [[key1 key2 key3] body]))
-
-(defn check-cond-case [node]
+(defn cond-or-case? [node]
   (when-lets
-    [pair (:pairs node)
-     _ (= 2 (count pair))
-     [key val] pair
+    [[key val] (single-pair? node)
      _ (map? key)
      _ (map? val)
      sym (:Sym key)
@@ -39,9 +28,9 @@
 
     [key body]))
 
-(defn pairs-case-cond-condp [node]
+(defn do-case-cond-condp [node]
   (when-lets
-    [[sym body] (check-cond-case node)
+    [[sym body] (cond-or-case? node)
      len (count body)
      _ (>= len 2)
      last-key-pos (- len 2)
@@ -53,33 +42,9 @@
             body)]
     {:pairs [[sym] {:forms body}]}))
 
-(defn pairs-defn-docstring [node]
-  (when-lets
-    [[[key1 key2 key3]
-      [doc-string empty & body]] (check-is-defn node)
-     _ (:Str doc-string)
-     _ (= "" (:Str empty))]
-
-    {:pairs
-     [[key1 key2 doc-string key3]
-      {:pairs body}]}))
-
-(defn pairs-defn-docstring-arrow [node]
-  (when-lets
-    [[[key1 key2 key3]
-      [arrow doc-string & body]] (check-is-defn node)
-     _ (= '=> (:Sym arrow))
-     _ (:Str doc-string)]
-
-    {:pairs
-     [[key1 key2 doc-string key3]
-      {:pairs body}]}))
-
 (def macros-by-tag
   {:pairs
-   [pairs-defn-docstring
-    pairs-defn-docstring-arrow
-    pairs-case-cond-condp]})
+   [do-case-cond-condp]})
 
 (defn apply-macros [tag node]
   (let

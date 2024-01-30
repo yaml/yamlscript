@@ -80,11 +80,16 @@
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>]+(?:\.(?=\ ))?)")
 (def ysym (re #"(?:$symw[?!.]?)"))         ; YS symbol token
+(def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fsym (re #"(?:$nspc\.$ysym)"))        ; Fully qualified symbol
                                            ; Symbol followed by paren
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))
 (def esym (re #"(?:\*$symw\*)"))           ; Earmuff symbol
+
+(def defk (re #"$symw +="))                ; Pair key for def/let call
+(def dfnk (re #"^defn ($ysym)(?:\((.*)\))?$"))  ; Pair key for defn call
+
 ; Balanced parens
 (def bpar #"(?x)
             (?:\(

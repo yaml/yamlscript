@@ -63,7 +63,6 @@
       {:map [{:str "key"} {:str "value"}]}]}
 
 
-
 - name: Start in code mode
   yamlscript: |
     !yamlscript/v0
@@ -71,7 +70,6 @@
     die: "Noooo"
   resolve: |
     {:pairs [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
-
 
 
 - name: Start in code mode with /code tag
@@ -83,7 +81,6 @@
     {:pairs [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
 
 
-
 - name: Start in bare mode
   yamlscript: |
     !yamlscript/v0/bare
@@ -91,7 +88,6 @@
     die: "Noooo"
   resolve: |
     {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
-
 
 
 - name: Start in data mode with !data tag
@@ -103,14 +99,12 @@
     {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
 
 
-
 - name: Start in bare mode
   yamlscript: |
     prn: 'Hello'
     die: "Noooo"
   resolve: |
     {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
-
 
 
 - name: Start in bare mode explicitly
@@ -122,7 +116,6 @@
     {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
 
 
-
 - name: Start in bare mode with !!map tag
   yamlscript: |
     !!map
@@ -130,7 +123,6 @@
     die: "Noooo"
   resolve: |
     {:map [{:str "prn"} {:str "Hello"} {:str "die"} {:str "Noooo"}]}
-
 
 
 - name: Can't use ! tag in bare mode
@@ -141,14 +133,12 @@
     "Unrecognized tag in bare mode: !"
 
 
-
 - name: Tag ! switches from data mode to code mode
   yamlscript: |
     !yamlscript/v0/data
     num: ! inc(41)
   resolve: |
     {:map [{:str "num"} {:exp "inc(41)"}]}
-
 
 
 - name: Tag ! switches from code mode to data mode
@@ -159,14 +149,12 @@
     {:pairs [{:exp "num"} {:str "inc(41)"}]}
 
 
-
 - name: Tag ! switches from data mode to code mode
   yamlscript: |
     !yamlscript/v0/data
     num: ! inc(41)
   resolve: |
     {:map [{:str "num"} {:exp "inc(41)"}]}
-
 
 
 - name: Sequence in data mode after switch
@@ -178,14 +166,11 @@
     - 3
   resolve: |
     {:pairs
-     [{:exp "def list"}
+     [{:def "list ="}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
 
 
-
 - name: Key syntax to switch to data mode
-  parse: true
-  compose: true
   yamlscript: |
     !yamlscript/v0
     list =::
@@ -194,10 +179,5 @@
     - 3
   resolve: |
     {:pairs
-     [{:exp "def list"}
+     [{:def "list ="}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
-  SKIP: true
-
-
-
-- name: Explicit tags in input

@@ -31,7 +31,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [when-lets]]
+   [yamlscript.util :refer [if-lets when-lets]]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [resolve]))
 
@@ -71,48 +71,36 @@
 ;; Resolve taggers for code mode:
 ;; ----------------------------------------------------------------------------
 (defn tag-str [[key val]]
-  (when-lets
-    [str (:vstr key)
-     _ (= "" (:exp val))]
-    [{:str str} {:str ""}]))
+  (when-lets [str (or (:vstr key) (:str key))
+              _ (= "" (:exp val))]
+    [{:str str} nil]))
 
-(defn tag-def [[key val]]
-  (when-lets
-    [key (:exp key)
-     old key
-     rgx (re/re #"^($symw) +=$")
-     key (str/replace key rgx "def $1")]
-    (when (not= old key)
-      [{:exp key} val])))
+(defn tag-def [[{key :exp} val]]
+  (when (re-matches re/defk key)
+    [{:def key} val]))
 
-(defn tag-defn [[key val]]
-  (let [key (:exp key)
-        old key
-        rgx (re/re #"^defn ($ysym)\((.*)\)$")
-        key (str/replace key rgx "defn $1 [$2]")]
-    (when (not= old key)
-      [{:exp key} val])))
+(defn tag-defn [[{key :exp} val]]
+  (when (re-matches re/dfnk key)
+    [{:defn key} val]))
 
 (defn tag-fn [[key val]]
-  (let [key (:exp key)
-        old key
-        rgx (re/re #"^fn\((.*)\)$")
-        key (str/replace key rgx "fn [$1]")]
-    (when (not= old key)
-      [{:exp key} val])))
+  (when-lets [key (:exp key)
+              old key
+              rgx (re/re #"^fn\((.*)\)$")
+              key (str/replace key rgx "fn [$1]")
+              _ (not= old key)]
+    [{:exp key} val]))
 
 (defn tag-forms [[key val]]
-  (when (and
-          (contains? key :exp)
-          (contains? val :pairs)
-          (re-find #" +%$" (:exp key)))
-    (let [key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
-          val (set/rename-keys val {:pairs :forms})]
-      [key val])))
+  (when-lets [_ (re-find #" +%$" (:exp key))
+              _ (contains? val :pairs)
+              key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
+              val (set/rename-keys val {:pairs :forms})]
+    [key val]))
 
 (defn tag-exp [[key val]]
-  (when (and (contains? key :exp)
-          (some val [:exp :str :vstr :pairs]))
+  (when-lets [_ (contains? key :exp)
+              _ (some val [:exp :str :vstr :pairs])]
     [key val]))
 
 (defn tag-error [[key val]]
@@ -148,10 +136,16 @@
 (defn resolve-code-mapping [node]
   (when (:%% node)
     (throw (Exception. "Flow mappings not allowed in code mode")))
-  {:pairs (vec
-          (mapcat
-            (fn [[key val]] (resolve-code-pair key val))
-            (partition 2 (:% node))))})
+  (let [node
+        {:pairs (vec
+                  (mapcat
+                    (fn [[key val]] (resolve-code-pair key val))
+                    (partition 2 (:% node))))}]
+    (if-lets [[key val] (:pairs node)
+              key-str (:exp key)
+              _ (re-matches re/dfnk key-str)]
+      {:defn [key val]}
+      node)))
 
 (defn resolve-code-sequence [_]
   (throw (Exception. "Sequences (block and flow) not allowed in code mode")))

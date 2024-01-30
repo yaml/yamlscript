@@ -432,15 +432,6 @@
     (__ a 5 "x y" "z")
 
 
-- name: Operator symbol with underscore prefix
-  yamlscript: |
-    !yamlscript/v0
-    defn _+(a b): (+ a b)
-  clojure: |
-    (defn _+ [a b] (+ a b))
-  SKIP: true
-
-
 - name: Switching to data mode
   yamlscript: |
     !yamlscript/v0
@@ -503,7 +494,7 @@
     defn foo():
       =>: "This is a doc string"
       say: "Hello World"
-  transform: |
+  build: |
     {:pairs
      [[{:Sym defn} {:Sym foo} {:Str "This is a doc string"} {:Vec []}]
       {:pairs ({:Sym say} {:Str "Hello World"})}]}
@@ -588,3 +579,16 @@
   clojure: |
     (say (_+ "123" " let's go"))
     (say "123 let's go")
+
+
+- name: String keys with empty values
+  yamlscript: |
+    !yamlscript/v0
+    foo:
+      'bar':
+      "baz":
+      call:
+      nada::
+      =>:
+  clojure: |
+    (foo "bar" "baz" (call) (nada nil))

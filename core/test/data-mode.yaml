@@ -26,7 +26,6 @@
     {"foo" 42, "bar" 3.1415, "baz" true}
 
 
-
 - name: data-mode sequence
   yamlscript: |
     - foo
@@ -61,7 +60,6 @@
     ["foo" 42 3.1415 true false nil nil nil]
 
 
-
 - name: data-mode nested collections
   yamlscript: |
     foo:
@@ -75,22 +73,19 @@
     {"foo" [-42 {"bar" 3.1415, "baz" [true false ":string"]}]}
 
 
-
 - name: Empty YAMLScript File
   yamlscript: ''
   build: |
-    {:Empty nil}
+    nil
   print: |
-
 
 
 - name: Empty YAMLScript File w/ yamlscript Tag
   yamlscript: |
     !yamlscript/v0
   build: |
-    {:Empty nil}
+    nil
   print: |
-
 
 
 - name: Just a comment
@@ -98,9 +93,8 @@
     !yamlscript/v0
     ; just a comment
   build: |
-    {:Empty nil}
+    nil
   print: |
-
 
 
 - name: data mode with code mode
@@ -110,4 +104,3 @@
     bar: ! dec(43)
   print: |
     {"foo" (inc 41), "bar" (dec 43)}
-  SKIP: true

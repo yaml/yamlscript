@@ -1,2 +1,3 @@
-{:lint-as {yamlscript.util/when-let* clojure.core/let}}
+{:lint-as {yamlscript.util/when-lets clojure.core/let
+           yamlscript.util/if-lets clojure.core/let}}
 

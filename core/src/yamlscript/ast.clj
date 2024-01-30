@@ -22,7 +22,9 @@
 
 (defn Spc [s] {:Spc (symbol s)})
 
-(defn Sym [s] {:Sym (symbol s)})
+(defn Sym
+  ([s] {:Sym (symbol s)})
+  ([s d] {:Sym [(symbol s) d]}))
 
 (defn Chr [s] {:Chr (symbol s)})
 

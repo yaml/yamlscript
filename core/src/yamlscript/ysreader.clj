@@ -65,6 +65,9 @@
     (re-matches re/esym (str token))
     (re-matches re/ysym (str token))))
 
+(defn is-default-symbol? [token]
+  (re-matches re/dsym (str token)))
+
 (defn is-symbol-paren? [token]
   (re-matches re/psym (str token)))
 
@@ -83,6 +86,7 @@
       $numb |                   # Numeric literal token
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
+      $dsym |                   # Symbol with default
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $osym |                   # Operator symbol token
@@ -239,12 +243,19 @@
     (is-character? token) [(Chr (subs token 1)) tokens]
     (is-path? token) [(make-path token) tokens]
     (is-regex? token) [(Rgx (->> (subs token 1 (dec (count token))))) tokens]
+    ,
     (is-fq-symbol? token)
     (let [sym (str/replace token #"\." "/")
           sym (str/replace sym #"::" ".")]
       [(Sym sym) tokens])
     ,
     (is-symbol? token) [(Sym token) tokens]
+    ,
+    (is-default-symbol? token)
+    (let [[value tokens] (read-form tokens)
+          token (subs token 0 (-> token count dec))]
+      [(Sym token value) tokens])
+    ,
     (is-clojure-symbol? token)
     (throw (Exception. (str "Invalid symbol: '" token "'")))
     ,

@@ -16,5 +16,15 @@
         (when-lets ~(drop 2 bindings) ~@body))
      `(do ~@body))))
 
+(defmacro if-lets
+  ([bindings then]
+   `(if-lets ~bindings ~then nil))
+  ([bindings then else]
+   (if (seq bindings)
+     `(if-let [~(first bindings) ~(second bindings)]
+        (if-lets ~(drop 2 bindings) ~then ~else)
+        ~else)
+     then)))
+
 (comment
   www)

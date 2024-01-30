@@ -29,18 +29,14 @@
       declare-undefined
       maybe-call-main)))
 
-(defn construct-call [pair]
-  (let [pair (if (= '=> (get-in pair [0 :Sym]))
-               (rest pair)
-               pair)
-        pair (if (= 1 (count pair))
-               (first pair)
-               (Lst (flatten [pair])))]
-    pair))
+(defn construct-call [[key val]]
+  (cond
+    (= '=> (:Sym key)) val
+    (and (:Str key) (nil? val)) key
+    :else (Lst (flatten [key val]))))
 
-(defn construct-pairs [node ctx]
-  (let [nodes (:pairs node)
-        pairs (vec (map vec (partition 2 nodes)))
+(defn construct-pairs [{nodes :pairs} ctx]
+  (let [pairs (vec (map vec (partition 2 nodes)))
         construct-side (fn [n c] (if (vector? n)
                                    (vec (map #(construct-node %1 c) n))
                                    (construct-node n c)))
@@ -58,9 +54,8 @@
                  new))]
     node))
 
-(defn construct-forms [node ctx]
-  (let [nodes (:forms node)
-        nodes (reduce
+(defn construct-forms [{nodes :forms} ctx]
+  (let [nodes (reduce
                 (fn [nodes node]
                   (let [node (construct-node node ctx)]
                     (if (not= '=> (:Sym node))
@@ -69,6 +64,10 @@
                 [] nodes)]
     {:forms nodes}))
 
+(defn construct-list [{nodes :Lst} ctx]
+  (let [nodes (map #(construct-node %1 ctx) nodes)]
+    {:Lst (-> nodes flatten vec)}))
+
 (defn construct-node [node ctx]
   (when (vector? ctx) (throw (Exception. "ctx is a vector")))
   (let [[[key]] (seq node)
@@ -76,7 +75,8 @@
     (case key
       :pairs (construct-pairs node ctx)
       :forms (construct-forms node ctx)
-      ,    node)))
+      :Lst (construct-list node ctx)
+      ,      node)))
 
 ;;------------------------------------------------------------------------------
 ;; Fix-up functions

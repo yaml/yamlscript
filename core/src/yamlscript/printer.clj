@@ -26,12 +26,10 @@
     (str/escape regex-escape)))
 
 (defn print-node [node]
-  (let [node (if (keyword? node)
-               {node true}
-               node)
+  (let [node (if (keyword? node) {node true} node)
         [type val] (first node)]
     (case type
-      :Empty ""
+      nil  ""
       :Lst (str
              "("
              (str/join " " (map print-node val))
@@ -67,20 +65,22 @@
 (defn print
   "Render a YAMLScript AST as Clojure code."
   [node]
-  (let [list (:Top node)
+  (let [list (or (:Top node) [node])
         code (->> list
                (map print-node)
                (apply str))]
     code))
 
+(defn print-top [& node]
+  (print {:Top node}))
+
 (comment
   www
-  (print :Empty)
-  (read-string "
-(defmacro each [bindings & body]
-  `(do
-     (doall (for [~@bindings] (do ~@body)))
-     nil)))")
-  (print
-    {:Lst [{:Sym 'a} {:Sym 'b} {:Sym 'c}]})
-  (print {:Map [{:Str "foo"} {:Str "\\a"}]}))
+  (print '{:Top
+           [{:Lst
+             [{:Sym defn}
+              {:Sym foo}
+              nil
+              {:Lst [{:Vec [{:Sym a}]} {:Lst [{:Sym say} {:Sym a}]}]}
+              {:Lst [{:Vec []} {:Lst [{:Sym foo} {:Int 1}]}]}]}]})
+  )

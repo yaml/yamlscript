@@ -219,7 +219,7 @@
     !yamlscript/v0
     foo =: 123
   resolve: |
-    {:pairs [{:exp "def foo"} {:exp "123"}]}
+    {:pairs [{:def "foo ="} {:exp "123"}]}
   build: |
     {:pairs
      [[{:Sym def} {:Sym foo}]
@@ -233,10 +233,10 @@
     !yamlscript/v0
     defn foo(a b): (a + b)
   resolve: |
-    {:pairs [{:exp "defn foo [a b]"} {:exp "(a + b)"}]}
+    {:pairs [{:defn "defn foo(a b)"} {:exp "(a + b)"}]}
   build: |
     {:pairs
-     [[{:Sym defn} {:Sym foo} {:Vec [{:Sym a} {:Sym b}]}]
+     [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
       {:Lst [{:Sym +} {:Sym a} {:Sym b}]}]}
   print: |
     (defn foo [a b] (_+ a b))
@@ -249,7 +249,7 @@
       add: a b
   build: |
     {:pairs
-     [[{:Sym defn} {:Sym foo} {:Vec [{:Sym a} {:Sym b}]}]
+     [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
       {:pairs
        [{:Sym add}
         [{:Sym a} {:Sym b}]]}]}
@@ -293,11 +293,11 @@
       {:= "10 20"} ]}
   resolve: |
     {:pairs [
-      {:exp "def foo"}
+      {:def "foo ="}
       {:exp "123"}
-      {:exp "defn bar [a b]"}
+      {:defn "defn bar(a b)"}
       {:pairs [
-        {:exp "def c"}
+        {:def "c ="}
         {:exp "(a + b)"}
         {:exp "=>"}
         {:exp "2 * c"} ]}
@@ -307,7 +307,7 @@
     {:pairs
      ([{:Sym def} {:Sym foo}]
       {:Int 123}
-      [{:Sym defn} {:Sym bar} {:Vec [{:Sym a} {:Sym b}]}]
+      [{:Sym defn} {:Sym bar} nil {:Vec [{:Sym a} {:Sym b}]}]
       {:pairs
        ([{:Sym def} {:Sym c}]
         {:Lst [{:Sym +} {:Sym a} {:Sym b}]}
@@ -315,13 +315,10 @@
         {:Lst [{:Sym *} {:Int 2} {:Sym c}]})}
       {:Sym bar}
       [{:Int 10} {:Int 20}])}
-  Xconstruct: |
-  Xprint: |
+  print: |
     (def foo 123)
-    (defn bar [a b]
-      (let [c (+ a b)]
-        (_* 2 c)))
-    bar: 10 20
+    (defn bar [a b] (let [c (_+ a b)] (_* 2 c)))
+    (bar 10 20)
 
 
 - name: The 'if' special form
@@ -455,7 +452,7 @@
       fn(a b): a + b
   resolve: |
     {:pairs
-     [{:exp "def add"} {:pairs [{:exp "fn [a b]"} {:exp "a + b"}]}]}
+     [{:def "add ="} {:pairs [{:exp "fn [a b]"} {:exp "a + b"}]}]}
   clojure: |
     (def add (fn [a b] (_+ a b)))
 
@@ -488,3 +485,64 @@
         {:Sym f}]}]}
   print: |
     (foo (> a b) c (< a d) e f)
+
+
+- name: Support default fn arguments
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(a b=42 c="OK"): .[c b a]
+  build: |
+    {:pairs
+     [[{:Sym defn} {:Sym foo} nil]
+      [{:Lst
+        [{:Vec [{:Sym a} {:Sym b} {:Sym c}]}
+         {:Vec [{:Sym c} {:Sym b} {:Sym a}]}]}
+       {:Lst
+        [{:Vec [{:Sym a} {:Sym b}]}
+         {:Lst [{:Sym foo} {:Sym a} {:Sym b} {:Str "OK"}]}]}
+       {:Lst
+        [{:Vec [{:Sym a}]}
+         {:Lst [{:Sym foo} {:Sym a} {:Int 42} {:Str "OK"}]}]}]]}
+  construct: |
+    {:Top
+     [{:Lst
+       [{:Sym defn}
+        {:Sym foo}
+        nil
+        {:Lst
+         [{:Vec [{:Sym a} {:Sym b} {:Sym c}]}
+          {:Vec [{:Sym c} {:Sym b} {:Sym a}]}]}
+        {:Lst
+         [{:Vec [{:Sym a} {:Sym b}]}
+          {:Lst [{:Sym foo} {:Sym a} {:Sym b} {:Str "OK"}]}]}
+        {:Lst
+         [{:Vec [{:Sym a}]}
+          {:Lst [{:Sym foo} {:Sym a} {:Int 42} {:Str "OK"}]}]}]}]}
+  print: |
+    (defn
+     foo
+     ([a b c] [c b a])
+     ([a b] (foo a b "OK"))
+     ([a] (foo a 42 "OK")))
+
+
+- name: All args have defaults
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(a=1 b=2 c=3): .[c b a]
+  print: |
+    (defn
+     foo
+     ([a b c] [c b a])
+     ([a b] (foo a b 3))
+     ([a] (foo a 2 3))
+     ([] (foo 1 2 3)))
+
+
+- name: Construct :Lst objects
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(a=1):
+      say: a
+  print: |
+    (defn foo ([a] (say a)) ([] (foo 1)))

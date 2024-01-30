@@ -5,8 +5,7 @@
 # usage:
 #   ys 99-bottles.ys [<count>]
 
-defn main(&[number]):
-  number =: number || 99
+defn main(number=99):
   each [n (number .. 1)]:
     say: paragraph(n)
 
