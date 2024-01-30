@@ -2,7 +2,7 @@ import yamlscript, json
 
 ys = yamlscript.YAMLScript()
 
-program = open('data.ys').read()
+program = open('data-generator.ys').read()
 
 data = ys.load(program)
 

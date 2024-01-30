@@ -14,10 +14,10 @@ export LD_LIBRARY_PATH := $(LIB_DIR)
 default:
 
 data-ys:
-	ys --load data.ys $n | jq
+	ys --load data-generator.ys $n | jq
 
 data-python:
-	python3 data.py | jq
+	python3 data-generator.py | jq
 
 dependencies:
 	pip3 install yamlscript==$(YS_VERSION) --target $(LIB_DIR)
