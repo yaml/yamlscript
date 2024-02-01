@@ -1,8 +1,8 @@
 #!/usr/bin/env ys-0
 
-defn main(&[width]):
+defn main(width=5):
   say:
-    tree: width || 5
+    tree: width
 
 defn tree(width):
   top =:
