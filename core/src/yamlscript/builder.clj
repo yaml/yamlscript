@@ -128,6 +128,13 @@
       \$ $bpar
     )"))
 
+(defn build-exp-interpolated [node]
+  (let [exp (build-exp node)
+        lst1 (:Lst exp)
+        lst2 (get-in lst1 [0 :Lst])
+        exp (if (and (= 1 (count lst1)) lst2) (Lst lst2) exp)]
+    exp))
+
 (defn build-interpolated [string]
   (let [parts (re-seq re-interpolated-string string)
         exprs (map
@@ -139,7 +146,7 @@
                    (Sym (subs %1 1))
                    ,
                    (re-matches (re/re #"\$$bpar") %1)
-                   (build-exp {:exp (subs %1 1)})
+                   (build-exp-interpolated {:exp (subs %1 1)})
                    ,
                    :else
                    (Str (str/replace %1 #"\\(\$)" "$1")))

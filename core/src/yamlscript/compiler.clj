@@ -84,32 +84,6 @@
 
 (comment
   www
-; {:do [[{:Sym a} {:Sym b}]]}
-; (:construct {:Lst [{:Sym a} {:Sym b}]})
-  (binding [*debug* stages]
-    (->>
-      "!yamlscript/v0
-foo =: 123
-defn bar(a b):
-  c =: (a + b)
-  .*: 2 c
-bar: 10 20"
-      compile-debug
-      print))
-
-  (-> "" compile)
-  (-> "!yamlscript/v0" compile)
-  (-> "a: b" compile)
-
-  (-> [#__
-       "foo: bar baz"
-       "if (x > y): x (inc y)"
-       "if(x > y): x (inc y)"
-       #__]
-    (nth 2)
-    compile
-    println)
-
   (->> "../test/hello.ys"
     slurp
     compile

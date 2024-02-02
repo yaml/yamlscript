@@ -602,3 +602,11 @@
     =>: 3 * "hi $name\n"
   clojure: |
     (_* 3 (str "hi " name "\n"))
+
+
+- name: Interpolated path lookup
+  yamlscript: |
+    !yamlscript/v0
+    =>: "Hi $(ARGV.0)!!"
+  clojure: |
+    (str "Hi " (__ ARGV 0) "!!")
