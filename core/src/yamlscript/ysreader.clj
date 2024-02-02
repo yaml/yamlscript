@@ -11,8 +11,9 @@
    [yamlscript.ast :refer
     [Bln Chr Int Key Lst Map Nil Rgx Spc Str Sym Tok Vec]]
    [yamlscript.re :as re]
-   [yamlscript.debug :refer [www]])
-  (:refer-clojure :exclude [read-string resolve]))
+   [yamlscript.debug :refer [www]]
+   [yamlscript.util :as util])
+  (:refer-clojure :exclude [read-string]))
 
 (defn is-comment? [token]
   (re-matches re/comm (str token)))
@@ -192,16 +193,18 @@
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
-(defn normalize-string [string]
-  (-> string
-    (subs 1 (dec (count string)))
-    (str/replace #"\\ " " ")
-    (str/replace #"\\n" "\n")))
+(defn read-dq-string [string]
+  (let [build-vstr @util/build-vstr]
+    (-> string
+      (subs 1 (dec (count string)))
+      (#(hash-map :vstr %))
+      build-vstr)))
 
-(defn normalize-single [string]
+(defn read-sq-string [string]
   (-> string
     (subs 1 (dec (count string)))
-    (str/replace #"''" "'")))
+    (str/replace #"''" "'")
+    Str))
 
 (defn make-path [token]
   (let
@@ -210,8 +213,8 @@
            #(cond
               (is-number? %1) (Int %1)
               (is-symbol? %1) (Str %1)
-              (is-string? %1) (Str (normalize-string %1))
-              (is-single? %1) (Str (normalize-single %1))
+              (is-string? %1) (read-dq-string %1)
+              (is-single? %1) (read-sq-string %1)
               :else (throw (Exception. (str "Invalid path token: " %1))))
            keys)
     form (cons (Sym '__) (cons (Sym value) form))]
@@ -237,8 +240,8 @@
     (is-operator? token) [(Sym token) tokens]
     (is-unquote-splice? token) [(Tok token) tokens]
     (is-syntax-quote? token) [(Tok token) tokens]
-    (is-string? token) [(Str (normalize-string token)) tokens]
-    (is-single? token) [(Str (normalize-single token)) tokens]
+    (is-string? token) [(read-dq-string token) tokens]
+    (is-single? token) [(read-sq-string token) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
     (is-path? token) [(make-path token) tokens]

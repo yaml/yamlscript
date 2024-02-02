@@ -128,9 +128,8 @@
       \$ $bpar
     )"))
 
-(defn build-vstr [node]
-  (let [string (:vstr node)
-        parts (re-seq re-interpolated-string string)
+(defn build-interpolated [string]
+  (let [parts (re-seq re-interpolated-string string)
         exprs (map
                 #(cond
                    (re-matches (re/re #"\$$symw$bpar") %1)
@@ -148,6 +147,21 @@
     (if (= 1 (count exprs))
       (first exprs)
       (Lst (cons (Sym 'str) exprs)))))
+
+(defn build-dq-string [string]
+  (-> string
+    (str/replace #"\\\$" "$")
+    (str/replace #"\\ " " ")
+    (str/replace #"\\n" "\n")
+    Str))
+
+(defn build-vstr [node]
+  (let [string (:vstr node)]
+    (if (re-find #"\$[\(a-zA-Z]" string)
+      (build-interpolated string)
+      (build-dq-string string))))
+
+(reset! yamlscript.util/build-vstr build-vstr)
 
 (defn build-node [node]
   (let [[tag] (first node)]

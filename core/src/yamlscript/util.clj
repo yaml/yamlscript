@@ -8,13 +8,7 @@
   (:require
    [yamlscript.debug :refer [www]]))
 
-
-(defmacro when-lets
-  ([bindings & body]
-   (if (seq bindings)
-     `(when-let [~(first bindings) ~(second bindings)]
-        (when-lets ~(drop 2 bindings) ~@body))
-     `(do ~@body))))
+(defonce build-vstr (atom nil))
 
 (defmacro if-lets
   ([bindings then]
@@ -25,6 +19,13 @@
         (if-lets ~(drop 2 bindings) ~then ~else)
         ~else)
      then)))
+
+(defmacro when-lets
+  ([bindings & body]
+   (if (seq bindings)
+     `(when-let [~(first bindings) ~(second bindings)]
+        (when-lets ~(drop 2 bindings) ~@body))
+     `(do ~@body))))
 
 (comment
   www)

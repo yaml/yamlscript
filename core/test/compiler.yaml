@@ -594,3 +594,11 @@
       =>:
   clojure: |
     (foo "bar" "baz" (call) (nada nil))
+
+
+- name: Interpolation in YS strings
+  yamlscript: |
+    !yamlscript/v0
+    =>: 3 * "hi $name\n"
+  clojure: |
+    (_* 3 (str "hi " name "\n"))
