@@ -594,3 +594,28 @@
       =>:
   clojure: |
     (foo "bar" "baz" (call) (nada nil))
+
+
+- name: Variations of require
+  yamlscript: |
+    !yamlscript/v0
+    require foo::bar:
+    require: foo::bar
+    require: foo::bar => bar
+    require foo::bar: => bar
+    require: foo::bar a b c
+    require foo::bar: a b c
+    require:
+      foo::bar:
+      foo::bar: => bar
+      foo::bar: a b c
+  clojure: |
+    (require '[foo.bar])
+    (require '[foo.bar])
+    (require '[foo.bar :as bar])
+    (require '[foo.bar :as bar])
+    (require '[foo.bar :refer [a b c]])
+    (require '[foo.bar :refer [a b c]])
+    (require 'foo.bar
+             '[foo.bar :as bar]
+             '[foo.bar :refer [a b c]])
