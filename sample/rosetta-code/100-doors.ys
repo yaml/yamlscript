@@ -13,4 +13,4 @@ defn doors():
   reduce:
     fn(doors idx): assoc(doors idx true)
     into []: repeat(100 false)
-    map \(dec (%1 * %1)): 1..10
+    map \(dec (%1 * %1)): 1 .. 10

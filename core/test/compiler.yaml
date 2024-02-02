@@ -610,3 +610,11 @@
     =>: "Hi $(ARGV.0)!!"
   clojure: |
     (str "Hi " (__ ARGV 0) "!!")
+
+
+- name: Floatings point numbers
+  yamlscript: |
+    !yamlscript/v0
+    =>: .[ 0. 0.1 -1.2e3 2.3e-4 ]
+  clojure: |
+    [0.0 0.1 -1200.0 2.3E-4]

@@ -47,7 +47,9 @@
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
-(def numb #"-?\d+")                        ; Numeric literal token
+(def inum #"-?\d+")                        ; Integer literal token
+(def fnum (re #"$inum\.\d*(?:e$inum)?"))   ; Floating point literal token
+(def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token
 (def xsym #"(?:\=\~)")                     ; Special operator token
 (def osym #"(?:[-+*/%<=>~|&.]{1,3})")      ; Operator symbol token
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
@@ -66,14 +68,14 @@
             )*\"                             # Ending quote
             ")
 (def sstr #"(?x)
-            '(?:                          # Sinlge quoted string
+            '(?:                          # Single quoted string
               '' |                           # Escaped single quote
               [^']                           # Any other char
             )*'                              # Ending quote
             ")
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
-(def symw #"(?:$anum+(?:-$anum+)*)")       ; Symbol word
+(def symw (re #"(?:$anum+(?:-$anum+)*)"))  ; Symbol word
 (def pkey (re #"(?:$symw|$pnum|$dstr|$sstr)"))   ; Path key
 (def path (re #"(?:$symw(?:\.$pkey)+)"))   ; Lookup path
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token

@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :refer
-    [Bln Chr Int Key Lst Map Nil Rgx Spc Str Sym Tok Vec]]
+    [Bln Chr Flt Int Key Lst Map Nil Rgx Spc Str Sym Tok Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [www]]
    [yamlscript.util :as util])
@@ -30,8 +30,11 @@
 (defn is-narg? [token]
   (re-matches re/narg (str token)))
 
-(defn is-number? [token]
-  (re-matches re/numb (str token)))
+(defn is-integer? [token]
+  (re-matches re/inum (str token)))
+
+(defn is-float? [token]
+  (re-matches re/fnum (str token)))
 
 (defn is-operator? [token]
   (re-matches re/osym (str token)))
@@ -84,7 +87,7 @@
       $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
       $path |                   # Lookup path
-      $numb |                   # Numeric literal token
+      $xnum |                   # Numeric literal token
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
       $dsym |                   # Symbol with default
@@ -211,7 +214,8 @@
    [[value & keys] (str/split token #"\.")
     form (map
            #(cond
-              (is-number? %1) (Int %1)
+              (is-integer? %1) (Int %1)
+              (is-float? %1) (Flt %1)
               (is-symbol? %1) (Str %1)
               (is-string? %1) (read-dq-string %1)
               (is-single? %1) (read-sq-string %1)
@@ -236,7 +240,8 @@
                                           token))))
                            n (str "_" n)]
                        [(Sym n) tokens])
-    (is-number? token) [(Int token) tokens]
+    (is-integer? token) [(Int token) tokens]
+    (is-float? token) [(Flt token) tokens]
     (is-operator? token) [(Sym token) tokens]
     (is-unquote-splice? token) [(Tok token) tokens]
     (is-syntax-quote? token) [(Tok token) tokens]

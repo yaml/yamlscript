@@ -1,5 +1,5 @@
 !yamlscript/v0
-->> (1..10):
+->> (1 .. 10):
   www: "before map"
   map: inc
   www: "after map"

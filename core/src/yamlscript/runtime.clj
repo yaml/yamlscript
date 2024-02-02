@@ -52,6 +52,8 @@
               'ENV env
               '*sci-version* sci-version
               'load (sci/copy-var ys-load nil)
+              'parse-double (sci/copy-var clojure.core/parse-double nil)
+              'parse-long (sci/copy-var clojure.core/parse-long nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
               'slurp (sci/copy-var clojure.core/slurp nil)
               'spit (sci/copy-var clojure.core/spit nil)}

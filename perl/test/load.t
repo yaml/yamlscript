@@ -4,7 +4,7 @@ use Test2::V0 -target => 'YAMLScript';
 
 my $program = <<'...';
 !yamlscript/v0/data
-foo:: 1..10
+foo:: 1 .. 10
 ...
 
 is CLASS->new->load($program),

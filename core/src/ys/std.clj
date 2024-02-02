@@ -63,7 +63,7 @@
   (re-find rgx str))
 
 (defn die [msg]
-  (throw (Exception. msg)))
+  (throw (Exception. ^String msg)))
 
 (defmacro each [bindings & body]
   `(do

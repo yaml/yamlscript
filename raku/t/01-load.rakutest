@@ -11,7 +11,7 @@ my %wanted =
 
 my $program = q:to/.../;
 !yamlscript/v0/data
-foo:: 1..10
+foo:: 1 .. 10
 ...
 
 my YAMLScript $ys.=new;
