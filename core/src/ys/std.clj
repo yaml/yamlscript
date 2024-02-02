@@ -22,9 +22,9 @@
 (defn zzz [& xs]
   (apply yamlscript.debug/zzz xs))
 
-(defn toBoo [x] (boolean x))
+(defn toBool [x] (boolean x))
 
-(defn toFlt [x] (parse-double x))
+(defn toFloat [x] (parse-double x))
 
 (defn toInt [x] (parse-long x))
 
@@ -35,12 +35,15 @@
 
 (defn toStr [& xs] (apply str xs))
 
+; toList
+; toNum
+; toVec
+
 (defn _get [coll key]
   (if (string? key)
     (or (get coll (keyword key))
       (get coll key))
-    (get coll key))
-  )
+    (get coll key)))
 
 (defn __ [x & xs]
   (reduce _get x xs))
@@ -85,6 +88,12 @@
 (defn out [& xs]
   (apply clojure.core/print xs)
   (flush))
+
+(defn pow [x y]
+  (Math/pow x y))
+
+(defn pp [o]
+  (pp/pprint o))
 
 (defn pretty [o]
   (str/trim-newline

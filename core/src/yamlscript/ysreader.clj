@@ -116,18 +116,19 @@
 
 (declare read-form)
 
+(def operators
+  {(Sym '..) (Sym 'rng)
+   (Sym '||) (Sym 'or)
+   (Sym '&&) (Sym 'and)
+   (Sym '%)  (Sym 'rem)
+   (Sym '%%) (Sym 'mod)
+   (Sym '**) (Sym 'pow)})
+
 (defn yes-expr [expr]
   (if (= (count expr) 3)
     (let [[a op b] expr]
       (if (is-operator? (:Sym op))
-        (let [op (cond
-                   (= op (Sym '..)) (Sym 'rng)
-                   (= op (Sym '||)) (Sym 'or)
-                   (= op (Sym '&&)) (Sym 'and)
-                   (= op (Sym '%))  (Sym 'rem)
-                   (= op (Sym '%%)) (Sym 'mod)
-                   :else op)]
-          [op a b])
+        (let [op (or (operators op) op)] [op a b])
         expr))
     (if (and (> (count expr) 3)
           (some #(->> expr
@@ -139,8 +140,7 @@
             op (cond
                  (= op (Sym '||)) (Sym 'or)
                  (= op (Sym '&&)) (Sym 'and)
-                 :else op)
-            ]
+                 :else op)]
         (->> expr
           (cons nil)
           (partition 2)
@@ -303,11 +303,7 @@
             (= 3 (count forms))
             (is-operator? (:Sym (second forms))))
         (let [op (second forms)
-              op (cond
-                   (= op (Sym '||)) (Sym 'or)
-                   (= op (Sym '&&)) (Sym 'and)
-                   (= op (Sym '..)) (Sym 'rng)
-                   :else op)]
+              op (or (operators op) op)]
           (Lst [op (first forms) (last forms)]))
         (if (and
               (> (count forms) 3)

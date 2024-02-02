@@ -296,6 +296,7 @@
       ([x n] (+ x n)))
   SKIP: true
 
+
 - name: Call main when program has one top level (defn main ...) form
   yamlscript: |
     !yamlscript/v0
@@ -618,3 +619,13 @@
     =>: .[ 0. 0.1 -1.2e3 2.3e-4 ]
   clojure: |
     [0.0 0.1 -1200.0 2.3E-4]
+
+
+- name: Exponentiation operator
+  yamlscript: |
+    !yamlscript/v0
+    =>: a ** b
+    =>: (a ** b) ** c
+  clojure: |
+    (pow a b)
+    (pow (pow a b) c)
