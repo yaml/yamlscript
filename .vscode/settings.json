@@ -19,5 +19,6 @@
     "unoptimized",
     "vstr",
     "yamlscript"
-  ]
+  ],
+  "java.configuration.updateBuildConfiguration": "disabled"
 }

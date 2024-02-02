@@ -170,7 +170,7 @@ or:
 
 ```text
 $ ys --version
-YAMLScript 0.1.35
+YAMLScript 0.1.36
 ```
 
 ## Language Design

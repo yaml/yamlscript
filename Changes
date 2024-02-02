@@ -1,4 +1,28 @@
 
+- version: 0.1.36
+  date:    Fri Feb  2 01:25:27 PM PST 2024
+  changes:
+  - release: Fix some issues with release automation
+  - rust: Fix the ReadMe example rust code instuctions
+  - core: "Special 'fn(a b): ...' -> 'fn [a b]: ...'"
+  - core: Regex literal syntax /.../
+  - core: Add an =~ operator for re-find
+  - core: Support '%:' for separate left/right forms
+  - core: Auto group case and cond body forms
+  - core: Turn => to true in cond and condp
+  - core: Allow . at end of symbol
+  - stdlib: Add `die` function
+  - core: Support single quoted strings
+  - www: Support '. <(curl -sL yamlscript.org/try-ys)'
+  - ys: Option -X means -xall and -S means --stack-trace
+  - core: Support argument symbols with default values
+  - core: Change fq symbol from foo.bar to foo/bar
+  - core: Make common java classes and clojure.string available
+  - core: Support interpolation in ys double quoted strings
+  - core: Fix compilatation of "... $(...) ..."
+  - core: Support floating point numbers
+  - core: Add exponentiation operator `**`
+
 - version: 0.1.35
   date:    Sat Jan 20 01:03:51 PM EST 2024
   changes:

@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-yamlscript_version=0.1.35
+yamlscript_version=0.1.36
 
 main() (
   setup "$@"
