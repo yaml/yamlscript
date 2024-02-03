@@ -16,12 +16,12 @@ cat <<'...'
 Try out these commands:
 
     ys --help
-    ys -e 'each [i (1..5)]: say("Hello!")'
-    ys -e 'each [i (1..5)]:' -e '  say: "Hello!"'
-    ys -c -e 'each [i (1..5)]:' -e '  say: "Hello!"'
-    ys -l 'each [i (1..5)]:' -e '  say: "Hello!"'
+    ys -e 'each [i (1 .. 5)]: say("Hello!")'
+    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"'
+    ys -c -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"'
+    ys -l 'each [i (1 .. 5)]:' -e '  say: "Hello!"'
     curl -sL yamlscript.org/try/99-bottles.ys | ys - 3
-    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c
+    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c -X
 
 For more information about YAMLScript and ys:
 
