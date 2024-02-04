@@ -4056,15 +4056,9 @@ It's important to be transparent with you about where things are at.</p>
 <hr>
 <h2>Try YAMLScript today!</h2>
 <ul>
-<li>
-<p>Run: <code>. &lt;(curl -sL yamlscript.org/try-ys)</code></p>
-</li>
-<li>
-<p>Installs <code>ys</code> under <code>/tmp</code> and adds it to your <code>PATH</code></p>
-</li>
-<li>
-<p>For current shell (Bash or Zsh) session only</p>
-</li>
+<li>Run: <code>. &lt;(curl -sL yamlscript.org/try-ys)</code></li>
+<li>Installs <code>ys</code> under <code>/tmp</code> and adds it to your <code>PATH</code></li>
+<li>For current shell (Bash or Zsh) session only</li>
 </ul>
 <pre class="language-txt"><code class="language-txt">$ . &lt;(curl -sL yamlscript.org/try-ys)<br>Installed /tmp/yamlscript-try-ys-thwJgNAUG0/bin/ys - version 0.1.36<br><br>Try out these commands:<br><br>    ys --help<br><br>    ys -e 'each [i (1 .. 5)]: say("Hello!")'<br><br>    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"'<br>    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"' --compile<br>    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"' --load<br><br>    curl -sL yamlscript.org/try/99-bottles.ys | ys - 3<br>    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c -X</code></pre>
 
