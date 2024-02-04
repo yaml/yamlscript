@@ -1,0 +1,18 @@
+!yamlscript/v0
+
+data =: load("database.yaml")
+people =: data.people
+places =: data.places
+
+defn other(max, person, place)::
+  string:: "$person likes $place."
+  number:: int(rand(max)) + 1
+
+take (ARGV.0 || 5):
+  shuffle:
+    for [person people, place places]:
+      merge:
+        =>::
+          person:: person
+          place::  place
+        other: 10, person, place

@@ -1,0 +1,14 @@
+[
+  {
+    "person": "Thom",
+    "place": "Seattle",
+    "string": "Thom likes Seattle.",
+    "number": 4
+  },
+  {
+    "person": "Eemeli",
+    "place": "Berlin",
+    "string": "Eemeli likes Berlin.",
+    "number": 6
+  }
+]
