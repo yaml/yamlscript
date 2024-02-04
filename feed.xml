@@ -4015,36 +4015,19 @@ It's important to be transparent with you about where things are at.</p>
 <hr>
 <h2>YAMLScript</h2>
 <ul>
-<li>
-<p>https://yamlscript.org</p>
-</li>
-<li>
-<p>YAMLScript is a new functional programming language</p>
-</li>
-<li>
-<p>Syntax is valid YAML</p>
-</li>
-<li>
-<p>Clean, expressive, mixes well with YAML data</p>
-</li>
-<li>
-<p>Execution speed is on par with Python or Ruby</p>
-</li>
-<li>
-<p>YAMLScript loader modules for all major programming languages</p>
+<li>https://yamlscript.org</li>
+<li>YAMLScript is a new functional programming language</li>
+<li>Syntax is valid YAML</li>
+<li>Clean, expressive, mixes well with YAML data</li>
+<li>Execution speed is on par with Python or Ruby</li>
+<li>YAMLScript loader modules for all major programming languages
 <ul>
 <li>Perl, Python, Raku, Ruby and Rust so far</li>
 </ul>
 </li>
-<li>
-<p>Your YAML files are already valid YAMLScript programs</p>
-</li>
-<li>
-<p>Load them as normal YAML 1.2 data files</p>
-</li>
-<li>
-<p>Get YS function powers by adding <code>!yamlscript/v0</code> to the top</p>
-</li>
+<li>Your YAML files are already valid YAMLScript programs</li>
+<li>Load them as normal YAML 1.2 data files</li>
+<li>Get YS function powers by adding <code>!yamlscript/v0</code> to the top</li>
 </ul>
 <hr>
 <table>
