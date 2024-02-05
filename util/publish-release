@@ -88,7 +88,7 @@ api-new-release() {
 
   resp_json=$(
     set -x
-    curl -sL \
+    curl -s -S -L \
       --user "$GH_USER:$GH_TOKEN" \
       -X POST \
       "$GH_API_URL" \
@@ -119,7 +119,7 @@ api-get-release() {
 
   resp_json=$(
     set -x
-    curl -sL \
+    curl -s -S -L \
       --user "$GH_USER:$GH_TOKEN" \
       -X GET \
       "$GH_API_URL/tags/$VERSION"
@@ -142,7 +142,7 @@ api-upload-assets() (
   GH_ASSET_URL+="$id/assets?name=$RELEASE_TAR_FILE"
   resp_json=$(
     set -x
-    curl -sL \
+    curl -s -S -L \
       --user "$GH_USER:$GH_TOKEN" \
       -X POST "$GH_ASSET_URL" \
       --header 'Content-Type: text/javascript' \

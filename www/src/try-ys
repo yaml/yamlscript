@@ -1,3 +1,6 @@
+# Note: Bash and Zsh supported but using bash for shellcheck here.
+# shellcheck shell=bash
+
 _yamlscript-try-ys() {
   local tmp dir
   tmp=${TMPDIR:-/tmp}

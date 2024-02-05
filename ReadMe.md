@@ -156,7 +156,7 @@ You can try out the latest version of the `ys` command without actually
 If you run this command in Bash or Zsh:
 
 ```
-. <(curl -sL yamlscript.org/try-ys)
+. <(curl -sSL yamlscript.org/try-ys)
 ```
 
 it will install the `ys` command in a temporary directory (under `/tmp/`) and
