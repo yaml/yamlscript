@@ -25,14 +25,14 @@ install() (
 
   url+=/$vers/$name-$vers-$os-$arch.tar.xz
 
-  curl -sL -o "$dir/download.tar.xz" "$url"
+  curl -s -S -L -o "$dir/download.tar.xz" "$url"
 
   release_dir=$dir/$name
-  mkdir "$release_dir"
+  mkdir -- "$release_dir"
   tar -xf "$dir/download.tar.xz" -C "$release_dir"
 
   (
-    cd "$release_dir" || exit
+    CDPATH='' cd -- "$release_dir" || exit
 
     make -s --no-print-directory -C "$name"-* install
   )
@@ -63,8 +63,11 @@ setup() {
     export PREFIX=$PWD/$PREFIX
   fi
 
+  unset -v dir
+  
+  trap '[[ ${dir-} ]] && rm -fr -- "$dir"' EXIT
+
   dir=$(mktemp -d)
-  trap 'rm -fr "$dir"' EXIT
 }
 
 die() {
