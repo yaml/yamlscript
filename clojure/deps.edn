@@ -1,0 +1,9 @@
+{:paths ["src" "test"]
+ :deps {org.clojure/data.json {:mvn/version "2.4.0"}
+        org.yaml/yamlscript {:local/root "../java/target/yamlscript-0.1.36.jar"}}
+ :aliases {:test {:extra-paths ["test"]
+                  :extra-deps {io.github.cognitect-labs/test-runner
+                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                  :main-opts ["-m" "cognitect.test-runner"]
+                  :exec-fn cognitect.test-runner.api/test}}
+ }

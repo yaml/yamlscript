@@ -29,6 +29,7 @@ bump python/lib/yamlscript/__init__.py
 bump rust/src/lib.rs
 bump ys/deps.edn
 bump ys/project.clj
+bump clojure/deps.edn
 bump ys/share/ys-0.bash
 bump ys/src/yamlscript/cli.clj
 
@@ -43,6 +44,7 @@ bump common/install.mk
 bump raku/lib/YAMLScript.rakumod
 bump ruby/lib/yamlscript.rb
 bump www/src/install
+bump java/src/main/org/yaml/yamlscript/YAMLScript.java
 
 pattern='(YAMLScript.*)'"$vp"'(.*)'
 
@@ -52,6 +54,8 @@ bump www/src/index.md
 pattern='(version.*)'"$vp"'(.*)'
 
 bump Meta
+bump java/pom.xml
+bump clojure/pom.xml
 
 #------------------------------------------------------------------------------
 version=$v_perl
