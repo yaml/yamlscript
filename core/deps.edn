@@ -4,5 +4,7 @@
   org.clojure/data.json {:mvn/version "2.4.0"},
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
   org.snakeyaml/snakeyaml-engine {:mvn/version "2.7"},
+  babashka/fs {:mvn/version "0.5.20"},
+  org.babashka/http-client {:mvn/version "0.3.11"},
   org.babashka/sci {:mvn/version "0.8.41"}},
- :mvn/repos {"public-github" {:url "git://github.com"}}}
+ :mvn/repos {"public-github" {:url "https://github.com"}}}

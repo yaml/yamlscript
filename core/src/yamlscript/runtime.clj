@@ -7,33 +7,48 @@
    [clojure.java.io :as io]
    [clojure.pprint]
    [clojure.string :as str]
+   [babashka.fs]
+   [babashka.http-client]
    [sci.core :as sci]
    [ys.std]
    [ys.json]
    [ys.yaml]
    [ys.ys]))
 
+(def ys-version "0.1.36")
+
 (sci/alter-var-root sci/out (constantly *out*))
 (sci/alter-var-root sci/err (constantly *err*))
 (sci/alter-var-root sci/in (constantly *in*))
 
 (def ys-std (sci/create-ns 'std))
-(def ys-std-vars (sci/copy-ns ys.std ys-std))
+(def ys-std-ns (sci/copy-ns ys.std ys-std))
 
 (def ys-json (sci/create-ns 'json))
-(def ys-json-vars (sci/copy-ns ys.json ys-json))
+(def ys-json-ns (sci/copy-ns ys.json ys-json))
 
 (def ys-yaml (sci/create-ns 'yaml))
-(def ys-yaml-vars (sci/copy-ns ys.yaml ys-yaml))
+(def ys-yaml-ns (sci/copy-ns ys.yaml ys-yaml))
 
 (def ys-ys (sci/create-ns 'ys))
-(def ys-ys-vars (sci/copy-ns ys.ys ys-ys))
+(def ys-ys-ns (sci/copy-ns ys.ys ys-ys))
 
 (def clj-str (sci/create-ns 'str))
-(def clj-str-vars (sci/copy-ns clojure.string clj-str))
+(def clj-str-ns (sci/copy-ns clojure.string clj-str))
 
-(def argv (sci/new-dynamic-var 'ARGV nil))
-(def env (sci/new-dynamic-var 'ENV nil))
+(def bb-http (sci/create-ns 'http))
+(def bb-http-ns (sci/copy-ns babashka.http-client bb-http))
+
+(def bb-fs (sci/create-ns 'fs))
+(def bb-fs-ns (sci/copy-ns babashka.fs bb-fs))
+
+(def ARGS (sci/new-dynamic-var 'ARGS nil))
+(def ARGV (sci/new-dynamic-var 'ARGV nil))
+(def CWD (sci/new-dynamic-var 'CWD nil))
+(def ENV (sci/new-dynamic-var 'ENV nil))
+(def FILE (sci/new-dynamic-var 'FILE nil))
+(def SCI-VERSION (sci/new-dynamic-var 'SCI-VERSION nil))
+(def VERSION (sci/new-dynamic-var 'VERSION nil))
 
 (declare ys-load)
 
@@ -47,9 +62,14 @@
       (map #(if (re-matches #"\d+" %1) (parse-long %1) %1))
       (zipmap [:major :minor :incremental :qualifier]))))
 
-(defn clojure-core-vars []
-  (let [core {'ARGV argv
-              'ENV env
+(defn clojure-core-ns []
+  (let [core {'ARGS ARGS
+              'ARGV ARGV
+              'CWD CWD
+              'ENV ENV
+              'FILE FILE
+              'SCI-VERSION SCI-VERSION
+              'VERSION VERSION
               '*sci-version* sci-version
               'load (sci/copy-var ys-load nil)
               'parse-double (sci/copy-var clojure.core/parse-double nil)
@@ -63,12 +83,14 @@
 
 (defn sci-ctx []
   {:namespaces
-   {'ys.std ys-std-vars
-    'ys.json ys-json-vars
-    'ys.yaml ys-yaml-vars
-    'ys.ys ys-ys-vars
-    'str clj-str-vars
-    'clojure.core (clojure-core-vars)}
+   {'ys.std ys-std-ns
+    'ys.json ys-json-ns
+    'ys.yaml ys-yaml-ns
+    'ys.ys ys-ys-ns
+    'fs bb-fs-ns
+    'http bb-http-ns
+    'str clj-str-ns
+    'clojure.core (clojure-core-ns)}
    :classes
    {'Boolean java.lang.Boolean
     'java.lang.Boolean java.lang.Boolean
@@ -118,11 +140,18 @@
        ""
        (sci/binding
         [sci/file file
-        ;; XXX - This is a temporary hack to make numeric args into longs.
-         argv (vec
+         ARGS (vec
                 (map #(if (re-matches #"\d+" %1) (parse-long %1) %1)
                   args))
-         env (into {} (System/getenv))]
+         ARGV args
+         CWD (str (babashka.fs/cwd))
+         ENV (into {} (System/getenv))
+         FILE file
+         SCI-VERSION (->>
+                       (io/resource "SCI_VERSION")
+                       slurp
+                       str/trim-newline)
+         VERSION ys-version]
          (sci/eval-string clj (sci-ctx)))))))
 
 (comment

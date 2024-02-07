@@ -21,6 +21,8 @@
    [org.clojure/data.json "2.4.0"]
    [clj-commons/clj-yaml "1.0.27"]
    [org.snakeyaml/snakeyaml-engine "2.7"]
+   [babashka/fs "0.5.20"]
+   [org.babashka/http-client "0.3.11"]
    [org.babashka/sci "0.8.41"]]
 
   :plugins
@@ -31,7 +33,7 @@
 
   :prep-tasks [["lein2deps" "--write-file" "deps.edn" "--print" "false"]]
 
-  :repositories [["public-github" {:url "git://github.com"}]]
+  :repositories [["public-github" {:url "https://github.com"}]]
 
   :global-vars {*warn-on-reflection* true}
 
