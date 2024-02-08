@@ -48,20 +48,10 @@
 (def CWD (sci/new-dynamic-var 'CWD nil))
 (def ENV (sci/new-dynamic-var 'ENV nil))
 (def FILE (sci/new-dynamic-var 'FILE nil))
-(def SCI-VERSION (sci/new-dynamic-var 'SCI-VERSION nil))
 (def VERSION (sci/new-dynamic-var 'VERSION nil))
+(def VERSIONS (sci/new-dynamic-var 'VERSIONS nil))
 
 (declare ys-load)
-
-(def sci-version
-  (sci/new-var '*sci-version*
-    (->>
-      (io/resource "SCI_VERSION")
-      slurp
-      str/trim-newline
-      (#(str/split %1 #"\."))
-      (map #(if (re-matches #"\d+" %1) (parse-long %1) %1))
-      (zipmap [:major :minor :incremental :qualifier]))))
 
 (defn clojure-core-ns []
   (let [core {'ARGS ARGS
@@ -69,9 +59,8 @@
               'CWD CWD
               'ENV ENV
               'FILE FILE
-              'SCI-VERSION SCI-VERSION
               'VERSION VERSION
-              '*sci-version* sci-version
+              'VERSIONS VERSIONS
               'load (sci/copy-var ys-load nil)
               'parse-double (sci/copy-var clojure.core/parse-double nil)
               'parse-long (sci/copy-var clojure.core/parse-long nil)
@@ -150,11 +139,13 @@
          CWD (str (babashka.fs/cwd))
          ENV (into {} (System/getenv))
          FILE file
-         SCI-VERSION (->>
-                       (io/resource "SCI_VERSION")
-                       slurp
-                       str/trim-newline)
-         VERSION ys-version]
+         VERSION ys-version
+         VERSIONS {:clojure "1.11.1"
+                   :sci (->>
+                          (io/resource "SCI_VERSION")
+                          slurp
+                          str/trim-newline)
+                   :yamlscript ys-version}]
          (sci/eval-string clj (sci-ctx)))))))
 
 (comment
