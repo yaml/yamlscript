@@ -4,6 +4,7 @@
 (ns yamlscript.runtime
   (:require
    [yamlscript.debug :refer [www]]
+   [yamlscript.re :as re]
    [clojure.java.io :as io]
    [clojure.pprint]
    [clojure.string :as str]
@@ -141,7 +142,9 @@
        (sci/binding
         [sci/file file
          ARGS (vec
-                (map #(if (re-matches #"\d+" %1) (parse-long %1) %1)
+                (map #(cond (re-matches re/inum %1) (parse-long %1)
+                            (re-matches re/fnum %1) (parse-double %1)
+                            :else %1)
                   args))
          ARGV args
          CWD (str (babashka.fs/cwd))
