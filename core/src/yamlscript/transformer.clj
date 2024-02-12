@@ -52,15 +52,14 @@
 
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
-(defn apply-transformer [node]
-  (if-lets [[key val] (get-in node [:pairs])
-            name (or
+(defn apply-transformer [key val]
+  (if-lets [name (or
                    (get-in key [:Sym])
                    (get-in key [0 :Sym]))
             sym (symbol (str "transform_" name))
             transformer (ns-resolve transformers-ns sym)]
-    (or {:pairs (transformer key val)} node)
-    node))
+    (or (transformer key val) [key val])
+    [key val]))
 
 (defn transform-pairs [node key]
   (->> node
@@ -70,9 +69,16 @@
       #(if (vector? %1)
          (map-vec transform-node %1)
          (transform-node %1)))
+    (partition 2)
+    (reduce
+      (fn [acc [k v]]
+        (let [[k v] (if (= :pairs key)
+                      (apply-transformer k v)
+                      [k v])]
+          (conj acc k v)))
+      [])
     (hash-map key)
-    fix-cond
-    apply-transformer))
+    fix-cond))
 
 (defn transform-list [node]
   (or
