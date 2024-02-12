@@ -73,15 +73,19 @@
     (or (build-defn-defaults name doc args body)
         (build-defn-single name doc args body))))
 
+(defn build-form-pair [key val]
+  (let [key (:form key)]
+    [{:form (build-node key)} (build-node val)]))
+
+(defn build-pair [nodes [key val]]
+  (let [[key val] (cond
+                    (:defn key) (build-defn key val)
+                    (:form key) (build-form-pair key val)
+                    :else [(build-node key) (build-node val)])]
+    (conj nodes key val)))
+
 (defn build-pairs [{pairs :pairs}]
-  (let [nodes (reduce
-                (fn [nodes [key val]]
-                  (let [[key val] (if (:defn key)
-                                    (build-defn key val)
-                                    [(build-node key) (build-node val)])]
-                    (conj nodes key val)))
-                []
-                (partition 2 pairs))]
+  (let [nodes (reduce build-pair [] (partition 2 pairs))]
     {:pairs nodes}))
 
 (defn build-forms [node]

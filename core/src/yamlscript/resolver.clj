@@ -101,7 +101,10 @@
 (defn tag-exp [[key val]]
   (when-lets [_ (contains? key :exp)
               _ (some val [:exp :str :vstr :pairs])]
-    [key val]))
+    (let [key (if (re-find #" +\|$" (:exp key))
+                {:form (assoc key :exp (str/replace (:exp key) #" +\|$" ""))}
+                key)]
+      [key val])))
 
 (defn tag-error [[key val]]
   (throw (Exception. (str "Don't know how to tag pair" [key val]))))

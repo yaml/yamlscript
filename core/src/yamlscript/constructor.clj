@@ -46,10 +46,15 @@
                                (check-let-bindings pairs ctx)
                                pairs)
                        [[lhs rhs] & pairs] pairs
+                       [forms lhs] (if (get-in lhs [:form])
+                                     [true (:form lhs)]
+                                     [false lhs])
                        lhs (construct-side lhs ctx)
                        rhs (construct-side rhs ctx)
                        rhs (or (:forms rhs) rhs)
-                       new (conj new (construct-call [lhs rhs]))]
+                       new (if forms
+                             (conj new lhs rhs)
+                             (conj new (construct-call [lhs rhs])))]
                    (recur pairs, new))
                  new))]
     node))

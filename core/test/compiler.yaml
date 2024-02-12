@@ -629,3 +629,16 @@
   clojure: |
     (pow a b)
     (pow (pow a b) c)
+
+
+- name: Form indicator
+  yamlscript: |
+    !yamlscript/v0
+    a: b
+    c |: d()
+    e: f
+  clojure: |
+    (a b)
+    c
+    (d)
+    (e f)
