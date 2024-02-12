@@ -571,7 +571,7 @@
       (a < d): e
       =>: f
   clojure: |
-    (cond (> a b) c (< a d) e true f)
+    (cond (> a b) c (< a d) e :else f)
 
 
 - name: Single quoted string

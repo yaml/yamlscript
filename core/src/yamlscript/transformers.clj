@@ -9,6 +9,16 @@
 
 (def Q {:Sym 'quote})
 
+(defn transform_cond [key val]
+  (when-lets [forms (:forms val)
+              len (count forms)
+              _ (>= len 2)
+              last-key-pos (- len 2)
+              last-key (nth forms last-key-pos)
+              _ (= '=> (:Sym last-key))
+              val (update-in val [:forms last-key-pos] (fn [_] (Key "else")))]
+    [key val]))
+
 (defn transform_require [key val]
   (if-lets [_ (:Sym key)
             _ (:Spc val)]

@@ -23,3 +23,16 @@
     require foo::bar: => fb
   clojure: |
     (require '[foo.bar :as fb])
+
+
+- name: Transform require and cond
+  yamlscript: |
+    !yamlscript/v0
+    require foo::bar: => fb
+    cond:
+      (x = 1): "one"
+      (x = 2): "two"
+      =>: "other"
+  clojure: |
+    (require '[foo.bar :as fb])
+    (cond (= x 1) "one" (= x 2) "two" :else "other")
