@@ -53,13 +53,13 @@
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
 (defn apply-transformer [node]
-  (if-lets [key (get-in node [:pairs 0])
+  (if-lets [[key val] (get-in node [:pairs])
             name (or
                    (get-in key [:Sym])
                    (get-in key [0 :Sym]))
             sym (symbol (str "transform_" name))
             transformer (ns-resolve transformers-ns sym)]
-    (or (transformer node) node)
+    (or {:pairs (transformer key val)} node)
     node))
 
 (defn transform-pairs [node key]

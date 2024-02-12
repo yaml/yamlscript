@@ -9,30 +9,30 @@
 
 (def Q {:Sym 'quote})
 
-(defn transform_require [node]
-  (let [[key val] (:pairs node)]
-    (if-lets [_ (:Sym key)
-              _ (:Spc val)]
-      {:pairs [key (Lst [Q val])]}
+(defn transform_require [key val]
+  (if-lets [_ (:Sym key)
+            _ (:Spc val)]
+    [key (Lst [Q val])]
+    ,
+    (if-lets [sym (get-in key [0])
+              _ (:Sym sym)
+              spc (nth key 1)
+              _ (:Spc spc)
+              _ (= 2 (count key))
+              _ (nil? val)]
+      [sym (Lst [Q spc])]
       ,
       (if-lets [sym (get-in key [0])
                 _ (:Sym sym)
                 spc (nth key 1)
                 _ (:Spc spc)
                 _ (= 2 (count key))
-                _ (nil? val)]
-        {:pairs [sym (Lst [Q spc])]}
+                _ (= '=> (get-in val [0 :Sym]))
+                alias (nth val 1)
+                _ (:Sym alias)]
+        [sym (Lst [Q (Vec [spc (Key "as") alias])])]
         ,
-        (if-lets [sym (get-in key [0])
-                  _ (:Sym sym)
-                  spc (nth key 1)
-                  _ (:Spc spc)
-                  _ (= 2 (count key))
-                  _ (= '=> (get-in val [0 :Sym]))
-                  alias (nth val 1)
-                  _ (:Sym alias)]
-          {:pairs [sym (Lst [Q (Vec [spc (Key "as") alias])])]}
-          node)))))
+        (throw (Exception. "Invalid 'require' form"))))))
 
 (comment
   www)
