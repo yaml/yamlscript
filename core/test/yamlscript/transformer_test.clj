@@ -14,7 +14,8 @@
 
 (test/load-yaml-test-files
   ["test/compiler-stack.yaml"
-   "test/compiler.yaml"]
+   "test/compiler.yaml"
+   "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :transform] %1)
    :test (fn [test]
            (->> test

@@ -8,6 +8,7 @@
   (:require
    [yamlscript.util :refer [if-lets]]
    [yamlscript.ast :refer [Sym]]
+   [yamlscript.transformers]
    [yamlscript.debug :refer [www]]))
 
 (declare transform-node)
@@ -49,6 +50,18 @@
     (update-in node [:pairs 1 :forms last-key-pos] (fn [_] (Sym "true")))
     node))
 
+(def transformers-ns (the-ns 'yamlscript.transformers))
+
+(defn apply-transformer [node]
+  (if-lets [key (get-in node [:pairs 0])
+            name (or
+                   (get-in key [:Sym])
+                   (get-in key [0 :Sym]))
+            sym (symbol (str "transform_" name))
+            transformer (ns-resolve transformers-ns sym)]
+    (or (transformer node) node)
+    node))
+
 (defn transform-pairs [node key]
   (->> node
     first
@@ -58,7 +71,8 @@
          (map-vec transform-node %1)
          (transform-node %1)))
     (hash-map key)
-    fix-cond))
+    fix-cond
+    apply-transformer))
 
 (defn transform-list [node]
   (or

@@ -9,7 +9,8 @@
 
 (test/load-yaml-test-files
   ["test/compiler.yaml"
-   "test/compiler-stack.yaml"]
+   "test/compiler-stack.yaml"
+   "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :clojure] %1)
    :test (fn [test]
            (->> test

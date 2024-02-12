@@ -1,0 +1,25 @@
+# Copyright 2023-2024 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+- name: require simple library
+  yamlscript: |
+    !yamlscript/v0
+    require: foo::bar
+  clojure: |
+    (require 'foo.bar)
+
+
+- name: require simple library with nil pair value
+  yamlscript: |
+    !yamlscript/v0
+    require foo::bar:
+  clojure: |
+    (require 'foo.bar)
+
+
+- name: require library with alias
+  yamlscript: |
+    !yamlscript/v0
+    require foo::bar: => fb
+  clojure: |
+    (require '[foo.bar :as fb])
