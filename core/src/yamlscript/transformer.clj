@@ -6,7 +6,8 @@
 
 (ns yamlscript.transformer
   (:require
-   [yamlscript.macros]
+   [yamlscript.util :refer [if-lets]]
+   [yamlscript.ast :refer [Sym]]
    [yamlscript.debug :refer [www]]))
 
 (declare transform-node)
@@ -33,6 +34,21 @@
           [_ v2 v3] list]
       {:Lst [{:Sym '_*} v2 v3]})))
 
+;; XXX - Temporary fix for comp until def-transformer is implemented
+(defn fix-cond [node]
+  (if-lets [[key val] (:pairs node)
+            sym (:Sym key)
+            sym (str sym)
+            _ (re-matches #"(cond|condp)" sym)
+            forms (:forms val)
+            len (count forms)
+            _ (>= len 2)
+            last-key-pos (- len 2)
+            last-key (nth forms last-key-pos)
+            _ (= '=> (:Sym last-key))]
+    (update-in node [:pairs 1 :forms last-key-pos] (fn [_] (Sym "true")))
+    node))
+
 (defn transform-pairs [node key]
   (->> node
     first
@@ -42,7 +58,7 @@
          (map-vec transform-node %1)
          (transform-node %1)))
     (hash-map key)
-    (yamlscript.macros/apply-macros key)))
+    fix-cond))
 
 (defn transform-list [node]
   (or

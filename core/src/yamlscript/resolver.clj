@@ -92,7 +92,9 @@
     [{:exp key} val]))
 
 (defn tag-forms [[key val]]
-  (when-lets [_ (re-find #" +%$" (:exp key))
+  (when-lets [_ (or
+                  (re-find #" +%$" (:exp key))
+                  (re-matches #"(cond|condp|case)" (:exp key)))
               _ (contains? val :pairs)
               key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
               val (set/rename-keys val {:pairs :forms})]
