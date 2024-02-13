@@ -60,7 +60,9 @@
         (throw (Exception. "Invalid 'require' pairs")))
       (let [args (if (nil? rhs)
                    (Lst [Q spc])
-                   (Lst [Q (Vec (concat [spc] (require-args rhs)))]))]
+                   (if (= :all (:Key rhs))
+                     (Lst [Q (Vec [spc REFER rhs])])
+                     (Lst [Q (Vec (concat [spc] (require-args rhs)))])))]
         (conj acc args)))
     []
     (partition 2 pairs)))

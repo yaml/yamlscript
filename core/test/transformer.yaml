@@ -65,10 +65,12 @@
         => fd
         one two
       foo::eee:
+      foo::fff: :all
   clojure: |
     (require
      '[foo.aaa :as fa]
      '[foo.bbb :refer [one]]
      '[foo.ccc :refer [one two]]
      '[foo.ddd :as fd :refer [one two]]
-     'foo.eee)
+     'foo.eee
+     '[foo.fff :refer :all])
