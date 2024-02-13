@@ -36,3 +36,39 @@
   clojure: |
     (require '[foo.bar :as fb])
     (cond (= x 1) "one" (= x 2) "two" :else "other")
+
+
+- name: Various require transformations
+  yamlscript: |
+    !yamlscript/v0
+    require foo::aaa: => fa
+    require foo::bbb: one
+    require foo::ccc: one two
+    require foo::ddd:
+      => fd
+      one two
+  clojure: |
+    (require '[foo.aaa :as fa])
+    (require '[foo.bbb :refer [one]])
+    (require '[foo.ccc :refer [one two]])
+    (require '[foo.ddd :as fd :refer [one two]])
+
+
+- name: Various require transformations in one pair
+  yamlscript: |
+    !yamlscript/v0
+    require:
+      foo::aaa: => fa
+      foo::bbb: one
+      foo::ccc: one two
+      foo::ddd:
+        => fd
+        one two
+      foo::eee:
+  clojure: |
+    (require
+     '[foo.aaa :as fa]
+     '[foo.bbb :refer [one]]
+     '[foo.ccc :refer [one two]]
+     '[foo.ddd :as fd :refer [one two]]
+     'foo.eee)
