@@ -642,3 +642,20 @@
     c
     (d)
     (e f)
+
+
+- name: Single underscore as a symbol
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(a _ b):
+      =>: a + b
+  clojure: |
+    (defn foo [a _ b] (_+ a b))
+
+
+- name: Invalid symbol '__'
+  yamlscript: |
+    !yamlscript/v0
+    __: 2
+  error: |
+    ~~ Invalid symbol: '__'
