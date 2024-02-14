@@ -5,7 +5,7 @@ PYTHON := $(shell command -v python3)
 PYTHON ?= $(shell command -v python)
 
 ifdef DOCKERENV
-  PYTHON_VENV := /tmp/venv
+  PYTHON_VENV := $(YS_TMP)/venv
 else
   PYTHON_VENV := $(ROOT)/python/.venv
 endif

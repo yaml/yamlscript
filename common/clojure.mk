@@ -16,7 +16,8 @@ ifdef w
 endif
 
 LEIN := $(BUILD_BIN)/lein
-LEIN_URL := https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+LEIN_URL := \
+  https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
 LEIN_COMMANDS := \
   check \
@@ -52,7 +53,7 @@ clean::
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
-$(LEIN): $(BUILD_BIN) $(GRAALVM_INSTALLED)
+$(LEIN): $(BUILD_BIN) $(JAVA_INSTALLED)
 ifeq (,$(CURL))
 	$(error *** 'curl' is required but not installed)
 endif
@@ -86,6 +87,25 @@ ifeq (,$(CURL))
 	$(error *** 'curl' is required but not installed)
 endif
 	$(CURL) -L -o $@ $(GRAALVM_URL)
+
+# Maven targets
+
+$(MAVEN_DOWNLOAD):
+ifeq (,$(CURL))
+	$(error *** 'curl' is required but not installed)
+endif
+	$(CURL) -L -o $@ $(MAVEN_URL)
+
+$(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD) $(MAVEN_HOME)
+	(cd $(YS_TMP) && tar xzf $< )
+	touch $@
+
+$(MAVEN_HOME):
+	mkdir -p $@
+
+$(MAVEN_SETTINGS): $(ROOT)/common/maven-settings.xml
+	mkdir -p $(dir $@)
+	cp $< $@
 
 # REPL/nREPL management targets
 repl:: $(LEIN) repl-deps

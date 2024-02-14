@@ -165,7 +165,7 @@ distclean-%: %
 	$(RM) -r .calva/ .clj-kondo/cache .lsp/
 
 sysclean: realclean
-	$(RM) -r ~/.m2/ /tmp/graalvm* /tmp/yamlscript/
+	$(RM) -r ~/.m2/ $(YS_TMP)
 
 $(DOCKER_BUILD):
 docker-build: $(DOCKER_BUILD)

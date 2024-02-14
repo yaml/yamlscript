@@ -1,6 +1,6 @@
 DOCKER_NAME := yamlscript-$(SUBDIR)
 DOCKER_IMAGE := $(DOCKER_NAME):latest
-DOCKER_HISTORY := /tmp/$(DOCKER_NAME)-bash-history
+DOCKER_HISTORY := $(YS_TMP)/$(DOCKER_NAME)-bash-history
 export DOCKER_UID := $(shell id -u)
 export DOCKER_GID := $(shell id -g)
 

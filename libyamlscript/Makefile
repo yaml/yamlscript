@@ -34,7 +34,7 @@ test:: $(LIBYAMLSCRIPT_SO_FQNP)
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
-$(LIBYAMLSCRIPT_SO_FQNP): $(GRAALVM_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
+$(LIBYAMLSCRIPT_SO_FQNP): $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
