@@ -1,4 +1,17 @@
 
+- version: 0.1.37
+  date:    Wed Feb 14 01:26:10 PM PST 2024
+  changes:
+  - www: Bash improvements suggested by friend on IRC #perl
+  - core: Support ARGV, ARGS, FILE, VERSION etc
+  - core: Parse floats in ARGS
+  - core: Add VERSIONS and remove SCI-VERSION
+  - core: Support |:_form pair indicator
+  - core: Add transformer for `require`
+  - core: Apply transforms to key/val not entire map node
+  - core: Support `require a::b:_:all`
+  - core: Allow a single `_` to be a valid YS symbol
+
 - version: 0.1.36
   date:    Fri Feb  2 01:25:27 PM PST 2024
   changes:

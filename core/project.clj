@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2024 Ingy dot Net
 
-(defproject yamlscript/core "0.1.36"
+(defproject yamlscript/core "0.1.37"
   :description "Program in YAML"
 
   :url "https://github.com/yaml/yamlscript"

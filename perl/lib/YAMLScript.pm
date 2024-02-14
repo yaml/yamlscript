@@ -7,9 +7,9 @@ use FFI::CheckLib ();
 use FFI::Platypus;
 use Cpanel::JSON::XS ();
 
-our $VERSION = '0.1.36';
+our $VERSION = '0.1.37';
 
-our $libyamlscript_version = '0.1.36';
+our $libyamlscript_version = '0.1.37';
 
 
 #------------------------------------------------------------------------------

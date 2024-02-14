@@ -1,6 +1,6 @@
 # Used by util/version-bump to update versions in repo
 
-v_api=0.1.36
+v_api=0.1.37
 
 v_perl=$v_api
 v_python=$v_api
