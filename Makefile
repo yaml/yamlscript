@@ -8,6 +8,8 @@ include $(ROOT)/common/vars.mk
 DIRS := \
     core \
     libyamlscript \
+    clojure \
+    java \
     perl \
     perl-alien \
     python \
@@ -95,7 +97,7 @@ release-build-ys: $(YS_RELEASE)
 release-build-libyamlscript: $(LYS_RELEASE)
 
 release-clean:
-	$(RM) -r libyamlscript/lib ys/bin ~/.m2/repository/yamlscript
+	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
 
 jars: $(JAR_ASSETS)
 
@@ -162,10 +164,14 @@ distclean: realclean $(DISTCLEAN)
 	$(RM) -r bin/ lib/
 distclean-%: %
 	$(MAKE) -C $< distclean
-	$(RM) -r .calva/ .clj-kondo/cache .lsp/
+	$(RM) -r .calva/ .clj-kondo/.cache .lsp/
 
+# XXX Limit removing ~/.m2 to ingy until we can get ~/.m2 to not be used
 sysclean: realclean
-	$(RM) -r ~/.m2/ $(YS_TMP)
+	$(RM) -r $(YS_TMP)
+ifeq (ingy,$(USER))
+	$(RM) -r $(HOME)/.m2
+endif
 
 $(DOCKER_BUILD):
 docker-build: $(DOCKER_BUILD)

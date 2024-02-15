@@ -1,4 +1,4 @@
-ZILD := \
+ZILD_COMMANDS := \
     cpan \
     cpanshell \
     dist \
@@ -10,6 +10,6 @@ ZILD := \
     update \
 
 ifneq (,$(shell command -v zild))
-$(ZILD)::
+$(ZILD_COMMANDS)::
 	zild $@
 endif

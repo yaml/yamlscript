@@ -1,12 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-include $(COMMON)/java.mk
+include $(COMMON)/clojure.mk
 
 #------------------------------------------------------------------------------
 
-$(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP)
-	mvn $@
-
-
-clean::
-	$(RM) -r reports/ target/
+test install:: $(LEIN) $(YAMLSCRIPT_JAVA_INSTALLED)
+	$< $@

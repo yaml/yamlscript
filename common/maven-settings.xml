@@ -23,7 +23,7 @@ under the License.
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd">
 
-  <localRepository>/tmp/yamlscript/maven/repository</localRepository>
+  <localRepository>/tmp/yamlscript/.m2/repository</localRepository>
 
   <pluginGroups>
   </pluginGroups>

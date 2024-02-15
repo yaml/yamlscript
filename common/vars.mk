@@ -155,10 +155,15 @@ MAVEN_HOME := $(YS_TMP)/apache-maven-$(MAVEN_VER)
 MAVEN_DOWNLOAD := $(YS_TMP)/$(MAVEN_TAR)
 MAVEN_INSTALLED := $(MAVEN_HOME)/bin/mvn
 
-export M2_HOME := $(YS_TMP)/maven
+export M2_HOME := $(YS_TMP)/.m2
+
 MAVEN_REPOSITORY := $(M2_HOME)/repository
 MAVEN_SETTINGS := $(M2_HOME)/conf/settings.xml
-export MAVEN_OPTS := -Dmaven.repo.local=$(MAVEN_REPOSITORY)
+
+export MAVEN_OPTS := \
+  -Duser.home=$(YS_TMP) \
+  -Dmaven.repo.local=$(MAVEN_REPOSITORY) \
+
 export PATH := $(MAVEN_HOME)/bin:$(PATH)
 
 export LEIN_JVM_OPTS := \

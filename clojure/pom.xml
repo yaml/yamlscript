@@ -15,12 +15,12 @@
     <testSourceDirectory>test</testSourceDirectory>
     <resources>
       <resource>
-        <directory>resources/yamlscript-0.1.36.jar</directory>
+        <directory>../java/target/yamlscript-java-0.1.36.jar</directory>
       </resource>
     </resources>
     <testResources>
       <testResource>
-        <directory>resources/yamlscript-0.1.36.jar</directory>
+        <directory>../java/target/yamlscript-java-0.1.36.jar</directory>
       </testResource>
     </testResources>
     <directory>target</directory>
@@ -50,7 +50,13 @@
     </repository>
   </repositories>
   <dependencyManagement>
-    <dependencies/>
+    <dependencies>
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>yamlscript-java</artifactId>
+        <version>0.1.36</version>
+      </dependency>
+    </dependencies>
   </dependencyManagement>
   <dependencies>
     <dependency>
@@ -64,9 +70,14 @@
       <version>2.4.0</version>
     </dependency>
     <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>yamlscript-java</artifactId>
-      <version>0.1.36</version>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20240205</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>5.14.0</version>
     </dependency>
   </dependencies>
 </project>

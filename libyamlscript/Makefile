@@ -71,7 +71,7 @@ ifeq (true,$(IS_ROOT))
 	$(error *** YAMLScript 'make build' must be run as non-root user)
 endif
 else
-$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_LANG_INSTALLED)
+$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
 	$< uberjar
 endif
 

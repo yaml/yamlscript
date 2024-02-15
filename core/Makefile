@@ -5,7 +5,7 @@ include $(COMMON)/docker.mk
 export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_LANG_INSTALLED)
+build:: $(YAMLSCRIPT_CORE_INSTALLED)
 
 install test: $(LEIN)
 	$< $@
@@ -20,3 +20,6 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-deps-clojure.dockerfile \
 	  $</docker-apt-dev.dockerfile \
 		> $@
+
+clean::
+	$(RM) pom.xml
