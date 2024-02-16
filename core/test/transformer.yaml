@@ -74,3 +74,21 @@
      '[foo.ddd :as fd :refer [one two]]
      'foo.eee
      '[foo.fff :refer :all])
+
+
+- name: Anonymous function with name
+  yamlscript: |
+    !yamlscript/v0
+    fn add(a b): a + b
+  clojure: |
+    (fn add [a b] (_+ a b))
+
+
+- name: Multi-arity anonymous function with name
+  yamlscript: |
+    !yamlscript/v0
+    fn add:
+      (): 0
+      (a b): a + b
+  clojure: |
+    (fn add (() 0) ((a b) (_+ a b)))

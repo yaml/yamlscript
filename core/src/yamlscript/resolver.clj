@@ -83,6 +83,11 @@
   (when (re-matches re/dfnk key)
     [{:defn key} val]))
 
+(defn tag-afn [[{key :exp} val]]
+  (when (re-matches re/afnk key)
+    [{:fn key} val]))
+
+;; XXX - This needs refactoring to not mutate the key
 (defn tag-fn [[key val]]
   (when-lets [key (:exp key)
               old key
@@ -134,6 +139,7 @@
        tag-fn
        tag-def
        tag-defn
+       tag-afn
        tag-forms
        tag-exp
        identity) pair)))

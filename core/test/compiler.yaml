@@ -681,3 +681,14 @@
     .[a b c] =: .[1 2 3]
   error: |
     ~~ Destructured def not allowed
+
+
+- name: Multi-arity defn
+  yamlscript: |
+    !yamlscript/v0
+    defn foo:
+      (): 0
+      (a): a
+      (a b): a + b
+  clojure: |
+    (defn foo ([] 0) ([a] a) ([a b] (_+ a b)))

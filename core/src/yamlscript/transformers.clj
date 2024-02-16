@@ -24,6 +24,28 @@
     [lhs rhs]))
 
 ;;-----------------------------------------------------------------------------
+;; defn and fn
+;;-----------------------------------------------------------------------------
+
+(defn transform_defn [lhs rhs]
+  (when-lets [lhs (remove nil? lhs)
+              lhs (vec lhs)
+              _ (= 2 (count lhs))
+              kind (get-in lhs [0 :Sym])
+              _ (#{'defn 'fn} kind)
+              pairs (:pairs rhs)
+              _ (every? :Lst (->> pairs (partition 2) (map first)))
+              pairs (reduce
+                      (fn [acc [lhs rhs]]
+                        (let [lhs (Vec (:Lst lhs))]
+                          (conj acc lhs rhs)))
+                      []
+                      (partition 2 pairs))]
+    [lhs {:pairs pairs}]))
+
+#_(every? :Lst '({:Lst []} {:Lst [{:Sym a}]} {:Lst [{:Sym a} {:Sym b}]}))
+
+;;-----------------------------------------------------------------------------
 ;; require
 ;;-----------------------------------------------------------------------------
 

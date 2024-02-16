@@ -20,12 +20,12 @@
   "Parse all the !exp nodes into YAMLScript AST nodes."
   [node] (build-node node))
 
-(defn build-defn-defaults [name doc args body]
+(defn build-defn-defaults [name doc args body kind]
   (when-lets [args (:Vec args)
               dargs (filter #(vector? (:Sym %1)) args)
               _ (seq dargs)
               dmap (reduce (fn [m {[k v] :Sym}] (assoc m {:Sym k} v)) {} dargs)
-              defn (Sym 'defn)
+              defn (Sym kind)
               args (map Sym
                      (map #(or (get-in % [:Sym 0])
                              (get % :Sym)) args))
@@ -47,12 +47,18 @@
                        (range (dec n-args) (- n-args n-dargs 1) -1))]
     [[defn name doc] bodies]))
 
-(defn build-defn-single [name doc args body]
-  (when-let [defn (Sym 'defn)]
+(defn build-defn-single [name doc args body kind]
+  (when-lets [defn (Sym kind)
+              _ true]
     [[defn name doc args] body]))
 
-(defn build-defn [{key :defn} val]
-  (let [[_ name args] (re-matches re/dfnk key)
+(defn build-defn [key val]
+  (let [[key kind] (if-let [key (:defn key)]
+                     [key 'defn]
+                     [(:fn key) 'fn])
+        [_ name args] (if (= kind 'defn)
+                        (re-matches re/dfnk key)
+                        (re-matches re/afnk key))
         name (Sym name)
         args (when args
                (let [args (build-node {:exp args})
@@ -70,8 +76,9 @@
                                    [key {:pairs nodes}])]
                      [doc body]
                      [nil body])]
-    (or (build-defn-defaults name doc args body)
-        (build-defn-single name doc args body))))
+    (or
+      (build-defn-defaults name doc args body kind)
+      (build-defn-single name doc args body kind))))
 
 (defn build-form-pair [key val]
   (let [key (:form key)]
@@ -80,6 +87,7 @@
 (defn build-pair [nodes [key val]]
   (let [[key val] (cond
                     (:defn key) (build-defn key val)
+                    (:fn key) (build-defn key val)
                     (:form key) (build-form-pair key val)
                     :else [(build-node key) (build-node val)])]
     (conj nodes key val)))

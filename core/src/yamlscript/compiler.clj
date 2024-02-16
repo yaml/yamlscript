@@ -84,8 +84,4 @@
 
 (comment
   www
-  (->> "../test/hello.ys"
-    slurp
-    compile
-    println)
   )
