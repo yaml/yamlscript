@@ -659,3 +659,25 @@
     __: 2
   error: |
     ~~ Invalid symbol: '__'
+
+
+- name: Destructuring let
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      .[a b c] =: .[1 2 3]
+      .{:d d :e e} =: .{:d 4 :e 5}
+      =>: a + b + c
+  clojure: |
+    (defn
+     foo
+     []
+     (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (_+ a b c)))
+
+
+- name: Destructuring def not allowed
+  yamlscript: |
+    !yamlscript/v0
+    .[a b c] =: .[1 2 3]
+  error: |
+    ~~ Destructured def not allowed

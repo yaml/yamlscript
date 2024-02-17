@@ -8,6 +8,7 @@
   (:require
    [clojure.walk :as walk]
    [yamlscript.ast :refer [Lst Sym Vec]]
+   [yamlscript.re :as re]
    [yamlscript.debug :refer [www]]))
 
 (declare
@@ -50,6 +51,12 @@
                                      [true (:form lhs)]
                                      [false lhs])
                        lhs (construct-side lhs ctx)
+                       _ (when (and
+                                 (= 'def (get-in lhs [0 :Sym]))
+                                 (not (re-matches re/symw
+                                        (str (get-in lhs [1 :Sym])))))
+                           (throw (Exception.
+                                    "Destructured def not allowed")))
                        rhs (construct-side rhs ctx)
                        rhs (or (:forms rhs) rhs)
                        new (if forms
