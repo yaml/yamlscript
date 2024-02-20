@@ -132,7 +132,7 @@
   clojure: |
     (defn main [name] (say (str "Hello " name)))
     (def x 1)
-    (apply main ARGV)
+    (apply main ARGS)
 
 
 - name: The => operator
@@ -304,7 +304,7 @@
       say: "Hello World"
   clojure: |
     (defn main [] (say "Hello World"))
-    (apply main ARGV)
+    (apply main ARGS)
 
 
 - name: Interpolate variable with - in it
@@ -608,9 +608,9 @@
 - name: Interpolated path lookup
   yamlscript: |
     !yamlscript/v0
-    =>: "Hi $(ARGV.0)!!"
+    =>: "Hi $(ARGS.0)!!"
   clojure: |
-    (str "Hi " (__ ARGV 0) "!!")
+    (str "Hi " (__ ARGS 0) "!!")
 
 
 - name: Floatings point numbers

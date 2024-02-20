@@ -1,5 +1,5 @@
 !yamlscript/v0/data
 
 foo: This is a string
-bar: ! load("./loadme.ys")
-# baz: ! load("loadme.ys" "foo.bar")
+bar:: load("loadme.ys")
+# baz:: ys/load("loadme.ys").foo.bar

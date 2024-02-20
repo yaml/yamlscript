@@ -201,12 +201,12 @@
                     (let [want (str/replace want #"^=~\s*" "")
                           want (str/trim-newline want)]
                       (test/is (re-find (re-pattern want) got)))
-                    ,
+
                     (and (string? want) (re-find #"^~~\s*" want))
                     (let [want (str/replace want #"^~~\s*" "")
                           want (str/trim-newline want)]
                       (test/is (str/includes? got want)))
-                    ,
+
                     :else
                     (test/is (= want got))))))))
         (when (seq only)

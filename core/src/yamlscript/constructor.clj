@@ -160,7 +160,7 @@
 (def call-main
   (Lst [(Sym 'apply)
         (Sym 'main)
-        (Sym 'ARGV)]))
+        (Sym 'ARGS)]))
 
 (defn maybe-call-main [node]
   (let [need-call-main (atom false)]

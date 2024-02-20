@@ -58,16 +58,16 @@
     "-p prints Clojure result of file run")
 
   (like (ys "-pe" "say")
-    #"ys\.std.say"
+    #"std.say"
     "'say' evaluates to a symbol")
 
-  (is (ys "-ce" "ys::std/say: 123")
-    "(ys.std/say 123)"
+  (is (ys "-ce" "std/say: 123")
+    "(std/say 123)"
     "-c prints Clojure code of compilation")
 
-  (is (ys "-e" "ys::std/say: 123")
+  (is (ys "-e" "std/say: 123")
     "123"
-    "ys::std/say is the YS std println")
+    "std/say is the YS std println")
 
   (is (ys "-mc" "-le" "say: 12345" "-e" "=>: 67890")
     "12345\n67890"

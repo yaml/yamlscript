@@ -113,12 +113,12 @@ write-program-clj() (
   if [[ $in_path == */EVAL.ys ]]; then
     program=$(
       "$YS_BIN" --compile --eval="$YS_CODE" |
-        grep -Ev '^\(apply main ARGV\)'
+        grep -Ev '^\(apply main ARGS\)'
     )
   else
     program=$(
       "$YS_BIN" --compile "$in_path" |
-        grep -Ev '^\(apply main ARGV\)'
+        grep -Ev '^\(apply main ARGS\)'
     )
   fi
 
@@ -130,7 +130,7 @@ write-program-clj() (
 (ns program (:gen-class) (:refer-clojure :exclude [print]))
 (use 'clojure.core)
 (use 'ys.std)
-(def ^:dynamic ARGV [])
+(def ^:dynamic ARGS [])
 (def ^:dynamic ENV {})
 ;; ------------------------------------------------------------------------
 

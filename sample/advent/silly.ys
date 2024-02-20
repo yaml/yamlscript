@@ -22,8 +22,8 @@ my-json =: |
     "Frosty",
     "Kids" ]
 
-greets =: ys::yaml.load(my-yaml)
+greets =: ys::yaml/load(my-yaml)
 
-names =: ys::json.load(my-json)
+names =: ys::json/load(my-json)
 
 say: "$rand-nth(greets), $rand-nth(names)!!"

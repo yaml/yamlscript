@@ -14,54 +14,26 @@
    [ys.std]
    [ys.json]
    [ys.yaml]
-   [ys.ys]))
+   [ys.ys :as ys]
+   [yamlscript.util
+    :refer [abspath
+            get-yspath]]))
 
 (def ys-version "0.1.36")
 
-(sci/alter-var-root sci/out (constantly *out*))
-(sci/alter-var-root sci/err (constantly *err*))
-(sci/alter-var-root sci/in (constantly *in*))
+(def no-file "NO_SOURCE_PATH")
 
-(def ys-std (sci/create-ns 'std))
-(def ys-std-ns (sci/copy-ns ys.std ys-std))
-
-(def ys-json (sci/create-ns 'json))
-(def ys-json-ns (sci/copy-ns ys.json ys-json))
-
-(def ys-yaml (sci/create-ns 'yaml))
-(def ys-yaml-ns (sci/copy-ns ys.yaml ys-yaml))
-
-(def ys-ys (sci/create-ns 'ys))
-(def ys-ys-ns (sci/copy-ns ys.ys ys-ys))
-
-(def clj-str (sci/create-ns 'str))
-(def clj-str-ns (sci/copy-ns clojure.string clj-str))
-
-(def bb-http (sci/create-ns 'http))
-(def bb-http-ns (sci/copy-ns babashka.http-client bb-http))
-
-(def bb-fs (sci/create-ns 'fs))
-(def bb-fs-ns (sci/copy-ns babashka.fs bb-fs))
-
-(def ARGS (sci/new-dynamic-var 'ARGS nil))
-(def ARGV (sci/new-dynamic-var 'ARGV nil))
-(def CWD (sci/new-dynamic-var 'CWD nil))
-(def ENV (sci/new-dynamic-var 'ENV nil))
-(def FILE (sci/new-dynamic-var 'FILE nil))
-(def VERSION (sci/new-dynamic-var 'VERSION nil))
-(def VERSIONS (sci/new-dynamic-var 'VERSIONS nil))
-
-(declare ys-load)
+(def ARGS (sci/new-dynamic-var 'ARGS))
+(def ARGV (sci/new-dynamic-var 'ARGV))
+(def INC (sci/new-dynamic-var 'INC))
 
 (defn clojure-core-ns []
   (let [core {'ARGS ARGS
               'ARGV ARGV
-              'CWD CWD
-              'ENV ENV
-              'FILE FILE
-              'VERSION VERSION
-              'VERSIONS VERSIONS
-              'load (sci/copy-var ys-load nil)
+              'FILE ys/FILE
+              'INC INC
+
+              'load (sci/copy-var ys.ys/load-file nil)
               'parse-double (sci/copy-var clojure.core/parse-double nil)
               'parse-long (sci/copy-var clojure.core/parse-long nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
@@ -71,50 +43,54 @@
         std (update-vals std #(sci/copy-var* %1 nil))]
     (merge core std)))
 
-(defn sci-ctx []
-  {:namespaces
-   {'ys.std ys-std-ns
-    'ys.json ys-json-ns
-    'ys.yaml ys-yaml-ns
-    'ys.ys ys-ys-ns
-    'fs bb-fs-ns
-    'http bb-http-ns
-    'str clj-str-ns
-    'clojure.core (clojure-core-ns)}
-   :classes
-   {'Boolean java.lang.Boolean
-    'java.lang.Boolean java.lang.Boolean
-    'Character java.lang.Character
-    'java.lang.Character java.lang.Character
-    'Long java.lang.Long
-    'java.lang.Long java.lang.Long}})
+(defmacro use-ns [ns-name from-ns]
+  `(let [ns# (sci/create-ns ~ns-name)]
+     (sci/copy-ns ~from-ns ns#)))
 
-(defn ys-load
-  ([file]
-   (let [path (if (or (= "/EVAL" file) (= "/STDIN" file))
-                file
-                (.getParent
-                  (io/file
-                    (.getAbsolutePath (io/file @sci/file)))))
-         file (io/file path file)
-         ys-code (slurp file)
-         clj-code (ys.ys/compile ys-code)]
-     (sci/with-bindings
-       {sci/ns @sci/ns}
-       (sci/eval-string clj-code (sci-ctx)))))
+(reset! ys/sci-ctx
+  (sci/init
+    {:namespaces
+     {'clojure.core (clojure-core-ns)
 
-  ([file path]
-   (let [data (ys-load file)
-         path
-         (map #(if (re-matches #"\d+" %1) (parse-long %1) %1)
-           (str/split path #"\."))]
-     (get-in data path))))
+      'ys.ys (use-ns 'ys.ys ys.ys)
 
-(def no-file "NO_SOURCE_PATH")
+      'fs  (use-ns 'fs  babashka.fs)
+      'std (use-ns 'std ys.std)
+      'str (use-ns 'str clojure.string)
+      'ys  (use-ns 'ys  ys.ys)
+
+      'ys.http (use-ns 'http babashka.http-client)
+      'ys.json (use-ns 'json ys.json)
+      'ys.yaml (use-ns 'yaml ys.yaml)}
+
+     :classes
+     {'Boolean   java.lang.Boolean
+      'Character java.lang.Character
+      'Long      java.lang.Long
+
+      'java.lang.Boolean   java.lang.Boolean
+      'java.lang.Character java.lang.Character
+      'java.lang.Long      java.lang.Long}}))
+
+(sci/intern @ys/sci-ctx 'clojure.core 'CWD (str (babashka.fs/cwd)))
+(sci/intern @ys/sci-ctx 'clojure.core 'ENV (into {} (System/getenv)))
+(sci/intern @ys/sci-ctx 'clojure.core 'VERSION ys-version)
+(sci/intern @ys/sci-ctx 'clojure.core 'VERSIONS
+  {:clojure "1.11.1"
+   :sci (->>
+          (io/resource "SCI_VERSION")
+          slurp
+          str/trim-newline)
+   :yamlscript ys-version})
+
+(sci/alter-var-root sci/out (constantly *out*))
+(sci/alter-var-root sci/err (constantly *err*))
+(sci/alter-var-root sci/in (constantly *in*))
+
 (defn eval-string
   ([clj]
    (let [file (if @sci/file
-                (.getAbsolutePath (io/file @sci/file))
+                (abspath @sci/file)
                 no-file)]
      (eval-string clj file)))
 
@@ -122,10 +98,7 @@
 
   ([clj file args]
    (let [clj (str/trim-newline clj)
-         file (or file no-file)
-         file (if (= file no-file)
-                file
-                (.getAbsolutePath (io/file file)))]
+         file (or (abspath file) no-file)]
      (if (= "" clj)
        ""
        (sci/binding
@@ -136,17 +109,9 @@
                             :else %1)
                   args))
          ARGV args
-         CWD (str (babashka.fs/cwd))
-         ENV (into {} (System/getenv))
-         FILE file
-         VERSION ys-version
-         VERSIONS {:clojure "1.11.1"
-                   :sci (->>
-                          (io/resource "SCI_VERSION")
-                          slurp
-                          str/trim-newline)
-                   :yamlscript ys-version}]
-         (sci/eval-string clj (sci-ctx)))))))
+         ys/FILE file
+         INC (get-yspath file)]
+         (sci/eval-string* @ys/sci-ctx clj))))))
 
 (comment
   www

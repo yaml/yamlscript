@@ -70,7 +70,7 @@
                              (cond (and (= '=> (:Sym key))
                                      (some val [:Str :str :vstr]))
                                    [val {:pairs nodes}]
-                                   ,
+
                                    (and (nil? val)
                                      (some key [:Str :str :vstr]))
                                    [key {:pairs nodes}])]
@@ -153,13 +153,13 @@
                 #(cond
                    (re-matches (re/re #"\$$symw$bpar") %1)
                    (build-exp {:exp (subs %1 1)})
-                   ,
+
                    (re-matches (re/re #"\$$symw") %1)
                    (Sym (subs %1 1))
-                   ,
+
                    (re-matches (re/re #"\$$bpar") %1)
                    (build-exp-interpolated {:exp (subs %1 1)})
-                   ,
+
                    :else
                    (Str (str/replace %1 #"\\(\$)" "$1")))
                 parts)]

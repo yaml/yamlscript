@@ -3,7 +3,7 @@
 defn main():
   say:
     "Open doors after 100 passes:
-    $(apply str interpose(\", \" open-doors()))"
+    $(apply str interpose(', ' open-doors()))"
 
 defn open-doors():
   for [[d n] map(vector doors() iterate(inc 1)) :when d]:

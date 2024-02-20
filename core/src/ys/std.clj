@@ -6,6 +6,7 @@
 (ns ys.std
   (:require
    [yamlscript.debug]
+   [babashka.http-client :as http]
    [clojure.pprint :as pp]
    [clojure.string :as str])
   (:refer-clojure :exclude [print]))
@@ -64,6 +65,15 @@
 
 (defn =-- [str rgx]
   (re-find rgx str))
+
+(defn curl [url]
+  (let [url (if (re-find #":" url)
+              url
+              (str "https://" url))
+        resp (http/get url)]
+    (if-let [body (:body resp)]
+      (str body)
+      (throw (Exception. (str resp))))))
 
 (defn die [msg]
   (throw (Exception. ^String msg)))

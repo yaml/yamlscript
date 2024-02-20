@@ -227,7 +227,7 @@ Options:
          (add-ys-mode-tag opts))
        "\n")
      "/EVAL" args]
-    ,
+
     (seq args)
     (let [[file & args] args
           code (str
@@ -236,10 +236,10 @@ Options:
                    (slurp file))
                  "\n")]
       [code file args])
-    ,
+
     (:stdin opts)
     [(:stdin opts) "/STDIN" args]
-    ,
+
     :else
     (let [code (get-stdin)]
       (if code

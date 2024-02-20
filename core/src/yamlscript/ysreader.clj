@@ -251,22 +251,22 @@
     (is-character? token) [(Chr (subs token 1)) tokens]
     (is-path? token) [(make-path token) tokens]
     (is-regex? token) [(Rgx (->> (subs token 1 (dec (count token))))) tokens]
-    ,
+
     (is-fq-symbol? token)
     (let [sym (str/replace token #"\." "/")
           sym (str/replace sym #"::" ".")]
       [(Sym sym) tokens])
-    ,
+
     (is-symbol? token) [(Sym token) tokens]
-    ,
+
     (is-default-symbol? token)
     (let [[value tokens] (read-form tokens)
           token (subs token 0 (-> token count dec))]
       [(Sym token value) tokens])
-    ,
+
     (is-clojure-symbol? token)
     (throw (Exception. (str "Invalid symbol: '" token "'")))
-    ,
+
     (is-namespace? token) [(Spc token) tokens]
     :else (throw (Exception. (str "Unexpected token: '" token "'")))))
 

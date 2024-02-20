@@ -1,7 +1,7 @@
 #!/usr/bin/env ys-0
 
 defn main(n):
-  say: factorial(n)
+  say: "$n! = $factorial(n)"
 
 defn factorial(x):
-  apply *: 2..x
+  apply *: 2 .. x

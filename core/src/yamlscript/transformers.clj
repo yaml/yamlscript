@@ -94,20 +94,20 @@
     (when-lets [_ (:Sym lhs)
                 _ (:Spc rhs)]
       [lhs (Lst [Q rhs])])
-    ,
+
     (when-lets [[sym spc] (require-spc-lhs? lhs)
                 _ (nil? rhs)]
       [sym (Lst [Q spc])])
-    ,
+
     (when-lets [[sym spc] (require-spc-lhs? lhs)
                 args (require-args rhs)]
       [sym (Lst [Q (Vec (concat [spc] args))])])
-    ,
+
     (when-lets [_ (:Sym lhs)
                 pairs (:pairs rhs)
                 args (require-pairs pairs)]
       [lhs args])
-    ,
+
     (throw (Exception. "Invalid 'require' form"))))
 
 (comment
