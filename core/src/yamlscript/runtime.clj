@@ -21,8 +21,6 @@
 
 (def ys-version "0.1.36")
 
-(def no-file "NO_SOURCE_PATH")
-
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))
 (def INC (sci/new-dynamic-var 'INC))
@@ -34,6 +32,8 @@
               'INC INC
 
               'load (sci/copy-var ys.ys/load-file nil)
+              'use (sci/copy-var ys.ys/use nil)
+
               'parse-double (sci/copy-var clojure.core/parse-double nil)
               'parse-long (sci/copy-var clojure.core/parse-long nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
@@ -88,17 +88,13 @@
 (sci/alter-var-root sci/in (constantly *in*))
 
 (defn eval-string
-  ([clj]
-   (let [file (if @sci/file
-                (abspath @sci/file)
-                no-file)]
-     (eval-string clj file)))
+  ([clj] (eval-string clj @sci/file))
 
   ([clj file] (eval-string clj file []))
 
   ([clj file args]
    (let [clj (str/trim-newline clj)
-         file (or (abspath file) no-file)]
+         file (if file (abspath file) "/EVAL")]
      (if (= "" clj)
        ""
        (sci/binding
