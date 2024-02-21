@@ -5,10 +5,12 @@
 
 (ns yamlscript.util
   (:require
-   [babashka.fs :refer [cwd]]
+   [babashka.fs
+    :refer [cwd]]
    [clojure.java.io :as io]
    [clojure.string :as str]
-   [yamlscript.debug :refer [www]]))
+   [yamlscript.debug
+    :refer [www]]))
 
 (defonce build-vstr (atom nil))
 

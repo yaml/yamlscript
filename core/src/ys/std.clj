@@ -6,9 +6,11 @@
 (ns ys.std
   (:require
    [yamlscript.debug]
+   [babashka.fs :as fs]
    [babashka.http-client :as http]
    [clojure.pprint :as pp]
-   [clojure.string :as str])
+   [clojure.string :as str]
+   [yamlscript.util :as util])
   (:refer-clojure :exclude [print]))
 
 (defn www [& xs]
@@ -66,6 +68,12 @@
 (defn =-- [str rgx]
   (re-find rgx str))
 
+(defn abspath [& args]
+  (apply util/abspath args))
+
+(defn cwd [& args]
+  (str (apply babashka.fs/cwd args)))
+
 (defn curl [url]
   (let [url (if (re-find #":" url)
               url
@@ -77,6 +85,9 @@
 
 (defn die [msg]
   (throw (Exception. ^String msg)))
+
+(defn dirname [& args]
+  (apply util/dirname args))
 
 (defmacro each [bindings & body]
   `(do
