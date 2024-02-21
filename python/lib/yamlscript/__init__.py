@@ -117,9 +117,9 @@ class YAMLScript():
       raise Exception(self.error['cause'])
 
     # Get the response object from evaluating the YAMLScript string:
-    data = resp.get('data')
-    if data is None:
+    if not 'data' in resp:
       raise Exception("Unexpected response from 'libyamlscript'")
+    data = resp.get('data')
 
     # Return the response object:
     return data
