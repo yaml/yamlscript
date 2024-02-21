@@ -63,7 +63,7 @@ run programs written to a newer API version.
 
 There are two primary ways to use YAMLScript:
 
-* Using the `ys` command line runner / loader / compiler
+* Using the `ys` command line runner / loader / compiler / installer
 * Using a YAMLScript library in your own programming language
 
 The `ys` command line tool is the easiest way to get started with YAMLScript.
@@ -73,8 +73,11 @@ It has these main modes of operation:
 * `ys --run <file>` - Same as above but explicit
 * `ys --load <file>` - Load a YAMLScript program
 * `ys --compile <file>` - Compile a YAMLScript program to Clojure
+* `ys --native <file>` - Compile YAMLScript to a native binary executable
 * `ys --eval '<expr>'` - Evaluate a YAMLScript expression string
 * `ys --repl` - Start an interactive YAMLScript REPL session
+* `ys --install` - Install the latest libyamlscript shared library
+* `ys --upgrade` - Upgrade ys and libyamlscript
 * `ys --help` - Show the `ys` command help
 
 You can also use YAMLScript as a library in your own programming language.
@@ -171,7 +174,7 @@ Try it out!
 ## Installing YAMLScript
 
 At the moment, the best way to install YAMLScript is to build it from source,
-but see the section "Installing YAMLScript Releases" below.
+but see the section "Installing YAMLScript Binary Releases" below.
 
 This is very easy to do because the YAMLScript build process has very few
 dependencies:
@@ -189,12 +192,13 @@ run these commands:
 git clone https://github.com/yaml/yamlscript
 cd yamlscript
 make build
-sudo make install
+make install
 ```
 
 The `make install` command will install `ys` and `libyamlscript` to
-`/usr/local/bin` and `/usr/local/lib` respectively, by default.
-This means that you will need to run `make install` with `sudo` or as root.
+`~/.local/bin` and `~/.local/lib` respectively, by default.
+If run as root they will default to `/usr/local/bin` and `/usr/local/lib`.
+
 To install to a different location, run `make install PREFIX=/some/path`.
 
 > Notes:
@@ -205,7 +209,7 @@ To install to a different location, run `make install PREFIX=/some/path`.
 >   your `PATH` and `LD_LIBRARY_PATH` environment variables
 
 
-### Installing YAMLScript Releases
+### Installing YAMLScript Binary Releases
 
 YAMLScript now ships binary releases for some platforms [here](
 https://github.com/yaml/yamlscript/releases).
@@ -213,21 +217,21 @@ https://github.com/yaml/yamlscript/releases).
 To install a latest release for your machine platform, try:
 
 ```bash
-$ curl https://yamlscript.org/install | PREFIX=~/.local bash
+$ curl -sSL yamlscript.org/install | bash
 ```
 
 Make sure `~/.local/bin` is in your `PATH` environment variable.
 
-> The default `PREFIX` is `/usr/local`, which likely requires `sudo bash` to run
-the above command.
-
 You can use the following environment variables to control the installation:
 
-* `PREFIX=...` - The directory to install to. Default: `/usr/local`
-* `VERSION=...` - The YAMLScript version to install. Default: `0.1.37`
+* `PREFIX=...` - The directory to install to. Default: `~/.local`
+* `VERSION=...` - The YAMLScript version to install. Default: `0.1.38`
 * `BIN=1` - Only install the `PREFIX/bin/ys` command line tool.
 * `LIB=1` - Only install the `PREFIX/lib/libyamlscript` shared library.
 * `DEBUG=1` - Print the Bash commands that are being run.
+
+Once you have installed the `ys` command you can upgrade to a bin binary
+version with `ys --upgrade`.
 
 
 ### Installing a YAMLScript Binding for a Programming Language
@@ -246,8 +250,8 @@ installer to install the latest shared library version.
 So for Python you would:
 
 ```bash
-pip install yamlscript
-curl https://yamlscript.org/install | sudo LIB=1 bash
+$ pip install yamlscript
+$ ys --install
 ```
 
 The Perl installation process can automatically install the shared library, so

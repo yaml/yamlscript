@@ -1,4 +1,18 @@
 
+- version: 0.1.38
+  date:    Wed Feb 21 02:23:21 PM PST 2024
+  changes:
+  - core: Support destructured let, but err on def
+  - core: Support names in fn calls and fix multi-arity defn and fn
+  - core: Add support for ys/use and YSPATH
+  - core: Make `use` -> `ys.ys/use`
+  - python: Fix a bug. null is a valid JSON data response.
+  - core: Fix bugs with switching from data to code mode
+  - core: Add abspath cwd & dirname to ys::std
+  - www: Updates for yamlscript.org front page
+  - core: Fixes so binding modules can resolve relative paths
+  - ys: Support --install and --upgrade
+
 - version: 0.1.37
   date:    Wed Feb 14 01:26:10 PM PST 2024
   changes:

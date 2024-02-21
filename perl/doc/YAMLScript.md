@@ -9,7 +9,7 @@ Program in YAML
 ```yaml
 #!/usr/bin/env ys-0
 
-defn main(name):
+defn main(name='world'):
   say: "Hello, $name!"
 ```
 
@@ -104,18 +104,15 @@ $ cpanm YAMLScript
 
 but you will need to have a system install of `libyamlscript.so`.
 
-Note: YAMLScript.pm has Alien support built in, so you don't really need to
-install `libyamlscript.so` yourself for Perl.
-
 One simple way to do that is with:
 
 ```bash
-$ curl https://yamlscript.org/install | sudo PREFIX=/usr/local bash
+$ curl -sSL yamlscript.org/install | bash
 ```
 
 Note: The above command will install the latest version of the YAMLScript
 command line utility, `ys`, and the shared library, `libyamlscript.so`, into
-`/usr/local/bin` and `/usr/local/lib` respectively.
+`~/local/bin` and `~/.local/lib` respectively.
 
 See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
