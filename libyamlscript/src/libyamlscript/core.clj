@@ -5,8 +5,8 @@
 
 (ns libyamlscript.core
   (:require
-   [yamlscript.compiler :as ys]
-   [yamlscript.runtime :as run]
+   [yamlscript.compiler :as compiler]
+   [yamlscript.runtime :as runtime]
    [clojure.data.json :as json]
    [sci.core :as sci])
   (:gen-class
@@ -32,8 +32,8 @@
   (sci/binding [sci/out *out*]
     (try
       (->> ys-str
-        ys/compile
-        run/eval-string
+        compiler/compile
+        runtime/eval-string
         (assoc {} :data)
         json-write-str)
 

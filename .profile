@@ -2,8 +2,10 @@
 
 YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
 
-[[ :$PATH: == *:"$YAMLSCRIPT_ROOT/ys/bin":* ]] ||
-  PATH=$YAMLSCRIPT_ROOT/ys/bin:$PATH
+ys-local() {
+  [[ :$PATH: == *:"$YAMLSCRIPT_ROOT/ys/bin":* ]] ||
+    PATH=$YAMLSCRIPT_ROOT/ys/bin:$PATH
+}
 
 YS() (
   set -e

@@ -36,7 +36,7 @@ test: test-unit
 
 test-all: test-unit test-ys
 
-test-unit: $(LEIN)
+test-unit: $(LEIN) $(YAMLSCRIPT_LANG_INSTALLED)
 	$< test
 
 test-ys: $(YAMLSCRIPT_CLI_BIN)

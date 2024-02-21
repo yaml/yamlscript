@@ -27,7 +27,7 @@
              resolver/resolve
              builder/build
              transformer/transform
-             constructor/construct
+             constructor/construct-ast
              printer/print
              compiler/pretty-format))
    :want :print})

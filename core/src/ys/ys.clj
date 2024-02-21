@@ -25,18 +25,22 @@
   (let [module (str/replace module #"\." "/")]
     (str module ".ys")))
 
-(declare load-file)
+(declare load-file clj-load-file)
 
 (defn -use-module [module & args]
   (let [file (-get-module module)
+        clj-file (str/replace file #"\.ys$" ".clj")
         yspath (get-yspath @sci/file)]
     (loop [[path & yspath] yspath]
-      (let [path (str path "/" file)]
-        (if (.exists (io/as-file path))
-          (load-file path)
-          (if (seq yspath)
-            (recur yspath)
-            (die (str "Module not found: " module))))))))
+      (let [ys-path (str path "/" file)
+            clj-path (str path "/" clj-file)]
+        (if (.exists (io/as-file ys-path))
+          (load-file ys-path)
+          (if (.exists (io/as-file clj-path))
+            (clj-load-file clj-path)
+            (if (seq yspath)
+              (recur yspath)
+              (die (str "Module not found: " module)))))))))
 
 ;;-----------------------------------------------------------------------------
 (defn compile [code]
@@ -54,6 +58,17 @@
         ret (sci/binding
              [sci/file ys-file
               FILE ys-file]
+              (sci/eval-string+ @sci-ctx clj-code))]
+    (:val ret)))
+
+(defn clj-load-file [clj-file]
+  (let [clj-file (abspath clj-file (dirname @sci/file))
+        clj-code (->
+                   clj-file
+                   slurp)
+        ret (sci/binding
+             [sci/file clj-file
+              FILE clj-file]
               (sci/eval-string+ @sci-ctx clj-code))]
     (:val ret)))
 

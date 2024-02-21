@@ -47,7 +47,7 @@
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
-(def dotn #"(?:\.\d+)")                    ; Dot operator followed by number
+(def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token
 (def inum #"-?\d+")                        ; Integer literal token
 (def fnum (re #"$inum\.\d*(?:e$inum)?"))   ; Floating point literal token
@@ -70,7 +70,7 @@
             )*\"                             # Ending quote
             ")
 (def sstr #"(?x)
-            '(?:                          # Single quoted string
+            '(?:                           # Single quoted string
               '' |                           # Escaped single quote
               [^']                           # Any other char
             )*'                              # Ending quote
@@ -78,7 +78,8 @@
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
 (def symw (re #"(?:$anum+(?:-$anum+)*)"))  ; Symbol word
-(def vsym (re #"(?:\$$symw)"))             ; Dollar sign symbol
+(def vsym (re #"(?:\$$symw)"))             ; Variable lookup symbol
+(def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
@@ -90,9 +91,9 @@
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))
 (def esym (re #"(?:\*$symw\*)"))           ; Earmuff symbol
 
-(def defk (re #"(?:\[.*\]|\{.*\}|$symw) +="))                ; Pair key for def/let call
-(def dfnk (re #"^defn ($ysym)(?:\((.*)\))?$"))  ; Pair key for defn call
-(def afnk (re #"^fn ($ysym)(?:\((.*)\))?$"))  ; Pair key for a fn call
+(def defk (re #"(?:\[.*\]|\{.*\}|$symw) +="))  ; Pair key for def/let call
+(def dfnk (re #"^defn ($ysym)(?:\((.*)\))?$")) ; Pair key for defn call
+(def afnk (re #"^fn ($ysym)(?:\((.*)\))?$"))   ; Pair key for a fn call
 
 ; Balanced parens
 (def bpar #"(?x)

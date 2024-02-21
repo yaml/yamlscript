@@ -73,7 +73,7 @@ It has these main modes of operation:
 * `ys --run <file>` - Same as above but explicit
 * `ys --load <file>` - Load a YAMLScript program
 * `ys --compile <file>` - Compile a YAMLScript program to Clojure
-* `ys --native <file>` - Compile YAMLScript to a native binary executable
+* `ys --binary <file>` - Compile YAMLScript to a native binary executable
 * `ys --eval '<expr>'` - Evaluate a YAMLScript expression string
 * `ys --repl` - Start an interactive YAMLScript REPL session
 * `ys --install` - Install the latest libyamlscript shared library

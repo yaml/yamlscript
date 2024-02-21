@@ -96,6 +96,8 @@ endif
 
 repl-deps::
 
+nrepl+: nrepl-stop nrepl
+
 nrepl: .nrepl-pid
 	@echo "nREPL server running on port $$(< .nrepl-port)"
 

@@ -17,7 +17,7 @@
   maybe-call-main
   check-let-bindings)
 
-(defn construct
+(defn construct-ast
   "Construct resolved YAML tree into a YAMLScript AST."
   [node]
   (let [ctx {:lvl 0 :defn false}]
@@ -29,6 +29,15 @@
       (hash-map :Top)
       declare-undefined
       maybe-call-main)))
+
+(defn construct
+  "Make the AST and add wrap the last node."
+  [node]
+  (-> node
+    construct-ast
+    ((fn [m]
+       (update-in m [:Top (dec (count (:Top m)))]
+         (fn [n] (Lst [(Sym '+++) n])))))))
 
 (defn construct-call [[key val]]
   (cond

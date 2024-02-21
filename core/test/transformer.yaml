@@ -68,12 +68,12 @@
       foo::fff: :all
   clojure: |
     (require
-     '[foo.aaa :as fa]
-     '[foo.bbb :refer [one]]
-     '[foo.ccc :refer [one two]]
-     '[foo.ddd :as fd :refer [one two]]
-     'foo.eee
-     '[foo.fff :refer :all])
+      '[foo.aaa :as fa]
+      '[foo.bbb :refer [one]]
+      '[foo.ccc :refer [one two]]
+      '[foo.ddd :as fd :refer [one two]]
+      'foo.eee
+      '[foo.fff :refer :all])
 
 
 - name: Anonymous function with name

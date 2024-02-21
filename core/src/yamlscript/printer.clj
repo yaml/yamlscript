@@ -25,6 +25,14 @@
   (-> s
     (str/escape regex-escape)))
 
+(defn pr-symbol [s]
+  (case s
+    "$" "($)"
+    "$$" "@$$"
+    "$#" "@$#"
+    "=~" "=--"
+    , s))
+
 (defn print-node [node]
   (let [node (if (keyword? node) {node true} node)
         [type val] (first node)]
@@ -51,7 +59,7 @@
       :Rgx (str \# \" (pr-regex val) \")
       :Chr (str "\\" val)
       :Spc (str/replace val #"::" ".")
-      :Sym (str (str/replace val #"~" "--"))
+      :Sym (pr-symbol (str val))
       :Tok (str val)
       :Key (str val)
       :Int (str val)
