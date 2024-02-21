@@ -1,0 +1,31 @@
+!yamlscript/v0
+
+base =: load('./db-defaults.yaml')
+# host: localhost
+# port: 12345
+# user: app
+# password: secret
+
+secret =: load('secret.yaml')
+# dev:   devsecret
+# stage: stagesecret
+# prod:  prodsecret
+
+data =::
+  development::
+    merge base::
+      user: dev
+      password:: secret.dev
+
+  staging::
+    merge base::
+      host: staging-db.myapp.com
+
+  production::
+    merge base::
+      host: prod-db.myapp.com
+      user: prod
+      password:: secret.prod
+
+defn main(level='development'):
+  get: data level
