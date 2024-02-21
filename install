@@ -6,6 +6,7 @@ set -e -u -o pipefail
 
 LIBYAMLSCRIPT_VERSION=0.1.37
 VERSION=${VERSION:-$LIBYAMLSCRIPT_VERSION}
+export VERSION
 
 main() (
   setup "$@"
@@ -41,6 +42,15 @@ install() (
 setup() {
   vers=$VERSION
 
+  if [[ ! $PREFIX ]]; then
+    if [[ $(id -u) == 0 ]]; then
+      PREFIX=/usr/local
+    else
+      PREFIX=$HOME/.local
+    fi
+  fi
+  export PREFIX
+
   if [[ $OSTYPE == *darwin* ]]; then
     os=macos
   elif [[ $OSTYPE == *linux* ]]; then
@@ -64,7 +74,7 @@ setup() {
   fi
 
   unset -v dir
-  
+
   trap '[[ ${dir-} ]] && rm -fr -- "$dir"' EXIT
 
   dir=$(mktemp -d)
