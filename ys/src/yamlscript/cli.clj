@@ -108,6 +108,11 @@
    #_["-K" "--kill"
       "Stop the nREPL server"]
 
+   [nil "--install"
+    "Install the libyamlscript shared library"]
+   [nil "--upgrade"
+    "Upgrade both ys and the libyamlscript shared library"]
+
    ["-x" "--debug-stage STAGE"
     "Display the result of stage(s)"
     :default {}
@@ -154,22 +159,29 @@
         (die "Input file must end in .ys"))
       [in-file code])))
 
-(defn do-native [opts args]
+(defn get-ys-sh-path []
   (let [path (-> (java.lang.ProcessHandle/current) .info .command .get)
         cmd (if (re-find #"-openjdk-" path)
               (str "ys-sh-" yamlscript-version)
               (str/replace path #"/[^/]*$"
-                (str "/ys-sh-" yamlscript-version)))
+                (str "/ys-sh-" yamlscript-version)))]
+    [cmd path]))
+
+(defn do-install [opts args]
+  (let [[cmd] (get-ys-sh-path)]
+    (exec cmd "--install")))
+
+(defn do-upgrade [opts args]
+  (let [[cmd] (get-ys-sh-path)]
+    (exec cmd "--upgrade")))
+
+(defn do-native [opts args]
+  (let [[cmd path] (get-ys-sh-path)
         [in-file code] (get-native-info opts args)
         out-file (some identity
                    [(:output opts)
                     (and in-file (str/replace in-file #"\.ys$" ""))])
         path (if (re-find #"-openjdk-" path) "ys" path)]
-    #_(print
-      (str
-        (format "Compiling '%s' -> '%s'\n\n" in-file out-file)
-        (format "$ %s --compile-to-native %s %s %s\n\n"
-          cmd in-file out-file yamlscript-version)))
     (flush)
     (exec {:extra-env {"YS_BIN" path
                        "YS_CODE" (or code "")}}
@@ -194,6 +206,7 @@ Options:
         ;; Insert blank lines in help text
         help (str/replace help #"\n  (-[comJRx])" "\n\n  $1")
         help (str/replace help #"\n  (.*--version)" "\n\n  $1")
+        help (str/replace help #"\n  (.*--install)" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %1))]
     (println help)))
 
@@ -432,6 +445,8 @@ Options:
       (seq errs) (do-error errs help)
       (:help opts) (do-help help)
       (:version opts) (do-version)
+      (:install opts) (do-install opts args)
+      (:upgrade opts) (do-upgrade opts args)
       (:native opts) (do-native opts args)
       (:run opts) (do-run opts args)
       (:load opts) (do-run opts args)

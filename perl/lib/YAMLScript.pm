@@ -101,7 +101,7 @@ sub find_libyamlscript {
         /usr/local/lib64
         /usr/lib
         /usr/lib64
-    );
+    ), "$ENV{HOME}/.local/lib";
     for my $path (@paths) {
         if (-e "$path/$name") {
             return "$path/$name";

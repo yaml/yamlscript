@@ -45,6 +45,7 @@ class YAMLScript
       env_value = ENV.fetch('LD_LIBRARY_PATH', '')
       paths = env_value.split(':')
       paths << '/usr/local/lib'
+      paths << ENV.fetch('HOME', '') + '/.local/lib'
     end
 
     # Find the libyamlscript shared library file path

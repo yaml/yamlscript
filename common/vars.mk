@@ -58,7 +58,11 @@ LIBYAMLSCRIPT_SO_FQNP := $(LIBYAMLSCRIPT_SO_NAME).$(SO).$(YS_VERSION)
 LIBYAMLSCRIPT_SO_BASE := $(LIBRARY_PATH)/libyamlscript.$(SO)
 LIBYAMLSCRIPT_SO_APIP := $(LIBYAMLSCRIPT_SO_BASE).$(API_VERSION)
 
-PREFIX ?= /usr/local
+ifeq (true,$(IS_ROOT))
+  PREFIX ?= /usr/local
+else
+  PREFIX ?= $(HOME)/.local
+endif
 
 #------------------------------------------------------------------------------
 # Set machine specific variables:

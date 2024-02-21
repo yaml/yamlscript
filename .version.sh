@@ -1,14 +1,12 @@
 # Used by util/version-bump to update versions in repo
 
-v_api=0.1.37
+v_api=0.1.38
 
 v_perl=$v_api
 v_python=$v_api
 v_raku=$v_api
 v_ruby=$v_api
 v_rust=$v_api
-
-# add ReadMe.md and www/src/index.md to this list
 
 vp='0\.[01]\.[0-9]+'
 
@@ -27,6 +25,7 @@ bump perl-alien/alienfile
 bump perl-alien/lib/Alien/YAMLScript.pm
 bump python/lib/yamlscript/__init__.py
 bump rust/src/lib.rs
+bump www/src/index.md
 bump ys/deps.edn
 bump ys/project.clj
 bump ys/share/ys-0.bash
@@ -60,11 +59,13 @@ pattern='(version.*)'"$vp"'(.*)'
 
 bump perl/Meta
 bump perl-alien/Meta
+bump www/src/index.md
 
 pattern='(VERSION.*)'"$vp"'(.*)'
 
 bump perl/lib/YAMLScript.pm
 bump perl-alien/lib/Alien/YAMLScript.pm
+bump www/src/index.md
 
 pattern='(Alien::YAMLScript:.*)'"$vp"'(.*)'
 

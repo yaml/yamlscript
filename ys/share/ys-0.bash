@@ -10,6 +10,17 @@ main() (
   "do-$command" "${arguments[@]}"
 )
 
+do-install() (
+  export PREFIX=${PREFIX:-$(dirname "$bindir")}
+  export LIB=1
+  curl -sSL https://yamlscript.org/install | bash
+)
+
+do-upgrade() (
+  export PREFIX=${PREFIX:-$(dirname "$bindir")}
+  curl -sSL https://yamlscript.org/install | bash
+)
+
 do-compile-to-native() (
   in_file=${1-}
   out_file=${2-}
@@ -63,6 +74,8 @@ setup() {
 
   command=${1#--}; shift
   arguments=("$@")
+
+  bindir=$(cd -P "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
 
   [[ $(command -v "do-$command") ]] ||
     die "Unknown command: --$command"

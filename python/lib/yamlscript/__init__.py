@@ -49,6 +49,7 @@ def find_libyamlscript_path():
   ld_library_path = os.environ.get('LD_LIBRARY_PATH')
   ld_library_paths = ld_library_path.split(':') if ld_library_path else []
   ld_library_paths.append('/usr/local/lib')
+  ld_library_paths.append(os.environ.get('HOME') + '/.local/lib')
 
   libyamlscript_path = None
   for path in ld_library_paths:
