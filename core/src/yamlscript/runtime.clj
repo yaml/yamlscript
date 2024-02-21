@@ -26,15 +26,23 @@
 (def ARGV (sci/new-dynamic-var 'ARGV))
 (def INC (sci/new-dynamic-var 'INC))
 
+;; Define the clojure.core namespace that is referenced into all namespaces
 (defn clojure-core-ns []
-  (let [core {'ARGS ARGS
+  (let [core {;; Runtime variables
+              'ARGS ARGS
               'ARGV ARGV
+              'CWD nil
+              'ENV nil
               'FILE ys/FILE
               'INC INC
+              'VERSION nil
+              'VERSIONS nil
 
+              ;; clojure.core functions overridden by YS
               'load (sci/copy-var ys.ys/load-file nil)
               'use (sci/copy-var ys.ys/use nil)
 
+              ;; clojure.core functions not added by SCI
               'parse-double (sci/copy-var clojure.core/parse-double nil)
               'parse-long (sci/copy-var clojure.core/parse-long nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
@@ -113,7 +121,8 @@
          INC (get-yspath file)]
          (sci/eval-string* @ys/sci-ctx clj))))))
 
+(sci/intern @ys/sci-ctx 'clojure.core 'eval-string eval-string)
+
 (comment
   www
-  (eval-string "(say (inc 123))")
   )

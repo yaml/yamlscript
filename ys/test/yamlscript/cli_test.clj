@@ -18,24 +18,24 @@
 (test/deftest cli-test
 
   (has (ys)
-    "Usage: ys [options] [file]"
+    "Usage: ys [<option...>] [<file>]"
     "No args prints help")
 
   (has (ys "-h")
-    "Usage: ys [options] [file]"
+    "Usage: ys [<option...>] [<file>]"
     "-h prints help")
 
   (has (ys "--help")
-    "Usage: ys [options] [file]"
+    "Usage: ys [<option...>] [<file>]"
     "--help prints help")
 
   (like (ys "--version")
     #"^YAMLScript \d+\.\d+\.\d+$"
     "--version prints version")
 
-  (is (ys "-le" "a: b")
+  (is (ys "-mb" "-le" "a: b")
     "{\"a\":\"b\"}"
-    "-l uses bare mode and prints json")
+    "-l with bare mode")
 
   (is (ys "-e" "say: \"Hello\"")
     "Hello"
@@ -61,7 +61,7 @@
     #"std.say"
     "'say' evaluates to a symbol")
 
-  (is (ys "-ce" "std/say: 123")
+  (has (ys "-ce" "std/say: 123")
     "(std/say 123)"
     "-c prints Clojure code of compilation")
 

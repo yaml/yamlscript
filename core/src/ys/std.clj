@@ -42,6 +42,24 @@
 ; toNum
 ; toVec
 
+(def $$ (atom {}))
+(def $# (atom 0))
+
+(defn === []
+  (reset! $$ {})
+  (reset! $# 0)
+  nil)
+
+(defn $ [] (->> @$# str keyword (get @$$)))
+
+(defn +++* [value]
+  (let [index (keyword (str (swap! $# inc)))]
+    (swap! $$ assoc index value)
+    value))
+
+(defmacro +++ [& forms]
+  `(~'+++* (do ~@forms)))
+
 (defn _dot [ctx key]
   (cond
     (symbol? key) (or
@@ -49,10 +67,17 @@
                     (get ctx (str key))
                     (get ctx key))
     (string? key) (get ctx key)
-    (int? key) (nth ctx key)
+    (int? key) (let [n (if (< key 0)
+                         (+ key (count ctx))
+                         key)]
+                 (if (map? ctx)
+                   (or (get ctx (keyword (str n)))
+                     (get ctx (str n))
+                     (get ctx n))
+                   (nth ctx n)))
     (keyword? key) (get ctx key)
     (list? key) (let [[fn & args] key]
-                     (apply (resolve fn) ctx args))
+                  (apply (resolve fn) ctx args))
     :else (throw (Exception. (str "Invalid key: " key)))))
 
 (defn __ [x & xs]

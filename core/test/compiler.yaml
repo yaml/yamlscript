@@ -397,15 +397,15 @@
             \(line width, %1): (width..1)
   clojure: |
     (defn
-     tree
-     [width]
-     (let
-      [stars
-       (fn [& [_1]] (_* (inc _1) "*"))
-       spaces
-       (fn [& [_1]] (_* _1 " "))
-       top
-       (join (map ((fn [& [_1]] (line width _1)) (rng width 1))))]))
+      tree
+      [width]
+      (let
+       [stars
+        (fn [& [_1]] (_* (inc _1) "*"))
+        spaces
+        (fn [& [_1]] (_* _1 " "))
+        top
+        (join (map ((fn [& [_1]] (line width _1)) (rng width 1))))]))
 
 
 - name: Star operator in anonymous function
@@ -624,7 +624,7 @@
     (str "Hi " (__ ARGS 0) "!!")
 
 
-- name: Floatings point numbers
+- name: Floating point numbers
   yamlscript: |
     !yamlscript/v0
     =>: .[ 0. 0.1 -1.2e3 2.3e-4 ]
@@ -681,9 +681,9 @@
       =>: a + b + c
   clojure: |
     (defn
-     foo
-     []
-     (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (_+ a b c)))
+      foo
+      []
+      (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (_+ a b c)))
 
 
 - name: Destructuring def not allowed
@@ -798,3 +798,18 @@
     =>: a.b.$c.d(e)
   clojure: |
     (__ a 'b c '(d e))
+
+
+- name: Multiple document stream
+  yamlscript: |
+    foo: 42
+    --- !yamlscript/v0
+    =>::
+      bar:: _.foo.inc()
+      foo: 123
+    ---
+    bar: 44
+  clojure: |
+    {"foo" 42}
+    {"bar" (__ _ 'foo '(inc)), "foo" 123}
+    {"bar" 44}

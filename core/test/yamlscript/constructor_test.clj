@@ -26,7 +26,7 @@
              resolver/resolve
              builder/build
              transformer/transform
-             constructor/construct))
+             constructor/construct-ast))
    :want (fn [test]
            (->> test
              :construct

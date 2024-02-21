@@ -9,7 +9,8 @@
    [yamlscript.composer :as composer]
    [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
-   [yamltest.core :as test]))
+   [yamltest.core :as test]
+   [yamlscript.debug :refer [www]]))
 
 (test/load-yaml-test-files
   ["test/compiler-stack.yaml"

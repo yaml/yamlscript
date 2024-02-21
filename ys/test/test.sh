@@ -48,9 +48,11 @@ ys -c -e 'say: "Hello, World!"' \
       -e 'say: "YAMLScript!!"' \
       "$ROOT/test/hello.ys"
 
-ys -c -x parse -x build -x print -e 'say: "Hello, World!"'
+ys -c -D parse -D build -D print -e 'say: "Hello, World!"'
 
-ys -x all -e 'say: inc(41)'
+ys -D all -e 'say: inc(41)'
+
+ys -d -e 'say: inc(41)'
 
 echo 42 | ys -E
 

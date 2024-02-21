@@ -16,7 +16,7 @@
    :test (fn [test]
            (->> test
              :yamlscript
-             parser/parse
+             parser/parse-test-case
              (map pr-str)
              (map #(subs %1 4 (dec (count %1))))))
    :want (fn [test]

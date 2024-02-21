@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+[[ ${YS_SH_DEBUG-} ]] && set -x
+
 yamlscript_version=0.1.38
 
 main() (
@@ -21,7 +23,7 @@ do-upgrade() (
   curl -sSL https://yamlscript.org/install | bash
 )
 
-do-compile-to-native() (
+do-compile-to-binary() (
   in_file=${1-}
   out_file=${2-}
   ys_version=${3-}
@@ -30,7 +32,7 @@ do-compile-to-native() (
      $ys_version &&
      ( $in_file == NO-NAME.ys || -f $in_file )
    ]] ||
-    die "Usage: --compile-to-native <in-file> <out-file> <ys-version>"
+    die "Usage: --compile-to-binary <in-file> <out-file> <ys-version>"
   [[ $in_file == *.ys ]] ||
     die "File '$in_file' must have .ys extension"
 
@@ -136,7 +138,7 @@ write-program-clj() (
   fi
 
   n=$'\n'
-  [[ $program =~ (^|$n)\(defn[\ $n]+main[\ $n] ]] ||
+  [[ $program =~ \(defn[\ $n]+main[\ $n] ]] ||
     die "Could not find main function in '$in_file'"
 
   cat <<EOF > src/program.clj
@@ -162,8 +164,8 @@ EOF
 
 write-profile() (
   cat > project.clj <<EOF
-(defproject program "ys-native"
-  :description "Compile a YAMLScript program to native machine code"
+(defproject program "ys-binary"
+  :description "Compile a YAMLScript program to native binary executable"
 
   :dependencies
   [[org.clojure/clojure "1.11.1"]
@@ -200,7 +202,7 @@ SHELL := bash
 
 export PATH := /tmp/graalvm-oracle-21/bin:$(PATH)
 
-JAR := target/uberjar/program-ys-native-standalone.jar
+JAR := target/uberjar/program-ys-binary-standalone.jar
 
 OPTIONS := \
   -O1 \

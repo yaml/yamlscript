@@ -4,8 +4,15 @@
 (ns yamlscript.compiler-test
   #_(:use yamlscript.debug)
   (:require
+   [clojure.string :as str]
    [yamlscript.compiler :as compiler]
-   [yamltest.core :as test]))
+   [yamltest.core :as test]
+   [yamlscript.debug :refer [www]]))
+
+(defn testing-fix-clojure [clj]
+  (-> clj
+    (str/replace #"(?m)^\(\+\+\+ +(.*)\)$" "$1")
+    (str/replace #"(?s)^\(\+\+\+[ \n]+(.*)\)$" "$1")))
 
 (test/load-yaml-test-files
   ["test/compiler.yaml"
@@ -16,7 +23,8 @@
            (->> test
              :yamlscript
              compiler/compile
-             compiler/pretty-format))
+             compiler/pretty-format
+             testing-fix-clojure))
    :want :clojure})
 
 (test/load-yaml-test-files

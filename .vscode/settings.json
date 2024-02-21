@@ -1,12 +1,14 @@
 {
   "calva.fmt.configPath": ".cljfmt.edn",
   "cSpell.words": [
+    "arity",
     "concat",
     "cond",
     "condp",
     "debuginfo",
     "defmacro",
     "defn",
+    "defsyn",
     "distclean",
     "doall",
     "fizzbuzz",
@@ -14,11 +16,16 @@
     "isolatethread",
     "libyamlscript",
     "mapv",
+    "nada",
+    "nums",
+    "parens",
+    "println",
     "Raku",
     "serde",
     "unoptimized",
     "vstr",
-    "yamlscript"
+    "yamlscript",
+    "ysexpr"
   ],
   "java.configuration.updateBuildConfiguration": "disabled"
 }

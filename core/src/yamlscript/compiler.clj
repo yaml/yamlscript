@@ -13,6 +13,7 @@
    [a0.patch-pprint]
    [clojure.pprint]
    [clojure.edn]
+   [clojure.string :as str]
    [yamlscript.parser]
    [yamlscript.composer]
    [yamlscript.resolver]
@@ -20,34 +21,37 @@
    [yamlscript.transformer]
    [yamlscript.constructor]
    [yamlscript.printer]
-   [yamlscript.debug :refer [www]])
+   [yamlscript.debug :refer [www #_xxx]])
   (:refer-clojure :exclude [compile]))
 
-(def ^:dynamic *debug* {})
-
-(def stages
-  {"parse" true
-   "compose" true
-   "resolve" true
-   "build" true
-   "transform" true
-   "construct" true
-   "print" true})
+(def debug (atom {}))
 
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
-  (->> yamlscript-string
-    yamlscript.parser/parse
-    yamlscript.composer/compose
-    yamlscript.resolver/resolve
-    yamlscript.builder/build
-    yamlscript.transformer/transform
-    yamlscript.constructor/construct
-    yamlscript.printer/print))
+  (let [events (yamlscript.parser/parse yamlscript-string)
+        groups (->> events
+                 (reduce
+                   (fn [acc ev]
+                     (if (= (:+ ev) "+DOC")
+                       (conj acc [ev])
+                       (update acc (dec (count acc)) conj ev)))
+                   [[]])
+                 (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
+        blocks (map
+                 (fn [group]
+                   (->> group
+                     yamlscript.composer/compose
+                     yamlscript.resolver/resolve
+                     yamlscript.builder/build
+                     yamlscript.transformer/transform
+                     yamlscript.constructor/construct
+                     yamlscript.printer/print))
+                 groups)]
+    (str/join "" blocks)))
 
 (defn debug-print [stage data]
-  (when (get *debug* stage)
+  (when (get @debug stage)
     (println (str "*** " stage " output ***"))
     (clojure.pprint/pprint data)
     (println ""))
@@ -56,21 +60,33 @@
 (defn compile-debug
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
-  (->> yamlscript-string
-    yamlscript.parser/parse
-    (debug-print "parse")
-    yamlscript.composer/compose
-    (debug-print "compose")
-    yamlscript.resolver/resolve
-    (debug-print "resolve")
-    yamlscript.builder/build
-    (debug-print "build")
-    yamlscript.transformer/transform
-    (debug-print "transform")
-    yamlscript.constructor/construct
-    (debug-print "construct")
-    yamlscript.printer/print
-    (debug-print "print")))
+  (let [events (yamlscript.parser/parse yamlscript-string)
+        _ (debug-print "parse" events)
+        groups (->> events
+                 (reduce
+                   (fn [acc ev]
+                     (if (= (:+ ev) "+DOC")
+                       (conj acc [ev])
+                       (update acc (dec (count acc)) conj ev)))
+                   [[]])
+                 (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
+        blocks (map
+                 (fn [group]
+                   (->> group
+                     yamlscript.composer/compose
+                     (debug-print "compose")
+                     yamlscript.resolver/resolve
+                     (debug-print "resolve")
+                     yamlscript.builder/build
+                     (debug-print "build")
+                     yamlscript.transformer/transform
+                     (debug-print "transform")
+                     yamlscript.constructor/construct
+                     (debug-print "construct")
+                     yamlscript.printer/print
+                     (debug-print "print")))
+                 groups)]
+    (str/join "" blocks)))
 
 (defn pretty-format [code]
   (->> code
