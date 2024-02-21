@@ -149,7 +149,7 @@
                  "\n"))]
     (or in-file code
       (die "No input file specified"))
-    (let [in-file (if code "EVAL.ys" in-file)]
+    (let [in-file (if code "NO-NAME.ys" in-file)]
       (or (re-find #"\.ys$" in-file)
         (die "Input file must end in .ys"))
       [in-file code])))
@@ -226,7 +226,7 @@ Options:
          (str/join "\n")
          (add-ys-mode-tag opts))
        "\n")
-     "/EVAL" args]
+     "/NO-NAME" args]
 
     (seq args)
     (let [[file & args] args

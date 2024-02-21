@@ -15,7 +15,7 @@ classes/
 .cpcache/
 Dockerfile
 .DS_Store
-EVAL
+NO-NAME
 *.jar
 .lein-*
 .lsp/

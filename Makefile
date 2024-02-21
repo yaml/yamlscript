@@ -116,7 +116,7 @@ $(CLEAN):
 clean: $(CLEAN) release-clean
 	$(RM) -r libyamlscript-0* ys-0*
 	$(RM) -r sample/advent/hearsay-rust/target/
-	$(RM) EVAL
+	$(RM) NO-NAME
 clean-%: %
 	$(MAKE) -C $< clean
 

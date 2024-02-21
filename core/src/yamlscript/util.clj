@@ -47,7 +47,7 @@
 (defn get-yspath [base]
   (let [yspath (or
                  (get (System/getenv) "YSPATH")
-                 (when (= "/EVAL" base) (str (cwd)))
+                 (when (re-matches #"/NO-NAME$" base) (str (cwd)))
                  (->
                    base
                    dirname

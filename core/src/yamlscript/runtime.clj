@@ -94,7 +94,7 @@
 
   ([clj file args]
    (let [clj (str/trim-newline clj)
-         file (if file (abspath file) "/EVAL")]
+         file (abspath (or file "NO-NAME"))]
      (if (= "" clj)
        ""
        (sci/binding

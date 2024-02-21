@@ -17,7 +17,7 @@ do-compile-to-native() (
   [[ $in_file &&
      $out_file &&
      $ys_version &&
-     ( $in_file == EVAL.ys || -f $in_file )
+     ( $in_file == NO-NAME.ys || -f $in_file )
    ]] ||
     die "Usage: --compile-to-native <in-file> <out-file> <ys-version>"
   [[ $in_file == *.ys ]] ||
@@ -31,8 +31,8 @@ do-compile-to-native() (
   out_name=$(basename -- "$out_file")
   out_path=$out_base/${out_name%.ys}
 
-  [[ $in_file == EVAL.ys ]] && in_file='-e'
-  [[ $out_file == EVAL ]] && out_file='./EVAL'
+  [[ $in_file == NO-NAME.ys ]] && in_file='-e'
+  [[ $out_file == NO-NAME ]] && out_file='./NO-NAME'
 
   assert-lein
   assert-graalvm
@@ -110,7 +110,7 @@ setup() {
 write-program-clj() (
   in_path=$1 in_file=$2
 
-  if [[ $in_path == */EVAL.ys ]]; then
+  if [[ $in_path == */NO-NAME.ys ]]; then
     program=$(
       "$YS_BIN" --compile --eval="$YS_CODE" |
         grep -Ev '^\(apply main ARGS\)'
