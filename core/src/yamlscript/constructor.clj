@@ -76,9 +76,10 @@
                 [] nodes)]
     {:forms nodes}))
 
-(defn construct-list [{nodes :Lst} ctx]
-  (let [nodes (map #(construct-node %1 ctx) nodes)]
-    {:Lst (-> nodes flatten vec)}))
+(defn construct-coll [node ctx key]
+  (let [{nodes key} node
+        nodes (map #(construct-node %1 ctx) nodes)]
+    {key (-> nodes flatten vec)}))
 
 (defn construct-node [node ctx]
   (when (vector? ctx) (throw (Exception. "ctx is a vector")))
@@ -87,7 +88,9 @@
     (case key
       :pairs (construct-pairs node ctx)
       :forms (construct-forms node ctx)
-      :Lst (construct-list node ctx)
+      :Map (construct-coll node ctx :Map)
+      :Vec (construct-coll node ctx :Vec)
+      :Lst (construct-coll node ctx :Lst)
       ,      node)))
 
 ;;------------------------------------------------------------------------------

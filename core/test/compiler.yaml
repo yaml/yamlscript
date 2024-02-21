@@ -692,3 +692,25 @@
       (a b): a + b
   clojure: |
     (defn foo ([] 0) ([a] a) ([a b] (_+ a b)))
+
+
+- name: Constructing a mapping with code mode
+  yamlscript: |
+    !yamlscript/v0/data
+    a::
+      b: c
+  construct: |
+    {:Top [{:Map [{:Str "a"} {:Lst [{:Sym b} {:Sym c}]}]}]}
+  clojure: |
+    {"a" (b c)}
+
+
+- name: Constructing a sequence with code mode
+  yamlscript: |
+    !yamlscript/v0/data
+    - !
+      a: b c
+  construct: |
+    {:Top [{:Vec [{:Lst [{:Sym a} {:Sym b} {:Sym c}]}]}]}
+  clojure: |
+    [(a b c)]
