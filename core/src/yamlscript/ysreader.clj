@@ -30,6 +30,11 @@
 (defn is-narg? [token]
   (re-matches re/narg (str token)))
 
+(defn is-bad-number? [token]
+  (and
+    (re-matches re/mnum (str token))
+    (not (re-matches re/xnum (str token)))))
+
 (defn is-integer? [token]
   (re-matches re/inum (str token)))
 
@@ -87,7 +92,7 @@
       $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
       $path |                   # Lookup path
-      $xnum |                   # Numeric literal token
+      $mnum |                   # Maybe a numeric literal token
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
       $dsym |                   # Symbol with default
@@ -214,6 +219,8 @@
    [[value & keys] (str/split token #"\.")
     form (map
            #(cond
+              (is-bad-number? %1) (throw
+                                    (Exception. (str "Invalid number: " %1)))
               (is-integer? %1) (Int %1)
               (is-float? %1) (Flt %1)
               (is-symbol? %1) (Str %1)
@@ -240,6 +247,8 @@
                                           token))))
                            n (str "_" n)]
                        [(Sym n) tokens])
+    (is-bad-number? token) (throw
+                             (Exception. (str "Invalid number: " token)))
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
     (is-operator? token) [(Sym token) tokens]

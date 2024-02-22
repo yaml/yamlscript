@@ -47,6 +47,7 @@
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
+(def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token
 (def inum #"-?\d+")                        ; Integer literal token
 (def fnum (re #"$inum\.\d*(?:e$inum)?"))   ; Floating point literal token
 (def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token

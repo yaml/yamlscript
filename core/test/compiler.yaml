@@ -714,3 +714,19 @@
     {:Top [{:Vec [{:Lst [{:Sym a} {:Sym b} {:Sym c}]}]}]}
   clojure: |
     [(a b c)]
+
+
+- name: Invalid number A
+  yamlscript: |
+    !yamlscript/v0
+    =>: 1.2.3
+  error: |
+    ~~ Invalid number: 1.2.3
+
+
+- name: Invalid number B
+  yamlscript: |
+    !yamlscript/v0
+    =>: -3.foo.5
+  error: |
+    ~~ Invalid number: -3.foo.5
