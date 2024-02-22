@@ -133,6 +133,9 @@
 (defn say [& xs]
   (apply clojure.core/println xs))
 
+(defn sleep [s]
+  (Thread/sleep (int (* 1000 s))))
+
 (defn warn [& xs]
   (binding [*out* *err*]
     (apply clojure.core/println xs)

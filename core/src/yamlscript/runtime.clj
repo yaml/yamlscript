@@ -67,10 +67,12 @@
      {'Boolean   java.lang.Boolean
       'Character java.lang.Character
       'Long      java.lang.Long
+      'Thread    java.lang.Thread
 
       'java.lang.Boolean   java.lang.Boolean
       'java.lang.Character java.lang.Character
-      'java.lang.Long      java.lang.Long}}))
+      'java.lang.Long      java.lang.Long
+      'java.lang.Thread    java.lang.Thread}}))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'CWD (str (babashka.fs/cwd)))
 (sci/intern @ys/sci-ctx 'clojure.core 'ENV (into {} (System/getenv)))
