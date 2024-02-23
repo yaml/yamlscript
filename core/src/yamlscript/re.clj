@@ -47,6 +47,7 @@
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
+(def dotn #"(?:\.\d+)")                    ; Dot operator followed by number
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token
 (def inum #"-?\d+")                        ; Integer literal token
 (def fnum (re #"$inum\.\d*(?:e$inum)?"))   ; Floating point literal token
@@ -77,8 +78,6 @@
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
 (def symw (re #"(?:$anum+(?:-$anum+)*)"))  ; Symbol word
-(def pkey (re #"(?:$symw|$pnum|$dstr|$sstr)"))   ; Path key
-(def path (re #"(?:$symw(?:\.$pkey)+)"))   ; Lookup path
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>]+(?:\.(?=\ ))?)")

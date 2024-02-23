@@ -42,14 +42,14 @@
 ; toNum
 ; toVec
 
-(defn _get [coll key]
+(defn _dot [coll key]
   (if (string? key)
     (or (get coll (keyword key))
       (get coll key))
     (get coll key)))
 
-(defn __ [x & xs]
-  (reduce _get x xs))
+(defn ._ [x & xs]
+  (reduce _dot x xs))
 
 (defn _+ [x & xs]
   (cond

@@ -427,12 +427,26 @@
     (a? b)
 
 
-- name: Chained path lookup
+- name: Dot path access
   yamlscript: |
     !yamlscript/v0
-    =>: a.5."x y".z
+    =>: a.5.6.b."c d".'e f'.g(h).i().:j
+  build: |
+    {:pairs
+     [{:Sym =>}
+      {:Lst
+       [{:Sym ._}
+        {:Sym a}
+        {:Int 5}
+        {:Int 6}
+        {:Sym b}
+        {:Str "c d"}
+        {:Str "e f"}
+        {:Lst [{:Sym g} {:Sym h}]}
+        {:Lst [{:Sym i}]}
+        {:Key :j}]}]}
   clojure: |
-    (__ a 5 "x y" "z")
+    (._ a 5 6 b "c d" "e f" (g h) (i) :j)
 
 
 - name: Switching to data mode
@@ -443,7 +457,7 @@
       foo: ! d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (__ d "bar")}
+    {"foo" (._ d bar)}
 
 
 - name: Switching to data mode with '::'
@@ -454,7 +468,7 @@
       foo:: d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (__ d "bar")}
+    {"foo" (._ d bar)}
 
 
 - name: Switch modes with '::' for def/let '=::'
@@ -610,7 +624,7 @@
     !yamlscript/v0
     =>: "Hi $(ARGS.0)!!"
   clojure: |
-    (str "Hi " (__ ARGS 0) "!!")
+    (str "Hi " (._ ARGS 0) "!!")
 
 
 - name: Floatings point numbers

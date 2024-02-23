@@ -202,20 +202,4 @@
 
 (comment
   www
-
-  (build {:exp ""})
-
-  (re-seq #"(?:bar|.+?(?=bar|$))" "foo bar baz")
-
-  (build {:exp "; comment (foo bar)"})
-
-  (build {:pairs [{:exp "println"} {:str "Hello"}]})
-
-  (build {:pairs [{:exp "inc"} {:exp "(6 * 7)"}]})
-
-  (build {:pairs [{:exp "a"} {:exp "b c"}]})
-
-  (build
-    {:pairs [{:exp "a"}
-             {:exp "b c"}]})
   )

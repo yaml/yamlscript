@@ -41,11 +41,11 @@
 (defn is-float? [token]
   (re-matches re/fnum (str token)))
 
+(defn is-dot-num? [token]
+  (re-matches re/dotn (str token)))
+
 (defn is-operator? [token]
   (re-matches re/osym (str token)))
-
-(defn is-path? [token]
-  (re-matches re/path (str token)))
 
 (defn is-syntax-quote? [token]
   (= "`" (str token)))
@@ -91,13 +91,13 @@
       $psym |                   # Symbol followed by paren
       $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
-      $path |                   # Lookup path
       $mnum |                   # Maybe a numeric literal token
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
       $dsym |                   # Symbol with default
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
+      $dotn |                   # Dot operator followed by number
       $osym |                   # Operator symbol token
       $char |                   # Character token
       $anon |                   # Anonymous fn start token
@@ -122,7 +122,8 @@
 (declare read-form)
 
 (def operators
-  {(Sym '..) (Sym 'rng)
+  {(Sym '.)  (Sym '._)
+   (Sym '..) (Sym 'rng)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)
    (Sym '%)  (Sym 'rem)
@@ -140,9 +141,10 @@
                    (partition 2)
                    (map second)
                    (apply = %1))
-            (map Sym '[+ - * / || &&])))
+            (map Sym '[+ - * / || && .])))
       (let [op (second expr)
             op (cond
+                 (= op (Sym '.))  (Sym '._)
                  (= op (Sym '||)) (Sym 'or)
                  (= op (Sym '&&)) (Sym 'and)
                  :else op)]
@@ -214,23 +216,6 @@
     (str/replace #"''" "'")
     Str))
 
-(defn make-path [token]
-  (let
-   [[value & keys] (str/split token #"\.")
-    form (map
-           #(cond
-              (is-bad-number? %1) (throw
-                                    (Exception. (str "Invalid number: " %1)))
-              (is-integer? %1) (Int %1)
-              (is-float? %1) (Flt %1)
-              (is-symbol? %1) (Str %1)
-              (is-string? %1) (read-dq-string %1)
-              (is-single? %1) (read-sq-string %1)
-              :else (throw (Exception. (str "Invalid path token: " %1))))
-           keys)
-    form (cons (Sym '__) (cons (Sym value) form))]
-    (Lst form)))
-
 (declare read-form)
 
 (defn read-scalar [[token & tokens]]
@@ -251,6 +236,8 @@
                              (Exception. (str "Invalid number: " token)))
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
+    (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
+                          [(Sym ".") tokens])
     (is-operator? token) [(Sym token) tokens]
     (is-unquote-splice? token) [(Tok token) tokens]
     (is-syntax-quote? token) [(Tok token) tokens]
@@ -258,7 +245,6 @@
     (is-single? token) [(read-sq-string token) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
-    (is-path? token) [(make-path token) tokens]
     (is-regex? token) [(Rgx (->> (subs token 1 (dec (count token))))) tokens]
 
     (is-fq-symbol? token)
@@ -304,18 +290,19 @@
 (defn read-string [string]
   (let [forms (->> string
                 lex-tokens
-                read-forms)]
-    (case (count forms)
+                read-forms)
+        num (count forms)]
+    (case num
       0 nil
       1 (first forms)
       (if (and
-            (= 3 (count forms))
+            (= 3 num)
             (is-operator? (:Sym (second forms))))
         (let [op (second forms)
               op (or (operators op) op)]
           (Lst [op (first forms) (last forms)]))
         (if (and
-              (> (count forms) 3)
+              (< 3 num)
               (some #(->> forms
                        (partition 2)
                        (map second)
@@ -323,6 +310,7 @@
                 (map Sym '[+ - * / || && .])))
           (let [op (second forms)
                 op (cond
+                     (= op (Sym '.))  (Sym '._)
                      (= op (Sym '||)) (Sym 'or)
                      (= op (Sym '&&)) (Sym 'and)
                      :else op)]
