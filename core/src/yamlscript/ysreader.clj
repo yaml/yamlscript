@@ -108,9 +108,6 @@
       [\[\]{}()`~^@] |          # Single character tokens
     )"))
 
-(defn wrap-parens [expr]
-  (str "(" expr "\n)"))
-
 (defn lex-tokens [expr]
   (->> expr
     (re-seq re-tokenize)
@@ -295,30 +292,21 @@
     (case num
       0 nil
       1 (first forms)
-      (if (and
-            (= 3 num)
-            (is-operator? (:Sym (second forms))))
-        (let [op (second forms)
-              op (or (operators op) op)]
-          (Lst [op (first forms) (last forms)]))
-        (if (and
-              (< 3 num)
-              (some #(->> forms
-                       (partition 2)
-                       (map second)
-                       (apply = %1))
-                (map Sym '[+ - * / || && .])))
-          (let [op (second forms)
-                op (cond
-                     (= op (Sym '.))  (Sym '._)
-                     (= op (Sym '||)) (Sym 'or)
-                     (= op (Sym '&&)) (Sym 'and)
-                     :else op)]
-            (Lst (cons op (vec (map second (partition 2 (cons nil forms)))))))
-          (vec forms))))))
+      2 (vec forms)
+      (let [yes (vec (yes-expr forms))]
+        (if (= yes forms)
+          yes
+          (Lst yes))))))
 
 (comment
   www
+
+  (read-string "(1 * 4) + (2 * 3)")
+  ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
+  ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
+  (read-string "a.b + c.d")
+  (read-string "a + b + c")
+
   (read-string "1 + 2")
   (read-string
     "[\"a\" :b \\c 42 true false nil
