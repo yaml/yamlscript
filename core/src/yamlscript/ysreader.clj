@@ -12,7 +12,8 @@
     [Bln Chr Flt Int Key Lst Map Nil Rgx Spc Str Sym Tok Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [www]]
-   [yamlscript.util :as util])
+   [yamlscript.util :as util
+    :refer [if-lets]])
   (:refer-clojure :exclude [read-string]))
 
 (defn is-comment? [token]
@@ -116,7 +117,27 @@
         (www %1)
         %1))))
 
-(declare read-form)
+(declare read-form yes-expr)
+
+(defn- conj-seq [coll part & xs]
+  (apply conj (cond-> coll
+                (seq part) (conj (Lst (yes-expr part true)))) xs))
+
+(defn group-dots [coll]
+  (let [sep (Sym '.)
+        new (if (> (count coll) 3)
+              (loop [[a b c :as xs] coll, part [], acc []]
+                (cond (empty? xs)
+                      (conj-seq acc part)
+                      (and c (= sep b) (not= a sep) (not= c sep))
+                      (recur (drop 3 xs) (into []
+                                           (take 3) xs) (conj-seq acc part))
+                      (and b (= sep a) (not (empty? part)))
+                      (recur (drop 2 xs) (into part (take 2) xs) acc)
+                      :else
+                      (recur (rest xs) [] (conj-seq acc part a))))
+              coll)]
+    new))
 
 (def operators
   {(Sym '.)  (Sym '._)
@@ -127,30 +148,32 @@
    (Sym '%%) (Sym 'mod)
    (Sym '**) (Sym 'pow)})
 
-(defn yes-expr [expr]
-  (if (= (count expr) 3)
-    (let [[a op b] expr]
-      (if (is-operator? (:Sym op))
-        (let [op (or (operators op) op)] [op a b])
-        expr))
-    (if (and (> (count expr) 3)
-          (some #(->> expr
-                   (partition 2)
-                   (map second)
-                   (apply = %1))
-            (map Sym '[+ - * / || && .])))
-      (let [op (second expr)
-            op (cond
-                 (= op (Sym '.))  (Sym '._)
-                 (= op (Sym '||)) (Sym 'or)
-                 (= op (Sym '&&)) (Sym 'and)
-                 :else op)]
-        (->> expr
-          (cons nil)
-          (partition 2)
-          (map second)
-          (cons op)))
-      expr)))
+(defn yes-expr [expr & no-group]
+  #_(www "yes" expr no-group)
+  (let [expr (if no-group expr (group-dots expr))]
+    (if (= (count expr) 3)
+      (let [[a op b] expr]
+        (if (is-operator? (:Sym op))
+          (let [op (or (operators op) op)] [op a b])
+          expr))
+      (if (and (> (count expr) 3)
+            (some #(->> expr
+                     (partition 2)
+                     (map second)
+                     (apply = %1))
+              (map Sym '[+ - * / || && .])))
+        (let [op (second expr)
+              op (cond
+                   (= op (Sym '.))  (Sym '._)
+                   (= op (Sym '||)) (Sym 'or)
+                   (= op (Sym '&&)) (Sym 'and)
+                   :else op)]
+          (->> expr
+            (cons nil)
+            (partition 2)
+            (map second)
+            (cons op)))
+        expr))))
 
 (defn anon-fn-arg-list [node]
   (let [args (atom {})
@@ -296,18 +319,21 @@
       (let [yes (vec (yes-expr forms))]
         (if (= yes forms)
           yes
-          (Lst yes))))))
+          (if (= 1 (count yes))
+            (first yes)
+            (Lst yes)))))))
 
 (comment
   www
-
   (read-string "(1 * 4) + (2 * 3)")
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   (read-string "a.b + c.d")
-  (read-string "a + b + c")
-
+  ; {:Lst [{:Sym +} {:Lst [{:Sym ._} {:Sym a} {:Sym b}]} {:Lst [{:Sym ._} {:Sym c} {:Sym d}]}]}
   (read-string "1 + 2")
+  (read-string "a b")
+  (read-string "a.b")
+  (read-string "a.b.3.c()")
   (read-string
     "[\"a\" :b \\c 42 true false nil
      (a b c) [a b c] {:a b :c \"d\"}]")

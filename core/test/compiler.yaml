@@ -744,3 +744,11 @@
     =>: -3.foo.5
   error: |
     ~~ Invalid number: -3.foo.5
+
+
+- name: Dot grouping in sub-expression
+  yamlscript: |
+    !yamlscript/v0
+    =>: a.3.b + c.4.d
+  clojure: |
+    (_+ (._ a 3 b) (._ c 4 d))
