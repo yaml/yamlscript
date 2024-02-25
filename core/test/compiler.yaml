@@ -291,10 +291,7 @@
     defn increase(x n=1):
       =>: x + n
   clojure: |
-    (defn increase
-      ([x] (let [n 1] (increase x n)))
-      ([x n] (+ x n)))
-  SKIP: true
+    (defn increase ([x n] (_+ x n)) ([x] (increase x 1)))
 
 
 - name: Call main when program has one top level (defn main ...) form
