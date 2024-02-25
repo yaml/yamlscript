@@ -432,18 +432,18 @@
     {:pairs
      [{:Sym =>}
       {:Lst
-       [{:Sym ._}
+       [{:Sym __}
         {:Sym a}
         {:Int 5}
         {:Int 6}
-        {:Sym b}
+        {:Lst [{:Sym quote} {:Sym b}]}
         {:Str "c d"}
         {:Str "e f"}
-        {:Lst [{:Sym g} {:Sym h}]}
-        {:Lst [{:Sym i}]}
+        {:Lst [{:Sym quote} {:Lst [{:Sym g} {:Sym h}]}]}
+        {:Lst [{:Sym quote} {:Lst [{:Sym i}]}]}
         {:Key :j}]}]}
   clojure: |
-    (._ a 5 6 b "c d" "e f" (g h) (i) :j)
+    (__ a 5 6 'b "c d" "e f" '(g h) '(i) :j)
 
 
 - name: Switching to data mode
@@ -454,7 +454,7 @@
       foo: ! d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (._ d bar)}
+    {"foo" (__ d 'bar)}
 
 
 - name: Switching to data mode with '::'
@@ -465,7 +465,7 @@
       foo:: d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (._ d bar)}
+    {"foo" (__ d 'bar)}
 
 
 - name: Switch modes with '::' for def/let '=::'
@@ -621,7 +621,7 @@
     !yamlscript/v0
     =>: "Hi $(ARGS.0)!!"
   clojure: |
-    (str "Hi " (._ ARGS 0) "!!")
+    (str "Hi " (__ ARGS 0) "!!")
 
 
 - name: Floatings point numbers
@@ -748,4 +748,37 @@
     !yamlscript/v0
     =>: a.3.b + c.4.d
   clojure: |
-    (_+ (._ a 3 b) (._ c 4 d))
+    (_+ (__ a 3 'b) (__ c 4 'd))
+
+
+- name: Dot grouping in dot path
+  yamlscript: |
+    !yamlscript/v0
+    =>: a.3.b(c.4.d)
+  clojure: |
+    (__ a 3 '(b (__ c 4 'd)))
+
+
+- name: Dot grouping in if statement
+  yamlscript: |
+    !yamlscript/v0
+    if a.b: c.d * 3
+  clojure: |
+    (if (__ a 'b) (_* (__ c 'd) 3))
+
+
+- name: Yes expression in sym-paren form
+  yamlscript: |
+    !yamlscript/v0
+    =>: a(b * c)
+  clojure: |
+    (a (_* b c))
+
+
+- name: Dot groupings in vectors
+  yamlscript: |
+    !yamlscript/v0
+    =>: .[a.3.b(x.y),
+          c.4.d]
+  clojure: |
+    [(__ a 3 '(b (__ x 'y))) (__ c 4 'd)]

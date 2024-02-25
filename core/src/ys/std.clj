@@ -42,13 +42,20 @@
 ; toNum
 ; toVec
 
-(defn _dot [coll key]
-  (if (string? key)
-    (or (get coll (keyword key))
-      (get coll key))
-    (get coll key)))
+(defn _dot [ctx key]
+  (cond
+    (symbol? key) (or
+                    (get ctx (keyword key))
+                    (get ctx (str key))
+                    (get ctx key))
+    (string? key) (get ctx key)
+    (int? key) (nth ctx key)
+    (keyword? key) (get ctx key)
+    (list? key) (let [[fn & args] key]
+                     (apply (resolve fn) ctx args))
+    :else (throw (Exception. (str "Invalid key: " key)))))
 
-(defn ._ [x & xs]
+(defn __ [x & xs]
   (reduce _dot x xs))
 
 (defn _+ [x & xs]
@@ -141,4 +148,12 @@
     (apply clojure.core/println xs)
     (flush)))
 
-(comment)
+(comment
+  (require '[yamlscript.runtime :as rt])
+  (require '[yamlscript.compiler :as comp])
+  (->
+    "!yamlscript/v0\ndefn sub(a b): a - b\n=>: .{:foo 7}.:foo.sub(20).inc()"
+    comp/compile
+    (str/replace #"\._" "__")
+    rt/eval-string)
+  )

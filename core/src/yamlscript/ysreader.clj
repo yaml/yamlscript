@@ -120,27 +120,47 @@
 (declare read-form yes-expr)
 
 (defn- conj-seq [coll part & xs]
-  (apply conj (cond-> coll
-                (seq part) (conj (Lst (yes-expr part true)))) xs))
+  (apply conj
+    (cond-> coll
+      (seq part)
+      (conj (Lst (yes-expr part))))
+    xs))
 
-(defn group-dots [coll]
-  (let [sep (Sym '.)
-        new (if (> (count coll) 3)
-              (loop [[a b c :as xs] coll, part [], acc []]
-                (cond (empty? xs)
-                      (conj-seq acc part)
-                      (and c (= sep b) (not= a sep) (not= c sep))
-                      (recur (drop 3 xs) (into []
-                                           (take 3) xs) (conj-seq acc part))
-                      (and b (= sep a) (not (empty? part)))
-                      (recur (drop 2 xs) (into part (take 2) xs) acc)
-                      :else
-                      (recur (rest xs) [] (conj-seq acc part a))))
-              coll)]
-    new))
+(defn- qf [form]
+  (cond
+    (:Sym form) (Lst [(Sym 'quote) form])
+    (:Lst form) (Lst [(Sym 'quote) form])
+    :else form))
+
+(def sep (Sym '.))
+
+(defn group-dots [forms]
+  (if (>= (count forms) 3)
+    (loop [[a b c :as xs] forms, grp [], acc []]
+      (cond (empty? xs)
+            (conj-seq acc grp)
+            ,
+            (and c (= sep b) (not= a sep) (not= c sep))
+            (recur
+              (drop 3 xs)
+              [a b (qf c)]
+              (conj-seq acc grp))
+            ,
+            (and b (= sep a) (not (empty? grp)))
+            (recur
+              (drop 2 xs)
+              (conj grp a (qf b))
+              acc)
+            ,
+            :else
+            (recur
+              (rest xs)
+              []
+              (conj-seq acc grp a))))
+    forms))
 
 (def operators
-  {(Sym '.)  (Sym '._)
+  {(Sym '.)  (Sym '__)
    (Sym '..) (Sym 'rng)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)
@@ -148,32 +168,30 @@
    (Sym '%%) (Sym 'mod)
    (Sym '**) (Sym 'pow)})
 
-(defn yes-expr [expr & no-group]
-  #_(www "yes" expr no-group)
-  (let [expr (if no-group expr (group-dots expr))]
-    (if (= (count expr) 3)
-      (let [[a op b] expr]
-        (if (is-operator? (:Sym op))
-          (let [op (or (operators op) op)] [op a b])
-          expr))
-      (if (and (> (count expr) 3)
-            (some #(->> expr
-                     (partition 2)
-                     (map second)
-                     (apply = %1))
-              (map Sym '[+ - * / || && .])))
-        (let [op (second expr)
-              op (cond
-                   (= op (Sym '.))  (Sym '._)
-                   (= op (Sym '||)) (Sym 'or)
-                   (= op (Sym '&&)) (Sym 'and)
-                   :else op)]
-          (->> expr
-            (cons nil)
-            (partition 2)
-            (map second)
-            (cons op)))
-        expr))))
+(defn yes-expr [expr]
+  (if (= (count expr) 3)
+    (let [[a op b] expr]
+      (if (is-operator? (:Sym op))
+        (let [op (or (operators op) op)] [op a b])
+        expr))
+    (if (and (> (count expr) 3)
+          (some #(->> expr
+                   (partition 2)
+                   (map second)
+                   (apply = %1))
+            (map Sym '[+ - * / || && .])))
+      (let [op (second expr)
+            op (cond
+                 (= op (Sym '.))  (Sym '__)
+                 (= op (Sym '||)) (Sym 'or)
+                 (= op (Sym '&&)) (Sym 'and)
+                 :else op)]
+        (->> expr
+          (cons nil)
+          (partition 2)
+          (map second)
+          (cons op)))
+      expr)))
 
 (defn anon-fn-arg-list [node]
   (let [args (atom {})
@@ -202,14 +220,14 @@
       (throw (Exception. "Unexpected end of input")))
 
     (if (= (first tokens) ")")
-      (let [form (yes-expr list)
+      (let [form (-> list group-dots yes-expr)
             args (anon-fn-arg-list form)
             expr (Lst [(Sym 'fn) (Vec [(Sym "&")(Vec args)]) (Lst form)])]
         [expr (rest tokens)])
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
-(defn read-list [[_ & tokens] type end]
+(defn read-list [[_ & tokens] type end sym]
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
@@ -217,8 +235,14 @@
 
     (if (= (first tokens) end)
       (let [list (if (= type Lst)
-                   (yes-expr list)
-                   list)]
+                   (let [list (group-dots list)
+                         forms (yes-expr list)]
+                     (if sym
+                       (if (not= list forms)
+                         [sym (Lst forms)]
+                         (cons sym forms))
+                       forms))
+                   (group-dots list))]
         [(type list) (rest tokens)])
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
@@ -287,16 +311,16 @@
 
 (defn read-form [tokens]
   (let [token (first tokens)
-        [token tokens]
+        [token tokens sym]
         (if (is-symbol-paren? token)
           (let [sym (subs token 0 (-> token count dec))]
-            ["(" (conj (rest tokens) sym "(")])
-          [token tokens])]
+            ["(" (cons "(" (rest tokens)) (Sym sym)])
+          [token tokens nil])]
     (case token
       "\\(" (read-anon-fn tokens)
-      "(" (read-list tokens Lst ")")
-      "[" (read-list tokens Vec "]")
-      "{" (read-list tokens Map "}")
+      "(" (read-list tokens Lst ")" sym)
+      "[" (read-list tokens Vec "]" nil)
+      "{" (read-list tokens Map "}" nil)
       ,   (read-scalar tokens))))
 
 (defn read-forms [tokens]
@@ -316,12 +340,13 @@
       0 nil
       1 (first forms)
       2 (vec forms)
-      (let [yes (vec (yes-expr forms))]
-        (if (= yes forms)
-          yes
-          (if (= 1 (count yes))
-            (first yes)
-            (Lst yes)))))))
+      (let [forms (group-dots forms)
+            expr (vec (yes-expr forms))]
+        (if (= expr forms)
+          (if (= 1 (count expr))
+            (first expr)
+            expr)
+          (Lst expr))))))
 
 (comment
   www
@@ -329,7 +354,7 @@
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   (read-string "a.b + c.d")
-  ; {:Lst [{:Sym +} {:Lst [{:Sym ._} {:Sym a} {:Sym b}]} {:Lst [{:Sym ._} {:Sym c} {:Sym d}]}]}
+  ; {:Lst [{:Sym +} {:Lst [{:Sym __} {:Sym a} {:Sym b}]} {:Lst [{:Sym __} {:Sym c} {:Sym d}]}]}
   (read-string "1 + 2")
   (read-string "a b")
   (read-string "a.b")
