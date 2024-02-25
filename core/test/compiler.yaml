@@ -782,3 +782,11 @@
           c.4.d]
   clojure: |
     [(__ a 3 '(b (__ x 'y))) (__ c 4 'd)]
+
+
+- name: Fully qualified symbol with paren
+  yamlscript: |
+    !yamlscript/v0
+    =>: a::b/c(d)
+  clojure: |
+    (a.b/c d)

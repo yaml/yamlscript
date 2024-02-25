@@ -292,8 +292,7 @@
     (is-regex? token) [(Rgx (->> (subs token 1 (dec (count token))))) tokens]
 
     (is-fq-symbol? token)
-    (let [sym (str/replace token #"\." "/")
-          sym (str/replace sym #"::" ".")]
+    (let [sym (str/replace token #"::" ".")]
       [(Sym sym) tokens])
 
     (is-symbol? token) [(Sym token) tokens]
@@ -313,7 +312,8 @@
   (let [token (first tokens)
         [token tokens sym]
         (if (is-symbol-paren? token)
-          (let [sym (subs token 0 (-> token count dec))]
+          (let [sym (subs token 0 (-> token count dec))
+                sym (str/replace sym #"::" ".")]
             ["(" (cons "(" (rest tokens)) (Sym sym)])
           [token tokens nil])]
     (case token
