@@ -15,11 +15,18 @@
 ;; ----------------------------------------------------------------------------
 ;; Key binding helpers
 ;; ----------------------------------------------------------------------------
+
+(def prev-test-ns (atom nil))
+
 (defn get-test-ns [ns]
   (let [from-ns-name (str (ns-name ns))]
-    (if (str/ends-with? from-ns-name "-test")
-      ns
-      (find-ns (symbol (str from-ns-name "-test"))))))
+    (swap! prev-test-ns
+      (fn [x]
+        (if (str/ends-with? from-ns-name "-test")
+          ns
+          (or
+            (find-ns (symbol (str from-ns-name "-test")))
+            @prev-test-ns))))))
 
 (def short-keys {:v :verbose
                  :a :all
