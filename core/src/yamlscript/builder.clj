@@ -20,6 +20,18 @@
   "Parse all the !exp nodes into YAMLScript AST nodes."
   [node] (build-node node))
 
+(defn build-from-string [string]
+  (require
+    '[yamlscript.parser]
+    '[yamlscript.composer]
+    '[yamlscript.resolver]
+    '[yamlscript.builder])
+  (->> string
+    yamlscript.parser/parse
+    yamlscript.composer/compose
+    yamlscript.resolver/resolve
+    yamlscript.builder/build))
+
 (defn build-defn-defaults [name doc args body kind]
   (when-lets [args (:Vec args)
               dargs (filter #(vector? (:Sym %1)) args)
