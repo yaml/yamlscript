@@ -4,7 +4,7 @@
 
 set -e -u -o pipefail
 
-LIBYAMLSCRIPT_VERSION=0.1.37
+LIBYAMLSCRIPT_VERSION=0.1.38
 VERSION=${VERSION:-$LIBYAMLSCRIPT_VERSION}
 export VERSION
 
@@ -42,7 +42,7 @@ install() (
 setup() {
   vers=$VERSION
 
-  if [[ ! $PREFIX ]]; then
+  if [[ ! ${PREFIX-} ]]; then
     if [[ $(id -u) == 0 ]]; then
       PREFIX=/usr/local
     else
