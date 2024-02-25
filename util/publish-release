@@ -12,6 +12,9 @@ main() (
 update() (
   for RELEASE_TAR_PATH; do
     RELEASE_TAR_FILE=$(basename "$RELEASE_TAR_PATH")
+    if [[ ${RELEASE_ID-} && $RELEASE_TAR_FILE == *.jar ]]; then
+      continue
+    fi
     api-upload-assets
   done
 )
@@ -37,7 +40,8 @@ release() {
 }
 
 git-tag() {
-  if [[ $(git tag -l "$VERSION") ]]; then
+  if [[ $(git tag -l "$VERSION") ]] &&
+     [[ $(git rev-parse HEAD) != "$(git rev-parse "$VERSION")" ]]; then
     die "Error: Tag '$VERSION' already exists." \
       "Delete it with 'git tag -d $VERSION' or" \
       "Use 'make bump' to bump the version."
@@ -45,10 +49,11 @@ git-tag() {
   if [[ $(git diff --stat) ]]; then
     die "Error: Working directory is not clean. Commit changes first."
   fi
-  if grep -q 'date: .*wip' Changes; then
+  if grep -iq 'date: .*wip' Changes; then
     die "Error: Changes file contains 'wip' entry."
   fi
-  git tag "$VERSION"
+  [[ $(git tag -l "$VERSION") ]] ||
+    git tag "$VERSION"
 }
 
 setup() {

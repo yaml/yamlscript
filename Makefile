@@ -33,10 +33,16 @@ DOCKER_SHELL := $(DIRS:%=docker-shell-%)
 
 YS_RELEASE := $(RELEASE_YS_NAME).tar.xz
 LYS_RELEASE := $(RELEASE_LYS_NAME).tar.xz
+YS_JAR_RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
+LYS_JAR_RELEASE := libyamlscript-$(VERSION)-standalone.jar
+YS_JAR_PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
+LYS_JAR_PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
 RELEASE_ASSETS := \
     $(YS_RELEASE) \
     $(LYS_RELEASE) \
+    $(YS_JAR_RELEASE) \
+    $(LYS_JAR_RELEASE) \
 
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
@@ -69,7 +75,9 @@ test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
 
-release: release-clean $(RELEASE_ASSETS)
+release: release-clean release-this
+
+release-this: $(RELEASE_ASSETS)
 	publish-release $(RELEASE_ASSETS)
 
 release-build: release-build-ys release-build-libyamlscript
@@ -81,7 +89,7 @@ release-build-libyamlscript: $(LYS_RELEASE)
 release-clean:
 	$(RM) -r libyamlscript/lib ys/bin ~/.m2/repository/yamlscript
 
-$(RELEASE_YS_NAME).tar.xz: $(RELEASE_YS_NAME)
+$(YS_RELEASE): $(RELEASE_YS_NAME)
 	mkdir -p $<
 	cp -pP ys/bin/ys* $</
 	cp common/install.mk $</Makefile
@@ -91,7 +99,7 @@ else
 	$(TIME) tar -I'xz -0' -cf $@ $<
 endif
 
-$(RELEASE_LYS_NAME).tar.xz: $(RELEASE_LYS_NAME)
+$(LYS_RELEASE): $(RELEASE_LYS_NAME)
 	mkdir -p $<
 	cp -pP libyamlscript/lib/libyamlscript.$(SO)* $</
 	cp common/install.mk $</Makefile
@@ -104,6 +112,12 @@ endif
 $(RELEASE_YS_NAME): build-ys
 
 $(RELEASE_LYS_NAME): build-libyamlscript
+
+$(YS_JAR_RELEASE): $(YS_JAR_PATH)
+	cp $< $@
+
+$(LYS_JAR_RELEASE): $(LYS_JAR_PATH)
+	cp $< $@
 
 delete-tag:
 	-git tag --delete $(YS_VERSION)

@@ -42,7 +42,7 @@ install() (
 setup() {
   vers=$VERSION
 
-  if [[ ! $PREFIX ]]; then
+  if [[ ! ${PREFIX-} ]]; then
     if [[ $(id -u) == 0 ]]; then
       PREFIX=/usr/local
     else
