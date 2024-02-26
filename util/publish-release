@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+[[ ${DEBUG-} ]] && set -x
+
 main() (
   setup "$@"
   [[ ${RELEASE_ID-} ]] || git-tag
@@ -12,8 +14,14 @@ main() (
 update() (
   for RELEASE_TAR_PATH; do
     RELEASE_TAR_FILE=$(basename "$RELEASE_TAR_PATH")
-    if [[ ${RELEASE_ID-} && $RELEASE_TAR_FILE == *.jar ]]; then
-      continue
+    if [[ $RELEASE_TAR_FILE == *.jar ]]; then
+      if [[ ${RELEASE_ID-} && -z ${REDO-} ]]; then
+        continue
+      fi
+    else
+      if [[ ${JAR_ONLY-} ]]; then
+        continue
+      fi
     fi
     api-upload-assets
   done
@@ -40,6 +48,7 @@ release() {
 }
 
 git-tag() {
+  [[ -z ${REDO-} ]] || return 0
   if [[ $(git tag -l "$VERSION") ]] &&
      [[ $(git rev-parse HEAD) != "$(git rev-parse "$VERSION")" ]]; then
     die "Error: Tag '$VERSION' already exists." \

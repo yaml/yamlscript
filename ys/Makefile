@@ -80,7 +80,7 @@ clean::
 	$(RM) -r .cpcache/
 
 realclean::
-	$(RM) -r bin
+	$(RM) -r bin lib
 
 ifeq (true,$(IS_ROOT))
 $(YAMLSCRIPT_CLI_JAR_PATH):

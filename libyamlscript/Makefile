@@ -17,6 +17,8 @@ endif
 #------------------------------------------------------------------------------
 build:: $(BUILD_TARGETS)
 
+jar: $(LIBYAMLSCRIPT_JAR_PATH)
+
 install:: $(LIBYAMLSCRIPT_SO_FQNP)
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/

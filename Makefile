@@ -31,18 +31,26 @@ DOCKER_BUILD := $(DIRS:%=docker-build-%)
 DOCKER_TEST := $(DIRS:%=docker-test-%)
 DOCKER_SHELL := $(DIRS:%=docker-shell-%)
 
+LYS_JAR_RELEASE := libyamlscript-$(YS_VERSION)-standalone.jar
+YS_JAR_RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
+LYS_JAR_PATH := libyamlscript/target/libyamlscript-$(YS_VERSION)-standalone.jar
+YS_JAR_PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
+
 YS_RELEASE := $(RELEASE_YS_NAME).tar.xz
 LYS_RELEASE := $(RELEASE_LYS_NAME).tar.xz
-YS_JAR_RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
-LYS_JAR_RELEASE := libyamlscript-$(VERSION)-standalone.jar
-YS_JAR_PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
-LYS_JAR_PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
+
+JAR_ASSETS := \
+    $(LYS_JAR_RELEASE) \
+    $(YS_JAR_RELEASE) \
 
 RELEASE_ASSETS := \
-    $(YS_RELEASE) \
-    $(LYS_RELEASE) \
-    $(YS_JAR_RELEASE) \
+    $(JAR_ASSETS) \
+
+ifndef JAR_ONLY
+RELEASE_ASSETS += \
     $(LYS_JAR_RELEASE) \
+    $(YS_JAR_RELEASE)
+endif
 
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
@@ -89,6 +97,8 @@ release-build-libyamlscript: $(LYS_RELEASE)
 release-clean:
 	$(RM) -r libyamlscript/lib ys/bin ~/.m2/repository/yamlscript
 
+jars: $(JAR_ASSETS)
+
 $(YS_RELEASE): $(RELEASE_YS_NAME)
 	mkdir -p $<
 	cp -pP ys/bin/ys* $</
@@ -113,11 +123,17 @@ $(RELEASE_YS_NAME): build-ys
 
 $(RELEASE_LYS_NAME): build-libyamlscript
 
+$(LYS_JAR_RELEASE): $(LYS_JAR_PATH)
+	cp $< $@
+
 $(YS_JAR_RELEASE): $(YS_JAR_PATH)
 	cp $< $@
 
-$(LYS_JAR_RELEASE): $(LYS_JAR_PATH)
-	cp $< $@
+$(LYS_JAR_PATH):
+	$(MAKE) -C libyamlscript jar
+
+$(YS_JAR_PATH):
+	$(MAKE) -C ys jar
 
 delete-tag:
 	-git tag --delete $(YS_VERSION)
@@ -128,7 +144,7 @@ bump:
 
 $(CLEAN):
 clean: $(CLEAN) release-clean
-	$(RM) -r libyamlscript-0* ys-0*
+	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) NO-NAME
 clean-%: %

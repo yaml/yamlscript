@@ -10,6 +10,7 @@
    [clojure.string :as str]
    [babashka.fs]
    [babashka.http-client]
+   [babashka.pods.sci]
    [sci.core :as sci]
    [ys.std]
    [ys.json]
@@ -55,6 +56,7 @@
       'ys.ys (use-ns 'ys.ys ys.ys)
 
       'fs  (use-ns 'fs  babashka.fs)
+      'babashka.pods (use-ns 'babashka.pods babashka.pods.sci)
       'std (use-ns 'std ys.std)
       'str (use-ns 'str clojure.string)
       'ys  (use-ns 'ys  ys.ys)
