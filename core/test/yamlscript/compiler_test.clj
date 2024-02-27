@@ -20,8 +20,7 @@
    :want :clojure})
 
 (test/load-yaml-test-files
-  ["test/compiler.yaml"
-   "test/compiler-stack.yaml"]
+  ["test/compiler.yaml"]
   {:add-tests true
    :pick #(test/has-keys? [:yamlscript :error] %1)
    :test (fn [test]

@@ -50,18 +50,21 @@
 (defn clear-opts []
   (reset! test-opts {}))
 
-(defn reload-all []
-  (->> (all-ns)
-    (filter #(re-find #"yamlscript\..*-test$" (str (ns-name %1))))
-    (map ns-name)
-    sort
-    (#(doseq [ns %1]
-        (println (str "Reloading " ns))
-        (try
-          (require ns :reload)
-          (catch Exception e
-            (println (str "Error reloading " ns ": " (.getMessage e)))
-            nil))))))
+(defn reload-all
+  ([] (reload-all true))
+  ([print]
+   (->> (all-ns)
+     (filter #(re-find #"yamlscript\..*-test$" (str (ns-name %1))))
+     (map ns-name)
+     sort
+     (#(doseq [ns %1]
+         (when print
+           (println (str "Reloading " ns)))
+         (try
+           (require ns :reload)
+           (catch Exception e
+             (println (str "Error reloading " ns ": " (.getMessage e)))
+             nil)))))))
 
 (defn do-list-tests [ns]
   (let [ns (get-test-ns ns)
