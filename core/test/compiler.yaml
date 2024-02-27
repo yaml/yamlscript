@@ -798,4 +798,3 @@
     =>: a.b.$c.d(e)
   clojure: |
     (__ a 'b c '(d e))
-  ONLY: true
