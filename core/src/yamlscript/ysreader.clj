@@ -73,7 +73,8 @@
   (or
     (re-matches re/fsym (str token))
     (re-matches re/esym (str token))
-    (re-matches re/ysym (str token))))
+    (re-matches re/ysym (str token))
+    (re-matches re/vsym (str token))))
 
 (defn is-default-symbol? [token]
   (re-matches re/dsym (str token)))
@@ -96,6 +97,7 @@
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
       $dsym |                   # Symbol with default
+      $vsym |                   # Dollar sign symbol
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
@@ -128,7 +130,9 @@
 
 (defn- qf [form]
   (cond
-    (:Sym form) (Lst [(Sym 'quote) form])
+    (:Sym form) (if (re-find #"^\$" (-> form :Sym str))
+                  (Sym (-> form :Sym str  (subs 1)))
+                  (Lst [(Sym 'quote) form]))
     (:Lst form) (Lst [(Sym 'quote) form])
     :else form))
 
@@ -146,7 +150,7 @@
               [a b (qf c)]
               (conj-seq acc grp))
             ,
-            (and b (= sep a) (not (empty? grp)))
+            (and b (= sep a) (seq grp))
             (recur
               (drop 2 xs)
               (conj grp a (qf b))

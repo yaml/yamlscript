@@ -78,9 +78,10 @@
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
 (def symw (re #"(?:$anum+(?:-$anum+)*)"))  ; Symbol word
+(def vsym (re #"(?:\$$symw)"))             ; Dollar sign symbol
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
-(def csym #"(?:[-a-zA-Z0-9_*+?!<=>]+(?:\.(?=\ ))?)")
+(def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
 (def ysym (re #"(?:$symw[?!.]?|_)"))       ; YS symbol token
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol

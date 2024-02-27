@@ -790,3 +790,12 @@
     =>: a::b/c(d)
   clojure: |
     (a.b/c d)
+
+
+- name: Dot with var lookup
+  yamlscript: |
+    !yamlscript/v0
+    =>: a.b.$c.d(e)
+  clojure: |
+    (__ a 'b c '(d e))
+  ONLY: true
