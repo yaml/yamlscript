@@ -16,7 +16,7 @@ object that the YAMLScript code evaluates to.
 # This value is automatically updated by 'make bump'.
 # The version number is used to find the correct shared library file.
 # We currently only support binding to an exact version of libyamlscript.
-yamlscript_version = '0.1.38'
+yamlscript_version = '0.1.39'
 
 import os, sys
 import ctypes

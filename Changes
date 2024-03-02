@@ -1,4 +1,20 @@
 
+- version: 0.1.39
+  date:    Sat Mar  2 06:07:02 AM PST 2024
+  changes:
+  - std: Add sleep [s]
+  - dist: Add support to publish jar files
+  - test: Auto support auto-reload for nrepl tests
+  - core: Lex and error on invalid number tokens
+  - core: Support the `.` operator
+  - core: Simplify yes-expression handling
+  - core: Auto-group dot expressions
+  - test: Save and use last test ns when ambiguous
+  - test: Add build-from-string testing fn for ysreader
+  - core: Fix bug with fq-sym followed by paren
+  - core: Support a.$b variable key lookup
+  - core: Support multi doc with addressing
+
 - version: 0.1.38
   date:    Wed Feb 21 02:23:21 PM PST 2024
   changes:
