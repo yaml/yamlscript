@@ -38,23 +38,22 @@ install() (
     make -s --no-print-directory -C "$name"-* install
   )
 
-  if [[ $name == ys && -e ys ]]; then
-    if [[ $PATH != *"$PREFIX"/bin* ]]; then
-      echo
-      echo "*** WARNING: '$PREFIX/bin' is not in your PATH yet ***"
-      echo
-    fi
+  if [[ $name == ys &&
+        $PATH != *"$PREFIX"/bin*
+     ]]; then
+    echo
+    echo "  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***"
+    echo
   fi
 
-  if [[ $name == libyamlscript && $(echo libyamlscript-*) != *'*' ]]; then
-    if [[ $PREFIX != "$HOME/.local" &&
-          $PREFIX != /usr/local &&
-          ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
-       ]]; then
-      echo
-      echo "*** WARNING: '$PREFIX/lib' is not in your LD_LIBRARY_PATH yet ***"
-      echo
-    fi
+  if [[ $name == libyamlscript &&
+        $PREFIX != "$HOME/.local" &&
+        $PREFIX != /usr/local &&
+        ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
+     ]]; then
+    echo
+    echo "  *** WARNING: '$PREFIX/lib' is not in your LD_LIBRARY_PATH yet ***"
+    echo
   fi
 )
 
