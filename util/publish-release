@@ -48,14 +48,14 @@ release() {
 }
 
 git-tag() {
-  [[ -z ${REDO-} ]] || return 0
+  [[ ${REDO-} ]] && return
   if [[ $(git tag -l "$VERSION") ]] &&
      [[ $(git rev-parse HEAD) != "$(git rev-parse "$VERSION")" ]]; then
     die "Error: Tag '$VERSION' already exists." \
       "Delete it with 'git tag -d $VERSION' or" \
       "Use 'make bump' to bump the version."
   fi
-  if [[ $(git diff --stat) ]]; then
+  if [[ -z ${DIRTY-} && $(git diff --stat) ]]; then
     die "Error: Working directory is not clean. Commit changes first."
   fi
   if grep -iq 'date: .*wip' Changes; then

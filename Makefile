@@ -48,8 +48,8 @@ RELEASE_ASSETS := \
 
 ifndef JAR_ONLY
 RELEASE_ASSETS += \
-    $(LYS_JAR_RELEASE) \
-    $(YS_JAR_RELEASE)
+    $(LYS_RELEASE) \
+    $(YS_RELEASE)
 endif
 
 ifdef PREFIX
