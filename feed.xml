@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2024-02-04T00:00:00Z</updated>
+    <updated>2023-12-25T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -3980,87 +3980,6 @@ It's important to be transparent with you about where things are at.</p>
 <h3><a href="/posts/advent-2023/dec-03">Dec 3 - Load em Up!</a></h3>
 <h3><a href="/posts/advent-2023/dec-02">Dec 2 - Twas a Bit</a></h3>
 <h3><a href="/posts/advent-2023/dec-01">Dec 1 - YAMLScript Advent 2023</a></h3>
-
-    ]]>
-      </content>
-    </entry>
-  
-    
-    <entry>
-      <title>FOSDEM 2024 - YAMLScript Intro</title>
-      <link href="https://yamlscript.org/posts/fosdem-2024/"/>
-      <updated>2024-02-04T00:00:00Z</updated>
-      <id>https://yamlscript.org/posts/fosdem-2024/</id>
-      <content type="html">
-        <![CDATA[
-      <h2>YAML as a Programming Language</h2>
-<ul>
-<li>Many people try to do programming things with YAML
-<ul>
-<li>But YAML wasn't designed for that</li>
-</ul>
-</li>
-<li>Ingy has been working on a new YAML based programming language</li>
-<li>Complete and general-purpose</li>
-<li>Best when embedded in plain old YAML files
-<ul>
-<li>Load data from other files</li>
-<li>Excellent interpolation features</li>
-<li>Merge, filter, concatenate, etc. Any functions you can imagine</li>
-<li>Define your own functions</li>
-</ul>
-</li>
-<li>Solves most programming things that people want to do with YAML</li>
-</ul>
-<hr>
-<h2>YAMLScript</h2>
-<ul>
-<li>https://yamlscript.org</li>
-<li>YAMLScript is a new functional programming language</li>
-<li>Syntax is valid YAML</li>
-<li>Clean, expressive, mixes well with YAML data</li>
-<li>Execution speed is on par with Python or Ruby</li>
-<li>YAMLScript loader modules for all major programming languages
-<ul>
-<li>Perl, Python, Raku, Ruby and Rust so far</li>
-</ul>
-</li>
-<li>Your YAML files are already valid YAMLScript programs</li>
-<li>Load them as normal YAML 1.2 data files</li>
-<li>Get YS function powers by adding <code>!yamlscript/v0</code> to the top</li>
-</ul>
-<hr>
-<table>
-<tr>
-<td><b>YAML</b></td>
-<td><b>YAMLScript</b></td>
-<td><b>Run It!</b></td>
-</tr>
-<tr>
-<td><code>some.yaml</code></td>
-<td><code>generator.ys</code></td>
-<td><code>$ ys --load generator.ys | jq</code></td>
-</tr>
-<tr>
-<td>
-<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">people</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> Ingy<br><span class="token punctuation">-</span> Tina<br><span class="token punctuation">-</span> Panto<br><span class="token punctuation">-</span> Eemeli<br><span class="token punctuation">-</span> Thom<br><br><span class="token key atrule">places</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> Seattle<br><span class="token punctuation">-</span> Berlin<br><span class="token punctuation">-</span> Athens<br><span class="token punctuation">-</span> Helsinki<br><span class="token punctuation">-</span> Buffalo</code></pre>
-</td>
-<td>
-<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">data =</span><span class="token punctuation">:</span> load("some.yaml")<br><span class="token key atrule">people =</span><span class="token punctuation">:</span> data.people<br><span class="token key atrule">places =</span><span class="token punctuation">:</span> data.places<br><br>defn other(max<span class="token punctuation">,</span> person<span class="token punctuation">,</span> place)<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  string<span class="token punctuation">:</span><span class="token punctuation">:</span> <span class="token string">"$person likes $place."</span><br>  number<span class="token punctuation">:</span><span class="token punctuation">:</span> int(rand(max)) + 1<br><br><span class="token key atrule">take (ARGS.0 || 5)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">shuffle</span><span class="token punctuation">:</span><br>    for <span class="token punctuation">[</span>person people<span class="token punctuation">,</span> place places<span class="token punctuation">]</span><span class="token punctuation">:</span><br>      <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>        =<span class="token punctuation">></span><span class="token punctuation">:</span><span class="token punctuation">:</span><br>          person<span class="token punctuation">:</span><span class="token punctuation">:</span> person<br>          place<span class="token punctuation">:</span><span class="token punctuation">:</span>  place</code></pre>
-</td>
-<td>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">[</span><br>  <span class="token punctuation">{</span><br>    <span class="token property">"person"</span><span class="token operator">:</span> <span class="token string">"Thom"</span><span class="token punctuation">,</span><br>    <span class="token property">"place"</span><span class="token operator">:</span> <span class="token string">"Seattle"</span><span class="token punctuation">,</span><br>    <span class="token property">"string"</span><span class="token operator">:</span> <span class="token string">"Thom likes Seattle."</span><span class="token punctuation">,</span><br>    <span class="token property">"number"</span><span class="token operator">:</span> <span class="token number">4</span><br>  <span class="token punctuation">}</span><span class="token punctuation">,</span><br>  <span class="token punctuation">{</span><br>    <span class="token property">"person"</span><span class="token operator">:</span> <span class="token string">"Eemeli"</span><span class="token punctuation">,</span><br>    <span class="token property">"place"</span><span class="token operator">:</span> <span class="token string">"Berlin"</span><span class="token punctuation">,</span><br>    <span class="token property">"string"</span><span class="token operator">:</span> <span class="token string">"Eemeli likes Berlin."</span><span class="token punctuation">,</span><br>    <span class="token property">"number"</span><span class="token operator">:</span> <span class="token number">6</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">]</span></code></pre>
-</td>
-</tr>
-</table>
-<hr>
-<h2>Try YAMLScript today!</h2>
-<ul>
-<li>Run: <code>. &lt;(curl -sL yamlscript.org/try-ys)</code></li>
-<li>Installs <code>ys</code> under <code>/tmp</code> and adds it to your <code>PATH</code></li>
-<li>For current shell (Bash or Zsh) session only</li>
-</ul>
-<pre class="language-txt"><code class="language-txt">$ . &lt;(curl -sL yamlscript.org/try-ys)<br>Installed /tmp/yamlscript-try-ys-thwJgNAUG0/bin/ys - version 0.1.36<br><br>Try out these commands:<br><br>    ys --help<br><br>    ys -e 'each [i (1 .. 5)]: say("Hello!")'<br><br>    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"'<br>    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"' --compile<br>    ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"' --load<br><br>    curl -sL yamlscript.org/try/99-bottles.ys | ys - 3<br>    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c -X<br><br>For more information about YAMLScript and ys:<br><br>* https://github.com/yaml/yamlscript#readme<br>* https://yamlscript.org/<br>* https://yamlscript.org/blog/</code></pre>
 
     ]]>
       </content>
