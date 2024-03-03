@@ -157,7 +157,7 @@
 - name: YS reader forms
   yamlscript: |
     --- !yamlscript/v0
-    prn: .["str" \c 42 foo true false nil]
+    prn: .["str" \\c 42 foo true false nil]
     prn: .{:a 1 :c 2 :b 3}
     prn: ."A longer string"
   build: |

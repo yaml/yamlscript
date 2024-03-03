@@ -29,7 +29,7 @@
         (re-pattern rgx)))))
 
 (def char #"(?x)
-            \\
+            \\\\
             (?:
               newline |
               space |

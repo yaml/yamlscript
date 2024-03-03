@@ -93,6 +93,7 @@
       $comm |                 # Comment
                               # Symbols and operators
       $quot |                   # Quote token
+      $char |                   # Character token
       $keyw |                   # Keyword token
       $esym |                   # Earmuff symbol
       $psym |                   # Symbol followed by paren
@@ -108,7 +109,6 @@
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
       $osym |                   # Operator symbol token
-      $char |                   # Character token
       $anon |                   # Anonymous fn start token
       $dstr |                 # String token
       $sstr |                 # String token
@@ -301,7 +301,7 @@
     (is-string? token) [(read-dq-string token) tokens]
     (is-single? token) [(read-sq-string token) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
-    (is-character? token) [(Chr (subs token 1)) tokens]
+    (is-character? token) [(Chr (subs token 2)) tokens]
     (is-regex? token) [(Rgx (subs token 1 (dec (count token)))) tokens]
 
     (is-fq-symbol? token)
