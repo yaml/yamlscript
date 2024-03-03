@@ -102,7 +102,7 @@
     :validate
     [#(some #{%1} ["c" "code", "d" "data", "b" "bare"])
      (str "must be one of: c, code, d, data, b or bare")]]
-   ["-C" "--clj"
+   ["-C" "--clojure"
     "Treat input as Clojure code"]
 
    #_["-R" "--repl"
@@ -224,7 +224,7 @@ Options:
                [(cond
                   (or (str/starts-with? code "--- !yamlscript/v0")
                     (str/starts-with? code "!yamlscript/v0")
-                    (:clj opts))
+                    (:clojure opts))
                   ""
                   (or (= "c" mode) (= "code" mode))
                   "--- !yamlscript/v0/code\n"
@@ -237,7 +237,8 @@ Options:
                   :else
                   "--- !yamlscript/v0\n")
                 code])
-        code (if (re-find #"^---(?:[ \n]|$)" code)
+        code (if (or (:clojure opts)
+                   (re-find #"^---(?:[ \n]|$)" code))
                code
                (str "---\n" code))]
     code))
@@ -268,7 +269,7 @@ Options:
     [code file args (:load opts)]))
 
 (defn compile-code [code opts]
-  (if (:clj opts)
+  (if (:clojure opts)
     code
     (try
       (if (empty? (:debug-stage opts))
@@ -392,7 +393,7 @@ Options:
 
 (def all-opts
   #{:run :load :compile :eval
-    :clj :mode :print :output
+    :clojure :mode :print :output
     :to :json :yaml :edn
     :repl :nrepl :kill
     :stack-trace :debug-stage

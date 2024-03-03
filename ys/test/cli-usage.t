@@ -37,6 +37,11 @@ is "$(ys -pe '=>: 6 * 7')" \
   "ys -pe '=>: 6 * 7'"
 
 
+is "$(ys -Cle '{:x 123}')" \
+  '{"x":123}' \
+  '--clojure works with -e'
+
+
 cmd='ys -pl ...'
 has "$($cmd)" \
   "Error: Options --print and --load are mutually exclusive." \
