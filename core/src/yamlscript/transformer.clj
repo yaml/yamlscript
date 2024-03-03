@@ -19,7 +19,7 @@
 
 (defn map-vec [f coll] (->> coll (map f) vec))
 
-(defn add-num-or-string [{list :Lst}]
+#_(defn add-num-or-string [{list :Lst}]
   (when (and
           (>= (count list) 3)
           (= (first list) {:Sym '+}))
@@ -27,7 +27,7 @@
           [_ & rest] list]
       {:Lst (cons {:Sym '_+} rest)})))
 
-(defn string-repeat [{list :Lst}]
+#_(defn string-repeat [{list :Lst}]
   (when (and
           (= (count list) 3)
           (= (first list) {:Sym '*}))
@@ -66,8 +66,8 @@
 
 (defn transform-list [node]
   (or
-    (add-num-or-string node)
-    (string-repeat node)
+    ; (add-num-or-string node)
+    ; (string-repeat node)
     ;(if (= 'fn (get-in node [:Lst 0 :Sym]))
     (if (:Lst node)
       {:Lst (map-vec transform-node (:Lst node))}

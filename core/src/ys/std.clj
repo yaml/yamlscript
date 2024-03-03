@@ -10,7 +10,10 @@
    [babashka.http-client :as http]
    [clojure.pprint :as pp]
    [clojure.string :as str]
-   [yamlscript.util :as util])
+   [sci.core :as sci]
+   [ys.ys :as ys]
+   [yamlscript.util :as util]
+   [yamlscript.re :as re])
   (:refer-clojure :exclude [print]))
 
 (defn www [& xs]
@@ -76,8 +79,18 @@
                      (get ctx n))
                    (nth ctx n)))
     (keyword? key) (get ctx key)
-    (list? key) (let [[fn & args] key]
-                  (apply (resolve fn) ctx args))
+    (list? key) (let [[fnc & args] key
+                      nargs (map #(if (= '_ %1) ctx %1) args)
+                      args (vec
+                             (if (or (nil? args) (= nargs args))
+                               (cons ctx args)
+                               nargs))
+                      fnc (or (sci/resolve @ys/sci-ctx fnc) fnc)
+                      value (apply fnc args)
+                      value (if (instance? clojure.lang.LazySeq value)
+                              (vec value)
+                              value)]
+                  value)
     :else (throw (Exception. (str "Invalid key: " key)))))
 
 (defn __ [x & xs]
@@ -90,12 +103,16 @@
     (map? x) (apply merge x xs)
     :else (apply + x xs)))
 
-(defn _* [x y]
-  (if (and (string? x) (number? y))
-    (apply str (repeat y x))
-    (if (and (string? y) (number? x))
-      (apply str (repeat x y))
-      (* x y))))
+(defn _*
+  ([x y]
+   (cond
+     (and (string? x) (number? y)) (apply str (repeat y x))
+     (and (number? x) (string? y)) (apply str (repeat x y))
+     (and (sequential? x) (number? y)) (apply concat (repeat y x))
+     (and (number? x) (sequential? y)) (apply concat (repeat x y))
+     :else  (* x y)))
+  ([x y & xs]
+    (reduce _* (_* x y) xs)))
 
 (defn =-- [str rgx]
   (re-find rgx str))

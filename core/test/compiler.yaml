@@ -337,7 +337,7 @@
        {:Vec
         [{:Sym &}
          {:Vec [{:Sym _1} {:Sym _} {:Sym _} {:Sym _4}]}]}
-       {:Lst [{:Sym +} {:Sym _1} {:Sym _4}]}]})}
+       {:Lst [{:Sym _+} {:Sym _1} {:Sym _4}]}]})}
   clojure: |
     (def foo (fn [& [_1 _ _ _4]] (_+ _1 _4)))
 
@@ -829,3 +829,13 @@
     (_+ [foo] [bar])
     (_+ {foo 1} {bar 2})
     (foo || bar)
+
+
+- name: Star in the middle
+  yamlscript: |
+    !yamlscript/v0
+    =>: a * b
+    =>: a(* b)
+  clojure: |
+    (_* a b)
+    (a * b)

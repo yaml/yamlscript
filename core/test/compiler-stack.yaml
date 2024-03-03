@@ -194,7 +194,7 @@
   build: |
     {:pairs
      [{:Sym inc}
-      {:Lst [{:Sym *} {:Int 6} {:Int 7}]}]}
+      {:Lst [{:Sym _*} {:Int 6} {:Int 7}]}]}
   print: |
     (inc (_* 6 7))
 
@@ -237,7 +237,7 @@
   build: |
     {:pairs
      [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
-      {:Lst [{:Sym +} {:Sym a} {:Sym b}]}]}
+      {:Lst [{:Sym _+} {:Sym a} {:Sym b}]}]}
   print: |
     (defn foo [a b] (_+ a b))
 
@@ -310,9 +310,9 @@
       [{:Sym defn} {:Sym bar} nil {:Vec [{:Sym a} {:Sym b}]}]
       {:pairs
        ([{:Sym def} {:Sym c}]
-        {:Lst [{:Sym +} {:Sym a} {:Sym b}]}
+        {:Lst [{:Sym _+} {:Sym a} {:Sym b}]}
         {:Sym =>}
-        {:Lst [{:Sym *} {:Int 2} {:Sym c}]})}
+        {:Lst [{:Sym _*} {:Int 2} {:Sym c}]})}
       {:Sym bar}
       [{:Int 10} {:Int 20}])}
   print: |
@@ -442,7 +442,7 @@
      ([{:Sym def} {:Sym x}]
       {:Str "a\nb"}
       [{:Sym def} {:Sym y}]
-      {:Lst [{:Sym +} {:Str "c"} {:Str "d\ne"}]})}
+      {:Lst [{:Sym _+} {:Str "c"} {:Str "d\ne"}]})}
 
 
 - name: fn special form

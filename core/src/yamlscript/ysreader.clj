@@ -171,6 +171,8 @@
 (def operators
   {(Sym '.)  (Sym '__)
    (Sym '..) (Sym 'rng)
+   (Sym '+) (Sym '_+)
+   (Sym '*) (Sym '_*)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)
    (Sym '%)  (Sym 'rem)
@@ -190,11 +192,7 @@
                    (apply = %1))
             (map Sym '[+ - * / || && .])))
       (let [op (second expr)
-            op (cond
-                 (= op (Sym '.))  (Sym '__)
-                 (= op (Sym '||)) (Sym 'or)
-                 (= op (Sym '&&)) (Sym 'and)
-                 :else op)]
+            op (or (operators op) op)]
         (->> expr
           (cons nil)
           (partition 2)
