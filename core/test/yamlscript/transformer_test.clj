@@ -18,7 +18,7 @@
    "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :transform] %1)
    :test (fn [test]
-           (->> test
+           (-> test
              :yamlscript
              parser/parse
              composer/compose
@@ -26,6 +26,6 @@
              builder/build
              transformer/transform))
    :want (fn [test]
-           (->> test
+           (-> test
              :transform
              edn/read-string))})

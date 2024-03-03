@@ -20,7 +20,7 @@
    "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :clojure] %1)
    :test (fn [test]
-           (->> test
+           (-> test
              :yamlscript
              compiler/compile
              compiler/pretty-format
@@ -33,7 +33,7 @@
    :pick #(test/has-keys? [:yamlscript :error] %1)
    :test (fn [test]
            (try
-             (->> test
+             (-> test
                :yamlscript
                compiler/compile)
              ""

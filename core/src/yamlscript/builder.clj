@@ -26,7 +26,7 @@
     '[yamlscript.composer]
     '[yamlscript.resolver]
     '[yamlscript.builder])
-  (->> string
+  (-> string
     yamlscript.parser/parse
     yamlscript.composer/compose
     yamlscript.resolver/resolve
@@ -50,10 +50,10 @@
                                dargs (->> args (drop i) vec)
                                dvals (->> dargs (map #(get dmap %)) vec)
                                body (Lst [(Vec nargs)
-                                          (Lst (->> nargs
-                                                 (cons name)
+                                          (Lst (-> nargs
+                                                 (->> (cons name))
                                                  vec
-                                                 (#(concat %1 dvals))))])]
+                                                 (concat dvals)))])]
                            (conj bodies body)))
                        [main]
                        (range (dec n-args) (- n-args n-dargs 1) -1))]

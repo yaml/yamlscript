@@ -40,7 +40,7 @@
                  (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
         blocks (map
                  (fn [group]
-                   (->> group
+                   (-> group
                      yamlscript.composer/compose
                      yamlscript.resolver/resolve
                      yamlscript.builder/build

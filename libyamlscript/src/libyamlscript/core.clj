@@ -38,7 +38,7 @@
         json-write-str)
 
       (catch Exception e
-        (->> e
+        (-> e
           error-map
           json-write-str)))))
 

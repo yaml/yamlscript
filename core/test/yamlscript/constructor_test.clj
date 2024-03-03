@@ -19,7 +19,7 @@
    "test/compiler.yaml"]
   {:pick #(test/has-keys? [:yamlscript :construct] %1)
    :test (fn [test]
-           (->> test
+           (-> test
              :yamlscript
              parser/parse
              composer/compose
@@ -28,6 +28,6 @@
              transformer/transform
              constructor/construct-ast))
    :want (fn [test]
-           (->> test
+           (-> test
              :construct
              edn/read-string))})

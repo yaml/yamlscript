@@ -19,13 +19,13 @@
    "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :build] %1)
    :test (fn [test]
-           (->> test
+           (-> test
              :yamlscript
              parser/parse
              composer/compose
              resolver/resolve
              builder/build))
    :want (fn [test]
-           (->> test
+           (-> test
              :build
              edn/read-string))})

@@ -15,11 +15,11 @@
    "test/compiler.yaml"]
   {:pick #(test/has-keys? [:yamlscript :compose] %1)
    :test (fn [test]
-           (->> test
+           (-> test
              :yamlscript
              parser/parse
              composer/compose))
    :want (fn [test]
-           (->> test
+           (-> test
              :compose
              edn/read-string))})

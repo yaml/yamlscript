@@ -32,7 +32,7 @@
   "Compose YAML parse events into a tree."
   [events]
   (if (seq events)
-    (->>
+    (->
       events
       compose-events
       first)

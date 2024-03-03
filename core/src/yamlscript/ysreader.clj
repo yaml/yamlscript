@@ -298,7 +298,7 @@
     (is-single? token) [(read-sq-string token) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
     (is-character? token) [(Chr (subs token 1)) tokens]
-    (is-regex? token) [(Rgx (->> (subs token 1 (dec (count token))))) tokens]
+    (is-regex? token) [(Rgx (subs token 1 (dec (count token)))) tokens]
 
     (is-fq-symbol? token)
     (let [sym (str/replace token #"::" ".")]
@@ -341,7 +341,7 @@
       forms)))
 
 (defn read-string [string]
-  (let [forms (->> string
+  (let [forms (-> string
                 lex-tokens
                 read-forms)
         num (count forms)]

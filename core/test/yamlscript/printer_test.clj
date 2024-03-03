@@ -20,7 +20,7 @@
    "test/compiler.yaml"]
   {:pick #(test/has-keys? [:yamlscript :print] %1)
    :test (fn [test]
-           (->> test
+           (-> test
              :yamlscript
              parser/parse
              composer/compose

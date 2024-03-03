@@ -20,6 +20,6 @@
              (map pr-str)
              (map #(subs %1 4 (dec (count %1))))))
    :want (fn [test]
-           (->> test
+           (-> test
              :parse
              str/split-lines))})

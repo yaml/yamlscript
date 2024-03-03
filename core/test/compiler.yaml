@@ -813,3 +813,19 @@
     {"foo" 42}
     {"bar" (__ _ 'foo '(inc)), "foo" 123}
     {"bar" 44}
+
+
+- name: Dot escaping of YAML syntax
+  yamlscript: |
+    !yamlscript/v0
+    =>: .'foo' * 3
+    =>: ."foo" * 3
+    =>: .[foo] + [bar]
+    =>: .{foo 1} + {bar 2}
+    foo: .|| bar
+  clojure: |
+    (_* "foo" 3)
+    (_* "foo" 3)
+    (_+ [foo] [bar])
+    (_+ {foo 1} {bar 2})
+    (foo || bar)
