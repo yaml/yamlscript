@@ -10,13 +10,13 @@ defn main(number=99):
     say: paragraph(n)
 
 defn paragraph(num): |
-  $(bottles num) of beer on the wall,
-  $(bottles num) of beer.
+  $bottles(num) of beer on the wall,
+  $bottles(num) of beer.
   Take one down, pass it around.
-  $(bottles (num - 1)) of beer on the wall.
+  $bottles(num - 1) of beer on the wall.
 
 defn bottles(n):
   cond:
-    (n == 0) : "No more bottles"
-    (n == 1) : "1 bottle"
-    =>       : "$n bottles"
+    n == 0 : 'No more bottles'
+    n == 1 : '1 bottle'
+    =>     : "$n bottles"

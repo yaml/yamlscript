@@ -4,6 +4,5 @@ defn main(a b):
   say: "gcd($a $b) = $gcd(a b)"
 
 defn gcd(a b):
-  if zero?(b):
-    =>: a
-    recur: b mod(a b)
+  if zero?(b) a:
+    recur: b (a % b)
