@@ -1,0 +1,37 @@
+# Copyright 2023-2024 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+
+- name: Atoms
+  ys: |
+    vector:
+      =>: 1
+      =>: 2.3
+      =>: "foo"
+      =>: true
+      =>: false
+      =>: .[1 2 3]
+      =>: .{:a 1 :b 2}
+  eval: |
+    [1 2.3 "foo" true false [1 2 3] {:a 1, :b 2}]
+
+
+- name: Operator + combinations
+  ys: |
+    vector:
+      =>: 1 + 2
+      =>: 1 + 2 + 3
+      =>: ."foo" + "bar"
+      =>: .[1 2] + [3 4]
+  eval: |
+    [3 6 "foobar" (1 2 3 4)]
+
+
+- name: Dot threading
+  ys: |
+    n =: 10
+    =>: n.inc().vector().repeat(3 _)
+         .flatten().repeat(2 _)
+         .flatten().take(5 _)
+  eval: |
+    [11 11 11 11 11]
