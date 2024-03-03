@@ -48,6 +48,9 @@
 (defn is-operator? [token]
   (re-matches re/osym (str token)))
 
+(defn is-quote? [token]
+  (re-matches re/quot (str token)))
+
 (defn is-syntax-quote? [token]
   (= "`" (str token)))
 
@@ -89,6 +92,7 @@
     (?:
       $comm |                 # Comment
                               # Symbols and operators
+      $quot |                   # Quote token
       $keyw |                   # Keyword token
       $esym |                   # Earmuff symbol
       $psym |                   # Symbol followed by paren
@@ -275,6 +279,8 @@
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
+    (is-quote? token) (let [[value tokens] (read-form tokens)]
+                        [(Lst [(Sym 'quote) value]) tokens])
     (is-narg? token) (let [n (subs token 1)
                            n (parse-long n)
                            _ (when (or (<= n 0) (> n 20))

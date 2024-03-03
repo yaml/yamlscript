@@ -11,7 +11,7 @@
   (:require
    [clojure.string :as str]
    [yamlscript.debug :refer [www]])
-  (:refer-clojure :exclude [char]))
+  (:refer-clojure :exclude [char quot]))
 
 (defn re [rgx]
   (loop [rgx (str rgx)]
@@ -47,6 +47,7 @@
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
+(def quot #"(?:\\')")                      ; Quote token
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token
 (def inum #"-?\d+")                        ; Integer literal token

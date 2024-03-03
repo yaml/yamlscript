@@ -839,3 +839,13 @@
   clojure: |
     (_* a b)
     (a * b)
+
+
+- name: Quote escaping
+  yamlscript: |
+    !yamlscript/v0
+    =>: \'(1 2 3)
+    =>: \'foo
+  clojure: |
+    '(1 2 3)
+    'foo
