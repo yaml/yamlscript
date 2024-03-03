@@ -66,6 +66,7 @@ pattern='(VERSION.*)'"$vp"'(.*)'
 bump perl/lib/YAMLScript.pm
 bump perl-alien/lib/Alien/YAMLScript.pm
 bump www/src/index.md
+bump ys/test/cli-usage.t
 
 pattern='(Alien::YAMLScript:.*)'"$vp"'(.*)'
 

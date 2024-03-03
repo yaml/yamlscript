@@ -1,0 +1,16 @@
+#! bash
+
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)
+
+BASE=$ROOT/ys
+
+export BPAN_ROOT=$BASE/.bpan
+
+source "$BPAN_ROOT/test/init"
+
+YS_BIN_DIR=${YS_BIN_DIR:-$BASE/bin}
+
+[[ -e $YS_BIN_DIR/ys ]] ||
+  die "No ys program at '$YS_BIN_DIR/ys'"
+
+export PATH=$YS_BIN_DIR:$PATH

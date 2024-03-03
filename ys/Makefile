@@ -19,6 +19,9 @@ YAMLSCRIPT_CLI_JAR_PATH :=
 endif
 endif
 
+BPAN_LOCAL := .bpan
+BPAN_REPO_URL := https://github.com/bpan-org/bpan
+
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CLI_BIN_BASH) $(YAMLSCRIPT_CLI_BIN)
 
@@ -34,7 +37,7 @@ jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 
 test: test-unit
 
-test-all: test-unit test-ys
+test-all: test-unit test-ys test-run
 
 test-unit: $(LEIN) $(YAMLSCRIPT_LANG_INSTALLED)
 	$< test
@@ -44,7 +47,14 @@ test-ys: $(YAMLSCRIPT_CLI_BIN)
 	@echo
 	@echo "*** test.sh completed successfully"
 
+test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
+	prove $${TEST_VERBOSE:+'-v'} test/
+
+$(BPAN_LOCAL):
+	git clone --depth=1 $(BPAN_REPO_URL) $@
+
 $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
@@ -70,6 +80,7 @@ endif
 	    -o $@
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
+endif
 
 $(YAMLSCRIPT_CLI_BIN_BASH): $(YAMLSCRIPT_CLI_BIN_BASH_SRC)
 	mkdir -p $(dir $@)
@@ -80,7 +91,7 @@ clean::
 	$(RM) -r .cpcache/
 
 realclean::
-	$(RM) -r bin lib
+	$(RM) -r bin lib $(BPAN_LOCAL)
 
 ifeq (true,$(IS_ROOT))
 $(YAMLSCRIPT_CLI_JAR_PATH):
