@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :refer
-    [Bln Chr Flt Int Key Lst Map Nil Rgx Spc Str Sym Tok Vec]]
+    [Bln Chr Flt Int Key Lst Map Nil Rgx Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [www]]
    [yamlscript.util :as util
@@ -51,11 +51,8 @@
 (defn is-quote? [token]
   (re-matches re/quot (str token)))
 
-(defn is-syntax-quote? [token]
-  (= "`" (str token)))
-
-(defn is-unquote-splice? [token]
-  (= "~@" (str token)))
+(defn is-special? [token]
+  (re-matches re/spec (str token)))
 
 (defn is-clojure-symbol? [token]
   (re-matches re/csym (str token)))
@@ -93,6 +90,7 @@
       $comm |                 # Comment
                               # Symbols and operators
       $quot |                   # Quote token
+      $spec |                   # Special token
       $char |                   # Character token
       $keyw |                   # Keyword token
       $esym |                   # Earmuff symbol
@@ -113,8 +111,7 @@
       $dstr |                 # String token
       $sstr |                 # String token
                               # Other tokens
-      ~@ |                      # Unquote-splice token
-      [\[\]{}()`~^@] |          # Single character tokens
+      [\[\]{}()] |              # Single character tokens
     )"))
 
 (defn lex-tokens [expr]
@@ -279,8 +276,6 @@
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
-    (is-quote? token) (let [[value tokens] (read-form tokens)]
-                        [(Lst [(Sym 'quote) value]) tokens])
     (is-narg? token) (let [n (subs token 1)
                            n (parse-long n)
                            _ (when (or (<= n 0) (> n 20))
@@ -295,9 +290,11 @@
     (is-float? token) [(Flt token) tokens]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
+    (is-quote? token) (let [[value tokens] (read-form tokens)]
+                        [(Tup [(Tok "'") value]) tokens])
+    (is-special? token) (let [[value tokens] (read-form tokens)]
+                         [(Tup [(Tok token) value]) tokens])
     (is-operator? token) [(Sym token) tokens]
-    (is-unquote-splice? token) [(Tok token) tokens]
-    (is-syntax-quote? token) [(Tok token) tokens]
     (is-string? token) [(read-dq-string token) tokens]
     (is-single? token) [(read-sq-string token) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]

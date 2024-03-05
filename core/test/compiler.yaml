@@ -859,10 +859,11 @@
     '(\a \5 \newline \tab)
 
 
-- name: Meta escaping
+- name: Deref with @
   yamlscript: |
     !yamlscript/v0
-    =>: \`(foo \~bar \~@baz)
+    =>: .@foo
+    =>: ~foo
   clojure: |
-    #(1 2 3)
-  SKIP: true
+    @foo
+    ~foo

@@ -61,6 +61,7 @@
       :Spc (str/replace val #"::" ".")
       :Sym (pr-symbol (str val))
       :Tok (str val)
+      :Tup (apply str (map print-node val))
       :Key (str val)
       :Int (str val)
       :Flt (str val)

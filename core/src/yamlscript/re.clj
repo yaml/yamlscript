@@ -47,6 +47,7 @@
               [\s,]+    |                    # whitespace, commas,
               ;.*\n?                         # comments
             )")
+(def spec #"(?:~@|[~@`^])")                ; Special token
 (def quot #"(?:\\')")                      ; Quote token
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token
