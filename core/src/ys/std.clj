@@ -174,6 +174,9 @@
   (clojure.core/print o)
   (flush))
 
+(defmacro q [x]
+  `(quote ~x))
+
 (defn rng [x y]
   (if (> y x)
     (range x (inc y))
