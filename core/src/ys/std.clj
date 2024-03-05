@@ -8,6 +8,7 @@
    [yamlscript.debug]
    [babashka.fs :as fs]
    [babashka.http-client :as http]
+   [babashka.process :as process]
    [clojure.pprint :as pp]
    [clojure.string :as str]
    [sci.core :as sci]
@@ -182,6 +183,9 @@
 
 (defn say [& xs]
   (apply clojure.core/println xs))
+
+(defn sh [cmd]
+  (process/shell cmd))
 
 (defn sleep [s]
   (Thread/sleep (int (* 1000 s))))

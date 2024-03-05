@@ -6,11 +6,16 @@
    [yamlscript.debug :refer [www]]
    [yamlscript.re :as re]
    [clojure.java.io :as io]
+   [clojure.math]
    [clojure.pprint]
+   [clojure.set]
    [clojure.string :as str]
+   [clojure.tools.cli]
+   ; [babashka.deps]
    [babashka.fs]
    [babashka.http-client]
    [babashka.pods.sci]
+   [babashka.process]
    [sci.core :as sci]
    [ys.std]
    [ys.json]
@@ -63,33 +68,34 @@
 (reset! ys/sci-ctx
   (sci/init
     {:namespaces
-     {'clojure.core (clojure-core-ns)
+     {'main {}
 
-      'ys.ys (use-ns 'ys.ys ys.ys)
+      'clojure.core (clojure-core-ns)
 
-      'pods (babashka-pods-ns)
+;; This needs to be first
+      'ys.ys   (use-ns 'ys.ys ys.ys)
 
-      'fs  (use-ns 'fs  babashka.fs)
-      'std (use-ns 'std ys.std)
-      'str (use-ns 'str clojure.string)
-      'ys  (use-ns 'ys  ys.ys)
+      'cli     (use-ns 'cli clojure.tools.cli)
+      'fs      (use-ns 'fs babashka.fs)
+      'http    (use-ns 'http babashka.http-client)
+      'io      (use-ns 'io clojure.java.io)
+      'math    (use-ns 'math clojure.math)
+      'pods    (babashka-pods-ns)
+      'process (use-ns 'process babashka.process)
+      'set     (use-ns 'set clojure.set)
+      'str     (use-ns 'str clojure.string)
 
-      'ys.http (use-ns 'http babashka.http-client)
-      'ys.json (use-ns 'json ys.json)
-      'ys.yaml (use-ns 'yaml ys.yaml)}
+      'std     (use-ns 'std ys.std)
+      'ys      (use-ns 'ys ys.ys)
+      'json    (use-ns 'json ys.json)
+      'yaml    (use-ns 'yaml ys.yaml)}
 
      :classes
      {'Boolean   java.lang.Boolean
       'Character java.lang.Character
       'Long      java.lang.Long
       'Math      java.lang.Math
-      'Thread    java.lang.Thread
-
-      'java.lang.Boolean   java.lang.Boolean
-      'java.lang.Character java.lang.Character
-      'java.lang.Long      java.lang.Long
-      'java.lang.Math      java.lang.Math
-      'java.lang.Thread    java.lang.Thread}}))
+      'Thread    java.lang.Thread}}))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'CWD (str (babashka.fs/cwd)))
 (sci/intern @ys/sci-ctx 'clojure.core 'ENV (into {} (System/getenv)))
@@ -128,10 +134,13 @@
          ARGV args
          ys/FILE file
          INC (get-yspath file)]
-         (let [resp (sci/eval-string* @ys/sci-ctx clj)]
+         (let [resp (sci/eval-string+
+                      @ys/sci-ctx
+                      clj
+                      {:ns (sci/create-ns 'main)})]
            (ys/unload-pods)
            (shutdown-agents)
-           resp))))))
+           (:val resp)))))))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'eval-string eval-string)
 
