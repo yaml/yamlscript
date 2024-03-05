@@ -857,3 +857,12 @@
     =>: \'( \\a \\5 \\newline \\tab )
   clojure: |
     '(\a \5 \newline \tab)
+
+
+- name: Meta escaping
+  yamlscript: |
+    !yamlscript/v0
+    =>: \`(foo \~bar \~@baz)
+  clojure: |
+    #(1 2 3)
+  SKIP: true

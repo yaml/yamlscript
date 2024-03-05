@@ -68,6 +68,7 @@ endif
 	\
 	    --initialize-at-build-time \
 	    --enable-preview \
+	    --enable-url-protocols=https \
 	\
 	    -H:+ReportExceptionStackTraces \
 	    -H:IncludeResources=SCI_VERSION \
@@ -110,4 +111,4 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-copy-project-deps.dockerfile \
 	  $</docker-deps-clojure.dockerfile \
 	  $</docker-apt-dev.dockerfile \
-		> $@
+	  > $@

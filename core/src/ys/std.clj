@@ -12,8 +12,7 @@
    [clojure.string :as str]
    [sci.core :as sci]
    [ys.ys :as ys]
-   [yamlscript.util :as util]
-   [yamlscript.re :as re])
+   [yamlscript.util :as util])
   (:refer-clojure :exclude [print]))
 
 (defn www [& xs]
@@ -47,7 +46,6 @@
 
 (def $$ (atom {}))
 (def $# (atom 0))
-
 (defn === []
   (reset! $$ {})
   (reset! $# 0)
@@ -188,17 +186,13 @@
 (defn sleep [s]
   (Thread/sleep (int (* 1000 s))))
 
+(defn use-pod [pod-name version]
+  (ys/load-pod pod-name version))
+
 (defn warn [& xs]
   (binding [*out* *err*]
     (apply clojure.core/println xs)
     (flush)))
 
 (comment
-  (require '[yamlscript.runtime :as rt])
-  (require '[yamlscript.compiler :as comp])
-  (->
-    "!yamlscript/v0\ndefn sub(a b): a - b\n=>: .{:foo 7}.:foo.sub(20).inc()"
-    comp/compile
-    (str/replace #"\._" "__")
-    rt/eval-string)
   )

@@ -52,6 +52,10 @@
         std (update-vals std #(sci/copy-var* %1 nil))]
     (merge core std)))
 
+(defn babashka-pods-ns []
+  {'load-pod (sci/copy-var ys/load-pod nil)
+   'unload-pod (sci/copy-var babashka.pods.sci/unload-pod nil)})
+
 (defmacro use-ns [ns-name from-ns]
   `(let [ns# (sci/create-ns ~ns-name)]
      (sci/copy-ns ~from-ns ns#)))
@@ -63,8 +67,9 @@
 
       'ys.ys (use-ns 'ys.ys ys.ys)
 
+      'pods (babashka-pods-ns)
+
       'fs  (use-ns 'fs  babashka.fs)
-      'babashka.pods (use-ns 'babashka.pods babashka.pods.sci)
       'std (use-ns 'std ys.std)
       'str (use-ns 'str clojure.string)
       'ys  (use-ns 'ys  ys.ys)
@@ -102,9 +107,11 @@
 (sci/alter-var-root sci/in (constantly *in*))
 
 (defn eval-string
-  ([clj] (eval-string clj @sci/file))
+  ([clj]
+   (eval-string clj @sci/file))
 
-  ([clj file] (eval-string clj file []))
+  ([clj file]
+   (eval-string clj file []))
 
   ([clj file args]
    (let [clj (str/trim-newline clj)
@@ -121,7 +128,10 @@
          ARGV args
          ys/FILE file
          INC (get-yspath file)]
-         (sci/eval-string* @ys/sci-ctx clj))))))
+         (let [resp (sci/eval-string* @ys/sci-ctx clj)]
+           (ys/unload-pods)
+           (shutdown-agents)
+           resp))))))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'eval-string eval-string)
 

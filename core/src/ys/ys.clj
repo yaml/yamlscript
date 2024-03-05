@@ -3,6 +3,7 @@
 
 (ns ys.ys
   (:require
+   [babashka.pods.sci :as pods]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [sci.core :as sci]
@@ -43,10 +44,24 @@
               (die (str "Module not found: " module)))))))))
 
 ;;-----------------------------------------------------------------------------
+
+(def sci-ctx (atom nil))
+
+(def pods (atom []))
+
+(defn load-pod [& args]
+  (let [pod (apply pods/load-pod @sci-ctx args)]
+    (swap! pods conj pod)))
+
+(defn unload-pods []
+  (doseq [pod @pods]
+    (pods/unload-pod pod))
+  (reset! pods []))
+
+;;-----------------------------------------------------------------------------
 (defn compile [code]
   (yamlscript.compiler/compile code))
 
-(def sci-ctx (atom nil))
 (def FILE (sci/new-dynamic-var 'FILE nil))
 
 (defn load-file [ys-file]
