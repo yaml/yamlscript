@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2023-12-25T00:00:00Z</updated>
+    <updated>2024-03-07T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -3980,6 +3980,59 @@ It's important to be transparent with you about where things are at.</p>
 <h3><a href="/posts/advent-2023/dec-03">Dec 3 - Load em Up!</a></h3>
 <h3><a href="/posts/advent-2023/dec-02">Dec 2 - Twas a Bit</a></h3>
 <h3><a href="/posts/advent-2023/dec-01">Dec 1 - YAMLScript Advent 2023</a></h3>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>YAMLScript Seajure Talk Info Page</title>
+      <link href="https://yamlscript.org/posts/seajure-talk-info/"/>
+      <updated>2024-03-07T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/seajure-talk-info/</id>
+      <content type="html">
+        <![CDATA[
+      <h2>YAMLScript Talk Info</h2>
+<p>This web page has info to help you follow along with the YAMLScript talk at
+Seajure on March 7th, 2024.</p>
+<h3>Quick Links</h3>
+<p>YAMLScript git repository:</p>
+<ul>
+<li>https://github.com/yaml/yamlscript</li>
+</ul>
+<p>YAMLScript web site:</p>
+<ul>
+<li>https://yamlscript.org</li>
+</ul>
+<p>Watch my terminal in your browser:</p>
+<ul>
+<li>https://tmate.io/t/ro-WhvGK</li>
+</ul>
+<p>Matrix chat room:</p>
+<ul>
+<li>https://matrix.to/#/#chat-yamlscript:yaml.io</li>
+</ul>
+<p>My matrix id:</p>
+<ul>
+<li>@ingy:yaml.io</li>
+</ul>
+<h3>Quick Install For ys and libyamlscript.so</h3>
+<p>YS works on Linux and macOS. Not on Windows yet.</p>
+<p>Install ys for current shell session only (in /tmp):</p>
+<pre class="language-sh"><code class="language-sh"><span class="token builtin class-name">.</span> <span class="token operator">&lt;</span><span class="token punctuation">(</span><span class="token function">curl</span> <span class="token parameter variable">-sSL</span> yamlscript.org/try-ys<span class="token punctuation">)</span></code></pre>
+<p>Install ys and libyamlscript.so (in ~/.local/bin and ~/.local/lib):</p>
+<pre class="language-sh"><code class="language-sh"><span class="token function">curl</span> <span class="token parameter variable">-sSL</span> yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
+<p>You can change the install directory <code>... | PREFIX=/other/dir bash</code>.</p>
+<h3>Install from Source</h3>
+<p>If the quick install has problems, you can usually get it to work by building
+from source.</p>
+<pre class="language-sh"><code class="language-sh"><span class="token function">git</span> clone https://github.com/yaml/yamlscript<br><span class="token builtin class-name">cd</span> yamlscript<br><span class="token function">make</span> <span class="token function">install</span></code></pre>
+<p>The only dependencies are <code>git</code>, <code>curl</code>, <code>bash</code> and <code>make</code>.
+Also a <code>libz-dev</code> package is required on Linux.</p>
+<h3>Install the Python Module</h3>
+<pre class="language-sh"><code class="language-sh">pip <span class="token function">install</span> yamlscript</code></pre>
+<p>Also you'll need to have <code>libyamlscript.so</code> installed. See above.</p>
 
     ]]>
       </content>
