@@ -7,8 +7,10 @@ ifdef DOCKERENV
 else
 	yarn build
 endif
+	mkdir -p build/info
 	cp src/install* src/try* build/
 	cp src/blog-redirect-html build/posts/index.html
+	cp src/info-redirect-html build/info/index.html
 	cp src/advent-redirect-html build/posts/advent-2023/index.html
 	mkdir -p build/try
 	cp $(ROOT)/sample/rosetta-code/99-bottles-of-beer.ys build/try/99-bottles.ys
