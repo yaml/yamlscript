@@ -111,7 +111,7 @@
       $dstr |                 # String token
       $sstr |                 # String token
                               # Other tokens
-      [\[\]{}()] |              # Single character tokens
+      .                         # Single character tokens
     )"))
 
 (defn lex-tokens [expr]
