@@ -10,7 +10,7 @@ _yamlscript-try-ys() {
   export PATH=$dir/bin:$PATH
 }
 
-_yamlscript-try-ys
+_yamlscript-try-ys || return
 
 unset -f _yamlscript-try-ys
 
