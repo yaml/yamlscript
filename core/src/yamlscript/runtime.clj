@@ -31,6 +31,8 @@
 
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))
+(def CWD (sci/new-dynamic-var 'CWD))
+(def ENV (sci/new-dynamic-var 'ENV))
 (def INC (sci/new-dynamic-var 'INC))
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
@@ -38,8 +40,8 @@
   (let [core {;; Runtime variables
               'ARGS ARGS
               'ARGV ARGV
-              'CWD nil
-              'ENV nil
+              'CWD CWD
+              'ENV ENV
               'FILE ys/FILE
               'INC INC
               'VERSION nil
@@ -98,10 +100,9 @@
       'Character java.lang.Character
       'Long      java.lang.Long
       'Math      java.lang.Math
+      'System    java.lang.System
       'Thread    java.lang.Thread}}))
 
-(sci/intern @ys/sci-ctx 'clojure.core 'CWD (str (babashka.fs/cwd)))
-(sci/intern @ys/sci-ctx 'clojure.core 'ENV (into {} (System/getenv)))
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSION ys-version)
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSIONS
   {:clojure "1.11.1"
@@ -111,10 +112,6 @@
           str/trim-newline)
    :yamlscript ys-version})
 
-(sci/alter-var-root sci/out (constantly *out*))
-(sci/alter-var-root sci/err (constantly *err*))
-(sci/alter-var-root sci/in (constantly *in*))
-
 (defn eval-string
   ([clj]
    (eval-string clj @sci/file))
@@ -123,6 +120,10 @@
    (eval-string clj file []))
 
   ([clj file args]
+   (sci/alter-var-root sci/out (constantly *out*))
+   (sci/alter-var-root sci/err (constantly *err*))
+   (sci/alter-var-root sci/in (constantly *in*))
+
    (let [clj (str/trim-newline clj)
          file (abspath (or file "NO-NAME"))]
      (if (= "" clj)
@@ -135,6 +136,8 @@
                             :else %1)
                   args))
          ARGV args
+         CWD (str (babashka.fs/cwd))
+         ENV (into {} (System/getenv))
          ys/FILE file
          INC (get-yspath file)]
          (let [resp (sci/eval-string+
