@@ -6,8 +6,8 @@ _yamlscript-try-ys() {
   tmp=${TMPDIR:-/tmp}
   tmp=${tmp%/}
   dir=$(mktemp -d "$tmp/yamlscript-try-ys-XXXXXXXXXX") &&
-  curl -s https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
   export PATH=$dir/bin:$PATH
+  curl -s https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
 }
 
 _yamlscript-try-ys
