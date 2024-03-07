@@ -1,0 +1,17 @@
+!yamlscript/v0
+
+hobbies =::
+- Archery
+- Bowling
+- Cycling
+- Darts
+- Exercising
+- Formula 1
+- Gaming
+
+=>::
+  name:: .['Jack', 'Jill']
+         .rand-nth()
+  age:: rand-int(60) + 21
+  hobbies:: hobbies.shuffle()
+            .take(2 _)

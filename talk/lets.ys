@@ -1,0 +1,10 @@
+!yamlscript/v0
+
+foo =: 1
+
+defn main(a):
+  b =: 3
+  c =: b + a
+  say: c
+  d =: c / 2
+  say: d

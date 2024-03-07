@@ -10,6 +10,8 @@
 /release*.log
 /release-changes.txt
 /release-id.txt
+/note/
+/talk/
 /work/
 /www
 /ys-*
@@ -25,7 +27,6 @@ NO-NAME
 *.jar
 .lein-*
 .lsp/
-note/
 .nrepl-port
 .nrepl-pid
 pom.xml
@@ -36,5 +37,6 @@ profiles.clj
 .project.clj
 reports/
 target/
+.vimrc
 .vscode/
 **/.idea/

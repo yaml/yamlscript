@@ -1,0 +1,14 @@
+!yamlscript/v0
+
+say: 2 + 2
+say: ."two" + 'two'
+say: .[1 2] + [3 4]
+say: 3 * 3
+say: 3 * "three"
+say: ."three" * 3
+say: (4 / 4).inc().str() * 4
+say: 10 .. 1
+say: -23 % 7
+say: -23 %% 7
+say: .'foo' =~ /.*(oo)/
+=>: nil

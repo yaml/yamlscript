@@ -1,0 +1,13 @@
+!yamlscript/v0/data
+
+range:: 10 .. 15
+
+mapping::
+  foo: bar
+  baz:: inc(41)
+
+sequence:
+- ! load('bar.ys')
+- key:: load('bar.ys').names
+        .take(2 _)
+        .conj([Bill Ted])

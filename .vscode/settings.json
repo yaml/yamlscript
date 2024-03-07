@@ -55,4 +55,6 @@
   ],
   "java.configuration.updateBuildConfiguration": "disabled",
   "makefile.configureOnOpen": true
+  "terminal.integrated.fontSize": 36,
+  "editor.fontSize": 24
 }

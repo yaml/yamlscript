@@ -1,0 +1,7 @@
+!yamlscript/v0
+
+ns: lib1
+
+defn foo(n):
+  each [i (1 .. n)]:
+    say: "$i) foo"

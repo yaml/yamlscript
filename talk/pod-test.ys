@@ -1,0 +1,10 @@
+!yamlscript/v0
+
+use-pod: \'org::babashka/go-sqlite3 "0.2.3"
+
+require pod::babashka::go-sqlite3: => sqlite
+
+say:
+  sqlite/query:
+    .":memory:"
+    ["SELECT 41 + 1 AS sum"]

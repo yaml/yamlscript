@@ -1,0 +1,7 @@
+
+!yamlscript/v0
+
+use: lib1
+
+defn main():
+  lib1/foo: 5
