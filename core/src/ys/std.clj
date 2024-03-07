@@ -14,7 +14,21 @@
    [sci.core :as sci]
    [ys.ys :as ys]
    [yamlscript.util :as util])
-  (:refer-clojure :exclude [print]))
+  #_(:refer-clojure :exclude [print]))
+
+(defmacro _T [xs]
+  (let [[fun# & args#] xs
+        args# (map pr-str args#)
+        args# (str/join " -> " args#)]
+    `(do
+       (clojure.core/print
+         ";;" '~fun# "->" ~args# "\n")
+       (~@xs))))
+
+(comment
+  (macroexpand '(_T (+ 1 "2")))
+  (_T (prn 1 "2"))
+)
 
 (defn www [& xs]
   (apply yamlscript.debug/www xs))
@@ -168,10 +182,6 @@
   (str/trim-newline
     (with-out-str
       (pp/pprint o))))
-
-(defn print [o]
-  (clojure.core/print o)
-  (flush))
 
 (defmacro q [x]
   `(quote ~x))

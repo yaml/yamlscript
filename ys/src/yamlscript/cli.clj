@@ -8,6 +8,7 @@
   (:gen-class)
   (:require
    ;; This goes first for pprint/graalvm patch (prevents binary bloating)
+   [yamlscript.common :as common]
    [yamlscript.compiler :as compiler]
    [yamlscript.runtime :as runtime]
    ;; For www debugging
@@ -131,6 +132,8 @@
        " or all")]]
    ["-S" "--stack-trace"
     "Print full stack trace for errors"]
+   ["-x" "--xtrace"
+    "Print each expression before evaluation"]
 
    [nil "--install"
     "Install the libyamlscript shared library"]
@@ -272,6 +275,7 @@ Options:
   (if (:clojure opts)
     code
     (try
+      (reset! common/opts opts)
       (if (empty? (:debug-stage opts))
         (compiler/compile code)
         (do
@@ -317,7 +321,7 @@ Options:
                          :file file
                          :line line
                          :column column
-                         :trace trace}))
+                         :xtrace trace}))
                   (str cause "\n"
                     (if (seq file)
                       (str

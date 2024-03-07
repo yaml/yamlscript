@@ -8,27 +8,29 @@
   (:require
    [clojure.walk :as walk]
    [yamlscript.ast :refer [Lst Sym Vec]]
+   [yamlscript.common :as common]
    [yamlscript.re :as re]
+   [yamlscript.util :refer [if-lets]]
    [yamlscript.debug :refer [www]]))
 
 (declare
   construct-node
   declare-undefined
   maybe-call-main
+  maybe-trace
   check-let-bindings)
 
 (defn construct-ast
   "Construct resolved YAML tree into a YAMLScript AST."
   [node]
-  (let [ctx {:lvl 0 :defn false}]
-    (->> node
-      (#(construct-node %1 ctx))
-      (#(if (vector? %1)
-          %1
-          [%1]))
-      (hash-map :Top)
-      declare-undefined
-      maybe-call-main)))
+  (->> node
+    (#(construct-node %1))
+    (#(if (vector? %1)
+        %1
+        [%1]))
+    (hash-map :Top)
+    declare-undefined
+    maybe-call-main))
 
 (defn construct
   "Make the AST and add wrap the last node."
@@ -37,7 +39,7 @@
     construct-ast
     ((fn [m]
        (update-in m [:Top (dec (count (:Top m)))]
-         (fn [n] (Lst [(Sym '+++) n])))))))
+         (fn [n] (maybe-trace (Lst [(Sym '+++) n]))))))))
 
 (defn construct-call [[key val]]
   (cond
@@ -90,17 +92,30 @@
         nodes (map #(construct-node %1 ctx) nodes)]
     {key (-> nodes flatten vec)}))
 
-(defn construct-node [node ctx]
-  (when (vector? ctx) (throw (Exception. "ctx is a vector")))
-  (let [[[key]] (seq node)
-        ctx (update-in ctx [:lvl] inc)]
-    (case key
-      :pairs (construct-pairs node ctx)
-      :forms (construct-forms node ctx)
-      :Map (construct-coll node ctx :Map)
-      :Vec (construct-coll node ctx :Vec)
-      :Lst (construct-coll node ctx :Lst)
-      ,      node)))
+(defn maybe-trace [node]
+  (if-lets [_ (:xtrace @common/opts)
+            sym (get-in node [:Lst 0 :Sym])
+            _ (type sym)
+            _ (not= '_T sym)]
+    (Lst [(Sym '_T) node])
+    node)
+  )
+
+(defn construct-node
+  ([node ctx]
+   (when (vector? ctx) (throw (Exception. "ctx is a vector")))
+   (let [[[key]] (seq node)
+         ctx (update-in ctx [:lvl] inc)
+         node (case key
+                :pairs (construct-pairs node ctx)
+                :forms (construct-forms node ctx)
+                :Map (construct-coll node ctx :Map)
+                :Vec (construct-coll node ctx :Vec)
+                :Lst (construct-coll node ctx :Lst)
+                ,      node)]
+     (maybe-trace node)))
+  ([node]
+   (construct-node node {:lvl 0 :defn false})))
 
 ;;------------------------------------------------------------------------------
 ;; Fix-up functions
@@ -169,10 +184,11 @@
           #(vec (concat [form] %1))))
       node)))
 
-(def call-main
-  (Lst [(Sym 'apply)
-        (Sym 'main)
-        (Sym 'ARGS)]))
+(defn call-main []
+  (maybe-trace
+    (Lst [(Sym 'apply)
+          (Sym 'main)
+          (Sym 'ARGS)])))
 
 (defn maybe-call-main [node]
   (let [need-call-main (atom false)]
@@ -183,7 +199,7 @@
          %1)
       node)
     (if @need-call-main
-      (update-in node [:Top] conj call-main)
+      (update-in node [:Top] conj (call-main))
       node)))
 
 (comment
