@@ -35,7 +35,7 @@ elif [[ $line == \$\ * ]]; then
   echo
   # sleep 0.3
 
-  if [[ $line =~ [\>\<\|] ]]; then
+  if [[ $line =~ [\>\|] ]]; then
     eval "$line"
   else
     eval "$line </dev/tty" |& less -FRX # +Gg

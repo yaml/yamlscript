@@ -20,7 +20,7 @@ Introducing YAMLScript
 
 Programming in YAML
 
-(YS WE CAN)
+(YS WE CAN!)
 
 by Ingy döt Net
 
@@ -89,31 +89,35 @@ $ vim 99-* -O
 * Lot of information to get through tonight
 * I'm a new Clojure programmer (< 1 year)
   * I want to learn from you!
+
 * Clojure Programmers are full of good ideas!
   * You'll have ideas to improve YAMLScript
   * You'll have ideas to improve my Clojure
+
 * Please ask questions and make suggestions as we go
   * Matrix, Slack, GitHub Issues
+
 * Code reviews Super Welcome!
 
 
 ----
 == Ingy döt Net
 
-* Invented YAML (w/ Clark and Oren)
+* Ingy Invented YAML (w/ Clark and Oren)
 * Primary Maintainer of YAML
-* Also invented Pegex, Jemplate, Swim
 
-* Language Designer
+* Computer Language Designer
 * Polyglot Module Author
-  * CPAN, NPM, Clojars, PyPI, RubyGems, etc
+  * CPAN, NPM, PyPI, RubyGems, Crates, Clojars, etc
   * PST Package Manager for 42 languages
-* Acmeist Programmer
-* Inline, C'Dent, TestML
+
+* Acmeist Programmer - Everything, Everywhere, All at Once!
+* Other linguistic efforts:
+  * Pegex, Jemplate, Swim, Inline, C'Dent, TestML
 
 * Ingy loves no programming language
-+* Ingy likes Perl, CoffeeScript, Bash, GNU make
-+* Ingy really likes Clojure
+* Ingy likes Perl, CoffeeScript, Bash, GNU make
+* Ingy likes Clojure a lot
 
 
 ----
@@ -122,13 +126,16 @@ $ vim 99-* -O
 * Started in 2001
 * Usable ~2004
 * _why is YAML popular?
+
 * YAML is a data serialization language
-* Goals: Human Readable, Language Agnostic
+* Goals: Human Friendly, Language Agnostic
 * Simple API: dump and load
 * YAML is a superset of JSON (all JSON is valid YAML)
+
 * Huge Spec
 * 1.2 is the current version (2009)
 * Many problematic frameworks are at 1.1
+
 * 1.2.2 spec published in 2021 (no normative changes)
 * New team of maintainers
   * Tina, Panto, Eemeli, Thom and Ingy
@@ -140,9 +147,12 @@ $ vim 99-* -O
 * YAML is everywhere
 * YAML is used for configuration (almost entirely)
 * People seem to love or hate YAML
-* Many complaints fixed in 1.2
-* Many complaints solved by YAMLScript
+
+* Many complaints were fixed by 1.2
+  * Most complaints can be solved by YAMLScript
+
 * Projects try to extend YAML, but it's problematic
+  * YAMLScript is a new way to extend YAML with confidence!
 
 
 ----
@@ -150,11 +160,13 @@ $ vim 99-* -O
 
 * YAMLScript is a new way to extend YAML
 * All YAML config files are valid YAMLScript already!
+
 * YAMLScript loaders will soon be everywhere
 * Work just like YAML loaders, but the same everywhere
 
 * !yamlscript/v0 is the magic tag
 * Code execution at any point in a YAML file
+
 * Clean syntax + powerful features
   * When I say powerful, I mean Clojure power!
 
@@ -165,10 +177,13 @@ $ vim 99-* -O
 * YAMLScript is also a general purpose language
 * Write scripts, libraries, and applications
 * Just like Clojure, but with YAML syntax
+
 * More accurately, just like Babashka
 * Runtime engine is Babashka's SCI (Small Clojure Interpreter)
+
 * As fast as Python or Node.js
 * YAMLScript apps can be compiled to native binary executables
+
 * Compile to shared libraries for Acmeist Module Authoring
 
 * YAMLScript is my Dream Project :-)
@@ -212,6 +227,7 @@ $ vim syntax2.yaml
 $ ys
 $ ys --help
 $ ys --version
+
 $ ys 99-bottles 3
 $ ys 99-bottles 3 --print  # -p
 $ ys 99-bottles --compile  # -c
@@ -238,10 +254,11 @@ $ ys 99-bottles --compile  # -c
 
 $ vim foo.ys bar.ys -O
 $ ys bar.ys --load
-$ ys foo.ys -l | jq
-$ ys foo.ys --json  # -j
-$ ys foo.ys --yaml  # -y
-$ ys foo.ys --edn   # -e
+
+$ ys foo.ys --load | jq | less
+$ ys foo.ys --json  # -J
+$ ys foo.ys --yaml  # -Y
+$ ys foo.ys --edn   # -E
 
 
 ----
@@ -264,7 +281,7 @@ $ curl -sSL yamlscript.org/install | PREFIX=~/foo bash
 * Build from source
 $ git clone https://github.com/yaml/yamlscript
 $ cd yamlscript
-$ make install  # Takes a couple minutes
+$ make install  # Takes a few minutes
 
 
 ----
@@ -277,6 +294,7 @@ $ make install  # Takes a couple minutes
   * Simple Reliable Concurrency
   * Interoperability with Existing Java / JVM Tech
   * Instantly Usable for Real Work
+
 * Lisp - Well understood existing syntax model
 * Clojure makes programming better
 
@@ -291,18 +309,24 @@ $ make install  # Takes a couple minutes
 * What Jeremy Ashkenas did for JavaScript
 * CoffeeScript is my favorite syntax so far
   * Took great ideas from Ruby, Python, Haskell and YAML!
+
 * Made JS programming (in 2009) sane and beautiful
 * Writes better JavaScript than I can
+
 * Many ideas were adopted by JavaScript in 2015
+* Still a great language for writing JavaScript
 
 
 ----
 == The YAMLScript Language
 
 * What Ingy döt Net is doing for YAML
-* Improving YAML's User Experience
+* Similar to Rich and Jeremy in spirit
+
+* Improving YAML's usability while keeping it YAML
 * Building on the shoulders of Giants
   * YAML, Clojure, SCI, Babashka, SnakeYAML, GraalVM
+
 * Introducing YAML users to Clojure
   * Thus FP, Immutability, Concurrency, Interop etc
 
@@ -318,10 +342,10 @@ $ vim 99-bottles 99-bottles.clj -O
 
 * YAMLScript was conceived July 3 2022
 * Not much happened until 2023
-* I knew it would be a Lisp
+* I knew YAMLScript wanted to be a Lisp
 * I didn't know how to make a Lisp
 * So I googled "How to make a Lisp"
-  * https://github.com/kanaka/mal/#readme !!!
+  * https://github.com/kanaka/mal/#readme
 * I made a Lisp in 2 weeks
 * Decided to make a complete Clojure Platform for Perl
   * Lingy
@@ -330,10 +354,10 @@ $ vim 99-bottles 99-bottles.clj -O
 * Got noticed by Peter Strömberg (@pez) of Calva
 * He invited me to the Clojurians Slack
   * 🚀🚀🚀
-  * Met great new perople
+  * Met great new people who loved Clojure
   * I learned about GraalVM and SCI
-  * Realized this could be huge fast!!
-  * Dropped Lingy; full time YAMLScript since
+  * Realized YAMLScript could become huge fast!!
+  * Dropped Lingy; full time YAMLScript ever since
 
 
 ----
@@ -364,6 +388,7 @@ $ ys -Y mode-code.yaml
 * YAMLScript code only uses Block Mappings and Scalars
 * No Block Sequences, no Flow Collections
 * No Anchors, no Aliases
+
 * Plain Scalars are treated as code
 * Quoted and Literal Scalars are treated as strings
 * Double Quoted and Literal Scalars are interpolated
@@ -386,7 +411,7 @@ $ ys expressions.ys
 
 # Simple Clojure code is often valid YAMLScript
 $ ys -e '(do (def name "Bob") (say "Hello" name))'
-$ ys -e '(do (def name "Bob") (say "Hello" name))' -C
+$ ys -e '(do (def name "Bob") (say "Hello" name))' --clojure
 
 
 ----
@@ -441,10 +466,10 @@ $ ys -e 'say: "number:" 42'
 $ ys -e 'say: ."number:" 42'
 
 * Flow Collections
-$ ys -e 'say: [1 2 3]'
-$ ys -e 'say: .[1 2 3]'
-$ ys -e 'say:: [1 2 3]'
-$ ys -e 'say:: [1, 2, 3]'
+$ ys -le '=>: [1 2 3]'
+$ ys -le '=>: .[1 2 3]'
+$ ys -le '=>:: [1 2 3]'
+$ ys -le '=>:: [1, 2, 3]'
 
 * Duplicate Keys
 $ vim dup-keys-data.ys dup-keys-code.ys -O
@@ -463,6 +488,7 @@ $ ys lets.ys 5
 * Has a gotcha:
 $ vim lets-fail.ys
 $ ys lets-fail.ys
+$ ys lets-fail.ys -c
 
 
 ----
@@ -503,11 +529,14 @@ $ ys -ce 'a(+ b)'
 
 $ ys -pe ARGV <(:) foo 42 3.14
 $ ys -pe ARGS <(:) foo 42 3.14
+
 $ ys -pe CWD
 $ ys -pe ENV
 $ ys -pe FILE
+
 $ ys -pe INC
 $ YSPATH=foo:bar ys -pe INC
+
 $ ys -pe VERSION
 $ ys -pe VERSIONS
 
@@ -526,11 +555,21 @@ $ ys operators.ys
 * YAML has something Clojure doesn't: heredocs
 * YAML calls them "Literal Scalars"
 
+$ vim literal-scalar.ys literal-scalar.clj -O
+
+* Use for storing text files as strings:
+  * Program files
+  * Makefiles
+  * Other YAML files
+  * Whatever
+
 
 ----
 == Interpolation
 
 $ vim interpolation.ys interpolation.clj -O
+
+$ ys interpolation.ys
 
 
 ----
@@ -549,7 +588,7 @@ $ ys -pe '(3 .. 5).concat(_ ["XXX"] _)'
 
 $ vim multi-doc.ys multi-doc.clj -O
 $ ys multi-doc.ys
-$ ys multi-doc.ys -pe 'merge: $$.1 $$.2'
+$ ys multi-doc.ys -pe 'merge: $$.1 $$.2' | tail -n1
 
 $ ys <(curl -sSL yamlscript.org/some.yaml) -e '$.members.1' -p
 $ ys <(curl -sSL yamlscript.org/some.yaml) -e '$.members.1' -c
@@ -574,20 +613,22 @@ $ ys ../sample/rosetta-code/fizzbuzz.ys 16 3
 
 * https://github.com/acmeism/RosettaCodeData
 
+$ vim ~/src/RosettaCodeData/Lang/YAMLScript/
+
 
 ----
 == v0 Versioning
 
 * YAMLScript is future proof
-* When v0 is stable, it will never change
-* New features will be added in v1
+
+* When v0 is stable, it will never break compatibility
+* v1 can make any changes it wants without breaking v0
 
 * !yamlscript/v0
 * #!/usr/bin/env ys-0
 
 * ys and ys-0 are symlinks:
-$ readlink $(which ys)
-$ readlink $(which ys-0)
+$ ls -lh $(which ys)*
 
 
 ----
@@ -602,7 +643,8 @@ $ readlink $(which ys-0)
 
 * YAMLScript is really Clojure
 * Clojure is a Lisp, isn't it?
-* Clojure has no cons, car, cdr
+* Then YAMLScript must be a Lisp
+* But Clojure has no cons, car, cdr
 
 * Is YAMLScript homoiconic?
 * Is Clojure really homoiconic?
@@ -616,9 +658,10 @@ $ readlink $(which ys-0)
 * Remember: parse -> compose -> resolve -> construct
 
 $ vim ../core/src/yamlscript/compiler.clj +1
-* Uses SnakeYAML Parser Java library
 
-$ ys -e 'say: (3 .. 5) + (6 .. 9)' -c -d
+* Uses the SnakeYAML Parser Java library
+
+$ ys -e 'say: (3 .. 5) + (6 .. 9)' -c -d | vim -
 
 
 ----
@@ -647,7 +690,7 @@ $ ys -e 'say: (3 .. 5) + (6 .. 9)' -c -d
   * Gets back the evaluation result as a JSON string
   * Parses the JSON string to native data
 
-* API has one method: `load()`
+* API currently has one method: `load()`
 
 
 ----
@@ -664,7 +707,9 @@ $ python test.py
 == Solving YAML's Problems
 
 * Composition - Combine multiple YAML files
+
 * Interpolation - Use values from other YAML files
+
 * Transformation - Filter, Map and Reduce YAML data
 
 
@@ -674,6 +719,7 @@ $ python test.py
 * Continually make compiler and runtime improvements
 * Generate useful but annoying Clojure code
 * Generate different Clojure code for situations
+
 * --trace
   * Wrap every expression with a trace macro
 
@@ -682,8 +728,8 @@ $ python test.py
 == YAMLScript Macro System
 
 $ vim require.ys require.clj -O
-$ ys require.ys -c
-$ ys cond.ys -c -d
+
+$ ys require.ys -c -d
 
 * YAMLScript has a macro system
 * Restructures the AST in the "transform" phase
@@ -707,6 +753,7 @@ $ ys cond.ys -c -d
 * Must define a `main` function
 
 $ ys -e 'defn main(name="World"): say("Hello, $name!!")'
+
 $ ys -e 'defn main(name="World"): say("Hello, $name!!")' -b -o hello
 
 +* Actually _does_ take a few minutes
@@ -728,6 +775,7 @@ $ ls -lh hello
 * clojure::math
 * clojure::set
 * clojure::tools::cli
+
 * babashka::fs
 * babashka::http-client
 * babashka::pods
@@ -739,24 +787,30 @@ $ ls -lh hello
 
 * ys::std - Standard Library
   * Auto-referred along w/ clojure::core
+
 * ys::ys - YAMLScript Internals
   * use() compile() load-file()
+
 * ys::yaml - YAML Library
   * load() and dump()
+
 * ys::json - JSON Library
   * load() and dump()
-* ys::clj - Clojure fns that ys::std shadows
-  * use()
+
+* ys::clj - Clojure fns that ys::* libraries shadow
+  * clj/use() clj/compile clj/load() clj/load-file() etc
 
 
 ----
 == Babashka and External Libraries
 
 * Lot's of external libraries and Pods
+
 * Big thanks to Michiel Borkent and Babashka
   for making this possible
 
 * https://babashka.org/toolbox/
+
 * https://github.com/babashka/pod-registry?#registered-pods
 
 
@@ -766,6 +820,7 @@ $ ls -lh hello
 * Babashka has a pod system
 * Pods are programs that can be used as libraries by Babashka
   * https://github.com/babashka/pods?#readme
+
 * Can also be used by YAMLScript!!
 
 $ vim pod-test.ys
@@ -795,7 +850,7 @@ $ ys lib1.ys -c
   * Core language compiler
   * CLI
   * libyamlscript shared library
-  * Language bindings
+  * Every language binding module
   * Test suite
   * Documentation
   * Website
@@ -818,7 +873,7 @@ $ ys lib1.ys -c
 
 * YAMLScript has a unit test system
 * Unit Tests are written in YAML
-* vim ../core/test/compiler-stack.yaml
+$ vim ../core/test/compiler-stack.yaml
 
 * Calva key bindings make nREPL testing easy
 * Live demo with `ONLY`
@@ -846,10 +901,14 @@ Q: Can YAMLScript be written in YAMLScript?
 == YAMLScript's World Impact
 
 * How much will YAMLScript change the world?
+
 * Tons of YAML users
+
 * Clojure is the perfect language for YAMLScript
+
 * Can replace YAML config loaders in every language
   * Not a replacement for YAML loaders entirely
+
 * Should be a great gateway Clojure
 
 
@@ -882,7 +941,8 @@ Q: Can YAMLScript be written in YAMLScript?
 * YAMLScript is a Group Effort
 * We need your help and would love to have you!
 * Contact me on Matrix, GitHub, Slack or Email
-  * https://yamlscript.org/info for links
+
+* https://yamlscript.org/info
 
 
 ---- center
