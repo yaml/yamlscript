@@ -1,0 +1,40 @@
+set noshowmode
+set autoread
+
+unmap AA
+map QQ ;
+
+set nohlsearch
+
+au BufRead * syn match vroom_command "\v^\s*\$.*$"
+hi vroom_command term=bold,italic,underline ctermfg=Brown
+au BufRead * syn match https_url "\vhttps:.*"
+hi https_url term=bold,italic,underline ctermfg=LightBlue
+
+autocmd BufWritePre *.json :syn off
+
+autocmd BufRead,BufNewFile *.ly set filetype=clojure
+autocmd BufRead,BufNewFile *.ys set filetype=yaml
+autocmd BufRead,BufNewFile *.yaml set filetype=yaml
+
+map j /^\(\s\+\$\\|.*https:\)<cr>
+map k ?^\(\s\+\$\\|.*https:\)<cr>
+
+function! VroomSlideRunner()
+  if getline('.') != ''
+    :execute "!./vroom-slide-runner " . bufname('%') . " " . a:lastline
+  endif
+endfunction
+
+map <ENTER> :call VroomSlideRunner()<CR>
+
+map q ;
+map qq :<cr>
+map QW :q!<cr><cr>
+
+map rr :e! %<cr>
+map yy :set ft=yaml %<cr>
+
+map 1 :wincmd o<cr>
+map 2 :wincmd v<cr>
+map \1 :w<cr>

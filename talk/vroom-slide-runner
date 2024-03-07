@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+[[ ${SETX-} ]] && set -x
+
+file=$1
+lnum=$2
+line=$(sed "${lnum}q;d" $file)
+
+line=$(
+  shopt -s extglob
+  printf '%s\n' "${line##+([[:space:]])}"
+)
+
+line=${line#\* }
+
+if [[ $line == https://* ]]; then
+  if [[ $OSTYPE == darwin* ]]; then
+    open "$line"
+  else
+    xdg-open "$line"
+  fi
+
+elif [[ $line == \$\ * ]]; then
+  line=${line#\$\ }
+
+  if [[ $line == vim\ * ]]; then
+    line=${line/vim\ /vim --not-a-term -S vimrc2 }
+    eval "$line"
+    exit
+  fi
+
+  clear
+  echo
+  echo "+ $line"
+  echo
+  # sleep 0.3
+
+  if [[ $line =~ [\>\<\|] ]]; then
+    eval "$line"
+  else
+    eval "$line </dev/tty" |& less -FRX # +Gg
+  fi
+fi

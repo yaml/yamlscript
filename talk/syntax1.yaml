@@ -1,0 +1,21 @@
+# YAML nodes: mappings, sequences, scalars
+here's a: mapping
+look ma: No quotes!
+this is a key: this is a value
+here's a sequence:
+- this
+- that: other thing  # comment to EOL
+5 scalar styles:
+- plain scalar (no quotes)
+- "double quoted scalar"
+- 'single quoted scalar'
+- >
+  folded
+  scalar
+
+  lines fold
+  up
+- |
+  <literal>
+    scalar like a heredoc
+  </literal>

@@ -1,0 +1,17 @@
+!yamlscript/v0
+
+# =: is a special form (let)
+name =: "Bob"
+
+# Expression are mapping pairs as lists
+# (->> [LHS  RHS            ] flatten (apply list))
+# (->> ['say ["Hello" 'name]] flatten (apply list))
+
+say: ."Hello" name
+say "Hello": name
+say "Hello" name:
+
+=>: (say "Hello" name)
+=>: say("Hello" name)
+
+=>: nil

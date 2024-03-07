@@ -1,0 +1,18 @@
+foo: bar
+food:
+- apple
+- banana
+- carrot
+
+--- !yamlscript/v0/data
+
+foo: 123
+bar:: 5 .. 10
+
+--- !yamlscript/v0
+
+say:
+  yaml/dump::
+    $:: $
+    $#:: $#
+    $$:: $$
