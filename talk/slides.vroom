@@ -555,13 +555,28 @@ $ ys operators.ys
 * YAML has something Clojure doesn't: heredocs
 * YAML calls them "Literal Scalars"
 
-$ vim literal-scalar.ys literal-scalar.clj -O
-
 * Use for storing text files as strings:
   * Program files
   * Makefiles
   * Other YAML files
   * Whatever
+
+* Just indent the text. No escaping needed!
+
+----
+== YAML Literal Scalars
+
+* Let's have some fun with this!
+
+$ vim dir/yamlscript-tar-file.ys
+
+$ (cd dir/ && ys yamlscript-tar-file.ys)
+
+$ ls -l dir/
+
+$ make -C dir/ clean
+
+$ ls -l dir/
 
 
 ----
@@ -714,14 +729,24 @@ $ python test.py
 
 
 ----
-== Generated Clojure Rocks
+== Generating Clojure Code is Powerful
 
+* Generating code gives YAMLScript exciting possibilities
 * Continually make compiler and runtime improvements
 * Generate useful but annoying Clojure code
 * Generate different Clojure code for situations
 
-* --trace
-  * Wrap every expression with a trace macro
+* In Bash, `set -x` prints each command before running:
+$ (set -x; . <(curl -sSL yamlscript.org/try-ys))
+
+* Q: Can we do that in YAMLScript?
+* A: Heck yeah we can!
+
+$ ys 99-bottles 1
+$ ys 99-bottles 1 --xtrace
+$ ys 99-bottles 1 -x -c
+
+* Implemented this morning!
 
 
 ----
@@ -884,7 +909,7 @@ $ vim ../core/test/compiler-stack.yaml
 
 Q: Can YAMLScript be written in YAMLScript?
 
-+A: Of course!
+A: Of course!
 
 * Likely to be ported by year end
 * Depend on a previous binary version of YS
