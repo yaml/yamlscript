@@ -27,5 +27,7 @@
     "yamlscript",
     "ysexpr"
   ],
-  "java.configuration.updateBuildConfiguration": "disabled"
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "terminal.integrated.fontSize": 36,
+  "editor.fontSize": 24
 }
