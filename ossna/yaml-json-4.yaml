@@ -1,0 +1,17 @@
+# A YAML comment
+
+block:
+  indented: style
+
+flow: {JSON: style, no: quotes needed}
+
+scalar styles:   # Trailing comment
+- plain (no quotes)
+- 'single quoted'
+- "double quoted"
+- |
+  literal
+    string
+- >
+  folded
+  string

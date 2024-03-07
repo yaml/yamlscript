@@ -1,0 +1,6 @@
+people: [ "Alice", 'Bob', Charlie ]
+
+food: { apple: crunchy,
+        banana: curved,
+        carrot: orange,
+      }
