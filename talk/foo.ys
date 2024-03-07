@@ -10,4 +10,4 @@ sequence:
 - ! load('bar.ys')
 - key:: load('bar.ys').names
         .take(2 _)
-        .conj([Bill Ted])
+        .concat([Bill Ted])

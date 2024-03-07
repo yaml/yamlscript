@@ -75,7 +75,7 @@ $ vim 99-* -O
 
 * YAMLScript is a gateway for YAML users to find Clojure
 
-* Keep that in mind as you are introduced to:
+* Keep that in mind as I introduce you to:
   * Using YAML in a whole new way
   * Using Clojure in a whole new way
 
@@ -167,7 +167,7 @@ $ vim 99-* -O
 * !yamlscript/v0 is the magic tag
 * Code execution at any point in a YAML file
 
-* Clean syntax + powerful features
+* YAMLScript has clean syntax + powerful features
   * When I say powerful, I mean Clojure power!
 
 
@@ -182,9 +182,9 @@ $ vim 99-* -O
 * Runtime engine is Babashka's SCI (Small Clojure Interpreter)
 
 * As fast as Python or Node.js
-* YAMLScript apps can be compiled to native binary executables
+* YS scripts can be compiled to native binary executables
 
-* Compile to shared libraries for Acmeist Module Authoring
+* Also to shared libraries for Acmeist Module Authoring!
 
 * YAMLScript is my Dream Project :-)
 
@@ -197,6 +197,7 @@ $ vim syntax1.yaml
 * Validate syntax1.yaml with `ys`
   $ ys syntax1.yaml --load
   $ ys syntax1.yaml --json
+  $ ys syntax1.yaml --load | jq
   $ ys syntax1.yaml --yaml
 
 $ vim syntax2.yaml
@@ -563,16 +564,21 @@ $ ys operators.ys
 
 * Just indent the text. No escaping needed!
 
+* YAMLScript Compiler Test Suite uses Literals
+$ vim ../core/test
+
 ----
 == YAML Literal Scalars
 
-* Let's have some fun with this!
+* Let's have some fun with Literal Scalars!
 
 $ vim dir/yamlscript-tar-file.ys
 
 $ (cd dir/ && ys yamlscript-tar-file.ys)
 
 $ ls -l dir/
+
+$ cat dir/Makefile
 
 $ make -C dir/ clean
 
@@ -969,6 +975,7 @@ A: Of course!
 
 * https://yamlscript.org/info
 
+* A link to the slides will be there later tonight
 
 ---- center
 

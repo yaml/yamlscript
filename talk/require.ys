@@ -5,7 +5,9 @@ require foo::bar: => bar
 require:
   a::b:
   c::d: => d
-  e::f: x y z
-  g::h: => h q r p
+  e::f:
+    x y z
+  g::h: => h
+    q r p
 
 =>: nil
