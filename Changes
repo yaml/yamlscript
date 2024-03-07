@@ -1,4 +1,9 @@
 
+- version: 0.1.41
+  date:    Thu Mar  7 11:24:36 AM PST 2024
+  changes:
+  - core: Support --trace runtime tracing
+
 - version: 0.1.40
   date:    Wed Mar  6 11:11:11 PM PST 2024
   changes:
@@ -10,8 +15,8 @@
   - core: Refactor threading macros
   - core: Support _ placeholders in dot threading calls
   - core: Add runtime tests
-  - core: Support \' quote escaping
-  - core: Support \\x char escaping
+  - core: Support backslash-tick quote escaping
+  - core: Support backslash-backslash char escaping
   - core: Define a `q` macro for quote
   - core: Add support for using babashka pods
   - core: Add more common namespaces to runtime
