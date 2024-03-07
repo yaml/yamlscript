@@ -1,6 +1,6 @@
 # Used by util/version-bump to update versions in repo
 
-v_api=0.1.39
+v_api=0.1.40
 
 v_perl=$v_api
 v_python=$v_api
@@ -47,10 +47,17 @@ pattern='(YAMLScript.*)'"$vp"'(.*)'
 
 bump ReadMe.md
 bump www/src/index.md
+bump ys/test/cli-usage.t
 
 pattern='(version.*)'"$vp"'(.*)'
 
 bump Meta
+bump core/src/yamlscript/runtime.clj
+bump www/src/index.md
+
+pattern='(VERSION.*)'"$vp"'(.*)'
+bump www/src/index.md
+bump ys/test/cli-usage.t
 
 #------------------------------------------------------------------------------
 version=$v_perl
@@ -59,14 +66,11 @@ pattern='(version.*)'"$vp"'(.*)'
 
 bump perl/Meta
 bump perl-alien/Meta
-bump www/src/index.md
 
 pattern='(VERSION.*)'"$vp"'(.*)'
 
 bump perl/lib/YAMLScript.pm
 bump perl-alien/lib/Alien/YAMLScript.pm
-bump www/src/index.md
-bump ys/test/cli-usage.t
 
 pattern='(Alien::YAMLScript:.*)'"$vp"'(.*)'
 
