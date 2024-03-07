@@ -16,4 +16,6 @@
   "makefile.configureOnOpen": true,
   "search.useIgnoreFiles": false,
   "git.ignoreLimitWarning": true
+  "terminal.integrated.fontSize": 36,
+  "editor.fontSize": 24
 }

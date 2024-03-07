@@ -13,6 +13,8 @@
 /release-changes.txt
 /release-id.txt
 /website/
+/note/
+/talk/
 /work/
 /ys-*
 /.tmp/
@@ -28,7 +30,6 @@ NO-NAME
 *.jar
 .lein-*
 .lsp/
-note/
 .nrepl-port
 .nrepl-pid
 pom.xml
@@ -39,6 +40,7 @@ profiles.clj
 .project.clj
 reports/
 target/
+.vimrc
 .vscode/
 .yamllm/
 **/.idea/

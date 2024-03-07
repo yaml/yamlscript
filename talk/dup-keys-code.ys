@@ -1,0 +1,7 @@
+!yamlscript/v0
+
+say: 123
+say: 456
+say::
+  foo: 123
+  foo: 456

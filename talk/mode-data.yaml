@@ -1,0 +1,7 @@
+!yamlscript/v0/data
+
+name: Jill
+age:: rand-int(60) + 21
+hobbies:
+- Poker
+- Cycling

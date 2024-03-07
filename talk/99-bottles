@@ -1,0 +1,17 @@
+#!/usr/bin/env ys-0
+
+defn main(number=99):
+  each [n (number .. 1)]:
+    say: paragraph(n)
+
+defn paragraph(num): |
+  $bottles(num) of Lisp on the wall,
+  $bottles(num) of Lisp.
+  (do (take 1 down) (cons it around))
+  $bottles(num - 1) of Lisp on the wall.
+
+defn bottles(n):
+  cond:
+    n == 0 : 'No more bottles'
+    n == 1 : '1 bottle'
+    =>     : "$n bottles"
