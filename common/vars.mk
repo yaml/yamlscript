@@ -86,7 +86,7 @@ else ifeq (true,$(IS_MACOS))
   ifneq (,$(findstring arm64-apple-darwin,$(machtype)))
     GRAALVM_ARCH := macos-aarch64
 
-  else ifneq (,$(findstring x86_64-apple-darwin,$(machtype)))
+  else ifneq (,$(findstring x86_64,$(machtype)))
     GRAALVM_ARCH := macos-x64
 
   else
