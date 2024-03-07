@@ -1,0 +1,20 @@
+!yamlscript/v0
+
+defn add(a b): a + b
+
+defn addd:
+  (x): x
+  (x y): x + y
+  (x y & more):
+    reduce add: add(x y) more
+
+say:
+  apply addd: 1 .. 10
+
+pi =: math/PI
+
+defn circle-area(r):
+  r-sq =: r ** 2
+  =>: pi * r-sq
+
+say: circle-area(10)

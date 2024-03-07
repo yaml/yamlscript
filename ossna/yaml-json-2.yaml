@@ -1,0 +1,9 @@
+scalars: [string, 42, 3.1415, true, null]
+
+sequences:
+- - this
+  - [and, that]
+
+mappings:
+  key1: value1
+  key2: {key2: value3}

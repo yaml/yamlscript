@@ -1,0 +1,32 @@
+--- !yamlscript/v0/
+
+- &data !
+  yaml/load: slurp('data.yaml')
+
+- &map1
+  key: value
+
+- &seq1
+  - one
+  - two
+
+- &dogs !
+  yaml/load:
+    curl:: https://yamlscript.org/dogs.yaml
+
+--- !yamlscript/v0/
+
+some: plain data string
+number: 42
+
+sentence::
+  "$(*data.name) likes
+  $(*data.langs.rand-nth())!!!"
+2 dogs:: .*dogs.big.shuffle().take(2 _)
+
+sequence: !concat*:
+- *seq1
+- [three, four]
+mapping: !merge*:
+- this: that
+- *map1

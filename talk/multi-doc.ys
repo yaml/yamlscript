@@ -13,6 +13,6 @@ bar:: 5 .. 10
 
 say:
   yaml/dump::
-    $:: $
-    $#:: $#
-    $$:: $$
+    $:: $       # Previous document
+    $#:: $#     # Number of previous docs
+    $$:: $$     # Map of previous docs
