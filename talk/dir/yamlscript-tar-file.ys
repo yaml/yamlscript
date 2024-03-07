@@ -1,0 +1,21 @@
+Makefile: |
+  FILES := hello.clj
+
+  build: $(FILES)
+
+  %.clj: %.ys
+  	ys -c $< > $@
+
+  clean:
+  	$(RM) hello.* Makefile
+hello.ys: |
+  !yamlscript/v0
+  println: "Hello!"
+--- !yamlscript/v0
+each [[file-name file-text] $]:
+  spit: file-name file-text
+
+sh:: make hello.clj
+# Hack to replace '(+++' with '(identity':
+sh:: perl -p0i -e 's/..../(identity/' hello.clj
+sh:: clojure -M hello.clj

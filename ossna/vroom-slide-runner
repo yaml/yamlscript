@@ -2,6 +2,8 @@
 
 [[ ${SETX-} ]] && set -x
 
+# export VIM=$PWD
+
 file=$1
 lnum=$2
 line=$(sed "${lnum}q;d" $file)
@@ -17,7 +19,7 @@ if [[ $line == https://* ]]; then
   if [[ $OSTYPE == darwin* ]]; then
     open "$line"
   else
-    xdg-open "$line"
+    xdg-open "$line" &>/dev/null
   fi
 
 elif [[ $line == \$\ * ]]; then
@@ -35,7 +37,7 @@ elif [[ $line == \$\ * ]]; then
   echo
   # sleep 0.3
 
-  if [[ $line =~ [\>\|] ]]; then
+  if [[ $line =~ [\;\>\|\&] ]]; then
     eval "$line"
   else
     eval "$line </dev/tty" |& less -FRX # +Gg

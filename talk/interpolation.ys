@@ -1,0 +1,16 @@
+!yamlscript/v0
+
+name =: 'Juanita'
+
+game =::
+- Archery
+- Boxing
+- Chess
+- Darts
+
+say: "Meet, $name."
+say: |
+
+  $name plays $(game.count()) games.
+
+  Her favorite game is $rand-nth(game)!
