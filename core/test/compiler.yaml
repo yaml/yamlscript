@@ -867,3 +867,17 @@
   clojure: |
     @foo
     ~foo
+
+
+- name: Allowable symbols
+  yamlscript: |
+    !yamlscript/v0
+    say: a a-b a-b-c
+    say: a->b a->b->c
+    say: a-b->c-d
+    say: a? a-b? a! a-b!
+  clojure: |
+    (say a a-b a-b-c)
+    (say a->b a->b->c)
+    (say a-b->c-d)
+    (say a? a-b? a! a-b!)

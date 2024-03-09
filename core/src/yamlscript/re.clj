@@ -79,7 +79,7 @@
             ")
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
-(def symw (re #"(?:$anum+(?:-$anum+)*)"))  ; Symbol word
+(def symw (re #"(?:$anum+(?:->?$anum+)*)"))  ; Symbol word
 (def vsym (re #"(?:\$$symw)"))             ; Variable lookup symbol
 (def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
