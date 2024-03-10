@@ -7,5 +7,14 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "koffi": "^2.8.0"
+  },
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "bun run index.ts",
+    "build": "bun build --target=node index.ts --outdir=out"
   }
 }
