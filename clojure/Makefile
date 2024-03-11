@@ -1,6 +1,7 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 include $(COMMON)/clojure.mk
+include $(COMMON)/java.mk
 
 export CLOJARS_USERNAME ?= $(shell util/get-setting username)
 export CLOJARS_PASSWORD ?= $(shell util/get-setting password)
