@@ -29,18 +29,25 @@
   "Convert a YAMLScript code string to Clojure, eval the Clojure code with
   SCI, encode the resulting value as JSON and return the JSON string."
   [^String ys-str]
-  (sci/binding [sci/out *out*]
-    (try
-      (->> ys-str
-        compiler/compile
-        runtime/eval-string
-        (assoc {} :data)
-        json-write-str)
+  (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
+    (binding [*out* *err*]
+      (println "clojure input string:" ys-str)))
+  (let [resp (sci/binding [sci/out *out*]
+               (try
+                 (->> ys-str
+                   compiler/compile
+                   runtime/eval-string
+                   (assoc {} :data)
+                   json-write-str)
 
-      (catch Exception e
-        (-> e
-          error-map
-          json-write-str)))))
+                 (catch Exception e
+                   (-> e
+                     error-map
+                     json-write-str))))]
+    (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
+      (binding [*out* *err*]
+        (println "clojure response string:" resp)))
+    resp))
 
 (comment
   (-loadYsToJson "!yamlscript/v0/data\nsay: 42")

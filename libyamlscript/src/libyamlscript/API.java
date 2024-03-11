@@ -15,7 +15,13 @@ public final class API {
         @CConst CCharPointer s
     ) {
         String ys = CTypeConversion.toJavaString(s);
+        if (System.getenv("LIBYAMLSCRIPT_DEBUG") != null) {
+            System.err.println("java input string: " + ys.toString());
+        }
         String json = libyamlscript.core.loadYsToJson(ys);
+        if (System.getenv("LIBYAMLSCRIPT_DEBUG") != null) {
+            System.err.println("java response string: " + json.toString());
+        }
         try (CTypeConversion.CCharPointerHolder holder =
                 CTypeConversion.toCString(json)
         ) {
