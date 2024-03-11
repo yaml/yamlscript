@@ -16,6 +16,7 @@ version=$v_api
 pattern='(yamlscript.*)'"$vp"'(.*)'
 
 bump .profile
+bump clojure/project.clj
 bump common/project.clj
 bump core/project.clj
 bump libyamlscript/deps.edn
@@ -61,8 +62,17 @@ bump java/pom.xml
 bump www/src/index.md
 
 pattern='(VERSION.*)'"$vp"'(.*)'
+
 bump www/src/index.md
 bump ys/test/cli-usage.t
+
+pattern='(resource-paths.*)'"$vp"'(.*)'
+
+bump clojure/project.clj
+
+pattern='(managed-dependencies.*)'"$vp"'(.*)'
+
+bump clojure/project.clj
 
 #------------------------------------------------------------------------------
 version=$v_perl

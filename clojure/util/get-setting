@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+mvn_user_settings=~/.mvn-user-settings.xml
+
+grep "<$1>" "$mvn_user_settings" |
+  perl -pe 's/.*>(.*)<.*/$1/'
