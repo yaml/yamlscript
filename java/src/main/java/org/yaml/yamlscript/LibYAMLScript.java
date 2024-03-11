@@ -18,7 +18,7 @@ public class LibYAMLScript {
 
     public static String filename()
     {
-        return "libyamlscript." + extension() + '.' + YAMLScript.YAML_SCRIPT_VERSION;
+        return "libyamlscript." + extension() + '.' + YAMLScript.YAMLSCRIPT_VERSION;
     }
 
     public static String[] libraryPaths()
