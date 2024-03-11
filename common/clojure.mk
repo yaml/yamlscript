@@ -62,8 +62,9 @@ ifeq (,$(CURL))
 	$(error *** 'curl' is required but not installed)
 endif
 	$(CURL) -L -o $@ $(LEIN_URL)
+	# XXX Until /tmp/yamlscript/.m2 works
 	# perl -p0i -e 's{\n\n}{\n\nexport HOME=$(YS_TMP)\n\n}' $@
-	mkdir -p $(YS_TMP)/.lein
+	# mkdir -p $(YS_TMP)/.lein
 	chmod +x $@
 
 $(BUILD_BIN):

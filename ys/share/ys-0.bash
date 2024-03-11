@@ -241,6 +241,8 @@ EOF
 
 assert-yamlscript-core() (
   ys_version=$1
+  # XXX /tmp/yamlscript/.m2 not fully working yet:
+  # ys_jar=/tmp/yamlscript/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
   ys_jar=$HOME/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
   if ! [[ -f $ys_jar ]]; then
     say "Installing YAMLScript core in '$ys_jar'"

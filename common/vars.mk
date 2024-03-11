@@ -155,13 +155,19 @@ MAVEN_HOME := $(YS_TMP)/apache-maven-$(MAVEN_VER)
 MAVEN_DOWNLOAD := $(YS_TMP)/$(MAVEN_TAR)
 MAVEN_INSTALLED := $(MAVEN_HOME)/bin/mvn
 
-export M2_HOME := $(YS_TMP)/.m2
+# XXX Not always working yet:
+# export M2_HOME := $(YS_TMP)/.m2
+export M2_HOME := $(HOME)/.m2
 
 MAVEN_REPOSITORY := $(M2_HOME)/repository
 MAVEN_SETTINGS := $(M2_HOME)/conf/settings.xml
 
+# XXX .m2 in tmp not working yet:
+# export MAVEN_OPTS := \
+#   -Duser.home=$(YS_TMP) \
+#   -Dmaven.repo.local=$(MAVEN_REPOSITORY) \
 export MAVEN_OPTS := \
-  -Duser.home=$(YS_TMP) \
+  -Duser.home=$(HOME) \
   -Dmaven.repo.local=$(MAVEN_REPOSITORY) \
 
 export PATH := $(MAVEN_HOME)/bin:$(PATH)
@@ -171,7 +177,9 @@ export LEIN_JVM_OPTS := \
   -XX:TieredStopAtLevel=1 \
   $(MAVEN_OPTS)
 
-JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED) $(MAVEN_SETTINGS)
+# XXX Can't use MAVEN_SETTINGS until /tmp/yamlscript/.m2 is working:
+# JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED) $(MAVEN_SETTINGS)
+JAVA_INSTALLED := $(GRAALVM_INSTALLED)
 
 #------------------------------------------------------------------------------
 # Set release asset variables:
