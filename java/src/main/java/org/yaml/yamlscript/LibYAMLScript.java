@@ -1,4 +1,4 @@
-package org.yaml.yamlscript;
+package org.yamlscript.yamlscript;
 
 import com.sun.jna.Native;
 import com.sun.jna.Platform;

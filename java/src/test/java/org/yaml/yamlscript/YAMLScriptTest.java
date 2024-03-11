@@ -1,4 +1,4 @@
-package org.yaml.yamlscript;
+package org.yamlscript.yamlscript;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

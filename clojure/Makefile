@@ -11,3 +11,6 @@ test install deploy:: $(LEIN) $(YAMLSCRIPT_JAVA_INSTALLED)
 	$< $@
 
 release: deploy
+
+clean::
+	$(RM) pom.xml

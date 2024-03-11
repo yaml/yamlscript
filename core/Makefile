@@ -23,3 +23,4 @@ Dockerfile:: $(COMMON) Makefile
 
 clean::
 	$(RM) pom.xml
+	$(RM) -r target/

@@ -1,4 +1,4 @@
-(ns org.yaml.yamlscript.core
+(ns yamlscript.core
   (:require [clojure.data.json :as json])
   (:import (org.yamlscript.yamlscript YAMLScript)))
 
