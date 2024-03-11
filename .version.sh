@@ -43,6 +43,7 @@ bump common/install.mk
 bump raku/lib/YAMLScript.rakumod
 bump ruby/lib/yamlscript.rb
 bump www/src/install
+bump java/Makefile
 bump java/src/main/org/yaml/yamlscript/YAMLScript.java
 
 pattern='(YAMLScript.*)'"$vp"'(.*)'
@@ -54,14 +55,14 @@ bump ys/test/cli-usage.t
 pattern='(version.*)'"$vp"'(.*)'
 
 bump Meta
+bump clojure/pom.xml
 bump core/src/yamlscript/runtime.clj
+bump java/pom.xml
 bump www/src/index.md
 
 pattern='(VERSION.*)'"$vp"'(.*)'
 bump www/src/index.md
 bump ys/test/cli-usage.t
-bump java/pom.xml
-bump clojure/pom.xml
 
 #------------------------------------------------------------------------------
 version=$v_perl
