@@ -140,7 +140,7 @@ it commonly doesn't look like one syntactically.
 
 Typically Clojure produces Java bytecode that is run on the JVM, but for
 YAMLScript there is no Java or JVM involved.
-In testing so far, YAMLScript programs tend to run as faster or faster than
+In testing so far, YAMLScript programs tend to run as fast or faster than
 equivalent Perl or Python programs.
 
 For getting started with YAMLScript, you don't need to know anything about Lisp
