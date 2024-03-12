@@ -10,6 +10,8 @@ else
   PYTHON_VENV := $(ROOT)/python/.venv
 endif
 
+ACTIVATE := source $(PYTHON_VENV)/bin/activate
+
 VERSION := $(shell head -n1 setup.py | cut -d"'" -f2)
 
 export PYTHONPATH := $(ROOT)/python/lib
@@ -24,16 +26,17 @@ test:: test-pytest test-ffi
 endif
 
 test-pytest: $(PYTHON_VENV)
-	source $</bin/activate && \
-	pytest $${TEST_VERBOSE:+'-v'} test/*.py
+	$(ACTIVATE) && \
+	  pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
 test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
-	$(PYTHON) \
-	  -c 'import yamlscript; \
-	      print(yamlscript.YAMLScript().load("inc: 41"))'
-	$(PYTHON) \
-	  -c 'import yamlscript; \
-	      print(yamlscript.YAMLScript().load("!yamlscript/v0\ninc: 41"))'
+	$(ACTIVATE) && \
+	  $(PYTHON) \
+	    -c 'import yamlscript; \
+	        print(yamlscript.YAMLScript().load("inc: 41"))' && \
+	  $(PYTHON) \
+	    -c 'import yamlscript; \
+	        print(yamlscript.YAMLScript().load("!yamlscript/v0\ninc: 41"))'
 
 pkg-test: venv
 	$(MAKE) clean
@@ -44,12 +47,18 @@ pkg-test: venv
 	cat yamlscript-*/PKG-INFO
 
 dist: venv MANIFEST.in .long_description.md
-	$(PYTHON) setup.py sdist
+	( \
+	  $(ACTIVATE) && \
+	  $(PYTHON) setup.py sdist \
+	)
 
 release: publish
 
 publish: dist
-	twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz
+	( \
+	  $(ACTIVATE) && \
+	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz \
+	)
 
 clean::
 	$(RM) MANIFEST* .long_description.md
@@ -62,20 +71,14 @@ realclean::
 	$(RM) -r $(PYTHON_VENV)
 
 venv: $(PYTHON_VENV)
-	@[[ $$VIRTUAL_ENV == $< ]] || { \
-	    echo; \
-	    echo "Run 'source $</bin/activate'"; \
-	    echo; \
-	    exit 1; \
-	}
 
 $(PYTHON_VENV):
 	$(PYTHON) -mvenv $@
-	source $@/bin/activate && \
-	    pip install \
-	        pytest \
-		pyyaml \
-		twine
+	$(ACTIVATE) && \
+	  pip install \
+	    pytest \
+	    pyyaml \
+	    twine
 
 MANIFEST.in:
 	echo 'include ReadMe.md' > $@
@@ -100,4 +103,4 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-deps-clojure.dockerfile \
 	  $</docker-install-graalvm.dockerfile \
 	  $</docker-apt-dev.dockerfile \
-		> $@
+	  > $@
