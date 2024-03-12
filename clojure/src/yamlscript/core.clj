@@ -1,5 +1,7 @@
 (ns yamlscript.core
-  (:require [clojure.data.json :as json])
+  (:require
+   [clojure.data.json :as json])
+   (:refer-clojure :exclude [load])
   (:import (org.yamlscript.yamlscript YAMLScript)))
 
 (defn load [ys-code]
