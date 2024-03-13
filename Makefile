@@ -48,6 +48,8 @@ JAR_ASSETS := \
 RELEASE_ASSETS := \
     $(JAR_ASSETS) \
 
+RELEASE_LOG := release.log
+
 ifndef JAR_ONLY
 RELEASE_ASSETS += \
     $(LYS_RELEASE) \
@@ -56,6 +58,16 @@ endif
 
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
+endif
+
+ifdef v
+export YS_RELEASE_VERBOSE := 1
+endif
+ifdef d
+export YS_RELEASE_DRYRUN := 1
+endif
+ifdef l
+export YS_RELEASE_LAST_STEP := $l
 endif
 
 default:
@@ -98,6 +110,9 @@ release-build-libyamlscript: $(LYS_RELEASE)
 
 release-clean:
 	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
+
+release-yamlscript:
+	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
 jars: $(JAR_ASSETS)
 
@@ -148,7 +163,7 @@ $(CLEAN):
 clean: $(CLEAN) release-clean
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
-	$(RM) NO-NAME
+	$(RM) NO-NAME $(RELEASE_LOG)
 clean-%: %
 	$(MAKE) -C $< clean
 

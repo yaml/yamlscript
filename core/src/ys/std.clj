@@ -25,11 +25,6 @@
          ";;" '~fun# "->" ~args# "\n")
        (~@xs))))
 
-(comment
-  (macroexpand '(_T (+ 1 "2")))
-  (_T (prn 1 "2"))
-)
-
 (defn www [& xs]
   (apply yamlscript.debug/www xs))
 

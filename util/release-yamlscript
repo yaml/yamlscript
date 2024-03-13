@@ -1,0 +1,246 @@
+#!/usr/bin/env ys-0
+
+# This script is for automating the YAMLScript release process as much as
+# possible. The release process involves many steps, and might need to be
+# restarted at a certain step.
+#
+# Usage: release-yamlscript <old-version> <new-version> [<starting-step>]
+
+steps =: 10
+
+bindings =::
+- clojure
+- java
+- perl
+- perl-alien
+- python
+- raku
+- ruby
+- rust
+
+verbose =: boolean(ENV.'YS_RELEASE_VERBOSE')
+dryrun =: boolean(ENV.'YS_RELEASE_DRYRUN')
+last-step =:
+  parse-long: ENV.'YS_RELEASE_LAST_STEP' || str(steps)
+
+
+#------------------------------------------------------------------------------
+# Run each step in succession, starting at the specified step number if given.
+#------------------------------------------------------------------------------
+
+defn main(old-version new-version start=1):
+  ctx =:
+    check-args: old-version new-version start
+
+  say: "\nReleasing YAMLScript v$new-version at $(ctx.date-time)\n"
+
+  each [i (1 .. steps)]:
+    when ((i >= start) && (i <= last-step)):
+      resolve(symbol("step-$i")): ctx
+
+  say: ''
+
+
+#------------------------------------------------------------------------------
+# Change the .version.sh version bump script to use the new version string.
+#------------------------------------------------------------------------------
+
+defn step-1(ctx):
+  say: "\nStep 1) Update '.version.sh' file"
+
+  when-not dryrun:
+    spit '.version.sh':
+      str/replace-first:
+        slurp('.version.sh')
+        /0\.1\.\d+/
+        ctx.new
+
+  when verbose:
+    run:: git -P diff .version.sh
+
+
+#------------------------------------------------------------------------------
+# Change all current version strings in dozens of files to the new version.
+#------------------------------------------------------------------------------
+
+defn step-2(ctx):
+  say: "\nStep 2) Run 'make bump'"
+
+  run:: make bump
+
+  when verbose:
+    run:: git -P diff
+
+
+#------------------------------------------------------------------------------
+# Collect the git log subject lines since the last release, reverse them and
+# then create a new Changes file entry and add it to the top of the Changes
+# file.
+#
+# Open the file in an editor to review the entry and update if needed.
+#------------------------------------------------------------------------------
+
+defn step-3(ctx):
+  say: "\nStep 3) Update the 'Changes' file"
+
+  when-not dryrun:
+    file-prepend 'Changes':
+      make-changes-entry: ctx
+
+  when verbose:
+    run:: head -25 Changes
+
+
+#------------------------------------------------------------------------------
+# Some of the binding library directories have a change log file.
+# Update them.
+#------------------------------------------------------------------------------
+
+defn step-4(ctx):
+  say: "\nStep 4) Update the Change Log files for the binding modules"
+
+  when-not dryrun:
+    perl-entry =: |
+
+      ---
+      version: $(ctx.new)
+      date:    $(ctx.date-time)
+      changes:
+      - libyamlscript %(ctx.new)
+
+    file-prepend 'perl/Changes': perl-entry
+    when verbose:
+      run:: head perl/Changes
+
+    file-prepend 'perl-alien/Changes': perl-entry
+    when verbose:
+      run:: head perl-alien/Changes
+
+    ruby-entry =: |+
+      ## [$(ctx.new)] - $(ctx.date)
+
+      - libyamlscript $(ctx.new)
+
+    file-prepend 'ruby/ChangeLog.md': ruby-entry
+
+    when verbose:
+      run:: head ruby/ChangeLog.md
+
+
+#------------------------------------------------------------------------------
+# git commit the release changes we've made so far.
+#------------------------------------------------------------------------------
+
+defn step-5(ctx):
+  say: "\nStep 5) Commit the release changes to git"
+
+  run: "git commit -a -m 'release: $(ctx.new)'"
+
+
+#------------------------------------------------------------------------------
+# git tag using the new version
+#------------------------------------------------------------------------------
+
+defn step-6(ctx):
+  say: "\nStep 6) Add git tag for the new version"
+
+  run: "git tag $(ctx.new)"
+
+
+#------------------------------------------------------------------------------
+# git push commit and tag
+#------------------------------------------------------------------------------
+
+defn step-7(ctx):
+  say: "\nStep 7) Push the git commit and tag"
+
+  run:: git push
+
+  run:: git push --tags
+
+
+#------------------------------------------------------------------------------
+# Call 'make release'
+#------------------------------------------------------------------------------
+
+defn step-8(ctx):
+  say: "\nStep 8) Run 'make release'"
+
+  run:: make release
+
+
+#------------------------------------------------------------------------------
+# For each of the many binding libraries, run 'make release'
+#------------------------------------------------------------------------------
+
+defn step-9(ctx):
+  say: "\nStep 9) Run 'make release' for each language binding library"
+
+  each [dir bindings]:
+    run: "make -C $dir release"
+
+#------------------------------------------------------------------------------
+# Publish the website. A new release will change the content of some pages.
+#------------------------------------------------------------------------------
+
+defn step-10(ctx):
+  say: "\nStep 10) Publish the yamlscript.org website"
+
+  run: "make -C www realclean publish"
+
+
+#------------------------------------------------------------------------------
+# Helper functions:
+#------------------------------------------------------------------------------
+defn file-prepend(file s):
+  spit file:
+    str: s slurp(file)
+
+defn make-changes-entry(ctx):
+  lines =:
+    sh("git log --oneline $(ctx.old)..HEAD")
+    .out.str/split-lines().reverse()
+
+  changes =:
+    str/join "\n":
+      map \(str/replace %1 /^\w+ / '  - '): lines
+
+  =>: |
+
+    - version: $(ctx.new)
+      date:    $(ctx.date-time)
+      changes:
+    $changes
+
+defn run(cmd):
+  say: "+ $cmd"
+
+  when-not dryrun:
+    shell: cmd
+
+defn check-args(old new start):
+  when-not:
+    and:
+      string?: old
+      re-matches: /0\.\d+\.\d+/ old
+    die: "Invalid old version '$old'"
+
+  when-not:
+    and:
+      string?: new
+      re-matches: /0\.\d+\.\d+/ new
+    die: "Invalid new version '$new'"
+
+  when-not:
+    and:
+      number?: start
+      start >= 1 |: start <= steps
+    die: "Invalid starting step number '$start'"
+
+  date-time =: sh('date').out.str/trim-newline()
+  date =: sh('date +%Y-%m-%d').out.str/trim-newline()
+
+  =>: .{:old old,
+        :new new,
+        :date date,
+        :date-time date-time}

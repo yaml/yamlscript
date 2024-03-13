@@ -76,7 +76,7 @@
 
       'clojure.core (clojure-core-ns)
 
-;; This needs to be first
+      ;; This needs to be first
       'ys.ys   (use-ns 'ys.ys ys.ys)
 
       'cli     (use-ns 'cli clojure.tools.cli)
