@@ -1,4 +1,25 @@
 
+- version: 0.1.42
+  date:    Wed Mar 13 05:57:45 PM PDT 2024
+  changes:
+  - core: Support -> in symbols like a->b
+  - java: Add Clojure and Java bindings
+  - clojure: Use lein rather than deps.edn
+  - java: Add Makefile and maven support
+  - java: Rework Makefiles to support Java and Clojure bindings
+  - java: Update version to 0.1.41
+  - java: Get deploy to Clojars working
+  - clojure: Add support for deploying the Clojure binding to Clojars
+  - clojure: Rename Java and Clojure classes,groups,namespaces
+  - build: Disable putting .m2 in /tmp/yamlscript/ for now
+  - clojure: Don't use lein :managed-dependencies
+  - clojure: Fix a warning about replacing clojure.core/load
+  - python: Fixes for Makefile
+  - libyamlscript: Add some debug printing to libyamlscript
+  - core: Add exec, process, shell and sh to std
+  - core: Add ys/for eager version of for
+  - release: Write YS program to manage the release process
+
 - version: 0.1.41
   date:    Thu Mar  7 11:24:36 AM PST 2024
   changes:

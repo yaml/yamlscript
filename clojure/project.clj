@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2024 Ingy dot Net
 
-(defproject org.yamlscript/clj-yamlscript "0.1.41"
+(defproject org.yamlscript/clj-yamlscript "0.1.42"
   :description
   "YAMLScript is a functional programming language whose syntax is encoded in
   YAML."
@@ -18,9 +18,9 @@
    :tag "clojure"
    :dir ".."}
 
-  #_#_:resource-paths ["../java/target/yamlscript-0.1.41.jar"]
+  #_#_:resource-paths ["../java/target/yamlscript-0.1.42.jar"]
 
-  #_#_:managed-dependencies [[org.yamlscript/yamlscript "0.1.41"]]
+  #_#_:managed-dependencies [[org.yamlscript/yamlscript "0.1.42"]]
 
   :dependencies
   [[org.clojure/clojure "1.11.1"]
