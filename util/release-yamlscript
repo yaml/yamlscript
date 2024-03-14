@@ -5,12 +5,14 @@
 # restarted at a certain step.
 #
 # Usage: release-yamlscript <old-version> <new-version> [<starting-step>]
+#
+# The following environment variables can be used to control the script:
+#
+# * YS_RELEASE_DRYRUN=1     - Don't actually run any commands, just show them
+# * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
+# * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
 
-
-### To Do:
-# - Remove the spurious v0.1.xx ruby tag
-# - Perl Changes date changed after release
-# - Make sure nvm / yarn are available at the start
+# TODO: Make sure nvm / yarn are available at the start
 
 steps =: 10
 
@@ -31,12 +33,12 @@ last-step =:
 
 
 #------------------------------------------------------------------------------
-# Run each step in succession, starting at the specified step number if given.
+# Run each step in succession, starting at the specified step number if given
+# and ending at the specified last step number if given.
 #------------------------------------------------------------------------------
 
 defn main(old-version new-version start=1):
-  ctx =:
-    check-args: old-version new-version start
+  ctx =: check-args(old-version new-version start)
 
   say: "\nReleasing YAMLScript v$new-version at $(ctx.date-time)\n"
 
@@ -52,7 +54,7 @@ defn main(old-version new-version start=1):
 #------------------------------------------------------------------------------
 
 defn step-1(ctx):
-  say: "\nStep 1) Update '.version.sh' file"
+  o: "Step 1) Update '.version.sh' file"
 
   when-not dryrun:
     spit '.version.sh':
@@ -70,7 +72,7 @@ defn step-1(ctx):
 #------------------------------------------------------------------------------
 
 defn step-2(ctx):
-  say: "\nStep 2) Run 'make bump'"
+  o: "Step 2) Run 'make bump'"
 
   run:: make bump
 
@@ -87,14 +89,15 @@ defn step-2(ctx):
 #------------------------------------------------------------------------------
 
 defn step-3(ctx):
-  say: "\nStep 3) Update the 'Changes' file"
+  o: "Step 3) Update the 'Changes' file"
 
   when-not dryrun:
     file-prepend 'Changes':
       make-changes-entry: ctx
 
   when verbose:
-    run:: head -25 Changes
+    # Show git changes since last release:
+    run: "grep -F -B999 '$(ctx.old)' Changes"
 
 
 #------------------------------------------------------------------------------
@@ -103,9 +106,10 @@ defn step-3(ctx):
 #------------------------------------------------------------------------------
 
 defn step-4(ctx):
-  say: "\nStep 4) Update the Change Log files for the binding modules"
+  o: "Step 4) Update the Change Log files for the binding modules"
 
   when-not dryrun:
+    # A change log (YAML) entry for Perl:
     perl-entry =: |
 
       ---
@@ -113,6 +117,8 @@ defn step-4(ctx):
       date:    $(ctx.date-time)
       changes:
       - libyamlscript $(ctx.new)
+
+    # TODO: check that YAML entry is valid YAML
 
     file-prepend 'perl/Changes': perl-entry
     when verbose:
@@ -122,6 +128,7 @@ defn step-4(ctx):
     when verbose:
       run:: head perl-alien/Changes
 
+    # Change log entry for Ruby:
     ruby-entry =: |+
       ## [$(ctx.new)] - $(ctx.date)
 
@@ -138,7 +145,7 @@ defn step-4(ctx):
 #------------------------------------------------------------------------------
 
 defn step-5(ctx):
-  say: "\nStep 5) Commit the release changes to git"
+  o: "Step 5) Commit the release changes to git"
 
   run: "git commit -a -m 'release: $(ctx.new)'"
 
@@ -148,7 +155,7 @@ defn step-5(ctx):
 #------------------------------------------------------------------------------
 
 defn step-6(ctx):
-  say: "\nStep 6) Add git tag for the new version"
+  o: "Step 6) Add git tag for the new version"
 
   run: "git tag $(ctx.new)"
 
@@ -158,7 +165,7 @@ defn step-6(ctx):
 #------------------------------------------------------------------------------
 
 defn step-7(ctx):
-  say: "\nStep 7) Push the git commit and tag"
+  o: "Step 7) Push the git commit and tag"
 
   run:: git push
 
@@ -170,27 +177,34 @@ defn step-7(ctx):
 #------------------------------------------------------------------------------
 
 defn step-8(ctx):
-  say: "\nStep 8) Run 'make release'"
+  o: "Step 8) Run 'make release'"
 
   run:: make release
 
+  # TODO: Print command to run on other build machines
 
 #------------------------------------------------------------------------------
 # For each of the many binding libraries, run 'make release'
 #------------------------------------------------------------------------------
 
 defn step-9(ctx):
-  say: "\nStep 9) Run 'make release' for each language binding library"
+  o: "Step 9) Run 'make release' for each language binding library"
 
   each [dir bindings]:
     run: "make -C $dir release"
+
+  # TODO: Remove the v0.1.xx tag that ruby creates
+  # TODO: Undo the Changes date modifications that zild makes
+
+  when verbose:
+    run:: git -P diff
 
 #------------------------------------------------------------------------------
 # Publish the website. A new release will change the content of some pages.
 #------------------------------------------------------------------------------
 
 defn step-10(ctx):
-  say: "\nStep 10) Publish the yamlscript.org website"
+  o: "Step 10) Publish the yamlscript.org website"
 
   run: "make -C www realclean publish"
 
@@ -198,19 +212,23 @@ defn step-10(ctx):
 #------------------------------------------------------------------------------
 # Helper functions:
 #------------------------------------------------------------------------------
-defn file-prepend(file s):
+defn o(msg): say("\n$msg")
+
+defn file-prepend(file text):
   spit file:
-    str: s slurp(file)
+    str: text slurp(file)
 
 defn make-changes-entry(ctx):
   lines =:
-    sh("git log --oneline $(ctx.old)..HEAD")
-    .out.str/split-lines().reverse()
+    sh("git log --oneline $(ctx.old)..HEAD").out
+      .str/split-lines().reverse()
 
   changes =:
     str/join "\n":
-      map \(str/replace %1 /^\w+ / '  - '): lines
+      map \(str/replace %1, /^\w+ /, "  - "): lines
 
+  # Return a YAML entry for the Changes file:
+  # TODO: check that YAML entry is valid YAML
   =>: |
 
     - version: $(ctx.new)
@@ -225,28 +243,18 @@ defn run(cmd):
     shell: cmd
 
 defn check-args(old new start):
-  when-not:
-    and:
-      string?: old
-      re-matches: /0\.\d+\.\d+/ old
+  when-not ((string? old) && (re-matches /0\.\d+\.\d+/ old)):
     die: "Invalid old version '$old'"
 
-  when-not:
-    and:
-      string?: new
-      re-matches: /0\.\d+\.\d+/ new
+  when-not ((string? new) && (re-matches /0\.\d+\.\d+/ new)):
     die: "Invalid new version '$new'"
 
-  when-not:
-    and:
-      number?: start
-      start >= 1 |: start <= steps
+  when-not ((number? start) && (start >= 1) && (start <= steps)):
     die: "Invalid starting step number '$start'"
 
-  date-time =: sh('date').out.str/trim-newline()
-  date =: sh('date +%Y-%m-%d').out.str/trim-newline()
-
-  =>: .{:old old,
-        :new new,
-        :date date,
-        :date-time date-time}
+  # Return context mapping:
+  =>::
+    old:: old
+    new:: new
+    date:: sh('date +%Y-%m-%d').out.str/trim-newline()
+    date-time:: sh('date').out.str/trim-newline()

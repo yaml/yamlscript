@@ -48,7 +48,7 @@ JAR_ASSETS := \
 RELEASE_ASSETS := \
     $(JAR_ASSETS) \
 
-RELEASE_LOG := release.log
+RELEASE_LOG := release-$n.log
 
 ifndef JAR_ONLY
 RELEASE_ASSETS += \
@@ -112,6 +112,12 @@ release-clean:
 	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
 
 release-yamlscript:
+ifndef o
+	$(error 'make $@' needs the o variable set to the old version)
+endif
+ifndef n
+	$(error 'make $@' needs the n variable set to the new version)
+endif
 	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
 jars: $(JAR_ASSETS)
