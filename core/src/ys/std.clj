@@ -14,7 +14,7 @@
    [sci.core :as sci]
    [ys.ys :as ys]
    [yamlscript.util :as util])
-  #_(:refer-clojure :exclude [print]))
+  (:refer-clojure :exclude [#_for]))
 
 (defmacro _T [xs]
   (let [[fun# & args#] xs
@@ -151,6 +151,7 @@
 (defn dirname [& args]
   (apply util/dirname args))
 
+; XXX Remove 'each' when 'for' is fixed
 (defmacro each [bindings & body]
   `(do
      (doall (for [~@bindings] (do ~@body)))
@@ -160,6 +161,9 @@
   (binding [*out* *err*]
     (apply clojure.core/print xs)
     (flush)))
+
+(defn exec [cmd & xs]
+  (apply process/exec cmd xs))
 
 (defn join
   ([xs] (join "" xs))
@@ -183,6 +187,9 @@
     (with-out-str
       (pp/pprint o))))
 
+(defn process [cmd & xs]
+  (apply process/process cmd xs))
+
 (defmacro q [x]
   `(quote ~x))
 
@@ -194,8 +201,11 @@
 (defn say [& xs]
   (apply clojure.core/println xs))
 
-(defn sh [cmd]
-  (process/shell cmd))
+(defn sh [cmd & xs]
+  (apply process/sh cmd xs))
+
+(defn shell [cmd & xs]
+  (apply process/shell cmd xs))
 
 (defn sleep [s]
   (Thread/sleep (int (* 1000 s))))
