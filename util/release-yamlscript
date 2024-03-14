@@ -6,6 +6,10 @@
 #
 # Usage: release-yamlscript <old-version> <new-version> [<starting-step>]
 
+
+### To Do:
+# - Remove the spurious v0.1.xx ruby tag
+
 steps =: 10
 
 bindings =::
@@ -106,7 +110,7 @@ defn step-4(ctx):
       version: $(ctx.new)
       date:    $(ctx.date-time)
       changes:
-      - libyamlscript %(ctx.new)
+      - libyamlscript $(ctx.new)
 
     file-prepend 'perl/Changes': perl-entry
     when verbose:

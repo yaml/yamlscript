@@ -18,16 +18,16 @@
    :tag "clojure"
    :dir ".."}
 
-  #_#_:resource-paths ["../java/target/yamlscript-0.1.42.jar"]
-
-  #_#_:managed-dependencies [[org.yamlscript/yamlscript "0.1.42"]]
-
   :dependencies
   [[org.clojure/clojure "1.11.1"]
    [org.clojure/data.json "2.4.0"]
    [org.json/json "20240205"]
    [net.java.dev.jna/jna "5.14.0"]
    [org.yamlscript/yamlscript "0.1.41"]]
+
+  #_#_:resource-paths ["../java/target/yamlscript-0.1.42.jar"]
+
+  #_#_:managed-dependencies [[org.yamlscript/yamlscript "0.1.42"]]
 
   :deploy-repositories
   [["releases"

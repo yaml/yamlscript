@@ -2,6 +2,10 @@
 
 - libyamlscript 0.1.42
 
+## [0.1.42] - 2024-03-13
+
+- libyamlscript 0.1.42
+
 ## [0.1.41] - 2024-03-07
 
 - libyamlscript 0.1.41

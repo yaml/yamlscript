@@ -1,9 +1,9 @@
 
 ---
 version: 0.1.42
-date:    Wed Mar 13 05:57:45 PM PDT 2024
+date:    Wed Mar 13 06:39:29 PM PDT 2024
 changes:
-- libyamlscript %(ctx.new)
+- libyamlscript 0.1.42
 
 ---
 version: 0.1.41

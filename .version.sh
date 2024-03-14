@@ -45,7 +45,7 @@ bump raku/lib/YAMLScript.rakumod
 bump ruby/lib/yamlscript.rb
 bump www/src/install
 bump java/Makefile
-bump java/src/main/org/yaml/yamlscript/YAMLScript.java
+bump java/src/main/java/org/yaml/yamlscript/YAMLScript.java
 
 pattern='(YAMLScript.*)'"$vp"'(.*)'
 
@@ -71,6 +71,10 @@ pattern='(resource-paths.*)'"$vp"'(.*)'
 bump clojure/project.clj
 
 pattern='(managed-dependencies.*)'"$vp"'(.*)'
+
+bump clojure/project.clj
+
+pattern='(yamlscript/yamlscript.*)'"$vp"'(.*)'
 
 bump clojure/project.clj
 
