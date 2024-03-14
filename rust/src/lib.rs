@@ -202,11 +202,17 @@ impl YAMLScript {
         let mut first_error = None;
         let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
 
+        // Additionally look in `/usr/local/lib` and `${HOME}/.local/lib`.
+        let mut additional_paths = vec!["/usr/local/lib"];
+        let home_path = std::env::var("HOME")
+            .ok()
+            .map(|home| format!("{home}/.local/lib"));
+        if let Some(path) = &home_path {
+            additional_paths.push(path.as_str());
+        }
+
         // Iterate over segments of `LD_LIBRARY_PATH`.
-        for path in library_path
-            .split(':')
-            .chain(std::iter::once("/usr/local/lib"))
-        {
+        for path in library_path.split(':').chain(additional_paths.into_iter()) {
             // Try to open the library, if it exists.
             let path = Path::new(path).join(LIBYAMLSCRIPT_FILENAME);
             if !path.is_file() {
