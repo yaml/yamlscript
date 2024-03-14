@@ -17,6 +17,7 @@
    [yamlscript.debug :refer [www]])
   (:refer-clojure
    :exclude [compile
+             for
              load-file
              use]))
 
@@ -63,6 +64,11 @@
   (yamlscript.compiler/compile code))
 
 (def FILE (sci/new-dynamic-var 'FILE nil))
+
+(defmacro for [bindings & body]
+  `(do
+     (doall (clojure.core/for [~@bindings] (do ~@body)))
+     nil))
 
 (defn load-file [ys-file]
   (let [ys-file (abspath ys-file (dirname @sci/file))
