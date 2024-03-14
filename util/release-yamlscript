@@ -9,6 +9,8 @@
 
 ### To Do:
 # - Remove the spurious v0.1.xx ruby tag
+# - Perl Changes date changed after release
+# - Make sure nvm / yarn are available at the start
 
 steps =: 10
 
