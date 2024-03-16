@@ -93,7 +93,6 @@
                              (if (or (nil? args) (= nargs args))
                                (cons ctx args)
                                nargs))
-                      fnc (or (sci/resolve @ys/sci-ctx fnc) fnc)
                       value (apply fnc args)
                       value (if (instance? clojure.lang.LazySeq value)
                               (vec value)
