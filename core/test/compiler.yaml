@@ -881,3 +881,35 @@
     (say a->b a->b->c)
     (say a-b->c-d)
     (say a? a-b? a! a-b!)
+
+
+- name: Splats in function calls 1
+  yamlscript: |
+    !yamlscript/v0
+    =>: a(b*)
+  clojure: |
+    (apply a b)
+
+
+- name: Splats in function calls 2
+  yamlscript: |
+    !yamlscript/v0
+    =>: a(b c*)
+  clojure: |
+    (apply a b c)
+
+
+- name: Splats in function calls 3
+  yamlscript: |
+    !yamlscript/v0
+    =>: a(b c* d)
+  clojure: |
+    (apply a b (concat c [d]))
+
+
+- name: Splats in function calls 3
+  yamlscript: |
+    !yamlscript/v0
+    =>: a(b* c d e* f*)
+  clojure: |
+    (apply a (concat b [c] [d] e f))

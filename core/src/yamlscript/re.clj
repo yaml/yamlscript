@@ -86,6 +86,7 @@
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
 (def ysym (re #"(?:$symw[?!.]?|_)"))       ; YS symbol token
+(def splt (re #"(?:$ysym\*)"))             ; Splat symbol
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fsym (re #"(?:(?:$nspc|$symw)\/$ysym)"))  ; Fully qualified symbol

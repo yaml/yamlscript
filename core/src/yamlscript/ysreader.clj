@@ -75,7 +75,8 @@
     (re-matches re/esym (str token))
     (re-matches re/ysym (str token))
     (re-matches re/vsym (str token))
-    (re-matches re/ssym (str token))))
+    (re-matches re/ssym (str token))
+    (re-matches re/splt (str token))))
 
 (defn is-default-symbol? [token]
   (re-matches re/dsym (str token)))
@@ -103,6 +104,7 @@
       $dsym |                   # Symbol with default
       $vsym |                   # Variable lookup symbol
       $ssym |                   # Special symbols
+      $splt |                   # Splat symbol
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
