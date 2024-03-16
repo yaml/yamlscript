@@ -41,11 +41,40 @@
        (update-in m [:Top (dec (count (:Top m)))]
          (fn [n] (maybe-trace (Lst [(Sym '+++) n]))))))))
 
+(defn is-splat? [value]
+  (let [strng (str value)]
+    (and
+      (re-matches re/splt strng)
+      ; XXX Change ys.std/_* to something else
+      ; We'll want to splat `_` soon
+      (not= "_*" strng))))
+
+(defn expand-splats [nodes]
+  (if (some #(is-splat? (:Sym %1)) nodes)
+    (let [[fun & nodes] nodes]
+      (loop [nodes nodes new [] splats []]
+        (if (seq nodes)
+          (let [[node & nodes] nodes
+                val (str (:Sym node))
+                [new splats] (if (or (seq splats)
+                                   (is-splat? val))
+                               (let [node (if (is-splat? val)
+                                            (Sym (apply str (butlast val)))
+                                            (Vec [node]))]
+                                 [new (conj splats node)])
+                               [(conj new node) splats])]
+            (recur nodes new splats))
+          (let [splats (if (> (count splats) 1)
+                         [(Lst (vec (cons (Sym 'concat) splats)))]
+                         splats)]
+            (concat [(Sym 'apply)] [fun] new splats)))))
+    nodes))
+
 (defn construct-call [[key val]]
   (cond
     (= '=> (:Sym key)) val
     (and (:Str key) (nil? val)) key
-    :else (Lst (flatten [key val]))))
+    :else (Lst (expand-splats (flatten [key val])))))
 
 (defn construct-pairs [{nodes :pairs} ctx]
   (let [pairs (vec (map vec (partition 2 nodes)))
@@ -86,35 +115,6 @@
                       nodes)))
                 [] nodes)]
     {:forms nodes}))
-
-(defn is-splat? [value]
-  (let [strng (str value)]
-    (and
-      (re-matches re/splt strng)
-      ; XXX Change ys.std/_* to something else
-      ; We'll want to splat `_` soon
-      (not= "_*" strng))))
-
-(defn expand-splats [nodes]
-  (if (some #(is-splat? (:Sym %1)) nodes)
-    (let [[fun & nodes] nodes]
-      (loop [nodes nodes new [] splats []]
-        (if (seq nodes)
-          (let [[node & nodes] nodes
-                val (str (:Sym node))
-                [new splats] (if (or (seq splats)
-                                   (is-splat? val))
-                               (let [node (if (is-splat? val)
-                                            (Sym (apply str (butlast val)))
-                                            (Vec [node]))]
-                                 [new (conj splats node)])
-                               [(conj new node) splats])]
-            (recur nodes new splats))
-          (let [splats (if (> (count splats) 1)
-                         [(Lst (vec (cons (Sym 'concat) splats)))]
-                         splats)]
-            (concat [(Sym 'apply)] [fun] new splats)))))
-    nodes))
 
 (defn construct-coll [node ctx key]
   (let [{nodes key} node

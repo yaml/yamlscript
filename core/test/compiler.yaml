@@ -913,3 +913,11 @@
     =>: a(b* c d e* f*)
   clojure: |
     (apply a (concat b [c] [d] e f))
+
+
+- name: Splats in pair expressions
+  yamlscript: |
+    !yamlscript/v0
+    foo: bar* baz
+  clojure: |
+    (apply foo (concat bar [baz]))
