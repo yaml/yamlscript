@@ -169,7 +169,7 @@ $(CLEAN):
 clean: $(CLEAN) release-clean
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
-	$(RM) NO-NAME $(RELEASE_LOG)
+	$(RM) NO-NAME release-*.log
 clean-%: %
 	$(MAKE) -C $< clean
 
