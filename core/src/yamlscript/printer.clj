@@ -27,6 +27,10 @@
 
 (defn pr-symbol [s]
   (case s
+    "ERR" "*err*"
+    "IN" "*in*"
+    "NS" "*ns*"
+    "OUT" "*out*"
     "$" "($)"
     "$$" "@$$"
     "$#" "@$#"

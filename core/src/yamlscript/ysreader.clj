@@ -72,7 +72,6 @@
 (defn is-symbol? [token]
   (or
     (re-matches re/fsym (str token))
-    (re-matches re/esym (str token))
     (re-matches re/ysym (str token))
     (re-matches re/vsym (str token))
     (re-matches re/ssym (str token))
@@ -94,7 +93,6 @@
       $spec |                   # Special token
       $char |                   # Character token
       $keyw |                   # Keyword token
-      $esym |                   # Earmuff symbol
       $psym |                   # Symbol followed by paren
       $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol

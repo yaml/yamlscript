@@ -92,7 +92,6 @@
 (def fsym (re #"(?:(?:$nspc|$symw)\/$ysym)"))  ; Fully qualified symbol
                                            ; Symbol followed by paren
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))
-(def esym (re #"(?:\*$symw\*)"))           ; Earmuff symbol
 
 (def defk (re #"(?:\[.*\]|\{.*\}|$symw) +="))  ; Pair key for def/let call
 (def dfnk (re #"^defn ($ysym)(?:\((.*)\))?$")) ; Pair key for defn call
