@@ -6,19 +6,25 @@ title: YAMLScript.org
 <p style="text-align: center; font-weight: bold">YAMLScript — Program in
 YAML</p>
 
-**YAMLScript is a new YAML Loader** that can add SuperPowers™ to your plain old
-YAML config files.
+**YAMLScript is a new YAML Loader** that can add "Super Powers" to your plain
+old YAML config files.
 
-You can dynamically include data from other data files (YAML, JSON, XML, CSV,
-etc), pull data in from the web or even from a database.
+By using YAMLScript as your YAML loader, You can dynamically include data from
+other data files (YAML, JSON, XML, CSV, etc), pull data in from the web or even
+from a database.
 You can filter, map, merge, reduce, generate, concatenate, interpolate and
 manipulate your data to your heart's content.
 
 If you've ever wanted more from your YAML files, YAMLScript has you covered.
 You can easily mix logic into your data files at any point.
 
-On the other hand, if you just want a solid YAML 1.2 loader that works the same
-in any programming language, you should also give YAMLScript a try.
+On the other hand, if you just want a rock solid YAML 1.2 loader (without any
+code evaluation magic) that works the same in any programming language, you
+should also give YAMLScript a try.
+
+All valid [YAML 1.2 Core Schema](https://yaml.org/spec/1.2.2/#103-core-schema)
+files are also valid YAMLScript files!  That's pretty much any YAML config file
+you already have.
 
 Without the special `!yamlscript/v0` tag at the top, your YAMLScript loader
 will load any existing YAML (or JSON) just as one would expect a normal YAML
@@ -61,8 +67,8 @@ We specified that default with `main(level='development')`.
 
 ----
 
-You can use YAMLScript as a regular YAML loader module in a programming language
-like Python:
+You can use YAMLScript as a regular YAML loader library in a programming
+language like Python:
 
 ```python
 {% include "../main/sample/www/example.py" %}
@@ -71,7 +77,7 @@ like Python:
 It loads the YAML data file just like PyYAML would, but with these added
 benefits:
 
-* YAMLScript modules have the same API and work exactly the same in any
+* YAMLScript libraries have the same API and work exactly the same in any
   programming language.
 * YAMLScript uses the latest YAML 1.2 specification, which eliminates many of
   the complaints people often have about YAML.
@@ -104,7 +110,7 @@ YAMLScript can compile programs to native binary executables.
 It's as simple as this:
 
 ```bash
-$ ys -C hello.ys
+$ ys -b hello.ys
 $ ./hello Jack
 Hello, Jack!
 ```
@@ -138,13 +144,20 @@ Or you can install the [latest release](
 https://github.com/yaml/yamlscript/releases) with:
 
 ```bash
-$ curl https://yamlscript.org/install | PREFIX=~/.local bash
+$ curl -sSL yamlscript.org/install | bash
 ```
 
-Make sure `~/.local/bin` is in your `PATH` environment variable.
+Make sure that `~/.local/bin` is in your `PATH` environment variable.
 
-> The default `PREFIX` is `/usr/local`, which usually requires `sudo bash` to
-run the above command.
+To install elsewhere or install a specific version, set the `PREFIX` and/or
+`VERSION` environment variables to the desired values:
+
+```bash
+$ curl -sSL yamlscript.org/install | PREFIX=/some/dir VERSION=0.1.xx bash
+```
+
+> NOTE: The default `PREFIX` is `~/.local` (or `/usr/local` if you run the
+command as `root`).
 
 You can also install `ys` from source:
 
@@ -152,7 +165,7 @@ You can also install `ys` from source:
 $ git clone https://github.com/yaml/yamlscript
 $ cd yamlscript
 $ make build
-$ make install PREFIX=~/.local
+$ make install
 $ export PATH=~/.local/bin:$PATH
 ```
 
@@ -166,32 +179,44 @@ and `bash`.
 Test your new `ys` installation by running:
 
 ```text
+$ ys --help
+
 ys - The YAMLScript (YS) Command Line Tool
 
-Usage: ys [options] [file]
+Usage: ys [<option...>] [<file>]
 
 Options:
-  -r, --run                Compile and evaluate a YAMLScript file (default)
-  -l, --load               Output the evaluated YAMLScript value
+
+      --run                Run a YAMLScript program file (default)
+  -l, --load               Output (compact) JSON of YAMLScript evaluation
   -e, --eval YSEXPR        Evaluate a YAMLScript expression
+                           multiple -e values joined by newline
 
   -c, --compile            Compile YAMLScript to Clojure
-  -C, --native             Compile to a native binary executable
-      --clj                Treat input as Clojure code
+  -b, --binary             Compile to a native binary executable
 
-  -m, --mode MODE          Add a mode tag: code, data, or bare (only for --eval/-e)
   -p, --print              Print the result of --run in code mode
+  -o, --output FILE        Output file for --load, --compile or --binary
 
-  -o, --output FILE        Output file for --load, --compile or --native
-  -t, --to FORMAT          Output format for --load
-
-  -J, --json               Output JSON for --load
+  -T, --to FORMAT          Output format for --load:
+                             json, yaml, edn
+  -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
 
-  -x, --debug-stage STAGE  Display the result of stage(s)
-  -X                       Same as '-x all'
+  -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
+  -C, --clojure            Treat input as Clojure code
+
+  -d                       Debug all compilation stages
+  -D, --debug-stage STAGE  Debug a specific compilation stage:
+                             parse, compose, resolve, build,
+                             transform, construct, print
+                           can be used multiple times
   -S, --stack-trace        Print full stack trace for errors
+  -x, --xtrace             Print each expression before evaluation
+
+      --install            Install the libyamlscript shared library
+      --upgrade            Upgrade both ys and libyamlscript
 
       --version            Print version and exit
   -h, --help               Print this help and exit
@@ -205,42 +230,44 @@ YAMLScript 0.1.42
 ```
 
 
-## Installing a YAMLScript Module
+## Installing a YAMLScript Library
 
-YAMLScript can be installed as a YAML loader module/library in several
+YAMLScript can be installed as a YAML loader library (module) in several
 programming languages.
 
-So far there are modules in these languages:
+So far there are libraries in these languages:
 
+* Clojure
+* Java
 * Perl
 * Python
 * Raku
 * Rust
 * Ruby
 
-Several more are in the works, and the goal is to get it everywhere that people
-want it.
+Several more are in the works, and the goal is to get it to every language
+where YAML is used.
 
-Currently to install a YAMLScript module you need to install both the language
-module and the matching version of `libyamlscript.so`.
+Currently to install a YAMLScript library you need to install both the language
+library and the matching version of `libyamlscript.so`.
 
 For Python you would do:
 
 ```bash
 $ pip install yamlscript
-Successfully installed pyyaml-6.0.1 yamlscript-0.1.42
-$ curl -sSL yamlscript.org/install | sudo LIB=1 VERSION=0.1.42 install
-Installed /usr/local/lib/libyamlscript.so - version 0.1.42
+Successfully installed yamlscript-0.1.42
+$ curl -sSL yamlscript.org/install | VERSION=0.1.42 install
+Installed ~/.local/lib/libyamlscript.so - version 0.1.42
 ```
 
-For some other language, use that language's module installer.
-Just make sure the versions match for the module and libyamlscript.
+For some other language, use that language's library installer.
+Just make sure the versions match for the library and libyamlscript.
 
 
 ## YAMLScript Language Design
 
 YAMLScript code compiles to Clojure code and then is evaluated by a Clojure
-runtime engine.
+runtime native binary engine.
 This means that YAMLScript is a very complete language from the get-go.
 
 > NOTE: To see the generated Clojure code for any YAMLScript code just use the
@@ -253,7 +280,7 @@ This means that YAMLScript is a very complete language from the get-go.
 
 Clojure is a Lisp dialect that runs on the JVM, however YAMLScript is not run
 on the JVM.
-No Java or JVM installation is used to run YAMLScript programs.
+No Java or JVM installation is used to run (or build) YAMLScript programs.
 
 The YAMLScript compiler is written in Clojure and then compiled to a native
 machine code binary using GraalVM.
@@ -264,10 +291,10 @@ almost any programming language.
 YAMLScript intends to ship language bindings for (at least) 42 popular
 programming languages.
 
-YAMLScript syntax uses a combination of YAML structure and Clojure Lisp syntaxes
-combined together.
-The Lisp parts can use variants that make it feel more like Python or Ruby,
-instead of a Lisp.
+YAMLScript syntax uses a combination of YAML structure and Clojure Lisp code
+syntaxes combined together.
+The code parts have syntax variants that make it feel more like Python or Ruby
+than a Lisp.
 
 How a YAMLScript program is syntactically styled is very much up to the
 programmer.
@@ -298,3 +325,6 @@ Documentation is coming soon!
 <!--
 See the [YAMLScript Docs](https://yamlscript.org/doc/) for more information.
 -->
+
+----
+----
