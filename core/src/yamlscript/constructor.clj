@@ -42,12 +42,7 @@
          (fn [n] (maybe-trace (Lst [(Sym '+++) n]))))))))
 
 (defn is-splat? [value]
-  (let [strng (str value)]
-    (and
-      (re-matches re/splt strng)
-      ; XXX Change ys.std/_* to something else
-      ; We'll want to splat `_` soon
-      (not= "_*" strng))))
+  (re-matches re/splt (str value)))
 
 (defn expand-splats [nodes]
   (if (some #(is-splat? (:Sym %1)) nodes)

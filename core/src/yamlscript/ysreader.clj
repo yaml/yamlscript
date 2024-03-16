@@ -170,10 +170,11 @@
     forms))
 
 (def operators
+   ; change to ._
   {(Sym '.)  (Sym '__)
    (Sym '..) (Sym 'rng)
-   (Sym '+) (Sym '_+)
-   (Sym '*) (Sym '_*)
+   (Sym '+) (Sym '+_)
+   (Sym '*) (Sym '*_)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)
    (Sym '%)  (Sym 'rem)

@@ -104,14 +104,14 @@
 (defn __ [x & xs]
   (reduce _dot x xs))
 
-(defn _+ [x & xs]
+(defn +_ [x & xs]
   (cond
     (string? x) (apply str x xs)
     (vector? x) (apply concat x xs)
     (map? x) (apply merge x xs)
     :else (apply + x xs)))
 
-(defn _*
+(defn *_
   ([x y]
    (cond
      (and (string? x) (number? y)) (apply str (repeat y x))
@@ -120,7 +120,7 @@
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
      :else  (* x y)))
   ([x y & xs]
-    (reduce _* (_* x y) xs)))
+    (reduce *_ (*_ x y) xs)))
 
 (defn =-- [str rgx]
   (re-find rgx str))

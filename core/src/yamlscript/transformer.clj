@@ -25,7 +25,7 @@
           (= (first list) {:Sym '+}))
     (let [list (map-vec transform-node list)
           [_ & rest] list]
-      {:Lst (cons {:Sym '_+} rest)})))
+      {:Lst (cons {:Sym '+_} rest)})))
 
 #_(defn string-repeat [{list :Lst}]
   (when (and
@@ -33,7 +33,7 @@
           (= (first list) {:Sym '*}))
     (let [list (map-vec transform-node list)
           [_ v2 v3] list]
-      {:Lst [{:Sym '_*} v2 v3]})))
+      {:Lst [{:Sym '*_} v2 v3]})))
 
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
