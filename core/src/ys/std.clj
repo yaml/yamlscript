@@ -14,7 +14,7 @@
    [sci.core :as sci]
    [ys.ys :as ys]
    [yamlscript.util :as util])
-  (:refer-clojure :exclude [#_for]))
+  (:refer-clojure :exclude [print]))
 
 (defmacro _T [xs]
   (let [[fun# & args#] xs
@@ -180,6 +180,10 @@
   (str/trim-newline
     (with-out-str
       (pp/pprint o))))
+
+(defn print [& xs]
+  (apply clojure.core/print xs)
+  (flush))
 
 (defn process [cmd & xs]
   (apply process/process cmd xs))
