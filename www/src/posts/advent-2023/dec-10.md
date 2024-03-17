@@ -406,7 +406,3 @@ to be a good YAMLScript programmer.
 But then again, you probably want to know all about this to become a great one!
 
 See you tomorrow for Day 11 of the YAMLScript Advent Calendar.
-
-
-
-{% include "../../santa-secrets.md" %}

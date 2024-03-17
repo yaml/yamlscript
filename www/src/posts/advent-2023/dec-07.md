@@ -192,6 +192,3 @@ In the meantime, try out your new `ys` tool and see what you can do with it.
 The more you use it, the sharper it will get.
 
 I'll see you tomorrow for day 8 of YAMLScript Advent 2023!
-
-
-{% include "../../santa-secrets.md" %}

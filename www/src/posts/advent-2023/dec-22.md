@@ -149,6 +149,3 @@ That was a quick post but also an important one for learning how to write
 better YAMLScript.
 
 See you tomorrow for Day 23 of the YAMLScript Advent Blog!
-
-
-{% include "../../santa-secrets.md" %}

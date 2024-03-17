@@ -105,6 +105,3 @@ And that also means we're half way through the Advent Calendar.
 I hope you're enjoying it as much as I am, and I hope the best is yet to come!
 
 Tune in tomorrow for Day 13 of the YAMLScript Advent Calendar.
-
-
-{% include "../../santa-secrets.md" %}

@@ -4,7 +4,7 @@
 defn main():
   say: poem()
 
-data =: load("a-bit-of-data.ys")
+data =: load('a-bit-of-data.ys')
 
 defn W(kind):
   rand-nth: get(data, name(kind))

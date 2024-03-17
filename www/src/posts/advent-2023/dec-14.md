@@ -325,6 +325,3 @@ to chew on.
 Maybe we'll have to stuff your stocking a couple more times this month!
 
 See you tomorrow for Day 15 of YAMLScript Advent 2023!
-
-
-{% include "../../santa-secrets.md" %}

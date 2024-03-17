@@ -96,13 +96,15 @@ $ python -c 'import yaml; print(yaml.safe_load("Advent day: 3"))'
 {'Advent day': 3}
 ```
 
-YAMLScript will soon offer a binding in your favorite language that will do the
-same thing:
+YAMLScript has a Python binding that does the same thing:
 
 ```bash
-$ python -c 'import yamlscript; print(yamlscript.load("Advent day: 3"))'
+$ python -c 'from yamlscript import YAMLScript; print(YAMLScript().load("Advent day: 3"))'
 {'Advent day': 3}
 ```
+
+It also has these bindings in many other programming languages and plans to have
+them in all modern programming languages.
 
 A major goal of the YAMLScript project is to have these YAMLScript binding
 libraries be the best way to load YAML config files in all modern programming
@@ -113,8 +115,8 @@ framework has its own API and its own set of bugs and quirks.
 
 ### Loading YAMLScript from the Command Line
 
-The Python and other language bindings are not ready yet, but we can still load
-YAMLScript.
+We can also load YAMLScript outside of any programming language.
+
 We can do it from the command line using the `ys` command with the `--load`
 option.
 
@@ -123,7 +125,8 @@ $ ys -le 'Advent day: 3'
 {"Advent day": 3}
 ```
 
-> Note: The `-le` option is a short for `-l` (short for `--load`) and `-e`.
+> Note: The `-le` option is a short for `-l` (short for `--load`) and `-e`
+(short for `--eval).
 
 Since the command line doesn't have any way to store the loaded YAML (like a
 programming language would as a data structure) we have to get it back as text.
@@ -184,7 +187,7 @@ We can pull data from these files into our YAML dynamically:
 !yamlscript/v0/data
 
 key1: val1
-key2: ! load("map1.yaml")
+key2: ! load('map1.yaml')
 key3: val3
 ```
 
@@ -222,7 +225,7 @@ Another way to accomplish the same result is:
 # file2.ys
 !yamlscript/v0
 
-map1 =: load("map1.yaml")
+map1 =: load('map1.yaml')
 
 =>:
   .{
@@ -251,12 +254,12 @@ kids: `merge` and `concat`.
 
 my-map: !
   merge:
-    load("map1.yaml")
-    load("map2.yaml")
+    load('map1.yaml')
+    load('map2.yaml')
 my-seq: !
   concat:
-    load("seq1.yaml")
-    load("seq2.yaml")
+    load('seq1.yaml')
+    load('seq2.yaml')
 ```
 
 When we were inventing YAML 20 years ago, one of the most confusing things we
@@ -281,8 +284,8 @@ Let's end this day by making that last YS file even cooler than Rudolph's toes!
 ```yaml
 !yamlscript/v0/data
 
-my-map: ! load("map1.yaml") + load("map2.yaml")
-my-seq: ! load("seq1.yaml") + load("seq2.yaml")
+my-map: ! load('map1.yaml') + load('map2.yaml')
+my-seq: ! load('seq1.yaml') + load('seq2.yaml')
 ```
 
 YAMLScript's `+` operator is a general purpose joiner.
@@ -290,10 +293,3 @@ It's polymorphic for numbers, strings, sequences and mappings.
 
 As ususal, I hope you enjoyed today's post.
 I'll see you tomorrow for day 4 of YAMLScript Advent 2023!
-
-<!--
-refactor this into a template and include it.
-https://github.com/11ty/eleventy/issues/658#issuecomment-599142642
--->
-
-{% include "../../santa-secrets.md" %}

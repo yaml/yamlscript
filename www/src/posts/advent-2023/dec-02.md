@@ -153,7 +153,7 @@ or:
 or:
 
 ```yaml
-->: range(1, 10), map(inc)
+->>: range(1, 10), map(inc)
 ```
 
 There's actually many more ways to write this, but this is only day 2 of
@@ -177,11 +177,11 @@ arguments.
 Note that the opening parenthesis must immediately follow the function name
 without any intervening whitespace.
 
-You may have noticed a few more functions just now: `inc`, `=>`, and `->`.
+You may have noticed a few more functions just now: `inc`, `=>`, and `->>`.
 Well, `inc` is a function but we didn't call it directly.
 We passed it as an argument to the `map` function.
 
-I'll tell you about `=>` and `->` later.
+I'll tell you about `=>` and `->>` later.
 
 
 > ### Comma Chameleon
@@ -261,7 +261,7 @@ echo "Hello $name. The answer is $((43 - 1))."
 The equivalent YAMLScript code would be:
 
 ```yaml
-name =: "World"
+name =: 'World'
 say: "Hello $name. The answer is $(43 - 1)."
 ```
 
@@ -272,7 +272,7 @@ list) like this:
 say: "Hello $inc(41)."
 ```
 
-In most langauages that support interpolation `inc` would expand as a variable,
+In most languages that support interpolation `inc` would expand as a variable,
 but in YAMLScript it's a function and the parenthesized argument list is part of
 the expression.
 
@@ -306,5 +306,3 @@ The planet on the breast of the new-fallen snow,
 Gave the lustre of mid-day to flowers below.  
 When what to my wondering eyes should materialize?  
 But a miniature train, and eight tiny oxen.
-
-{% include "../../santa-secrets.md" %}

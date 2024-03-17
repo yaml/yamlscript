@@ -140,5 +140,3 @@ Well that concludes our coverage of YAMLScript a la Mode!
 Mmmm... Now doesn't that just sound delicious? (or at least fashionable!)
 
 I'll see you tomorrow for day 7 of YAMLScript Advent 2023!
-
-{% include "../../santa-secrets.md" %}

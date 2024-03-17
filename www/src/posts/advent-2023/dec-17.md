@@ -251,6 +251,3 @@ If you had never heard of Rosetta Code before, I hope you'll find it as
 interesting as I do.
 
 Check back tomorrow for Day 18 of the YAMLScript Advent Calendar!
-
-
-{% include "../../santa-secrets.md" %}

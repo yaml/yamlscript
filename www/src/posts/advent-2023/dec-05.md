@@ -33,24 +33,24 @@ aarch64.
 If you happen to be running on one of those platforms, you can run the following
 command to install YAMLScript's CLI, `ys`:
 
-```bash
-curl https://yamlscript.org/install | bash
-```
-
-This installer defaults to installing `ys` into `/usr/local/bin` so you probably
-need to run it as root or with `sudo`:
+> UPDATE: Releases are now available for Linux and macOS on both x86_64 and
+aarch64 (for either). See the [YAMLScript Releases Page](
+https://github.com/yaml/yamlscript/releases/)
 
 ```bash
-curl https://yamlscript.org/install | sudo bash
+curl -sSL yamlscript.org/install | bash
 ```
+
+This installer defaults to installing `ys` into `~/.local/bin`, unless you run
+it as root in which case it defautlls to `/usr/local/bin`.
 
 If you want to install it somewhere else, like say `~/local/bin`, you can do:
 
 ```bash
-curl https://yamlscript.org/install | PREFIX=~/local bash
+curl -sSL yamlscript.org/install | PREFIX=~/local bash
 ```
 
-Whereever you install it, make sure that the `$PREFIX/bin` directory is in your
+Wherever you install it, make sure that the `$PREFIX/bin` directory is in your
 `PATH` environment variable.
 
 YAMLScript also provides a release for `libyamlscript.so`, the YAMLScript shared
@@ -58,7 +58,7 @@ library.
 You can install it like above but with (some variation of):
 
 ```bash
-curl https://yamlscript.org/install | bash
+curl -sSL yamlscript.org/install | bash
 ```
 
 We'll be using the shared library soon when we start playing around with using
@@ -82,18 +82,13 @@ Then you can build and install the CLI with:
 ```bash
 $ cd yamlscript
 $ make build
-$ sudo make install
+$ make install
 or
 $ make install PREFIX=...
 ```
 
 The `make install` command will install both `ys` and `libyamlscript.so` into
 `$PREFIX/bin` and `$PREFIX/lib` respectively.
-
-> Note: Currently you should take care not to run `make build` as root.
-Since `make install` triggers `make build`, running `sudo make install`
-without first running `make build` may fail.
-This should be fixed soon.
 
 YAMLScript has a pretty sophisticated build system, built around GNU Make.
 Even though the build uses Java, Clojure and GraalVM, you don't need to install
@@ -115,27 +110,41 @@ It should display:
 ```text
 ys - The YAMLScript (YS) Command Line Tool
 
-Usage: ys [options] [file]
+Usage: ys [<option...>] [<file>]
 
 Options:
-  -r, --run                Compile and evaluate a YAMLScript file (default)
-  -l, --load               Output the evaluated YAMLScript value
-  -c, --compile            Compile YAMLScript to Clojure
+
+      --run                Run a YAMLScript program file (default)
+  -l, --load               Output (compact) JSON of YAMLScript evaluation
   -e, --eval YSEXPR        Evaluate a YAMLScript expression
-  -C, --clj                Treat input as Clojure code
+                           multiple -e values joined by newline
 
-  -m, --mode MODE          Add a mode tag: code, data, or bare (only for --eval/-e)
+  -c, --compile            Compile YAMLScript to Clojure
+  -b, --binary             Compile to a native binary executable
+
   -p, --print              Print the result of --run in code mode
+  -o, --output FILE        Output file for --load, --compile or --binary
 
-  -o, --output             Output file for --load or --compile
-  -t, --to FORMAT          Output format for --load
-
-  -J, --json               Output JSON for --load
+  -T, --to FORMAT          Output format for --load:
+                             json, yaml, edn
+  -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
 
-  -X, --debug              Debug mode: print full stack trace for errors
-  -x, --debug-stage STAGE  Display the result of stage(s)
+  -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
+  -C, --clojure            Treat input as Clojure code
+
+  -d                       Debug all compilation stages
+  -D, --debug-stage STAGE  Debug a specific compilation stage:
+                             parse, compose, resolve, build,
+                             transform, construct, print
+                           can be used multiple times
+  -S, --stack-trace        Print full stack trace for errors
+  -x, --xtrace             Print each expression before evaluation
+
+      --install            Install the libyamlscript shared library
+      --upgrade            Upgrade both ys and libyamlscript
+
       --version            Print version and exit
   -h, --help               Print this help and exit
 ```
@@ -146,8 +155,8 @@ Here's a quick example of how to run YAMLScript to process a file from the
 internet that Google just told me about:
 
 ```bash
-$ curl https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml |
-  ys -J | jq .classes
+$ curl -sSL gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml |
+ys -J - | jq .classes
 {
   "nfs::server": {
     "exports": [
@@ -158,14 +167,11 @@ $ curl https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f91432
 }
 ```
 
-When `ys` notices there is data on STDIN, it will read the YS program from
-there.
-The `-J` option tells `ys` to `--load` the YS and output the evaluation to JSON.
+The special file name `-` tells `ys` to read the program from STDIN.
+The `-J` option tells `ys` to `--load` the YAMLScript and output the evaluation
+to JSON.
 
 Well that's a wrap.
 Thanks again for following along each day.
 
 I'll see you tomorrow for day 6 of YAMLScript Advent 2023!
-
-
-{% include "../../santa-secrets.md" %}

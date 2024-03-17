@@ -167,5 +167,3 @@ I hope you are inspired to write some beautiful YAMLScript code.
 **You've got style, baby!**
 
 Come back tomorrow for day 10 of the YAMLScript Advent Calendar.
-
-{% include "../../santa-secrets.md" %}

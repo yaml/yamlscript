@@ -363,7 +363,3 @@ There are many more ways to debug YAMLScript programs.
 Likely many than I've even thought of yet.
 
 See you tomorrow for Day 19 of the YAMLScript Advent Calendar.
-
-
-
-{% include "../../santa-secrets.md" %}

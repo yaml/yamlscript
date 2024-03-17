@@ -156,6 +156,3 @@ Don't forget your sunglasses.
 The future is bright!!!
 
 — Ingy döt Net and the YAMLScript Elves
-
-
-{% include "../../santa-secrets.md" %}

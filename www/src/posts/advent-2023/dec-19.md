@@ -156,6 +156,3 @@ But I need to make it work first!
 Fingers crossed.
 
 Come back tomorrow for Day 20 of the YAMLScript Advent Calendar.
-
-
-{% include "../../santa-secrets.md" %}

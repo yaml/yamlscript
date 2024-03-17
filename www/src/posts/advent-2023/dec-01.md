@@ -81,10 +81,7 @@ And they evaluate to the same result that a YAML loader would produce.
 For example, here's a YAML file that defines a list of fruits:
 
 ```yaml
-# fruits.yaml
-- apple
-- banana
-- cherry
+{% include "../../../main/sample/advent/fruits.yaml" %}
 ```
 
 Let's run this file as a YAMLScript program:
@@ -103,7 +100,8 @@ $ python -c '["apple", "banana", "cherry"]'
 $
 ```
 
-To _evaluate_ a YAMLScript program, we need to use the `--load` option:
+To obtain the evaluation result of a YAMLScript program, we need to use the
+`--load` option:
 ```bash
 $ ys --load fruits.yaml
 ["apple", "banana", "cherry"]
@@ -118,7 +116,7 @@ What if we want to include these fruits in our YAML grocery list?
 Let's try it:
 
 ```yaml
-# grocery-list.yaml
+# grocery.yaml
 - bread
 - fruits: load("fruits.yaml")
 - milk
@@ -127,7 +125,7 @@ Let's try it:
 Let's add the `--yaml` option to print the result as YAML:
 
 ```bash
-$ ys --load grocery-list.yaml --yaml
+$ ys --load grocery.yaml --yaml
 - bread
 - fruits: load("fruits.yaml")
 - milk
@@ -144,17 +142,13 @@ loaded just like any other YAML loader would do it.
 Let's fix this to do what we want:
 
 ```yaml
-# grocery-list.yaml
-!yamlscript/v0/data
-- bread
-- fruits: ! load("fruits.yaml")
-- milk
+{% include "../../../main/sample/advent/grocery.yaml" %}
 ```
 
 Now when we run it:
 
 ```bash
-$ ys -l -Y grocery-list.yaml
+$ ys -l -Y grocery.yaml
 - bread
 - fruits:
   - apple
@@ -209,5 +203,3 @@ Here's a sneak peek of some of the things to come:
 Hopefully you're as excited as I am to learn more about YAMLScript!
 
 See you tomorrow!
-
-{% include "../../santa-secrets.md" %}

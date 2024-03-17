@@ -273,5 +273,3 @@ You can't please everyone, but if you give people choices, the only people that
 get upset are the ones who don't like choices. :- )
 
 See you tomorrow? That's Day 16 of the YAMLScript Advent 2023!!!
-
-{% include "../../santa-secrets.md" %}

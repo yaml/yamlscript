@@ -230,5 +230,3 @@ Not only as a new programming language, but also as a new way to work with YAML
 files that you already have.
 
 Join me tomorrow for Day 22 of the YAMLScript Advent Blog!
-
-{% include "../../santa-secrets.md" %}

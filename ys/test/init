@@ -4,6 +4,8 @@ ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd -P)
 
 BASE=$ROOT/ys
 
+export PYTHONPATH=$ROOT/python/lib
+
 export BPAN_ROOT=$BASE/.bpan
 
 source "$BPAN_ROOT/test/init"

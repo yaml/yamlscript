@@ -1,27 +1,27 @@
 #!/usr/bin/env ys-0
 
 defn main(width=5):
-  say:
-    tree: width
+  say: tree(width)
 
 defn tree(width):
   top =:
     join "\n":
-      mapv \(line width, %1): width..1
+      mapv \(line width, %1): width .. 1
 
   trunk =: trunk(width) * 2
 
-  =>: "$top\n$trunk"
+  =>: |-
+    $top
+    $trunk
 
-defn trunk(num):
-  spaces(num) + "*\n"
+defn trunk(num): spaces(num) + "*\n"
 
 defn line(width, num):
   # stars is a lexically defined function
-  stars =: \(inc(%1) * "*")
+  stars =: \(inc(%1) * '*')
 
-  join "":
+  join '':
     spaces: num
     stars: (width - num) * 2
 
-defn spaces(num): num * " "
+defn spaces(num): num * ' '

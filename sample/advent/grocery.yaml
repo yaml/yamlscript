@@ -2,5 +2,5 @@
 !yamlscript/v0/data
 
 - bread
-- fruits:: load("fruits.yaml")
+- fruits: ! load('fruits.yaml')
 - milk

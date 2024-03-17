@@ -20,7 +20,7 @@ I've actually been hiding something very very big something from you.
 Today is Monday and Monday's are made for big headlines.
 
 That's right.
-Not only is YAMLScript a Lisp, it's a very specifig and modern Lisp.
+Not only is YAMLScript a Lisp, it's a very specific and modern Lisp.
 It's a Lisp that has a community and conferences and books and jobs and that pay
 people to write code in Lisp!
 
@@ -44,7 +44,7 @@ Consider this YAMLScript program:
 ```yaml
 # hw.ys
 !yamlscript/v0
-println: "Hello, world!"
+println: 'Hello, world!'
 ```
 
 Let's run it:
@@ -83,7 +83,7 @@ Oh wait, you don't know what Clojure is?
 Or maybe you need a quick refresher?
 
 Clojure is a modern Lisp that runs on the JVM.
-It was created by this really intersting guy named [Rich Hickey](
+It was created by this really interesting guy named [Rich Hickey](
 https://en.wikipedia.org/wiki/Rich_Hickey) whom I've actually met many times...
 
 ...on YouTube.
@@ -134,7 +134,7 @@ We'll learn more about `-m` another time.
 **Lisp puts parentheses around everything.
 Does that mean that YAMLScript does too?**
 
-Good question. Tha answer may surprise you.
+Good question. The answer may surprise you.
 YAMLScript has a lot of different ways to express code.
 It embraces diversity. (As long as that diversity can be written as YAML!)
 One of the ways to write code in YAMLScript is in Clojure syntax!
@@ -142,7 +142,7 @@ One of the ways to write code in YAMLScript is in Clojure syntax!
 This YAMLScript prints 3 symbol names available in the current namespace:
 
 ```bash
-$ ys -e '(say (take (+ 1 2) (keys (ns-map *ns*))))'
+$ ys -e '(say (take (+ 1 2) (keys (ns-map NS))))'
 (+' decimal? sort-by)
 ```
 
@@ -168,7 +168,7 @@ We could write the above YAMLScript expression like this:
 ```yaml
 say:
   take (+: 1 2):
-    keys: ns-map(*ns*)
+    keys: ns-map(NS)
 ```
 
 Both YAMLScript forms compile to the same Clojure code.
@@ -242,7 +242,7 @@ My love for Clojure is that it has the right parts to make YAML more powerful
 in all those same languages.
 I have no desire to see the whole world switch to Clojure (or anything else).
 Clojure is a great gift and I hope YS can help more people benefit from it in
-the langauges and technologies they already use.
+the languages and technologies they already use.
 
 
 **How does YAMLScript benefit from building over Clojure?**
@@ -267,6 +267,3 @@ I'll have more to say about each of these in future posts.
 For now, I'll just say that I'm extremely grateful for all of them.
 
 I'll see you tomorrow for day 5 of YAMLScript Advent 2023!
-
-
-{% include "../../santa-secrets.md" %}

@@ -235,5 +235,3 @@ Full disclosure: I only came up the the `--native` idea 2 days ago.
 Climb aboard and let's fly this baby to the moon!
 
 Come back tomorrow for Day 21 of the YAMLScript Advent Blog!
-
-{% include "../../santa-secrets.md" %}

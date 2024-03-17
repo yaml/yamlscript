@@ -176,7 +176,3 @@ YAMLScript because my flight's toilets stopped working and they decided to land
 here for the night. True story.
 
 Tune in tomorrow for Day 9 of the YAMLScript Advent Calendar.
-
-
-
-{% include "../../santa-secrets.md" %}

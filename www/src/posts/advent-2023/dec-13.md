@@ -161,6 +161,3 @@ get some sleep.
 
 
 ### Join me again tomorrow for Day 14 of the YAMLScript Advent Calendar!
-
-
-{% include "../../santa-secrets.md" %}

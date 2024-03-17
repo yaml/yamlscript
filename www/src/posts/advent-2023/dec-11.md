@@ -149,6 +149,3 @@ YeS-Expressions allow you to lean to the Lisp but keep it readable for your
 non-Lisper friends.
 
 Join me tomorrow for Day 12 of the YAMLScript Advent Calendar.
-
-
-{% include "../../santa-secrets.md" %}

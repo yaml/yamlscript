@@ -244,5 +244,3 @@ Santa's nice list!!! (as far as I'm concerned)
 
 Please do join me tomorrow for the final post of the YAMLScript Advent Blog
 2023!
-
-{% include "../../santa-secrets.md" %}

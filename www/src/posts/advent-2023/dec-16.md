@@ -208,6 +208,3 @@ Someone told me the other day that YAMLScript was a "lol language".
 This must be what they meant.
 
 The lols continue tomorrow, on Day 17 of the YAMLScript Advent Calendar!
-
-
-{% include "../../santa-secrets.md" %}
