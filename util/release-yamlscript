@@ -12,8 +12,6 @@
 # * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
 # * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
 
-# TODO: Make sure nvm / yarn are available at the start
-
 steps =: 10
 
 bindings =::
@@ -30,6 +28,12 @@ verbose =: boolean(ENV.'YS_RELEASE_VERBOSE')
 dryrun =: boolean(ENV.'YS_RELEASE_DRYRUN')
 last-step =:
   parse-long: ENV.'YS_RELEASE_LAST_STEP' || str(steps)
+
+each [cmd ['ys' 'yarn']]:
+  try:
+    shell {:out :string}: "which $cmd"
+    catch Exception e:
+      die: "The '$cmd' command is not available"
 
 
 #------------------------------------------------------------------------------
@@ -95,9 +99,17 @@ defn step-3(ctx):
     file-prepend 'Changes':
       make-changes-entry: ctx
 
+    validate-yaml: slurp('Changes')
+
   when verbose:
     # Show git changes since last release:
     run: "grep -F -B999 '$(ctx.old)' Changes"
+
+  when-not dryrun:
+    when (prompt("Edit the 'Changes' file?") = 'y'):
+      editor =: ENV.EDITOR || 'vi'
+      run: "$editor Changes"
+      prompt: "Press Enter to continue or Ctrl-C to abort."
 
 
 #------------------------------------------------------------------------------
@@ -118,7 +130,7 @@ defn step-4(ctx):
       changes:
       - libyamlscript $(ctx.new)
 
-    # TODO: check that YAML entry is valid YAML
+    validate-yaml: perl-entry
 
     file-prepend 'perl/Changes': perl-entry
     when verbose:
@@ -193,8 +205,8 @@ defn step-9(ctx):
   each [dir bindings]:
     run: "make -C $dir release"
 
-  # TODO: Remove the v0.1.xx tag that ruby creates
-  # TODO: Undo the Changes date modifications that zild makes
+  run: "git tag -d v$(ctx.new)"
+  run: "git checkout perl perl-alien"
 
   when verbose:
     run:: git -P diff
@@ -214,6 +226,10 @@ defn step-10(ctx):
 #------------------------------------------------------------------------------
 defn o(msg): say("\n$msg")
 
+defn prompt(msg):
+  print: "$msg "
+  =>: read-line().str/trim()
+
 defn file-prepend(file text):
   spit file:
     str: text slurp(file)
@@ -227,14 +243,23 @@ defn make-changes-entry(ctx):
     str/join "\n":
       map \(str/replace %1, /^\w+ /, "  - "): lines
 
+  validate-yaml: changes
+
   # Return a YAML entry for the Changes file:
-  # TODO: check that YAML entry is valid YAML
   =>: |
 
     - version: $(ctx.new)
       date:    $(ctx.date-time)
       changes:
     $changes
+
+defn validate-yaml(yaml):
+  when-not dryrun:
+    try:
+      yaml/load: yaml
+
+      catch Exception e:
+        die: "Invalid YAML: $e"
 
 defn run(cmd):
   say: "+ $cmd"
