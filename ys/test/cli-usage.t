@@ -2,11 +2,11 @@
 
 source test/init
 
-VERSION=0.1.42
+VERSION=0.1.43
 
 
 cmd='ys --version'
-is "$($cmd)" "YAMLScript 0.1.42" "$cmd"
+is "$($cmd)" "YAMLScript 0.1.43" "$cmd"
 
 
 cmd='ys'
