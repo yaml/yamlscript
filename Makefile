@@ -97,9 +97,17 @@ test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
 
-release: release-clean release-this
+release:
+ifndef o
+	$(error 'make $@' needs the o variable set to the old version)
+endif
+ifndef n
+	$(error 'make $@' needs the n variable set to the new version)
+endif
+	$(MAKE) realclean test
+	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
-release-this: $(RELEASE_ASSETS)
+release-yamlscript: $(RELEASE_ASSETS)
 	publish-release $(RELEASE_ASSETS)
 
 release-build: release-build-ys release-build-libyamlscript
@@ -107,18 +115,6 @@ release-build: release-build-ys release-build-libyamlscript
 release-build-ys: $(YS_RELEASE)
 
 release-build-libyamlscript: $(LYS_RELEASE)
-
-release-clean:
-	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
-
-release-yamlscript:
-ifndef o
-	$(error 'make $@' needs the o variable set to the old version)
-endif
-ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
-endif
-	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
 jars: $(JAR_ASSETS)
 
@@ -166,7 +162,8 @@ bump:
 	version-bump
 
 $(CLEAN):
-clean: $(CLEAN) release-clean
+clean: $(CLEAN)
+	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) NO-NAME release-*.log
