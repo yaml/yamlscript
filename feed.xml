@@ -40,7 +40,7 @@
 <p>What if I told you that you could write a <strong>program in YAML</strong> that would
 generate a Christmas tree?</p>
 <p>Well, you can! Here's how:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br><span class="token key atrule">defn main(width=5)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span><br>    <span class="token key atrule">tree</span><span class="token punctuation">:</span> width<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">top =</span><span class="token punctuation">:</span><br>    <span class="token key atrule">join "\n"</span><span class="token punctuation">:</span><br>      mapv \(line width<span class="token punctuation">,</span> %1)<span class="token punctuation">:</span> width..1<br><br>  <span class="token key atrule">trunk =</span><span class="token punctuation">:</span> trunk(width) * 2<br><br>  <span class="token key atrule">=></span><span class="token punctuation">:</span> <span class="token string">"$top\n$trunk"</span><br><br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span><br>  spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  <span class="token comment"># stars is a lexically defined function</span><br>  <span class="token key atrule">stars =</span><span class="token punctuation">:</span> \(inc(%1) * "<span class="token important">*")</span><br><br>  <span class="token key atrule">join ""</span><span class="token punctuation">:</span><br>    <span class="token key atrule">spaces</span><span class="token punctuation">:</span> num<br>    <span class="token key atrule">stars</span><span class="token punctuation">:</span> (width <span class="token punctuation">-</span> num) * 2<br><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * " "<br></code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><br><span class="token key atrule">defn main(width=5)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span> tree(width)<br><br><span class="token key atrule">defn tree(width)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">top =</span><span class="token punctuation">:</span><br>    <span class="token key atrule">join "\n"</span><span class="token punctuation">:</span><br>      mapv \(line width<span class="token punctuation">,</span> %1)<span class="token punctuation">:</span> width .. 1<br><br>  <span class="token key atrule">trunk =</span><span class="token punctuation">:</span> trunk(width) * 2<br><br>  <span class="token key atrule">=></span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token punctuation">-</span><br>    $top<br>    $trunk<br><br><span class="token key atrule">defn trunk(num)</span><span class="token punctuation">:</span> spaces(num) + "<span class="token important">*\n"</span><br><br>defn line(width<span class="token punctuation">,</span> <span class="token key atrule">num)</span><span class="token punctuation">:</span><br>  <span class="token comment"># stars is a lexically defined function</span><br>  <span class="token key atrule">stars =</span><span class="token punctuation">:</span> \(inc(%1) * '<span class="token important">*')</span><br><br>  <span class="token key atrule">join ''</span><span class="token punctuation">:</span><br>    <span class="token key atrule">spaces</span><span class="token punctuation">:</span> num<br>    <span class="token key atrule">stars</span><span class="token punctuation">:</span> (width <span class="token punctuation">-</span> num) * 2<br><br><span class="token key atrule">defn spaces(num)</span><span class="token punctuation">:</span> num * ' '<br></code></pre>
 <p>Let's get a tree!</p>
 <pre class="language-bash"><code class="language-bash">$ ys tree.ys<br>     *<br>    ***<br>   *****<br>  *******<br> *********<br>     *<br>     *</code></pre>
 <p>That's a pretty nice tree, but it's a little small. Let's make it bigger!</p>
@@ -69,32 +69,33 @@ also designed to be a great language for writing YAML configuration files.
 To that point, almost all YAML files are valid YAMLScript programs!
 And they evaluate to the same result that a YAML loader would produce.</p>
 <p>For example, here's a YAML file that defines a list of fruits:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># fruits.yaml</span><br><span class="token punctuation">-</span> apple<br><span class="token punctuation">-</span> banana<br><span class="token punctuation">-</span> cherry</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># fruits.yaml</span><br><span class="token punctuation">-</span> apple<br><span class="token punctuation">-</span> banana<br><span class="token punctuation">-</span> cherry<br></code></pre>
 <p>Let's run this file as a YAMLScript program:</p>
 <pre class="language-bash"><code class="language-bash">$ ys fruits.yaml<br>$</code></pre>
 <p>Nothing happens!</p>
 <p>But why would anything happen? The program doesn't do anything!</p>
 <p>It's the same as running this Python program:</p>
 <pre class="language-python"><code class="language-python">$ python <span class="token operator">-</span>c <span class="token string">'["apple", "banana", "cherry"]'</span><br>$</code></pre>
-<p>To <em>evaluate</em> a YAMLScript program, we need to use the <code>--load</code> option:</p>
+<p>To obtain the evaluation result of a YAMLScript program, we need to use the
+<code>--load</code> option:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> fruits.yaml<br><span class="token punctuation">[</span><span class="token string">"apple"</span>, <span class="token string">"banana"</span>, <span class="token string">"cherry"</span><span class="token punctuation">]</span><br>$</code></pre>
 <p>We got some JSON back!
 That's because by default, <code>--load</code> evaluates the YAMLScript and prints the
 result as JSON.</p>
 <p>What if we want to include these fruits in our YAML grocery list?
 Let's try it:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery.yaml</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
 <p>Let's add the <code>--yaml</code> option to print the result as YAML:</p>
-<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> grocery-list.yaml <span class="token parameter variable">--yaml</span><br>- bread<br>- fruits: load<span class="token punctuation">(</span><span class="token string">"fruits.yaml"</span><span class="token punctuation">)</span><br>- milk<br>$</code></pre>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> grocery.yaml <span class="token parameter variable">--yaml</span><br>- bread<br>- fruits: load<span class="token punctuation">(</span><span class="token string">"fruits.yaml"</span><span class="token punctuation">)</span><br>- milk<br>$</code></pre>
 <p>That's not what we wanted!
 We wanted the contents of the fruits list to be included in the grocery list.</p>
 <p>But if you think about it, this is exactly what we asked for.
 Since every YAML file is a valid YAMLScript program, it certainly should be
 loaded just like any other YAML loader would do it.</p>
 <p>Let's fix this to do what we want:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery-list.yaml</span><br><span class="token tag">!yamlscript/v0/data</span><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("fruits.yaml")<br><span class="token punctuation">-</span> milk</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># grocery.yaml</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token punctuation">-</span> bread<br><span class="token punctuation">-</span> <span class="token key atrule">fruits</span><span class="token punctuation">:</span> <span class="token tag">!</span> load('fruits.yaml')<br><span class="token punctuation">-</span> milk<br></code></pre>
 <p>Now when we run it:</p>
-<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-l</span> <span class="token parameter variable">-Y</span> grocery-list.yaml<br>- bread<br>- fruits:<br>  - apple<br>  - banana<br>  - cherry<br>- milk<br>$</code></pre>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-l</span> <span class="token parameter variable">-Y</span> grocery.yaml<br>- bread<br>- fruits:<br>  - apple<br>  - banana<br>  - cherry<br>- milk<br>$</code></pre>
 <p>There we go! We got our fruits!</p>
 <p>So what did we do here?
 We added 2 things:</p>
@@ -131,43 +132,6 @@ Well at least until December 25th, but I might keep going after that. :-)</p>
 </ul>
 <p>Hopefully you're as excited as I am to learn more about YAMLScript!</p>
 <p>See you tomorrow!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -220,7 +184,7 @@ features, including:</p>
 Well, it's right here, of course; wrapped up in a nice little package for you to
 open and enjoy!</p>
 <details><summary><strong style="color:green">Open Me!!!</strong></summary>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><span class="token comment"># twas-a-bit -- Generate a winter-holiday poem in the Mad Libs style</span><br><br><span class="token key atrule">defn main()</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span> poem()<br><br><span class="token key atrule">data =</span><span class="token punctuation">:</span> load("a<span class="token punctuation">-</span>bit<span class="token punctuation">-</span>of<span class="token punctuation">-</span>data.ys")<br><br><span class="token key atrule">defn W(kind)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">rand-nth</span><span class="token punctuation">:</span> get(data<span class="token punctuation">,</span> name(kind))<br><br><span class="token key atrule">defn poem()</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string"><br>  'Twas a bit before $W(:holiday), and all through the $W(:place),<br>  not a creature was stirring, not even a $W(:animal).<br>  The stockings were hung by the $W(:hang-by) with care,<br>  In hopes that St. $W(:saint) soon would be there.<br>  The $W(:children) were nestled all snug in their $W(:beds),<br>  While visions of $W(:adj)-$W(:candies) danced in their heads.<br>  And $W(:relative) in their 'kerchief, and I in my $W(:hat),<br>  Had just settled down for a long winter's $W(:activity).<br>  When out on the $W(:outside) there arose such a clatter,<br>  I sprang from my $W(:seat) to see what was the matter.<br>  Away to the window, I flew like a $W(:flyer),<br>  Tore open the $W(:covers) and threw up the $W(:cover).<br>  The $W(:luminary) on the breast of the new-fallen $W(:fallers),<br>  Gave the lustre of mid-day to $W(:outers) below.<br>  When what to my wondering eyes should $W(:arrive)?<br>  But a miniature $W(:vehicle), and eight tiny $W(:service-animals).</span><br></code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment">#!/usr/bin/env ys-0</span><br><span class="token comment"># twas-a-bit -- Generate a winter-holiday poem in the Mad Libs style</span><br><br><span class="token key atrule">defn main()</span><span class="token punctuation">:</span><br>  <span class="token key atrule">say</span><span class="token punctuation">:</span> poem()<br><br><span class="token key atrule">data =</span><span class="token punctuation">:</span> load('a<span class="token punctuation">-</span>bit<span class="token punctuation">-</span>of<span class="token punctuation">-</span>data.ys')<br><br><span class="token key atrule">defn W(kind)</span><span class="token punctuation">:</span><br>  <span class="token key atrule">rand-nth</span><span class="token punctuation">:</span> get(data<span class="token punctuation">,</span> name(kind))<br><br><span class="token key atrule">defn poem()</span><span class="token punctuation">:</span> <span class="token punctuation">|</span><span class="token scalar string"><br>  'Twas a bit before $W(:holiday), and all through the $W(:place),<br>  not a creature was stirring, not even a $W(:animal).<br>  The stockings were hung by the $W(:hang-by) with care,<br>  In hopes that St. $W(:saint) soon would be there.<br>  The $W(:children) were nestled all snug in their $W(:beds),<br>  While visions of $W(:adj)-$W(:candies) danced in their heads.<br>  And $W(:relative) in their 'kerchief, and I in my $W(:hat),<br>  Had just settled down for a long winter's $W(:activity).<br>  When out on the $W(:outside) there arose such a clatter,<br>  I sprang from my $W(:seat) to see what was the matter.<br>  Away to the window, I flew like a $W(:flyer),<br>  Tore open the $W(:covers) and threw up the $W(:cover).<br>  The $W(:luminary) on the breast of the new-fallen $W(:fallers),<br>  Gave the lustre of mid-day to $W(:outers) below.<br>  When what to my wondering eyes should $W(:arrive)?<br>  But a miniature $W(:vehicle), and eight tiny $W(:service-animals).</span><br></code></pre>
 </details>
 <p>You can run this program with one of the following commands:</p>
 <pre class="language-bash"><code class="language-bash">$ ys twas-a-bit<br><br>$ <span class="token function">chmod</span> +x twas-a-bit <span class="token operator">&amp;&amp;</span> ./twas-a-bit</code></pre>
@@ -273,7 +237,7 @@ Another way to write this would be:</p>
 <p>or:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">=></span><span class="token punctuation">:</span> map(inc<span class="token punctuation">,</span> range(1<span class="token punctuation">,</span> 10))</code></pre>
 <p>or:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">-></span><span class="token punctuation">:</span> range(1<span class="token punctuation">,</span> 10)<span class="token punctuation">,</span> map(inc)</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">->></span><span class="token punctuation">:</span> range(1<span class="token punctuation">,</span> 10)<span class="token punctuation">,</span> map(inc)</code></pre>
 <p>There's actually many more ways to write this, but this is only day 2 of
 YAMLScript Advent 2023, so we'll save those for later.</p>
 <p>In general, these 2 forms are equivalent:</p>
@@ -287,10 +251,10 @@ When it is a scalar, a function name is followed by a parenthesized list of
 arguments.
 Note that the opening parenthesis must immediately follow the function name
 without any intervening whitespace.</p>
-<p>You may have noticed a few more functions just now: <code>inc</code>, <code>=&gt;</code>, and <code>-&gt;</code>.
+<p>You may have noticed a few more functions just now: <code>inc</code>, <code>=&gt;</code>, and <code>-&gt;&gt;</code>.
 Well, <code>inc</code> is a function but we didn't call it directly.
 We passed it as an argument to the <code>map</code> function.</p>
-<p>I'll tell you about <code>=&gt;</code> and <code>-&gt;</code> later.</p>
+<p>I'll tell you about <code>=&gt;</code> and <code>-&gt;&gt;</code> later.</p>
 <blockquote>
 <h3>Comma Chameleon</h3>
 <p>I was going to save this for later, but I just can't wait...</p>
@@ -339,11 +303,11 @@ immediately followed by the variable or expression.</p>
 <p>This is pretty much the same as string interpolation in a shell like Bash:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token assign-left variable">name</span><span class="token operator">=</span>World<br><span class="token builtin class-name">echo</span> <span class="token string">"Hello <span class="token variable">$name</span>. The answer is <span class="token variable"><span class="token variable">$((</span><span class="token number">43</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token variable">))</span></span>."</span></code></pre>
 <p>The equivalent YAMLScript code would be:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">name =</span><span class="token punctuation">:</span> <span class="token string">"World"</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $name. The answer is $(43 - 1)."</span></code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">name =</span><span class="token punctuation">:</span> <span class="token string">'World'</span><br><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $name. The answer is $(43 - 1)."</span></code></pre>
 <p>You can also interpolate a YAMLScript function call (symbol followed by argument
 list) like this:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span> <span class="token string">"Hello $inc(41)."</span></code></pre>
-<p>In most langauages that support interpolation <code>inc</code> would expand as a variable,
+<p>In most languages that support interpolation <code>inc</code> would expand as a variable,
 but in YAMLScript it's a function and the parenthesized argument list is part of
 the expression.</p>
 <p>This is the kind of interpolation syntax we used in our poem generator program.</p>
@@ -372,43 +336,6 @@ Gave the lustre of mid-day to flowers below.<br>
 When what to my wondering eyes should materialize?<br>
 But a miniature train, and eight tiny oxen.</p>
 </blockquote>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -485,22 +412,23 @@ method as its primary API.</p>
 <p>Here's a Python single line program that loads a YAML text into a Python
 dictionary and and then prints it.</p>
 <pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yaml; print(yaml.safe_load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
-<p>YAMLScript will soon offer a binding in your favorite language that will do the
-same thing:</p>
-<pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'import yamlscript; print(yamlscript.load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
+<p>YAMLScript has a Python binding that does the same thing:</p>
+<pre class="language-bash"><code class="language-bash">$ python <span class="token parameter variable">-c</span> <span class="token string">'from yamlscript import YAMLScript; print(YAMLScript().load("Advent day: 3"))'</span><br><span class="token punctuation">{</span><span class="token string">'Advent day'</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
+<p>It also has these bindings in many other programming languages and plans to have
+them in all modern programming languages.</p>
 <p>A major goal of the YAMLScript project is to have these YAMLScript binding
 libraries be the best way to load YAML config files in all modern programming
 languages.
 This will be a big improvement over the current situation where every YAML
 framework has its own API and its own set of bugs and quirks.</p>
 <h3>Loading YAMLScript from the Command Line</h3>
-<p>The Python and other language bindings are not ready yet, but we can still load
-YAMLScript.
-We can do it from the command line using the <code>ys</code> command with the <code>--load</code>
+<p>We can also load YAMLScript outside of any programming language.</p>
+<p>We can do it from the command line using the <code>ys</code> command with the <code>--load</code>
 option.</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-le</span> <span class="token string">'Advent day: 3'</span><br><span class="token punctuation">{</span><span class="token string">"Advent day"</span><span class="token builtin class-name">:</span> <span class="token number">3</span><span class="token punctuation">}</span></code></pre>
 <blockquote>
-<p>Note: The <code>-le</code> option is a short for <code>-l</code> (short for <code>--load</code>) and <code>-e</code>.</p>
+<p>Note: The <code>-le</code> option is a short for <code>-l</code> (short for <code>--load</code>) and <code>-e</code>
+(short for `--eval).</p>
 </blockquote>
 <p>Since the command line doesn't have any way to store the loaded YAML (like a
 programming language would as a data structure) we have to get it back as text.
@@ -552,7 +480,7 @@ You may ask it (politely) in one of these ways:</p>
 <p>Imagine we have YAML files containing top level mappings such as:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># map1.yaml</span><br><span class="token key atrule">reindeer</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Dancer<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Blitzen<br><span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> Rudolph<br>  <span class="token key atrule">nosy</span><span class="token punctuation">:</span> <span class="token boolean important">true</span></code></pre>
 <p>We can pull data from these files into our YAML dynamically:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file1.ys</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">key1</span><span class="token punctuation">:</span> val1<br><span class="token key atrule">key2</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml")<br><span class="token key atrule">key3</span><span class="token punctuation">:</span> val3</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file1.ys</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">key1</span><span class="token punctuation">:</span> val1<br><span class="token key atrule">key2</span><span class="token punctuation">:</span> <span class="token tag">!</span> load('map1.yaml')<br><span class="token key atrule">key3</span><span class="token punctuation">:</span> val3</code></pre>
 <p>Now if we &quot;ran&quot; the YS nothing would happen, but when we &quot;load&quot; it, we get the
 data we expect.</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--load</span> file1.ys<br><span class="token punctuation">{</span><span class="token string">"key1"</span><span class="token builtin class-name">:</span> <span class="token string">"val1"</span>, <span class="token string">"key2"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><span class="token string">"reindeer"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Dancer"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Blitzen"</span><span class="token punctuation">}</span>, <span class="token punctuation">{</span><span class="token string">"name"</span><span class="token builtin class-name">:</span> <span class="token string">"Rudolph"</span>, <span class="token string">"nosy"</span><span class="token builtin class-name">:</span> true<span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">}</span>, <span class="token string">"key3"</span><span class="token builtin class-name">:</span> <span class="token string">"val3"</span><span class="token punctuation">}</span></code></pre>
@@ -571,7 +499,7 @@ If you have existing YAML files and you want to use a couple of YS functions in
 them, start them with <code>!yamlscript/v0/data</code> and then use <code>!</code> tags before the
 functional parts.</p>
 <p>Another way to accomplish the same result is:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file2.ys</span><br><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">map1 =</span><span class="token punctuation">:</span> load("map1.yaml")<br><br><span class="token key atrule">=></span><span class="token punctuation">:</span><br>  .<span class="token punctuation">{</span><br>    <span class="token punctuation">:</span>key1 "val1"<br>    <span class="token punctuation">:</span>key2 map1<br>    <span class="token punctuation">:</span>key3 "val3"<br>  <span class="token punctuation">}</span></code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file2.ys</span><br><span class="token tag">!yamlscript/v0</span><br><br><span class="token key atrule">map1 =</span><span class="token punctuation">:</span> load('map1.yaml')<br><br><span class="token key atrule">=></span><span class="token punctuation">:</span><br>  .<span class="token punctuation">{</span><br>    <span class="token punctuation">:</span>key1 "val1"<br>    <span class="token punctuation">:</span>key2 map1<br>    <span class="token punctuation">:</span>key3 "val3"<br>  <span class="token punctuation">}</span></code></pre>
 <p>Here everything is code, and the final expression is the data we want to load.
 When you run <code>ys --load file2.ys</code> you get the same result as before.</p>
 <blockquote>
@@ -582,7 +510,7 @@ More on keywords another day.</p>
 <h3>Merging Mappings and Joining Sequences</h3>
 <p>I'll leave you with the two most frequent requests that Santa gets from YAML
 kids: <code>merge</code> and <code>concat</code>.</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file3.ys</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>    load("map1.yaml")<br>    load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">concat</span><span class="token punctuation">:</span><br>    load("seq1.yaml")<br>    load("seq2.yaml")</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file3.ys</span><br><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">merge</span><span class="token punctuation">:</span><br>    load('map1.yaml')<br>    load('map2.yaml')<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span><br>  <span class="token key atrule">concat</span><span class="token punctuation">:</span><br>    load('seq1.yaml')<br>    load('seq2.yaml')</code></pre>
 <p>When we were inventing YAML 20 years ago, one of the most confusing things we
 did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merge operation.</p>
 <p>It wasn't a good idea because:</p>
@@ -598,52 +526,11 @@ did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merg
 100s more (standard functions) in fact!
 (All in good time, my patient Advent-urers.)</p>
 <p>Let's end this day by making that last YS file even cooler than Rudolph's toes!</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("map1.yaml") + load("map2.yaml")<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span> load("seq1.yaml") + load("seq2.yaml")</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token tag">!yamlscript/v0/data</span><br><br><span class="token key atrule">my-map</span><span class="token punctuation">:</span> <span class="token tag">!</span> load('map1.yaml') + load('map2.yaml')<br><span class="token key atrule">my-seq</span><span class="token punctuation">:</span> <span class="token tag">!</span> load('seq1.yaml') + load('seq2.yaml')</code></pre>
 <p>YAMLScript's <code>+</code> operator is a general purpose joiner.
 It's polymorphic for numbers, strings, sequences and mappings.</p>
 <p>As ususal, I hope you enjoyed today's post.
 I'll see you tomorrow for day 4 of YAMLScript Advent 2023!</p>
-<!--
-refactor this into a template and include it.
-https://github.com/11ty/eleventy/issues/658#issuecomment-599142642
--->
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -667,7 +554,7 @@ I've actually been hiding something very very big something from you.</p>
 <h3>Welcome to day 4 of YAMLScript Advent 2023!</h3>
 <p>Today is Monday and Monday's are made for big headlines.</p>
 <p>That's right.
-Not only is YAMLScript a Lisp, it's a very specifig and modern Lisp.
+Not only is YAMLScript a Lisp, it's a very specific and modern Lisp.
 It's a Lisp that has a community and conferences and books and jobs and that pay
 people to write code in Lisp!</p>
 <p>If you know the slightest thing about Lisp, you must think I'm crazy.
@@ -683,7 +570,7 @@ Every YAMLScript program is program is a Clojure program.</p>
 that is then run by a Clojure runtime engine.
 I can prove it!</p>
 <p>Consider this YAMLScript program:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># hw.ys</span><br><span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">println</span><span class="token punctuation">:</span> <span class="token string">"Hello, world!"</span></code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># hw.ys</span><br><span class="token tag">!yamlscript/v0</span><br><span class="token key atrule">println</span><span class="token punctuation">:</span> <span class="token string">'Hello, world!'</span></code></pre>
 <p>Let's run it:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--run</span> hw.ys<br>Hello, world<span class="token operator">!</span></code></pre>
 <p>No surprises there.
@@ -701,7 +588,7 @@ Yeah, you get it. QED, baby!</p>
 <p>Oh wait, you don't know what Clojure is?
 Or maybe you need a quick refresher?</p>
 <p>Clojure is a modern Lisp that runs on the JVM.
-It was created by this really intersting guy named <a href="https://en.wikipedia.org/wiki/Rich_Hickey">Rich Hickey</a> whom I've actually met many times...</p>
+It was created by this really interesting guy named <a href="https://en.wikipedia.org/wiki/Rich_Hickey">Rich Hickey</a> whom I've actually met many times...</p>
 <p>...on YouTube.</p>
 <p>I don't typically watch a lot of programming videos, but I've seen at least a
 dozen of his.
@@ -734,12 +621,12 @@ We'll learn more about <code>-m</code> another time.</p>
 </blockquote>
 <p><strong>Lisp puts parentheses around everything.
 Does that mean that YAMLScript does too?</strong></p>
-<p>Good question. Tha answer may surprise you.
+<p>Good question. The answer may surprise you.
 YAMLScript has a lot of different ways to express code.
 It embraces diversity. (As long as that diversity can be written as YAML!)
 One of the ways to write code in YAMLScript is in Clojure syntax!</p>
 <p>This YAMLScript prints 3 symbol names available in the current namespace:</p>
-<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-e</span> <span class="token string">'(say (take (+ 1 2) (keys (ns-map *ns*))))'</span><br><span class="token punctuation">(</span>+' decimal? sort-by<span class="token punctuation">)</span></code></pre>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-e</span> <span class="token string">'(say (take (+ 1 2) (keys (ns-map NS))))'</span><br><span class="token punctuation">(</span>+' decimal? sort-by<span class="token punctuation">)</span></code></pre>
 <p>In Lisp every expression (function call) is a paranthesized list where the first
 word is the function name and the rest are the arguments.
 That means arithmetic expressions like <code>1 + 2</code> are written as <code>(+ 1 2)</code>.</p>
@@ -750,7 +637,7 @@ these Lisp basic forms.</p>
 <p>We'll learn the gritty details in another post, but here's the basics:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">=></span><span class="token punctuation">:</span> 1 + 2               <span class="token comment"># (+ 1 2)   ;; + - * /</span><br><span class="token key atrule">=></span><span class="token punctuation">:</span> 3 * 4 * 5           <span class="token comment"># (* 3 4 5) ;; if operators are the same</span><br><span class="token key atrule">=></span><span class="token punctuation">:</span> foo(bar(42 true))   <span class="token comment"># (foo (bar 42 true))</span></code></pre>
 <p>We could write the above YAMLScript expression like this:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span><br>  <span class="token key atrule">take (+</span><span class="token punctuation">:</span> <span class="token key atrule">1 2)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">keys</span><span class="token punctuation">:</span> ns<span class="token punctuation">-</span>map(<span class="token important">*ns*)</span></code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">say</span><span class="token punctuation">:</span><br>  <span class="token key atrule">take (+</span><span class="token punctuation">:</span> <span class="token key atrule">1 2)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">keys</span><span class="token punctuation">:</span> ns<span class="token punctuation">-</span>map(NS)</code></pre>
 <p>Both YAMLScript forms compile to the same Clojure code.</p>
 <p>Basically at any level of YAML in YAMLScript, you can switch to using Clojure.
 Since an entire YAML document can be a single string you can sometimes use an
@@ -798,7 +685,7 @@ My love for Clojure is that it has the right parts to make YAML more powerful
 in all those same languages.
 I have no desire to see the whole world switch to Clojure (or anything else).
 Clojure is a great gift and I hope YS can help more people benefit from it in
-the langauges and technologies they already use.</p>
+the languages and technologies they already use.</p>
 <p><strong>How does YAMLScript benefit from building over Clojure?</strong></p>
 <p>In a nutshell, it makes YAMLScript a complete, robust, battle tested, and
 well-documented language from the get go.
@@ -817,43 +704,6 @@ This is all thanks to the shoulders of these specific giants:</p>
 <p>I'll have more to say about each of these in future posts.
 For now, I'll just say that I'm extremely grateful for all of them.</p>
 <p>I'll see you tomorrow for day 5 of YAMLScript Advent 2023!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -884,18 +734,21 @@ What a coincidence!</p>
 aarch64.
 If you happen to be running on one of those platforms, you can run the following
 command to install YAMLScript's CLI, <code>ys</code>:</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
-<p>This installer defaults to installing <code>ys</code> into <code>/usr/local/bin</code> so you probably
-need to run it as root or with <code>sudo</code>:</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">bash</span></code></pre>
+<blockquote>
+<p>UPDATE: Releases are now available for Linux and macOS on both x86_64 and
+aarch64 (for either). See the <a href="https://github.com/yaml/yamlscript/releases/">YAMLScript Releases Page</a></p>
+</blockquote>
+<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> <span class="token parameter variable">-sSL</span> yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
+<p>This installer defaults to installing <code>ys</code> into <code>~/.local/bin</code>, unless you run
+it as root in which case it defautlls to <code>/usr/local/bin</code>.</p>
 <p>If you want to install it somewhere else, like say <code>~/local/bin</code>, you can do:</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=~</span>/local <span class="token function">bash</span></code></pre>
-<p>Whereever you install it, make sure that the <code>$PREFIX/bin</code> directory is in your
+<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> <span class="token parameter variable">-sSL</span> yamlscript.org/install <span class="token operator">|</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=~</span>/local <span class="token function">bash</span></code></pre>
+<p>Wherever you install it, make sure that the <code>$PREFIX/bin</code> directory is in your
 <code>PATH</code> environment variable.</p>
 <p>YAMLScript also provides a release for <code>libyamlscript.so</code>, the YAMLScript shared
 library.
 You can install it like above but with (some variation of):</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> https://yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
+<pre class="language-bash"><code class="language-bash"><span class="token function">curl</span> <span class="token parameter variable">-sSL</span> yamlscript.org/install <span class="token operator">|</span> <span class="token function">bash</span></code></pre>
 <p>We'll be using the shared library soon when we start playing around with using
 YAMLScript from other programming languages.</p>
 <h3>Building from Source</h3>
@@ -905,15 +758,9 @@ You don't need any special prerequisites; just git, bash, curl and make.</p>
 <p>The first thing you need to do is clone the YAMLScript repo:</p>
 <pre class="language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/yaml/yamlscript</code></pre>
 <p>Then you can build and install the CLI with:</p>
-<pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> yamlscript<br>$ <span class="token function">make</span> build<br>$ <span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span><br>or<br>$ <span class="token function">make</span> <span class="token function">install</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=</span><span class="token punctuation">..</span>.</code></pre>
+<pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> yamlscript<br>$ <span class="token function">make</span> build<br>$ <span class="token function">make</span> <span class="token function">install</span><br>or<br>$ <span class="token function">make</span> <span class="token function">install</span> <span class="token assign-left variable">PREFIX</span><span class="token operator">=</span><span class="token punctuation">..</span>.</code></pre>
 <p>The <code>make install</code> command will install both <code>ys</code> and <code>libyamlscript.so</code> into
 <code>$PREFIX/bin</code> and <code>$PREFIX/lib</code> respectively.</p>
-<blockquote>
-<p>Note: Currently you should take care not to run <code>make build</code> as root.
-Since <code>make install</code> triggers <code>make build</code>, running <code>sudo make install</code>
-without first running <code>make build</code> may fail.
-This should be fixed soon.</p>
-</blockquote>
 <p>YAMLScript has a pretty sophisticated build system, built around GNU Make.
 Even though the build uses Java, Clojure and GraalVM, you don't need to install
 any of those things.
@@ -923,54 +770,17 @@ In fact, even if you have them installed, the build will ignore them.</p>
 Try:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">--help</span></code></pre>
 <p>It should display:</p>
-<pre class="language-text"><code class="language-text">ys - The YAMLScript (YS) Command Line Tool<br><br>Usage: ys [options] [file]<br><br>Options:<br>  -r, --run                Compile and evaluate a YAMLScript file (default)<br>  -l, --load               Output the evaluated YAMLScript value<br>  -c, --compile            Compile YAMLScript to Clojure<br>  -e, --eval YSEXPR        Evaluate a YAMLScript expression<br>  -C, --clj                Treat input as Clojure code<br><br>  -m, --mode MODE          Add a mode tag: code, data, or bare (only for --eval/-e)<br>  -p, --print              Print the result of --run in code mode<br><br>  -o, --output             Output file for --load or --compile<br>  -t, --to FORMAT          Output format for --load<br><br>  -J, --json               Output JSON for --load<br>  -Y, --yaml               Output YAML for --load<br>  -E, --edn                Output EDN for --load<br><br>  -X, --debug              Debug mode: print full stack trace for errors<br>  -x, --debug-stage STAGE  Display the result of stage(s)<br>      --version            Print version and exit<br>  -h, --help               Print this help and exit</code></pre>
+<pre class="language-text"><code class="language-text">ys - The YAMLScript (YS) Command Line Tool<br><br>Usage: ys [<option...>] [<file>]<br><br>Options:<br><br>      --run                Run a YAMLScript program file (default)<br>  -l, --load               Output (compact) JSON of YAMLScript evaluation<br>  -e, --eval YSEXPR        Evaluate a YAMLScript expression<br>                           multiple -e values joined by newline<br><br>  -c, --compile            Compile YAMLScript to Clojure<br>  -b, --binary             Compile to a native binary executable<br><br>  -p, --print              Print the result of --run in code mode<br>  -o, --output FILE        Output file for --load, --compile or --binary<br><br>  -T, --to FORMAT          Output format for --load:<br>                             json, yaml, edn<br>  -J, --json               Output (pretty) JSON for --load<br>  -Y, --yaml               Output YAML for --load<br>  -E, --edn                Output EDN for --load<br><br>  -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)<br>  -C, --clojure            Treat input as Clojure code<br><br>  -d                       Debug all compilation stages<br>  -D, --debug-stage STAGE  Debug a specific compilation stage:<br>                             parse, compose, resolve, build,<br>                             transform, construct, print<br>                           can be used multiple times<br>  -S, --stack-trace        Print full stack trace for errors<br>  -x, --xtrace             Print each expression before evaluation<br><br>      --install            Install the libyamlscript shared library<br>      --upgrade            Upgrade both ys and libyamlscript<br><br>      --version            Print version and exit<br>  -h, --help               Print this help and exit</code></pre>
 <p>In the next day or two we'll go over all of these options in detail.</p>
 <p>Here's a quick example of how to run YAMLScript to process a file from the
 internet that Google just told me about:</p>
-<pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml <span class="token operator">|</span><br>  ys <span class="token parameter variable">-J</span> <span class="token operator">|</span> jq .classes<br><span class="token punctuation">{</span><br>  <span class="token string">"nfs::server"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><br>    <span class="token string">"exports"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><br>      <span class="token string">"/srv/share1"</span>,<br>      <span class="token string">"/srv/share3"</span><br>    <span class="token punctuation">]</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
-<p>When <code>ys</code> notices there is data on STDIN, it will read the YS program from
-there.
-The <code>-J</code> option tells <code>ys</code> to <code>--load</code> the YS and output the evaluation to JSON.</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> <span class="token parameter variable">-sSL</span> gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml <span class="token operator">|</span><br>ys <span class="token parameter variable">-J</span> - <span class="token operator">|</span> jq .classes<br><span class="token punctuation">{</span><br>  <span class="token string">"nfs::server"</span><span class="token builtin class-name">:</span> <span class="token punctuation">{</span><br>    <span class="token string">"exports"</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span><br>      <span class="token string">"/srv/share1"</span>,<br>      <span class="token string">"/srv/share3"</span><br>    <span class="token punctuation">]</span><br>  <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
+<p>The special file name <code>-</code> tells <code>ys</code> to read the program from STDIN.
+The <code>-J</code> option tells <code>ys</code> to <code>--load</code> the YAMLScript and output the evaluation
+to JSON.</p>
 <p>Well that's a wrap.
 Thanks again for following along each day.</p>
 <p>I'll see you tomorrow for day 6 of YAMLScript Advent 2023!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1071,43 +881,6 @@ from Code Mode to Data Mode.</p>
 <p>Well that concludes our coverage of YAMLScript a la Mode!
 Mmmm... Now doesn't that just sound delicious? (or at least fashionable!)</p>
 <p>I'll see you tomorrow for day 7 of YAMLScript Advent 2023!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1202,43 +975,6 @@ YAMLScript code compiles to Clojure code.</p>
 <p>In the meantime, try out your new <code>ys</code> tool and see what you can do with it.
 The more you use it, the sharper it will get.</p>
 <p>I'll see you tomorrow for day 8 of YAMLScript Advent 2023!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1360,43 +1096,6 @@ We wrote a program in YAML to play with some YAML that was inside the YAML!</p>
 YAMLScript because my flight's toilets stopped working and they decided to land
 here for the night. True story.</p>
 <p>Tune in tomorrow for Day 9 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1461,43 +1160,6 @@ with string interpolation.</p>
 <p>I hope you are inspired to write some beautiful YAMLScript code.</p>
 <p><strong>You've got style, baby!</strong></p>
 <p>Come back tomorrow for day 10 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1706,43 +1368,6 @@ I know it was a lot to take in, and I also know you don't need to know all this
 to be a good YAMLScript programmer.</p>
 <p>But then again, you probably want to know all about this to become a great one!</p>
 <p>See you tomorrow for Day 11 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1834,43 +1459,6 @@ much Lisp or YAML style you want to use at any point.
 YeS-Expressions allow you to lean to the Lisp but keep it readable for your
 non-Lisper friends.</p>
 <p>Join me tomorrow for Day 12 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -1944,43 +1532,6 @@ continue to work in the future.</p>
 And that also means we're half way through the Advent Calendar.
 I hope you're enjoying it as much as I am, and I hope the best is yet to come!</p>
 <p>Tune in tomorrow for Day 13 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -2103,43 +1654,6 @@ I'm loving this language and project!</p>
 <p>There's a lot more details I could add here but it's getting late and I need to
 get some sleep.</p>
 <h3>Join me again tomorrow for Day 14 of the YAMLScript Advent Calendar!</h3>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -2321,43 +1835,6 @@ function that returns a range from 0 to 4.</p>
 to chew on.
 Maybe we'll have to stuff your stocking a couple more times this month!</p>
 <p>See you tomorrow for Day 15 of YAMLScript Advent 2023!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -2563,43 +2040,6 @@ designing YAMLScript.
 You can't please everyone, but if you give people choices, the only people that
 get upset are the ones who don't like choices. :- )</p>
 <p>See you tomorrow? That's Day 16 of the YAMLScript Advent 2023!!!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -2717,43 +2157,6 @@ These are called atoms.</p>
 <p>Someone told me the other day that YAMLScript was a &quot;lol language&quot;.
 This must be what they meant.</p>
 <p>The lols continue tomorrow, on Day 17 of the YAMLScript Advent Calendar!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -2854,43 +2257,6 @@ Rosetta Code Data Project repo with your solutions.</p>
 <p>If you had never heard of Rosetta Code before, I hope you'll find it as
 interesting as I do.</p>
 <p>Check back tomorrow for Day 18 of the YAMLScript Advent Calendar!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3030,43 +2396,6 @@ the output starts and ends.</p>
 There are many more ways to debug YAMLScript programs.
 Likely many than I've even thought of yet.</p>
 <p>See you tomorrow for Day 19 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3159,43 +2488,6 @@ But YAMLScript is keeping me very busy and I was a little short on time today.</
 But I need to make it work first!
 Fingers crossed.</p>
 <p>Come back tomorrow for Day 20 of the YAMLScript Advent Calendar.</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3297,43 +2589,6 @@ today.
 Full disclosure: I only came up the the <code>--native</code> idea 2 days ago.</p>
 <p>Climb aboard and let's fly this baby to the moon!</p>
 <p>Come back tomorrow for Day 21 of the YAMLScript Advent Blog!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3419,43 +2674,6 @@ offers binding modules for it in many languages.</p>
 Not only as a new programming language, but also as a new way to work with YAML
 files that you already have.</p>
 <p>Join me tomorrow for Day 22 of the YAMLScript Advent Blog!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3542,43 +2760,6 @@ when you feel the need to be explicit.</p>
 <p>That was a quick post but also an important one for learning how to write
 better YAMLScript.</p>
 <p>See you tomorrow for Day 23 of the YAMLScript Advent Blog!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3709,43 +2890,6 @@ Even if it sometimes takes me a while to see it.</p>
 Santa's nice list!!! (as far as I'm concerned)</p>
 <p>Please do join me tomorrow for the final post of the YAMLScript Advent Blog
 2023!</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
@@ -3904,43 +3048,6 @@ Thank goodness for my ADD. (Advent Driven Development)</p>
 <p>Don't forget your sunglasses.</p>
 <p>The future is bright!!!</p>
 <p>— Ingy döt Net and the YAMLScript Elves</p>
-<p>&nbsp;</p>
-<details><summary style="color:#888">Santa's little secrets...</summary>
-<p>In December 2023 YAMLScript is a work in progress.</p>
-<p>This is not to say that it's a toy proof of concept.
-It has a working compiler, runtime and CLI.
-It has unit tests that must pass for every commit pushed to the main branch.
-It's well thought out and has a clear direction that I continually vet with a
-small group of talented and trusted people.
-It has regular <a href="https://github.com/yaml/yamlscript/releases">releases</a>.</p>
-<p>But that in turn not to say that you should use it in production today.
-I encourage you to start playing with it, and I'm committed to backwards
-compatibility for stable releases.
-But we're not quite there yet.
-Caveat usor!</p>
-<p>YAMLScript is evolving fast.
-While I'm writing these posts, I'm also writing the code for new features and
-fixing bugs as I go.
-I've had the Advent plan for over a month now, and I had planned to be further
-along before December 1st, but such are the time estimates of hackers.</p>
-<p>I am attempting to make sure that the code examples in these posts are always
-using the implemented features, but sometimes I may fall a few hours behind.
-Often I need to write the examples using code patterns that actually work but
-are not the ones I preferred to best make a point.</p>
-<p>As I fix bugs, implement features and tweak the language, I will update the
-posts accordingly.
-If you see something that bugs you, try taking another look after a few days.
-It probably bugged me too!</p>
-<p>Be patient with me.</p>
-<p>If I had to guess, I'd say that YAMLScript v0 will be have a stable release
-sometime before March 2024.
-I'll continue blogging the progress as I go, so it shouldn't be hard for you to
-decide when to start using YAMLScript for real.</p>
-<p>Overall the whole thing is going extremely well, and I'm having a lot of fun.
-It's important to be transparent with you about where things are at.</p>
-<p>Stick with me... This is going to be awesome!</p>
-<p>— Ingy döt Net</p>
-</details>
 
     ]]>
       </content>
