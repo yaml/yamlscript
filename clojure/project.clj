@@ -25,10 +25,6 @@
    [net.java.dev.jna/jna "5.14.0"]
    [org.yamlscript/yamlscript "0.1.41"]]
 
-  #_#_:resource-paths ["../java/target/yamlscript-0.1.42.jar"]
-
-  #_#_:managed-dependencies [[org.yamlscript/yamlscript "0.1.42"]]
-
   :deploy-repositories
   [["releases"
     {:url "https://repo.clojars.org"
