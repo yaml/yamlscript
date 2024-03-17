@@ -3,9 +3,11 @@
 #------------------------------------------------------------------------------
 
 MVN_COMMANDS := \
+  compile \
   install \
   package \
   test \
+  validate \
 
 export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(JAVA_HOME)/bin:$(PATH)
