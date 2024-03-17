@@ -15,7 +15,7 @@ main() (
 
 bump() (
   file=$1
-  perl -n0e "m/$pattern/ or exit 1" "$file" || return 0
+#  perl -n0e "m/$pattern/ or exit 1" "$file" || return 0
   set -x
   perl -p0i -e "s/$pattern/\${1}$version\$2/" "$file"
 )
