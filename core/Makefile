@@ -19,7 +19,7 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-copy-project-clj.dockerfile \
 	  $</docker-deps-clojure.dockerfile \
 	  $</docker-apt-dev.dockerfile \
-		> $@
+	  > $@
 
 clean::
 	$(RM) pom.xml

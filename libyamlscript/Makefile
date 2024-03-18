@@ -85,4 +85,4 @@ Dockerfile:: $(COMMON) Makefile
 	  $</docker-copy-project-deps.dockerfile \
 	  $</docker-deps-clojure.dockerfile \
 	  $</docker-apt-dev.dockerfile \
-		> $@
+	  > $@

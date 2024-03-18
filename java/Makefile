@@ -10,12 +10,15 @@ $(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP)
 	mvn $@
 
 release: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP) test package
-	mvn deploy:deploy-file  $o \
-		-s ~/.mvn-user-settings.xml \
-	  -Dfile=$(YAMLSCRIPT_JAVA_JAR) \
-		-DpomFile=pom.xml \
-		-DrepositoryId=clojars \
-		-Durl=https://clojars.org/repo/
+ifndef n
+	$(error 'make $@' needs the n variable set to the new version)
+endif
+	mvn deploy:deploy-file $n \
+	    -s ~/.mvn-user-settings.xml \
+	    -Dfile=$(YAMLSCRIPT_JAVA_JAR) \
+	    -DpomFile=pom.xml \
+	    -DrepositoryId=clojars \
+	    -Durl=https://clojars.org/repo/
 
 clean::
 	$(RM) -r reports/ target/

@@ -12,11 +12,11 @@
 # * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
 # * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
 
-steps =: 10
+steps =: 13
 
 bindings =::
-- clojure
 - java
+- clojure
 - perl
 - perl-alien
 - python
@@ -54,11 +54,34 @@ defn main(old-version new-version start=1):
 
 
 #------------------------------------------------------------------------------
-# Change the .version.sh version bump script to use the new version string.
+# Git pull --rebase to ensure we have the latest changes.
 #------------------------------------------------------------------------------
 
 defn step-1(ctx):
-  o: "Step 1) Update '.version.sh' file"
+  o: "Step 1) Run 'git pull --rebase'"
+
+  run:: git pull --rebase
+
+  when verbose:
+    run: "git log --oneline --abbrev-commit $(ctx.old)^..HEAD"
+
+
+#------------------------------------------------------------------------------
+# Run 'make realclean' to ensure we have a clean build environment.
+#------------------------------------------------------------------------------
+
+defn step-2(ctx):
+  o: "Step 2) Run 'make realclean'"
+
+  run:: make realclean
+
+
+#------------------------------------------------------------------------------
+# Change the .version.sh version bump script to use the new version string.
+#------------------------------------------------------------------------------
+
+defn step-3(ctx):
+  o: "Step 3) Update '.version.sh' file"
 
   when-not dryrun:
     spit '.version.sh':
@@ -75,13 +98,23 @@ defn step-1(ctx):
 # Change all current version strings in dozens of files to the new version.
 #------------------------------------------------------------------------------
 
-defn step-2(ctx):
-  o: "Step 2) Run 'make bump'"
+defn step-4(ctx):
+  o: "Step 4) Run 'make bump'"
 
   run:: make bump
 
   when verbose:
     run:: git -P diff
+
+
+#------------------------------------------------------------------------------
+# Run 'make test' to ensure everything is working as expected.
+#------------------------------------------------------------------------------
+
+defn step-5(ctx):
+  o: "Step 5) Run 'make test'"
+
+  run:: make test
 
 
 #------------------------------------------------------------------------------
@@ -92,8 +125,8 @@ defn step-2(ctx):
 # Open the file in an editor to review the entry and update if needed.
 #------------------------------------------------------------------------------
 
-defn step-3(ctx):
-  o: "Step 3) Update the 'Changes' file"
+defn step-6(ctx):
+  o: "Step 6) Update the 'Changes' file"
 
   when-not dryrun:
     file-prepend 'Changes':
@@ -117,8 +150,8 @@ defn step-3(ctx):
 # Update them.
 #------------------------------------------------------------------------------
 
-defn step-4(ctx):
-  o: "Step 4) Update the Change Log files for the binding modules"
+defn step-7(ctx):
+  o: "Step 7) Update the Change Log files for the binding modules"
 
   when-not dryrun:
     # A change log (YAML) entry for Perl:
@@ -156,8 +189,8 @@ defn step-4(ctx):
 # git commit the release changes we've made so far.
 #------------------------------------------------------------------------------
 
-defn step-5(ctx):
-  o: "Step 5) Commit the release changes to git"
+defn step-8(ctx):
+  o: "Step 8) Commit the release changes to git"
 
   run: "git commit -a -m 'release: $(ctx.new)'"
 
@@ -166,8 +199,8 @@ defn step-5(ctx):
 # git tag using the new version
 #------------------------------------------------------------------------------
 
-defn step-6(ctx):
-  o: "Step 6) Add git tag for the new version"
+defn step-9(ctx):
+  o: "Step 9) Add git tag for the new version"
 
   run: "git tag $(ctx.new)"
 
@@ -176,8 +209,8 @@ defn step-6(ctx):
 # git push commit and tag
 #------------------------------------------------------------------------------
 
-defn step-7(ctx):
-  o: "Step 7) Push the git commit and tag"
+defn step-10(ctx):
+  o: "Step 10) Push the git commit and tag"
 
   run:: git push
 
@@ -188,8 +221,8 @@ defn step-7(ctx):
 # Call 'make release'
 #------------------------------------------------------------------------------
 
-defn step-8(ctx):
-  o: "Step 8) Run 'make release-assets'"
+defn step-11(ctx):
+  o: "Step 11) Run 'make release-assets'"
 
   run:: make release-assets
 
@@ -199,11 +232,16 @@ defn step-8(ctx):
 # For each of the many binding libraries, run 'make release'
 #------------------------------------------------------------------------------
 
-defn step-9(ctx):
-  o: "Step 9) Run 'make release' for each language binding library"
+defn step-12(ctx):
+  o: "Step 12) Run 'make release' for each language binding library"
 
   each [dir bindings]:
-    run: "make -C $dir release"
+    try:
+      run: "make -C $dir release"
+      catch Exception e:
+        if ((dir = 'clojure') || (dir = 'java')):
+          warn: "Failed to release $dir. Continuing."
+          die: "Failed to release $dir. Exiting."
 
   run: "git tag -d v$(ctx.new)"
   run: "git checkout perl perl-alien"
@@ -215,8 +253,8 @@ defn step-9(ctx):
 # Publish the website. A new release will change the content of some pages.
 #------------------------------------------------------------------------------
 
-defn step-10(ctx):
-  o: "Step 10) Publish the yamlscript.org website"
+defn step-13(ctx):
+  o: "Step 13) Publish the yamlscript.org website"
 
   run: "make -C www realclean publish"
 

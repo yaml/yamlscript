@@ -97,7 +97,8 @@ test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
 
-release: release-var-check realclean test release-yamlscript
+release: release-var-check
+	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
 release-var-check:
 ifndef o
@@ -106,10 +107,6 @@ endif
 ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
 endif
-
-
-release-yamlscript:
-	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
 release-assets: $(RELEASE_ASSETS)
 	release-assets $^
