@@ -127,13 +127,11 @@ write-program-clj() (
 
   if [[ $in_path == */NO-NAME.ys ]]; then
     program=$(
-      "$YS_BIN" --compile --eval="$YS_CODE" |
-        grep -Ev '^\(apply main ARGS\)'
+      "$YS_BIN" --compile --eval="$YS_CODE" | sed '$d'
     )
   else
     program=$(
-      "$YS_BIN" --compile "$in_path" |
-        grep -Ev '^\(apply main ARGS\)'
+      "$YS_BIN" --compile "$in_path" | sed '$d'
     )
   fi
 
