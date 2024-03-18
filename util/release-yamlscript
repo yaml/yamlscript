@@ -189,9 +189,9 @@ defn step-7(ctx):
 #------------------------------------------------------------------------------
 
 defn step-8(ctx):
-  o: "Step 8) Run 'make release-yamlscript'"
+  o: "Step 8) Run 'make release-assets'"
 
-  run:: make release-yamlscript
+  run:: make release-assets
 
   run: "grep '^Release id:' release-$(ctx.new).log"
 

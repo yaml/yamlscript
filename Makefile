@@ -45,16 +45,16 @@ JAR_ASSETS := \
     $(LYS_JAR_RELEASE) \
     $(YS_JAR_RELEASE) \
 
-RELEASE_ASSETS := \
-    $(JAR_ASSETS) \
-
-RELEASE_LOG := release-$n.log
-
 ifndef JAR_ONLY
-RELEASE_ASSETS += \
+RELEASE_ASSETS := \
     $(LYS_RELEASE) \
     $(YS_RELEASE)
 endif
+
+RELEASE_ASSETS += \
+    $(JAR_ASSETS) \
+
+RELEASE_LOG := release-$n.log
 
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
@@ -97,18 +97,22 @@ test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
 
-release:
+release: release-var-check realclean test release-yamlscript
+
+release-var-check:
 ifndef o
 	$(error 'make $@' needs the o variable set to the old version)
 endif
 ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
 endif
-	$(MAKE) realclean test
+
+
+release-yamlscript:
 	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
 
-release-yamlscript: $(RELEASE_ASSETS)
-	publish-release $(RELEASE_ASSETS)
+release-assets: $(RELEASE_ASSETS)
+	release-assets $^
 
 release-build: release-build-ys release-build-libyamlscript
 
