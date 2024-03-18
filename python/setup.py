@@ -1,4 +1,4 @@
-version = '0.1.43'
+version = '0.1.44'
 
 from setuptools import setup
 import pathlib

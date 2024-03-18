@@ -1,4 +1,11 @@
 
+- version: 0.1.44
+  date:    Mon Mar 18 08:14:24 AM PDT 2024
+  changes:
+  - make: Change reference to yamlscript-java to yamlscript
+  - make: Refactor 'make release'
+  - ys: Fix for --binary compilation
+
 - version: 0.1.43
   date:    Sun Mar 17 03:34:47 PM PDT 2024
   changes:
