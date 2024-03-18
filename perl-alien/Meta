@@ -21,6 +21,8 @@ test:
 
 =zild:
   no-about: true
+  no_changes_yaml: true
+  no-check: true
   no-git-update: true
   no-readme: true
   no-travis: true

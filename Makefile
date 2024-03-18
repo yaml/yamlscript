@@ -1,7 +1,7 @@
 SHELL := bash
 
 ROOT := $(shell \
-	cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
+    cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 
 include $(ROOT)/common/vars.mk
 
@@ -19,8 +19,8 @@ DIRS := \
     ys \
 
 BUILD_DIRS := \
-		libyamlscript \
-		ys \
+    libyamlscript \
+    ys \
 
 BUILD := $(BUILD_DIRS:%=build-%)
 INSTALL := $(BUILD_DIRS:%=install-%)
