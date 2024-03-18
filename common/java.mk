@@ -13,7 +13,7 @@ export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(JAVA_HOME)/bin:$(PATH)
 
 YAMLSCRIPT_JAVA_INSTALLED := \
-  $(MAVEN_REPOSITORY)/org/yamlscript/yamlscript-java/maven-metadata-local.xml
+  $(MAVEN_REPOSITORY)/org/yamlscript/yamlscript/maven-metadata-local.xml
 
 YAMLSCRIPT_JAVA_SRC := \
   $(ROOT)/java/src/main/java/org/yamlscript/yamlscript/*.java \
