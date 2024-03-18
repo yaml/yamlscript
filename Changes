@@ -1,4 +1,9 @@
 
+- version: 0.1.45
+  date:    Mon Mar 18 09:46:26 AM PDT 2024
+  changes:
+  - release: More fixes to release process
+
 - version: 0.1.44
   date:    Mon Mar 18 08:14:24 AM PDT 2024
   changes:

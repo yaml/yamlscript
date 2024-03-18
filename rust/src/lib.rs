@@ -63,7 +63,7 @@ use serde::Deserialize;
 use crate::error::LibYAMLScriptError;
 
 /// The name of the yamlscript library to load.
-const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.44";
+const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.45";
 
 /// A wrapper around libyamlscript.
 pub struct YAMLScript {
