@@ -12,7 +12,7 @@
 # * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
 # * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
 
-steps =: 10
+steps =: 11
 
 bindings =::
 - java
