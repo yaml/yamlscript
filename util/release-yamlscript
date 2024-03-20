@@ -12,7 +12,7 @@
 # * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
 # * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
 
-steps =: 13
+steps =: 10
 
 bindings =::
 - java
@@ -29,12 +29,6 @@ dryrun =: boolean(ENV.'YS_RELEASE_DRYRUN')
 last-step =:
   parse-long: ENV.'YS_RELEASE_LAST_STEP' || str(steps)
 
-each [cmd ['ys' 'yarn']]:
-  try:
-    shell {:out :string}: "which $cmd"
-    catch Exception e:
-      die: "The '$cmd' command is not available"
-
 
 #------------------------------------------------------------------------------
 # Run each step in succession, starting at the specified step number if given
@@ -42,46 +36,28 @@ each [cmd ['ys' 'yarn']]:
 #------------------------------------------------------------------------------
 
 defn main(old-version new-version start=1):
-  ctx =: check-args(old-version new-version start)
+  ctx =:
+    if ENV.'RELEASE_ID':
+      =>: .{}
+      check-args: old-version new-version start
 
   say: "\nReleasing YAMLScript v$new-version at $(ctx.date-time)\n"
 
-  each [i (1 .. steps)]:
-    when ((i >= start) && (i <= last-step)):
-      resolve(symbol("step-$i")): ctx
+  if ENV.'RELEASE_ID':
+    step-9: ctx
+    each [i (1 .. steps)]:
+      when ((i >= start) && (i <= last-step)):
+        resolve(symbol("step-$i")): ctx
 
   say: ''
-
-
-#------------------------------------------------------------------------------
-# Git pull --rebase to ensure we have the latest changes.
-#------------------------------------------------------------------------------
-
-defn step-1(ctx):
-  o: "Step 1) Run 'git pull --rebase'"
-
-  run:: git pull --rebase
-
-  when verbose:
-    run: "git log --oneline --abbrev-commit $(ctx.old)^..HEAD"
-
-
-#------------------------------------------------------------------------------
-# Run 'make realclean' to ensure we have a clean build environment.
-#------------------------------------------------------------------------------
-
-defn step-2(ctx):
-  o: "Step 2) Run 'make realclean'"
-
-  run:: make realclean
 
 
 #------------------------------------------------------------------------------
 # Change the .version.sh version bump script to use the new version string.
 #------------------------------------------------------------------------------
 
-defn step-3(ctx):
-  o: "Step 3) Update '.version.sh' file"
+defn step-1(ctx):
+  o: "Step 1) Update '.version.sh' file"
 
   when-not dryrun:
     spit '.version.sh':
@@ -98,8 +74,8 @@ defn step-3(ctx):
 # Change all current version strings in dozens of files to the new version.
 #------------------------------------------------------------------------------
 
-defn step-4(ctx):
-  o: "Step 4) Run 'make bump'"
+defn step-2(ctx):
+  o: "Step 2) Run 'make bump'"
 
   run:: make bump
 
@@ -111,8 +87,8 @@ defn step-4(ctx):
 # Run 'make test' to ensure everything is working as expected.
 #------------------------------------------------------------------------------
 
-defn step-5(ctx):
-  o: "Step 5) Run 'make test'"
+defn step-3(ctx):
+  o: "Step 3) Run 'make test'"
 
   run:: make test
 
@@ -125,8 +101,8 @@ defn step-5(ctx):
 # Open the file in an editor to review the entry and update if needed.
 #------------------------------------------------------------------------------
 
-defn step-6(ctx):
-  o: "Step 6) Update the 'Changes' file"
+defn step-4(ctx):
+  o: "Step 4) Update the 'Changes' file"
 
   when-not dryrun:
     file-prepend 'Changes':
@@ -150,8 +126,8 @@ defn step-6(ctx):
 # Update them.
 #------------------------------------------------------------------------------
 
-defn step-7(ctx):
-  o: "Step 7) Update the Change Log files for the binding modules"
+defn step-5(ctx):
+  o: "Step 5) Update the Change Log files for the binding modules"
 
   when-not dryrun:
     # A change log (YAML) entry for Perl:
@@ -189,8 +165,8 @@ defn step-7(ctx):
 # git commit the release changes we've made so far.
 #------------------------------------------------------------------------------
 
-defn step-8(ctx):
-  o: "Step 8) Commit the release changes to git"
+defn step-6(ctx):
+  o: "Step 6) Commit the release changes to git"
 
   run: "git commit -a -m 'release: $(ctx.new)'"
 
@@ -199,8 +175,8 @@ defn step-8(ctx):
 # git tag using the new version
 #------------------------------------------------------------------------------
 
-defn step-9(ctx):
-  o: "Step 9) Add git tag for the new version"
+defn step-7(ctx):
+  o: "Step 7) Add git tag for the new version"
 
   run: "git tag $(ctx.new)"
 
@@ -209,8 +185,8 @@ defn step-9(ctx):
 # git push commit and tag
 #------------------------------------------------------------------------------
 
-defn step-10(ctx):
-  o: "Step 10) Push the git commit and tag"
+defn step-8(ctx):
+  o: "Step 8) Push the git commit and tag"
 
   run:: git push
 
@@ -221,19 +197,22 @@ defn step-10(ctx):
 # Call 'make release'
 #------------------------------------------------------------------------------
 
-defn step-11(ctx):
-  o: "Step 11) Run 'make release-assets'"
+defn step-9(ctx):
+  o: "Step 9) Run 'make release-assets'"
 
   run:: make release-assets
 
-  run: "grep '^Release id:' release-$(ctx.new).log"
+  run:: make install
+
+  when-not ENV.'RELEASE_ID':
+    run: "grep '^Release id:' release-$(ctx.new).log"
 
 #------------------------------------------------------------------------------
 # For each of the many binding libraries, run 'make release'
 #------------------------------------------------------------------------------
 
-defn step-12(ctx):
-  o: "Step 12) Run 'make release' for each language binding library"
+defn step-10(ctx):
+  o: "Step 10) Run 'make release' for each language binding library"
 
   each [dir bindings]:
     try:
@@ -253,8 +232,8 @@ defn step-12(ctx):
 # Publish the website. A new release will change the content of some pages.
 #------------------------------------------------------------------------------
 
-defn step-13(ctx):
-  o: "Step 13) Publish the yamlscript.org website"
+defn step-11(ctx):
+  o: "Step 11) Publish the yamlscript.org website"
 
   run: "make -C www realclean publish"
 

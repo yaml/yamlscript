@@ -33,6 +33,8 @@ DOCKER_BUILD := $(DIRS:%=docker-build-%)
 DOCKER_TEST := $(DIRS:%=docker-test-%)
 DOCKER_SHELL := $(DIRS:%=docker-shell-%)
 
+export HEAD := $(shell git rev-parse HEAD)
+
 LYS_JAR_RELEASE := libyamlscript-$(YS_VERSION)-standalone.jar
 YS_JAR_RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
 LYS_JAR_PATH := libyamlscript/target/libyamlscript-$(YS_VERSION)-standalone.jar
@@ -97,16 +99,38 @@ test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
 
-release: release-var-check
-	$(ROOT)/util/release-yamlscript $o $n $s 2>&1 | tee -a $(RELEASE_LOG)
+ifdef s
+release: release-check release-yamlscript
+else
+release: release-check realclean release-pull release-yamlscript
+endif
 
-release-var-check:
+release-check:
+ifndef RELEASE_ID
 ifndef o
-	$(error 'make $@' needs the o variable set to the old version)
+	$(error 'make release' needs the 'o' variable set to the old version)
 endif
 ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
+	$(error 'make release' needs the 'n' variable set to the new version)
 endif
+ifeq (,$(shell which yarn))
+	$(error 'make release' needs 'yarn' installed)
+endif
+endif
+
+release-pull:
+	( \
+	  set -ex; \
+	  git pull --rebase; \
+	  if [[ $$(git rev-parse HEAD) != $$HEAD ]]; then \
+	    echo "Pulled new changes. Please re-run 'make release'."; \
+	    exit 1; \
+	  fi \
+	)
+
+release-yamlscript:
+	(time $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
+	  tee -a $(RELEASE_LOG)
 
 release-assets: $(RELEASE_ASSETS)
 	release-assets $^
@@ -167,13 +191,14 @@ clean: $(CLEAN)
 	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
-	$(RM) NO-NAME release-*.log
+	$(RM) NO-NAME
 clean-%: %
 	$(MAKE) -C $< clean
 
 $(REALCLEAN):
 realclean: clean $(REALCLEAN)
 	$(MAKE) -C www $@
+	$(RM) release-*.log
 realclean-%: %
 	$(MAKE) -C $< realclean
 
