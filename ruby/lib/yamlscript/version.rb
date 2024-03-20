@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class YAMLScript
-  VERSION = "0.1.45"
+  VERSION = "0.1.46"
 end

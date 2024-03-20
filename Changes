@@ -1,4 +1,9 @@
 
+- version: 0.1.46
+  date:    Wed Mar 20 10:55:26 AM PDT 2024
+  changes:
+  - release: Fix known issues with release automation
+
 - version: 0.1.45
   date:    Mon Mar 18 09:46:26 AM PDT 2024
   changes:

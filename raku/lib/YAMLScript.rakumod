@@ -2,7 +2,7 @@ unit class YAMLScript;
 
 use NativeCall;
 
-constant YAMLSCRIPT_VERSION = v0.1.45;
+constant YAMLSCRIPT_VERSION = v0.1.46;
 
 sub from-j($t) { ::("Rakudo::Internals::JSON").from-json($t); }
 

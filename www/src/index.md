@@ -226,7 +226,7 @@ or:
 
 ```text
 $ ys --version
-YAMLScript 0.1.45
+YAMLScript 0.1.46
 ```
 
 
@@ -255,9 +255,9 @@ For Python you would do:
 
 ```bash
 $ pip install yamlscript
-Successfully installed yamlscript-0.1.45
-$ curl -sSL yamlscript.org/install | VERSION=0.1.45 install
-Installed ~/.local/lib/libyamlscript.so - version 0.1.45
+Successfully installed yamlscript-0.1.46
+$ curl -sSL yamlscript.org/install | VERSION=0.1.46 install
+Installed ~/.local/lib/libyamlscript.so - version 0.1.46
 ```
 
 For some other language, use that language's library installer.
