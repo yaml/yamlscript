@@ -54,18 +54,18 @@
 ; toNum
 ; toVec
 
-(def $$ (atom {}))
+(def $ (atom {}))
 (def $# (atom 0))
 (defn === []
-  (reset! $$ {})
+  (reset! $ {})
   (reset! $# 0)
   nil)
 
-(defn $ [] (->> @$# str keyword (get @$$)))
+(defn $$ [] (->> @$# str keyword (get @$)))
 
 (defn +++* [value]
   (let [index (keyword (str (swap! $# inc)))]
-    (swap! $$ assoc index value)
+    (swap! $ assoc index value)
     value))
 
 (defmacro +++ [& forms]
