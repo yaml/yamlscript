@@ -57,14 +57,15 @@
   (let [tag (:! node)
         node (dissoc node :!)]
     (if (and tag (re-find #"^yamlscript/v0" tag))
-      (let [tag (subs tag (count "yamlscript/v0"))]
+      (let [full-tag tag
+            tag (subs tag (count "yamlscript/v0"))]
         (case tag
           "" (resolve-code-node node)
-          "/:" (resolve-data-node node)
+          "/" (resolve-data-node node)
           "/code" (resolve-code-node node)
           "/data" (resolve-data-node node)
           "/bare" (resolve-bare-node node)
-          (throw (Exception. (str "Unknown yamlscript tag: " tag)))))
+          (throw (Exception. (str "Unknown yamlscript tag: !" full-tag)))))
       (resolve-bare-node node))))
 
 ;; ----------------------------------------------------------------------------
