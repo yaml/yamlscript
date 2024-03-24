@@ -7,15 +7,17 @@
 (ns yamlscript.transformer
   (:require
    [yamlscript.util :refer [if-lets]]
-   [yamlscript.ast :refer [Sym]]
+   #_[yamlscript.ast :refer [Sym]]
    [yamlscript.transformers]
    [yamlscript.debug :refer [www]]))
 
-(declare transform-node)
+(declare
+  transform-node
+  transform-node-top)
 
 (defn transform
   "Transform special rules for YAMLScript AST."
-  [node] (transform-node node))
+  [node] (transform-node-top node))
 
 (defn map-vec [f coll] (->> coll (map f) vec))
 
@@ -96,6 +98,16 @@
       :Map (transform-map node)
       :Sym (transform-sym node)
       ,    node)))
+
+(defn transform-node-top [node]
+  (if-lets [[key1 val1 & rest] (:Map node)
+            _ (= key1 {:Sym '=>})
+            pairs (:pairs val1)]
+    {:pairs (concat pairs [{:Sym '=>} {:Map rest}])}
+    (if-lets [[first & rest] (:Vec node)
+              pairs (get-in first [:pairs 1 :pairs])]
+      {:pairs (concat pairs [{:Sym '=>} {:Vec rest}])}
+      (transform-node node))))
 
 (comment
   www

@@ -546,3 +546,61 @@
       say: a
   print: |
     (defn foo ([a] (say a)) ([] (foo 1)))
+
+
+- name: Code preamble in data mode mapping
+  yamlscript: |
+    !yamlscript/v0/data
+    =>:
+      vars =: load('vars.yaml')
+    foo:: vars.foo
+  resolve: |
+    {:map
+     ({:exp "=>"}
+      {:pairs [{:def "vars ="} {:exp "load('vars.yaml')"}]}
+      {:str "foo"}
+      {:exp "vars.foo"})}
+  transform: |
+    {:pairs
+     ([{:Sym def} {:Sym vars}]
+      {:Lst [{:Sym load} {:Str "vars.yaml"}]}
+      {:Sym =>}
+      {:Map
+       ({:Str "foo"}
+        {:Lst
+         [{:Sym __}
+          {:Sym vars}
+          {:Lst [{:Sym quote} {:Sym foo}]}]})})}
+  clojure: |
+    (def vars (load "vars.yaml"))
+    {"foo" (__ vars 'foo)}
+
+
+- name: Code preamble in data mode sequence
+  yamlscript: |
+    !yamlscript/v0/
+    - =>:
+        vars =: load('vars.yaml')
+    - ! vars.foo
+    - bar
+  resolve: |
+    {:seq
+     ({:pairs
+       [{:exp "=>"}
+        {:pairs [{:def "vars ="} {:exp "load('vars.yaml')"}]}]}
+      {:exp "vars.foo"}
+      {:str "bar"})}
+  transform: |
+    {:pairs
+     ([{:Sym def} {:Sym vars}]
+      {:Lst [{:Sym load} {:Str "vars.yaml"}]}
+      {:Sym =>}
+      {:Vec
+       ({:Lst
+         [{:Sym __}
+          {:Sym vars}
+          {:Lst [{:Sym quote} {:Sym foo}]}]}
+        {:Str "bar"})})}
+  clojure: |
+    (def vars (load "vars.yaml"))
+    [(__ vars 'foo) "bar"]

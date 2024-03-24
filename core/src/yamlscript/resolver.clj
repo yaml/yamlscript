@@ -49,6 +49,7 @@
 (declare
   resolve-bare-node
   resolve-data-node
+  resolve-data-node-top
   resolve-code-node)
 
 (defn resolve
@@ -61,9 +62,9 @@
             tag (subs tag (count "yamlscript/v0"))]
         (case tag
           "" (resolve-code-node node)
-          "/" (resolve-data-node node)
+          "/" (resolve-data-node-top node)
           "/code" (resolve-code-node node)
-          "/data" (resolve-data-node node)
+          "/data" (resolve-data-node-top node)
           "/bare" (resolve-bare-node node)
           (throw (Exception. (str "Unknown yamlscript tag: !" full-tag)))))
       (resolve-bare-node node))))
@@ -245,6 +246,23 @@
         :map (resolve-data-mapping node)
         :seq (resolve-data-sequence node)
         :val (resolve-data-scalar node)))))
+
+(defn resolve-data-node-top [node]
+  (if-lets [pairs (or (:% node) (:%% node))
+            key (get-in pairs [0 :=])
+            _ (= "=>" key)
+            [key1 val1 & rest] pairs]
+    {:map (concat
+            [(resolve-code-node key1)]
+            [(resolve-code-node val1)]
+            (:map (resolve-data-node {:% rest})))}
+    (if-lets [list (or (:- node) (:-- node))
+              key (get-in list [0 :% 0 :=])
+              _ (= "=>" key)
+              [first & rest] list]
+      {:seq (cons (resolve-code-mapping first)
+              (map resolve-data-node rest))}
+      (resolve-data-node node))))
 
 
 ;; ----------------------------------------------------------------------------
