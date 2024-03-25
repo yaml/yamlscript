@@ -258,6 +258,10 @@ Options:
                    (->> opts
                      :eval
                      (str/join "\n")
+                     (#(if (and (re-find #"^\.\w" %1)
+                             (not (re-find #"\n" %1)))
+                         (str "$$" %1)
+                         %1))
                      (add-ys-mode-tag opts))
                    "\n"))
         opts (if (and e-code f-code)
