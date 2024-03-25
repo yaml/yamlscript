@@ -145,12 +145,11 @@
    ["-h" "--help"
     "Print this help and exit"]])
 
-(defn do-error [errs help]
+(defn do-error [errs]
   (let [errs (if (> (count errs) 1)
                (apply list "Error(s):" errs)
                errs)]
-    (println (str/join "\n* " errs))
-    (println (str "\n" help)))
+    (println (str (str/join "\n* " errs) "\n")))
   (exit 1))
 
 (declare add-ys-mode-tag)
@@ -448,8 +447,8 @@ Options:
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
                (assoc opts :mode "code") opts)]
     (cond
-      error (do-error [(str "Error: " error)] help)
-      (seq errs) (do-error errs help)
+      error (do-error [(str "Error: " error)])
+      (seq errs) (do-error errs)
       (:help opts) (do-help help)
       (:version opts) (do-version)
       (:install opts) (do-install opts args)
