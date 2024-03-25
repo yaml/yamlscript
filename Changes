@@ -1,4 +1,18 @@
 
+- version: 0.1.47
+  date:    Mon Mar 25 10:28:21 AM PDT 2024
+  changes:
+  - release: Fix bug in release script
+  - core: Switch $ and $$ symbols
+  - core: Make !yamlscript/v0/ short for !yamlscript/v0/data
+  - ys: Fix typo in Makefile variable name
+  - core: Add support with `=>` code mode preamble in data mode
+  - release: Add -R to copy for macOS/Intel bug fix
+  - ys: Don't print help text after usage error
+  - ys: Add current version to --help title
+  - ys: -e '.foo' -> -e '$$.foo' for simple expressions
+  - sample: Add more YS code samples
+
 - version: 0.1.46
   date:    Wed Mar 20 10:55:26 AM PDT 2024
   changes:

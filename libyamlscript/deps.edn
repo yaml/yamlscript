@@ -3,7 +3,7 @@
  {org.clojure/clojure {:mvn/version "1.11.1"},
   org.babashka/sci {:mvn/version "0.8.40"},
   org.clojure/data.json {:mvn/version "2.4.0"},
-  yamlscript/compiler {:mvn/version "0.1.46"}},
+  yamlscript/compiler {:mvn/version "0.1.47"}},
  :aliases
  {:lein2deps
   {:deps
