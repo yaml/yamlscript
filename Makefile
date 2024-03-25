@@ -145,7 +145,7 @@ jars: $(JAR_ASSETS)
 
 $(YS_RELEASE): $(RELEASE_YS_NAME)
 	mkdir -p $<
-	cp -pP ys/bin/ys* $</
+	cp -pPR ys/bin/ys* $</
 	cp common/install.mk $</Makefile
 ifeq (true,$(IS_MACOS))
 	$(TIME) tar -J -cf $@ $<
@@ -155,7 +155,7 @@ endif
 
 $(LYS_RELEASE): $(RELEASE_LYS_NAME)
 	mkdir -p $<
-	cp -pP libyamlscript/lib/libyamlscript.$(SO)* $</
+	cp -pPR libyamlscript/lib/libyamlscript.$(SO)* $</
 	cp common/install.mk $</Makefile
 ifeq (true,$(IS_MACOS))
 	$(TIME) tar -J -cf $@ $<
