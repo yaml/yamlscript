@@ -1,0 +1,26 @@
+!yamlscript/v0/
+# /v0/ starts in "data mode"
+
+# This `=>` preamble loads reusable data and code:
+=>:
+  # Set `vars` to an external data mapping:
+  vars =: load('data.yaml')
+  # Load a local custom YS library file that has a `rot13` function:
+  load: "rot13.ys"
+
+
+# The rest of the file is normal YAML data.
+# It could have been a massive YAML file that we wanted to enhance.
+# The lines above lets us do that cleanly.
+# Now we can use `::` or `!` to switch to "code mode" at any point:
+
+some: plain string
+multi: ! |
+  foo
+  bar
+  $(vars.name)
+person:
+  name:: vars.name
+  age:: 6 * vars.number
+  encrypted pw:: vars.password.rot13()
+numbers:: 1 .. vars.number

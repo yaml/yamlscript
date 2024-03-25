@@ -1,0 +1,7 @@
+!yamlscript/v0
+
+s =: set(nil).into('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+m =: drop(26 s).concat(take(26 s)).zipmap(s _)
+
+defn main(s):
+  say: map(\(m %1 %1) s).apply(str _)

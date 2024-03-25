@@ -1,0 +1,131 @@
+#!/usr/bin/env ys
+
+#------------------------------------------------------------------------------
+# A YAMLScript program to benchmark loading of long YAML strings.
+# See: https://yamlscript.org
+#
+# Usage examples:
+#
+#   $ ys benchmark-yaml
+#   $ ys benchmark-yaml libyaml 10
+#   $ ys benchmark-yaml pyyaml
+#   $ ys benchmark-yaml pyyaml 10
+#
+# Install the `ys` command in /tmp and add to PATH with:
+#
+#   $ source <(curl -sSL yamlscript.org/try-ys)
+#   Installed /tmp/yamlscript-try-ys-2y4AWh9OP4/bin/ys - version 0.1.45
+#   $ which ys
+#   /tmp/yamlscript-try-ys-2y4AWh9OP4/bin/ys
+#
+# Sample run:
+#
+#   $ ys benchmark-yaml ys-yaml 8
+#           1) "Elapsed time: 23.333034 msecs"
+#          10) "Elapsed time: 24.177944 msecs"
+#         100) "Elapsed time: 24.1656 msecs"
+#        1000) "Elapsed time: 30.169237 msecs"
+#       10000) "Elapsed time: 29.145544 msecs"
+#      100000) "Elapsed time: 36.269679 msecs"
+#     1000000) "Elapsed time: 88.36362 msecs"
+#    10000000) "Elapsed time: 602.019436 msecs"
+#   100000000) "Elapsed time: 5005.437764 msecs"
+
+
+# YAML document of scripts for benchmarking:
+---
+
+# Build the libyaml run-parser executable if needed:
+build-libyaml: |
+  if [[ ! -e /tmp/libyaml/run-parser ]]; then
+    set -eux
+    git clone https://github.com/yaml/libyaml /tmp/libyaml
+    cd /tmp/libyaml
+    cmake .
+    make
+  fi
+
+nodejs-loader: |
+  const fs = require("fs");
+  const yaml = require("yaml");
+  yaml.parse(
+    fs.readFileSync(
+      "/dev/stdin",
+      "utf8",
+    )
+  );
+
+perl-ypp-loader: |
+  use YAML::PP;
+  my $ypp = YAML::PP->new;
+  print $ypp->load_string(<STDIN>);
+
+pyyaml-loader: |
+  import sys, yaml
+  yaml.load(
+    sys.stdin.read(),
+    Loader=yaml.CLoader,
+  )
+
+pyjson-loader: |
+    import sys, json
+    json.loads(sys.stdin.read())
+
+
+--- !yamlscript/v0
+
+# Entrypoint function takes 2 args: name of test and count:
+defn main(loader='libyaml' n=5):
+  y =: '[{"":['
+
+  each [e (0 .. n)]:
+    r =: int(10 ** e)                       # 1 10 100 1000 ...
+    yaml =: y * r                           # YAML input string
+    func =: "test-$loader"                  # Test funtion name
+    tester =: resolve(func.symbol()) ||
+      die("No test function '$func'")       # Test function
+    printf "%$str(n + 1)d) ": r             # Print test prefix
+    tester: yaml                            # Run timing test
+
+# ###
+# # Time a command that gets the test YAML string from STDIN:
+# ###
+defn test(input cmd):
+  time:
+    sh {:in input}: cmd
+
+# Test libyaml's run-parser:
+defn test-libyaml(yaml):
+  sh {:out OUT :err OUT}: "bash -c '$str($$.build-libyaml)'"
+  test yaml: '/tmp/libyaml/run-parser /dev/stdin'
+
+# Test pyyaml using libyaml under the hood:
+defn test-pyyaml(yaml):
+  test yaml: "python -c '$str($$.pyyaml-loader)'"
+
+# Test as JSON with Python:
+defn test-pyjson(json):
+  test json: "python -c '$str($$.pyjson-loader)'"
+
+# Test with libfyaml's fy-tool:
+# (libfyaml is a more modern C library for YAML)
+defn test-fy-tool(yaml):
+  test yaml: 'fy-tool'
+
+# Test @perlpunk's YAML::PP Perl YAML loader:
+defn test-perl-ypp(yaml):
+  test yaml: "perl -e '$str($$.perl-ypp-loader)'"
+
+# Test the NodeJS yaml loader:
+defn test-nodejs(yaml):
+  test yaml: "node -e '$str($$.nodejs-loader)'"
+
+# Test YAMLScript loading as YAMLScript:
+defn test-ys(yaml):
+  test yaml: 'ys -l -'
+
+# Test YAMLScript loading with Java's SnakeYAML Engine:
+defn test-ys-yaml(yaml):
+  test yaml: "ys -e 'yaml/load: slurp(IN)'"
+
+# vim: lisp ft=yaml sw=2:

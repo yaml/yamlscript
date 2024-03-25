@@ -1,0 +1,7 @@
+!yamlscript/v0
+
+defn rot13(i):
+  s =: set(nil).into('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+  m =: drop(26 s).concat(take(26 s)).zipmap(s _)
+  l =: map(\(m %1 %1) i)
+  str: l*
