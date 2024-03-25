@@ -200,14 +200,14 @@
 (defn do-version []
   (println (str "YAMLScript " yamlscript-version)))
 
-(def help-heading "
-ys - The YAMLScript (YS) Command Line Tool
+(def help-heading (str "
+ys - The YAMLScript (YS) Command Line Tool - v" yamlscript-version "
 
 Usage: ys [<option...>] [<file>]
 
 Options:
 
-")
+"))
 
 (defn do-help [help]
   (let [help (str/replace help #"^" help-heading)
