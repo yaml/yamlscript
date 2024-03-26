@@ -18,7 +18,8 @@ public class LibYAMLScript {
 
     public static String filename()
     {
-        return "libyamlscript." + extension() + '.' + YAMLScript.YAMLSCRIPT_VERSION;
+        return "libyamlscript." + extension() + '.' +
+               YAMLScript.YAMLSCRIPT_VERSION;
     }
 
     public static String[] libraryPaths()
@@ -42,11 +43,18 @@ public class LibYAMLScript {
         if (path != null) return path;
 
         path = "/usr/local/lib" + pathDelimiter() + name;
-        if (new File(path).exists()) {
-            return path;
-        }
+        if (new File(path).exists()) return path;
 
-        throw new RuntimeException("Shared library file " + name + " not found");
+        path = System.getenv("HOME") + pathDelimiter() +
+               ".local/lib" + pathDelimiter() + name;
+        if (new File(path).exists()) return path;
+
+        throw new RuntimeException(
+            "Shared library file " + name + " not found\n" +
+            "Try: curl -sSL yamlscript.org/install | VERSION=" +
+            YAMLScript.YAMLSCRIPT_VERSION + " LIB=1 bash\n" +
+            "See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"
+        );
     }
 
     public static ILibYAMLScript load(String path)
@@ -68,4 +76,3 @@ public class LibYAMLScript {
         return INSTANCE;
     }
 }
-
