@@ -8,5 +8,5 @@
   (let [result (json/read-str (.getRAWResult (YAMLScript.) ys-code))
         error (result "error")]
     (if error
-      (throw (Exception. error))
+      (throw (Exception. (error "cause")))
       (result "data"))))
