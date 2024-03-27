@@ -9,7 +9,10 @@
 
 (defn load [ys-code]
   (let [result (json/read-str (.getRAWResult (YAMLScript.) ys-code))
+        data (result "data")
         error (result "error")]
-    (if error
-      (throw (Exception. (error "cause")))
-      (result "data"))))
+    (cond
+      error (throw (Exception. (error "cause")))
+      data data
+      :else (throw
+              (Exception. "Unexpected response from 'libyamlscript'")))))
