@@ -1,3 +1,6 @@
+# Copyright 2023-2024 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
 unit class YAMLScript;
 
 use NativeCall;
