@@ -181,7 +181,7 @@ Test your new `ys` installation by running:
 ```text
 $ ys --help
 
-ys - The YAMLScript (YS) Command Line Tool
+ys - The YAMLScript (YS) Command Line Tool - v0.1.47
 
 Usage: ys [<option...>] [<file>]
 
