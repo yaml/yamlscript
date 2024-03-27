@@ -13,7 +13,7 @@ require_relative 'yamlscript/version'
 class YAMLScript
   Error = Class.new(StandardError)
 
-  # TODO: This value is automatically updated by 'make bump'.
+  # This value is automatically updated by 'make bump'.
   # The version number is used to find the correct shared library file.
   # We currently only support binding to an exact version of libyamlscript.
   YAMLSCRIPT_VERSION = '0.1.47'
@@ -33,7 +33,7 @@ class YAMLScript
       end
     end
 
-    def self.filename
+    def self.libyamlscript_name
       "libyamlscript.#{extension}.#{YAMLSCRIPT_VERSION}"
     end
 
@@ -49,18 +49,24 @@ class YAMLScript
     end
 
     # Find the libyamlscript shared library file path
-    def self.path
-      name = filename
+    def self.find_libyamlscript_path
+      name = libyamlscript_name
       path = ld_library_paths.map {
         |dir| File.join(dir, name) }.detect { |file| File.exist?(file)
       }
 
-      raise Error, "Shared library file `#{name}` not found" unless path
+      vers = YAMLSCRIPT_VERSION
+      raise Error, <<-ERROR unless path
+
+Shared library file `#{name}` not found
+Try: curl -sSL yamlscript.org/install | VERSION=#{vers} LIB=1 bash
+See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
+ERROR
 
       path
     end
 
-    dlload path
+    dlload find_libyamlscript_path
 
     extern \
       'int graal_create_isolate(void* params, void** isolate, void** thread)'
@@ -93,16 +99,19 @@ class YAMLScript
   def load(ys_code)
     # Create a new GraalVM isolate thread for each call to load()
     thread = Fiddle::Pointer.malloc(Fiddle::SIZEOF_VOIDP)
-    LibYAMLScript.graal_create_isolate(nil, @isolate.ref, thread.ref)
+    raise Error, "Failed to create isolate" unless \
+      LibYAMLScript.graal_create_isolate(nil, @isolate.ref, thread.ref).zero?
 
     # Call 'load_ys_to_json' function in libyamlscript shared library
     json_data = LibYAMLScript.load_ys_to_json(thread, ys_code)
     resp = JSON.parse(json_data.to_s)
-    raise Error, 'Failed to tear down isolate' \
-      unless LibYAMLScript.graal_tear_down_isolate(thread).zero?
-    raise Error, @error['cause'] if (@error = resp['error'])
+
+    raise Error, "Failed to tear down isolate" unless \
+      LibYAMLScript.graal_tear_down_isolate(thread).zero?
+    raise Error, @error['cause'] if @error = resp['error']
+
     data = resp.fetch('data') do
-      raise Error, 'Unexpected response from libyamlscript'
+      raise Error, "Unexpected response from 'libyamlscript'"
     end
 
     data
