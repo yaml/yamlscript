@@ -93,8 +93,9 @@ $ffi->attach(
 #------------------------------------------------------------------------------
 # Look for the local libyamlscript first, then look for the Alien version:
 sub find_libyamlscript {
+    my $vers = $libyamlscript_version;
     my $so = $^O eq 'darwin' ? 'dylib' : 'so';
-    my $name = "libyamlscript.$so.$libyamlscript_version";
+    my $name = "libyamlscript.$so.$vers";
     my @paths;
     if (my $path = $ENV{LD_LIBRARY_PATH}) {
         @paths = split /:/, $path;
@@ -119,8 +120,11 @@ sub find_libyamlscript {
         }
     }
 
-    die "Unable to find $name";
+    die <<"..."
+Shared library file $name not found
+Try: curl -sSL yamlscript.org/install | VERSION=$vers LIB=1 bash
+See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
+...
 }
-
 
 1;
