@@ -29,8 +29,17 @@ test-pytest: $(PYTHON_VENV)
 	$(ACTIVATE) && \
 	  pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
-test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
+# test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
+test-ffi:
+	make -C ../libyamlscript $(LIBYAMLSCRIPT_SO_FQNP)
+	@printf '%.0s-' {1..80}; echo
 	$(ACTIVATE) && \
+	  $(PYTHON) \
+	    -c 'import yamlscript; \
+	        print(yamlscript.YAMLScript().hello())' && \
+		$(PYTHON) \
+	    -c 'import yamlscript; \
+	        print(yamlscript.YAMLScript().triple(7))' && \
 	  $(PYTHON) \
 	    -c 'import yamlscript; \
 	        print(yamlscript.YAMLScript().load("inc: 41"))' && \

@@ -8,22 +8,21 @@
    [yamlscript.compiler :as compiler]
    [yamlscript.runtime :as runtime]
    [clojure.data.json :as json]
-   [sci.core :as sci])
+   [sci.core :as sci]
+   [yamlscript.debug :refer [www #_xxx]]
+   [yamlscript.re :as re])
   (:gen-class
-   :methods [^{:static true} [loadYsToJson [String] String]]))
+   :methods [^:static [printHello [] void]
+             ^:static [tripleNum [int] int]
+             ^:static [loadYsToJson [String] String]]))
 
-(defn json-write-str [data]
-  (json/write-str
-    data
-    {:escape-unicode false
-     :escape-js-separators false
-     :escape-slash false}))
+(defn -printHello []
+  (println "Hello from libyamlscript"))
 
-(defn error-map [e]
-  (let [err (Throwable->map e)]
-    {:error {:cause (:cause err)
-             :type (get-in err [:via 0 :type])
-             :trace (get-in err [:trace])}}))
+(defn -tripleNum [^Long n]
+  (* n 3))
+
+(declare json-write-str error-map)
 
 (defn -loadYsToJson
   "Convert a YAMLScript code string to Clojure, eval the Clojure code with
@@ -31,7 +30,7 @@
   [^String ys-str]
   (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
     (binding [*out* *err*]
-      (println "clojure input string:" ys-str)))
+      (println "CLJ load - input string:" ys-str)))
   (let [resp (sci/binding [sci/out *out*]
                (try
                  (->> ys-str
@@ -46,8 +45,21 @@
                      json-write-str))))]
     (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
       (binding [*out* *err*]
-        (println "clojure response string:" resp)))
+        (println "CLJ load - response string:" resp)))
     resp))
+
+(defn json-write-str [data]
+  (json/write-str
+    data
+    {:escape-unicode false
+     :escape-js-separators false
+     :escape-slash false}))
+
+(defn error-map [e]
+  (let [err (Throwable->map e)]
+    {:error {:cause (:cause err)
+             :type (get-in err [:via 0 :type])
+             :trace (get-in err [:trace])}}))
 
 (comment
   (-loadYsToJson "!yamlscript/v0/data\nsay: 42")

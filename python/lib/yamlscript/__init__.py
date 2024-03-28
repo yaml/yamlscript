@@ -71,6 +71,12 @@ See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
 # Load libyamlscript shared library:
 libyamlscript = ctypes.CDLL(find_libyamlscript_path())
 
+# XXX
+print_hello = libyamlscript.print_hello
+print_hello.restype = None
+triple_num = libyamlscript.triple_num
+triple_num.restype = ctypes.c_int
+
 # Create binding to 'load_ys_to_json' function:
 load_ys_to_json = libyamlscript.load_ys_to_json
 load_ys_to_json.restype = ctypes.c_char_p
@@ -104,6 +110,13 @@ class YAMLScript():
 
     if rc != 0:
       raise Exception("Failed to create isolate")
+
+  def hello(self):
+    print_hello(self.isolatethread)
+    return
+
+  def triple(self, number):
+    return triple_num(self.isolatethread, number)
 
   # Compile and eval a YAMLScript string and return the result:
   def load(self, input):
