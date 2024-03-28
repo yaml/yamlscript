@@ -60,7 +60,11 @@ def find_libyamlscript_path():
 
   if not libyamlscript_path:
     raise Exception(
-      "Shared library file '%s' not found." % libyamlscript_name)
+      """\
+Shared library file '%s' not found
+Try: curl -sSL yamlscript.org/install | VERSION=%s LIB=1 bash
+See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
+""" % (libyamlscript_name, yamlscript_version))
 
   return libyamlscript_path
 
@@ -92,11 +96,14 @@ class YAMLScript():
     self.isolatethread = ctypes.c_void_p()
 
     # Create a new GraalVM isolate:
-    libyamlscript.graal_create_isolate(
+    rc = libyamlscript.graal_create_isolate(
       None,
       None,
       ctypes.byref(self.isolatethread),
     )
+
+    if rc != 0:
+      raise Exception("Failed to create isolate")
 
   # Compile and eval a YAMLScript string and return the result:
   def load(self, input):
@@ -128,6 +135,6 @@ class YAMLScript():
   # YAMLScript instance destructor:
   def __del__(self):
     # Tear down the isolate thread to free resources:
-    ret = libyamlscript.graal_tear_down_isolate(self.isolatethread)
-    if ret != 0:
-      raise Exception("Failed to tear down isolate.")
+    rc = libyamlscript.graal_tear_down_isolate(self.isolatethread)
+    if rc != 0:
+      raise Exception("Failed to tear down isolate")

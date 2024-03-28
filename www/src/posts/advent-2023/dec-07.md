@@ -32,29 +32,44 @@ The best first command to run is `ys --help`:
 
 ```bash
 $ ys --help
-ys - The YAMLScript (YS) Command Line Tool
 
-Usage: ys [options] [file]
+ys - The YAMLScript (YS) Command Line Tool - v0.1.47
+
+Usage: ys [<option...>] [<file>]
 
 Options:
-  -r, --run                Compile and evaluate a YAMLScript file (default)
-  -l, --load               Output the evaluated YAMLScript value
-  -c, --compile            Compile YAMLScript to Clojure
+
+      --run                Run a YAMLScript program file (default)
+  -l, --load               Output (compact) JSON of YAMLScript evaluation
   -e, --eval YSEXPR        Evaluate a YAMLScript expression
-  -C, --clj                Treat input as Clojure code
+                           multiple -e values joined by newline
 
-  -m, --mode MODE          Add a mode tag: code, data, or bare (only for --eval/-e)
+  -c, --compile            Compile YAMLScript to Clojure
+  -b, --binary             Compile to a native binary executable
+
   -p, --print              Print the result of --run in code mode
+  -o, --output FILE        Output file for --load, --compile or --binary
 
-  -o, --output             Output file for --load or --compile
-  -t, --to FORMAT          Output format for --load
-
-  -J, --json               Output JSON for --load
+  -T, --to FORMAT          Output format for --load:
+                             json, yaml, edn
+  -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
 
-  -X, --debug              Debug mode: print full stack trace for errors
-  -x, --debug-stage STAGE  Display the result of stage(s)
+  -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
+  -C, --clojure            Treat input as Clojure code
+
+  -d                       Debug all compilation stages
+  -D, --debug-stage STAGE  Debug a specific compilation stage:
+                             parse, compose, resolve, build,
+                             transform, construct, print
+                           can be used multiple times
+  -S, --stack-trace        Print full stack trace for errors
+  -x, --xtrace             Print each expression before evaluation
+
+      --install            Install the libyamlscript shared library
+      --upgrade            Upgrade both ys and libyamlscript
+
       --version            Print version and exit
   -h, --help               Print this help and exit
 ```
