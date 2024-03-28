@@ -8,7 +8,9 @@
    [yamlscript.compiler :as compiler]
    [yamlscript.runtime :as runtime]
    [clojure.data.json :as json]
-   [sci.core :as sci])
+   [sci.core :as sci]
+   [yamlscript.debug :refer [www #_xxx]]
+   [ys.ys :as ys])
   (:gen-class
    :methods [^{:static true} [loadYsToJson [String] String]]))
 
@@ -29,6 +31,8 @@
   "Convert a YAMLScript code string to Clojure, eval the Clojure code with
   SCI, encode the resulting value as JSON and return the JSON string."
   [^String ys-str]
+  (www "libyamlscript.so loaded")
+  (www ys-str)
   (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
     (binding [*out* *err*]
       (println "clojure input string:" ys-str)))
@@ -47,6 +51,7 @@
     (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
       (binding [*out* *err*]
         (println "clojure response string:" resp)))
+    (www resp)
     resp))
 
 (comment
