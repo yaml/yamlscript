@@ -7,6 +7,7 @@
 (ns yamlscript.printer
   (:require
    [clojure.string :as str]
+   [yamlscript.common :as common]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [print]))
 
@@ -50,15 +51,18 @@
              "["
              (str/join " " (map print-node val))
              "]")
-      :Map (str
-             "{"
-             (str/join ", " (->> val
-                              (partition 2)
-                              (map #(str
-                                      (print-node (first %1))
-                                      " "
-                                      (print-node (second %1))))))
-             "}")
+      :Map (let [[start end] (if (:ordered @common/opts)
+                               ["(omap" ")"]
+                               ["{" "}"])]
+             (str
+               start
+               (str/join ", " (->> val
+                                (partition 2)
+                                (map #(str
+                                        (print-node (first %1))
+                                        " "
+                                        (print-node (second %1))))))
+               end))
       :Str (str \" (pr-string val) \")
       :Rgx (str \# \" (pr-regex val) \")
       :Chr (str "\\" val)

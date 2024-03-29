@@ -5,7 +5,7 @@
   (:require
    [yamlscript.debug :refer [www]]))
 
-(def opts (atom nil))
+(def opts (atom {}))
 
 (comment
   www)

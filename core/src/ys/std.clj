@@ -11,6 +11,7 @@
    [babashka.process :as process]
    [clojure.pprint :as pp]
    [clojure.string :as str]
+   [flatland.ordered.map]
    [sci.core :as sci]
    [ys.ys :as ys]
    [yamlscript.util :as util])
@@ -165,6 +166,9 @@
     (if (= 1 (count xs))
       (str/join sep (first xs))
       (str/join sep xs))))
+
+(defn omap [& xs]
+  (apply flatland.ordered.map/ordered-map xs))
 
 (defn out [& xs]
   (apply clojure.core/print xs)
