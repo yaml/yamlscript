@@ -1,4 +1,13 @@
 
+- version: 0.1.48
+  date:    Fri 29 Mar 2024 08:02:23 PM PDT
+  changes:
+  - make: Use downloaded mvn command, not system one
+  - java: Look for libyamlscript in ~/.local/lib/ by default
+  - clojure: Fix throwing error message
+  - clojure: Throw unless JSON has data or error key
+  - core: Support ordered mappings
+
 - version: 0.1.47
   date:    Mon Mar 25 10:28:21 AM PDT 2024
   changes:
