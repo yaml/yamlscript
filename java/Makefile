@@ -13,7 +13,7 @@ release: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP) test package
 ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
 endif
-	mvn deploy:deploy-file $n \
+	mvn deploy:deploy-file \
 	    -s ~/.mvn-user-settings.xml \
 	    -Dfile=$(YAMLSCRIPT_JAVA_JAR) \
 	    -DpomFile=pom.xml \
