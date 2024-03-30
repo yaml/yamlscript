@@ -71,6 +71,9 @@ endif
 ifdef l
 export YS_RELEASE_LAST_STEP := $l
 endif
+ifdef o
+export YS_OLD_TAG := $o
+endif
 
 default:
 

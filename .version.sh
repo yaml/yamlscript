@@ -54,6 +54,7 @@ bump www/src/posts/advent-2023/dec-07.md
 pattern='(YAMLScript.*)'"$vp"'(.*)'
 
 bump ReadMe.md
+bump common/release.md
 bump www/src/index.md
 bump ys/test/cli-usage.t
 

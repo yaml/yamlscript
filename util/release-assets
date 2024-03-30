@@ -100,6 +100,16 @@ setup() {
 api-new-release() {
   id='' error=''
 
+  [[ ${YS_OLD_TAG-} ]] ||
+    die "YS_OLD_TAG not defined"
+
+  body=$(
+    (
+      cat common/release.md
+      git log --oneline "$YS_OLD_TAG..HEAD^" | tac | perl -pe 's/\S+ /* /'
+    ) | jq -Rs .
+  )
+
   resp_json=$(
     set -x
     curl -s -S -L \
@@ -110,7 +120,7 @@ api-new-release() {
         \"tag_name\": \"$VERSION\",
         \"target_commitish\": \"$GH_TARGET\",
         \"name\": \"$VERSION\",
-        \"body\": \"YAMLScript Release - version $VERSION\",
+        \"body\": $body,
         \"draft\": false,
         \"prerelease\": false
       }"
