@@ -109,6 +109,7 @@ release: release-check realclean release-pull release-yamlscript
 endif
 
 release-check:
+ifndef d
 ifndef RELEASE_ID
 ifndef o
 	$(error 'make release' needs the 'o' variable set to the old version)
@@ -120,8 +121,10 @@ ifeq (,$(shell which yarn))
 	$(error 'make release' needs 'yarn' installed)
 endif
 endif
+endif
 
 release-pull:
+ifndef d
 	( \
 	  set -ex; \
 	  git pull --rebase; \
@@ -130,6 +133,7 @@ release-pull:
 	    exit 1; \
 	  fi \
 	)
+endif
 
 release-yamlscript:
 	(time $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
@@ -198,12 +202,16 @@ clean: $(CLEAN)
 clean-%: %
 	$(MAKE) -C $< clean
 
+ifdef d
+realclean:
+else
 $(REALCLEAN):
 realclean: clean $(REALCLEAN)
 	$(MAKE) -C www $@
-	$(RM) release-*.log
+	$(RM) release-*
 realclean-%: %
 	$(MAKE) -C $< realclean
+endif
 
 $(DISTCLEAN):
 distclean: realclean $(DISTCLEAN)

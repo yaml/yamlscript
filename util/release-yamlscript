@@ -24,7 +24,9 @@ bindings =::
 - ruby
 - rust
 
-verbose =: boolean(ENV.'YS_RELEASE_VERBOSE')
+# verbose =: boolean(ENV.'YS_RELEASE_VERBOSE')
+verbose =: true
+
 dryrun =: boolean(ENV.'YS_RELEASE_DRYRUN')
 last-step =:
   parse-long: ENV.'YS_RELEASE_LAST_STEP' || str(steps)
@@ -35,9 +37,9 @@ last-step =:
 # and ending at the specified last step number if given.
 #------------------------------------------------------------------------------
 
-defn main(old-version new-version start=1):
+defn main(old-version=0 new-version=0 start=1):
   ctx =:
-    if ENV.'RELEASE_ID':
+    if (dryrun || ENV.'RELEASE_ID'):
       =>: .{}
       check-args: old-version new-version start
 
@@ -204,8 +206,8 @@ defn step-9(ctx):
 
   run:: make install
 
-  when-not ENV.'RELEASE_ID':
-    run: "grep '^Release id:' release-$(ctx.new).log"
+  when-not (dryrun || ENV.'RELEASE_ID'):
+    shell {:out "release-id.txt"}: "grep '^Release id:' release-$(ctx.new).log"
 
 #------------------------------------------------------------------------------
 # For each of the many binding libraries, run 'make release'
@@ -222,8 +224,12 @@ defn step-10(ctx):
           warn: "Failed to release $dir. Continuing."
           die: "Failed to release $dir. Exiting."
 
-  run: "git tag -d v$(ctx.new)"
-  run: "git checkout perl perl-alien"
+  try:
+    run: "git tag -d v$(ctx.new)"
+    run: "git push origin :v$(ctx.new)"
+    catch Exception e:
+
+  run: "git checkout -- perl perl-alien"
 
   when verbose:
     run:: git -P diff
