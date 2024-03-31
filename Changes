@@ -1,4 +1,12 @@
 
+- version: 0.1.49
+  date:    Sun 31 Mar 2024 03:04:29 PM PDT
+  changes:
+  - release: Add description of changes to each release
+  - java: Don't pass version string to mvn deploy:deploy-file
+  - release: Release fixups
+  - ys: Fix for Bash test on macOS
+
 - version: 0.1.48
   date:    Fri 29 Mar 2024 08:02:23 PM PDT
   changes:
