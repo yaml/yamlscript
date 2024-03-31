@@ -124,16 +124,16 @@ endif
 endif
 
 release-pull:
-ifndef d
-	( \
-	  set -ex; \
-	  git pull --rebase; \
-	  if [[ $$(git rev-parse HEAD) != $$HEAD ]]; then \
-	    echo "Pulled new changes. Please re-run 'make release'."; \
-	    exit 1; \
-	  fi \
-	)
-endif
+# ifndef d
+# 	( \
+# 	  set -ex; \
+# 	  git pull --rebase; \
+# 	  if [[ $$(git rev-parse HEAD) != $$HEAD ]]; then \
+# 	    echo "Pulled new changes. Please re-run 'make release'."; \
+# 	    exit 1; \
+# 	  fi \
+# 	)
+# endif
 
 release-yamlscript:
 	(time $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
