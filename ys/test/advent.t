@@ -2,11 +2,15 @@
 
 source test/init
 
+w='[a-zA-Z0-9_]'
+S='[^ ]'
+
+
 AV=$ROOT/sample/advent
 
 
 cmd="ys $AV/silly.ys"
-like "$($cmd)" "\w+.*,.*\w+" "$cmd"
+like "$($cmd)" "$w+.*,.*$w+" "$cmd"
 
 
 cmd="ys $AV/twas-a-bit"
@@ -52,7 +56,7 @@ is "$($cmd)" "\
 
 cmd="ys -p $AV/hearsay.ys"
 like "$($cmd)" \
-  "I heard that @\S+ uses YAMLScript in their \w+ code!" \
+  "I heard that @$S+ uses YAMLScript in their $w+ code!" \
   "$cmd"
 
 
@@ -62,12 +66,12 @@ is "$($cmd)" $'1\n2\n3' "$cmd"
 
 cmd="ys $AV/madlibs"
 like "$($cmd)" \
-"Dear \w+,
+"Dear $w+,
 
-You should go to \w+( \w+)?.
-I really think you would \w+ it there.
+You should go to $w+( $w+)?.
+I really think you would $w+ it there.
 
-Sincerely, \w+" \
+Sincerely, $w+" \
   "$cmd"
 
 cmd="ys -le 'map inc: range(1, 10)'"
