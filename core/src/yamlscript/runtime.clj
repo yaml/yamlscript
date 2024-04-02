@@ -96,12 +96,33 @@
       'yaml    (use-ns 'yaml ys.yaml)}
 
      :classes
-     {'Boolean   java.lang.Boolean
+     {'Atom       clojure.lang.Atom
+      'Fn         clojure.lang.Fn
+      'Keyword    clojure.lang.Keyword
+      'Range      clojure.lang.Range
+      'Seqable    clojure.lang.Seqable
+      'Sequential clojure.lang.Sequential
+      'Symbol     clojure.lang.Symbol
+
+      'Boolean   java.lang.Boolean
+      'Byte      java.lang.Byte
       'Character java.lang.Character
+      'Class     java.lang.Class
+      'Double    java.lang.Double
+      'Error     java.lang.Error
+      'Exception java.lang.Exception
+      'Float     java.lang.Float
+      'Integer   java.lang.Integer
       'Long      java.lang.Long
       'Math      java.lang.Math
+      'Number    java.lang.Number
+      'Object    java.lang.Object
+      'Process   java.lang.Process
+      'Runtime   java.lang.Runtime
+      'String    java.lang.String
       'System    java.lang.System
-      'Thread    java.lang.Thread}}))
+      'Thread    java.lang.Thread
+      'Throwable java.lang.Throwable}}))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSION ys-version)
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSIONS
