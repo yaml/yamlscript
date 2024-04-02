@@ -1,9 +1,8 @@
-use std::str::Utf8Error;
+use std::{fmt::Debug, str::Utf8Error};
 
 use serde::Deserialize;
 
-/// An error with libyamlscript.
-#[derive(Debug)]
+/// An error with the binding.
 pub enum Error {
     /// The library was not found.
     NotFound,
@@ -25,6 +24,26 @@ pub enum Error {
     Serde(serde_json::Error),
     /// An error while decoding strings returned from libyamlscript.
     Utf8(Utf8Error),
+}
+
+impl Debug for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NotFound => write!(
+                f,
+                "Shared library file 'libyamlscript.so.{0}' not found
+Try: curl -sSL yamlscript.org/install | VERSION={0} LIB=1 bash
+See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript",
+                &super::LIBYAMLSCRIPT_FILENAME["libyamlscript.so.".len()..]
+            ),
+            Error::Load(e) => write!(f, "Error::Load({e:?})"),
+            Error::GraalVM(e) => write!(f, "Error::GraalVM({e:?})"),
+            Error::Ffi(e) => write!(f, "Error::Ffi({e:?})"),
+            Error::YAMLScript(e) => write!(f, "Error::YAMLScript({e:?})"),
+            Error::Serde(e) => write!(f, "Error::Serde({e:?})"),
+            Error::Utf8(e) => write!(f, "Error::Utf8({e:?})"),
+        }
+    }
 }
 
 /// An error from libyamlscript.
