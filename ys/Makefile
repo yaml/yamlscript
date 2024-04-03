@@ -70,6 +70,7 @@ endif
 	    --enable-preview \
 	    --enable-url-protocols=https \
 	\
+	    -H:ReflectionConfigurationFiles=reflection.json \
 	    -H:+ReportExceptionStackTraces \
 	    -H:IncludeResources=SCI_VERSION \
 	    -H:Log=registerResource: \
