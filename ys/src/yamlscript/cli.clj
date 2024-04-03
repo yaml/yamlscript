@@ -295,7 +295,21 @@ Options:
 (def json-options
   {:escape-unicode false
    :escape-js-separators false
-   :escape-slash false})
+   :escape-slash false
+   :key-fn (fn [x]
+             (let [t (type x)]
+               (if (contains? #{clojure.lang.Symbol
+                                Double
+                                Float
+                                Integer
+                                Long
+                                String} t)
+                 (str x)
+                 (if (= t clojure.lang.Keyword)
+                   (subs (str x) 1)
+                   (throw (Exception.
+                            (str "Unsupported key type '" t "'\n"
+                              "Key = '" x "'")))))))})
 
 (defn do-run [opts args]
   (try
