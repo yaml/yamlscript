@@ -45,9 +45,6 @@
 (defn todo [s & _]
   (die "--" s " not implemented yet."))
 
-(defn daemon-thread [^Runnable f]
-  (.start (doto (new Thread f)
-            (.setDaemon true))))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})

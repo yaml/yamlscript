@@ -88,9 +88,6 @@
                (apply str))]
     code))
 
-(defn print-top [& node]
-  (print {:Top node}))
-
 (comment
   www
   (print '{:Top
