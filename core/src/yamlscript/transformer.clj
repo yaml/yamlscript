@@ -68,6 +68,7 @@
 
 (defn transform-list [node]
   (or
+    false ; prevent comments below from warning
     ; (add-num-or-string node)
     ; (string-repeat node)
     ;(if (= 'fn (get-in node [:Lst 0 :Sym]))

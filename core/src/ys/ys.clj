@@ -29,7 +29,7 @@
 
 (declare load-file clj-load-file)
 
-(defn -use-module [module & args]
+(defn -use-module [module & _args]
   (let [file (-get-module module)
         clj-file (str/replace file #"\.ys$" ".clj")
         yspath (get-yspath @sci/file)]

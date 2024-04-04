@@ -175,11 +175,11 @@
                 (str "/ys-sh-" yamlscript-version)))]
     [cmd path]))
 
-(defn do-install [opts args]
+(defn do-install [_opts _args]
   (let [[cmd] (get-ys-sh-path)]
     (exec cmd "--install")))
 
-(defn do-upgrade [opts args]
+(defn do-upgrade [_opts _args]
   (let [[cmd] (get-ys-sh-path)]
     (exec cmd "--upgrade")))
 
