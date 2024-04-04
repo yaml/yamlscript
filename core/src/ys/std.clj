@@ -12,14 +12,20 @@
    [clojure.pprint :as pp]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [sci.core :as sci]
    [ys.ys :as ys]
+   [yamlscript.re :as re]
    [yamlscript.util :as util])
-  (:refer-clojure :exclude [print]))
+  (:refer-clojure :exclude [num
+                            print
+                            when]))
 
 (defmacro _T [xs]
   (let [[fun# & args#] xs
         args# (map pr-str args#)
+        #_#_args# (map (fn [x]
+                     (let [y (str/replace x #"\(_T " "")
+                           n (/ (- (count x) (count y)) 4)]
+                       (subs y 0 (- (count y) n)))) args#)
         args# (str/join " -> " args#)]
     `(do
        (clojure.core/print
@@ -104,12 +110,13 @@
 (defn __ [x & xs]
   (reduce _dot x xs))
 
+(declare num)
 (defn +_ [x & xs]
   (cond
     (string? x) (apply str x xs)
     (vector? x) (apply concat x xs)
     (map? x) (apply merge x xs)
-    :else (apply + x xs)))
+    :else (apply + x (map num xs))))
 
 (defn *_
   ([x y]
@@ -160,12 +167,36 @@
 (defn exec [cmd & xs]
   (apply process/exec cmd xs))
 
+(defn if [cond then else]
+  (if cond then else))
+
 (defn join
   ([xs] (join "" xs))
   ([sep & xs]
     (if (= 1 (count xs))
       (str/join sep (first xs))
       (str/join sep xs))))
+
+(defn new [class & args]
+  (clojure.lang.Reflector/invokeConstructor
+    class (into-array Object args)))
+
+(defn num [x]
+  (condp = (type x)
+    java.lang.Boolean (if x 1 0)
+    java.lang.Long (long x)
+    java.lang.Double (double x)
+    java.lang.String (or
+                       (if (re-find #"\." x)
+                         (parse-double x)
+                         (parse-long x))
+                       0)
+    clojure.lang.PersistentVector (count x)
+    clojure.lang.PersistentList (count x)
+    clojure.lang.PersistentArrayMap (count x)
+    clojure.lang.PersistentHashMap (count x)
+    clojure.lang.PersistentHashSet (count x)
+    (die (str "Can't convert " (type x) " to number"))))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
@@ -212,6 +243,8 @@
 (defn sleep [s]
   (Thread/sleep (int (* 1000 s))))
 
+(defn throw [e] (throw e))
+
 (defn use-pod [pod-name version]
   (ys/load-pod pod-name version))
 
@@ -219,6 +252,9 @@
   (binding [*out* *err*]
     (apply clojure.core/println xs)
     (flush)))
+
+(defn when [cond then]
+  (clojure.core/when cond then))
 
 (comment
   )

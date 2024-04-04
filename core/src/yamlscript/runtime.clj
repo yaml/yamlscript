@@ -19,6 +19,7 @@
    [babashka.pods.sci]
    [babashka.process]
    [sci.core :as sci]
+   [ys.clj]
    [ys.std]
    [ys.json]
    [ys.yaml]
@@ -80,6 +81,7 @@
       'ys.ys   (use-ns 'ys.ys ys.ys)
 
       'cli     (use-ns 'cli clojure.tools.cli)
+      'clj     (use-ns 'clj ys.clj)
       'fs      (use-ns 'fs babashka.fs)
       'http    (use-ns 'http babashka.http-client)
       'io      (use-ns 'io clojure.java.io)
