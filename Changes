@@ -1,4 +1,9 @@
 
+- version: 0.1.51
+  date:    Thu 04 Apr 2024 11:46:15 AM PDT
+  changes:
+  - core: Fix a bug with 'each' in 0.1.50
+
 - version: 0.1.50
   date:    Thu 04 Apr 2024 08:12:21 AM PDT
   changes:
