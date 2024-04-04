@@ -5,7 +5,7 @@
 
 (ns yamlscript.ast
   (:require
-   [yamlscript.debug :refer [www]])
+   [yamlscript.util :refer [die]])
   (:refer-clojure :exclude [Vec]))
 
 (defn Lst [list] {:Lst (vec list)})
@@ -20,7 +20,7 @@
             (apply array-map)
             (mapcat seq)
             vec)}
-    (throw (Exception. "Odd number of elements in map"))))
+    (die "Odd number of elements in map")))
 
 (defn Spc [s] {:Spc (symbol s)})
 

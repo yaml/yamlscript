@@ -18,6 +18,9 @@
                             print
                             when]))
 
+(declare die)
+(intern 'ys.std 'die util/die)
+
 (defmacro _T [xs]
   (let [[fun# & args#] xs
         args# (map pr-str args#)
@@ -104,7 +107,7 @@
                               (vec value)
                               value)]
                   value)
-    :else (throw (Exception. (str "Invalid key: " key)))))
+    :else (die "Invalid key: " key)))
 
 (defn __ [x & xs]
   (reduce _dot x xs))
@@ -144,10 +147,7 @@
         resp (http/get url)]
     (if-let [body (:body resp)]
       (str body)
-      (throw (Exception. (str resp))))))
-
-(defn die [msg]
-  (throw (Exception. ^String msg)))
+      (die resp))))
 
 (defn dirname [& args]
   (apply util/dirname args))

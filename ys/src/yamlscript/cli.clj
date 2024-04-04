@@ -37,14 +37,13 @@
     (str "*** exit " n " ***")
     (System/exit n)))
 
-(defn die [& xs]
+(defn err [& xs]
   (binding [*out* *err*]
     (println (apply str "Error: " xs))
     (exit 1)))
 
 (defn todo [s & _]
-  (die "--" s " not implemented yet."))
-
+  (err "--" s " not implemented yet."))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
@@ -161,10 +160,10 @@
                    (str/join "\n"))
                  "\n"))]
     (or in-file code
-      (die "No input file specified"))
+      (err "No input file specified"))
     (let [in-file (if code "NO-NAME.ys" in-file)]
       (or (re-find #"\.ys$" in-file)
-        (die "Input file must end in .ys"))
+        (err "Input file must end in .ys"))
       [in-file code])))
 
 (defn get-ys-sh-path []
@@ -282,7 +281,7 @@ Options:
         (do
           (reset! compiler/debug (:debug-stage opts))
           (compiler/compile-debug code)))
-      (catch Exception e (die e opts)))))
+      (catch Exception e (err e opts)))))
 
 (defn get-compiled-code [opts args]
   (let [[code file args load] (get-code opts args)
@@ -344,7 +343,7 @@ Options:
                         " line " line
                         " column " column "\n")
                       "")))]
-        (die msg)))))
+        (err msg)))))
 
 (defn do-compile [opts args]
   (let [[code _ _ #_file #_args] (get-compiled-code opts args)]

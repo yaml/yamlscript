@@ -31,7 +31,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [if-lets when-lets]]
+   [yamlscript.util :refer [die if-lets when-lets]]
    [yamlscript.debug :refer [www]])
   (:refer-clojure :exclude [resolve]))
 
@@ -66,7 +66,7 @@
           "/code" (resolve-code-node node)
           "/data" (resolve-data-node-top node)
           "/bare" (resolve-bare-node node)
-          (throw (Exception. (str "Unknown yamlscript tag: !" full-tag)))))
+          (die "Unknown yamlscript tag: !" full-tag)))
       (resolve-bare-node node))))
 
 ;; ----------------------------------------------------------------------------
@@ -116,7 +116,7 @@
       [key val])))
 
 (defn tag-error [[key val]]
-  (throw (Exception. (str "Don't know how to tag pair" [key val]))))
+  (die "Don't know how to tag pair" [key val]))
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for code mode:
@@ -148,7 +148,7 @@
 
 (defn resolve-code-mapping [node]
   (when (:%% node)
-    (throw (Exception. "Flow mappings not allowed in code mode")))
+    (die "Flow mappings not allowed in code mode"))
   (let [node
         {:pairs (vec
                   (mapcat
@@ -161,7 +161,7 @@
       node)))
 
 (defn resolve-code-sequence [_]
-  (throw (Exception. "Sequences (block and flow) not allowed in code mode")))
+  (die "Sequences (block and flow) not allowed in code mode"))
 
 (defn resolve-code-scalar [node]
   (let [node (dissoc node :!)
@@ -177,7 +177,7 @@
       :' (set/rename-keys node {:' :str})
       :| (set/rename-keys node {:| :vstr})
       :> (set/rename-keys node {:> :str})
-      ,  (throw (Exception. (str "Scalar has unknown style: " key))))))
+      ,  (die "Scalar has unknown style: " key))))
 
 (defn resolve-code-node
   "Resolve nodes recursively in code mode"
@@ -217,7 +217,7 @@
 (defn resolve-plain-scalar [node]
   (let [val (:= node)]
     (when (re-matches re-inf-nan val)
-      (throw (Exception. (str "Inf and NaN not supported in YAMLScript"))))
+      (die "Inf and NaN not supported in YAMLScript"))
     (cond
       (re-matches re-int val) :int
       (re-matches re-float val) :flt
@@ -233,7 +233,7 @@
       :' (set/rename-keys node {:' :str})
       :| (set/rename-keys node {:| :str})
       :> (set/rename-keys node {:> :str})
-      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
+      ,  (die "Scalar has unknown style: " style))))
 
 (defn resolve-data-node
   "Resolve nodes recursively in 'yaml' mode"
@@ -284,7 +284,7 @@
       :' (set/rename-keys node {:' :str})
       :| (set/rename-keys node {:| :str})
       :> (set/rename-keys node {:> :str})
-      ,  (throw (Exception. (str "Scalar has unknown style: " style))))))
+      ,  (die "Scalar has unknown style: " style))))
 
 (def bare-mode-tags
   ["tag:yaml.org,2002:map"
@@ -296,8 +296,7 @@
   (let [tag (:! node)
         node (dissoc node :&)]
     (when (and tag (not (some #{tag} bare-mode-tags)))
-      (throw (Exception.
-               (str "Unrecognized tag in bare mode: !" tag))))
+      (die "Unrecognized tag in bare mode: !" tag))
     (case (node-type node)
       :map (resolve-bare-mapping node)
       :seq (resolve-bare-sequence node)

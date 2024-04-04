@@ -6,7 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
-   [yamlscript.util :refer [if-lets]]
+   [yamlscript.util :refer [die if-lets]]
    #_[yamlscript.ast :refer [Sym]]
    [yamlscript.transformers]
    [yamlscript.debug :refer [www]]))
@@ -84,7 +84,7 @@
 (defn transform-sym [node]
   (let [sym (str (:Sym node))]
     (when (= sym "%")
-      (throw (Exception. "Invalid symbol '%'. Did you mean '%1'?")))
+      (die "Invalid symbol '%'. Did you mean '%1'?"))
     node))
 
 ; TODO:

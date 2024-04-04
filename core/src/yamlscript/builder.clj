@@ -11,7 +11,7 @@
    [yamlscript.ast :refer
     [Bln Flt Int Lst Map Nil Str Sym Vec]]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [if-lets when-lets]]
+   [yamlscript.util :refer [die if-lets when-lets]]
    [yamlscript.ysreader :as ysreader]))
 
 (declare build-node)
@@ -210,7 +210,7 @@
       :flt (Flt (:flt node))
       :bln (Bln (:bln node))
       :nil (Nil)
-      (throw (Exception. (str "Don't know how to build node: " node))))))
+      (die "Don't know how to build node: " node))))
 
 (comment
   www

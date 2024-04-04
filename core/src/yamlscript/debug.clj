@@ -5,7 +5,8 @@
 
 (ns yamlscript.debug
   (:require
-   [clojure.pprint :as pp]))
+   [clojure.pprint :as pp]
+   [yamlscript.util :refer [die]]))
 
 (defn dump [o]
   (str
@@ -24,7 +25,7 @@
 
 (defn xxx [& o]
   (let [o (if (= 1 (count o)) (first o) o)]
-    (throw (Exception. ^String (str "\n" (dump o))))))
+    (die "\n" (dump o))))
 
 (defn yyy [& o]
   (let [l (last o)
@@ -35,7 +36,7 @@
 
 (defn zzz [& o]
   (let [o (if (= 1 (count o)) (first o) o)]
-    (throw (Exception. ^String (str "\n" (dump o))))))
+    (die "\n" (dump o))))
 
 (defn xxx+ [& o]
   (binding [*print-meta* true]

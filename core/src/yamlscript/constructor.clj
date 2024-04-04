@@ -10,7 +10,7 @@
    [yamlscript.ast :refer [Lst Sym Vec]]
    [yamlscript.common :as common]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [if-lets]]
+   [yamlscript.util :refer [die if-lets]]
    [yamlscript.debug :refer [www]]))
 
 (declare
@@ -90,8 +90,7 @@
                                  (= 'def (get-in lhs [0 :Sym]))
                                  (not (re-matches re/symw
                                         (str (get-in lhs [1 :Sym])))))
-                           (throw (Exception.
-                                    "Destructured def not allowed")))
+                           (die "Destructured def not allowed"))
                        rhs (construct-side rhs ctx)
                        rhs (or (:forms rhs) rhs)
                        new (if forms
@@ -128,7 +127,7 @@
 
 (defn construct-node
   ([node ctx]
-   (when (vector? ctx) (throw (Exception. "ctx is a vector")))
+   (when (vector? ctx) (die "ctx is a vector"))
    (let [[[key]] (seq node)
          ctx (update-in ctx [:lvl] inc)
          node (case key

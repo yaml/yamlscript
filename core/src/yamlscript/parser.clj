@@ -9,7 +9,8 @@
 
 (ns yamlscript.parser
   (:require
-   [yamlscript.debug :refer [www]])
+   [yamlscript.debug :refer [www]]
+   [yamlscript.util :refer [die]])
   (:import
    (java.util Optional)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -73,7 +74,7 @@
                (= class SequenceEndEvent) "-SEQ"
                (= class ScalarEvent) "=VAL"
                (= class AliasEvent) "=ALI"
-               :else (throw (Exception. (str class))))
+               :else (die class))
         start ^Optional (. event getStartMark)
         end ^Optional (. event getEndMark)]
     (with-meta

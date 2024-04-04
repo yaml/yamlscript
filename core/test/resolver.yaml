@@ -130,7 +130,7 @@
   yamlscript: |
     prn: ! inc(41)
   resolve: |
-    "Unrecognized tag in bare mode: !"
+    "Unrecognized tag in bare mode: !\n"
 
 
 - name: Tag ! switches from data mode to code mode

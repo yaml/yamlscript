@@ -530,7 +530,7 @@
   yamlscript: |
     !yamlscript/v0
     =>: a+b
-  error: |-
+  error: |
     Invalid symbol: 'a+b'
 
 
@@ -538,7 +538,7 @@
   yamlscript: |
     !yamlscript/v0
     =>: (a +_ b)
-  error: |-
+  error: |
     Invalid symbol: '+_'
 
 
@@ -546,7 +546,7 @@
   yamlscript: |
     !yamlscript/v0
     =>: (+_ a b)
-  error: |-
+  error: |
     Invalid symbol: '+_'
 
 
@@ -554,7 +554,7 @@
   yamlscript: |
     !yamlscript/v0
     =>: (a + b_c)
-  error: |-
+  error: |
     Invalid symbol: 'b_c'
 
 

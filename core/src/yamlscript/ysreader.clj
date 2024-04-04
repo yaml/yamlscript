@@ -12,8 +12,7 @@
     [Bln Chr Flt Int Key Lst Map Nil Rgx Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [www]]
-   [yamlscript.util :as util
-    :refer [if-lets]])
+   [yamlscript.util :as util :refer [die]])
   (:refer-clojure :exclude [read-string]))
 
 (defn is-comment? [token]
@@ -230,7 +229,7 @@
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
-      (throw (Exception. "Unexpected end of input")))
+      (die "Unexpected end of input"))
 
     (if (= (first tokens) ")")
       (let [form (-> list group-dots yes-expr)
@@ -244,7 +243,7 @@
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
-      (throw (Exception. "Unexpected end of input")))
+      (die "Unexpected end of input"))
 
     (if (= (first tokens) end)
       (let [list (if (= type Lst)
@@ -284,13 +283,10 @@
     (is-narg? token) (let [n (subs token 1)
                            n (parse-long n)
                            _ (when (or (<= n 0) (> n 20))
-                               (throw (Exception.
-                                        (str "Invalid numbered argument: "
-                                          token))))
+                               (die "Invalid numbered argument: " token))
                            n (str "_" n)]
                        [(Sym n) tokens])
-    (is-bad-number? token) (throw
-                             (Exception. (str "Invalid number: " token)))
+    (is-bad-number? token) (die "Invalid number: " token)
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
@@ -318,10 +314,10 @@
       [(Sym token value) tokens])
 
     (is-clojure-symbol? token)
-    (throw (Exception. (str "Invalid symbol: '" token "'")))
+    (die "Invalid symbol: '" token "'")
 
     (is-namespace? token) [(Spc token) tokens]
-    :else (throw (Exception. (str "Unexpected token: '" token "'")))))
+    :else (die "Unexpected token: '" token "'")))
 
 (defn read-form [tokens]
   (let [token (first tokens)

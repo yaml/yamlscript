@@ -8,9 +8,7 @@
    [babashka.fs
     :refer [cwd]]
    [clojure.java.io :as io]
-   [clojure.string :as str]
-   [yamlscript.debug
-    :refer [www]]))
+   [clojure.string :as str]))
 
 (defonce build-vstr (atom nil))
 
@@ -22,8 +20,8 @@
      (.getAbsolutePath (io/file (abspath base) path)))))
 
 (defn die
-  ([msg] (throw (Exception. ^String msg)))
-  ([msg info] (throw (ex-info msg info))))
+  ([msg] (throw (Exception. (str msg "\n"))))
+  ([x & xs] (die (apply str x xs))))
 
 (defn dirname
   [path]
@@ -74,4 +72,4 @@
      `(do ~@body))))
 
 (comment
-  www)
+  )

@@ -3,8 +3,8 @@
 
 (ns yamlscript.transformers
   (:require
-   [yamlscript.util :refer [if-lets when-lets]]
-   [yamlscript.ast :refer [Sym Lst Vec Key]]
+   [yamlscript.util :refer [die if-lets when-lets]]
+   [yamlscript.ast :refer [Lst Vec Key]]
    [yamlscript.debug :refer [www]]))
 
 (def Q {:Sym 'quote})
@@ -71,7 +71,7 @@
         args (if (seq rhs)
                (if (every? :Sym rhs)
                  (conj args REFER (Vec rhs))
-                 (throw (Exception. "Invalid 'require' arguments")))
+                 (die "Invalid 'require' arguments"))
                args)]
     args))
 
@@ -79,7 +79,7 @@
   (reduce
     (fn [acc [spc rhs]]
       (or (:Spc spc)
-        (throw (Exception. "Invalid 'require' pairs")))
+        (die "Invalid 'require' pairs"))
       (let [args (if (nil? rhs)
                    (Lst [Q spc])
                    (if (= :all (:Key rhs))
@@ -108,7 +108,7 @@
                 args (require-pairs pairs)]
       [lhs args])
 
-    (throw (Exception. "Invalid 'require' form"))))
+    (die "Invalid 'require' form")))
 
 (comment
   www)

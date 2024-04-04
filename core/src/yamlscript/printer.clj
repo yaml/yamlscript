@@ -8,7 +8,8 @@
   (:require
    [clojure.string :as str]
    [yamlscript.common :as common]
-   [yamlscript.debug :refer [www]])
+   [yamlscript.debug :refer [www]]
+   [yamlscript.util :refer [die]])
   (:refer-clojure :exclude [print]))
 
 (def string-escape
@@ -75,9 +76,7 @@
       :Flt (str val)
       :Bln (str val)
       :Nil "nil"
-      ,     (throw
-              (Exception. (str "Unknown AST node type:"
-                            node))))))
+      ,    (die "Unknown AST node type:" node))))
 
 (defn print
   "Render a YAMLScript AST as Clojure code."
