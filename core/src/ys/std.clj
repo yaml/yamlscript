@@ -13,7 +13,6 @@
    [clojure.string :as str]
    [flatland.ordered.map]
    [ys.ys :as ys]
-   [yamlscript.re :as re]
    [yamlscript.util :as util])
   (:refer-clojure :exclude [num
                             print

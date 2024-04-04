@@ -298,7 +298,7 @@
     (is-quote? token) (let [[value tokens] (read-form tokens)]
                         [(Tup [(Tok "'") value]) tokens])
     (is-special? token) (let [[value tokens] (read-form tokens)]
-                         [(Tup [(Tok token) value]) tokens])
+                          [(Tup [(Tok token) value]) tokens])
     (is-operator? token) [(Sym token) tokens]
     (is-string? token) [(read-dq-string token) tokens]
     (is-single? token) [(read-sq-string token) tokens]
