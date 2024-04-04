@@ -21,6 +21,7 @@
 (declare die)
 (intern 'ys.std 'die util/die)
 
+;; TODO fix this with a talk to remove _T calls from output
 (defmacro _T [xs]
   (let [[fun# & args#] xs
         args# (map pr-str args#)
@@ -34,6 +35,7 @@
          ";;" '~fun# "->" ~args# "\n")
        (~@xs))))
 
+;; TODO replace with p()
 (defn www [& xs]
   (apply yamlscript.debug/www xs))
 
@@ -152,7 +154,6 @@
 (defn dirname [& args]
   (apply util/dirname args))
 
-; XXX Remove 'each' when 'for' is fixed
 (defmacro each [bindings & body]
   `(do
      (doall (for [~@bindings] (do ~@body)))
@@ -165,9 +166,6 @@
 
 (defn exec [cmd & xs]
   (apply process/exec cmd xs))
-
-(defn if [cond then else]
-  (if cond then else))
 
 (defn join
   ([xs] (join "" xs))
@@ -251,9 +249,6 @@
   (binding [*out* *err*]
     (apply clojure.core/println xs)
     (flush)))
-
-(defn when [cond then]
-  (clojure.core/when cond then))
 
 (comment
   )

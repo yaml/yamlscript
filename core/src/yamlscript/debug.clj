@@ -8,6 +8,8 @@
    [clojure.pprint :as pp]
    [yamlscript.util :refer [die]]))
 
+;; TODO Replace with hashp
+
 (defn dump [o]
   (str
     "---\n"

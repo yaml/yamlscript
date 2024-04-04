@@ -19,10 +19,11 @@
    :exclude [compile
              for
              load-file
-             use]))
+             use
+             when]))
 
 (defn -get-module [module]
-  (when (not (re-matches (re/re #"(?:$nspc|$symw)") module))
+  (clojure.core/when (not (re-matches (re/re #"(?:$nspc|$symw)") module))
     (die (str "Invalid module name: " module)))
   (let [module (str/replace module #"\." "/")]
     (str module ".ys")))
@@ -70,6 +71,9 @@
      (doall (clojure.core/for [~@bindings] (do ~@body)))
      nil))
 
+(defn if [cond then else]
+  (if cond then else))
+
 (defn load-file [ys-file]
   (let [ys-file (abspath ys-file (dirname @sci/file))
         clj-code (->
@@ -96,6 +100,9 @@
 (defmacro use [module & args]
   `(let [module# (str (quote ~module))]
      (-use-module module# ~@args)))
+
+(defn when [cond then]
+  (clojure.core/when cond then))
 
 (comment
   www
