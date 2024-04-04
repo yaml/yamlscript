@@ -1,4 +1,17 @@
 
+- version: 0.1.50
+  date:    Thu 04 Apr 2024 08:12:21 AM PDT
+  changes:
+  - raku: New error msg when libyamlscript not found...
+  - core: Add more Clojure and Java classes to runtime
+  - ys: Error on non-string mapping keys for JSON
+  - ys: Add reflection.json to ys native-image build
+  - core: Add polymorphic 'num' to ys::std
+  - core: Add ys::clj library for replaced clojure.core fns
+  - refactor: Remove unused functions
+  - refactor: Squelch clj-kondo warnings
+  - refactor: Revise all 'die' defns and calls
+
 - version: 0.1.49
   date:    Sun 31 Mar 2024 03:04:29 PM PDT
   changes:

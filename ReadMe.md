@@ -225,7 +225,7 @@ Make sure `~/.local/bin` is in your `PATH` environment variable.
 You can use the following environment variables to control the installation:
 
 * `PREFIX=...` - The directory to install to. Default: `~/.local`
-* `VERSION=...` - The YAMLScript version to install. Default: `0.1.49`
+* `VERSION=...` - The YAMLScript version to install. Default: `0.1.50`
 * `BIN=1` - Only install the `PREFIX/bin/ys` command line tool.
 * `LIB=1` - Only install the `PREFIX/lib/libyamlscript` shared library.
 * `DEBUG=1` - Print the Bash commands that are being run.
