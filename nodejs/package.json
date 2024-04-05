@@ -1,0 +1,26 @@
+{
+  "name": "@yaml/yamlscript",
+  "version": "0.1.51",
+  "description": "Program in YAML",
+  "main": "lib/yamlscript/index.js",
+  "author": "Ingy döt Net",
+  "license": "MIT",
+  "dependencies": {
+    "ffi-napi": "4.0.3",
+    "ref-napi": "3.0.3"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yaml/yamlscript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yaml/yamlscript/issues"
+  },
+  "homepage": "https://github.com/yaml/yamlscript#readme"
+}

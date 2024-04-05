@@ -17,6 +17,7 @@ steps =: 11
 bindings =::
 - java
 - clojure
+- nodejs
 - perl
 - perl-alien
 - python

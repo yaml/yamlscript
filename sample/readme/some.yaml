@@ -1,0 +1,12 @@
+food:
+  fruit:
+  - apple
+  - banana
+  - cherry
+  - date
+
+hello:
+- Aloha
+- Bonjour
+- Ciao
+- Dzień dobry

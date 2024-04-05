@@ -16,11 +16,13 @@ version=$v_api
 pattern='(yamlscript.*)'"$vp"'(.*)'
 
 bump .profile
+bump clojure/deps.edn
 bump clojure/project.clj
 bump common/project.clj
 bump core/project.clj
 bump libyamlscript/deps.edn
 bump libyamlscript/project.clj
+bump nodejs/lib/yamlscript/index.js
 bump perl/lib/YAMLScript.pm
 bump perl-alien/alienfile
 bump perl-alien/lib/Alien/YAMLScript.pm
@@ -29,7 +31,6 @@ bump rust/src/lib.rs
 bump www/src/index.md
 bump ys/deps.edn
 bump ys/project.clj
-bump clojure/deps.edn
 bump ys/share/ys-0.bash
 bump ys/src/yamlscript/cli.clj
 
@@ -62,6 +63,7 @@ pattern='(version.*)'"$vp"'(.*)'
 
 bump Meta
 bump core/src/yamlscript/runtime.clj
+bump nodejs/package.json
 bump java/pom.xml
 bump www/src/index.md
 

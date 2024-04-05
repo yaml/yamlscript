@@ -10,6 +10,7 @@ DIRS := \
     libyamlscript \
     clojure \
     java \
+    nodejs \
     perl \
     perl-alien \
     python \

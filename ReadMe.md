@@ -119,6 +119,9 @@ language, giving you a great and consistent YAML experience everywhere.
 
 At this early stage, YAMLScript has bindings for these programming languages:
 
+* [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+* [Java](https://clojars.org/org.yamlscript/yamlscript)
+* [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)
 * [Python](https://pypi.org/project/yamlscript/)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
@@ -327,7 +330,7 @@ It will be rewritten soon.
 * [tony-o](https://github.com/tony-o) - Raku
 * [Ethiraric](https://github.com/Ethiraric) - Rust
 * [José Joaquín Atria](https://github.com/jjatria) - Perl
-* [Delon R.Newman](https://github.com/delonnewman) - Ruby
+* [Delon R.Newman](https://github.com/delonnewman) - Clojure, Java, Ruby
 
 
 ## Copyright and License

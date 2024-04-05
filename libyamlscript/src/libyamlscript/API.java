@@ -14,19 +14,27 @@ public final class API {
         @CEntryPoint.IsolateThreadContext long isolateId,
         @CConst CCharPointer s
     ) {
+        debug("API - called loadYsToJson");
+
         String ys = CTypeConversion.toJavaString(s);
-        if (System.getenv("LIBYAMLSCRIPT_DEBUG") != null) {
-            System.err.println("java input string: " + ys.toString());
-        }
+
+        debug("API - java input string: " + ys);
+
         String json = libyamlscript.core.loadYsToJson(ys);
-        if (System.getenv("LIBYAMLSCRIPT_DEBUG") != null) {
-            System.err.println("java response string: " + json.toString());
-        }
+
+        debug("API - java response string: " + json);
+
         try (CTypeConversion.CCharPointerHolder holder =
                 CTypeConversion.toCString(json)
         ) {
             CCharPointer value = holder.get();
             return value;
+        }
+    }
+
+    public static void debug(String s) {
+        if (System.getenv("LIBYAMLSCRIPT_DEBUG") != null) {
+            System.err.println(s);
         }
     }
 }

@@ -4,6 +4,10 @@ include $(COMMON)/docker.mk
 
 LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-$(YS_VERSION)-standalone.jar
 
+LYS_SOURCES := \
+  src/libyamlscript/core.clj \
+	src/libyamlscript/API.java \
+
 BUILD_TARGETS := \
   $(LIBYAMLSCRIPT_SO_FQNP) \
 
@@ -71,7 +75,7 @@ ifeq (true,$(IS_ROOT))
 	$(error *** YAMLScript 'make build' must be run as non-root user)
 endif
 else
-$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
+$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(LYS_SOURCES)
 	$< uberjar
 endif
 
