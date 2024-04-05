@@ -1,4 +1,9 @@
 
+- version: 0.1.52
+  date:    Fri 05 Apr 2024 01:34:55 PM PDT
+  changes:
+  - nodejs: NOdeJS/NPM binding module for YAMLScript
+
 - version: 0.1.51
   date:    Thu 04 Apr 2024 11:46:15 AM PDT
   changes:
