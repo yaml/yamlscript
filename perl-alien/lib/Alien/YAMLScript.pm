@@ -3,11 +3,11 @@ use warnings;
 
 package Alien::YAMLScript;
 
-our $VERSION = '0.1.52';
+our $VERSION = '0.1.53';
 
 use parent 'Alien::Base';
 
-our $libyamlscript_version = '0.1.52';
+our $libyamlscript_version = '0.1.53';
 
 die "Alien::YAMLScript $VERSION requires libyamlscript $libyamlscript_version" .
     "but you have " . __PACKAGE__->version
