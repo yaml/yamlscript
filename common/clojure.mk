@@ -2,8 +2,6 @@
 # Set Clojure specific variables:
 #------------------------------------------------------------------------------
 
-include $(ROOT)/common/java.mk
-
 YAMLSCRIPT_CORE_INSTALLED := \
   $(MAVEN_REPOSITORY)/yamlscript/core/maven-metadata-local.xml
 
