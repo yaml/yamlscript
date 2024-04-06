@@ -1,4 +1,4 @@
-let YS = require("yamlscript");
+let YS = require("@yaml/yamlscript");
 
 let ys = new YS();
 
