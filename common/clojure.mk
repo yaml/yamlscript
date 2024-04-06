@@ -25,7 +25,6 @@ LEIN_COMMANDS := \
   classpath \
   compile \
   deps \
-  deploy \
   run \
   show-profiles \
 
