@@ -1,4 +1,5 @@
 include ../common/base.mk
+include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/docker.mk
 
