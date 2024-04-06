@@ -239,6 +239,7 @@ So far there are libraries in these languages:
 
 * Clojure
 * Java
+* NodeJS
 * Perl
 * Python
 * Raku
