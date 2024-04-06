@@ -5,9 +5,7 @@ ROOT := $(shell \
 
 include $(ROOT)/common/vars.mk
 
-DIRS := \
-    core \
-    libyamlscript \
+BINDINGS := \
     clojure \
     java \
     nodejs \
@@ -17,6 +15,11 @@ DIRS := \
     raku \
     ruby \
     rust \
+
+DIRS := \
+    core \
+    libyamlscript \
+    $(BINDINGS) \
     ys \
 
 BUILD_DIRS := \
@@ -26,6 +29,7 @@ BUILD_DIRS := \
 BUILD := $(BUILD_DIRS:%=build-%)
 INSTALL := $(BUILD_DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
+TEST_BINDINGS := $(BINDINGS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
 REALCLEAN := $(DIRS:%=realclean-%)
@@ -102,6 +106,7 @@ test-%: %
 test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
+test-bindings: $(TEST_BINDINGS)
 
 ifdef s
 release: release-check release-yamlscript
