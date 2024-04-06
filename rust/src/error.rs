@@ -34,7 +34,7 @@ impl Debug for Error {
                 "Shared library file 'libyamlscript.so.{0}' not found
 Try: curl -sSL yamlscript.org/install | VERSION={0} LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript",
-                &super::LIBYAMLSCRIPT_FILENAME["libyamlscript.so.".len()..]
+                &super::LIBYAMLSCRIPT_VERSION
             ),
             Error::Load(e) => write!(f, "Error::Load({e:?})"),
             Error::GraalVM(e) => write!(f, "Error::GraalVM({e:?})"),

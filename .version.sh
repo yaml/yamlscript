@@ -27,7 +27,6 @@ bump perl/lib/YAMLScript.pm
 bump perl-alien/alienfile
 bump perl-alien/lib/Alien/YAMLScript.pm
 bump python/lib/yamlscript/__init__.py
-bump rust/src/lib.rs
 bump www/src/index.md
 bump ys/deps.edn
 bump ys/project.clj
@@ -46,6 +45,7 @@ bump java/Makefile
 bump java/src/main/java/org/yamlscript/yamlscript/YAMLScript.java
 bump raku/lib/YAMLScript.rakumod
 bump ruby/lib/yamlscript.rb
+bump rust/src/lib.rs
 bump www/src/index.md
 bump www/src/install
 bump www/src/posts/advent-2023/dec-05.md

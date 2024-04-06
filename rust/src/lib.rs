@@ -62,8 +62,24 @@ use serde::Deserialize;
 
 use crate::error::LibYAMLScriptError;
 
-/// The name of the yamlscript library to load.
-const LIBYAMLSCRIPT_FILENAME: &str = "libyamlscript.so.0.1.53";
+/// The name of the YAMLScript library to load.
+const LIBYAMLSCRIPT_BASENAME: &str = "libyamlscript";
+
+/// The version of the yamlscript library this bindings works with.
+const LIBYAMLSCRIPT_VERSION: &str = "0.1.53";
+
+/// The extension of the YAMLScript library. On Linux, it's a `.so` file.
+#[cfg(target_os = "linux")]
+const LIBYAMLSCRIPT_EXTENSION: &str = "so";
+/// The extension of the YAMLScript library. On MacOS, it's a `.dylib` file.
+#[cfg(target_os = "macos")]
+const LIBYAMLSCRIPT_EXTENSION: &str = "dylib";
+// This should be the extension of the library file, but the platform is unsupported.
+#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+compile_error!(
+    "Unsupported platform {} for yamlscript.",
+    std::env::consts::OS
+);
 
 /// A wrapper around libyamlscript.
 pub struct YAMLScript {
@@ -214,7 +230,9 @@ impl YAMLScript {
         // Iterate over segments of `LD_LIBRARY_PATH`.
         for path in library_path.split(':').chain(additional_paths.into_iter()) {
             // Try to open the library, if it exists.
-            let path = Path::new(path).join(LIBYAMLSCRIPT_FILENAME);
+            let path = Path::new(path).join(format!(
+                "{LIBYAMLSCRIPT_BASENAME}.{LIBYAMLSCRIPT_EXTENSION}.{LIBYAMLSCRIPT_VERSION}"
+            ));
             if !path.is_file() {
                 continue;
             }
