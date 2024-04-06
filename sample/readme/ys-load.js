@@ -1,5 +1,5 @@
 let fs = require("fs");
-let YS = require("yamlscript");
+let YS = require("@yaml/yamlscript");
 
 let input = fs.readFileSync("some.ys", "utf8");
 
