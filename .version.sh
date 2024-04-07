@@ -56,6 +56,7 @@ pattern='(YAMLScript.*)'"$vp"'(.*)'
 
 bump ReadMe.md
 bump common/release.md
+bump www/src/doc/ys.md
 bump www/src/index.md
 bump ys/test/cli-usage.t
 

@@ -1,0 +1,3 @@
+---
+title: YAMLScript Syntax Basics
+---

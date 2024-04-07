@@ -8,6 +8,11 @@
   },
   "headerLinks": [
     {
+      "text": "Docs",
+      "url": "/doc",
+      "external": false
+    },
+    {
       "text": "Blog",
       "url": "/blog",
       "external": false
