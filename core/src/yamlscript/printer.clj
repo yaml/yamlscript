@@ -67,6 +67,7 @@
       :Str (str \" (pr-string val) \")
       :Rgx (str \# \" (pr-regex val) \")
       :Chr (str "\\" val)
+      :Qts (str "'" val)
       :Spc (str/replace val #"::" ".")
       :Sym (pr-symbol (str val))
       :Tok (str val)

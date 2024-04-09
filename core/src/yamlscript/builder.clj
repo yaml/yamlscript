@@ -122,7 +122,7 @@
     node))
 
 (defn build-exp [node]
-  (let [string (-> node first val)]
+  (let [string (:exp node)]
     (when-not (empty? string)
       (let [exp (ysreader/read-string string)]
         (when exp
@@ -195,22 +195,29 @@
 (reset! yamlscript.util/build-vstr build-vstr)
 
 (defn build-node [node]
-  (let [[tag] (first node)]
-    (case tag
-      nil nil
-      :pairs (build-pairs node)
-      :forms (build-forms node)
-      :exp (build-exp node)
-      :vstr (build-vstr node)
-      :str (Str (:str node))
-      :def (build-def node)
-      :map (build-map node)
-      :seq (build-vec node)
-      :int (Int (:int node))
-      :flt (Flt (:flt node))
-      :bln (Bln (:bln node))
-      :nil (Nil)
-      (die "Don't know how to build node: " node))))
+  (let [anchor (:& node)
+        [tag] (first (dissoc node :&))
+        node (case tag
+               nil nil
+               :pairs (build-pairs node)
+               :forms (build-forms node)
+               :exp (build-exp node)
+               :vstr (build-vstr node)
+               :str (Str (:str node))
+               :def (build-def node)
+               :ali node
+               :Ali node
+               :map (build-map node)
+               :seq (build-vec node)
+               :int (Int (:int node))
+               :flt (Flt (:flt node))
+               :bln (Bln (:bln node))
+               :nil (Nil)
+               (die "Don't know how to build node: " node))
+        node (if anchor
+               (assoc node :& anchor)
+               node)]
+    node))
 
 (comment
   www

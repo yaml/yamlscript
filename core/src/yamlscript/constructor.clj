@@ -7,7 +7,7 @@
 (ns yamlscript.constructor
   (:require
    [clojure.walk :as walk]
-   [yamlscript.ast :refer [Lst Sym Vec]]
+   [yamlscript.ast :refer [Lst Qts Str Sym Vec]]
    [yamlscript.common :as common]
    [yamlscript.re :as re]
    [yamlscript.util :refer [die if-lets]]
@@ -125,18 +125,34 @@
     node)
   )
 
+(defn construct-alias [node]
+  (Lst [(Sym '_*) (Qts (:ali node))]))
+
+(defn construct-stream-alias [node]
+  (Lst [(Sym '_**) (Qts (:Ali node))]))
+
 (defn construct-node
   ([node ctx]
    (when (vector? ctx) (die "ctx is a vector"))
    (let [[[key]] (seq node)
          ctx (update-in ctx [:lvl] inc)
+         anchor (:& node)
+         node (dissoc node :&)
          node (case key
                 :pairs (construct-pairs node ctx)
                 :forms (construct-forms node ctx)
                 :Map (construct-coll node ctx :Map)
                 :Vec (construct-coll node ctx :Vec)
                 :Lst (construct-coll node ctx :Lst)
-                ,      node)]
+                :ali (construct-alias node)
+                :Ali (construct-stream-alias node)
+                ,      node)
+         node (if anchor
+                (let [node (if (vector? node)
+                             (first node)
+                             node)]
+                  (Lst [(Sym '_&) (Qts anchor) node]))
+                node)]
      (maybe-trace node)))
   ([node]
    (construct-node node {:lvl 0 :defn false})))

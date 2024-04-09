@@ -67,14 +67,8 @@
     (hash-map key)))
 
 (defn transform-list [node]
-  (or
-    false ; prevent comments below from warning
-    ; (add-num-or-string node)
-    ; (string-repeat node)
-    ;(if (= 'fn (get-in node [:Lst 0 :Sym]))
-    (if (:Lst node)
-      {:Lst (map-vec transform-node (:Lst node))}
-      node)))
+  (let [val (map-vec transform-node (:Lst node))]
+    (assoc node :Lst val)))
 
 (defn transform-map [node]
   {:Map (map-vec
@@ -91,14 +85,17 @@
 ; Turn :pairs mappings into :forms groups when appropriate.
 
 (defn transform-node [node]
-  (let [[key] (first node)]
-    (case key
-      :pairs (transform-pairs node :pairs)
-      :forms (transform-pairs node :forms)
-      :Lst (transform-list node)
-      :Map (transform-map node)
-      :Sym (transform-sym node)
-      ,    node)))
+  (let [anchor (:& node)
+        node (cond
+               (:pairs node) (transform-pairs node :pairs)
+               (:forms node) (transform-pairs node :forms)
+               (:Lst node) (transform-list node)
+               (:Map node) (transform-map node)
+               (:Sym node) (transform-sym node)
+               :else node)]
+    (if anchor
+      (assoc node :& anchor)
+      node)))
 
 (defn transform-node-top [node]
   (if-lets [[key1 val1 & rest] (:Map node)

@@ -28,6 +28,8 @@
   ([s] {:Sym (symbol s)})
   ([s d] {:Sym [(symbol s) d]}))
 
+(defn Qts [s] {:Qts (str s)})
+
 (defn Chr [s] {:Chr (symbol s)})
 
 (defn Int [s] {:Int (parse-long s)})

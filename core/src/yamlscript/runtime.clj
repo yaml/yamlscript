@@ -75,9 +75,8 @@
     {:namespaces
      {'main {}
 
+      ;; These 2 need to be first:
       'clojure.core (clojure-core-ns)
-
-      ;; This needs to be first
       'ys.ys   (use-ns 'ys.ys ys.ys)
 
       'cli     (use-ns 'cli clojure.tools.cli)

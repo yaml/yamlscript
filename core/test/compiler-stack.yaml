@@ -604,3 +604,43 @@
   clojure: |
     (def vars (load "vars.yaml"))
     [(__ vars 'foo) "bar"]
+
+
+- name: Anchors and aliases in bare mode
+  yamlscript: |
+    - &bar 42
+    - *bar
+  parse: |
+     "+SEQ"
+     "=VAL", :& "bar", := "42"
+     "=ALI", :* "bar"
+     "-SEQ"
+  compose: |
+    {:- [{:& "bar", := "42"} {:* "bar"}]}
+  resolve: |
+    {:seq ({:& "bar", :int "42"} {:ali "bar"})}
+  build: |
+    {:Vec [{:Int 42, :& "bar"} {:ali "bar"}]}
+  transform: |
+    {:Vec [{:Int 42, :& "bar"} {:ali "bar"}]}
+  construct: |
+    {:Top
+     [{:Vec
+       [{:Lst [{:Sym _&} {:Qts "bar"} {:Int 42}]}
+        {:Lst [{:Sym _*} {:Qts "bar"}]}]}]}
+  print: |
+    [(_& 'bar 42) (_* 'bar)]
+  clojure: |
+    [(_& 'bar 42) (_* 'bar)]
+
+
+- name: Anchors and aliases in code mode
+  yamlscript: |
+    &a 123
+    --- !yamlscript/v0
+    x =: *a
+    y =:: *b
+  clojure: |
+    (_& 'a 123)
+    (def x (_** 'a))
+    (def y (_* 'b))

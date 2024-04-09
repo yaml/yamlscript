@@ -44,6 +44,7 @@
     (:%% node) :map
     (:- node)  :seq
     (:-- node) :seq
+    (:* node)  :ali
     :else      :val))
 
 (declare
@@ -68,6 +69,9 @@
           "/bare" (resolve-bare-node node)
           (die "Unknown yamlscript tag: !" full-tag)))
       (resolve-bare-node node))))
+
+(defn get-scalar-style [node]
+  (some #(when (%1 node) %1) [:= :$ :' :| :>]))
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for code mode:
@@ -149,11 +153,12 @@
 (defn resolve-code-mapping [node]
   (when (:%% node)
     (die "Flow mappings not allowed in code mode"))
-  (let [node
-        {:pairs (vec
-                  (mapcat
-                    (fn [[key val]] (resolve-code-pair key val))
-                    (partition 2 (:% node))))}]
+  (let [anchor (:& node)
+        node {:pairs (vec
+                       (mapcat
+                         (fn [[key val]] (resolve-code-pair key val))
+                         (partition 2 (:% node))))}
+        node (if anchor (assoc node :& anchor) node)]
     (if-lets [[key val] (:pairs node)
               key-str (:exp key)
               _ (re-matches re/dfnk key-str)]
@@ -165,8 +170,9 @@
 
 (defn resolve-code-scalar [node]
   (let [node (dissoc node :!)
-        [key val] (-> node first)]
-    (case key
+        style (get-scalar-style node)
+        val (style node)]
+    (case style
       := (let [node
                ;; Remove leading escape character from value
                (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
@@ -177,19 +183,22 @@
       :' (set/rename-keys node {:' :str})
       :| (set/rename-keys node {:| :vstr})
       :> (set/rename-keys node {:> :str})
-      ,  (die "Scalar has unknown style: " key))))
+      ,  (die "Scalar has unknown style"))))
+
+(defn resolve-code-alias [node]
+  (set/rename-keys node {:* :Ali}))
 
 (defn resolve-code-node
   "Resolve nodes recursively in code mode"
   [node]
-  (let [tag (:! node)
-        node (dissoc node :&)]
+  (let [tag (:! node)]
     (if (= tag "")
       (resolve-data-node (dissoc node :!))
       (case (node-type node)
         :map (resolve-code-mapping node)
         :seq (resolve-code-sequence node)
-        :val (resolve-code-scalar node)))))
+        :val (resolve-code-scalar node)
+        :ali (resolve-code-alias node)))))
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for data mode:
@@ -226,7 +235,7 @@
       :else :str)))
 
 (defn resolve-data-scalar [node]
-  (let [style (-> node first key)]
+  (let [style (get-scalar-style node)]
     (case style
       := (set/rename-keys node {:= (resolve-plain-scalar node)})
       :$ (set/rename-keys node {:$ :str})
@@ -235,17 +244,20 @@
       :> (set/rename-keys node {:> :str})
       ,  (die "Scalar has unknown style: " style))))
 
+(defn resolve-data-alias [node]
+  (set/rename-keys node {:* :ali}))
+
 (defn resolve-data-node
   "Resolve nodes recursively in 'yaml' mode"
   [node]
-  (let [tag (:! node)
-        node (dissoc node :&)]
+  (let [tag (:! node)]
     (if (= tag "")
       (resolve-code-node (dissoc node :!))
       (case (node-type node)
         :map (resolve-data-mapping node)
         :seq (resolve-data-sequence node)
-        :val (resolve-data-scalar node)))))
+        :val (resolve-data-scalar node)
+        :ali (resolve-data-alias node)))))
 
 (defn resolve-data-node-top [node]
   (if-lets [pairs (or (:% node) (:%% node))
@@ -277,7 +289,7 @@
           (or (:- node) (:-- node)))})
 
 (defn resolve-bare-scalar [node]
-  (let [style (-> node first key)]
+  (let [style (some #(when (%1 node) %1) [:= :$ :' :| :>])]
     (case style
       := (set/rename-keys node {:= (resolve-plain-scalar node)})
       :$ (set/rename-keys node {:$ :str})
@@ -293,14 +305,14 @@
 (defn resolve-bare-node
   "Resolve nodes recursively in 'bare' mode"
   [node]
-  (let [tag (:! node)
-        node (dissoc node :&)]
+  (let [tag (:! node)]
     (when (and tag (not (some #{tag} bare-mode-tags)))
       (die "Unrecognized tag in bare mode: !" tag))
     (case (node-type node)
       :map (resolve-bare-mapping node)
       :seq (resolve-bare-sequence node)
-      :val (resolve-bare-scalar node))))
+      :val (resolve-bare-scalar node)
+      :ali (resolve-data-alias node))))
 
 (comment
   www

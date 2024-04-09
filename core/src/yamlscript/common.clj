@@ -7,5 +7,12 @@
 
 (def opts (atom {}))
 
+(def $ (atom {}))
+(def $# (atom 0))
+
+(def stream-anchors_ (atom {}))
+(def doc-anchors_ (atom {}))
+
+
 (comment
   www)

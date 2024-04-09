@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :refer
-    [Bln Chr Flt Int Key Lst Map Nil Rgx Spc Str Sym Tok Tup Vec]]
+    [Bln Chr Flt Int Key Lst Map Nil Qts Rgx Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [www]]
    [yamlscript.util :as util :refer [die]])
@@ -68,12 +68,16 @@
 (defn is-fq-symbol? [token]
   (re-matches re/fsym (str token)))
 
+(defn is-alias-symbol? [token]
+  (re-matches re/asym (str token)))
+
 (defn is-symbol? [token]
   (or
     (re-matches re/fsym (str token))
     (re-matches re/ysym (str token))
     (re-matches re/vsym (str token))
     (re-matches re/ssym (str token))
+    (re-matches re/asym (str token))
     (re-matches re/splt (str token))))
 
 (defn is-default-symbol? [token]
@@ -101,6 +105,7 @@
       $dsym |                   # Symbol with default
       $vsym |                   # Variable lookup symbol
       $ssym |                   # Special symbols
+      $asym |                   # Alias symbol
       $splt |                   # Splat symbol
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
@@ -295,6 +300,7 @@
                         [(Tup [(Tok "'") value]) tokens])
     (is-special? token) (let [[value tokens] (read-form tokens)]
                           [(Tup [(Tok token) value]) tokens])
+    (is-alias-symbol? token) [(Lst [(Sym '_**) (Qts (subs token 1))]) tokens]
     (is-operator? token) [(Sym token) tokens]
     (is-string? token) [(read-dq-string token) tokens]
     (is-single? token) [(read-sq-string token) tokens]

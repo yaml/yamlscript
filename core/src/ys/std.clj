@@ -13,6 +13,7 @@
    [clojure.string :as str]
    [flatland.ordered.map]
    [ys.ys :as ys]
+   [yamlscript.common :as common]
    [yamlscript.util :as util])
   (:refer-clojure :exclude [num
                             print
@@ -65,18 +66,27 @@
 ; toNum
 ; toVec
 
-(def $ (atom {}))
-(def $# (atom 0))
-(defn === []
-  (reset! $ {})
-  (reset! $# 0)
-  nil)
+(defn _& [sym val]
+  (swap! common/stream-anchors_ assoc sym val)
+  (swap! common/doc-anchors_ assoc sym val)
+  val)
 
-(defn $$ [] (->> @$# str keyword (get @$)))
+(defn _* [sym]
+  (or
+    (get @common/doc-anchors_ sym)
+    (die "Anchor not found: &" sym)))
+
+(defn _** [sym]
+  (or
+    (get @common/stream-anchors_ sym)
+    (die "Anchor not found: &" sym)))
+
+(defn $$ [] (->> @common/$# str keyword (get @common/$)))
 
 (defn +++* [value]
-  (let [index (keyword (str (swap! $# inc)))]
-    (swap! $ assoc index value)
+  (let [index (keyword (str (swap! common/$# inc)))]
+    (reset! common/doc-anchors_ {})
+    (swap! common/$ assoc index value)
     value))
 
 (defmacro +++ [& forms]
