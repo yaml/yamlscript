@@ -196,7 +196,9 @@
 
 (defn build-node [node]
   (let [anchor (:& node)
-        [tag] (first (dissoc node :&))
+        ytag (:! node)
+        node (dissoc node :! :&)
+        [tag] (first node)
         node (case tag
                nil nil
                :pairs (build-pairs node)
@@ -217,7 +219,9 @@
         node (if anchor
                (assoc node :& anchor)
                node)]
-    node))
+    (if ytag
+      (assoc node :! ytag)
+      node)))
 
 (comment
   www

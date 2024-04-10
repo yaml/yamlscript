@@ -209,8 +209,8 @@
             (fn [[key val]]
               (let [[key val]
                     (resolve-mode-swap key val)]
-                 [(resolve-data-node key)
-                  (resolve-data-node val)]))
+                [(resolve-data-node key)
+                 (resolve-data-node val)]))
             (partition 2 (or (:% node) (:%% node)))))})
 
 (defn resolve-data-sequence [node]
@@ -245,19 +245,24 @@
       ,  (die "Scalar has unknown style: " style))))
 
 (defn resolve-data-alias [node]
-  (set/rename-keys node {:* :ali}))
+  (set/rename-keys node {:* :Ali}))
 
 (defn resolve-data-node
   "Resolve nodes recursively in 'yaml' mode"
   [node]
-  (let [tag (:! node)]
-    (if (= tag "")
-      (resolve-code-node (dissoc node :!))
-      (case (node-type node)
-        :map (resolve-data-mapping node)
-        :seq (resolve-data-sequence node)
-        :val (resolve-data-scalar node)
-        :ali (resolve-data-alias node)))))
+  (let [tag (:! node)
+        anchor (:& node)
+        node (if (= tag "")
+               (resolve-code-node (dissoc node :!))
+               (case (node-type node)
+                 :map (resolve-data-mapping node)
+                 :seq (resolve-data-sequence node)
+                 :val (resolve-data-scalar node)
+                 :ali (resolve-data-alias node)))
+        node (if anchor (assoc node :& anchor) node)]
+    (if (and tag (re-find #":$" tag))
+      (assoc node :! tag)
+      node)))
 
 (defn resolve-data-node-top [node]
   (if-lets [pairs (or (:% node) (:%% node))
@@ -302,17 +307,22 @@
   ["tag:yaml.org,2002:map"
    "tag:yaml.org,2002:seq"])
 
+(defn resolve-bare-alias [node]
+  (set/rename-keys node {:* :ali}))
+
 (defn resolve-bare-node
   "Resolve nodes recursively in 'bare' mode"
   [node]
-  (let [tag (:! node)]
-    (when (and tag (not (some #{tag} bare-mode-tags)))
-      (die "Unrecognized tag in bare mode: !" tag))
-    (case (node-type node)
-      :map (resolve-bare-mapping node)
-      :seq (resolve-bare-sequence node)
-      :val (resolve-bare-scalar node)
-      :ali (resolve-data-alias node))))
+  (let [tag (:! node)
+        anchor (:& node)
+        _ (when (and tag (not (some #{tag} bare-mode-tags)))
+            (die "Unrecognized tag in bare mode: !" tag))
+        node (case (node-type node)
+               :map (resolve-bare-mapping node)
+               :seq (resolve-bare-sequence node)
+               :val (resolve-bare-scalar node)
+               :ali (resolve-bare-alias node))]
+    (if anchor (assoc node :& anchor) node)))
 
 (comment
   www

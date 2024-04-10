@@ -131,13 +131,28 @@
 (defn construct-stream-alias [node]
   (Lst [(Sym '_**) (Qts (:Ali node))]))
 
+(defn construct-tag-call [node tag]
+  (or (re-find #":$" tag)
+    (die "Tag must end with a colon"))
+  (let [tag (subs tag 0 (dec (count tag)))
+        [tag splat] (if (re-find #"\*$" tag)
+                      [(subs tag 0 (dec (count tag))) true]
+                      [tag false])
+        kind (-> node first key)]
+    (if splat
+      (case kind
+        :Vec (Lst [(Sym 'apply) (Sym tag) node])
+        ,    (die "Splat only allowed on Vec"))
+      (Lst [(Sym tag) node]))))
+
 (defn construct-node
   ([node ctx]
    (when (vector? ctx) (die "ctx is a vector"))
    (let [[[key]] (seq node)
          ctx (update-in ctx [:lvl] inc)
          anchor (:& node)
-         node (dissoc node :&)
+         tag (:! node)
+         node (dissoc node :& :!)
          node (case key
                 :pairs (construct-pairs node ctx)
                 :forms (construct-forms node ctx)
@@ -152,6 +167,9 @@
                              (first node)
                              node)]
                   (Lst [(Sym '_&) (Qts anchor) node]))
+                node)
+         node (if tag
+                (construct-tag-call node tag)
                 node)]
      (maybe-trace node)))
   ([node]

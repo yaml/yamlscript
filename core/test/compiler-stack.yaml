@@ -643,4 +643,45 @@
   clojure: |
     (_& 'a 123)
     (def x (_** 'a))
-    (def y (_* 'b))
+    (def y (_** 'b))
+
+
+- name: Function tags in data mode
+  yamlscript: |
+    !yamlscript/v0/
+    foo: !merge*:
+    - foo: 1
+    - bar: 2
+  compose: |
+    {:! "yamlscript/v0/",
+     :%
+     [{:= "foo"}
+      {:! "merge*:",
+       :-
+       [{:% [{:= "foo"} {:= "1"}]} {:% [{:= "bar"} {:= "2"}]}]}]}
+  resolve: |
+    {:map
+     [{:str "foo"}
+      {:seq
+       ({:map [{:str "foo"} {:int "1"}]}
+        {:map [{:str "bar"} {:int "2"}]}),
+       :! "merge*:"}]}
+  build: |
+    {:Map
+     [{:Str "foo"}
+      {:Vec
+       [{:Map [{:Str "foo"} {:Int 1}]}
+        {:Map [{:Str "bar"} {:Int 2}]}],
+       :! "merge*:"}]}
+  construct: |
+    {:Top
+     [{:Map
+       [{:Str "foo"}
+        {:Lst
+         [{:Sym apply}
+          {:Sym merge}
+          {:Vec
+           [{:Map [{:Str "foo"} {:Int 1}]}
+            {:Map [{:Str "bar"} {:Int 2}]}]}]}]}]}
+  clojure: |
+    {"foo" (apply merge [{"foo" 1} {"bar" 2}])}
