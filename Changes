@@ -1,4 +1,16 @@
 
+- version: 0.1.54
+  date:    Thu 11 Apr 2024 07:00:11 AM PDT
+  changes:
+  - make: Include java.mk before clojure.mk
+  - nodejs: Fix test require("@yaml/yamlscript")
+  - make: Support 'make test-bindings'
+  - rust: Display install instructions on `NotFound`
+  - rust: Add support for dylib
+  - core: Add anchor / alias support
+  - core: Add tag functions for data mode
+  - www: Initial YAMLScript documentation
+
 - version: 0.1.53
   date:    Sat 06 Apr 2024 05:36:24 AM PDT
   changes:
