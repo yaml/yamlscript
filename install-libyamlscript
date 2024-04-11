@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cat <<...
+
+--------------------------------------------------------------------------------
+ERROR: 'install-libyamlscript' has been renamed to 'install'.
+
+Use:
+
+  curl https://yamlscript.org/install | LIB=1 bash
+--------------------------------------------------------------------------------
+
+...

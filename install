@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+[[ ${DEBUG-} == 1 ]] && set -x
+
+set -e -u -o pipefail
+
+LIBYAMLSCRIPT_VERSION=0.1.54
+VERSION=${VERSION:-$LIBYAMLSCRIPT_VERSION}
+export VERSION
+
+main() (
+  setup "$@"
+
+  if ! [[ ${BIN-} || ${LIB-} ]]; then
+    install ys
+    install libyamlscript
+  elif [[ ${BIN-} ]]; then
+    install ys
+  elif [[ ${LIB-} ]]; then
+    install libyamlscript
+  fi
+)
+
+install() (
+  name=$1
+
+  url+=/$vers/$name-$vers-$os-$arch.tar.xz
+
+  curl -s -S -L -o "$dir/download.tar.xz" "$url"
+
+  release_dir=$dir/$name
+  mkdir -- "$release_dir"
+  tar -xf "$dir/download.tar.xz" -C "$release_dir"
+
+  (
+    CDPATH='' cd -- "$release_dir" || exit
+
+    make -s --no-print-directory -C "$name"-* install
+  )
+
+  if [[ $name == ys &&
+        $PATH != *"$PREFIX"/bin*
+     ]]; then
+    echo
+    echo "  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***"
+    echo
+  fi
+
+  if [[ $name == libyamlscript &&
+        $PREFIX != "$HOME/.local" &&
+        $PREFIX != /usr/local &&
+        ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
+     ]]; then
+    echo
+    echo "  *** WARNING: '$PREFIX/lib' is not in your LD_LIBRARY_PATH yet ***"
+    echo
+  fi
+)
+
+setup() {
+  vers=$VERSION
+
+  if [[ ! ${PREFIX-} ]]; then
+    if [[ $(id -u) == 0 ]]; then
+      PREFIX=/usr/local
+    else
+      PREFIX=$HOME/.local
+    fi
+  fi
+  export PREFIX
+
+  if [[ $OSTYPE == *darwin* ]]; then
+    os=macos
+  elif [[ $OSTYPE == *linux* ]]; then
+    os=linux
+  else
+    die "Unknown OS type: $OSTYPE"
+  fi
+
+  if [[ $MACHTYPE == *x86_64* ]]; then
+    arch=x64
+  elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
+    arch=aarch64
+  else
+    die "Unknown machine type: $MACHTYPE"
+  fi
+
+  url=https://github.com/yaml/yamlscript/releases/download/
+
+  if [[ ${PREFIX-} && $PREFIX != /* ]]; then
+    export PREFIX=$PWD/$PREFIX
+  fi
+
+  unset -v dir
+
+  trap '[[ ${dir-} ]] && rm -fr -- "$dir"' EXIT
+
+  dir=$(mktemp -d)
+}
+
+die() {
+  printf '%s\n' "$@" >&2
+  exit 1
+}
+
+main "$@"
