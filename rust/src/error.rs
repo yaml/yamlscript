@@ -32,7 +32,7 @@ impl Debug for Error {
             Self::NotFound => write!(
                 f,
                 "Shared library file 'libyamlscript.so.{0}' not found
-Try: curl -sSL yamlscript.org/install | VERSION={0} LIB=1 bash
+Try: curl https://yamlscript.org/install | VERSION={0} LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript",
                 &super::LIBYAMLSCRIPT_VERSION
             ),

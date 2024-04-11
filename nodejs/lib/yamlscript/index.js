@@ -103,7 +103,7 @@ function findLibyamlscriptPath() {
 
   throw new Error(
 `Shared library file '${libyamlscriptName}' not found
-Try: curl -sSL yamlscript.org/install | VERSION=${yamlscriptVersion} LIB=1 bash
+Try: curl https://yamlscript.org/install | VERSION=${yamlscriptVersion} LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript`);
 }
 

@@ -37,7 +37,7 @@ Consider the following examples.
 
 Bare mode:
 
-```text
+```txt
 $ ys --load <(echo '
 foo:
   count: [red, green, blue]')
@@ -46,7 +46,7 @@ foo:
 
 Data mode:
 
-```text
+```txt
 $ ys --load <(echo '
 !yamlscript/v0/
 foo:
@@ -56,7 +56,7 @@ foo:
 
 Code mode:
 
-```text
+```txt
 $ ys --load <(echo '
 !yamlscript/v0
 foo:
@@ -78,7 +78,7 @@ number of elements in the sequence.
 
 The special tag `!` can be used to switch from data to code and vice versa.
 
-```text
+```txt
 $ ys --load <(echo '
 !yamlscript/v0/
 foo: !
@@ -91,7 +91,7 @@ We got the same error.
 YAMLScript only allows block mappings for code.
 We need to put `[red, green, blue]` into data mode:
 
-```
+```txt
 $ ys --load <(echo '
 !yamlscript/v0/
 foo: !
@@ -107,7 +107,7 @@ If you use `::` instead of `:` it does the same thing.
 
 Let's try it out:
 
-```
+```txt
 $ ys --load <(echo '
 !yamlscript/v0/
 foo::
@@ -119,7 +119,7 @@ Sweet!
 
 However, when *switching in a sequence* you'll need to use `!`:
 
-```
+```txt
 $ ys --load <(echo '
 !yamlscript/v0/
 - !
@@ -133,7 +133,7 @@ In the examples above `count:` is simply a plain scalar ending with `:`.
 
 We can see that in bare mode:
 
-```
+```txt
 $ ys --load <(echo '
 count:: [red, green, blue]')
 {"count:":["red","green","blue"]}

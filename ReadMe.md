@@ -162,7 +162,7 @@ You can try out the latest version of the `ys` command without actually
 If you run this command in Bash or Zsh:
 
 ```
-. <(curl -sSL yamlscript.org/try-ys)
+. <(curl https://yamlscript.org/try-ys)
 ```
 
 it will install the `ys` command in a temporary directory (under `/tmp/`) and
@@ -220,7 +220,7 @@ https://github.com/yaml/yamlscript/releases).
 To install a latest release for your machine platform, try:
 
 ```bash
-$ curl -sSL yamlscript.org/install | bash
+$ curl https://yamlscript.org/install | bash
 ```
 
 Make sure `~/.local/bin` is in your `PATH` environment variable.

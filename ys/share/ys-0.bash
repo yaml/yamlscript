@@ -15,12 +15,12 @@ main() (
 do-install() (
   export PREFIX=${PREFIX:-$(dirname "$bindir")}
   export LIB=1
-  curl -sSL https://yamlscript.org/install | bash
+  curl -sS https://yamlscript.org/install | bash
 )
 
 do-upgrade() (
   export PREFIX=${PREFIX:-$(dirname "$bindir")}
-  curl -sSL https://yamlscript.org/install | bash
+  curl -sS https://yamlscript.org/install | bash
 )
 
 do-compile-to-binary() (
@@ -275,7 +275,7 @@ assert-lein() {
     mkdir -p "$lein_path"
     (
       set -x
-      curl -s "$lein_url" > "$lein_path/lein"
+      curl -sS "$lein_url" > "$lein_path/lein"
     )
   fi
   [[ -f $lein_path/lein ]] ||
@@ -302,7 +302,7 @@ assert-graalvm-tarball() {
     mkdir -p "$(dirname -- "$graalvm_download")"
     (
       set -x
-      curl -s "$graalvm_url" > "$graalvm_download"
+      curl -sS "$graalvm_url" > "$graalvm_download"
     )
   fi
   [[ -f $graalvm_download ]] ||

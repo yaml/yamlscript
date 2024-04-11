@@ -62,7 +62,7 @@ def find_libyamlscript_path():
     raise Exception(
       """\
 Shared library file '%s' not found
-Try: curl -sSL yamlscript.org/install | VERSION=%s LIB=1 bash
+Try: curl https://yamlscript.org/install | VERSION=%s LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
 """ % (libyamlscript_name, yamlscript_version))
 

@@ -106,7 +106,7 @@ but you will need to have a system install of `libyamlscript.so`.
 One simple way to do that is with:
 
 ```bash
-$ curl -sSL yamlscript.org/install | bash
+$ curl https://yamlscript.org/install | bash
 ```
 
 > Note: The above command will install the latest version of the YAMLScript

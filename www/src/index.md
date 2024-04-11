@@ -134,7 +134,7 @@ You can try `ys` out temporarily (for the duration of your shell session) by
 running this command in your terminal:
 
 ```bash
-$ . <(curl -sSL yamlscript.org/try-ys)
+$ . <(curl https://yamlscript.org/try-ys)
 ```
 
 This will install `ys` in a temporary directory and add it to the `PATH`
@@ -144,7 +144,7 @@ Or you can install the [latest release](
 https://github.com/yaml/yamlscript/releases) with:
 
 ```bash
-$ curl -sSL yamlscript.org/install | bash
+$ curl https://yamlscript.org/install | bash
 ```
 
 Make sure that `~/.local/bin` is in your `PATH` environment variable.
@@ -153,7 +153,7 @@ To install elsewhere or install a specific version, set the `PREFIX` and/or
 `VERSION` environment variables to the desired values:
 
 ```bash
-$ curl -sSL yamlscript.org/install | PREFIX=/some/dir VERSION=0.1.xx bash
+$ curl https://yamlscript.org/install | PREFIX=/some/dir VERSION=0.1.xx bash
 ```
 
 > NOTE: The default `PREFIX` is `~/.local` (or `/usr/local` if you run the
@@ -257,7 +257,7 @@ For Python you would do:
 ```bash
 $ pip install yamlscript
 Successfully installed yamlscript-0.1.54
-$ curl -sSL yamlscript.org/install | VERSION=0.1.54 install
+$ curl https://yamlscript.org/install | VERSION=0.1.54 install
 Installed ~/.local/lib/libyamlscript.so - version 0.1.54
 ```
 

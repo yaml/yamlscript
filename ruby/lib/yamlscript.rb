@@ -59,7 +59,7 @@ class YAMLScript
       raise Error, <<-ERROR unless path
 
 Shared library file `#{name}` not found
-Try: curl -sSL yamlscript.org/install | VERSION=#{vers} LIB=1 bash
+Try: curl https://yamlscript.org/install | VERSION=#{vers} LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
 ERROR
 

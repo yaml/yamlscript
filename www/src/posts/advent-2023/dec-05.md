@@ -38,7 +38,7 @@ aarch64 (for either). See the [YAMLScript Releases Page](
 https://github.com/yaml/yamlscript/releases/)
 
 ```bash
-curl -sSL yamlscript.org/install | bash
+curl https://yamlscript.org/install | bash
 ```
 
 This installer defaults to installing `ys` into `~/.local/bin`, unless you run
@@ -47,7 +47,7 @@ it as root in which case it defautlls to `/usr/local/bin`.
 If you want to install it somewhere else, like say `~/local/bin`, you can do:
 
 ```bash
-curl -sSL yamlscript.org/install | PREFIX=~/local bash
+curl https://yamlscript.org/install | PREFIX=~/local bash
 ```
 
 Wherever you install it, make sure that the `$PREFIX/bin` directory is in your
@@ -58,7 +58,7 @@ library.
 You can install it like above but with (some variation of):
 
 ```bash
-curl -sSL yamlscript.org/install | bash
+curl https://yamlscript.org/install | bash
 ```
 
 We'll be using the shared library soon when we start playing around with using
@@ -155,7 +155,7 @@ Here's a quick example of how to run YAMLScript to process a file from the
 internet that Google just told me about:
 
 ```bash
-$ curl -sSL gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml |
+$ curl https://gist.githubusercontent.com/chriscowley/8598119/raw/8f671464f914320281e5e75bb8dcbe11285d21e6/nfs.example.lan.yml |
 ys -J - | jq .classes
 {
   "nfs::server": {

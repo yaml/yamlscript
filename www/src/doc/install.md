@@ -27,10 +27,10 @@ You can install both `ys` and `libyamlscript` with a single CLI command, where:
 
 Examples:
 ```bash
-$ curl -sSL yamlscript.org/install | bash
-$ curl -sSL yamlscript.org/install | VERSION=0.1.47 bash
-$ curl -sSL yamlscript.org/install | VERSION=0.1.47 LIB=1 bash
-$ curl -sSL yamlscript.org/install | PREFIX=/tmp/yamlscript bash
+$ curl https://yamlscript.org/install | bash
+$ curl https://yamlscript.org/install | VERSION=0.1.47 bash
+$ curl https://yamlscript.org/install | VERSION=0.1.47 LIB=1 bash
+$ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
 ```
 
 You'll need to have `PREFIX/bin` in your `PATH`.
@@ -43,7 +43,7 @@ Unless you use the default `PREFIX` you'll need to add `PREFIX/lib` to
 If you just want to try out the `ys` command but not install it permanently, you
 can run this (in Bash and Zsh only):
 ```bash
-$ source <(curl -sSL yamlscript.org/try-ys)
+$ source <(curl https://yamlscript.org/try-ys)
 ```
 
 This will install the `ys` binary under `/tmp/` and add the directory to you

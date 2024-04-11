@@ -6,7 +6,7 @@ _yamlscript-try-ys() {
   tmp=${TMPDIR:-/tmp}
   tmp=${tmp%/}
   dir=$(mktemp -d "$tmp/yamlscript-try-ys-XXXXXXXXXX") &&
-  curl -s https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
+  curl https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
   export PATH=$dir/bin:$PATH
 }
 
@@ -26,8 +26,8 @@ Try out these commands:
     ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"' --compile
     ys -e 'each [i (1 .. 5)]:' -e '  say: "Hello!"' --load
 
-    curl -sL yamlscript.org/try/99-bottles.ys | ys - 3
-    curl -sL yamlscript.org/try/99-bottles.ys | ys - -c -X
+    curl https://yamlscript.org/try/99-bottles.ys | ys - 3
+    curl https://yamlscript.org/try/99-bottles.ys | ys - -c -X
 
 For more information about YAMLScript and ys:
 

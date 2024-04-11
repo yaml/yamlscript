@@ -8,7 +8,7 @@ The following architectures are currently supported:
 Run this command to install `~/.local/bin/ys` and `~/.local/lib/libyamlscript.so` (`.dylib` on macOS):
 
 ```
-$ curl -sSL yamlscript.org/install | bash
+$ curl https://yamlscript.org/install | bash
 ```
 
 See [Installing YAMLScript](https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript) for more detailed information.
