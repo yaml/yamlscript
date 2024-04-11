@@ -9,6 +9,18 @@ YAML</p>
 **YAMLScript is a new YAML Loader** that can add "Super Powers" to your plain
 old YAML config files.
 
+YAMLScript intends to provide a loader library for every programming language
+that uses YAML.
+Currently we have working libraries for
+[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
+[Java](https://clojars.org/org.yamlscript/yamlscript),
+[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
+[Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
+[Python](https://pypi.org/project/yamlscript/),
+[Raku](https://raku.land/zef:ingy/YAMLScript),
+[Ruby](https://rubygems.org/search?query=yamlscript) and
+[Rust](https://crates.io/crates/yamlscript).
+
 By using YAMLScript as your YAML loader, You can dynamically include data from
 other data files (YAML, JSON, XML, CSV, etc), pull data in from the web or even
 from a database.
@@ -35,54 +47,104 @@ new level!
 
 ----
 
-Here's an example of using YAMLScript in a YAML configuration file called
-`db-config.yaml`:
+Here's an example of using YAMLScript in a YAML file called `file.yaml`:
 
 ```yaml
-{% include "../main/sample/www/db-config.yaml" %}
+--- !yamlscript/v0/ &pets
+
+cats:: load("cats.yaml")
+dogs:: curl("https://yamlscript.org/dogs.yaml")
+      .yaml/load().big
+
+--- !yamlscript/v0/
+
+about: A YAMLScript Example about Pets
+title:: "$(ENV.USER.str/capitalize())'s Pets"
+birds: !sort:
+- Parrot
+- Canary
+- Owl
+cats:: .*pets.cats
+dogs:: .*pets.dogs.shuffle().take(2 _)
+```
+
+And these other files:
+```bash
+$ cat cats.yaml
+- Siamese
+- Persian
+- Maine Coon
+
+$ curl -s https://yamlscript.org/dogs.yaml
+small:
+- Chihuahua
+- Pomeranian
+- Maltese
+
+big:
+- Mastiff
+- Great Dane
+- Saint Bernard
+- Otterhound
 ```
 
 From the command line, run:
 
 ```bash
-$ ys --load db-config.yaml production
-{"host":"prod-db.myapp.com","port":12345,"user":"prod","password":"prodsecret"}
+$ ys --load file.yaml
+{"about":"A YAMLScript Example about Pets",
+"title":"Ingy's Pets",
+"birds":["Canary","Owl","Parrot"],
+"cats":["Siamese","Persian","Maine Coon"],
+"dogs":["Otterhound","Saint Bernard"]}
 ```
 
 By default YAMLScript outputs JSON, but it can also output YAML by running:
 
 ```bash
-$ ys --load --yaml db-config.yaml
-host: localhost
-port: 12345
-user: dev
-password: devsecret
+$ ys -Y file.yaml
+about: A YAMLScript Example about Pets
+title: Ingy's Pets
+birds:
+- Canary
+- Owl
+- Parrot
+cats:
+- Siamese
+- Persian
+- Maine Coon
+dogs:
+- Great Dane
+- Mastiff
 ```
-
-Notice the first time we ran the command, we passed in the `production` level
-key, and it loaded our "production" data.
-The second time we ran the command, we didn't pass in a key, so it loaded the
-default "development" data.
-We specified that default with `main(level='development')`.
 
 ----
 
-You can use YAMLScript as a regular YAML loader library in a programming
-language like Python:
+You can get the same result from a programming language like Python by using its
+YAMLScript loader library.
+Here's a CLI one liner to do the same thing in Python:
 
-```python
-{% include "../main/sample/www/example.py" %}
+```bash
+$ python -c '
+import yamlscript,yaml
+ys = yamlscript.YAMLScript()
+input = open("file.yaml").read()
+data = ys.load(input)
+print(yaml.dump(data))'
+about: A YAMLScript Example about Pets
+birds:
+- Canary
+- Owl
+- Parrot
+cats:
+- Siamese
+- Persian
+- Maine Coon
+dogs:
+- Otterhound
+- Mastiff
+title: Ingy's Pets
 ```
-
-It loads the YAML data file just like PyYAML would, but with these added
-benefits:
-
-* YAMLScript libraries have the same API and work exactly the same in any
-  programming language.
-* YAMLScript uses the latest YAML 1.2 specification, which eliminates many of
-  the complaints people often have about YAML.
-* You can add dynamic operations to your YAML file by starting the file with a
-  `!yamlscript/v0` tag.
 
 ----
 
@@ -91,29 +153,51 @@ functional and dynamic **programming language** whose syntax is encoded in
 YAML.
 YAMLScript can be used for writing new software applications and libraries.
 
-Here's an example of a YAMLScript program called `hello.ys`:
+Here's an example of a YAMLScript program called `99-bottles.ys`:
 
 ```yaml
-{% include "../main/sample/www/hello.ys" %}
+{% include "../main/sample/rosetta-code/99-bottles-of-beer.ys" %}
 ```
 
 You can run this program from the command line:
 
 ```bash
-$ ys hello.ys
-Hello, world!
-$ ys hello.ys Jack
-Hello, Jack!
+$ ys 99-bottles.ys 3
+3 bottles of beer on the wall,
+3 bottles of beer.
+Take one down, pass it around.
+2 bottles of beer on the wall.
+
+2 bottles of beer on the wall,
+2 bottles of beer.
+Take one down, pass it around.
+1 bottle of beer on the wall.
+
+1 bottle of beer on the wall,
+1 bottle of beer.
+Take one down, pass it around.
+No more bottles of beer on the wall.
 ```
 
 YAMLScript can compile programs to native binary executables.
 It's as simple as this:
 
 ```bash
-$ ys -b hello.ys
-$ ./hello Jack
-Hello, Jack!
+$ ys -b 99-bottles.ys
+* Compiling YAMLScript '99-bottles.ys' to '99-bottles' executable
+
+$ time ./99-bottles 1
+1 bottle of beer on the wall,
+1 bottle of beer.
+Take one down, pass it around.
+No more bottles of beer on the wall.
+
+real    0m0.010s
+user    0m0.006s
+sys     0m0.005s
 ```
+
+That's pretty fast!
 
 The YAMLScript language has all the things you expect from a modern programming
 language including:
@@ -226,7 +310,7 @@ or:
 
 ```text
 $ ys --version
-YAMLScript 0.1.47
+YAMLScript 0.1.54
 ```
 
 
@@ -236,15 +320,14 @@ YAMLScript can be installed as a YAML loader library (module) in several
 programming languages.
 
 So far there are libraries in these languages:
-
-* Clojure
-* Java
-* NodeJS
-* Perl
-* Python
-* Raku
-* Rust
-* Ruby
+[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
+[Java](https://clojars.org/org.yamlscript/yamlscript),
+[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
+[Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
+[Python](https://pypi.org/project/yamlscript/),
+[Raku](https://raku.land/zef:ingy/YAMLScript),
+[Ruby](https://rubygems.org/search?query=yamlscript) and
+[Rust](https://crates.io/crates/yamlscript).
 
 Several more are in the works, and the goal is to get it to every language
 where YAML is used.
@@ -283,8 +366,10 @@ Clojure is a Lisp dialect that runs on the JVM, however YAMLScript is not run
 on the JVM.
 No Java or JVM installation is used to run (or build) YAMLScript programs.
 
-The YAMLScript compiler is written in Clojure and then compiled to a native
-machine code binary using GraalVM.
+The YAMLScript compiler and runtime interpreter is written in Clojure and then
+compiled to a native machine code binary using
+[GraalVM](https://www.graalvm.org/)'s [native-image](
+https://www.graalvm.org/22.0/reference-manual/native-image/) compiler.
 It is standalone and quite fast.
 
 It is also compiled into a native shared library that can be embedded into
@@ -299,33 +384,36 @@ than a Lisp.
 
 How a YAMLScript program is syntactically styled is very much up to the
 programmer.
-She can go Full Lisp or full YAML, but most likely using a combination of the
-two will end up reading the best.
+She can go **Full Lisp** or **Full YAML**, but most likely using a combination
+of the two will end up reading the best.
 
 
 ## Status
 
 YAMLScript is already a working programming language but it does not yet have a
-stable release version.
+stable `v0` API release version.
+In other words, you can use it now but some things _might_ change.
 
 A stable release of YAMLScript `v0` is expected in Q2 of 2024.
 
-Once `v0` is announced stable, it's API will remain backwards compatible for
-its lifetime.
+Once `v0` is announced stable, its API will remain backwards compatible for its
+lifetime.
 That is to say, any files containing `!yamlscript/v0` will always continue to
 work the same.
 
 
-## Further Reading
+## YAMLScript Resources
 
-Read the [YAMLScript Advent 2023](https://yamlscript.org/posts/advent-2023/)
-posts for lots of explanations and examples of YAMLScript in action.
+* [Web Site](https://yamlscript.org)
+* [Documentation](https://yamlscript.org/doc)
+* [Matrix Chat](https://matrix.to/#/#chat-yamlscript:yaml.io)
+* [Slack Chat](https://clojurians.slack.com/archives/yamlscript)
+* [Blog](https://yamlscript.org/blog)
+* [March 2023 Talk](https://www.youtube.com/watch?v=GajOBwBcFyA)
+* [GitHub Repository](https://github.com/yaml/yamlscript)
+* [Discussions](https://github.com/yaml/yamlscript/discussions)
+* [Issues](https://github.com/yaml/yamlscript/issues)
 
-Documentation is coming soon!
-
-<!--
-See the [YAMLScript Docs](https://yamlscript.org/doc/) for more information.
--->
 
 ----
 ----

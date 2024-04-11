@@ -7,6 +7,7 @@ ifdef DOCKERENV
 else
 	yarn build
 endif
+	cp src/dogs.yaml build/
 	cp src/install* src/try* build/
 	cp src/blog-redirect-html build/posts/index.html
 	cp src/advent-redirect-html build/posts/advent-2023/index.html
