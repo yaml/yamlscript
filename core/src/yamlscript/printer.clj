@@ -13,12 +13,12 @@
   (:refer-clojure :exclude [print]))
 
 (def string-escape
-  {\" "\\\""
+  {\\ "\\\\"
+   \" "\\\""
    \newline "\\n"})
 
 (defn pr-string [s]
-  (-> s
-    (str/escape string-escape)))
+  (str/escape s string-escape))
 
 (def regex-escape
   {\" "\\\""})

@@ -921,3 +921,11 @@
     foo: bar* baz
   clojure: |
     (apply foo (concat bar [baz]))
+
+
+- name: String escapes
+  yamlscript: |
+    rgx: |
+      ^v([0-9]+\.[0-9]+\.[0-9]+)$
+  clojure: |
+    {"rgx" "^v([0-9]+\\.[0-9]+\\.[0-9]+)$\n"}

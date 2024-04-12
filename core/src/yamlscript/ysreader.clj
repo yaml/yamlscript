@@ -264,10 +264,18 @@
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
+(defn str-unescape [s]
+  (-> s
+    (str/replace "\\\\" "\\")
+    (str/replace "\\n" "\n")
+    (str/replace "\\t" "\t")
+    (str/replace "\\\"" "\"")))
+
 (defn read-dq-string [string]
   (let [build-vstr @util/build-vstr]
     (-> string
       (subs 1 (dec (count string)))
+      str-unescape
       (#(hash-map :vstr %))
       build-vstr)))
 
