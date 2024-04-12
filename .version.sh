@@ -38,6 +38,10 @@ pattern='(yamlscript\/core.*)'"$vp"'(.*)'
 bump libyamlscript/project.clj
 bump ys/project.clj
 
+pattern='(?m:^(YAMLScript )'"$vp"'()$)'
+
+bump www/src/index.md
+
 pattern='(YAMLSCRIPT.*)'"$vp"'(.*)'
 
 bump common/install.mk
