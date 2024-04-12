@@ -1,4 +1,12 @@
 
+- version: 0.1.55
+  date:    Fri 12 Apr 2024 12:28:29 PM PDT
+  changes:
+  - doc: Change curl commands to use https explicitly
+  - www: Rework yamlscript.org main page
+  - core: Fix a bug with backslash escaping
+  - release: Version bump fix for main web page
+
 - version: 0.1.54
   date:    Thu 11 Apr 2024 07:00:11 AM PDT
   changes:

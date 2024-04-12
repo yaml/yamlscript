@@ -3,7 +3,7 @@
 base: ../Meta
 
 name: Alien-YAMLScript
-version: 0.1.54
+version: 0.1.55
 
 language: perl
 

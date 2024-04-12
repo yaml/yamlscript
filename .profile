@@ -10,7 +10,7 @@ ys-local() {
 YS() (
   set -e
   base=$YAMLSCRIPT_ROOT/ys
-  libyamlscript_version=0.1.54
+  libyamlscript_version=0.1.55
   jar=yamlscript.cli-$libyamlscript_version-SNAPSHOT-standalone.jar
   make --no-print-directory -C "$base" jar
   java -jar "$base/target/uberjar/$jar" "$@"
