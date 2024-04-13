@@ -243,8 +243,9 @@ Options:
                (str "---\n" code))]
     code))
 
-(defn get-code [opts args]
+(defn get-code [opts args argv]
   (let [[file & args] args
+        args (concat args argv)
         f-code (when file
                  (str
                    (if (= "-" file)
@@ -283,8 +284,8 @@ Options:
           (compiler/compile-debug code)))
       (catch Exception e (err e opts)))))
 
-(defn get-compiled-code [opts args]
-  (let [[code file args load] (get-code opts args)
+(defn get-compiled-code [opts args argv]
+  (let [[code file args load] (get-code opts args argv)
         code (if code (compile-code code opts) "")]
     [code file args load]))
 
@@ -307,9 +308,9 @@ Options:
                             (str "Unsupported key type '" t "'\n"
                               "Key = '" x "'")))))))})
 
-(defn do-run [opts args]
+(defn do-run [opts args argv]
   (try
-    (let [[code file args load] (get-compiled-code opts args)
+    (let [[code file args load] (get-compiled-code opts args argv)
           result (runtime/eval-string code file args)]
       (if (:print opts)
         (pp/pprint result)
@@ -346,7 +347,7 @@ Options:
         (err msg)))))
 
 (defn do-compile [opts args]
-  (let [[code _ _ #_file #_args] (get-compiled-code opts args)]
+  (let [[code _ _ #_file #_args] (get-compiled-code opts args [])]
     (-> code
       compiler/pretty-format
       str/trim-newline
@@ -369,11 +370,11 @@ Options:
     (dissoc opts opt)
     opts))
 
-(defn do-default [opts args help]
+(defn do-default [opts args argv help]
   (if (or (seq (elide-empty :eval
                  (elide-empty :debug-stage opts)))
         (seq args))
-    (do-run opts args)
+    (do-run opts args argv)
     (do-help help)))
 
 (defn mutex [opts keys]
@@ -449,11 +450,13 @@ Options:
       (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
 
 (defn -main [& args]
-  (let [options (cli/parse-opts args cli-options)
+  (let [[args argv] (split-with #(not= "--" %1) args)
+        options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
+        argv (rest argv)
         error (validate-opts opts)
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
@@ -474,14 +477,14 @@ Options:
       (:install opts) (do-install opts args)
       (:upgrade opts) (do-upgrade opts args)
       (:binary opts) (do-binary opts args)
-      (:run opts) (do-run opts args)
+      (:run opts) (do-run opts args argv)
       (:compile opts) (do-compile opts args)
-      (:load opts) (do-run opts args)
+      (:load opts) (do-run opts args argv)
       (:repl opts) (do-repl opts)
       (:connect opts) (do-connect opts args)
       (:kill opts) (do-kill opts args)
       (:nrepl opts) (do-nrepl opts args)
-      :else (do-default opts args help))))
+      :else (do-default opts args argv help))))
 
 (comment
   www
