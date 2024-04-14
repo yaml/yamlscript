@@ -1,4 +1,299 @@
-<!doctype html><html lang="en"><head><script async src="https://www.googletagmanager.com/gtag/js?id=G-44C9DS3Q80"></script><script>window.dataLayer = window.dataLayer || [];
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-44C9DS3Q80"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-44C9DS3Q80');</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="canonical" href="https://yamlscript.org/posts/advent-2023/dec-19/"><link href="/assets/main.ba27954d2f63d1b86fb9.css" rel="stylesheet"><link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet"><title>Reindeer All The Way Down | YAMLScript</title><link rel="icon" type="“image/x-icon”" href="/images/favicon.ico"><meta property="og:title" content="Reindeer All The Way Down"><meta property="og:site_name" content="YAMLScript"><meta property="og:type" content="website"><meta property="og:url" content="https://yamlscript.org/posts/advent-2023/dec-19/"><meta name="twitter:card" content="summary_large_image"><meta name="description" content="Reindeer All The Way Down by Ingy döt Net | 19 Dec 2023 | 3 min read Santa is in charge of Christmas. He&#39;s the one who makes sure that all..."><meta property="og:description" content="Reindeer All The Way Down by Ingy döt Net | 19 Dec 2023 | 3 min read Santa is in charge of Christmas. He&#39;s the one who makes sure that all..."><meta name="description" content="Reindeer All The Way Down by Ingy döt Net | 19 Dec 2023 | 3 min read Santa is in charge of Christmas. He&#39;s the one who makes sure that all..."><script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script><script>mermaid.initialize({startOnLoad:true});</script></head><body><div class="layout-wrapper"><header class="header"><div class="header__content"><h1 class="site-title"><a href="/"><img src="/images/yamlscript.svg"></a></h1><nav class="nav"><ul class="nav__list"><li class="nav-item"><a href="/doc">Docs</a></li><li class="nav-item"><a href="/blog">Blog</a></li><li class="nav-item"><a href="/about">About</a></li></ul></nav></div></header><main class="main"><article class="post"><header class="post__header"><h1>Reindeer All The Way Down</h1><div class="post__details">by <a href="/about/#ingydotnet">Ingy döt Net</a> <span>| </span><time datetime="2023-12-19">19 Dec 2023 </time><span>| </span><span>3 min read</span></div></header><main class="post__content"><p>Santa is in charge of Christmas. He's the one who makes sure that all the children get presents. But who is in charge of getting Santa his presents? That's where the reindeer come in. They are the ones who make sure that Santa gets his presents. But who is in charge of getting the reindeer their presents? More reindeer! But who is in charge of getting the reindeer's reindeer their presents? More reindeer! It's reindeer all the way down.</p><h3>Welcome to Day 19 of the YAMLScript Advent Calendar</h3><p>YAMLScript is a new programming language that is based on Clojure. It's written in Clojure and compiles to Clojure. In effect YAMLScript is Clojure. So if YAMLScript is written in Clojure, why not just use YAMLScript to write YAMLScript?</p><p>Isn't there a chicken and egg problem here? Sure, but that's easy to solve.</p><p>Once you have a stable version of YAMLScript, you can rewrite YAMLScript in YAMLScript. You just need to use a previously compiled version of YAMLScript to compile the new YAMLScript-in-YAMLScript with.</p><p>This is called self-hosting and it's a common practice in the programming language world. Clojure itself is written in Clojure. Not all of it. It's also written in Java, since it runs on the JVM. But all the core libraries are written in Clojure.</p><p>YAMLScript isn't quite ready to be self-hosted yet. But I was able to convert the <code>ys::std</code> library to YAMLScript and then build YAMLScript with it!</p><p>Have a look at this <a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933">gist</a>.</p><p>It has 3 files:</p><ul><li><a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-orig-std-clj">orig-std.clj</a> — The original Clojure version of <code>ys::std</code> as of today.</li><li><a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-std-clj">std.clj</a> — The compiled version of YAMLScript port of <code>ys::std</code>.</li><li><a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-std-ys">std.ys</a> — The YAMLScript port of <code>ys::std</code>.</li></ul><p>I don't know about you but I find the YAMLScript version much easier to read than the Clojure version.</p><p>However since there's still a lot of work left to do on YAMLScript, before the first stable release, some of the YAMLScript code is a bit ugly.</p><p>Let's look at a few ugly forms and think about how to make them better.</p><p>Let's start with the <code>ns</code> declaration at the top of the file:</p><pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">ns ys::std</span><span class="token punctuation">:</span><br>  (<span class="token punctuation">:</span>require<br>   <span class="token punctuation">[</span>yamlscript<span class="token punctuation">:</span><span class="token punctuation">:</span>debug<span class="token punctuation">]</span><br>   <span class="token punctuation">[</span>clojure<span class="token punctuation">:</span><span class="token punctuation">:</span>pprint<span class="token punctuation">]</span><br>   <span class="token punctuation">[</span>clojure<span class="token punctuation">:</span><span class="token punctuation">:</span>string<span class="token punctuation">]</span>)<br>  (<span class="token punctuation">:</span>refer<span class="token punctuation">-</span>clojure <span class="token punctuation">:</span>exclude <span class="token punctuation">[</span>print<span class="token punctuation">]</span>)</code></pre><p>Soon we'll have a YAMLScript macro system for making certain calls look better than they do with the base syntax. The future <code>ns</code> declaration might look like this:</p><pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">ns ys::std</span><span class="token punctuation">:</span><br>  <span class="token key atrule">require</span><span class="token punctuation">:</span><br>    <span class="token key atrule">yamlscript::debug</span><span class="token punctuation">:</span><br>    <span class="token key atrule">clojure::pprint</span><span class="token punctuation">:</span> pp<br>    <span class="token key atrule">clojure::string</span><span class="token punctuation">:</span><br>  <span class="token key atrule">refer-clojure</span><span class="token punctuation">:</span><br>    <span class="token key atrule">exclude</span><span class="token punctuation">:</span> print</code></pre><p>That looks pretty nice!</p><p>How about this ugly multi-arity defn:</p><pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">defn toMap</span><span class="token punctuation">:</span><br>  .<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">:</span> .<span class="token punctuation">{</span><span class="token punctuation">}</span><br>  .<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map x<br>  .<span class="token punctuation">[</span>k v &amp; xs<span class="token punctuation">]</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map k v xs</code></pre><p>Here we needed to dot-escape the <code>[]</code> keys. I'd rather see like:</p><pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">defn toMap</span><span class="token punctuation">:</span><br>  <span class="token key atrule">()</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map()<br>  <span class="token key atrule">(x)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map x<br>  <span class="token key atrule">(k v &amp; xs)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map k v xs</code></pre><p>Parentheses are just normal characters in YAML so we don't need to escape them. And we already use parens in <code>defn foo(bar): baz</code> so it's consistent.</p><p>One of the more problematic forms in this file is the macro definition:</p><pre class="language-yaml"><code class="language-yaml">defmacro each <span class="token punctuation">[</span>bindings &amp; body<span class="token punctuation">]</span><span class="token punctuation">:</span><br>  .`(do<br>      (doall<br>        (for <span class="token punctuation">[</span>~@bindings<span class="token punctuation">]</span> (do ~@body)))<br>      nil)</code></pre><p>I pretty much had to leave the original Clojure syntax alone here. The backtick is a reserved character in YAML so we had to dot-escape it.</p><p>There's actually quite a few problems that macros cause for YAMLScript. I won't bore you with the details. We'll figure out a good way to code macros in YAMLScript but I can't say that I have it figured out yet.</p><p>At this point I'd say that about 80% of Clojure code ports nicely to YAMLScript. The other 20% is a bit of a struggle. But that's stuff I want to improve before the first stable release.</p><hr><p>I hope you enjoyed today's post. It was a little shorter than usual. But YAMLScript is keeping me very busy and I was a little short on time today.</p><p>I have something really special planned for tomorrow. But I need to make it work first! Fingers crossed.</p><p>Come back tomorrow for Day 20 of the YAMLScript Advent Calendar.</p></main><aside class="post__aside"><div class="post__tags"><a href="/tags/blog/">#blog</a> <a href="/tags/advent-2023/">#advent-2023</a></div><nav class="post__pagination"><a href="/posts/advent-2023/dec-18/"><span>←</span> <span>Santa&#39;s in d&#39;buggy</span> </a><a href="/posts/advent-2023/dec-20/"><span>Godspeed</span> <span>→</span></a></nav></aside></article></main><footer class="footer"><div class="footer__content"><ul class="hero__social-links"><li><a href="https://github.com/yaml/yamlscript" target="_blank" rel="noopener noreferrer">GitHub</a></li><li><a href="/feed.xml" target="_blank" rel="noopener noreferrer">RSS</a></li></ul><p class="footer__attribution">Powered by <a href="https://www.11ty.dev" target="_blank" rel="noopener">Eleventy</a>. Theme: <a href="https://github.com/yinkakun/eleventy-duo" target="_blank" rel="noopener noreferrer">Eleventy Duo</a>.</p></div></footer></div><script src="/assets/main.31d6cfe0d16ae931b73c.js"></script></body></html>
+      gtag('config', 'G-44C9DS3Q80');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href=https://yamlscript.org/posts/advent-2023/dec-19/>
+
+    <link href="/assets/main.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+
+    <title>
+      Reindeer All The Way Down
+      
+         | YAMLScript
+      
+    </title>
+
+    <link rel="icon" type= “image/x-icon” href="/images/favicon.ico">
+
+    <meta property="og:title" content="Reindeer All The Way Down">
+    <meta property="og:site_name" content="YAMLScript"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://yamlscript.org/posts/advent-2023/dec-19/"/>
+    <meta name="twitter:card" content="summary_large_image">
+
+    
+
+    
+    
+      
+    
+    
+      <meta name="description" content="Reindeer All The Way Down by Ingy döt Net | 19 Dec 2023 | 3 min read Santa is in charge of Christmas. He&#39;s the one who makes sure that all...">
+      <meta property="og:description" content="Reindeer All The Way Down by Ingy döt Net | 19 Dec 2023 | 3 min read Santa is in charge of Christmas. He&#39;s the one who makes sure that all...">
+      <meta name="description" content="Reindeer All The Way Down by Ingy döt Net | 19 Dec 2023 | 3 min read Santa is in charge of Christmas. He&#39;s the one who makes sure that all..."/>
+    
+
+    
+      
+    
+    
+
+    
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>mermaid.initialize({startOnLoad:true});</script>
+    
+  </head>
+  <body>
+    <div class="layout-wrapper">
+
+      <header class="header">
+        <div class="header__content">
+          <h1 class="site-title">
+            <a href=/>
+              <img src="/images/yamlscript.svg">
+              <!-- YAMLScript -->
+            </a>
+          </h1>
+
+          
+            <nav class="nav">
+              <ul class="nav__list">
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/doc"  >Docs</a>
+                  </li>
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/blog"  >Blog</a>
+                  </li>
+                
+                  
+                  
+
+                  
+
+                  
+
+                  <li class="nav-item">
+                    <a href="/about"  >About</a>
+                  </li>
+                
+              </ul>
+            </nav>
+
+          
+
+        </div>
+      </header>
+
+      <main class="main">
+        
+<article class="post">
+  <header class="post__header">
+    <h1>Reindeer All The Way Down</h1>
+    <div class="post__details">
+        by <a href="/about/#ingydotnet">Ingy döt Net</a>
+        <span> | </span>
+      
+      <time datetime="2023-12-19">
+        19 Dec 2023
+      </time>
+      <span> | </span>
+      <span>3 min read</span>
+    </div>
+  </header>
+
+  <main class="post__content">
+    <p>Santa is in charge of Christmas.
+He's the one who makes sure that all the children get presents.
+But who is in charge of getting Santa his presents?
+That's where the reindeer come in.
+They are the ones who make sure that Santa gets his presents.
+But who is in charge of getting the reindeer their presents?
+More reindeer!
+But who is in charge of getting the reindeer's reindeer their presents?
+More reindeer!
+It's reindeer all the way down.</p>
+<h3>Welcome to Day 19 of the YAMLScript Advent Calendar</h3>
+<p>YAMLScript is a new programming language that is based on Clojure.
+It's written in Clojure and compiles to Clojure.
+In effect YAMLScript is Clojure.
+So if YAMLScript is written in Clojure, why not just use YAMLScript to write
+YAMLScript?</p>
+<p>Isn't there a chicken and egg problem here?
+Sure, but that's easy to solve.</p>
+<p>Once you have a stable version of YAMLScript, you can rewrite YAMLScript in
+YAMLScript.
+You just need to use a previously compiled version of YAMLScript to compile
+the new YAMLScript-in-YAMLScript with.</p>
+<p>This is called self-hosting and it's a common practice in the programming
+language world.
+Clojure itself is written in Clojure.
+Not all of it.
+It's also written in Java, since it runs on the JVM.
+But all the core libraries are written in Clojure.</p>
+<p>YAMLScript isn't quite ready to be self-hosted yet.
+But I was able to convert the <code>ys::std</code> library to YAMLScript and then build
+YAMLScript with it!</p>
+<p>Have a look at this <a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933">gist</a>.</p>
+<p>It has 3 files:</p>
+<ul>
+<li><a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-orig-std-clj">orig-std.clj</a>
+— The original Clojure version of <code>ys::std</code> as of today.</li>
+<li><a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-std-clj">std.clj</a>
+— The compiled version of YAMLScript port of <code>ys::std</code>.</li>
+<li><a href="https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-std-ys">std.ys</a>
+— The YAMLScript port of <code>ys::std</code>.</li>
+</ul>
+<p>I don't know about you but I find the YAMLScript version much easier to read
+than the Clojure version.</p>
+<p>However since there's still a lot of work left to do on YAMLScript, before the
+first stable release, some of the YAMLScript code is a bit ugly.</p>
+<p>Let's look at a few ugly forms and think about how to make them better.</p>
+<p>Let's start with the <code>ns</code> declaration at the top of the file:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">ns ys::std</span><span class="token punctuation">:</span><br>  (<span class="token punctuation">:</span>require<br>   <span class="token punctuation">[</span>yamlscript<span class="token punctuation">:</span><span class="token punctuation">:</span>debug<span class="token punctuation">]</span><br>   <span class="token punctuation">[</span>clojure<span class="token punctuation">:</span><span class="token punctuation">:</span>pprint<span class="token punctuation">]</span><br>   <span class="token punctuation">[</span>clojure<span class="token punctuation">:</span><span class="token punctuation">:</span>string<span class="token punctuation">]</span>)<br>  (<span class="token punctuation">:</span>refer<span class="token punctuation">-</span>clojure <span class="token punctuation">:</span>exclude <span class="token punctuation">[</span>print<span class="token punctuation">]</span>)</code></pre>
+<p>Soon we'll have a YAMLScript macro system for making certain calls look better
+than they do with the base syntax.
+The future <code>ns</code> declaration might look like this:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">ns ys::std</span><span class="token punctuation">:</span><br>  <span class="token key atrule">require</span><span class="token punctuation">:</span><br>    <span class="token key atrule">yamlscript::debug</span><span class="token punctuation">:</span><br>    <span class="token key atrule">clojure::pprint</span><span class="token punctuation">:</span> pp<br>    <span class="token key atrule">clojure::string</span><span class="token punctuation">:</span><br>  <span class="token key atrule">refer-clojure</span><span class="token punctuation">:</span><br>    <span class="token key atrule">exclude</span><span class="token punctuation">:</span> print</code></pre>
+<p>That looks pretty nice!</p>
+<p>How about this ugly multi-arity defn:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">defn toMap</span><span class="token punctuation">:</span><br>  .<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">:</span> .<span class="token punctuation">{</span><span class="token punctuation">}</span><br>  .<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map x<br>  .<span class="token punctuation">[</span>k v &amp; xs<span class="token punctuation">]</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map k v xs</code></pre>
+<p>Here we needed to dot-escape the <code>[]</code> keys.
+I'd rather see like:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">defn toMap</span><span class="token punctuation">:</span><br>  <span class="token key atrule">()</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map()<br>  <span class="token key atrule">(x)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map x<br>  <span class="token key atrule">(k v &amp; xs)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">apply</span><span class="token punctuation">:</span> hash<span class="token punctuation">-</span>map k v xs</code></pre>
+<p>Parentheses are just normal characters in YAML so we don't need to escape them.
+And we already use parens in <code>defn foo(bar): baz</code> so it's consistent.</p>
+<p>One of the more problematic forms in this file is the macro definition:</p>
+<pre class="language-yaml"><code class="language-yaml">defmacro each <span class="token punctuation">[</span>bindings &amp; body<span class="token punctuation">]</span><span class="token punctuation">:</span><br>  .`(do<br>      (doall<br>        (for <span class="token punctuation">[</span>~@bindings<span class="token punctuation">]</span> (do ~@body)))<br>      nil)</code></pre>
+<p>I pretty much had to leave the original Clojure syntax alone here.
+The backtick is a reserved character in YAML so we had to dot-escape it.</p>
+<p>There's actually quite a few problems that macros cause for YAMLScript.
+I won't bore you with the details.
+We'll figure out a good way to code macros in YAMLScript but I can't say that I
+have it figured out yet.</p>
+<p>At this point I'd say that about 80% of Clojure code ports nicely to YAMLScript.
+The other 20% is a bit of a struggle.
+But that's stuff I want to improve before the first stable release.</p>
+<hr>
+<p>I hope you enjoyed today's post.
+It was a little shorter than usual.
+But YAMLScript is keeping me very busy and I was a little short on time today.</p>
+<p>I have something really special planned for tomorrow.
+But I need to make it work first!
+Fingers crossed.</p>
+<p>Come back tomorrow for Day 20 of the YAMLScript Advent Calendar.</p>
+
+  </main>
+
+  <aside class="post__aside">
+    <div class="post__tags">
+      
+        
+        <a href="/tags/blog/">#blog</a>
+      
+        
+        <a href="/tags/advent-2023/">#advent-2023</a>
+      
+    </div>
+
+    <nav class="post__pagination">
+
+        <a href="/posts/advent-2023/dec-18/">
+          <span>←</span>
+          <span>Santa&#39;s in d&#39;buggy</span>
+        </a>
+
+      
+
+        <a href="/posts/advent-2023/dec-20/">
+          <span>Godspeed</span>
+          <span>→</span>
+        </a>
+
+      
+    </nav>
+  </aside>
+
+</article>
+
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+
+          <ul class="hero__social-links">
+            
+              
+            
+
+            
+
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="https://github.com/yaml/yamlscript" target="_blank" rel="noopener noreferrer" >GitHub</a>
+                </li>
+              
+                
+
+                
+                  
+                
+
+                <li>
+                  <a href="/feed.xml" target="_blank" rel="noopener noreferrer" >RSS</a>
+                </li>
+              
+            
+          </ul>
+
+          
+            <p class="footer__attribution">
+      Powered by
+      <a href="https://www.11ty.dev" target="_blank" rel="noopener">Eleventy</a>.
+      Theme:
+      <a href="https://github.com/yinkakun/eleventy-duo" target="_blank" rel="noopener noreferrer">Eleventy Duo</a>.
+            </p>
+          
+
+        </div>
+      </div>
+
+    </footer>
+
+    <script src="/assets/main.js"></script>
+  </body>
+</html>
