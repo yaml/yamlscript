@@ -49,8 +49,7 @@ main:
 
 gh-pages:
 	git branch --track $@ origin/$@ 2>/dev/null || true
-	git worktree prune
-	git worktree add $@
+	git worktree add -f $@
 
 yamlscript-1920x1080.png: src/images/yamlscript.svg
 	svgexport $< $@ 1920:1080 pad
