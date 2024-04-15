@@ -582,6 +582,14 @@ $ vim ../core/test/compiler-stack.yaml
 
 
 ----
+== Runtime Trace Debugging
+
+$ (set -x; source ...)
+
+$ ys -T 99-bottles.ys 1
+
+
+----
 == Real Programming with YAMLScript
 
 * YAMLScript is my new favorite scripting language!
@@ -593,9 +601,12 @@ $ vim ../util/release-yamlscript
 == Real World Example of Improving YAML with YAMLScript
 
 * Calva is a Clojure IDE for VS Code
-* YAMLScript was written in Calva
+* YAMLScript is written in Clojure
+* YAMLScript is developed in Calva
+
 * Peter Strömberg is the Calva author
 * He welcomed me to the the Clojure Community
+
 * Last week he asked me if YS could help Calva
 
   I said, "Yes, of course!"
