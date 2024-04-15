@@ -6,7 +6,15 @@ ROOT := $(shell \
 PID_FILE := .watcher.pid
 LOG_FILE := .watcher.log
 
-export PATH := $(ROOT)/bin:$(PATH)
+SRC := $(HOME)/src
+
+export PST_ROOT := $(SRC)/pst
+
+export PATH := $(ROOT)/bin:$(SRC)/pst/bin:$(PATH)
+export PERL5LIB := $(SRC)/vroom-pm/lib
+export PYTHONPATH := $(SRC)/yamlscript/python/lib
+export RUBYLIB := $(SRC)/yamlscript/ruby/lib
+export BIN := 1
 
 #------------------------------------------------------------------------------
 default: run
