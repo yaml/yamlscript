@@ -1,0 +1,22 @@
+{
+  "foo": [
+    {
+      "bar": [
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven"
+      ]
+    },
+    {
+      "bar": [
+        "eight",
+        "nine"
+      ]
+    }
+  ],
+  "baz": 42
+}

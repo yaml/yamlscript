@@ -1,0 +1,15 @@
+!yamlscript/v0
+
+a =::
+- O
+- N
+- E
+
+n =: rand(10).int().inc()
+
+if (n <= 5):
+  mapv say::
+  - ! a.join('' _)
+  - two
+  - ! n.str() * 10
+  say: "$n is BIG"

@@ -1,0 +1,7 @@
+# Start in Data mode:
+
+!yamlscript/v0/
+
+datum: A normal string
+Name: ! ENV.USER.str/capitalize()
+shell:: "My shell is $(ENV.SHELL)"
