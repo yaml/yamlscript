@@ -1,7 +1,7 @@
 ---
 title: About YAMLScript
 layout: about.njk
-name: YAMLScript
+name: About YAMLScript
 XXX-image: '/images/me.jpeg'
 ---
 
@@ -52,15 +52,17 @@ Ingy is one of the creators and the lead maintainer of the YAML data language.
 He is the primary designer and implementor of the YAMLScript programming
 language.
 
-* [Ingy on GitHub](https://github.com/ingydotnet)
-* [Ingy on Matrix](https://matrix.to/#/@ingy:yaml.io)
+* [Ingy on Matrix](https://matrix.to/#/@ingy:yaml.io) (preferred chat)
 * [Ingy on IRC](https://web.libera.chat/#yamlscript)
+* [Ingy on GitHub](https://github.com/ingydotnet)
+* [Email Ingy](mailto:ingy@ingy.net)
 
 
 ### See Also
 
 * [YAMLScript on GitHub](https://github.com/yaml/yamlscript)
 * [YAML on GitHub](https://github.com/yaml)
+* [YAMLScript Podcast](https://www.therepl.net/episodes/52/)
 * [2023 YAMLScript Advent Blog](/posts/advent-2023/index)
 * [Chat about YAMLScript in Matrix](
   https://matrix.to/#/#chat-yamlscript:yaml.io)
