@@ -3245,7 +3245,7 @@ readable:</p>
 <p>Let's look at the same thing in YAMLScript in various styles.</p>
 <p>Basic block style:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">take 5</span><span class="token punctuation">:</span><br>  <span class="token key atrule">shuffle</span><span class="token punctuation">:</span><br>    <span class="token key atrule">filter even?</span><span class="token punctuation">:</span><br>      <span class="token key atrule">range</span><span class="token punctuation">:</span> <span class="token number">100</span></code></pre>
-<p>Yes Expression style:</p>
+<p><a href="https://yamlscript.org/doc/yes/">Yes Expression style</a>:</p>
 <pre class="language-yaml"><code class="language-yaml">take(5<br>  shuffle(<br>    filter(even<span class="token punctuation">?</span><br>      range(100))))</code></pre>
 <p>Clojure threading style:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">->> range(100)</span><span class="token punctuation">:</span><br>  filter(even<span class="token punctuation">?</span>)<br>  shuffle<br>  take(5)</code></pre>
@@ -3258,11 +3258,11 @@ readable:</p>
 But it's even more useful than that.</p>
 <p>Consider:</p>
 <pre class="language-yaml"><code class="language-yaml">a.b.3.c().d(e).f(g _).$h</code></pre>
-<p>If <code>a</code> is a mapping, the <code>&quot;b&quot;</code> (or <code>:b</code> or <code>'b</code>) key is looked up.
-<code>3</code> is the 4th element of the list that <code>b</code> resolves to.
-<code>c</code> is called as a function with the result of <code>3</code> as an argument.
-<code>d</code> is called as a function with the result of <code>c</code> and <code>e</code> as arguments.
-<code>f</code> is called as a function with <code>g</code> and the result of <code>d</code> as arguments.
+<p>If <code>a</code> is a mapping, the <code>&quot;b&quot;</code> (or <code>:b</code> or <code>'b</code>) key is looked up.<br>
+<code>3</code> is the 4th element of the list that <code>b</code> resolves to.<br>
+<code>c</code> is called as a function with the result of <code>3</code> as an argument.<br>
+<code>d</code> is called as a function with the result of <code>c</code> and <code>e</code> as arguments.<br>
+<code>f</code> is called as a function with <code>g</code> and the result of <code>d</code> as arguments.<br>
 Finally the key in variable <code>h</code> is looked up in the result of <code>f</code>.</p>
 <p>One common idiom is looking up environment variables.
 For example: <code>ENV.HOME</code> or <code>ENV.USER.str/upper-case()</code>.</p>
@@ -3272,7 +3272,7 @@ For example: <code>ENV.HOME</code> or <code>ENV.USER.str/upper-case()</code>.</p
 It's the namespace separator, as in <code>clojure.core/println</code>.</p>
 <p>YAMLScript uses <code>::</code> for that separator instead, so we'd say
 <code>clojure::core/println</code>.</p>
-<p>In a similar switch up, we added the <code>%</code> and <code>%%</code> operators.
+<p>In a similar switch-up, we added the <code>%</code> and <code>%%</code> operators.
 <code>(a % b)</code> compiles to the Clojure code <code>(rem a b)</code>, and <code>(a %% b)</code> compiles to
 <code>(mod a b)</code>; 2 slightly different math functions.</p>
 <p>In Clojure, <code>%</code> was already a shorthand for the <code>%1</code> argument in anonymous
@@ -3340,7 +3340,7 @@ YAMLScript offers all of that by default.
 In a few places we decided to replace Clojure functions with our own versions.
 But we also added a <code>ys::clj</code> library that has all the Clojure functions in it.</p>
 <p>So if you really need <code>clojure::core/print</code>, you can say <code>clj/print</code>.</p>
-<p>Here's the functions in <code>ys::clj</code>:</p>
+<p>Here are the functions in <code>ys::clj</code>:</p>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-e</span> <span class="token string">'say: q(clj).ns-publics().keys().sort().vec()'</span> <span class="token operator">|</span> zprint <span class="token string">'{:width 40}'</span><br><span class="token punctuation">[</span>compile load load-file num print use<span class="token punctuation">]</span></code></pre>
 <p>Not too many.</p>
 <p>We'll look at <code>use</code> in the next section.</p>
@@ -3353,7 +3353,7 @@ But we also added a <code>ys::clj</code> library that has all the Clojure functi
 <p>The <code>require</code> function is used for including Clojure libraries.
 We've also added support for writing libraries in YAMLScript itself.
 We'll call them &quot;modules&quot; to distinguish them from Clojure libraries.</p>
-<p>To use a module in YAMLScript, you use the <code>use</code> function!</p>
+<p>To use a module in YAMLScript, you use the <code>use</code> function.</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">use</span><span class="token punctuation">:</span> <span class="token string">'my-module'</span></code></pre>
 <p>This will look for a file called <code>my-module.ys</code> in the <code>INC</code> path.</p>
 <p>The <code>INC</code> path is a list of directories that YAMLScript will look in for and it
