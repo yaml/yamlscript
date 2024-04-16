@@ -89,7 +89,7 @@
       'process (use-ns 'process babashka.process)
       'set     (use-ns 'set clojure.set)
       'str     (use-ns 'str clojure.string)
-      'walk    (use-ns 'str clojure.walk)
+      'walk    (use-ns 'walk clojure.walk)
 
       'std     (use-ns 'std ys.std)
       'ys      (use-ns 'ys ys.ys)
