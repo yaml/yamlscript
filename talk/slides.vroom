@@ -40,11 +40,11 @@ Seattle
 == On the Rocks
 
 * Who has used YAML before?
-+* Who hates YAML?
-+* Who likes YAML?
-+* Who loves YAML?
++* Who has written a program that uses a YAML library?
++* Who has used YAML's load() function?
++* Who has used YAML's dump() function?
 
-+* Who loves JSON?
++* Who prefers JSON to YAML?
 +* Who knows JSON is a complete subset of YAML?
 
 +* Who has heard of YAMLScript?
