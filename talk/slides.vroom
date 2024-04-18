@@ -33,29 +33,29 @@ Seattle
 
 * Interactive Slides in Vim
 
-* cpanm Vroom
+* Install with: cpanm Vroom
 
 
 ----
 == On the Rocks
 
 * Who has used YAML before?
-+* Who uses YAML for config files?
-+* Who has written a program that uses a YAML library?
-+* Who has used YAML's load() function?
-+* Who has used YAML's dump() function?
++* Who uses YAML primarily for software configuration?
++* Who has used YAML in a program they've written?
 
-+* Who prefers JSON to YAML?
++* Who has used YAML's dump() function?
+* Who has used YAML's load() function?
+
 +* Who knows JSON is a complete subset of YAML?
 
-+* Who has heard of YAMLScript?
-+* Who has tried YAMLScript?
++* Who has heard of YAMLScript before this conference?
 
 
 ----
 == Ingy döt Net
 
-* Co-creator and lead maintainer of YAML
+* Invented YAML in 2001
+* Lead maintainer of the YAML Language
 * Polyglot/Acmeist Open Source Library Author
 * Inventor and lead developer of YAMLScript
 
@@ -67,11 +67,15 @@ Seattle
 ----
 == What is YAML?
 
-* YAML is a serialization language
-* JSON is not a serialization language
+* YAML is a data serialization language
+  * dump(anything) | load(yaml) -> anything
 
-* YAML was not made for configuration
-* YAML has become a configuration language
+* JSON is not a (complete) serialization language
+  * Much simpler, but less expressive
+
+* YAML was not intended for configuration
+
+* YAML has certainly become a configuration language
 
 
 ----
@@ -87,6 +91,7 @@ $ vim yaml-json-1.yaml
   * Mappings (Objects)
 
 $ vim yaml-json-2.yaml
+
 
 ----
 == Comparison of YAML and JSON
@@ -113,14 +118,15 @@ $ vim yaml-json-4.yaml
 
 
 ----
-== YAML is Awesome
+== Nice Things About YAML
 
 * Minimal syntax
 * Easy to organize data
 * Readable by non-programmers
-* Literal scalars
-  * Encode text files inline
-* Full serialization round-trip
+* Literal scalars are awesome
+  * Encode text files inline by indenting
+  * Including other YAML files!
+* Full data serialization round-trip
   * All data types and structures
 
 ----
@@ -131,41 +137,37 @@ $ vim yaml-json-4.yaml
 * Spec is complicated, hard to implement
 * Comments are not in data model
 * Anchors and tags are clumsy and underused
-* No file composition -> One huge file
-* No native interpolation -> Bolted on
-* No logic operations -> maybe >> merge
-* No schema validation
+* No file composition (One huge file)
+* No native interpolation (Often bolted on)
+* No functional operations (sometimes merge with <<)
+* No builtin schema validation
 * Code execution, Denial of Service
-* Parsers are often slow
+* Round-trip data loss (between  languages)
 
-+* YAMLScript can help fix all these problems!
++* YAMLScript can fix all these problems!
 
 
 ----
 == YAML Spec History
 
-* 0.0 (2001) Clark, Oren, Ingy
+* 0.0 (2001) Clark Evans, Oren Ben-Kiki, Ingy
 * 1.0 (2004)
 * 1.1 (2005)
 * 1.2 (2009)
 
 * 1.2.2 (2021) Tina, Panto, Eeemli, Thom, Ingy
-* 1.3 (2024?)
+
+* 1.3 (2024?) Berlin
 
 
 ----
-== Lesser Known YAML Facts
+== The Norway Problem
 
-* Complex mapping keys
-
-? - 1
-  - 2
-: Buckle my Foo
-[3, 4]: Shut the Core
-
-+* The Norway Problem was fixed in 2009
+  ni: Nicaragua
   nl: Netherlands
   no: Norway
+
++* The Norway Problem was fixed in 2009
 
 * YAML 1.2 fixed a lot of common gripes
 * Especially around implicit tags
@@ -185,8 +187,8 @@ https://play.yaml.io/main/parser?input=e2EsIGIsIGN9
 +[a: 1, b: 2, c: 3]
 https://play.yaml.io/main/parser?input=W2E6IDEsIGI6IDIsIGM6IDNd
 
-+[[[[[[[[[[]]]]]]]]]]
-https://play.yaml.io/main/parser?input=W1tbW1tbW1tbW1tbXV1dXV1dXV1dXV1d
++[[[[[[[[[[[]]]]]]]]]]]
+https://play.yaml.io/main/parser?input=W1tbW1tbW1tbW1tbW11dXV1dXV1dXV1dXV0=
 
 +[foo:, bar:]
 https://play.yaml.io/main/parser?input=W2ZvbzosIGJhcjpd
@@ -236,11 +238,12 @@ https://play.yaml.io/main/parser?input=W2ZvbzosIGJhcjpd
 * Syntax is YAML based
 * It might sound like a terrible idea
 
-* Actually quite elegant
+* Actually clean, powerful, and easy to use
 * A Lisp in YAML's clothing
-* Has to pass the "Ingy Test"
+* Features/syntax has to pass the "Ingy Test"
 
 * Let's see some YAMLScript!
+
 
 ---- yaml
 == 99 Bottles of Beer in YAMLScript
@@ -314,8 +317,10 @@ $ ys 99-bottles.ys 3
 ----
 == YAMLScript Goals for YAML
 
-* Provide a safe, fast, and consistent YAML Loader
-  * For all languages that use YAML
+* Provide a secure, fast, and consistent YAML Loader
+  * For every language that use YAML
+  * Clojure, Java, NodeJS, Perl,
+    Python, Raku, Ruby, and Rust so far
 * Offer the missing features YAML users want
   * Composition, Interpolation, Logic
 * Simple Schema Definition
@@ -334,7 +339,7 @@ $ ys 99-bottles.ys 3
 * Scripting for automation
 * Compile to binary executables
 * Compile shared libraries
-  * Bind to any language
+  * Bindable to any language
 
 
 ----
@@ -343,9 +348,10 @@ $ ys 99-bottles.ys 3
 * YAMLScript is compiled to Clojure
 * Then evaluated as Clojure
 
-* Clojure is a Java/JVM Lisp
+* Clojure is a mature Java/JVM based Lisp
 * YAMLScript is standalone binary
   * No Java/JVM at all
+  * Thanks to GraalVM's native-image compiler!
 
 $ time clojure -e '(println "Hello, World!")'
 $ time ys -e 'say: "Hello, World!"'
@@ -364,10 +370,10 @@ $ ys -e 'say: "Hello, World!"'
 $ ys -e 'say: "Hello, $(ENV.USER)!"'
 $ ys -e 'say: "Hello, $(ENV.USER)!"' --compile
 $ ys -e 'reverse: 0 .. 10'
+$ ys -e 'say:' -e '  reverse: 0 .. 10'
 $ ys -e 'reverse: 0 .. 10' --print
 $ ys -e 'reverse: 0 .. 10' --load
 $ ys -e 'reverse: 0 .. 10' --load --mode=data
-$ ys -e 'reverse: 0 .. 10' --json
 $ ys -e 'reverse: 0 .. 10' --yaml
 $ ys -e '(0 .. 10).reverse()' --yaml
 $ ys -e 'reverse(rng(0 10))' --yaml
@@ -412,7 +418,7 @@ $ ys -e 'say: "Hello, World!"' --load --mode=data
 
 
 ----
-== !yamlscript YAMLScript Tags
+== !yamlscript/v0 YAMLScript Tags
 
 * YAMLScript uses the !yamlscript/v0 tag
 * Must tag the top level node
@@ -506,8 +512,7 @@ $ ys -e 'say: reverse([1 2 3 4 5])' -c
 ----
 == Dot Chain Expressions
 
-* Clojure has Thread-First and Thread-Last
-* YAMLScript has Dot Chain
+* YAMLScript has the Dot Chaining Operator
 
 $ ys -e 'say: (1 .. 5).shuffle()'
 $ ys -e 'say: (1 .. 5).shuffle().nth(3)'
@@ -591,6 +596,8 @@ $ (set -x; . <(curl -s https://yamlscript.org/try-ys))
 
 $ ys -x 99-bottles.ys 1
 
+$ ys -x 99-bottles.ys 1 -c
+
 
 ----
 == Real Programming with YAMLScript
@@ -622,6 +629,7 @@ $ git -C calva reset --hard published && cd calva/.circleci && bash
 $ git -C calva reset --hard c053bcec8 && cd calva/.circleci && bash
 $ git -C calva reset --hard f34304974 && cd calva/.circleci && bash
 $ git -C calva reset --hard f0616fe4f && cd calva/.circleci && bash
+$ git -C calva reset --hard 4d46acf80 && cd calva/.circleci && bash
 
 * Prove the Refactoring Changed Nothing
 $ ys -pe 'ARGV.0.slurp().yaml/load() = ARGV.1.slurp().yaml/load()' -- <(git -C calva show origin/dev:.circleci/config.yml) <(git -C calva show f0616fe4f:.circleci/config.yml)
@@ -630,11 +638,17 @@ $ ys -pe 'ARGV.0.slurp().yaml/load() = ARGV.1.slurp().yaml/load()' -- <(git -C c
 == Stuff I don't have time to show you:
 
 * YAMLScript Macros
+  * Customizing YS Syntax lexically
 * YAMLScript Libraries
+  * Write your own YS libraries
 * YAMLScript Schemas
+  * Define your data structures allowed
 * YAMLScript Compile to Binary
+  * Standalone executables
 * YAMLScript Compile to Shared Library
-* YAMLScript Runtime Capabilities
+  * Acmeist Polyglot Libraries
+* YAMLScript Runtime Capabilities (Secure YAML)
+  * Full control af allowed operations
 
 
 ----
@@ -643,6 +657,7 @@ $ ys -pe 'ARGV.0.slurp().yaml/load() = ARGV.1.slurp().yaml/load()' -- <(git -C c
 YAMLScript needs your help!
 
 Tons of interesting things to do still.
+Ambitious roadmap ahead.
 
 If you are interested in contributing to YAMLScript, please reach out to us.
 
@@ -650,7 +665,7 @@ If you are interested in contributing to YAMLScript, please reach out to us.
     Visit: yamlscript.org/contribute
 
 ----
-.
+== Thank You!
 
 
 

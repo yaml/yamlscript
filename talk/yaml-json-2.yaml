@@ -1,3 +1,6 @@
+# YAML and JSON have same base data model
+# scalars, sequences and mappings
+
 scalars: [string, 42, 3.1415, true, null]
 
 sequences:

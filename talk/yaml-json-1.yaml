@@ -1,3 +1,8 @@
+# YAML Block and Flow collections
+# Collections are mapping or sequences
+# Flow collections use JSON syntax
+# Quotes are optional as in block style
+
 people: [ "Alice", 'Bob', Charlie ]
 
 food: { apple: crunchy,

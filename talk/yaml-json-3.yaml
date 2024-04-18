@@ -1,3 +1,6 @@
+# YAML structural features
+# not found in JSON
+
 ---
 - &alice !person
   name: Alice
