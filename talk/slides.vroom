@@ -40,6 +40,7 @@ Seattle
 == On the Rocks
 
 * Who has used YAML before?
++* Who uses YAML for config files?
 +* Who has written a program that uses a YAML library?
 +* Who has used YAML's load() function?
 +* Who has used YAML's dump() function?
@@ -71,8 +72,6 @@ Seattle
 
 * YAML was not made for configuration
 * YAML has become a configuration language
-
-* Who uses YAML's dump(...) ?
 
 
 ----
@@ -114,7 +113,7 @@ $ vim yaml-json-4.yaml
 
 
 ----
-== YAML Rocks
+== YAML is Awesome
 
 * Minimal syntax
 * Easy to organize data
@@ -125,7 +124,7 @@ $ vim yaml-json-4.yaml
   * All data types and structures
 
 ----
-== YAML Sucks
+== YAML Has Problems
 
 * All implementations are different
   * Different APIs, Features, Bugs
@@ -293,6 +292,10 @@ defn bottles(n):
     n == 0 : 'No more bottles'
     n == 1 : '1 bottle'
     =>     : "$n bottles"
+
+
+$ ys 99-bottles.ys
+$ ys 99-bottles.ys 3
 
 
 ----
@@ -584,9 +587,9 @@ $ vim ../core/test/compiler-stack.yaml
 ----
 == Runtime Trace Debugging
 
-$ (set -x; source ...)
+$ (set -x; . <(curl -s https://yamlscript.org/try-ys))
 
-$ ys -T 99-bottles.ys 1
+$ ys -x 99-bottles.ys 1
 
 
 ----
