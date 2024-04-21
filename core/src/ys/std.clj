@@ -177,6 +177,42 @@
 (defn exec [cmd & xs]
   (apply process/exec cmd xs))
 
+(defn fs-d [p] (fs/directory? p))
+(defn fs-e [p] (fs/exists? p))
+(defn fs-f [p] (fs/regular-file? p))
+(defn fs-l [p] (fs/sym-link? p))
+(defn fs-r [p] (fs/readable? p))
+(defn fs-s [p] (not= 0 (fs/size p)))
+(defn fs-w [p] (fs/writable? p))
+(defn fs-x [p] (fs/executable? p))
+(defn fs-z [p] (= 0 (fs/size p)))
+
+(defn fs-cwd [] (str (fs/cwd)))
+(defn fs-ls
+  ([] (fs-ls "."))
+  ([d] (map str (fs/list-dir d))))
+(defn fs-mtime [f]
+  (fs/file-time->millis
+    (fs/last-modified-time f)))
+(defn fs-glob
+  ([pat] (fs-glob "." pat))
+  ([dir pat] (map str (fs/glob dir pat))))
+(defn fs-path-abs [p] (str (fs/absolutize p)))
+(defn fs-path-rel
+  ([p] (str (fs/relativize (fs/cwd) p)))
+  ([d p] (str (fs/relativize d p))))
+(defn fs-which [c]
+  (when-let [p (fs/which c)] (str p)))
+
+(defn grep [a b]
+  (let [[a b] (if (seqable? b) [a b] [b a])
+        _ (when-not (seqable? b) (die "No seqable arg passed to grep"))
+        t (type a)]
+    (cond
+      (= t java.util.regex.Pattern) (filter #(re-find a %1) b)
+      (fn? a) (filter a b)
+      :else (die "Invalid args for grep"))))
+
 (defn join
   ([xs] (join "" xs))
   ([sep & xs]
