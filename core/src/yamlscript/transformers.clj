@@ -56,7 +56,7 @@
   (when-lets [sym (get-in lhs [0])
               _ (:Sym sym)
               spc (nth lhs 1)
-              _ (:Spc spc)
+              _ (or (:Spc spc) (:Sym spc))
               _ (= 2 (count lhs))]
     [sym spc]))
 
