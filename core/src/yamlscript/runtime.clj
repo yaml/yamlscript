@@ -25,6 +25,7 @@
    [ys.json]
    [ys.yaml]
    [ys.ys :as ys]
+   [yamlscript.common :as common]
    [yamlscript.util
     :refer [abspath
             get-yspath]]))
@@ -48,6 +49,8 @@
               'INC INC
               'VERSION nil
               'VERSIONS nil
+              '$ common/$
+              '$# common/$#
 
               ;; clojure.core functions overridden by YS
               'load (sci/copy-var ys.ys/load-file nil)

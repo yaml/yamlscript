@@ -38,16 +38,19 @@
                        (update acc (dec (count acc)) conj ev)))
                    [[]])
                  (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
-        blocks (map
-                 (fn [group]
-                   (-> group
-                     yamlscript.composer/compose
-                     yamlscript.resolver/resolve
-                     yamlscript.builder/build
-                     yamlscript.transformer/transform
-                     yamlscript.constructor/construct
-                     yamlscript.printer/print))
-                 groups)]
+        n (count groups)
+        blocks (loop [[group & groups] groups blocks [] i 1]
+                 (let [blocks (conj blocks
+                                (-> group
+                                  yamlscript.composer/compose
+                                  yamlscript.resolver/resolve
+                                  yamlscript.builder/build
+                                  yamlscript.transformer/transform
+                                  (yamlscript.constructor/construct (>= i n))
+                                  yamlscript.printer/print))]
+                   (if (seq groups)
+                     (recur groups blocks (inc i))
+                     blocks)))]
     (str/join "" blocks)))
 
 (defn debug-print [stage data]
@@ -70,22 +73,26 @@
                        (update acc (dec (count acc)) conj ev)))
                    [[]])
                  (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
-        blocks (map
-                 (fn [group]
-                   (->> group
-                     yamlscript.composer/compose
-                     (debug-print "compose")
-                     yamlscript.resolver/resolve
-                     (debug-print "resolve")
-                     yamlscript.builder/build
-                     (debug-print "build")
-                     yamlscript.transformer/transform
-                     (debug-print "transform")
-                     yamlscript.constructor/construct
-                     (debug-print "construct")
-                     yamlscript.printer/print
-                     (debug-print "print")))
-                 groups)]
+        n (count groups)
+        blocks (loop [[group & groups] groups blocks [] i 1]
+                 (let [blocks (conj blocks
+                                (->> group
+                                  yamlscript.composer/compose
+                                  (debug-print "compose")
+                                  yamlscript.resolver/resolve
+                                  (debug-print "resolve")
+                                  yamlscript.builder/build
+                                  (debug-print "build")
+                                  yamlscript.transformer/transform
+                                  (debug-print "transform")
+                                  (#(yamlscript.constructor/construct
+                                      %1 (>= i n)))
+                                  (debug-print "construct")
+                                  yamlscript.printer/print
+                                  (debug-print "print")))]
+                   (if (seq groups)
+                     (recur groups blocks (inc i))
+                     blocks)))]
     (str/join "" blocks)))
 
 (defn pretty-format [code]
