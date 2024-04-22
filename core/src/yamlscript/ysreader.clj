@@ -144,10 +144,11 @@
                       form
                       (Lst [(Sym 'quote) form]))))
     (:Lst form) (update-in form [:Lst]
-                  (fn [lst] (concat [(Sym 'list)]
-                              (vec (map #(if (= {:Sym '_} %1)
-                                           (Lst [(Sym 'quote) %1])
-                                           %1) lst)))))
+                  (fn [lst] (vec
+                              (concat [(Sym 'list)]
+                                (vec (map #(if (= {:Sym '_} %1)
+                                             (Lst [(Sym 'quote) %1])
+                                             %1) lst))))))
     :else form))
 
 (def sep (Sym '.))

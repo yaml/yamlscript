@@ -6,6 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
+   [yamlscript.ast :refer [Lst]]
    [yamlscript.util :refer [die if-lets]]
    #_[yamlscript.ast :refer [Sym]]
    [yamlscript.transformers]
@@ -66,8 +67,37 @@
       [])
     (hash-map key)))
 
+(def poly (do (require 'ys.poly)
+              (-> 'ys.poly
+                ns-publics
+                keys
+                (->> (map str)
+                  (map #(subs %1 1))
+                  (map symbol))
+                set)))
+
+(defn transform-dot-chain [node] node
+  (if-lets [args (:Lst node)
+            _ (and
+                (= '__ (get-in args [0 :Sym]))
+                (> (count args) 2))
+            args (map (fn [arg]
+                        (if-lets [_ (= 'list (get-in arg [:Lst 0 :Sym]))
+                                  _ (not-any?
+                                      #(= {:Lst
+                                           [{:Sym 'quote} {:Sym '_}]}
+                                         %1) (:Lst arg))
+                                  sym (get-in arg [:Lst 1 :Sym])
+                                  _ (poly sym)
+                                  sym (symbol (str "+" sym))]
+                          (update-in arg [:Lst 1 :Sym] (constantly sym))
+                          arg)) args)]
+    (Lst args)
+    node))
+
 (defn transform-list [node]
-  (let [val (map-vec transform-node (:Lst node))]
+  (let [node (transform-dot-chain node)
+        val (map-vec transform-node (:Lst node))]
     (assoc node :Lst val)))
 
 (defn transform-map [node]

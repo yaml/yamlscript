@@ -929,3 +929,11 @@
       ^v([0-9]+\.[0-9]+\.[0-9]+)$
   clojure: |
     {"rgx" "^v([0-9]+\\.[0-9]+\\.[0-9]+)$\n"}
+
+
+- name: Dot polymorphic functions
+  yamlscript: |
+    !yamlscript/v0
+    foo: x.drop(3 _).take(5).nth(3)
+  clojure: |
+    (foo (__ x (list drop 3 '_) (list +take 5) (list +nth 3)))

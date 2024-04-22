@@ -21,6 +21,7 @@
    [sci.core :as sci]
    [ys.clj]
    [ys.std]
+   [ys.poly]
    [ys.json]
    [ys.yaml]
    [ys.ys :as ys]
@@ -59,8 +60,10 @@
               'slurp (sci/copy-var clojure.core/slurp nil)
               'spit (sci/copy-var clojure.core/spit nil)}
         std (ns-publics 'ys.std)
-        std (update-vals std #(sci/copy-var* %1 nil))]
-    (merge core std)))
+        std (update-vals std #(sci/copy-var* %1 nil))
+        poly (ns-publics 'ys.poly)
+        poly (update-vals poly #(sci/copy-var* %1 nil))]
+    (merge core std poly)))
 
 (defn babashka-pods-ns []
   {'load-pod (sci/copy-var ys/load-pod nil)
