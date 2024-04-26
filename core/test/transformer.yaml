@@ -33,6 +33,16 @@
     (require '[foo :as f])
 
 
+- name: require one-part library with alias
+  yamlscript: |
+    !yamlscript/v0
+    require:
+      foo: => f
+      bar: => b
+  clojure: |
+    (require '[foo :as f] '[bar :as b])
+
+
 - name: Transform require and cond
   yamlscript: |
     !yamlscript/v0

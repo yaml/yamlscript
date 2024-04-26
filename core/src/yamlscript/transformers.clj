@@ -78,7 +78,7 @@
 (defn require-pairs [pairs]
   (reduce
     (fn [acc [spc rhs]]
-      (or (:Spc spc)
+      (or (:Spc spc) (:Sym spc)
         (die "Invalid 'require' pairs"))
       (let [args (if (nil? rhs)
                    (Lst [Q spc])
