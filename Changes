@@ -1,4 +1,9 @@
 
+- version: 0.1.58
+  date:    Fri 26 Apr 2024 11:57:22 AM WEST
+  changes:
+  - core: Fix a bug in require transformation
+
 - version: 0.1.57
   date:    Mon 22 Apr 2024 01:39:33 PM EDT
   changes:
