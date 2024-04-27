@@ -6,10 +6,16 @@ include $(COMMON)/docker.mk
 export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CORE_INSTALLED)
+build:: $(RAPIDYAML_SO) $(RAPIDYAML_INSTALLED)
 
-install test: $(LEIN)
+install test:: $(LEIN) build
 	$< $@
+
+$(RAPIDYAML_SO):
+	$(MAKE) -C $(ROOT)/rapidyaml build
+
+$(RAPIDYAML_INSTALLED):
+	$(MAKE) -C $(ROOT)/rapidyaml install
 
 Dockerfile:: $(COMMON) Makefile
 	cat \
