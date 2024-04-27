@@ -18,6 +18,7 @@ CPAN_DEPS := \
     Test2::V0 \
     FFI::CheckLib \
     FFI::Platypus \
+    Cpanel::JSON::XS \
 
 LOCAL_LIB := local
 

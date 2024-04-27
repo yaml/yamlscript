@@ -6,6 +6,7 @@ ROOT := $(shell \
 export ROOT
 
 include $(ROOT)/common/vars.mk
+include $(ROOT)/common/java.mk
 
 BINDINGS := \
     clojure \
@@ -21,12 +22,14 @@ BINDINGS := \
     rust \
 
 DIRS := \
+    rapidyaml \
     core \
     libyamlscript \
     $(BINDINGS) \
     ys \
 
 BUILD_DIRS := \
+    rapidyaml \
     libyamlscript \
     go \
     nodejs \
@@ -102,9 +105,6 @@ default::
 
 env:
 	@env | sort | less -FRX
-
-java-home:
-	@echo $(JAVA_HOME)
 
 chown:
 	sudo chown -R $(USER):$(USER) .

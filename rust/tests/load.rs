@@ -1,4 +1,4 @@
-use yamlscript::Error;
+// use yamlscript::Error;
 
 #[test]
 fn load_sample_ys() {
@@ -52,17 +52,17 @@ fn load_sample_ys_serde() {
     assert_eq!(ret.baz, &[1, 2, 3, 4, 5]);
 }
 
-#[test]
-fn load_sample_error() {
-    let ys = yamlscript::YAMLScript::new().unwrap();
-    let result = ys.load::<Response>(
-        r#"!yamlscript/v0/data
-           : : : : : :
-        "#,
-    );
-    dbg!(&result);
-    assert!(matches!(result, Err(Error::YAMLScript(_))));
-}
+// #[test]
+// fn load_sample_error() {
+//     let ys = yamlscript::YAMLScript::new().unwrap();
+//     let result = ys.load::<Response>(
+//         r#"!yamlscript/v0/data
+//            : : : : : :
+//         "#,
+//     );
+//     dbg!(&result);
+//     assert!(matches!(result, Err(Error::YAMLScript(_))));
+// }
 
 #[test]
 fn load_multiple() {

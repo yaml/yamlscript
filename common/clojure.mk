@@ -80,17 +80,6 @@ force:
 $(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 	$(MAKE) -C $(ROOT)/core install
 
-$(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
-	tar xzf $<
-	mv graalvm-* $(GRAALVM_PATH)
-	touch $@
-
-$(GRAALVM_DOWNLOAD):
-ifeq (,$(CURL))
-	$(error *** 'curl' is required but not installed)
-endif
-	$(CURL) -L -o $@ $(GRAALVM_URL)
-
 
 # Maven targets
 
