@@ -27,6 +27,7 @@ BINDINGS += \
     rust \
 
 DIRS := \
+    rapidyaml \
     core \
     libyamlscript \
     $(BINDINGS) \
