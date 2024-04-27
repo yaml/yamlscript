@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+export YS_PARSER_RAPIDYAML=1
+
+bin=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
+
+exec "$bin/YS" "$@"

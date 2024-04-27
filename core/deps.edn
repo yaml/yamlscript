@@ -4,6 +4,7 @@
   org.clojure/data.json {:mvn/version "2.4.0"},
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
   org.flatland/ordered {:mvn/version "1.15.11"},
+  org.rapidyaml/rapidyaml {:mvn/version "0.7.0"},
   org.snakeyaml/snakeyaml-engine {:mvn/version "2.7"},
   babashka/babashka.pods {:mvn/version "0.2.0"},
   babashka/fs {:mvn/version "0.5.20"},
