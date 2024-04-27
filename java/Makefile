@@ -4,6 +4,13 @@ include $(COMMON)/java.mk
 
 YAMLSCRIPT_JAVA_JAR := target/yamlscript-0.1.71.jar
 
+MVN_COMMANDS := \
+  compile \
+  install \
+  package \
+  test \
+  validate \
+
 #------------------------------------------------------------------------------
 
 $(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP)

@@ -21,6 +21,7 @@ BINDINGS := \
     rust \
 
 DIRS := \
+    rapidyaml \
     core \
     libyamlscript \
     $(BINDINGS) \
@@ -99,6 +100,9 @@ export YS_RELEASE_VERSION_OLD := $o
 endif
 
 default:
+
+java-home:
+	@echo $(JAVA_HOME)
 
 chown:
 	sudo chown -R $(USER):$(USER) .
