@@ -1,3 +1,4 @@
 rapidyaml
 rapidyaml-build
-rapidyaml-install
+ryml_all.hpp
+librapidyaml.so*
