@@ -1,14 +1,14 @@
 // Copyright 2023-2024 Ingy dot Net
 // This code is licensed under MIT license (See License for details)
 
-package org.ryml.ryml;
+package org.rapidyaml;
 
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
 
-public class LibRyml {
+public class LibRapidyaml {
     public static String extension()
     {
         return Platform.isMac() ? "dylib" : "so";
@@ -21,8 +21,8 @@ public class LibRyml {
 
     public static String filename()
     {
-        return "libryml." + extension() + '.' +
-               Ryml.RYML_VERSION;
+        return "librapidyaml." + extension() + '.' +
+               Rapidyaml.RAPIDYAML_VERSION;
     }
 
     public static String[] libraryPaths()
@@ -57,19 +57,19 @@ public class LibRyml {
         );
     }
 
-    public static ILibRyml load(String path)
+    public static ILibRapidyaml load(String path)
     {
-        return Native.load(path, ILibRyml.class);
+        return Native.load(path, ILibRapidyaml.class);
     }
 
-    public static ILibRyml load()
+    public static ILibRapidyaml load()
     {
         return load(path());
     }
 
-    private static ILibRyml INSTANCE = null;
+    private static ILibRapidyaml INSTANCE = null;
 
-    public static ILibRyml library()
+    public static ILibRapidyaml library()
     {
         if (INSTANCE == null) INSTANCE = load();
 
