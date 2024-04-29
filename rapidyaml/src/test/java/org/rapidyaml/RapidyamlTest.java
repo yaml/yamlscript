@@ -42,4 +42,20 @@ public class RapidyamlTest extends TestCase
         assertEquals("+STR\n+DOC\n+MAP\n=VAL :𝄞\n=VAL :✅\n-MAP\n-DOC\n-STR\n",
                      evts);
     }
+
+    public void testContKeyFlow()
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        String evts = rapidyaml.parseYS("{{a: b}: {c: d}}");
+        assertEquals("+STR\n+DOC\n+MAP {}\n+MAP {}\n=VAL :a\n=VAL :b\n-MAP\n+MAP {}\n=VAL :c\n=VAL :d\n-MAP\n-MAP\n-DOC\n-STR\n",
+                     evts);
+    }
+
+    public void testContKeyBlock()
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        String evts = rapidyaml.parseYS("? a: b\n: that's right");
+        assertEquals("+STR\n+DOC\n+MAP\n+MAP\n=VAL :a\n=VAL :b\n-MAP\n=VAL :that's right\n-MAP\n-DOC\n-STR\n",
+                     evts);
+    }
 }
