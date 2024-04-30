@@ -279,9 +279,7 @@ Options:
     (try
       (if (empty? (:debug-stage opts))
         (compiler/compile code)
-        (do
-          (reset! compiler/debug (:debug-stage opts))
-          (compiler/compile-debug code)))
+        (compiler/compile-with-options code))
       (catch Exception e (err e opts)))))
 
 (defn get-compiled-code [opts args argv]

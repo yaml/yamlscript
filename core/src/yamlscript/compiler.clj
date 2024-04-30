@@ -21,23 +21,25 @@
    [yamlscript.transformer]
    [yamlscript.constructor]
    [yamlscript.printer]
+   [yamlscript.common :as common]
    [yamlscript.debug :refer [www #_xxx]])
   (:refer-clojure :exclude [compile]))
 
-(def debug (atom {}))
+(defn parse-events-to-groups [events]
+  (->> events
+    (reduce
+      (fn [acc ev]
+        (if (= (:+ ev) "+DOC")
+          (conj acc [ev])
+          (update acc (dec (count acc)) conj ev)))
+      [[]])
+    (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1))))
 
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
   (let [events (yamlscript.parser/parse yamlscript-string)
-        groups (->> events
-                 (reduce
-                   (fn [acc ev]
-                     (if (= (:+ ev) "+DOC")
-                       (conj acc [ev])
-                       (update acc (dec (count acc)) conj ev)))
-                   [[]])
-                 (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
+        groups (parse-events-to-groups events)
         n (count groups)
         blocks (loop [[group & groups] groups blocks [] i 1]
                  (let [blocks (conj blocks
@@ -54,25 +56,18 @@
     (str/join "" blocks)))
 
 (defn debug-print [stage data]
-  (when (get @debug stage)
+  (when (get-in @common/opts [:debug-stage stage])
     (println (str "*** " stage " output ***"))
     (clojure.pprint/pprint data)
     (println ""))
   data)
 
-(defn compile-debug
+(defn compile-with-options
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
   (let [events (yamlscript.parser/parse yamlscript-string)
         _ (debug-print "parse" events)
-        groups (->> events
-                 (reduce
-                   (fn [acc ev]
-                     (if (= (:+ ev) "+DOC")
-                       (conj acc [ev])
-                       (update acc (dec (count acc)) conj ev)))
-                   [[]])
-                 (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1)))
+        groups (parse-events-to-groups events)
         n (count groups)
         blocks (loop [[group & groups] groups blocks [] i 1]
                  (let [blocks (conj blocks
