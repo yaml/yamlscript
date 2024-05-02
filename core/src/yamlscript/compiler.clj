@@ -55,36 +55,43 @@
                      blocks)))]
     (str/join "" blocks)))
 
-(defn debug-print [stage data]
-  (when (get-in @common/opts [:debug-stage stage])
-    (println (str "*** " stage " output ***"))
-    (clojure.pprint/pprint data)
-    (println ""))
-  data)
+(defn stage-with-options [stage-name stage-fn input-args]
+  (if (get-in @common/opts [:debug-stage stage-name])
+    (printf "*** %-9s *** " stage-name)
+    (when (:time @common/opts)
+      (printf "*** %-9s *** " stage-name)))
+  (let [output-data (if (:time @common/opts)
+                      (time (apply stage-fn input-args))
+                      (apply stage-fn input-args))]
+    (when (not (:time @common/opts)) (println ""))
+    (when (get-in @common/opts [:debug-stage stage-name])
+      (clojure.pprint/pprint output-data)
+      (println ""))
+    output-data))
 
 (defn compile-with-options
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
-  (let [events (yamlscript.parser/parse yamlscript-string)
-        _ (debug-print "parse" events)
+  (let [events (stage-with-options "parse"
+                 yamlscript.parser/parse [yamlscript-string])
         groups (parse-events-to-groups events)
         n (count groups)
         blocks (loop [[group & groups] groups blocks [] i 1]
                  (let [blocks (conj blocks
-                                (->> group
-                                  yamlscript.composer/compose
-                                  (debug-print "compose")
-                                  yamlscript.resolver/resolve
-                                  (debug-print "resolve")
-                                  yamlscript.builder/build
-                                  (debug-print "build")
-                                  yamlscript.transformer/transform
-                                  (debug-print "transform")
-                                  (#(yamlscript.constructor/construct
-                                      %1 (>= i n)))
-                                  (debug-print "construct")
-                                  yamlscript.printer/print
-                                  (debug-print "print")))]
+                                (-> group
+                                  (#(stage-with-options "compose"
+                                      yamlscript.composer/compose [%1]))
+                                  (#(stage-with-options "resolve"
+                                      yamlscript.resolver/resolve [%1]))
+                                  (#(stage-with-options "build"
+                                      yamlscript.builder/build [%1]))
+                                  (#(stage-with-options "transform"
+                                      yamlscript.transformer/transform [%1]))
+                                  (#(stage-with-options "construct"
+                                      yamlscript.constructor/construct
+                                      [%1 (>= i n)]))
+                                  (#(stage-with-options "print"
+                                      yamlscript.printer/print [%1]))))]
                    (if (seq groups)
                      (recur groups blocks (inc i))
                      blocks)))]

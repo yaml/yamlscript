@@ -128,6 +128,8 @@
      (str "must be one of: "
        (str/join ", " (keys stages))
        " or all")]]
+   [nil "--time"
+    "Print time taken for each stage"]
    ["-S" "--stack-trace"
     "Print full stack trace for errors"]
    ["-x" "--xtrace"
@@ -277,7 +279,8 @@ Options:
   (if (:clojure opts)
     code
     (try
-      (if (empty? (:debug-stage opts))
+      (if (and (empty? (:debug-stage opts))
+            (not (:time opts)))
         (compiler/compile code)
         (compiler/compile-with-options code))
       (catch Exception e (err e opts)))))
@@ -447,6 +450,24 @@ Options:
       (mutex1 opts :print (set/difference action-opts #{:run}))
       (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
 
+(defn do-main [opts args argv help error errs]
+  (cond
+    error (do-error [(str "Error: " error)])
+    (seq errs) (do-error errs)
+    (:help opts) (do-help help)
+    (:version opts) (do-version)
+    (:install opts) (do-install opts args)
+    (:upgrade opts) (do-upgrade opts args)
+    (:binary opts) (do-binary opts args)
+    (:run opts) (do-run opts args argv)
+    (:compile opts) (do-compile opts args)
+    (:load opts) (do-run opts args argv)
+    (:repl opts) (do-repl opts)
+    (:connect opts) (do-connect opts args)
+    (:kill opts) (do-kill opts args)
+    (:nrepl opts) (do-nrepl opts args)
+    :else (do-default opts args argv help)))
+
 (defn -main [& args]
   (let [[args argv] (split-with #(not= "--" %1) args)
         options (cli/parse-opts args cli-options)
@@ -467,22 +488,9 @@ Options:
 
     (reset! common/opts opts)
 
-    (cond
-      error (do-error [(str "Error: " error)])
-      (seq errs) (do-error errs)
-      (:help opts) (do-help help)
-      (:version opts) (do-version)
-      (:install opts) (do-install opts args)
-      (:upgrade opts) (do-upgrade opts args)
-      (:binary opts) (do-binary opts args)
-      (:run opts) (do-run opts args argv)
-      (:compile opts) (do-compile opts args)
-      (:load opts) (do-run opts args argv)
-      (:repl opts) (do-repl opts)
-      (:connect opts) (do-connect opts args)
-      (:kill opts) (do-kill opts args)
-      (:nrepl opts) (do-nrepl opts args)
-      :else (do-default opts args argv help))))
+    (if (:time opts)
+      (time (do-main opts args argv help error errs))
+      (do-main opts args argv help error errs))))
 
 (comment
   www
