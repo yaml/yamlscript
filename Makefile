@@ -3,6 +3,8 @@ SHELL := bash
 ROOT := $(shell \
     cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 
+export ROOT
+
 include $(ROOT)/common/vars.mk
 
 BINDINGS := \
@@ -196,8 +198,8 @@ delete-tag:
 	-git tag --delete $(YS_VERSION)
 	-git push --delete origin $(YS_VERSION)
 
-bump:
-	version-bump
+bump: $(BUILD_BIN_YS)
+	$< $(ROOT)/util/version-bump
 
 $(CLEAN):
 clean: $(CLEAN)

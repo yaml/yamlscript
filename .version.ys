@@ -1,0 +1,130 @@
+# Used by util/version-bump to update versions in repo
+
+!yamlscript/v0
+
+v-api =: '0.1.58'
+
+v-perl =: v-api
+v-python =: v-api
+v-raku =: v-api
+v-ruby =: v-api
+v-rust =: v-api
+
+vp =: '0\.[01]\.[0-9]+'
+
+#------------------------------------------------------------------------------
+
+=>::
+- vers:: v-api
+  bump:
+  - regx:: "(yamlscript.*)${vp}(.*)"
+    file:
+    - .profile
+    - clojure/deps.edn
+    - clojure/project.clj
+    - common/project.clj
+    - core/project.clj
+    - libyamlscript/deps.edn
+    - libyamlscript/project.clj
+    - nodejs/lib/yamlscript/index.js
+    - perl/lib/YAMLScript.pm
+    - perl-alien/alienfile
+    - perl-alien/lib/Alien/YAMLScript.pm
+    - python/lib/yamlscript/__init__.py
+    - www/src/index.md
+    - ys/deps.edn
+    - ys/project.clj
+    - ys/share/ys-0.bash
+    - ys/src/yamlscript/cli.clj
+
+  - regx:: "(yamlscript\/core.*)${vp}(.*)"
+    file:
+    - libyamlscript/project.clj
+    - ys/project.clj
+
+  - regx:: "(?m:^(YAMLScript )${vp}()$)"
+    file:
+    - www/src/index.md
+
+  - regx:: "(YAMLSCRIPT.*)${vp}(.*)"
+    file:
+    - common/install.mk
+    - java/Makefile
+    - java/src/main/java/org/yamlscript/yamlscript/YAMLScript.java
+    - raku/lib/YAMLScript.rakumod
+    - ruby/lib/yamlscript.rb
+    - rust/src/lib.rs
+    - www/src/install
+
+
+  - regx:: "(YAMLScript.*)${vp}(.*)"
+    file:
+    - ReadMe.md
+    - common/release.md
+    - www/src/doc/ys.md
+    - www/src/index.md
+    - www/src/posts/advent-2023/dec-05.md
+    - www/src/posts/advent-2023/dec-07.md
+    - ys/test/cli-usage.t
+
+  - regx:: "(version.*)${vp}(.*)"
+    file:
+    - Meta
+    - core/src/yamlscript/runtime.clj
+    - nodejs/package.json
+    - java/pom.xml
+    - www/src/index.md
+
+  - regx:: "(VERSION.*)${vp}(.*)"
+    file:
+    - www/src/index.md
+    - ys/test/cli-usage.t
+
+  - regx:: "(yamlscript\/yamlscript.*)${vp}(.*)"
+    file:
+    - clojure/project.clj
+
+#------------------------------------------------------------------------------
+- vers:: v-perl
+  bump:
+  - regx:: "(version.*)${vp}(.*)"
+    file:
+    - perl/Meta
+    - perl-alien/Meta
+
+  - regx:: "(VERSION.*)${vp}(.*)"
+    file:
+    - perl/lib/YAMLScript.pm
+    - perl-alien/lib/Alien/YAMLScript.pm
+
+  - regx:: "(Alien::YAMLScript:.*)${vp}(.*)"
+    file:
+    - perl/Meta
+
+#------------------------------------------------------------------------------
+- vers:: v-python
+  bump:
+  - regx:: "(version.*)${vp}(.*)"
+    file:
+    - python/setup.py
+
+#------------------------------------------------------------------------------
+- vers:: v-raku
+  bump:
+  - regx:: "(version.*)${vp}(.*)"
+    file:
+    - raku/META6.json
+
+#------------------------------------------------------------------------------
+- vers:: v-ruby
+  bump:
+  - regx:: "(VERSION.*)${vp}(.*)"
+    file:
+    - ruby/lib/yamlscript/version.rb
+
+#------------------------------------------------------------------------------
+- vers:: v-rust
+  bump:
+  - regx:: "(version.*)${vp}(.*)"
+    file:
+    - rust/Cargo.toml

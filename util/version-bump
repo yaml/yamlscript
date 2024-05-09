@@ -1,28 +1,28 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ys-0
 
-set -euo pipefail
+ROOT =: ENV.ROOT ||
+  die("'ROOT' env var not defined")
 
-main() (
-  root=$(cd $(dirname "${BASH_SOURCE[0]}")/.. && pwd -P)
-  source "$root/.version.sh"
+defn main():
+  plan =: load("$ROOT/.version.ys")
 
-  (
-    set -x
-    cd rust || exit
-    cargo update
-  )
-)
+  each [p plan]:
+    .{:strs [vers bump]} =: p
+    each [b bump]:
+      .{:strs [regx file]} =: b
+      regx =: re-pattern(regx)
+      each [f file]:
+        f =: "$ROOT/$f"
+        text =: slurp(f)
+        m =: re-matcher(regx text)
+        if re-find(m):
+          do:
+            .[x m1 m2] =: re-groups(m)
+            spit f:
+              str/replace-first:
+                text regx
+                str/re-quote-replacement("$m1$vers$m2")
+            say: "Bumped '$f'"
+          warn: .['No Match!!' f regx]
 
-bump() (
-  file=$1
-#  perl -n0e "m/$pattern/ or exit 1" "$file" || return 0
-  set -x
-  perl -p0i -e "s/$pattern/\${1}$version\$2/" "$file"
-)
-
-die() {
-  echo "$*" >&2
-  exit 1
-}
-
-[[ $0 != "${BASH_SOURCE[0]}" ]] || main "$@"
+  shell {:dir 'rust'}: 'cargo update'

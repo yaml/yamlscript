@@ -64,9 +64,6 @@ endif
 	# mkdir -p $(YS_TMP)/.lein
 	chmod +x $@
 
-$(BUILD_BIN):
-	mkdir -p $@
-
 
 # Leiningen targets
 $(LEIN_COMMANDS):: $(LEIN)

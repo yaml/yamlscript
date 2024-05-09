@@ -6,6 +6,12 @@ endif
 
 BUILD_BIN := $(YS_TMP)/bin
 
+BUILD_BIN_YS_VERSION := 0.1.58
+
+BUILD_BIN_YS := $(BUILD_BIN)/ys-$(BUILD_BIN_YS_VERSION)
+
+YS_INSTALL_URL := https://yamlscript.org/install
+
 COMMON := $(ROOT)/common
 
 export PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(BUILD_BIN):$(PATH)
@@ -190,3 +196,12 @@ RELEASE_YS_TAR := $(RELEASE_YS_NAME).tar.xz
 
 RELEASE_LYS_NAME := libyamlscript-$(YS_VERSION)-$(GRAALVM_ARCH)
 RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
+
+
+#------------------------------------------------------------------------------
+$(BUILD_BIN_YS):
+	curl -sSL $(YS_INSTALL_URL) | \
+	  PREFIX=$$(dirname $(BUILD_BIN)) VERSION=$(BUILD_BIN_YS_VERSION) BIN=1 bash
+
+$(BUILD_BIN):
+	mkdir -p $@
