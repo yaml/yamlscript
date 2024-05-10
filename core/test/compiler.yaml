@@ -104,6 +104,14 @@
     (say (str "Hello " name " " (inc 41) " " (dec 43) "!"))
 
 
+- name: String interpolation followed by a word
+  yamlscript: |
+    !yamlscript/v0
+    say: "Hello${name}world"
+  clojure: |
+    (say (str "Hello" name "world"))
+
+
 - name: Multi-line string interpolation
   yamlscript: |
     !yamlscript/v0

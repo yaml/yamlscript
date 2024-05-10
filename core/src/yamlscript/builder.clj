@@ -145,8 +145,9 @@
     (?:
       (?:
         (?: \\\$ | [^\$] )+?
-        (?= \$ $symw | \$ $bpar | $)
+        (?= \$ $symw | \$ $bpar | \$ \{ | $)
       ) |
+      \$ \{ $symw \} |
       \$ $symw $bpar |
       \$ $symw |
       \$ $bpar
@@ -163,6 +164,9 @@
   (let [parts (re-seq re-interpolated-string string)
         exprs (map
                 #(cond
+                   (re-matches (re/re #"\$\{$symw\}") %1)
+                   (Sym (subs %1 2 (dec (count %1))))
+
                    (re-matches (re/re #"\$$symw$bpar") %1)
                    (build-exp {:exp (subs %1 1)})
 
@@ -188,7 +192,7 @@
 
 (defn build-vstr [node]
   (let [string (:vstr node)]
-    (if (re-find #"\$[\(a-zA-Z]" string)
+    (if (re-find #"\$[\{\(a-zA-Z]" string)
       (build-interpolated string)
       (build-dq-string string))))
 
