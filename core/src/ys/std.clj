@@ -22,6 +22,8 @@
 (declare die)
 (intern 'ys.std 'die util/die)
 
+(def _max-alias-size (* 1024 1024))
+
 ;; TODO fix this with a talk to remove _T calls from output
 (defmacro _T [xs]
   (let [[fun# & args#] xs
@@ -67,6 +69,8 @@
 ; toVec
 
 (defn _& [sym val]
+  (clojure.core/when (> (count (str val)) _max-alias-size)
+    (die "Anchored node &" sym " exceeds max size of " _max-alias-size))
   (swap! common/stream-anchors_ assoc sym val)
   (swap! common/doc-anchors_ assoc sym val)
   val)
@@ -215,10 +219,11 @@
 
 (defn join
   ([xs] (join "" xs))
-  ([sep & xs]
-    (if (= 1 (count xs))
-      (str/join sep (first xs))
-      (str/join sep xs))))
+  ([sep seq]
+   (let [[sep seq] (if (= (type sep) java.lang.String) [sep seq] [seq sep])]
+     (str/join sep seq)))
+  ([sep x & xs]
+   (str/join sep (cons x xs))))
 
 (defn new [class & args]
   (clojure.lang.Reflector/invokeConstructor
