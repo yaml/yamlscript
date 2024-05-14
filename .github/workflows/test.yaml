@@ -1,0 +1,6 @@
+on: push
+jobs:
+  workflow:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: yaml/yamlscript-workflow-action@main

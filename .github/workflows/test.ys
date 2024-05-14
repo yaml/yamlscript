@@ -1,0 +1,3 @@
+--- !yamlscript/v0
+
+shell:: make -C core test
