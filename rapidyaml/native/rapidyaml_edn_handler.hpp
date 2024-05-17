@@ -189,7 +189,7 @@ public:
     void end_doc_expl()
     {
         _c4dbgp("end_doc_expl");
-        _send_("-DOC ...\n");
+        _send_("{:+ \"-DOC\"}\n");
         if(_stack_should_pop_on_end_doc())
         {
             _c4dbgp("pop!");
@@ -219,7 +219,7 @@ public:
         _send_val_props_();
         _send_(" :flow true}\n");
         _mark_parent_with_children_();
-        _enable_(MAP|BLOCK);
+        _enable_(MAP|FLOW_SL);
         _push();
     }
     void begin_map_val_block()
@@ -247,29 +247,18 @@ public:
 
     void begin_seq_key_flow()
     {
-        _send_("{:+ \"+SEQ\" []");
-        _send_key_props_();
-        _send_('\n');
-        _mark_parent_with_children_();
-        _enable_(SEQ|FLOW_SL);
-        _push();
+        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
     }
     void begin_seq_key_block()
     {
-        _send_("{:+ \"+SEQ\"");
-        _send_("+SEQ");
-        _send_key_props_();
-        _send_('\n');
-        _mark_parent_with_children_();
-        _enable_(SEQ|BLOCK);
-        _push();
+        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
     }
 
     void begin_seq_val_flow()
     {
-        _send_("{:+ \"+SEQ\" []");
+        _send_("{:+ \"+SEQ\"");
         _send_val_props_();
-        _send_('\n');
+        _send_(", :flow true}\n");
         _mark_parent_with_children_();
         _enable_(SEQ|FLOW_SL);
         _push();
@@ -278,7 +267,7 @@ public:
     {
         _send_("{:+ \"+SEQ\"");
         _send_val_props_();
-        _send_('\n');
+        _send_("}\n");
         _mark_parent_with_children_();
         _enable_(SEQ|BLOCK);
         _push();
@@ -287,7 +276,7 @@ public:
     void end_seq()
     {
         _pop();
-        _send_("{:+ \"-SEQ\"}\n"); // before popping
+        _send_("{:+ \"-SEQ\"}\n");
     }
 
     /** @} */
@@ -304,9 +293,24 @@ public:
         m_curr->ev_data = {};
     }
 
+    /** set the previous val as the first key of a new map, with flow style.
+     *
+     * See the documentation for @ref doc_event_handlers, which has
+     * important notes about this event.
+     */
     void actually_val_is_first_key_of_new_map_flow()
     {
-        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
+        // ensure we have a temporary buffer to save the current val
+        const id_type tmp = m_curr->level + id_type(2);
+        _buf_ensure_(tmp + id_type(2));
+        // save the current val to the temporary buffer
+        _buf_flush_to_(m_curr->level, tmp);
+        // create the map.
+        // this will push a new level, and tmp is one further
+        begin_map_val_flow();
+        _RYML_CB_ASSERT(m_stack.m_callbacks, tmp != m_curr->level);
+        // now move the saved val as the first key
+        _buf_flush_to_(tmp, m_curr->level);
     }
 
     void actually_val_is_first_key_of_new_map_block()
@@ -325,13 +329,13 @@ public:
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
         _c4dbgpf("node[{}]: set key scalar plain: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
-        _send_key_scalar_(scalar, ':');
+        _send_key_scalar_(scalar, '=');
         _enable_(KEY|KEY_PLAIN);
     }
     C4_ALWAYS_INLINE void set_val_scalar_plain(csubstr scalar)
     {
         _c4dbgpf("node[{}]: set val scalar plain: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
-        _send_val_scalar_(scalar, ':');
+        _send_val_scalar_(scalar, '=');
         _enable_(VAL|VAL_PLAIN);
     }
 
@@ -339,13 +343,13 @@ public:
     C4_ALWAYS_INLINE void set_key_scalar_dquoted(csubstr scalar)
     {
         _c4dbgpf("node[{}]: set key scalar dquot: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
-        _send_key_scalar_(scalar, '"');
+        _send_key_scalar_(scalar, '$');
         _enable_(KEY|KEY_DQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_dquoted(csubstr scalar)
     {
         _c4dbgpf("node[{}]: set val scalar dquot: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
-        _send_val_scalar_(scalar, '"');
+        _send_val_scalar_(scalar, '$');
         _enable_(VAL|VAL_DQUO);
     }
 
@@ -590,7 +594,7 @@ public:
     {
         _send_("{:+ \"=VAL\"");
         _send_key_props_();
-        _send_(" :");
+        _send_(", :");
         _send_(scalar_type_code);
         _send_(" \"");
         _buf_().append_escaped(scalar);
@@ -600,7 +604,7 @@ public:
     {
         _send_("{:+ \"=VAL\"");
         _send_val_props_();
-        _send_(" :");
+        _send_(", :");
         _send_(scalar_type_code);
         _send_(" \"");
         _buf_().append_escaped(scalar);
@@ -611,13 +615,13 @@ public:
     {
         if(_has_any_(KEYANCH|KEYREF))
         {
-            _send_(" :& \"");
+            _send_(", :& \"");
             _send_(m_curr->ev_data.m_key.anchor);
             _send_('\"');
         }
         if(_has_any_(KEYTAG))
         {
-            _send_(" :! \"");
+            _send_(", :! \"");
             _send_tag_(m_curr->ev_data.m_key.tag);
             _send_('\"');
         }
@@ -628,13 +632,13 @@ public:
     {
         if(_has_any_(VALANCH|VALREF))
         {
-            _send_(" :& \"");
+            _send_(", :& \"");
             _send_(m_curr->ev_data.m_val.anchor);
             _send_('\"');
         }
         if(m_curr->ev_data.m_type.type & VALTAG)
         {
-            _send_(" :! \"");
+            _send_(", :! \"");
             _send_tag_(m_curr->ev_data.m_val.tag);
             _send_('\"');
         }
@@ -644,16 +648,9 @@ public:
     void _send_tag_(csubstr tag)
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, !tag.empty());
-        if(tag.str[0] == '<')
-        {
-            _send_(tag);
-        }
-        else
-        {
-            _send_('<');
-            _send_(tag);
-            _send_('>');
-        }
+        if(tag.begins_with('!'))
+            tag = tag.sub(1);
+        _send_(tag);
     }
 
     void _clear_tag_directives_()

@@ -28,10 +28,51 @@ struct TestCase
 };
 
 const TestCase test_cases[] = {
-    {"a: 1", "{:a 1}"},
-    {"𝄞: ✅", "{:𝄞 ✅}"},
-    {
-        R"(foo: !
+    // case ------------------------------
+    {"a: 1",
+     R"((
+{:+ "+MAP"}
+{:+ "=VAL", := "a"}
+{:+ "=VAL", := "1"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)"},
+    // case ------------------------------
+    {"𝄞: ✅",
+     R"((
+{:+ "+MAP"}
+{:+ "=VAL", := "𝄞"}
+{:+ "=VAL", := "✅"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)"},
+    // case ------------------------------
+    {"[a, b, c]",
+     R"((
+{:+ "+SEQ", :flow true}
+{:+ "=VAL", := "a"}
+{:+ "=VAL", := "b"}
+{:+ "=VAL", := "c"}
+{:+ "-SEQ"}
+{:+ "-DOC"}
+)
+)"},
+    // case ------------------------------
+    {"[a: b]",
+     R"((
+{:+ "+SEQ", :flow true}
+{:+ "+MAP", :flow true}
+{:+ "=VAL", := "a"}
+{:+ "=VAL", := "b"}
+{:+ "-MAP"}
+{:+ "-SEQ"}
+{:+ "-DOC"}
+)
+)"},
+    // case ------------------------------
+    {R"(foo: !
 - {x: y}
 - [x, y]
 - foo
@@ -41,28 +82,47 @@ const TestCase test_cases[] = {
   foo
 - >
   foo
+- [1, 2, true, false, null]
 - &anchor-1 !tag-1 foobar
+---
+another: doc
 )",
-        R"(({:+ "+MAP", :! "yamlscript/v0"}
- {:+ "=VAL", := "foo"}
- {:+ "+SEQ", :! ""}
- {:+ "+MAP", :flow true}
- {:+ "=VAL", := "x"}
- {:+ "=VAL", := "y"}
- {:+ "-MAP"}
- {:+ "+SEQ", :flow true}
- {:+ "=VAL", := "x"}
- {:+ "=VAL", := "y"}
- {:+ "-SEQ"}
- {:+ "=VAL", := "foo"}
- {:+ "=VAL", :' "foo"}
- {:+ "=VAL", :$ "foo"}
- {:+ "=VAL", :| "foo\n"}
- {:+ "=VAL", :> "foo\n"}
- {:+ "=VAL", :& "anchor-1", :! "tag-1", := "foobar"}
- {:+ "-SEQ"}
- {:+ "-MAP"}
- {:+ "-DOC"}))"}
+        R"((
+{:+ "+MAP", :! "yamlscript/v0"}
+{:+ "=VAL", := "foo"}
+{:+ "+SEQ", :! ""}
+{:+ "+MAP", :flow true}
+{:+ "=VAL", := "x"}
+{:+ "=VAL", := "y"}
+{:+ "-MAP"}
+{:+ "+SEQ", :flow true}
+{:+ "=VAL", := "x"}
+{:+ "=VAL", := "y"}
+{:+ "-SEQ"}
+{:+ "=VAL", := "foo"}
+{:+ "=VAL", :' "foo"}
+{:+ "=VAL", :$ "foo"}
+{:+ "=VAL", :| "foo\n"}
+{:+ "=VAL", :> "foo\n"}
+{:+ "+SEQ", :flow true}
+{:+ "=VAL", := "1"}
+{:+ "=VAL", := "2"}
+{:+ "=VAL", := "true"}
+{:+ "=VAL", := "false"}
+{:+ "=VAL", := "null"}
+{:+ "-SEQ"}
+{:+ "=VAL", :& "anchor-1", :! "tag-1", := "foobar"}
+{:+ "-SEQ"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+{:+ "+DOC", :& nil}
+{:+ "+MAP"}
+{:+ "=VAL", := "another"}
+{:+ "=VAL", := "doc"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)"}
 };
 
 int main()
