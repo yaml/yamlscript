@@ -28,10 +28,41 @@ struct TestCase
 };
 
 const TestCase test_cases[] = {
-    {"a: 1", "+STR\n+DOC\n+MAP\n=VAL :a\n=VAL :1\n-MAP\n-DOC\n-STR\n"},
-    {"𝄞: ✅", "+STR\n+DOC\n+MAP\n=VAL :𝄞\n=VAL :✅\n-MAP\n-DOC\n-STR\n"},
-    {"{{a: b}: {c: d}}", "+STR\n+DOC\n+MAP {}\n+MAP {}\n=VAL :a\n=VAL :b\n-MAP\n+MAP {}\n=VAL :c\n=VAL :d\n-MAP\n-MAP\n-DOC\n-STR\n"},
-    {"? a: b\n: that's right", "+STR\n+DOC\n+MAP\n+MAP\n=VAL :a\n=VAL :b\n-MAP\n=VAL :that's right\n-MAP\n-DOC\n-STR\n"}
+    {"a: 1", "{:a 1}"},
+    {"𝄞: ✅", "{:𝄞 ✅}"},
+    {
+        R"(foo: !
+- {x: y}
+- [x, y]
+- foo
+- 'foo'
+- "foo"
+- |
+  foo
+- >
+  foo
+- &anchor-1 !tag-1 foobar
+)",
+        R"(({:+ "+MAP", :! "yamlscript/v0"}
+ {:+ "=VAL", := "foo"}
+ {:+ "+SEQ", :! ""}
+ {:+ "+MAP", :flow true}
+ {:+ "=VAL", := "x"}
+ {:+ "=VAL", := "y"}
+ {:+ "-MAP"}
+ {:+ "+SEQ", :flow true}
+ {:+ "=VAL", := "x"}
+ {:+ "=VAL", := "y"}
+ {:+ "-SEQ"}
+ {:+ "=VAL", := "foo"}
+ {:+ "=VAL", :' "foo"}
+ {:+ "=VAL", :$ "foo"}
+ {:+ "=VAL", :| "foo\n"}
+ {:+ "=VAL", :> "foo\n"}
+ {:+ "=VAL", :& "anchor-1", :! "tag-1", := "foobar"}
+ {:+ "-SEQ"}
+ {:+ "-MAP"}
+ {:+ "-DOC"}))"}
 };
 
 int main()
