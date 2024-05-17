@@ -21,7 +21,7 @@ $(LIBRARY): $(wildcard native/*pp native/CMakeLists.txt native/Makefile)
 	$(MAKE) -C native build
 	cp -fav native/rapidyaml-build/librapidyaml.$(SO) $(LIBRARY)
 
-test:: build
+install test:: build
 
 $(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBRAPIDYAML_SO_FQNP)
 	mvn $@
@@ -39,8 +39,6 @@ endif
 
 clean::
 	$(MAKE) -C native $@
-	$(RM) -r reports/ target/
-	$(RM) -r $(LIBRARY)
+	$(RM) -r reports/ target/ native/rapidyaml/ $(LIBRARY)
 
-realclean::
-	$(MAKE) -C native $@
+realclean:: clean
