@@ -4,8 +4,8 @@ struct Ys2EvtsScoped
 {
     std::string input;
     char *evts;
-    Ys2EvtsScoped(const char *src) : input(src), evts() { evts = ys2evts_create(input.data()); }
-    ~Ys2EvtsScoped() { if(evts) ys2evts_destroy(evts); }
+    Ys2EvtsScoped(const char *src) : input(src), evts() { evts = ys2edn_create(input.data()); }
+    ~Ys2EvtsScoped() { if(evts) ys2edn_destroy(evts); }
 };
 
 struct TestCase

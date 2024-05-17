@@ -6,8 +6,8 @@ project(rapidyaml
 
 add_library(rapidyaml
     ryml_all.hpp
-    rapidyaml/test/test_suite/test_suite_event_handler.hpp
-    rapidyaml/test/test_suite/test_suite_event_handler.cpp
+    rapidyaml_edn_handler.hpp
+    rapidyaml_edn_handler.cpp
     rapidyaml_events.hpp
     rapidyaml_events.cpp
 )
