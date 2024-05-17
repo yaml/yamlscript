@@ -12,6 +12,7 @@
    [yamlscript.util :refer [die]])
   (:import
    (java.util Optional)
+   (org.rapidyaml Rapidyaml)
    (org.snakeyaml.engine.v2.api LoadSettings)
    (org.snakeyaml.engine.v2.api.lowlevel Parse)
    (org.snakeyaml.engine.v2.exceptions Mark)
@@ -28,20 +29,19 @@
      SequenceStartEvent
      SequenceEndEvent)))
 
-(declare ys-event)
+(declare
+  parse-snakeyaml
+  parse-rapidyaml)
 
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
-  (let [parser (new Parse (.build (LoadSettings/builder)))
-        has-code-mode-shebang (re-find
-                                  #"^#!.*ys-0"
-                                  yaml-string)
-        events (->> yaml-string
-                 (.parseString parser)
-                 (map ys-event)
-                 (remove nil?)
-                 rest)
+  (let [has-code-mode-shebang (re-find
+                                #"^#!.*ys-0"
+                                yaml-string)
+        events (if (= "rapidyaml" (System/getenv "YS_PARSER"))
+                 (parse-rapidyaml yaml-string)
+                 (parse-snakeyaml yaml-string))
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
@@ -53,6 +53,25 @@
                       first-event)
         events (cons first-event rest-events)]
     (remove nil? events)))
+
+(declare snake-event rapid-event)
+
+(defn parse-snakeyaml [yaml-string]
+  (let [parser (new Parse (.build (LoadSettings/builder)))]
+    (->> yaml-string
+      (.parseString parser)
+      (map snake-event)
+      (remove nil?)
+      rest)))
+
+(defn parse-rapidyaml [yaml-string]
+  (let [parser (new Rapidyaml)]
+    (->> yaml-string
+      (.parseYS parser)
+      (str/split-lines)
+      (remove #(or (= %1 "+STR") (= %1 "-STR")))
+      rest
+      (map #(rapid-event %1)))))
 
 (defn parse-test-case [yaml-string]
   (->> yaml-string
@@ -129,16 +148,68 @@
   (let [obj (event-obj event)]
     (assoc obj :* (str (. event getAlias)))))
 
-(defmulti  ys-event class)
-(defmethod ys-event DocumentStartEvent [event] (doc-start  event))
-(defmethod ys-event DocumentEndEvent   [event] (doc-end    event))
-(defmethod ys-event MappingStartEvent  [event] (map-start  event))
-(defmethod ys-event MappingEndEvent    [event] (map-end    event))
-(defmethod ys-event SequenceStartEvent [event] (seq-start  event))
-(defmethod ys-event SequenceEndEvent   [event] (seq-end    event))
-(defmethod ys-event ScalarEvent        [event] (scalar-val event))
-(defmethod ys-event AliasEvent         [event] (alias-val  event))
-(defmethod ys-event :default [_] nil)
+(defmulti  snake-event class)
+(defmethod snake-event DocumentStartEvent [event] (doc-start  event))
+(defmethod snake-event DocumentEndEvent   [event] (doc-end    event))
+(defmethod snake-event MappingStartEvent  [event] (map-start  event))
+(defmethod snake-event MappingEndEvent    [event] (map-end    event))
+(defmethod snake-event SequenceStartEvent [event] (seq-start  event))
+(defmethod snake-event SequenceEndEvent   [event] (seq-end    event))
+(defmethod snake-event ScalarEvent        [event] (scalar-val event))
+(defmethod snake-event AliasEvent         [event] (alias-val  event))
+(defmethod snake-event :default [_] nil)
+
+(def unescapes
+  {"\\\\" "\\"
+   "\\n" "\n"
+   "\\t" "\t"
+   "\\\"" "\""})
+
+(defn str-unescape [s]
+  (str/replace s #"(?:\\\\|\\n|\\t|\\\")"
+    (fn [m] (get unescapes m))))
+
+(defn rapid-event [line]
+  (let [[kind line] [(subs line 0 4) (subs line 4)]
+        event (case kind
+                "+DOC" {:+ "+DOC"}
+                "+MAP" {:+ "+MAP"}
+                "-MAP" {:+ "-MAP"}
+                "+SEQ" {:+ "+SEQ"}
+                "-SEQ" {:+ "-SEQ"}
+                "=VAL" {:+ "=VAL"}
+                "=ALI" {:+ "=ALI"}
+                "-DOC" {:+ "-DOC"}
+                (die kind))
+        [event line] (if (re-find #"^( (?:\{\}|\[\]))" line)
+                       (let [event (assoc event :flow true)
+                             line (subs line 3)]
+                         [event line])
+                       [event line])
+        matcher (re-matcher #"^( &(\S+))" line)
+        [event line] (if (re-find matcher)
+                       (let [event (assoc event
+                                     :& (nth (re-groups matcher) 2))
+                             line (subs line (.end matcher))]
+                         [event line])
+                       [event line])
+        matcher (re-matcher #"^( <!(\S*)>)" line)
+        [event line] (if (re-find matcher)
+                       (let [event (assoc event
+                                     :! (nth (re-groups matcher) 2))
+                             line (subs line (.end matcher))]
+                         [event line])
+                       [event line])
+        event (if (seq line)
+                (let [[style value] [(subs line 1 2) (subs line 2)]
+                      style (case style
+                              ":" :=
+                              "\"" :$
+                              (keyword style))
+                      value (str-unescape value)]
+                  (assoc event style value))
+                event)]
+    event))
 
 (comment
   (parse "a")

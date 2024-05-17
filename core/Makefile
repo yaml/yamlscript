@@ -5,11 +5,21 @@ include $(COMMON)/docker.mk
 
 export PATH := $(ROOT)/core/bin:$(PATH)
 
-#------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CORE_INSTALLED)
+RAPIDYAML_INSTALLED := \
+  $(MAVEN_REPOSITORY)/org/ryml/ryml/0.6.0/ryml-0.6.0.jar
 
-install test: $(LEIN)
+CORE_BUILD_DEPS := \
+  $(RAPIDYAML_INSTALLED) \
+
+#------------------------------------------------------------------------------
+build:: $(CORE_BUILD_DEPS)
+
+install test:: $(LEIN) build
 	$< $@
+
+$(RAPIDYAML_INSTALLED):
+	$(MAKE) -C $(ROOT)/rapidyaml install
+	ls -lh $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \
