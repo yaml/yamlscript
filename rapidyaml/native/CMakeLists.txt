@@ -8,8 +8,8 @@ add_library(rapidyaml
     ryml_all.hpp
     rapidyaml_edn_handler.hpp
     rapidyaml_edn_handler.cpp
-    rapidyaml_events.hpp
-    rapidyaml_events.cpp
+    rapidyaml_edn.hpp
+    rapidyaml_edn.cpp
 )
 target_include_directories(rapidyaml PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
