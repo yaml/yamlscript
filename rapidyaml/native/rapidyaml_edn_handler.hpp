@@ -134,12 +134,12 @@ public:
 
     void begin_stream()
     {
-        _send_("+STR\n");
+        _send_('(');
     }
 
     void end_stream()
     {
-        _send_("-STR\n");
+        _send_(')');
         _buf_flush_();
     }
 
@@ -160,7 +160,6 @@ public:
             _push();
             _enable_(DOC);
         }
-        _send_("+DOC\n");
     }
     /** implicit doc end (without ...) */
     void end_doc()
@@ -207,37 +206,27 @@ public:
 
     void begin_map_key_flow()
     {
-        _send_("+MAP {}");
-        _send_key_props_();
-        _send_('\n');
-        _mark_parent_with_children_();
-        _enable_(MAP|FLOW_SL);
-        _push();
+        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
     }
     void begin_map_key_block()
     {
-        _send_("+MAP");
-        _send_key_props_();
-        _send_('\n');
-        _mark_parent_with_children_();
-        _enable_(MAP|BLOCK);
-        _push();
+        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
     }
 
     void begin_map_val_flow()
     {
-        _send_("+MAP {}");
+        _send_("{:+ \"+MAP\"");
         _send_val_props_();
-        _send_('\n');
+        _send_(", :flow true}\n");
         _mark_parent_with_children_();
-        _enable_(MAP|FLOW_SL);
+        _enable_(MAP|BLOCK);
         _push();
     }
     void begin_map_val_block()
     {
-        _send_("+MAP");
+        _send_("{:+ \"+MAP\"");
         _send_val_props_();
-        _send_('\n');
+        _send_("}\n");
         _mark_parent_with_children_();
         _enable_(MAP|BLOCK);
         _push();
@@ -246,7 +235,7 @@ public:
     void end_map()
     {
         _pop();
-        _send_("-MAP\n");
+        _send_("{:+ \"-MAP\"");
     }
 
     /** @} */
@@ -314,56 +303,14 @@ public:
         m_curr->ev_data = {};
     }
 
-    /** set the previous val as the first key of a new map, with flow style.
-     *
-     * See the documentation for @ref doc_event_handlers, which has
-     * important notes about this event.
-     */
     void actually_val_is_first_key_of_new_map_flow()
     {
-        // ensure we have a temporary buffer to save the current val
-        const id_type tmp = m_curr->level + id_type(2);
-        _buf_ensure_(tmp + id_type(2));
-        // save the current val to the temporary buffer
-        _buf_flush_to_(m_curr->level, tmp);
-        // create the map.
-        // this will push a new level, and tmp is one further
-        begin_map_val_flow();
-        _RYML_CB_ASSERT(m_stack.m_callbacks, tmp != m_curr->level);
-        // now move the saved val as the first key
-        _buf_flush_to_(tmp, m_curr->level);
+        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
     }
 
-    /** like its flow counterpart, but this function can only be
-     * called after the end of a flow-val at root or doc level.
-     *
-     * See the documentation for @ref doc_event_handlers, which has
-     * important notes about this event.
-     */
     void actually_val_is_first_key_of_new_map_block()
     {
-        EventSink &sink = _buf_();
-        substr full = sink.get();(void)full;
-        // interpolate +MAP\n after the last +DOC\n
-        _RYML_CB_ASSERT(m_stack.m_callbacks, full.len);
-        _RYML_CB_ASSERT(m_stack.m_callbacks, !full.count('\r'));
-        size_t docpos = sink.find_last("+DOC\n");
-        if(docpos != npos)
-        {
-            _RYML_CB_ASSERT(m_stack.m_callbacks, (m_stack.size() == 1u) ? (docpos >= 5u) : (docpos == 0u));
-            _RYML_CB_ASSERT(m_stack.m_callbacks, docpos + 5u < full.len);
-            sink.insert("+MAP\n", docpos + 5u);
-        }
-        else
-        {
-            // ... or interpolate +MAP\n after the last +DOC ---\n
-            docpos = sink.find_last("+DOC ---\n");
-            _RYML_CB_ASSERT(m_stack.m_callbacks, docpos != npos);
-            _RYML_CB_ASSERT(m_stack.m_callbacks, (m_stack.size() == 1u) ? (docpos >= 5u) : (docpos == 0u));
-            _RYML_CB_ASSERT(m_stack.m_callbacks, docpos + 9u < full.len);
-            sink.insert("+MAP\n", docpos + 9u);
-        }
-        _push();
+        _RYML_CB_ERR(m_stack.m_callbacks, "container keys not supported");
     }
 
     /** @} */
@@ -533,13 +480,7 @@ public:
 
     void add_directive(csubstr directive)
     {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, directive.begins_with('%'));
-        if(directive.begins_with("%TAG"))
-        {
-            const id_type pos = _num_tag_directives();
-            _RYML_CB_CHECK(m_stack.m_callbacks, pos < RYML_MAX_TAG_DIRECTIVES);
-            _RYML_CB_CHECK(m_stack.m_callbacks, m_tag_directives[pos].create_from_str(directive));
-        }
+        _RYML_CB_ERR(m_stack.m_callbacks, "tag directives not supported");
     }
 
     /** @} */
@@ -646,33 +587,36 @@ public:
 
     void _send_key_scalar_(csubstr scalar, char scalar_type_code)
     {
-        _send_("=VAL");
+        _send_("{:+ \"=VAL\"");
         _send_key_props_();
-        _send_(' ');
+        _send_(" :");
         _send_(scalar_type_code);
         _buf_().append_escaped(scalar);
-        _send_('\n');
+        _send_("\n}");
     }
     void _send_val_scalar_(csubstr scalar, char scalar_type_code)
     {
-        _send_("=VAL");
+        _send_("{:+ \"=VAL\"");
         _send_val_props_();
-        _send_(' ');
+        _send_(" :");
         _send_(scalar_type_code);
         _buf_().append_escaped(scalar);
-        _send_('\n');
+        _send_("\n}");
     }
 
     void _send_key_props_()
     {
         if(_has_any_(KEYANCH|KEYREF))
         {
-            _send_(" &");
+            _send_(", :& \"");
             _send_(m_curr->ev_data.m_key.anchor);
+            _send_('\"');
         }
         if(_has_any_(KEYTAG))
         {
+            _send_(", :! \"");
             _send_tag_(m_curr->ev_data.m_key.tag);
+            _send_('\"');
         }
         m_curr->ev_data.m_key = {};
         _disable_(KEYANCH|KEYREF|KEYTAG);
@@ -681,12 +625,15 @@ public:
     {
         if(_has_any_(VALANCH|VALREF))
         {
-            _send_(" &");
+            _send_(", :& \"");
             _send_(m_curr->ev_data.m_val.anchor);
+            _send_('\"');
         }
         if(m_curr->ev_data.m_type.type & VALTAG)
         {
+            _send_(", :! \"");
             _send_tag_(m_curr->ev_data.m_val.tag);
+            _send_('\"');
         }
         m_curr->ev_data.m_val = {};
         _disable_(VALANCH|VALREF|VALTAG);
@@ -696,12 +643,11 @@ public:
         _RYML_CB_ASSERT(m_stack.m_callbacks, !tag.empty());
         if(tag.str[0] == '<')
         {
-            _send_(' ');
             _send_(tag);
         }
         else
         {
-            _send_(" <");
+            _send_('<');
             _send_(tag);
             _send_('>');
         }
