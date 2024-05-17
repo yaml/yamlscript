@@ -134,12 +134,12 @@ public:
 
     void begin_stream()
     {
-        _send_('(');
+        _send_("(\n");
     }
 
     void end_stream()
     {
-        _send_(')');
+        _send_(")\n");
         _buf_flush_();
     }
 
@@ -165,7 +165,7 @@ public:
     void end_doc()
     {
         _c4dbgp("end_doc");
-        _send_("-DOC\n");
+        _send_("{:+ \"-DOC\"}\n");
         if(_stack_should_pop_on_end_doc())
         {
             _c4dbgp("pop!");
@@ -182,7 +182,7 @@ public:
             _c4dbgp("push!");
             _push();
         }
-        _send_("+DOC ---\n");
+        _send_("{:+ \"+DOC\"}\n");
         _enable_(DOC);
     }
     /** explicit doc end, with ... */
@@ -217,7 +217,7 @@ public:
     {
         _send_("{:+ \"+MAP\"");
         _send_val_props_();
-        _send_(", :flow true}\n");
+        _send_(" :flow true}\n");
         _mark_parent_with_children_();
         _enable_(MAP|BLOCK);
         _push();
@@ -235,7 +235,7 @@ public:
     void end_map()
     {
         _pop();
-        _send_("{:+ \"-MAP\"");
+        _send_("{:+ \"-MAP\"}\n");
     }
 
     /** @} */
@@ -247,7 +247,7 @@ public:
 
     void begin_seq_key_flow()
     {
-        _send_("+SEQ []");
+        _send_("{:+ \"+SEQ\" []");
         _send_key_props_();
         _send_('\n');
         _mark_parent_with_children_();
@@ -256,6 +256,7 @@ public:
     }
     void begin_seq_key_block()
     {
+        _send_("{:+ \"+SEQ\"");
         _send_("+SEQ");
         _send_key_props_();
         _send_('\n');
@@ -266,7 +267,7 @@ public:
 
     void begin_seq_val_flow()
     {
-        _send_("+SEQ []");
+        _send_("{:+ \"+SEQ\" []");
         _send_val_props_();
         _send_('\n');
         _mark_parent_with_children_();
@@ -275,7 +276,7 @@ public:
     }
     void begin_seq_val_block()
     {
-        _send_("+SEQ");
+        _send_("{:+ \"+SEQ\"");
         _send_val_props_();
         _send_('\n');
         _mark_parent_with_children_();
@@ -286,7 +287,7 @@ public:
     void end_seq()
     {
         _pop();
-        _send_("-SEQ\n"); // before popping
+        _send_("{:+ \"-SEQ\"}\n"); // before popping
     }
 
     /** @} */
@@ -591,8 +592,9 @@ public:
         _send_key_props_();
         _send_(" :");
         _send_(scalar_type_code);
+        _send_(" \"");
         _buf_().append_escaped(scalar);
-        _send_("\n}");
+        _send_("\"}\n");
     }
     void _send_val_scalar_(csubstr scalar, char scalar_type_code)
     {
@@ -600,21 +602,22 @@ public:
         _send_val_props_();
         _send_(" :");
         _send_(scalar_type_code);
+        _send_(" \"");
         _buf_().append_escaped(scalar);
-        _send_("\n}");
+        _send_("\"}\n");
     }
 
     void _send_key_props_()
     {
         if(_has_any_(KEYANCH|KEYREF))
         {
-            _send_(", :& \"");
+            _send_(" :& \"");
             _send_(m_curr->ev_data.m_key.anchor);
             _send_('\"');
         }
         if(_has_any_(KEYTAG))
         {
-            _send_(", :! \"");
+            _send_(" :! \"");
             _send_tag_(m_curr->ev_data.m_key.tag);
             _send_('\"');
         }
@@ -625,13 +628,13 @@ public:
     {
         if(_has_any_(VALANCH|VALREF))
         {
-            _send_(", :& \"");
+            _send_(" :& \"");
             _send_(m_curr->ev_data.m_val.anchor);
             _send_('\"');
         }
         if(m_curr->ev_data.m_type.type & VALTAG)
         {
-            _send_(", :! \"");
+            _send_(" :! \"");
             _send_tag_(m_curr->ev_data.m_val.tag);
             _send_('\"');
         }
