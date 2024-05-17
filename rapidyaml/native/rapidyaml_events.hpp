@@ -13,8 +13,8 @@ using namespace c4::yml;
 extern "C" {
 #endif
 
-RYML_EXPORT void ys2evts_destroy(char *events);
-RYML_EXPORT char * ys2evts_create(char *src);
+RYML_EXPORT void ys2edn_destroy(char *events);
+RYML_EXPORT char * ys2edn_create(char *src);
 
 #if defined(__cplusplus)
 }
