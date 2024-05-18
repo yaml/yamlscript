@@ -68,7 +68,6 @@ public:
     std::vector<EventSink> m_val_buffers;
     char m_key_tag_buf[256];
     char m_val_tag_buf[256];
-    TagDirective m_tag_directives[RYML_MAX_TAG_DIRECTIVES];
     std::string m_arena;
 
     // undefined at the end
@@ -94,8 +93,6 @@ public:
     {
         _stack_reset_root();
         m_curr->flags |= RUNK|RTOP;
-        for(auto &td : m_tag_directives)
-            td = {};
         m_val_buffers.resize((size_t)m_stack.size());
         m_arena.clear();
     }
@@ -326,13 +323,11 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set key scalar plain: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_key_scalar_(scalar, '=');
         _enable_(KEY|KEY_PLAIN);
     }
     C4_ALWAYS_INLINE void set_val_scalar_plain(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set val scalar plain: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_val_scalar_(scalar, '=');
         _enable_(VAL|VAL_PLAIN);
     }
@@ -340,13 +335,11 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_dquoted(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set key scalar dquot: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_key_scalar_(scalar, '$');
         _enable_(KEY|KEY_DQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_dquoted(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set val scalar dquot: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_val_scalar_(scalar, '$');
         _enable_(VAL|VAL_DQUO);
     }
@@ -354,13 +347,11 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_squoted(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set key scalar squot: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_key_scalar_(scalar, '\'');
         _enable_(KEY|KEY_SQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_squoted(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set val scalar squot: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_val_scalar_(scalar, '\'');
         _enable_(VAL|VAL_SQUO);
     }
@@ -368,13 +359,11 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_literal(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set key scalar literal: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_key_scalar_(scalar, '|');
         _enable_(KEY|KEY_LITERAL);
     }
     C4_ALWAYS_INLINE void set_val_scalar_literal(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set val scalar literal: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_val_scalar_(scalar, '|');
         _enable_(VAL|VAL_LITERAL);
     }
@@ -382,13 +371,11 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_folded(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set key scalar folded: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_key_scalar_(scalar, '>');
         _enable_(KEY|KEY_FOLDED);
     }
     C4_ALWAYS_INLINE void set_val_scalar_folded(csubstr scalar)
     {
-        _c4dbgpf("node[{}]: set val scalar folded: [{}]~~~{}~~~ ({})", m_curr->node_id, scalar.len, scalar, reinterpret_cast<void const*>(scalar.str));
         _send_val_scalar_(scalar, '>');
         _enable_(VAL|VAL_FOLDED);
     }
@@ -396,11 +383,11 @@ public:
 
     C4_ALWAYS_INLINE void mark_key_scalar_unfiltered()
     {
-        C4_NOT_IMPLEMENTED();
+        _RYML_CB_ERR(m_stack.m_callbacks, "all scalars must be filtered");
     }
     C4_ALWAYS_INLINE void mark_val_scalar_unfiltered()
     {
-        C4_NOT_IMPLEMENTED();
+        _RYML_CB_ERR(m_stack.m_callbacks, "all scalars must be filtered");
     }
 
     /** @} */
@@ -412,33 +399,18 @@ public:
 
     void set_key_anchor(csubstr anchor)
     {
-        _c4dbgpf("node[{}]: set key anchor: [{}]~~~{}~~~", m_curr->node_id, anchor.len, anchor);
-        RYML_ASSERT(!anchor.begins_with('&'));
         _enable_(KEYANCH);
         m_curr->ev_data.m_key.anchor = anchor;
     }
     void set_val_anchor(csubstr anchor)
     {
-        _c4dbgpf("node[{}]: set val anchor: [{}]~~~{}~~~", m_curr->node_id, anchor.len, anchor);
-        RYML_ASSERT(!anchor.begins_with('&'));
         _enable_(VALANCH);
         m_curr->ev_data.m_val.anchor = anchor;
     }
 
-    C4_ALWAYS_INLINE bool has_key_anchor() const
-    {
-        return _has_any_(KEYANCH);
-    }
-
-    C4_ALWAYS_INLINE bool has_val_anchor() const
-    {
-        return _has_any_(VALANCH);
-    }
-
     void set_key_ref(csubstr ref)
     {
-        _c4dbgpf("node[{}]: set key ref: [{}]~~~{}~~~", m_curr->node_id, ref.len, ref);
-        RYML_ASSERT(ref.begins_with('*'));
+        _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(KEY|KEYREF);
         _send_("{:+ \"=ALI\" :* \"");
         _send_(ref.sub(1));
@@ -446,8 +418,6 @@ public:
     }
     void set_val_ref(csubstr ref)
     {
-        _c4dbgpf("node[{}]: set val ref: [{}]~~~{}~~~", m_curr->node_id, ref.len, ref);
-        RYML_ASSERT(ref.begins_with('*'));
         _enable_(VAL|VALREF);
         _send_("{:+ \"=ALI\" :* \"");
         _send_(ref.sub(1));
@@ -463,13 +433,11 @@ public:
 
     void set_key_tag(csubstr tag)
     {
-        _c4dbgpf("node[{}]: set key tag: [{}]~~~{}~~~", m_curr->node_id, tag.len, tag);
         _enable_(KEYTAG);
         m_curr->ev_data.m_key.tag = _transform_directive(tag, m_key_tag_buf);
     }
     void set_val_tag(csubstr tag)
     {
-        _c4dbgpf("node[{}]: set val tag: [{}]~~~{}~~~", m_curr->node_id, tag.len, tag);
         _enable_(VALTAG);
         m_curr->ev_data.m_val.tag = _transform_directive(tag, m_val_tag_buf);
     }
@@ -514,7 +482,6 @@ public:
         _buf_ensure_(m_stack.size() + id_type(1));
         _buf_().reset();
         m_curr->ev_data = {};
-        _c4dbgpf("pushed! level={}", m_curr->level);
     }
 
     /** end the current scope */
@@ -651,42 +618,8 @@ public:
         _send_(tag);
     }
 
-    void _clear_tag_directives_()
-    {
-        for(TagDirective &td : m_tag_directives)
-            td = {};
-    }
-    id_type _num_tag_directives() const
-    {
-        // this assumes we have a very small number of tag directives
-        for(id_type i = 0; i < RYML_MAX_TAG_DIRECTIVES; ++i)
-            if(m_tag_directives[i].handle.empty())
-                return i;
-        return RYML_MAX_TAG_DIRECTIVES;
-    }
     csubstr _transform_directive(csubstr tag, substr output)
     {
-        // lookup from the end. We want to find the first directive that
-        // matches the tag and has a target node id leq than the given
-        // node_id.
-        for(id_type i = RYML_MAX_TAG_DIRECTIVES-1; i != NONE; --i)
-        {
-            TagDirective const& td = m_tag_directives[i];
-            if(td.handle.empty())
-                continue;
-            if(tag.begins_with(td.handle))
-            {
-                size_t len = td.transform(tag, output, m_stack.m_callbacks);
-                if(len == 0)
-                {
-                    if(tag.begins_with("!<"))
-                        return tag.sub(1);
-                    return tag;
-                }
-                _RYML_CB_CHECK(m_stack.m_callbacks, len <= output.len);
-                return output.first(len);
-            }
-        }
         if(tag.begins_with('!'))
         {
             if(is_custom_tag(tag))
@@ -699,7 +632,6 @@ public:
         _RYML_CB_CHECK(m_stack.m_callbacks, result.str);
         return result;
     }
-
 #undef _enable_
 #undef _disable_
 #undef _has_any_
