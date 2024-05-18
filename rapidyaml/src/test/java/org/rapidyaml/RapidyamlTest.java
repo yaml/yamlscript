@@ -27,11 +27,22 @@ public class RapidyamlTest extends TestCase
         return new TestSuite( RapidyamlTest.class );
     }
 
-    public void testPlainMap()
+    private void testEdn_(String ys, String expected)
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String edn = rapidyaml.parseYS("a: 1");
-        assertEquals(
+        String actual = rapidyaml.parseYS(ys);
+        System.out.println("expected:");
+        System.out.println(expected);
+        System.out.println("actual");
+        System.out.println(actual);
+        assertEquals(expected, actual);
+    }
+
+    public void testPlainMap()
+    {
+        testEdn_(
+            "a: 1"
+            ,
             "(\n" +
             "{:+ \"+MAP\"}\n" +
             "{:+ \"=VAL\", := \"a\"}\n" +
@@ -39,16 +50,14 @@ public class RapidyamlTest extends TestCase
             "{:+ \"-MAP\"}\n" +
             "{:+ \"-DOC\"}\n" +
             ")\n"
-            ,
-            edn
             );
     }
 
     public void testUtf8()
     {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        String edn = rapidyaml.parseYS("𝄞: ✅");
-        assertEquals(
+        testEdn_(
+            "𝄞: ✅"
+            ,
             "(\n" +
             "{:+ \"+MAP\"}\n" +
             "{:+ \"=VAL\", := \"𝄞\"}\n" +
@@ -56,14 +65,12 @@ public class RapidyamlTest extends TestCase
             "{:+ \"-MAP\"}\n" +
             "{:+ \"-DOC\"}\n" +
             ")\n"
-            ,
-            edn);
+            );
     }
 
     public void testLargeCase()
     {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        String edn = rapidyaml.parseYS(
+        testEdn_(
             "foo: !\n" +
             "- {x: y}\n" +
             "- [x, y]\n" +
@@ -77,8 +84,8 @@ public class RapidyamlTest extends TestCase
             "- [1, 2, true, false, null]\n" +
             "- &anchor-1 !tag-1 foobar\n" +
             "---\n" +
-            "another: doc\n");
-        assertEquals(
+            "another: doc\n"
+            ,
             "(\n" +
             "{:+ \"+MAP\"}\n" +
             "{:+ \"=VAL\", := \"foo\"}\n" +
@@ -113,7 +120,7 @@ public class RapidyamlTest extends TestCase
             "{:+ \"=VAL\", := \"doc\"}\n" +
             "{:+ \"-MAP\"}\n" +
             "{:+ \"-DOC\"}\n" +
-            ")\n",
-            edn);
+            ")\n"
+            );
     }
 }
