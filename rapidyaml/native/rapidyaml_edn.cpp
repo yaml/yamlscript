@@ -10,6 +10,12 @@ using namespace c4::yml;
 
 using namespace ryml;
 
+#if 0
+#define TIMED_SECTION_INNER(name) YS2EDN_TIMED
+#else
+#define TIMED_SECTION_INNER(name)
+#endif
+
 #ifndef YS2EDN_TIMED
 #define TIMED_SECTION(name)
 #else
@@ -38,7 +44,7 @@ extern "C" {
 
 RYML_EXPORT Ryml2Edn *ys2edn_init()
 {
-    TIMED_SECTION("init");
+    TIMED_SECTION("ys2edn_init");
     Ryml2Edn *ryml2edn = _RYML_CB_ALLOC(get_callbacks(), Ryml2Edn, 1);
     _RYML_CB_CHECK(get_callbacks(), ryml2edn != nullptr);
     new ((void*)ryml2edn) Ryml2Edn();
@@ -47,7 +53,7 @@ RYML_EXPORT Ryml2Edn *ys2edn_init()
 
 RYML_EXPORT void ys2edn_destroy(Ryml2Edn *ryml2edn)
 {
-    TIMED_SECTION("destroy");
+    TIMED_SECTION("ys2edn_destroy");
     ryml2edn->~Ryml2Edn();
 }
 
@@ -60,11 +66,11 @@ RYML_EXPORT size_type ys2edn(Ryml2Edn *ryml2edn,
     csubstr filename_ = to_csubstr(filename);
     substr ys_(ys, (size_t)ys_size);
     {
-        TIMED_SECTION("reset");
+        TIMED_SECTION_INNER("reset");
         ryml2edn->reset();
     }
     {
-        TIMED_SECTION("parse_in_place");
+        TIMED_SECTION_INNER("parse_in_place");
         ryml2edn->m_parser.parse_in_place_ev(filename_, ys_);
     }
     return ys2edn_retry_get(ryml2edn, edn, edn_size);
@@ -109,22 +115,22 @@ RYML_EXPORT char * ys2edn_alloc(Ryml2Edn *ryml2edn,
     csubstr filename_ = to_csubstr(filename);
     substr ys_(ys, (size_t)ys_size);
     {
-        TIMED_SECTION("reset");
+        TIMED_SECTION_INNER("reset");
         ryml2edn->reset();
     }
     {
-        TIMED_SECTION("parse_in_place");
+        TIMED_SECTION_INNER("parse_in_place");
         ryml2edn->m_parser.parse_in_place_ev(filename_, ys_);
     }
     csubstr result = to_csubstr(ryml2edn->m_sink.result);
     char *edn;
     {
-        TIMED_SECTION("alloc");
+        TIMED_SECTION_INNER("alloc");
         edn = _RYML_CB_ALLOC(get_callbacks(), char, result.len + 1);
         _RYML_CB_CHECK(get_callbacks(), edn != nullptr);
     }
     {
-        TIMED_SECTION("memcpy");
+        TIMED_SECTION_INNER("memcpy");
         if(result.len)
         {
             memcpy(edn, result.str, result.len);
