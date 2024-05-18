@@ -10,7 +10,7 @@
 (ns yamlscript.parser
   (:require
    [clojure.string :as str]
-   [clojure.pprint :as pp]
+   #_[clojure.pprint :as pp]
    [yamlscript.debug :refer [www]]
    [yamlscript.util :refer [die]])
   (:import
@@ -45,7 +45,7 @@
         events (if (= "rapidyaml" (System/getenv "YS_PARSER"))
                  (parse-rapidyaml yaml-string)
                  (parse-snakeyaml yaml-string))
-        _ (www events)
+        #_(www events)
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
@@ -73,9 +73,9 @@
   (let [parser (new Rapidyaml)]
     (->> yaml-string
       (.parseYS parser)
-      (#(do (println %1) %1))
+      #_(#(do (println %1) %1))
       (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
-      (#(do (println %1) %1))
+      #_(#(do (println %1) %1))
       read-string)))
 
 (defn parse-test-case [yaml-string]

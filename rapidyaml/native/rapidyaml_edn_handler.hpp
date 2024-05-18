@@ -442,18 +442,18 @@ public:
         _c4dbgpf("node[{}]: set key ref: [{}]~~~{}~~~", m_curr->node_id, ref.len, ref);
         RYML_ASSERT(ref.begins_with('*'));
         _enable_(KEY|KEYREF);
-        _send_("=ALI ");
-        _send_(ref);
-        _send_('\n');
+        _send_("{:+ \"=ALI\" :* \"");
+        _send_(ref.sub(1));
+        _send_("\"}\n");
     }
     void set_val_ref(csubstr ref)
     {
         _c4dbgpf("node[{}]: set val ref: [{}]~~~{}~~~", m_curr->node_id, ref.len, ref);
         RYML_ASSERT(ref.begins_with('*'));
         _enable_(VAL|VALREF);
-        _send_("=ALI ");
-        _send_(ref);
-        _send_('\n');
+        _send_("{:+ \"=ALI\" :* \"");
+        _send_(ref.sub(1));
+        _send_("\"}\n");
     }
 
     /** @} */
