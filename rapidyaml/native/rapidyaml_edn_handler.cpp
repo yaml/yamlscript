@@ -41,6 +41,8 @@ void EventHandlerEdn::EventSink::append_escaped(csubstr val)
             _c4flush_use_instead("\\n", 1); break;
         case UINT8_C(0x5c): // '\\'
             _c4flush_use_instead("\\\\", 1); break;
+        case UINT8_C(0x22): // \"
+            _c4flush_use_instead("\\\"", 1); break;
         case UINT8_C(0x09): // \t
             _c4flush_use_instead("\\t", 1); break;
         case UINT8_C(0x0d): // \r

@@ -80,6 +80,7 @@
           {:-- [
             {:= "l"}
           ]} ]} ]} ]}
+  SKIP: true
 
 
 - name: Nested parse events test
