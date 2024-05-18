@@ -24,16 +24,17 @@ public class Rapidyaml
 
     protected void finalize() throws Throwable
     {
-        try {
+        try
+        {
             this.librapidyaml.ys2edn_destroy(this.ryml2edn);
-        } finally {
+        }
+        finally
+        {
             super.finalize();
         }
     }
 
-    // TODO use char arrays or StringBuffer, and do not allocate in C++
-
-    public String parseYS(String srcstr) throws RuntimeException
+    public String parseYS0(String srcstr) throws RuntimeException
     {
         // using ys2edn_alloc(): allocates the output in C++
         String filename = "yamlscript"; // fixme
@@ -48,8 +49,7 @@ public class Rapidyaml
         return librapidyaml.ys2edn_alloc(this.ryml2edn, filename, src, src.length);
     }
 
-    // this is occasionally failing: [WARNING] Corrupted STDOUT by directly writing to native stream in forked JVM 1
-    public String parseYS0(String srcstr) throws RuntimeException
+    public String parseYS(String srcstr) throws RuntimeException
     {
         String filename = "yamlscript"; // fixme
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
