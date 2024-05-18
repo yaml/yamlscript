@@ -100,7 +100,7 @@ public class RapidyamlTest extends TestCase
             "{:+ \"-SEQ\"}\n" +
             "{:+ \"=VAL\", := \"foo\"}\n" +
             "{:+ \"=VAL\", :' \"foo\"}\n" +
-            "{:+ \"=VAL\", :$ \"f3oo\"}\n" +
+            "{:+ \"=VAL\", :$ \"foo\"}\n" +
             "{:+ \"=VAL\", :| \"foo\\n\"}\n" +
             "{:+ \"=VAL\", :> \"foo\\n\"}\n" +
             "{:+ \"+SEQ\", :flow true}\n" +
