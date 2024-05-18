@@ -215,7 +215,7 @@ public:
     {
         _send_("{:+ \"+MAP\"");
         _send_val_props_();
-        _send_(" :flow true}\n");
+        _send_(", :flow true}\n");
         _mark_parent_with_children_();
         _enable_(MAP|FLOW_SL);
         _push();
