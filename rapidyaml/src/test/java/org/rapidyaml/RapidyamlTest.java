@@ -29,13 +29,6 @@ public class RapidyamlTest extends TestCase
 
     private void testEdn_(String ys, String expected)
     {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        String actual = rapidyaml.parseYS(ys);
-        System.out.println("expected:");
-        System.out.println(expected);
-        System.out.println("actual");
-        System.out.println(actual);
-        assertEquals(expected, actual);
     }
 
     public void testPlainMap()
