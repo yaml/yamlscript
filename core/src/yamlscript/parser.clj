@@ -69,14 +69,15 @@
       (remove nil?)
       rest)))
 
+(def rapid-parser (new Rapidyaml))
+
 (defn parse-rapidyaml [yaml-string]
-  (let [parser (new Rapidyaml)]
-    (->> yaml-string
-      (.parseYS parser)
-      #_(#(do (println %1) %1))
-      (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
-      #_(#(do (println %1) %1))
-      read-string)))
+  (->> yaml-string
+    (.parseYS ^Rapidyaml rapid-parser)
+    #_(#(do (println %1) %1))
+    (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
+    #_(#(do (println %1) %1))
+    read-string))
 
 (defn parse-test-case [yaml-string]
   (->> yaml-string
