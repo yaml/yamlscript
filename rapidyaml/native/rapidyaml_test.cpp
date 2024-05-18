@@ -1,31 +1,176 @@
 #include <rapidyaml_edn.hpp>
 
-struct Ys2EvtsScoped
+using c4::csubstr;
+using c4::substr;
+
+
+struct Ys2EdnScoped
 {
-    std::string input;
-    char *evts;
-    Ys2EvtsScoped(const char *src) : input(src), evts() { evts = ys2edn_create(input.data()); }
-    ~Ys2EvtsScoped() { if(evts) ys2edn_destroy(evts); }
+    Ryml2Edn *ryml2edn;
+    Ys2EdnScoped() : ryml2edn(ys2edn_init()) {}
+    ~Ys2EdnScoped() { if(ryml2edn) ys2edn_destroy(ryml2edn); }
+};
+
+
+struct ResultScoped
+{
+    char *edn = nullptr;
+    ~ResultScoped() { if(edn) ys2edn_free(edn); }
+};
+
+struct TestResult
+{
+    uint32_t num_assertions;
+    uint32_t num_tests;
+    uint32_t num_failed_assertions;
+    uint32_t num_failed_tests;
+    operator bool() const { return num_failed_tests == 0; }
+    void add(TestResult const& that)
+    {
+        num_tests += 1 + that.num_tests;
+        num_assertions += that.num_assertions;
+        num_failed_tests += (that.num_failed_assertions > 0) + that.num_failed_tests;
+        num_failed_assertions += that.num_failed_assertions;
+    }
 };
 
 struct TestCase
 {
-    const char *input_src;
-    const char *expected_evts;
-    bool test() const
+    csubstr ys;
+    csubstr edn;
+    bool testeq(csubstr actual) const
     {
-        Ys2EvtsScoped result(input_src);
-        const bool status = strcmp(result.evts, expected_evts) == 0;
+        const bool status = (actual == edn);
         if(!status)
             printf("------\n"
                    "FAIL:\n"
-                   "input:~~~%s~~~\n"
-                   "expected:~~~%s~~~\n"
-                   "actual:~~~%s~~~\n",
-                   input_src, expected_evts, result.evts);
+                   "input:~~~%.*s~~~\n"
+                   "expected:~~~%.*s~~~\n"
+                   "actual:~~~%.*s~~~\n",
+                   (int)ys.len, ys.str,
+                   (int)edn.len, edn.str,
+                   (int)actual.len, actual.str);
         return status;
     }
+
+    #define _runtest(name, ...)                             \
+        do {                                                \
+            printf("[RUN ] %s ... \n", #name);              \
+            TestResult tr_ = name(__VA_ARGS__);             \
+            tr.add(tr_);                                    \
+            printf("[%s] %s\n", tr_?"OK  ":"FAIL", #name);  \
+        } while(0)
+    #define CHECK(cond)                                                 \
+        do {                                                            \
+            bool pass = !!(cond);                                       \
+            ++tr.num_assertions;                                        \
+            if(!pass) {                                                 \
+                printf("%s:%d: fail! %s", __FILE__, __LINE__, #cond);   \
+                ++tr.num_failed_assertions;                             \
+            }                                                           \
+        } while(0)
+
+    TestResult test(Ryml2Edn *ryml2edn) const
+    {
+        TestResult tr = {};
+        _runtest(test_1_alloc, );
+        _runtest(test_2_large_enough, );
+        _runtest(test_3_too_small, );
+        _runtest(test_4_nullptr, );
+        _runtest(test_1_alloc_reuse, ryml2edn);
+        _runtest(test_2_large_enough_reuse, ryml2edn);
+        _runtest(test_3_too_small_reuse, ryml2edn);
+        _runtest(test_4_nullptr_reuse, ryml2edn);
+        return tr;
+    }
+
+    TestResult test_1_alloc() const
+    {
+        Ys2EdnScoped lib;
+        return test_1_alloc_reuse(lib.ryml2edn);
+    }
+    TestResult test_1_alloc_reuse(Ryml2Edn *ryml2edn) const
+    {
+        TestResult tr = {};
+        // simplest (but wasteful) first: alloc a new string
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        ResultScoped result; // frees when destroying
+        result.edn = ys2edn_alloc(ryml2edn, "ysfilename",
+                                  input.str, (size_type)input.len);
+        CHECK(testeq(c4::to_csubstr(result.edn)));
+        return tr;
+    }
+
+    TestResult test_2_large_enough() const
+    {
+        Ys2EdnScoped lib;
+        return test_2_large_enough_reuse(lib.ryml2edn);
+    }
+    TestResult test_2_large_enough_reuse(Ryml2Edn *ryml2edn) const
+    {
+        TestResult tr = {};
+        // happy path: large-enough destination string
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        std::string output;
+        output.resize(2 * edn.len);
+        size_type reqsize = ys2edn(ryml2edn, "ysfilename",
+                                   input.str, (size_type)input.len,
+                                   &output[0], (size_type)output.size());
+        CHECK(reqsize == edn.len+1);
+        CHECK(reqsize != 0);
+        output.resize(reqsize - 1u);
+        CHECK(testeq(c4::to_csubstr(output)));
+        return tr;
+    }
+
+    TestResult test_3_too_small() const
+    {
+        Ys2EdnScoped lib;
+        return test_3_too_small_reuse(lib.ryml2edn);
+    }
+    TestResult test_3_too_small_reuse(Ryml2Edn *ryml2edn) const
+    {
+        TestResult tr = {};
+        // less-happy path: destination string not large enough
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        std::string output = "?";
+        size_type reqsize = ys2edn(ryml2edn, "ysfilename",
+                                   input.str, (size_type)input.len,
+                                   output.data(), (size_type)output.size());
+        CHECK(reqsize == edn.len+1);
+        CHECK(reqsize != 0);
+        CHECK(output != "?");
+        output.resize(reqsize);
+        size_type getsize = ys2edn_retry_get(ryml2edn, &output[0], (size_type)output.size());
+        CHECK(getsize == reqsize);
+        output.resize(reqsize - 1u);
+        CHECK(testeq(c4::to_csubstr(output)));
+        return tr;
+    }
+
+    TestResult test_4_nullptr() const
+    {
+        Ys2EdnScoped lib;
+        return test_4_nullptr_reuse(lib.ryml2edn);
+    }
+    TestResult test_4_nullptr_reuse(Ryml2Edn *ryml2edn) const
+    {
+        TestResult tr = {};
+        // safe calling with nullptr
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        size_type reqsize = ys2edn(ryml2edn, "ysfilename",
+                                   input.str, (size_type)input.len,
+                                   nullptr, 0);
+        CHECK(reqsize == edn.len+1);
+        CHECK(reqsize != 0);
+        return tr;
+    }
 };
+
 
 const TestCase test_cases[] = {
     // case ------------------------------
@@ -88,7 +233,7 @@ const TestCase test_cases[] = {
 another: doc
 )",
         R"((
-{:+ "+MAP", :! "yamlscript/v0"}
+{:+ "+MAP"}
 {:+ "=VAL", := "foo"}
 {:+ "+SEQ", :! ""}
 {:+ "+MAP", :flow true}
@@ -115,7 +260,7 @@ another: doc
 {:+ "-SEQ"}
 {:+ "-MAP"}
 {:+ "-DOC"}
-{:+ "+DOC", :& nil}
+{:+ "+DOC"}
 {:+ "+MAP"}
 {:+ "=VAL", := "another"}
 {:+ "=VAL", := "doc"}
@@ -125,18 +270,22 @@ another: doc
 )"}
 };
 
+
 int main()
 {
-    int result = 0;
+    Ys2EdnScoped ys2edn;
+    TestResult total = {};
+    size_t failed_cases = {};
     for(size_t i = 0; i < C4_COUNTOF(test_cases); ++i)
     {
         printf("case %zu/%zu ...\n", i, C4_COUNTOF(test_cases));
-        bool ok = true;
-        if(!test_cases[i].test()) {
-            result = -1;
-            ok = false;
-        }
-        printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), ok ? "ok!" : "failed");
+        const TestResult tr = test_cases[i].test(ys2edn.ryml2edn);
+        total.add(tr);
+        failed_cases += (!tr);
+        printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
     }
-    return result;
+    printf("%u/%u assertions failed\n", total.num_failed_assertions, total.num_assertions);
+    printf("%u/%u tests failed\n", total.num_failed_tests, total.num_tests);
+    printf("%u/%u cases failed\n", failed_cases, C4_COUNTOF(test_cases));
+    return total ? 0 : -1;
 }

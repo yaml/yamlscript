@@ -9,15 +9,6 @@
 namespace c4 {
 namespace yml {
 
-std::string emit_edn_from_source(substr src)
-{
-    EventHandlerEdn::EventSink sink;
-    EventHandlerEdn handler(&sink);
-    ParseEngine<EventHandlerEdn> parser(&handler);
-    parser.parse_in_place_ev("(testyaml)", src);
-    return sink.result;
-}
-
 // instantiate the template
 template class ParseEngine<EventHandlerEdn>;
 

@@ -18,7 +18,8 @@ public class Rapidyaml
     public String parseYS(String src) throws RuntimeException
     {
         // TODO use a StringBuffer, and do not allocate in C++
-        return librapidyaml.ys2edn_create(src);
+        String filename = "yamlscript";
+        return librapidyaml.ys2edn_stateless(filename, src, src.length());
     }
 
 }
