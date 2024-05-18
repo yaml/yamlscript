@@ -5,7 +5,7 @@ RAPIDYAML_HPP := ryml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
 
 build: $(RAPIDYAML_HPP) $(wildcard ./*pp) CMakeLists.txt Makefile
-	cmake -S . -B rapidyaml-build -D BUILD_SHARED_LIBS=ON
+	cmake -S . -B rapidyaml-build -D BUILD_SHARED_LIBS=ON # TODO static library! https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
 	cmake --build rapidyaml-build --parallel --target rapidyaml
 
 test: build

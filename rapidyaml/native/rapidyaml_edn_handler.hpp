@@ -29,8 +29,6 @@ namespace yml {
 /** @addtogroup doc_event_handlers
  * @{ */
 
-std::string emit_edn_from_source(substr src);
-
 
 struct EventHandlerEdnState : public ParserState
 {

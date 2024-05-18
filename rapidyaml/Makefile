@@ -15,6 +15,9 @@ export LD_LIBRARY_PATH := \
 
 #------------------------------------------------------------------------------
 
+wtf::
+	mvn -X -e test
+
 build:: $(LIBRARY) package
 
 $(LIBRARY): $(wildcard native/*pp native/CMakeLists.txt native/Makefile)
