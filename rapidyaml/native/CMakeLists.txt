@@ -4,6 +4,8 @@ project(rapidyaml
     HOMEPAGE_URL "https://github.com/biojppm/rapidyaml -> https://github.com/yaml/yamlscript"
     LANGUAGES CXX)
 
+option(YS2EDN_TIMED "add timings to sections" OFF)
+
 add_library(rapidyaml
     ryml_all.hpp
     rapidyaml_edn_handler.hpp
@@ -19,6 +21,7 @@ target_compile_definitions(rapidyaml PUBLIC
     RYML_WITH_TAB_TOKENS
     RYML_DEFAULT_CALLBACK_USES_EXCEPTIONS
     RYML_SINGLE_HEADER
+    $<$<BOOL:${YS2EDN_TIMED}>:YS2EDN_TIMED>
 )
 
 add_executable(rapidyaml-test rapidyaml_test.cpp)
