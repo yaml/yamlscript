@@ -23,6 +23,9 @@ $(LIBRARY): $(wildcard native/*pp native/CMakeLists.txt native/Makefile)
 
 install test:: build
 
+t:
+	mvn test
+
 $(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBRAPIDYAML_SO_FQNP)
 	mvn $@
 
