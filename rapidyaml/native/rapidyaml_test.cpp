@@ -286,9 +286,12 @@ int main()
     Ys2EdnScoped ys2edn;
     TestResult total = {};
     size_t failed_cases = {};
+    size_t num_cases = C4_COUNTOF(test_cases);
     for(size_t i = 0; i < C4_COUNTOF(test_cases); ++i)
     {
-        printf("case %zu/%zu ...\n", i, C4_COUNTOF(test_cases));
+        printf("-----------------------------------------\n"
+               "case %zu/%zu ...\n"
+               "[%zu]~~~%.*s~~~\n", i, num_cases, test_cases[i].ys.len, (int)test_cases[i].ys.len, test_cases[i].ys.str);
         const TestResult tr = test_cases[i].test(ys2edn.ryml2edn);
         total.add(tr);
         failed_cases += (!tr);
@@ -296,6 +299,6 @@ int main()
     }
     printf("%u/%u assertions failed\n", total.num_failed_assertions, total.num_assertions);
     printf("%u/%u tests failed\n", total.num_failed_tests, total.num_tests);
-    printf("%u/%u cases failed\n", failed_cases, C4_COUNTOF(test_cases));
+    printf("%zu/%zu cases failed\n", failed_cases, num_cases);
     return total ? 0 : -1;
 }
