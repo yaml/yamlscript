@@ -10,6 +10,7 @@
 (ns yamlscript.parser
   (:require
    [clojure.string :as str]
+   [clojure.pprint :as pp]
    [yamlscript.debug :refer [www]]
    [yamlscript.util :refer [die]])
   (:import
@@ -44,6 +45,7 @@
         events (if (= "rapidyaml" (System/getenv "YS_PARSER"))
                  (parse-rapidyaml yaml-string)
                  (parse-snakeyaml yaml-string))
+        _ (www events)
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
@@ -53,10 +55,11 @@
                                    first-event-tag))))
                       (assoc first-event :! "yamlscript/v0")
                       first-event)
-        events (cons first-event rest-events)]
+        events (cons first-event rest-events)
+        #_#__ (pp/pprint events)]
     (remove nil? events)))
 
-(declare snake-event rapid-event)
+(declare snake-event)
 
 (defn parse-snakeyaml [yaml-string]
   (let [parser (new Parse (.build (LoadSettings/builder)))]
@@ -70,10 +73,10 @@
   (let [parser (new Rapidyaml)]
     (->> yaml-string
       (.parseYS parser)
-      (str/split-lines)
-      (remove #(or (= %1 "+STR") (= %1 "-STR")))
-      rest
-      (map #(rapid-event %1)))))
+      (#(do (println %1) %1))
+      (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
+      (#(do (println %1) %1))
+      read-string)))
 
 (defn parse-test-case [yaml-string]
   (->> yaml-string
@@ -170,48 +173,6 @@
 (defn str-unescape [s]
   (str/replace s #"(?:\\\\|\\n|\\t|\\\")"
     (fn [m] (get unescapes m))))
-
-(defn rapid-event [line]
-  (let [[kind line] [(subs line 0 4) (subs line 4)]
-        event (case kind
-                "+DOC" {:+ "+DOC"}
-                "+MAP" {:+ "+MAP"}
-                "-MAP" {:+ "-MAP"}
-                "+SEQ" {:+ "+SEQ"}
-                "-SEQ" {:+ "-SEQ"}
-                "=VAL" {:+ "=VAL"}
-                "=ALI" {:+ "=ALI"}
-                "-DOC" {:+ "-DOC"}
-                (die kind))
-        [event line] (if (re-find #"^( (?:\{\}|\[\]))" line)
-                       (let [event (assoc event :flow true)
-                             line (subs line 3)]
-                         [event line])
-                       [event line])
-        matcher (re-matcher #"^( &(\S+))" line)
-        [event line] (if (re-find matcher)
-                       (let [event (assoc event
-                                     :& (nth (re-groups matcher) 2))
-                             line (subs line (.end matcher))]
-                         [event line])
-                       [event line])
-        matcher (re-matcher #"^( <!(\S*)>)" line)
-        [event line] (if (re-find matcher)
-                       (let [event (assoc event
-                                     :! (nth (re-groups matcher) 2))
-                             line (subs line (.end matcher))]
-                         [event line])
-                       [event line])
-        event (if (seq line)
-                (let [[style value] [(subs line 1 2) (subs line 2)]
-                      style (case style
-                              ":" :=
-                              "\"" :$
-                              (keyword style))
-                      value (str-unescape value)]
-                  (assoc event style value))
-                event)]
-    event))
 
 (comment
   www
