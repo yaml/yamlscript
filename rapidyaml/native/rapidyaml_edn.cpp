@@ -145,13 +145,6 @@ RYML_EXPORT void ys2edn_free(char *edn)
     _RYML_CB_FREE(get_callbacks(), edn, char, strlen(edn) + 1);
 }
 
-RYML_EXPORT char *ys2edn_stateless(const char *filename,
-                                   char *ys, size_type ys_size)
-{
-    Ryml2Edn ryml2edn;
-    return ys2edn_alloc(&ryml2edn, filename, ys, ys_size);
-}
-
 #if defined(__cplusplus)
 }
 #endif
