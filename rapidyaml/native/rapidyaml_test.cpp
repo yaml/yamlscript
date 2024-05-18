@@ -84,15 +84,10 @@ struct TestCase
         return tr;
     }
 
-    TestResult test_1_alloc() const
-    {
-        Ys2EdnScoped lib;
-        return test_1_alloc_reuse(lib.ryml2edn);
-    }
+    // 1. simplest (but wasteful) first: alloc a new string
     TestResult test_1_alloc_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
-        // simplest (but wasteful) first: alloc a new string
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         ResultScoped result; // frees when destroying
@@ -101,16 +96,16 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(result.edn)));
         return tr;
     }
-
-    TestResult test_2_large_enough() const
+    TestResult test_1_alloc() const
     {
         Ys2EdnScoped lib;
-        return test_2_large_enough_reuse(lib.ryml2edn);
+        return test_1_alloc_reuse(lib.ryml2edn);
     }
+
+    // 2. happy path: large-enough destination string
     TestResult test_2_large_enough_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
-        // happy path: large-enough destination string
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         std::string output;
@@ -124,16 +119,16 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-
-    TestResult test_3_too_small() const
+    TestResult test_2_large_enough() const
     {
         Ys2EdnScoped lib;
-        return test_3_too_small_reuse(lib.ryml2edn);
+        return test_2_large_enough_reuse(lib.ryml2edn);
     }
+
+    // less-happy path: destination string not large enough
     TestResult test_3_too_small_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
-        // less-happy path: destination string not large enough
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         std::string output = "?";
@@ -150,16 +145,16 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-
-    TestResult test_4_nullptr() const
+    TestResult test_3_too_small() const
     {
         Ys2EdnScoped lib;
-        return test_4_nullptr_reuse(lib.ryml2edn);
+        return test_3_too_small_reuse(lib.ryml2edn);
     }
+
+    // safe calling with nullptr
     TestResult test_4_nullptr_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
-        // safe calling with nullptr
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         size_type reqsize = ys2edn(ryml2edn, "ysfilename",
@@ -168,6 +163,11 @@ struct TestCase
         CHECK(reqsize == edn.len+1);
         CHECK(reqsize != 0);
         return tr;
+    }
+    TestResult test_4_nullptr() const
+    {
+        Ys2EdnScoped lib;
+        return test_4_nullptr_reuse(lib.ryml2edn);
     }
 };
 
