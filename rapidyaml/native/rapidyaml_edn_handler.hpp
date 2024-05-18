@@ -69,6 +69,7 @@ public:
     char m_key_tag_buf[256];
     char m_val_tag_buf[256];
     std::string m_arena;
+    bool m_first_doc;
 
     // undefined at the end
     #define _enable_(bits) _enable__<bits>()
@@ -81,9 +82,9 @@ public:
     /** @name construction and resetting
      * @{ */
 
-    EventHandlerEdn() : EventHandlerStack(), m_sink(), m_val_buffers() {}
-    EventHandlerEdn(Callbacks const& cb) : EventHandlerStack(cb), m_sink(), m_val_buffers() {}
-    EventHandlerEdn(EventSink *sink, Callbacks const& cb) : EventHandlerStack(cb), m_sink(sink), m_val_buffers()
+    EventHandlerEdn() : EventHandlerStack(), m_sink(), m_val_buffers(), m_first_doc() {}
+    EventHandlerEdn(Callbacks const& cb) : EventHandlerStack(cb), m_sink(), m_val_buffers(), m_first_doc() {}
+    EventHandlerEdn(EventSink *sink, Callbacks const& cb) : EventHandlerStack(cb), m_sink(sink), m_val_buffers(), m_first_doc()
     {
         reset();
     }
@@ -95,6 +96,7 @@ public:
         m_curr->flags |= RUNK|RTOP;
         m_val_buffers.resize((size_t)m_stack.size());
         m_arena.clear();
+        m_first_doc = true;
     }
 
     /** @} */
@@ -155,6 +157,7 @@ public:
             _push();
             _enable_(DOC);
         }
+        m_first_doc = false;
     }
     /** implicit doc end (without ...) */
     void end_doc()
@@ -177,7 +180,10 @@ public:
             _c4dbgp("push!");
             _push();
         }
-        _send_("{:+ \"+DOC\"}\n");
+        if (m_first_doc)
+            m_first_doc = false;
+        else
+            _send_("{:+ \"+DOC\"}\n");
         _enable_(DOC);
     }
     /** explicit doc end, with ... */
