@@ -227,7 +227,8 @@ const TestCase test_cases[] = {
 )
 )"},
     // case ------------------------------
-    {R"(foo: !
+    {R"(--- !yamlscript/v0
+foo: !
 - {x: y}
 - [x, y]
 - foo
@@ -243,7 +244,7 @@ const TestCase test_cases[] = {
 another: doc
 )",
         R"((
-{:+ "+MAP"}
+{:+ "+MAP", :! "yamlscript/v0"}
 {:+ "=VAL", := "foo"}
 {:+ "+SEQ", :! ""}
 {:+ "+MAP", :flow true}
