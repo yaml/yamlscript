@@ -11,7 +11,7 @@ using namespace c4::yml;
 using namespace ryml;
 
 #if 0
-#define TIMED_SECTION_INNER(name) YS2EDN_TIMED
+#define TIMED_SECTION_INNER(name) TIMED_SECTION(name)
 #else
 #define TIMED_SECTION_INNER(name)
 #endif
@@ -32,7 +32,6 @@ struct timed_section
     ~timed_section()
     {
         fprintf(stderr, "%.6fms: %.*s\n", since().count(), (int)name.len, name.str);
-        fflush(stderr);
     }
 };
 #endif
@@ -94,11 +93,11 @@ RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
 {
     TIMED_SECTION("ys2edn_retry_get");
     csubstr result = to_csubstr(ryml2edn->m_sink.result);
-    size_type required_size = 1 + (size_type)result.size();
+    size_type required_size = 1 + (size_type)result.len;
     if(required_size <= edn_size)
     {
-        memcpy(edn, result.str, (size_t)edn_size);
-        edn[edn_size] = '\0';
+        memcpy(edn, result.str, (size_t)result.len);
+        edn[result.len] = '\0';
     }
     else if(edn_size > 0)
     {
