@@ -31,11 +31,17 @@ public class RapidyamlTest extends TestCase
     {
         Rapidyaml rapidyaml = new Rapidyaml();
         String actual = rapidyaml.parseYS(ys);
-        System.out.println("expected:");
-        System.out.println(expected);
-        System.out.println("actual");
-        System.out.println(actual);
-        assertEquals(expected, actual);
+        try {
+            assertEquals(expected.length(), actual.length());
+            assertEquals(expected, actual);
+        }
+        catch (Exception e) {
+            System.err.println("expected:");
+            System.err.println(expected);
+            System.err.println("actual");
+            System.err.println(actual);
+            throw e;
+        }
     }
 
     public void testPlainMap()
@@ -55,17 +61,17 @@ public class RapidyamlTest extends TestCase
 
     public void testUtf8()
     {
-        //testEdn_(
-        //    "𝄞: ✅"
-        //    ,
-        //    "(\n" +
-        //    "{:+ \"+MAP\"}\n" +
-        //    "{:+ \"=VAL\", := \"𝄞\"}\n" +
-        //    "{:+ \"=VAL\", := \"✅\"}\n" +
-        //    "{:+ \"-MAP\"}\n" +
-        //    "{:+ \"-DOC\"}\n" +
-        //    ")\n"
-        //    );
+        testEdn_(
+            "𝄞: ✅"
+            ,
+            "(\n" +
+            "{:+ \"+MAP\"}\n" +
+            "{:+ \"=VAL\", := \"𝄞\"}\n" +
+            "{:+ \"=VAL\", := \"✅\"}\n" +
+            "{:+ \"-MAP\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            ")\n"
+            );
     }
 
     public void testLargeCase()

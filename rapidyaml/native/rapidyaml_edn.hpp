@@ -54,10 +54,6 @@ RYML_EXPORT char * ys2edn_alloc(Ryml2Edn *ryml2edn,
                                 char *ys, size_type ys_size);
 RYML_EXPORT void ys2edn_free(char *edn);
 
-// really creaky and inefficient, do not use this
-RYML_EXPORT char *ys2edn_stateless(const char *filename,
-                                   char *ys, size_type ys_size);
-
 #if defined(__cplusplus)
 }
 #endif
