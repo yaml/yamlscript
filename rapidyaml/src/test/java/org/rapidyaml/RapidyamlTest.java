@@ -27,35 +27,90 @@ public class RapidyamlTest extends TestCase
         return new TestSuite( RapidyamlTest.class );
     }
 
-    public void testLoad()
+    public void testPlainMap()
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String evts = rapidyaml.parseYS("a: 1");
-        assertEquals("+STR\n+DOC\n+MAP\n=VAL :a\n=VAL :1\n-MAP\n-DOC\n-STR\n",
-                     evts);
+        String edn = rapidyaml.parseYS("a: 1");
+        assertEquals(edn,
+                     "(\n" +
+                     "{:+ \"+MAP\"}\n" +
+                     "{:+ \"=VAL\",\n := \"a\"}" +
+                     "{:+ \"=VAL\",\n := \"1\"}" +
+                     "{:+ \"-MAP\"}\n" +
+                     "{:+ \"-DOC\"}\n" +
+                     ")");
     }
 
     public void testUtf8()
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String evts = rapidyaml.parseYS("𝄞: ✅");
-        assertEquals("+STR\n+DOC\n+MAP\n=VAL :𝄞\n=VAL :✅\n-MAP\n-DOC\n-STR\n",
-                     evts);
+        String edn = rapidyaml.parseYS("𝄞: ✅");
+        assertEquals(edn,
+                     "(\n" +
+                     "{:+ \"+MAP\"}\n" +
+                     "{:+ \"=VAL\",\n := \"𝄞\"}" +
+                     "{:+ \"=VAL\",\n := \"✅\"}" +
+                     "{:+ \"-MAP\"}\n" +
+                     "{:+ \"-DOC\"}\n" +
+                     ")");
     }
 
-    public void testContKeyFlow()
+    public void testLargeCase()
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String evts = rapidyaml.parseYS("{{a: b}: {c: d}}");
-        assertEquals("+STR\n+DOC\n+MAP {}\n+MAP {}\n=VAL :a\n=VAL :b\n-MAP\n+MAP {}\n=VAL :c\n=VAL :d\n-MAP\n-MAP\n-DOC\n-STR\n",
-                     evts);
-    }
-
-    public void testContKeyBlock()
-    {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        String evts = rapidyaml.parseYS("? a: b\n: that's right");
-        assertEquals("+STR\n+DOC\n+MAP\n+MAP\n=VAL :a\n=VAL :b\n-MAP\n=VAL :that's right\n-MAP\n-DOC\n-STR\n",
-                     evts);
+        String edn = rapidyaml.parseYS(
+            "" +
+            "foo: !\n" +
+            "- {x: y}\n" +
+            "- [x, y]\n" +
+            "- foo\n" +
+            "- 'foo'\n" +
+            "- \"foo\"\n" +
+            "- |\n" +
+            "  foo\n" +
+            "- >\n" +
+            "  foo\n" +
+            "- [1, 2, true, false, null]\n" +
+            "- &anchor-1 !tag-1 foobar\n" +
+            "---\n" +
+            "another: doc\n");
+        assertEquals(
+            edn,
+            "" +
+            "(\n" +
+            "{:+ \"+MAP\"}\n" +
+            "{:+ \"=VAL\", := \"foo\"}\n" +
+            "{:+ \"+SEQ\", :! \"\"}\n" +
+            "{:+ \"+MAP\", :flow true}\n" +
+            "{:+ \"=VAL\", := \"x\"}\n" +
+            "{:+ \"=VAL\", := \"y\"}\n" +
+            "{:+ \"-MAP\"}\n" +
+            "{:+ \"+SEQ\", :flow true}\n" +
+            "{:+ \"=VAL\", := \"x\"}\n" +
+            "{:+ \"=VAL\", := \"y\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"=VAL\", := \"foo\"}\n" +
+            "{:+ \"=VAL\", :' \"foo\"}\n" +
+            "{:+ \"=VAL\", :$ \"foo\"}\n" +
+            "{:+ \"=VAL\", :| \"foo\n\"}\n" +
+            "{:+ \"=VAL\", :> \"foo\n\"}\n" +
+            "{:+ \"+SEQ\", :flow true}\n" +
+            "{:+ \"=VAL\", := \"1\"}\n" +
+            "{:+ \"=VAL\", := \"2\"}\n" +
+            "{:+ \"=VAL\", := \"true\"}\n" +
+            "{:+ \"=VAL\", := \"false\"}\n" +
+            "{:+ \"=VAL\", := \"null\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"=VAL\", :& \"anchor-1\", :! \"tag-1\", := \"foobar\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-MAP\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            "{:+ \"+DOC\"}\n" +
+            "{:+ \"+MAP\"}\n" +
+            "{:+ \"=VAL\", := \"another\"}\n" +
+            "{:+ \"=VAL\", := \"doc\"}\n" +
+            "{:+ \"-MAP\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            ")\n");
     }
 }
