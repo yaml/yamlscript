@@ -43,7 +43,7 @@ extern "C" {
 
 RYML_EXPORT Ryml2Edn *ys2edn_init()
 {
-    TIMED_SECTION("ys2edn_init");
+    // TIMED_SECTION("ys2edn_init");
     Ryml2Edn *ryml2edn = _RYML_CB_ALLOC(get_callbacks(), Ryml2Edn, 1);
     _RYML_CB_CHECK(get_callbacks(), ryml2edn != nullptr);
     new ((void*)ryml2edn) Ryml2Edn();

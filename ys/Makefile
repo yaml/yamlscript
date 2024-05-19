@@ -23,8 +23,13 @@ endif
 BPAN_LOCAL := .bpan
 BPAN_REPO_URL := https://github.com/bpan-org/bpan
 
+YS_BUILD_DEPS := \
+  $(YAMLSCRIPT_CLI_BIN_BASH) \
+  $(YAMLSCRIPT_CLI_BIN) \
+	$(RAPIDYAML_INSTALLED) \
+
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CLI_BIN_BASH) $(YAMLSCRIPT_CLI_BIN)
+build:: $(YS_BUILD_DEPS)
 
 install: build
 	mkdir -p $(PREFIX)/bin
@@ -33,7 +38,7 @@ install: build
 	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
 	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) $(PREFIX)/bin/
 
-jar: $(YAMLSCRIPT_CLI_JAR_PATH)
+jar: $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 	@:
 
 test: test-unit

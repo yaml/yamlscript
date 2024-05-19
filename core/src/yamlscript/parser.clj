@@ -61,6 +61,7 @@
 
 (declare snake-event)
 
+;; TODO - Set bigger buffer size in scanner class
 (defn parse-snakeyaml [yaml-string]
   (let [parser (new Parse (.build (LoadSettings/builder)))]
     (->> yaml-string
@@ -69,15 +70,14 @@
       (remove nil?)
       rest)))
 
-(def rapid-parser (new Rapidyaml))
-
 (defn parse-rapidyaml [yaml-string]
-  (->> yaml-string
-    ((time #(.parseYS ^Rapidyaml rapid-parser %1)))
-    #_(#(do (println %1) %1))
-    (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
-    #_(#(do (println %1) %1))
-    read-string))
+  (let [rapid-parser (new Rapidyaml)]
+    (->> yaml-string
+      ((time #(.parseYS ^Rapidyaml rapid-parser %1)))
+      #_(#(do (println %1) %1))
+      (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
+      #_(#(do (println %1) %1))
+      read-string)))
 
 (defn parse-test-case [yaml-string]
   (->> yaml-string

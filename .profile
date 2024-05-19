@@ -9,6 +9,7 @@ ys-local() {
 
 YS() (
   set -e
+  export LD_LIBRARY_PATH=$YAMLSCRIPT_ROOT/rapidyaml/native
   base=$YAMLSCRIPT_ROOT/ys
   libyamlscript_version=0.1.59
   jar=yamlscript.cli-$libyamlscript_version-SNAPSHOT-standalone.jar
