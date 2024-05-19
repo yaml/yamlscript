@@ -3,48 +3,31 @@ include ../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
 
-RAPIDYAML_VERSION := 0.6.0
-
-RAPIDYAML_JAVA_JAR := target/rapidyaml-$(RAPIDYAML_VERSION).jar
-
-LIBRARY := native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
-
-export LD_LIBRARY_PATH := \
-  $(ROOT)/rapidyaml/native
-
+RAPIDYAML_SOURCES := \
+  $(wildcard \
+  Makefile \
+  native/*pp \
+  native/CMakeLists.txt \
+  native/Makefile \
+)
 
 #------------------------------------------------------------------------------
 
-wtf::
-	mvn -X -e test
+build:: $(RAPIDYAML_SO)
 
-build:: $(LIBRARY) package
-
-$(LIBRARY): $(wildcard native/*pp native/CMakeLists.txt native/Makefile)
-	$(MAKE) -C native build
-	cp -fav native/rapidyaml-build/librapidyaml.$(SO) $(LIBRARY)
-
-install test:: build
-
-t:
-	mvn test
-
-$(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBRAPIDYAML_SO_FQNP)
+install test:: build $(JAVA_INSTALLED)
 	mvn $@
 
-release: $(JAVA_INSTALLED) $(LIBRAPIDYAML_SO_FQNP) test package
-ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
-endif
-	mvn deploy:deploy-file \
-	    -s ~/.mvn-user-settings.xml \
-	    -Dfile=$(RAPIDYAML_JAVA_JAR) \
-	    -DpomFile=pom.xml \
-	    -DrepositoryId=clojars \
-	    -Durl=https://clojars.org/repo/
+test-x: build
+	mvn -X -e test
+
+$(RAPIDYAML_SO): $(RAPIDYAML_SOURCES)
+	$(MAKE) -C native build
+	cp -fav native/rapidyaml-build/librapidyaml.$(SO) $@
 
 clean::
 	$(MAKE) -C native $@
-	$(RM) -r reports/ target/ native/rapidyaml/ $(LIBRARY)
+	$(RM) -r reports/ target/ native/rapidyaml/ $(RAPIDYAML_SO)
 
-realclean:: clean
+realclean::
+	$(RM) -r $(MAVEN_REPOSITORY)/org/ryml

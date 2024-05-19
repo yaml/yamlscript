@@ -7,7 +7,8 @@
   (:refer-clojure :exclude [load]))
 
 (defn load [str]
-  (yaml/parse-string str))
+  (yaml/parse-string str
+    :code-point-limit (* 10 1024 1024)))
 
 (defn dump [data]
   (yaml/generate-string
