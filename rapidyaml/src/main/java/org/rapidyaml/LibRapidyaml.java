@@ -11,7 +11,7 @@ import java.io.File;
 public class LibRapidyaml {
     public static String extension()
     {
-        return Platform.isMac() ? "dylib" : "so";
+        return Platform.isMac() ? "so" : "so";
     }
 
     public static char pathDelimiter()
@@ -43,13 +43,16 @@ public class LibRapidyaml {
             path = dir + pathDelimiter() + name;
             if (new File(path).exists()) break;
         }
+	System.out.println(path);
         if (path != null) return path;
 
         path = "/usr/local/lib" + pathDelimiter() + name;
+	System.out.println(path);
         if (new File(path).exists()) return path;
 
         path = System.getenv("HOME") + pathDelimiter() +
                ".local/lib" + pathDelimiter() + name;
+	System.out.println(path);
         if (new File(path).exists()) return path;
 
         throw new RuntimeException(

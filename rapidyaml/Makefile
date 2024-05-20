@@ -23,7 +23,7 @@ test-x: build
 
 $(RAPIDYAML_SO): $(RAPIDYAML_SOURCES)
 	$(MAKE) -C native build
-	cp -fav native/rapidyaml-build/librapidyaml.$(SO) $@
+	cp -fav native/rapidyaml-build/librapidyaml.so $@
 
 clean::
 	$(MAKE) -C native $@

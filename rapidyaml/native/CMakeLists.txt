@@ -6,6 +6,10 @@ project(rapidyaml
 
 option(YS2EDN_TIMED "add timings to sections" OFF)
 
+if(UNIX)
+    set(CMAKE_SHARED_LIBRARY_SUFFIX .so)
+endif()
+
 add_library(rapidyaml
     ryml_all.hpp
     rapidyaml_edn_handler.hpp
@@ -23,6 +27,7 @@ target_compile_definitions(rapidyaml PUBLIC
     RYML_SINGLE_HEADER
     $<$<BOOL:${YS2EDN_TIMED}>:YS2EDN_TIMED>
 )
+set_target_properties(rapidyaml PROPERTIES CXX_STANDARD 17)
 
 add_executable(rapidyaml-test rapidyaml_test.cpp)
 target_link_libraries(rapidyaml-test rapidyaml)
