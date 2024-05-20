@@ -76,6 +76,8 @@ endif
 	    --enable-preview \
 	    --enable-url-protocols=https \
 	\
+	    -H:ConfigurationFileDirectories=config/ \
+	\
 	    -H:ReflectionConfigurationFiles=reflection.json \
 	    -H:+ReportExceptionStackTraces \
 	    -H:IncludeResources=SCI_VERSION \
