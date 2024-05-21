@@ -469,9 +469,26 @@ public:
 
     substr alloc_arena(size_t len)
     {
-        const size_t curr = m_arena.size();
-        m_arena.resize(curr + len);
-        return to_substr(m_arena).sub(curr);
+        const size_t sz = m_arena.size();
+        csubstr prev = to_csubstr(m_arena);
+        m_arena.resize(sz + len);
+        substr out = to_substr(m_arena).sub(sz);
+        substr curr = to_substr(m_arena);
+        if(curr.str != prev.str)
+            _stack_relocate_to_new_arena(prev, curr);
+        return out;
+    }
+
+    substr alloc_arena(size_t len, substr *relocated)
+    {
+        csubstr prev = to_csubstr(m_arena);
+        if(!prev.is_super(*relocated))
+            return alloc_arena(len);
+        substr out = alloc_arena(len);
+        substr curr = to_substr(m_arena);
+        if(curr.str != prev.str)
+            *relocated = _stack_relocate_to_new_arena(*relocated, prev, curr);
+        return out;
     }
 
     /** @} */
