@@ -7,21 +7,30 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
+import java.util.*;
 
 public class LibRapidyaml {
-    public static String extension()
+    public static String ext()
     {
-        return Platform.isMac() ? "so" : "so";
+        return Platform.isMac() ? "dylib" : "so";
     }
 
-    public static char pathDelimiter()
+    public static char slash()
     {
         return Platform.isWindows() ? '\\' : '/';
     }
 
-    public static String filename()
+    public static boolean isNativeImage()
     {
-        return "librapidyaml." + extension() + '.' +
+        return
+            System.getProperty("java.vm.name") == "Substrate VM" &&
+            System.getProperty("org.graalvm.nativeimage.imagecode") ==
+                "runtime";
+    }
+
+    public static String getLibraryName()
+    {
+        return "librapidyaml." + ext() + '.' +
                Rapidyaml.RAPIDYAML_VERSION;
     }
 
@@ -33,48 +42,64 @@ public class LibRapidyaml {
         return envValue.split(":");
     }
 
-    public static String path() throws RuntimeException
+    public static String findLibraryPath() throws RuntimeException
     {
-        String name = filename();
-        String[] dirs = libraryPaths();
+        String libName = getLibraryName();
+        String[] paths = libraryPaths();
+        char slash = slash();
 
-        String path = null;
-        for (String dir : dirs) {
-            path = dir + pathDelimiter() + name;
-            if (new File(path).exists()) break;
+        String dirPath = null;
+        String fullPath = null;
+        for (String path : paths) {
+            dirPath = path;
+            fullPath = dirPath + slash + libName;
+            if (new File(fullPath).exists()) return dirPath;
         }
-	System.out.println(path);
-        if (path != null) return path;
 
-        path = "/usr/local/lib" + pathDelimiter() + name;
-	System.out.println(path);
-        if (new File(path).exists()) return path;
+        dirPath = "/usr/local/lib";
+        fullPath = dirPath + slash + libName;
+        if (new File(fullPath).exists()) return dirPath;
 
-        path = System.getenv("HOME") + pathDelimiter() +
-               ".local/lib" + pathDelimiter() + name;
-	System.out.println(path);
-        if (new File(path).exists()) return path;
+        dirPath = System.getenv("HOME") + slash + ".local" + slash + "lib";
+        fullPath = dirPath + slash + libName;
+        if (new File(fullPath).exists()) return dirPath;
 
         throw new RuntimeException(
-            "Shared library file " + name + " not found\n"
+            "Shared library file '" +
+                libName +
+                "'' not found by LibRapidyaml\n"
         );
     }
 
-    public static ILibRapidyaml load(String path)
+    public static ILibRapidyaml loadLibraryWithJNA()
     {
-        return Native.load(path, ILibRapidyaml.class);
-    }
+        if (isNativeImage())
+        {
+            System.setProperty(
+                "java.class.path",
+                "/home/ingy/src/yamlscript/rapidyaml/"
+            );
+            // String fullPath = findLibraryPath() + slash() + getLibraryName();
+            return Native.load(
+                "rapidyaml",
+                // "librapidyaml.so",
+                // fullPath,
+                ILibRapidyaml.class,
+                Collections.emptyMap()
+            );
+        }
 
-    public static ILibRapidyaml load()
-    {
-        return load(path());
+        // Not a native image; Just in JVM
+        String fullPath = findLibraryPath() + slash() + getLibraryName();
+        System.out.println("Loading " + fullPath);
+        return Native.load(fullPath, ILibRapidyaml.class);
     }
 
     private static ILibRapidyaml INSTANCE = null;
 
     public static ILibRapidyaml library()
     {
-        if (INSTANCE == null) INSTANCE = load();
+        if (INSTANCE == null) INSTANCE = loadLibraryWithJNA();
 
         return INSTANCE;
     }

@@ -85,6 +85,9 @@ endif
 
 default:
 
+java-home:
+	@echo $(JAVA_HOME)
+
 chown:
 	sudo chown -R $(USER):$(USER) .
 

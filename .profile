@@ -14,7 +14,8 @@ YS() (
   libyamlscript_version=0.1.59
   jar=yamlscript.cli-$libyamlscript_version-SNAPSHOT-standalone.jar
   make --no-print-directory -C "$base" jar
-  export JAVA_HOME=/tmp/yamlscript/graalvm-oracle-21/Contents/Home
+  JAVA_HOME=$(make --no-print-directory -C "$YAMLSCRIPT_ROOT" java-home)
+  export JAVA_HOME
   export PATH=$JAVA_HOME/bin:$PATH
   java -jar "$base/target/uberjar/$jar" "$@"
 )
