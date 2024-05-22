@@ -153,6 +153,9 @@
 (defn abspath [& args]
   (apply util/abspath args))
 
+(defn call [f & args]
+  (apply f args))
+
 (defn cwd [& args]
   (str (apply babashka.fs/cwd args)))
 
