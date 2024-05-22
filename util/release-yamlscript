@@ -12,6 +12,8 @@
 # * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
 # * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
 
+version-file =: '.version.ys'
+
 steps =: 11
 
 bindings =::
@@ -56,21 +58,21 @@ defn main(old-version=0 new-version=0 start=1):
 
 
 #------------------------------------------------------------------------------
-# Change the .version.sh version bump script to use the new version string.
+# Change the .version.ys version bump script to use the new version string.
 #------------------------------------------------------------------------------
 
 defn step-1(ctx):
-  o: "Step 1) Update '.version.sh' file"
+  o: "Step 1) Update '$version-file' file"
 
   when-not dryrun:
-    spit '.version.sh':
+    spit version-file:
       str/replace-first:
-        slurp('.version.sh')
+        slurp(version-file)
         /0\.1\.\d+/
         ctx.new
 
   when verbose:
-    run:: git -P diff .version.sh
+    run: "git -P diff $version-file"
 
 
 #------------------------------------------------------------------------------
