@@ -21,7 +21,7 @@
    [clojure.string :as str]
    [clojure.tools.cli :as cli]))
 
-(def yamlscript-version "0.1.58")
+(def yamlscript-version "0.1.59")
 
 (def testing (atom false))
 

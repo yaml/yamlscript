@@ -2,7 +2,7 @@
 
 !yamlscript/v0
 
-v-api =: '0.1.58'
+v-api =: '0.1.59'
 
 v-perl =: v-api
 v-python =: v-api
