@@ -28,6 +28,7 @@ YS_BUILD_DEPS := \
   $(YAMLSCRIPT_CLI_BIN) \
 	$(RAPIDYAML_INSTALLED) \
 
+
 #------------------------------------------------------------------------------
 build:: $(YS_BUILD_DEPS)
 
@@ -59,7 +60,12 @@ test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+%.json: ../common/%.yaml
+	$(BUILD_BIN_YS) -J $< > $@
+
+#	    --trace-object-instantiation=com.sun.jna.internal.Cleaner$$CleanerThread \
+
+$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(NATIVE_CONFIG_FILES)
 ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
@@ -72,13 +78,20 @@ endif
 	    --native-image-info \
 	    --no-fallback \
 	\
+	    --trace-class-initialization=true \
+	    -J-Dclojure.compiler.direct-linking=true \
+	    -H:Log=registerResource:5 \
+	\
 	    --initialize-at-build-time \
+	    --report-unsupported-elements-at-runtime \
 	    --enable-preview \
 	    --enable-url-protocols=https \
 	\
-	    -H:ConfigurationFileDirectories=config/ \
-	\
+	    -H:JNIConfigurationFiles=jni-config.json \
+	    -H:ResourceConfigurationFiles=resource-config.json \
+	    -H:ReflectionConfigurationFiles=reflect-config.json \
 	    -H:ReflectionConfigurationFiles=reflection.json \
+	\
 	    -H:+ReportExceptionStackTraces \
 	    -H:IncludeResources=SCI_VERSION \
 	    -H:Log=registerResource: \
@@ -99,6 +112,7 @@ $(YAMLSCRIPT_CLI_BIN_BASH): $(YAMLSCRIPT_CLI_BIN_BASH_SRC)
 
 clean::
 	$(RM) -r .cpcache/
+	$(RM) $(NATIVE_CONFIG_FILES)
 
 realclean::
 	$(RM) -r bin lib $(BPAN_LOCAL)

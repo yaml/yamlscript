@@ -17,6 +17,12 @@ RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
 RAPIDYAML_INSTALLED := \
   $(MAVEN_REPOSITORY)/org/ryml/ryml/$(RAPIDYAML_VERSION)/ryml-$(RAPIDYAML_VERSION).jar
 
+NATIVE_CONFIG_FILES := \
+  reflection.json \
+  jni-config.json \
+  reflect-config.json \
+  resource-config.json \
+
 
 #------------------------------------------------------------------------------
 $(YAMLSCRIPT_JAVA_INSTALLED): $(YAMLSCRIPT_JAVA_SRC)

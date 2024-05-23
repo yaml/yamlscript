@@ -5,6 +5,7 @@ package org.rapidyaml;
 
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
+import com.sun.jna.NativeLibrary;
 
 import java.io.File;
 import java.util.*;
@@ -71,22 +72,67 @@ public class LibRapidyaml {
         );
     }
 
+    public static void setPropertyTrueIfEnv(String key, String env)
+    {
+        if (System.getenv(env) != null) System.setProperty(key, "true");
+    }
+
+    public static void setPropertyIfEnv(String key, String env)
+    {
+        String val = System.getenv(env);
+        if (val != null) System.setProperty(key, val);
+    }
+
+    public static void setPropertiesFromEnv()
+    {
+        setPropertyIfEnv("java.class.path", "YS_JAVA_CLASS_PATH");
+        setPropertyIfEnv("jna.library.path", "YS_JNA_LIBRARY_PATH");
+        setPropertyTrueIfEnv("jna.nosys", "YS_JNA_NOSYS");
+        setPropertyTrueIfEnv("jna.noclasspath", "YS_JNA_NOCLASSPATH");
+        setPropertyTrueIfEnv("jna.nounpack", "YS_JNA_NOUNPACK");
+        setPropertyTrueIfEnv("jna.debug_load", "YS_JNA_DEBUG_LOAD");
+        setPropertyTrueIfEnv("jna.debug_load.jna", "YS_JNA_DEBUG_LOAD_JNA");
+    }
+
+    public static void printSystemProperties()
+    {
+        Properties props = System.getProperties();
+        List<String> keys = new ArrayList(props.keySet());
+        Collections.sort(keys);
+        for (String key : keys) {
+            System.out.println(key + " = '" + props.getProperty(key) + "'");
+        }
+    }
+
     public static ILibRapidyaml loadLibraryWithJNA()
     {
-        if (isNativeImage())
+        if (false && isNativeImage())
         {
-            System.setProperty(
-                "java.class.path",
-                "/home/ingy/src/yamlscript/rapidyaml/"
-            );
-            // String fullPath = findLibraryPath() + slash() + getLibraryName();
+            setPropertiesFromEnv();
+            if (System.getenv("YS_SHOW_PROPS") != null)
+                printSystemProperties();
+            String nativeName = "rapidyaml";
+            String nativeNameEnv = System.getenv("YS_NATIVE_NAME");
+            if (nativeNameEnv != null) nativeName = nativeNameEnv;
             return Native.load(
-                "rapidyaml",
-                // "librapidyaml.so",
-                // fullPath,
+                nativeName,
                 ILibRapidyaml.class,
                 Collections.emptyMap()
             );
+        }
+
+        if (isNativeImage())
+        {
+            String libPath = "/home/ingy/src/yamlscript/rapidyaml/native";
+            String nativeName = "rapidyaml";
+            String nativeNameEnv = System.getenv("YS_NATIVE_NAME");
+            if (nativeNameEnv != null) nativeName = nativeNameEnv;
+            // System.setProperty("jna.library.path", libPath);
+            // System.setProperty("java.class.path", libPath);
+            // System.setProperty("jna.prefix", "");
+            NativeLibrary lib = NativeLibrary.getInstance(nativeName);
+            System.out.println("================== Loaded: " + lib);
+            return null;
         }
 
         // Not a native image; Just in JVM
