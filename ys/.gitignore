@@ -1,3 +1,7 @@
 /.bpan/
 /bin/
 /lib/
+/reflection.json
+/jni-config.json
+/reflect-config.json
+/resource-config.json
