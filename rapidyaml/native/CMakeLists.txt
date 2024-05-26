@@ -5,6 +5,7 @@ project(rapidyaml
     LANGUAGES CXX)
 
 option(YS2EDN_TIMED "add timings to sections" OFF)
+option(YS2EDN_ALWAYS_ASSERT "assert even in release builds" OFF)
 
 if(UNIX)
     set(CMAKE_SHARED_LIBRARY_SUFFIX .so)
@@ -26,6 +27,7 @@ target_compile_definitions(rapidyaml PUBLIC
     RYML_DEFAULT_CALLBACK_USES_EXCEPTIONS
     RYML_SINGLE_HEADER
     $<$<BOOL:${YS2EDN_TIMED}>:YS2EDN_TIMED>
+    $<$<BOOL:${YS2EDN_ALWAYS_ASSERT}>:RYML_USE_ASSERT=1>
 )
 set_target_properties(rapidyaml PROPERTIES CXX_STANDARD 17)
 

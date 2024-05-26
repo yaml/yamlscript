@@ -7,15 +7,14 @@
 #ifndef _C4_YML_EVENT_HANDLER_STACK_HPP_
 #include "c4/yml/event_handler_stack.hpp"
 #endif
-#ifndef _C4_YML_STD_STRING_HPP_
-#include "c4/yml/std/string.hpp"
-#endif
 #ifndef _C4_YML_DETAIL_PRINT_HPP_
 #include "c4/yml/detail/print.hpp"
 #endif
 #endif
 
-#include <vector>
+#ifndef _C4_YML_EXTRA_STRING_HPP_
+#include "test_suite/string.hpp"
+#endif
 
 C4_SUPPRESS_WARNING_GCC_CLANG_PUSH
 C4_SUPPRESS_WARNING_GCC_CLANG("-Wold-style-cast")
@@ -29,6 +28,7 @@ namespace yml {
 /** @addtogroup doc_event_handlers
  * @{ */
 
+void append_escaped(extra::string *s, csubstr val);
 
 struct EventHandlerEdnState : public ParserState
 {
@@ -45,19 +45,7 @@ struct EventHandlerEdn : public EventHandlerStack<EventHandlerEdn, EventHandlerE
     // our internal state must inherit from parser state
     using state = EventHandlerEdnState;
 
-    struct EventSink
-    {
-        std::string result;
-        void reset() noexcept { result.clear(); }
-        void append(csubstr s) noexcept { result.append(s.str, s.len); }
-        void append(char c) noexcept { result += c; }
-        void insert(csubstr s, size_t pos) noexcept { result.insert(pos, s.str, s.len); }
-        void insert(char c, size_t pos) noexcept { result.insert(pos, 1, c); }
-        csubstr get() const { return csubstr(&result[0], result.size()); }
-        substr get() { return substr(&result[0], result.size()); }
-        size_t find_last(csubstr s) const { return result.rfind(s.str, std::string::npos, s.len); }
-        void append_escaped(csubstr val);
-    };
+    using EventSink = extra::string;
 
     /** @} */
 
@@ -65,10 +53,10 @@ public:
 
     /** @cond dev */
     EventSink *C4_RESTRICT m_sink;
-    std::vector<EventSink> m_val_buffers;
-    char m_key_tag_buf[256];
-    char m_val_tag_buf[256];
-    std::string m_arena;
+    extra::string_vector m_val_buffers;
+    extra::string m_key_tag_buf;
+    extra::string m_val_tag_buf;
+    extra::string m_arena;
     bool m_first_doc;
 
     // undefined at the end
@@ -82,13 +70,20 @@ public:
     /** @name construction and resetting
      * @{ */
 
-    EventHandlerEdn() : EventHandlerStack(), m_sink(), m_val_buffers(), m_first_doc() {}
-    EventHandlerEdn(Callbacks const& cb) : EventHandlerStack(cb), m_sink(), m_val_buffers(), m_first_doc() {}
-    EventHandlerEdn(EventSink *sink, Callbacks const& cb) : EventHandlerStack(cb), m_sink(sink), m_val_buffers(), m_first_doc()
+    EventHandlerEdn() : EventHandlerEdn(nullptr, get_callbacks()) {}
+    EventHandlerEdn(Callbacks const& cb) : EventHandlerEdn(nullptr, cb) {}
+    EventHandlerEdn(EventSink *sink) : EventHandlerEdn(sink, get_callbacks()) {}
+    EventHandlerEdn(EventSink *sink, Callbacks const& cb)
+        : EventHandlerStack(cb)
+        , m_sink(sink)
+        , m_val_buffers()
+        , m_key_tag_buf()
+        , m_val_tag_buf()
+        , m_arena()
+        , m_first_doc()
     {
         reset();
     }
-    EventHandlerEdn(EventSink *sink) : EventHandlerEdn(sink, get_callbacks()) {}
 
     void reset()
     {
@@ -96,6 +91,11 @@ public:
         m_curr->flags |= RUNK|RTOP;
         m_val_buffers.resize((size_t)m_stack.size());
         m_arena.clear();
+        m_val_buffers.clear();
+        m_val_buffers.resize(1);
+        m_arena.reserve(1024);
+        m_key_tag_buf.resize(256);
+        m_val_tag_buf.resize(256);
         m_first_doc = true;
     }
 
@@ -106,9 +106,9 @@ public:
     /** @name parse events
      * @{ */
 
-    void start_parse(const char* filename)
+    void start_parse(const char* filename, detail::pfn_relocate_arena relocate_arena, void *relocate_arena_data)
     {
-        m_curr->start_parse(filename, m_curr->node_id);
+        this->_stack_start_parse(filename, relocate_arena, relocate_arena_data);
     }
 
     void finish_parse()
@@ -306,6 +306,7 @@ public:
         _buf_ensure_(tmp + id_type(2));
         // save the current val to the temporary buffer
         _buf_flush_to_(m_curr->level, tmp);
+        _disable_(_VALMASK|VAL_STYLE);
         // create the map.
         // this will push a new level, and tmp is one further
         begin_map_val_flow();
@@ -440,12 +441,12 @@ public:
     void set_key_tag(csubstr tag)
     {
         _enable_(KEYTAG);
-        m_curr->ev_data.m_key.tag = _transform_directive(tag, m_key_tag_buf);
+        m_curr->ev_data.m_key.tag = _transform_directive(tag, &m_key_tag_buf);
     }
     void set_val_tag(csubstr tag)
     {
         _enable_(VALTAG);
-        m_curr->ev_data.m_val.tag = _transform_directive(tag, m_val_tag_buf);
+        m_curr->ev_data.m_val.tag = _transform_directive(tag, &m_val_tag_buf);
     }
 
     /** @} */
@@ -470,7 +471,7 @@ public:
     substr alloc_arena(size_t len)
     {
         const size_t sz = m_arena.size();
-        csubstr prev = to_csubstr(m_arena);
+        csubstr prev = m_arena;
         m_arena.resize(sz + len);
         substr out = to_substr(m_arena).sub(sz);
         substr curr = to_substr(m_arena);
@@ -481,7 +482,7 @@ public:
 
     substr alloc_arena(size_t len, substr *relocated)
     {
-        csubstr prev = to_csubstr(m_arena);
+        csubstr prev = m_arena;
         if(!prev.is_super(*relocated))
             return alloc_arena(len);
         substr out = alloc_arena(len);
@@ -503,7 +504,7 @@ public:
     {
         _stack_push();
         _buf_ensure_(m_stack.size() + id_type(1));
-        _buf_().reset();
+        _buf_().clear();
         m_curr->ev_data = {};
     }
 
@@ -535,26 +536,26 @@ public:
 
     EventSink& _buf_() noexcept
     {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, (size_t)m_curr->level < m_val_buffers.size());
-        return m_val_buffers[(size_t)m_curr->level];
+        _RYML_CB_ASSERT(m_stack.m_callbacks, m_curr->level < m_val_buffers.size());
+        return m_val_buffers[m_curr->level];
     }
 
     EventSink& _buf_(id_type level) noexcept
     {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, (size_t)level < m_val_buffers.size());
-        return m_val_buffers[(size_t)level];
+        _RYML_CB_ASSERT(m_stack.m_callbacks, level < m_val_buffers.size());
+        return m_val_buffers[level];
     }
 
     EventSink const& _buf_(id_type level) const noexcept
     {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, (size_t)level < m_val_buffers.size());
-        return m_val_buffers[(size_t)level];
+        _RYML_CB_ASSERT(m_stack.m_callbacks, level < m_val_buffers.size());
+        return m_val_buffers[level];
     }
 
     static void _buf_flush_to_(EventSink &C4_RESTRICT src, EventSink &C4_RESTRICT dst) noexcept
     {
-        dst.append(src.get());
-        src.reset();
+        dst.append(src);
+        src.clear();
     }
 
     void _buf_flush_to_(id_type level_src, id_type level_dst) noexcept
@@ -571,8 +572,8 @@ public:
 
     void _buf_ensure_(id_type size_needed) noexcept
     {
-        if((size_t)size_needed > m_val_buffers.size())
-            m_val_buffers.resize((size_t)size_needed);
+        if(size_needed > m_val_buffers.size())
+            m_val_buffers.resize(size_needed);
     }
 
     C4_ALWAYS_INLINE void _send_(csubstr s) noexcept { _buf_().append(s); }
@@ -585,7 +586,7 @@ public:
         _send_(", :");
         _send_(scalar_type_code);
         _send_(" \"");
-        _buf_().append_escaped(scalar);
+        append_escaped(&_buf_(), scalar);
         _send_("\"}\n");
     }
     void _send_val_scalar_(csubstr scalar, char scalar_type_code)
@@ -595,7 +596,7 @@ public:
         _send_(", :");
         _send_(scalar_type_code);
         _send_(" \"");
-        _buf_().append_escaped(scalar);
+        append_escaped(&_buf_(), scalar);
         _send_("\"}\n");
     }
 
@@ -641,7 +642,7 @@ public:
         _send_(tag);
     }
 
-    csubstr _transform_directive(csubstr tag, substr output)
+    csubstr _transform_directive(csubstr tag, extra::string *output)
     {
         if(tag.begins_with('!'))
         {
@@ -650,14 +651,23 @@ public:
                 _RYML_CB_ERR_(m_stack.m_callbacks, "tag not found", m_curr->pos);
             }
         }
-        csubstr result = normalize_tag_long(tag, output);
-        _RYML_CB_CHECK(m_stack.m_callbacks, result.len > 0);
-        _RYML_CB_CHECK(m_stack.m_callbacks, result.str);
+        bool retry = false;
+    again:
+        csubstr result = normalize_tag_long(tag, *output);
+        if(!result.str)
+        {
+            _RYML_CB_CHECK(m_stack.m_callbacks, !retry);
+            retry = true;
+            output->resize(result.len);
+            output->resize(output->capacity());
+            goto again;
+        }
         return result;
     }
-#undef _enable_
-#undef _disable_
-#undef _has_any_
+
+    #undef _enable_
+    #undef _disable_
+    #undef _has_any_
 
     /** @endcond */
 };

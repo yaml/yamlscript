@@ -92,11 +92,14 @@ RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
                                        char *edn, size_type edn_size)
 {
     TIMED_SECTION("ys2edn_retry_get");
-    csubstr result = to_csubstr(ryml2edn->m_sink.result);
+    csubstr result = ryml2edn->m_sink;
     size_type required_size = 1 + (size_type)result.len;
     if(required_size <= edn_size)
     {
-        memcpy(edn, result.str, (size_t)result.len);
+        if(result.len)
+        {
+            memcpy(edn, result.str, (size_t)result.len);
+        }
         edn[result.len] = '\0';
     }
     else if(edn_size > 0)
@@ -121,7 +124,7 @@ RYML_EXPORT char * ys2edn_alloc(Ryml2Edn *ryml2edn,
         TIMED_SECTION_INNER("parse_in_place");
         ryml2edn->m_parser.parse_in_place_ev(filename_, ys_);
     }
-    csubstr result = to_csubstr(ryml2edn->m_sink.result);
+    csubstr result = ryml2edn->m_sink;
     char *edn;
     {
         TIMED_SECTION_INNER("alloc");
