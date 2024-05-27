@@ -25,7 +25,12 @@ $(RAPIDYAML_HPP): rapidyaml
 	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@
 
 rapidyaml:
-	git clone --recursive --single-branch --depth=1 -b $(RAPIDYAML_TAG) $(RAPIDYAML_REPO)
+	mkdir rapidyaml
+	( cd rapidyaml && git init -q . )
+	( cd rapidyaml && git remote add origin $(RAPIDYAML_REPO) )
+	( cd rapidyaml && git fetch origin $(RAPIDYAML_TAG) )
+	( cd rapidyaml && git reset --hard FETCH_HEAD )
+	( cd rapidyaml && git submodule update --init --recursive )
 
 clean:
 	$(RM) -r rapidyaml-build
