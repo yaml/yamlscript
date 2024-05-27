@@ -57,6 +57,7 @@
               'use (sci/copy-var ys.ys/use nil)
 
               ;; clojure.core functions not added by SCI
+              'file-seq (sci/copy-var clojure.core/file-seq nil)
               'parse-double (sci/copy-var clojure.core/parse-double nil)
               'parse-long (sci/copy-var clojure.core/parse-long nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
