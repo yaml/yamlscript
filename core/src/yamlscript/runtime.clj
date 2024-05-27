@@ -77,6 +77,22 @@
   `(let [ns# (sci/create-ns ~ns-name)]
      (sci/copy-ns ~from-ns ns#)))
 
+(defn classes-map [class-symbols]
+  (loop [[class-symbol & class-symbols] class-symbols
+         m '{}]
+    (if class-symbol
+      (let [symbol (-> class-symbol
+                     str
+                     (str/replace #".*\." "")
+                     symbol)
+            class (eval class-symbol)]
+        (recur class-symbols (assoc m
+                               symbol class
+                               class-symbol class)))
+      m)))
+
+
+
 (reset! ys/sci-ctx
   (sci/init
     {:namespaces
@@ -103,34 +119,36 @@
       'json    (use-ns 'json ys.json)
       'yaml    (use-ns 'yaml ys.yaml)}
 
-     :classes
-     {'Atom       clojure.lang.Atom
-      'Fn         clojure.lang.Fn
-      'Keyword    clojure.lang.Keyword
-      'Range      clojure.lang.Range
-      'Seqable    clojure.lang.Seqable
-      'Sequential clojure.lang.Sequential
-      'Symbol     clojure.lang.Symbol
+     :classes (classes-map
+                '[clojure.lang.Atom
+                  clojure.lang.Fn
+                  clojure.lang.Keyword
+                  clojure.lang.Range
+                  clojure.lang.Seqable
+                  clojure.lang.Sequential
+                  clojure.lang.Symbol
 
-      'Boolean   java.lang.Boolean
-      'Byte      java.lang.Byte
-      'Character java.lang.Character
-      'Class     java.lang.Class
-      'Double    java.lang.Double
-      'Error     java.lang.Error
-      'Exception java.lang.Exception
-      'Float     java.lang.Float
-      'Integer   java.lang.Integer
-      'Long      java.lang.Long
-      'Math      java.lang.Math
-      'Number    java.lang.Number
-      'Object    java.lang.Object
-      'Process   java.lang.Process
-      'Runtime   java.lang.Runtime
-      'String    java.lang.String
-      'System    java.lang.System
-      'Thread    java.lang.Thread
-      'Throwable java.lang.Throwable}}))
+                  java.lang.Boolean
+                  java.lang.Byte
+                  java.lang.Character
+                  java.lang.Class
+                  java.lang.Double
+                  java.lang.Error
+                  java.lang.Exception
+                  java.lang.Float
+                  java.lang.Integer
+                  java.lang.Long
+                  java.lang.Math
+                  java.lang.Number
+                  java.lang.Object
+                  java.lang.Process
+                  java.lang.Runtime
+                  java.lang.String
+                  java.lang.System
+                  java.lang.Thread
+                  java.lang.Throwable
+
+                  java.io.File])}))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSION ys-version)
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSIONS
