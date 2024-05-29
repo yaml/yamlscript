@@ -4,7 +4,7 @@
 (ns yamlscript.transformers
   (:require
    [yamlscript.util :refer [die if-lets when-lets]]
-   [yamlscript.ast :refer [Lst Vec Key]]
+   [yamlscript.ast :refer [Sym Lst Vec Key]]
    [yamlscript.debug :refer [www]]))
 
 (def Q {:Sym 'quote})
@@ -40,10 +40,25 @@
                         (let [lhs (Vec (:Lst lhs))]
                           (conj acc lhs rhs)))
                       []
-                      (partition 2 pairs))]
-    [lhs {:pairs pairs}]))
+                      (partition 2 pairs))
+              rhs {:pairs pairs}]
+    [lhs rhs]))
 
 #_(every? :Lst '({:Lst []} {:Lst [{:Sym a}]} {:Lst [{:Sym a} {:Sym b}]}))
+
+(defn transform_if [lhs rhs]
+  (when-lets
+    [pairs (:pairs rhs)
+     [k1 v1 k2 v2] pairs
+     _ (= k1 (Sym 'then))
+     rhs (if (> (count (:pairs v1)) 2)
+           (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
+           (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))]
+    (if (and (> (count pairs) 2) (= k2 (Sym 'else)))
+      (if (> (count (:pairs v2)) 2)
+        [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
+        [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
+      [lhs rhs])))
 
 ;;-----------------------------------------------------------------------------
 ;; require

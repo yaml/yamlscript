@@ -110,3 +110,28 @@
       (a b): a + b
   clojure: |
     (fn add (() 0) ((a b) (+_ a b)))
+
+
+- name: Keywords then and else for if
+  yamlscript: |
+    !yamlscript/v0
+    if (x = 1):
+      then:
+        a: b
+        c: d
+      else:
+        e: f
+  clojure: |
+    (if (= x 1) (do (a b) (c d)) (e f))
+
+
+- name: Keywords then and else for if with scalar actions
+  yamlscript: |
+    !yamlscript/v0
+    if (x = 1):
+      then: a(b)
+      else:
+        c: d
+        e: f
+  clojure: |
+    (if (= x 1) (a b) (do (c d) (e f)))
