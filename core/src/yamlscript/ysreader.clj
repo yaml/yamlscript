@@ -184,6 +184,7 @@
    (Sym '..) (Sym 'rng)
    (Sym '+) (Sym '+_)
    (Sym '*) (Sym '*_)
+   (Sym '!=) (Sym 'not=)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)
    (Sym '%)  (Sym 'rem)
