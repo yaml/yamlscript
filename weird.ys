@@ -32,7 +32,7 @@ defn sieve(limit):
   loop [i 2, w1 vec([false] * limit)]:
     if (i < limit):
       recur (i + 2):
-        if not(w1.nth(i)):
+        if not(w1.$i):
           do:
             divs =: divisors(i)
             if not(abundant(i divs)):
@@ -52,7 +52,7 @@ defn main(max=25):
   loop [n 2, count 0]:
     when (count < max):
       recur (n + 2):
-        if not(w.nth(n)):
+        if not(w.$n):
           do:
             print: "$n "
             inc: count
