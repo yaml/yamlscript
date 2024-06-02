@@ -54,11 +54,13 @@
      rhs (if (> (count (:pairs v1)) 2)
            (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
            (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))]
-    (if (and (> (count pairs) 2) (= k2 (Sym 'else)))
-      (if (> (count (:pairs v2)) 2)
-        [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
-        [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
-      [lhs rhs])))
+    (if (> (count pairs) 2)
+      (if (= k2 (Sym 'else))
+        (if (> (count (:pairs v2)) 2)
+          [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
+          [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
+        (die "Form after 'then' must be 'else'"))
+        [lhs rhs])))
 
 ;;-----------------------------------------------------------------------------
 ;; require

@@ -135,3 +135,15 @@
         e: f
   clojure: |
     (if (= x 1) (a b) (do (c d) (e f)))
+
+
+- name: Error when using then and not else
+  yamlscript: |
+    !yamlscript/v0
+    if (x = 1):
+      then: a(b)
+      =>:
+        c: d
+        e: f
+  error: |
+    Form after 'then' must be 'else'
