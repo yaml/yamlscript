@@ -137,6 +137,15 @@
     (if (= x 1) (a b) (do (c d) (e f)))
 
 
+- name: Using then without else
+  yamlscript: |
+    !yamlscript/v0
+    if (x = 1):
+      then: a(b)
+  clojure: |
+    (if (= x 1) (a b))
+
+
 - name: Error when using then and not else
   yamlscript: |
     !yamlscript/v0
