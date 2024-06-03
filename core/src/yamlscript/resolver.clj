@@ -169,21 +169,26 @@
   (die "Sequences (block and flow) not allowed in code mode"))
 
 (defn resolve-code-scalar [node]
-  (let [node (dissoc node :!)
+  (let [tag (:! node)
+        node (dissoc node :!)
         style (get-scalar-style node)
-        val (style node)]
-    (case style
-      := (let [node
+        val (style node)
+        _ (when (and tag (not= "clj" tag))
+            (die "Scalar has unknown tag: !" tag))]
+    (if tag
+      (set/rename-keys node {style (keyword tag)})
+      (case style
+        := (let [node
                ;; Remove leading escape character from value
-               (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
-                 (assoc node := (subs val 1))
-                 node)]
-           (set/rename-keys node {:= :exp}))
-      :$ (set/rename-keys node {:$ :vstr})
-      :' (set/rename-keys node {:' :str})
-      :| (set/rename-keys node {:| :vstr})
-      :> (set/rename-keys node {:> :str})
-      ,  (die "Scalar has unknown style"))))
+                 (if (re-find #"^\.[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
+                   (assoc node := (subs val 1))
+                   node)]
+             (set/rename-keys node {:= :exp}))
+        :$ (set/rename-keys node {:$ :vstr})
+        :' (set/rename-keys node {:' :str})
+        :| (set/rename-keys node {:| :vstr})
+        :> (set/rename-keys node {:> :str})
+        ,  (die "Scalar has unknown style")))))
 
 (defn resolve-code-alias [node]
   (set/rename-keys node {:* :Ali}))

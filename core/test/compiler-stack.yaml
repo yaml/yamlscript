@@ -685,3 +685,27 @@
             {:Map [{:Str "bar"} {:Int 2}]}]}]}]}]}
   clojure: |
     {"foo" (apply merge [{"foo" 1} {"bar" 2}])}
+
+
+- name: Raw clojure mode with !clj
+  yamlscript: |
+    !yamlscript/v0
+    =>: !clj |
+      (defmacro qq [x]
+        `(quote ~x))
+    qq: (1 2 3)
+  resolve: |
+    {:pairs
+     [{:exp "=>"}
+      {:clj "(defmacro qq [x]\n  `(quote ~x))\n"}
+      {:exp "qq"}
+      {:exp "(1 2 3)"}]}
+  clojure: |
+    (defmacro
+     qq
+     [x]
+     (clojure.core/seq
+      (clojure.core/concat
+       (clojure.core/list 'quote)
+       (clojure.core/list x))))
+    (qq (1 2 3))

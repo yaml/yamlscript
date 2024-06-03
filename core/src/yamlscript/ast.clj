@@ -52,6 +52,9 @@
 (defn Nil []
   {:Nil nil})
 
+(defn Clj [c]
+  {:Clj c})
+
 (comment
   www
   [(Lst [1 2 3])

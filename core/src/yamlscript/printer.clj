@@ -76,6 +76,7 @@
       :Int (str val)
       :Flt (str val)
       :Bln (str val)
+      :Clj (with-out-str (clojure.core/print val))
       :Nil "nil"
       ,    (die "Unknown AST node type:" node))))
 

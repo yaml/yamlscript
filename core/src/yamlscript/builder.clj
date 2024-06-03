@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [yamlscript.debug :refer [www]]
    [yamlscript.ast :refer
-    [Bln Flt Int Lst Map Nil Str Sym Vec]]
+    [Bln Clj Flt Int Lst Map Nil Str Sym Vec]]
    [yamlscript.re :as re]
    [yamlscript.util :refer [die if-lets when-lets]]
    [yamlscript.ysreader :as ysreader]))
@@ -218,6 +218,7 @@
                :int (Int (:int node))
                :flt (Flt (:flt node))
                :bln (Bln (:bln node))
+               :clj (Clj (:clj node))
                :nil (Nil)
                (die "Don't know how to build node: " node))
         node (if anchor
