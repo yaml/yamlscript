@@ -74,6 +74,16 @@
 (defn if [cond then else]
   (if cond then else))
 
+(defn cpp-compile-file [ys-file]
+  (let [ys-file (abspath ys-file (dirname @sci/file))
+        clj-code (->
+                   ys-file
+                   slurp
+                   yamlscript.compiler/compile)
+        clj-code-plus (clojure.string/replace clj-code #"\+\+\+" "identity")
+        cpp-code (yamlscript.compiler/ferret-compile-clj clj-code-plus)]
+    cpp-code))
+
 (defn load-file [ys-file]
   (let [ys-file (abspath ys-file (dirname @sci/file))
         clj-code (->
