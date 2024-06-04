@@ -22,8 +22,58 @@
    [yamlscript.constructor]
    [yamlscript.printer]
    [yamlscript.common :as common]
-   [yamlscript.debug :refer [www #_xxx]])
+   [yamlscript.debug :refer [www #_xxx]]
+
+   [clojure.stacktrace :as stacktrace]
+   [compiler.parser :as parser]
+   [compiler.io :as io]
+   [compiler.core :as ft])
   (:refer-clojure :exclude [compile]))
+
+(defn read-clojure-string [code-string]
+  (let [ns (gensym)
+        ns-str (str ns)]
+    (create-ns ns)
+    (binding [*ns* (the-ns ns)]
+      (refer 'clojure.core)
+      (let [code-edn (read-string (str \( code-string \)))]
+        (println "klm codestring")
+        (println code-edn)
+        (-> code-edn
+          (parser/transform
+           symbol?
+           #(if (= (namespace %) ns-str)
+              (-> % name symbol)
+              %))
+          (parser/transform
+           (fn [x]
+             (and (parser/form? 'quote x)
+                  (or (= 'clojure.core/fn    (second x))
+                      (= 'clojure.core/defn  (second x))
+                      (= 'clojure.core/while (second x)))))
+           (fn [[_ s]] `'~(-> s name symbol))))))))
+
+(defn compile->cpp [form options]
+  (let [source    (ft/emit-source form options)
+        program   (ft/program-template source options)]
+    program))
+
+(defn build-solution [code-string spec-fn]
+  (compile->cpp (read-clojure-string code-string) (spec-fn)))
+
+(defn ferret-compile [code-string]
+    (let [args {:options {:input "/Users/kloimhardt/klmplay/yamlscript/ftest.clj"},
+                :arguments []}
+          {:keys [input]} (:options args)
+          spec-fn (ft/build-specs input args)
+          options (spec-fn)
+          code-edn (read-clojure-string code-string)
+          source    (ft/emit-source code-edn options)
+          program   (ft/program-template source options)]
+      program))
+
+(def ccode-string (ferret-compile "(print 333)"))
+(spit "utest.cpp" ccode-string)
 
 (defn parse-events-to-groups [events]
   (->> events
