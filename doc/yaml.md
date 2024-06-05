@@ -30,7 +30,7 @@ YAML represents the same kind of data as JSON: "mappings", "sequences" and
 * A "sequence" is an ordered collection of values.
   Sequences are also known as 'arrays', 'lists' or 'vectors' elsewhere.
 * A "scalar" is a single value, like a number, string, keyword, boolean or even
-  a null value .
+  a null value.
   Scalars are also known as 'atoms' or 'primitives' elsewhere.
 
 YAML adds just a few things to this basic data model:
@@ -46,6 +46,14 @@ YAML adds just a few things to this basic data model:
   referred to by that name elsewhere in the document using an "alias".
   * An anchor looks like `&foo`.
   * An alias looks like `*foo`.
+  * Example:
+    ```
+    first: &anchor
+      a: mapping
+      
+    second: *anchor
+    ```
+
 * A mapping key can be any "kind" of YAML node, (not just a scalar node like in
   JSON).
   * This is not commonly used either in YAML or YAMLScript, but it is completely
@@ -84,8 +92,8 @@ Example 1: A YAML stream with several syntax elements:
 # The top level node of this document is a mapping:
 # Mapping "pairs" consist of a "key" and a "value" separated by a colon.
 
-For the first pair we have a scalar key and a scalar value.
-Notice how the key is single-quoted and the value is double-quoted.
+# For the first pair we have a scalar key and a scalar value.
+# Notice how the key is single-quoted and the value is double-quoted.
 
 'first-key': "first-value"
 
