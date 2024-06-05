@@ -16,6 +16,7 @@ title: YAMLScript Documentation Index
 
 ## Language Basics
 
+* [Necessary YAML Knowledge](yaml)
 * [YAMLScript Modes](modes)
 * [Syntax Basics](basic)
 * [Variables and Functions](define)
