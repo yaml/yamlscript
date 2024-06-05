@@ -1,0 +1,96 @@
+# Ported from https://rosettacode.org/wiki/100_prisoners#Clojure
+
+--- !yamlscript/v0
+
+ns: clojure-sandbox::prisoners
+
+defn random-drawers():
+  =>: |
+    Returns a list of shuffled numbers.
+
+  ->: 100
+      range
+      shuffle
+
+defn search-50-random-drawers(prisoner-number drawers):
+  =>: |
+    Select 50 random drawers and return true if the prisoner's number was
+    found.
+
+  ->>: drawers
+       shuffle
+       take(50)
+       filter(\(%1 == prisoner-number))
+       count
+       (== 1)
+
+defn search-50-optimal-drawers(prisoner-number drawers):
+  =>: |
+    Open 50 drawers according to the agreed strategy, returning true if
+    prisoner's number was found.
+
+  loop [next-drawer prisoner-number, drawers-opened 0]:
+    if (drawers-opened == 50):
+      then: false
+      else:
+        result =: nth(drawers next-drawer)
+        if (result == prisoner-number):
+          then: true
+          else:
+            recur: result drawers-opened.inc()
+
+defn try-luck(drawers drawer-searching-function):
+  =>: |
+    Returns 1 if all prisoners find their number otherwise 0.
+
+  loop [prisoners range(100)]:
+    if not(prisoners.empty?()):
+      if prisoners.first().drawer-searching-function(drawers):
+        recur: rest(prisoners)
+        =>: 0
+      =>: 1
+
+defn simulate-100-prisoners():
+  =>: |
+    Simulates all prisoners searching the same drawers by both strategies,
+    returns map showing whether each was successful.
+
+  # Create 100 drawers with randomly ordered prisoner numbers:
+  drawers =: random-drawers()
+  =>:
+    .{:random try-luck(drawers search-50-random-drawers)
+      :optimal try-luck(drawers search-50-optimal-drawers)}
+
+defn simulate-n-runs(n):
+  =>: |
+    Simulate n runs of the 100 prisoner problem and returns a success count for
+    each search method.
+
+  loop [random-successes 0, optimal-successes 0, run-count 0]:
+    # If we've done the loop n times
+    if (n == run-count):
+      # return results
+      then:
+        .{:random-successes random-successes
+          :optimal-successes optimal-successes
+          :run-count run-count}
+
+      # Otherwise, run for another batch of prisoners
+      else:
+        next-result =: simulate-100-prisoners()
+        recur:
+          (random-successes + next-result.random)
+          (optimal-successes + next-result.optimal)
+          run-count.inc()
+
+defn main(n=5000):
+  ? .{:keys [random-successes
+             optimal-successes
+             run-count]} =
+  : simulate-n-runs: n
+
+  say: ."Probability of survival with random search:\ " +
+       float(random-successes / run-count)
+
+  say: ."Probability of survival with ordered search:\ " +
+       float(optimal-successes / run-count)
