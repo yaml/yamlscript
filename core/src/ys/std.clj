@@ -38,6 +38,9 @@
          ";;" '~fun# "->" ~args# "\n")
        (~@xs))))
 
+(defn V [x]
+  (var-get (resolve (symbol x))))
+
 ;; TODO replace with p()
 (defn www [& xs]
   (apply yamlscript.debug/www xs))
