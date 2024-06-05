@@ -72,7 +72,13 @@ endif
 	    --enable-url-protocols=https \
 	\
 	    --initialize-at-run-time=com.jcraft.jsch.PortWatcher \
-	    --trace-object-instantiation=java.net.Inet4Address \
+	    --initialize-at-run-time=org.eclipse.jgit.lib.RepositoryCache \
+	    --initialize-at-run-time=org.eclipse.jgit.lib.internal.WorkQueue \
+	    --initialize-at-run-time=org.eclipse.jgit.transport.HttpAuthMethod \
+	    --initialize-at-run-time=org.eclipse.jgit.internal.storage.file.WindowCache \
+	\
+	    --trace-object-instantiation=java.util.Random \
+	    --trace-object-instantiation=java.lang.Thread \
 	\
 	    -H:ReflectionConfigurationFiles=reflection.json \
 	    -H:+ReportExceptionStackTraces \
