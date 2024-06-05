@@ -17,8 +17,8 @@ such as:
 * Running shell commands
 * And much more...
 
-All YAMLScript code is valid YAML syntax, even though it might seem surprising
-from time to time.
+All of YAMLScript is (and must be) valid YAML syntax, even though it might seem
+surprising from time to time.
 Also all YAML config files are valid YAMLScript files and YAMLScript will treat
 them as such (no code execution), unless you explicitly tell it to do more.
 
@@ -37,7 +37,7 @@ available for you to use.
 
 Even though Clojure is a Lisp, YAMLScript code looks a lot more like Python,
 Ruby, Perl or JavaScript.
-And even though Clojure is a JVM language, YAMLScript doesn't use the JVM at
-all.
+And even though Clojure is a JVM (Java) language, YAMLScript doesn't use the JVM
+at all.
 YAMLScript is a standalone native binary, as is the `libyamlscript` shared
 library that it is used by all [YAMLScript loader libraries](loaders).

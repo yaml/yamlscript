@@ -161,7 +161,7 @@ $ ys -c program.ys
 (defn greet
   ([name times] (each [i (rng 1 times)] (say (str i ") Hello, " name "!"))))
   ([name] (greet name 1)))
-(+++ (apply main ARGS))
+(apply main ARGS)
 ```
 
 ----

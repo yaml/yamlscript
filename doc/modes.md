@@ -13,15 +13,30 @@ it's very important to know what mode you are in at any given point.
 YAMLScript has 3 modes:
 
 * Bare mode
+
+  Exactly the same as YAML 1.2 (Core Schema).
+  YAMLScript can load most existing files without executing any code.
+
 * Data mode
+
+  Very similar to bare mode, but allows you to switch to code mode.
+  All YAML syntax forms are allowed here.
+
 * Code mode
 
-The important one to learn about are data and code modes.
-To use YAMLScript effectively you'll need to be comfortable with switching back
-and forth between data the two.
+  Plain (unquoted) scalars are treated as code expressions.
+  YAML's flow mappings (`{}`), flow sequences (`[]`) and block sequences (`-`)
+  are not allowed in code mode.
+  YAMLScript "code" is  written using block mappings (`k: v`), plain scalars,
+  quoted scalars (single and double) and literal (`|`) scalars.
+  Folded scalars (`>`) are also disallowed in code mode.
 
-Bare mode is the default when you haven't added a `!yamlscript` tag to the
-start of a YAML document.
+The most important ones to learn about are data and code modes.
+To use YAMLScript effectively you'll need to be comfortable with switching back
+and forth between the two.
+
+Bare mode is the default when you haven't added a `!yamlscript/…` tag to the
+start of a YAMLScript document.
 It means that everything in the file is data; code can never be used.
 This is how we can make sure that existing YAML files are valid YAMLScript.
 
@@ -65,7 +80,7 @@ Error: Sequences (block and flow) not allowed in code mode
 ```
 
 Oops.
-Looks like we need to switching to data mode in there.
+Looks like we need to switch to data mode in there.
 
 
 ## Switching Modes
