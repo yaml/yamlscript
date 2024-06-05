@@ -18,7 +18,7 @@ YAMLScript has 3 modes:
 
 The important one to learn about are data and code modes.
 To use YAMLScript effectively you'll need to be comfortable with switching back
-and forth between data the two.
+and forth between the two.
 
 Bare mode is the default when you haven't added a `!yamlscript` tag to the
 start of a YAML document.
