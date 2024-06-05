@@ -213,4 +213,14 @@ say: .'foo' * 3
 Now the right-hand side is an unquoted scalar whose value is `.'foo' * 3`.
 YAMLScript will ignore the leading `.` and evaluate the expression as expected.
 
-> TODO: This section is incomplete.
+This `.` escaping character can be used anywhere that you want a scalar to be
+"plain" (unquoted) but it happens to start with a character that happens to be
+YAML syntax.
+
+Some examples:
+
+```yaml
+# Here [3 4 5] is a YAMLScript vector, not a YAML sequence.
+# Again we make the entire RHS a plain scalar by starting with a `.`.
+say: .[3 4 5].reverse()
+```
