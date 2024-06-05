@@ -1,7 +1,10 @@
 include ../common/base.mk
-include ../common/docker.mk
+include $(ROOT)/common/docker.mk
 
-build:: node_modules main
+DOC_FILES := $(shell cd $(ROOT)/doc && echo *.md)
+DOC_FILES := $(DOC_FILES:%=src/doc/%) src/doc/doc.json
+
+build:: node_modules main doc
 ifdef DOCKERENV
 	source ~/.bashrc && yarn build
 else
@@ -30,7 +33,7 @@ test::
 
 clean::
 	[[ -h node_modules ]] && $(RM) node_modules || true
-	$(RM) -r build/ gh-pages/
+	$(RM) -r build/ gh-pages/ src/doc
 	$(RM) main
 	$(RM) yamlscript-1920x1080.png
 
@@ -46,6 +49,17 @@ endif
 
 main:
 	ln -s .. main
+
+doc: $(DOC_FILES)
+
+src/doc/%: ../doc/% src/doc
+	ln -fs ../../$< $@
+
+src/doc/%: % src/doc
+	ln -fs ../../$< $@
+
+src/doc:
+	mkdir -p $@
 
 gh-pages:
 	git branch --track $@ origin/$@ 2>/dev/null || true
