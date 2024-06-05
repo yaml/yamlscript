@@ -60,7 +60,7 @@
           [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
           [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
         (die "Form after 'then' must be 'else'"))
-        [lhs rhs])))
+      [lhs rhs])))
 
 ;;-----------------------------------------------------------------------------
 ;; require
