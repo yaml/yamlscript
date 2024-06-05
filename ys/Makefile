@@ -71,6 +71,9 @@ endif
 	    --enable-preview \
 	    --enable-url-protocols=https \
 	\
+	    --initialize-at-run-time=com.jcraft.jsch.PortWatcher \
+	    --trace-object-instantiation=java.net.Inet4Address \
+	\
 	    -H:ReflectionConfigurationFiles=reflection.json \
 	    -H:+ReportExceptionStackTraces \
 	    -H:IncludeResources=SCI_VERSION \
