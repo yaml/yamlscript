@@ -15,8 +15,12 @@ BINDINGS := \
     perl-alien \
     python \
     raku \
-    ruby \
     rust \
+
+# Allow skipping Ruby bindings for now.
+ifndef YS_SKIP_RUBY
+BINDINGS += ruby
+endif
 
 DIRS := \
     core \
