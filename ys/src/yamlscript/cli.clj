@@ -75,6 +75,10 @@
     "Compile YAMLScript to Clojure"]
    ["-b" "--binary"
     "Compile to a native binary executable"]
+   [nil "--cpp"
+    "Compile to C++ code"]
+   [nil "--cpp-bin"
+    "Compile to C++ binary"]
 
    ["-p" "--print"
     "Print the result of --run in code mode"]
@@ -196,6 +200,22 @@
                        "YS_CODE" (or code "")}}
       cmd "--compile-to-binary"
       in-file out-file yamlscript-version)))
+
+(defn do-cpp [opts args]
+  (let [[cmd path] (get-ys-sh-path)
+        [in-file code] (get-binary-info opts args)
+        out-file (some identity
+                   [(:output opts)
+                    (and in-file (str/replace in-file #"\.ys$" ".cpp"))])
+        path (if (re-find #"-openjdk-" path) "ys" path)]
+    (flush)
+    (exec {:extra-env {"YS_BIN" path
+                       "YS_CODE" (or code "")}}
+      cmd "--compile-to-cpp"
+      in-file out-file yamlscript-version)))
+
+(defn do-cpp-bin [opts args]
+  (err "cpp-bin not implemented yet."))
 
 (defn do-version []
   (println (str "YAMLScript " yamlscript-version)))
@@ -459,6 +479,8 @@ Options:
     (:install opts) (do-install opts args)
     (:upgrade opts) (do-upgrade opts args)
     (:binary opts) (do-binary opts args)
+    (:cpp opts) (do-cpp opts args)
+    (:cpp-bin opts) (do-cpp-bin opts args)
     (:run opts) (do-run opts args argv)
     (:compile opts) (do-compile opts args)
     (:load opts) (do-run opts args argv)

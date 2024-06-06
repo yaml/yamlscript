@@ -70,6 +70,51 @@ do-compile-to-binary() (
   rm -fr "$dir"
 )
 
+do-compile-to-cpp() (
+  # set -x
+  in_file=${1-}
+  out_file=${2-}
+  ys_version=${3-}
+  [[ $in_file &&
+     $out_file &&
+     $ys_version &&
+     ( $in_file == NO-NAME.ys || -f $in_file )
+   ]] ||
+    die "Usage: --compile-to-cpp <in-file> <out-file> <ys-version>"
+  [[ $in_file == *.ys ]] ||
+    die "File '$in_file' must have .ys extension"
+
+  in_base=$(cd -P -- "$(dirname -- "$in_file")" && pwd -P)
+  in_name=$(basename -- "$in_file")
+  in_path=$in_base/$in_name
+
+  out_base=$(cd -P -- "$(dirname -- "$out_file")" && pwd -P)
+  out_name=$(basename -- "$out_file")
+  out_path=$out_base/${out_name%.ys}
+
+  [[ $in_file == NO-NAME.ys ]] && in_file='-e'
+  [[ $out_file == NO-NAME ]] && out_file='./NO-NAME'
+
+  assert-lein
+  assert-graalvm
+  assert-yamlscript-core "$ys_version"
+
+  dir=$(mktemp -d)
+  (
+    say "Compiling YAMLScript '$in_file' to '$out_file' C++ code"
+    say "Setting up build env in '$dir'"
+    cd "$dir" || exit
+    write-makefile-cpp
+    write-profile
+    mkdir -p src
+    write-program-clj-cpp "$in_path" "$in_file"
+    make program.cpp
+    cp src/program.cpp "$out_path"
+    say "Compiled YAMLScript '$in_file' to '$out_file' C++ code file"
+  )
+  rm -fr "$dir"
+)
+
 setup() {
   [[ ${1-} == --* ]] ||
     die "Usage: --<command> [args...]"
@@ -160,6 +205,48 @@ $program
 EOF
 )
 
+write-program-clj-cpp() (
+  in_path=$1 in_file=$2
+
+  if [[ $in_path == */NO-NAME.ys ]]; then
+    program=$(
+      "$YS_BIN" --compile --eval="$YS_CODE" | sed '$d'
+    )
+  else
+    program=$(
+      "$YS_BIN" --compile "$in_path" | sed '$d'
+    )
+  fi
+
+  n=$'\n'
+  [[ $program =~ \(defn[\ $n]+main[\ $n] ]] ||
+    die "Could not find main function in '$in_file'"
+
+  cat <<EOF > src/program.clj
+;(ns program (:gen-class) (:refer-clojure :exclude [print]))
+(ns program (:gen-class))
+(use 'clojure.core)
+(use 'ys.std)
+(def ^:dynamic ARGS (vector))
+(def ^:dynamic ENV {})
+;; ------------------------------------------------------------------------
+
+$program
+
+;; ------------------------------------------------------------------------
+(defn -main [& args]
+  (let [argv (vec
+              (map
+                #(if (re-matches #"\d+" %)
+                  (parse-long %) %)
+                  args))]
+    (apply main argv)))
+EOF
+  printf '%.0s=' {1..100}; echo
+  cat src/program.clj
+  printf '%.0s=' {1..100}; echo
+)
+
 write-profile() (
   cat > project.clj <<EOF
 (defproject program "ys-binary"
@@ -237,6 +324,28 @@ clean:
 EOF
 )
 
+write-makefile-cpp() (
+  cat > Makefile <<'EOF'
+SHELL := bash
+
+export PATH := /tmp/graalvm-oracle-21/bin:$(PATH)
+
+FERRET := /tmp/ferret.jar
+
+default:
+
+program.cpp: src/program.clj $(FERRET)
+	java -jar $(FERRET) -i $<
+
+$(FERRET):
+	curl -sSL https://ferret-lang.org/builds/ferret.jar -o $@
+
+clean:
+	$(RM) -r target reports
+	$(RM) program
+EOF
+)
+
 assert-yamlscript-core() (
   ys_version=$1
   # XXX /tmp/yamlscript/.m2 not fully working yet:
@@ -247,7 +356,7 @@ assert-yamlscript-core() (
     repo_path=/tmp/yamlscript/$ys_version
     assert-yamlscript-repo "$repo_path"
     (
-      set -x
+      # set -x
       make -C "$repo_path/core" install
     )
   fi
