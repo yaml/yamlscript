@@ -3,7 +3,7 @@ SHELL := bash
 ROOT := $(shell \
 	cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 
-YAMLSCRIPT_VERSION := 0.1.59
+YAMLSCRIPT_VERSION := 0.1.60
 
 YS := $(wildcard ys)
 LIBYAMLSCRIPT := $(firstword $(wildcard libyamlscript.*))

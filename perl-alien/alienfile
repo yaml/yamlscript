@@ -1,6 +1,6 @@
 use alienfile;
 
-my $libyamlscript_version = '0.1.59';
+my $libyamlscript_version = '0.1.60';
 
 # Always use a share install
 # We cannot use a system install, because we need to know exactly

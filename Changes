@@ -1,4 +1,14 @@
 
+- version: 0.1.60
+  date:    Thu 06 Jun 2024 12:09:19 PM BST
+  changes:
+  - core: Refer clojure.core/file-seq
+  - core: Add != operator
+  - core: Add support for then/else transform in if
+  - std: Add std/V to gain access to weird clojure symbols
+  - sample: New and updated RosettaCode solutions
+  - core: Support !clj scalars for raw Clojure code
+
 - version: 0.1.59
   date:    Wed 22 May 2024 02:56:59 PM EDT
   changes:

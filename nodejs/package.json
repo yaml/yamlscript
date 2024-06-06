@@ -1,6 +1,6 @@
 {
   "name": "@yaml/yamlscript",
-  "version": "0.1.59",
+  "version": "0.1.60",
   "description": "Program in YAML",
   "main": "lib/yamlscript/index.js",
   "author": "Ingy döt Net",

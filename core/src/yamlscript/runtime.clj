@@ -30,7 +30,7 @@
     :refer [abspath
             get-yspath]]))
 
-(def ys-version "0.1.59")
+(def ys-version "0.1.60")
 
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))
