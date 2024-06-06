@@ -7,6 +7,7 @@ set -euo pipefail
 yamlscript_version=0.1.59
 
 main() (
+
   setup "$@"
 
   "do-$command" "${arguments[@]}"
@@ -71,7 +72,6 @@ do-compile-to-binary() (
 )
 
 do-compile-to-cpp() (
-  # set -x
   in_file=${1-}
   out_file=${2-}
   ys_version=${3-}
@@ -108,9 +108,13 @@ do-compile-to-cpp() (
     write-profile
     mkdir -p src
     write-program-clj-cpp "$in_path" "$in_file"
-    make program.cpp
+    set -x
+    make src/program.cpp
     cp src/program.cpp "$out_path"
     say "Compiled YAMLScript '$in_file' to '$out_file' C++ code file"
+    make program
+    cp program "${out_path%.cpp}"
+    say "Compiled C++ '$out_file' to '${out_file%.cpp}' executable"
   )
   rm -fr "$dir"
 )
@@ -165,6 +169,7 @@ setup() {
 
   export JAVA_HOME=$graalvm_home
   export PATH=$lein_path:$graalvm_home/bin:$PATH
+  export ROOT=$PWD
 }
 
 write-program-clj() (
@@ -224,16 +229,22 @@ write-program-clj-cpp() (
 
   cat <<EOF > src/program.clj
 ;(ns program (:gen-class) (:refer-clojure :exclude [print]))
-(ns program (:gen-class))
-(use 'clojure.core)
-(use 'ys.std)
-(def ^:dynamic ARGS (vector))
-(def ^:dynamic ENV {})
+;(ns program (:gen-class))
+;(use 'clojure.core)
+;(use 'ys.std)
+;(def ^:dynamic ARGS (vector))
+;(def ^:dynamic ENV {})
 ;; ------------------------------------------------------------------------
 
 $program
 
 ;; ------------------------------------------------------------------------
+(defn -main [& args]
+  (println "in -main")
+  (apply main args))
+
+;; DISABLED:
+#_
 (defn -main [& args]
   (let [argv (vec
               (map
@@ -328,14 +339,20 @@ write-makefile-cpp() (
   cat > Makefile <<'EOF'
 SHELL := bash
 
+CP := $(ROOT)/ys/target/uberjar/yamlscript.cli-0.1.59-SNAPSHOT-standalone.jar
+
 export PATH := /tmp/graalvm-oracle-21/bin:$(PATH)
 
 FERRET := /tmp/ferret.jar
 
 default:
 
-program.cpp: src/program.clj $(FERRET)
-	java -jar $(FERRET) -i $<
+src/program.cpp: src/program.clj $(FERRET)
+	java -cp $(CP) -jar $(FERRET) -i $<
+
+program: src/program.cpp
+	g++ -std=c++11 -pthread $<
+	mv a.out $@
 
 $(FERRET):
 	curl -sSL https://ferret-lang.org/builds/ferret.jar -o $@
