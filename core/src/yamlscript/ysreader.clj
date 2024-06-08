@@ -45,7 +45,9 @@
   (re-matches re/dotn (str token)))
 
 (defn is-operator? [token]
-  (re-matches re/osym (str token)))
+  (let [t (str token)]
+    (and (re-matches re/osym t)
+      (not= t "&"))))
 
 (defn is-quote? [token]
   (re-matches re/quot (str token)))
@@ -312,6 +314,7 @@
                           [(Tup [(Tok token) value]) tokens])
     (is-alias-symbol? token) [(Lst [(Sym '_**) (Qts (subs token 1))]) tokens]
     (is-operator? token) [(Sym token) tokens]
+    (= "&" (str token)) [(Sym token) tokens]
     (is-string? token) [(read-dq-string token) tokens]
     (is-single? token) [(read-sq-string token) tokens]
     (is-keyword? token) [(Key (subs token 1)) tokens]
