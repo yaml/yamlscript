@@ -74,17 +74,22 @@
 (defn if [cond then else]
   (if cond then else))
 
-(defn load-file [ys-file]
-  (let [ys-file (abspath ys-file (dirname @sci/file))
-        clj-code (->
-                   ys-file
-                   slurp
-                   yamlscript.compiler/compile)
-        ret (sci/binding
-             [sci/file ys-file
-              FILE ys-file]
-              (sci/eval-string+ @sci-ctx clj-code))]
-    (:val ret)))
+(defn load-file
+  ([ys-file]
+   (load-file ys-file identity))
+
+  ([ys-file transform]
+   (let [ys-file (abspath ys-file (dirname @sci/file))
+         clj-code (->
+                    ys-file
+                    slurp
+                    yamlscript.compiler/compile
+                    transform)
+         ret (sci/binding
+              [sci/file ys-file
+               FILE ys-file]
+               (sci/eval-string+ @sci-ctx clj-code))]
+     (:val ret))))
 
 (defn clj-load-file [clj-file]
   (let [clj-file (abspath clj-file (dirname @sci/file))

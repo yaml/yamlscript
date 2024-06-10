@@ -1,0 +1,21 @@
+!yamlscript/v0
+
+ys-file-content =: atom("")
+
+defn main(ys-file & args):
+  reset! ys-file-content: slurp(ys-file)
+  load: ys-file strip-main-call
+
+  while true:
+    new-ys-content =: slurp(ys-file)
+    when (new-ys-content != ys-file-content.deref()):
+      try:
+        do:
+          clojure =: ys/compile(new-ys-content)
+          reset! ys-file-content: new-ys-content
+          load: ys-file strip-main-call
+        catch Exception e:
+    Thread/sleep: 300
+
+defn strip-main-call(code):
+  str/replace code: /\(\+\+\+.*/ ""
