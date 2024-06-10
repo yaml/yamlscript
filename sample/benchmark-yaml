@@ -13,7 +13,7 @@
 #
 # Install the `ys` command in /tmp and add to PATH with:
 #
-#   $ source <(curl -sSL yamlscript.org/try-ys)
+#   $ source <(curl -sSL https://yamlscript.org/try-ys)
 #   Installed /tmp/yamlscript-try-ys-2y4AWh9OP4/bin/ys - version 0.1.45
 #   $ which ys
 #   /tmp/yamlscript-try-ys-2y4AWh9OP4/bin/ys

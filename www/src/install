@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+[ -z "$BASH" ] && {
+  echo "This script must be run with 'bash' instead of '$0'." >&2
+  exit 1
+}
+
 [[ ${DEBUG-} == 1 ]] && set -x
 
 set -e -u -o pipefail
