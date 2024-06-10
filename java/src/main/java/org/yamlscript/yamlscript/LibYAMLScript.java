@@ -54,7 +54,7 @@ public class LibYAMLScript {
 
         throw new RuntimeException(
             "Shared library file " + name + " not found\n" +
-            "Try: curl -sSL yamlscript.org/install | VERSION=" +
+            "Try: curl -sSL https://yamlscript.org/install | VERSION=" +
             YAMLScript.YAMLSCRIPT_VERSION + " LIB=1 bash\n" +
             "See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"
         );
