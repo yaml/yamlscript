@@ -187,6 +187,10 @@
 (defn exec [cmd & xs]
   (apply process/exec cmd xs))
 
+(defn exit
+  ([] (exit 0))
+  ([rc] (System/exit rc)))
+
 (defn fs-d [p] (fs/directory? p))
 (defn fs-e [p] (fs/exists? p))
 (defn fs-f [p] (fs/regular-file? p))
