@@ -11,7 +11,7 @@ as JSON.
 ```text
 $ ys --help
 
-ys - The YAMLScript (YS) Command Line Tool - v0.1.60
+ys - The YAMLScript (YS) Command Line Tool - v0.1.61
 
 Usage: ys [<option...>] [<file>]
 

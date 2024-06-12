@@ -25,7 +25,7 @@ Reminder, here's the quick way to install the latest version:
 $ curl https://yamlscript.org/install | PREFIX=~/.yamlscript bash
 $ export PATH=$HOME/.yamlscript/bin:$PATH
 $ ys --version
-YAMLScript v0.1.60
+YAMLScript v0.1.61
 ```
 
 The best first command to run is `ys --help`:

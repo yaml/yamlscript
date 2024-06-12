@@ -1,4 +1,13 @@
 
+- version: 0.1.61
+  date:    Wed 12 Jun 2024 11:54:55 AM EDT
+  changes:
+  - make: Upgrade GraalVM to version 22 (from 21)
+  - core: Support `&` in defn args
+  - install: Check if shell used is not Bash
+  - core: Resolve plain :foo to :key in data mode
+  - std: Add an `exit` defn for System/exit
+
 - version: 0.1.60
   date:    Thu 06 Jun 2024 12:09:19 PM BST
   changes:

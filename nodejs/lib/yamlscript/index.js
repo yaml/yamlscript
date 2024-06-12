@@ -1,4 +1,4 @@
-const yamlscriptVersion = '0.1.60';
+const yamlscriptVersion = '0.1.61';
 
 const ffi = require('ffi-napi');
 const ref = require('ref-napi');
