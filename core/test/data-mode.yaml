@@ -70,7 +70,7 @@
       - False
       - :string
   print: |
-    {"foo" [-42 {"bar" 3.1415, "baz" [true false ":string"]}]}
+    {"foo" [-42 {"bar" 3.1415, "baz" [true false :string]}]}
 
 
 - name: Empty YAMLScript File

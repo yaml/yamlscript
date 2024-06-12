@@ -227,6 +227,7 @@
 (def re-bool #"(?:true|True|TRUE|false|False|FALSE)")
 (def re-null #"(?:|~|null|Null|NULL)")
 (def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
+(def re-keyword (re/re #":$symw"))
 
 (defn resolve-plain-scalar [node]
   (let [val (:= node)]
@@ -237,6 +238,7 @@
       (re-matches re-float val) :flt
       (re-matches re-bool val) :bln
       (re-matches re-null val) :nil
+      (re-matches re-keyword val) :key
       :else :str)))
 
 (defn resolve-data-scalar [node]
