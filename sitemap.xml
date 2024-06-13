@@ -619,17 +619,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/gotchas/</loc>
-        
-          <lastmod>2024-06-13T18:29:46.224Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/yaml/</loc>
         
           <lastmod>2024-06-13T18:29:46.224Z</lastmod>
@@ -655,6 +644,17 @@
         <loc>https://yamlscript.org/doc/modes/</loc>
         
           <lastmod>2024-06-13T18:29:46.228Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/gotchas/</loc>
+        
+          <lastmod>2024-06-13T19:36:10.416Z</lastmod>
         
         
         
