@@ -945,3 +945,13 @@
     foo: x.drop(3 _).take(5).nth(3)
   clojure: |
     (foo (__ x (list drop 3 '_) (list +take 5) (list +nth 3)))
+
+
+- name: Bug fix for bare '$' in literal with interpolation
+  yamlscript: |
+    !yamlscript/v0
+    say: |
+      $ $x
+      $ $y
+  clojure: |
+    (say (str "$ " x "\n$ " y "\n"))
