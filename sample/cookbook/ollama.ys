@@ -1,0 +1,158 @@
+#!/usr/bin/env ys-0
+
+# *** ollama.ys ***
+#
+# A YAMLScript program to query LLMs installed locally on your laptop!
+
+# Usage Instructions:
+#
+# First install `ollamo` and `ys` (super easy):
+# * https://ollama.com/download
+# * https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
+#   $ curl https://yamlscript.org/install | bash
+# * Optionally install `prettier` for results in 80 columns:
+#   $ npm install -g prettier
+#
+# Then install 1 or more ollama models:
+# $ ollama pull <model-name-1>
+# $ ollama pull <model-name-2>
+# etc...
+#
+# $ ys ollama.ys --help
+# $ ys ollama.ys llama3 'Tell me a joke'
+
+
+# The local ollama API server:
+ollama-uri =:
+  ENV.'OLLAMA_URI' ||
+  'http://localhost:11434/api'
+
+# Main entry point function:
+defn main(model=nil query=nil):
+  +[model query] =: init(model query)
+  print: "$model: "
+  answer =: prompt(query model)
+  say: answer.format()
+
+# Commandline usage:
+defn usage():
+  file =: FILE.str/replace(/.*\/(.*)/ "$1")
+  say: |
+    $ $file                  - Random model; prompt for query
+    $ $file <model>          - Specific model; prompt for query
+    $ $file <model> <query>  - Specific model; specific query
+    $ LLM_TEMP=0.2 $file …   - With environment variable options
+  exit: 0
+
+# Call the ollama API server with a model and query:
+defn prompt(query model):
+  request =::
+    :headers:
+      :content-type: application-json
+    :body::
+      json/dump::
+        :prompt:: query
+        :model:: model
+        :stream: false
+        :options:: options()
+
+  response =:
+    http/post "$ollama-uri/generate": request
+
+  when (response.status != 200): die(response)
+
+  =>:
+    response
+      .body
+      .json/load()
+      .response
+
+# Initial program setup:
+defn init(model query):
+  when model.in(['--help' '-h']):
+    usage()
+
+  when sh('which ollama').out.empty?():
+    die: "The 'ollama' software is required"
+
+  model =: get-model(model)
+  query =: query || get-query()
+
+  vector: model query
+
+# Pick a random model from ones installed if user didn't specify one.
+# Verify the specified one if they did.
+defn get-model(model):
+  models =:
+    sh('ollama list').out
+      .str/split-lines().drop(1)
+      .map(\(str/split %1 /:/) _)
+      .map(first _)
+
+  when-not seq(models):
+    die: "No ollama models found to use. Try 'ollama pull llama3'."
+
+  model =: model || models.rand-nth()
+
+  when-not some(\(%1 = model) models):
+    die: "'$model' is not a valid model"
+
+  =>: model
+
+# Ask user for a query if not provided in command:
+defn get-query():
+  say: "What's up?"
+  loop []:
+    print: "\n>>> "
+    q =: read-line()
+    if empty?(q): recur() q
+
+# Format response output:
+defn format(string):
+  string =: string.str/triml().prettier()
+
+  if (re-find /\n/ string):
+    +"\n$string"
+    string
+
+# Refomat to 80 columns if `prettier` installed:
+defn prettier(s):
+  if sh('which prettier').out.empty?():
+    then: s
+    else:
+      cmd =:: prettier --stdin-filepath=x.md
+                       --print-width=80
+                       --prose-wrap=always
+      =>: sh(cmd {:in s}).out
+
+# ollama options to use:
+defn options()::
+  options:
+    num_keep: 5
+    seed: 42
+    num_predict: 100
+    top_k: 20
+    top_p: 0.9
+    tfs_z: 0.5
+    typical_p: 0.7
+    repeat_last_n: 33
+    temperature:: num(ENV.'LLM_TEMP' || 0.8)
+    repeat_penalty: 1.2
+    presence_penalty: 1.5
+    frequency_penalty: 1.0
+    mirostat: 1
+    mirostat_tau: 0.8
+    mirostat_eta: 0.6
+    penalize_newline: true
+    stop: ["\n", 'user:']
+    numa: false
+    num_ctx: 1024
+    num_batch: 2
+    num_gpu: 1
+    main_gpu: 0
+    low_vram: false
+    f16_kv: true
+    vocab_only: false
+    use_mmap: true
+    use_mlock: false
+    num_thread: 8
