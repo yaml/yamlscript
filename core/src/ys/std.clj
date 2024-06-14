@@ -227,6 +227,12 @@
       (fn? a) (filter a b)
       :else (die "Invalid args for grep"))))
 
+(defn has [coll x]
+  (some (set coll) [x]))
+
+(defn in [x coll]
+  (some (set coll) [x]))
+
 (defn join
   ([xs] (join "" xs))
   ([sep seq]
