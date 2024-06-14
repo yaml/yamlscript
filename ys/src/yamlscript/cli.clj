@@ -469,7 +469,9 @@ Options:
     :else (do-default opts args argv help)))
 
 (defn -main [& args]
-  (let [[args argv] (split-with #(not= "--" %1) args)
+  (let [[args argv] (if (and (seq args) (not (re-find #"^-" (first args))))
+                      [[(first args)] (cons "--" (rest args))]
+                      (split-with #(not= "--" %1) args))
         options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
