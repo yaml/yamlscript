@@ -61,7 +61,7 @@ vp =: '0\.[01]\.[0-9]+'
     file:
     - ReadMe.md
     - common/release.md
-    - www/src/doc/ys.md
+    - doc/ys.md
     - www/src/index.md
     - www/src/posts/advent-2023/dec-05.md
     - www/src/posts/advent-2023/dec-07.md
