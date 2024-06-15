@@ -92,6 +92,17 @@
         (die "Form after 'then' must be 'else'"))
       [lhs rhs])))
 
+(defn transform_catch [lhs rhs]
+  (let [lhs (cond
+              (= lhs (Sym 'catch))
+              [lhs (Sym 'Exception) (Sym 'e)]
+              ,
+              (= (count lhs) 2)
+              [(first lhs) (Sym 'Exception) (second lhs)]
+              ,
+              :else lhs)]
+    [lhs rhs]))
+
 ;;-----------------------------------------------------------------------------
 ;; require
 ;;-----------------------------------------------------------------------------

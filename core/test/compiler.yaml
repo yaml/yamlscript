@@ -1039,3 +1039,25 @@
           a
   clojure: |
     (def a (loop [] (let [a (read-line)] (if (empty? a) (recur) a))))
+
+
+- name: Allow catch with no arguments
+  yamlscript: |
+    !yamlscript/v0
+    try:
+      1:
+      catch:
+        (println "Error")
+  clojure: |
+    (try (1) (catch Exception e (println "Error")))
+
+
+- name: Allow catch with one argument
+  yamlscript: |
+    !yamlscript/v0
+    try:
+      1:
+      catch err:
+        (println "Error")
+  clojure: |
+    (try (1) (catch Exception err (println "Error")))

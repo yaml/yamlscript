@@ -110,4 +110,11 @@
 (comment
   (compile "!yamlscript/v0\na .=: b.c()")
   (compile "!yamlscript/v0\na .=: b().c")
+  (compile "
+!yamlscript/v0
+try:
+  1:
+  catch Exception e:
+    say: \"Error\"
+")
   )
