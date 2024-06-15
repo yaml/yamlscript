@@ -1026,3 +1026,16 @@
       =>: b
   clojure: |
     (defn a [] (let [b (__ b (list c) 'd)] b))
+
+
+- name: Loop without bindings
+  yamlscript: |
+    !yamlscript/v0
+    a =:
+      loop:
+        a =: read-line()
+        if empty?(a):
+          recur()
+          a
+  clojure: |
+    (def a (loop [] (let [a (read-line)] (if (empty? a) (recur) a))))

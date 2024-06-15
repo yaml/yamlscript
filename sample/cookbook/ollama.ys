@@ -102,7 +102,7 @@ defn get-model(model):
 # Ask user for a query if not provided in command:
 defn get-query():
   say: "What's up?"
-  loop []:
+  loop:
     print: "\n>>> "
     q =: read-line()
     if empty?(q): recur() q
