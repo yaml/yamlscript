@@ -70,7 +70,11 @@
                   (Lst [op b rhs]))]
         [lhs rhs]))))
 
-#_(every? :Lst '({:Lst []} {:Lst [{:Sym a}]} {:Lst [{:Sym a} {:Sym b}]}))
+(defn transform_loop [lhs rhs]
+  (let [lhs (if (= lhs (Sym 'loop))
+              [lhs (Vec [])]
+              lhs)]
+    [lhs rhs]))
 
 (defn transform_if [lhs rhs]
   (when-lets
