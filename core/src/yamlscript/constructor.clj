@@ -203,8 +203,6 @@
                 vec))]
         (construct-pairs {:pairs (mapcat identity rest)} ctx)))]])
 
-(mapcat identity [{:Sym 'b} {:Lst [{:Sym 'c} {:Sym 'd}]}])
-
 (defn check-let-bindings [pairs ctx]
   (let [[lets rest]
         (map vec

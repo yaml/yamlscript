@@ -108,5 +108,6 @@
     (apply str)))
 
 (comment
-  www
+  (compile "!yamlscript/v0\na .=: b.c()")
+  (compile "!yamlscript/v0\na .=: b().c")
   )
