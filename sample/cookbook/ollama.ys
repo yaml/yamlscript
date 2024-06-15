@@ -110,8 +110,9 @@ defn get-query():
 # Format response output:
 defn format(string):
   string .=: str/triml().prettier()
+            .str/trimr()
 
-  if (re-find /\n/ string):
+  if (string =~ /\n/):
     +"\n$string"
     string
 
