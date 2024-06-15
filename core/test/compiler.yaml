@@ -971,3 +971,58 @@
       $ $y
   clojure: |
     (say (str "$ " x "\n$ " y "\n"))
+
+
+- name: Support for let operators
+  yamlscript: |
+    !yamlscript/v0
+    defn a():
+      x =: nil
+      b ||=: 1
+      c +=: 2
+      d *=: 3
+      e -=: 4
+      f /=: 5
+      =>: b + c + d + e + f
+  clojure: |
+    (defn
+      a
+      []
+      (let
+       [x nil b (or b 1) c (+_ c 2) d (*_ d 3) e (- e 4) f (/ f 5)]
+       (+_ b c d e f)))
+
+
+- name: Support the `.=` let operator
+  yamlscript: |
+    !yamlscript/v0
+    defn a():
+      b .=: c
+      d .=: e.f(g)
+      =>: b + d
+  clojure: |
+    (defn a [] (let [b (__ b c) d (__ d e (list f g))] (+_ b d)))
+
+
+- name: Support ops with def (like let)
+  yamlscript: |
+    !yamlscript/v0
+    a =: 1
+    a +=: 2
+    a .=: b
+    a .=: c.d(e)
+  clojure: |
+    (def a 1)
+    (def a (+_ a 2))
+    (def a (__ a b))
+    (def a (__ a c (list d e)))
+
+
+- name: Dot op when first arg is function call
+  yamlscript: |
+    !yamlscript/v0
+    defn a():
+      b .=: c().d
+      =>: b
+  clojure: |
+    (defn a [] (let [b (__ b (list c) 'd)] b))

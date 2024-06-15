@@ -25,7 +25,7 @@
 # The local ollama API server:
 ollama-uri =:
   ENV.'OLLAMA_URI' ||
-  'http://localhost:11434/api'
+    'http://localhost:11434/api'
 
 # Main entry point function:
 defn main(model=nil query=nil):
@@ -76,7 +76,7 @@ defn init(model query):
     die: "The 'ollama' software is required"
 
   model =: get-model(model)
-  query =: query || get-query()
+  query ||=: get-query()
 
   vector: model query
 
@@ -92,7 +92,7 @@ defn get-model(model):
   when-not seq(models):
     die: "No ollama models found to use. Try 'ollama pull llama3'."
 
-  model =: model || models.rand-nth()
+  model ||=: models.rand-nth()
 
   when-not some(\(%1 = model) models):
     die: "'$model' is not a valid model"
@@ -109,7 +109,7 @@ defn get-query():
 
 # Format response output:
 defn format(string):
-  string =: string.str/triml().prettier()
+  string .=: str/triml().prettier()
 
   if (re-find /\n/ string):
     +"\n$string"

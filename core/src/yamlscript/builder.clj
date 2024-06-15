@@ -129,8 +129,12 @@
           (optimize-ys-expression exp))))))
 
 (defn build-def [{node :def}]
-  [(Sym "def")
-   (Sym (str/replace node #"\ +=$" ""))])
+  (if-lets [m (re-matches re/defk node)
+            v [(Sym "def")
+               (Sym (m 1))]]
+    (if (empty? (m 2))
+      v
+      (conj v (Sym (m 2))))))
 
 (defn build-map [node]
   (Map (map build-node (:map node))))
