@@ -265,7 +265,7 @@ Test your new `ys` installation by running:
 ```text
 $ ys --help
 
-ys - The YAMLScript (YS) Command Line Tool - v0.1.61
+ys - The YAMLScript (YS) Command Line Tool - v0.1.62
 
 Usage: ys [<option...>] [<file>]
 
@@ -310,7 +310,7 @@ or:
 
 ```text
 $ ys --version
-YAMLScript 0.1.61
+YAMLScript 0.1.62
 ```
 
 
@@ -339,9 +339,9 @@ For Python you would do:
 
 ```bash
 $ pip install yamlscript
-Successfully installed yamlscript-0.1.61
-$ curl https://yamlscript.org/install | VERSION=0.1.61 install
-Installed ~/.local/lib/libyamlscript.so - version 0.1.61
+Successfully installed yamlscript-0.1.62
+$ curl https://yamlscript.org/install | VERSION=0.1.62 install
+Installed ~/.local/lib/libyamlscript.so - version 0.1.62
 ```
 
 For some other language, use that language's library installer.

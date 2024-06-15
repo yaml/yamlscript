@@ -1,4 +1,19 @@
 
+- version: 0.1.62
+  date:    Sat 15 Jun 2024 01:47:13 PM EDT
+  changes:
+  - doc: Move doc files from www/src/doc/ to doc/
+  - doc: New pages /yaml and /gotcha
+  - core: Fix bug when $ alone in interpolated string
+  - core: Support + escaping like . escaping
+  - release: Bug fix in .version.sh
+  - ys: When file name is first, args go to file
+  - std: Add `in` and `has` functions
+  - sample: Add ollama.ys local LLM query utility
+  - core: Support ||= .= += -= *= /= operators
+  - core: Allow loop with no bindings (implies [])
+  - core: Support 'catch:_…' and 'catch e:_…'
+
 - version: 0.1.61
   date:    Wed 12 Jun 2024 11:54:55 AM EDT
   changes:
