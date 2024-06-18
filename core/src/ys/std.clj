@@ -329,6 +329,13 @@
 (defn sleep [s]
   (Thread/sleep (int (* 1000 s))))
 
+(defn split
+  ([s] (clojure.string/split s #""))
+  ([s r]
+    (let [[s r] (if (= java.util.regex.Pattern (type s)) [r s] [s r])
+          r (if (string? r) (re-pattern r) r)]
+      (clojure.string/split s r))))
+
 (defn throw [e] (throw e))
 
 (defn use-pod [pod-name version]
