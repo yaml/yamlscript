@@ -163,6 +163,8 @@
 
 (intern 'ys.std 'capitalize clojure.string/capitalize)
 
+(intern 'ys.std 'chomp clojure.string/trim-newline)
+
 (defn cwd [& args]
   (str (apply babashka.fs/cwd args)))
 
@@ -357,6 +359,10 @@
       (clojure.string/split s r))))
 
 (defn throw [e] (throw e))
+
+(intern 'ys.std 'trim clojure.string/trim)
+(intern 'ys.std 'triml clojure.string/triml)
+(intern 'ys.std 'trimr clojure.string/trimr)
 
 (intern 'ys.std 'upper-case clojure.string/upper-case)
 
