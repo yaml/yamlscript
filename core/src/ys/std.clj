@@ -160,6 +160,8 @@
 (defn call [f & args]
   (apply f args))
 
+(intern 'ys.std 'capitalize clojure.string/capitalize)
+
 (defn cwd [& args]
   (str (apply babashka.fs/cwd args)))
 
@@ -249,6 +251,8 @@
    (str/join sep (cons x xs))))
 
 (intern 'ys.std 'lines clojure.string/split-lines)
+
+(intern 'ys.std 'lower-case clojure.string/lower-case)
 
 (defn new [class & args]
   (clojure.lang.Reflector/invokeConstructor
@@ -345,6 +349,8 @@
       (clojure.string/split s r))))
 
 (defn throw [e] (throw e))
+
+(intern 'ys.std 'upper-case clojure.string/upper-case)
 
 (defn use-pod [pod-name version]
   (ys/load-pod pod-name version))
