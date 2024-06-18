@@ -1049,7 +1049,7 @@
       catch:
         (println "Error")
   clojure: |
-    (try (1) (catch Exception e (println "Error")))
+    (try (1) (catch Exception _e (println "Error")))
 
 
 - name: Allow catch with one argument

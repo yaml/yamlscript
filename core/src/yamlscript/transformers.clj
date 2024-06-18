@@ -95,7 +95,7 @@
 (defn transform_catch [lhs rhs]
   (let [lhs (cond
               (= lhs (Sym 'catch))
-              [lhs (Sym 'Exception) (Sym 'e)]
+              [lhs (Sym 'Exception) (Sym '_e)]
               ,
               (= (count lhs) 2)
               [(first lhs) (Sym 'Exception) (second lhs)]
