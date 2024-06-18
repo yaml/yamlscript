@@ -17,6 +17,7 @@
    [yamlscript.util :as util])
   (:refer-clojure :exclude [num
                             print
+                            reverse
                             when]))
 
 (declare die)
@@ -300,6 +301,13 @@
                  ,
                  :else (str w#)))
           '(~@xs))))
+
+(defn reverse [x]
+  (cond
+    (string? x) (clojure.string/reverse x)
+    (vector? x) (vec (clojure.core/reverse x))
+    (seqable? x) (clojure.core/reverse x)
+    :else (die "Can't reverse " x)))
 
 (defn rng [x y]
   (if (> y x)
