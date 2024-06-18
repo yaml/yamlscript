@@ -229,10 +229,16 @@
       :else (die "Invalid args for grep"))))
 
 (defn has [coll x]
-  (some (set coll) [x]))
+  (boolean
+    (if (and (string? coll) (string? x))
+      (re-find (re-pattern x) coll)
+      (some (set coll) [x]))))
 
 (defn in [x coll]
-  (some (set coll) [x]))
+  (boolean
+    (if (and (string? coll) (string? x))
+      (re-find (re-pattern x) coll)
+      (some (set coll) [x]))))
 
 (defn join
   ([xs] (join "" xs))
