@@ -346,5 +346,8 @@
     (apply clojure.core/println xs)
     (flush)))
 
+(defn words [s]
+  (clojure.string/split s #"\s+"))
+
 (comment
   )
