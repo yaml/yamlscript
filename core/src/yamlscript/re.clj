@@ -39,6 +39,7 @@
               return |
               .
             )")                            ; Character token
+(def tend #"(?=[\.\,\s\]\}\)]|$)")        ; End of token
 (def comm #";.*(?:\n|\z)")                 ; Comment token
 (def ignr #"(?x)
             (?:                            # Ignorables
@@ -50,6 +51,7 @@
 (def spec #"(?:~@|[~@`^])")                ; Special token
 (def quot #"(?:\\')")                      ; Quote token
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
+(def dots (re #"(?:\.\w+(?:_\w+)+)$tend")) ; Dot operator word with _ allowed
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token
 (def inum #"-?\d+")                        ; Integer literal token
 (def fnum (re #"$inum\.\d*(?:e$inum)?"))   ; Floating point literal token

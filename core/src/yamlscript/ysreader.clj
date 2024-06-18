@@ -44,6 +44,9 @@
 (defn is-dot-num? [token]
   (re-matches re/dotn (str token)))
 
+(defn is-dot-sym? [token]
+  (re-matches re/dots (str token)))
+
 (defn is-operator? [token]
   (let [t (str token)]
     (and (re-matches re/osym t)
@@ -112,6 +115,7 @@
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
+      $dots |                   # Dot operator word with _ allowed
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
       $dstr |                 # String token
@@ -293,6 +297,7 @@
 
 (defn read-scalar [[token & tokens]]
   (cond
+    (map? token) [token tokens]
     (is-comment? token) []
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
@@ -307,6 +312,8 @@
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
+                          [(Sym ".") tokens])
+    (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
                           [(Sym ".") tokens])
     (is-quote? token) (let [[value tokens] (read-form tokens)]
                         [(Tup [(Tok "'") value]) tokens])

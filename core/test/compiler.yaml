@@ -1061,3 +1061,12 @@
         (println "Error")
   clojure: |
     (try (1) (catch Exception err (println "Error")))
+
+
+- name: Allow underscores in symbols in dot chains
+  yamlscript: |
+    !yamlscript/v0
+    when ENV.FOO_BAR:
+      x: y
+  clojure: |
+    (when (__ ENV 'FOO_BAR) (x y))

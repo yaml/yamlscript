@@ -112,9 +112,6 @@
   (compile "!yamlscript/v0\na .=: b().c")
   (compile "
 !yamlscript/v0
-try:
-  1:
-  catch Exception e:
-    say: \"Error\"
+say: ENV.FOO_BAR.1.a.x()
 ")
   )
