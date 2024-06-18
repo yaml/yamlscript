@@ -18,6 +18,7 @@
   (:refer-clojure :exclude [num
                             print
                             reverse
+                            replace
                             when]))
 
 (declare die)
@@ -325,6 +326,13 @@
   (if (> y x)
     (range x (inc y))
     (range x (dec y) -1)))
+
+(defn replace
+  ([x] (clojure.core/replace x))
+  ([x y] (clojure.core/replace x y))
+  ([x y z] (clojure.string/replace x y z)))
+
+(intern 'ys.std 'replace1 clojure.string/replace-first)
 
 (defn rx [s]
   (re-pattern s))
