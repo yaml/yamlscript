@@ -242,6 +242,8 @@
   ([sep x & xs]
    (str/join sep (cons x xs))))
 
+(intern 'ys.std 'lines clojure.string/split-lines)
+
 (defn new [class & args]
   (clojure.lang.Reflector/invokeConstructor
     class (into-array Object args)))
