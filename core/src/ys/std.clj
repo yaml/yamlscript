@@ -290,6 +290,17 @@
 (defmacro q [x]
   `(quote ~x))
 
+(defmacro qw [& xs]
+  `(vec (map (fn [w#]
+               (cond
+                 (nil? w#) "nil"
+                 ,
+                 (not (re-matches #"^[-\w]+$" (str w#)))
+                 (clojure.core/die (str "Invalid qw word: '" w# "'"))
+                 ,
+                 :else (str w#)))
+          '(~@xs))))
+
 (defn rng [x y]
   (if (> y x)
     (range x (inc y))
