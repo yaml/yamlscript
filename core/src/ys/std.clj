@@ -306,6 +306,9 @@
     (range x (inc y))
     (range x (dec y) -1)))
 
+(defn rx [s]
+  (re-pattern s))
+
 (defn say [& xs]
   (apply clojure.core/println xs))
 
