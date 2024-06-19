@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-defn main(n):
+defn main(n=10):
   say: "$n! = $factorial(n)"
 
 defn factorial(x):

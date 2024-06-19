@@ -24,7 +24,7 @@
 
 # The local ollama API server:
 ollama-uri =:
-  ENV.'OLLAMA_URI' ||
+  ENV.OLLAMA_URI ||
     'http://localhost:11434/api'
 
 # Main entry point function:
@@ -36,7 +36,7 @@ defn main(model=nil query=nil):
 
 # Commandline usage:
 defn usage():
-  file =: FILE.str/replace(/.*\/(.*)/ "$1")
+  file =: FILE.replace(rx('.*/(.*)') '$1')
   say: |
     $ $file                  - Random model; prompt for query
     $ $file <model>          - Specific model; prompt for query
@@ -85,8 +85,8 @@ defn init(model query):
 defn get-model(model):
   models =:
     sh('ollama list').out
-      .str/split-lines().drop(1)
-      .map(\(str/split %1 /:/) _)
+      .lines().drop(1)
+      .map(\(split %1 /:/) _)
       .map(first _)
 
   when-not seq(models):
@@ -109,8 +109,7 @@ defn get-query():
 
 # Format response output:
 defn format(string):
-  string .=: str/triml().prettier()
-            .str/trimr()
+  string .=: triml().prettier().trimr()
 
   if (string =~ /\n/):
     +"\n$string"
@@ -137,7 +136,7 @@ defn options()::
     tfs_z: 0.5
     typical_p: 0.7
     repeat_last_n: 33
-    temperature:: num(ENV.'LLM_TEMP' || 0.8)
+    temperature:: num(ENV.LLM_TEMP || 0.8)
     repeat_penalty: 1.2
     presence_penalty: 1.5
     frequency_penalty: 1.0

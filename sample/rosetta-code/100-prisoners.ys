@@ -58,7 +58,7 @@ defn simulate-100-prisoners():
   # Create 100 drawers with randomly ordered prisoner numbers:
   drawers =: random-drawers()
   =>:
-    .{:random try-luck(drawers search-50-random-drawers)
+    +{:random try-luck(drawers search-50-random-drawers)
       :optimal try-luck(drawers search-50-optimal-drawers)}
 
 defn simulate-n-runs(n):
@@ -71,7 +71,7 @@ defn simulate-n-runs(n):
     if (n == run-count):
       # return results
       then:
-        .{:random-successes random-successes
+        +{:random-successes random-successes
           :optimal-successes optimal-successes
           :run-count run-count}
 
@@ -84,13 +84,13 @@ defn simulate-n-runs(n):
           run-count.inc()
 
 defn main(n=5000):
-  ? .{:keys [random-successes
+  ? +{:keys [random-successes
              optimal-successes
              run-count]} =
   : simulate-n-runs: n
 
-  say: ."Probability of survival with random search:\ " +
+  say: +"Probability of survival with random search:\ " +
        float(random-successes / run-count)
 
-  say: ."Probability of survival with ordered search:\ " +
+  say: +"Probability of survival with ordered search:\ " +
        float(optimal-successes / run-count)

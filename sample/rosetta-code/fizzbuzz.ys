@@ -10,7 +10,7 @@
 defn main(count=100 impl=1):
   fizzbuzz =: "fizzbuzz-$impl"
 
-  when-not ENV.'YS_TEST':
+  when-not ENV.YS_TEST:
     say: "Running function '$fizzbuzz' with count=$count"
 
   function =: resolve(fizzbuzz.symbol())

@@ -1,8 +1,8 @@
 !yamlscript/v0
 
-name =: "World"
+name =: 'World'
 
 =>::
   foo: [1, 2, ! inc(41)]
-  bar:: load("other.yaml")
+  bar:: load('other.yaml')
   baz:: "Hello, $name!"

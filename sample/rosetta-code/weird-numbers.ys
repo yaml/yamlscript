@@ -23,7 +23,7 @@ defn abundant(n, divs):
 
 defn semiperfect(n, divs):
   when (divs.count() > 0):
-    .[h & t] =: divs
+    +[h & t] =: divs
     if (n < h):
       semiperfect: n t
       or:
