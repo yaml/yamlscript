@@ -363,7 +363,7 @@
     {:exp "; comment (foo bar)"}
   parse: |
     "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
-  print: |
+  # Semicolon comments are errors now
 
 
 - name: Switch to code mode

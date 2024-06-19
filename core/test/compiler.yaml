@@ -1078,3 +1078,11 @@
     =>: foo.?.bar
   clojure: |
     (__ foo (list _DBG) 'bar)
+
+
+- name: Error Clojure style comments
+  yamlscript: |
+    !yamlscript/v0
+    =>: 42          ;; This is not a comment :(
+  error: |
+    ~~ This is not a comment

@@ -302,7 +302,8 @@
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
-    (is-comment? token) []
+    (is-comment? token)
+      (die "Clojure style comments are not allowed: '" token "'.")
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]

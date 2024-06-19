@@ -92,9 +92,7 @@
   yamlscript: |
     !yamlscript/v0
     ; just a comment
-  build: |
-    nil
-  print: |
+  # Semicolon comments are errors now
 
 
 - name: data mode with code mode

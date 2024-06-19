@@ -38,14 +38,13 @@
               return |
               .
             )")                            ; Character token
-(def tend #"(?=[\.\,\s\]\}\)]|$)")        ; End of token
+(def tend #"(?=[\.\,\s\]\}\)]|$)")         ; End of token
 (def comm #";.*(?:\n|\z)")                 ; Comment token
 (def ignr #"(?x)
             (?:                            # Ignorables
               |                              # Empty
               \#\!.*\n? |                    # hashbang line
               [\s,]+    |                    # whitespace, commas,
-              ;.*\n?                         # comments
             )")
 (def spec #"(?:~@|[~@`^])")                ; Special token
 (def quot #"(?:\\')")                      ; Quote token
