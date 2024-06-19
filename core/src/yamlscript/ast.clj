@@ -56,7 +56,6 @@
   {:Clj c})
 
 (comment
-  www
   [(Lst [1 2 3])
    (Vec [1 2 3])
    (Map [1 2 3 4 5 6])

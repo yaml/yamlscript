@@ -13,8 +13,7 @@
     :refer [abspath
             die
             dirname
-            get-yspath]]
-   [yamlscript.debug :refer [www]])
+            get-yspath]])
   (:refer-clojure
    :exclude [compile
              for
@@ -105,5 +104,4 @@
   (clojure.core/when cond then))
 
 (comment
-  www
   )

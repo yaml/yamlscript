@@ -31,8 +31,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [die if-lets when-lets]]
-   [yamlscript.debug :refer [www]])
+   [yamlscript.util :refer [die if-lets when-lets]])
   (:refer-clojure :exclude [resolve]))
 
 ;; ----------------------------------------------------------------------------
@@ -333,7 +332,6 @@
     (if anchor (assoc node :& anchor) node)))
 
 (comment
-  www
   (resolve
     #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
     {:! "yamlscript/v0", := ""}

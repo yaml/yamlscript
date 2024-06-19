@@ -9,8 +9,7 @@
 
 (ns yamlscript.re
   (:require
-   [clojure.string :as str]
-   [yamlscript.debug :refer [www]])
+   [clojure.string :as str])
   (:refer-clojure :exclude [char quot]))
 
 (defn re [rgx]
@@ -119,5 +118,4 @@
           ")
 
 (comment
-  www
   )

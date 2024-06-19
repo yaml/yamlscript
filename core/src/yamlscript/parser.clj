@@ -9,7 +9,6 @@
 
 (ns yamlscript.parser
   (:require
-   [yamlscript.debug :refer [www]]
    [yamlscript.util :refer [die]])
   (:import
    (java.util Optional)
@@ -142,6 +141,5 @@
 (defmethod ys-event :default [_] nil)
 
 (comment
-  www
   (parse "a")
   )

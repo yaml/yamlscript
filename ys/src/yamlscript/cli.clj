@@ -7,12 +7,10 @@
 (ns yamlscript.cli
   (:gen-class)
   (:require
-   ;; This goes first for pprint/graalvm patch (prevents binary bloating)
+   [yamlscript.debug]
+   [yamlscript.runtime :as runtime]
    [yamlscript.common :as common]
    [yamlscript.compiler :as compiler]
-   [yamlscript.runtime :as runtime]
-   ;; For www debugging
-   [yamlscript.debug :refer [www]]
    [babashka.process :refer [exec]]
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
@@ -495,7 +493,6 @@ Options:
       (do-main opts args argv help error errs))))
 
 (comment
-  www
   (-main)
   (-main
     "-e" "say: 123"

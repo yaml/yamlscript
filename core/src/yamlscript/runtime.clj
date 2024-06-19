@@ -3,7 +3,7 @@
 
 (ns yamlscript.runtime
   (:require
-   [yamlscript.debug :refer [www]]
+   [yamlscript.debug]
    [yamlscript.re :as re]
    [clojure.java.io :as io]
    [clojure.math]
@@ -62,7 +62,16 @@
               'parse-long (sci/copy-var clojure.core/parse-long nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
               'slurp (sci/copy-var clojure.core/slurp nil)
-              'spit (sci/copy-var clojure.core/spit nil)}
+              'spit (sci/copy-var clojure.core/spit nil)
+
+              ;; YAMLScript debugging functions
+              '_DBG (sci/copy-var clojure.core/_DBG nil)
+              'PPP (sci/copy-var yamlscript.debug/PPP nil)
+              'WWW (sci/copy-var yamlscript.debug/WWW nil)
+              'XXX (sci/copy-var yamlscript.debug/XXX nil)
+              'YYY (sci/copy-var yamlscript.debug/YYY nil)
+              'ZZZ (sci/copy-var yamlscript.debug/ZZZ nil)
+              }
         std (ns-publics 'ys.std)
         std (update-vals std #(sci/copy-var* %1 nil))
         poly (ns-publics 'ys.poly)
@@ -198,5 +207,4 @@
 (sci/intern @ys/sci-ctx 'clojure.core 'eval-string eval-string)
 
 (comment
-  www
   )

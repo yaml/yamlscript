@@ -4,9 +4,8 @@
 ;; The yamlscript.composer is responsible for converting a stream of YAML
 ;; parse events into a tree of nodes.
 
-(ns yamlscript.composer
-  (:require
-   [yamlscript.debug :refer [www]]))
+(ns yamlscript.composer)
+
 (comment
   [;
    :%  ; block mapping
@@ -110,5 +109,4 @@
     "=ALI" (compose-alias events)))
 
 (comment
-  www
   )

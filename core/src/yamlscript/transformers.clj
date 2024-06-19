@@ -4,8 +4,7 @@
 (ns yamlscript.transformers
   (:require
    [yamlscript.util :refer [die if-lets when-lets]]
-   [yamlscript.ast :refer [Sym Lst Vec Key]]
-   [yamlscript.debug :refer [www]]))
+   [yamlscript.ast :refer [Sym Lst Vec Key]]))
 
 (def Q {:Sym 'quote})
 
@@ -169,4 +168,4 @@
     (die "Invalid 'require' form")))
 
 (comment
-  www)
+  )

@@ -9,8 +9,7 @@
    [yamlscript.ast :refer [Lst]]
    [yamlscript.util :refer [die if-lets]]
    #_[yamlscript.ast :refer [Sym]]
-   [yamlscript.transformers]
-   [yamlscript.debug :refer [www]]))
+   [yamlscript.transformers]))
 
 (declare
   transform-node
@@ -138,7 +137,6 @@
       (transform-node node))))
 
 (comment
-  www
   (->>
     {:Map
      [{:Str "my-seq"}

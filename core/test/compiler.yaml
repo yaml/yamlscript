@@ -1070,3 +1070,12 @@
       x: y
   clojure: |
     (when (__ ENV 'FOO_BAR) (x y))
+
+
+- name: Support .? debugging operator
+  yamlscript: |
+    !yamlscript/v0
+    =>: foo.?
+  clojure: |
+    (__ foo (list P))
+  SKIP: true

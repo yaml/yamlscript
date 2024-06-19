@@ -6,8 +6,7 @@
   (:require
    [clojure.string :as str]
    [yamlscript.compiler :as compiler]
-   [yamltest.core :as test]
-   [yamlscript.debug :refer [www]]))
+   [yamltest.core :as test]))
 
 (defn testing-fix-clojure [clj]
   (-> clj

@@ -10,7 +10,7 @@
 
 (ns yamlscript.compiler
   (:require
-   [a0.patch-pprint]
+   [yamlscript.debug]
    [clojure.pprint]
    [clojure.edn]
    [clojure.string :as str]
@@ -21,8 +21,7 @@
    [yamlscript.transformer]
    [yamlscript.constructor]
    [yamlscript.printer]
-   [yamlscript.common :as common]
-   [yamlscript.debug :refer [www #_xxx]])
+   [yamlscript.common :as common])
   (:refer-clojure :exclude [compile]))
 
 (defn parse-events-to-groups [events]

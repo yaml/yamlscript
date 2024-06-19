@@ -6,47 +6,56 @@
 (ns yamlscript.debug
   (:require
    [clojure.pprint :as pp]
-   [yamlscript.util :refer [die]]))
+   [clj-yaml.core :as yaml]
+   [yamlscript.util :refer [die]])
+  (:refer-clojure :exclude [PPP WWW XXX YYY ZZZ]))
 
-;; TODO Replace with hashp
+(defn -dump [o]
+  (let
+   [o (if (= 1 (count o)) (first o) o)]
+    (str
+      "<<<\n"
+      (with-out-str
+        (pp/pprint o))
+      ">>>\n")))
 
-(defn dump [o]
-  (str
-    "---\n"
-    (with-out-str
-      (pp/pprint o))
-    "...\n"))
-
-(defn www [& o]
-  (let [l (last o)
-        o (if (= 1 (count o)) (first o) o)]
-    (binding [*out* *err*]
-      (print (dump o))
-      (flush))
-    l))
-
-(defn xxx [& o]
-  (let [o (if (= 1 (count o)) (first o) o)]
-    (die "\n" (dump o))))
-
-(defn yyy [& o]
-  (let [l (last o)
-        o (if (= 1 (count o)) (first o) o)]
-    (print (dump o))
+(defn PPP [& o]
+  (let [l (last o)]
+    (print (-dump o))
     (flush)
     l))
 
-(defn zzz [& o]
-  (let [o (if (= 1 (count o)) (first o) o)]
-    (die "\n" (dump o))))
+(intern 'clojure.core 'PPP PPP)
 
-(defn xxx+ [& o]
-  (binding [*print-meta* true]
-    (apply xxx o)))
+(defn WWW [& o]
+  (let [l (last o)]
+    (binding [*out* *err*]
+      (print (-dump o))
+      (flush))
+    l))
 
-(defn www+ [& o]
-  (binding [*print-meta* true]
-    (apply www o)))
+(intern 'clojure.core 'WWW WWW)
+(intern 'clojure.core '_DBG WWW)
+
+(defn XXX [& o]
+  (die "\n" (-dump o)))
+
+(intern 'clojure.core 'XXX XXX)
+
+(defn YYY [& o]
+  (let [l (last o)
+        o (if (= 1 (count o)) (first o) o)]
+    (print (yaml/generate-string o))
+    (flush)
+    l))
+
+(intern 'clojure.core 'YYY YYY)
+
+; TODO Turn on stack trace printing
+(defn ZZZ [& o]
+  (die "\n" (-dump o)))
+
+(intern 'clojure.core 'ZZZ ZZZ)
 
 (comment
   (www {:a 1 :b 2})

@@ -7,7 +7,6 @@
 (ns yamlscript.builder
   (:require
    [clojure.string :as str]
-   [yamlscript.debug :refer [www]]
    [yamlscript.ast :refer
     [Bln Clj Flt Int Key Lst Map Nil Str Sym Vec]]
    [yamlscript.re :as re]
@@ -234,5 +233,4 @@
       node)))
 
 (comment
-  www
   )

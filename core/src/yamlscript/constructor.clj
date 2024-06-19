@@ -10,8 +10,7 @@
    [yamlscript.ast :refer [Lst Qts Str Sym Vec]]
    [yamlscript.common :as common]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [die if-lets]]
-   [yamlscript.debug :refer [www]]))
+   [yamlscript.util :refer [die if-lets]]))
 
 (declare
   construct-node
@@ -264,17 +263,4 @@
       node)))
 
 (comment
-  www
-  (construct
-    {:pairs
-     ([{:Sym 'defn} {:Sym 'foo} {:Vec [{:Sym 'x}]}]
-      {:pairs
-       '([{:Sym 'def} {:Sym 'y}]
-         {:Lst ({:Sym 'add} {:Sym 'x} {:Int 1})}
-         [{:Sym 'def} {:Sym 'x}]
-         {:Lst [{:Sym 'times} {:Sym 'y} {:Sym 'x}]}
-         {:Sym '=>}
-         {:Sym 'y})})})
-  (construct :Nil)
-  (construct {:do [{:Sym 'a} [{:Sym 'b} {:Sym 'c}]]})
   )

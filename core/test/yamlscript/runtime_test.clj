@@ -2,7 +2,6 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.runtime-test
-  (:use yamlscript.debug)
   (:require
    [clojure.edn :as edn]
    [yamlscript.compiler :as compiler]

@@ -8,7 +8,6 @@
   (:require
    [clojure.string :as str]
    [yamlscript.common :as common]
-   [yamlscript.debug :refer [www]]
    [yamlscript.util :refer [die]])
   (:refer-clojure :exclude [print]))
 
@@ -90,7 +89,6 @@
     code))
 
 (comment
-  www
   (print '{:Top
            [{:Lst
              [{:Sym defn}

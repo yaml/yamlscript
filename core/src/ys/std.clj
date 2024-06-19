@@ -43,19 +43,6 @@
 (defn V [x]
   (var-get (resolve (symbol x))))
 
-;; TODO replace with p()
-(defn www [& xs]
-  (apply yamlscript.debug/www xs))
-
-(defn xxx [& xs]
-  (apply yamlscript.debug/xxx xs))
-
-(defn yyy [& xs]
-  (apply yamlscript.debug/yyy xs))
-
-(defn zzz [& xs]
-  (apply yamlscript.debug/zzz xs))
-
 (defn toBool [x] (boolean x))
 
 (defn toFloat [x] (parse-double x))

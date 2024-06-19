@@ -11,7 +11,7 @@
    [yamlscript.ast :refer
     [Bln Chr Flt Int Key Lst Map Nil Qts Rgx Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
-   [yamlscript.debug :refer [www]]
+   [yamlscript.debug :refer [WWW]]
    [yamlscript.util :as util :refer [die]])
   (:refer-clojure :exclude [read-string]))
 
@@ -129,7 +129,7 @@
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))
     (#(if (System/getenv "YS_LEX_DEBUG")
-        (www %1)
+        (WWW %1)
         %1))))
 
 (declare read-form yes-expr)
@@ -386,7 +386,6 @@
           (Lst expr))))))
 
 (comment
-  www
   (read-string "(1 * 4) + (2 * 3)")
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}

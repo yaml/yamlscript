@@ -3,7 +3,6 @@
 
 (ns ys.json
   (:require
-   [yamlscript.debug :refer [www]]
    [clojure.data.json :as json])
   (:refer-clojure :exclude [load]))
 
@@ -18,5 +17,4 @@
     (json/pprint data)))
 
 (comment
-  www
   )
