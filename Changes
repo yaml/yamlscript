@@ -1,4 +1,24 @@
 
+- version: 0.1.63
+  date:    Wed 19 Jun 2024 12:51:46 PM EDT
+  changes:
+  - core: Add ys.std/qw macro for quoting words
+  - core: Add ys::std/rx for creating regex pattern from string
+  - core: Support _ in dot chain symbols
+  - core: Using 'catch' with no args should not bind to e
+  - core: Add ys::std/reverse polymorphic
+  - core: Add ys::std/split with string and re swappable
+  - core: Add ys::std/words (split on ws)
+  - core: Add ys::std/lines to split text into lines
+  - core: Make has and in work with strings
+  - core: Add std capitalize lower-case and upper-case
+  - core: Add std replace for arities 1, 2 (core) and 3 (string)
+  - core: Add std chomp trim triml trimr
+  - sample: Update sample code to use latest YS features
+  - core: Refactored yamlscript.debug completely
+  - core: Add support for .? debugging
+  - core: Clojure style comments `; ...` now longer supported
+
 - version: 0.1.62
   date:    Sat 15 Jun 2024 01:47:13 PM EDT
   changes:
