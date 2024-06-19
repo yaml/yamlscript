@@ -49,6 +49,7 @@
             )")
 (def spec #"(?:~@|[~@`^])")                ; Special token
 (def quot #"(?:\\')")                      ; Quote token
+(def dotd #"(?:\.\?)")                     ; Dot debugging with .?
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def dots (re #"(?:\.\w+(?:_\w+)+)$tend")) ; Dot operator word with _ allowed
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token

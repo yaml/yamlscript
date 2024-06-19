@@ -1075,7 +1075,6 @@
 - name: Support .? debugging operator
   yamlscript: |
     !yamlscript/v0
-    =>: foo.?
+    =>: foo.?.bar
   clojure: |
-    (__ foo (list P))
-  SKIP: true
+    (__ foo (list _DBG) 'bar)

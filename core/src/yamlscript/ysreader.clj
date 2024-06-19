@@ -47,6 +47,9 @@
 (defn is-dot-sym? [token]
   (re-matches re/dots (str token)))
 
+(defn is-dot-dbg? [token]
+  (re-matches re/dotd (str token)))
+
 (defn is-operator? [token]
   (let [t (str token)]
     (and (re-matches re/osym t)
@@ -116,6 +119,7 @@
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
       $dots |                   # Dot operator word with _ allowed
+      $dotd |                   # Dot debugging with .?
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
       $dstr |                 # String token
@@ -311,6 +315,8 @@
     (is-bad-number? token) (die "Invalid number: " token)
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
+    (is-dot-dbg? token) (let [tokens (conj tokens ")" "DBG(" ".")]
+                          [nil tokens])
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
@@ -350,7 +356,8 @@
         [token tokens sym]
         (if (is-symbol-paren? token)
           (let [sym (subs token 0 (-> token count dec))
-                sym (str/replace sym #"::" ".")]
+                sym (str/replace sym #"::" ".")
+                sym (if (= "DBG" sym) "_DBG" sym)]
             ["(" (cons "(" (rest tokens)) (Sym sym)])
           [token tokens nil])]
     (case token
@@ -364,8 +371,9 @@
   (loop [tokens tokens
          forms []]
     (if (seq tokens)
-      (let [[form tokens] (read-form tokens)]
-        (recur tokens (conj forms form)))
+      (let [[form tokens] (read-form tokens)
+            forms (if form (conj forms form) forms)]
+        (recur tokens forms))
       forms)))
 
 (defn read-string [string]
