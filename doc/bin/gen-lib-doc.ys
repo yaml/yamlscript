@@ -1,0 +1,62 @@
+!yamlscript/v0
+
+defn main(input-file):
+  data =: load(input-file.abspath())
+
+  doc-type =: data.meta.doc-type
+
+  say: +"generate-${doc-type}-markdown".symbol().resolve().call(data)
+  # TODO call should convert string to function
+  # say: call("generate-${doc-type}-markdown" data)
+
+defn generate-library-markdown(data):
+  meta =: data.meta
+  data =: dissoc(data "meta")
+
+  markdown =: |
+    ---
+    title: $(meta.title)
+    ---
+
+  loop [pairs data.seq() markdown markdown]:
+    +[pair & pairs] =: pairs
+    if pair:
+      then:
+        +[key val] =: pair
+        markdown +=: "\n"
+        markdown +=:
+          cond:
+            (key = 'raw'): val
+            :else:
+              str:
+                =>: "## $key\n\n"
+                cond:
+                  string?(val): "$val\n"
+                  vector?(val): format-sections(val)
+                  nil?(val): ""
+                  =>: ""
+        recur: pairs markdown
+
+      else: markdown
+
+defn format-sections(sections):
+  markdown =: ""
+  loop [section & sections markdown markdown]:
+    if section:
+      then:
+        markdown +=: format-section(section)
+        recur: sections markdown
+      else: markdown
+
+defn format-function([func desc more]):
+  markdown =: |
+    - name:
+      - $(name)
+      - $(args)
+    desc: $(desc)
+  if more:
+    then:
+      markdown +=: "\n"
+      markdown +=: "  more: |\n"
+      markdown +=: "    $(more)\n"
+  markdown
