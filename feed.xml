@@ -3481,8 +3481,8 @@ The results of my scripting efforts are pretty awesome to me.
 Both in how much fun it is to interact with LLMs directly using code and how
 clean the YAMLScript code ends up being.</p>
 <blockquote>
-<p><strong>Full Disclosure</strong>: The YAMLScript code is clean because I when it's not I
-can (and do) fix the language.
+<p><strong>Full Disclosure</strong>: The YAMLScript code is clean because when it's not I can
+(and do) fix the language.
 Honestly, I think this is a very important point and should be a goal of any new
 programming language.
 Implementing a sizable number of <a href="https://rosettacode.org">Rosetta Code Tasks</a>
