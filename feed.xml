@@ -3430,7 +3430,7 @@ to train on: XML, JSON, and YAML.
 The internet is crammed full of these files.
 He said it turns out that YAML is the most efficient when combined with current
 LLM tokenization techniques.</p>
-<p>It seems he may be right:</p>
+<p>It seems Paul may be right:</p>
 <ul>
 <li><a href="https://www.youtube.com/watch?v=zduSFxRajkE&amp;t=7756s">OpenAI co-founder Andrej Karpathy on YAML vs JSON for LLMs</a></li>
 <li><a href="https://betterprogramming.pub/yaml-vs-json-which-is-more-efficient-for-language-models-5bc11dd0f6df">YAML vs. JSON: Which Is More Efficient for Language Models?</a></li>
