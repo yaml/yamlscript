@@ -3449,7 +3449,7 @@ script its internals with YAML itself!
 Think about that.
 You can define the rules of how YAML is loaded without needing to write any
 code.</p>
-<p>For example, if you wanted the YAML files for your application to not contain
+<p>For example, if you wanted the YAML files for your application not to contain
 anchors or aliases (just like GitHub Actions' YAML loader does), that's just a
 line or 2 of YAML.</p>
 <p>Maybe you like the &quot;Norway Problem&quot; so much that you want to treat your users to
