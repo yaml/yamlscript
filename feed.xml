@@ -3508,7 +3508,7 @@ Let me ask a friend:</p>
 <p>Huh. They answered a question with a question…
 Smart little (er, large) language model.</p>
 <p>I'll have to answer them in another post!</p>
-<a id="perl">
+<p id="perl"></p>
 <h2>PS (Perl Strangelove???)</h2>
 <p>I should mention that I'm giving a couple talks about YAMLScript at <a href="http://https://tprc.us/tprc-2024-las/">The Perl
 and Raku</a> Conference in Las Vegas next
