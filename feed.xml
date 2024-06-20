@@ -3470,7 +3470,7 @@ the rules of YAMLScript (which itself has to play within the rules of YAML).</p>
 <h2>How I learned to stop paying for ChatGPT and love the YAMLLM</h2>
 <p>YAMLScript is turning out to be my favorite programming language.</p>
 <p>Up until a couple weeks ago my only interaction with LLMs was using GitHub's
-Copilot to help me write blog posts like this one, and paying $20usd/month for a
+Copilot to help me write blog posts like this one, and paying $20USD/month for a
 ChatGPT subscription I almost never used.</p>
 <p>When Paul and I started talking, I decided to write some programs to play around
 with various (free) LLM APIs like <a href="https://ollama.com/">Ollama</a> and <a href="https://groq.com/">Groq</a>.
