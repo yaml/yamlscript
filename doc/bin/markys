@@ -3,7 +3,13 @@
 input-dir =: atom(nil)
 
 defn main(input-file):
-  reset! input-dir: dirname(input-file)
+  dir =: dirname(input-file).abspath()
+  reset! input-dir: dir
+
+  fmt-file =: "$dir/fmt.ys"
+  if fs-f(fmt-file):
+    ys/load-file: fmt-file
+
   say:
     process: input-file
 
@@ -54,27 +60,6 @@ defn format-markys(text):
   func =: +"fmt-$type".symbol().resolve() ||
     die("Can't find function 'fmt-$type'")
   call func: data
-
-defn fmt-func-list(data):
-  loop [[elem & data] data markdown '']:
-    if elem:
-      then:
-        markdown +=: |
-
-          * $(elem.func.0)
-
-            $(elem.desc)
-
-        more =: elem.more
-        markdown +=:
-          when more: |2
-
-              <details><summary><strong>More</strong></summary>
-            $(more.chomp().indent())
-              </details>
-
-        recur: data markdown
-      else: markdown
 
 defn fmt-include(data):
   input-file =: "$(deref input-dir)/$(data.file)"

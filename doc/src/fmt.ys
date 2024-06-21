@@ -1,0 +1,24 @@
+!yamlscript/v0
+
+defn fmt-func-list(data):
+  loop [[elem & data] data markdown '']:
+    if elem:
+      then:
+        markdown +=: |
+
+          * $(elem.func.0)
+
+            $(elem.desc)
+
+        more =: elem.more
+        markdown +=:
+          when more: |2
+
+              <details><summary><strong>More</strong></summary>
+            $(more.chomp().indent())
+              </details>
+
+        recur: data markdown
+      else: markdown
+
+# vim: ft=yaml sw=2 lisp:
