@@ -11,8 +11,8 @@ default:
 
 build: $(MD_GEN_FILES)
 
-%.md: src/%.ys
-	markdowny $< > $@
+%.md: src/%.md
+	markys $< > $@
 
 force:
-	touch src/*.ys
+	touch src/*.md

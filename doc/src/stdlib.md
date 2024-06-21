@@ -32,34 +32,42 @@ std/say: 'Hello'
 ys::std/say: 'Hello'
 ```
 
-* abs-path
+```MY:func-list
+- func:
+  - abs-path
+  - str: relative-path
+  - str: absolute-path
 
-  Returns the absolute path of a file.
+  desc: Returns the absolute path of a file.
 
-* call
+- func:
+  - call
+  - [fn: function, any: argument*]
+  - any: value
 
-  Calls a function with the given arguments.
+  desc: Calls a function with the given arguments.
+  more: |
+    This function is useful with dot chaining when a function returns
+    another function and you want to call it immediately.
 
-  <details><summary><strong>More</strong></summary>
-  This function is useful with dot chaining when a function returns
-  another function and you want to call it immediately.
+    ```yaml
+    !yamlscript/v0
+    x =: 39
+    say: x.fn([n] \(n + %)).call(3)
+    ```
 
-  ```yaml
-  !yamlscript/v0
-  x =: 39
-  say: x.fn([n] \(n + %)).call(3)
-  ```
-  </details>
+- func:
+  - cwd
+  - []
+  - str: path
 
-* cwd
+  desc: Returns the current working directory path as a string.
+```
 
-  Returns the current working directory path as a string.
 
 ## See Also
 
-* [`ys::clj`]() — Original Clojure functions shadowed by YS
-* [`ys::ys`]() — Special YS Functions
-* [`ys::yaml`]() — Standard YAML processing library
-* [`ys::json`]() — Standard JSON processing library
-* [`clojure::core`]() - Clojure Core Library Essentials
-
+```MY:include
+file: library-list.md
+yank: ys::std
+```

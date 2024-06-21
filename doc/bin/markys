@@ -1,0 +1,92 @@
+#!/usr/bin/env ys-0
+
+input-dir =: atom(nil)
+
+defn main(input-file):
+  reset! input-dir: dirname(input-file)
+  say:
+    process: input-file
+
+defn process(input-file):
+  data =: load-markys(input-file)
+  markdown =:
+    generate-markdown: data
+  triml: markdown
+
+defn load-markys(file):
+  text =: file.abspath().slurp()
+  fenced-re =: /(?s)(?:```MY:\S+\n.*?\n```\n)/
+  texts =:
+    split text: fenced-re
+  fenced =:
+    re-seq fenced-re: text
+  fix =: fenced.count() < texts.count()
+  fenced =:
+    if fix:
+      (vec(fenced) + [''])
+      fenced
+  all =:
+    interleave texts: fenced
+  if fix:
+    drop-last(all)
+    all
+
+defn generate-markdown(data):
+  markdown =: ''
+  loop [[section & sections] data markdown markdown]:
+    if section:
+      then:
+        markdown +=:
+          if (section =~ /^```MY:/):
+            format-markys: section
+            trim: section
+        recur sections:
+          if empty?(markdown):
+            markdown
+            (markdown + "\n")
+      else: markdown
+
+defn format-markys(text):
+  type =: (text =~ /^```MY:(\S+)/).1
+  text =: text.replace(/^```.*\n/ '')
+  yaml =: text.replace(/```\n\z/ '')
+  data =: yaml/load(yaml)
+  func =: +"fmt-$type".symbol().resolve() ||
+    die("Can't find function 'fmt-$type'")
+  call func: data
+
+defn fmt-func-list(data):
+  loop [[elem & data] data markdown '']:
+    if elem:
+      then:
+        markdown +=: |
+
+          * $(elem.func.0)
+
+            $(elem.desc)
+
+        more =: elem.more
+        markdown +=:
+          when more: |2
+
+              <details><summary><strong>More</strong></summary>
+            $(more.chomp().indent())
+              </details>
+
+        recur: data markdown
+      else: markdown
+
+defn fmt-include(data):
+  input-file =: "$(deref input-dir)/$(data.file)"
+  markdown =: process(input-file).lines()
+  yank =: data.yank
+  markdown =:
+    if yank:
+      remove fn([s] re-find(rx(yank) s)): markdown
+      =>: markdown
+  =>: +"\n" + join("\n" markdown)
+
+defn indent(text):
+  replace text: /(?m)^(?=.)/ '  '
+
+# vim: ft=yaml sw=2 lisp:
