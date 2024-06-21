@@ -17,8 +17,7 @@ defn generate-library-markdown(data):
     title: $(meta.title)
     ---
 
-  loop [pairs data.seq() markdown markdown]:
-    +[pair & pairs] =: pairs
+  loop [[pair & pairs] data.seq() markdown markdown]:
     if pair:
       then:
         +[key val] =: pair
@@ -32,16 +31,13 @@ defn generate-library-markdown(data):
                 cond:
                   string?(val): val
                   vector?(val): format-sections(val)
-                  nil?(val): ""
-                  =>: ""
         recur: pairs markdown
 
       else: markdown
 
 defn format-sections(sections):
   markdown =: ""
-  loop [sections sections markdown markdown]:
-    +[section & sections] =: sections
+  loop [[section & sections] sections markdown markdown]:
     if section:
       then:
         markdown +=: format-section(section)
