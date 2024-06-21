@@ -22,6 +22,17 @@ We'll certainly cover those cases here.
 
 * call — Calls a function with the given arguments.
 
+  <details><summary><strong>More</strong></summary>
+  This function is useful with dot chaining when a function returns
+  another function and you want to call it immediately.
+  
+  ```yaml
+  !yamlscript/v0
+  x =: 39
+  say: x.fn([n] \(n + %)).call(3)
+  ```
+  </details>
+
 * cwd — Returns the current working directory path as a string.
 
 
