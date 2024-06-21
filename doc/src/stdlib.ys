@@ -5,7 +5,7 @@ meta:
   doc-type: library
 
 
-raw: |
+text: |
   The YAMLScript standard library is a collection of functions that are
   available to all YAMLScript programs.
   This document describes the functions in the standard library and how to use

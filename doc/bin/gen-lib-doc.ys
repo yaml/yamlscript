@@ -12,7 +12,6 @@ defn main(input-file):
 defn generate-library-markdown(data):
   meta =: data.meta
   data =: dissoc(data "meta")
-
   markdown =: |
     ---
     title: $(meta.title)
@@ -26,12 +25,12 @@ defn generate-library-markdown(data):
         markdown +=: "\n"
         markdown +=:
           cond:
-            (key = 'raw'): val
+            (key = 'text'): val
             :else:
               str:
-                =>: "## $key\n\n"
+                =>: "\n## $key\n"
                 cond:
-                  string?(val): "$val\n"
+                  string?(val): val
                   vector?(val): format-sections(val)
                   nil?(val): ""
                   =>: ""
@@ -41,22 +40,24 @@ defn generate-library-markdown(data):
 
 defn format-sections(sections):
   markdown =: ""
-  loop [section & sections markdown markdown]:
+  loop [sections sections markdown markdown]:
+    +[section & sections] =: sections
     if section:
       then:
         markdown +=: format-section(section)
         recur: sections markdown
       else: markdown
 
-defn format-function([func desc more]):
-  markdown =: |
-    - name:
-      - $(name)
-      - $(args)
-    desc: $(desc)
-  if more:
-    then:
-      markdown +=: "\n"
-      markdown +=: "  more: |\n"
-      markdown +=: "    $(more)\n"
-  markdown
+defn format-section(section):
+  cond:
+    section.func: format-function(section)
+    =>: die("Don't know how to format '$section'")
+
+defn format-function(val):
+  +{:strs [func desc more]} =: val
+  +[name args retn] =: func
+  =>: |
+
+    * $name — $desc
+
+# vim: ft=yaml sw=2 lisp:

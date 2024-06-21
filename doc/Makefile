@@ -6,7 +6,10 @@ MD_GEN_FILES := $(YS_FILES:%.ys=%.md)
 
 default:
 
-docs: $(MD_GEN_FILES)
+build: $(MD_GEN_FILES)
 
-%.md: %.ys Makefile
+%.md: src/%.ys
 	ys bin/gen-lib-doc.ys $< > $@
+
+force:
+	touch src/*.ys
