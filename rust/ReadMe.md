@@ -1,3 +1,5 @@
+<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
+
 YAMLScript
 ==========
 
@@ -9,7 +11,7 @@ Program in YAML
 ```yaml
 #!/usr/bin/env ys-0
 
-defn main(name):
+defn main(name='world'):
   say: "Hello, $name!"
 ```
 
@@ -146,6 +148,7 @@ See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
 
 
 ## Authors
+
 
 * [Ingy döt Net](https://github.com/ingydotnet)
 * [Ethiraric](https://github.com/Ethiraric)

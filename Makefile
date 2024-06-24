@@ -29,11 +29,19 @@ DIRS := \
     ys \
 
 BUILD_DIRS := \
+    nodejs \
+    python \
+    ruby \
+    rust \
+    libyamlscript \
+    ys \
+
+INSTALL_DIRS := \
     libyamlscript \
     ys \
 
 BUILD := $(BUILD_DIRS:%=build-%)
-INSTALL := $(BUILD_DIRS:%=install-%)
+INSTALL := $(INSTALL_DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
 TEST_BINDINGS := $(BINDINGS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)

@@ -50,9 +50,12 @@ endif
 main:
 	ln -s .. main
 
-doc: $(DOC_FILES)
+doc: gen-doc $(DOC_FILES)
 
-src/doc/%: ../doc/% src/doc
+gen-doc:
+	$(MAKE) -C ../doc force build
+
+src/doc/%.md: ../doc/%.md src/doc
 	ln -fs ../../$< $@
 
 src/doc/%: % src/doc

@@ -19,22 +19,23 @@ However, the following is not valid and would cause a YAML parsing error:
 say: 'foo' * 3
 ```
 
-This is because YAML sees a single quoted scalar and text is not allowed to
-follow the closing quote.
+This is because YAML sees a single quoted scalar and text content is not allowed
+to follow the closing quote.
 
-YAMLScript provides the `.` escaping character to fix this:
+YAMLScript provides the `+` escaping character to fix this:
 
 ```yaml
-say: .'foo' * 3
+say: +'foo' * 3
 # (these also work in this case):
 say: ('foo' * 3)
 say: 3 * 'foo'
 ```
 
-Now the right-hand side is a plain scalar whose value is `.'foo' * 3`.
-YAMLScript will ignore the leading `.` and evaluate the expression as expected.
+Now the right-hand side is a plain scalar wThis is because YAML sees a single quoted scalar and text content is not allowed to
+follow the closing quote.hose value is `+'foo' * 3`.
+YAMLScript will ignore the leading `+` and evaluate the expression as expected.
 
-This `.` escaping character can be used anywhere that you need to use a plain
+This `+` escaping character can be used anywhere that you need to use a plain
 scalar to write a YAMLScript expression but the leading character would
 otherwise be interpreted as YAML syntax.
 
@@ -42,8 +43,8 @@ Another example:
 
 ```yaml
 # Here [3 4 5] is a YAMLScript vector, not a YAML sequence.
-# Again we make the entire RHS a plain scalar by starting with a `.`.
-say: .[3 4 5].reverse()
+# Again we make the entire RHS a plain scalar by starting with a `+`.
+say: +[3 4 5].reverse()
 ```
 
 It is super common to use `[]` vectors and `{}` mappings in Clojure code
@@ -51,9 +52,9 @@ expressions and thus in YAMLScript code expressions.
 In YAML, the same syntax is used for flow sequence and mapping nodes.
 This can cause confusion.
 
-We "fix" this, again, by using the `.` escaping character.
+We "fix" this, again, by using the `+` escaping character.
 Also, we simply disallow (in code mode) YAML flow sequences and flow mappings.
-Using the `.` to get the scalar expression version of the same thing works fine
+Using the `+` to get the scalar expression version of the same thing works fine
 (and as a bonus, there is no need for the commas and colons).
 
 For example:
@@ -63,20 +64,20 @@ For example:
 # This is an error (using a flow sequence in code mode):
 say: [1, 2, 3]
 # This is a scalar that re-parses as a vector:
-say: .[1, 2, 3]
+say: +[1, 2, 3]
 # And thus does not need the commas (commas are whitespace in previous line):
-say: .[1 2 3]
+say: +[1 2 3]
 # We can use the YAML flow collection syntax if we switch to data mode:
 say:: [1, 2, 3]
 # Same switching as above, but with `!` instead of `::`:
 say: ! [1, 2, 3]
-# The commas are require in the flow collections.
+# The commas are require in YAML flow collection syntax.
 ```
 
 YAML block sequences (lines starting with `- `) are also disallowed in code
 mode.
 
-The rationale here is that if you ever see `{`, `[`, `- ` or `>' (folded scalar)
+The rationale here is that if you ever see `{`, `[`, `- ` or `>` (folded scalar)
 you can assume that you are in data mode and not code mode.
 
 Example errors:
@@ -106,7 +107,7 @@ say::
 - 3'
 [1 2 3]
 
-$ ys -e 'say: .[1, 2, 3]'
+$ ys -e 'say: +[1, 2, 3]'
 [1 2 3]
 ```
 

@@ -11,7 +11,7 @@
    [yamlscript.runtime :as runtime]
    [yamlscript.common :as common]
    [yamlscript.compiler :as compiler]
-   [babashka.process :refer [exec]]
+   [babashka.process :refer [check exec process sh shell]]
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
    [clojure.pprint :as pp]
@@ -345,12 +345,30 @@ Options:
                       "")))]
         (err msg)))))
 
+(defn clojure-format [clojure formatter]
+  (let [out (try
+              (:out
+               (check
+                 (process {:in clojure
+                           :out :string
+                           :err *err*}
+                   formatter)))
+              (catch Exception e
+                (err e "Error running formatter: '" formatter "'")))]
+    out))
+
 (defn do-compile [opts args]
-  (let [[code _ _ #_file #_args] (get-compiled-code opts args [])]
-    (-> code
-      compiler/pretty-format
-      str/trim-newline
-      println)))
+  (let [[code _ _ #_file #_args] (get-compiled-code opts args [])
+        clojure (-> code
+                  compiler/pretty-format
+                  str/trim-newline)
+        formatter (System/getenv "YS_FORMATTER")
+        clojure (str/trimr
+                  (if formatter
+                    (clojure-format clojure formatter)
+                    clojure))]
+    (println clojure)
+    (System/exit 0)))
 
 (defn do-repl [opts]
   (todo "repl" opts))

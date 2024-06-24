@@ -19,7 +19,7 @@ defn main():
 ```
 
 To define a variable with a value we specify a symbol name, followed by one or
-more spaces, followed by `=:`. for the YAMLScript key (the LHS).
+more spaces, followed by `=:` for the YAMLScript key (the LHS).
 The variable will be set to the result of the evaluation of the mapping pair's
 value (the RHS).
 
@@ -40,4 +40,5 @@ But in the Clojure code one became a `def` expression and the other used `let`.
 Using `=:` outside a function uses `def` and it's a file scope variable.
 Using `=:` inside a function uses `let` and the scope is the remainder of the
 function.
+
 This is idiomatic Clojure.

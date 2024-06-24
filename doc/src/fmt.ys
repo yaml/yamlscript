@@ -1,0 +1,44 @@
+!yamlscript/v0
+
+defn fmt-func-list(data):
+  markdown =:
+    loop [[elem & data] data markdown '']:
+      if elem:
+        then:
+          +[fname sigs desc opts] =: elem
+          more =: opts.more
+
+          markdown +=: |
+
+            * **$fname** — $desc
+
+          markdown +=:
+            loop [[sig & sigs] sigs markdown '']:
+              if sig:
+                then:
+                  +[ret & args] =: sig.words().reverse()
+                  args =: args.reverse().join(' ' _)
+                  markdown +=:
+                    "  * ${fname}($args) -> $ret\n"
+                  recur: sigs markdown
+                else: markdown
+
+          markdown +=:
+            when more: |2
+
+                <details>
+                <summary
+                style="font-size:smaller;
+                       font-weight:bold;
+                       color:#888">More</summary>
+              $(more.chomp().indent())
+                </details>
+
+          recur: data markdown
+        else: markdown
+  =>: |
+    <div class="func-list">
+    $(markdown.chomp())
+    </div>
+
+# vim: ft=yaml sw=2 lisp:

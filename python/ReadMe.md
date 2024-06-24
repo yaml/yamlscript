@@ -1,3 +1,5 @@
+<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
+
 YAMLScript
 ==========
 
@@ -126,6 +128,7 @@ See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
 
 ## Authors
+
 
 * [Ingy döt Net](https://github.com/ingydotnet)
 

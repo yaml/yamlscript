@@ -20,6 +20,8 @@ export PYTHONPATH := $(ROOT)/python/lib
 version:
 	@echo $(VERSION)
 
+build:: ReadMe.md
+
 .PHONY: test
 ifdef PYTHON
 test:: test-pytest test-ffi

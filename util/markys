@@ -1,0 +1,85 @@
+#!/usr/bin/env ys-0
+
+input-dir =: atom(nil)
+
+defn main(input-file):
+  dir =: dirname(input-file).abspath()
+  reset! input-dir: dir
+
+  fmt-file =: "$dir/fmt.ys"
+  if fs-f(fmt-file):
+    ys/load-file: fmt-file
+
+  markdown =:
+    process: input-file
+
+  say: |-
+    <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
+
+    $(markdown.trim())
+
+defn process(input-file):
+  data =: load-markys(input-file)
+  markdown =:
+    generate-markdown: data
+  triml: markdown
+
+defn load-markys(file):
+  text =: file.abspath().slurp()
+  fenced-re =: /(?s)(?:```markys:\S+\n.*?\n```\n)/
+  texts =:
+    split text: fenced-re
+  fenced =:
+    re-seq fenced-re: text
+  fix =: fenced.count() < texts.count()
+  fenced =:
+    if fix:
+      (vec(fenced) + [''])
+      fenced
+  all =:
+    interleave texts: fenced
+  if fix:
+    drop-last(all)
+    all
+
+defn generate-markdown(data):
+  markdown =: ''
+  loop [[section & sections] data markdown markdown]:
+    if section:
+      then:
+        markdown +=:
+          if (section =~ /^```markys:/):
+            format-markys: section
+            trim: section
+        recur sections:
+          if empty?(markdown):
+            markdown
+            (markdown + "\n")
+      else: markdown
+
+defn format-markys(text):
+  type =: (text =~ /^```markys:(\S+)/).1
+  text =: text.replace(/^```.*\n/ '')
+  yaml =: text.replace(/```\n\z/ '')
+  data =: yaml.ys/compile().eval-string()
+  func =: +"fmt-$type".symbol().resolve() ||
+    die("Can't find function 'fmt-$type'")
+  call func: data
+
+defn get-path(file):
+  abspath file: input-dir.deref()
+
+defn fmt-include(data):
+  input-file =: data.file.get-path()
+  markdown =: process(input-file).lines()
+  yank =: data.yank
+  markdown =:
+    if yank:
+      remove fn([s] re-find(rx(yank) s)): markdown
+      =>: markdown
+  =>: +"\n\n" + join("\n" markdown) + "\n\n"
+
+defn indent(text):
+  replace text: /(?m)^(?=.)/ '  '
+
+# vim: ft=yaml sw=2 lisp:

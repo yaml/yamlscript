@@ -21,6 +21,8 @@ endif
 
 #------------------------------------------------------------------------------
 
+build:: ReadMe.md
+
 test:: update
 	make -C ../libyamlscript $(LIBYAMLSCRIPT_SO_FQNP)
 	@printf '%.0s-' {1..80}; echo

@@ -11,6 +11,8 @@ RAKE_CMDS := \
 
 #------------------------------------------------------------------------------
 
+build:: ReadMe.md
+
 ifdef RUBY
 update:
 	bundle install
