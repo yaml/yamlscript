@@ -1,2 +1,2 @@
 test:
-	LD_LIBRARY_PATH=../../libyamlscript/lib/ go test
+	LD_LIBRARY_PATH=/usr/local/lib go test

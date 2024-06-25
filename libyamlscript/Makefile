@@ -9,8 +9,13 @@ LYS_SOURCES := \
   src/libyamlscript/core.clj \
 	src/libyamlscript/API.java \
 
+HEADERS := \
+  $(LIBRARY_PATH)/graal_isolate.h \
+  $(LIBYAMLSCRIPT_SO_NAME).h \
+
 BUILD_TARGETS := \
   $(LIBYAMLSCRIPT_SO_FQNP) \
+  $(HEADERS) \
 
 # Avoid rebuild in ephemerally created Docker container.
 ifdef DOCKERENV
@@ -24,7 +29,9 @@ build:: $(BUILD_TARGETS)
 
 jar: $(LIBYAMLSCRIPT_JAR_PATH)
 
-install:: $(LIBYAMLSCRIPT_SO_FQNP)
+install:: $(BUILD_TARGETS)
+	mkdir -p $(PREFIX)/include/
+	install -m 644 $(HEADERS) $(PREFIX)/include/
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
