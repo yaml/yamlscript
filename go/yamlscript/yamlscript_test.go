@@ -2,9 +2,9 @@ package yamlscript_test
 
 import (
 	"testing"
-	"yamlscript"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/xanni/yamlscript/go/yamlscript"
 )
 
 func TestYamlScript(t *testing.T) {

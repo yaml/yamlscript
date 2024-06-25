@@ -1,4 +1,4 @@
-module yamlscript
+module github.com/xanni/yamlscript/go/yamlscript
 
 go 1.22.2
 
