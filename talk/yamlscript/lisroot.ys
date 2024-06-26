@@ -1,0 +1,15 @@
+!yamlscript/v0
+
+defn Linear():
+  fn([x] [d k]): d + (k * x)
+
+l =: Linear()
+
+newTF1 =: ROO/T(new TF1)
+SetParameters =: ROO/T(SetParameters TF1)
+Draw =: ROO/T(Draw TF1)
+
+doto:
+  newTF1 'pyf2': l -1. 1. 2
+  SetParameters: 5. 2.
+  Draw:

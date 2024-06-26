@@ -1,0 +1,18 @@
+%YAML 1.2
+%TAG !clj! tag:clojure.org,2006:/
+
+--- &anchor1
+# key1: &seq1 [flow, sequence, [1,2,3,]]
+# key2: *seq1     # alias reference to &seq1
+# key3: *anchor1  # recursive reference
+key4: { flow: mapping, map: {}, seq: [] }
+
+---
+second: document
+# invalid: *seq1
+invalid: duplicate mapping key
+...
+
+---
+# - !tag "123"
+- # !!str foo bar

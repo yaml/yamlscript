@@ -1,0 +1,16 @@
+!yamlscript/v0
+
+doall:
+  for [x (1 .. 3), y (5 .. 3)]:
+    say: +[x y]
+
+defn factorial(x):
+  apply *: 2 .. x
+
+say:
+  loop [[x & xs] (5 .. 10), pairs []]:
+    if x:
+      then:
+        f =: x.factorial()
+        recur xs: pairs.conj([x f])
+      else: pairs

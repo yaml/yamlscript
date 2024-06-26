@@ -1,0 +1,7 @@
+0*
+.watcher.*
+bin/ys*
+/lib/
+.help
+.vimrc
+hello

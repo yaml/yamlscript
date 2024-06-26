@@ -1,0 +1,21 @@
+!yamlscript/v0
+
+todo-list =::
+- Write your talk
+- Give your talk
+- Drink your beer
+
+defn main():
+  me =: ENV.USER.capitalize()
+  say: |
+    Good Morning $me,
+
+    Don't forget to:
+    $(join("\n"
+      (mapv \("* " + %1)
+        todo-list)))
+
+  say: >
+    **In THAT order!**
+
+    Have a good day.

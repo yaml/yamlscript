@@ -1,0 +1,16 @@
+!yamlscript/v0
+
+defn add:
+  (): 0
+  (x): x
+  (x y): x + y
+  (x y & z):
+    reduce: add add(x y) z
+
+say:
+  add: 3 4 5 6 7 8 9
+
+nums =: 3 .. 9
+
+say:
+  add: nums*

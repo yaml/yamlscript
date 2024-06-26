@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+vim -s $1
+
+ys $1

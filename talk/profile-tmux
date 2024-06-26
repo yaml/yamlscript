@@ -1,0 +1,1 @@
+tmux bind-key C-b send-prefix

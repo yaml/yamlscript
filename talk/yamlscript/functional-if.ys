@@ -1,0 +1,29 @@
+!yamlscript/v0
+
+defn main(fun):
+  say: "Calling '$fun':"
+  call: fun.symbol().resolve()
+
+defn f1():
+  x =: rand(20)
+  if (x < 10):
+    then: say('small')
+    else: say('BIG')
+
+defn f2():
+  size =: nil
+  if (rand(20) > 10):
+    size =: 'small'
+    size =: 'BIG'
+  say: size
+
+defn f3():
+  size =:
+    if (rand(20) > 10):
+      then: 'small'
+      else: 'BIG'
+  say: size
+
+defn f4():
+  say:
+    if (rand(20) > 10): +'small' 'BIG'

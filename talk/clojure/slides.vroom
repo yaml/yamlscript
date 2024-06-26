@@ -1,0 +1,184 @@
+---- config
+title: Introduction to Clojure for Perl Programmers
+indent: 5
+
+height: 25
+width: 89
+
+vim_opts: '-u NONE'
+skip: 0
+top: 1
+before: 2
+
+vimrc: |
+  source ./vimrc
+
+
+### >>> Thursday, June 27 • 1:30pm - 2:20pm <<<
+
+
+---- center
+Introduction to Clojure for Perl Programmers
+
+by Ingy döt Net
+
+The Perl and Raku Conference
+
+June 27, 2024
+
+Las Vegas
+
+
+----
+== Remember where you were on Oct 24, 2011?
+
+* I was drinking coffee in Larry Wall's kitchen
+
+* John McCarthy — RIP
+
+
+----
+== See: https://yamlscript.org/tprc2024
+
+* Info for all my talks
+
+
+----
+== Rich Hickey's Sabbatical
+
+* Rich took 2 years off from 2005-2007
+* Tired of 18 years of Java and C++ problems
+* He created Clojure and it was Good
+* Clojure is a Lisp that compiles to JVM Bytecode
+* Fully interoperable with Java
+* Also made ClojureScript; same thing over JavaScript
+* Clojure is a Platform
+* Clojure and ClojureScript were quickly successful
+* Now has lots of conferences and lots of jobs
+* Concise, Reliable, Performant Code
+
+
+----
+== Rich Hickey is Interesting
+
+* He's a great thinker, speaker and writer
+  * And seems like a nice guy
+
+* Rich Already Answered That
+  https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f
+
+* A History of Clojure
+  https://dl.acm.org/doi/pdf/10.1145/3386321
+
+* Rich on YouTube
+  https://www.youtube.com/results?search_query=rich+hickey
+  https://youtu.be/028LZLUB24s?si=hi5ak6LEKpTWJIEk&t=26
+  https://www.youtube.com/shorts/liUiRfN9NzQ
+
+
+----
+== Ingy and Clojure
+
+* I've been programming Clojure for 12 months
+  * All day, every day making YAMLScript
+
+* YAMLScript is a language that compiles to Clojure
+
+* Before 12 months of Clojure I was writing Lingy
+  * Lingy is a Clojure implementation in Perl
+
+* Before Lingy I was MAL (Making A Lisp)
+  https://github.com/kanaka/mal/blob/master/process/guide.md
+
+* I think Clojure is a really good language
+  * I've learned a Real Lisp
+  * It's an employable language
+  * It fits nicely in my Perl influenced brain
+
+
+----
+== Clojure and Perl
+
+* Clojure and Perl have a Lot in common
+* Both very dynamic
+  * Even though Clojure compiles to JVM jar files
+* Both are great for meta programming
+  * Access to internals
+
+Q: Why is Perl's "compile time" so crazy?
+A: Lisp
+
+* Clojure's big adds:
+  * Immutable data types
+  * Function programming
+  * Awesome concurrency experience
+  * Access to anything made for JVM
+
+
+----
+== I'm Sorry
+
+* I can't teach you Clojure today...
+  * I tried to write this talk
+  * I failed...
+
++$ yamllm 'What are the best ways to learn Clojure (especially for Perl Programmers)?'
+
+
+----
+== Let's just live code some Clojure!
+
+* What could go wrong?
+
+
+----
+== Let's Hack on YAMLScript
+
+https://github.com/yaml/yamlscript/issues/165
+
+$ ys folded.ys
+$ vim folded.ys
+
+* We need to:
+  * Make YS error on folded scalars in code mode.
+
+
+----
+== But first, The Clojure REPL Experience
+
+* The REPL is almost every Clojure progammers...
+  * Most Prized Possession!
+
+* You think you know what a REPL is but...
+  * YOU DON'T!!!
+
+* I'm not an expert either
+  * Let me show you what I know
+
+* Show `lein repl` in terminal
+
+
+----
+== Now Let's Code
+
+== PLEASE ASK QUESTIONS AS WE GO!
+
+* Write a failing test
+  * Error on folded scalars in code mode
+
+* Learn the YS compiler
+
+$ ys -cde '(1 + 2)'
+$ ys -cd folded.ys
+
+* Rich comment testing
+
+
+----
+== Q & A
+
+* Ask me Anything!
+
+
+----
+== THE END

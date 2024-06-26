@@ -1,0 +1,5 @@
+!yamlscript/v0
+
+defn get-beers-wanted(name):
+  print: "$(name.capitalize()), how many beers today? "
+  =>: read-line().num()

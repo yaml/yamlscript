@@ -1,0 +1,11 @@
+!yamlscript/v0
+
+old-people =::
+- Abigail
+- Ovid
+- ! ENV.USER.capitalize()
+
+old-things =: ! [ wise, experienced, stalwart ]
+
+each [person old-people]:
+  say: "$person is very $(old-things.rand-nth())! :-)"

@@ -1,0 +1,15 @@
+!yamlscript/v0
+
+defn main(count=100):
+  doall:
+    map say: fizzbuzz(count)
+
+defn fizzbuzz(n):
+  map:
+    fn(x):
+      cond:
+        zero?(x % 15): 'FizzBuzz'
+        zero?(x % 5):  'Buzz'
+        zero?(x % 3):  'Fizz'
+        =>: x
+    =>: 1 .. n

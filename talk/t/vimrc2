@@ -1,0 +1,4 @@
+map q ;
+map qq :qa!<cr><cr><cr><cr>
+
+autocmd BufEnter *.ys :setlocal filetype=yaml

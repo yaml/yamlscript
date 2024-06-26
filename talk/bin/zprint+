@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+zprint |
+  perl -p0e 's/\)\n\(/)\n\n(/g' |
+  perl -p0e 's/^(\(defn .*)\n *\[/$1 \[/gm'

@@ -1,0 +1,10 @@
+!yamlscript/v0
+
+say: +"/usr/share/dict/words"
+      .slurp()
+      .words()
+      .shuffle()
+      .take(5)
+      .join(" ")
+      .capitalize()
+      + "!!!"

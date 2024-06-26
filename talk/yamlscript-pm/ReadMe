@@ -1,0 +1,25 @@
+There's a new YAML loader in town, for both Perl and Raku!
+
+It loads all of your existing YAML files just as expected, but you can also
+call functions at any point.
+
+You can include other files, fetch web data or query a database! You can merge,
+concat, interpolate & 100s more.
+
+I think you'll love it!At TPRC 2023 I(ngy) talked about Lingy and YAMLScript.
+
+Immediately afterwards all the pieces fell in place to make YAMLScript the most
+powerful YAML loader for every language, including Perl and Raku.
+
+While YAMLScript is a complete functional programming language (available right
+now) its main focus is to fix most of the problems people have with YAML, and
+also take YAML's capabilities to a whole new level.
+
+In this talk, Ingy dot Net will teach you how to use the YAMLScript loader
+modules for Perl and Raku.
+
+Then he'll teach you how to easily tame your YAML and do just about anything
+you'd normally do from a programming language directly in YAML.
+
+I think you'll be pleasantly surprised just how clean and powerful it is when
+you add YAMLScript to your YAML files.

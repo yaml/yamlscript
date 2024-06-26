@@ -1,0 +1,64 @@
+Introduction to Clojure for Perl Programmers
+
+There's a lot about the Clojure programming language for a Perl programmer to like.
+It's very dynamic and very practical.
+If you think it's just for the JVM, you're very wrong.
+Let Ingy teach you the basics of this exciting language including compiling it to binary and using it directly with Perl!
+
+
+Clojure (pronounced like "closure") is a programming language that was created to make Java programming not be a nightmare!
+Clojure can use any library written in Java and Java can use any library written in Clojure.
+It's core data structures are immutable yet easy to work with.
+This makes it a great functional programming language, and makes concurrency simple and reliable.
+At the same time it supports mutable data structures when you need them (not very often).
+It's a very practical language.
+Clojure went beyond Java and the JVM to support other host languages, most notably JavaScript.
+These days Clojure can be run directly without any host (no JVM at all).
+It can also be compiled to binary executables and shared libraries.
+That means you can write "XS" modules in a very high level language.
+Clojure has a Lisp syntax, and if you've been wanting to really learn a Lisp, Clojure is a very practical one to start with.
+
+In this talk, Ingy dot Net will teach you as much as he can in 50 minutes about how a Perl programmer can be productive with Clojure.
+
+
+
+
+
+YAMLScript - Dynamic YAML in Perl and Raku
+
+There's a new YAML loader in town, for both Perl and Raku!
+It loads all of your existing YAML files just as expected, but you can also call functions at any point.
+You can include other files, fetch web data or query a database! You can merge, concat, interpolate & 100s more.
+I think you'll love it!
+
+
+At TPRC 2023 I(ngy) talked about Lingy and YAMLScript.
+Immediately afterwards all the pieces fell in place to make YAMLScript the most powerful YAML loader for every language, including Perl and Raku.
+While YAMLScript is a complete functional programming language (available right now) its main focus is to fix most of the problems people have with YAML, and also take YAML's capabilities to a whole new level.
+
+In this talk, Ingy dot Net will teach you how to use the YAMLScript loader modules for Perl and Raku.
+Then he'll teach you how to easily tame your YAML and do just about anything you'd normally do from a programming language directly in YAML.
+
+I think you'll be pleasantly surprised  just how clean and powerful it is when you add YAMLScript to your YAML files.
+
+
+
+
+
+YAMLScript - Scripting in YAML
+
+What's the best language for writing scripts?
+Is it Bash? Perl? Raku? YAML?
+Huh? YAML's not even a scripting language...
+Well it is now, and it might be your go to language after this talk!
+Ingy wants to show you how to be super productive with nice clean functional YAML code.
+Welcome to YAMLScript!
+
+While YAMLScript is focused on making YAML configuration be incredible, it's also a complete functional programming language.
+It comes with an extensive standard library, tons of external real world external libraries, all the things you expect a real programming language to have.
+How is that possible? It's because YAMLScript jit-compiles to another real world language, Clojure.
+But while Clojure is a Lisp that runs on the JVM, YAMLScript looks closer to Python and needs no JVM.
+It's clean, fast and a great way to script just about anything.
+And if your script needs data, well I hope you know we got you covered!
+
+Come hear Ingy dot Net tell you about this great new addition to your day to day hacking toolbox.

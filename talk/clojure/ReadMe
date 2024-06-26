@@ -1,0 +1,35 @@
+There's a lot about the Clojure programming language for a Perl programmer to
+like.
+
+It's very dynamic and very practical.
+If you think it's just for the JVM, you're very wrong.
+
+Let Ingy teach you the basics of this exciting language including compiling it
+to binary and using it directly with Perl!Clojure (pronounced like "closure")
+is a programming language that was created to make Java programming not be a
+nightmare!
+
+Clojure can use any library written in Java and Java can use any library
+written in Clojure.
+
+It's core data structures are immutable yet easy to work with.
+This makes it a great functional programming language, and makes concurrency
+simple and reliable.
+
+At the same time it supports mutable data structures when you need them (not
+very often).
+It's a very practical language.
+
+Clojure went beyond Java and the JVM to support other host languages, most
+notably JavaScript.
+
+These days Clojure can be run directly without any host (no JVM at all).
+
+It can also be compiled to binary executables and shared libraries.
+That means you can write "XS" modules in a very high level language.
+
+Clojure has a Lisp syntax, and if you've been wanting to really learn a Lisp,
+Clojure is a very practical one to start with.
+
+In this talk, Ingy dot Net will teach you as much as he can in 50 minutes about
+how a Perl programmer can be productive with Clojure.

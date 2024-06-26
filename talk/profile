@@ -1,0 +1,36 @@
+export TPRC_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)
+export YS_ROOT=$(cd "$TPRC_ROOT/.." && pwd -P)
+
+[[ -e $TPRC_ROOT/bin/ys ]] ||
+(
+  cd "$TPRC_ROOT"
+  make "ys-install${Q:+-quick}"
+)
+
+add-to-path() {
+  if [[ $PATH != *"$1":* ]]; then
+    export PATH=$1:$PATH
+  fi
+}
+
+export YS_FORMATTER=$(which zprint+)
+
+profile-edit() {
+  vim "$TPRC_ROOT/profile"
+  source "$TPRC_ROOT/profile"
+}
+
+profile-source() {
+  source "$TPRC_ROOT/profile"
+}
+
+if [[ $PATH != *"$HOME/src/pst/bin":* ]]; then
+  source ~/src/pst/.rc
+fi
+
+add-to-path "$HOME/src/yamllm/.rc"
+# add-to-path "$TPRC_ROOT/bin"
+export PATH=$TPRC_ROOT/bin:$PATH
+
+
+# vim: ft=sh sw=2:

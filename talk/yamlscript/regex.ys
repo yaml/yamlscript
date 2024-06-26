@@ -1,0 +1,15 @@
+!yamlscript/v0
+
+word-list =: slurp('/usr/share/dict/words').words()
+
+each [word word-list]:
+  if (word =~ /a.+oo.+d/):
+    say: word
+
+say: ''
+
+paths =: sh('find /tmp').out.lines().take(10)
+each [path paths]:
+  m =: path =~ rx('^/tmp/([^/]+)$')
+  if m:
+    say: m.1

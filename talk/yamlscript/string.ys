@@ -1,0 +1,20 @@
+!yamlscript/v0
+
+hello =: 'Howdy'
+
+words =: slurp('/usr/share/dict/words').std/words()
+
+names =: slurp("https://raw.githubusercontent.com/dominictarr/random-name/master/first-names.json").json/load()
+
+say: hello
+
+say: "$hello, $(names.rand-nth())!"
+
+it =: words.shuffle().first()
+say: |
+
+  Dear $(names.rand-nth()),
+
+  Think about '$it' next time.
+
+  Love, $(ENV.USER.capitalize())

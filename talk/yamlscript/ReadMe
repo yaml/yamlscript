@@ -1,0 +1,30 @@
+What's the best language for writing scripts?
+Is it Bash? Perl? Raku? YAML?
+
+Huh? YAML's not even a scripting language...
+
+Well it is now, and it might be your go to language after this talk!
+
+Ingy wants to show you how to be super productive with nice clean functional
+YAML code.
+
+Welcome to YAMLScript!
+
+While YAMLScript is focused on making YAML configuration be incredible, it's
+also a complete functional programming language.
+
+It comes with an extensive standard library, tons of external real world
+external libraries, all the things you expect a real programming language to
+have.
+
+How is that possible? It's because YAMLScript jit-compiles to another real
+world language, Clojure.
+
+But while Clojure is a Lisp that runs on the JVM, YAMLScript looks closer to
+Python and needs no JVM.
+
+It's clean, fast and a great way to script just about anything.
+And if your script needs data, well I hope you know we got you covered!
+
+Come hear Ingy dot Net tell you about this great new addition to your day to
+day hacking toolbox.

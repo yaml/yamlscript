@@ -1,0 +1,10 @@
+!yamlscript/v0
+
+answer =: 42
+
+defn main():
+  defn =: 'yo'
+  times =: 2
+  say: defn * times
+
+

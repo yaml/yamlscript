@@ -1,0 +1,526 @@
+---- config
+title: YAMLScript — Scripting in YAML
+indent: 5
+
+height: 25
+width: 89
+
+vim_opts: '-u NONE'
+skip: 0
+top: 1
+before: 2
+
+vimrc: |
+  source ./vimrc
+
+
+### >>> Wednesday, June 26 • 10:30am - 11:20am <<<
+
+
+---- center
+YAMLScript — Scripting in YAML
+
+by Ingy döt Net
+
+The Perl and Raku Conference
+
+June 26, 2024
+
+Las Vegas
+
+
+----
+== Let's Sing!
+
+* Who knows "99 Bottles of Perl"?
+
++$ ys 99-bottles.ys
+
+$ ys 99-bottles.ys 3
+
+$ vim 99-bottles.ys
+
+$ ys --compile 99-bottles.ys
+
+$ vim 99-bottles.{ys,clj} -O
+
+
+----
+== Introducing YAMLScript
+
+* A new programming language (Finally)
+* Compiles to Clojure (A JVM Lisp)
+
+* Runtime is native (No JVM)
+* As Fast as Perl (Python, Ruby, etc)
+
+$ time ys -e 'say: "Hello, world!"'
+$ time perl -E 'say "Hello, world!"'
+$ time raku -e 'say "Hello, world!"'
+$ time ruby -e 'puts "Hello, world!"'
+$ time node -e 'console.log("Hello, world!")'
+$ time python -c 'print("Hello, world!")'
+
+* Complete Stdlib (clojure.core, .*)
+* Full ecosystem (Bigger than CPAN?)
+
+
+----
+== About YAMLScript
+
+* YAML Based Syntax (100% valid YAML)
+* Your YAML files are valid YS!
+
+* Compiles to Clojure (a modern Lisp)
+* No code execution by default.
+
+* Embeds into YAML (Dynamic YAML)
+  * Come to my next talk :)
+* Also standalone (Nice for scripting)
+  * This talk
+
+
+----
+== ys - The YAMLScript CLI Interpreter
+
+* Run YAMLScript programs
+* Load YAML files (to JSON, YAML, etc)
+  * With or w/o embedded code
+
+* Compile YS to Clojure
+* Compile YS program to binary
+
+* Compile YS library to shared (soon)
+* Compile YS to C++ (soon)
+
+* Debug YS programs
+
+
+----
+== ys Basic Usage
+
+$ ys --help    # or `ys -h` or just `ys`
+
+$ ys 99-bottles.ys
+$ ys -c 99-bottles.ys
+
+$ cat yaml-spec-example.yaml
+$ ys -l yaml-spec-example.yaml
+$ ys -J yaml-spec-example.yaml
+$ ys -Y yaml-spec-example.yaml
+$ ys -E yaml-spec-example.yaml
+$ cat yaml-spec-example.yaml | ys -l -
+$ cat yaml-spec-example.yaml | ys -l - | jq '."bill-to"'
+
+$ ys yaml-spec-example.yaml
+$ ys -p yaml-spec-example.yaml
+$ ys -c yaml-spec-example.yaml
+$ ys -cd yaml-spec-example.yaml
+
+
+----
+== Installing ys
+
+* First go here:
+  $ open https://yamlscript.org/tprc2024
+* All this stuff is there
+
+* Simplest install:
+  $ curl -s https://yamlscript.org/install | bash
+  $ export PATH=~/.local/bin:$PATH
+  $ ys --help
+
+
+----
+== Building ys
+
+* Sometimes the binary builds don't work
+* Mostly on older Linux
+* Build from source usually fixes it
+
+  git clone https://github.com/yaml/yamlscript
+  cd yamlscript
+  make install
+
+* This takes several minutes :\
+* Also curls a 350MB tarball (first time)
+
+----
+== YAMLScript Modes
+
+$ ys <(echo 'say: "Hello"')
+$ ys -p <(echo 'say: "Hello"')
+$ ys -l <(echo 'say: "Hello"')
+$ ys <(echo $'!yamlscript/v0\nsay: "Hello"')
+
+$ ys -e 'say: "Hello"'
+$ ys -Dparse -c -e 'say: "Hello"'
+
+$ ys -md -l -e 'say: "Hello"'
+$ ys -mc -e 'say: "Hello"'
+
+$ ys -e 'say: Hello'
+
+
+----
+== YAMLScript Compiles to Clojure
+
+$ ys -c 99-bottles.ys
+
+$ (unset YS_FORMATTER; ys -c 99-bottles.ys)
+
+$ (YS_FORMATTER=zprint; ys -c 99-bottles.ys)
+
+$ (YS_FORMATTER=zprint+; ys -c 99-bottles.ys)
+
+$ cat $(which zprint+)
+
+
+----
+== Clojure Basics
+
+$ clj -M -e '42'
+$ bb -e '42'
+
+$ bb '(1 + 2)'
+$ bb '(+ 1 2)'
+$ bb '(say "Hello")'
+$ bb '(println "Hello")'
+$ bb '(defn foo [x] (inc x)) (foo 41)'
+
+
+----
+== Clojure Basics
+
+$ vim fizzbuzz.clj
+$ time bb fizzbuzz.clj 16
+
+$ vim fizzbuzz.ys
+$ time ys fizzbuzz.ys 16
+
+$ vim fizzbuzz.{clj,ys} -O
+
+
+----
+== Functional
+
+* YAMLScript is a functional language
+* Because Clojure is a functional language
+* YAMLScript looks imperative
+* VSCode usually thinks it's Python
+
+$ vim functional-if.ys
+$ ys functional-if.ys f1
+$ ys functional-if.ys f2
+$ ys functional-if.ys f3
+$ ys functional-if.ys f4
+
+
+----
+== YAMLScript <3 TMTOWTDI
+
+* Lisp has 1 (way 2 'do :it)
+
+* YAMLScript is like Burger King
+  * Have it your way
+
+* Go anywhere on the spectrum:
+  * Full-Lisp <--------> Full YAML
+  * I like a nice mix
+
+* Perl is a MAJOR influencer of YS
+* Raku as well
+* Shout out to vendethiel!!
+
+
+----
+== YeS Expressions!
+
+* Lisp has S-Expressions
+* YAMLScript has YeS-Expressions
+
+$ ys -e 'say: (+ 40 2)'
+$ ys -e 'say: (40 + 2)'
+$ ys -e 'say: 40 + 2'
+$ ys -e 'say: 5 + 10 + 10 + 15 + 2'
+$ ys -ce 'say: 5 + 10 + 10 + 15 + 2'
+$ ys -e 'say: +"foo" + 5 + 10 + 10 + 15 + 2'
+$ ys -e 'say: 3 + 4 * 5'
+$ ys -e 'say: 3 + (4 * 5)'
+
+
+----
+== Function Calling
+
+$ ys -pe '(map inc (reverse (drop 5 (1 .. 10))))'
+
+$ ys -pe 'map(inc reverse( drop(5 (1 .. 10))))'
+
+$ ys -pe '(1 .. 10).drop(5 _).reverse().map(inc _)'
+
+$ ys -pe '(1 .. 10) . drop(5 _) . reverse() . map(inc _)'
+
+
+----
+== Dot Chaining
+
+$ ys -pe 'ENV.sort().rand-nth()'
+
+$ ys -pe 'ENV.USER.2.upper-case()'
+
+$ ys -e 'say: +"/usr/share/dict/words".slurp().words().shuffle().take(5).join(" ").capitalize() + "!!!"'
+
+$ vim dot-blurb.ys
+$ ys dot-blurb.ys
+
+
+----
+== Strings and Interpolation
+
+* YAML has 5 'styles' of strings
+  * Plain - unquoted
+  * Double Quoted
+  * Single Quoted
+  * Literal - heredocs
+  * Folded - best avoided!
+
+* Very important in YAMLScript
+
+$ vim string.ys
+$ ys string.ys
+
+
+----
+== YAMLScript Symbols
+
+* Clojure symbols (variables) begin with a
+  non-numeric character and can contain
+  alphanumeric characters and
+  *, +, !, -, _, ', ?, <, > and =
+
+* YAML symbols:
+  * foo
+  * foo-bar
+  * my::ns/foo-bar
+  * foo?
+  * foo!
+  * Operators: + - == != =~ etc
+  * No underscores
+  * Except `_` is a valid symbol
+
+* Clojure actually only uses those IRL
+* YS can make good use of the rest
+
+
+----
+== More YS Syntax Features
+
+$ vim let.ys
+$ ys -c let.ys
+
+$ vim multi-arity.ys
+$ ys multi-arity.ys
+$ ys -c multi-arity.ys
+
+$ vim loops.ys
+$ ys loops.ys
+
+$ vim regex.ys
+$ ys regex.ys
+
+$ vim polymorphic.ys
+$ ys polymorphic.ys
+
+
+----
+== The Power of Code Generation
+
+$ vim 99-bottles.bash
+$ bash 99-bottles.bash
+$ bash 99-bottles.bash 3
+$ bash -x 99-bottles.bash 3
+
+$ vim 99-bottles.ys
+$ ys 99-bottles.ys
+$ ys 99-bottles.ys 3
+$ ys -x 99-bottles.ys 3
+
+$ ys -c 99-bottles.ys 3   # declare and apply main
+$ ys -cx 99-bottles.ys 3
+
+
+----
+== Rosetta Code, Clojure and YAMLScript
+
+$ open https://rosettacode.org/wiki/Rosetta_Code
+$ open https://rosettacode.org/wiki/Category:YAMLScript
+$ open https://rosettacode.org/wiki/Category:Clojure
+
+$ open https://rosettacode.org/wiki/9_billion_names_of_God_the_integer
+
+
+----
+== Porting Clojure to YAMLScript
+
+$ open https://rosettacode.org/wiki/9_billion_names_of_God_the_integer#Clojure
+
+$ vim 9BNoGtI-A.ys
+$ vim 9BNoGtI-B.ys
+$ vim 9BNoGtI-C.ys
+$ vim 9BNoGtI-D.ys
+$ vim 9BNoGtI-E.ys
+$ vim 9BNoGtI-F.ys
+
+----
+== Compiling To binary
+
+* A YS program with a 'main' function
+  can be compiled to a native binary executable
+
+* Even a one liner:
+$ ys -b -e 'defn main(name="world"): say("Hello, $name!!")'
+
+$ time ./hello
+$ time ./hello TPRC
+$ ls -lh hello
+
+
+----
+== YS Compiled-In Libraries
+
+* clojure::core
+$ open https://github.com/clojure/clojure/blob/master/src/clj/clojure/core.clj
+$ curl -s https://raw.githubusercontent.com/clojure/clojure/master/src/clj/clojure/core.clj | grep '^(' | wc -l
+* clojure::{string,math,java.io,...}
+
+* ys::std
+* ys::yaml
+* ys::json
+* ys::clj
+
+
+----
+== How ys is Built
+
+* I used to think that Java sucked
+* I still do. It's a terrible language
+
+* YAMLScript is built over Clojure
+* Clojure is built over Java
+* native-image converts jar files to binary
+  * Standalone native; no JVM
+  * Oracle's GraalVM project
+
+* YAMLScript needs no Java/JVM
+* JVM Ecosystem is a real treasure
+
+$ ys --stack-trace -e 'say: 0 / 0'
+
+
+----
+== YAMLScript repository
+
+* YAMLScript has a Mono-Repository
+  * Code, doc, website, language bindings
+
+$ open https://github.com/yaml/yamlscript
+
+* Powerful Makefile System
+
+* Minimal deps to build
+  * bash + make + curl
+  * No Java environment needed
+  * Installs one in /tmp
+
+
+----
+== Releasing YAMLScript
+
+* Releasing YS is complicated
+  * Build binaries for matrix of:
+    * bin/ys and lib/libyamlscript.so
+    * Mac and Linux (Windows soon)
+    * Intel and ARM
+  * Release them to GitHub Releases
+  * Release Binding Modules in 8 (42 soon)
+    programming languages
+  * Update website with new version info
+
+* Show Releases Web Pages
+
+* I scripted all this in YAMLScript
+  $ vim $YS_ROOT/util/release-yamlscript
+
+
+----
+== YAMLScript vs Python
+
+$ open https://github.com/kloimhardt/LisRoot#readme
+
+$ vim lisroot.py lisroot.ys -O
+
+
+----
+== Why YAMLScript
+
+* YAMLScript is a possible future of scientific computing
+* While Python is statement based, YAMLScript is expression based
+* Expressions are like mathematical formulas, known to science since ages
+* Nevertheless, YAMLScript looks similar to popular Python
+* Mathematica(TM) language very successfully shows the way of expressions
+* It is time to base whole scientific computing on expressions
+* Python is good, but will be eventually replaced by something else
+* C++ is fast and will still be there when Python is gone
+* To mix C++ with Python, knowledge beyond the average scientist's is needed
+* YAMLScript compiles to C++ and thus can readily be mixed with C++
+
+
+----
+== The Importance of Being Lispest
+
+* YAMLScript is a Lisp Family Language
+
+* Why is this important?
+
+$ yamllm 'What is important about the Lisp programming language?'
+
+
+----
+== YAMLLM - YAMLScript meets API
+
+$ open https://yamlscript.org/blog/
+  * YAML is least expensive for LLM interaction
+
+* Paul Prescod, XML, ActiveState
+
+* Wrote my own chat-with-a-gpt tool: yamllm
+  * In YAMLScript!!!
+  $ open https://github.com/yaml/yamllm#readme
+
+* I cancelled my ChatGPT subscription!!
+
+$ yamllm 'Describe a future where YAMLScript (yamlscript.org) is widespread.'
+
+
+----
+== The YAMLScript Team
+
+* YAMLScript is a Team Effort
+  * Please Join Us
+
+* Perl and Raku People
+  * Ingy - Project Lead
+  * Ven (vendethiel) - Language Design
+  * JJ Atria - Perl Binding
+  * Tony O - Raku Binding
+  * Stig - NixOS distribution
+
+* Many others - Bindings and Help
+
+
+----
+== THE END
+
+== Questions?
+
+== Check Out https://yamlscript.org/tprc2024

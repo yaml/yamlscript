@@ -1,0 +1,368 @@
+---- config
+title: YAMLScript — Dynamic YAML in Perl and Raku
+indent: 5
+
+height: 25
+width: 89
+
+vim_opts: '-u NONE'
+skip: 0
+top: 1
+before: 2
+
+vimrc: |
+  source ./vimrc
+
+
+### >>> Wednesday, June 26 • 10:30am - 11:20am <<<
+
+
+---- center
+YAMLScript — Dynamic YAML in Perl and Raku
+
+by Ingy döt Net
+
+The Perl and Raku Conference
+
+June 26, 2024
+
+Las Vegas
+
+
+----
+== Perl Has a New YAML Loader
+
+$ perl -MXXX -e 'XXX \%ENV'
+
+$ perl -MXXX -MIO::All -e 'XXX io("beer.pl")->all'
+
+$ perl -MXXX -MIO::All -e 'use YAMLScript; XXX + YAMLScript->new->load(io("beer.yaml")->all)'
+
+$ vim beer.pl
+$ perl beer.pl
+$ vim beer.yaml
+
+
+----
+== Let's Change it Up
+
+$ vim beer2.raku
+$ raku beer2.raku
+$ vim beer2.yaml get-beer2.ys -O
+
+
+----
+== Introducing YAMLScript
+
+* A new programming language (Finally)
+* Compiles to Clojure (A JVM Lisp)
+* Runtime is native (No JVM)
+* YAML Based Syntax (100% valid YAML)
+* As Fast as Perl (Python, Ruby, etc)
+
+* A complete standalone programming language
+  * Previous talk
+* Embeds into YAML (Dynamic YAML)
+  * This talk
+* Complete Stdlib (clojure.core, .*)
+* Full ecosystem (like CPAN)
+
+* YS YAML Loader Bindings for 42 Languages
+  * 8.5 so far!
+  * Perl, Raku, Python, Ruby
+  * NodeJS, Java, Clojure, & Rust
+  * and a PR for Go!!
+
+
+----
+== What are YAMLScript's Use Cases?
+
+* Everyone asks this
+* AIP (Answer In Progress...)
+* Solve YAMLs Unsolved Problems
+* Acmeist Software Libraries/Modules
+* DRY out unwieldy YAML files
+  * For everyone. Not just k8s, Ansible, GHA, etc
+* Great Scripting Language
+  * Repo management tasks
+* New ideas come constantly to YAMScript
+
+
+----
+== Acmeism Realized?
+
+* Who has heard me talk of Acmeism?
+* C'Dent?
+* Pegex? TestML?
+
+* YAMLScript bindings for 42 languages
+
+* So YAMLScript IS Acmeist...
+
+
+----
+== YAMLScript can make YOU an Acmeist!
+
+* YAMLScript can be compiled to a shared library!
+
+* Write a new module in YS (high level)
+* Compile to a shared library
+* Auto-bind to 42 languages
+* Release with `pst`
+
+----
+== PST - Packaging Super Tool
+
+* In 2022 I wrote a new Package Manager
+  * For 42 programming languages!
+
+$ open https://github.com/ingydotnet/pst#readme
+$ pst version -a | cat
+
+* Making PST is how I found Clojure!
+
+
+----
+== Installing YAMLScript.{pm,rakumod}
+
+* First go here:
+  $ open https://yamlscript.org/tprc2024
+
+
+----
+== Installing YAMLScript.pm for Perl
+
+$ cpanm YAMLScript
+$ perl -MYAMLScript\ 9
+
+----
+== Installing YAMLScript.rakumod for Raku
+
+* First install the latest libyamlscript.so
+
+$ curl -s https://yamlscript.org/install | bash
+$ curl -s https://yamlscript.org/install | LIB=1 bash
+
+* Installs to ~/.local/lib/
+
+$ zef install YAMLScript
+$ raku -MYAMLScript -e 'say YAMLSCRIPT.VERSION'
+
+
+----
+== YAMLScript is YAML's Best Loader
+
+* The overall state of YAML is a mess
+* YAMLScript wants to be the best YAML Loader
+* Most correct, featured and secure
+* For all your current YAML
+* In any programming language
+* Same API, Functionality, Bugs and Fixes
+
+* The YAML Spec Problem
+* YAMLScript is only a Loader (no Dumper)
+* Stay tuned! :)
+
+
+----
+== How libyamlscript.so is Built
+
+* https://github.com/yaml/yamlscript/releases (show)
+
+* YAMLScript is built over Clojure
+* Clojure is built over Java
+* native-image converts jar files to shared library
+  * Standalone native binary; no JVM
+  * Oracle's GraalVM project
+
+* YAMLScript needs no Java/JVM
+* JVM Ecosystem is a real treasure
+
+$ ys --stack-trace -e 'say: 0 / 0'
+
+
+----
+== Binding Modules
+
+* YAMLScript Binding Modules are Small
+
+* To the Mono Repo!
+$ open https://github.com/yaml/yamlscript
+  Show: bindings and ReadMe files
+
+
+----
+== Capabilities
+
+* YS and YAML should be as safe as possible
+* No code eval unless the program allows it
+  * AND the user wants it
+
+* Can be applied deeper and more widely
+  * Disable anchors/Aliases
+  * Disable folded Scalars
+  * Allow code, but disable I/O
+
+* Coming Soon
+
+
+----
+== YAMLScript Standard Library
+
+* YS has the main clojure libraries builtin
+* Many 100s of standard functions
+
+* clojure::core is the mother lode!
+$ curl -s https://raw.githubusercontent.com/clojure/clojure/master/src/clj/clojure/core.clj | grep '^(' | wc -l
+* clojure::{string,math,java.io,...}
+
+* ys::std
+* ys::yaml
+* ys::json
+
+
+----
+== YAMLScript Modes
+
+* Understanding Modes is Key to Using YS
+  * Also understanding YAML!
+
+* YS has 3 Modes:
+  * Bare mode: data only
+    * All you current YAML files are bare
+  * Code mode: YAML is functional code
+    * Start YAML with '!yamlscript/v0'
+    * Or '#!/usr/bin/env ys-0' or 'ys -e ...'
+  * Data mode: YAML starts as data
+    * Can switch to code mode and back
+
+
+----
+== Syntax for mode switching
+
+$ ys -e 'say: ENV.USER'
+$ ys -l <(echo 'say: ENV.USER')
+$ ys -e 'say:: ENV.USER'
+
+$ vim modes.ys
+$ ys modes.ys
+
+
+----
+== The libyamlscript API
+
+* Currently one function
+  * load(ys-string) -> json-string
+
+* Eventually I hope to generate the bindings
+  * For every language
+
+
+----
+== The ys CLI command
+
+$ ys -h
+$ ys beer3.yaml
+$ ys -p beer3.yaml
+$ ys -l beer3.yaml
+$ ys -J beer3.yaml
+$ ys -Y beer3.yaml
+$ vim beer3.yaml
+$ ys -c beer3.yaml
+
+
+----
+== Billion Laughs Attack
+
+* https://en.wikipedia.org/wiki/Billion_laughs_attack#Variations
+
+$ vim billion.yaml
+$ ys -l billion.yaml
+$ ys -l billion.yaml | wc
+$ ys -c billion.yaml
+
+
+----
+== YAMLScript v0
+
+$ ls -l $TPRC_ROOT/bin
+$ ls -l $TPRC_ROOT/lib
+
+* !yamlscript/v0
+* #!/usr/bin/env ys-0
+
+* I know I can't get YS right the first time
+* Maybe not the 5th
+
+* v0 is my idea to hopefully future proof YS
+* After it is declared stable...
+  * v0 files should never break
+
+
+----
+== Multi-doc Addressing
+
+$ vim multi-doc.ys multi-doc.clj -O
+$ ys multi-doc.ys
+$ ys multi-doc.ys -pe 'merge: $.1 $.2'
+
+
+----
+== The YAMLScript Compiler Explained
+
+* The YS (to Clojure) compiler is a fancy YAML Loader
+
+$ open https://yaml.org/spec/1.2.2/#31-processes
+
+* Compile:
+  * Parse       YAML
+  * Compose     YAML
+  * Resolve     YAML
+  * Build       YS   - Expressions
+  * Transform   YS   - Macros
+  * Construct   YAML - Clojure AST
+  * Print       YS   - Clojure Code Text
+
+$ ys -e 'defn main(name="$(ENV.USER)"): say("Hello, $name")'
+$ ys -c -e 'defn main(name="$(ENV.USER)"): say("Hello, $name")'
+$ ys -c -d -e 'defn main(name="$(ENV.USER)"): say("Hello, $name")'
+
+
+----
+== Taming Unwieldy Real Life YAML
+
+* https://github.com/BetterThanTomorrow/calva
+* https://github.com/BetterThanTomorrow/calva/pull/2511
+
+
+----
+== MarkYS Doc Generation
+
+$ vim $YS_ROOT/doc/{src/,}stdlib.md -O
+$ open https://yamlscript.org/doc/stdlib/
+
+$ vim $YS_ROOT/{python,ruby}/ReadMe.md -O
+$ vim $YS_ROOT/common/readme.md $YS_ROOT/python/{doc,ReadMe.md} -O
+
+----
+== The YAMLScript Team
+
+* YAMLScript is a Team Effort
+  * Please Join Us
+
+* Perl and Raku People
+  * Ingy - Project Lead
+  * Ven (vendethiel) - Language Design
+  * JJ Atria - Perl Binding
+  * Tony O - Raku Binding
+  * Stig - NixOS distribution
+
+* Many others - Bindings and Help
+
+
+----
+== THE END
+
+== Questions?
+
+== Check Out https://yamlscript.org/tprc2024

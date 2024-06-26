@@ -1,0 +1,12 @@
+!yamlscript/v0/
+
+=>:
+  load: 'get-beer2.ys'
+  user-name =: ENV.USER
+  url =: "https://raw.githubusercontent.com/dominictarr/random-name/master/first-names.json"
+  names =: curl(url).json/load()
+
+name:: user-name
+age:: 3 + 4 + 5 + 6 + 7 + 8 + 9
+beers:: get-beers-wanted(user-name)
+friends:: names.shuffle().take(4 _).sort()

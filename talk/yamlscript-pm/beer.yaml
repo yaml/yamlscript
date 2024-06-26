@@ -1,0 +1,11 @@
+!yamlscript/v0/
+
+=>:
+  defn get-beers-wanted(name):
+    print: "$(name.capitalize()), how many beers today? "
+    =>: read-line().num()
+  user-name =: ENV.USER
+
+name:: user-name
+age:: 3 + 4 + 5 + 6 + 7 + 8 + 9
+beers:: get-beers-wanted(user-name)
