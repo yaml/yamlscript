@@ -111,6 +111,7 @@
   (compile "!yamlscript/v0\na .=: b().c")
   (compile "
 !yamlscript/v0
-say: ENV.FOO_BAR.1.a.x()
+=>: >
+  foo
 ")
   )

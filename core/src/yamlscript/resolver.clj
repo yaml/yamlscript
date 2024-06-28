@@ -187,7 +187,7 @@
         :$ (set/rename-keys node {:$ :vstr})
         :' (set/rename-keys node {:' :str})
         :| (set/rename-keys node {:| :vstr})
-        :> (set/rename-keys node {:> :str})
+        :> (die "Folded scalars not allowed in code mode")
         ,  (die "Scalar has unknown style")))))
 
 (defn resolve-code-alias [node]

@@ -53,7 +53,7 @@
 - name: Folded style string
   yamlscript: |
     !yamlscript/v0
-    println: >-
+    println:: >-
       foo
   clojure: |
     (println "foo")
@@ -1086,3 +1086,12 @@
     =>: 42          ;; This is not a comment :(
   error: |
     ~~ This is not a comment
+
+
+- name: Error on folded scalars in code mode
+  yamlscript: |
+    !yamlscript/v0
+    =>: >
+      42
+  error: |
+    ~~ Folded scalars not allowed in code mode
