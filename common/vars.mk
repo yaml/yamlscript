@@ -14,6 +14,8 @@ YS_INSTALL_URL := https://yamlscript.org/install
 
 COMMON := $(ROOT)/common
 
+unexport YS_FORMATTER
+
 export PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(BUILD_BIN):$(PATH)
 
 export YAMLSCRIPT_ROOT ?= $(ROOT)
