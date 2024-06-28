@@ -608,17 +608,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/stdlib/</loc>
-        
-          <lastmod>2024-06-25T11:34:28.048Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/yaml/</loc>
         
           <lastmod>2024-06-25T11:34:28.048Z</lastmod>
@@ -677,6 +666,17 @@
         <loc>https://yamlscript.org/</loc>
         
           <lastmod>2024-06-25T11:34:28.056Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/stdlib/</loc>
+        
+          <lastmod>2024-06-26T23:13:21.280Z</lastmod>
         
         
         
