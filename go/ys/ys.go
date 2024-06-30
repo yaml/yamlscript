@@ -1,7 +1,5 @@
 package ys
 
-// #cgo CFLAGS: -I/usr/local/include
-// #cgo LDFLAGS: -L/usr/local/lib -lyamlscript
 // #include <libyamlscript.h>
 // #include <stdlib.h>
 import "C"

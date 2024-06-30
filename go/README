@@ -1,6 +1,15 @@
-# Installation instructions
+# Installation
 
-To install the Go binding, you will first need the library and header files in
-`/usr/local`, created using `make build` and `sudo make install`
+To install the Go binding run `make -C go install`.
 
-You can then run `go get github.com/yaml/yamlscript/go/ys` and make use of the `ys.Load` function.
+You can then run `go get github.com/yaml/yamlscript/go/ys` and make use of the
+`ys.Load` function.
+
+
+# Testing
+
+This needs to work:
+
+```
+$ make -C go test
+```
