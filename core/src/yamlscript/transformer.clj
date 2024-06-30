@@ -78,7 +78,7 @@
 (defn transform-dot-chain [node] node
   (if-lets [args (:Lst node)
             _ (and
-                (= '__ (get-in args [0 :Sym]))
+                (= '_-> (get-in args [0 :Sym]))
                 (> (count args) 2))
             args (map (fn [arg]
                         (if-lets [_ (= 'list (get-in arg [:Lst 0 :Sym]))

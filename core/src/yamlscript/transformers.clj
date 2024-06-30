@@ -43,7 +43,7 @@
               rhs {:pairs pairs}]
     [lhs rhs]))
 
-(def dot-op (Sym '__))
+(def dot-op (Sym '_->))
 (defn transform_def [lhs rhs]
   (let [[a b c] lhs]
     (if (not c)
@@ -53,7 +53,7 @@
             op (or ({'|| 'or
                      '+ '+_
                      '* '*_
-                     '. '__} op)
+                     '. '_->} op)
                  op)
             op (Sym op)
             rhs (if (and (= op dot-op)

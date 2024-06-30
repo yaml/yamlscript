@@ -117,7 +117,7 @@
                   value)
     :else (die "Invalid key: " key)))
 
-(defn __ [x & xs]
+(defn _-> [x & xs]
   (reduce _dot x xs))
 
 (declare num)

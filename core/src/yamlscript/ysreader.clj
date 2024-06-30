@@ -190,7 +190,7 @@
 
 (def operators
    ; change to ._
-  {(Sym '.)  (Sym '__)
+  {(Sym '.)  (Sym '_->)
    (Sym '..) (Sym 'rng)
    (Sym '+) (Sym '+_)
    (Sym '*) (Sym '*_)
@@ -399,7 +399,7 @@
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
   (read-string "a.b + c.d")
-  ; {:Lst [{:Sym +} {:Lst [{:Sym __} {:Sym a} {:Sym b}]} {:Lst [{:Sym __} {:Sym c} {:Sym d}]}]}
+  ; {:Lst [{:Sym +} {:Lst [{:Sym _->} {:Sym a} {:Sym b}]} {:Lst [{:Sym _->} {:Sym c} {:Sym d}]}]}
   (read-string "1 + 2")
   (read-string "a b")
   (read-string "a.b")

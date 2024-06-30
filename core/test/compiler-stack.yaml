@@ -568,12 +568,12 @@
       {:Map
        ({:Str "foo"}
         {:Lst
-         [{:Sym __}
+         [{:Sym _->}
           {:Sym vars}
           {:Lst [{:Sym quote} {:Sym foo}]}]})})}
   clojure: |
     (def vars (load "vars.yaml"))
-    {"foo" (__ vars 'foo)}
+    {"foo" (_-> vars 'foo)}
 
 
 - name: Code preamble in data mode sequence
@@ -597,13 +597,13 @@
       {:Sym =>}
       {:Vec
        ({:Lst
-         [{:Sym __}
+         [{:Sym _->}
           {:Sym vars}
           {:Lst [{:Sym quote} {:Sym foo}]}]}
         {:Str "bar"})})}
   clojure: |
     (def vars (load "vars.yaml"))
-    [(__ vars 'foo) "bar"]
+    [(_-> vars 'foo) "bar"]
 
 
 - name: Anchors and aliases in bare mode

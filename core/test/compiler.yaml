@@ -440,7 +440,7 @@
     {:pairs
      [{:Sym =>}
       {:Lst
-       [{:Sym __}
+       [{:Sym _->}
         {:Sym a}
         {:Int 5}
         {:Int 6}
@@ -451,7 +451,7 @@
         {:Lst [{:Sym list} {:Sym i}]}
         {:Key :j}]}]}
   clojure: |
-    (__ a 5 6 'b "c d" "e f" (list g h) (list i) :j)
+    (_-> a 5 6 'b "c d" "e f" (list g h) (list i) :j)
 
 
 - name: Switching to data mode
@@ -462,7 +462,7 @@
       foo: ! d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (__ d 'bar)}
+    {"foo" (_-> d 'bar)}
 
 
 - name: Switching to data mode with '::'
@@ -473,7 +473,7 @@
       foo:: d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (__ d 'bar)}
+    {"foo" (_-> d 'bar)}
 
 
 - name: Switch modes with '::' for def/let '=::'
@@ -629,7 +629,7 @@
     !yamlscript/v0
     =>: "Hi $(ARGS.0)!!"
   clojure: |
-    (str "Hi " (__ ARGS 0) "!!")
+    (str "Hi " (_-> ARGS 0) "!!")
 
 
 - name: Floating point numbers
@@ -672,12 +672,12 @@
     (defn foo [a _ b] (+_ a b))
 
 
-- name: Invalid symbol '__'
+- name: Invalid symbol '_->'
   yamlscript: |
     !yamlscript/v0
-    __: 2
+    _->: 2
   error: |
-    ~~ Invalid symbol: '__'
+    ~~ Invalid symbol: '_->'
 
 
 - name: Destructuring let
@@ -756,7 +756,7 @@
     !yamlscript/v0
     =>: a.3.b + c.4.d
   clojure: |
-    (+_ (__ a 3 'b) (__ c 4 'd))
+    (+_ (_-> a 3 'b) (_-> c 4 'd))
 
 
 - name: Dot grouping in dot path
@@ -764,7 +764,7 @@
     !yamlscript/v0
     =>: a.3.b(c.4.d)
   clojure: |
-    (__ a 3 (list b (__ c 4 'd)))
+    (_-> a 3 (list b (_-> c 4 'd)))
 
 
 - name: Dot grouping in if statement
@@ -772,7 +772,7 @@
     !yamlscript/v0
     if a.b: c.d * 3
   clojure: |
-    (if (__ a 'b) (*_ (__ c 'd) 3))
+    (if (_-> a 'b) (*_ (_-> c 'd) 3))
 
 
 - name: Yes expression in sym-paren form
@@ -789,7 +789,7 @@
     =>: .[a.3.b(x.y),
           c.4.d]
   clojure: |
-    [(__ a 3 (list b (__ x 'y))) (__ c 4 'd)]
+    [(_-> a 3 (list b (_-> x 'y))) (_-> c 4 'd)]
 
 
 - name: Fully qualified symbol with paren
@@ -805,7 +805,7 @@
     !yamlscript/v0
     =>: a.b.$c.d(e)
   clojure: |
-    (__ a 'b c (list d e))
+    (_-> a 'b c (list d e))
 
 
 - name: Multiple document stream
@@ -819,7 +819,7 @@
     bar: 44
   clojure: |
     {"foo" 42}
-    {"bar" (__ _ 'foo (list inc)), "foo" 123}
+    {"bar" (_-> _ 'foo (list inc)), "foo" 123}
     {"bar" 44}
 
 
@@ -960,7 +960,7 @@
     !yamlscript/v0
     foo: x.drop(3 _).take(5).nth(3)
   clojure: |
-    (foo (__ x (list drop 3 '_) (list +take 5) (list +nth 3)))
+    (foo (_-> x (list drop 3 '_) (list +take 5) (list +nth 3)))
 
 
 - name: Bug fix for bare '$' in literal with interpolation
@@ -1001,7 +1001,7 @@
       d .=: e.f(g)
       =>: b + d
   clojure: |
-    (defn a [] (let [b (__ b c) d (__ d e (list f g))] (+_ b d)))
+    (defn a [] (let [b (_-> b c) d (_-> d e (list f g))] (+_ b d)))
 
 
 - name: Support ops with def (like let)
@@ -1014,8 +1014,8 @@
   clojure: |
     (def a 1)
     (def a (+_ a 2))
-    (def a (__ a b))
-    (def a (__ a c (list d e)))
+    (def a (_-> a b))
+    (def a (_-> a c (list d e)))
 
 
 - name: Dot op when first arg is function call
@@ -1025,7 +1025,7 @@
       b .=: c().d
       =>: b
   clojure: |
-    (defn a [] (let [b (__ b (list c) 'd)] b))
+    (defn a [] (let [b (_-> b (list c) 'd)] b))
 
 
 - name: Loop without bindings
@@ -1069,7 +1069,7 @@
     when ENV.FOO_BAR:
       x: y
   clojure: |
-    (when (__ ENV 'FOO_BAR) (x y))
+    (when (_-> ENV 'FOO_BAR) (x y))
 
 
 - name: Support .? debugging operator
@@ -1077,7 +1077,7 @@
     !yamlscript/v0
     =>: foo.?.bar
   clojure: |
-    (__ foo (list _DBG) 'bar)
+    (_-> foo (list _DBG) 'bar)
 
 
 - name: Error Clojure style comments
