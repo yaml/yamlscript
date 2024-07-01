@@ -1,4 +1,4 @@
-module github.com/xanni/yamlscript/go/ys
+module github.com/yaml/yamlscript/go/ys
 
 go 1.22.2
 

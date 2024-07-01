@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/xanni/yamlscript/go/ys"
+	"github.com/yaml/yamlscript/go/ys"
 )
 
 func TestYamlScript(t *testing.T) {
