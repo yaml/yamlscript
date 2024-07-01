@@ -46,11 +46,11 @@ build:: $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
 
 test:: build
 	(cd $(ROOT)/go/ys && go $@)
+	chmod -R u+w $(GOPATH)
 
 clean::
 
 realclean:: clean
-	[[ ! -e $(GOPATH) ]] || chmod -R u+w $(GOPATH)
 	$(RM) -r $(GOPATH)
 
 sysclean:: clean
