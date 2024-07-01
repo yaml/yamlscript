@@ -45,7 +45,7 @@ export PATH := $(GOBIN):$(PATH)
 build:: $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
 
 test:: build
-	(cd $(ROOT)/go/ys && go $@)
+	go $@
 	chmod -R u+w $(GOPATH)
 
 clean::
