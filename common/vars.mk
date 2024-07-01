@@ -30,6 +30,12 @@ endif
 ostype := $(shell /bin/bash -c 'echo $$OSTYPE')
 machtype := $(shell /bin/bash -c 'echo $$MACHTYPE')
 
+ifneq (,$(findstring x86_64,$(machtype)))
+  IS_INTEL := true
+else ifneq (,$(findstring aarch64,$(machtype)))
+  IS_ARM := true
+endif
+
 ifneq (,$(findstring linux,$(ostype)))
   IS_LINUX := true
   GCC := gcc -std=gnu99 -fPIC -shared
@@ -188,6 +194,7 @@ export LEIN_JVM_OPTS := \
 # XXX Can't use MAVEN_SETTINGS until /tmp/yamlscript/.m2 is working:
 # JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED) $(MAVEN_SETTINGS)
 JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED)
+
 
 #------------------------------------------------------------------------------
 # Set release asset variables:
