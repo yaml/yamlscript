@@ -51,6 +51,8 @@ test:: build
 clean::
 
 realclean:: clean
+	[[ ! -d $(GOPATH) ]] || \
+	  chmod -R u+w $(GOPATH)
 	$(RM) -r $(GOPATH)
 
 sysclean:: clean

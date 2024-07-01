@@ -1,4 +1,4 @@
-package ys
+package yamlscript
 
 // #cgo LDFLAGS: -lyamlscript
 // #include <libyamlscript.h>
