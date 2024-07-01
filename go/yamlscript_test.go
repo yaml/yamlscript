@@ -1,17 +1,17 @@
-package ys_test
+package yamlscript_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/yaml/yamlscript/go/ys"
+	"github.com/yaml/yamlscript/go/yamlscript"
 )
 
 func TestYamlScript(t *testing.T) {
-	_, err := ys.Load(":")
+	_, err := yamlscript.Load(":")
 	assert.Error(t, err)
 
-	data, err := ys.Load("!yamlscript/v0/data\ntest:: inc(41)")
+	data, err := yamlscript.Load("!yamlscript/v0/data\ntest:: inc(41)")
 	assert.NoError(t, err)
 	assert.Equal(t, map[string]any{"test": (float64)(42)}, data)
 }

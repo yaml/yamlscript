@@ -1,4 +1,4 @@
-module github.com/yaml/yamlscript/go/ys
+module github.com/yaml/yamlscript/go/yamlscript
 
 go 1.22.2
 
