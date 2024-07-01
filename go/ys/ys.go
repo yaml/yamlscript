@@ -1,5 +1,6 @@
 package ys
 
+// #cgo LDFLAGS: -lyamlscript
 // #include <libyamlscript.h>
 // #include <stdlib.h>
 import "C"
