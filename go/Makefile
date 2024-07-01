@@ -43,7 +43,6 @@ export PATH := $(GOBIN):$(PATH)
 
 #------------------------------------------------------------------------------
 build:: $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
-	(cd $(ROOT)/go/ys && go $@)
 
 test:: build
 	(cd $(ROOT)/go/ys && go $@)
@@ -51,10 +50,11 @@ test:: build
 clean::
 
 realclean:: clean
+	[[ ! -e $(GOPATH) ]] || chmod -R u+w $(GOPATH)
 	$(RM) -r $(GOPATH)
 
 sysclean:: clean
-	$(RM) -r $(YS_TMP)/go
+	$(RM) -r $(YS_TMP)/go*
 
 $(GO_INSTALLED): $(GO_TARBALL)
 	mkdir -p $(YS_TMP)
@@ -63,4 +63,4 @@ $(GO_INSTALLED): $(GO_TARBALL)
 	touch $@
 
 $(GO_TARBALL):
-	curl -L -o $@ $(GO_URL)
+	curl -sL -o $@ $(GO_URL)
