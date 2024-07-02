@@ -42,13 +42,6 @@ export PATH := $(GOBIN):$(PATH)
 
 
 #------------------------------------------------------------------------------
-pseudo-version:
-	@TZ=UTC git --no-pager show \
-	   --quiet \
-	   --abbrev=12 \
-	   --date=format-local:%Y%m%d%H%M%S \
-	   --format=v0.0.0-%cd-%h
-
 build:: build-doc $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
 
 build-doc: ReadMe.md
@@ -67,6 +60,20 @@ realclean:: clean
 sysclean:: clean
 	$(RM) -r $(YS_TMP)/go*
 
+
+#------------------------------------------------------------------------------
+pseudo-version:
+	@TZ=UTC git --no-pager show \
+	   --quiet \
+	   --abbrev=12 \
+	   --date=format-local:%Y%m%d%H%M%S \
+	   --format=v0.0.0-%cd-%h
+
+print-gobin: $(GO_INSTALLED)
+	@echo $(GOBIN)
+
+
+#------------------------------------------------------------------------------
 $(GO_INSTALLED): $(GO_TARBALL)
 	mkdir -p $(YS_TMP)
 	tar xf $< -C $(YS_TMP)
