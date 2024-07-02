@@ -36,6 +36,7 @@ install:: $(BUILD_TARGETS)
 	install -m 644 $< $(PREFIX)/lib/
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_APIP))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_VERS))
 
 realclean::
 	$(RM) -r lib/
@@ -75,6 +76,7 @@ endif
 	    -H:Name=$(LIBYAMLSCRIPT_SO_NAME)
 	mv $(LIBYAMLSCRIPT_SO_BASE) $@
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_APIP)
+	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_VERS)
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_BASE)
 
 ifeq (true,$(IS_ROOT))

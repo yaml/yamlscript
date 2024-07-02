@@ -42,6 +42,13 @@ export PATH := $(GOBIN):$(PATH)
 
 
 #------------------------------------------------------------------------------
+pseudo-version:
+	@TZ=UTC git --no-pager show \
+	   --quiet \
+	   --abbrev=12 \
+	   --date=format-local:%Y%m%d%H%M%S \
+	   --format=v0.0.0-%cd-%h
+
 build:: build-doc $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
 
 build-doc: ReadMe.md
