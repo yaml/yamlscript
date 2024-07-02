@@ -42,7 +42,9 @@ export PATH := $(GOBIN):$(PATH)
 
 
 #------------------------------------------------------------------------------
-build:: $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
+build:: build-doc $(LIBYAMLSCRIPT_SO_FQNP) $(GO_INSTALLED)
+
+build-doc: ReadMe.md
 
 test:: build
 	go $@
