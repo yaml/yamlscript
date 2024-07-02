@@ -1,0 +1,15 @@
+# Installation
+
+To install the Go binding run `make -C go install`.
+
+You can then run `go get github.com/yaml/yamlscript/go/ys` and make use of the
+`ys.Load` function.
+
+
+# Testing
+
+This needs to work:
+
+```
+$ make -C go test
+```
