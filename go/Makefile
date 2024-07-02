@@ -69,8 +69,8 @@ pseudo-version:
 	   --date=format-local:%Y%m%d%H%M%S \
 	   --format=v0.0.0-%cd-%h
 
-print-gobin: $(GO_INSTALLED)
-	@echo $(GOBIN)
+print-goroot: $(GO_INSTALLED)
+	@echo $(GOROOT)
 
 
 #------------------------------------------------------------------------------
