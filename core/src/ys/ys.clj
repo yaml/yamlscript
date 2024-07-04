@@ -16,6 +16,7 @@
             get-yspath]])
   (:refer-clojure
    :exclude [compile
+             eval
              for
              load-file
              use
@@ -72,6 +73,14 @@
 
 (defn if [cond then else]
   (if cond then else))
+
+(defn eval [ys-code]
+  (let [clj-code (yamlscript.compiler/compile ys-code)
+        ret (sci/binding
+             [sci/file "EVAL"
+              FILE "EVAL"]
+              (sci/eval-string+ @sci-ctx clj-code))]
+    (:val ret)))
 
 (defn load-file [ys-file]
   (let [ys-file (abspath ys-file (dirname @sci/file))

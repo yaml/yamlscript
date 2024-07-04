@@ -25,6 +25,7 @@
    [ys.json]
    [ys.yaml]
    [ys.ys :as ys]
+   [ys.taptest]
    [yamlscript.common :as common]
    [yamlscript.util
     :refer [abspath
@@ -126,7 +127,10 @@
       'std     (use-ns 'std ys.std)
       'ys      (use-ns 'ys ys.ys)
       'json    (use-ns 'json ys.json)
-      'yaml    (use-ns 'yaml ys.yaml)}
+      'yaml    (use-ns 'yaml ys.yaml)
+
+      'ys.taptest (use-ns 'ys.taptest ys.taptest)}
+
 
      :classes (classes-map
                 '[clojure.lang.Atom
