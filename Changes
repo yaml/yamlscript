@@ -1,4 +1,16 @@
 
+- version: 0.1.64
+  date:    Thu 04 Jul 2024 12:36:04 PM PDT
+  changes:
+  - doc: Many docs are now partially generated
+  - doc: Add ruby/doc files
+  - core: Forbid folded scalars in code mode
+  - make: Unset YS_FORMATTER if it is in the environment
+  - www: Add info page from the TPRC 2024 conference
+  - core: Change dot operator function from __ to _->
+  - core: Allow :all on one line require
+  - core: Add the ys::taptest testing library
+
 - version: 0.1.63
   date:    Wed 19 Jun 2024 12:51:46 PM EDT
   changes:
