@@ -126,9 +126,10 @@
                      [(conj args AS alias) (drop 2 rhs)]
                      [args rhs])
         args (if (seq rhs)
-               (if (every? :Sym rhs)
-                 (conj args REFER (Vec rhs))
-                 (die "Invalid 'require' arguments"))
+               (cond
+                 (every? :Sym rhs) (conj args REFER (Vec rhs))
+                 (= rhs [{:Key :all}]) (conj args REFER (first rhs))
+                 :else (die "Invalid 'require' arguments"))
                args)]
     args))
 

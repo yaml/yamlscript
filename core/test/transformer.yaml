@@ -94,6 +94,14 @@
       '[foo.fff :refer :all])
 
 
+- name: 'require ns: :all'
+  yamlscript: |
+    !yamlscript/v0
+    require foo::bar: :all
+  clojure: |
+    (require '[foo.bar :refer :all])
+
+
 - name: Anonymous function with name
   yamlscript: |
     !yamlscript/v0
