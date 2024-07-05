@@ -9,18 +9,21 @@ include $(ROOT)/common/vars.mk
 
 BINDINGS := \
     clojure \
+    go \
     java \
     nodejs \
     perl \
     perl-alien \
     python \
     raku \
-    rust \
 
 # Allow skipping Ruby bindings for now.
 ifndef YS_SKIP_RUBY
 BINDINGS += ruby
 endif
+
+BINDINGS += \
+    rust \
 
 DIRS := \
     core \

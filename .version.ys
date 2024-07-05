@@ -24,6 +24,7 @@ vp =: '0\.[01]\.[0-9]+'
     - clojure/project.clj
     - common/project.clj
     - core/project.clj
+    - go/yamlscript.go
     - libyamlscript/deps.edn
     - libyamlscript/project.clj
     - nodejs/lib/yamlscript/index.js
