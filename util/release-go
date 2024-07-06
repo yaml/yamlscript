@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+set -x
+
+cd $YAMLSCRIPT_ROOT
+
+ys_go_root=/tmp/yamlscript-go
+ys_go_url=git@github.com:yaml/yamlscript-go
+
+rm -fr $ys_go_root
+git clone $ys_go_url $ys_go_root
+
+cp \
+  go/ReadMe.md \
+  go/go.mod \
+  go/go.sum \
+  go/yamlscript.go \
+  $ys_go_root
+
+perl -pi -e 's{yamlscript/go}{yamlscript-go}' \
+  $ys_go_root/go.mod
+
+(
+  cd $ys_go_root || exit
+  git commit -a -m "Release $YS_RELEASE_VERSION_NEW"
+  git push
+  git tag "v$YS_RELEASE_VERSION_NEW"
+  git push --tags
+)

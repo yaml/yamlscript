@@ -50,9 +50,10 @@ test:: build
 	go $@
 	chmod -R u+w $(GOPATH)
 
-clean::
+release:
+	$(ROOT)/util/release-go
 
-realclean:: clean
+clean::
 	[[ ! -d $(GOPATH) ]] || \
 	  chmod -R u+w $(GOPATH)
 	$(RM) -r $(GOPATH)
