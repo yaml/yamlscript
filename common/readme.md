@@ -20,13 +20,13 @@ YAMLScript is a functional programming language with a stylized YAML syntax.
 
 YAMLScript can be used for:
 
+* Enhancing ordinary YAML files with functional operations
+  * Import parts of other YAML files to any node
+  * String interpolation including function calls
+  * Data transforms including ones defined by you
 * Writing new programs and applications
   * Run with `ys file.ys`
   * Or compile to binary executable with `ys -C file.ys`
-* Enhancing ordinary YAML files with new functional magics
-  * Import parts of other YAML files to any node
-  * String interpolation including function calls
-  * Any other functionality you can dream up!
 * Writing reusable shared libraries
   * High level code instead of C
   * Bindable to almost any programming language
@@ -47,7 +47,7 @@ YAMLScript is compiled to a native shared library (`libyamlscript.so`) that can
 be used by any programming language that can load shared libraries.
 
 To see the Clojure code that YAMLScript compiles to, you can use the YAMLScript
-command line utility, `ys`, to run:
+CLI binary, `ys`, to run:
 
 ```text
 $ ys --compile file.ys
