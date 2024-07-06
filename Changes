@@ -1,3 +1,9 @@
+- version: 0.1.65
+  date:    Sat 06 Jul 2024 12:05:01 PM PDT
+  changes:
+  - go: Add the Go binding library for libyamlscript
+  - doc: Update the binding ReadMe files
+  - build: Fix unicode bug in 0.1.64
 
 - version: 0.1.64
   date:    Thu 04 Jul 2024 12:36:04 PM PDT

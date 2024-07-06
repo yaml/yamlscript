@@ -1,6 +1,6 @@
 { "api": 0
 , "name": "YAMLScript"
-, "version": "0.1.64"
+, "version": "0.1.65"
 , "description": "Program in YAML"
 , "auth": "zef:ingy"
 , "provides":
