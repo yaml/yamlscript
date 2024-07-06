@@ -258,6 +258,7 @@ distclean-%: %
 # XXX Limit removing ~/.m2 to ingy until we can get ~/.m2 to not be used
 sysclean: realclean
 	$(RM) -r $(YS_TMP)
+	$(RM) -r /tmp/yamlscript-* /tmp/ys-local
 ifeq (ingy,$(USER))
 	$(RM) -r $(HOME)/.m2
 endif
