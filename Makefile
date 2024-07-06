@@ -93,8 +93,12 @@ endif
 ifdef l
 export YS_RELEASE_LAST_STEP := $l
 endif
+ifdef n
+export YS_RELEASE_VERSION_NEW := $n
+endif
 ifdef o
 export YS_OLD_TAG := $o
+export YS_RELEASE_VERSION_OLD := $o
 endif
 
 default:
@@ -134,10 +138,10 @@ endif
 release-check:
 ifndef d
 ifndef RELEASE_ID
-ifndef o
+ifndef YS_RELEASE_VERSION_OLD
 	$(error 'make release' needs the 'o' variable set to the old version)
 endif
-ifndef n
+ifndef YS_RELEASE_VERSION_NEW
 	$(error 'make release' needs the 'n' variable set to the new version)
 endif
 ifeq (,$(shell which yarn))
@@ -221,7 +225,7 @@ clean: $(CLEAN)
 	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
-	$(RM) NO-NAME
+	$(RM) NO-NAME release*.log
 clean-%: %
 	$(MAKE) -C $< clean
 

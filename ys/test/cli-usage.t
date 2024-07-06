@@ -6,7 +6,7 @@ VERSION=0.1.64
 
 
 cmd='ys --version'
-is "$($cmd)" "YAMLScript 0.1.64" "$cmd"
+is "$($cmd)" "YAMLScript $VERSION" "$cmd"
 
 
 cmd='ys'

@@ -63,17 +63,7 @@ defn main(old-version=0 new-version=0 start=1):
 #------------------------------------------------------------------------------
 
 defn step-1(ctx):
-  o: "Step 1) Update '$version-file' file"
-
-  when-not dryrun:
-    spit version-file:
-      str/replace-first:
-        slurp(version-file)
-        /0\.1\.\d+/
-        ctx.new
-
-  when verbose:
-    run: "git -P diff $version-file"
+  o: "Step 1) Do nothing, Step no longer needed"
 
 
 #------------------------------------------------------------------------------

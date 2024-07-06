@@ -40,7 +40,7 @@ def find_libyamlscript_path():
       "Unsupported platform '%s' for yamlscript." % sys.platform)
 
   # We currently bind to an exact version of libyamlscript.
-  # eg 'libyamlscript.so.0.1.234'
+  # eg 'libyamlscript.so.0.1.64'
   libyamlscript_name = \
     "libyamlscript.%s.%s" % (so, yamlscript_version)
 

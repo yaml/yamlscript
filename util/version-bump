@@ -7,10 +7,10 @@ defn main():
   plan =: load("$ROOT/.version.ys")
 
   each [p plan]:
-    .{:strs [vers bump]} =: p
+    .{:strs [vers bump all]} =: p
     each [b bump]:
       .{:strs [regx file]} =: b
-      regx =: re-pattern(regx)
+      regx =: rx(regx)
       each [f file]:
         f =: "$ROOT/$f"
         text =: slurp(f)
@@ -18,8 +18,12 @@ defn main():
         if re-find(m):
           do:
             .[x m1 m2] =: re-groups(m)
+            replace =:
+              if all:
+                str/replace
+                str/replace-first
             spit f:
-              str/replace-first:
+              replace:
                 text regx
                 str/re-quote-replacement("$m1$vers$m2")
             say: "Bumped '$f'"
