@@ -14,7 +14,7 @@ include $(ROOT)/common/vars.mk
 SUBDIR = $(shell pwd)
 SUBDIR := $(SUBDIR:$(ROOT)/%=%)
 
-export LANG := $(SUBDIR)
+export YSLANG := $(SUBDIR)
 
 
 #------------------------------------------------------------------------------

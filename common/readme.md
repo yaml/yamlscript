@@ -55,7 +55,7 @@ $ ys --compile file.ys
 
 ```markys:include
 !yamlscript/v0/
-file:: "$(ENV.ROOT)/$(ENV.LANG)/doc/readme.md"
+file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 ```
 
 
@@ -72,7 +72,7 @@ file:: "$(ENV.ROOT)/$(ENV.LANG)/doc/readme.md"
 
 ```markys:include
 !yamlscript/v0/
-file:: "$(ENV.ROOT)/$(ENV.LANG)/doc/authors.md"
+file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/authors.md"
 ```
 
 

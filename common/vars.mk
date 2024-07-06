@@ -1,3 +1,5 @@
+export LANG := en_US.UTF-8
+
 YS_TMP ?= /tmp/yamlscript
 
 ifeq (,$(wildcard $(YS_TMP)))
