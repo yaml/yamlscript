@@ -388,17 +388,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/tprc2024/</loc>
-        
-          <lastmod>2024-06-25T11:24:34.952Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/basic/</loc>
         
           <lastmod>2024-06-25T11:34:28.048Z</lastmod>
@@ -509,17 +498,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/install/</loc>
-        
-          <lastmod>2024-06-25T11:34:28.048Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/internal/</loc>
         
           <lastmod>2024-06-25T11:34:28.048Z</lastmod>
@@ -532,17 +510,6 @@
     
       <url>
         <loc>https://yamlscript.org/doc/intro/</loc>
-        
-          <lastmod>2024-06-25T11:34:28.048Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/loaders/</loc>
         
           <lastmod>2024-06-25T11:34:28.048Z</lastmod>
         
@@ -630,40 +597,7 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/ys/</loc>
-        
-          <lastmod>2024-06-25T11:34:28.048Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/about/</loc>
-        
-          <lastmod>2024-06-25T11:34:28.056Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/contribute/</loc>
-        
-          <lastmod>2024-06-25T11:34:28.056Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/</loc>
         
           <lastmod>2024-06-25T11:34:28.056Z</lastmod>
         
@@ -677,6 +611,72 @@
         <loc>https://yamlscript.org/doc/stdlib/</loc>
         
           <lastmod>2024-06-26T23:13:21.280Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/tprc2024/</loc>
+        
+          <lastmod>2024-07-01T16:03:52.404Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/about/</loc>
+        
+          <lastmod>2024-07-06T04:30:39.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/install/</loc>
+        
+          <lastmod>2024-07-06T04:30:39.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/loaders/</loc>
+        
+          <lastmod>2024-07-06T04:30:39.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys/</loc>
+        
+          <lastmod>2024-07-06T19:04:30.348Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/</loc>
+        
+          <lastmod>2024-07-06T19:04:30.352Z</lastmod>
         
         
         
