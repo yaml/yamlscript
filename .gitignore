@@ -6,6 +6,7 @@
 /lib/
 /libyamlscript-*
 /release*.log
+/release-changes.txt
 /release-id.txt
 /work/
 /www

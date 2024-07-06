@@ -104,10 +104,9 @@ api-new-release() {
     die "YS_OLD_TAG not defined"
 
   body=$(
-    (
-      cat common/release.md
-      git log --oneline "$YS_OLD_TAG..HEAD^" | tac | perl -pe 's/\S+ /* /'
-    ) | jq -Rs .
+    cat common/release.md \
+      release-changes.txt |
+      jq -Rs .
   )
 
   resp_json=$(

@@ -101,20 +101,33 @@ defn step-4(ctx):
   o: "Step 4) Update the 'Changes' file"
 
   when-not dryrun:
-    file-prepend 'Changes':
+    changes =:
       make-changes-entry: ctx
 
+    spit 'release-changes.txt': changes
+
+    when (prompt("Edit the 'Changes' file?") = 'y'):
+      editor =: ENV.EDITOR || 'vi'
+      run: "$editor release-changes.txt"
+      prompt: "Press Enter to continue or Ctrl-C to abort."
+
+    changes =: +'release-changes.txt'.slurp()
+
+    file-prepend 'Changes': |
+      - version: $(ctx.new)
+        date:    $(ctx.date-time)
+        changes:
+      $(changes.str/trimr())
+
     validate-yaml: slurp('Changes')
+
+    changes =: changes.replace(/(?m)^  -/ '*')
+
+    spit 'release-changes.txt': changes
 
   when verbose:
     # Show git changes since last release:
     run: "grep -F -B999 '$(ctx.old)' Changes"
-
-  when-not dryrun:
-    when (prompt("Edit the 'Changes' file?") = 'y'):
-      editor =: ENV.EDITOR || 'vi'
-      run: "$editor Changes"
-      prompt: "Press Enter to continue or Ctrl-C to abort."
 
 
 #------------------------------------------------------------------------------
@@ -262,13 +275,7 @@ defn make-changes-entry(ctx):
 
   validate-yaml: changes
 
-  # Return a YAML entry for the Changes file:
-  =>: |
-
-    - version: $(ctx.new)
-      date:    $(ctx.date-time)
-      changes:
-    $changes
+  =>: changes
 
 defn validate-yaml(yaml):
   when-not dryrun:
