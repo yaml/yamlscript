@@ -88,6 +88,7 @@ YAMLScript loader libraries are currently available for these programming
 languages:
 
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+* [Go](https://github.com/yaml/yamlscript-go)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)

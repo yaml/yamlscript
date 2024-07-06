@@ -13,6 +13,7 @@ YAMLScript intends to provide a loader library for every programming language
 that uses YAML.
 Currently we have working libraries for
 [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
+[Go](https://github.com/yaml/yamlscript-go),
 [Java](https://clojars.org/org.yamlscript/yamlscript),
 [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
 [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
@@ -321,6 +322,7 @@ programming languages.
 
 So far there are libraries in these languages:
 [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
+[Go](https://github.com/yaml/yamlscript-go),
 [Java](https://clojars.org/org.yamlscript/yamlscript),
 [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
 [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
