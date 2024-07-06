@@ -16,11 +16,15 @@ VERSION := $(shell head -n1 setup.py | cut -d"'" -f2)
 
 export PYTHONPATH := $(ROOT)/python/lib
 
+
 #------------------------------------------------------------------------------
+
 version:
 	@echo $(VERSION)
 
-build:: ReadMe.md
+build:: build-doc
+
+build-doc:: ReadMe.md
 
 .PHONY: test
 ifdef PYTHON

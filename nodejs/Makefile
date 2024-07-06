@@ -19,9 +19,12 @@ endif
 
 # export LIBYAMLSCRIPT_DEBUG := 1
 
+
 #------------------------------------------------------------------------------
 
-build:: ReadMe.md
+build:: build-doc
+
+build-doc:: ReadMe.md
 
 test:: update
 	make -C ../libyamlscript $(LIBYAMLSCRIPT_SO_FQNP)

@@ -9,9 +9,12 @@ RAKE_CMDS := \
     release \
     test \
 
+
 #------------------------------------------------------------------------------
 
-build:: ReadMe.md
+build:: build-doc
+
+build-doc:: ReadMe.md
 
 ifdef RUBY
 update:

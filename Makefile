@@ -32,11 +32,12 @@ DIRS := \
     ys \
 
 BUILD_DIRS := \
+    libyamlscript \
+    go \
     nodejs \
     python \
     ruby \
     rust \
-    libyamlscript \
     ys \
 
 INSTALL_DIRS := \
@@ -44,6 +45,7 @@ INSTALL_DIRS := \
     ys \
 
 BUILD := $(BUILD_DIRS:%=build-%)
+BUILD_DOC := $(BINDINGS:%=build-doc-%)
 INSTALL := $(INSTALL_DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
 TEST_BINDINGS := $(BINDINGS:%=test-%)
@@ -110,6 +112,11 @@ $(BUILD):
 build: $(BUILD)
 build-%: %
 	$(MAKE) -C $< build
+
+$(BUILD_DOC):
+build-doc: $(BUILD_DOC)
+build-doc-%: %
+	$(MAKE) -C $< build-doc
 
 $(INSTALL):
 install: $(INSTALL)

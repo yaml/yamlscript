@@ -4,3 +4,5 @@ include $(COMMON)/zild.mk
 #------------------------------------------------------------------------------
 clean::
 	$(RM) -r cpan Alien-YAMLScript*
+
+build-doc::

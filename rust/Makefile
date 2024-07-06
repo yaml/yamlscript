@@ -11,7 +11,10 @@ CARGO_CMDS := \
     test \
 
 
-build:: ReadMe.md
+#------------------------------------------------------------------------------
+build:: build-doc
+
+build-doc:: ReadMe.md
 
 ifdef CARGO
 $(CARGO_CMDS)::
