@@ -4,10 +4,9 @@ authors = ["Ingy döt Net <ingy@ingy.net>"]
 version = "0.0.18"
 
 [deps]
-YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 
 [compat]
-YAML = "0.4.1"
 julia = "1"
 
 [extras]

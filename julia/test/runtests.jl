@@ -1,11 +1,61 @@
+module TestYAMLScript
+
 using Test
-using YAMLScript
+import YAMLScript as YS
 
-@testset "YAMLScript.jl" begin
+@testset "load" begin
+    function load(script)
+        ys = YS.Runtime()
+        YS.load(ys, script)
+    end
 
-  binPath = joinpath(@__DIR__, "../bin/ys-yamlscript.jl")
-  ysPath = joinpath(@__DIR__, "../test/hello.ys")
-  greeting = readchomp(`$binPath $ysPath Julia`)
-  @test greeting == "Hello, Julia!"
+    @testset "a: 1" begin
+        data = load("a: 1")
+        @test data["a"] == 1
+    end
 
+    @testset "A simple script" begin
+        script = """
+!yamlscript/v0/data
+say: "Hello"
+key: ! inc(42)
+baz: ! range(1 6)
+"""
+        obj = load(script)
+        @test haskey(obj, "say")
+        @test haskey(obj, "key")
+        @test haskey(obj, "baz")
+
+        @test obj["say"] == "Hello"
+        @test obj["key"] == 43
+        @test obj["baz"] == [1, 2, 3, 4, 5]
+    end
+
+    @testset "An error case" begin
+        script = """
+!yamlscript/v0/data
+: : : : : :
+"""
+        @test_throws Exception load(script)
+    end
+
+    @testset "Load multiple times" begin
+        script = """
+!yamlscript/v0/data
+say: "Hello"
+key: ! inc(42)
+baz: ! range(1 6)
+"""
+        ys = YS.Runtime()
+        obj = YS.load(ys, script)
+        @test obj["say"] == "Hello"
+        @test obj["key"] == 43
+        @test obj["baz"] == [1, 2, 3, 4, 5]
+        obj = YS.load(ys, script)
+        @test obj["say"] == "Hello"
+        @test obj["key"] == 43
+        @test obj["baz"] == [1, 2, 3, 4, 5]
+    end
 end
+
+end  # module TestYAMLScript

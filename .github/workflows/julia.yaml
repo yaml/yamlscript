@@ -1,0 +1,78 @@
+name: Julia
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - julia/**
+      - .github/workflows/julia.yaml
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - master
+    paths:
+      - julia/**
+      - .github/workflows/julia.yaml
+
+jobs:
+  test:
+    name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        version:
+          - '1.6'
+          - '1'
+          - 'nightly'
+        os:
+          - ubuntu-latest
+          - macOS-14
+        arch:
+          - x64
+          - aarch64
+        exclude:
+          - os: ubuntu-latest
+            arch: aarch64
+          - os: windows-latest
+            arch: aarch64
+          - os: macOS-14
+            arch: x64
+          - os: macOS-14
+            version: '1.6'
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v1
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: actions/cache@v4
+        env:
+          cache-name: cache-artifacts
+        with:
+          path: ~/.julia/artifacts
+          key: ${{ runner.os }}-test-${{ env.cache-name }}-${{ hashFiles('**/Project.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-test-${{ env.cache-name }}-
+            ${{ runner.os }}-test-
+            ${{ runner.os }}-
+      - name: Build and Install libyamlscript
+        run: |
+          make build-libyamlscript
+          make install-libyamlscript
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "DYLD_LIBRARY_PATH=$HOME/.local/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
+        shell: bash
+      - uses: julia-actions/julia-buildpkg@v1
+        with:
+          project: julia
+      - uses: julia-actions/julia-runtest@v1
+        with:
+          project: julia
