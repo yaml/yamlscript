@@ -11,7 +11,7 @@ LYS_SOURCES := \
 
 HEADERS := \
   $(LIBRARY_PATH)/graal_isolate.h \
-  $(LIBYAMLSCRIPT_SO_NAME).h \
+  $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h \
 
 BUILD_TARGETS := \
   $(LIBYAMLSCRIPT_SO_FQNP) \
@@ -75,6 +75,7 @@ endif
 	    -jar $(LIBYAMLSCRIPT_JAR_PATH) \
 	    -H:Name=$(LIBYAMLSCRIPT_SO_NAME)
 	mv $(LIBYAMLSCRIPT_SO_BASE) $@
+	mv $(LIBYAMLSCRIPT_SO_NAME).h $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_APIP)
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_VERS)
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_BASE)
