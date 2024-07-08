@@ -24,9 +24,9 @@ greet 'Bob':
 
 ### Chain calls
 say: slurp(&quot;/usr/share/dict/words&quot;)
-     .str/split(/\n/).shuffle().take(3 _)
-     .join(&quot;.&quot; _)
-=&gt; specialty.mutation's.Kisangani
+     .split(/\n/).shuffle().take(3)
+     .join(&quot;.&quot;)
+# =&gt; specialty.mutation's.Kisangani
 
 ### Looping
 each [i (1 .. 3)]:
@@ -48,7 +48,7 @@ cond:
 say: |
   Dear $name,
 
-  I have 3 words for you: $(words().take(3 ).join(&quot;, &quot; _)).
+  I have 3 words for you: $(words().take(3 ).join(&quot;, &quot;)).
 
   Yours truly, $get(ENV &quot;USER&quot;)
 
