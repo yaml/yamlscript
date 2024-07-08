@@ -12,6 +12,9 @@ BUILD_BIN_YS_VERSION := 0.1.65
 
 BUILD_BIN_YS := $(BUILD_BIN)/ys-$(BUILD_BIN_YS_VERSION)
 
+YS_REPO_URL := https://github.com/yaml/yamlscript
+YS_GH_API_URL := https://api.github.com/repos/yaml/yamlscript
+
 YS_INSTALL_URL := https://yamlscript.org/install
 
 COMMON := $(ROOT)/common
