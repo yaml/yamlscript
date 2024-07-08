@@ -11,6 +11,7 @@ BINDINGS := \
     clojure \
     go \
     java \
+    julia \
     nodejs \
     perl \
     perl-alien \

@@ -20,6 +20,7 @@ bindings =::
 - java
 - clojure
 - go
+- julia
 - nodejs
 - perl
 - perl-alien

@@ -15,6 +15,7 @@ Currently we have working libraries for
 [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
 [Go](https://github.com/yaml/yamlscript-go),
 [Java](https://clojars.org/org.yamlscript/yamlscript),
+[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
 [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
 [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
 [Python](https://pypi.org/project/yamlscript/),

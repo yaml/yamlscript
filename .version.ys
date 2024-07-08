@@ -86,6 +86,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     file:
     - nodejs/package.json
     - java/pom.xml
+    - julia/Project.toml
     - perl/Meta
     - perl-alien/Meta
     - python/setup.py

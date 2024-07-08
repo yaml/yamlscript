@@ -79,16 +79,16 @@ $ ys --compile file.ys
 ```
 
 
-## Python Usage
+## Julia Usage
 
-File `prog.py`:
+File `prog.jl`:
 
-```python
-from yamlscript import YAMLScript
-ys = YAMLScript()
-input = open('file.ys').read()
-data = ys.load(input)
-print(data)
+```julia
+import YAMLScript as YS
+ys = YS.Runtime()
+yaml = read("file.ys", String)
+data = YS.load(ys, yaml)
+println(data)
 ```
 
 File `file.ys`:
@@ -113,17 +113,17 @@ oh: Hello
 Run:
 
 ```text
-$ python prog.py
-{'foo': [1, 2, 42], 'bar': {'oh': 'Hello'}, 'baz': 'Hello, World!'}
+$ julia prog.jl
+Dict{String, Any}("bar" => Dict{String, Any}("oh" => "Hello"), "baz" => "Hello, World!", "foo" => Any[1, 2, 42])
 ```
 
 
 ## Installation
 
-You can install this module like any other Python module:
+You can install this package like any other Julia package:
 
 ```bash
-$ pip install yamlscript
+$ julia --project=. -e 'using Pkg; Pkg.add("YAMLScript")'
 ```
 
 but you will need to have a system install of `libyamlscript.so`.
@@ -137,6 +137,7 @@ $ curl https://yamlscript.org/install | bash
 > Note: The above command will install the latest version of the YAMLScript
 command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
+You may need to add this install directory to `LD_LIBRARY_PATH`.
 
 See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
@@ -156,6 +157,7 @@ See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
 
 * [Ingy döt Net](https://github.com/ingydotnet)
+* [Kenta Murata](https://github.com/mrkn)
 
 
 ## License & Copyright

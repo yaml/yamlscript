@@ -122,6 +122,7 @@ At this early stage, YAMLScript has bindings for these programming languages:
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
 * [Go](https://github.com/yaml/yamlscript-go),
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
+* [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)
 * [Python](https://pypi.org/project/yamlscript/)
@@ -328,10 +329,12 @@ It will be rewritten soon.
 
 * [Ingy döt Net](https://github.com/ingydotnet) - Creator / Lead
 * [Ven de Thiel](https://github.com/vendethiel) - Language design
-* [tony-o](https://github.com/tony-o) - Raku
-* [Ethiraric](https://github.com/Ethiraric) - Rust
-* [José Joaquín Atria](https://github.com/jjatria) - Perl
-* [Delon R.Newman](https://github.com/delonnewman) - Clojure, Java, Ruby
+* [tony-o](https://github.com/tony-o) - Raku binding
+* [Ethiraric](https://github.com/Ethiraric) - Rust binding
+* [José Joaquín Atria](https://github.com/jjatria) - Perl binding
+* [Delon R.Newman](https://github.com/delonnewman) - Clojure, Java, Ruby bindings
+* [Andrew Pam](https://github.com/xanni) - Go binding
+* [Kenta Murata](https://github.com/mrkn) - Julia binding
 
 
 ## Copyright and License

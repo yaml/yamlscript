@@ -1,37 +1,52 @@
 YAMLScript
 ==========
 
-Program in YAML
+Add Logic to Your YAML Files
 
 
 ## Synopsis
 
+Load `file.yaml` with YAMLScript:
 ```yaml
-#!/usr/bin/env ys-0
+!yamlscript/v0/
 
-defn main(name='world'):
-  say: "Hello, $name!"
+=>:
+  names =: curl(
+    "https://raw.githubusercontent.com/dominictarr/" +
+    "random-name/master/first-names.json")
+    .json/load()
+
+name:: names.rand-nth()
+aka:: names.rand-nth()
+age:: 6 * 7
+color: yellow
+```
+
+and get:
+```json
+{
+  "name": "Anthea",
+  "aka": "Patrizia",
+  "age": 42,
+  "color": "yellow"
+}
 ```
 
 
 ## Description
 
-YAMLScript is a functional programming language with a stylized YAML syntax.
+[YAMLScript](https://yamlscript.org) is a functional programming language with a
+clean YAML syntax.
 
-YAMLScript can be used for:
+YAMLScript can be used for enhancing ordinary [YAML](https://yaml.org) files
+with functional operations, such as:
 
-* Enhancing ordinary YAML files with functional operations
-  * Import parts of other YAML files to any node
-  * String interpolation including function calls
-  * Data transforms including ones defined by you
-* Writing new programs and applications
-  * Run with `ys file.ys`
-  * Or compile to binary executable with `ys -C file.ys`
-* Writing reusable shared libraries
-  * High level code instead of C
-  * Bindable to almost any programming language
+* Import parts of other YAML files to any node
+* String interpolation including function calls
+* Data transforms including ones defined by you
 
-YAMLScript should be a drop-in replacement for your YAML loader!
+This YAMLScript library should be a drop-in replacement for your current YAML
+loader!
 
 Most existing YAML files are already valid YAMLScript files.
 This means that YAMLScript works as a normal YAML loader, but can also evaluate
@@ -51,6 +66,14 @@ CLI binary, `ys`, to run:
 
 ```text
 $ ys --compile file.ys
+(def names
+  (_-> (curl (+_ "https://raw.githubusercontent.com/dominictarr/"
+                 "random-name/master/first-names.json"))
+       (list json/load)))
+{"age" (*_ 6 7),
+ "aka" (_-> names (list rand-nth)),
+ "color" "yellow",
+ "name" (_-> names (list rand-nth))}
 ```
 
 ```markys:include
@@ -61,9 +84,11 @@ file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 
 ## See Also
 
-* [The YAMLScript Web Site](https://yamlscript.org)
-* [The YAMLScript Blog](https://yamlscript.org/blog)
-* [The YAMLScript Source Code](https://github.com/yaml/yamlscript)
+* [YAMLScript Web Site](https://yamlscript.org)
+* [YAMLScript Blog](https://yamlscript.org/blog)
+* [YAMLScript Source Code](https://github.com/yaml/yamlscript)
+* [YAMLScript Samples](https://github.com/yaml/yamlscript/tree/main/sample)
+* [YAMLScript Programs](https://rosettacode.org/wiki/Category:YAMLScript)
 * [YAML](https://yaml.org)
 * [Clojure](https://clojure.org)
 
