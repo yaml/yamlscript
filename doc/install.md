@@ -7,12 +7,12 @@ YAMLScript has 3 main things you might want to install:
 1. The `ys` compiler, loader and runner command.
 2. The `libyamlscript.so` shared library needed by a YAMLScript loader library
    for your particular programming language.
-3. The YAMLScript loader library itself, for your particular programming
-   language.
+3. A YAMLScript loader library for your particular programming language, like
+   Python, Rust, NodeJS, etc.
 
-Currently when you install a YAMLScript loader library for your particular
-programming language you must also install the `libyamlscript` shared library of
-the **exact same version**.
+> NOTE: Currently when you install a YAMLScript loader library for your
+particular programming language you must also install the `libyamlscript` shared
+library of the **exact same version**.
 Fortunately this is simple.
 
 

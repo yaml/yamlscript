@@ -20,8 +20,9 @@ title: YAMLScript Documentation Index
 * [YAMLScript Modes](modes)
 * [Syntax Basics](basic)
 * [Variables and Functions](define)
-* [Common Functions](common)
 * [Yes Expressions](yes)
+* [Operators](operators)
+* [Common Functions](common)
 * [Dot Chaining](chain)
 * [Data Referencing](reference)
 

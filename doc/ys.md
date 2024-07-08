@@ -5,8 +5,10 @@ title: ys - The YAMLScript Command Line Tool
 The YAMLScript `ys` command line tool is the primary way to run, load and
 compile YAMLScript programs.
 
-Loading is essentially the same as running, but the result is output is printed
-as JSON.
+> Loading is essentially the same as running, but the result is output is
+printed as JSON.
+
+Here's the `ys --help` output:
 
 ```text
 $ ys --help
@@ -69,7 +71,7 @@ YAML file and also do some simple calculations:
 num: 123
 greet:: "$(data.hello.rand-nth()), $name!"
 eat:: fruit.shuffle().first()
-drink:: (["Bar"] * 3).join(', ' _).str('!!!')
+drink:: (["Bar"] * 3).join(', ').str('!!!')
 ```
 
 Here's the other YAML file (`data1.yaml`):

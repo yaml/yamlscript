@@ -6,7 +6,7 @@ For now you can find YAMLScript examples in these places:
 
 * [Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
 * [YAMLScript Repo Examples](
-  https://github.com/yaml/yamlscript/tree/main/samples)
+  https://github.com/yaml/yamlscript/tree/main/sample)
 
 More examples will be added here soon.
 
