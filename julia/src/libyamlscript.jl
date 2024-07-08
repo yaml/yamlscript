@@ -31,7 +31,7 @@ See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"""
     error(msg)
 end
 
-function __init__()
+function init()
     libpath = Libdl.find_library(libyamlscript_name)
     if libpath == ""
         _library_not_found_error(libyamlscript_name)

@@ -16,6 +16,7 @@ mutable struct Runtime
 end
 
 function graal_create_isolate(func::Function, params, isolate::Ref{Ptr{Cvoid}}, thread::Ref{Ptr{Cvoid}})
+    libyamlscript.init()
     if libyamlscript.graal_create_isolate(params, isolate, thread) != 0
         error("Failed to create isolate")
     end
