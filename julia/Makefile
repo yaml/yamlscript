@@ -23,7 +23,7 @@ endif
 	  -H "Authorization: Bearer $(GH_TOKEN)" \
 	  -H "X-GitHub-Api-Version: 2022-11-28" \
 	  $(YS_GH_API_URL)/commits/$(HEAD_COMMIT)/comments \
-	  -d '{"body":"@JuliaRegistrator register\n"}'
+	  -d '{"body":"@JuliaRegistrator register subdir=julia\n"}'
 
 repl:
 	julia --project=.
