@@ -37,7 +37,7 @@ machtype := $(shell /bin/bash -c 'echo $$MACHTYPE')
 
 ifneq (,$(findstring x86_64,$(machtype)))
   IS_INTEL := true
-else ifneq (,$(findstring aarch64,$(machtype)))
+else ifneq (,$(findstring arm64,$(machtype)))
   IS_ARM := true
 endif
 

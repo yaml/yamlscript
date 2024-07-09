@@ -14,7 +14,7 @@ ifdef IS_LINUX
   else ifdef IS_ARM
     GO_ARCH := linux-arm64
   endif
-else ifdef MACOS
+else ifdef IS_MACOS
   ifdef IS_INTEL
     GO_ARCH := darwin-amd64
   else ifdef IS_ARM
