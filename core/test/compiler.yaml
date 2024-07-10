@@ -1095,3 +1095,13 @@
       42
   error: |
     ~~ Folded scalars not allowed in code mode
+
+
+- name: Double quoted strings with capture group vars
+  yamlscript: |
+    !yamlscript/v0
+    =>: "$1 $foo $2"
+    =>: +"$1$foo$2"
+  clojure: |
+    (str "$1 " foo " $2")
+    (str "$1" foo "$2")

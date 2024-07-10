@@ -153,7 +153,8 @@
       \$ \{ $symw \} |
       \$ $symw $bpar |
       \$ $symw |
-      \$ $bpar
+      \$ $bpar |
+      (?: [^\$]*\$+[^\$]*)
     )"))
 
 (defn build-exp-interpolated [node]
