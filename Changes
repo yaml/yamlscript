@@ -1,3 +1,12 @@
+- version: 0.1.66
+  date:    Thu 11 Jul 2024 01:09:06 PM PDT
+  changes:
+  - julia: Fixes for Julia release process
+  - go: Fix `make test` on MacOS
+  - core: Fix using $1 in double quoted strings
+  - core: Inline comment syntax \#"..."
+  - core: Order map literals by default; add --unordered
+  - core: Add +map chaining support
 - version: 0.1.65
   date:    Sat 06 Jul 2024 12:05:01 PM PDT
   changes:
