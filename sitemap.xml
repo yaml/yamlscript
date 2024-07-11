@@ -586,17 +586,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/</loc>
-        
-          <lastmod>2024-07-08T20:01:26.536Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/about/</loc>
         
           <lastmod>2024-07-08T20:01:42.828Z</lastmod>
@@ -621,7 +610,7 @@
       <url>
         <loc>https://yamlscript.org/doc/cheat/</loc>
         
-          <lastmod>2024-07-09T05:11:12.860Z</lastmod>
+          <lastmod>2024-07-09T18:29:44.816Z</lastmod>
         
         
         
@@ -632,7 +621,7 @@
       <url>
         <loc>https://yamlscript.org/doc/examples/</loc>
         
-          <lastmod>2024-07-09T05:11:12.860Z</lastmod>
+          <lastmod>2024-07-09T18:29:44.816Z</lastmod>
         
         
         
@@ -643,29 +632,7 @@
       <url>
         <loc>https://yamlscript.org/doc/</loc>
         
-          <lastmod>2024-07-09T05:11:12.860Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/intro/</loc>
-        
-          <lastmod>2024-07-09T05:11:12.860Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/ys/</loc>
-        
-          <lastmod>2024-07-09T05:11:12.860Z</lastmod>
+          <lastmod>2024-07-09T18:29:44.816Z</lastmod>
         
         
         
@@ -676,7 +643,40 @@
       <url>
         <loc>https://yamlscript.org/doc/install/</loc>
         
-          <lastmod>2024-07-09T05:11:12.864Z</lastmod>
+          <lastmod>2024-07-09T18:29:44.816Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/intro/</loc>
+        
+          <lastmod>2024-07-09T18:29:44.816Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys/</loc>
+        
+          <lastmod>2024-07-11T20:08:29.724Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/</loc>
+        
+          <lastmod>2024-07-11T20:08:29.728Z</lastmod>
         
         
         
