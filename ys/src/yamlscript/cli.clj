@@ -91,8 +91,8 @@
     "Output YAML for --load"]
    ["-E" "--edn"
     "Output EDN for --load"]
-   ["-O" "--ordered"
-    "Mappings preserve key order"]
+   ["-U" "--unordered"
+    "Mappings don't preserve key order (faster)"]
 
    ["-m" "--mode MODE"
     "Add a mode tag: code, data, or bare (for -e)"
@@ -500,9 +500,7 @@ Options:
         opts (if (:edn opts) (assoc opts :to "edn") opts)
         opts (if (:to opts) (assoc opts :load true) opts)
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
-               (assoc opts :mode "code") opts)
-        opts (if (System/getenv "YS_ORDERED")
-               (assoc opts :ordered true) opts)]
+               (assoc opts :mode "code") opts)]
 
     (reset! common/opts opts)
 

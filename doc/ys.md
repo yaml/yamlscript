@@ -33,7 +33,7 @@ Options:
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
-  -O, --ordered            Mappings preserve key order
+  -U, --unordered          Mappings don't preserve key order (faster)
 
   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
   -C, --clojure            Treat input as Clojure code

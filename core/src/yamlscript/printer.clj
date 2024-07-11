@@ -51,9 +51,10 @@
              "["
              (str/join " " (map print-node val))
              "]")
-      :Map (let [[start end] (if (:ordered @common/opts)
-                               ["(omap" ")"]
-                               ["{" "}"])]
+      :Map (let [[start end] (if (or (:unordered @common/opts)
+                                   (<= (count val) 16))
+                               ["{" "}"]
+                               ["(omap " ")"])]
              (str
                start
                (str/join ", " (->> val

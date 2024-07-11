@@ -3,7 +3,10 @@
 
 (ns yamlscript.common)
 
-(def opts (atom {}))
+(def opts (atom
+            (if (System/getenv "YS_UNORDERED")
+              {:unordered true}
+              {})))
 
 (def $ (atom {}))
 (def $# (atom 0))
