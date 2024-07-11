@@ -15,8 +15,11 @@
    [yamlscript.util :as util :refer [die]])
   (:refer-clojure :exclude [read-string]))
 
-(defn is-comment? [token]
-  (re-matches re/comm (str token)))
+(defn is-clojure-comment? [token]
+  (re-matches re/ccom (str token)))
+
+(defn is-inline-comment? [token]
+  (re-matches re/icom (str token)))
 
 (defn is-character? [token]
   (re-matches re/char (str token)))
@@ -98,7 +101,8 @@
   (re/re
     #"(?x)
     (?:
-      $comm |                 # Comment
+      $ccom |                 # Clojure comment
+      $icom |                 # Inline comment
                               # Symbols and operators
       $quot |                   # Quote token
       $spec |                   # Special token
@@ -302,8 +306,9 @@
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
-    (is-comment? token)
+    (is-clojure-comment? token)
       (die "Clojure style comments are not allowed: '" token "'.")
+    (is-inline-comment? token) [nil tokens]
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]

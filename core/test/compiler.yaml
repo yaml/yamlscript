@@ -1105,3 +1105,14 @@
   clojure: |
     (str "$1 " foo " $2")
     (str "$1" foo "$2")
+
+
+- name: Inline comments
+  yamlscript: |
+    !yamlscript/v0
+    say: text
+      .foo   \#"get foo"
+      .bar   \#"get bar"
+      .baz   \#"get baz"
+  clojure: |
+    (say (_-> text 'foo 'bar 'baz))

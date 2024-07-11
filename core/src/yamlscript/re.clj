@@ -39,7 +39,7 @@
               .
             )")                            ; Character token
 (def tend #"(?=[\.\,\s\]\}\)]|$)")         ; End of token
-(def comm #";.*(?:\n|\z)")                 ; Comment token
+(def ccom #";.*(?:\n|\z)")                 ; Clojure comment
 (def ignr #"(?x)
             (?:                            # Ignorables
               |                              # Empty
@@ -78,6 +78,7 @@
               [^']                           # Any other char
             )*'                              # Ending quote
             ")
+(def icom (re #"\\\#$dstr"))               ; Inline comment token
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def alph #"[a-zA-Z]")                     ; Alpha
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
