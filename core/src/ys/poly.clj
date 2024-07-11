@@ -16,7 +16,9 @@
        (~core-name b# a#))))
 
 (-def-seq-1st +nth nth)
-(-def-seq-2nd +take take)
+
 (-def-seq-2nd +drop drop)
+(-def-seq-2nd +map map)
+(-def-seq-2nd +take take)
 
 (comment)
