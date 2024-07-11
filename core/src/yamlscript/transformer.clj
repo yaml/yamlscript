@@ -7,7 +7,7 @@
 (ns yamlscript.transformer
   (:require
    [yamlscript.ast :refer [Lst]]
-   [yamlscript.util :refer [die if-lets when-lets]]
+   [yamlscript.util :refer [die if-lets]]
    #_[yamlscript.ast :refer [Sym]]
    [yamlscript.transformers]))
 
@@ -94,21 +94,10 @@
     (Lst args)
     node))
 
-(defn get-single [list]
-  (when-lets [_ (= 1 (count list))
-              elem (first list)
-              _ (contains?
-                  #{:Bln :Chr :Flt :Int :Key :Map :Nil :Rgx :Str :Vec}
-                  (first (keys elem)))]
-    elem))
-
 (defn transform-list [node]
   (let [node (transform-dot-chain node)
-        list (map-vec transform-node (:Lst node))
-        single (get-single list)]
-    (if single
-      single
-      (assoc node :Lst list))))
+        val (map-vec transform-node (:Lst node))]
+    (assoc node :Lst val)))
 
 (defn transform-map [node]
   {:Map (map-vec
