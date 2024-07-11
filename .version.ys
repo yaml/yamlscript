@@ -33,6 +33,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - go/yamlscript.go
     - java/Makefile
     - java/src/main/java/org/yamlscript/yamlscript/YAMLScript.java
+    - julia/src/libyamlscript.jl
     - nodejs/lib/yamlscript/index.js
     - perl-alien/alienfile
     - perl-alien/lib/Alien/YAMLScript.pm
