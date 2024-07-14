@@ -13,24 +13,30 @@ Load `file.yaml` with YAMLScript:
 !yamlscript/v0/
 
 =>:
-  names =: curl(
-    "https://raw.githubusercontent.com/dominictarr/" +
-    "random-name/master/first-names.json")
-    .json/load()
+  names-url =:
+    ("https://raw.githubusercontent.com/dominictarr/" +
+     "random-name/master/first-names.json")
 
-name:: names.rand-nth()
-aka:: names.rand-nth()
-age:: 6 * 7
-color: yellow
+  name-list =: &first-names json/load(curl(names-url))
+
+# Data object with literal keys and generated values:
+name:: rand-nth(*first-names)
+aka:: name-list.rand-nth()
+age:: &num 2 * 3 * 7
+color:: &hue qw(red green blue yellow)
+          .shuffle()
+          .first()
+title:: "$(*num) shades of $(*hue)."
 ```
 
 and get:
 ```json
 {
-  "name": "Anthea",
-  "aka": "Patrizia",
+  "name": "Dolores",
+  "aka": "Anita",
   "age": 42,
-  "color": "yellow"
+  "color": "green",
+  "title": "42 shades of green."
 }
 ```
 
@@ -43,7 +49,7 @@ clean YAML syntax.
 YAMLScript can be used for enhancing ordinary [YAML](https://yaml.org) files
 with functional operations, such as:
 
-* Import parts of other YAML files to any node
+* Import (parts of) other YAML files to any node
 * String interpolation including function calls
 * Data transforms including ones defined by you
 
@@ -64,18 +70,19 @@ YAMLScript is compiled to a native shared library (`libyamlscript.so`) that can
 be used by any programming language that can load shared libraries.
 
 To see the Clojure code that YAMLScript compiles to, you can use the YAMLScript
-CLI binary, `ys`, to run:
+CLI binary `ys` to run:
 
 ```text
 $ ys --compile file.ys
-(def names
-  (_-> (curl (+_ "https://raw.githubusercontent.com/dominictarr/"
-                 "random-name/master/first-names.json"))
-       (list json/load)))
-{"age" (*_ 6 7),
- "aka" (_-> names (list rand-nth)),
- "color" "yellow",
- "name" (_-> names (list rand-nth))}
+(def names-url
+  (+_ "https://raw.githubusercontent.com/dominictarr/"
+      "random-name/master/first-names.json"))
+(def name-list (_& 'first-names (json/load (curl names-url))))
+{"age" (_& 'num (*_ 2 3 7)),
+ "aka" (_-> name-list (list rand-nth)),
+ "color" (_& 'hue (_-> (qw red green blue yellow) (list shuffle) (list first))),
+ "name" (rand-nth (_** 'first-names)),
+ "title" (str (_** 'num) " shades of " (_** 'hue) ".")}
 ```
 
 
