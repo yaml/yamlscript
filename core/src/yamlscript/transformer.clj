@@ -66,14 +66,16 @@
       [])
     (hash-map key)))
 
-(def poly (do (require 'ys.poly)
-              (-> 'ys.poly
-                ns-publics
-                keys
-                (->> (map str)
-                  (map #(subs %1 1))
-                  (map symbol))
-                set)))
+(def poly
+  (do
+    (require 'ys.poly)
+    (-> 'ys.poly
+      ns-publics
+      keys
+      (->> (map str)
+        (map #(subs %1 1))
+        (map symbol))
+      set)))
 
 (defn transform-dot-chain [node] node
   (if-lets [args (:Lst node)
