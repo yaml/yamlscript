@@ -1,0 +1,7 @@
+!yamlscript/v0
+
+defn main(n):
+  say: "$n is $when(
+      (str(n) != str(n).reverse())
+      'not '
+    )a palindrome."
