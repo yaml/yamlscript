@@ -52,4 +52,15 @@ test::
   fail: true
   have: Divide by zero
 
-done: 11
+- name: Take stdout
+  code: |
+    say: 'Hello, world!'
+  take: out
+  want: "Hello, world!\n"
+
+- name: Run command
+  cmnd: echo 'Hello, world!'
+  take: out
+  want: "Hello, world!\n"
+
+done: 13

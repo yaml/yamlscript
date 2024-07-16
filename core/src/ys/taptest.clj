@@ -1,5 +1,6 @@
 (ns ys.taptest
   (:require
+   [babashka.process :as process]
    [clojure.string :as str]
    [ys.ys :as ys]
    [yamlscript.util :refer [die]])
@@ -31,11 +32,8 @@
 (defn plan [n]
   (println (str "1.." n)))
 
-(defn run [test]
+(defn run-code [test]
   (let [count (deref counter)
-        keys (set (keys test))
-        _ (when (not (contains? keys "code"))
-            (die (str "taptest: Test " count " is missing 'code' key")))
         code (get test "code")
         _ (when (not (string? code))
             (die (str "taptest: Test " count
@@ -46,6 +44,27 @@
            (if (get test "fail")
              (.getMessage e)
              (throw e))))))
+
+(defn run-cmnd [test]
+  (let [count (deref counter)
+        cmnd (get test "cmnd")
+        _ (when (not (string? cmnd))
+            (die (str "taptest: Test " count
+                   " 'cmnd' key must be a string")))
+        ret (process/sh cmnd)]
+    (cond
+      (= "out" (get test "take")) (:out ret)
+      (= "err" (get test "take")) (:err ret)
+      :else "")))
+
+(defn run [test]
+  (let [keys (set (keys test))]
+    (cond
+      (contains? keys "code") (if (= "out" (get test "take"))
+                                (with-out-str (run-code test))
+                                (run-code test))
+      (contains? keys "cmnd") (run-cmnd test)
+      :else (die "taptest: Test requires one of: 'code', 'cmnd'"))))
 
 (defn test [tests]
   (doall
