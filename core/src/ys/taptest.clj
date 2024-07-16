@@ -52,7 +52,9 @@
     (for [test tests]
       (let [keys (set (keys test))
             count (swap! counter inc)
-            got (run test)]
+            got (if (= "out" (get test "grab"))
+                  (with-out-str (run test))
+                  (run test))]
         (cond
           (contains? keys "want")
           (if (= got (get test "want"))

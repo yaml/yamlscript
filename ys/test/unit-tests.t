@@ -13,4 +13,19 @@ test::
   code: (1 .. 10).drop(2).take(3)
   want:: +[3 4 5]
 
+- name: Grab stdout
+  code: |
+    say: 'Hello, world!'
+  grab: out
+  want: "Hello, world!\n"
+
+- name: Run program, test output
+  code: sh("ys $(ENV.ROOT)/sample/advent/tree.ys 3").out
+  want: |1+
+      *
+     ***
+    *****
+      *
+      *
+
 done:
