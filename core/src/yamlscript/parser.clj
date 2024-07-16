@@ -10,8 +10,6 @@
 (ns yamlscript.parser
   (:require
    [clojure.string :as str]
-   #_[clojure.pprint :as pp]
-   [yamlscript.debug :refer [www]]
    [yamlscript.util :refer [die]])
   (:import
    (java.util Optional)
@@ -45,7 +43,6 @@
         events (if (= "rapidyaml" (System/getenv "YS_PARSER"))
                  (parse-rapidyaml yaml-string)
                  (parse-snakeyaml yaml-string))
-        #_(www events)
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
@@ -55,8 +52,7 @@
                                    first-event-tag))))
                       (assoc first-event :! "yamlscript/v0")
                       first-event)
-        events (cons first-event rest-events)
-        #_#__ (pp/pprint events)]
+        events (cons first-event rest-events)]
     (remove nil? events)))
 
 (declare snake-event)

@@ -58,8 +58,4 @@
 (intern 'clojure.core 'ZZZ ZZZ)
 
 (comment
-  (www {:a 1 :b 2})
-  (xxx {:a 1 :b 2})
-  (www+ {:a 1 :b 2})
-  (xxx+ {:a 1 :b 2})
   )
