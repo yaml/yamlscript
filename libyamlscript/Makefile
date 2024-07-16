@@ -10,7 +10,7 @@ LYS_SOURCES := \
 	src/libyamlscript/API.java \
 
 HEADERS := \
-  $(LIBRARY_PATH)/graal_isolate.h \
+  $(LIBYAMLSCRIPT_DIR)/graal_isolate.h \
   $(LIBYAMLSCRIPT_SO_NAME).h \
 
 BUILD_TARGETS := \
