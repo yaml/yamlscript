@@ -20,7 +20,6 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "()${vp}()"
     file:
-    - .profile
     - Meta
     - ReadMe.md
     - common/install.mk
@@ -43,6 +42,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ruby/lib/yamlscript.rb
     - ruby/lib/yamlscript/version.rb
     - rust/src/lib.rs
+    - util/YS
     - www/src/index.md
     - www/src/install
     - www/src/posts/advent-2023/dec-07.md
