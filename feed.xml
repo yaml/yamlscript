@@ -3591,7 +3591,7 @@ version of the <code>ys</code> YAMLScript interpreter.
 Of course, having YAMLScript available as a JVM language is also a good thing
 for Linux, MacOS and Windows users.</p>
 <p>We also want to make WebAssembly, JavaScript and C++ versions of the
-interpreter.</p>
+YAMLScript interpreter.</p>
 <p>And of course we still want to get to our goal of 42 language bindings!!!</p>
 <p>Lots of fun stuff to explore!</p>
 
