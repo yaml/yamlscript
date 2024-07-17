@@ -3570,7 +3570,7 @@ do.</p>
 <li><a href="https://crates.io/crates/yamlscript">Rust</a></li>
 </ul>
 <h2>Join the Fun!</h2>
-<p>If your langauge is missing a YAMLScript binding or you want to help improve
+<p>If your language is missing a YAMLScript binding or you want to help improve
 one, please drop by the <a href="https://matrix.to/#/#chat-yamlscript:yaml.io">YAMLScript Chat Room</a> and we'll get you started.</p>
 <p>All of the bindings are part of the <a href="https://github.com/yaml/yamlscript">YAMLScript Mono-Repo</a> on GitHub.
 If you look at the existing bindings, you'll see that they are all quite small.
