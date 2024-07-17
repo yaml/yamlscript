@@ -1,3 +1,13 @@
+- version: 0.1.67
+  date:    Tue 16 Jul 2024 08:44:18 PM PDT
+  changes:
+  - binding: Change binding ReadMe.md files
+  - sample: Add more RosettaCode YS examples
+  - core: Add more polymorphic dot chain functions
+  - test: Make ys::taptest much more complete
+  - test: Add new taptest tests for ys
+  - test: Add a YS testing script
+  - doc: Documentation updates
 - version: 0.1.66
   date:    Thu 11 Jul 2024 01:09:06 PM PDT
   changes:
