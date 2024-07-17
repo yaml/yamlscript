@@ -2,7 +2,7 @@
 
 version       = "0.0.16"
 author        = "Ingy döt Net"
-description   = "Program in YAML"
+description   = "Program in YAML — Code is Data"
 license       = "MIT"
 srcDir        = "src"
 installExt    = @["nim"]

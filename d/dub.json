@@ -3,7 +3,7 @@
 		"ingy"
 	],
 	"copyright": "Copyright 2022-2024, Ingy döt Net",
-	"description": "Program in YAML",
+	"description": "Program in YAML — Code is Data",
 	"license": "MIT",
 	"name": "yamlscript"
 }

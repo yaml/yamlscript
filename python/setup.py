@@ -12,7 +12,7 @@ long_description = \
 setup(
   name = 'yamlscript',
   version = version,
-  description = 'Program in YAML',
+  description = 'Program in YAML — Code is Data',
   license = 'MIT',
   url = 'https://github.com/ingydotnet/yamlscript',
 

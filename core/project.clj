@@ -2,7 +2,7 @@
 ;; Copyright 2023-2024 Ingy dot Net
 
 (defproject yamlscript/core "0.1.67"
-  :description "Program in YAML"
+  :description "Program in YAML — Code is Data"
 
   :url "https://github.com/yaml/yamlscript"
 

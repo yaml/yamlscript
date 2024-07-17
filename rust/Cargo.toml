@@ -2,7 +2,7 @@
 name = "yamlscript"
 version = "0.1.67"
 edition = "2021"
-description = "Program in YAML"
+description = "Program in YAML — Code is Data"
 license = "MIT"
 readme = "ReadMe.md"
 repository = "https://github.com/yaml/yamlscript"

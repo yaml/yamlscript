@@ -1,7 +1,7 @@
 YAMLScript
 ==========
 
-Program in YAML
+Program in YAML — Code is Data
 
 
 ## Authors

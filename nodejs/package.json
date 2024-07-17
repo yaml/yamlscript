@@ -1,7 +1,7 @@
 {
   "name": "@yaml/yamlscript",
   "version": "0.1.67",
-  "description": "Program in YAML",
+  "description": "Program in YAML — Code is Data",
   "main": "lib/yamlscript/index.js",
   "author": "Ingy döt Net",
   "license": "MIT",

@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ingy döt Net", "Delon Newman"]
   spec.email         = ["ingy@ingy.net", "contact@delonnewman.name"]
 
-  spec.summary       = "Program in YAML"
-  spec.description   = "Program in YAML"
+  spec.summary       = "Program in YAML — Code is Data"
+  spec.description   = "Program in YAML — Code is Data"
   spec.homepage      = "https://github.com/yaml/yamlscript"
   spec.required_ruby_version = ">= 2.4.0"
 

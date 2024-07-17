@@ -5,7 +5,7 @@ defmodule Yamlscript.MixProject do
     [
       app: :yamlscript,
       version: "0.0.16",
-      description: "Program in YAML",
+      description: "Program in YAML — Code is Data",
       elixir: "~> 1.12",
       package: package(),
       deps: deps()

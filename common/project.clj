@@ -2,7 +2,7 @@
 ;; Copyright 2023-2024 Ingy dot Net
 
 (defproject yamlscript/docker "0.1.67"
-  :description "Program in YAML"
+  :description "Program in YAML — Code is Data"
   :dependencies
   [#__
    [borkdude/edamame "1.3.23"]

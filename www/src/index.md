@@ -3,8 +3,8 @@ layout: home
 title: YAMLScript.org
 ---
 
-<p style="text-align: center; font-weight: bold">YAMLScript — Program in
-YAML</p>
+<p style="text-align: center; font-weight: bold">Program in YAML — Code is
+Data</p>
 
 **YAMLScript is a new YAML Loader** that can add "Super Powers" to your plain
 old YAML config files.
@@ -325,6 +325,7 @@ So far there are libraries in these languages:
 [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
 [Go](https://github.com/yaml/yamlscript-go),
 [Java](https://clojars.org/org.yamlscript/yamlscript),
+[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
 [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
 [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
 [Python](https://pypi.org/project/yamlscript/),
@@ -397,7 +398,7 @@ YAMLScript is already a working programming language but it does not yet have a
 stable `v0` API release version.
 In other words, you can use it now but some things _might_ change.
 
-A stable release of YAMLScript `v0` is expected in Q2 of 2024.
+A stable release of YAMLScript `v0` is expected in 2024.
 
 Once `v0` is announced stable, its API will remain backwards compatible for its
 lifetime.
