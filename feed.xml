@@ -3581,17 +3581,17 @@ that's about it.</p>
 <h2>Some Future Plans</h2>
 <p>There's a lot of upcoming work planned for YAMLScript.
 I've mapped some of it out in the <a href="https://github.com/orgs/yaml/projects/6/views/1">YAMLScript Roadmap</a>.</p>
-<p>Currently YAMLScript (written in Clojure, which compiles to JVM, which…)
-compiles to a native binary interpreter using the GraalVM <code>native-image</code>
-compiler.
+<p>Currently YAMLScript (written in <a href="https://clojure.org/">Clojure</a>, which compiles
+to JVM bytecode, which…) compiles to a native binary interpreter using the
+<a href="https://www.graalvm.org/latest/reference-manual/native-image/">GraalVM <code>native-image</code> compiler</a>.
 This is great for performance and distribution, but it's not great for
 portability, limiting it to Linux, MacOS and Windows.</p>
 <p>The JVM is a great platform for portability, so we're planning to make a JVM
 version of the <code>ys</code> YAMLScript interpreter.
 Of course, having YAMLScript available as a JVM language is also a good thing
 for Linux, MacOS and Windows users.</p>
-<p>We also want to make WebAssembly, JavaScript and C++ versions of the
-YAMLScript interpreter.</p>
+<p>We also want to make <a href="https://webassembly.org/">WebAssembly</a>, JavaScript and C++
+versions of the YAMLScript interpreter.</p>
 <p>And of course we still want to get to our goal of 42 language bindings!!!</p>
 <p>Lots of fun stuff to explore!</p>
 
