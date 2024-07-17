@@ -2,6 +2,8 @@
 
 input-dir =: atom(nil)
 
+DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
+
 defn main(input-file):
   dir =: dirname(input-file).abspath()
   reset! input-dir: dir
@@ -12,10 +14,15 @@ defn main(input-file):
 
   markdown =: input-file.process().trim()
 
-  say: |-
-    <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
+  markdown =:
+    replace markdown /^(---\n(?s:.*?)\n---\n)\n*/: "$1\n$DNE"
 
-    $markdown
+  markdown =:
+    if markdown.str/includes?(DNE):
+      markdown
+      (DNE + markdown)
+
+  say: markdown.trimr()
 
 defn process(input-file):
   data =: load-markys(input-file)

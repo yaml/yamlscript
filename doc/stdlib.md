@@ -1,8 +1,8 @@
-<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
-
 ---
 title: The YAMLScript Standard Library
 ---
+
+<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
 The YAMLScript standard library is a collection of functions that are available
 to all YAMLScript programs.
