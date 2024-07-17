@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2024-06-20T00:00:00Z</updated>
+    <updated>2024-07-17T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -3514,6 +3514,83 @@ Smart little (er, large) language model.</p>
 <a href="https://tprc.us/tprc-2024-las/">The Perl and Raku Conference</a> in Las Vegas next
 week.</p>
 <p>Hope to see you there!!!</p>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Go Julia!</title>
+      <link href="https://yamlscript.org/posts/jul-17-2024/"/>
+      <updated>2024-07-17T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/jul-17-2024/</id>
+      <content type="html">
+        <![CDATA[
+      <p>Last week two new language bindings were added to the YAMLScript family:
+<a href="https://github.com/yaml/yamlscript-go">Go</a> and
+<a href="https://juliahub.com/ui/Packages/General/YAMLScript">Julia</a>.</p>
+<h2>Go</h2>
+<p>The <a href="https://go.dev/">Go</a> binding has been a long time coming.
+Several people have been working on it this year but it was <a href="https://github.com/xanni">Andrew Pam</a> who finally got it over the finish line.</p>
+<p>Go is a big user of the YAML data language, so we're happy to be able to provide
+this library and hope to see it used in many Go projects.</p>
+<h2>Julia</h2>
+<p>The <a href="https://julialang.org/">Julia</a> binding was a bit more of a recent surprise
+addition.
+A few weeks ago a Julia hacker dropped by the <a href="https://matrix.to/#/#chat:yaml.io">YAML Chat Room</a> to ask some questions about YAML.
+I ended up asking him more about Julia and if he could help write a YAMLScript
+binding.</p>
+<p>He invited <a href="https://github.com/mrkn">Kenta Murata</a> to the chat room and Kenta
+said he could do it for us.
+Then Kenta disappeared for a few weeks.
+Last week he came back with a fully working Julia binding for YAMLScript!</p>
+<p>Fun fact: Julia is <a href="https://github.com/clarkevans">Clark Evans</a> favorite
+programming language!
+Clark is one of the original authors of the YAML data language.</p>
+<h2>YAMLScript Loader Libraries</h2>
+<p>These YAMLScript language bindings are intended to be an alternative YAML loader
+library for the respective languages.
+They can load normal existing YAML files in a consistent way, and common API
+across all languages.
+They can also load YAML files with embedded YAMLScript code, to achieve data
+importing, transformation, interpolation; anything a programming language can
+do.</p>
+<p>The current list of YAMLScript loader libraries is:</p>
+<ul>
+<li><a href="https://clojars.org/org.yamlscript/clj-yamlscript">Clojure</a></li>
+<li><a href="https://github.com/yaml/yamlscript-go">Go</a></li>
+<li><a href="https://clojars.org/org.yamlscript/yamlscript">Java</a></li>
+<li><a href="https://juliahub.com/ui/Packages/General/YAMLScript">Julia</a></li>
+<li><a href="https://www.npmjs.com/package/@yaml/yamlscript">NodeJS</a></li>
+<li><a href="https://metacpan.org/pod/YAMLScript">Perl</a></li>
+<li><a href="https://pypi.org/project/yamlscript/">Python</a></li>
+<li><a href="https://raku.land/zef:ingy/YAMLScript">Raku</a></li>
+<li><a href="https://rubygems.org/gems/yamlscript">Ruby</a></li>
+<li><a href="https://crates.io/crates/yamlscript">Rust</a></li>
+</ul>
+<h2>Join the Fun!</h2>
+<p>If your langauge is missing a YAMLScript binding or you want to help improve
+one, please drop by the <a href="https://matrix.to/#/#chat-yamlscript:yaml.io">YAMLScript Chat Room</a> and we'll get you started.</p>
+<p>All of the bindings are part of the <a href="https://github.com/yaml/yamlscript">YAMLScript Mono-Repo</a> on GitHub.
+If you look at the existing bindings, you'll see that they are all quite small.
+You'll need to learn about basic FFI (Foreign Function Interface) for your
+language, to make calls to the YAMLScript shared library <code>libyamlscript</code>, but
+that's about it.</p>
+<p>It's a great way to get started with a new language project.</p>
+<h2>Some Future Plans</h2>
+<p>There's a lot of upcoming work planned for YAMLScript.
+I've mapped some of it out in the <a href="https://github.com/orgs/yaml/projects/6/views/1">YAMLScript Roadmap</a>.</p>
+<p>Currently YAMLScript compiles to a native binary interpreter using the GraalVM
+<code>native-image</code> compiler.
+This is great for performance and distribution, but it's not great for
+portability, limiting it to Linux, MacOS and Windows.</p>
+<p>The JVM is a great platform for portability, so we're planning to make a JVM
+version of the <code>ys</code> YAMLScript interpreter.</p>
+<p>We also want to make a WebAssembly, JavaScript and C++ versions of the
+interpreter.</p>
+<p>And of course we still want to get to our goal of 42 language bindings!!!</p>
+<p>Lots of fun stuff to explore!</p>
 
     ]]>
       </content>
