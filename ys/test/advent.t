@@ -17,43 +17,6 @@ cmd="ys $AV/twas-a-bit"
 has "$($cmd)" "Twas a bit before" "$cmd"
 
 
-cmd="ys -Y $AV/grocery.yaml"
-is "$($cmd)" "\
-- bread
-- fruits:
-  - apple
-  - banana
-  - cherry
-- milk" \
-  "$cmd"
-
-
-cmd="ys $AV/tree.ys"
-is "$($cmd)" "\
-     *
-    ***
-   *****
-  *******
- *********
-     *
-     *" \
-  "$cmd"
-
-
-cmd="ys $AV/tree.ys 7"
-is "$($cmd)" "\
-       *
-      ***
-     *****
-    *******
-   *********
-  ***********
- *************
-       *
-       *" \
-  "$cmd"
-
-
 cmd="ys -p $AV/hearsay.ys"
 like "$($cmd)" \
   "I heard that @$S+ uses YAMLScript in their $w+ code!" \

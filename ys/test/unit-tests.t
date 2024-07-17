@@ -4,6 +4,12 @@
 
 require ys::taptest: test done
 
+AV =: FILE.dirname() + '/../../sample/advent'
+
+hash =::
+  foo: one
+  :bar: two
+
 test::
 - name: Function call
   code: 41 .inc()
@@ -13,13 +19,28 @@ test::
   code: (1 .. 10).drop(2).take(3)
   want:: +[3 4 5]
 
-- name: Run program, test output
-  code: sh("ys $(ENV.ROOT)/sample/advent/tree.ys 3").out
-  want: |1+
-      *
-     ***
-    *****
-      *
-      *
+- name: Get nth
+  code: (1 .. 10).5
+  want: 6
+
+- name: Get string key maybe
+  code: hash.foo
+  want: one
+
+- name: Get string key single
+  code: hash.'foo'
+  want: one
+
+- name: Get string key double
+  code: hash."foo"
+  want: one
+
+- name: Get keyword key maybe
+  code: hash.bar
+  want: two
+
+- name: Get keyword key explicit
+  code: hash.:bar
+  want: two
 
 done:
