@@ -11,6 +11,11 @@ hash =::
   :bar: two
 
 test::
+- name: 1.2.3 not a number
+  code: 1.2.3
+  what: error
+  want: 'Invalid number: 1.2.3'
+
 - name: Function call
   code: 41 .inc()
   want: 42
