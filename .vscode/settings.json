@@ -2,9 +2,12 @@
   "calva.fmt.configPath": ".cljfmt.edn",
   "cSpell.words": [
     "arity",
+    "cmnd",
     "concat",
     "cond",
     "condp",
+    "csys",
+    "cusr",
     "debuginfo",
     "defmacro",
     "defn",
@@ -22,8 +25,10 @@
     "println",
     "Raku",
     "serde",
+    "taptest",
     "unoptimized",
     "vstr",
+    "wallclock",
     "yamlscript",
     "ysexpr"
   ],

@@ -1,3 +1,0 @@
----
-title: YAMLScript Builtin Libraries
----

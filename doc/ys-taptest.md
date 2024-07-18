@@ -119,7 +119,7 @@ Here are the test mapping keys you can use in a test:
 * `all` — An object containing `out`, `err` and `exit` values.
 
 
-## Functions
+## The ys::taptest API Functions
 
 * `done` — Indicate that a certain number of tests were run.
   Run this after running all tests.

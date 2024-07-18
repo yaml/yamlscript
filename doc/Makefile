@@ -1,7 +1,7 @@
 SHELL := bash
 
 MD_GEN_FILES := \
-  stdlib.md \
+  ys-std.md \
 
 export PATH := $(PWD)/util:$(PATH)
 
