@@ -630,9 +630,20 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/external/</loc>
+        <loc>https://yamlscript.org/doc/clj-core/</loc>
         
-          <lastmod>2024-07-18T16:46:50.048Z</lastmod>
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ext-libs/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
         
         
         
@@ -643,7 +654,7 @@
       <url>
         <loc>https://yamlscript.org/doc/</loc>
         
-          <lastmod>2024-07-18T16:46:50.048Z</lastmod>
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
         
         
         
@@ -652,20 +663,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/internal/</loc>
+        <loc>https://yamlscript.org/doc/operators/</loc>
         
-          <lastmod>2024-07-18T16:46:50.048Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/reference/</loc>
-        
-          <lastmod>2024-07-18T16:46:50.048Z</lastmod>
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
         
         
         
@@ -674,9 +674,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/stdlib/</loc>
+        <loc>https://yamlscript.org/doc/referencing/</loc>
         
-          <lastmod>2024-07-18T16:46:50.048Z</lastmod>
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
         
         
         
@@ -687,7 +687,84 @@
       <url>
         <loc>https://yamlscript.org/doc/yes/</loc>
         
-          <lastmod>2024-07-18T16:46:50.048Z</lastmod>
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-clj/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-json/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-libs/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-taptest/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-yaml/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-ys/</loc>
+        
+          <lastmod>2024-07-18T16:50:36.200Z</lastmod>
         
         
         
