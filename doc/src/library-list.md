@@ -3,4 +3,4 @@
 * [`ys::ys`](/doc/ys-ys) — Special YS Functions
 * [`ys::yaml`](/doc/ys-yaml) — Standard YAML processing library
 * [`ys::json`](/doc/ys-json) — Standard JSON processing library
-* [`clojure::core`](/doc/clj-core) - Clojure Core Library Essentials
+* [`clojure::core`](/doc/clj-core) — Clojure Core Library Essentials

@@ -2,10 +2,12 @@
 title: YAMLScript Documentation Index
 ---
 
+
 ## TL;DR Topics
 
 * [YAMLScript Cheat Sheet](/doc/cheat)
 * [YAMLScript Examples](/doc/examples)
+
 
 ## Getting Started
 
@@ -13,6 +15,7 @@ title: YAMLScript Documentation Index
 * [The `ys` Command](/doc/ys)
 * [YAMLScript Loader Libraries](/doc/loaders)
 * [Installing YAMLScript](/doc/install)
+
 
 ## Language Basics
 
@@ -26,11 +29,14 @@ title: YAMLScript Documentation Index
 * [Dot Chaining](/doc/chain)
 * [Data Referencing](/doc/referencing)
 
+
 ## Functions and Libraries
 
 * [YAMLScript Standard Library](/doc/ys-std)
 * [Builtin Internal Libraries](/doc/ys-libs)
 * [Using External Libraries](/doc/ext-libs)
+* [Clojure Core Library Essentials](/doc/clj-core)
+
 
 ## Advanced Topics
 

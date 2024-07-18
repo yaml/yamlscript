@@ -1,3 +1,3 @@
 ---
-title: Yes Expressions
+title: YeS Expressions
 ---

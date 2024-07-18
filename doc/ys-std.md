@@ -1,5 +1,5 @@
 ---
-title: ys::std — The YAMLScript Standard Library
+title: The YAMLScript Standard Library
 ---
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
@@ -66,8 +66,8 @@ ys::std/say: 'Hello'
 ## See Also
 
 
-* [`ys::clj`]() — Original Clojure functions shadowed by YS
-* [`ys::ys`]() — Special YS Functions
-* [`ys::yaml`]() — Standard YAML processing library
-* [`ys::json`]() — Standard JSON processing library
-* [`clojure::core`]() - Clojure Core Library Essentials
+* [`ys::clj`](/doc/ys-clj) — Original Clojure functions shadowed by YS
+* [`ys::ys`](/doc/ys-ys) — Special YS Functions
+* [`ys::yaml`](/doc/ys-yaml) — Standard YAML processing library
+* [`ys::json`](/doc/ys-json) — Standard JSON processing library
+* [`clojure::core`](/doc/clj-core) — Clojure Core Library Essentials
