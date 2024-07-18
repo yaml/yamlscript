@@ -22,6 +22,7 @@
     "println",
     "Raku",
     "serde",
+    "taptest",
     "unoptimized",
     "vstr",
     "yamlscript",

@@ -1,5 +1,5 @@
 ---
-title: The YAMLScript Standard Library
+title: ys::std — The YAMLScript Standard Library
 ---
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
