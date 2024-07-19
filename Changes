@@ -1,3 +1,13 @@
+- version: 0.1.68
+  date:    Fri 19 Jul 2024 12:00:53 PM PDT
+  changes:
+  - dev: Fix .profile bug
+  - rust: Add the repository field to Cargo.toml
+  - go: Version libyamlscript.h
+  - doc: Fix formatting bug in util/markys
+  - doc: Change tagline to 'Program in YAML — Code is Data'
+  - taptest: Changes to taptest API
+  - doc: Many documentation updates
 - version: 0.1.67
   date:    Tue 16 Jul 2024 08:44:18 PM PDT
   changes:
