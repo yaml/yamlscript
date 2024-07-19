@@ -171,6 +171,9 @@ ifndef d
 endif
 
 release-yamlscript:
+ifndef GH_TOKEN
+	$(error YAMLScript release requires GH_TOKEN to be set)
+endif
 	(time $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE_LOG)
 
