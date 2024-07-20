@@ -3,10 +3,12 @@ include $(COMMON)/binding.mk
 
 ifeq (,$(shell command -v node))
 $(info *** Warning: node not found)
-endif
-ifeq (,$(shell command -v npm))
+else ifeq (,$(shell command -v npm))
 $(info *** Warning: npm not found)
 endif
+
+NODEJS := $(shell command -v node)
+NPM := $(shell command -v npm)
 
 NODE_CMDS := \
     test \
@@ -26,16 +28,20 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
+ifdef NODEJS
+ifdef NPM
 test:: update
 	make -C ../libyamlscript $(LIBYAMLSCRIPT_SO_FQNP)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
 
 update:
-	npm install
+	$(NPM) install
 
 release:
-	npm publish
+	$(NPM) publish
+endif
+endif
 
 clean::
 	$(RM) package-lock.json strace.txt
