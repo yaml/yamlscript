@@ -5,9 +5,10 @@ RUBY := $(shell command -v bundle)
 
 RAKE_CMDS := \
     build \
-    clean \
     release \
     test \
+
+export GEM_HOME=gem
 
 
 #------------------------------------------------------------------------------
@@ -20,11 +21,16 @@ ifdef RUBY
 update:
 	bundle install
 
-$(RAKE_CMDS)::
+$(RAKE_CMDS):: $(GEM_HOME)
 	bundle exec rake $@
 
+$(GEM_HOME):
+	gem install minitest -v 5.20.0
 endif
 
 clean::
 	$(RM) Gemfile.lock .rake_tasks*
 	$(RM) -r pkg
+
+realclean::
+	$(RM) -r $(GEM_HOME)

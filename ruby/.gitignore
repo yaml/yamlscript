@@ -3,6 +3,7 @@
 /_yardoc/
 /coverage/
 /doc/
+/gem/
 /pkg/
 /.rake_tasks*
 /spec/reports/
