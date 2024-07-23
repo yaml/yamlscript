@@ -1116,3 +1116,13 @@
       .baz   \#"get baz"
   clojure: |
     (say (_-> text 'foo 'bar 'baz))
+
+
+- name: Escape pound and colon in ysexpr strings
+  yamlscript: |
+    !yamlscript/v0
+    say: +'foo \# bar :\ baz'
+    say: +"foo \# bar :\ baz"
+  clojure: |
+    (say "foo # bar : baz")
+    (say "foo # bar : baz")

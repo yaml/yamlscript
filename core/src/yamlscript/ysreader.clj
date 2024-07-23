@@ -283,6 +283,8 @@
 (defn str-unescape [s]
   (-> s
     (str/replace "\\\\" "\\")
+    (str/replace ":\\ " ": ")
+    (str/replace " \\#" " #")
     (str/replace "\\n" "\n")
     (str/replace "\\t" "\t")
     (str/replace "\\\"" "\"")))
@@ -295,9 +297,15 @@
       (#(hash-map :vstr %))
       build-vstr)))
 
+(defn sstr-unescape [s]
+  (-> s
+    (str/replace ":\\ " ": ")
+    (str/replace " \\#" " #")))
+
 (defn read-sq-string [string]
   (-> string
     (subs 1 (dec (count string)))
+    sstr-unescape
     (str/replace #"''" "'")
     Str))
 
