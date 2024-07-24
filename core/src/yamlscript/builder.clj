@@ -68,6 +68,12 @@
               _ true]
     [[defn name doc args] body]))
 
+(defn fix-args [args]
+  (let [args (if (= args "*") "& _" args)
+        args (str/replace args #"(?:^| )\*$" "& _")
+        args (str/replace args (re/re #"\*($symw)") "& $1")]
+    args))
+
 (defn build-defn [key val]
   (let [[key kind] (if-let [key (:defn key)]
                      [key 'defn]
@@ -77,14 +83,22 @@
                         (re-matches re/afnk key))
         name (Sym name)
         args (when args
-               (let [
-                     args (if (= args "*") "& _" args)
-                     args (str/replace args #"(?:^| )\*$" "& _")
-                     args (str/replace args (re/re #"\*($symw)") "& $1")
+               (let [args (fix-args args)
                      args (build-node {:exp args})
                      args (if (map? args) [args] args)]
                  (Vec args)))
-        body (build-node val)
+        body (build-node
+               (if-lets [_ (nil? args)
+                         pairs (:pairs val)]
+                 (let [pairs (loop [[k v & pairs] pairs new []]
+                               (if (nil? v)
+                                 new
+                                 (let [args (:exp k)
+                                       args (fix-args args)
+                                       args {:exp args}]
+                                   (recur pairs (conj new args v)))))]
+                   {:pairs pairs})
+                 val))
         [doc body] (if-lets [[key val & nodes] (:pairs body)
                              [doc body]
                              (cond (and (= '=> (:Sym key))

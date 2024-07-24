@@ -1148,3 +1148,20 @@
     defn foo(a b=1 *c): nil
   clojure: |
     (defn foo ([a b & c] nil) ([a] (foo a 1)))
+
+
+- name: Multi-arity defn with variable args
+  yamlscript: |
+    !yamlscript/v0
+    defn add:
+      (): 0
+      (x): x
+      (x y): x + y
+      (x y *xs): reduce(add (add x y) xs)
+  clojure: |
+    (defn
+      add
+      ([] 0)
+      ([x] x)
+      ([x y] (+_ x y))
+      ([x y & xs] (reduce add (add x y) xs)))
