@@ -72,7 +72,11 @@
                         (re-matches re/afnk key))
         name (Sym name)
         args (when args
-               (let [args (build-node {:exp args})
+               (let [
+                     args (if (= args "*") "& _" args)
+                     args (str/replace args #"(?:^| )\*$" "& _")
+                     args (str/replace args (re/re #"\*($symw)") "& $1")
+                     args (build-node {:exp args})
                      args (if (map? args) [args] args)]
                  (Vec args)))
         body (build-node val)

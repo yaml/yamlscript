@@ -1126,3 +1126,17 @@
   clojure: |
     (say "foo # bar : baz")
     (say "foo # bar : baz")
+
+
+- name: Define functions with unnamed variable args
+  yamlscript: |
+    !yamlscript/v0
+    defn foo(*): nil
+    defn bar(*xs): nil
+    defn baz(a b *xs): nil
+    defn boo(a b *): nil
+  clojure: |
+    (defn foo [& _] nil)
+    (defn bar [& xs] nil)
+    (defn baz [a b & xs] nil)
+    (defn boo [a b & _] nil)
