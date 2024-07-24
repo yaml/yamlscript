@@ -40,9 +40,14 @@
               args (map Sym
                      (map #(or (get-in % [:Sym 0])
                              (get % :Sym)) args))
+              last2 (or (take-last 2 args) '())
+              orig-args args
+              args (if (= (first last2) {:Sym '&})
+                     (drop-last 2 args)
+                     args)
               n-args (count args)
               n-dargs (count dargs)
-              main (Lst [(Vec args) body])
+              main (Lst [(Vec orig-args) body])
               bodies (reduce
                        (fn [bodies i]
                          (let [nargs (->> args (take i) vec)
