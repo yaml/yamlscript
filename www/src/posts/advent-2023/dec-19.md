@@ -116,7 +116,7 @@ defn toMap:
   (): hash-map()
   (x):
     apply: hash-map x
-  (k v & xs):
+  (k v *xs):
     apply: hash-map k v xs
 ```
 

@@ -1,7 +1,7 @@
 !yamlscript/v0
 
 # Main function definition with variable arguments:
-defn main(& args):
+defn main(*):
   answer =:
     multiply: ARGS*
   say: "multiply($(ARGS.join(', '))) = $answer"
@@ -11,5 +11,5 @@ defn multiply:
   (): 1
   (x): x
   (x y): x * y
-  (x y & more):
+  (x y *more):
     reduce multiply: multiply(x y) more
