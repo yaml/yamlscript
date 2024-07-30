@@ -37,6 +37,7 @@
        (apply ~name xs#))))
 
 
+(-def-seq-2nd apply)
 (-def-seq-2nd drop)
 (-def-seq-2nd drop-while)
 (-def-seq-2nd filter)
