@@ -22,21 +22,31 @@
       (println (str "ok " count " - " name))
       (println (str "ok " count)))))
 
+(defn- format-value [value]
+  (let  [value (with-out-str (pr value))]
+    (if (re-find #"^[^\"].*\n" value)
+      (str "'" value "'")
+      value)))
+
 (defn- failed [test got]
   (let
    [name (get test "name")
     count (deref counter)
-    want (or
+    keys (set (keys test))
+    want (if (contains? keys "want")  ;; want can be false or nil
            (get test "want")
-           (get test "like")
-           (get test "have"))
-    want (with-out-str (pr want))
-    got (with-out-str (pr got))]
+           (or
+             (get test "like")
+             (get test "have")))
+    want (format-value want)
+    got (format-value got)
+    out (str " Failed test '" name "'\n"
+          "        got: "   got "\n   expected: " want)
+    out (str/replace out #"(?m)^" "#  ")]
     (if name
       (println (str "not ok " count " - " name))
       (println (str "not ok " count)))
-    (println
-      (str "     got: '" got "'\nexpected: '" want "'" "\n"))))
+    (println out)))
 
 (defn- check-string [value name count]
   (when-not (string? value)

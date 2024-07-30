@@ -1,0 +1,34 @@
+#!/usr/bin/env ys-0
+
+!yamlscript/v0
+
+require ys::taptest: :all
+
+# Run the tests:
+test::
+- name: String fail
+  code: say("Hello")
+  what: out
+  want: Hello
+
+- name: Number fail
+  code: 6 * 7
+  want: 43
+
+- name: Pass expecting false
+  code: 1 = 2
+  want: false
+
+- name: Fail expecting false
+  code: 3 = 3
+  want: false
+
+- name: Fail expecting nil
+  code: 3 = 3
+  want: null
+
+- name: Fail expecting nil as string
+  code: 3 = 3
+  want: nil
+
+done: 6
