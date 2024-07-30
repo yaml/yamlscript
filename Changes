@@ -1,3 +1,16 @@
+- version: 0.1.69
+  date:    Tue 30 Jul 2024 10:46:51 AM PDT
+  changes:
+  - ruby: Install deps locally on demand
+  - julia: Ignore make commands if Julia not installed
+  - nodejs: Makefile ignores rules if npm not installed
+  - perl: Install CPAN deps locally for `make test`
+  - core: Allow escape of pound and colon in ys expr strings
+  - core: Allow for *xs and * in defn args
+  - core: Allow mix of default args and slurp args
+  - core: Support variable arg * syntax in multi-arity defn
+  - core: Add 'apply' to poly.clj
+  - test: Improved TAP error formatting for ys::taptest
 - version: 0.1.68
   date:    Fri 19 Jul 2024 12:00:53 PM PDT
   changes:
