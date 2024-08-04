@@ -25,11 +25,11 @@ Open doors after 100 passes:
 
 
 cmd="ys $RC/factorial.ys 10"
-is "$($cmd)" "10! = 3628800" "$cmd"
+is "$($cmd)" "10! -> 3628800" "$cmd"
 
 
 cmd="ys $RC/greatest-common-denominator.ys 65 78"
-is "$($cmd)" "gcd(65 78) = 13" "$cmd"
+is "$($cmd)" "gcd(65 78) -> 13" "$cmd"
 
 
 cmd="ys $RC/leap-year.ys 2024"

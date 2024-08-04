@@ -43,19 +43,28 @@
 (defn V [x]
   (var-get (resolve (symbol x))))
 
+(intern 'ys.std 'eq clojure.core/=)
+(intern 'ys.std 'ne clojure.core/not=)
+(intern 'ys.std 'gt clojure.core/>)
+(intern 'ys.std 'ge clojure.core/>=)
+(intern 'ys.std 'lt clojure.core/<)
+(intern 'ys.std 'le clojure.core/<=)
+
+(intern 'ys.std 'sum clojure.core/+)
+(intern 'ys.std 'sub clojure.core/-)
+(intern 'ys.std 'mul clojure.core/*)
+(intern 'ys.std 'div clojure.core//)
+(defn pow [x y] (Math/pow x y))
+
+
 (defn toBool [x] (boolean x))
-
 (defn toFloat [x] (parse-double x))
-
 (defn toInt [x] (parse-long x))
-
 (defn toMap
   ([] {})
   ([x] (apply hash-map x))
   ([k v & xs] (apply hash-map k v xs)))
-
 (defn toStr [& xs] (apply str xs))
-
 ; toList
 ; toNum
 ; toVec
@@ -148,12 +157,10 @@
 (defn call [f & args]
   (apply f args))
 
-(intern 'ys.std 'capitalize clojure.string/capitalize)
-
 (intern 'ys.std 'chomp clojure.string/trim-newline)
 
 (defn cwd [& args]
-  (str (apply babashka.fs/cwd args)))
+  (str (apply fs/cwd args)))
 
 (defn curl [url]
   (let [url (if (re-find #":" url)
@@ -184,14 +191,14 @@
   ([] (exit 0))
   ([rc] (System/exit rc)))
 
-(defn fs-d [p] (fs/directory? p))
-(defn fs-e [p] (fs/exists? p))
-(defn fs-f [p] (fs/regular-file? p))
-(defn fs-l [p] (fs/sym-link? p))
-(defn fs-r [p] (fs/readable? p))
+(intern 'ys.std 'fs-d fs/directory?)
+(intern 'ys.std 'fs-e fs/exists?)
+(intern 'ys.std 'fs-f fs/regular-file?)
+(intern 'ys.std 'fs-l fs/sym-link?)
+(intern 'ys.std 'fs-r fs/readable?)
 (defn fs-s [p] (not= 0 (fs/size p)))
-(defn fs-w [p] (fs/writable? p))
-(defn fs-x [p] (fs/executable? p))
+(intern 'ys.std 'fs-w fs/writable?)
+(intern 'ys.std 'fs-x fs/executable?)
 (defn fs-z [p] (= 0 (fs/size p)))
 
 (defn fs-cwd [] (str (fs/cwd)))
@@ -204,8 +211,8 @@
 (defn fs-glob
   ([pat] (fs-glob "." pat))
   ([dir pat] (map str (fs/glob dir pat))))
-(defn fs-path-abs [p] (str (fs/absolutize p)))
-(defn fs-path-rel
+(intern 'ys.std 'fs-abs fs/absolute?)
+(defn fs-rel
   ([p] (str (fs/relativize (fs/cwd) p)))
   ([d p] (str (fs/relativize d p))))
 (defn fs-which [c]
@@ -218,7 +225,7 @@
     (cond
       (= t java.util.regex.Pattern) (filter #(re-find a %1) b)
       (fn? a) (filter a b)
-      :else (die "Invalid args for grep"))))
+      :else (filter #(= a %1) b))))
 
 (defn has [coll x]
   (boolean
@@ -242,7 +249,7 @@
 
 (intern 'ys.std 'lines clojure.string/split-lines)
 
-(intern 'ys.std 'lower-case clojure.string/lower-case)
+(intern 'ys.std 'lc clojure.string/lower-case)
 
 (defn new [class & args]
   (clojure.lang.Reflector/invokeConstructor
@@ -271,9 +278,6 @@
 (defn out [& xs]
   (apply clojure.core/print xs)
   (flush))
-
-(defn pow [x y]
-  (Math/pow x y))
 
 (defn pp [o]
   (pp/pprint o))
@@ -326,8 +330,9 @@
 (defn rx [s]
   (re-pattern s))
 
+(def _println (resolve 'println))
 (defn say [& xs]
-  (apply clojure.core/println xs))
+  (apply _println xs))
 
 (defn sh [cmd & xs]
   (apply process/sh cmd xs))
@@ -351,14 +356,15 @@
 (intern 'ys.std 'triml clojure.string/triml)
 (intern 'ys.std 'trimr clojure.string/trimr)
 
-(intern 'ys.std 'upper-case clojure.string/upper-case)
+(intern 'ys.std 'uc clojure.string/upper-case)
+(intern 'ys.std 'uc1 clojure.string/capitalize)
 
 (defn use-pod [pod-name version]
   (ys/load-pod pod-name version))
 
 (defn warn [& xs]
   (binding [*out* *err*]
-    (apply clojure.core/println xs)
+    (apply _println xs)
     (flush)))
 
 (defn words [s]
