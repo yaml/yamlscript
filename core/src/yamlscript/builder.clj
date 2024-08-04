@@ -78,9 +78,10 @@
   (let [[key kind] (if-let [key (:defn key)]
                      [key 'defn]
                      [(:fn key) 'fn])
-        [_ name args] (if (= kind 'defn)
-                        (re-matches re/dfnk key)
-                        (re-matches re/afnk key))
+        [_ kind name args] (if (= kind 'defn)
+                             (re-matches re/dfnk key)
+                             (re-matches re/afnk key))
+        kind (symbol kind)
         name (Sym name)
         args (when args
                (let [args (fix-args args)

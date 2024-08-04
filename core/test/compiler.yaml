@@ -1165,3 +1165,11 @@
       ([x] x)
       ([x y] (+_ x y))
       ([x y & xs] (reduce add (add x y) xs)))
+
+
+- name: Define a private function
+  yamlscript: |
+    !yamlscript/v0
+    defn- foo(): nil
+  clojure: |
+    (defn- foo [] nil)
