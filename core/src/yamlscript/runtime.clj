@@ -58,12 +58,17 @@
               'use (sci/copy-var ys.ys/use nil)
 
               ;; clojure.core functions not added by SCI
+              'abs (sci/copy-var clojure.core/abs nil)
               'file-seq (sci/copy-var clojure.core/file-seq nil)
+              'infinite? (sci/copy-var clojure.core/infinite? nil)
               'parse-double (sci/copy-var clojure.core/parse-double nil)
               'parse-long (sci/copy-var clojure.core/parse-long nil)
+              'parse-uuid (sci/copy-var clojure.core/parse-uuid nil)
               'pprint (sci/copy-var clojure.pprint/pprint nil)
+              'random-uuid (sci/copy-var clojure.core/random-uuid nil)
               'slurp (sci/copy-var clojure.core/slurp nil)
               'spit (sci/copy-var clojure.core/spit nil)
+              'NaN? (sci/copy-var clojure.core/NaN? nil)
 
               ;; YAMLScript debugging functions
               '_DBG (sci/copy-var clojure.core/_DBG nil)
@@ -136,10 +141,13 @@
                 '[clojure.lang.Atom
                   clojure.lang.Fn
                   clojure.lang.Keyword
+                  clojure.lang.Numbers
                   clojure.lang.Range
                   clojure.lang.Seqable
                   clojure.lang.Sequential
                   clojure.lang.Symbol
+
+                  java.io.File
 
                   java.lang.Boolean
                   java.lang.Byte
@@ -161,7 +169,8 @@
                   java.lang.Thread
                   java.lang.Throwable
 
-                  java.io.File])}))
+                  java.math.BigDecimal
+                  java.math.BigInteger])}))
 
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSION ys-version)
 (sci/intern @ys/sci-ctx 'clojure.core 'VERSIONS
