@@ -87,7 +87,7 @@ defn step-2(ctx):
 defn step-3(ctx):
   o: "Step 3) Run 'make test'"
 
-  # run:: make test
+  run:: make test
 
 
 #------------------------------------------------------------------------------
@@ -273,6 +273,8 @@ defn make-changes-entry(ctx):
   changes =:
     str/join "\n":
       map \(str/replace %1, /^\w+ /, "  - "): lines
+
+  validate-yaml: changes
 
   =>: changes
 
