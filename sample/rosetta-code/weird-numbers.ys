@@ -27,7 +27,7 @@ defn semiperfect(n, divs):
     if (n < h):
       semiperfect: n t
       or:
-        (n = h)
+        (n == h)
         semiperfect((n - h) t)
         semiperfect(n t)
 

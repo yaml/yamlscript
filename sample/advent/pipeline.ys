@@ -1,11 +1,11 @@
 !yamlscript/v0
 ->> (1 .. 10):
-  www: 'before map'
+  WWW: 'before map'
   map: inc
-  www: 'after map'
-  filter: \(= 0 (%1 % 2))  # odd?
-  www: 'after filter'
+  WWW: 'after map'
+  filter: \(== 0 (%1 % 2))  # odd?
+  WWW: 'after filter'
   reduce: +
-  www: 'after reduce'
+  WWW: 'after reduce'
   =>: say
-  =>: www
+  =>: WWW

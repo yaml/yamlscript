@@ -94,7 +94,7 @@ defn get-model(model):
 
   model ||=: models.rand-nth()
 
-  when-not some(\(%1 = model) models):
+  when-not some(\(%1 == model) models):
     die: "'$model' is not a valid model"
 
   =>: model

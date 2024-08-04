@@ -4,7 +4,7 @@
 defn main(*):
   answer =:
     multiply: ARGS*
-  say: "multiply($(ARGS.join(', '))) = $answer"
+  say: "multiply($(ARGS.join(', '))) -> $answer"
 
 # A multi-arity function definition:
 defn multiply:

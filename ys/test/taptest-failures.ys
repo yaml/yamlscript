@@ -16,19 +16,19 @@ test::
   want: 43
 
 - name: Pass expecting false
-  code: 1 = 2
+  code: 1 == 2
   want: false
 
 - name: Fail expecting false
-  code: 3 = 3
+  code: 3 == 3
   want: false
 
 - name: Fail expecting nil
-  code: 3 = 3
+  code: 3 == 3
   want: null
 
 - name: Fail expecting nil as string
-  code: 3 = 3
+  code: 3 == 3
   want: nil
 
 done: 6

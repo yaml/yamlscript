@@ -1,7 +1,7 @@
 !yamlscript/v0
 
 defn main(a b):
-  say: "gcd($a $b) = $gcd(a b)"
+  say: "gcd($a $b) -> $gcd(a b)"
 
 defn gcd(a b):
   if zero?(b) a:
