@@ -154,6 +154,12 @@
               (passed test)
               (failed test got))
             ,
+            (contains? keys "code")
+            (let [test (assoc test "want" true)]
+              (if (= got true)
+                (passed test)
+                (failed test got)))
+            ,
             :else
             (die (str "taptest: Test " count
                    " requires one of: 'want', 'like', 'have'"))))))))
