@@ -81,16 +81,6 @@ defn step-2(ctx):
 
 
 #------------------------------------------------------------------------------
-# Run 'make test' to ensure everything is working as expected.
-#------------------------------------------------------------------------------
-
-defn step-3(ctx):
-  o: "Step 3) Run 'make test'"
-
-  run:: make test
-
-
-#------------------------------------------------------------------------------
 # Collect the git log subject lines since the last release, reverse them and
 # then create a new Changes file entry and add it to the top of the Changes
 # file.
@@ -98,8 +88,8 @@ defn step-3(ctx):
 # Open the file in an editor to review the entry and update if needed.
 #------------------------------------------------------------------------------
 
-defn step-4(ctx):
-  o: "Step 4) Update the 'Changes' file"
+defn step-3(ctx):
+  o: "Step 3) Update the 'Changes' file"
 
   when-not dryrun:
     changes =:
@@ -112,6 +102,24 @@ defn step-4(ctx):
       run: "$editor release-changes.txt"
       prompt: "Press Enter to continue or Ctrl-C to abort."
 
+    validate-yaml: slurp('release-changes.txt')
+
+  when verbose:
+    # Show git changes since last release:
+    run: "grep -F -B999 '$(ctx.old)' Changes"
+
+
+#------------------------------------------------------------------------------
+# Run 'make test' to ensure everything is working as expected.
+#------------------------------------------------------------------------------
+
+defn step-4(ctx):
+  o: "Step 4) Run 'make test'"
+
+  run:: make test
+
+  # Update Changes if tests pass:
+  when-not dryrun:
     changes =: +'release-changes.txt'.slurp()
 
     file-prepend 'Changes': |
@@ -125,10 +133,6 @@ defn step-4(ctx):
     changes =: changes.replace(/(?m)^  -/ '*')
 
     spit 'release-changes.txt': changes
-
-  when verbose:
-    # Show git changes since last release:
-    run: "grep -F -B999 '$(ctx.old)' Changes"
 
 
 #------------------------------------------------------------------------------
@@ -273,8 +277,6 @@ defn make-changes-entry(ctx):
   changes =:
     str/join "\n":
       map \(str/replace %1, /^\w+ /, "  - "): lines
-
-  validate-yaml: changes
 
   =>: changes
 
