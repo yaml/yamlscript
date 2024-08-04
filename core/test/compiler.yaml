@@ -1173,3 +1173,14 @@
     defn- foo(): nil
   clojure: |
     (defn- foo [] nil)
+
+
+- name: Check case compiles like cond
+  yamlscript: |
+    !yamlscript/v0
+    case x:
+      1: a
+      2: b
+      3: c
+  clojure: |
+    (case x 1 a 2 b 3 c)
