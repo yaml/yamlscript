@@ -1,11 +1,5 @@
 
 ---
-version: 0.1.70
-date:    Sun 04 Aug 2024 03:34:02 PM PDT
-changes:
-- libyamlscript 0.1.70
-
----
 version: 0.1.69
 date:    Tue 30 Jul 2024 10:46:51 AM PDT
 changes:

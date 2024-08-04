@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2024 Ingy dot Net
 
-(defproject org.yamlscript/clj-yamlscript "0.1.70"
+(defproject org.yamlscript/clj-yamlscript "0.1.69"
   :description
   "YAMLScript is a functional programming language whose syntax is encoded in
   YAML."
@@ -23,7 +23,7 @@
    [org.clojure/data.json "2.4.0"]
    [org.json/json "20240205"]
    [net.java.dev.jna/jna "5.14.0"]
-   [org.yamlscript/yamlscript "0.1.70"]]
+   [org.yamlscript/yamlscript "0.1.69"]]
 
   :deploy-repositories
   [["releases"
