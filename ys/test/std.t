@@ -55,4 +55,11 @@ test::
 - code: 'reduce+ 0 (1 .. 5): +'
   want: 15
 
+- code: +"inc".call(41)
+  want: 42
+- code: |
+    f =: "inc"
+    =>: f.call(41)
+  want: 42
+
 done:

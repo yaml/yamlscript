@@ -156,7 +156,11 @@
   (apply util/abspath args))
 
 (defn call [f & args]
-  (apply f args))
+  (let [f (cond
+            (string? f) (-> f symbol resolve var-get)
+            (symbol? f) (-> f resolve var-get)
+            :else f)]
+    (apply f args)))
 
 (intern 'ys.std 'chomp clojure.string/trim-newline)
 
