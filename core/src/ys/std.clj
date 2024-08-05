@@ -253,6 +253,7 @@
 (intern 'ys.std 'lc clojure.string/lower-case)
 
 (intern 'ys.std 'map+ ys.plus/map+)
+(intern 'ys.std 'reduce+ ys.plus/reduce+)
 
 (defn new [class & args]
   (clojure.lang.Reflector/invokeConstructor

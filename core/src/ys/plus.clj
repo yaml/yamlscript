@@ -8,5 +8,15 @@
     (string? f) (map #(get %1 f) coll)
     :else (map f coll)))
 
+(defn reduce+
+  ([a b]
+   (cond
+     (fn? b) (reduce b a)
+     :else (reduce a b)))
+  ([a b c]
+   (cond
+     (fn? c) (reduce c a b)
+     :else (reduce a b c))))
+
 (comment
   )

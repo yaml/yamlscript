@@ -50,4 +50,9 @@ test::
 - code: 'map+ "a": q(({"a" 1}{"a" 2}))'
   want:: +[1 2]
 
+- code: 'reduce+ + 0 (1 .. 5):'
+  want: 15
+- code: 'reduce+ 0 (1 .. 5): +'
+  want: 15
+
 done:
