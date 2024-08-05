@@ -216,7 +216,8 @@
   (let [declare (atom {})
         defined (atom {})]
     (walk/prewalk
-      #(let [defn-name (when (= 'defn (get-in %1 [:Lst 0 :Sym]))
+      #(let [fn-name (get-in %1 [:Lst 0 :Sym])
+             defn-name (when (some #{'defn 'defn-} [fn-name])
                          (get-in %1 [:Lst 1 :Sym]))
              sym-name (get-in %1 [:Sym])]
          (when defn-name (swap! defined assoc defn-name true))
@@ -230,7 +231,8 @@
 
 (defn declare-undefined [node]
   (let [defn-names (map #(get-in %1 [:Lst 1 :Sym])
-                     (filter #(= 'defn (get-in %1 [:Lst 0 :Sym]))
+                     (filter #(some #{'defn 'defn-}
+                               [(get-in %1 [:Lst 0 :Sym])])
                        (rest (get-in node [:Top]))))
         defn-names (zipmap defn-names (repeat true))
         declares (map Sym
