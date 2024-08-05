@@ -45,4 +45,9 @@ test::
 - code: uc1('foo') == 'Foo'
 - code: lc('FoOoO') == 'foooo'
 
+- code: +[{"a" 1}{"a" 2}].map("a")
+  want:: \'(1 2)
+- code: 'map+ "a": q(({"a" 1}{"a" 2}))'
+  want:: +[1 2]
+
 done:

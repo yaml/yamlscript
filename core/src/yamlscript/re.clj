@@ -88,7 +88,7 @@
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
-(def ysym (re #"(?:$symw[?!.]?|_)"))       ; YS symbol token
+(def ysym (re #"(?:$symw[+?!.]?|_)"))      ; YS symbol token
 (def splt (re #"(?:$ysym\*)"))             ; Splat symbol
 (def asym (re #"(?:\*$symw)"))             ; Alias symbol
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default

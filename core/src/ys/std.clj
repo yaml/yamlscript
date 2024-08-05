@@ -12,6 +12,7 @@
    [clojure.pprint :as pp]
    [clojure.string :as str]
    [flatland.ordered.map]
+   [ys.plus]
    [ys.ys :as ys]
    [yamlscript.common :as common]
    [yamlscript.util :as util])
@@ -250,6 +251,8 @@
 (intern 'ys.std 'lines clojure.string/split-lines)
 
 (intern 'ys.std 'lc clojure.string/lower-case)
+
+(intern 'ys.std 'map+ ys.plus/map+)
 
 (defn new [class & args]
   (clojure.lang.Reflector/invokeConstructor
