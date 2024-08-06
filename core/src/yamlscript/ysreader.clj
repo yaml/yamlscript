@@ -193,7 +193,6 @@
     forms))
 
 (def operators
-   ; change to ._
   {(Sym '.)  (Sym '_->)
    (Sym '..) (Sym 'rng)
    (Sym '+) (Sym '+_)

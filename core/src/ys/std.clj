@@ -152,6 +152,9 @@
 (defn =-- [str rgx]
   (re-find rgx str))
 
+(defn !-- [str rgx]
+  (not (re-find rgx str)))
+
 (defn abspath [& args]
   (apply util/abspath args))
 

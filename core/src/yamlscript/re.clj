@@ -55,7 +55,7 @@
 (def inum #"-?\d+")                        ; Integer literal token
 (def fnum (re #"$inum\.\d*(?:e$inum)?"))   ; Floating point literal token
 (def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token
-(def xsym #"(?:\=\~)")                     ; Special operator token
+(def xsym #"(?:\=\~|!~)")                  ; Special operator token
 (def osym #"(?:[-+*/%<>!=~|&.]{1,3})")     ; Operator symbol token
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def narg #"(?:%\d+)")                     ; Numbered argument token
