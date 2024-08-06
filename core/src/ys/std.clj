@@ -55,8 +55,19 @@
 (intern 'ys.std 'sub clojure.core/-)
 (intern 'ys.std 'mul clojure.core/*)
 (intern 'ys.std 'div clojure.core//)
-(defn pow [x y] (Math/pow x y))
-
+(defn pow
+  ([x y]
+   (if (and (integer? x) (integer? y) (>= y 0))
+     (let [a (Math/pow x y)]
+       (if (<= a (Long/MAX_VALUE))
+         (long a)
+         a))
+     (Math/pow x y)))
+  ([x y & z]
+   (die "'pow' ('**') takes 2 arguments")))
+(defn squared [x] (pow x 2))
+(defn cubed [x] (pow x 3))
+(defn sqrt [x] (Math/sqrt x))
 
 (defn toBool [x] (boolean x))
 (defn toFloat [x] (parse-double x))

@@ -215,7 +215,7 @@
                    (partition 2)
                    (map second)
                    (apply = %1))
-            (map Sym '[+ - * / || && .])))
+            (map Sym '[+ - * / || && . ** = == > >= < <=])))
       (let [op (second expr)
             op (or (operators op) op)]
         (->> expr
