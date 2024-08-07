@@ -7,7 +7,7 @@
 (ns yamlscript.cli
   (:gen-class)
   (:require
-   [yamlscript.debug]
+   #_[yamlscript.debug :refer [WWW]]
    [yamlscript.runtime :as runtime]
    [yamlscript.common :as common]
    [yamlscript.compiler :as compiler]
@@ -17,6 +17,7 @@
    [clojure.pprint :as pp]
    [clojure.set :as set]
    [clojure.string :as str]
+   [clojure.stacktrace]
    [clojure.tools.cli :as cli]))
 
 (def yamlscript-version "0.1.69")
@@ -35,13 +36,45 @@
     (str "*** exit " n " ***")
     (System/exit n)))
 
-(defn err [& xs]
-  (binding [*out* *err*]
-    (println (apply str "Error: " xs))
-    (exit 1)))
+(defn err [e]
+  (let [prefix @common/error-msg-prefix
+        msg (if (instance? Throwable e)
+              (:cause (Throwable->map e))
+              e)]
+    (common/reset-error-msg-prefix!)
+    (binding [*out* *err*]
+      (print prefix)
+      (if (and (:stack-trace @common/opts) (instance? Throwable e))
+        (do
+          (clojure.stacktrace/print-stack-trace e)
+          (flush))
+        (println (str/replace msg "java.lang.Exception: " "")))))
+  (exit 1))
+
+#_
+(let [{:keys [cause data trace]} (Throwable->map e)
+      {:keys [file line column]} data
+      stack-trace (:stack-trace opts)
+      msg (if stack-trace
+            (with-out-str
+              (pp/pprint
+                {:stack-trace true
+                 :cause cause
+                 :file file
+                 :line line
+                 :column column
+                 :xtrace trace}))
+            (str cause "\n"
+              (if (seq file)
+                (str
+                  "  in file '" file "'"
+                  " line " line
+                  " column " column "\n")
+                "")))]
+  (err msg))
 
 (defn todo [s & _]
-  (err "--" s " not implemented yet."))
+  (err (str "--" s " not implemented yet.")))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts #{"json" "yaml" "edn"})
@@ -281,7 +314,9 @@ Options:
             (not (:time opts)))
         (compiler/compile code)
         (compiler/compile-with-options code))
-      (catch Exception e (err e opts)))))
+      (catch Exception e
+        (common/reset-error-msg-prefix! "Compile error: ")
+        (err e)))))
 
 (defn get-compiled-code [opts args argv]
   (let [[code file args load] (get-code opts args argv)
@@ -324,26 +359,8 @@ Options:
             "edn"  (pp/pprint result)
             ,      (println (json/write-str result json-options))))))
     (catch Exception e
-      (let [{:keys [cause data trace]} (Throwable->map e)
-            {:keys [file line column]} data
-            stack-trace (:stack-trace opts)
-            msg (if stack-trace
-                  (with-out-str
-                    (pp/pprint
-                        {:stack-trace true
-                         :cause cause
-                         :file file
-                         :line line
-                         :column column
-                         :xtrace trace}))
-                  (str cause "\n"
-                    (if (seq file)
-                      (str
-                        "  in file '" file "'"
-                        " line " line
-                        " column " column "\n")
-                      "")))]
-        (err msg)))))
+      (common/reset-error-msg-prefix! "Runtime error:\n")
+      (err e))))
 
 (defn clojure-format [clojure formatter]
   (let [out (try
@@ -354,7 +371,9 @@ Options:
                            :err *err*}
                    formatter)))
               (catch Exception e
-                (err e "Error running formatter: '" formatter "'")))]
+                (common/reset-error-msg-prefix!
+                  (str "Compiler formatter error in '" formatter "':\n"))
+                (err e)))]
     out))
 
 (defn do-compile [opts args]
@@ -511,7 +530,7 @@ Options:
 (comment
   (-main)
   (-main
-    "-e" "say: 123"
+    "-pe" "if 1 < 2: 3"
     ;"--run"
     ;"--load"
     ;"--to=json"

@@ -14,5 +14,11 @@
 (def stream-anchors_ (atom {}))
 (def doc-anchors_ (atom {}))
 
+(def error-msg-prefix (atom ()))
+(defn reset-error-msg-prefix!
+  ([] (reset! error-msg-prefix "Error :"))
+  ([prefix] (reset! error-msg-prefix prefix)))
+(reset-error-msg-prefix!)
+
 (comment
   )
