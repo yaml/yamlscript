@@ -54,20 +54,19 @@ Here it is again:
 
 defn main(number=99):
   each n (number .. 1):
-    say:
-      paragraph: n
+    say: paragraph(n)
 
 defn paragraph(num): |
-  $(bottles num) of beer on the wall,
-  $(bottles num) of beer.
+  $bottles(num) of beer on the wall,
+  $bottles(num) of beer.
   Take one down, pass it around.
-  $(bottles (num - 1)) of beer on the wall.
+  $bottles(num - 1) of beer on the wall.
 
 defn bottles(n):
   cond:
     n == 0: "No more bottles"
     n == 1: "1 bottle"
-    :else : str(n " bottles")
+    =>    : "$n bottles"
 ```
 
 Let's see how long it takes to drink 3 bottles:
@@ -96,7 +95,7 @@ real    0m0.075s
 Let's see if we can drink a little faster, shall we?
 
 ```bash
-$ ys --native 99-bottles.ys
+$ ys --binary 99-bottles.ys
 * Compiling YAMLScript '99-bottles.ys' to '99-bottles' executable
 * Setting up build env in '/tmp/tmp.wpt7O1KsWg'
 * This may take a few minutes...
@@ -154,7 +153,7 @@ Also did you notice that it took an annoying amount of time to compile?
 Let's time native compiling a minimal program:
 
 ```bash
-$ time ys -Ce 'say: "Hello, world!"'
+$ time ys -be 'say: "Hello, world!"'
 * Compiling YAMLScript '-e' to './EVAL' executable
 * Setting up build env in '/tmp/tmp.mahWVLE9gi'
 Could not find main function in '-e'
@@ -163,12 +162,12 @@ real    0m0.103s
 ```
 
 I forgot to mention.
-In order to `--native` compile a YAMLScript program, it must have a `main`
+In order to `--binary` compile a YAMLScript program, it must have a `main`
 function.
 That's an easy fix:
 
 ```bash
-$ time ys -Ce 'defn main(): say("Hello, world!")'
+$ time ys -be 'defn main(): say("Hello, world!")'
 * Compiling YAMLScript '-e' to './EVAL' executable
 * Setting up build env in '/tmp/tmp.1zpmh6L1jM'
 * This may take a few minutes...
@@ -209,12 +208,12 @@ real    0m0.010s
 
 ----
 
-YAMLScript's `--native` compiler is based on GraalVM's `native-image` tool.
+YAMLScript's `--binary` compiler is based on GraalVM's `native-image` tool.
 The same process that is used to compile the `ys` CLI binary.
 
-I wish it were faster, but at least now we can be fast while developing our
-YAMLScript programs and then compile them to native binaries when we are ready
-to ship them.
+I wish it were faster to compile to binary, but at least now we can be fast
+while developing our YAMLScript programs and then compile them to native
+binaries when we are ready to ship them.
 
 Let's look at where YAMLScript is at now from a high level view:
 
@@ -230,7 +229,7 @@ I think we have a winner here!
 
 There's still a long way to go on many fronts, but all of the above is true
 today.
-Full disclosure: I only came up the the `--native` idea 2 days ago.
+Full disclosure: I only came up the the `--binary` idea 2 days ago.
 
 Climb aboard and let's fly this baby to the moon!
 

@@ -228,10 +228,10 @@ Another way to accomplish the same result is:
 map1 =: load('map1.yaml')
 
 =>:
-  .{
-    :key1 "val1"
+  +{
+    :key1 'val1'
     :key2 map1
-    :key3 "val3"
+    :key3 'val3'
   }
 ```
 

@@ -6,7 +6,7 @@ defn main(width=5):
 defn tree(width):
   top =:
     join "\n":
-      mapv \(line width, %1): width .. 1
+      map \(line width, %1): width .. 1
 
   trunk =: trunk(width) * 2
 

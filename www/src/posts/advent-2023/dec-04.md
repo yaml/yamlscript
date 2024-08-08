@@ -21,7 +21,7 @@ Today is Monday and Monday's are made for big headlines.
 
 That's right.
 Not only is YAMLScript a Lisp, it's a very specific and modern Lisp.
-It's a Lisp that has a community and conferences and books and jobs and that pay
+It's a Lisp that has a community and conferences and books and jobs that pay
 people to write code in Lisp!
 
 If you know the slightest thing about Lisp, you must think I'm crazy.
@@ -66,7 +66,7 @@ Looks pretty Lispy to me.
 Now let's run the Clojure code:
 
 ```bash
-$ ys -c hw.ys | clojure -
+$ ys -c hw.ys | clojure -M -
 Hello, world!
 ```
 
@@ -92,7 +92,7 @@ I don't typically watch a lot of programming videos, but I've seen at least a
 dozen of his.
 I encourage you to watch some too.
 Or at least peruse some of his [various opinions on varying programming topics](
-https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f)
+https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f).
 
 Rich programmed professionally in Java for many years.
 One day he decided that he couldn't take it anymore.
@@ -167,8 +167,10 @@ We could write the above YAMLScript expression like this:
 
 ```yaml
 say:
-  take (+: 1 2):
-    keys: ns-map(NS)
+  take:
+    +: 1 2
+    keys:
+      ns-map: NS
 ```
 
 Both YAMLScript forms compile to the same Clojure code.

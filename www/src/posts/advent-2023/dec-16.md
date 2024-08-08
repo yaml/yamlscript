@@ -37,7 +37,7 @@ Here's a simple lambda that squares a number:
 ;; Using the fn keyword
 (fn [x] (* x x))
 ;; Using the #() reader macro
-#(* % %)
+#(* %1 %1)
 ```
 
 Note: Clojure just calls them "anonymous functions".
@@ -46,9 +46,9 @@ Here's both of those in YAMLScript:
 
 ```yaml
 # Using the fn keyword
-fn(x): (x * x)
+fn(x): x * x
 # Using the #() reader macro
-\(% * %)
+\(%1 * %1)
 ```
 
 The latter method is shorter but the former is more flexible.
@@ -59,7 +59,7 @@ access to the variables in the scope where they were created.
 Here's a function the returns a function that adds a number to another number:
 
 ```yaml
-defn adder(x): \(% + x)
+defn adder(x): \(%1 + x)
 add-5 =: adder(5)
 add-5: 10           # => 15
 ```

@@ -57,7 +57,7 @@ yaml_text = """
 - 60
 """
 
-data = yamlscript.load(yaml_text)
+data = yamlscript.YAMLScript().load(yaml_text)
 
 print(data)
 # => [40, 50, 60]
@@ -75,7 +75,7 @@ yaml_text = """
 mapv \(% * 10): 4..6
 """
 
-data = yamlscript.load(yaml_text)
+data = yamlscript.YAMLScript().load(yaml_text)
 
 print(data)
 # => [40, 50, 60]
@@ -118,11 +118,11 @@ db =: load("db.yaml")
 
 =>: !
 - name: Ingy döt Net
-  car: ! db.cars.0
+  car:: db.cars.0
 - name: Santa Claus
-  car: ! db.cars.1
+  car:: db.cars.1
 - name: Sir Lancelot
-  car: ! db.cars.2
+  car:: db.cars.2
 ```
 
 Then we could load the data into Python and print it out:

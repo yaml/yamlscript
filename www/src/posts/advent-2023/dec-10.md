@@ -35,7 +35,7 @@ To begin this journey, let's use this visualizer in action.
 You could write it like this:
 
 ```bash
-ys --compile --debug-state=all -e 'name =: "Clojure"' -e 'say: "Hello, $name!"'
+ys --compile --debug-stage=all -e 'name =: "Clojure"' -e 'say: "Hello, $name!"'
 ```
 
 The one line program is equivalent to the file containing:
@@ -49,50 +49,50 @@ say: "Hello, $name!"
 Let's run the command now (but we'll use the shorter options):
 
 ```bash
-$ ys -c -e 'name =: "Clojure"' -e 'say: "Hello, $name!"' -xall
-*** parse output ***
-({:+ "+MAP", :! "yamlscript/v0"}
+$ ys -c -e 'name =: "Clojure"' -e 'say: "Hello, $name!"' -d
+*** parse     *** 0.127737 ms
+({:+ "+MAP", :! "yamlscript/v0/code"}
  {:+ "=VAL", := "name ="}
  {:+ "=VAL", :$ "Clojure"}
  {:+ "=VAL", := "say"}
  {:+ "=VAL", :$ "Hello, $name!"}
- {:+ "-MAP"})
+ {:+ "-MAP"}
+ {:+ "-DOC"})
 
-*** compose output ***
-{:! "yamlscript/v0",
+*** compose   *** 0.009495 ms
+{:! "yamlscript/v0/code",
  :% [{:= "name ="} {:$ "Clojure"} {:= "say"} {:$ "Hello, $name!"}]}
 
-*** resolve output ***
-{:ysm
- [{:ysx "def name"}
-  {:ysi "Clojure"}
-  {:ysx "say"}
-  {:ysi "Hello, $name!"}]}
+*** resolve   *** 0.073969 ms
+{:pairs
+ [{:def "name ="}
+  {:vstr "Clojure"}
+  {:exp "say"}
+  {:vstr "Hello, $name!"}]}
 
-*** build output ***
-{:ysm
- ([{:Sym def} {:Sym name}]
-  {:Str "Clojure"}
-  {:Sym say}
-  {:Lst [{:Sym str} {:Str "Hello, "} {:Sym name} {:Str "!"}]})}
-
-*** transform output ***
-{:ysm
+*** build     *** 0.375378 ms
+{:pairs
  [[{:Sym def} {:Sym name}]
   {:Str "Clojure"}
   {:Sym say}
   {:Lst [{:Sym str} {:Str "Hello, "} {:Sym name} {:Str "!"}]}]}
 
-*** construct output ***
-{:Lst
- [{:Sym do}
-  {:Lst [{:Sym def} {:Sym name} {:Str "Clojure"}]}
+*** transform *** 0.027342 ms
+{:pairs
+ [[{:Sym def} {:Sym name}]
+  {:Str "Clojure"}
+  {:Sym say}
+  {:Lst [{:Sym str} {:Str "Hello, "} {:Sym name} {:Str "!"}]}]}
+
+*** construct *** 0.087933 ms
+{:Top
+ [{:Lst [{:Sym def} {:Sym name} {:Str "Clojure"}]}
   {:Lst
    [{:Sym say}
     {:Lst [{:Sym str} {:Str "Hello, "} {:Sym name} {:Str "!"}]}]}]}
 
-*** print output ***
-"(def name \"Clojure\")\n(say (str \"Hello, \" name \"!\"))\n"
+*** print     *** 0.014494 ms
+"(def name \"Clojure\")(say (str \"Hello, \" name \"!\"))"
 
 (def name "Clojure")
 (say (str "Hello, " name "!"))
@@ -390,13 +390,13 @@ defn compile(yamlscript-string):
   "Convert YAMLScript code string to an equivalent Clojure code string.":
   ->>:
     yamlscript-string
-    yamlscript.parser/parse
-    yamlscript.composer/compose
-    yamlscript.resolver/resolve
-    yamlscript.builder/build
-    yamlscript.transformer/transform
-    yamlscript.constructor/construct
-    yamlscript.printer/print
+    yamlscript::parser/parse
+    yamlscript::composer/compose
+    yamlscript::resolver/resolve
+    yamlscript::builder/build
+    yamlscript::transformer/transform
+    yamlscript::constructor/construct
+    yamlscript::printer/print
 ```
 
 I hope I didn't waste too much of your Sunday on this post.

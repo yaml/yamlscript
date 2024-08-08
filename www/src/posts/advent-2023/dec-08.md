@@ -127,7 +127,7 @@ Here's a few of them:
 * `load` - Load an external YAMLScript file
 * `=>` - `=>: 123` or `(=> 123)` compiles to `123`
 * `pretty` - Pretty formats a data structure (without printing it)
-* `toI`, `toS`, `toB` etc casting functions (Integer, String, Boolean)
+* `toInt`, `toStr`, `toBool` etc casting functions (Integer, String, Boolean)
 * `_+` and `_*` - The polymorphic versions of `+` and `*` infix operators
 
 The `ys::std` library will certainly grow over time.
@@ -136,11 +136,14 @@ functions.
 
 ### Other `ys::` Libraries
 
-There are currently 3 other `ys::` libraries that are always available.
+There are currently several other `ys::` libraries that are always available.
+Here are a few of them:
 
 * `ys::yaml` - YAML `load` and `dump` functions
 * `ys::json` - JSON `load` and `dump` functions
 * `ys::ys` - `compile`, `eval` and `load` YS from within YS!
+* `ys::clj` - Clojure core functions replaced by YAMLScript ones
+* `ys::taptest` - A TAP-based testing library
 
 For fun let's write a silly YS program that uses them.
 
@@ -169,7 +172,8 @@ Hello, Elves!!
 That's a lot of fun!
 We wrote a program in YAML to play with some YAML that was inside the YAML!
 
-I hope you're starting to see the power of YAMLScript, and I hope you have a wonderful day.
+I hope you're starting to see the power of YAMLScript, and I hope you have a
+wonderful day.
 
 Full disclosure: I'm stuck in the Winnipeg airport, writing this and hacking on
 YAMLScript because my flight's toilets stopped working and they decided to land

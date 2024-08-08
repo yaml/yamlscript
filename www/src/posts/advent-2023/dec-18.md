@@ -86,7 +86,7 @@ That's because we are using it to generate data, so we'll `--load` it:
 
 ```bash
 $ ys map.ys -l
-Error: java.lang.Exception: Sequences (block and flow) not allowed in code mode{:eval [], :debug-stage {}}
+Compile error: Sequences (block and flow) not allowed in code mode
 ```
 
 That's scary!
@@ -94,14 +94,14 @@ And what's up with Java?!
 I don't think it even compiled.
 
 When this happens, I like to debug the 7 layers of YAMLScript compilation, with
-the `--debug-stage=all` option, aka `-xall`:
+the `--debug-stage=all` option, aka `-d`:
 
 ```bash
-$ ys map.ys -xall
+$ ys map.ys -d
 ```
 
 ```txt
-$ ys map.ys -l -xall
+$ ys map.ys -l -d
 *** parse output ***
 ({:+ "+MAP", :! "yamlscript/v0"}
  {:+ "=VAL", := "map inc"}
@@ -113,15 +113,15 @@ $ ys map.ys -l -xall
 *** compose output ***
 {:! "yamlscript/v0", :% [{:= "map inc"} {:-- [{:= "1 2 3"}]}]}
 
-Error: java.lang.Exception: Sequences (block and flow) not allowed in code mode{:eval [], :debug-stage {"parse" true, "compose" true, "resolve" true, "build" true, "transform" true, "construct" true, "print" true}, :load true}
+Compile error: Sequences (block and flow) not allowed in code mode
 ```
 
 The 7 stages of YAMLScript compilation are: `parse`, `compose`, `resolve`,
 `build`, `transform`, `construct`, and `print`.
 It looks like we are getting an error in the `resolve` stage.
 
-The `-xall` option means the same thing as `-xparse -xcompose -xresolve -xbuild
--xtransform -xconstruct -xprint`.
+The `-d` option means the same thing as `-Dparse -Dcompose -Dresolve -Dbuild
+-Dtransform -Dconstruct -Dprint`.
 
 So we parsed the YAML input into pieces and then composed a tree out of them.
 In the resolve stage we look at each node of the tree and figure out what it
@@ -137,21 +137,21 @@ We wanted YAML to see the RHS as a scalar value, not a sequence.
 YAML plain (unquoted) scalars can't begin with certain characters, like `[`,
 `{`, `*`, `&`, `!`, `|`, `>`, `%`, `@`, `#` etc because they are YAML syntax.
 In YAMLScript when we want a ysexpr string that starts with one of these
-characters, we can escape it with a dot `.`.
+characters, we can escape it with a plus `+`.
 
 ```yaml
 !yamlscript/v0
-map inc: .[1 2 3]
+map inc: +[1 2 3]
 ```
 
 And let's just check the resolve stage this time:
 
 ```bash
-$ ys map.ys -l -xresolve
+$ ys map.ys -l -Dresolve
 ```
 
 ```txt
-$ ys map.ys -l -xresolve
+$ ys map.ys -l -Dresolve
 *** resolve output ***
 {:ysm [{:ysx "map inc"} {:ysx "[1 2 3]"}]}
 
@@ -177,7 +177,7 @@ defn main(n):
   say: factorial(n)
 
 defn factorial(x):
-  apply *: 2..x
+  apply *: 2 .. x
 ```
 
 Let's see how it works:
@@ -206,65 +206,55 @@ to get there.
 Especially when many library files are involved.
 
 You can see the stack trace on any error by using the `--stack-trace` option aka
-`-X`:
+`-S`:
 
 ```txt
-$ ys factorial.ys 30 -X
-Error: {:stack-trace true,
- :cause "long overflow",
- :file nil,
- :line nil,
- :column nil,
- :trace
- [[clojure.lang.Numbers multiply "Numbers.java" 1971]
-  [clojure.lang.Numbers$LongOps multiply "Numbers.java" 503]
-  [clojure.lang.Numbers multiply "Numbers.java" 175]
-  [clojure.core$_STAR_ invokeStatic "core.clj" 1018]
-  [clojure.core$_STAR_ invoke "core.clj" 1010]
-  [clojure.lang.LongRange$LongChunk reduce "LongRange.java" 316]
-  [clojure.core$reduce1 invokeStatic "core.clj" 944]
-  [clojure.core$_STAR_ invokeStatic "core.clj" 1020]
-  [clojure.core$_STAR_ doInvoke "core.clj" 1010]
-  [clojure.lang.RestFn applyTo "RestFn.java" 142]
-  [clojure.core$apply invokeStatic "core.clj" 667]
-  [clojure.core$apply invoke "core.clj" 662]
-  [sci.lang.Var invoke "lang.cljc" 202]
-  [sci.impl.analyzer$return_call$reify__4621 eval "analyzer.cljc" 1422]
-  [sci.impl.fns$fun$arity_1__3508 invoke "fns.cljc" 107]
-  [sci.lang.Var invoke "lang.cljc" 200]
-  [sci.impl.analyzer$return_call$reify__4617 eval "analyzer.cljc" 1422]
-  [sci.impl.analyzer$return_call$reify__4617 eval "analyzer.cljc" 1422]
-  [sci.impl.fns$fun$arity_1__3508 invoke "fns.cljc" 107]
-  [clojure.lang.AFn applyToHelper "AFn.java" 154]
-  [clojure.lang.AFn applyTo "AFn.java" 144]
-  [clojure.core$apply invokeStatic "core.clj" 667]
-  [clojure.core$apply invoke "core.clj" 662]
-  [sci.lang.Var invoke "lang.cljc" 202]
-  [sci.impl.analyzer$return_call$reify__4621 eval "analyzer.cljc" 1422]
-  [sci.impl.interpreter$eval_form invokeStatic "interpreter.cljc" 40]
-  [sci.impl.interpreter$eval_string_STAR_
-   invokeStatic
-   "interpreter.cljc"
-   66]
-  [sci.impl.interpreter$eval_string_STAR_ invoke "interpreter.cljc" 57]
-  [sci.impl.interpreter$eval_string_STAR_
-   invokeStatic
-   "interpreter.cljc"
-   59]
-  [sci.impl.interpreter$eval_string invokeStatic "interpreter.cljc" 77]
-  [sci.core$eval_string invokeStatic "core.cljc" 225]
-  [yamlscript.runtime$eval_string invokeStatic "runtime.clj" 114]
-  [yamlscript.cli$do_run invokeStatic "cli.clj" 221]
-  [yamlscript.cli$do_default invokeStatic "cli.clj" 284]
-  [yamlscript.cli$_main invokeStatic "cli.clj" 381]
-  [yamlscript.cli$_main doInvoke "cli.clj" 370]
-  [clojure.lang.RestFn applyTo "RestFn.java" 137]
-  [yamlscript.cli main nil -1]
-  [java.lang.invoke.LambdaForm$DMH/sa346b79c
-   invokeStaticInit
-   "LambdaForm$DMH"
-   -1]]}
-```
+$ ys -S sample/rosetta-code/factorial.ys 30
+Runtime error:
+java.lang.ArithmeticException: long overflow
+ at clojure.lang.Numbers.multiply (Numbers.java:1971)
+    clojure.lang.Numbers$LongOps.multiply (Numbers.java:503)
+    clojure.lang.Numbers.multiply (Numbers.java:175)
+    clojure.core$_STAR_.invokeStatic (core.clj:1018)
+    clojure.core$_STAR_.invoke (core.clj:1010)
+    clojure.lang.LongRange$LongChunk.reduce (LongRange.java:316)
+    clojure.core$reduce1.invokeStatic (core.clj:944)
+    clojure.core$_STAR_.invokeStatic (core.clj:1020)
+    clojure.core$_STAR_.doInvoke (core.clj:1010)
+    clojure.lang.RestFn.applyTo (RestFn.java:142)
+    clojure.core$apply.invokeStatic (core.clj:667)
+    clojure.core$apply.invoke (core.clj:662)
+    sci.lang.Var.invoke (lang.cljc:202)
+    sci.impl.analyzer$return_call$reify__6143.eval (analyzer.cljc:1422)
+    sci.impl.fns$fun$arity_1__5030.invoke (fns.cljc:107)
+    sci.lang.Var.invoke (lang.cljc:200)
+    sci.impl.analyzer$return_call$reify__6139.eval (analyzer.cljc:1422)
+    sci.impl.analyzer$return_call$reify__6147.eval (analyzer.cljc:1422)
+    sci.impl.analyzer$return_call$reify__6139.eval (analyzer.cljc:1422)
+    sci.impl.fns$fun$arity_1__5030.invoke (fns.cljc:107)
+    clojure.lang.AFn.applyToHelper (AFn.java:154)
+    clojure.lang.AFn.applyTo (AFn.java:144)
+    clojure.core$apply.invokeStatic (core.clj:667)
+    sci.impl.analyzer$analyze_fn_STAR_$reify__5779$f__5780.doInvoke (analyzer.cljc:538)
+    clojure.lang.RestFn.applyTo (RestFn.java:137)
+    clojure.core$apply.invokeStatic (core.clj:667)
+    clojure.core$apply.invoke (core.clj:662)
+    sci.lang.Var.invoke (lang.cljc:202)
+    sci.impl.analyzer$return_call$reify__6143.eval (analyzer.cljc:1422)
+    sci.impl.analyzer$return_call$reify__6139.eval (analyzer.cljc:1422)
+    sci.impl.interpreter$eval_form.invokeStatic (interpreter.cljc:40)
+    sci.impl.interpreter$eval_string_STAR_.invokeStatic (interpreter.cljc:66)
+    sci.core$eval_string_PLUS_.invokeStatic (core.cljc:276)
+    yamlscript.runtime$eval_string.invokeStatic (runtime.clj:209)
+    yamlscript.cli$do_run.invokeStatic (cli.clj:347)
+    yamlscript.cli$do_default.invokeStatic (cli.clj:410)
+    yamlscript.cli$do_main.invokeStatic (cli.clj:489)
+    yamlscript.cli$_main.invokeStatic (cli.clj:527)
+    yamlscript.cli$_main.doInvoke (cli.clj:506)
+    clojure.lang.RestFn.applyTo (RestFn.java:137)
+    yamlscript.cli.main (:-1)
+    java.lang.invoke.LambdaForm$DMH/sa346b79c.invokeStaticInit (LambdaForm$DMH:-1)
+★```
 
 Well... You asked for it. :- )
 
@@ -272,15 +262,13 @@ Well... You asked for it. :- )
 ----
 
 Print debugging is a great way to debug programs.
-YAMLScript provides some help here with it's `www`, `xxx`, `yyy`, and `zzz`
-standard library functions.
+YAMLScript provides some help here with it's `WWW` and `XXX` standard library
+functions.
 Conceptually these come from an old Perl module I wrote years ago called
 [XXX](https://metacpan.org/pod/XXX).
 
-* `www` warns (prints to stderr) it's argument and returns it.
-* `xxx` dies (prints and then terminates) it's argument.
-* `yyy` prints it's argument as YAML and returns it.
-* `zzz` is like `xxx` but it prints the stack trace too.
+* `WWW` warns (prints to stderr) it's argument and returns it.
+* `XXX` dies (prints and then terminates) it's argument.
 
 Here's a contrived example that passes data through a pipeline of functions:
 
@@ -308,30 +296,30 @@ It's quite nice and handy.
 
 Often times when I'm writing a pipeline like this, I want to see what the data
 looks like after a particular transformation or maybe after several of them.
-I almost always us `www` for this.
+I almost always us `WWW` for this.
 
 ```yaml
 !yamlscript/v0
 ->> (1..10):
-  www: "before map"
+  WWW: "before map"
   map: inc
-  www: "after map"
+  WWW: "after map"
   filter: \(= 0 (mod % 2))  # odd?
-  www: "after filter"
+  WWW: "after filter"
   reduce: +
-  www: "after reduce"
+  WWW: "after reduce"
   =>: say
-  =>: www
+  =>: WWW
 ```
 
-The `www` function can actually take multiple arguments.
+The `WWW` function can actually take multiple arguments.
 It prints them all and returns the last one.
 The `->>` threading macro adds its value as the last argument to each function.
 So the way we did it here we are adding a label to each debugging section.
 
-I used `=>: www` to show how to call it with no extra label argument.
+I used `=>: WWW` to show how to call it with no extra label argument.
 Remember that `=>:` is the YAMLScript way to write a mapping pair when you only
-need one thing (the `www` function in this case).
+need one thing (the `WWW` function in this case).
 
 ```txt
 $ ys pipeline.ys
@@ -353,7 +341,7 @@ nil
 ...
 ```
 
-Each www call wraps the output with a `---` and a `...` so you can see where
+Each WWW call wraps the output with a `---` and a `...` so you can see where
 the output starts and ends.
 
 ----

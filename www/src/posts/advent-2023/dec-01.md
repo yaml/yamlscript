@@ -118,7 +118,7 @@ Let's try it:
 ```yaml
 # grocery.yaml
 - bread
-- fruits: load("fruits.yaml")
+- fruits: load('fruits.yaml')
 - milk
 ```
 
@@ -127,7 +127,7 @@ Let's add the `--yaml` option to print the result as YAML:
 ```bash
 $ ys --load grocery.yaml --yaml
 - bread
-- fruits: load("fruits.yaml")
+- fruits: load('fruits.yaml')
 - milk
 $
 ```

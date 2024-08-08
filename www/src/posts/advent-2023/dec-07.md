@@ -55,6 +55,7 @@ Options:
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
+  -U, --unordered          Mappings don't preserve key order (faster)
 
   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
   -C, --clojure            Treat input as Clojure code
@@ -118,7 +119,7 @@ Also you can pipe the output of `ys --compile` to `ys --clj` to run the
 compiler's Clojure code ouput:
 
 ```bash
-$ ys -c -e 'say: 123' | ys -C
+$ ys -c -e 'say: 123' | ys -C -
 ```
 
 
@@ -152,10 +153,11 @@ To get this you could print it with `say.`
 You can also use the special `--print` (`-p`) option, which does exactly that
 (with less typing)..
 
-Finally there a 2 special debugging options:
+Finally there a 3 special debugging options:
 
-* `--debug` (`-X`) - Print a full stack trace for errors (more info)
-* `--debug-stage` (`-x`) - Display the result of a stage/stages
+* `--stack-trace` (`-S`) - Print a full stack trace for errors (more info)
+* `--debug-stage` (`-D`) - Display the result of a stage/stages
+* `-d` - Short for `--debug-stage=all` - Display the result of all stages
 
 The `--debug-stage` option is super useful for understanding exactly how
 YAMLScript code compiles to Clojure code.
@@ -163,7 +165,7 @@ YAMLScript code compiles to Clojure code.
 For example, to see the internal AST when compiling some YAMLScript:
 
 ```bash
-$ ys -c -e 'say: "Hello"' -xconstruct
+$ ys -c -e 'say: "Hello"' -Dconstruct
 *** construct output ***
 {:Lst [{:Sym say} {:Str "Hello"}]}
 
@@ -173,30 +175,31 @@ $ ys -c -e 'say: "Hello"' -xconstruct
 And to see all 7 compilation stages:
 
 ```bash
-$ ys -c -e 'say: "Hello"' -xall
-*** parse output ***
-({:+ "+MAP", :! "yamlscript/v0"}
+$ ys -c -e 'say: "Hello"' -d
+*** parse     *** 0.181519 ms
+({:+ "+MAP", :! "yamlscript/v0/code"}
  {:+ "=VAL", := "say"}
  {:+ "=VAL", :$ "Hello"}
- {:+ "-MAP"})
+ {:+ "-MAP"}
+ {:+ "-DOC"})
 
-*** compose output ***
-{:! "yamlscript/v0", :% [{:= "say"} {:$ "Hello"}]}
+*** compose   *** 0.005334 ms
+{:! "yamlscript/v0/code", :% [{:= "say"} {:$ "Hello"}]}
 
-*** resolve output ***
-{:ysm ({:ysx "say"} {:ysi "Hello"})}
+*** resolve   *** 0.055135 ms
+{:pairs [{:exp "say"} {:vstr "Hello"}]}
 
-*** build output ***
-{:ysm ({:Sym say} {:Str "Hello"})}
+*** build     *** 0.102548 ms
+{:pairs [{:Sym say} {:Str "Hello"}]}
 
-*** transform output ***
-{:ysm ({:Sym say} {:Str "Hello"})}
+*** transform *** 0.014468 ms
+{:pairs [{:Sym say} {:Str "Hello"}]}
 
-*** construct output ***
-{:Lst [{:Sym say} {:Str "Hello"}]}
+*** construct *** 0.048013 ms
+{:Top [{:Lst [{:Sym say} {:Str "Hello"}]}]}
 
-*** print output ***
-"(say \"Hello\")\n"
+*** print     *** 0.006561 ms
+"(say \"Hello\")"
 
 (say "Hello")
 ```

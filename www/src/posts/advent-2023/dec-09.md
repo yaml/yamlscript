@@ -40,20 +40,19 @@ Here's a YS program that sings my favorite drinking song:
 
 defn main(number=99):
   each n (number .. 1):
-    say:
-      paragraph: n
+    say: paragraph(n)
 
 defn paragraph(num): |
-  $(bottles num) of beer on the wall,
-  $(bottles num) of beer.
+  $bottles(num) of beer on the wall,
+  $bottles(num) of beer.
   Take one down, pass it around.
-  $(bottles (num - 1)) of beer on the wall.
+  $bottles(num - 1) of beer on the wall.
 
 defn bottles(n):
   cond:
-    n == 0: "No more bottles"
-    n == 1: "1 bottle"
-    =>    : str(n " bottles")
+    n == 0: 'No more bottles'
+    n == 1: '1 bottle'
+    =>    : "$n bottles"
 ```
 
 Let's give it a try:
@@ -80,25 +79,22 @@ I feel tipsy.
 
 Let's compile this program to Clojure and see what it looks like:
 
-```bash
+```clojure
 $ ys -c 99-bottles.ys
 (declare paragraph bottles)
-(defn main [& [number]]
-  (doall (map say (map paragraph (rng (or number 99) 1)))))
+(defn main
+  ([number] (each [n (rng number 1)] (say (paragraph n))))
+  ([] (main 99)))
 (defn paragraph [num]
-  (str
-    (bottles num)
-    " of beer on the wall,\n"
-    (bottles num)
-    " of beer.\nTake one down, pass it around.\n"
-    (bottles (- num 1))
-    " of beer on the wall." "\n"))
+  (str (bottles num)
+       " of beer on the wall,\n" (bottles num)
+       " of beer.\nTake one down, pass it around.\n" (bottles (- num 1))
+       " of beer on the wall." "\n"))
 (defn bottles [n]
-  (cond
-    (== n 0) "No more bottles"
-    (== n 1) "1 bottle" :else
-    (str n " bottles")))
-(apply main ARGV)
+  (cond (= n 0) "No more bottles"
+        (= n 1) "1 bottle"
+        :else (str n " bottles")))
+(apply main ARGS)
 ```
 
 It turns out that the compiled Clojure code is actually valid YAMLScript syntax
@@ -129,22 +125,19 @@ style.
 Let's iterate on the above code and make it YAML just at the top level:
 
 ```yaml
-defn main [& [number]]:
-  (doall (map say (map paragraph (rng (or number 99) 1))))
+defn main:
+  ([number] (each [n (rng number 1)] (say (paragraph n))))
+  ([] (main 99))
 defn paragraph [num]:
-  (str
-    (bottles num)
-    " of beer on the wall,\n"
-    (bottles num)
-    " of beer.\nTake one down, pass it around.\n"
-    (bottles (- num 1))
-    " of beer on the wall." "\n")
+  (str (bottles num)
+       " of beer on the wall,\n" (bottles num)
+       " of beer.\nTake one down, pass it around.\n" (bottles (- num 1))
+       " of beer on the wall." "\n")
 defn bottles [n]:
-  (cond
-    (== n 0) "No more bottles"
-    (== n 1) "1 bottle" :else
-    (str n " bottles"))
-apply: main ARGV
+  (cond (= n 0) "No more bottles"
+        (= n 1) "1 bottle"
+        :else (str n " bottles"))
+apply: main ARGS
 ```
 
 That already looks a lot better.
@@ -154,10 +147,10 @@ with string interpolation.
 
 ```yaml
 defn paragraph(num): |
-  $(bottles num) of beer on the wall,
-  $(bottles num) of beer.
+  $bottles(num) of beer on the wall,
+  $bottles(num) of beer.
   Take one down, pass it around.
-  $(bottles (num - 1)) of beer on the wall.
+  $bottles(num - 1) of beer on the wall.
 ```
 
 That's so much easier to read and understand.
