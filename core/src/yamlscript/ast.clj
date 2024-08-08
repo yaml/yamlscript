@@ -14,6 +14,8 @@
 
 (defn Tup [list] {:Tup (vec list)})
 
+(defn Set [list] {:Set (vec list)})
+
 (defn Map [list]
   (if (even? (count list))
     {:Map (->> list

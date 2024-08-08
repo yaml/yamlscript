@@ -159,8 +159,6 @@
      (str "must be one of: "
        (str/join ", " (keys stages))
        " or all")]]
-   [nil "--time"
-    "Print time taken for each stage"]
    ["-S" "--stack-trace"
     "Print full stack trace for errors"]
    ["-x" "--xtrace"
@@ -310,10 +308,9 @@ Options:
   (if (:clojure opts)
     code
     (try
-      (if (and (empty? (:debug-stage opts))
-            (not (:time opts)))
-        (compiler/compile code)
-        (compiler/compile-with-options code))
+      (if (:debug-stage opts)
+        (compiler/compile-with-options code)
+        (compiler/compile code))
       (catch Exception e
         (common/reset-error-msg-prefix! "Compile error: ")
         (err e)))))
@@ -523,9 +520,7 @@ Options:
 
     (reset! common/opts opts)
 
-    (if (:time opts)
-      (time (do-main opts args argv help error errs))
-      (do-main opts args argv help error errs))))
+    (do-main opts args argv help error errs)))
 
 (comment
   (-main)

@@ -53,6 +53,10 @@
              "["
              (str/join " " (map print-node val))
              "]")
+      :Set (str
+             "#{"
+             (str/join " " (map print-node val))
+             "}")
       :Map (let [[start end] (if (or (:unordered @common/opts)
                                    (<= (count val) 16))
                                ["{" "}"]

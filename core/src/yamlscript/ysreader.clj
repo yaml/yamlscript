@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :refer
-    [Bln Chr Flt Int Key Lst Map Nil Qts Rgx Spc Str Sym Tok Tup Vec]]
+    [Bln Chr Flt Int Key Lst Map Nil Qts Rgx Set Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [WWW]]
    [yamlscript.util :as util :refer [die]])
@@ -126,6 +126,7 @@
       $dotd |                   # Dot debugging with .?
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
+      $sett |                   # Set start token
       $dstr |                 # String token
       $sstr |                 # String token
                               # Other tokens
@@ -381,6 +382,7 @@
       "(" (read-list tokens Lst ")" sym)
       "[" (read-list tokens Vec "]" nil)
       "{" (read-list tokens Map "}" nil)
+      "\\{" (read-list tokens Set "}" nil)
       ,   (read-scalar tokens))))
 
 (defn read-forms [tokens]

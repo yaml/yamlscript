@@ -58,6 +58,7 @@
 (def xsym #"(?:\=\~|!~)")                  ; Special operator token
 (def osym #"(?:[-+*/%<>!=~|&.]{1,3})")     ; Operator symbol token
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
+(def sett #"(?:\\\{)")                     ; Set start token
 (def narg #"(?:%\d+)")                     ; Numbered argument token
 (def regx #"(?x)                           # Regular expression
             / (?=\S)                         # opening slash

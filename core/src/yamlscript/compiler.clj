@@ -54,19 +54,34 @@
                      blocks)))]
     (str/join "" blocks)))
 
+(defmacro value-time [& body]
+  `(let [s# (new java.io.StringWriter)]
+     (binding [*out* s#]
+       [(time ~@body)
+        (.replaceAll (str s#) "[^0-9\\.]" "")])))
+
 (defn stage-with-options [stage-name stage-fn input-args]
   (if (get-in @common/opts [:debug-stage stage-name])
-    (printf "*** %-9s *** " stage-name)
-    (when (:time @common/opts)
-      (printf "*** %-9s *** " stage-name)))
-  (let [output-data (if (:time @common/opts)
-                      (time (apply stage-fn input-args))
-                      (apply stage-fn input-args))]
-    (when (not (:time @common/opts)) (println ""))
-    (when (get-in @common/opts [:debug-stage stage-name])
-      (clojure.pprint/pprint output-data)
-      (println ""))
-    output-data))
+    (let [[value time] (value-time (apply stage-fn input-args))]
+      (printf "*** %-9s *** %s ms\n\n" stage-name time)
+      (clojure.pprint/pprint value)
+      (println)
+      value)
+    (apply stage-fn input-args)))
+
+(comment
+  (do
+    (reset! common/opts
+      {:debug-stage
+       {"parse" true
+        "compose" false
+        "resolve" false
+        "build" true
+        "transform" false
+        "construct" false
+        "print" true}})
+    (compile-with-options "!yamlscript/v0\na =: b.c()"))
+  )
 
 (defn compile-with-options
   "Convert YAMLScript code string to an equivalent Clojure code string."

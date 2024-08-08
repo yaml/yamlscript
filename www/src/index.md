@@ -265,8 +265,6 @@ and `bash`.
 Test your new `ys` installation by running:
 
 ```text
-$ ys --help
-
 ys - The YAMLScript (YS) Command Line Tool - v0.1.69
 
 Usage: ys [<option...>] [<file>]
@@ -289,6 +287,7 @@ Options:
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -E, --edn                Output EDN for --load
+  -U, --unordered          Mappings don't preserve key order (faster)
 
   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
   -C, --clojure            Treat input as Clojure code
