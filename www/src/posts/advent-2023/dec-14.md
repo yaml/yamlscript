@@ -65,7 +65,7 @@ Here's a one good way to do it:
 
 ```yaml
 !yamlscript/v0
-if (a > b):
+if a > b:
   say: "$a is greater than $b"
   say: "$b is greater than or equal to $a"
 ```
@@ -136,7 +136,7 @@ line with the key and the `:` separator.
 Let's write the `if` statement using YAML scalars instead of a mapping:
 
 ```yaml
-if (a > b):
+if a > b:
   say("$a is greater than $b")
   say("$b is greater than or equal to $a")
 ```
@@ -215,7 +215,7 @@ Here's the same loop in Clojure:
 So in YAMLScript we can do this:
 
 ```yaml
-for [i range(5)]:
+for i range(5):
   say: i
 ```
 
@@ -251,7 +251,7 @@ Let's use that in our YAMLScript program:
 
 ```yaml
 doall:
-  for [i range(5)]:
+  for i range(5):
     say: i
 ```
 
@@ -274,20 +274,20 @@ YAMLScript has a nicer way to do this.
 It has an `each` command that calls `doall` and `for` for you:
 
 ```yaml
-each [i range(5)]:
+each i range(5):
   say: i
 ```
 
 or:
 
 ```yaml
-each [i range(5)]: say(i)
+each i range(5): say(i)
 ```
 
 or:
 
 ```yaml
-each [i (0..4)]: say(i)
+each i (0 .. 4): say(i)
 ```
 
 Doesn't it seem strange to you that `(range 5)` really means 0 to 4?
@@ -300,7 +300,7 @@ function that returns a range from 0 to 4.
 It also works in reverse:
 
 ```bash
-$ ys -e 'each [i (4..0)]: say(i)'
+$ ys -e 'each i (4 .. 0): say(i)'
 4
 3
 2

@@ -44,7 +44,7 @@ last-step =:
 
 defn main(old-version=0 new-version=0 start=1):
   ctx =:
-    if (dryrun || ENV.'RELEASE_ID'):
+    if dryrun || ENV.'RELEASE_ID':
       =>: .{}
       check-args: old-version new-version start
 
@@ -52,8 +52,8 @@ defn main(old-version=0 new-version=0 start=1):
 
   if ENV.'RELEASE_ID':
     step-9: ctx
-    each [i (1 .. steps)]:
-      when ((i >= start) && (i <= last-step)):
+    each i (1 .. steps):
+      when (i >= start) && (i <= last-step):
         resolve(symbol("step-$i")): ctx
 
   say: ''
@@ -97,7 +97,7 @@ defn step-3(ctx):
 
     spit 'release-changes.txt': changes
 
-    when (prompt("Edit the 'Changes' file?") = 'y'):
+    when prompt("Edit the 'Changes' file?") = 'y':
       editor =: ENV.EDITOR || 'vi'
       run: "$editor release-changes.txt"
       prompt: "Press Enter to continue or Ctrl-C to abort."
@@ -228,11 +228,11 @@ defn step-9(ctx):
 defn step-10(ctx):
   o: "Step 10) Run 'make release' for each language binding library"
 
-  each [dir bindings]:
+  each dir bindings:
     try:
       run: "make -C $dir release"
       catch Exception e:
-        if ((dir = 'clojure') || (dir = 'java')):
+        if (dir = 'clojure') || (dir = 'java'):
           warn: "Failed to release $dir. Continuing."
           die: "Failed to release $dir. Exiting."
 

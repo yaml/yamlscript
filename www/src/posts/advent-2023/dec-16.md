@@ -46,7 +46,7 @@ Here's both of those in YAMLScript:
 
 ```yaml
 # Using the fn keyword
-fn [x]: (x * x)
+fn(x): (x * x)
 # Using the #() reader macro
 \(% * %)
 ```

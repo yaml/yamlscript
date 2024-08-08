@@ -99,20 +99,20 @@ test::
 - name: Use form function on return value
   code: '41'
   form::
-    fn [val test]:
+    fn(val test):
       inc: val
   want: 42
 
 - name: Use form function on error test
   code: 1 / 0
   form::
-    fn [e _]: e.cause
+    fn(e _): e.cause
   want: Divide by zero
 
 - name: Use form function on a command
   cmnd: echo 'Hello, world!'
   form::
-    fn [val _]: val.out
+    fn(val _): val.out
   want: "Hello, world!\n"
 
 

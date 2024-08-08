@@ -3,10 +3,12 @@
 
 (ns yamlscript.transformers
   (:require
+   [yamlscript.ast :refer [Sym Lst Vec Key]]
    [yamlscript.util :refer [die if-lets when-lets]]
-   [yamlscript.ast :refer [Sym Lst Vec Key]]))
+   [yamlscript.ysreader]))
 
 (def Q {:Sym 'quote})
+
 
 ;;-----------------------------------------------------------------------------
 ;; cond
@@ -21,6 +23,7 @@
               _ (= '=> (:Sym last-key))
               rhs (update-in rhs [:forms last-key-pos] (fn [_] (Key "else")))]
     [lhs rhs]))
+
 
 ;;-----------------------------------------------------------------------------
 ;; defn and fn
@@ -69,28 +72,6 @@
                   (Lst [op b rhs]))]
         [lhs rhs]))))
 
-(defn transform_loop [lhs rhs]
-  (let [lhs (if (= lhs (Sym 'loop))
-              [lhs (Vec [])]
-              lhs)]
-    [lhs rhs]))
-
-(defn transform_if [lhs rhs]
-  (when-lets
-    [pairs (:pairs rhs)
-     [k1 v1 k2 v2] pairs
-     _ (= k1 (Sym 'then))
-     rhs (if (> (count (:pairs v1)) 2)
-           (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
-           (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))]
-    (if (> (count pairs) 2)
-      (if (= k2 (Sym 'else))
-        (if (> (count (:pairs v2)) 2)
-          [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
-          [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
-        (die "Form after 'then' must be 'else'"))
-      [lhs rhs])))
-
 (defn transform_catch [lhs rhs]
   (let [lhs (cond
               (= lhs (Sym 'catch))
@@ -101,6 +82,73 @@
               ,
               :else lhs)]
     [lhs rhs]))
+
+
+;;-----------------------------------------------------------------------------
+;; Group LHS arguments as a single conditional test form
+;;-----------------------------------------------------------------------------
+
+(defn- lhs-tests [lhs rhs]
+  (let [lhs (if (> (count lhs) 3)
+              [(first lhs) (Lst (yamlscript.ysreader/yes-expr (rest lhs)))]
+              lhs)]
+    [lhs rhs]))
+
+(defn transform_if [lhs rhs]
+  (let [[lhs rhs] (lhs-tests lhs rhs)
+        ,
+        [lhs rhs]
+        (if-lets
+          [pairs (:pairs rhs)
+           [k1 v1 k2 v2] pairs
+           _ (= k1 (Sym 'then))
+           rhs (if (> (count (:pairs v1)) 2)
+                 (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
+                 (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))]
+          (if (> (count pairs) 2)
+            (if (= k2 (Sym 'else))
+              (if (> (count (:pairs v2)) 2)
+                [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
+                [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
+              (die "Form after 'then' must be 'else'"))
+            [lhs rhs])
+          [lhs rhs])]
+    [lhs rhs]))
+
+(intern 'yamlscript.transformers 'transform_if-not   lhs-tests)
+(intern 'yamlscript.transformers 'transform_when     lhs-tests)
+(intern 'yamlscript.transformers 'transform_when-not lhs-tests)
+(intern 'yamlscript.transformers 'transform_while    lhs-tests)
+
+
+;;-----------------------------------------------------------------------------
+;; Group LHS arguments as a single bindings form
+;;-----------------------------------------------------------------------------
+
+(defn- lhs-bindings [lhs rhs]
+  (let [lhs (cond
+              (> (count lhs) 2) [(first lhs) (Vec (rest lhs))]
+              (:Sym lhs) [lhs (Vec [])]
+              :else lhs)]
+    [lhs rhs]))
+
+(intern 'yamlscript.transformers 'transform_binding    lhs-bindings)
+(intern 'yamlscript.transformers 'transform_doseq      lhs-bindings)
+(intern 'yamlscript.transformers 'transform_dotimes    lhs-bindings)
+(intern 'yamlscript.transformers 'transform_each       lhs-bindings)
+(intern 'yamlscript.transformers 'transform_for        lhs-bindings)
+(intern 'yamlscript.transformers 'transform_if-let     lhs-bindings)
+(intern 'yamlscript.transformers 'transform_if-lets    lhs-bindings)
+(intern 'yamlscript.transformers 'transform_if-some    lhs-bindings)
+(intern 'yamlscript.transformers 'transform_let        lhs-bindings)
+(intern 'yamlscript.transformers 'transform_loop       lhs-bindings)
+(intern 'yamlscript.transformers 'transform_when-first lhs-bindings)
+(intern 'yamlscript.transformers 'transform_let        lhs-bindings)
+(intern 'yamlscript.transformers 'transform_when-let   lhs-bindings)
+(intern 'yamlscript.transformers 'transform_when-lets  lhs-bindings)
+(intern 'yamlscript.transformers 'transform_when-some  lhs-bindings)
+(intern 'yamlscript.transformers 'transform_with-open  lhs-bindings)
+
 
 ;;-----------------------------------------------------------------------------
 ;; require

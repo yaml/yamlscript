@@ -6,18 +6,18 @@ ROOT =: ENV.ROOT ||
 defn main():
   plan =: load("$ROOT/.version.ys")
 
-  each [p plan]:
+  each p plan:
     .{:strs [vers bump all]} =: p
-    each [b bump]:
+    each b bump:
       .{:strs [regx file]} =: b
       regx =: rx(regx)
-      each [f file]:
+      each f file:
         f =: "$ROOT/$f"
         text =: slurp(f)
         m =: re-matcher(regx text)
         if re-find(m):
           do:
-            .[x m1 m2] =: re-groups(m)
+            +[x m1 m2] =: re-groups(m)
             replace =:
               if all:
                 str/replace
@@ -27,6 +27,6 @@ defn main():
                 text regx
                 str/re-quote-replacement("$m1$vers$m2")
             say: "Bumped '$f'"
-          warn: .['No Match!!' f regx]
+          warn: +['No Match!!' f regx]
 
   shell {:dir 'rust'}: 'cargo update'

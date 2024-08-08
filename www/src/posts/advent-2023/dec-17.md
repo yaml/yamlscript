@@ -121,7 +121,7 @@ YAMLScript.
 (defn doors []
 	(reduce (fn [doors idx] (assoc doors idx true))
 	        (into [] (repeat 100 false))
-	        (map #(dec (* % %)) (range 1 11))))
+	        (map #(dec (* %1 %1)) (range 1 11))))
 
 (defn open-doors [] (for [[d n] (map vector (doors) (iterate inc 1)) :when d] n))
 
@@ -140,12 +140,12 @@ Here's a quick translation to YAMLScript:
 
 defn doors():
   reduce:
-    fn [doors idx]: assoc(doors idx true)
+    fn(doors idx): assoc(doors idx true)
     into []: repeat(100 false)
-    map \(dec (% * %)): (1 .. 10)
+    map \(dec (%1 * %1)): 1 .. 10
 
 defn open-doors():
-  for: .[[d n] map(vector doors() iterate(inc 1)) :when d] n
+  for [d n] map(vector doors() iterate(inc 1)) :when d: n
 
 defn print-open-doors():
   say:
@@ -177,13 +177,13 @@ defn main():
     $(apply str interpose(\", \" open-doors()))"
 
 defn open-doors():
-  for: .[[d n] map(vector doors() iterate(inc 1)) :when d] n
+  for [d n] map(vector doors() iterate(inc 1)) :when d: n
 
 defn doors():
   reduce:
-    fn [doors idx]: assoc(doors idx true)
+    fn(doors idx): assoc(doors idx true)
     into []: repeat(100 false)
-    map \(dec (% * %)): 1..10
+    map \(dec (%1 * %1)): 1 .. 10
 ```
 
 I also ordered the functions top-down in the order they are called since we know
@@ -216,13 +216,13 @@ defn main():
     $(apply str interpose(\", \" open-doors()))"
 
 defn open-doors():
-  for: .[[d n] map(vector doors() iterate(inc 1)) :when d] n
+  for [d n] map(vector doors() iterate(inc 1)) :when d: n
 
 defn doors():
   reduce:
-    fn [doors idx]: assoc(doors idx true)
+    fn(doors idx): assoc(doors idx true)
     into []: repeat(100 false)
-    map \(dec (% * %)): 1..10
+    map \(dec (%1 * %1)): 1 .. 10
 &lt;/syntaxhighlight>
 {&lcub;out}}
 &lt;pre>

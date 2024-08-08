@@ -38,8 +38,8 @@ Here's a YS program that sings my favorite drinking song:
 # usage:
 #   ys 99-bottles.ys [<count>]
 
-defn main(&[number]):
-  each [n ((number || 99) .. 1)]:
+defn main(number=99):
+  each n (number .. 1):
     say:
       paragraph: n
 
@@ -51,9 +51,9 @@ defn paragraph(num): |
 
 defn bottles(n):
   cond:
-    (n == 0) "No more bottles"
-    (n == 1) "1 bottle"
-    :else    str(n " bottles")
+    n == 0: "No more bottles"
+    n == 1: "1 bottle"
+    =>    : str(n " bottles")
 ```
 
 Let's give it a try:

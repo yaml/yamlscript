@@ -11,8 +11,8 @@ defn primes-up-to(limit):
   max-i =: int((limit - 1) / 2)
   refs =: boolean-array(max-i true)
   root =: dec(int(Math/sqrt(limit))) / 2
-  doseq [i (1 .. root) :when aget(refs i)]:
-    doseq [j range((2 * i * inc(i)) max-i (i + i + 1))]:
+  doseq i (1 .. root) :when aget(refs i):
+    doseq j range((2 * i * inc(i)) max-i (i + i + 1)):
       aset refs: j false
   cons 2:
     map \(+ %1 %1 1):

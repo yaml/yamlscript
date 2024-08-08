@@ -306,7 +306,7 @@ Some of these are used in YAMLScript, so it's good to know about them.
 # The collection key does have a good use case in YAMLScript.
 # Consider this `for` loop:
 
-for [a foo(), b bar(), c [1 2 3]]:
+for a foo(), b bar(), c [1 2 3]:
   say: a + b + c
 
 # YAMLScript requires that the `for […]` key be a plain scalar, and YAML

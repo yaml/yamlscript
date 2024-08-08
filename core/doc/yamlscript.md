@@ -662,7 +662,7 @@ list:
   `if` expressions:
 
   ```
-  if (x > 50):          # condition
+  if x > 50:            # condition
   - say("$x wins :)")   # then
   - say("$x loses :(")  # else
 
@@ -685,9 +685,9 @@ list:
 
   ```
   ???:
-    (x > 50) : "big"
-    (x < 50) : "small"
-    :else    : "just right"
+    x > 50 : "big"
+    x < 50 : "small"
+    :else  : "just right"
 
   (cond
     (> x 50) "big"
@@ -698,8 +698,8 @@ list:
 * Try / Catch
 
   ```
-  - try: (42 / 0)
-    catch(Exception e):
+  - try: 42 / 0
+    catch e:
       say: "Caught error '$e'"
 
   (try (/ 42 0)
@@ -721,9 +721,9 @@ list:
 * Looping
 
   ```
-  loop [x 1]:
+  loop x 1:
     say: x
-    if (x < 5):
+    if x < 5:
       ^^^: (x + 1)
 
   (loop [x 1]

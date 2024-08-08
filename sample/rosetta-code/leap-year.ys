@@ -14,5 +14,5 @@ defn leap-year(year):
   and:
     zero?: year % 4
     or:
-      pos?: year % 100
+      pos? : year % 100
       zero?: year % 400

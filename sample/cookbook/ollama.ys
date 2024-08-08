@@ -59,7 +59,8 @@ defn prompt(query model):
   response =:
     http/post "$ollama-uri/generate": request
 
-  when (response.status != 200): die(response)
+  when response.status != 200:
+    die(response)
 
   =>:
     response
@@ -111,7 +112,7 @@ defn get-query():
 defn format(string):
   string .=: triml().prettier().trimr()
 
-  if (string =~ /\n/):
+  if string =~ /\n/:
     +"\n$string"
     string
 

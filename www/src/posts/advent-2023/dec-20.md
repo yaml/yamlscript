@@ -52,8 +52,8 @@ Here it is again:
 #!/usr/bin/env ys-0
 # 99-bottles.ys
 
-defn main(&[number]):
-  each [n ((number || 99) .. 1)]:
+defn main(number=99):
+  each n (number .. 1):
     say:
       paragraph: n
 
@@ -65,9 +65,9 @@ defn paragraph(num): |
 
 defn bottles(n):
   cond:
-    (n == 0) "No more bottles"
-    (n == 1) "1 bottle"
-    :else    str(n " bottles")
+    n == 0: "No more bottles"
+    n == 1: "1 bottle"
+    :else : str(n " bottles")
 ```
 
 Let's see how long it takes to drink 3 bottles:

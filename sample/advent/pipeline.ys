@@ -3,9 +3,9 @@
   WWW: 'before map'
   map: inc
   WWW: 'after map'
-  filter: \(== 0 (%1 % 2))  # odd?
+  filter: \(0 == (%1 % 2))  # odd?
   WWW: 'after filter'
-  reduce: +
+  reduce +:
   WWW: 'after reduce'
-  =>: say
-  =>: WWW
+  say:
+  WWW:

@@ -31,11 +31,11 @@ say: slurp("/usr/share/dict/words")
 # => specialty.mutation's.Kisangani
 
 ### Looping
-each [i (1 .. 3)]:
+each i (1 .. 3):
   say: i
 
 ### Conditional (if/else)
-if (a > 10):
+if a > 10:
   say: 'BIG'
   say: 'small'
 

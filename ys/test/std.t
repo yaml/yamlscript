@@ -7,7 +7,7 @@ require ys::taptest: :all
 say: CWD
 
 base =:
-  if (CWD =~ /\/yamlscript$/):
+  if CWD =~ /\/yamlscript$/:
     then: "$CWD/ys"
     else: CWD
 
