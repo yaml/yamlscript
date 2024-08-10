@@ -59,6 +59,7 @@
 (-def-seq-2nd mapv)
 (-def-seq-2nd not-any?)
 (-def-seq-1st nth)
+(-def-seq-2nd partition)
 (-def-seq-2nd random-sample)
 (-def-rgx-1st re-find)
 (-def-rgx-1st re-matches)
