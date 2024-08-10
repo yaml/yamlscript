@@ -366,7 +366,9 @@
   (Thread/sleep (int (* 1000 s))))
 
 (defn split
-  ([s] (clojure.string/split s #""))
+  ([s] (if (empty? s)
+         []
+         (clojure.string/split s #"")))
   ([s r]
     (let [[s r] (if (= java.util.regex.Pattern (type s)) [r s] [s r])
           r (if (string? r) (re-pattern r) r)]
