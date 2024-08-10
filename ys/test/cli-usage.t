@@ -2,7 +2,7 @@
 
 source test/init
 
-VERSION=0.1.69
+VERSION=0.1.70
 
 
 cmd='ys --version'

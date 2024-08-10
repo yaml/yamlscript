@@ -1,3 +1,30 @@
+- version: 0.1.70
+  date:    Sat 10 Aug 2024 12:53:19 AM PDT
+  changes:
+  - core: Add more functions to poly.clj
+  - test: Assume 'want:\ true' for 'code:' tests
+  - core: Add more classes and functions to runtime
+  - core: Make == compile to =
+  - std: Updates to std and add initial tests for std
+  - core: Support defn- for private functions
+  - release: Don't validate Changes YAML until reviewed
+  - core: Fix pair semantics for `case` and `condp`
+  - core: Fix bug for case and condp
+  - core: Add support for `map+`; coll.map('abc')
+  - std: Add reduce+
+  - core: Allow `call` to take function as string
+  - core: Add a `!~` operator for not re-find
+  - core: Operator fixes and tests
+  - core: Add missing string escaped characters
+  - core: Improve error messages
+  - core: Transform binding and test forms for some fns
+  - www: Update the old blog post to current truths
+  - www: Renamed 2024 blog files to a better scheme
+  - core: Support Clojure set literals with \{...}
+  - core: Add partition to poly functions
+  - std: Make split("") -> []
+  - core: Support _ arg positioning in block forms
+  - core: Support maps.map('key')
 - version: 0.1.69
   date:    Tue 30 Jul 2024 10:46:51 AM PDT
   changes:
