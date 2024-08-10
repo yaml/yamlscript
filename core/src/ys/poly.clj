@@ -1,9 +1,12 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.poly
-  (:require
-   [ys.plus]))
+(ns ys.poly)
+
+(defn ++map [f coll]
+  (cond
+    (string? f) (map #(get %1 f) coll)
+    :else (map f coll)))
 
 (defmacro ^:private -def-seq-1st [name]
   (let [dname (symbol (str "+" name))]
@@ -21,7 +24,7 @@
 
 (defmacro ^:private -def-seq-2nd+ [name]
   (let [dname (symbol (str "+" name))
-        pname (symbol (str "ys.plus/" name "+"))]
+        pname (symbol (str "++" name))]
     `(defn ~dname [a# b#]
        (if (coll? b#)
          (~pname a# b#)

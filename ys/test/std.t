@@ -47,12 +47,10 @@ test::
 
 - code: +[{"a" 1}{"a" 2}].map("a")
   want:: \'(1 2)
-- code: 'map+ "a": q(({"a" 1}{"a" 2}))'
-  want:: +[1 2]
 
-- code: 'reduce+ + 0 (1 .. 5):'
+- code: 'reduce + 0 (1 .. 5):'
   want: 15
-- code: 'reduce+ 0 (1 .. 5): +'
+- code: 'reduce _ 0 (1 .. 5): +'
   want: 15
 
 - code: +"inc".call(41)
