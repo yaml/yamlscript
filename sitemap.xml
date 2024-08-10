@@ -289,7 +289,7 @@
   
     
       <url>
-        <loc>https://yamlscript.org/posts/mar-14-2024/</loc>
+        <loc>https://yamlscript.org/posts/2024-03-14/</loc>
         
           <lastmod>2024-03-14T00:00:00.000Z</lastmod>
         
@@ -366,7 +366,7 @@
   
     
       <url>
-        <loc>https://yamlscript.org/posts/apr-16-2024/</loc>
+        <loc>https://yamlscript.org/posts/2024-04-16/</loc>
         
           <lastmod>2024-04-16T00:00:00.000Z</lastmod>
         
@@ -377,7 +377,7 @@
   
     
       <url>
-        <loc>https://yamlscript.org/posts/jun-20-2024/</loc>
+        <loc>https://yamlscript.org/posts/2024-06-20/</loc>
         
           <lastmod>2024-06-20T00:00:00.000Z</lastmod>
         
@@ -520,17 +520,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/yaml/</loc>
-        
-          <lastmod>2024-07-16T16:14:18.340Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/about/</loc>
         
           <lastmod>2024-07-16T16:14:18.348Z</lastmod>
@@ -553,20 +542,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/posts/jul-17-2024/</loc>
+        <loc>https://yamlscript.org/posts/2024-07-17/</loc>
         
           <lastmod>2024-07-17T00:00:00.000Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/cheat/</loc>
-        
-          <lastmod>2024-07-19T00:49:03.596Z</lastmod>
         
         
         
@@ -751,9 +729,31 @@
   
     
       <url>
+        <loc>https://yamlscript.org/doc/cheat/</loc>
+        
+          <lastmod>2024-08-08T04:21:31.264Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/yaml/</loc>
+        
+          <lastmod>2024-08-08T04:21:31.264Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
         <loc>https://yamlscript.org/doc/ys/</loc>
         
-          <lastmod>2024-07-19T19:00:48.208Z</lastmod>
+          <lastmod>2024-08-10T07:53:12.956Z</lastmod>
         
         
         
@@ -764,7 +764,7 @@
       <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-07-19T19:00:48.212Z</lastmod>
+          <lastmod>2024-08-10T07:53:12.956Z</lastmod>
         
         
         
