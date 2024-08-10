@@ -54,6 +54,13 @@
                      blocks)))]
     (str/join "" blocks)))
 
+(comment
+  (compile "
+!yamlscript/v0
+reduce _ a b:
+  fn [x]:
+    foo: x"))
+
 (defmacro value-time [& body]
   `(let [s# (new java.io.StringWriter)]
      (binding [*out* s#]

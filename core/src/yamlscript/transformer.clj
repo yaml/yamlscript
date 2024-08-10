@@ -39,14 +39,31 @@
 
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
+(comment
+  (transform-node
+{:pairs
+ [[{:Sym 'reduce} {:Sym '_} {:Sym 'a} {:Sym 'b}]
+  {:pairs
+   [[{:Sym 'fn} {:Vec [{:Sym 'x}]}] {:Lst [{:Sym 'foo} {:Sym 'x}]}]}]}
+    ))
+
+(defn swap-underscores [lhs rhs]
+  (if-lets [_ (get-in lhs [0 :Sym])
+            _ (some (partial = {:Sym '_}) lhs)
+            _ (map? rhs)
+            lhs (vec (map #(if (= {:Sym '_} %1) rhs %1) lhs))]
+    [lhs []]
+    [lhs rhs]))
+
 (defn apply-transformer [key val]
-  (if-lets [name (or
-                   (get-in key [:Sym])
-                   (get-in key [0 :Sym]))
-            sym (symbol (str "transform_" name))
-            transformer (ns-resolve transformers-ns sym)]
-    (or (transformer key val) [key val])
-    [key val]))
+  (let [[key val] (swap-underscores key val)]
+    (if-lets [name (or
+                     (get-in key [:Sym])
+                     (get-in key [0 :Sym]))
+              sym (symbol (str "transform_" name))
+              transformer (ns-resolve transformers-ns sym)]
+      (or (transformer key val) [key val])
+      [key val])))
 
 (defn transform-pairs [node key]
   (->> node

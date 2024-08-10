@@ -1184,3 +1184,13 @@
       3: c
   clojure: |
     (case x 1 a 2 b 3 c)
+
+
+- name: Arg swap using underscore
+  yamlscript: |
+    !yamlscript/v0
+    reduce _ [] (1 .. 10):
+      fn(a b):
+        conj a: b * 10
+  clojure: |
+    (reduce (fn [a b] (conj a (*_ b 10))) [] (rng 1 10))
