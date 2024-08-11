@@ -12,10 +12,11 @@ Load `file.yaml` with YAMLScript:
 ```yaml
 !yamlscript/v0/
 
+# Get data from external sources:
 =>:
   names-url =:
-    ("https://raw.githubusercontent.com/dominictarr/" +
-     "random-name/master/first-names.json")
+    "https://raw.githubusercontent.com/dominictarr/" +
+            "random-name/master/first-names.json"
 
   name-list =: &first-names json/load(curl(names-url))
 
