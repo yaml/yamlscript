@@ -1,7 +1,9 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.poly)
+(ns ys.poly
+  (:require
+   [clojure.string :refer [join]]))
 
 (defn ++map [f coll]
   (cond
@@ -57,6 +59,7 @@
 (-def-seq-2nd every?)
 (-def-seq-2nd filter)
 (-def-seq-2nd filterv)
+(-def-seq-2nd join)
 (-def-seq-2nd keep)
 (-def-seq-2nd+ map)
 (-def-seq-2nd mapv)
@@ -73,6 +76,7 @@
 (-def-seq-2nd split-at)
 (-def-seq-2nd split-with)
 (-def-seq-2nd take)
+(-def-seq-2nd take-last)
 (-def-seq-2nd take-while)
 #_(-def-mac when)
 
