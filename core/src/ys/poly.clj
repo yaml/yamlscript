@@ -1,30 +1,30 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.poly
-  (:require
-   [clojure.string :refer [join]]))
+(ns ys.poly)
 
 (defn ++map [f coll]
   (cond
     (string? f) (map #(get %1 f) coll)
     :else (map f coll)))
 
-(defmacro ^:private -def-seq-1st [name]
+
+;;------------------------------------------------------------------------------
+(defmacro ^:private -seq-1st [name]
   (let [dname (symbol (str "+" name))]
     `(defn ~dname [a# b#]
        (if (coll? a#)
          (~name a# b#)
          (~name b# a#)))))
 
-(defmacro ^:private -def-seq-2nd [name]
+(defmacro ^:private -seq-2nd [name]
   (let [dname (symbol (str "+" name))]
     `(defn ~dname [a# b#]
        (if (coll? b#)
          (~name a# b#)
          (~name b# a#)))))
 
-(defmacro ^:private -def-seq-2nd+ [name]
+(defmacro ^:private -seq-2nd+ [name]
   (let [dname (symbol (str "+" name))
         pname (symbol (str "++" name))]
     `(defn ~dname [a# b#]
@@ -32,52 +32,63 @@
          (~pname a# b#)
          (~pname b# a#)))))
 
-(defmacro ^:private -def-rgx-1st [name]
+(defmacro ^:private -rgx-1st [name]
   (let [dname (symbol (str "+" name))]
     `(defn ~dname [a# b# & c#]
        (if (= java.util.regex.Pattern (type a#))
          (apply ~name a# b# c#)
          (apply ~name b# a# c#)))))
 
-(defmacro ^:private -def-rgx-2nd [name]
+(defmacro ^:private -rgx-2nd [name]
   (let [dname (symbol (str "+" name))]
     `(defn ~dname [a# b# & c#]
        (if (= java.util.regex.Pattern (type b#))
          (apply ~name a# b# c#)
          (apply ~name b# a# c#)))))
 
-#_(defmacro ^:private -def-mac [name]
+(defmacro ^:private -com-mac [name]
   (let [dname (symbol (str "+" name))]
     `(defn ~dname [& xs#]
        (apply ~name xs#))))
 
-(-def-seq-2nd apply)
-(-def-seq-1st contains?)
-(-def-seq-2nd drop)
-(-def-seq-2nd drop-last)
-(-def-seq-2nd drop-while)
-(-def-seq-2nd every?)
-(-def-seq-2nd filter)
-(-def-seq-2nd filterv)
-(-def-seq-2nd join)
-(-def-seq-2nd keep)
-(-def-seq-2nd+ map)
-(-def-seq-2nd mapv)
-(-def-seq-2nd not-any?)
-(-def-seq-1st nth)
-(-def-seq-2nd partition)
-(-def-seq-2nd random-sample)
-(-def-rgx-1st re-find)
-(-def-rgx-1st re-matches)
-(-def-rgx-1st re-seq)
-(-def-seq-2nd remove)
-#_(-def-rgx-2nd replace)
-(-def-seq-2nd some)
-(-def-seq-2nd split-at)
-(-def-seq-2nd split-with)
-(-def-seq-2nd take)
-(-def-seq-2nd take-last)
-(-def-seq-2nd take-while)
-#_(-def-mac when)
+(defmacro ^:private -clj-mac [name]
+  (let [dname (symbol (str "+" name))]
+    `(defn ~dname
+       ([a#] (~name a#))
+       ([a# b#] (~name a# b#))
+       ([a# b# c#] (~name a# b# c#))
+       ([a# b# c# d#] (~name a# b# c# d#))
+       ([a# b# c# d# e#] (~name a# b# c# d# e#)))))
 
-(comment)
+
+;;------------------------------------------------------------------------------
+(-seq-2nd apply)
+(-seq-1st contains?)
+(-seq-2nd drop)
+(-seq-2nd drop-last)
+(-seq-2nd drop-while)
+(-seq-2nd every?)
+(-seq-2nd filter)
+(-seq-2nd filterv)
+(-seq-2nd keep)
+(-seq-2nd+ map)
+(-seq-2nd mapv)
+(-seq-2nd not-any?)
+(-seq-1st nth)
+(-seq-2nd partition)
+(-seq-2nd random-sample)
+(-rgx-1st re-find)
+(-rgx-1st re-matches)
+(-rgx-1st re-seq)
+(-seq-2nd remove)
+#_(-rgx-2nd replace)
+(-seq-2nd some)
+(-seq-2nd split-at)
+(-seq-2nd split-with)
+(-seq-2nd take)
+(-seq-2nd take-last)
+(-seq-2nd take-while)
+(-clj-mac when)
+
+(comment
+  )

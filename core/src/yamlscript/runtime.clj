@@ -28,6 +28,7 @@
    [ys.taptest]
    [yamlscript.common :as common]
    [yamlscript.util
+    :as util
     :refer [abspath
             get-yspath]]))
 

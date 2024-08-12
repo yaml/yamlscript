@@ -23,8 +23,7 @@
   ([msg] (throw (Exception. (str msg "\n"))))
   ([x & xs] (die (apply str x xs))))
 
-(defn dirname
-  [path]
+(defn dirname [path]
   (->
     path
     io/file

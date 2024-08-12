@@ -9,14 +9,21 @@
 
 (def counter (atom 0))
 
+(defn- get-test-name [test]
+  (let [name (or
+               (get test "name")
+               (get test "cmnd")
+               (get test "code")
+               "")
+        name (str/replace
+               (str/trim name)
+               #"\n"
+               (str/re-quote-replacement "\\n"))]
+    name))
+
 (defn- passed [test]
   (let
-   [name (or
-           (get test "name")
-           (get test "cmnd")
-           (get test "code")
-           "")
-    name (str/replace (str/trim name) #"\n" "\\n")
+   [name (get-test-name test)
     count (deref counter)]
     (if name
       (println (str "ok " count " - " name))
@@ -30,7 +37,7 @@
 
 (defn- failed [test got]
   (let
-   [name (get test "name")
+   [name (get-test-name test)
     count (deref counter)
     keys (set (keys test))
     want (if (contains? keys "want")  ;; want can be false or nil
@@ -48,11 +55,12 @@
       (println (str "not ok " count)))
     (println out)))
 
-(defn- check-string [value name count]
+(defn- check-string [value key count]
   (when-not (string? value)
-    (die (str "taptest: Test " count " '" name "' key must be a string"))))
+    (die (str "taptest: Test " count " '" key "' key must be a string"))))
 
 (defn- run-code [test]
+  (swap! counter inc)
   (let [count (deref counter)
         code (get test "code")
         what (get test "what")
@@ -68,6 +76,7 @@
              :else (throw e))))))
 
 (defn- run-cmnd [test]
+  (swap! counter inc)
   (let [count (deref counter)
         cmnd (get test "cmnd")
         what (get test "what")
@@ -103,6 +112,9 @@
       (contains? keys "cmnd")
       (assoc test "what" (or what "out"))
       ,
+      (some #{"diag" "note"} keys)
+      test
+      ,
       :else
       (die "taptest: Test requires one of: 'code', 'cmnd'"))))
 
@@ -130,39 +142,48 @@
       (for [test tests]
         (let [test (init-test test)
               keys (set (keys test))
-              count (swap! counter inc)
-              got (if (contains? keys "code")
-                    (run-code test)
-                    (run-cmnd test))]
-          (cond
-            (contains? keys "want")
-            (let [got (normalize got test)
-                  want (normalize (get test "want")
-                         {"what" (get test "what")})]
-              (if (= got want)
-                (passed test)
-                (failed test got)))
-            ,
-            (contains? keys "like")
-            (let [rgx (re-pattern (get test "like"))]
-              (if (re-find rgx got)
-                (passed test)
-                (failed test got)))
-            ,
-            (contains? keys "have")
-            (if (str/includes? got (get test "have"))
-              (passed test)
-              (failed test got))
-            ,
-            (contains? keys "code")
-            (let [test (assoc test "want" true)]
-              (if (= got true)
-                (passed test)
-                (failed test got)))
-            ,
-            :else
-            (die (str "taptest: Test " count
-                   " requires one of: 'want', 'like', 'have'"))))))))
+              _ (do
+                  (when-let [note (get test "note")]
+                    (println (str "# " note)))
+                  (when-let [diag (get test "diag")]
+                    (binding [*out* *err*]
+                      (println (str "# " diag)))))
+              got (cond
+                    (contains? keys "code") [(run-code test)]
+                    (contains? keys "cmnd") [(run-cmnd test)])]
+          (when got
+            (let [got (first got)]
+              (cond
+                (contains? keys "want")
+                (let [got (normalize got test)
+                      want (normalize (get test "want")
+                             {"what" (get test "what")})]
+                  (if (= got want)
+                    (passed test)
+                    (failed test got)))
+                ,
+                (contains? keys "like")
+                (let [rgx (re-pattern (get test "like"))]
+                  (if (re-find rgx got)
+                    (passed test)
+                    (failed test got)))
+                ,
+                (contains? keys "have")
+                (if (str/includes? got (get test "have"))
+                  (passed test)
+                  (failed test got))
+                ,
+                (contains? keys "code")
+                (let [test (assoc test "want" true)]
+                  (if (= got true)
+                    (passed test)
+                    (failed test got)))
+                (contains? keys "note") nil
+                (contains? keys "diag") nil
+                ,
+                :else
+                (die (str "taptest: Test " @counter
+                       " requires one of: 'want', 'like', 'have'"))))))))))
 
 (defn plan [n]
   (println (str "1.." n)))
