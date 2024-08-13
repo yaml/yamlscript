@@ -28,6 +28,11 @@
 .site-title a {
   color: rgb(6 6 6);
   text-decoration: none;
+  max-width: 30%;
+}
+
+.site-title a img {
+  max-width: 30%;
 }
 
 .site-title a:hover {
