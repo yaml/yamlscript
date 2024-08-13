@@ -5,7 +5,7 @@ set -euo pipefail
 (
   root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
   base=$root/ys
-  libyamlscript_version=0.1.70
+  libyamlscript_version=0.1.71
   jar=yamlscript.cli-$libyamlscript_version-SNAPSHOT-standalone.jar
   make --no-print-directory -C "$base" jar
   java -jar "$base/target/uberjar/$jar" "$@"

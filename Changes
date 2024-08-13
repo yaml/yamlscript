@@ -1,3 +1,9 @@
+- version: 0.1.71
+  date:    Mon 12 Aug 2024 09:05:55 PM PDT
+  changes:
+  - doc: Update binding ReadMe.md files
+  - www: Add new official YAMLScript logo
+  - core: Refactor ys::std; fix bugs, add tests
 - version: 0.1.70
   date:    Sat 10 Aug 2024 12:53:19 AM PDT
   changes:

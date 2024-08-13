@@ -20,7 +20,7 @@
    [clojure.stacktrace]
    [clojure.tools.cli :as cli]))
 
-(def yamlscript-version "0.1.70")
+(def yamlscript-version "0.1.71")
 
 (def testing (atom false))
 
