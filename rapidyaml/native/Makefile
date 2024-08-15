@@ -25,7 +25,7 @@ $(RAPIDYAML_HPP): rapidyaml
 	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@
 
 rapidyaml:
-	mkdir rapidyaml
+	mkdir -p rapidyaml
 	( cd rapidyaml && git init -q . )
 	( cd rapidyaml && git remote add origin $(RAPIDYAML_REPO) )
 	( cd rapidyaml && git fetch origin $(RAPIDYAML_TAG) )

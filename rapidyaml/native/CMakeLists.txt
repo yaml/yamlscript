@@ -4,6 +4,8 @@ project(rapidyaml
     HOMEPAGE_URL "https://github.com/biojppm/rapidyaml -> https://github.com/yaml/yamlscript"
     LANGUAGES CXX)
 
+find_package(JNI REQUIRED)
+
 option(YS2EDN_TIMED "add timings to sections" OFF)
 
 if(UNIX)
@@ -30,6 +32,9 @@ target_compile_definitions(rapidyaml PUBLIC
     $<$<BOOL:${YS2EDN_TIMED}>:YS2EDN_TIMED>
 )
 set_target_properties(rapidyaml PROPERTIES CXX_STANDARD 17)
+
+# target_link_libraries(rapidyaml PUBLIC JNI::JNI)
+target_include_directories(rapidyaml PUBLIC ${JNI_INCLUDE_DIRS})
 
 add_executable(rapidyaml-test rapidyaml_test.cpp)
 target_link_libraries(rapidyaml-test rapidyaml)

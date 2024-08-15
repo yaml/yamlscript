@@ -10,34 +10,34 @@ extern "C" {
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2edn_init
- * Signature: ()Ljava/lang/Object;
+ * Signature: ()J
  */
-JNIEXPORT jobject JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1init
+JNIEXPORT jlong JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1init
   (JNIEnv *, jobject);
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2edn_destroy
- * Signature: (Ljava/lang/Object;)V
+ * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv *, jobject, jlong);
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2edn
- * Signature: (Ljava/lang/Object;Ljava/lang/String;[BI[BI)I
+ * Signature: (JLjava/lang/String;[BI[BI)I
  */
 JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn
-  (JNIEnv *, jobject, jobject, jstring, jbyteArray, jint, jbyteArray, jint);
+  (JNIEnv *, jobject, jlong, jstring, jbyteArray, jint, jbyteArray, jint);
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2edn_retry_get
- * Signature: (Ljava/lang/Object;[BI)I
+ * Signature: (J[BI)I
  */
 JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1retry_1get
-  (JNIEnv *, jobject, jobject, jbyteArray, jint);
+  (JNIEnv *, jobject, jlong, jbyteArray, jint);
 
 #ifdef __cplusplus
 }

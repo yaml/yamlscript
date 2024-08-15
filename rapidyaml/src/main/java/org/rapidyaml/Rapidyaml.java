@@ -11,19 +11,14 @@ public class Rapidyaml
 {
     public static String RAPIDYAML_VERSION = "0.7.0";
 
-    private native Object ys2edn_init();
-    private native void ys2edn_destroy(Object ryml2edn);
-    private native int ys2edn(Object ryml2edn, String filename,
+    private native long ys2edn_init();
+    private native void ys2edn_destroy(long ryml2edn);
+    private native int ys2edn(long ryml2edn, String filename,
                byte[] ys, int ys_length,
                byte[] edn, int edn_length);
-    private native int ys2edn_retry_get(Object ryml2edn, byte[] edn, int edn_size);
+    private native int ys2edn_retry_get(long ryml2edn, byte[] edn, int edn_size);
 
-
-
-
-
-
-    private final Object ryml2edn;
+    private final long ryml2edn;
 
     public Rapidyaml()
     {
@@ -45,14 +40,11 @@ public class Rapidyaml
 
     public String parseYS(String srcstr) throws RuntimeException
     {
-
         String filename = "yamlscript"; // fixme
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;
-
         byte[] edn = new byte[edn_size];
-        int required_size = ys2edn(
-            this.ryml2edn, filename, src, src.length, edn, edn_size);
+        int required_size = ys2edn(this.ryml2edn, filename, src, src.length, edn, edn_size);
         if(required_size > edn_size)
         {
             edn_size = required_size;

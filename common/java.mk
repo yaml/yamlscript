@@ -13,7 +13,8 @@ YAMLSCRIPT_JAVA_SRC := \
 
 RAPIDYAML_VERSION := 0.7.0
 RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
-RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
+#RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
+RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO)
 RAPIDYAML_INSTALLED := \
   $(MAVEN_REPOSITORY)/org/ryml/ryml/$(RAPIDYAML_VERSION)/ryml-$(RAPIDYAML_VERSION).jar
 
