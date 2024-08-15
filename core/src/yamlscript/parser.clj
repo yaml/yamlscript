@@ -69,7 +69,7 @@
 (defn parse-rapidyaml [yaml-string]
   (let [rapid-parser (new Rapidyaml)]
     (->> yaml-string
-      ((time #(.parseYS ^Rapidyaml rapid-parser %1)))
+      ( #(.parseYS ^Rapidyaml rapid-parser %1))
       #_(#(do (println %1) %1))
       (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
       #_(#(do (println %1) %1))

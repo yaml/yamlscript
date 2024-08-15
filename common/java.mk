@@ -16,7 +16,7 @@ RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
 #RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
 RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO)
 RAPIDYAML_INSTALLED := \
-  $(MAVEN_REPOSITORY)/org/ryml/ryml/$(RAPIDYAML_VERSION)/ryml-$(RAPIDYAML_VERSION).jar
+  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/rapidyaml-$(RAPIDYAML_VERSION).jar
 
 
 #------------------------------------------------------------------------------
