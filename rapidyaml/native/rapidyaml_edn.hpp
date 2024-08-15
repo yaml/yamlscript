@@ -2,7 +2,7 @@
 #ifndef RAPIDYAML_EVENTS_H
 #define RAPIDYAML_EVENTS_H
 
-#include <ryml_all.hpp>
+#include <rapidyaml_all.hpp>
 #include "rapidyaml_edn_handler.hpp"
 
 namespace ryml {

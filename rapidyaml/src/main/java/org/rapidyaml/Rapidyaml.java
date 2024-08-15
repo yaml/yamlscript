@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
  */
 public class Rapidyaml
 {
-    public static String RAPIDYAML_VERSION = "0.6.0";
+    public static String RAPIDYAML_VERSION = "0.7.0";
 
     private final ILibRapidyaml librapidyaml;
     private final Pointer ryml2edn;

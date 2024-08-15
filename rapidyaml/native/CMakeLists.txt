@@ -11,7 +11,7 @@ if(UNIX)
 endif()
 
 add_library(rapidyaml
-    ryml_all.hpp
+    rapidyaml_all.hpp
     rapidyaml_edn_handler.hpp
     rapidyaml_edn_handler.cpp
     rapidyaml_edn.hpp

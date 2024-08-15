@@ -1,7 +1,7 @@
 include ../../common/python.mk
 include ../rapidyaml.mk
 
-RAPIDYAML_HPP := ryml_all.hpp
+RAPIDYAML_HPP := rapidyaml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
 
 # TODO static library! https://stackoverflow.com/questions/24493337/linking-static-library-with-jni

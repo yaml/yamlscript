@@ -8,20 +8,19 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.ryml</groupId>
+  <groupId>org.rapidyaml</groupId>
 
-  <artifactId>ryml</artifactId>
+  <artifactId>rapidyaml</artifactId>
 
-  <version>0.6.0</version>
+  <version>0.7.0</version>
 
-  <name>ryml</name>
+  <name>rapidyaml</name>
 
   <description>
-    Ryml, shorthand for rapidyaml. rapidyaml is a C++ library to parse
-    and emit YAML, and do it fast.
+    rapidyaml is a C++ library to parse and emit YAML, and do it fast.
   </description>
 
-  <url>https://ryml.org</url>
+  <url>https://rapidyaml.org</url>
 
   <licenses>
     <license>

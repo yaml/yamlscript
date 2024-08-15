@@ -30,4 +30,4 @@ clean::
 	$(RM) -r reports/ target/ native/rapidyaml/ $(RAPIDYAML_SO)
 
 realclean::
-	$(RM) -r $(MAVEN_REPOSITORY)/org/ryml
+	$(RM) -r $(MAVEN_REPOSITORY)/org/rapidyaml
