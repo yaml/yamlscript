@@ -11,6 +11,8 @@ if(UNIX)
 endif()
 
 add_library(rapidyaml
+    org_rapidyaml_Rapidyaml.h
+    org_rapidyaml_Rapidyaml.cpp
     rapidyaml_all.hpp
     rapidyaml_edn_handler.hpp
     rapidyaml_edn_handler.cpp

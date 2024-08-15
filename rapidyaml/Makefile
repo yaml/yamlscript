@@ -31,3 +31,13 @@ clean::
 
 realclean::
 	$(RM) -r $(MAVEN_REPOSITORY)/org/rapidyaml
+
+debug:
+	javac src/main/java/org/rapidyaml/Rapidyaml.java
+	javac -h native src/main/java/org/rapidyaml/Rapidyaml.java
+
+# %.class: %.java
+# 	javac $<
+# 
+# %.h: %.java
+# 	javac -h . $<
