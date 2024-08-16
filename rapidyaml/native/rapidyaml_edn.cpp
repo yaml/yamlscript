@@ -58,7 +58,17 @@ void onRapidyamlError(const char* msg, size_t msg_len, Location location, void *
 {
 fprintf(stderr, "here 0, '%.*s' '%s'\n", (int)msg_len, msg, msg);fflush(stdout);
     JNIEnv *env = (JNIEnv*)user_data;
-    (void)throwRuntimeExceptionError(env, msg);
+    // msg may not be zero-terminated; ensure we terminate it:
+    char *zmsg_ = malloc(msg_len + 1u);
+    const char *zmsg = zmsg_;
+    if (zmsg) {
+        memcpy(zmsg, msg, msg_len);
+        msg[msg_len] = '\0';
+    }
+    else {
+        zmsg = msg;
+    }
+    (void)throwRuntimeExceptionError(env, zmsg);
 }
 
 RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env)
