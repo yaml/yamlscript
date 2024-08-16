@@ -6,15 +6,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
-
-  <groupId>org.rapidyaml</groupId>
-
-  <artifactId>rapidyaml</artifactId>
+  <name>rapidyaml</name>
 
   <version>0.7.0</version>
 
-  <name>rapidyaml</name>
+  <artifactId>rapidyaml</artifactId>
+
+  <groupId>org.rapidyaml</groupId>
+
+  <modelVersion>4.0.0</modelVersion>
 
   <description>
     rapidyaml is a C++ library to parse and emit YAML, and do it fast.

@@ -1,38 +1,56 @@
-include ./rapidyaml.mk
 include ../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
+include ./rapidyaml.mk
 
-RAPIDYAML_SOURCES := \
+RAPIDYAML_JAR_DEPS := \
   $(wildcard \
+      build \
+      $(JAVA_INSTALLED) \
       Makefile \
-      native/*pp \
-      native/CMakeLists.txt \
-      native/Makefile \
+      pom.xml \
   )
 
+RAPIDYAML_CLASS := src/main/java/org/rapidyaml/Rapidyaml.class
+
+
 #------------------------------------------------------------------------------
+default::
+	echo $(RAPIDYAML_SO)
 
 build:: $(RAPIDYAML_SO)
 
-install test:: build $(JAVA_INSTALLED)
+jar: $(RAPIDYAML_JAR)
+
+install:: $(RAPIDYAML_INSTALLED)
+
+test:: build $(JAVA_INSTALLED)
 	mvn $@
 
-test-x: build
+test-x: build $(JAVA_INSTALLED)
 	mvn -X -e test
 
-$(RAPIDYAML_SO): $(RAPIDYAML_SOURCES)
-	$(MAKE) -C native build
-	cp -fav native/rapidyaml-build/librapidyaml.so $@
-
 clean::
-	$(MAKE) -C native $@
-	$(RM) src/main/java/org/rapidyaml/Rapidyaml.class $(RAPIDYAML_SO)
+	$(RM) $(RAPIDYAML_CLASS) $(RAPIDYAML_SO)
 	$(RM) -r reports/ target/ native/rapidyaml/ $(RAPIDYAML_SO)
+	$(MAKE) -C native $@
 
-realclean::
+realclean:: clean
+	$(MAKE) -C native $@
+
+sysclean::
 	$(RM) -r $(MAVEN_REPOSITORY)/org/rapidyaml
 
-debug:
-	javac src/main/java/org/rapidyaml/Rapidyaml.java
-	javac -h native src/main/java/org/rapidyaml/Rapidyaml.java
+
+#------------------------------------------------------------------------------
+$(RAPIDYAML_SO):
+	$(MAKE) -C native $@
+
+$(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
+	mvn install
+
+$(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
+	jar -cvf $@ $<
+
+$(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
+	javac $<

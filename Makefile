@@ -11,14 +11,15 @@ BINDINGS := \
     clojure \
     go \
     java \
-    julia \
     nodejs \
-    perl \
-    perl-alien \
     python \
     raku \
     ruby \
-    rust \
+
+#     julia \
+#     perl \
+#     perl-alien \
+#     rust \
 
 DIRS := \
     rapidyaml \
@@ -28,6 +29,7 @@ DIRS := \
     ys \
 
 BUILD_DIRS := \
+    rapidyaml \
     libyamlscript \
     go \
     nodejs \
@@ -99,7 +101,7 @@ export YS_OLD_TAG := $o
 export YS_RELEASE_VERSION_OLD := $o
 endif
 
-default:
+default::
 
 java-home:
 	@echo $(JAVA_HOME)

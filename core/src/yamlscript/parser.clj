@@ -40,7 +40,7 @@
   (let [has-code-mode-shebang (re-find
                                 #"^#!.*ys-0"
                                 yaml-string)
-        events (if (= "rapidyaml" (System/getenv "YS_PARSER"))
+        events (if (System/getenv "YS_PARSER_RAPIDYAML")
                  (parse-rapidyaml yaml-string)
                  (parse-snakeyaml yaml-string))
         [first-event & rest-events] events

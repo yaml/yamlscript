@@ -215,6 +215,23 @@ RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
 
 
 #------------------------------------------------------------------------------
+# RapidYAML variables:
+#------------------------------------------------------------------------------
+RAPIDYAML := $(ROOT)/rapidyaml
+
+RAPIDYAML_VERSION := 0.7.0
+RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
+#RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
+RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO)
+RAPIDYAML_INSTALLED := \
+  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/rapidyaml-$(RAPIDYAML_VERSION).jar
+
+
+#------------------------------------------------------------------------------
+default::
+
+build-bin-ys: $(BUILD_BIN_YS)
+
 $(BUILD_BIN_YS):
 	curl -sSL $(YS_INSTALL_URL) | \
 	  PREFIX=$$(dirname $(BUILD_BIN)) VERSION=$(BUILD_BIN_YS_VERSION) BIN=1 bash
