@@ -44,28 +44,27 @@ extern "C" {
 
 jint throwRuntimeExceptionError(JNIEnv *env, const char *message)
 {
-    fprintf(stderr, "here 1, '%s'\n", message);fflush(stdout);
     const char *className = "java/lang/RuntimeException";
     jclass exClass = env->FindClass(className);
-    fprintf(stderr, "here 2, '%p'\n", exClass);fflush(stdout);
-    //if (exClass == NULL) {
-    //    return throwRuntimeExceptionError(env, className);
-    //}
+    if (exClass == NULL) {
+        return throwRuntimeExceptionError(env, className);
+    }
     return env->ThrowNew(exClass, message);
 }
 
 void onRapidyamlError(const char* msg, size_t msg_len, Location location, void *user_data)
 {
-fprintf(stderr, "here 0, '%.*s' '%s'\n", (int)msg_len, msg, msg);fflush(stdout);
     JNIEnv *env = (JNIEnv*)user_data;
     // msg may not be zero-terminated; ensure we terminate it:
-    char *zmsg_ = malloc(msg_len + 1u);
+    char *zmsg_ = (char*)malloc(msg_len + 1u);
     const char *zmsg = zmsg_;
-    if (zmsg) {
-        memcpy(zmsg, msg, msg_len);
-        msg[msg_len] = '\0';
+    if (zmsg)
+    {
+        memcpy(zmsg_, msg, msg_len);
+        zmsg_[msg_len] = '\0';
     }
-    else {
+    else
+    {
         zmsg = msg;
     }
     (void)throwRuntimeExceptionError(env, zmsg);
@@ -74,7 +73,6 @@ fprintf(stderr, "here 0, '%.*s' '%s'\n", (int)msg_len, msg, msg);fflush(stdout);
 RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env)
 {
     TIMED_SECTION("ys2edn_init");
-fprintf(stderr, "wtf init 0\n");fflush(stdout);
     if(env)
     {
         c4::yml::Callbacks cb = {};
@@ -82,12 +80,9 @@ fprintf(stderr, "wtf init 0\n");fflush(stdout);
         cb.m_error = &onRapidyamlError;
         c4::yml::set_callbacks(cb);
     }
-fprintf(stderr, "init 0\n");fflush(stdout);
     Ryml2Edn *ryml2edn = _RYML_CB_ALLOC(get_callbacks(), Ryml2Edn, 1);
     _RYML_CB_CHECK(get_callbacks(), ryml2edn != nullptr);
-fprintf(stderr, "init 1\n");fflush(stdout);
     new ((void*)ryml2edn) Ryml2Edn(env);
-fprintf(stderr, "init 2\n");fflush(stdout);
     return ryml2edn;
 }
 

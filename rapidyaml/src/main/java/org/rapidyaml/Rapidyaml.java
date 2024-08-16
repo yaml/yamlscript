@@ -25,11 +25,6 @@ public class Rapidyaml {
 
     public Rapidyaml() {
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
-
-        System.out.println("===============================");
-        System.out.println(library_name);
-        System.out.println("===============================");
-
         System.loadLibrary(library_name);
         this.ryml2edn = this.ys2edn_init();
     }
