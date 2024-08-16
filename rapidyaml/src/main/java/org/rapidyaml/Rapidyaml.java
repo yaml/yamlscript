@@ -24,18 +24,28 @@ public class Rapidyaml {
     private final long ryml2edn;
 
     public Rapidyaml() {
-        System.loadLibrary("rapidyaml." + RAPIDYAML_VERSION);
+        String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
+
+        System.out.println("===============================");
+        System.out.println(library_name);
+        System.out.println("===============================");
+
+        System.loadLibrary(library_name);
         this.ryml2edn = this.ys2edn_init();
     }
 
-//     protected void finalize() throws Throwable {
-//         try {
-//             this.ys2edn_destroy(this.ryml2edn);
-//         }
-//         finally {
-//             super.finalize();
-//         }
-//     }
+// Likely bad idea to implement finalize:
+//
+// https://stackoverflow.com/questions/158174/why-would-you-ever-implement-finalize
+//
+    protected void finalize() throws Throwable {
+        try {
+            this.ys2edn_destroy(this.ryml2edn);
+        }
+        finally {
+            super.finalize();
+        }
+    }
 
     public String parseYS(String srcstr) throws RuntimeException {
         String filename = "yamlscript"; // fixme

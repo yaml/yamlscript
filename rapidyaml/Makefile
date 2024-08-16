@@ -18,7 +18,11 @@ RAPIDYAML_CLASS := src/main/java/org/rapidyaml/Rapidyaml.class
 default::
 	echo $(RAPIDYAML_SO)
 
+x:
+	YS -ce 'foo: var'
+
 build:: $(RAPIDYAML_SO)
+	@:
 
 jar: $(RAPIDYAML_JAR)
 
@@ -32,7 +36,7 @@ test-x: build $(JAVA_INSTALLED)
 
 clean::
 	$(RM) $(RAPIDYAML_CLASS) $(RAPIDYAML_SO)
-	$(RM) -r reports/ target/ native/rapidyaml/ $(RAPIDYAML_SO)
+	$(RM) -r reports/ target/
 	$(MAKE) -C native $@
 
 realclean:: clean

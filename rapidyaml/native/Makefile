@@ -44,6 +44,7 @@ rapidyaml:
 	git -C $@ submodule update --init --recursive
 
 clean::
+	$(RM) librapidyaml.*
 	$(RM) $(RAPIDYAML_HPP)
 	$(RM) -r rapidyaml-build
 	$(RM) -r rapidyaml-install
@@ -59,6 +60,7 @@ $(RAPIDYAML_SO): $(RAPIDYAML_SO_DEPS)
 	cmake --build rapidyaml-build \
 	  --parallel --verbose --target rapidyaml
 	mv rapidyaml-build/*.so $@
+	ln -s $@ librapidyaml.so
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $<
