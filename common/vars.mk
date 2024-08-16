@@ -221,10 +221,12 @@ RAPIDYAML := $(ROOT)/rapidyaml
 
 RAPIDYAML_VERSION := 0.7.0
 RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
-#RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO).$(RAPIDYAML_VERSION)
-RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(SO)
+RAPIDYAML_SO := \
+  $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_INSTALLED_DIR := \
+  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/
 RAPIDYAML_INSTALLED := \
-  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/rapidyaml-$(RAPIDYAML_VERSION).jar
+  $(RAPIDYAML_INSTALLED_DIR)/rapidyaml-$(RAPIDYAML_VERSION).jar
 
 
 #------------------------------------------------------------------------------

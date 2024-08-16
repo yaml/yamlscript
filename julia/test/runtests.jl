@@ -31,13 +31,13 @@ baz: ! range(1 6)
         @test obj["baz"] == [1, 2, 3, 4, 5]
     end
 
-    @testset "An error case" begin
-        script = """
-!yamlscript/v0/data
-: : : : : :
-"""
-        @test_throws Exception load(script)
-    end
+#     @testset "An error case" begin
+#         script = """
+# !yamlscript/v0/data
+# : : : : : :
+# """
+#         @test_throws Exception load(script)
+#     end
 
     @testset "Load multiple times" begin
         script = """

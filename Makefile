@@ -11,15 +11,14 @@ BINDINGS := \
     clojure \
     go \
     java \
+    julia \
     nodejs \
+    perl \
+    perl-alien \
     python \
     raku \
     ruby \
-
-#     julia \
-#     perl \
-#     perl-alien \
-#     rust \
+    rust \
 
 DIRS := \
     rapidyaml \
