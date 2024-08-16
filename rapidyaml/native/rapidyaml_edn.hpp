@@ -23,7 +23,7 @@ struct RYML_EXPORT Ryml2Edn
     c4::yml::EventHandlerEdn m_handler;
     c4::yml::ParseEngine<c4::yml::EventHandlerEdn> m_parser;
     JNIEnv *m_env;
-    Ryml2Edn(JNIEnv *env)
+    Ryml2Edn(JNIEnv *env=nullptr)
         : m_sink()
         , m_handler(&m_sink)
         , m_parser(&m_handler)
@@ -37,7 +37,7 @@ struct RYML_EXPORT Ryml2Edn
     }
 };
 
-RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env);
+RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env=nullptr);
 RYML_EXPORT void ys2edn_destroy(Ryml2Edn *ryml2edn);
 
 /** (1) return the number of characters needed for edn.

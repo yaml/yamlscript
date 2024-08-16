@@ -56,7 +56,7 @@ jint throwRuntimeExceptionError(JNIEnv *env, const char *message)
 
 void onRapidyamlError(const char* msg, size_t msg_len, Location location, void *user_data)
 {
-    fprintf(stderr, "here 0, '%.*s' '%s'\n", (int)msg_len, msg, msg);fflush(stdout);
+fprintf(stderr, "here 0, '%.*s' '%s'\n", (int)msg_len, msg, msg);fflush(stdout);
     JNIEnv *env = (JNIEnv*)user_data;
     (void)throwRuntimeExceptionError(env, msg);
 }
@@ -64,16 +64,20 @@ void onRapidyamlError(const char* msg, size_t msg_len, Location location, void *
 RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env)
 {
     TIMED_SECTION("ys2edn_init");
-    fprintf(stderr, "wtf init 0\n");fflush(stdout);
+fprintf(stderr, "wtf init 0\n");fflush(stdout);
+    if(env)
+    {
+        c4::yml::Callbacks cb = {};
+        cb.m_user_data = env;
+        cb.m_error = &onRapidyamlError;
+        c4::yml::set_callbacks(cb);
+    }
+fprintf(stderr, "init 0\n");fflush(stdout);
     Ryml2Edn *ryml2edn = _RYML_CB_ALLOC(get_callbacks(), Ryml2Edn, 1);
     _RYML_CB_CHECK(get_callbacks(), ryml2edn != nullptr);
+fprintf(stderr, "init 1\n");fflush(stdout);
     new ((void*)ryml2edn) Ryml2Edn(env);
-    fprintf(stderr, "init 0\n");fflush(stdout);
-    c4::yml::Callbacks cb = {};
-    cb.m_user_data = env;
-    cb.m_error = &onRapidyamlError;
-    c4::yml::set_callbacks(cb);
-    fprintf(stderr, "init 1\n");fflush(stdout);
+fprintf(stderr, "init 2\n");fflush(stdout);
     return ryml2edn;
 }
 

@@ -47,7 +47,7 @@ public class Rapidyaml {
         }
     }
 
-    public String testit()
+    public void testit()
     {
         String ys = ": : : :";
         boolean gotit = false;
@@ -61,7 +61,7 @@ public class Rapidyaml {
             gotit = false;
         }
         if (!gotit)
-            throw RuntimeException("wtf");
+            throw new RuntimeException("wtf");
     }
 
     public String parseYS(String srcstr) throws RuntimeException {
@@ -69,8 +69,7 @@ public class Rapidyaml {
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;
         byte[] edn = new byte[edn_size];
-        int required_size =
-            ys2edn(this.ryml2edn, filename, src, src.length, edn, edn_size);
+        int required_size = ys2edn(this.ryml2edn, filename, src, src.length, edn, edn_size);
         if(required_size > edn_size) {
             edn_size = required_size;
             edn = new byte[edn_size];
@@ -79,8 +78,7 @@ public class Rapidyaml {
                 throw new RuntimeException("inconsistent size");
             }
         }
-        String ret =
-            new String(edn, 0, required_size-1, StandardCharsets.UTF_8);
+        String ret = new String(edn, 0, required_size-1, StandardCharsets.UTF_8);
         return ret;
     }
 }
