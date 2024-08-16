@@ -60,7 +60,7 @@ $(RAPIDYAML_SO): $(RAPIDYAML_SO_DEPS)
 	cmake --build rapidyaml-build \
 	  --parallel --verbose --target rapidyaml
 	mv rapidyaml-build/*.so $@
-	ln -s $@ librapidyaml.so
+	ln -fs $@ librapidyaml.so
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $<

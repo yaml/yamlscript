@@ -129,4 +129,22 @@ public class RapidyamlTest extends TestCase
             ")\n"
             );
     }
+
+    public void testFailure()
+    {
+    //    Rapidyaml rapidyaml = new Rapidyaml();
+    //    System.out.println("hi!");
+    //    String ys = ": : : :";
+    //    boolean gotit = false;
+    //    try {
+    //        rapidyaml.parseYS(ys);
+    //    }
+    //    catch (RuntimeException e) {
+    //        gotit = true;
+    //    }
+    //    catch (Exception e) {
+    //        gotit = false;
+    //    }
+    //    assertTrue(gotit);
+    }
 }

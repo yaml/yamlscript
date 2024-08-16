@@ -47,6 +47,23 @@ public class Rapidyaml {
         }
     }
 
+    public String testit()
+    {
+        String ys = ": : : :";
+        boolean gotit = false;
+        try {
+            this.parseYS(ys);
+        }
+        catch (RuntimeException e) {
+            gotit = true;
+        }
+        catch (Exception e) {
+            gotit = false;
+        }
+        if (!gotit)
+            throw RuntimeException("wtf");
+    }
+
     public String parseYS(String srcstr) throws RuntimeException {
         String filename = "yamlscript"; // fixme
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);

@@ -14,9 +14,9 @@ extern "C" {
  * Signature: ()Ljava/lang/Object;
  */
 JNIEXPORT jlong JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *, jobject)
+Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *env, jobject)
 {
-    Ryml2Edn *obj = ys2edn_init();
+    Ryml2Edn *obj = ys2edn_init(env);
     return (jlong)obj; // ???
 }
 
