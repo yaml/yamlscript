@@ -1,0 +1,54 @@
+#!/bin/bash
+
+set -euo pipefail
+
+main() {
+  [[ -d /tmp && -w /tmp ]] ||
+    die "Can't write to /tmp/"
+
+  local prefix=/tmp/yamlscript-auto-install
+  mkdir -p "$prefix"
+  [[ -d $prefix && -w $prefix ]] ||
+    die "Can't write to '$prefix/'"
+
+  local bin=$prefix/bin
+  [[ -e $bin ]] && ! [[ -d $bin && -w $bin ]] &&
+    die "Can't write to '$bin/'"
+
+  export PATH=$bin:$PATH
+
+  assert-ys
+
+  local file=${BASH_SOURCE[${#BASH_SOURCE[*]}-1]}
+  [[ -f $file ]] ||
+    die "Can't find '$file'"
+
+  [[ $# -gt 0 ]] && [[ ${*:$#} == ':' ]] &&
+    set -- "${@:1:$#-1}"
+
+  exec ys-0 "$file" "$@"
+}
+
+assert-ys() {
+  [[ -f $bin/ys-0 && -x $bin/ys-0 ]] && return
+
+  [[ $(command -v curl) ]] ||
+    die "'curl' command is required but not found"
+
+  # echo "*** Installing '$bin/ys'" >&2
+
+  curl -s https://yamlscript.org/install |
+    BIN=1 PREFIX=$prefix bash
+
+  cp ~/src/yamlscript/ys/bin/ys* $bin/   # XXX
+
+  [[ $(command -v ys-0) == $bin/ys-0 ]] ||
+    die "Something went wrong"
+}
+
+die() {
+  echo "$*" >&2
+  exit 1
+}
+
+main "$@"
