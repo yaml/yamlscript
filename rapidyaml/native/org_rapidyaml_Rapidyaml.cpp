@@ -8,16 +8,32 @@
 extern "C" {
 #endif
 
+struct ParseErrorExceptionJava : public std::runtime_error
+{
+    ryml::Location location;
+    ParseErrorExceptionJava(JNIEnv * env,
+                            const char* type,
+                            std::string const& message,
+                            ryml::Location const& location_)
+        : std::runtime_error(message)
+        , location(location_)
+    {
+        jclass newExcCls = env->FindClass(type);
+        if (newExcCls != NULL) //if it is null, a NoClassDefFoundError was already thrown
+            env->ThrowNew(newExcCls, message.c_str());
+    }
+};
+
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2edn_init
  * Signature: ()Ljava/lang/Object;
  */
 JNIEXPORT jlong JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *env, jobject)
+Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *, jobject)
 {
-    Ryml2Edn *obj = ys2edn_init(env);
-    return (jlong)obj; // ???
+    Ryml2Edn *obj = ys2edn_init();
+    return (jlong)obj;
 }
 
 /*
@@ -28,29 +44,39 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *env, jobject)
 JNIEXPORT void JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy(JNIEnv *, jobject, jlong obj)
 {
-    ys2edn_destroy((Ryml2Edn *)obj);
+    ys2edn_destroy((Ryml2Edn*)obj);
 }
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn
+ * Method:    ys2edn_parse
  * Signature: (Ljava/lang/Object;Ljava/lang/String;[BI[BI)I
  */
 JNIEXPORT jint JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn(JNIEnv *env, jobject,
-                                    jlong obj, jstring filename,
-                                    jbyteArray src, jint src_len,
-                                    jbyteArray dst, jint dst_len)
+Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
+                                           jlong obj, jstring jfilename,
+                                           jbyteArray src, jint src_len,
+                                           jbyteArray dst, jint dst_len)
 {
-    (void)filename;
     jboolean src_is_copy, dst_is_copy;
     jbyte* src_ = env->GetByteArrayElements(src, &src_is_copy);
     jbyte* dst_ = env->GetByteArrayElements(dst, &dst_is_copy);
-    int rc = ys2edn((Ryml2Edn*)obj, "foo",
-                    (char*)src_, src_len,
-                    (char*)dst_, dst_len);
+    const char *filename = env->GetStringUTFChars(jfilename, 0);
+    int rc = 0;
+    try
+    {
+        rc = ys2edn_parse((Ryml2Edn*)obj, filename,
+                          (char*)src_, src_len,
+                          (char*)dst_, dst_len);
+    }
+    catch (Ryml2EdnParseError const& exc)
+    {
+        throw ParseErrorExceptionJava(env, "java/lang/Error",
+                                      exc.msg, exc.location);
+    }
     env->ReleaseByteArrayElements(src, src_, 0);
     env->ReleaseByteArrayElements(dst, dst_, 0);
+    env->ReleaseStringUTFChars(jfilename, filename);
     return rc;
 }
 

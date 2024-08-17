@@ -2,9 +2,9 @@
 #ifndef RAPIDYAML_EVENTS_H
 #define RAPIDYAML_EVENTS_H
 
+#include <stdexcept>
 #include <rapidyaml_all.hpp>
 #include "rapidyaml_edn_handler.hpp"
-#include <jni.h>
 
 namespace ryml {
 using namespace c4;
@@ -22,12 +22,10 @@ struct RYML_EXPORT Ryml2Edn
     c4::yml::EventHandlerEdn::EventSink m_sink;
     c4::yml::EventHandlerEdn m_handler;
     c4::yml::ParseEngine<c4::yml::EventHandlerEdn> m_parser;
-    JNIEnv *m_env;
-    Ryml2Edn(JNIEnv *env=nullptr)
+    Ryml2Edn()
         : m_sink()
         , m_handler(&m_sink)
         , m_parser(&m_handler)
-        , m_env(env)
     {
     }
     void reset()
@@ -37,30 +35,34 @@ struct RYML_EXPORT Ryml2Edn
     }
 };
 
-RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env=nullptr);
+struct RYML_EXPORT Ryml2EdnParseError : public std::exception
+{
+    c4::yml::Location location;
+    std::string msg;
+    const char* what() const noexcept override { return msg.c_str(); }
+};
+
+
+//-----------------------------------------------------------------------------
+
+/** Initialize the resources */
+RYML_EXPORT Ryml2Edn *ys2edn_init();
+
+/** Destroy the resources */
 RYML_EXPORT void ys2edn_destroy(Ryml2Edn *ryml2edn);
 
-/** (1) return the number of characters needed for edn.
- * The caller must check if the returned size is not larger
- * than edn_size. If it is, call ys_retry_get(). */
-RYML_EXPORT size_type ys2edn(Ryml2Edn *ryml2edn,
-                             const char *filename,
-                             char *ys, size_type ys_size,
-                             char *edn, size_type edn_size);
+/** Parse YAML, and return corresponding EDN. Return the number of
+ * characters needed for edn. Check if the returned size is larger
+ * than edn_size. If it is, call ys_retry_get() can be called
+ * afterwards to extract the EDN. */
+RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,
+                                   const char *filename,
+                                   char *ys, size_type ys_size,
+                                   char *edn, size_type edn_size);
 
+/** Get the edn from the previous call to ys2edn_parse(). */
 RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
                                        char *edn, size_type edn_size);
-
-/** (2) like (1), but raise an error if the size is not enough. */
-RYML_EXPORT size_type ys2edn_failsmall(Ryml2Edn *ryml2edn,
-                                       const char *filename,
-                                       char *ys, size_type ys_size,
-                                       char *edn, size_type edn_size);
-
-RYML_EXPORT char * ys2edn_alloc(Ryml2Edn *ryml2edn,
-                                const char *filename,
-                                char *ys, size_type ys_size);
-RYML_EXPORT void ys2edn_free(char *edn);
 
 #if defined(__cplusplus)
 }

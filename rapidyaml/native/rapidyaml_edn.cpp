@@ -2,7 +2,6 @@
 #include <rapidyaml_all.hpp>
 #include "rapidyaml_edn.hpp"
 #include <string.h>
-#include <jni.h>
 
 namespace ryml {
 using namespace c4;
@@ -10,12 +9,6 @@ using namespace c4::yml;
 } // namespace ryml
 
 using namespace ryml;
-
-#if 0
-#define TIMED_SECTION_INNER(name) TIMED_SECTION(name)
-#else
-#define TIMED_SECTION_INNER(name)
-#endif
 
 #ifndef YS2EDN_TIMED
 #define TIMED_SECTION(name)
@@ -41,48 +34,29 @@ struct timed_section
 #if defined(__cplusplus)
 extern "C" {
 #endif
+// see
+// https://stackoverflow.com/questions/230689/best-way-to-throw-exceptions-in-jni-code
+// https://stackoverflow.com/questions/4138168/what-happens-when-i-throw-a-c-exception-from-a-native-java-method
 
-jint throwRuntimeExceptionError(JNIEnv *env, const char *message)
+namespace {
+C4_NORETURN void ys2edn_parse_error(const char* msg, size_t msg_len, Location location, void *user_data)
 {
-    const char *className = "java/lang/RuntimeException";
-    jclass exClass = env->FindClass(className);
-    if (exClass == NULL) {
-        return throwRuntimeExceptionError(env, className);
-    }
-    return env->ThrowNew(exClass, message);
+    Ryml2EdnParseError exc;
+    exc.location = location;
+    exc.msg.assign(msg, msg_len);
+    throw exc;
 }
+} // anon namespace
 
-void onRapidyamlError(const char* msg, size_t msg_len, Location location, void *user_data)
-{
-    JNIEnv *env = (JNIEnv*)user_data;
-    // msg may not be zero-terminated; ensure we terminate it:
-    char *zmsg_ = (char*)malloc(msg_len + 1u);
-    const char *zmsg = zmsg_;
-    if (zmsg)
-    {
-        memcpy(zmsg_, msg, msg_len);
-        zmsg_[msg_len] = '\0';
-    }
-    else
-    {
-        zmsg = msg;
-    }
-    (void)throwRuntimeExceptionError(env, zmsg);
-}
-
-RYML_EXPORT Ryml2Edn *ys2edn_init(JNIEnv *env)
+RYML_EXPORT Ryml2Edn *ys2edn_init()
 {
     TIMED_SECTION("ys2edn_init");
-    if(env)
-    {
-        c4::yml::Callbacks cb = {};
-        cb.m_user_data = env;
-        cb.m_error = &onRapidyamlError;
-        c4::yml::set_callbacks(cb);
-    }
+    Callbacks cb = {};
+    cb.m_error = &ys2edn_parse_error;
+    set_callbacks(cb);
     Ryml2Edn *ryml2edn = _RYML_CB_ALLOC(get_callbacks(), Ryml2Edn, 1);
     _RYML_CB_CHECK(get_callbacks(), ryml2edn != nullptr);
-    new ((void*)ryml2edn) Ryml2Edn(env);
+    new ((void*)ryml2edn) Ryml2Edn();
     return ryml2edn;
 }
 
@@ -92,36 +66,23 @@ RYML_EXPORT void ys2edn_destroy(Ryml2Edn *ryml2edn)
     ryml2edn->~Ryml2Edn();
 }
 
-RYML_EXPORT size_type ys2edn(Ryml2Edn *ryml2edn,
-                             const char *filename,
-                             char *ys, size_type ys_size,
-                             char *edn, size_type edn_size)
+RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,
+                                   const char *filename,
+                                   char *ys, size_type ys_size,
+                                   char *edn, size_type edn_size)
 {
-    TIMED_SECTION("ys2edn");
-    csubstr filename_ = to_csubstr(filename);
+    TIMED_SECTION("ys2edn_parse");
+    csubstr filename_ = filename ? to_csubstr(filename) : csubstr{};
     substr ys_(ys, (size_t)ys_size);
     {
-        TIMED_SECTION_INNER("reset");
+        TIMED_SECTION("reset");
         ryml2edn->reset();
     }
     {
-        TIMED_SECTION_INNER("parse_in_place");
+        TIMED_SECTION("parse_in_place");
         ryml2edn->m_parser.parse_in_place_ev(filename_, ys_);
     }
     return ys2edn_retry_get(ryml2edn, edn, edn_size);
-}
-
-RYML_EXPORT size_type ys2edn_failsmall(Ryml2Edn *ryml2edn,
-                                       const char *filename,
-                                       char *ys, size_type ys_size,
-                                       char *edn, size_type edn_size)
-{
-    size_type sz = ys2edn(ryml2edn, filename, ys, ys_size, edn, edn_size);
-    if(sz > edn_size)
-    {
-        _RYML_CB_ERR(get_callbacks(), "edn buffer too small");
-    }
-    return sz;
 }
 
 RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
@@ -140,44 +101,6 @@ RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
         edn[0] = '\0';
     }
     return required_size;
-}
-
-RYML_EXPORT char * ys2edn_alloc(Ryml2Edn *ryml2edn,
-                                const char *filename,
-                                char *ys, size_type ys_size)
-{
-    TIMED_SECTION("ys2edn_alloc");
-    csubstr filename_ = to_csubstr(filename);
-    substr ys_(ys, (size_t)ys_size);
-    {
-        TIMED_SECTION_INNER("reset");
-        ryml2edn->reset();
-    }
-    {
-        TIMED_SECTION_INNER("parse_in_place");
-        ryml2edn->m_parser.parse_in_place_ev(filename_, ys_);
-    }
-    csubstr result = to_csubstr(ryml2edn->m_sink.result);
-    char *edn;
-    {
-        TIMED_SECTION_INNER("alloc");
-        edn = _RYML_CB_ALLOC(get_callbacks(), char, result.len + 1);
-        _RYML_CB_CHECK(get_callbacks(), edn != nullptr);
-    }
-    {
-        TIMED_SECTION_INNER("memcpy");
-        if(result.len)
-        {
-            memcpy(edn, result.str, result.len);
-        }
-        edn[result.len] = '\0';
-    }
-    return edn;
-}
-
-RYML_EXPORT void ys2edn_free(char *edn)
-{
-    _RYML_CB_FREE(get_callbacks(), edn, char, strlen(edn) + 1);
 }
 
 #if defined(__cplusplus)

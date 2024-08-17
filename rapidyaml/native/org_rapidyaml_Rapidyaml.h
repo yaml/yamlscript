@@ -25,10 +25,10 @@ JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn
+ * Method:    ys2edn_parse
  * Signature: (JLjava/lang/String;[BI[BI)I
  */
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn
+JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1parse
   (JNIEnv *, jobject, jlong, jstring, jbyteArray, jint, jbyteArray, jint);
 
 /*

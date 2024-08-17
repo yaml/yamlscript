@@ -12,11 +12,9 @@ public class Rapidyaml {
 
     private native long ys2edn_init();
     private native void ys2edn_destroy(long ryml2edn);
-    private native int ys2edn(
-        long ryml2edn, String filename,
-        byte[] ys, int ys_length,
-        byte[] edn, int edn_length
-    );
+    private native int ys2edn_parse(long ryml2edn, String filename,
+                                    byte[] ys, int ys_length,
+                                    byte[] edn, int edn_length);
     private native int ys2edn_retry_get(
         long ryml2edn, byte[] edn, int edn_size
     );
@@ -29,10 +27,10 @@ public class Rapidyaml {
         this.ryml2edn = this.ys2edn_init();
     }
 
-// Likely bad idea to implement finalize:
-//
-// https://stackoverflow.com/questions/158174/why-would-you-ever-implement-finalize
-//
+    // Likely bad idea to implement finalize:
+    //
+    // https://stackoverflow.com/questions/158174/why-would-you-ever-implement-finalize
+    //
     protected void finalize() throws Throwable {
         try {
             this.ys2edn_destroy(this.ryml2edn);
@@ -64,7 +62,7 @@ public class Rapidyaml {
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;
         byte[] edn = new byte[edn_size];
-        int required_size = ys2edn(this.ryml2edn, filename, src, src.length, edn, edn_size);
+        int required_size = ys2edn_parse(this.ryml2edn, filename, src, src.length, edn, edn_size);
         if(required_size > edn_size) {
             edn_size = required_size;
             edn = new byte[edn_size];
