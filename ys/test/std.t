@@ -19,11 +19,11 @@ test::
 - note: 'Short named functions'
 
 # A is for partials
-- code: (A(+ 1) 41)
+- code: (FN(+ 1) 41)
   want: 42
-- code: call(A(+ 1) 41)
+- code: call(FN(+ 1) 41)
   want: 42
-- code: A(+ 1).call(41)
+- code: FN(+ 1).call(41)
   want: 42
 
 # I is for identity
@@ -33,9 +33,9 @@ test::
   want: '123'
 
 # S is for size
-- code: S('hello')
+- code: N('hello')
   want: 5
-- code: +'Hello'.S()
+- code: +'Hello'.N()
   want: 5
 
 # Q is for quote
@@ -49,8 +49,10 @@ test::
   want:: inc
 - code: V('inc').call(41)
   want: 42
+- code: V(Q(inc))
+  want:: inc
 
-- code: qw(one two three)
+- code: QW(one two three)
   want: [one, two, three]
 
 

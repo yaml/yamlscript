@@ -45,17 +45,27 @@
 
 
 ;;------------------------------------------------------------------------------
+;; Special functions
+;;------------------------------------------------------------------------------
+
+;; Used to run a YAMLScript file as a Bash script:
+(defmacro source [& xs])
+
+;;------------------------------------------------------------------------------
 ;; Short named functions for very common operations
 ;;------------------------------------------------------------------------------
-(intern 'ys.std 'A clojure.core/partial)
+
+(intern 'ys.std 'FN clojure.core/partial)
 (intern 'ys.std 'I clojure.core/identity)
-(intern 'ys.std 'S clojure.core/count)
+(intern 'ys.std 'N clojure.core/count)
 
-(defn            V [s] (var-get (resolve (symbol s))))
+(defn V [s]
+  (if (symbol? s)
+    (var-get (resolve s))
+    (var-get (resolve (symbol s)))))
 
-(defmacro        Q [x] `(quote ~x))
-(defmacro        q [x] `(Q ~x))  ;; XXX deprecated?
-(defmacro        qw [& xs]
+(defmacro Q [x] `(quote ~x))
+(defmacro QW [& xs]
   `(vec (map (fn [w#]
                (cond
                  (nil? w#) "nil"
@@ -441,17 +451,21 @@
 ;;------------------------------------------------------------------------------
 ;; IPC functions
 ;;------------------------------------------------------------------------------
-(defn exec [cmd & xs]
-  (apply process/exec cmd xs))
+(defn exec [cmd & args]
+  (apply process/exec cmd args))
 
-(defn process [cmd & xs]
-  (apply process/process cmd xs))
+(defn process [cmd & args]
+  (apply process/process cmd args))
 
-(defn sh [cmd & xs]
-  (apply process/sh cmd xs))
+(defn sh [cmd & args]
+  (apply process/sh cmd args))
 
-(defn shell [cmd & xs]
-  (apply process/shell cmd xs))
+(defn shell [cmd & args]
+  (apply process/shell cmd args))
+
+(defn shout [cmd & args]
+  (str/trim-newline
+    (:out (apply process/sh cmd args))))
 
 
 ;;------------------------------------------------------------------------------
