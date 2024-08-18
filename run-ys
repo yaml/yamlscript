@@ -1,8 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
 main() {
+  local YAMLSCRIPT_VERSION=0.1.71
+
+  VERSION=${YS_VERSION:-$YAMLSCRIPT_VERSION}
+
   [[ -d /tmp && -w /tmp ]] ||
     die "Can't write to /tmp/"
 
@@ -35,12 +39,12 @@ assert-ys() {
   [[ $(command -v curl) ]] ||
     die "'curl' command is required but not found"
 
-  # echo "*** Installing '$bin/ys'" >&2
-
   curl -s https://yamlscript.org/install |
-    BIN=1 PREFIX=$prefix bash
+    BIN=1 PREFIX=$prefix VERSION=$VERSION bash &> /dev/tty
 
-  cp ~/src/yamlscript/ys/bin/ys* $bin/   # XXX
+  # XXX - Temporary testing hack
+  [[ -e ~/src/yamlscript/ys/bin/ys ]] &&
+    cp ~/src/yamlscript/ys/bin/ys* $bin/
 
   [[ $(command -v ys-0) == $bin/ys-0 ]] ||
     die "Something went wrong"
