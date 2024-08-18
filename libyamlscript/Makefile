@@ -10,7 +10,7 @@ LYS_SOURCES := \
 	src/libyamlscript/API.java \
 
 HEADERS := \
-  $(LIBRARY_PATH)/graal_isolate.h \
+  $(LIBYAMLSCRIPT_DIR)/graal_isolate.h \
   $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h \
 
 BUILD_TARGETS := \
@@ -47,7 +47,7 @@ test:: $(LIBYAMLSCRIPT_SO_FQNP)
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
-$(LIBYAMLSCRIPT_SO_FQNP): $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
+$(LIBYAMLSCRIPT_SO_FQNP): $(LIBYAMLSCRIPT_JAR_PATH)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
@@ -72,8 +72,8 @@ endif
 	    -J-Xmx3g \
 	\
 	    --shared \
-	    -jar $(LIBYAMLSCRIPT_JAR_PATH) \
-	    -H:Name=$(LIBYAMLSCRIPT_SO_NAME)
+	    -jar $< \
+	    -o $(LIBYAMLSCRIPT_SO_NAME)
 	mv $(LIBYAMLSCRIPT_SO_BASE) $@
 	mv $(LIBYAMLSCRIPT_SO_NAME).h $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_APIP)
@@ -86,7 +86,7 @@ ifeq (true,$(IS_ROOT))
 	$(error *** YAMLScript 'make build' must be run as non-root user)
 endif
 else
-$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(LYS_SOURCES)
+$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(JAVA_INSTALLED) $(YAMLSCRIPT_CORE_INSTALLED) $(LYS_SOURCES)
 	$< uberjar
 endif
 

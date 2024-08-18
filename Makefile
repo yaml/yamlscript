@@ -98,7 +98,13 @@ export YS_OLD_TAG := $o
 export YS_RELEASE_VERSION_OLD := $o
 endif
 
-default:
+default::
+
+env:
+	@env | sort | less -FRX
+
+java-home:
+	@echo $(JAVA_HOME)
 
 chown:
 	sudo chown -R $(USER):$(USER) .

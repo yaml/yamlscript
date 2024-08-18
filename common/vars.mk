@@ -75,14 +75,15 @@ CURL := $(shell command -v curl)
 
 TIME := time -p
 
-LIBRARY_PATH := $(ROOT)/libyamlscript/lib
+LIBYAMLSCRIPT_DIR := $(ROOT)/libyamlscript/lib
+LIBRARY_PATH := $(LIBYAMLSCRIPT_DIR):$(ROOT)/rapidyaml/native
 export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
-export LD_LIBRARY_PATH := $(LIBRARY_PATH)
-LIBYAMLSCRIPT_SO_NAME := $(LIBRARY_PATH)/libyamlscript
+export LD_LIBRARY_PATH := $(LIBRARY_PATH):$(ROOT)/rapidyaml/native
+LIBYAMLSCRIPT_SO_NAME := $(LIBYAMLSCRIPT_DIR)/libyamlscript
 LIBYAMLSCRIPT_SO_FQNP := $(LIBYAMLSCRIPT_SO_NAME).$(SO).$(YS_VERSION)
-LIBYAMLSCRIPT_SO_BASE := $(LIBRARY_PATH)/libyamlscript.$(SO)
+LIBYAMLSCRIPT_SO_BASE := $(LIBYAMLSCRIPT_DIR)/libyamlscript.$(SO)
 LIBYAMLSCRIPT_SO_APIP := $(LIBYAMLSCRIPT_SO_BASE).$(API_VERSION)
-LIBYAMLSCRIPT_SO_VERS := $(LIBRARY_PATH)/libyamlscript.$(YS_VERSION).$(SO)
+LIBYAMLSCRIPT_SO_VERS := $(LIBYAMLSCRIPT_DIR)/libyamlscript.$(YS_VERSION).$(SO)
 
 ifeq (true,$(IS_ROOT))
   PREFIX ?= /usr/local
@@ -214,6 +215,10 @@ RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
 
 
 #------------------------------------------------------------------------------
+default::
+
+build-bin-ys: $(BUILD_BIN_YS)
+
 $(BUILD_BIN_YS):
 	curl -sSL $(YS_INSTALL_URL) | \
 	  PREFIX=$$(dirname $(BUILD_BIN)) VERSION=$(BUILD_BIN_YS_VERSION) BIN=1 bash
