@@ -46,3 +46,6 @@ docker-build::
 docker-test::
 
 always:
+
+env::
+	@env | sort | less -FRX

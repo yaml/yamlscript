@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-export YS_PARSER_RAPIDYAML=1
-
-bin=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
-
-exec "$bin/YS" "$@"
+(
+  root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
+  export LD_LIBRARY_PATH=$root/rapidyaml/native
+  export YS_PARSER_RAPIDYAML=1
+  exec "$root/util/YS" "$@"
+)

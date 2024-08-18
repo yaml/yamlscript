@@ -102,6 +102,9 @@ endif
 
 default::
 
+env:
+	@env | sort | less -FRX
+
 java-home:
 	@echo $(JAVA_HOME)
 
