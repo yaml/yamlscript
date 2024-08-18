@@ -23,6 +23,9 @@ endif
 BPAN_LOCAL := .bpan
 BPAN_REPO_URL := https://github.com/bpan-org/bpan
 
+test := test/
+
+
 #------------------------------------------------------------------------------
 build:: $(YAMLSCRIPT_CLI_BIN_BASH) $(YAMLSCRIPT_CLI_BIN)
 
@@ -49,7 +52,7 @@ test-ys: $(YAMLSCRIPT_CLI_BIN)
 	@echo "*** test.sh completed successfully"
 
 test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
-	prove $${TEST_VERBOSE:+'-v'} test/
+	prove $${TEST_VERBOSE:+'-v'} $(test)
 
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
