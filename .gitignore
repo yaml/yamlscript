@@ -5,6 +5,7 @@
 /issue-*
 /lib/
 /libyamlscript-*
+/main/
 /release*.log
 /release-changes.txt
 /release-id.txt

@@ -27,7 +27,7 @@ endif
 #------------------------------------------------------------------------------
 build:: $(BUILD_TARGETS)
 
-jar: $(LIBYAMLSCRIPT_JAR_PATH)
+jar: $(LIBYAMLSCRIPT_JAR_PATH) $(RAPIDYAML_INSTALLED)
 
 install:: $(BUILD_TARGETS)
 	mkdir -p $(PREFIX)/include/
@@ -47,7 +47,7 @@ test:: $(LIBYAMLSCRIPT_SO_FQNP)
 
 repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
 
-$(LIBYAMLSCRIPT_SO_FQNP): $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_JAR_PATH)
+$(LIBYAMLSCRIPT_SO_FQNP): $(LIBYAMLSCRIPT_JAR_PATH) $(RAPIDYAML_INSTALLED) $(JAVA_INSTALLED)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
@@ -62,6 +62,9 @@ endif
 	\
 	    --initialize-at-build-time \
 	    --enable-preview \
+	    --enable-url-protocols=https \
+	\
+	\
 	\
 	    -H:ReflectionConfigurationFiles=reflection.json \
 	    -H:+ReportExceptionStackTraces \
@@ -89,6 +92,9 @@ else
 $(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(LYS_SOURCES)
 	$< uberjar
 endif
+
+$(RAPIDYAML_INSTALLED):
+	$(MAKE) -C $(RAPIDYAML) $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

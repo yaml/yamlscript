@@ -23,17 +23,24 @@ endif
 BPAN_LOCAL := .bpan
 BPAN_REPO_URL := https://github.com/bpan-org/bpan
 
+YS_BUILD_DEPS := \
+  $(YAMLSCRIPT_CLI_BIN) \
+  $(YAMLSCRIPT_CLI_BIN_BASH) \
+
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CLI_BIN_BASH) $(YAMLSCRIPT_CLI_BIN)
+build:: $(YS_BUILD_DEPS)
 
 install: build
 	mkdir -p $(PREFIX)/bin
 	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(PREFIX)/bin/
-	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
-	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
-	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) $(PREFIX)/bin/
+	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) \
+	  $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) \
+	  $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
+	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) \
+	  $(PREFIX)/bin/
 
-jar: $(YAMLSCRIPT_CLI_JAR_PATH)
+jar: $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 	@:
 
 test: test-unit
@@ -54,10 +61,11 @@ test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
-	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
+	$(error *** The 'libz.$(SO)' library is required by native-image \
+		but not installed)
 endif
 	mkdir -p $(dir $@)
 	$(TIME) \
@@ -70,6 +78,8 @@ endif
 	    --initialize-at-build-time \
 	    --enable-preview \
 	    --enable-url-protocols=https \
+	\
+	    -H:ConfigurationFileDirectories=config/ \
 	\
 	    -H:ReflectionConfigurationFiles=reflection.json \
 	    -H:+ReportExceptionStackTraces \
@@ -102,6 +112,9 @@ else
 $(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	$< uberjar
 endif
+
+$(RAPIDYAML_INSTALLED):
+	$(MAKE) -C $(RAPIDYAML) $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

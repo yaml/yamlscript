@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+(
+  root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
+  make --no-print-directory -C "$root/rapidyaml" build
+  export LD_LIBRARY_PATH=$root/rapidyaml/native
+  export YS_PARSER_RAPIDYAML=1
+  exec "$root/util/YS" "$@"
+)
