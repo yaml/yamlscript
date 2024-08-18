@@ -5,7 +5,6 @@ include ./rapidyaml.mk
 
 RAPIDYAML_JAR_DEPS := \
   $(wildcard \
-      build \
       $(JAVA_INSTALLED) \
       Makefile \
       pom.xml \
@@ -17,9 +16,6 @@ RAPIDYAML_CLASS := src/main/java/org/rapidyaml/Rapidyaml.class
 #------------------------------------------------------------------------------
 default::
 	echo $(RAPIDYAML_SO)
-
-x:
-	YS -ce 'foo: var'
 
 build:: $(RAPIDYAML_SO)
 	@:
@@ -47,13 +43,13 @@ sysclean::
 
 
 #------------------------------------------------------------------------------
-$(RAPIDYAML_SO):
+$(RAPIDYAML_SO): $(JAVA_INSTALLED)
 	$(MAKE) -C native $@
 
 $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
 	mvn install
 
-$(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
+$(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(RAPIDYAML_JAR_DEPS)
 	jar -cvf $@ $<
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
