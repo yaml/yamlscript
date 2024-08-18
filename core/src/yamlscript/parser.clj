@@ -30,13 +30,14 @@
 
 (declare ys-event)
 
+(def shebang-ys #"^#!.*/env ys-0\n")
+(def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
   (let [parser (new Parse (.build (LoadSettings/builder)))
-        has-code-mode-shebang (re-find
-                                  #"^#!.*ys-0"
-                                  yaml-string)
+        has-code-mode-shebang (or (re-find shebang-ys yaml-string)
+                                (re-find shebang-bash yaml-string))
         events (->> yaml-string
                  (.parseString parser)
                  (map ys-event)

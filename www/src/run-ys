@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+main() {
+  local YAMLSCRIPT_VERSION=0.1.71
+  local INSTALL_DIR=/tmp/yamlscript-run-ys
+  local bin file last prefix tty version ysbin
+
+  version=${YS_VERSION:-$YAMLSCRIPT_VERSION}
+
+  initialize "$@"
+
+  if [[ $# -gt 0 ]]; then
+    last=${*:$#}
+    [[ $last == : || $last == :: ]] &&
+      set -- "${@:1:$#-1}"
+  fi
+
+  export PATH=$bin:$PATH
+
+  [[ -f $bin/ys-0 && -x $bin/ys-0 ]] ||
+    install-ys
+
+  exec ys-0 "$file" "$@"
+}
+
+initialize() {
+  if sh -c ': >/dev/tty' &>/dev/null; then
+    tty=/dev/tty
+  else
+    tty=/dev/null
+  fi
+  [[ ${YS_QUIET-} ]] && tty=/dev/null
+  if [[ $# -gt 0 ]]; then
+    [[ ${*:$#} == :: ]] && tty=/dev/null
+  fi
+
+  if [[ ${YS_PREFIX-} ]]; then
+    [[ -d $YS_PREFIX ]] ||
+      die "YS_PREFIX - no such directory '$YS_PREFIX'"
+    [[ -w $YS_PREFIX ]] ||
+      die "Can't write to '$YS_PREFIX/'"
+    prefix=$YS_PREFIX
+  else
+    [[ -d /tmp && -w /tmp ]] ||
+      die "Can't write to /tmp/"
+    prefix=$INSTALL_DIR
+  fi
+
+  mkdir -p "$prefix"
+  [[ -d $prefix && -w $prefix ]] ||
+    die "Can't write to '$prefix/'"
+
+  bin=$prefix/bin
+  [[ -e $bin ]] && ! [[ -d $bin && -w $bin ]] &&
+    die "Can't write to '$bin/'"
+
+  ysbin=$bin/ys-$version
+
+  file=${BASH_SOURCE[${#BASH_SOURCE[*]}-1]}
+  [[ -f $file ]] ||
+    die "Can't find YAMLScript program file '$file'"
+}
+
+install-ys() {
+  [[ $(command -v curl) ]] ||
+    die "'curl' command is required but not found"
+
+  (
+    cat <<...
+Installing YAMLScript CLI '$ysbin' now...
+Ctl-C to abort
+See https://yamlscript.org/doc/run-ys for more information.
+
+...
+    curl -s https://yamlscript.org/install |
+      BIN=1 PREFIX=$prefix VERSION=$version bash
+    printf '%.0s-' {1..80}
+    echo
+  ) &> "$tty"
+
+                  # XXX - Temporary testing hack
+                  [[ -e ~ingy/src/yamlscript/ys/bin/ys ]] &&
+                    cp ~ingy/src/yamlscript/ys/bin/ys* "$bin/"
+
+  [[ $(command -v "ys-$version") == "$ysbin" ]] ||
+    die "Something went wrong"
+}
+
+die() {
+  printf '%s\n' "$@" >&2
+  exit 1
+}
+
+main "$@"
