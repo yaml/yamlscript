@@ -8,7 +8,7 @@
   (:require
    [clojure.string :as str]
    [yamlscript.ast :refer
-    [Bln Clj Flt Int Key Lst Map Nil Str Sym Vec]]
+    [Bln Clj Flt Form Int Key Lst Map Nil Str Sym Vec]]
    [yamlscript.re :as re]
    [yamlscript.util :refer [die if-lets when-lets]]
    [yamlscript.ysreader :as ysreader]))
@@ -185,7 +185,9 @@
   (let [exp (build-exp node)
         lst1 (:Lst exp)
         lst2 (get-in lst1 [0 :Lst])
-        exp (if (and (= 1 (count lst1)) lst2) (Lst lst2) exp)]
+        exp (if (and (= 1 (count lst1)) (get-in lst1 [0 :dot]))
+              (first lst1)
+              (if (and (= 1 (count lst1)) lst2) (Lst lst2) exp))]
     exp))
 
 (defn build-interpolated [string]

@@ -560,20 +560,25 @@
       {:pairs [{:def "vars ="} {:exp "load('vars.yaml')"}]}
       {:str "foo"}
       {:exp "vars.foo"})}
+  build: |
+    {:Map
+     [{:Sym =>}
+      {:pairs
+       [[{:Sym def} {:Sym vars}]
+        {:Lst [{:Sym load} {:Str "vars.yaml"}]}]}
+      {:Str "foo"}
+      {:dot [{:Sym vars} {:QSym foo}]}]}
   transform: |
     {:pairs
-     ([{:Sym def} {:Sym vars}]
+     [[{:Sym def} {:Sym vars}]
       {:Lst [{:Sym load} {:Str "vars.yaml"}]}
       {:Sym =>}
       {:Map
-       ({:Str "foo"}
-        {:Lst
-         [{:Sym _->}
-          {:Sym vars}
-          {:Lst [{:Sym quote} {:Sym foo}]}]})})}
+       [{:Str "foo"}
+        {:Lst [{:Sym get+} {:Sym vars} {:QSym foo}]}]}]}
   clojure: |
     (def vars (load "vars.yaml"))
-    {"foo" (_-> vars 'foo)}
+    {"foo" (get+ vars 'foo)}
 
 
 - name: Code preamble in data mode sequence
@@ -592,18 +597,15 @@
       {:str "bar"})}
   transform: |
     {:pairs
-     ([{:Sym def} {:Sym vars}]
+     [[{:Sym def} {:Sym vars}]
       {:Lst [{:Sym load} {:Str "vars.yaml"}]}
       {:Sym =>}
       {:Vec
-       ({:Lst
-         [{:Sym _->}
-          {:Sym vars}
-          {:Lst [{:Sym quote} {:Sym foo}]}]}
-        {:Str "bar"})})}
+       [{:Lst [{:Sym get+} {:Sym vars} {:QSym foo}]}
+        {:Str "bar"}]}]}
   clojure: |
     (def vars (load "vars.yaml"))
-    [(_-> vars 'foo) "bar"]
+    [(get+ vars 'foo) "bar"]
 
 
 - name: Anchors and aliases in bare mode
@@ -667,6 +669,13 @@
         {:map [{:str "bar"} {:int "2"}]}),
        :! "merge*:"}]}
   build: |
+    {:Map
+     [{:Str "foo"}
+      {:Vec
+       [{:Map [{:Str "foo"} {:Int 1}]}
+        {:Map [{:Str "bar"} {:Int 2}]}],
+       :! "merge*:"}]}
+  transform: |
     {:Map
      [{:Str "foo"}
       {:Vec

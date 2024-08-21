@@ -21,7 +21,9 @@
               last-key-pos (- len 2)
               last-key (nth forms last-key-pos)
               _ (= '=> (:Sym last-key))
-              rhs (update-in rhs [:forms last-key-pos] (fn [_] (Key "else")))]
+              rhs (update-in rhs
+                    [:forms last-key-pos]
+                    (fn [_] (Key "else")))]
     [lhs rhs]))
 
 
@@ -45,32 +47,6 @@
                       (partition 2 pairs))
               rhs {:pairs pairs}]
     [lhs rhs]))
-
-(def dot-op (Sym '_->))
-(defn transform_def [lhs rhs]
-  (let [[a b c] lhs]
-    (if (not c)
-      [lhs rhs]
-      (let [lhs [a b]
-            op (:Sym c)
-            op (or ({'|| 'or
-                     '+ '+_
-                     '* '*_
-                     '. '_->} op)
-                 op)
-            op (Sym op)
-            rhs (if (and (= op dot-op)
-                      (= dot-op (get-in rhs [:Lst 0])))
-                  (let [l (:Lst rhs)
-                        op (first l)
-                        tail (vec (drop 1 l))
-                        tail (if-lets [l1 (get-in tail [0 :Lst])
-                                       l1 (concat [(Sym 'list)] l1)]
-                               (update-in tail [0 :Lst] (fn [_] l1))
-                               tail)]
-                    (Lst (concat [op b] tail)))
-                  (Lst [op b rhs]))]
-        [lhs rhs]))))
 
 (defn transform_catch [lhs rhs]
   (let [lhs (cond

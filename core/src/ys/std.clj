@@ -23,6 +23,7 @@
 
 
 (declare die)
+;; Guard against billion laughs style attacks
 (def _max-alias-size (* 1024 1024))
 
 
@@ -199,44 +200,6 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Dot chaining support
-;; TODO make this public as `chain`
-;; XXX Dot chaining compilation is going to change soon
-;;------------------------------------------------------------------------------
-(defn _dot [ctx key]
-  (cond
-    (symbol? key) (or
-                    (get ctx (keyword key))
-                    (get ctx (str key))
-                    (get ctx key))
-    (string? key) (get ctx key)
-    (int? key) (let [n (if (< key 0)
-                         (+ key (count ctx))
-                         key)]
-                 (if (map? ctx)
-                   (or (get ctx (keyword (str n)))
-                     (get ctx (str n))
-                     (get ctx n))
-                   (nth ctx n)))
-    (keyword? key) (get ctx key)
-    (list? key) (let [[fnc & args] key
-                      nargs (map #(if (= '_ %1) ctx %1) args)
-                      args (vec
-                             (if (or (nil? args) (= nargs args))
-                               (cons ctx args)
-                               nargs))
-                      value (apply fnc args)
-                      value (if (instance? clojure.lang.LazySeq value)
-                              (vec value)
-                              value)]
-                  value)
-    :else (die "Invalid key: " key)))
-
-(defn _-> [x & xs]
-  (reduce _dot x xs))
-
-
-;;------------------------------------------------------------------------------
 ;; Control functions
 ;;------------------------------------------------------------------------------
 
@@ -325,11 +288,17 @@
 ;;------------------------------------------------------------------------------
 ;; Collection functions
 ;;------------------------------------------------------------------------------
-(defn has [coll x]
-  (boolean
-    (if (and (string? coll) (string? x))
-      (re-find (re-pattern x) coll)
-      (some (set coll) [x]))))
+(defn get+ [coll key]
+  (cond
+    (map? coll) (condp = (type key)
+                  String (get coll key)
+                  clojure.lang.Keyword (get coll key)
+                  clojure.lang.Symbol (or
+                           (get coll (str key))
+                           (get coll (keyword key))
+                           (get coll key)))
+    (seqable? coll) (nth coll key)
+    :else (die "Can't (get+ " coll " " key ")")))
 
 (defn grep [a b]
   (let [[a b] (if (seqable? b) [a b] [b a])
@@ -340,7 +309,13 @@
       (fn? a) (filter a b)
       :else (filter #(= a %1) b))))
 
-(defn in [x coll]
+(defn has? [coll x]
+  (boolean
+    (if (and (string? coll) (string? x))
+      (re-find (re-pattern x) coll)
+      (some (set coll) [x]))))
+
+(defn in? [x coll]
   (boolean
     (if (and (string? coll) (string? x))
       (re-find (re-pattern x) coll)

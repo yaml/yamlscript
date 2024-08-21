@@ -30,8 +30,8 @@
 - name: Dot threading
   ys: |
     n =: 10
-    =>: n.inc().vector().repeat(3 _)
-         .flatten().repeat(2 _)
-         .flatten().take(5 _)
+    =>: n.inc().vector().repeat(3)
+         .flatten().repeat(2)
+         .flatten().take(5)
   eval: |
     [11 11 11 11 11]

@@ -5,10 +5,17 @@
 
 (ns yamlscript.ast
   (:require
-   [yamlscript.util :refer [die]])
+   [yamlscript.util :refer [die if-lets]])
   (:refer-clojure :exclude [Vec]))
 
 (defn Lst [list] {:Lst (vec list)})
+
+(defn Form [list]
+  (if-lets [_ (= 1 (count list))
+            node (first list)
+            _ (map? node)]
+    node
+    (Lst list)))
 
 (defn Vec [list] {:Vec (vec list)})
 
@@ -29,6 +36,8 @@
 (defn Sym
   ([s] {:Sym (symbol s)})
   ([s d] {:Sym [(symbol s) d]}))
+
+(defn QSym [s] {:QSym s})
 
 (defn Qts [s] {:Qts (str s)})
 

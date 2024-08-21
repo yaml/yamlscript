@@ -6,9 +6,9 @@
 
 (ns yamlscript.transformer
   (:require
-   [yamlscript.ast :refer [Lst]]
-   [yamlscript.util :refer [die if-lets]]
-   #_[yamlscript.ast :refer [Sym]]
+   [ys.poly]
+   [yamlscript.ast :refer [Lst Sym QSym]]
+   [yamlscript.util :refer [die if-lets YS-C]]
    [yamlscript.transformers]))
 
 (declare
@@ -19,33 +19,92 @@
   "Transform special rules for YAMLScript AST."
   [node] (transform-node-top node))
 
-(defn map-vec [f coll] (->> coll (map f) vec))
-
-#_(defn add-num-or-string [{list :Lst}]
-  (when (and
-          (>= (count list) 3)
-          (= (first list) {:Sym '+}))
-    (let [list (map-vec transform-node list)
-          [_ & rest] list]
-      {:Lst (cons {:Sym '+_} rest)})))
-
-#_(defn string-repeat [{list :Lst}]
-  (when (and
-          (= (count list) 3)
-          (= (first list) {:Sym '*}))
-    (let [list (map-vec transform-node list)
-          [_ v2 v3] list]
-      {:Lst [{:Sym '*_} v2 v3]})))
-
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
-(comment
-  (transform-node
-{:pairs
- [[{:Sym 'reduce} {:Sym '_} {:Sym 'a} {:Sym 'b}]
-  {:pairs
-   [[{:Sym 'fn} {:Vec [{:Sym 'x}]}] {:Lst [{:Sym 'foo} {:Sym 'x}]}]}]}
-    ))
+(def plus-fn?
+  (-> 'ys.poly
+    ns-publics
+    keys
+    (->> (map str)
+      (map #(subs %1 1))
+      (map symbol))
+    set))
+
+(def topic (Sym '_))
+
+(defn dot-list [ctx node]
+  (let [[func & args] (:Lst node)
+        topics (filter #{topic} args)
+        [func ctx args]
+        (case (count topics)
+          0 (let [+func (if-lets
+                          [sym (get-in func [:Sym])
+                           _ (plus-fn? sym)
+                           sym (symbol (str "+" sym))]
+                          (update-in func [:Sym] (constantly sym))
+                          func)]
+              [+func ctx args])
+          1 [func nil (map (fn [arg] (if (= topic arg) ctx arg)) args)]
+          (die "XXX support for multiple topics not yet implemented"))]
+    (Lst (concat [func ctx] (vec args)))))
+
+(defn transform-dot [node]
+  (let
+   [lst (:dot node)
+    form (reduce
+           (fn [ctx node]
+             (let
+              [node (transform-node node)
+               ctx
+               (if ctx
+                 (cond
+                   (:Int node) (Lst [(Sym 'nth) ctx node])
+                   (:Str node) (Lst [(Sym 'get) ctx node])
+                   (:QSym node) (Lst [(Sym 'get+) ctx node])
+                   (:Sym node) (Lst [(Sym 'get+) ctx node])
+                   (:Key node) (Lst [node ctx])
+                   (:Lst node) (dot-list ctx node)
+                   :else ctx)
+                 node)]
+               ctx))
+           nil lst)]
+    form))
+
+(defn adjust-dot-def [[lhs rhs]]
+  (if-lets [_ (vector? lhs)
+            _ (= 3 (count lhs))
+            [def sym dot] lhs
+            _ (= 'def (:Sym def))
+            _ (= '. (:Sym dot))
+            _ (if-not (or (map? rhs)
+                        (> (count rhs) 1))
+                (die "Invalid dot assignment")
+                true)
+            lhs [def sym]
+            rhs (if-lets [dots (:dot rhs)
+                          [dot1 & dots] dots
+                          dot1 (if-let [sym (:Sym dot1)]
+                                 (QSym sym)
+                                 dot1)]
+                  (apply vector sym dot1 dots)
+                  (if (:Sym rhs)
+                    [sym (QSym (:Sym rhs))]
+                    [sym rhs]))
+            rhs (transform-dot {:dot rhs})]
+    [lhs rhs]
+    [lhs rhs]))
+
+(defn transform-def-ops [lhs rhs]
+  (when (and
+          (vector? lhs)
+          (= 3 (count lhs))
+          (= 'def (:Sym (first lhs))))
+    (let [[a b c] lhs
+          lhs [a b]
+          op (:Sym c)
+          op (Sym (or ({'|| 'or, '+ '+_, '* '*_} op) op))
+          rhs (Lst [op b rhs])]
+      [lhs rhs])))
 
 (defn swap-underscores [lhs rhs]
   (if-lets [_ (get-in lhs [0 :Sym])
@@ -57,71 +116,53 @@
 
 (defn apply-transformer [key val]
   (let [[key val] (swap-underscores key val)]
-    (if-lets [name (or
-                     (get-in key [:Sym])
-                     (get-in key [0 :Sym]))
-              sym (symbol (str "transform_" name))
-              transformer (ns-resolve transformers-ns sym)]
-      (or (transformer key val) [key val])
+    (or (if-lets [name (or
+                         (get-in key [:Sym])
+                         (get-in key [0 :Sym]))
+                  sym (symbol (str "transform_" name))
+                  transformer (ns-resolve transformers-ns sym)]
+          (transformer key val)
+          (transform-def-ops key val))
       [key val])))
 
-(defn transform-pairs [node key]
-  (->> node
-    first
-    val
-    (map-vec
-      #(if (vector? %1)
-         (map-vec transform-node %1)
-         (transform-node %1)))
-    (partition 2)
-    (reduce
-      (fn [acc [k v]]
-        (let [[k v] (if (= :pairs key)
-                      (apply-transformer k v)
-                      [k v])]
-          (conj acc k v)))
-      [])
-    (hash-map key)))
-
-(def poly
-  (do
-    (require 'ys.poly)
-    (-> 'ys.poly
-      ns-publics
-      keys
-      (->> (map str)
-        (map #(subs %1 1))
-        (map symbol))
-      set)))
-
-(defn transform-dot-chain [node] node
-  (if-lets [args (:Lst node)
-            _ (and
-                (= '_-> (get-in args [0 :Sym]))
-                (> (count args) 2))
-            args (map (fn [arg]
-                        (if-lets [_ (= 'list (get-in arg [:Lst 0 :Sym]))
-                                  _ (not-any?
-                                      #(= {:Lst
-                                           [{:Sym 'quote} {:Sym '_}]}
-                                         %1) (:Lst arg))
-                                  sym (get-in arg [:Lst 1 :Sym])
-                                  _ (poly sym)
-                                  sym (symbol (str "+" sym))]
-                          (update-in arg [:Lst 1 :Sym] (constantly sym))
-                          arg)) args)]
-    (Lst args)
-    node))
+(defn transform-pairs [node]
+  (let [key (key (first node))]
+    (->> node
+      first
+      val
+      (partition 2)
+      (mapv adjust-dot-def)
+      (apply concat)
+      (mapv #(if (vector? %1)
+               (mapv transform-node %1)
+               (transform-node %1)))
+      (partition 2)
+      (reduce
+        (fn [acc [k v]]
+          (let [[k v] (if (= :pairs key)
+                        (apply-transformer k v)
+                        [k v])]
+            (conj acc k v)))
+        [])
+      (hash-map key))))
 
 (defn transform-list [node]
-  (let [node (transform-dot-chain node)
-        val (map-vec transform-node (:Lst node))]
-    (assoc node :Lst val)))
+  (assoc node :Lst
+    (mapv
+      transform-node
+      (:Lst node))))
 
 (defn transform-map [node]
-  {:Map (map-vec
-          transform-node
-          (:Map node))})
+  (assoc node :Map
+    (mapv
+      transform-node
+      (:Map node))))
+
+(defn transform-vec [node]
+  (assoc node :Vec
+    (mapv
+      transform-node
+      (:Vec node))))
 
 (defn transform-sym [node]
   (let [sym (str (:Sym node))]
@@ -135,10 +176,12 @@
 (defn transform-node [node]
   (let [anchor (:& node)
         node (cond
-               (:pairs node) (transform-pairs node :pairs)
-               (:forms node) (transform-pairs node :forms)
+               (:pairs node) (transform-pairs node)
+               (:forms node) (transform-pairs node)
+               (:dot node) (transform-dot node)
                (:Lst node) (transform-list node)
                (:Map node) (transform-map node)
+               (:Vec node) (transform-vec node)
                (:Sym node) (transform-sym node)
                :else node)]
     (if anchor
@@ -146,14 +189,15 @@
       node)))
 
 (defn transform-node-top [node]
-  (if-lets [[key1 val1 & rest] (:Map node)
-            _ (= key1 {:Sym '=>})
-            pairs (:pairs val1)]
-    {:pairs (concat pairs [{:Sym '=>} {:Map rest}])}
-    (if-lets [[first & rest] (:Vec node)
-              pairs (get-in first [:pairs 1 :pairs])]
-      {:pairs (concat pairs [{:Sym '=>} {:Vec rest}])}
-      (transform-node node))))
+  (transform-node
+    (if-lets [[key1 val1 & rest] (:Map node)
+              _ (= key1 {:Sym '=>})
+              pairs (:pairs val1)]
+      {:pairs (concat pairs [{:Sym '=>} {:Map rest}])}
+      (if-lets [[first & rest] (:Vec node)
+                pairs (get-in first [:pairs 1 :pairs])]
+        {:pairs (concat pairs [{:Sym '=>} {:Vec rest}])}
+        node))))
 
 (comment
   (->>

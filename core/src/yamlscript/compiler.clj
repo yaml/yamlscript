@@ -54,13 +54,6 @@
                      blocks)))]
     (str/join "" blocks)))
 
-(comment
-  (compile "
-!yamlscript/v0
-reduce _ a b:
-  fn [x]:
-    foo: x"))
-
 (defmacro value-time [& body]
   `(let [s# (new java.io.StringWriter)]
      (binding [*out* s#]
@@ -75,20 +68,6 @@ reduce _ a b:
       (println)
       value)
     (apply stage-fn input-args)))
-
-(comment
-  (do
-    (reset! common/opts
-      {:debug-stage
-       {"parse" true
-        "compose" false
-        "resolve" false
-        "build" true
-        "transform" false
-        "construct" false
-        "print" true}})
-    (compile-with-options "!yamlscript/v0\na =: b.c()"))
-  )
 
 (defn compile-with-options
   "Convert YAMLScript code string to an equivalent Clojure code string."
@@ -129,6 +108,17 @@ reduce _ a b:
     (apply str)))
 
 (comment
+  (do
+    (reset! common/opts
+      {:debug-stage
+       {"parse" true
+        "compose" false
+        "resolve" false
+        "build" true
+        "transform" false
+        "construct" false
+        "print" true}})
+    (compile-with-options "!yamlscript/v0\na =: b.c()"))
   (compile "!yamlscript/v0\na .=: b.c()")
   (compile "!yamlscript/v0\na .=: b().c")
   (compile "

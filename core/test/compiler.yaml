@@ -439,19 +439,52 @@
   build: |
     {:pairs
      [{:Sym =>}
-      {:Lst
-       [{:Sym _->}
-        {:Sym a}
+      {:dot
+       [{:Sym a}
+        {:Int 5}
+        {:Int 6}
+        {:QSym b}
+        {:Str "c d"}
+        {:Str "e f"}
+        {:Lst [{:Sym g} {:Sym h}]}
+        {:Lst [{:Sym i}]}
+        {:Key :j}]}]}
+     [{:Sym =>}
+      {:dot
+       [{:Sym a}
         {:Int 5}
         {:Int 6}
         {:Lst [{:Sym quote} {:Sym b}]}
         {:Str "c d"}
         {:Str "e f"}
-        {:Lst [{:Sym list} {:Sym g} {:Sym h}]}
-        {:Lst [{:Sym list} {:Sym i}]}
+        {:Lst [{:Sym g} {:Sym h}]}
+        {:Lst [{:Sym i}]}
         {:Key :j}]}]}
+  transform: |
+    {:pairs
+     [{:Sym =>}
+      {:Lst
+       [{:Key :j}
+        {:Lst
+         [{:Sym i}
+          {:Lst
+           [{:Sym g}
+            {:Lst
+             [{:Sym get}
+              {:Lst
+               [{:Sym get}
+                {:Lst
+                 [{:Sym get+}
+                  {:Lst
+                   [{:Sym nth}
+                    {:Lst [{:Sym nth} {:Sym a} {:Int 5}]}
+                    {:Int 6}]}
+                  {:QSym b}]}
+                {:Str "c d"}]}
+              {:Str "e f"}]}
+            {:Sym h}]}]}]}]}
   clojure: |
-    (_-> a 5 6 'b "c d" "e f" (list g h) (list i) :j)
+    (:j (i (g (get (get (get+ (nth (nth a 5) 6) 'b) "c d") "e f") h)))
 
 
 - name: Switching to data mode
@@ -462,7 +495,7 @@
       foo: ! d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (_-> d 'bar)}
+    {"foo" (get+ d 'bar)}
 
 
 - name: Switching to data mode with '::'
@@ -473,7 +506,7 @@
       foo:: d.bar
   clojure: |
     (def d (load "data.yaml"))
-    {"foo" (_-> d 'bar)}
+    {"foo" (get+ d 'bar)}
 
 
 - name: Switch modes with '::' for def/let '=::'
@@ -596,7 +629,7 @@
 - name: Single quoted string
   yamlscript: |
     !yamlscript/v0
-    say: ."123" + ' let''s go'
+    say: +"123" + ' let''s go'
     say: '123 let''s go'
   clojure: |
     (say (+_ "123" " let's go"))
@@ -629,13 +662,14 @@
     !yamlscript/v0
     =>: "Hi $(ARGS.0)!!"
   clojure: |
-    (str "Hi " (_-> ARGS 0) "!!")
+    (str "Hi " (nth ARGS 0) "!!")
+  #  (str "Hi " ((nth ARGS 0)) "!!")
 
 
 - name: Floating point numbers
   yamlscript: |
     !yamlscript/v0
-    =>: .[ 0. 0.1 -1.2e3 2.3e-4 ]
+    =>: +[ 0. 0.1 -1.2e3 2.3e-4 ]
   clojure: |
     [0.0 0.1 -1200.0 2.3E-4]
 
@@ -684,8 +718,8 @@
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      .[a b c] =: .[1 2 3]
-      .{:d d :e e} =: .{:d 4 :e 5}
+      +[a b c] =: .[1 2 3]
+      +{:d d :e e} =: +{:d 4 :e 5}
       =>: a + b + c
   clojure: |
     (defn
@@ -697,7 +731,7 @@
 - name: Destructuring def not allowed
   yamlscript: |
     !yamlscript/v0
-    .[a b c] =: .[1 2 3]
+    +[a b c] =: +[1 2 3]
   error: |
     ~~ Destructured def not allowed
 
@@ -756,7 +790,7 @@
     !yamlscript/v0
     =>: a.3.b + c.4.d
   clojure: |
-    (+_ (_-> a 3 'b) (_-> c 4 'd))
+    (+_ (get+ (nth a 3) 'b) (get+ (nth c 4) 'd))
 
 
 - name: Dot grouping in dot path
@@ -764,7 +798,7 @@
     !yamlscript/v0
     =>: a.3.b(c.4.d)
   clojure: |
-    (_-> a 3 (list b (_-> c 4 'd)))
+    (b (nth a 3) (get+ (nth c 4) 'd))
 
 
 - name: Dot grouping in if statement
@@ -772,7 +806,7 @@
     !yamlscript/v0
     if a.b: c.d * 3
   clojure: |
-    (if (_-> a 'b) (*_ (_-> c 'd) 3))
+    (if (get+ a 'b) (*_ (get+ c 'd) 3))
 
 
 - name: Yes expression in sym-paren form
@@ -786,10 +820,9 @@
 - name: Dot groupings in vectors
   yamlscript: |
     !yamlscript/v0
-    =>: .[a.3.b(x.y),
-          c.4.d]
+    =>: +[a.3.b(x.y), c.4.d]
   clojure: |
-    [(_-> a 3 (list b (_-> x 'y))) (_-> c 4 'd)]
+    [(b (nth a 3) (get+ x 'y)) (get+ (nth c 4) 'd)]
 
 
 - name: Fully qualified symbol with paren
@@ -805,7 +838,7 @@
     !yamlscript/v0
     =>: a.b.$c.d(e)
   clojure: |
-    (_-> a 'b c (list d e))
+    (d (get+ (get+ a 'b) c) e)
 
 
 - name: Multiple document stream
@@ -813,13 +846,13 @@
     foo: 42
     --- !yamlscript/v0
     =>::
-      bar:: _.foo.inc()
+      bar:: $$.foo.inc()
       foo: 123
     ---
     bar: 44
   clojure: |
     {"foo" 42}
-    {"bar" (_-> _ 'foo (list inc)), "foo" 123}
+    {"bar" (inc (get+ ($$) 'foo)), "foo" 123}
     {"bar" 44}
 
 
@@ -831,6 +864,22 @@
     =>: .[foo] + [bar]
     =>: .{foo 1} + {bar 2}
     foo: .|| bar
+  clojure: |
+    (*_ "foo" 3)
+    (*_ "foo" 3)
+    (+_ [foo] [bar])
+    (+_ {foo 1} {bar 2})
+    (foo || bar)
+
+
+- name: Plus escaping of YAML syntax
+  yamlscript: |
+    !yamlscript/v0
+    =>: +'foo' * 3
+    =>: +"foo" * 3
+    =>: +[foo] + [bar]
+    =>: +{foo 1} + {bar 2}
+    foo: +|| bar
   clojure: |
     (*_ "foo" 3)
     (*_ "foo" 3)
@@ -958,9 +1007,9 @@
 - name: Dot polymorphic functions
   yamlscript: |
     !yamlscript/v0
-    foo: x.drop(3 _).take(5).nth(3)
+    =>: x.drop(3 _).take(5).nth(3)
   clojure: |
-    (foo (_-> x (list drop 3 '_) (list +take 5) (list +nth 3)))
+    (+nth (+take (drop 3 x) 5) 3)
 
 
 - name: Bug fix for bare '$' in literal with interpolation
@@ -998,10 +1047,19 @@
     !yamlscript/v0
     defn a():
       b .=: c
-      d .=: e.f(g)
-      =>: b + d
+      b .=: c.d
+      b .=: c.d(e).3.$f.:g.h()
   clojure: |
-    (defn a [] (let [b (_-> b c) d (_-> d e (list f g))] (+_ b d)))
+    (defn
+      a
+      []
+      (let
+       [b
+        (get+ b 'c)
+        b
+        (get+ (get+ b 'c) 'd)
+        b
+        (h (:g (get+ (nth (d (get+ b 'c) e) 3) f)))]))
 
 
 - name: Support ops with def (like let)
@@ -1014,18 +1072,30 @@
   clojure: |
     (def a 1)
     (def a (+_ a 2))
-    (def a (_-> a b))
-    (def a (_-> a c (list d e)))
+    (def a (get+ a 'b))
+    (def a (d (get+ a 'c) e))
 
 
 - name: Dot op when first arg is function call
   yamlscript: |
     !yamlscript/v0
     defn a():
-      b .=: c().d
-      =>: b
+      b .=: c()
+      b .=: c(d).e
+      :: 42
   clojure: |
-    (defn a [] (let [b (_-> b (list c) 'd)] b))
+    (defn a [] (let [b (c b) b (get+ (c b d) 'e)] (42)))
+
+
+- name: Dot op when first arg is function with _
+  yamlscript: |
+    !yamlscript/v0
+    defn a():
+      b .=: drop(c _)
+      b .=: drop(c)
+      :: 42
+  clojure: |
+    (defn a [] (let [b (drop c b) b (+drop b c)] (42)))
 
 
 - name: Loop without bindings
@@ -1068,8 +1138,12 @@
     !yamlscript/v0
     when ENV.FOO_BAR:
       x: y
+  build: |
+    {:pairs
+     [[{:Sym when} {:dot [{:Sym ENV} {:QSym FOO_BAR}]}]
+      {:pairs [{:Sym x} {:Sym y}]}]}
   clojure: |
-    (when (_-> ENV 'FOO_BAR) (x y))
+    (when (get+ ENV 'FOO_BAR) (x y))
 
 
 - name: Support .? debugging operator
@@ -1077,7 +1151,7 @@
     !yamlscript/v0
     =>: foo.?.bar
   clojure: |
-    (_-> foo (list _DBG) 'bar)
+    (get+ (_DBG foo) 'bar)
 
 
 - name: Error Clojure style comments
@@ -1115,7 +1189,7 @@
       .bar   \#"get bar"
       .baz   \#"get baz"
   clojure: |
-    (say (_-> text 'foo 'bar 'baz))
+    (say (get+ (get+ (get+ text 'foo) 'bar) 'baz))
 
 
 - name: Escape pound and colon in ysexpr strings

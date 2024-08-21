@@ -29,6 +29,7 @@
       (println (str "ok " count " - " name))
       (println (str "ok " count)))))
 
+;; TODO - Handle unexpected LazySeq values
 (defn- format-value [value]
   (let  [value (with-out-str (pr value))]
     (if (re-find #"^[^\"].*\n" value)

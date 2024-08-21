@@ -9,10 +9,11 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :refer
-    [Bln Chr Flt Int Key Lst Map Nil Qts Rgx Set Spc Str Sym Tok Tup Vec]]
+    [Bln Chr Flt Form Int Key Lst Map Nil
+     QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
    [yamlscript.debug :refer [WWW]]
-   [yamlscript.util :as util :refer [die]])
+   [yamlscript.util :as util :refer [die if-lets]])
   (:refer-clojure :exclude [read-string]))
 
 (defn is-clojure-comment? [token]
@@ -147,7 +148,7 @@
   (apply conj
     (cond-> coll
       (seq part)
-      (conj (Lst (yes-expr part))))
+      (conj (Form (yes-expr part))))
     xs))
 
 (defn- qf [form]
@@ -157,44 +158,49 @@
                     (Sym (subs sym 1))
                     (if (= sym "$#")
                       form
-                      (Lst [(Sym 'quote) form]))))
+                      (QSym (:Sym form)))))
     (:Lst form) (update-in form [:Lst]
-                  (fn [lst] (vec
-                              (concat [(Sym 'list)]
-                                (vec (map #(if (= {:Sym '_} %1)
-                                             (Lst [(Sym 'quote) %1])
-                                             %1) lst))))))
+                  (fn [lst] (map #(if (= {:Sym '_} %1)
+                                    (Sym '_)
+                                    %1) lst)))
     :else form))
+
+(defn fix-dot-chain [expr]
+  (if-lets [lst (or (get-in expr [0 :Lst]) expr)
+            _ (= (first lst) {:Sym '_dot_})]
+    [{:dot (vec (rest lst))}]
+    expr))
 
 (def sep (Sym '.))
 
 (defn group-dots [forms]
-  (if (>= (count forms) 3)
-    (loop [[a b c :as xs] forms, grp [], acc []]
-      (cond (empty? xs)
-            (conj-seq acc grp)
-            ,
-            (and c (= sep b) (not= a sep) (not= c sep))
-            (recur
-              (drop 3 xs)
-              [a b (qf c)]
-              (conj-seq acc grp))
-            ,
-            (and b (= sep a) (seq grp))
-            (recur
-              (drop 2 xs)
-              (conj grp a (qf b))
-              acc)
-            ,
-            :else
-            (recur
-              (rest xs)
-              []
-              (conj-seq acc grp a))))
-    forms))
+  (fix-dot-chain
+    (if (>= (count forms) 3)
+      (loop [[a b c :as xs] forms, grp [], acc []]
+        (cond (empty? xs)
+              (conj-seq acc grp)
+              ,
+              (and c (= sep b) (not= a sep) (not= c sep))
+              (recur
+                (drop 3 xs)
+                [a b (qf c)]
+                (conj-seq acc grp))
+              ,
+              (and b (= sep a) (seq grp))
+              (recur
+                (drop 2 xs)
+                (conj grp a (qf b))
+                acc)
+              ,
+              :else
+              (recur
+                (rest xs)
+                []
+                (conj-seq acc grp a))))
+      forms)))
 
 (def operators
-  {(Sym '.)  (Sym '_->)
+  {(Sym '.)  (Sym '_dot_)
    (Sym '..) (Sym 'rng)
    (Sym '+) (Sym '+_)
    (Sym '*) (Sym '*_)
@@ -206,25 +212,26 @@
    (Sym '**) (Sym 'pow)})
 
 (defn yes-expr [expr]
-  (if (= (count expr) 3)
-    (let [[a op b] expr]
-      (if (is-operator? (:Sym op))
-        (let [op (or (operators op) op)] [op a b])
-        expr))
-    (if (and (> (count expr) 3)
-          (some #(->> expr
-                   (partition 2)
-                   (map second)
-                   (apply = %1))
-            (map Sym '[+ - * / || && . ** = == > >= < <=])))
-      (let [op (second expr)
-            op (or (operators op) op)]
-        (->> expr
-          (cons nil)
-          (partition 2)
-          (map second)
-          (cons op)))
-      expr)))
+  (fix-dot-chain
+    (if (= (count expr) 3)
+      (let [[a op b] expr]
+        (if (is-operator? (:Sym op))
+          (let [op (or (operators op) op)] [op a b])
+          expr))
+      (if (and (> (count expr) 3)
+            (some #(->> expr
+                     (partition 2)
+                     (map second)
+                     (apply = %1))
+              (map Sym '[+ - * / || && . ** = == > >= < <=])))
+        (let [op (second expr)
+              op (or (operators op) op)]
+          (->> expr
+            (cons nil)
+            (partition 2)
+            (map second)
+            (cons op)))
+        expr))))
 
 (defn anon-fn-arg-list [node]
   (let [args (atom {})
@@ -255,7 +262,7 @@
     (if (= (first tokens) ")")
       (let [form (-> list group-dots yes-expr)
             args (anon-fn-arg-list form)
-            expr (Lst [(Sym 'fn) (Vec [(Sym "&")(Vec args)]) (Lst form)])]
+            expr (Lst [(Sym 'fn) (Vec [(Sym "&")(Vec args)]) (Form form)])]
         [expr (rest tokens)])
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
@@ -272,7 +279,7 @@
                          forms (yes-expr list)]
                      (if sym
                        (if (not= list forms)
-                         [sym (Lst forms)]
+                         [sym (Form forms)]
                          (cons sym forms))
                        forms))
                    (group-dots list))]
@@ -409,19 +416,7 @@
           (if (= 1 (count expr))
             (first expr)
             expr)
-          (Lst expr))))))
+          (Form expr))))))
 
 (comment
-  (read-string "(1 * 4) + (2 * 3)")
-  ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
-  ; {:Lst [{:Sym +} {:Lst [{:Sym *} {:Int 1} {:Int 4}]} {:Lst [{:Sym *} {:Int 2} {:Int 3}]}]}
-  (read-string "a.b + c.d")
-  ; {:Lst [{:Sym +} {:Lst [{:Sym _->} {:Sym a} {:Sym b}]} {:Lst [{:Sym _->} {:Sym c} {:Sym d}]}]}
-  (read-string "1 + 2")
-  (read-string "a b")
-  (read-string "a.b")
-  (read-string "a.b.3.c()")
-  (read-string
-    "[\"a\" :b \\c 42 true false nil
-     (a b c) [a b c] {:a b :c \"d\"}]")
   )
