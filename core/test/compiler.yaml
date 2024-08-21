@@ -1268,3 +1268,21 @@
         conj a: b * 10
   clojure: |
     (reduce (fn [a b] (conj a (*_ b 10))) [] (rng 1 10))
+
+
+- name: Form with dot on LHS
+  yamlscript: |
+    !yamlscript/v0
+    foo .: bar
+    foo.: bar()
+    foo.: bar.baz
+    foo : .bar
+    foo: .bar()
+    foo: .bar.baz
+  clojure: |
+    (get+ foo 'bar)
+    (bar foo)
+    (get+ (get+ foo 'bar) 'baz)
+    (get+ foo 'bar)
+    (bar foo)
+    (get+ (get+ foo 'bar) 'baz)

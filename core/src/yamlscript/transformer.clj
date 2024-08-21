@@ -70,6 +70,18 @@
            nil lst)]
     form))
 
+(defn dot-rhs [rhs form]
+  (let [rhs (if-lets [dots (:dot rhs)
+                      [dot1 & dots] dots
+                      dot1 (if-let [sym (:Sym dot1)]
+                             (QSym sym)
+                             dot1)]
+              (apply vector form dot1 dots)
+              (if (:Sym rhs)
+                [form (QSym (:Sym rhs))]
+                [form rhs]))]
+    (transform-dot {:dot rhs})))
+
 (defn adjust-dot-def [[lhs rhs]]
   (if-lets [_ (vector? lhs)
             _ (= 3 (count lhs))
@@ -81,16 +93,32 @@
                 (die "Invalid dot assignment")
                 true)
             lhs [def sym]
-            rhs (if-lets [dots (:dot rhs)
-                          [dot1 & dots] dots
-                          dot1 (if-let [sym (:Sym dot1)]
-                                 (QSym sym)
-                                 dot1)]
-                  (apply vector sym dot1 dots)
-                  (if (:Sym rhs)
-                    [sym (QSym (:Sym rhs))]
-                    [sym rhs]))
-            rhs (transform-dot {:dot rhs})]
+            rhs (dot-rhs rhs sym)]
+    [lhs rhs]
+    [lhs rhs]))
+
+(defn adjust-dot-on-right [lhs rhs]
+  (if-lets [_ (map? lhs)
+            _ (vector? rhs)
+            [dot & rest] rhs
+            _ (= '. (:Sym dot))
+            lhs [lhs dot]
+            rhs (if (= 1 (count rest)) (first rest) rest)]
+    [lhs rhs]
+    [lhs rhs]))
+
+(defn adjust-dot-pair [[lhs rhs]]
+  (if-lets [[lhs rhs] (adjust-dot-on-right lhs rhs)
+            _ (vector? lhs)
+            _ (= 2 (count lhs))
+            [form dot] lhs
+            _ (= '. (:Sym dot))
+            _ (if-not (or (map? rhs)
+                        (> (count rhs) 1))
+                (die "Invalid dot pair")
+                true)
+            lhs (Sym '=>)
+            rhs (dot-rhs rhs form)]
     [lhs rhs]
     [lhs rhs]))
 
@@ -132,6 +160,7 @@
       val
       (partition 2)
       (mapv adjust-dot-def)
+      (mapv adjust-dot-pair)
       (apply concat)
       (mapv #(if (vector? %1)
                (mapv transform-node %1)
