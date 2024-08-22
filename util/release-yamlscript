@@ -29,12 +29,12 @@ bindings =::
 - ruby
 - rust
 
-# verbose =: boolean(ENV.'YS_RELEASE_VERBOSE')
+# verbose =: boolean(ENV.YS_RELEASE_VERBOSE)
 verbose =: true
 
-dryrun =: boolean(ENV.'YS_RELEASE_DRYRUN')
+dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
 last-step =:
-  parse-long: ENV.'YS_RELEASE_LAST_STEP' || str(steps)
+  parse-long: ENV.YS_RELEASE_LAST_STEP || str(steps)
 
 
 #------------------------------------------------------------------------------
@@ -44,13 +44,13 @@ last-step =:
 
 defn main(old-version=0 new-version=0 start=1):
   ctx =:
-    if dryrun || ENV.'RELEASE_ID':
+    if dryrun || ENV.RELEASE_ID:
       =>: .{}
       check-args: old-version new-version start
 
   say: "\nReleasing YAMLScript v$new-version at $(ctx.date-time)\n"
 
-  if ENV.'RELEASE_ID':
+  if ENV.RELEASE_ID:
     step-9: ctx
     each i (1 .. steps):
       when (i >= start) && (i <= last-step):
@@ -64,7 +64,7 @@ defn main(old-version=0 new-version=0 start=1):
 #------------------------------------------------------------------------------
 
 defn step-1(ctx):
-  o: "Step 1) Do nothing, Step no longer needed"
+  o: 'Step 1) Do nothing, Step no longer needed'
 
 
 #------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ defn step-3(ctx):
     when prompt("Edit the 'Changes' file?") = 'y':
       editor =: ENV.EDITOR || 'vi'
       run: "$editor release-changes.txt"
-      prompt: "Press Enter to continue or Ctrl-C to abort."
+      prompt: 'Press Enter to continue or Ctrl-C to abort.'
 
     validate-yaml: slurp('release-changes.txt')
 
@@ -141,7 +141,7 @@ defn step-4(ctx):
 #------------------------------------------------------------------------------
 
 defn step-5(ctx):
-  o: "Step 5) Update the Change Log files for the binding modules"
+  o: 'Step 5) Update the Change Log files for the binding modules'
 
   when-not dryrun:
     # A change log (YAML) entry for Perl:
@@ -180,7 +180,7 @@ defn step-5(ctx):
 #------------------------------------------------------------------------------
 
 defn step-6(ctx):
-  o: "Step 6) Commit the release changes to git"
+  o: 'Step 6) Commit the release changes to git'
 
   run: "git commit -a -m 'release: $(ctx.new)'"
 
@@ -190,7 +190,7 @@ defn step-6(ctx):
 #------------------------------------------------------------------------------
 
 defn step-7(ctx):
-  o: "Step 7) Add git tag for the new version"
+  o: 'Step 7) Add git tag for the new version'
 
   run: "git tag $(ctx.new)"
 
@@ -200,7 +200,7 @@ defn step-7(ctx):
 #------------------------------------------------------------------------------
 
 defn step-8(ctx):
-  o: "Step 8) Push the git commit and tag"
+  o: 'Step 8) Push the git commit and tag'
 
   run:: git push
 
@@ -218,7 +218,7 @@ defn step-9(ctx):
 
   run:: make install
 
-  when-not (dryrun || ENV.'RELEASE_ID'):
+  when-not dryrun || ENV.RELEASE_ID:
     shell {:out "release-id.txt"}: "grep '^Release id:' release-$(ctx.new).log"
 
 #------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ defn step-10(ctx):
     run: "git push origin :v$(ctx.new)"
     catch Exception e:
 
-  run: "git checkout -- perl perl-alien"
+  run: 'git checkout -- perl perl-alien'
 
   when verbose:
     run:: git -P diff
@@ -251,9 +251,9 @@ defn step-10(ctx):
 #------------------------------------------------------------------------------
 
 defn step-11(ctx):
-  o: "Step 11) Publish the yamlscript.org website"
+  o: 'Step 11) Publish the yamlscript.org website'
 
-  run: "make -C www realclean publish"
+  run: 'make -C www realclean publish'
 
 
 #------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ defn make-changes-entry(ctx):
 
   changes =:
     str/join "\n":
-      map \(str/replace %1, /^\w+ /, "  - "): lines
+      map \(str/replace %1, /^\w+ /, '  - '): lines
 
   =>: changes
 
@@ -295,13 +295,13 @@ defn run(cmd):
     shell: cmd
 
 defn check-args(old new start):
-  when-not ((string? old) && (re-matches /0\.\d+\.\d+/ old)):
+  when-not (string? old) && (re-matches /0\.\d+\.\d+/ old):
     die: "Invalid old version '$old'"
 
-  when-not ((string? new) && (re-matches /0\.\d+\.\d+/ new)):
+  when-not (string? new) && (re-matches /0\.\d+\.\d+/ new):
     die: "Invalid new version '$new'"
 
-  when-not ((number? start) && (start >= 1) && (start <= steps)):
+  when-not (number? start) && (start >= 1) && (start <= steps):
     die: "Invalid starting step number '$start'"
 
   # Return context mapping:

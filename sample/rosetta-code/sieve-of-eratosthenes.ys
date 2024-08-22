@@ -3,18 +3,24 @@
 defn main(n):
   primes =: primes-up-to(n)
   say: |
-    The $(primes.count()) prime numbers less than $n are:
-    $(primes.join("\n"))
+    The $N(primes) prime numbers less than $n are:
+    $join("\n" primes)
 
 defn primes-up-to(limit):
-  "Returns a lazy sequence of prime numbers less than limit":
-  max-i =: int((limit - 1) / 2)
+  :: Returns a lazy sequence of prime numbers less than limit.
+
+  max-i =: int(dec(limit) / 2)
   refs =: boolean-array(max-i true)
-  root =: dec(int(Math/sqrt(limit))) / 2
-  doseq i (1 .. root) :when aget(refs i):
-    doseq j range((2 * i * inc(i)) max-i (i + i + 1)):
-      aset refs: j false
+  root =: limit.sqrt().int().dec() / 2
+  ? doseq i (1 .. root)
+      :when aget(refs i)
+  : ? doseq
+        j range(
+            inc(i).mul(2 * i),
+            max-i,
+            (i + i + 1))
+    : aset(refs j false)
   cons 2:
-    map \(+ %1 %1 1):
-      filter \(aget refs %1):
-        range: 1 max-i
+    map comp(inc FN(* 2)):
+      filter FN(aget refs):
+        range(1 max-i)

@@ -50,11 +50,11 @@ defn load-markys(file):
 
 defn generate-markdown(data):
   markdown =: ''
-  loop [[section & sections] data markdown markdown]:
+  loop [section & sections] data, markdown markdown:
     if section:
       then:
         markdown +=:
-          if (section =~ /^```markys:/):
+          if section =~ /^```markys:/:
             format-markys: section
             trim: section
         recur sections:
@@ -65,7 +65,7 @@ defn generate-markdown(data):
 
 defn format-markys(text):
   type =: (text =~ /^```markys:(\S+)/).1
-  text =: text.replace(/^```.*\n/ '')
+  text .=: replace(/^```.*\n/ '')
   yaml =: text.replace(/```\n\z/ '')
   data =: yaml.ys/compile().eval-string()
   func =: +"fmt-$type".symbol().resolve() ||

@@ -2,9 +2,7 @@
 
 # Main function definition with variable arguments:
 defn main(*):
-  answer =:
-    multiply: ARGS*
-  say: "multiply($(ARGS.join(', '))) -> $answer"
+  say: "multiply($(ARGS.join(', '))) -> $multiply(ARGS*)"
 
 # A multi-arity function definition:
 defn multiply:

@@ -5,7 +5,7 @@ data =:
 
 defn word(kind):
   rand-nth:
-    get: data name(kind)
+    data.get(name(kind))
 
 say: |
   Dear $word(:name),

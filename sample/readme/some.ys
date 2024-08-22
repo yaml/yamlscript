@@ -5,7 +5,7 @@
   data =: load('some.yaml')
   fruit =: data.food.fruit
 
-num: 123
+num:    123
 greet:: "$(data.hello.rand-nth()), $name!"
-eat:: fruit.shuffle().first()
-drink:: (['Bar'] * 3).join(', ' _).str('!!!')
+eat::   fruit.shuffle().first()
+drink:: (['Bar'] * 3).join(', ').str('!!!')

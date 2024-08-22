@@ -45,15 +45,15 @@
     "3"
     "-p prints result of evaluation")
 
-  (is (ys "../test/hello.ys")
+  (is (ys "test/hello.ys")
     "Hello"
     "File arg is loaded and run")
 
-  (is (ys "-l" "../test/hello.ys")
+  (is (ys "-l" "test/hello.ys")
     "Hello\n12345"
     "-l prints json result of file run")
 
-  (is (ys "-p" "../test/hello.ys")
+  (is (ys "-p" "test/hello.ys")
     "Hello\n12345"
     "-p prints Clojure result of file run")
 
@@ -110,13 +110,16 @@
     "Error: Options --to and --run are mutually exclusive"
     "Can't use --to with --run")
 
-  (is (ys "-Y" "../test/loader.ys")
+  (is (ys "-Y" "test/loader.ys")
     "foo: This is a string
 bar:
   foo:
     bar:
     - aaa: 1
-    - bbb: 2"
+    - bbb: 2
+baz:
+- aaa: 1
+- bbb: 2"
     "Testing the 'load' function to load another YS file")
 
   (like (ys "-pe" "find-ns: quote(str)")

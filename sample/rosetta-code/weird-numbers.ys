@@ -2,34 +2,18 @@
 
 --- !yamlscript/v0
 
-defn divisors(n):
-  loop divs [1], divs2 [], i 2:
-    if (i ** 2) <= n:
-      if (n % i).zero?():
-        then:
-          divs =: divs.conj(i)
-          j =: n / i
-          divs2 =:
-            if i != j:
-              divs2.conj(j)
-              divs2
-          recur: divs divs2 i.inc()
-        else:
-          recur: divs divs2 i.inc()
-      concat divs2: divs.reverse()
-
-defn abundant(n, divs):
-  (+ divs*) > n
-
-defn semiperfect(n, divs):
-  when divs.count() > 0:
-    +[h & t] =: divs
-    if n < h:
-      semiperfect: n t
-      or:
-        (n == h)
-        semiperfect((n - h) t)
-        semiperfect(n t)
+defn main(max=25):
+  w =: sieve(17000)
+  say: "The first $max weird numbers:"
+  loop n 2, count 0:
+    if count < max:
+      recur (n + 2):
+        if not(w.$n):
+          then:
+            print: "$n "
+            inc: count
+          else: count
+  say: ''
 
 defn sieve(limit):
   loop i 2, w1 vec([false] * limit):
@@ -52,15 +36,31 @@ defn sieve(limit):
             else: w1
       else: w1
 
-defn main(max=25):
-  w =: sieve(17000)
-  say: "The first $max weird numbers:"
-  loop n 2, count 0:
-    when count < max:
-      recur (n + 2):
-        if not(w.$n):
-          then:
-            print: "$n "
-            inc: count
-          else: count
-  say:
+defn divisors(n):
+  loop divs [1], divs2 [], i 2:
+    if (i ** 2) <= n:
+      if (n % i).zero?():
+        then:
+          divs .=: conj(i)
+          j =: n / i
+          divs2 =:
+            if i != j:
+              divs2.conj(j)
+              divs2
+          recur: divs divs2 i.inc()
+        else:
+          recur: divs divs2 i.inc()
+      concat divs2: divs.reverse()
+
+defn abundant(n, divs):
+  (+ divs*) > n
+
+defn semiperfect(n, divs):
+  when divs.count() > 0:
+    +[h & t] =: divs
+    if n < h:
+      semiperfect: n t
+      or:
+        (n == h)
+        semiperfect((n - h) t)
+        semiperfect(n t)

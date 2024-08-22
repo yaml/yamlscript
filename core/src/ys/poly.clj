@@ -76,7 +76,7 @@
 (-seq-2nd mapv)
 (-seq-2nd not-any?)
 (-seq-1st nth)
-(-seq-2nd partition)
+(-seq-2nd partition)  ;; XXX topic should go last
 (-seq-2nd random-sample)
 (-rgx-1st re-find)
 (-rgx-1st re-matches)

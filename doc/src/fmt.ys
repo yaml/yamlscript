@@ -2,7 +2,7 @@
 
 defn fmt-func-list(data):
   markdown =:
-    loop [elem & data] data markdown '':
+    loop [elem & data], data markdown '':
       if elem:
         then:
           +[fname sigs desc opts] =: elem
@@ -13,14 +13,14 @@ defn fmt-func-list(data):
             * **$fname** — $desc
 
           markdown +=:
-            loop [sig & sigs] sigs markdown '':
+            loop [sig & sigs] sigs, markdown '':
               if sig:
                 then:
                   +[ret & args] =: sig.words().reverse()
-                  args =: args.reverse().join(' ' _)
+                  args .=: reverse().join(' ' _)
                   markdown +=:
                     "  * ${fname}($args) -> $ret\n"
-                  recur: sigs markdown
+                  recur: sigs, markdown
                 else: markdown
 
           markdown +=:
@@ -34,7 +34,7 @@ defn fmt-func-list(data):
               $(more.chomp().indent())
                 </details>
 
-          recur: data markdown
+          recur: data, markdown
         else: markdown
   =>: |
     <div class="func-list">

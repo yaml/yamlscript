@@ -23,14 +23,13 @@ defn main(count=100 impl=1):
 # https://rosettacode.org/wiki/FizzBuzz#Clojure
 
 defn fizzbuzz-1(n):
-  map:
+  map _ (1 .. n):
     fn(x):
       cond:
         zero?(x % 15): 'FizzBuzz'
         zero?(x % 5):  'Buzz'
         zero?(x % 3):  'Fizz'
         =>: x
-    =>: 1 .. n
 
 defn fizzbuzz-2(n):
   loop i 1, l []:
@@ -50,5 +49,5 @@ defn fizzbuzz-3(n):
     s =:
       str:
         when zero?(x % 3): 'Fizz'
-        =>: (zero?(x % 5) && 'Buzz') || nil
+        or (zero?(x % 5) && 'Buzz'): nil
     if empty?(s): x s

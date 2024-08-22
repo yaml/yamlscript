@@ -2,4 +2,4 @@
 
 foo: This is a string
 bar:: load("loadme.ys")
-# baz:: ys/load("loadme.ys").foo.bar
+baz:: load("loadme.ys").foo.bar

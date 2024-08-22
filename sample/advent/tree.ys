@@ -17,7 +17,7 @@ defn tree(width):
 defn trunk(num): spaces(num) + "*\n"
 
 defn line(width, num):
-  # stars is a lexically defined function
+  :: "`stars` is a lexically defined function"
   stars =: \(inc(%1) * '*')
 
   join '':
