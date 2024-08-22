@@ -101,14 +101,8 @@
                    {:pairs pairs})
                  val))
         [doc body] (if-lets [[key val & nodes] (:pairs body)
-                             [doc body]
-                             (cond (and (= '=> (:Sym key))
-                                     (some val [:Str :str :vstr]))
-                                   [val {:pairs nodes}]
-
-                                   (and (nil? val)
-                                     (some key [:Str :str :vstr]))
-                                   [key {:pairs nodes}])]
+                             [doc body] (when (and (nil? key) (:Str val))
+                                          [val {:pairs nodes}])]
                      [doc body]
                      [nil body])]
     (or

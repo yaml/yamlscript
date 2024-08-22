@@ -547,7 +547,7 @@
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      =>: "This is a doc string"
+      :: This is a doc string
       say: "Hello World"
   build: |
     {:pairs
@@ -557,14 +557,26 @@
     (defn foo "This is a doc string" [] (say "Hello World"))
 
 
-- name: Support doc string as key
+- name: Quoted doc string
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      "This is a doc string":
+      :: "This is a doc string"
       say: "Hello World"
   clojure: |
     (defn foo "This is a doc string" [] (say "Hello World"))
+
+
+- name: Literal doc string
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      :: |
+        This is
+        a doc string
+      say: "Hello World"
+  clojure: |
+    (defn foo "This is\na doc string\n" [] (say "Hello World"))
 
 
 - name: Error on `a+b`
