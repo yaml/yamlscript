@@ -20,7 +20,7 @@
               _ (>= len 2)
               last-key-pos (- len 2)
               last-key (nth forms last-key-pos)
-              _ (= '=> (:Sym last-key))
+              _ (= 'else (:Sym last-key))
               rhs (update-in rhs
                     [:forms last-key-pos]
                     (fn [_] (Key "else")))]

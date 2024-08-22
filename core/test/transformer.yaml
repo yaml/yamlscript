@@ -50,7 +50,7 @@
     cond:
       (x = 1): "one"
       (x = 2): "two"
-      =>: "other"
+      else: "other"
   clojure: |
     (require '[foo.bar :as fb])
     (cond (= x 1) "one" (= x 2) "two" :else "other")

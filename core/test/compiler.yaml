@@ -633,7 +633,7 @@
     cond:
       (a > b): c
       (a < d): e
-      =>: f
+      else: f
   clojure: |
     (cond (> a b) c (< a d) e :else f)
 
