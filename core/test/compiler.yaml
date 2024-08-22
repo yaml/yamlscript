@@ -1197,9 +1197,9 @@
   yamlscript: |
     !yamlscript/v0
     say: text
-      .foo   \#"get foo"
-      .bar   \#"get bar"
-      .baz   \#"get baz"
+      .foo   \"get foo"
+      .bar   \"get bar"
+      .baz   \"get baz"
   clojure: |
     (say (get+ (get+ (get+ text 'foo) 'bar) 'baz))
 

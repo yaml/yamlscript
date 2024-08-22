@@ -79,7 +79,7 @@
               [^']                           # Any other char
             )*'                              # Ending quote
             ")
-(def icom (re #"\\\#$dstr"))               ; Inline comment token
+(def icom (re #"\\$dstr"))                 ; Inline comment token
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def alph #"[a-zA-Z]")                     ; Alpha
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
