@@ -18,7 +18,7 @@ test::
     case type(x):
       String  : "S"
       Boolean : "B"
-      =>      : "X"
+      else    : "X"
   want: X
 
 done:

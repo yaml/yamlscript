@@ -29,7 +29,7 @@ defn fizzbuzz-1(n):
         zero?(x % 15) : 'FizzBuzz'
         zero?(x % 5)  : 'Buzz'
         zero?(x % 3)  : 'Fizz'
-        =>            : x
+        else          : x
 
 defn fizzbuzz-2(n):
   loop i 1, l []:
@@ -42,7 +42,7 @@ defn fizzbuzz-2(n):
               zero?(i % 15) : 'FizzBuzz'
               zero?(i % 5)  : 'Buzz'
               zero?(i % 3)  : 'Fizz'
-              =>            : i
+              else          : i
 
 defn fizzbuzz-3(n):
   for x (1 .. n):

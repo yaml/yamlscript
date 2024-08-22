@@ -1268,8 +1268,9 @@
       1: a
       2: b
       3: c
+      else: d
   clojure: |
-    (case x 1 a 2 b 3 c)
+    (case x 1 a 2 b 3 c d)
 
 
 - name: Arg swap using underscore

@@ -66,7 +66,7 @@ defn bottles(n):
   cond:
     n == 0 : "No more bottles"
     n == 1 : "1 bottle"
-    =>     : "$n bottles"
+    else   : "$n bottles"
 ```
 
 Let's see how long it takes to drink 3 bottles:

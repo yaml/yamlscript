@@ -11,10 +11,10 @@
 
 
 ;;-----------------------------------------------------------------------------
-;; cond
+;; cond and case
 ;;-----------------------------------------------------------------------------
 
-(defn transform_cond [lhs rhs]
+(defn transform-with-else [lhs rhs subst]
   (when-lets [forms (:forms rhs)
               len (count forms)
               _ (>= len 2)
@@ -23,9 +23,17 @@
               _ (= 'else (:Sym last-key))
               rhs (update-in rhs
                     [:forms last-key-pos]
-                    (fn [_] (Key "else")))]
+                    (fn [_] subst))]
     [lhs rhs]))
 
+(defn transform_cond [lhs rhs]
+  (transform-with-else lhs rhs (Key "else")))
+
+(defn transform_condp [lhs rhs]
+  (transform-with-else lhs rhs (Key "else")))
+
+(defn transform_case [lhs rhs]
+  (transform-with-else lhs rhs (Sym "=>")))
 
 ;;-----------------------------------------------------------------------------
 ;; defn and fn
@@ -72,23 +80,33 @@
 
 (defn transform_if [lhs rhs]
   (let [[lhs rhs] (lhs-tests lhs rhs)
-        ,
-        [lhs rhs]
-        (if-lets
-          [pairs (:pairs rhs)
-           [k1 v1 k2 v2] pairs
-           _ (= k1 (Sym 'then))
-           rhs (if (> (count (:pairs v1)) 2)
-                 (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
-                 (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))]
-          (if (> (count pairs) 2)
-            (if (= k2 (Sym 'else))
-              (if (> (count (:pairs v2)) 2)
-                [lhs (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))]
-                [lhs (update-in rhs [:pairs 2] (fn [_] (Sym '=>)))])
-              (die "Form after 'then' must be 'else'"))
-            [lhs rhs])
-          [lhs rhs])]
+        pairs (:pairs rhs)
+        _ (when (and pairs (not= (count pairs) 4))
+            (die "Invalid 'if' form"))
+        rhs (if-lets
+              [_ pairs
+               [k1 v1 k2 v2] pairs
+               _ (= k1 (Sym 'then))]
+              (do
+                (when-not (= k2 (Sym 'else))
+                  (die "Form after 'then' must be 'else'"))
+                (let [rhs
+                      (if (> (count (:pairs v1)) 2)
+                        (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
+                        (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))
+                      rhs
+                      (if (> (count (:pairs v2)) 2)
+                        (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))
+                        (update-in rhs [:pairs 2] (fn [_] (Sym '=>))))]
+                  rhs))
+              (if-lets
+                [_ pairs
+                 [_ _ k2 v2] pairs
+                 _ (= k2 (Sym 'else))]
+                (if (> (count (:pairs v2)) 2)
+                  (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))
+                  (update-in rhs [:pairs 2] (fn [_] (Sym '=>))))
+                rhs))]
     [lhs rhs]))
 
 (intern 'yamlscript.transformers 'transform_if-not   lhs-tests)
