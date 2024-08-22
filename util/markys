@@ -82,7 +82,7 @@ defn fmt-include(data):
   markdown =:
     if yank:
       remove fn([s] re-find(rx(yank) s)): markdown
-      =>: markdown
+      do: markdown
   =>: +"\n\n" + join("\n" markdown) + "\n\n"
 
 defn indent(text):

@@ -32,5 +32,6 @@
     "yamlscript",
     "ysexpr"
   ],
-  "java.configuration.updateBuildConfiguration": "disabled"
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "makefile.configureOnOpen": true
 }

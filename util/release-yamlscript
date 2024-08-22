@@ -45,8 +45,9 @@ last-step =:
 defn main(old-version=0 new-version=0 start=1):
   ctx =:
     if dryrun || ENV.RELEASE_ID:
-      =>: .{}
-      check-args: old-version new-version start
+      then: .{}
+      else:
+        check-args: old-version new-version start
 
   say: "\nReleasing YAMLScript v$new-version at $(ctx.date-time)\n"
 

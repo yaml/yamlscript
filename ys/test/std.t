@@ -112,7 +112,7 @@ test::
   want: 42
 - code: |
     ns: foo
-    =>: +"inc".call(41)
+    +"inc": .call(41)
   want: 42
 
 

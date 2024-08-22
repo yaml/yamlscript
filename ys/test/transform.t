@@ -16,9 +16,9 @@ test::
   code: |
     x =: 42
     case type(x):
-      String: "S"
-      Boolean: "B"
-      =>: "X"
+      String  : "S"
+      Boolean : "B"
+      =>      : "X"
   want: X
 
 done:

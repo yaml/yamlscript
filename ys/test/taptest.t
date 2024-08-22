@@ -8,8 +8,7 @@ require ys::taptest: :all
 use: 'hello-world'
 
 # Define a custom form function:
-defn inc2(n _):
-  =>: n + 2
+defn inc2(n _): n + 2
 
 
 # Run the tests:

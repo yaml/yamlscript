@@ -86,6 +86,10 @@
                                (check-let-bindings pairs ctx)
                                pairs)
                        [[lhs rhs] & pairs] pairs
+                       lhs (if (and (= lhs {:Sym 'do})
+                                 (map? rhs)
+                                 (not (some #{:pairs :forms} (keys rhs))))
+                             {:Sym '=>} lhs)
                        [forms lhs] (if (get-in lhs [:form])
                                      [true (:form lhs)]
                                      [false lhs])

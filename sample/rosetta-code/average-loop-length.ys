@@ -26,15 +26,14 @@ defn single-test-cycle-length(n):
   loop count 0, bits 0, x 1:
     if zero?(bit-and(x bits)):
       recur: count.inc() bit-or(bits x) bit-shift-left(1 rand-int(n))
-      =>: count
+      do: count
 
 defn avg-cycle-length(n times):
   ' Average results of single tests of cycle lengths ':
-  div:
+  div _ times:
     reduce +:
       for i (range times):
         single-test-cycle-length: n
-    =>: times
 
 # Show results:
 say: "\tAvg\tExp\tDiff"

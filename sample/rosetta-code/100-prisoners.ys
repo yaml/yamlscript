@@ -54,8 +54,8 @@ defn try-luck(drawers drawer-searching-function):
     if not(prisoners.empty?()):
       if prisoners.first().drawer-searching-function(drawers):
         recur: rest(prisoners)
-        =>: 0
-      =>: 1
+        do: 0
+      do: 1
 
 defn search-50-optimal-drawers(prisoner-number drawers):
   :: Open 50 drawers according to the agreed strategy, returning true if

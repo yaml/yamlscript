@@ -7,5 +7,6 @@ defn main(*):
   say: "gcd($a $b) -> $gcd(a b)"
 
 defn gcd(a b):
-  if zero?(b) a:
+  if zero?(b):
+    do: a
     recur: b (a % b)
