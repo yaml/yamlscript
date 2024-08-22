@@ -60,10 +60,10 @@
 (intern 'ys.std 'I clojure.core/identity)
 (intern 'ys.std 'N clojure.core/count)
 
-(defn V [s]
-  (if (symbol? s)
-    (var-get (resolve s))
-    (var-get (resolve (symbol s)))))
+(defmacro V [s]
+  `(if (symbol? ~s)
+    (var-get (ns-resolve *ns* ~s))
+    (var-get (ns-resolve *ns* (symbol ~s)))))
 
 (defmacro Q [x] `(quote ~x))
 (defmacro QW [& xs]
