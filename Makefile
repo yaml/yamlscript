@@ -109,6 +109,13 @@ java-home:
 chown:
 	sudo chown -R $(USER):$(USER) .
 
+ys-files:
+	@( \
+	  find . -name '*.ys' | cut -c3-; \
+	  ag -asl --hidden '^#!/usr/bin/env ys-0$$' .; \
+	) | grep -Ev '(^note/)' | \
+	LC_ALL=C sort | uniq
+
 $(BUILD):
 build: $(BUILD)
 build-%: %
