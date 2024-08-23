@@ -1299,3 +1299,13 @@
     (get+ foo 'bar)
     (bar foo)
     (get+ (get+ foo 'bar) 'baz)
+
+
+- name: Dot chain call with splat
+  yamlscript: |
+    !yamlscript/v0
+    =>: (1 .. 10).bar(*)
+    =>: foo.bar.baz(*)
+  clojure: |
+    (apply bar (rng 1 10))
+    (apply baz (get+ foo 'bar))

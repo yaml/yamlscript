@@ -155,6 +155,16 @@
     (if (= x 1) (a b) c)
 
 
+- name: Using else without then for if-not
+  yamlscript: |
+    !yamlscript/v0
+    if-not (x = 1):
+      a: b
+      else: c
+  clojure: |
+    (if-not (= x 1) (a b) c)
+
+
 - name: Using then without else
   yamlscript: |
     !yamlscript/v0

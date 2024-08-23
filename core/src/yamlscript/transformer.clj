@@ -45,7 +45,10 @@
                           func)]
               [+func ctx args])
           1 [func nil (map (fn [arg] (if (= topic arg) ctx arg)) args)]
-          (die "XXX support for multiple topics not yet implemented"))]
+          (die "XXX support for multiple topics not yet implemented"))
+        [func ctx args] (if (= args '({:Sym *}))
+                          [{:Sym 'apply} func [ctx]]
+                          [func ctx args])]
     (Lst (concat [func ctx] (vec args)))))
 
 (defn transform-dot [node]

@@ -30,7 +30,7 @@
   (transform-with-else lhs rhs (Key "else")))
 
 (defn transform_condp [lhs rhs]
-  (transform-with-else lhs rhs (Key "else")))
+  (transform-with-else lhs rhs (Sym "=>")))
 
 (defn transform_case [lhs rhs]
   (transform-with-else lhs rhs (Sym "=>")))
@@ -109,7 +109,7 @@
                 rhs))]
     [lhs rhs]))
 
-(intern 'yamlscript.transformers 'transform_if-not   lhs-tests)
+(intern 'yamlscript.transformers 'transform_if-not   transform_if)
 (intern 'yamlscript.transformers 'transform_when     lhs-tests)
 (intern 'yamlscript.transformers 'transform_when-not lhs-tests)
 (intern 'yamlscript.transformers 'transform_while    lhs-tests)
