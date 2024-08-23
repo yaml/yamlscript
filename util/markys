@@ -10,12 +10,14 @@ defn main(input-file):
 
   fmt-file =: "$dir/fmt.ys"
   when fs-f(fmt-file):
-    ys/load-file: fmt-file
+    load: fmt-file
 
   markdown =: input-file.process().trim()
 
   markdown =:
-    replace markdown /^(---\n(?s:.*?)\n---\n)\n*/: "$1\n$DNE"
+    replace markdown:
+      /^(---\n(?s:.*?)\n---\n)\n*/
+      "$1\n$DNE"
 
   markdown =:
     if markdown.str/includes?(DNE):
@@ -25,25 +27,22 @@ defn main(input-file):
   say: markdown.trimr()
 
 defn process(input-file):
-  data =: load-markys(input-file)
-  markdown =:
-    generate-markdown: data
-  triml: markdown
+  input-file:
+    .load-markys()
+    .generate-markdown()
+    .triml()
 
 defn load-markys(file):
   text =: file.abspath().slurp()
   fenced-re =: /(?s)(?:```markys:\S+\n.*?\n```\n)/
-  texts =:
-    split text: fenced-re
-  fenced =:
-    re-seq fenced-re: text
+  texts =: text.split(fenced-re)
+  fenced =: text.re-seq(fenced-re)
   fix =: fenced.count() < texts.count()
   fenced =:
     if fix:
       (vec(fenced) + [''])
       fenced
-  all =:
-    interleave texts: fenced
+  all =: texts.interleave(fenced)
   if fix:
     drop-last(all)
     all
@@ -68,7 +67,7 @@ defn format-markys(text):
   text .=: replace(/^```.*\n/ '')
   yaml =: text.replace(/```\n\z/ '')
   data =: yaml.ys/compile().eval-string()
-  func =: +"fmt-$type".symbol().resolve() ||
+  func =: V("fmt-$type") ||
     die("Can't find function 'fmt-$type'")
   call func: data
 
@@ -85,7 +84,9 @@ defn fmt-include(data):
       else: markdown
   =>: +"\n\n" + join("\n" markdown) + "\n\n"
 
-defn indent(text):
-  replace text: /(?m)^(?=.)/ '  '
+defn indent(text n=2):
+  replace text:
+    /(?m)^(?=.)/
+    (' ' * n)
 
 # vim: ft=yaml sw=2 lisp:

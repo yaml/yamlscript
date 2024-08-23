@@ -8,6 +8,8 @@ require ys::taptest: :all
 
 say: CWD
 
+NIL =: nil
+
 base =:
   if CWD =~ /\/yamlscript$/:
     then: "$CWD/ys"
@@ -128,6 +130,18 @@ test::
 
 - code: +"Hello".split().join()
   want: Hello
+
+- code: nil.$NIL
+  want: null
+- code: nil.123
+  want: null
+- code: nil.foo
+  want: null
+- code: +{}.$NIL
+  want: null
+- code: +[].$NIL
+  what: error
+  want: Can't (get+ [] nil)
 
 
 #-------------------------------------------------------------------------------

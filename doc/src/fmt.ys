@@ -36,9 +36,10 @@ defn fmt-func-list(data):
 
           recur: data, markdown
         else: markdown
+
   =>: |
     <div class="func-list">
-    $(markdown.chomp())
+    $chomp(markdown)
     </div>
 
 # vim: ft=yaml sw=2 lisp:

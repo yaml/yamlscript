@@ -295,11 +295,17 @@
                   String (get coll key)
                   clojure.lang.Keyword (get coll key)
                   clojure.lang.Symbol (or
-                           (get coll (str key))
-                           (get coll (keyword key))
-                           (get coll key)))
-    (seqable? coll) (nth coll key)
-    :else (die "Can't (get+ " coll " " key ")")))
+                                        (get coll (str key))
+                                        (get coll (keyword key))
+                                        (get coll key))
+                  (get coll key))
+    (nil? coll) nil
+    (seqable? coll) (if (number? key)
+                      (nth coll key)
+                      (die "Can't (get+ " coll " "
+                        (if (nil? key) "nil" key) ")"))
+    :else (die "Can't (get+ " coll " "
+            (if (nil? key) "nil" key) ")")))
 
 (defn grep [a b]
   (let [[a b] (if (seqable? b) [a b] [b a])
