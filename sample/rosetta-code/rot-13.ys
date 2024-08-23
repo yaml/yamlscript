@@ -4,4 +4,4 @@ s =: set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
 m =: cycle(s).drop(26).zipmap(s)
 
 defn main(s):
-  say: map(\(m %1 %1) s).apply(str)
+  say: s.map(m _).str(*)

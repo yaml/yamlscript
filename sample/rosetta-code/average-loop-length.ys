@@ -1,35 +1,34 @@
 --- !yamlscript/v0
 
-ns cyclelengths:
-  (:gen-class)
+mul =: V("*'")
 
 # Number of random times to test each n:
 TIMES =: 1000000
 
 # Use *' (vs. *) to allow arbitrary length arithmetic:
 defn factorial(n):
-  ' n! ':
-  apply V("*'"): range(1 n.inc())
+  :: n!
+  range(1 n.inc()): .mul(*)
 
 defn pow(n i):
-  ' n^i ':
-  apply V("*'"): repeat(i n)
+  :: n^i
+  repeat(i n): .mul(*)
 
 defn analytical(n):
-  ' Analytical computation ':
+  :: Analytical computation
   ->>: (1 .. n)
        map(\(factorial(n) / pow(n %1) / factorial(n - %1)))
        reduce(+ 0)
 
 defn single-test-cycle-length(n):
-  ' Single random test of cycle length ':
+  :: Single random test of cycle length
   loop count 0, bits 0, x 1:
     if zero?(bit-and(x bits)):
       recur: count.inc() bit-or(bits x) bit-shift-left(1 rand-int(n))
       do: count
 
 defn avg-cycle-length(n times):
-  ' Average results of single tests of cycle lengths ':
+  :: Average results of single tests of cycle lengths
   div _ times:
     reduce +:
       for i (range times):

@@ -4,4 +4,4 @@ defn main(n=10):
   say: "$n! -> $factorial(n)"
 
 defn factorial(x):
-  apply mul: 2 .. x
+  2 .. x: .mul(*)

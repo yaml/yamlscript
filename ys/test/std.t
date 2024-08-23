@@ -103,6 +103,21 @@ test::
 #-------------------------------------------------------------------------------
 - note: "Dot chaining support"
 
+- code: nil.$NIL
+  want: null
+- code: nil.123
+  want: null
+- code: nil.foo
+  want: null
+- code: +{}.$NIL
+  want: null
+- code: +[].$NIL
+  what: error
+  want: Can't (get+ [] nil)
+
+- code: (1 .. 20).partition(3 5)
+  want:: \'((1 2 3) (6 7 8) (11 12 13) (16 17 18))
+
 
 #-------------------------------------------------------------------------------
 - note: "Control functions"
@@ -130,18 +145,6 @@ test::
 
 - code: +"Hello".split().join()
   want: Hello
-
-- code: nil.$NIL
-  want: null
-- code: nil.123
-  want: null
-- code: nil.foo
-  want: null
-- code: +{}.$NIL
-  want: null
-- code: +[].$NIL
-  what: error
-  want: Can't (get+ [] nil)
 
 
 #-------------------------------------------------------------------------------

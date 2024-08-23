@@ -264,7 +264,7 @@ defn o(msg): say("\n$msg")
 
 defn prompt(msg):
   print: "$msg "
-  =>: read-line().str/trim()
+  read-line(): .str/trim()
 
 defn file-prepend(file text):
   spit file:
@@ -275,11 +275,8 @@ defn make-changes-entry(ctx):
     sh("git log --oneline $(ctx.old)..HEAD").out
       .str/split-lines().reverse()
 
-  changes =:
-    str/join "\n":
-      map \(str/replace %1, /^\w+ /, '  - '): lines
-
-  =>: changes
+  str/join "\n":
+    map \(str/replace %1, /^\w+ /, '  - '): lines
 
 defn validate-yaml(yaml):
   when-not dryrun:

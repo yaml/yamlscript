@@ -8,6 +8,11 @@
     (string? f) (map #(get %1 f) coll)
     :else (map f coll)))
 
+(defn ++mapv [f coll]
+  (cond
+    (string? f) (mapv #(get %1 f) coll)
+    :else (mapv f coll)))
+
 
 ;;------------------------------------------------------------------------------
 (defmacro ^:private -seq-1st [name]
@@ -24,6 +29,13 @@
          (~name a# b#)
          (~name b# a#)))))
 
+(defmacro ^:private -seq-last [name]
+  (let [dname (symbol (str "+" name))]
+    `(defn ~dname [a# & xs#]
+       (if (seqable? a#)
+         (apply ~name (concat xs# [a#]))
+         (apply ~name a# xs#)))))
+
 (defmacro ^:private -seq-2nd+ [name]
   (let [dname (symbol (str "+" name))
         pname (symbol (str "++" name))]
@@ -38,18 +50,6 @@
        (if (= java.util.regex.Pattern (type a#))
          (apply ~name a# b# c#)
          (apply ~name b# a# c#)))))
-
-(defmacro ^:private -rgx-2nd [name]
-  (let [dname (symbol (str "+" name))]
-    `(defn ~dname [a# b# & c#]
-       (if (= java.util.regex.Pattern (type b#))
-         (apply ~name a# b# c#)
-         (apply ~name b# a# c#)))))
-
-(defmacro ^:private -com-mac [name]
-  (let [dname (symbol (str "+" name))]
-    `(defn ~dname [& xs#]
-       (apply ~name xs#))))
 
 (defmacro ^:private -clj-mac [name]
   (let [dname (symbol (str "+" name))]
@@ -73,10 +73,10 @@
 (-seq-2nd interpose)
 (-seq-2nd keep)
 (-seq-2nd+ map)
-(-seq-2nd mapv)
+(-seq-2nd+ mapv)
 (-seq-2nd not-any?)
 (-seq-1st nth)
-(-seq-2nd partition)  ;; XXX topic should go last
+(-seq-last partition)
 (-seq-2nd random-sample)
 (-rgx-1st re-find)
 (-rgx-1st re-matches)
