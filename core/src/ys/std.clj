@@ -18,8 +18,7 @@
   (:refer-clojure :exclude [num
                             print
                             reverse
-                            replace
-                            when]))
+                            replace]))
 
 
 (declare die)
@@ -61,9 +60,11 @@
 (intern 'ys.std 'N clojure.core/count)
 
 (defmacro V [s]
-  `(if (symbol? ~s)
-    (var-get (ns-resolve *ns* ~s))
-    (var-get (ns-resolve *ns* (symbol ~s)))))
+  `(cond
+     (string? ~s) (var-get (ns-resolve *ns* (symbol ~s)))
+     (symbol? ~s) (var-get (ns-resolve *ns* ~s))
+     (var? ~s) (var-get ~s)
+     :else (clojure.core/die "Can't get value of " ~s)))
 
 (defmacro Q [x] `(quote ~x))
 (defmacro QW [& xs]
@@ -167,7 +168,7 @@
 ;; YAML Anchor and alias functions
 ;;------------------------------------------------------------------------------
 (defn _& [sym val]
-  (clojure.core/when (> (count (str val)) _max-alias-size)
+  (when (> (count (str val)) _max-alias-size)
     (die "Anchored node &" sym " exceeds max size of " _max-alias-size))
   (swap! common/stream-anchors_ assoc sym val)
   (swap! common/doc-anchors_ assoc sym val)

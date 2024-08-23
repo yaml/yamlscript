@@ -77,8 +77,7 @@
               'WWW (sci/copy-var yamlscript.debug/WWW nil)
               'XXX (sci/copy-var yamlscript.debug/XXX nil)
               'YYY (sci/copy-var yamlscript.debug/YYY nil)
-              'ZZZ (sci/copy-var yamlscript.debug/ZZZ nil)
-              }
+              'ZZZ (sci/copy-var yamlscript.debug/ZZZ nil)}
         std (ns-publics 'ys.std)
         std (update-vals std #(sci/copy-var* %1 nil))
         poly (ns-publics 'ys.poly)
