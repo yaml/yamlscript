@@ -3,7 +3,7 @@
 set -euo pipefail
 
 (
-  libyamlscript_version=0.1.71
+  libyamlscript_version=0.1.72
   root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
   JAVA_HOME=$(make -C "$root/core" env | grep ^JAVA_HOME= | cut -d= -f2)
   export JAVA_HOME

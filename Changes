@@ -1,3 +1,20 @@
+- version: 0.1.72
+  date:    Fri 23 Aug 2024 05:42:19 PM PDT
+  changes:
+  - core: Support auto-install ys configurations
+  - std: Redo some of the shortname fns
+  - core: Refactor dot compilation
+  - core: Support splitting a dot chain into a pair
+  - core: Change defn doc string to only use `::`
+  - make: Add rule to list all repo YS files
+  - core: Remove `do` from form if contains 1 form
+  - core: For cond, replace `=>` with `else`
+  - core: Allow trailing else on if cond case etc
+  - core: Change inline comments \#"..." -> \"..."
+  - core: Turn `V` into a macro to work across namespaces
+  - core: Make get+ return nil when coll is nil
+  - core: Support foo.bar(*) -> (apply bar foo)
+  - poly: Put collection at end of .partition(...)
 - version: 0.1.71
   date:    Mon 12 Aug 2024 09:05:55 PM PDT
   changes:
