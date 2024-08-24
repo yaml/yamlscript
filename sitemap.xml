@@ -553,17 +553,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/cheat/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/clj-core/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
@@ -642,17 +631,6 @@
     
       <url>
         <loc>https://yamlscript.org/doc/referencing/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/yaml/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
         
@@ -751,9 +729,31 @@
   
     
       <url>
+        <loc>https://yamlscript.org/doc/cheat/</loc>
+        
+          <lastmod>2024-08-18T19:34:14.100Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/yaml/</loc>
+        
+          <lastmod>2024-08-18T19:34:14.100Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
         <loc>https://yamlscript.org/doc/ys/</loc>
         
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
+          <lastmod>2024-08-24T00:41:11.648Z</lastmod>
         
         
         
@@ -764,7 +764,7 @@
       <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-08-14T18:47:01.940Z</lastmod>
+          <lastmod>2024-08-24T00:41:11.648Z</lastmod>
         
         
         

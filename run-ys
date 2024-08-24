@@ -3,55 +3,93 @@
 set -euo pipefail
 
 main() {
-  local YAMLSCRIPT_VERSION=0.1.71
+  local YAMLSCRIPT_VERSION=0.1.72
+  local INSTALL_DIR=/tmp/yamlscript-run-ys
+  local bin file last prefix tty version ysbin
 
-  VERSION=${YS_VERSION:-$YAMLSCRIPT_VERSION}
+  version=${YS_VERSION:-$YAMLSCRIPT_VERSION}
 
-  [[ -d /tmp && -w /tmp ]] ||
-    die "Can't write to /tmp/"
+  initialize "$@"
 
-  local prefix=/tmp/yamlscript-auto-install
-  mkdir -p "$prefix"
-  [[ -d $prefix && -w $prefix ]] ||
-    die "Can't write to '$prefix/'"
-
-  local bin=$prefix/bin
-  [[ -e $bin ]] && ! [[ -d $bin && -w $bin ]] &&
-    die "Can't write to '$bin/'"
+  if [[ $# -gt 0 ]]; then
+    last=${*:$#}
+    [[ $last == : || $last == :: ]] &&
+      set -- "${@:1:$#-1}"
+  fi
 
   export PATH=$bin:$PATH
 
-  assert-ys
-
-  local file=${BASH_SOURCE[${#BASH_SOURCE[*]}-1]}
-  [[ -f $file ]] ||
-    die "Can't find '$file'"
-
-  [[ $# -gt 0 ]] && [[ ${*:$#} == ':' ]] &&
-    set -- "${@:1:$#-1}"
+  [[ -f $bin/ys-0 && -x $bin/ys-0 ]] ||
+    install-ys
 
   exec ys-0 "$file" "$@"
 }
 
-assert-ys() {
-  [[ -f $bin/ys-0 && -x $bin/ys-0 ]] && return
+initialize() {
+  if sh -c ': >/dev/tty' &>/dev/null; then
+    tty=/dev/tty
+  else
+    tty=/dev/null
+  fi
+  [[ ${YS_QUIET-} ]] && tty=/dev/null
+  if [[ $# -gt 0 ]]; then
+    [[ ${*:$#} == :: ]] && tty=/dev/null
+  fi
 
+  if [[ ${YS_PREFIX-} ]]; then
+    [[ -d $YS_PREFIX ]] ||
+      die "YS_PREFIX - no such directory '$YS_PREFIX'"
+    [[ -w $YS_PREFIX ]] ||
+      die "Can't write to '$YS_PREFIX/'"
+    prefix=$YS_PREFIX
+  else
+    [[ -d /tmp && -w /tmp ]] ||
+      die "Can't write to /tmp/"
+    prefix=$INSTALL_DIR
+  fi
+
+  mkdir -p "$prefix"
+  [[ -d $prefix && -w $prefix ]] ||
+    die "Can't write to '$prefix/'"
+
+  bin=$prefix/bin
+  [[ -e $bin ]] && ! [[ -d $bin && -w $bin ]] &&
+    die "Can't write to '$bin/'"
+
+  ysbin=$bin/ys-$version
+
+  file=${BASH_SOURCE[${#BASH_SOURCE[*]}-1]}
+  [[ -f $file ]] ||
+    die "Can't find YAMLScript program file '$file'"
+}
+
+install-ys() {
   [[ $(command -v curl) ]] ||
     die "'curl' command is required but not found"
 
-  curl -s https://yamlscript.org/install |
-    BIN=1 PREFIX=$prefix VERSION=$VERSION bash &> /dev/tty
+  (
+    cat <<...
+Installing YAMLScript CLI '$ysbin' now...
+Ctl-C to abort
+See https://yamlscript.org/doc/run-ys for more information.
 
-  # XXX - Temporary testing hack
-  [[ -e ~/src/yamlscript/ys/bin/ys ]] &&
-    cp ~/src/yamlscript/ys/bin/ys* $bin/
+...
+    curl -s https://yamlscript.org/install |
+      BIN=1 PREFIX=$prefix VERSION=$version bash
+    printf '%.0s-' {1..80}
+    echo
+  ) &> "$tty"
 
-  [[ $(command -v ys-0) == $bin/ys-0 ]] ||
+                  # XXX - Temporary testing hack
+                  [[ -e ~ingy/src/yamlscript/ys/bin/ys ]] &&
+                    cp ~ingy/src/yamlscript/ys/bin/ys* "$bin/"
+
+  [[ $(command -v "ys-$version") == "$ysbin" ]] ||
     die "Something went wrong"
 }
 
 die() {
-  echo "$*" >&2
+  printf '%s\n' "$@" >&2
   exit 1
 }
 
