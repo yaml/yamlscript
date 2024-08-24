@@ -1,6 +1,6 @@
---- !yamlscript/v0
+!yamlscript/v0
 
-mul =: V("*'")
+mul =: value("*'")
 
 # Number of random times to test each n:
 TIMES =: 1000000

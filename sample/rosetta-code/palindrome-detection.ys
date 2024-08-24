@@ -2,6 +2,6 @@
 
 defn main(n):
   say: "$n is $when(
-      (str(n) != str(n).reverse())
+      (str(n) != reverse(str(n)))
       'not '
     )a palindrome."

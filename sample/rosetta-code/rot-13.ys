@@ -1,7 +1,5 @@
 !yamlscript/v0
 
-s =: set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-m =: cycle(s).drop(26).zipmap(s)
-
-defn main(s):
-  say: s.map(m _).str(*)
+defn main(in):
+  s =: ((\\A .. \\Z) + (\\a .. \\z)).map(char).set()
+  say: cycle(s).drop(13 * 2).zipmap(s).map(in).str(*)

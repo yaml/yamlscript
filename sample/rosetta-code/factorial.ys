@@ -1,4 +1,4 @@
-#!/usr/bin/env ys-0
+!yamlscript/v0
 
 defn main(n=10):
   say: "$n! -> $factorial(n)"
