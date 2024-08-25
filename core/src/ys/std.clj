@@ -339,9 +339,13 @@
     :else (die "Can't reverse " x)))
 
 (defn rng [x y]
-  (if (> y x)
-    (range x (inc y))
-    (range x (dec y) -1)))
+  (let [[x y] (for [n [x y]]
+                (condp = (type n)
+                  Character (long n)
+                  n))]
+    (if (> y x)
+      (range x (inc y))
+      (range x (dec y) -1))))
 
 
 ;;------------------------------------------------------------------------------
