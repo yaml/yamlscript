@@ -5,7 +5,7 @@ defn fmt-func-list(data):
     loop [elem *data], data markdown '':
       if elem:
         then:
-          +[fname sigs desc opts] =: elem
+          -[fname sigs desc opts] =: elem
           more =: opts.more
 
           markdown +=: |
@@ -41,5 +41,16 @@ defn fmt-func-list(data):
     <div class="func-list">
     $chomp(markdown)
     </div>
+
+defn fmt-quick-ref(data):
+  links =:
+    join ', ':
+      for name words(data):
+        "[$name](https://clojuredocs.org/clojure.core/$name)"
+
+  =>: |+
+    Clojure Core:
+
+    * $links
 
 # vim: ft=yaml sw=2 lisp:

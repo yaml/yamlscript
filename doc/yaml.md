@@ -1,14 +1,19 @@
 ---
-title: Necessary YAML Knowledge
+title: The YAML Data Language
 ---
 
-YAML was created to make data simple... most of the time.
-
+YAML was created to make data documents simple (most of the time).
 It was also created to give people a lot of control over how they write their
 data.
-There's actually quite a bit about YAML that you need to know in order to write
-YAMLScript well.
+
+Modern programmers generally have a decent understanding of YAML basics as it
+ends up in many places in the tech world.
+That said, there are many lesser well-known YAML concepts and features and
+YAMLScript makes use of most of them.
+
 Remember, all valid YAMLScript is required to be valid YAML syntax.
+To write YAMLScript well, you'll need to have a solid understanding of YAML
+concepts and also Clojure concepts.
 
 This document will cover all the YAML syntax, concepts and vocabulary that you
 need to know to write YAMLScript effectively.
@@ -327,4 +332,4 @@ for:
 ## See Also
 
 * [The yaml.info Site](https://www.yaml.info/learn/)
-* [Common YAML / YAMLScript Gotchas](../gotchas)
+* [Common YAML / YAMLScript Gotchas](/doc/gotchas)

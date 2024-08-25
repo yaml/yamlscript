@@ -6,7 +6,7 @@ The YAMLScript compiler and runtime written in Clojure
 
 ## Synopsis
 
-```clj
+```clojure
 (do
   (require '[yamlscript.compiler :as ys])
   (-> "foo: bar baz"

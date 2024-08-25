@@ -147,6 +147,9 @@ test-unit:
 	$(MAKE) -C ys test v=$v
 test-bindings: $(TEST_BINDINGS)
 
+serve publish:
+	$(MAKE) -C www $@
+
 ifdef s
 release: release-check release-yamlscript
 else

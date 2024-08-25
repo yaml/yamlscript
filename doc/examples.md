@@ -2,11 +2,13 @@
 title: YAMLScript Examples
 ---
 
-For now you can find YAMLScript examples in these places:
+Here are some examples of working YAMLScript code.
 
 * [Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
 * [YAMLScript Repo Examples](
   https://github.com/yaml/yamlscript/tree/main/sample)
+* [YAMLLM](https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys) -
+  A multi LLM query CLI written in YAMLScript
 
 More examples will be added here soon.
 
