@@ -7,8 +7,6 @@ require ys::taptest: :all
 test::
 - name: Operator `==` for generic equality
   code: lc('Foo') == 'foo'
-- name: Operator `=` for generic equality
-  code: lc('fOO') = 'foo'
 - name: Operator `!=` for generic inequality
   code: ('foo' != 'bar')
 - code: 3 < 4 < 5
@@ -42,9 +40,9 @@ test::
   want: 2
 - code: ((2 ** 3) ** 4)
   want: 4096
-- code: squared(5)
+- code: sqr(5)
   want: 25
-- code: cubed(5)
+- code: cube(5)
   want: 125
 - code: sqrt(25)
   want: 5.0

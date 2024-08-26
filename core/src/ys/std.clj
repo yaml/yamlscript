@@ -55,16 +55,40 @@
 ;; Short named functions for very common operations
 ;;------------------------------------------------------------------------------
 
-(intern 'ys.std 'FN clojure.core/partial)
-(intern 'ys.std 'I clojure.core/identity)
-(intern 'ys.std 'N clojure.core/count)
+;; (intern 'ys.std 'E? clojure.core/empty?)
+;; (defn NE? [x] (not (empty? x)))
+;; (intern 'ys.std 'Z? clojure.core/zero?)
+;; (defn NZ? [x] (not (zero? x)))
+(defn f? [x]
+  (cond
+    (number? x) (zero? x)
+    (seqable? x) (empty? x)
+    x false
+    :else true))
 
-(defmacro V [s]
-  `(cond
-     (string? ~s) (var-get (ns-resolve *ns* (symbol ~s)))
-     (symbol? ~s) (var-get (ns-resolve *ns* ~s))
-     (var? ~s) (var-get ~s)
-     :else (clojure.core/die "Can't get value of " ~s)))
+(defn t? [x] (not (f? x)))
+
+(defmacro t-or
+  ([] nil)
+  ([x] (if (t? x) x nil))
+  ([x & next]
+      `(if (t? ~x) ~x (t-or ~@next))))
+
+(defmacro ||| [x & xs] `(t-or ~x ~@xs))
+
+(defmacro t-and
+  ([] true)
+  ([x] (if (t? x) x nil))
+  ([x & next]
+      `(if (t? ~x) (t-and ~@next) nil)))
+
+(defmacro &&& [x & xs] `(t-and ~x ~@xs))
+
+(intern 'ys.std 'fun clojure.core/partial)
+
+(intern 'ys.std 'just clojure.core/identity)
+
+(intern 'ys.std 'len clojure.core/count)
 
 (defmacro Q [x] `(quote ~x))
 (defmacro QW [& xs]
@@ -113,7 +137,12 @@
     clojure.lang.PersistentHashSet (count x)
     (die (str "Can't convert " (type x) " to number"))))
 
-(defn to-bool [x] (boolean x))
+;; These casts already exist in Clojure:
+;; boolean
+;; set
+;; str
+;; vec
+
 (defn to-float [x] (parse-double x))
 (defn to-int [x] (parse-long x))
 (defn to-map
@@ -141,15 +170,15 @@
         a))
     (Math/pow x y)))
 
-(defn squared [x] (pow x 2))
-(defn cubed [x] (pow x 3))
+(defn sqr  [x] (pow x 2))
+(defn cube [x] (pow x 3))
 (defn sqrt [x] (Math/sqrt x))
 
 (defn +_ [x & xs]
   (cond
     (string? x) (apply str x xs)
-    (vector? x) (apply concat x xs)
     (map? x) (apply merge x xs)
+    (seqable? x) (apply concat x xs)
     :else (apply + x (map num xs))))
 
 (defn *_
@@ -162,6 +191,8 @@
      :else  (* x y)))
   ([x y & xs]
     (reduce *_ (*_ x y) xs)))
+
+;; `-` could work on maps or vectors
 
 
 ;;------------------------------------------------------------------------------
@@ -203,6 +234,12 @@
 ;;------------------------------------------------------------------------------
 ;; Control functions
 ;;------------------------------------------------------------------------------
+
+(defmacro value [s]
+  `(cond
+     (string? ~s) (var-get (ns-resolve *ns* (symbol ~s)))
+     (symbol? ~s) (var-get (ns-resolve *ns* ~s))
+     (var? ~s) (var-get ~s)))
 
 (defn call [f & args]
   (let [f (cond
@@ -338,14 +375,19 @@
     (seqable? x) (clojure.core/reverse x)
     :else (die "Can't reverse " x)))
 
-(defn rng [x y]
-  (let [[x y] (for [n [x y]]
-                (condp = (type n)
-                  Character (long n)
-                  n))]
-    (if (> y x)
-      (range x (inc y))
-      (range x (dec y) -1))))
+(defn rng [a b]
+  (let [[x y] (for [n [a b]] (if (char? n) (long n) n))]
+    (cond
+      (and (number? a) (number? b))
+      (if (> y x)
+        (range x (inc y))
+        (range x (dec y) -1))
+      (and (char? a) (char? b))
+      (if (> y x)
+        (map char (range x (inc y)))
+        (map char (range x (dec y) -1)))
+      :else
+      (die "Can't rng(" (pr-str a) ", " (pr-str b) ")"))))
 
 
 ;;------------------------------------------------------------------------------
@@ -477,20 +519,4 @@
 
 ;;------------------------------------------------------------------------------
 (comment
-  )
-
-
-
-
-(comment
-  (call "inc" 41)
-
-  (ns main (:require [ys.std :refer :all]))
-
-  (binding [*ns* (the-ns 'main)]
-    (eval (clojure.core/read-string "(resolve 'call)")))
-  (binding [*ns* (the-ns 'main)]
-    (eval (clojure.core/read-string "(call \"inc\" 41)")))
-
-  (call "inc" 41)
   )

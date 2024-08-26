@@ -36,9 +36,11 @@
 
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))
+;(def BIN (sci/new-dynamic-var 'BIN))
 (def CWD (sci/new-dynamic-var 'CWD))
 (def ENV (sci/new-dynamic-var 'ENV))
 (def INC (sci/new-dynamic-var 'INC))
+;(def PATH (sci/new-dynamic-var 'PATH))
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
 (defn clojure-core-ns []
@@ -89,8 +91,10 @@
    'unload-pod (sci/copy-var babashka.pods.sci/unload-pod nil)})
 
 (defmacro use-ns [ns-name from-ns]
-  `(let [ns# (sci/create-ns ~ns-name)]
-     (sci/copy-ns ~from-ns ns#)))
+  `(sci/copy-ns ~from-ns (sci/create-ns ~ns-name)))
+
+;(macroexpand '(use-ns 'ys.ys ys.ys))
+;(let* [ns_ (sci/create-ns 'ys.ys)] (sci/copy-ns ys.ys ))
 
 (defn classes-map [class-symbols]
   (loop [[class-symbol & class-symbols] class-symbols
@@ -106,7 +110,7 @@
                                class-symbol class)))
       m)))
 
-
+(def std-namespace (use-ns 'std ys.std))
 
 (reset! ys/sci-ctx
   (sci/init
@@ -129,7 +133,8 @@
       'str     (use-ns 'str clojure.string)
       'walk    (use-ns 'walk clojure.walk)
 
-      'std     (use-ns 'std ys.std)
+      'std     std-namespace
+      'ys.std  std-namespace
       'ys      (use-ns 'ys ys.ys)
       'json    (use-ns 'json ys.json)
       'yaml    (use-ns 'yaml ys.yaml)

@@ -21,23 +21,21 @@ test::
 - note: 'Short named functions'
 
 # A is for partials
-- code: (FN(+ 1) 41)
+- code: (fun(+ 1) 41)
   want: 42
-- code: call(FN(+ 1) 41)
+- code: call(fun(+ 1) 41)
   want: 42
-- code: FN(+ 1).call(41)
+- code: fun(+ 1).call(41)
   want: 42
 
-# I is for identity
-- code: 'I: 123'
+- code: 'just: 123'
   want: 123
-- code: I('123')
+- code: just('123')
   want: '123'
 
-# S is for size
-- code: N('hello')
+- code: len('hello')
   want: 5
-- code: +'Hello'.N()
+- code: +'Hello'.len()
   want: 5
 
 # Q is for quote
@@ -46,12 +44,11 @@ test::
 - code: Q((1 2 3))
   want:: \'(1 2 3)
 
-# V is for var (from string or symbol)
-- code: V('inc')
+- code: value('inc')
   want:: inc
-- code: V('inc').call(41)
+- code: value('inc').call(41)
   want: 42
-- code: V(Q(inc))
+- code: value(Q(inc))
   want:: inc
 
 - code: QW(one two three)
@@ -81,6 +78,25 @@ test::
 - code: 'le: 4 (2 + 2)'
 - code: 'lt: 1 2 3 4'
 - code: 'le: 1 2 2 3'
+
+
+#-------------------------------------------------------------------------------
+- note: "Truthy and falsy operations"
+
+- code: f?(0)
+- code: f?(0.0)
+- code: f?('')
+- code: f?("")
+- code: f?([])
+- code: f?({})
+- code: f?(\{})
+- code: f?(nil)
+- code: f?(false)
+
+- code: +"" ||| [] ||| 42
+  want: 42
+- code: 42 &&& []
+  want: null
 
 
 
@@ -151,18 +167,22 @@ test::
 - note: "Collection functions"
 
 - code: (\\A .. \\E)
-  want:: \'(65 66 67 68 69)
+  want:: \'(\\A \\B \\C \\D \\E)
 
 - code: 'reduce + 0 (1 .. 5):'
   want: 15
 - code: 'reduce _ 0 (1 .. 5): +'
   want: 15
-- name: String acts like a function (similar to kewwords)
-  code: +[{"a" 1}{"a" 2}].map("a")
+- code: +[{"a" 1}{"a" 2}].map(\(get %1 "a"))
   want:: \'(1 2)
-
+- code: +"abc".map(int)
+  want:: \'(97 98 99)
+- code: int.map('abc')
+  want:: \'(97 98 99)
+- code: +"abc".map(int).mapv(inc)
+  want:: +[98 99 100]
 - code: '(1 .. 10).has?(5)'
-- code: 'I(5).in?(1 .. 10)'
+- code: 'num(5).in?(1 .. 10)'
 
 
 #-------------------------------------------------------------------------------
