@@ -132,19 +132,15 @@ public class RapidyamlTest extends TestCase
 
     public void testFailure()
     {
-    //    Rapidyaml rapidyaml = new Rapidyaml();
-    //    System.out.println("hi!");
-    //    String ys = ": : : :";
-    //    boolean gotit = false;
-    //    try {
-    //        rapidyaml.parseYS(ys);
-    //    }
-    //    catch (RuntimeException e) {
-    //        gotit = true;
-    //    }
-    //    catch (Exception e) {
-    //        gotit = false;
-    //    }
-    //    assertTrue(gotit);
+        Rapidyaml rapidyaml = new Rapidyaml();
+        String ys = ": : : :";
+        boolean gotit = false;
+        try {
+            rapidyaml.parseYS(ys);
+        }
+        catch (RuntimeException e) {
+            gotit = true;
+        }
+        assertTrue(gotit);
     }
 }

@@ -8,6 +8,15 @@
 extern "C" {
 #endif
 
+void throw_java_exception(JNIEnv * env,
+                          const char* type,
+                          const char* msg)
+{
+    jclass newExcCls = env->FindClass(type);
+    if (newExcCls != NULL) // if it is null, a NoClassDefFoundError was already thrown
+        env->ThrowNew(newExcCls, msg);
+}
+
 struct ParseErrorExceptionJava : public std::runtime_error
 {
     ryml::Location location;
@@ -19,7 +28,7 @@ struct ParseErrorExceptionJava : public std::runtime_error
         , location(location_)
     {
         jclass newExcCls = env->FindClass(type);
-        if (newExcCls != NULL) //if it is null, a NoClassDefFoundError was already thrown
+        if (newExcCls != NULL) // if it is null, a NoClassDefFoundError was already thrown
             env->ThrowNew(newExcCls, message.c_str());
     }
 };
@@ -71,8 +80,9 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
     }
     catch (Ryml2EdnParseError const& exc)
     {
-        throw ParseErrorExceptionJava(env, "java/lang/Error",
-                                      exc.msg, exc.location);
+        throw_java_exception(env, "java/lang/RuntimeException", exc.msg.c_str());
+        //throw ParseErrorExceptionJava(env, "java/lang/Error",
+        //                              exc.msg, exc.location);
     }
     env->ReleaseByteArrayElements(src, src_, 0);
     env->ReleaseByteArrayElements(dst, dst_, 0);
