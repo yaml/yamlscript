@@ -11,7 +11,9 @@ RAPIDYAML_JAR_DEPS := \
       pom.xml \
   )
 
-RAPIDYAML_CLASS := src/main/java/org/rapidyaml/Rapidyaml.class
+RAPIDYAML_CLASS := \
+  src/main/java/org/rapidyaml/Rapidyaml.class \
+  src/main/java/org/rapidyaml/YamlParseErrorException.class
 
 
 #------------------------------------------------------------------------------
@@ -57,4 +59,9 @@ $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
 	jar -cvf $@ $<
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
-	javac $<
+	# this doesn't work:
+	#javac $<
+	# ... but this does:
+	javac $(RAPIDYAML_JAVA)
+
+crl: $(RAPIDYAML_CLASS)

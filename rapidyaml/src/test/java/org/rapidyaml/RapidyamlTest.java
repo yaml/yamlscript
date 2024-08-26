@@ -1,5 +1,6 @@
 package org.rapidyaml;
 
+import org.rapidyaml.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -24,23 +25,28 @@ public class RapidyamlTest extends TestCase
      */
     public static Test suite()
     {
-        return new TestSuite( RapidyamlTest.class );
+        return new TestSuite(RapidyamlTest.class);
     }
 
     private void testEdn_(String ys, String expected)
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String actual = rapidyaml.parseYS(ys);
         try {
-            assertEquals(expected.length(), actual.length());
-            assertEquals(expected, actual);
+            String actual = rapidyaml.parseYS(ys);
+            try {
+                assertEquals(expected.length(), actual.length());
+                assertEquals(expected, actual);
+            }
+            catch (Exception e) {
+                System.err.println("expected:");
+                System.err.println(expected);
+                System.err.println("actual");
+                System.err.println(actual);
+                throw e;
+            }
         }
-        catch (Exception e) {
-            System.err.println("expected:");
-            System.err.println(expected);
-            System.err.println("actual");
-            System.err.println(actual);
-            throw e;
+        catch (YamlParseErrorException e) {
+            fail("parse error:\n" + e.getMessage());
         }
     }
 
@@ -138,8 +144,14 @@ public class RapidyamlTest extends TestCase
         try {
             rapidyaml.parseYS(ys);
         }
-        catch (RuntimeException e) {
+        catch (YamlParseErrorException e) {
             gotit = true;
+        }
+        catch (RuntimeException e) {
+            gotit = false;
+        }
+        catch (Exception e) {
+            gotit = false;
         }
         assertTrue(gotit);
     }

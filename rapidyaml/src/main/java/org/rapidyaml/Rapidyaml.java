@@ -1,5 +1,6 @@
 package org.rapidyaml;
 
+import org.rapidyaml.YamlParseErrorException;
 import java.nio.charset.StandardCharsets;
 import java.nio.ByteBuffer;
 
@@ -57,7 +58,7 @@ public class Rapidyaml {
             throw new RuntimeException("wtf");
     }
 
-    public String parseYS(String srcstr) throws RuntimeException {
+    public String parseYS(String srcstr) throws RuntimeException, org.rapidyaml.YamlParseErrorException {
         String filename = "yamlscript"; // fixme
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;

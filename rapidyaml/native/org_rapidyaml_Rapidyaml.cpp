@@ -80,7 +80,8 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
     }
     catch (Ryml2EdnParseError const& exc)
     {
-        throw_java_exception(env, "java/lang/RuntimeException", exc.msg.c_str());
+        throw_java_exception(env, "org/rapidyaml/YamlParseErrorException", exc.msg.c_str());
+        //throw_java_exception(env, "java/lang/RuntimeException", exc.msg.c_str());
         //throw ParseErrorExceptionJava(env, "java/lang/Error",
         //                              exc.msg, exc.location);
     }
