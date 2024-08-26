@@ -27,6 +27,8 @@ test::
   want: 42
 - code: fun(+ 1).call(41)
   want: 42
+- code: +"inc".call(41)
+  want: 42
 
 - code: 'just: 123'
   want: 123

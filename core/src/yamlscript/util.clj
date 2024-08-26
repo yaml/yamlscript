@@ -56,6 +56,21 @@
           (die "Odd number of forms"))
        (cond-lets ~@(nnext clauses)))))
 
+(defn get-process-handle []
+  (java.lang.ProcessHandle/current))
+
+(defn get-process-info []
+  (-> ^java.lang.ProcessHandle (get-process-handle) .info))
+
+(defn get-cmd-path []
+  (-> ^java.lang.ProcessHandle$Info (get-process-info) .command .get))
+
+(defn get-cmd-bin []
+  (-> ^String (get-cmd-path) io/file .getParent))
+
+(defn get-cmd-pid []
+  (-> ^java.lang.ProcessHandle (get-process-handle) .pid))
+
 (defn get-yspath [base]
   (let [yspath (or
                  (get (System/getenv) "YSPATH")
