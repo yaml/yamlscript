@@ -39,6 +39,7 @@
 (def CWD (sci/new-dynamic-var 'CWD))
 (def ENV (sci/new-dynamic-var 'ENV))
 (def INC (sci/new-dynamic-var 'INC))
+(def RUN (sci/new-dynamic-var 'RUN))
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
 (defn clojure-core-ns []
@@ -49,8 +50,8 @@
               'ENV ENV
               'FILE ys/FILE
               'INC INC
-              'VERSION nil
-              'VERSIONS nil
+              'RUN RUN
+              'VERSION ys-version
               '$ common/$
               '$# common/$#
 
@@ -181,6 +182,19 @@
           str/trim-newline)
    :yamlscript ys-version})
 
+(defn get-runtime-info []
+  {:args (util/get-cmd-args)
+   :bin (util/get-cmd-bin)
+   :pid (util/get-cmd-pid)
+   :versions {:clojure "1.11.1"
+              :sci (->>
+                     (io/resource "SCI_VERSION")
+                     slurp
+                     str/trim-newline)
+              :yamlscript ys-version}
+   :yspath (util/get-cmd-path)
+   })
+
 (defn eval-string
   ([clj]
    (eval-string clj @sci/file))
@@ -205,6 +219,7 @@
                             :else %1)
                   args))
          ARGV args
+         RUN (get-runtime-info)
          CWD (str (babashka.fs/cwd))
          ENV (into {} (System/getenv))
          ys/FILE file
