@@ -37,6 +37,36 @@
   (transform-with-else lhs rhs (Sym "=>")))
 
 ;;-----------------------------------------------------------------------------
+;; let destructuring
+;;-----------------------------------------------------------------------------
+
+(defn transform-vec-destructure [vec-form]
+  (if-lets [vect (:Vec vec-form)
+            form (last vect)
+            list (:Lst form)
+            _ (= 2 (count list))
+            _ (= {:Sym '_**} (first list))
+            sym (:Qts (second list))]
+    (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
+    vec-form))
+
+;; XXX `let` destructuring is faked in the build stage currently.
+#_(defn transform_def [lhs rhs]
+  (if-lets [_ (= 2 (count lhs))
+            [def form] lhs
+            vect (:Sym form)
+            _ (WWW (type vect))
+            _ (vector? vect)
+            form1 (Vec vect)
+            form2 (transform-vec-destructure form1)
+            _ (not= form1 form2)
+            form (Sym (:Vec form2))
+            lhs [def form]]
+    [lhs rhs]
+    [lhs rhs]))
+
+
+;;-----------------------------------------------------------------------------
 ;; defn and fn
 ;;-----------------------------------------------------------------------------
 
@@ -120,9 +150,30 @@
 ;; Group LHS arguments as a single bindings form
 ;;-----------------------------------------------------------------------------
 
+(defn transform-vec-destructure [vec-form]
+  (if-lets [vect (:Vec vec-form)
+            form (last vect)
+            list (:Lst form)
+            _ (= 2 (count list))
+            _ (= {:Sym '_**} (first list))
+            sym (:Qts (second list))]
+    (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
+    vec-form))
+
+(defn transform-bindings [bindings]
+  (let [bindings
+        (loop [[lhs rhs & forms] (rest bindings) bindings []]
+          (let [lhs (if (:Vec lhs)
+                      (transform-vec-destructure lhs)
+                      lhs)]
+            (if (seq forms)
+              (recur forms (conj bindings lhs rhs))
+              (conj bindings lhs rhs))))]
+    (Vec bindings)))
+
 (defn- lhs-bindings [lhs rhs]
   (let [lhs (cond
-              (> (count lhs) 2) [(first lhs) (Vec (rest lhs))]
+              (> (count lhs) 2) [(first lhs) (transform-bindings lhs)]
               (:Sym lhs) [lhs (Vec [])]
               :else lhs)]
     [lhs rhs]))

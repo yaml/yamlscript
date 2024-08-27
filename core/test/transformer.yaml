@@ -177,10 +177,28 @@
 - name: Error when using then and not else
   yamlscript: |
     !yamlscript/v0
-    if (x = 1):
+    if (x == 1):
       then: a(b)
       =>:
         c: d
         e: f
   error: |
     Form after 'then' must be 'else'
+
+
+- name: Support vector destructuring in bindings with *xs
+  yamlscript: |
+    !yamlscript/v0
+    for [x *xs] lst:
+      a: b
+  clojure: |
+    (for [[x & xs] lst] (a b))
+
+
+- name: Support vector destructuring if def
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      -[x *y] =: z
+  clojure: |
+    (defn foo [] (let [[x & y] z]))
