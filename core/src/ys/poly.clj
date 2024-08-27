@@ -4,12 +4,12 @@
 (ns ys.poly)
 
 (defn ++map [a b]
-  (if (and (ifn? b) (or (seq? a) (string? a)))
+  (if (and (ifn? b) (or (sequential? a) (string? a)))
     (map b a)
     (map a b)))
 
 (defn ++mapv [a b]
-  (if (and (ifn? b) (or (seq? a) (string? a)))
+  (if (and (ifn? b) (or (sequential? a) (string? a)))
     (mapv b a)
     (mapv a b)))
 

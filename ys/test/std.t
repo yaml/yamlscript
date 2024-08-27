@@ -34,26 +34,28 @@ test::
   want: 123
 - code: just('123')
   want: '123'
+- code: a(41).inc()
+  want: 42
 
 - code: len('hello')
   want: 5
 - code: +'Hello'.len()
   want: 5
 
-# Q is for quote
-- code: Q(name)
+# q is for quote
+- code: q(name)
   want:: \'name
-- code: Q((1 2 3))
+- code: q((1 2 3))
   want:: \'(1 2 3)
 
 - code: value('inc')
   want:: inc
 - code: value('inc').call(41)
   want: 42
-- code: value(Q(inc))
+- code: value(q(inc))
   want:: inc
 
-- code: QW(one two three)
+- code: qw(one two three)
   want: [one, two, three]
 
 

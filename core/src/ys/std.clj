@@ -84,14 +84,16 @@
 
 (defmacro &&& [x & xs] `(t-and ~x ~@xs))
 
+(intern 'ys.std 'a clojure.core/identity)
+
 (intern 'ys.std 'fun clojure.core/partial)
 
 (intern 'ys.std 'just clojure.core/identity)
 
 (intern 'ys.std 'len clojure.core/count)
 
-(defmacro Q [x] `(quote ~x))
-(defmacro QW [& xs]
+(defmacro q [x] `(quote ~x))
+(defmacro qw [& xs]
   `(vec (map (fn [w#]
                (cond
                  (nil? w#) "nil"
@@ -166,14 +168,14 @@
 (defn cube [x] (pow x 3))
 (defn sqrt [x] (Math/sqrt x))
 
-(defn +_ [x & xs]
+(defn add+ [x & xs]
   (cond
     (string? x) (apply str x xs)
     (map? x) (apply merge x xs)
     (seqable? x) (apply concat x xs)
     :else (apply + x (map num xs))))
 
-(defn *_
+(defn mul+
   ([x y]
    (cond
      (and (string? x) (number? y)) (apply str (repeat y x))
@@ -182,9 +184,9 @@
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
      :else  (* x y)))
   ([x y & xs]
-    (reduce *_ (*_ x y) xs)))
+    (reduce mul+ (mul+ x y) xs)))
 
-;; `-` could work on maps or vectors
+(defn div+ [& xs] (double (apply / xs)))
 
 
 ;;------------------------------------------------------------------------------

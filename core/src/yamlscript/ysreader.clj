@@ -202,8 +202,9 @@
 (def operators
   {(Sym '.)  (Sym '_dot_)
    (Sym '..) (Sym 'rng)
-   (Sym '+) (Sym '+_)
-   (Sym '*) (Sym '*_)
+   (Sym '+) (Sym 'add+)
+   (Sym '*) (Sym 'mul+)
+   (Sym '/) (Sym 'div+)
    (Sym '!=) (Sym 'not=)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)

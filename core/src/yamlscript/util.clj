@@ -68,6 +68,9 @@
 (defn get-cmd-bin []
   (-> ^String (get-cmd-path) io/file .getParent))
 
+(defn get-cmd-args []
+  (-> ^java.lang.ProcessHandle$Info (get-process-info) .arguments .get))
+
 (defn get-cmd-pid []
   (-> ^java.lang.ProcessHandle (get-process-handle) .pid))
 

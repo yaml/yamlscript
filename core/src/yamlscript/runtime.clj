@@ -33,21 +33,21 @@
 
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))
-(def CONF (sci/new-dynamic-var 'CONF))
 (def CWD (sci/new-dynamic-var 'CWD))
 (def ENV (sci/new-dynamic-var 'ENV))
 (def INC (sci/new-dynamic-var 'INC))
+(def RUN (sci/new-dynamic-var 'RUN))
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
 (def clojure-core-ns
   (let [core {;; Runtime variables
               'ARGS ARGS
               'ARGV ARGV
-              'CONF CONF
               'CWD CWD
               'ENV ENV
               'FILE ys/FILE
               'INC INC
+              'RUN RUN
               'VERSION ys-version
               '$ common/$
               '$# common/$#
@@ -184,8 +184,9 @@
     {:namespaces namespaces
      :classes classes}))
 
-(defn get-conf []
-  {:bin (util/get-cmd-bin)
+(defn get-runtime-info []
+  {:args (util/get-cmd-args)
+   :bin (util/get-cmd-bin)
    :pid (util/get-cmd-pid)
    :versions {:clojure "1.11.1"
               :sci (->>
@@ -220,7 +221,7 @@
                             :else %1)
                   args))
          ARGV args
-         CONF (get-conf)
+         RUN (get-runtime-info)
          CWD (str (babashka.fs/cwd))
          ENV (into {} (System/getenv))
          ys/FILE file

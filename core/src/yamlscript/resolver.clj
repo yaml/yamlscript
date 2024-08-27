@@ -178,9 +178,13 @@
       (set/rename-keys node {style (keyword tag)})
       (case style
         := (let [node
-               ;; Remove leading escape character from value
-                 (if (re-find
-                       #"^[\.\+][\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
+                 ;; Remove leading escape character from value
+                 (if
+                  (or
+                    (re-find
+                      #"^[\.\+][\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
+                    (re-find
+                      #"^-[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?]" val))
                    (assoc node := (subs val 1))
                    node)]
              (set/rename-keys node {:= :exp}))
