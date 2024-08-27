@@ -1,6 +1,5 @@
 package org.rapidyaml;
 
-import org.rapidyaml.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -15,9 +14,9 @@ public class RapidyamlTest extends TestCase
      *
      * @param testName name of the test case
      */
-    public RapidyamlTest(String testName )
+    public RapidyamlTest(String testName)
     {
-        super( testName );
+        super(testName);
     }
 
     /**
@@ -139,19 +138,22 @@ public class RapidyamlTest extends TestCase
     public void testFailure()
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String ys = ": : : :";
         boolean gotit = false;
         try {
-            rapidyaml.parseYS(ys);
+            rapidyaml.parseYS(": : : :");
         }
-        catch (YamlParseErrorException e) {
+        catch(YamlParseErrorException e) {
             gotit = true;
+            assertEquals(2, e.offset);
+            assertEquals(1, e.line);
+            assertEquals(3, e.column);
+            assertFalse(e.getMessage().equals(""));
         }
-        catch (RuntimeException e) {
-            gotit = false;
+        catch(RuntimeException e) {
+            fail("wrong exception type");
         }
-        catch (Exception e) {
-            gotit = false;
+        catch(Exception e) {
+            fail("wrong exception type");
         }
         assertTrue(gotit);
     }

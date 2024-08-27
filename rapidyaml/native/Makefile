@@ -63,7 +63,8 @@ $(RAPIDYAML_SO): $(RAPIDYAML_SO_DEPS)
 	ln -fs $@ librapidyaml.so
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
-	javac -h . $<
+	#javac -h . $<
+	javac -h . $(RAPIDYAML_JAVA)
 
 $(RAPIDYAML_HPP): rapidyaml
 	$(PYTHON) rapidyaml/tools/amalgamate.py \

@@ -12,26 +12,31 @@ void throw_java_exception(JNIEnv * env,
                           const char* type,
                           const char* msg)
 {
-    jclass newExcCls = env->FindClass(type);
-    if (newExcCls != NULL) // if it is null, a NoClassDefFoundError was already thrown
-        env->ThrowNew(newExcCls, msg);
+    jclass clazz = env->FindClass(type);
+    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
+        env->ThrowNew(clazz, msg);
 }
 
-struct ParseErrorExceptionJava : public std::runtime_error
+void throw_parse_error(JNIEnv *env, size_t offset, size_t line, size_t column, const char *msg)
 {
-    ryml::Location location;
-    ParseErrorExceptionJava(JNIEnv * env,
-                            const char* type,
-                            std::string const& message,
-                            ryml::Location const& location_)
-        : std::runtime_error(message)
-        , location(location_)
+    // see https://stackoverflow.com/questions/55013243/jni-custom-exceptions-with-more-than-one-parameter
+    jclass clazz = env->FindClass("org/rapidyaml/YamlParseErrorException");
+    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
     {
-        jclass newExcCls = env->FindClass(type);
-        if (newExcCls != NULL) // if it is null, a NoClassDefFoundError was already thrown
-            env->ThrowNew(newExcCls, message.c_str());
+        jstring jmsg = env->NewStringUTF(msg);
+        jint joffset = (jint)offset;
+        jint jline = (jint)line;
+        jint jcol = (jint)column;
+        // see https://www.rgagnon.com/javadetails/java-0286.html
+        // about the proper signature.
+        // we want <init>(int, int, int, String):
+        const char * const signature = "(IIILjava/lang/String;)V";
+        jmethodID ctor = env->GetMethodID(clazz, "<init>", signature);
+        jobject jexc = env->NewObject(clazz, ctor, joffset, jline, jcol, jmsg);
+        env->Throw((jthrowable)jexc); // https://stackoverflow.com/questions/2455668/jni-cast-between-jobect-and-jthrowable
     }
-};
+}
+
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
@@ -80,10 +85,7 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
     }
     catch (Ryml2EdnParseError const& exc)
     {
-        throw_java_exception(env, "org/rapidyaml/YamlParseErrorException", exc.msg.c_str());
-        //throw_java_exception(env, "java/lang/RuntimeException", exc.msg.c_str());
-        //throw ParseErrorExceptionJava(env, "java/lang/Error",
-        //                              exc.msg, exc.location);
+        throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
     }
     env->ReleaseByteArrayElements(src, src_, 0);
     env->ReleaseByteArrayElements(dst, dst_, 0);
