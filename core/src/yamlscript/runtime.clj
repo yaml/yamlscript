@@ -27,10 +27,7 @@
    [ys.ys :as ys]
    [ys.taptest]
    [yamlscript.common :as common]
-   [yamlscript.util
-    :as util
-    :refer [abspath
-            get-yspath]]))
+   [yamlscript.util :as util]))
 
 (def ys-version "0.1.72")
 
@@ -42,7 +39,7 @@
 (def RUN (sci/new-dynamic-var 'RUN))
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
-(defn clojure-core-ns []
+(def clojure-core-ns
   (let [core {;; Runtime variables
               'ARGS ARGS
               'ARGV ARGV
@@ -85,13 +82,52 @@
         poly (update-vals poly #(sci/copy-var* %1 nil))]
     (merge core std poly)))
 
-(defn babashka-pods-ns []
+(def babashka-pods-ns
   {'load-pod (sci/copy-var ys/load-pod nil)
    'unload-pod (sci/copy-var babashka.pods.sci/unload-pod nil)})
 
 (defmacro use-ns [ns-name from-ns]
-  `(let [ns# (sci/create-ns ~ns-name)]
-     (sci/copy-ns ~from-ns ns#)))
+  `(sci/copy-ns ~from-ns (sci/create-ns ~ns-name)))
+
+(def cli-namespace (use-ns 'cli clojure.tools.cli))
+(def clj-namespace (use-ns 'clj ys.clj))
+(def std-namespace (use-ns 'std ys.std))
+(def ys-namespace (use-ns 'ys ys.ys))
+(def fs-namespace (use-ns 'fs babashka.fs))
+(def http-namespace (use-ns 'http babashka.http-client))
+(def io-namespace (use-ns 'io clojure.java.io))
+(def math-namespace (use-ns 'math clojure.math))
+(def process-namespace (use-ns 'process babashka.process))
+(def set-namespace (use-ns 'set clojure.set))
+(def str-namespace (use-ns 'str clojure.string))
+(def walk-namespace (use-ns 'walk clojure.walk))
+(def json-namespace (use-ns 'json ys.json))
+(def yaml-namespace (use-ns 'yaml ys.yaml))
+(def taptest-namespace (use-ns 'ys.taptest ys.taptest))
+
+(def namespaces
+  {'main {}
+
+   ;; These need to be first:
+   'clojure.core clojure-core-ns 'core clojure-core-ns
+   'ys      ys-namespace    'ys.ys   ys-namespace
+   'std     std-namespace   'ys.std  std-namespace
+   'clj     clj-namespace   'ys.clj  clj-namespace
+
+   'cli     cli-namespace
+   'fs      fs-namespace
+   'http    http-namespace
+   'io      io-namespace
+   'json    json-namespace
+   'math    math-namespace
+   'pods    babashka-pods-ns
+   'process process-namespace
+   'set     set-namespace
+   'str     str-namespace
+   'walk    walk-namespace
+   'yaml    yaml-namespace
+
+   'ys.taptest taptest-namespace})
 
 (defn classes-map [class-symbols]
   (loop [[class-symbol & class-symbols] class-symbols
@@ -107,80 +143,46 @@
                                class-symbol class)))
       m)))
 
+(def classes
+  (classes-map
+    '[clojure.lang.Atom
+      clojure.lang.Fn
+      clojure.lang.Keyword
+      clojure.lang.Numbers
+      clojure.lang.Range
+      clojure.lang.Seqable
+      clojure.lang.Sequential
+      clojure.lang.Symbol
 
+      java.io.File
+
+      java.lang.Boolean
+      java.lang.Byte
+      java.lang.Character
+      java.lang.Class
+      java.lang.Double
+      java.lang.Error
+      java.lang.Exception
+      java.lang.Float
+      java.lang.Integer
+      java.lang.Long
+      java.lang.Math
+      java.lang.Number
+      java.lang.Object
+      java.lang.Process
+      java.lang.Runtime
+      java.lang.String
+      java.lang.System
+      java.lang.Thread
+      java.lang.Throwable
+
+      java.math.BigDecimal
+      java.math.BigInteger]))
 
 (reset! ys/sci-ctx
   (sci/init
-    {:namespaces
-     {'main {}
-
-      ;; These 2 need to be first:
-      'clojure.core (clojure-core-ns)
-      'ys.ys   (use-ns 'ys.ys ys.ys)
-
-      'cli     (use-ns 'cli clojure.tools.cli)
-      'clj     (use-ns 'clj ys.clj)
-      'fs      (use-ns 'fs babashka.fs)
-      'http    (use-ns 'http babashka.http-client)
-      'io      (use-ns 'io clojure.java.io)
-      'math    (use-ns 'math clojure.math)
-      'pods    (babashka-pods-ns)
-      'process (use-ns 'process babashka.process)
-      'set     (use-ns 'set clojure.set)
-      'str     (use-ns 'str clojure.string)
-      'walk    (use-ns 'walk clojure.walk)
-
-      'std     (use-ns 'std ys.std)
-      'ys      (use-ns 'ys ys.ys)
-      'json    (use-ns 'json ys.json)
-      'yaml    (use-ns 'yaml ys.yaml)
-
-      'ys.taptest (use-ns 'ys.taptest ys.taptest)}
-
-
-     :classes (classes-map
-                '[clojure.lang.Atom
-                  clojure.lang.Fn
-                  clojure.lang.Keyword
-                  clojure.lang.Numbers
-                  clojure.lang.Range
-                  clojure.lang.Seqable
-                  clojure.lang.Sequential
-                  clojure.lang.Symbol
-
-                  java.io.File
-
-                  java.lang.Boolean
-                  java.lang.Byte
-                  java.lang.Character
-                  java.lang.Class
-                  java.lang.Double
-                  java.lang.Error
-                  java.lang.Exception
-                  java.lang.Float
-                  java.lang.Integer
-                  java.lang.Long
-                  java.lang.Math
-                  java.lang.Number
-                  java.lang.Object
-                  java.lang.Process
-                  java.lang.Runtime
-                  java.lang.String
-                  java.lang.System
-                  java.lang.Thread
-                  java.lang.Throwable
-
-                  java.math.BigDecimal
-                  java.math.BigInteger])}))
-
-(sci/intern @ys/sci-ctx 'clojure.core 'VERSION ys-version)
-(sci/intern @ys/sci-ctx 'clojure.core 'VERSIONS
-  {:clojure "1.11.1"
-   :sci (->>
-          (io/resource "SCI_VERSION")
-          slurp
-          str/trim-newline)
-   :yamlscript ys-version})
+    {:namespaces namespaces
+     :classes classes}))
 
 (defn get-runtime-info []
   {:args (util/get-cmd-args)
@@ -208,7 +210,7 @@
    (sci/alter-var-root sci/in (constantly *in*))
 
    (let [clj (str/trim-newline clj)
-         file (abspath (or file "NO-NAME"))]
+         file (util/abspath (or file "NO-NAME"))]
      (if (= "" clj)
        ""
        (sci/binding
@@ -223,7 +225,7 @@
          CWD (str (babashka.fs/cwd))
          ENV (into {} (System/getenv))
          ys/FILE file
-         INC (get-yspath file)]
+         INC (util/get-yspath file)]
          (let [resp (sci/eval-string+
                       @ys/sci-ctx
                       clj
