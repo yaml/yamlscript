@@ -3,7 +3,7 @@
 defn main(n):
   primes =: primes-up-to(n)
   say: |
-    The $N(primes) prime numbers less than $n are:
+    The $count(primes) prime numbers less than $n are:
     $join("\n" primes)
 
 defn primes-up-to(limit):
@@ -21,6 +21,6 @@ defn primes-up-to(limit):
             (i + i + 1))
     : aset(refs j false)
   cons 2:
-    map comp(inc FN(* 2)):
-      filter FN(aget refs):
+    map comp(inc fun(* 2)):
+      filter fun(aget refs):
         range(1 max-i)

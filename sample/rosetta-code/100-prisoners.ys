@@ -1,14 +1,12 @@
 # Ported from https://rosettacode.org/wiki/100_prisoners#Clojure
 
---- !yamlscript/v0
-
-ns: clojure-sandbox::prisoners
+!yamlscript/v0
 
 defn main(n=5000):
   ? +{:keys [random-successes
              optimal-successes
              run-count]} =
-  : simulate-n-runs: n
+  : simulate-n-runs(n)
 
   say: +"Probability of survival with random search:\ " +
        float(random-successes / run-count)
@@ -51,7 +49,7 @@ defn try-luck(drawers drawer-searching-function):
   :: Returns 1 if all prisoners find their number otherwise 0.
 
   loop prisoners range(100):
-    if not(prisoners.empty?()):
+    if t?(prisoners):
       if prisoners.first().drawer-searching-function(drawers):
         recur: rest(prisoners)
         else: 0

@@ -1,12 +1,12 @@
 # Ported from https://rosettacode.org/wiki/Weird_numbers#Ruby
 
---- !yamlscript/v0
+!yamlscript/v0
 
 defn main(max=25):
   w =: sieve(17000)
   say: "The first $max weird numbers:"
   loop n 2, count 0:
-    if count < max:
+    when count < max:
       recur (n + 2):
         if not(w.$n):
           then:
@@ -18,28 +18,25 @@ defn main(max=25):
 defn sieve(limit):
   loop i 2, w1 vec([false] * limit):
     if i < limit:
-      then:
-        recur (i + 2):
-          if not(w1.$i):
-            then:
-              divs =: divisors(i)
-              if not(abundant(i divs)):
-                assoc w1: i true
-                if semiperfect(i divs):
-                  then:
-                    loop j i, w3 w1:
-                      if j < limit:
-                        then:
-                          recur: (j + i) assoc(w3 j true)
-                        else: w3
-                  else: w1
-            else: w1
+      recur (i + 2):
+        if not(w1.$i):
+          then:
+            divs =: divisors(i)
+            if not(abundant(i divs)):
+              assoc w1: i true
+              if semiperfect(i divs):
+                loop j i, w3 w1:
+                  if j < limit:
+                    recur: (j + i) assoc(w3 j true)
+                    else: w3
+                else: w1
+          else: w1
       else: w1
 
 defn divisors(n):
   loop divs [1], divs2 [], i 2:
-    if (i ** 2) <= n:
-      if (n % i).zero?():
+    if sqr(i) <= n:
+      if f?(n % i):
         then:
           divs .=: conj(i)
           j =: n / i
@@ -53,7 +50,7 @@ defn divisors(n):
       concat divs2: divs.reverse()
 
 defn abundant(n, divs):
-  (+ divs*) > n
+  sum(divs*) > n
 
 defn semiperfect(n, divs):
   when divs.count() > 0:

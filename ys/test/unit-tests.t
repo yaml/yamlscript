@@ -22,7 +22,7 @@ test::
 
 - name: Dot chain
   code: (1 .. 10).drop(2).take(3)
-  want:: +[3 4 5]
+  want:: -[3 4 5]
 
 - name: Get nth
   code: (1 .. 10).5

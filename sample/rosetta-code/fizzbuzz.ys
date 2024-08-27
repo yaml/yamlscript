@@ -1,28 +1,18 @@
-#!/usr/bin/env ys-0
-
-# This program has multiple implementations of "fizzbuzz".
-
-# usage: yamlscript fizzbuzz.ys [<count>] [<fizzbuzz-fn-#>]
-
-# The main function runs a certain requested fizzbuzz implementation function
-# for a certain requested number (default is 100).
+!yamlscript/v0
 
 defn main(count=100 impl=1):
+  :: |
+    Invoke one of the FizzBuzz implementations below.
+
+    usage: ys fizzbuzz.ys [<count> [<implementation-number>]]
+
   fizzbuzz =: "fizzbuzz-$impl"
-
-  when-not ENV.YS_TEST:
-    say: "Running function '$fizzbuzz' with count=$count"
-
-  function =: resolve(fizzbuzz.symbol())
-  result   =: function(count)
-
-  mapv say: result
-
-
-# These implementation functions were adapted from
-# https://rosettacode.org/wiki/FizzBuzz#Clojure
+  say: "Running function '$fizzbuzz' with count=$count"
+  mapv say:
+    call value(fizzbuzz): count
 
 defn fizzbuzz-1(n):
+  :: Implementation 1 - with 'map'
   map _ (1 .. n):
     fn(x):
       cond:
@@ -32,22 +22,22 @@ defn fizzbuzz-1(n):
         else          : x
 
 defn fizzbuzz-2(n):
+  :: Implementation 2 - with 'loop'
   loop i 1, l []:
-    if i > n:
-      then: l
-      else:
-        recur inc(i):
-          conj l:
-            cond:
-              zero?(i % 15) : 'FizzBuzz'
-              zero?(i % 5)  : 'Buzz'
-              zero?(i % 3)  : 'Fizz'
-              else          : i
+    if i <= n:
+      recur inc(i):
+        conj l:
+          condp eq 0:
+            i % 15 : 'FizzBuzz'
+            i % 5  : 'Buzz'
+            i % 3  : 'Fizz'
+            else   : i
+      else: l
 
 defn fizzbuzz-3(n):
+  :: Implementation 3 - with 'for'
   for x (1 .. n):
-    s =:
+    t-or _ x:
       str:
-        when zero?(x % 3): 'Fizz'
-        or (zero?(x % 5) && 'Buzz'): nil
-    if empty?(s): x s
+        when (x % 3) == 0: 'Fizz'
+        when (x % 5) == 0: 'Buzz'

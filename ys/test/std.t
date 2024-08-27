@@ -27,7 +27,7 @@ test::
   want: 42
 - code: fun(+ 1).call(41)
   want: 42
-- code: +"inc".call(41)
+- code: -"inc".call(41)
   want: 42
 
 - code: 'just: 123'
@@ -39,7 +39,7 @@ test::
 
 - code: len('hello')
   want: 5
-- code: +'Hello'.len()
+- code: -'Hello'.len()
   want: 5
 
 # q is for quote
@@ -97,7 +97,7 @@ test::
 - code: f?(nil)
 - code: f?(false)
 
-- code: +"" ||| [] ||| 42
+- code: -"" ||| [] ||| 42
   want: 42
 - code: 42 &&& []
   want: null
@@ -129,9 +129,9 @@ test::
   want: null
 - code: nil.foo
   want: null
-- code: +{}.$NIL
+- code: -{}.$NIL
   want: null
-- code: +[].$NIL
+- code: -[].$NIL
   what: error
   want: Can't (get+ [] nil)
 
@@ -143,13 +143,13 @@ test::
 - note: "Control functions"
 
 # call a function by reference, string, or symbol
-- code: +'inc'.call(41)
+- code: -'inc'.call(41)
   want: 42
 - code: \'inc.call(41)
   want: 42
 - code: |
     ns: foo
-    +"inc": .call(41)
+    -"inc": .call(41)
   want: 42
 
 
@@ -163,7 +163,7 @@ test::
 - code: uc1('foo') == 'Foo'
 - code: lc('FoOoO') == 'foooo'
 
-- code: +"Hello".split().join()
+- code: -"Hello".split().join()
   want: Hello
 
 
@@ -177,14 +177,14 @@ test::
   want: 15
 - code: 'reduce _ 0 (1 .. 5): +'
   want: 15
-- code: +[{"a" 1}{"a" 2}].map(\(get %1 "a"))
+- code: -[{"a" 1}{"a" 2}].map(\(get %1 "a"))
   want:: \'(1 2)
-- code: +"abc".map(int)
+- code: -"abc".map(int)
   want:: \'(97 98 99)
 - code: int.map('abc')
   want:: \'(97 98 99)
-- code: +"abc".map(int).mapv(inc)
-  want:: +[98 99 100]
+- code: -"abc".map(int).mapv(inc)
+  want:: -[98 99 100]
 - code: '(1 .. 10).has?(5)'
 - code: 'num(5).in?(1 .. 10)'
 

@@ -5,7 +5,7 @@
 require ys::taptest: :all
 
 test::
-- code: +"".split()
-  want:: +[]
+- code: -"".split()
+  want: []
 
 done:
