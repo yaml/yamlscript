@@ -586,17 +586,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/install/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
@@ -731,7 +720,7 @@
       <url>
         <loc>https://yamlscript.org/doc/cheat/</loc>
         
-          <lastmod>2024-08-18T19:34:14.100Z</lastmod>
+          <lastmod>2024-08-25T20:22:19.756Z</lastmod>
         
         
         
@@ -742,7 +731,18 @@
       <url>
         <loc>https://yamlscript.org/doc/yaml/</loc>
         
-          <lastmod>2024-08-18T19:34:14.100Z</lastmod>
+          <lastmod>2024-08-25T20:22:19.760Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/</loc>
+        
+          <lastmod>2024-08-25T20:26:12.752Z</lastmod>
         
         
         
@@ -753,7 +753,7 @@
       <url>
         <loc>https://yamlscript.org/doc/ys/</loc>
         
-          <lastmod>2024-08-24T00:41:11.648Z</lastmod>
+          <lastmod>2024-08-27T21:01:12.036Z</lastmod>
         
         
         
@@ -764,7 +764,7 @@
       <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-08-24T00:41:11.648Z</lastmod>
+          <lastmod>2024-08-27T21:01:12.040Z</lastmod>
         
         
         
