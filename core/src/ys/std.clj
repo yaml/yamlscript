@@ -58,6 +58,12 @@
 (intern 'ys.std 'FN clojure.core/partial)
 (intern 'ys.std 'I clojure.core/identity)
 (intern 'ys.std 'N clojure.core/count)
+(defn f? [x]
+  (cond
+    (number? x) (zero? x)
+    (seqable? x) (empty? x)
+    x false
+    :else true))
 
 (defmacro V [s]
   `(cond
@@ -65,6 +71,23 @@
      (symbol? ~s) (var-get (ns-resolve *ns* ~s))
      (var? ~s) (var-get ~s)
      :else (clojure.core/die "Can't get value of " ~s)))
+(defn t? [x] (not (f? x)))
+
+(defmacro t-or
+  ([] nil)
+  ([x] (if (t? x) x nil))
+  ([x & next]
+      `(if (t? ~x) ~x (t-or ~@next))))
+
+(defmacro ||| [x & xs] `(t-or ~x ~@xs))
+
+(defmacro t-and
+  ([] true)
+  ([x] (if (t? x) x nil))
+  ([x & next]
+      `(if (t? ~x) (t-and ~@next) nil)))
+
+(defmacro &&& [x & xs] `(t-and ~x ~@xs))
 
 (defmacro Q [x] `(quote ~x))
 (defmacro QW [& xs]
@@ -145,14 +168,14 @@
 (defn cubed [x] (pow x 3))
 (defn sqrt [x] (Math/sqrt x))
 
-(defn +_ [x & xs]
+(defn add+ [x & xs]
   (cond
     (string? x) (apply str x xs)
-    (vector? x) (apply concat x xs)
     (map? x) (apply merge x xs)
+    (seqable? x) (apply concat x xs)
     :else (apply + x (map num xs))))
 
-(defn *_
+(defn mul+
   ([x y]
    (cond
      (and (string? x) (number? y)) (apply str (repeat y x))
@@ -161,7 +184,9 @@
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
      :else  (* x y)))
   ([x y & xs]
-    (reduce *_ (*_ x y) xs)))
+    (reduce mul+ (mul+ x y) xs)))
+
+(defn div+ [& xs] (double (apply / xs)))
 
 
 ;;------------------------------------------------------------------------------
@@ -473,20 +498,4 @@
 
 ;;------------------------------------------------------------------------------
 (comment
-  )
-
-
-
-
-(comment
-  (call "inc" 41)
-
-  (ns main (:require [ys.std :refer :all]))
-
-  (binding [*ns* (the-ns 'main)]
-    (eval (clojure.core/read-string "(resolve 'call)")))
-  (binding [*ns* (the-ns 'main)]
-    (eval (clojure.core/read-string "(call \"inc\" 41)")))
-
-  (call "inc" 41)
   )

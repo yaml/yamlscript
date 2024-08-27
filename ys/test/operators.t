@@ -33,7 +33,7 @@ test::
 - code: 2 * 3 * 4
   want: 24
 - code: 24 / 3 / 4
-  want: 2
+  want: 2.0
 - code: 2 + 3 + 4
   want: 9
 - code: 9 - 3 - 4

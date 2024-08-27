@@ -202,11 +202,14 @@
 (def operators
   {(Sym '.)  (Sym '_dot_)
    (Sym '..) (Sym 'rng)
-   (Sym '+) (Sym '+_)
-   (Sym '*) (Sym '*_)
+   (Sym '+) (Sym 'add+)
+   (Sym '*) (Sym 'mul+)
+   (Sym '/) (Sym 'div+)
    (Sym '!=) (Sym 'not=)
    (Sym '||) (Sym 'or)
    (Sym '&&) (Sym 'and)
+   (Sym '|||) (Sym 't-or)
+   (Sym '&&i&) (Sym 't-and)
    (Sym '%)  (Sym 'rem)
    (Sym '%%) (Sym 'mod)
    (Sym '**) (Sym 'pow)})
@@ -223,7 +226,7 @@
                      (partition 2)
                      (map second)
                      (apply = %1))
-              (map Sym '[+ - * / || && . ** = == > >= < <=])))
+              (map Sym '[+ - * / || ||| && &&& . ** = == > >= < <=])))
         (let [op (second expr)
               op (or (operators op) op)]
           (->> expr

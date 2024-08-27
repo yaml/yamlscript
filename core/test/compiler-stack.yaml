@@ -194,9 +194,9 @@
   build: |
     {:pairs
      [{:Sym inc}
-      {:Lst [{:Sym *_} {:Int 6} {:Int 7}]}]}
+      {:Lst [{:Sym mul+} {:Int 6} {:Int 7}]}]}
   print: |
-    (inc (*_ 6 7))
+    (inc (mul+ 6 7))
 
 
 - name: Function call ysexpr
@@ -237,9 +237,9 @@
   build: |
     {:pairs
      [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
-      {:Lst [{:Sym +_} {:Sym a} {:Sym b}]}]}
+      {:Lst [{:Sym add+} {:Sym a} {:Sym b}]}]}
   print: |
-    (defn foo [a b] (+_ a b))
+    (defn foo [a b] (add+ a b))
 
 
 - name: Structured defn expression
@@ -310,14 +310,14 @@
       [{:Sym defn} {:Sym bar} nil {:Vec [{:Sym a} {:Sym b}]}]
       {:pairs
        ([{:Sym def} {:Sym c}]
-        {:Lst [{:Sym +_} {:Sym a} {:Sym b}]}
+        {:Lst [{:Sym add+} {:Sym a} {:Sym b}]}
         {:Sym =>}
-        {:Lst [{:Sym *_} {:Int 2} {:Sym c}]})}
+        {:Lst [{:Sym mul+} {:Int 2} {:Sym c}]})}
       {:Sym bar}
       [{:Int 10} {:Int 20}])}
   print: |
     (def foo 123)
-    (defn bar [a b] (let [c (+_ a b)] (*_ 2 c)))
+    (defn bar [a b] (let [c (add+ a b)] (mul+ 2 c)))
     (bar 10 20)
 
 
@@ -442,7 +442,7 @@
      ([{:Sym def} {:Sym x}]
       {:Str "a\nb"}
       [{:Sym def} {:Sym y}]
-      {:Lst [{:Sym +_} {:Str "c"} {:Str "d\ne"}]})}
+      {:Lst [{:Sym add+} {:Str "c"} {:Str "d\ne"}]})}
 
 
 - name: fn special form
@@ -454,7 +454,7 @@
     {:pairs
      [{:def "add ="} {:pairs [{:exp "fn [a b]"} {:exp "a + b"}]}]}
   clojure: |
-    (def add (fn [a b] (+_ a b)))
+    (def add (fn [a b] (add+ a b)))
 
 
 - name: Support '%:' for left/right grouping

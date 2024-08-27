@@ -133,7 +133,12 @@
     (let [[a b c] lhs
           lhs [a b]
           op (:Sym c)
-          op (Sym (or ({'|| 'or, '+ '+_, '* '*_} op) op))
+          op (Sym (or ({'|| 'or
+                        '||| 't-or
+                        '+ 'add+
+                        '* 'mul+
+                        '/ 'div+
+                        '** 'pow} op) op))
           rhs (Lst [op b rhs])]
       [lhs rhs])))
 

@@ -72,7 +72,7 @@
     !yamlscript/v0
     (a + "-" + b)
   clojure: |
-    (+_ a "-" b)
+    (add+ a "-" b)
 
 
 - name: String repeat operator
@@ -80,9 +80,9 @@
     !yamlscript/v0
     ("foo" * 3)
   transform: |
-    {:Lst [{:Sym *_} {:Str "foo"} {:Int 3}]}
+    {:Lst [{:Sym mul+} {:Str "foo"} {:Int 3}]}
   clojure: |
-    (*_ "foo" 3)
+    (mul+ "foo" 3)
 
 
 - name: Nested mappings
@@ -150,7 +150,7 @@
     =>: (x + 1)
   clojure: |
     (def x 41)
-    (+_ x 1)
+    (add+ x 1)
 
 
 - name: (a + b + c) -> (+ a b c)
@@ -158,7 +158,7 @@
     !yamlscript/v0
     =>: (a + b + c)
   clojure: |
-    (+_ a b c)
+    (add+ a b c)
 
 
 - name: Pre-declare top level functions as needed
@@ -211,7 +211,7 @@
     !yamlscript/v0
     =>: a + b
   clojure: |
-    (+_ a b)
+    (add+ a b)
 
 
 - name: Multiple same operators without parens
@@ -219,7 +219,7 @@
     !yamlscript/v0
     =>: a + b + c
   clojure: |
-    (+_ a b c)
+    (add+ a b c)
 
 
 - name: The => operator inside parens
@@ -238,7 +238,7 @@
       x =: y * x
       =>: x
   clojure: |
-    (defn foo [x] (let [y (+_ x 1) x (*_ y x)] x))
+    (defn foo [x] (let [y (add+ x 1) x (mul+ y x)] x))
 
 
 - name: Multiple pairs in let
@@ -250,7 +250,7 @@
       prn: x
       =>: x
   clojure: |
-    (defn foo [x] (let [y (+_ x 1)] (prn y) (prn x) x))
+    (defn foo [x] (let [y (add+ x 1)] (prn y) (prn x) x))
 
 
 - name: let in let
@@ -263,7 +263,10 @@
       prn: x
       =>: x
   clojure: |
-    (defn foo [x] (let [y (+_ x 1)] (prn y) (let [x (*_ y x)] (prn x) x)))
+    (defn
+      foo
+      [x]
+      (let [y (add+ x 1)] (prn y) (let [x (mul+ y x)] (prn x) x)))
 
 
 - name: let not first in defn
@@ -275,7 +278,7 @@
       prn: y
       =>: x + y
   clojure: |
-    (defn foo [x] (prn x) (let [y (+_ x 1)] (prn y) (+_ x y)))
+    (defn foo [x] (prn x) (let [y (add+ x 1)] (prn y) (add+ x y)))
 
 
 - name: let over lambda
@@ -289,7 +292,7 @@
     say:
       lol(10): 4
   clojure: |
-    (defn lol [x] (let [y (*_ 2 x)] (fn [& [_1]] (+_ _1 y))))
+    (defn lol [x] (let [y (mul+ 2 x)] (fn [& [_1]] (add+ _1 y))))
     (say ((lol 10) 4))
 
 
@@ -299,7 +302,7 @@
     defn increase(x n=1):
       =>: x + n
   clojure: |
-    (defn increase ([x n] (+_ x n)) ([x] (increase x 1)))
+    (defn increase ([x n] (add+ x n)) ([x] (increase x 1)))
 
 
 - name: Call main when program has one top level (defn main ...) form
@@ -345,9 +348,9 @@
        {:Vec
         [{:Sym &}
          {:Vec [{:Sym _1} {:Sym _} {:Sym _} {:Sym _4}]}]}
-       {:Lst [{:Sym +_} {:Sym _1} {:Sym _4}]}]})}
+       {:Lst [{:Sym add+} {:Sym _1} {:Sym _4}]}]})}
   clojure: |
-    (def foo (fn [& [_1 _ _ _4]] (+_ _1 _4)))
+    (def foo (fn [& [_1 _ _ _4]] (add+ _1 _4)))
 
 
 - name: Anonymous function 2
@@ -355,7 +358,7 @@
     !yamlscript/v0
     map: \(str ((%1 / %3) + %2)) (1 .. 3)
   clojure: |
-    (map (fn [& [_1 _2 _3]] (str (+_ (/ _1 _3) _2))) (rng 1 3))
+    (map (fn [& [_1 _2 _3]] (str (add+ (div+ _1 _3) _2))) (rng 1 3))
 
 
 - name: Default mapping semantic is a list of pairs
@@ -409,9 +412,9 @@
       [width]
       (let
        [stars
-        (fn [& [_1]] (*_ (inc _1) "*"))
+        (fn [& [_1]] (mul+ (inc _1) "*"))
         spaces
-        (fn [& [_1]] (*_ _1 " "))
+        (fn [& [_1]] (mul+ _1 " "))
         top
         (join (map ((fn [& [_1]] (line width _1)) (rng width 1))))]))
 
@@ -421,7 +424,7 @@
     !yamlscript/v0
     say: \(inc(%1) * 2)
   clojure: |
-    (say (fn [& [_1]] (*_ (inc _1) 2)))
+    (say (fn [& [_1]] (mul+ (inc _1) 2)))
 
 
 - name: Function call symbol ends with ?
@@ -644,7 +647,7 @@
     say: -"123" + ' let''s go'
     say: '123 let''s go'
   clojure: |
-    (say (+_ "123" " let's go"))
+    (say (add+ "123" " let's go"))
     (say "123 let's go")
 
 
@@ -666,7 +669,7 @@
     !yamlscript/v0
     =>: 3 * "hi $name\n"
   clojure: |
-    (*_ 3 (str "hi " name "\n"))
+    (mul+ 3 (str "hi " name "\n"))
 
 
 - name: Interpolated path lookup
@@ -715,7 +718,7 @@
     defn foo(a _ b):
       =>: a + b
   clojure: |
-    (defn foo [a _ b] (+_ a b))
+    (defn foo [a _ b] (add+ a b))
 
 
 - name: Invalid symbol '_->'
@@ -737,7 +740,7 @@
     (defn
       foo
       []
-      (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (+_ a b c)))
+      (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (add+ a b c)))
 
 
 - name: Destructuring def not allowed
@@ -756,7 +759,7 @@
       (a): a
       (a b): a + b
   clojure: |
-    (defn foo ([] 0) ([a] a) ([a b] (+_ a b)))
+    (defn foo ([] 0) ([a] a) ([a b] (add+ a b)))
 
 
 - name: Constructing a mapping with code mode
@@ -802,7 +805,7 @@
     !yamlscript/v0
     =>: a.3.b + c.4.d
   clojure: |
-    (+_ (get+ (nth a 3) 'b) (get+ (nth c 4) 'd))
+    (add+ (get+ (nth a 3) 'b) (get+ (nth c 4) 'd))
 
 
 - name: Dot grouping in dot path
@@ -818,7 +821,7 @@
     !yamlscript/v0
     if a.b: c.d * 3
   clojure: |
-    (if (get+ a 'b) (*_ (get+ c 'd) 3))
+    (if (get+ a 'b) (mul+ (get+ c 'd) 3))
 
 
 - name: Yes expression in sym-paren form
@@ -826,7 +829,7 @@
     !yamlscript/v0
     =>: a(b * c)
   clojure: |
-    (a (*_ b c))
+    (a (mul+ b c))
 
 
 - name: Dot groupings in vectors
@@ -877,10 +880,10 @@
     =>: -{foo 1} + {bar 2}
     foo: .|| bar
   clojure: |
-    (*_ "foo" 3)
-    (*_ "foo" 3)
-    (+_ [foo] [bar])
-    (+_ {foo 1} {bar 2})
+    (mul+ "foo" 3)
+    (mul+ "foo" 3)
+    (add+ [foo] [bar])
+    (add+ {foo 1} {bar 2})
     (foo || bar)
 
 
@@ -893,10 +896,10 @@
     =>: -{foo 1} + {bar 2}
     foo: +|| bar
   clojure: |
-    (*_ "foo" 3)
-    (*_ "foo" 3)
-    (+_ [foo] [bar])
-    (+_ {foo 1} {bar 2})
+    (mul+ "foo" 3)
+    (mul+ "foo" 3)
+    (add+ [foo] [bar])
+    (add+ {foo 1} {bar 2})
     (foo || bar)
 
 
@@ -909,10 +912,10 @@
     =>: -{foo 1} + {bar 2}
     foo: +|| bar
   clojure: |
-    (*_ "foo" 3)
-    (*_ "foo" 3)
-    (+_ [foo] [bar])
-    (+_ {foo 1} {bar 2})
+    (mul+ "foo" 3)
+    (mul+ "foo" 3)
+    (add+ [foo] [bar])
+    (add+ {foo 1} {bar 2})
     (foo || bar)
 
 
@@ -922,7 +925,7 @@
     =>: a * b
     =>: a(* b)
   clojure: |
-    (*_ a b)
+    (mul+ a b)
     (a * b)
 
 
@@ -1050,8 +1053,8 @@
       a
       []
       (let
-       [x nil b (or b 1) c (+_ c 2) d (*_ d 3) e (- e 4) f (/ f 5)]
-       (+_ b c d e f)))
+       [x nil b (or b 1) c (add+ c 2) d (mul+ d 3) e (- e 4) f (div+ f 5)]
+       (add+ b c d e f)))
 
 
 - name: Support the `.=` let operator
@@ -1083,7 +1086,7 @@
     a .=: c.d(e)
   clojure: |
     (def a 1)
-    (def a (+_ a 2))
+    (def a (add+ a 2))
     (def a (get+ a 'b))
     (def a (d (get+ a 'c) e))
 
@@ -1249,7 +1252,7 @@
       add
       ([] 0)
       ([x] x)
-      ([x y] (+_ x y))
+      ([x y] (add+ x y))
       ([x y & xs] (reduce add (add x y) xs)))
 
 
@@ -1280,7 +1283,7 @@
       fn(a b):
         conj a: b * 10
   clojure: |
-    (reduce (fn [a b] (conj a (*_ b 10))) [] (rng 1 10))
+    (reduce (fn [a b] (conj a (mul+ b 10))) [] (rng 1 10))
 
 
 - name: Form with dot on LHS

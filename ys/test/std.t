@@ -83,6 +83,25 @@ test::
 - code: 'le: 1 2 2 3'
 
 
+#-------------------------------------------------------------------------------
+- note: "Truthy and falsy operations"
+
+- code: f?(0)
+- code: f?(0.0)
+- code: f?('')
+- code: f?("")
+- code: f?([])
+- code: f?({})
+- code: f?(\{})
+- code: f?(nil)
+- code: f?(false)
+
+- code: +"" ||| [] ||| 42
+  want: 42
+- code: 42 &&& []
+  want: null
+
+
 
 #-------------------------------------------------------------------------------
 - note: "Common type conversion functions"
