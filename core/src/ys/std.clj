@@ -116,35 +116,32 @@
 
 ;;------------------------------------------------------------------------------
 ;; Common type conversion functions
-;; TODO rename these. bool or to-bool or ->bool
 ;;------------------------------------------------------------------------------
 (defn num [x]
-  (condp = (type x)
-    java.lang.Boolean (if x 1 0)
-    java.lang.Long (long x)
-    java.lang.Double (double x)
-    java.lang.String (or
-                       (if (re-find #"\." x)
-                         (parse-double x)
-                         (parse-long x))
-                       0)
-    clojure.lang.PersistentVector (count x)
-    clojure.lang.PersistentList (count x)
-    clojure.lang.PersistentArrayMap (count x)
-    clojure.lang.PersistentHashMap (count x)
-    clojure.lang.PersistentHashSet (count x)
-    (die (str "Can't convert " (type x) " to number"))))
+  (cond
+    (ratio? x) (double x)
+    (number? x) x
+    (string? x) (or (if (re-find #"\." x)
+                      (parse-double x)
+                      (parse-long x))
+                  0)
+    (seqable? x) (count x)
+    (boolean? x) (if x 1 0)
+    :else (die (str "Can't convert " (type x) " to number"))))
 
-(defn to-bool [x] (boolean x))
+;; These casts already exist in Clojure:
+;; boolean
+;; set
+;; str
+;; vec
+
 (defn to-float [x] (parse-double x))
 (defn to-int [x] (parse-long x))
 (defn to-map
   ([] {})
   ([x] (apply hash-map x))
   ([k v & xs] (apply hash-map k v xs)))
-(defn to-str [& xs] (apply str xs))
-; toList
-; toVec
+(defn to-list [x] (apply list x))
 
 
 ;;------------------------------------------------------------------------------
