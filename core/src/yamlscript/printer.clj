@@ -38,6 +38,7 @@
     "=~" "=--"
     "!~" "!--"
     "==" "="
+    "=" (die "Operator '=' is not allowed in YAMLScript")
     , s))
 
 (defn print-node [node]
@@ -97,11 +98,4 @@
     code))
 
 (comment
-  (print '{:Top
-           [{:Lst
-             [{:Sym defn}
-              {:Sym foo}
-              nil
-              {:Lst [{:Vec [{:Sym a}]} {:Lst [{:Sym say} {:Sym a}]}]}
-              {:Lst [{:Vec []} {:Lst [{:Sym foo} {:Int 1}]}]}]}]})
   )

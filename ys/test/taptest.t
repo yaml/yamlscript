@@ -30,11 +30,11 @@ test::
   want:: 42
 
 - name: False test data-mode
-  code: 1 = 2
+  code: 1 == 2
   want: false
 
 - name: False test code-mode
-  code: 1 = 2
+  code: 1 == 2
   want:: false
 
 - name: Nil test null

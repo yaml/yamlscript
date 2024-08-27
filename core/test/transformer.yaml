@@ -48,8 +48,8 @@
     !yamlscript/v0
     require foo::bar: => fb
     cond:
-      (x = 1): "one"
-      (x = 2): "two"
+      (x == 1): "one"
+      (x == 2): "two"
       else: "other"
   clojure: |
     (require '[foo.bar :as fb])
@@ -117,13 +117,13 @@
       (): 0
       (a b): a + b
   clojure: |
-    (fn add (() 0) ((a b) (+_ a b)))
+    (fn add (() 0) ((a b) (add+ a b)))
 
 
 - name: Keywords then and else for if
   yamlscript: |
     !yamlscript/v0
-    if (x = 1):
+    if (x == 1):
       then:
         a: b
         c: d
@@ -136,7 +136,7 @@
 - name: Keywords then and else for if with scalar actions
   yamlscript: |
     !yamlscript/v0
-    if (x = 1):
+    if (x == 1):
       then: a(b)
       else:
         c: d
@@ -148,7 +148,7 @@
 - name: Using else without then
   yamlscript: |
     !yamlscript/v0
-    if (x = 1):
+    if (x == 1):
       a: b
       else: c
   clojure: |
@@ -158,7 +158,7 @@
 - name: Using else without then for if-not
   yamlscript: |
     !yamlscript/v0
-    if-not (x = 1):
+    if-not (x == 1):
       a: b
       else: c
   clojure: |
@@ -168,7 +168,7 @@
 - name: Using then without else
   yamlscript: |
     !yamlscript/v0
-    if (x = 1):
+    if (x == 1):
       then: a(b)
   error: |
     Invalid 'if' form
