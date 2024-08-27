@@ -3,15 +3,15 @@
 
 (ns ys.poly)
 
-(defn ++map [f coll]
-  (cond
-    (string? f) (map #(get %1 f) coll)
-    :else (map f coll)))
+(defn ++map [a b]
+  (if (and (ifn? b) (or (sequential? a) (string? a)))
+    (map b a)
+    (map a b)))
 
-(defn ++mapv [f coll]
-  (cond
-    (string? f) (mapv #(get %1 f) coll)
-    :else (mapv f coll)))
+(defn ++mapv [a b]
+  (if (and (ifn? b) (or (sequential? a) (string? a)))
+    (mapv b a)
+    (mapv a b)))
 
 
 ;;------------------------------------------------------------------------------

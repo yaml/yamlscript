@@ -173,12 +173,16 @@ test::
   want: 15
 - code: 'reduce _ 0 (1 .. 5): +'
   want: 15
-- name: String acts like a function (similar to kewwords)
-  code: +[{"a" 1}{"a" 2}].map("a")
+- code: +[{"a" 1}{"a" 2}].map(\(get %1 "a"))
   want:: \'(1 2)
-
+- code: +"abc".map(int)
+  want:: \'(97 98 99)
+- code: int.map('abc')
+  want:: \'(97 98 99)
+- code: +"abc".map(int).mapv(inc)
+  want:: +[98 99 100]
 - code: '(1 .. 10).has?(5)'
-- code: 'I(5).in?(1 .. 10)'
+- code: 'num(5).in?(1 .. 10)'
 
 
 #-------------------------------------------------------------------------------
