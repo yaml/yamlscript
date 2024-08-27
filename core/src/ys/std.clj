@@ -55,9 +55,6 @@
 ;; Short named functions for very common operations
 ;;------------------------------------------------------------------------------
 
-(intern 'ys.std 'FN clojure.core/partial)
-(intern 'ys.std 'I clojure.core/identity)
-(intern 'ys.std 'N clojure.core/count)
 (defn f? [x]
   (cond
     (number? x) (zero? x)
@@ -83,8 +80,16 @@
 
 (defmacro &&& [x & xs] `(t-and ~x ~@xs))
 
-(defmacro Q [x] `(quote ~x))
-(defmacro QW [& xs]
+(intern 'ys.std 'a clojure.core/identity)
+
+(intern 'ys.std 'fun clojure.core/partial)
+
+(intern 'ys.std 'just clojure.core/identity)
+
+(intern 'ys.std 'len clojure.core/count)
+
+(defmacro q [x] `(quote ~x))
+(defmacro qw [& xs]
   `(vec (map (fn [w#]
                (cond
                  (nil? w#) "nil"
@@ -158,8 +163,8 @@
         a))
     (Math/pow x y)))
 
-(defn squared [x] (pow x 2))
-(defn cubed [x] (pow x 3))
+(defn sqr  [x] (pow x 2))
+(defn cube [x] (pow x 3))
 (defn sqrt [x] (Math/sqrt x))
 
 (defn add+ [x & xs]

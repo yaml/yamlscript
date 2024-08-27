@@ -40,9 +40,9 @@ test::
   want: 2
 - code: ((2 ** 3) ** 4)
   want: 4096
-- code: squared(5)
+- code: sqr(5)
   want: 25
-- code: cubed(5)
+- code: cube(5)
   want: 125
 - code: sqrt(25)
   want: 5.0
