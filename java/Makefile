@@ -2,7 +2,7 @@ include ../common/base.mk
 include $(COMMON)/binding.mk
 include $(COMMON)/java.mk
 
-YAMLSCRIPT_JAVA_JAR := target/yamlscript-0.1.72.jar
+YAMLSCRIPT_JAVA_JAR := target/yamlscript-0.1.73.jar
 
 #------------------------------------------------------------------------------
 

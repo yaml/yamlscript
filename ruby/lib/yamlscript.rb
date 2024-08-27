@@ -16,7 +16,7 @@ class YAMLScript
   # This value is automatically updated by 'make bump'.
   # The version number is used to find the correct shared library file.
   # We currently only support binding to an exact version of libyamlscript.
-  YAMLSCRIPT_VERSION = '0.1.72'
+  YAMLSCRIPT_VERSION = '0.1.73'
 
   # A low-level interface to the native library
   module LibYAMLScript

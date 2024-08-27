@@ -1,3 +1,17 @@
+- version: 0.1.73
+  date:    Tue 27 Aug 2024 02:01:13 PM PDT
+  changes:
+  - core: Disallow `=` as function; replaced by `==`
+  - core: Use `-` to escape YAML syntax at start of ysexpr
+  - core: Add RUN dynamic var; mapping of runtime info
+  - core: Refactor yamlscript.runtime
+  - core: Support [a *b] destructuring syntax
+  - core: Support add+ mul+ div+ t? f? t-or t-and ||| &&& |||= &&&= **= /=
+  - core: Fixes for .map() and .mapv()
+  - std: Fix value and call; can call string now
+  - std: Rename short functions again
+  - std: Support character ranges
+  - std: Refactor casting functions
 - version: 0.1.72
   date:    Fri 23 Aug 2024 05:42:19 PM PDT
   changes:
