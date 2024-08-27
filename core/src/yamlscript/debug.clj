@@ -6,9 +6,27 @@
 (ns yamlscript.debug
   (:require
    [clojure.pprint :as pp]
+   [clojure.string :as str]
    [clj-yaml.core :as yaml]
    [yamlscript.util :refer [die]])
-  (:refer-clojure :exclude [PPP WWW XXX YYY ZZZ]))
+  (:refer-clojure :exclude [YSC PPP WWW XXX YYY ZZZ]))
+
+(defn YSC [ys-str]
+  (let [compile (var-get (resolve 'yamlscript.compiler/compile))
+        pretty-format (var-get (resolve 'yamlscript.compiler/pretty-format))]
+    (binding [*ns* (find-ns 'yamlscript.compiler)]
+      (let [code (eval
+                   (->
+                     (str "!yamlscript/v0\n" ys-str)
+                     compile
+                     pretty-format
+                     (str/replace #"(?m)^\(\+\+\+ +(.*)\)$" "$1")
+                     (str/replace #"(?s)^\(\+\+\+[ \n]+(.*)\)$" "$1")
+                     (str/trim-newline)))]
+        (println code)
+        code))))
+
+(intern 'clojure.core 'YSC YSC)
 
 (defn -dump [o]
   (let
@@ -58,6 +76,4 @@
 (intern 'clojure.core 'ZZZ ZZZ)
 
 (comment
-  (WWW {:a 1 :b 2})
-  (XXX {:a 1 :b 2})
   )

@@ -8,7 +8,7 @@
   (:require
    [ys.poly]
    [yamlscript.ast :refer [Lst Sym QSym]]
-   [yamlscript.util :refer [die if-lets YS-C]]
+   [yamlscript.util :refer [die if-lets]]
    [yamlscript.transformers]))
 
 (declare

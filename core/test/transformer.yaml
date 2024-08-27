@@ -184,3 +184,12 @@
         e: f
   error: |
     Form after 'then' must be 'else'
+
+
+- name: Support *foo in bindings
+  yamlscript: |
+    !yamlscript/v0
+    for [x *xs] lst:
+      a: b
+  clojure: |
+    (for [[x & xs] lst] (a b))

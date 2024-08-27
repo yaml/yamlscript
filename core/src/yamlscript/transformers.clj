@@ -3,6 +3,7 @@
 
 (ns yamlscript.transformers
   (:require
+   [yamlscript.debug]
    [yamlscript.ast :refer [Sym Lst Vec Key]]
    [yamlscript.util :refer [die if-lets when-lets]]
    [yamlscript.ysreader]))
@@ -119,9 +120,36 @@
 ;; Group LHS arguments as a single bindings form
 ;;-----------------------------------------------------------------------------
 
+(comment
+  (YSC "loop sum 0, [num *nums] digits:")
+  )
+
+(defn transform-binding-vec [forms]
+  (loop [[form & forms] forms new []]
+    (let [new (if-lets [list (:Lst form)
+                        _ (= 2 (count list))
+                        _ (= {:Sym '_**} (first list))
+                        sym (:Qts (second list))]
+                (conj new (Sym '&) (Sym sym))
+                (conj new form))]
+      (if (seq forms)
+        (recur forms new)
+        (Vec new)))))
+
+(defn transform-binding [lhs]
+  (let [bindings
+        (loop [[form & forms] (rest lhs) bindings []]
+          (let [form (if-let [vec (:Vec form)]
+                       (transform-binding-vec vec)
+                       form)]
+            (if (seq forms)
+              (recur forms (conj bindings form))
+              (conj bindings form))))]
+    (Vec bindings)))
+
 (defn- lhs-bindings [lhs rhs]
   (let [lhs (cond
-              (> (count lhs) 2) [(first lhs) (Vec (rest lhs))]
+              (> (count lhs) 2) [(first lhs) (transform-binding lhs)]
               (:Sym lhs) [lhs (Vec [])]
               :else lhs)]
     [lhs rhs]))
