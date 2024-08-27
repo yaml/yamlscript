@@ -37,7 +37,7 @@
   (transform-with-else lhs rhs (Sym "=>")))
 
 ;;-----------------------------------------------------------------------------
-;; def destructuring
+;; let destructuring
 ;;-----------------------------------------------------------------------------
 
 (defn transform-vec-destructure [vec-form]
@@ -50,6 +50,7 @@
     (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
     vec-form))
 
+;; XXX `let` destructuring is faked in the build stage currently.
 #_(defn transform_def [lhs rhs]
   (if-lets [_ (= 2 (count lhs))
             [def form] lhs
