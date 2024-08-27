@@ -370,10 +370,19 @@
     (seqable? x) (clojure.core/reverse x)
     :else (die "Can't reverse " x)))
 
-(defn rng [x y]
-  (if (> y x)
-    (range x (inc y))
-    (range x (dec y) -1)))
+(defn rng [a b]
+  (let [[x y] (for [n [a b]] (if (char? n) (long n) n))]
+    (cond
+      (and (number? a) (number? b))
+      (if (> y x)
+        (range x (inc y))
+        (range x (dec y) -1))
+      (and (char? a) (char? b))
+      (if (> y x)
+        (map char (range x (inc y)))
+        (map char (range x (dec y) -1)))
+      :else
+      (die "Can't rng(" (pr-str a) ", " (pr-str b) ")"))))
 
 
 ;;------------------------------------------------------------------------------
