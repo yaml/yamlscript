@@ -30,21 +30,6 @@
     .getParent
     (or ".")))
 
-(defn YS-C [ys-str]
-  (let [compile (var-get (resolve 'yamlscript.compiler/compile))
-        pretty-format (var-get (resolve 'yamlscript.compiler/pretty-format))]
-    (binding [*ns* (find-ns 'yamlscript.compiler)]
-      (let [code (eval
-                   (->
-                     (str "!yamlscript/v0\n" ys-str)
-                     compile
-                     pretty-format
-                     (str/replace #"(?m)^\(\+\+\+ +(.*)\)$" "$1")
-                     (str/replace #"(?s)^\(\+\+\+[ \n]+(.*)\)$" "$1")
-                     (str/trim-newline)))]
-        (println code)
-        code))))
-
 (defmacro cond-lets
   "if-lets but works like cond"
   {:style/indent [0]}

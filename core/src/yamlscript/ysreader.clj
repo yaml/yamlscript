@@ -12,7 +12,7 @@
     [Bln Chr Flt Form Int Key Lst Map Nil
      QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
-   [yamlscript.debug :refer [WWW]]
+   [yamlscript.debug]
    [yamlscript.util :as util :refer [die if-lets]])
   (:refer-clojure :exclude [read-string]))
 

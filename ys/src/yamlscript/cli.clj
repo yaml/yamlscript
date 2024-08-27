@@ -7,7 +7,7 @@
 (ns yamlscript.cli
   (:gen-class)
   (:require
-   #_[yamlscript.debug :refer [WWW]]
+   [yamlscript.debug]
    [yamlscript.runtime :as runtime]
    [yamlscript.common :as common]
    [yamlscript.compiler :as compiler]
