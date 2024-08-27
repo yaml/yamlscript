@@ -140,16 +140,16 @@
 - name: Dot escaping
   yamlscript: |
     --- !yamlscript/v0
-    map inc: .[2 4 6 8]
+    map inc: -[2 4 6 8]
   parse: |
     "+MAP", :! "yamlscript/v0"
     "=VAL", := "map inc"
-    "=VAL", := ".[2 4 6 8]"
+    "=VAL", := "-[2 4 6 8]"
     "-MAP"
   compose: |
     {:! "yamlscript/v0" :% [
       {:= "map inc"}
-      {:= ".[2 4 6 8]"} ]}
+      {:= "-[2 4 6 8]"} ]}
   print: |
     (map inc [2 4 6 8])
 
@@ -157,9 +157,9 @@
 - name: YS reader forms
   yamlscript: |
     --- !yamlscript/v0
-    prn: .["str" \\c 42 foo true false nil]
-    prn: .{:a 1 :c 2 :b 3}
-    prn: ."A longer string"
+    prn: -["str" \\c 42 foo true false nil]
+    prn: -{:a 1 :c 2 :b 3}
+    prn: -"A longer string"
   build: |
     {:pairs [
      {:Sym prn}
@@ -490,7 +490,7 @@
 - name: Support default fn arguments
   yamlscript: |
     !yamlscript/v0
-    defn foo(a b=42 c="OK"): .[c b a]
+    defn foo(a b=42 c="OK"): -[c b a]
   build: |
     {:pairs
      [[{:Sym defn} {:Sym foo} nil]
@@ -529,7 +529,7 @@
 - name: All args have defaults
   yamlscript: |
     !yamlscript/v0
-    defn foo(a=1 b=2 c=3): .[c b a]
+    defn foo(a=1 b=2 c=3): -[c b a]
   print: |
     (defn
      foo

@@ -341,11 +341,11 @@ with YAML syntax.
 ```
 - (def vec1 [5 7 9])                # Define a variable bound to a vector
 - vec2: [5 7 9]                     # Bad. YAML sees it as `["5 7 9"]`
-- vec3: .[5 7 9]                    # Good. The period makes value a YAML scalar
+- vec3: -[5 7 9]                    # Good. The dash makes value a YAML scalar
 ```
 
-Use a period at the start of a value so that YAML will consider the value to be
-a scalar, thus interpreted as a Clojure expression.
+Use a dash at the start of a value so that YAML will consider the value to be a
+scalar, thus interpreted as a Clojure expression.
 
 What if you want to use YAML to define an actual data structure in your
 YAMLScript program?
@@ -630,7 +630,7 @@ list:
   - say: "Hello world!"
   - say("Hello"): "world!"
   - say: ["Hello", "world!"]
-  - say: ."Hello", "world!"
+  - say: -"Hello", "world!"
   ```
 
 * Function Definition

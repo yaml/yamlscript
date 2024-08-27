@@ -641,7 +641,7 @@
 - name: Single quoted string
   yamlscript: |
     !yamlscript/v0
-    say: +"123" + ' let''s go'
+    say: -"123" + ' let''s go'
     say: '123 let''s go'
   clojure: |
     (say (+_ "123" " let's go"))
@@ -681,7 +681,7 @@
 - name: Floating point numbers
   yamlscript: |
     !yamlscript/v0
-    =>: +[ 0. 0.1 -1.2e3 2.3e-4 ]
+    =>: -[ 0. 0.1 -1.2e3 2.3e-4 ]
   clojure: |
     [0.0 0.1 -1200.0 2.3E-4]
 
@@ -730,8 +730,8 @@
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      +[a b c] =: .[1 2 3]
-      +{:d d :e e} =: +{:d 4 :e 5}
+      -[a b c] =: -[1 2 3]
+      -{:d d :e e} =: -{:d 4 :e 5}
       =>: a + b + c
   clojure: |
     (defn
@@ -743,7 +743,7 @@
 - name: Destructuring def not allowed
   yamlscript: |
     !yamlscript/v0
-    +[a b c] =: +[1 2 3]
+    -[a b c] =: -[1 2 3]
   error: |
     ~~ Destructured def not allowed
 
@@ -832,7 +832,7 @@
 - name: Dot groupings in vectors
   yamlscript: |
     !yamlscript/v0
-    =>: +[a.3.b(x.y), c.4.d]
+    =>: -[a.3.b(x.y), c.4.d]
   clojure: |
     [(b (nth a 3) (get+ x 'y)) (get+ (nth c 4) 'd)]
 
@@ -871,10 +871,10 @@
 - name: Dot escaping of YAML syntax
   yamlscript: |
     !yamlscript/v0
-    =>: .'foo' * 3
-    =>: ."foo" * 3
-    =>: .[foo] + [bar]
-    =>: .{foo 1} + {bar 2}
+    =>: -'foo' * 3
+    =>: -"foo" * 3
+    =>: -[foo] + [bar]
+    =>: -{foo 1} + {bar 2}
     foo: .|| bar
   clojure: |
     (*_ "foo" 3)
@@ -887,10 +887,10 @@
 - name: Plus escaping of YAML syntax
   yamlscript: |
     !yamlscript/v0
-    =>: +'foo' * 3
-    =>: +"foo" * 3
-    =>: +[foo] + [bar]
-    =>: +{foo 1} + {bar 2}
+    =>: -'foo' * 3
+    =>: -"foo" * 3
+    =>: -[foo] + [bar]
+    =>: -{foo 1} + {bar 2}
     foo: +|| bar
   clojure: |
     (*_ "foo" 3)
@@ -903,10 +903,10 @@
 - name: Plus escaping of YAML syntax
   yamlscript: |
     !yamlscript/v0
-    =>: +'foo' * 3
-    =>: +"foo" * 3
-    =>: +[foo] + [bar]
-    =>: +{foo 1} + {bar 2}
+    =>: -'foo' * 3
+    =>: -"foo" * 3
+    =>: -[foo] + [bar]
+    =>: -{foo 1} + {bar 2}
     foo: +|| bar
   clojure: |
     (*_ "foo" 3)
@@ -1187,7 +1187,7 @@
   yamlscript: |
     !yamlscript/v0
     =>: "$1 $foo $2"
-    =>: +"$1$foo$2"
+    =>: -"$1$foo$2"
   clojure: |
     (str "$1 " foo " $2")
     (str "$1" foo "$2")
@@ -1207,8 +1207,8 @@
 - name: Escape pound and colon in ysexpr strings
   yamlscript: |
     !yamlscript/v0
-    say: +'foo \# bar :\ baz'
-    say: +"foo \# bar :\ baz"
+    say: -'foo \# bar :\ baz'
+    say: -"foo \# bar :\ baz"
   clojure: |
     (say "foo # bar : baz")
     (say "foo # bar : baz")
