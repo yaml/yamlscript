@@ -2,7 +2,7 @@
 
 defn fmt-func-list(data):
   markdown =:
-    loop [elem & data], data markdown '':
+    loop [elem *data], data markdown '':
       if elem:
         then:
           +[fname sigs desc opts] =: elem
@@ -13,7 +13,7 @@ defn fmt-func-list(data):
             * **$fname** — $desc
 
           markdown +=:
-            loop [sig & sigs] sigs, markdown '':
+            loop [sig *sigs] sigs, markdown '':
               if sig:
                 then:
                   +[ret & args] =: sig.words().reverse()

@@ -49,7 +49,7 @@ defn load-markys(file):
 
 defn generate-markdown(data):
   markdown =: ''
-  loop [section & sections] data, markdown markdown:
+  loop [section *sections] data, markdown markdown:
     if section:
       then:
         markdown +=:
@@ -67,7 +67,7 @@ defn format-markys(text):
   text .=: replace(/^```.*\n/ '')
   yaml =: text.replace(/```\n\z/ '')
   data =: yaml.ys/compile().eval-string()
-  func =: V("fmt-$type") ||
+  func =: value("fmt-$type") ||
     die("Can't find function 'fmt-$type'")
   call func: data
 
