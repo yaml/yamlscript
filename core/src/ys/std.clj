@@ -65,12 +65,6 @@
     x false
     :else true))
 
-(defmacro V [s]
-  `(cond
-     (string? ~s) (var-get (ns-resolve *ns* (symbol ~s)))
-     (symbol? ~s) (var-get (ns-resolve *ns* ~s))
-     (var? ~s) (var-get ~s)
-     :else (clojure.core/die "Can't get value of " ~s)))
 (defn t? [x] (not (f? x)))
 
 (defmacro t-or
@@ -229,12 +223,20 @@
 ;; Control functions
 ;;------------------------------------------------------------------------------
 
-(defn call [f & args]
-  (let [f (cond
-            (string? f) (resolve (symbol f))
-            (symbol? f) (resolve f)
-            :else f)]
-    (apply f args)))
+(defmacro value [s]
+  `(cond
+     (string? ~s) (var-get (ns-resolve *ns* (symbol ~s)))
+     (symbol? ~s) (var-get (ns-resolve *ns* ~s))
+     (var? ~s) (var-get ~s)))
+
+(defmacro call [f & args]
+  `(let [f# (if (or
+                  (symbol? ~f)
+                  (string? ~f)
+                  (var? ~f))
+              (value ~f)
+              ~f)]
+     (f# ~@args)))
 
 (intern 'ys.std 'die util/die)
 

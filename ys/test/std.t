@@ -27,6 +27,8 @@ test::
   want: 42
 - code: FN(+ 1).call(41)
   want: 42
+- code: +"inc".call(41)
+  want: 42
 
 # I is for identity
 - code: 'I: 123'
@@ -46,12 +48,11 @@ test::
 - code: Q((1 2 3))
   want:: \'(1 2 3)
 
-# V is for var (from string or symbol)
-- code: V('inc')
+- code: value('inc')
   want:: inc
-- code: V('inc').call(41)
+- code: value('inc').call(41)
   want: 42
-- code: V(Q(inc))
+- code: value(q(inc))
   want:: inc
 
 - code: QW(one two three)
