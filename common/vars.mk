@@ -78,9 +78,8 @@ CURL := $(shell command -v curl)
 TIME := time -p
 
 LIBYAMLSCRIPT_DIR := $(ROOT)/libyamlscript/lib
-LIBRARY_PATH := $(LIBYAMLSCRIPT_DIR)
-export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
-export LD_LIBRARY_PATH := $(LIBRARY_PATH)
+LIBRARY_PATH := $(LIBYAMLSCRIPT_DIR):$(ROOT)/rapidyaml/native
+export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH):$(ROOT)/rapidyaml/native
 LIBYAMLSCRIPT_SO_NAME := $(LIBYAMLSCRIPT_DIR)/libyamlscript
 LIBYAMLSCRIPT_SO_FQNP := $(LIBYAMLSCRIPT_SO_NAME).$(SO).$(YS_VERSION)
 LIBYAMLSCRIPT_SO_BASE := $(LIBYAMLSCRIPT_DIR)/libyamlscript.$(SO)
@@ -214,6 +213,21 @@ RELEASE_YS_TAR := $(RELEASE_YS_NAME).tar.xz
 
 RELEASE_LYS_NAME := libyamlscript-$(YS_VERSION)-$(GRAALVM_ARCH)
 RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
+
+
+#------------------------------------------------------------------------------
+# RapidYAML variables:
+#------------------------------------------------------------------------------
+RAPIDYAML := $(ROOT)/rapidyaml
+
+RAPIDYAML_VERSION := 0.7.2
+RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
+RAPIDYAML_SO := \
+  $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_INSTALLED_DIR := \
+  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/
+RAPIDYAML_INSTALLED := \
+  $(RAPIDYAML_INSTALLED_DIR)/rapidyaml-$(RAPIDYAML_VERSION).jar
 
 
 #------------------------------------------------------------------------------

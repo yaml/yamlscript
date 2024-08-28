@@ -9,9 +9,11 @@
 
 (ns yamlscript.parser
   (:require
+   [clojure.string :as str]
    [yamlscript.common])
   (:import
    (java.util Optional)
+   (org.rapidyaml Rapidyaml)
    (org.snakeyaml.engine.v2.api LoadSettings)
    (org.snakeyaml.engine.v2.api.lowlevel Parse)
    (org.snakeyaml.engine.v2.exceptions Mark)
@@ -29,21 +31,20 @@
      SequenceEndEvent))
   (:refer-clojure))
 
-(declare ys-event)
+(declare
+  parse-snakeyaml
+  parse-rapidyaml)
 
 (def shebang-ys #"^#!.*/env ys-0\n")
 (def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
-  (let [parser (new Parse (.build (LoadSettings/builder)))
-        has-code-mode-shebang (or (re-find shebang-ys yaml-string)
+  (let [has-code-mode-shebang (or (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
-        events (->> yaml-string
-                 (.parseString parser)
-                 (map ys-event)
-                 (remove nil?)
-                 rest)
+        events (if (System/getenv "YS_PARSER_RAPIDYAML")
+                 (parse-rapidyaml yaml-string)
+                 (parse-snakeyaml yaml-string))
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
@@ -55,6 +56,26 @@
                       first-event)
         events (cons first-event rest-events)]
     (remove nil? events)))
+
+(declare snake-event)
+
+;; TODO - Set bigger buffer size in scanner class
+(defn parse-snakeyaml [yaml-string]
+  (let [parser (new Parse (.build (LoadSettings/builder)))]
+    (->> yaml-string
+      (.parseString parser)
+      (map snake-event)
+      (remove nil?)
+      rest)))
+
+(defn parse-rapidyaml [yaml-string]
+  (let [rapid-parser (new Rapidyaml)]
+    (->> yaml-string
+      ( #(.parseYS ^Rapidyaml rapid-parser %1))
+      #_(#(do (println %1) %1))
+      (#(str/replace %1 #"^\(\n\{:\+\ \"\+DOC\"\}" "("))
+      #_(#(do (println %1) %1))
+      read-string)))
 
 (defn parse-test-case [yaml-string]
   (->> yaml-string
@@ -132,16 +153,16 @@
   (let [obj (event-obj event)]
     (assoc obj :* (str (. event getAlias)))))
 
-(defmulti  ys-event class)
-(defmethod ys-event DocumentStartEvent [event] (doc-start  event))
-(defmethod ys-event DocumentEndEvent   [event] (doc-end    event))
-(defmethod ys-event MappingStartEvent  [event] (map-start  event))
-(defmethod ys-event MappingEndEvent    [event] (map-end    event))
-(defmethod ys-event SequenceStartEvent [event] (seq-start  event))
-(defmethod ys-event SequenceEndEvent   [event] (seq-end    event))
-(defmethod ys-event ScalarEvent        [event] (scalar-val event))
-(defmethod ys-event AliasEvent         [event] (alias-val  event))
-(defmethod ys-event :default [_] nil)
+(defmulti  snake-event class)
+(defmethod snake-event DocumentStartEvent [event] (doc-start  event))
+(defmethod snake-event DocumentEndEvent   [event] (doc-end    event))
+(defmethod snake-event MappingStartEvent  [event] (map-start  event))
+(defmethod snake-event MappingEndEvent    [event] (map-end    event))
+(defmethod snake-event SequenceStartEvent [event] (seq-start  event))
+(defmethod snake-event SequenceEndEvent   [event] (seq-end    event))
+(defmethod snake-event ScalarEvent        [event] (scalar-val event))
+(defmethod snake-event AliasEvent         [event] (alias-val  event))
+(defmethod snake-event :default [_] nil)
 
 (comment
   )
