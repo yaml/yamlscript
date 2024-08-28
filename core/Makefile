@@ -6,7 +6,7 @@ include $(COMMON)/vars-core.mk
 export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------
-build::
+build:: $(RAPIDYAML_SO) $(RAPIDYAML_INSTALLED)
 
 test:: $(CORE_DEPS)
 	$(LEIN) $@

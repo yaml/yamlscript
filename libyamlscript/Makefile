@@ -8,7 +8,11 @@ include $(COMMON)/vars-libys.mk
 #------------------------------------------------------------------------------
 build:: $(LIBYS_DEPS)
 
+<<<<<<< HEAD
 # jar: $(LIBYS_JAR_PATH)
+=======
+jar: $(LIBYAMLSCRIPT_JAR_PATH) $(RAPIDYAML_INSTALLED)
+>>>>>>> 8a8f78d0 (core: Add rapidyaml parser support)
 
 install:: $(LIBYS_DEPS)
 	mkdir -p $(PREFIX)/include/
