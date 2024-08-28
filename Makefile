@@ -22,12 +22,14 @@ BINDINGS := \
     rust \
 
 DIRS := \
+    rapidyaml \
     core \
     libyamlscript \
     $(BINDINGS) \
     ys \
 
 BUILD_DIRS := \
+    rapidyaml \
     libyamlscript \
     go \
     nodejs \
