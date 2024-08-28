@@ -1,25 +1,24 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
-ifeq (,$(shell command -v node))
-$(info *** Warning: node not found)
-else ifeq (,$(shell command -v npm))
-$(info *** Warning: npm not found)
-endif
+NODE_ROOT := $(ROOT)/nodejs
 
-NODEJS := $(shell command -v node)
-NPM := $(shell command -v npm)
+export NODE_PATH := $(NODE_ROOT)/lib
 
-NODE_CMDS := \
-    test \
+export NODE_VERSION := v16.20.2
 
-export NODE_PATH := $(ROOT)/nodejs/lib
+export NVM_DIR := $(NODE_ROOT)/nvm
+NVM_PATH := $(NVM_DIR)/versions/node/$(NODE_VERSION)
+export NVM_BIN := $(NVM_PATH)/bin
+export NVM_INC := $(NVM_PATH)/include/node
+
+NVM_INSTALLER_URL := https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh
+
+export PATH := $(NVM_BIN):$(PATH)
 
 ifdef strace
 strace := strace -o strace.txt
 endif
-
-# export LIBYAMLSCRIPT_DEBUG := 1
 
 
 #------------------------------------------------------------------------------
@@ -28,25 +27,22 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-ifdef NODEJS
-ifdef NPM
 test:: update $(LIBYAMLSCRIPT_SO_FQNP)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
 
-$(LIBYAMLSCRIPT_SO_FQNP):
-	make -C ../libyamlscript $@
+update: $(NVM_DIR)
+	npm install
 
-update:
-	$(NPM) install
-
-release:
-	$(NPM) publish
-endif
-endif
+release: $(NVM_BIN)
+	npm publish
 
 clean::
 	$(RM) package-lock.json strace.txt
 
 distclean::
-	$(RM) -r node_modules
+	$(RM) -r node_modules $(NVM_DIR)
+
+$(NVM_DIR):
+	mkdir -p $@
+	curl -o- $(NVM_INSTALLER_URL) | PROFILE=/dev/null bash

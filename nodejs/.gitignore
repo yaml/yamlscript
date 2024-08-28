@@ -1,3 +1,4 @@
 /node_modules/
+/nvm/
 /package-lock.json
 /strace.txt
