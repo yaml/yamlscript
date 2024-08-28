@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
  *
  */
 public class Rapidyaml {
-    public static String RAPIDYAML_VERSION = "0.7.0";
+    public static String RAPIDYAML_VERSION = "0.7.2";
 
     private native long ys2edn_init();
     private native void ys2edn_destroy(long ryml2edn);
