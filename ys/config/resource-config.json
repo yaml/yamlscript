@@ -1,0 +1,6 @@
+{
+  "resources": [
+      {"pattern": "librapidyaml.so"},
+      {"pattern": "librapibyaml.dylib"}
+  ]
+}
