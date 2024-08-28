@@ -290,6 +290,17 @@
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
+#_(def unescapes
+  {"\\\\" "\\"
+   "\\n" "\n"
+   "\\t" "\t"
+   "\\\"" "\""})
+
+#_(defn str-unescape [s]
+  (str/replace s #"(?:\\\\|\\n|\\t|\\\")"
+    (fn [m] (get unescapes m))))
+
+;; TODO do in one call
 (defn str-unescape [s]
   (-> s
     (str/replace "\\\\" "\\")

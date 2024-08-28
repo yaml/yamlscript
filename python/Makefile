@@ -1,8 +1,6 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-
-PYTHON := $(shell command -v python3)
-PYTHON ?= $(shell command -v python)
+include $(COMMON)/python.mk
 
 ifdef DOCKERENV
   PYTHON_VENV := $(YS_TMP)/venv

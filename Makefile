@@ -6,6 +6,7 @@ ROOT := $(shell \
 export ROOT
 
 include $(ROOT)/common/vars.mk
+include $(ROOT)/common/java.mk
 
 BINDINGS := \
     clojure \
@@ -102,9 +103,6 @@ default::
 
 env:
 	@env | sort | less -FRX
-
-java-home:
-	@echo $(JAVA_HOME)
 
 chown:
 	sudo chown -R $(USER):$(USER) .

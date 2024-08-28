@@ -6,9 +6,9 @@ include $(COMMON)/docker.mk
 export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------
-build:: $(YAMLSCRIPT_CORE_INSTALLED)
+build::
 
-install test: $(LEIN)
+install test:: $(LEIN) build
 	$< $@
 
 Dockerfile:: $(COMMON) Makefile

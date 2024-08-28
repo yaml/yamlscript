@@ -30,10 +30,12 @@ build-doc:: ReadMe.md
 
 ifdef NODEJS
 ifdef NPM
-test:: update
-	make -C ../libyamlscript $(LIBYAMLSCRIPT_SO_FQNP)
+test:: update $(LIBYAMLSCRIPT_SO_FQNP)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
+
+$(LIBYAMLSCRIPT_SO_FQNP):
+	make -C ../libyamlscript $@
 
 update:
 	$(NPM) install
