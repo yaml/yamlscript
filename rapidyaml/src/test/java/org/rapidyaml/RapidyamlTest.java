@@ -149,6 +149,8 @@ public class RapidyamlTest extends TestCase
             assertEquals(2, e.offset);
             assertEquals(1, e.line);
             assertEquals(3, e.column);
+            assertTrue(e.getMessage() != null);
+            assertFalse(e.getMessage().isEmpty());
         }
         catch(RuntimeException e) {
             fail("wrong exception type");
