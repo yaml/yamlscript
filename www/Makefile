@@ -38,6 +38,7 @@ clean::
 	$(RM) yamlscript-1920x1080.png
 
 distclean::
+	$(RM) yarn.lock
 	$(RM) -r node_modules/
 
 node_modules: package.json
