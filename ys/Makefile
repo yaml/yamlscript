@@ -42,7 +42,7 @@ install: build
 	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) \
 	  $(PREFIX)/bin/
 
-jar: $(YAMLSCRIPT_CLI_JAR_PATH)
+jar: $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 	@:
 
 test: test-unit
@@ -63,7 +63,7 @@ test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image \
@@ -114,6 +114,9 @@ else
 $(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	$< uberjar
 endif
+
+$(RAPIDYAML_INSTALLED):
+	$(MAKE) -C $(RAPIDYAML) $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \
