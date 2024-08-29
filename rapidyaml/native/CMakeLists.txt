@@ -38,3 +38,8 @@ target_include_directories(rapidyaml PUBLIC ${JNI_INCLUDE_DIRS})
 
 add_executable(rapidyaml-test rapidyaml_test.cpp)
 target_link_libraries(rapidyaml-test rapidyaml)
+add_custom_target(rapidyaml-test-run
+    DEPENDS rapidyaml-test
+    COMMAND $<TARGET_FILE:rapidyaml-test>
+    COMMENT "running C++ tests"
+)

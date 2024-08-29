@@ -31,9 +31,11 @@ jar: $(RAPIDYAML_JAR)
 install:: $(RAPIDYAML_INSTALLED)
 
 test:: build $(JAVA_INSTALLED)
+	$(MAKE) -C native $@
 	mvn $@
 
 test-x: build $(JAVA_INSTALLED)
+	$(MAKE) -C native $@
 	mvn -X -e test
 
 clean::

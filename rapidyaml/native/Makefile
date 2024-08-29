@@ -25,6 +25,10 @@ CMK_FLAGS :=
 CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)
 CMK_FLAGS += -D BUILD_SHARED_LIBS=$(SHARED)
 
+BDIR := rapidyaml-build
+
+CMK_BUILD := cmake --build $(BDIR) --parallel --verbose
+
 
 #------------------------------------------------------------------------------
 default::
@@ -32,9 +36,8 @@ default::
 build:: $(RAPIDYAML_SO)
 
 test:: build
-	cmake --build rapidyaml-build \
-	  --parallel --target rapidyaml-test
-	./rapidyaml-build/rapidyaml-test
+	$(CMK_BUILD) --target rapidyaml-test-run
+	./$(BDIR)/rapidyaml-test
 
 rapidyaml:
 	mkdir -p $@
@@ -47,7 +50,7 @@ rapidyaml:
 clean::
 	$(RM) librapidyaml.*
 	$(RM) $(RAPIDYAML_HPP)
-	$(RM) -r rapidyaml-build
+	$(RM) -r $(BDIR)
 	$(RM) -r rapidyaml-install
 
 realclean:: clean
@@ -56,16 +59,13 @@ realclean:: clean
 
 #------------------------------------------------------------------------------
 $(RAPIDYAML_SO): $(RAPIDYAML_SO_DEPS)
-	cmake -S . -B rapidyaml-build \
-	  $(CMK_FLAGS)
-	cmake --build rapidyaml-build \
-	  --parallel --verbose --target rapidyaml
-	mv rapidyaml-build/*.so $@
+	cmake -S . -B $(BDIR) $(CMK_FLAGS)
+	$(CMK_BUILD) --target rapidyaml
+	mv $(BDIR)/*.so $@
 	ln -fs $@ librapidyaml.so
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $^
 
 $(RAPIDYAML_HPP): rapidyaml
-	$(PYTHON) rapidyaml/tools/amalgamate.py \
-	  $(RAPIDYAML_AMALGAMATE_OPTS) > $@
+	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@
