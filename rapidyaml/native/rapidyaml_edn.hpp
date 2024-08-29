@@ -52,9 +52,9 @@ RYML_EXPORT Ryml2Edn *ys2edn_init();
 RYML_EXPORT void ys2edn_destroy(Ryml2Edn *ryml2edn);
 
 /** Parse YAML, and return corresponding EDN. Return the number of
- * characters needed for edn. Check if the returned size is larger
- * than edn_size. If it is, call ys_retry_get() can be called
- * afterwards to extract the EDN. */
+ * characters needed for edn. The caller must check if the returned
+ * size is larger than edn_size. If it is, call ys_retry_get() can be
+ * called afterwards to extract the EDN. */
 RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,
                                    const char *filename,
                                    char *ys, size_type ys_size,
