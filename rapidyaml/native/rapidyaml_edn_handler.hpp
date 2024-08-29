@@ -82,13 +82,15 @@ public:
     /** @name construction and resetting
      * @{ */
 
-    EventHandlerEdn() : EventHandlerStack(), m_sink(), m_val_buffers(), m_first_doc() {}
-    EventHandlerEdn(Callbacks const& cb) : EventHandlerStack(cb), m_sink(), m_val_buffers(), m_first_doc() {}
-    EventHandlerEdn(EventSink *sink, Callbacks const& cb) : EventHandlerStack(cb), m_sink(sink), m_val_buffers(), m_first_doc()
+    EventHandlerEdn(EventSink *sink, Callbacks const& cb)
+        : EventHandlerStack(cb), m_sink(sink), m_val_buffers(), m_first_doc()
     {
         reset();
     }
-    EventHandlerEdn(EventSink *sink) : EventHandlerEdn(sink, get_callbacks()) {}
+    EventHandlerEdn(EventSink *sink)
+        : EventHandlerEdn(sink, get_callbacks())
+    {
+    }
 
     void reset()
     {
@@ -97,6 +99,21 @@ public:
         m_val_buffers.resize((size_t)m_stack.size());
         m_arena.clear();
         m_first_doc = true;
+    }
+
+    void reserve(int edn_size, int arena_size)
+    {
+        if(m_val_buffers.empty())
+            m_val_buffers.resize((size_t)m_stack.size());
+        if(m_sink)
+            m_sink->result.reserve(edn_size);
+        for(size_t i = 0; i < m_val_buffers.size(); ++i)
+        {
+            int sz = edn_size / (int(1) << (uint32_t)i);
+            sz = sz >= 128 ? sz : 128;
+            m_val_buffers[i].result.reserve((size_t)sz);
+        }
+        m_arena.reserve(arena_size);
     }
 
     /** @} */
