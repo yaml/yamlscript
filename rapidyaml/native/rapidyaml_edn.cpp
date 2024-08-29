@@ -75,8 +75,9 @@ RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,
     csubstr filename_ = filename ? to_csubstr(filename) : csubstr{};
     substr ys_(ys, (size_t)ys_size);
     {
-        TIMED_SECTION("reset");
+        TIMED_SECTION("reset + reserve");
         ryml2edn->reset();
+        ryml2edn->m_handler.reserve(ys_size > edn_size ? 3 * ys_size : edn_size, 256u);
     }
     {
         TIMED_SECTION("parse_in_place");
