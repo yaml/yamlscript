@@ -12,12 +12,6 @@ struct Ys2EdnScoped
 };
 
 
-struct ResultScoped
-{
-    char *edn = nullptr;
-    ~ResultScoped() { if(edn) ys2edn_free(edn); }
-};
-
 struct TestResult
 {
     uint32_t num_assertions;
@@ -33,6 +27,7 @@ struct TestResult
         num_failed_assertions += that.num_failed_assertions;
     }
 };
+
 
 struct TestCase
 {
@@ -55,10 +50,10 @@ struct TestCase
 
     #define _runtest(name, ...)                             \
         do {                                                \
-            printf("[RUN ] %s ... \n", #name);              \
+            printf("[ RUN  ] %s ... \n", #name);              \
             TestResult tr_ = name(__VA_ARGS__);             \
             tr.add(tr_);                                    \
-            printf("[%s] %s\n", tr_?"OK  ":"FAIL", #name);  \
+            printf("[ %s ] %s\n", tr_?"OK  ":"FAIL", #name);  \
         } while(0)
     #define CHECK(cond)                                                 \
         do {                                                            \
@@ -73,68 +68,48 @@ struct TestCase
     TestResult test(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
-        _runtest(test_1_alloc, );
-        _runtest(test_2_large_enough, );
-        _runtest(test_3_too_small, );
-        _runtest(test_4_nullptr, );
-        _runtest(test_1_alloc_reuse, ryml2edn);
-        _runtest(test_2_large_enough_reuse, ryml2edn);
-        _runtest(test_3_too_small_reuse, ryml2edn);
-        _runtest(test_4_nullptr_reuse, ryml2edn);
+        _runtest(test_large_enough, );
+        _runtest(test_too_small, );
+        _runtest(test_nullptr, );
+        _runtest(test_large_enough_reuse, ryml2edn);
+        _runtest(test_too_small_reuse, ryml2edn);
+        _runtest(test_nullptr_reuse, ryml2edn);
         return tr;
     }
 
-    // 1. simplest (but wasteful) first: alloc a new string
-    TestResult test_1_alloc_reuse(Ryml2Edn *ryml2edn) const
-    {
-        TestResult tr = {};
-        std::string input_(ys.begin(), ys.end());
-        substr input = c4::to_substr(input_);
-        ResultScoped result; // frees when destroying
-        result.edn = ys2edn_alloc(ryml2edn, "ysfilename",
-                                  input.str, (size_type)input.len);
-        CHECK(testeq(c4::to_csubstr(result.edn)));
-        return tr;
-    }
-    TestResult test_1_alloc() const
-    {
-        Ys2EdnScoped lib;
-        return test_1_alloc_reuse(lib.ryml2edn);
-    }
-
-    // 2. happy path: large-enough destination string
-    TestResult test_2_large_enough_reuse(Ryml2Edn *ryml2edn) const
+    // happy path: large-enough destination string
+    TestResult test_large_enough_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         std::string output;
         output.resize(2 * edn.len);
-        size_type reqsize = ys2edn(ryml2edn, "ysfilename",
-                                   input.str, (size_type)input.len,
-                                   &output[0], (size_type)output.size());
+        size_type reqsize = ys2edn_parse(ryml2edn, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         &output[0], (size_type)output.size());
         CHECK(reqsize == edn.len+1);
         CHECK(reqsize != 0);
         output.resize(reqsize - 1u);
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-    TestResult test_2_large_enough() const
+    TestResult test_large_enough() const
     {
         Ys2EdnScoped lib;
-        return test_2_large_enough_reuse(lib.ryml2edn);
+        return test_large_enough_reuse(lib.ryml2edn);
     }
 
     // less-happy path: destination string not large enough
-    TestResult test_3_too_small_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_too_small_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         std::string output = "?";
-        size_type reqsize = ys2edn(ryml2edn, "ysfilename",
-                                   input.str, (size_type)input.len,
-                                   output.data(), (size_type)output.size());
+        size_type reqsize = ys2edn_parse(ryml2edn, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         output.data(), (size_type)output.size());
         CHECK(reqsize == edn.len+1);
         CHECK(reqsize != 0);
         CHECK(output != "?");
@@ -145,32 +120,34 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-    TestResult test_3_too_small() const
+    TestResult test_too_small() const
     {
         Ys2EdnScoped lib;
-        return test_3_too_small_reuse(lib.ryml2edn);
+        return test_too_small_reuse(lib.ryml2edn);
     }
 
     // safe calling with nullptr
-    TestResult test_4_nullptr_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_nullptr_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
-        size_type reqsize = ys2edn(ryml2edn, "ysfilename",
-                                   input.str, (size_type)input.len,
-                                   nullptr, 0);
+        size_type reqsize = ys2edn_parse(ryml2edn, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         nullptr, 0);
         CHECK(reqsize == edn.len+1);
         CHECK(reqsize != 0);
         return tr;
     }
-    TestResult test_4_nullptr() const
+    TestResult test_nullptr() const
     {
         Ys2EdnScoped lib;
-        return test_4_nullptr_reuse(lib.ryml2edn);
+        return test_nullptr_reuse(lib.ryml2edn);
     }
 };
 
+
+//-----------------------------------------------------------------------------
 
 const TestCase test_cases[] = {
     // case ------------------------------
