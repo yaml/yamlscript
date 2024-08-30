@@ -114,6 +114,9 @@ ys-files:
 	) | grep -Ev '(^note/)' | \
 	LC_ALL=C sort | uniq
 
+nrepl nrepl-stop nrepl+:
+	$(MAKE) -C core $@
+
 $(BUILD):
 build: $(BUILD)
 build-%: %
