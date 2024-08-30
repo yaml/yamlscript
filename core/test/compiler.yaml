@@ -1330,3 +1330,23 @@
     if foo.?: bar
   clojure: |
     (if (truey? foo) bar)
+
+
+- name: Support .# count operator
+  yamlscript: |
+    !yamlscript/v0
+    if foo.#: bar
+  clojure: |
+    (if (count foo) bar)
+
+
+- name: Support parenthesized .# count operator
+  yamlscript: |
+    !yamlscript/v0
+    if (foo.# == 3): bar
+    if foo.# == 3: bar
+    if (== foo.# 3): bar
+  clojure: |
+    (if (= (count foo) 3) bar)
+    (if (= (count foo) 3) bar)
+    (if (= (count foo) 3) bar)

@@ -320,18 +320,16 @@
 
 (declare read-form)
 
-(defn add-specials [token tokens]
-  (concat
-    (condp = token
-      ".#"   ["." "count(" ")"]
-      ".#?"  ["." "count(" ")" "." "truey?(" ")"]
-      ".#!"  ["." "count(" ")" "." "falsey?(" ")"]
-      ".?"   ["." "truey?(" ")"]
-      ".??"  ["." "boolean(" ")"]
-      ".!"   ["." "falsey?(" ")"]
-      ".!!"  ["." "not(" ")"]
-      ".???" ["." "DBG(" ")"])
-    tokens))
+(defn get-special-expansion [token]
+  (condp = token
+    ".#"   ["count(" ")"]
+    ".#?"  ["count(" ")" "." "truey?(" ")"]
+    ".#!"  ["count(" ")" "." "falsey?(" ")"]
+    ".?"   ["truey?(" ")"]
+    ".??"  ["boolean(" ")"]
+    ".!"   ["falsey?(" ")"]
+    ".!!"  ["not(" ")"]
+    ".???" ["DBG(" ")"]))
 
 (defn read-scalar [[token & tokens]]
   (cond
@@ -351,7 +349,8 @@
     (is-bad-number? token) (die "Invalid number: " token)
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
-    (is-dot-special? token) [nil (add-specials token tokens)]
+    (is-dot-special? token) [(Sym ".")
+                             (concat (get-special-expansion token) tokens)]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
