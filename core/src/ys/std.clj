@@ -15,8 +15,7 @@
    [ys.ys :as ys]
    [yamlscript.common :as common]
    [yamlscript.util :as util])
-  (:refer-clojure :exclude [num
-                            print
+  (:refer-clojure :exclude [print
                             reverse
                             replace]))
 
@@ -117,7 +116,18 @@
 ;;------------------------------------------------------------------------------
 ;; Common type conversion functions
 ;;------------------------------------------------------------------------------
-(defn num [x]
+(defn to-bool [x] (boolean x))
+(defn to-booly [x] (if (truey? x) true false))
+(defn to-float [x] (parse-double x))
+(defn to-int [x] (parse-long x))
+(defn to-list [x] (apply list x))
+
+(defn to-map
+  ([] {})
+  ([x] (apply hash-map x))
+  ([k v & xs] (apply hash-map k v xs)))
+
+(defn to-num [x]
   (cond
     (ratio? x) (double x)
     (number? x) x
@@ -129,19 +139,19 @@
     (boolean? x) (if x 1 0)
     :else (die (str "Can't convert " (type x) " to number"))))
 
-;; These casts already exist in Clojure:
-;; boolean
-;; set
-;; str
-;; vec
+(defn to-set
+  ([] (set []))
+  ([x] (if (map? x)
+         (set (keys x))
+         (set x)))
+  ([x & xs] (apply set x xs)))
 
-(defn to-float [x] (parse-double x))
-(defn to-int [x] (parse-long x))
-(defn to-map
-  ([] {})
-  ([x] (apply hash-map x))
-  ([k v & xs] (apply hash-map k v xs)))
-(defn to-list [x] (apply list x))
+(defn to-vec
+  ([] [])
+  ([x] (if (map? x)
+         (vec (flatten (seq x)))
+         (vec x)))
+  ([x & xs] (apply vector x xs)))
 
 
 ;;------------------------------------------------------------------------------
@@ -169,7 +179,7 @@
     (string? x) (apply str x xs)
     (map? x) (apply merge x xs)
     (seqable? x) (apply concat x xs)
-    :else (apply + x (map num xs))))
+    :else (apply + x (map to-num xs))))
 
 (defn mul+
   ([x y]

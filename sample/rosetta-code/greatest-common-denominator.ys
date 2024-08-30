@@ -1,7 +1,7 @@
 !yamlscript/v0
 
 defn main(*):
-  when num(ARGS) != 2:
+  when count(ARGS) != 2:
     die: 'Requires 2 integer arguments'
   +[a b] =: ARGS
   say: "gcd($a $b) -> $gcd(a b)"
