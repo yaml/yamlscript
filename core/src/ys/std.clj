@@ -50,34 +50,10 @@
 ;; Used to run a YAMLScript file as a Bash script:
 (defmacro source [& xs])
 
+
 ;;------------------------------------------------------------------------------
-;; Short named functions for very common operations
+;; Short named function aliases
 ;;------------------------------------------------------------------------------
-
-(defn f? [x]
-  (cond
-    (number? x) (zero? x)
-    (seqable? x) (empty? x)
-    x false
-    :else true))
-
-(defn t? [x] (not (f? x)))
-
-(defmacro t-or
-  ([] nil)
-  ([x] (if (t? x) x nil))
-  ([x & next]
-      `(if (t? ~x) ~x (t-or ~@next))))
-
-(defmacro ||| [x & xs] `(t-or ~x ~@xs))
-
-(defmacro t-and
-  ([] true)
-  ([x] (if (t? x) x nil))
-  ([x & next]
-      `(if (t? ~x) (t-and ~@next) nil)))
-
-(defmacro &&& [x & xs] `(t-and ~x ~@xs))
 
 (intern 'ys.std 'a clojure.core/identity)
 
@@ -99,6 +75,42 @@
                  :else (str w#)))
           '(~@xs))))
 
+
+;;------------------------------------------------------------------------------
+;; Alternate truth functions
+;;------------------------------------------------------------------------------
+
+(defn falsey? [x]
+  (cond
+    (number? x) (zero? x)
+    (seqable? x) (empty? x)
+    x false
+    :else true))
+
+(defn truey? [x] (not (falsey? x)))
+
+(defmacro or?
+  ([] nil)
+  ([x] (if (truey? x) x nil))
+  ([x & next]
+      `(if (truey? ~x) ~x (or? ~@next))))
+
+(defmacro ||| [x & xs] `(or? ~x ~@xs))
+
+(defmacro and?
+  ([] true)
+  ([x] (if (truey? x) x nil))
+  ([x & next]
+      `(if (truey? ~x) (and? ~@next) nil)))
+
+(defmacro &&& [x & xs] `(and? ~x ~@xs))
+
+(comment
+  (||| 0 42) ;; 42
+  (&&& 42 0) ;; nil
+  (||| 0 42 99) ;; 42
+  (&&& 42 99) ;; 99
+  )
 
 
 ;;------------------------------------------------------------------------------

@@ -87,15 +87,15 @@ test::
 #-------------------------------------------------------------------------------
 - note: "Truthy and falsy operations"
 
-- code: f?(0)
-- code: f?(0.0)
-- code: f?('')
-- code: f?("")
-- code: f?([])
-- code: f?({})
-- code: f?(\{})
-- code: f?(nil)
-- code: f?(false)
+- code: falsey?(0)
+- code: falsey?(0.0)
+- code: falsey?('')
+- code: falsey?("")
+- code: falsey?([])
+- code: falsey?({})
+- code: falsey?(\{})
+- code: falsey?(nil)
+- code: falsey?(false)
 
 - code: -"" ||| [] ||| 42
   want: 42
