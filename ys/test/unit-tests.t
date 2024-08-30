@@ -54,4 +54,8 @@ test::
 - code: '-"foo" *: 3'
   want: foofoofoo
 
+- code: -[123].#?
+- code: -{}.#!
+- code: a(0).??
+
 done:

@@ -6,6 +6,7 @@
 ;;
 ;; It defines an `re` function that takes a regex template and expands the
 ;; interpolations to create a regex pattern.
+;;(def dotx #"(?:\.(?:\?{1,3}|\!{1,2}|\#))")  ; Dot special operator
 
 (ns yamlscript.re
   (:require
@@ -48,7 +49,7 @@
             )")
 (def spec #"(?:~@|[~@`^])")                ; Special token
 (def quot #"(?:\\')")                      ; Quote token
-(def dotd #"(?:\.\?)")                     ; Dot debugging with .?
+(def dotx #"(?:\.(?:\?{1,3}|\!{1,2}|\#[?!]?))") ; Dot special operator
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def dots (re #"(?:\.\w+(?:_\w+)+)$tend")) ; Dot operator word with _ allowed
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token

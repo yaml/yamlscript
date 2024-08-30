@@ -1161,10 +1161,10 @@
     (when (get+ ENV 'FOO_BAR) (x y))
 
 
-- name: Support .? debugging operator
+- name: Support .??? debugging operator
   yamlscript: |
     !yamlscript/v0
-    =>: foo.?.bar
+    =>: foo.???.bar
   clojure: |
     (get+ (_DBG foo) 'bar)
 
@@ -1322,3 +1322,11 @@
   clojure: |
     (add+ foo (get+ bar 'baz))
     (or a (and? b c))
+
+
+- name: Support .? truey operator
+  yamlscript: |
+    !yamlscript/v0
+    if foo.?: bar
+  clojure: |
+    (if (truey? foo) bar)

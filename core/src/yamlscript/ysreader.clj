@@ -51,8 +51,8 @@
 (defn is-dot-sym? [token]
   (re-matches re/dots (str token)))
 
-(defn is-dot-dbg? [token]
-  (re-matches re/dotd (str token)))
+(defn is-dot-special? [token]
+  (re-matches re/dotx (str token)))
 
 (defn is-operator? [token]
   (let [t (str token)]
@@ -124,7 +124,7 @@
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
       $dots |                   # Dot operator word with _ allowed
-      $dotd |                   # Dot debugging with .?
+      $dotx |                   # Special dot operators
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
       $sett |                   # Set start token
@@ -320,11 +320,24 @@
 
 (declare read-form)
 
+(defn add-specials [token tokens]
+  (concat
+    (condp = token
+      ".#"   ["." "count(" ")"]
+      ".#?"  ["." "count(" ")" "." "truey?(" ")"]
+      ".#!"  ["." "count(" ")" "." "falsey?(" ")"]
+      ".?"   ["." "truey?(" ")"]
+      ".??"  ["." "boolean(" ")"]
+      ".!"   ["." "falsey?(" ")"]
+      ".!!"  ["." "not(" ")"]
+      ".???" ["." "DBG(" ")"])
+    tokens))
+
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
     (is-clojure-comment? token)
-      (die "Clojure style comments are not allowed: '" token "'.")
+    (die "Clojure style comments are not allowed: '" token "'.")
     (is-inline-comment? token) [nil tokens]
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
@@ -338,8 +351,7 @@
     (is-bad-number? token) (die "Invalid number: " token)
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
-    (is-dot-dbg? token) (let [tokens (conj tokens ")" "DBG(" ".")]
-                          [nil tokens])
+    (is-dot-special? token) [nil (add-specials token tokens)]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
