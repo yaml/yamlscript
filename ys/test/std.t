@@ -206,7 +206,7 @@ test::
 - code: 'fs-x: CWD'
 - code: 'fs-z: "$base/test/empty-file"'
 
-- code: fs-cwd()
+- code: fs/cwd().str()
   want:: CWD
 - code: 'fs-which: "ys"'
   like: /ys$

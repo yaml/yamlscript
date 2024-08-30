@@ -4,7 +4,7 @@
 
 require ys::taptest: test done
 
-AV =: FILE.dirname() + '/../../sample/advent'
+AV =: fs-abs("$fs-dirname(FILE)/../../sample/advent")
 
 hash =::
   foo: one

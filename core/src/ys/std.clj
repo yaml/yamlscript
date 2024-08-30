@@ -432,39 +432,45 @@
 ;;------------------------------------------------------------------------------
 ;; File system functions
 ;;------------------------------------------------------------------------------
-(defn abspath [& args]
-  (apply util/abspath args))
-
-(defn cwd [& args]
-  (str (apply fs/cwd args)))
-
-(defn dirname [& args]
-  (apply util/dirname args))
+(declare fs-f)
 
 (intern 'ys.std 'fs-d fs/directory?)
 (intern 'ys.std 'fs-e fs/exists?)
 (intern 'ys.std 'fs-f fs/regular-file?)
 (intern 'ys.std 'fs-l fs/sym-link?)
 (intern 'ys.std 'fs-r fs/readable?)
-(defn fs-s [p] (not= 0 (fs/size p)))
+(defn            fs-s [p] (not= 0 (fs/size p)))
 (intern 'ys.std 'fs-w fs/writable?)
 (intern 'ys.std 'fs-x fs/executable?)
-(defn fs-z [p] (= 0 (fs/size p)))
+(defn            fs-z [p] (= 0 (fs/size p)))
 
-(defn fs-cwd [] (str (fs/cwd)))
-(defn fs-ls
-  ([] (fs-ls "."))
-  ([d] (map str (fs/list-dir d))))
-(defn fs-mtime [f]
-  (fs/file-time->millis
-    (fs/last-modified-time f)))
+(defn fs-abs [p] (str (fs/canonicalize p)))
+(intern 'ys.std 'fs-abs? fs/absolute?)
+
+(defn fs-dirname [p]
+  (str (fs/parent (fs/canonicalize p))))
+
+(defn fs-filename [p]
+  (str (fs/file-name (fs/canonicalize p))))
+
 (defn fs-glob
   ([pat] (fs-glob "." pat))
   ([dir pat] (map str (fs/glob dir pat))))
-(intern 'ys.std 'fs-abs fs/absolute?)
+
+(defn fs-ls
+  ([] (fs-ls ""))
+  ([d] (map str (fs/list-dir d))))
+
+(defn fs-mtime [f]
+  (fs/file-time->millis
+    (fs/last-modified-time f)))
+
 (defn fs-rel
   ([p] (str (fs/relativize (fs/cwd) p)))
   ([d p] (str (fs/relativize d p))))
+
+(intern 'ys.std 'fs-rel? fs/relative?)
+
 (defn fs-which [c]
   (when-let [p (fs/which c)] (str p)))
 
