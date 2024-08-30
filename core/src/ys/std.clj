@@ -199,6 +199,8 @@
     (seqable? x) (apply concat x xs)
     :else (apply + x (map to-num xs))))
 
+(defn div+ [& xs] (double (apply / xs)))
+
 (defn mul+
   ([x y]
    (cond
@@ -209,8 +211,6 @@
      :else  (* x y)))
   ([x y & xs]
     (reduce mul+ (mul+ x y) xs)))
-
-(defn div+ [& xs] (double (apply / xs)))
 
 
 ;;------------------------------------------------------------------------------
@@ -307,9 +307,9 @@
   ([sep x & xs]
    (str/join sep (cons x xs))))
 
-(intern 'ys.std 'lines clojure.string/split-lines)
-
 (intern 'ys.std 'lc clojure.string/lower-case)
+
+(intern 'ys.std 'lines clojure.string/split-lines)
 
 (defn pretty [o]
   (str/trim-newline
@@ -323,13 +323,6 @@
 
 (intern 'ys.std 'replace1 clojure.string/replace-first)
 
-(intern 'ys.std 'trim clojure.string/trim)
-(intern 'ys.std 'triml clojure.string/triml)
-(intern 'ys.std 'trimr clojure.string/trimr)
-
-(intern 'ys.std 'uc clojure.string/upper-case)
-(intern 'ys.std 'uc1 clojure.string/capitalize)
-
 (defn split
   ([s] (if (empty? s)
          []
@@ -338,6 +331,13 @@
     (let [[s r] (if (= java.util.regex.Pattern (type s)) [r s] [s r])
           r (if (string? r) (re-pattern r) r)]
       (clojure.string/split s r))))
+
+(intern 'ys.std 'trim clojure.string/trim)
+(intern 'ys.std 'triml clojure.string/triml)
+(intern 'ys.std 'trimr clojure.string/trimr)
+
+(intern 'ys.std 'uc clojure.string/upper-case)
+(intern 'ys.std 'uc1 clojure.string/capitalize)
 
 (defn words [s]
   (clojure.string/split s #"\s+"))
