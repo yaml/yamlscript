@@ -66,6 +66,21 @@
 (defn Clj [c]
   {:Clj c})
 
+(def operators
+  {(Sym '.)  (Sym '_dot_)
+   (Sym '..) (Sym 'rng)
+   (Sym '+) (Sym 'add+)
+   (Sym '*) (Sym 'mul+)
+   (Sym '/) (Sym 'div+)
+   (Sym '!=) (Sym 'not=)
+   (Sym '||) (Sym 'or)
+   (Sym '&&) (Sym 'and)
+   (Sym '|||) (Sym 'or?)
+   (Sym '&&&) (Sym 'and?)
+   (Sym '%)  (Sym 'rem)
+   (Sym '%%) (Sym 'mod)
+   (Sym '**) (Sym 'pow)})
+
 (comment
   [(Lst [1 2 3])
    (Vec [1 2 3])

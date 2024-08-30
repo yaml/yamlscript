@@ -7,7 +7,7 @@
 (ns yamlscript.constructor
   (:require
    [clojure.walk :as walk]
-   [yamlscript.ast :refer [Lst Qts Str Sym Vec]]
+   [yamlscript.ast :as ast :refer [Lst Qts Str Sym Vec]]
    [yamlscript.common :as common]
    [yamlscript.re :as re]
    [yamlscript.util :refer [die if-lets]]))
@@ -69,11 +69,22 @@
             (concat [(Sym 'apply)] [fun] new splats)))))
     nodes))
 
+(defn apply-yes [key val]
+  (if-lets [_ (vector? key)
+            _ (= 2 (count key))
+            _ (map? val)
+            [a b] key
+            _ (re-matches re/osym (str (:Sym b)))
+            b (or (ast/operators b) b)]
+    [[b a] val]
+    [key val]))
+
 (defn construct-call [[key val]]
-  (cond
-    (= '=> (:Sym key)) val
-    (and (:Str key) (nil? val)) key
-    :else (Lst (expand-splats (flatten [key val])))))
+  (let [[key val] (apply-yes key val)]
+    (cond
+      (= '=> (:Sym key)) val
+      (and (:Str key) (nil? val)) key
+      :else (Lst (expand-splats (flatten [key val]))))))
 
 (defn construct-pairs [{nodes :pairs} ctx]
   (let [pairs (vec (map vec (partition 2 nodes)))

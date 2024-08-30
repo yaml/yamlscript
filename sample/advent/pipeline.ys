@@ -5,7 +5,7 @@
   WWW: 'after map'
   filter: \(0 == (%1 % 2))  # odd?
   WWW: 'after filter'
-  reduce +:
+  reduce sum:
   WWW: 'after reduce'
   say:
   WWW:

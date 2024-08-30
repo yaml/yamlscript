@@ -48,4 +48,10 @@ test::
   code: hash.:bar
   want: two
 
+- code: '-[] |||: 1 && 0'
+  want: 0
+
+- code: '-"foo" *: 3'
+  want: foofoofoo
+
 done:

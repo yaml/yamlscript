@@ -8,7 +8,7 @@
   (:require
    [clojure.string :as str]
    [clojure.walk :as walk]
-   [yamlscript.ast :refer
+   [yamlscript.ast :as ast :refer
     [Bln Chr Flt Form Int Key Lst Map Nil
      QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
    [yamlscript.re :as re]
@@ -199,27 +199,12 @@
                 (conj-seq acc grp a))))
       forms)))
 
-(def operators
-  {(Sym '.)  (Sym '_dot_)
-   (Sym '..) (Sym 'rng)
-   (Sym '+) (Sym 'add+)
-   (Sym '*) (Sym 'mul+)
-   (Sym '/) (Sym 'div+)
-   (Sym '!=) (Sym 'not=)
-   (Sym '||) (Sym 'or)
-   (Sym '&&) (Sym 'and)
-   (Sym '|||) (Sym 'or?)
-   (Sym '&&&) (Sym 'and?)
-   (Sym '%)  (Sym 'rem)
-   (Sym '%%) (Sym 'mod)
-   (Sym '**) (Sym 'pow)})
-
 (defn yes-expr [expr]
   (fix-dot-chain
     (if (= (count expr) 3)
       (let [[a op b] expr]
         (if (is-operator? (:Sym op))
-          (let [op (or (operators op) op)] [op a b])
+          (let [op (or (ast/operators op) op)] [op a b])
           expr))
       (if (and (> (count expr) 3)
             (some #(->> expr
@@ -228,7 +213,7 @@
                      (apply = %1))
               (map Sym '[+ - * / || ||| && &&& . ** = == > >= < <=])))
         (let [op (second expr)
-              op (or (operators op) op)]
+              op (or (ast/operators op) op)]
           (->> expr
             (cons nil)
             (partition 2)

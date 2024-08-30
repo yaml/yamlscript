@@ -1312,3 +1312,13 @@
   clojure: |
     (apply bar (rng 1 10))
     (apply baz (get+ foo 'bar))
+
+
+- name: YeS expression over a pair
+  yamlscript: |
+    !yamlscript/v0
+    foo +: bar.baz
+    a ||: b &&& c
+  clojure: |
+    (add+ foo (get+ bar 'baz))
+    (or a (and? b c))
