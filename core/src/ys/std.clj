@@ -27,14 +27,14 @@
 
 
 ;;------------------------------------------------------------------------------
-;; TODO fix that this prints _T as well
-;; TDOO Move to yamlscript.debug
+;; TODO fix that this prints _X as well
+;; TODO Move to yamlscript.debug
 ;;------------------------------------------------------------------------------
-(defmacro _T [xs]
+(defmacro _X [xs]
   (let [[fun# & args#] xs
         args# (map pr-str args#)
         #_#_args# (map (fn [x]
-                     (let [y (str/replace x #"\(_T " "")
+                     (let [y (str/replace x #"\(_X " "")
                            n (/ (- (count x) (count y)) 4)]
                        (subs y 0 (- (count y) n)))) args#)
         args# (str/join " -> " args#)]

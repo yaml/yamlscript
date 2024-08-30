@@ -128,8 +128,8 @@
   (if-lets [_ (:xtrace @common/opts)
             sym (get-in node [:Lst 0 :Sym])
             _ (type sym)
-            _ (not= '_T sym)]
-    (Lst [(Sym '_T) node])
+            _ (not= '_X sym)]
+    (Lst [(Sym '_X) node])
     node)
   )
 
