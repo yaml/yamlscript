@@ -1207,6 +1207,14 @@
     (say (get+ (get+ (get+ text 'foo) 'bar) 'baz))
 
 
+- name: Inline comments in parenthesized expression
+  yamlscript: |
+    !yamlscript/v0
+    (1 + \"Inline comment" 2)
+  clojure: |
+    (add+ 1 2)
+
+
 - name: Escape pound and colon in ysexpr strings
   yamlscript: |
     !yamlscript/v0

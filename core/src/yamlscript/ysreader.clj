@@ -273,7 +273,7 @@
                    (group-dots list))]
         [(type list) (rest tokens)])
       (let [[form tokens] (read-form tokens)]
-        (recur tokens (conj list form))))))
+        (recur tokens (if form (conj list form) list))))))
 
 #_(def unescapes
   {"\\\\" "\\"
