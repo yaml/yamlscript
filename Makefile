@@ -136,6 +136,8 @@ $(TEST):
 test: $(TEST)
 	@echo
 	@echo 'ALL TESTS PASSED!'
+test-core:
+	$(MAKE) -C core test v=$v
 test-ys:
 	$(MAKE) -C ys test-all v=$v GRAALVM_O=b
 test-%: %

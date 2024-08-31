@@ -323,13 +323,20 @@
 
 (defn get-special-expansion [token]
   (condp = token
-    ".#"   ["count(" ")"]
-    ".#?"  ["count(" ")" "." "truey?(" ")"]
-    ".#!"  ["count(" ")" "." "falsey?(" ")"]
+    ".--"  ["dec(" ")"]
+    ".++"  ["inc(" ")"]
+
     ".?"   ["truey?(" ")"]
     ".??"  ["boolean(" ")"]
     ".!"   ["falsey?(" ")"]
     ".!!"  ["not(" ")"]
+
+    ".#"   ["count(" ")"]
+    ".#?"  ["count(" ")" "." "truey?(" ")"]
+    ".#!"  ["count(" ")" "." "falsey?(" ")"]
+    ".#--" ["count(" ")" "." "dec(" ")"]
+    ".#++" ["count(" ")" "." "inc(" ")"]
+
     ".???" ["DBG(" ")"]))
 
 (defn read-scalar [[token & tokens]]

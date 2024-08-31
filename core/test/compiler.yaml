@@ -1368,3 +1368,11 @@
   clojure: |
     (fn [& [_1]] ((add _1 1) 2))
     (fn [& [_1 _2]] (add+ _2 _1 _1 _1))
+
+
+- name: Support .-- .++ .#-- .#++ operators
+  yamlscript: |
+    !yamlscript/v0
+    when a.-- > b.++ > c.#-- > d.#++: e
+  clojure: |
+    (when (> (dec a) (inc b) (dec (count c)) (inc (count d))) e)
