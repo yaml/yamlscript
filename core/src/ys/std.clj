@@ -178,7 +178,6 @@
 (intern 'ys.std 'sum clojure.core/+)
 (intern 'ys.std 'sub clojure.core/-)
 (intern 'ys.std 'mul clojure.core/*)
-(intern 'ys.std 'div clojure.core//)
 
 (defn pow [x y]
   (if (and (integer? x) (integer? y) (>= y 0))
@@ -187,6 +186,15 @@
         (long a)
         a))
     (Math/pow x y)))
+
+(defn div
+  ([x y]
+   (let [a (/ x y)]
+     (if (ratio? a)
+       (double a)
+       a)))
+  ([x y & xs]
+   (reduce div (div x y) xs)))
 
 (defn sqr  [x] (pow x 2))
 (defn cube [x] (pow x 3))
