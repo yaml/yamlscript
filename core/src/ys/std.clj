@@ -175,6 +175,7 @@
 ;;------------------------------------------------------------------------------
 ;; Math functions
 ;;------------------------------------------------------------------------------
+(intern 'ys.std 'add clojure.core/+)
 (intern 'ys.std 'sum clojure.core/+)
 (intern 'ys.std 'sub clojure.core/-)
 (intern 'ys.std 'mul clojure.core/*)
