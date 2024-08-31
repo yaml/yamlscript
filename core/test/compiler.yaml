@@ -1358,3 +1358,13 @@
     (if (= (count foo) 3) bar)
     (if (= (count foo) 3) bar)
     (if (= (count foo) 3) bar)
+
+
+- name: Use _ for %1 in anonymous function
+  yamlscript: |
+    !yamlscript/v0
+    =>: \(add(_ 1) 2)
+    =>: \(%2 + _ + _ + %1)
+  clojure: |
+    (fn [& [_1]] ((add _1 1) 2))
+    (fn [& [_1 _2]] (add+ _2 _1 _1 _1))

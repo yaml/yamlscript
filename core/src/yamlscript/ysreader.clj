@@ -249,8 +249,9 @@
 
     (if (= (first tokens) ")")
       (let [form (-> list group-dots yes-expr)
+            form (walk/prewalk-replace {{:Sym '_} {:Sym '_1}} form)
             args (anon-fn-arg-list form)
-            expr (Lst [(Sym 'fn) (Vec [(Sym "&")(Vec args)]) (Form form)])]
+            expr (Lst [(Sym 'fn) (Vec [(Sym "&") (Vec args)]) (Form form)])]
         [expr (rest tokens)])
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
