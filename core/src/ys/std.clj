@@ -179,14 +179,6 @@
 (intern 'ys.std 'sub clojure.core/-)
 (intern 'ys.std 'mul clojure.core/*)
 
-(defn pow [x y]
-  (if (and (integer? x) (integer? y) (>= y 0))
-    (let [a (Math/pow x y)]
-      (if (<= a (Long/MAX_VALUE))
-        (long a)
-        a))
-    (Math/pow x y)))
-
 (defn div
   ([x y]
    (let [a (/ x y)]
@@ -195,6 +187,18 @@
        a)))
   ([x y & xs]
    (reduce div (div x y) xs)))
+
+(defn pow
+  ([x y]
+   (if (and (integer? x) (integer? y) (>= y 0))
+     (let [a (Math/pow x y)]
+       (if (<= a Long/MAX_VALUE)
+         (long a)
+         a))
+     (Math/pow x y)))
+  ([x y & xs]
+    (let [[& xs] (clojure.core/reverse (conj xs y x))]
+      (reduce #(pow %2 %1) 1 xs))))
 
 (defn sqr  [x] (pow x 2))
 (defn cube [x] (pow x 3))
