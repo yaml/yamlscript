@@ -249,6 +249,10 @@
 
     (if (= (first tokens) ")")
       (let [form (-> list group-dots yes-expr)
+            form (if (and (= 1 (count form))
+                       (:Rgx (first form)))
+                   [(Sym 're-find) (first form) (Sym '_1)]
+                   form)
             form (walk/prewalk-replace {{:Sym '_} {:Sym '_1}} form)
             args (anon-fn-arg-list form)
             expr (Lst [(Sym 'fn) (Vec [(Sym "&") (Vec args)]) (Form form)])]

@@ -1376,3 +1376,11 @@
     when a.-- > b.++ > c.#-- > d.#++: e
   clojure: |
     (when (> (dec a) (inc b) (dec (count c)) (inc (count d))) e)
+
+
+- name: Anonymous function with only a regex
+  yamlscript: |
+    !yamlscript/v0
+    a.map(\(/.../))
+  clojure: |
+    (+map a (fn [& [_1]] (re-find #"..." _1)))
