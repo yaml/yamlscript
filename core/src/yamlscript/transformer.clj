@@ -134,7 +134,7 @@
           lhs [a b]
           op (:Sym c)
           op (Sym (or ({'|| 'or
-                        '||| 't-or
+                        '||| 'or?
                         '+ 'add+
                         '* 'mul+
                         '/ 'div+

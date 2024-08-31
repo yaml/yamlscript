@@ -154,6 +154,7 @@
                       (parse-long x))
                   0)
     (seqable? x) (count x)
+    (char? x) (int x)
     (boolean? x) (if x 1 0)
     :else (die (str "Can't convert " (type x) " to number"))))
 
