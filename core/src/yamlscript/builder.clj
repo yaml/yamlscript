@@ -55,7 +55,7 @@
                                dvals (->> dargs (map #(get dmap %)) vec)
                                body (Lst [(Vec nargs)
                                           (Lst (-> nargs
-                                                 (->> (cons name))
+                                                 (#(if name (cons name %) %))
                                                  vec
                                                  (concat dvals)))])]
                            (conj bodies body)))
@@ -82,7 +82,7 @@
                              (re-matches re/dfnk key)
                              (re-matches re/afnk key))
         kind (symbol kind)
-        name (Sym name)
+        name (when name (Sym name))
         args (when args
                (let [args (fix-args args)
                      args (build-node {:exp args})
@@ -108,6 +108,10 @@
     (or
       (build-defn-defaults name doc args body kind)
       (build-defn-single name doc args body kind))))
+
+(comment
+  (YSC "fn(*): nil")
+  )
 
 (defn build-form-pair [key val]
   (let [key (:form key)]

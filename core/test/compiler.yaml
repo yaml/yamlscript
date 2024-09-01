@@ -1384,3 +1384,18 @@
     a.map(\(/.../))
   clojure: |
     (+map a (fn [& [_1]] (re-find #"..." _1)))
+
+
+- name: Support slurp arg in fn
+  yamlscript: |
+    !yamlscript/v0
+    a =:
+      fn(*args): nil
+    b =:
+      fn(*): nil
+    c =:
+      fn c(*): nil
+  clojure: |
+    (def a (fn [& args] nil))
+    (def b (fn [& _] nil))
+    (def c (fn c [& _] nil))

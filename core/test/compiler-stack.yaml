@@ -439,7 +439,7 @@
       fn(a b): a + b
   resolve: |
     {:pairs
-     [{:def "add ="} {:pairs [{:exp "fn [a b]"} {:exp "a + b"}]}]}
+     [{:def "add ="} {:pairs [{:fn "fn(a b)"} {:exp "a + b"}]}]}
   clojure: |
     (def add (fn [a b] (add+ a b)))
 

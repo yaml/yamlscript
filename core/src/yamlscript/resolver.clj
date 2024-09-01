@@ -80,6 +80,10 @@
               _ (= "" (:exp val))]
     [{:str str} nil]))
 
+(defn tag-fn [[{key :exp} val]]
+  (when (re-matches re/afnk key)
+    [{:fn key} val]))
+
 (defn tag-def [[{key :exp} val]]
   (when (re-matches re/defk key)
     [{:def key} val]))
@@ -87,19 +91,6 @@
 (defn tag-defn [[{key :exp} val]]
   (when (re-matches re/dfnk key)
     [{:defn key} val]))
-
-(defn tag-afn [[{key :exp} val]]
-  (when (re-matches re/afnk key)
-    [{:fn key} val]))
-
-;; XXX - This needs refactoring to not mutate the key
-(defn tag-fn [[key val]]
-  (when-lets [key (:exp key)
-              old key
-              rgx (re/re #"^fn\((.*)\)$")
-              key (str/replace key rgx "fn [$1]")
-              _ (not= old key)]
-    [{:exp key} val]))
 
 (defn tag-forms [[key val]]
   (when-lets [_ (or
@@ -144,7 +135,6 @@
        tag-fn
        tag-def
        tag-defn
-       tag-afn
        tag-forms
        tag-exp
        identity) pair)))

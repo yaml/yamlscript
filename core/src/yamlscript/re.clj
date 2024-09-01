@@ -112,9 +112,9 @@
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))
 
 (def eqop (re #"(?:\|\|\|?|[-+*/.]|\*\*)"))
-(def defk (re #"(\[.*\]|\{.*\}|$symw) +($eqop?)="))  ; Pair key for def/let call
-(def dfnk (re #"^(defn-?) ($ysym)(?:\((.*)\))?$")) ; Pair key for defn call
-(def afnk (re #"^(fn) ($ysym)(?:\((.*)\))?$"))   ; Pair key for a fn call
+(def defk (re #"(\[.*\]|\{.*\}|$symw) +($eqop?)=")) ; Pair key for def/let call
+(def dfnk (re #"^(defn-?) +($ysym)(?:\((.*)\))?$")) ; Pair key for defn call
+(def afnk (re #"^(fn)( +$ysym)?(?:\((.*)\))?$"))    ; Pair key for a fn call
 
 ; Balanced parens
 (def bpar #"(?x)
