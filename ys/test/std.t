@@ -116,6 +116,9 @@ test::
 - code: 1 + \\A
   want: 66
 
+- code: sum(3 .. 9)
+  want: 42
+
 
 #-------------------------------------------------------------------------------
 - note: "YAML Anchor and alias functions"

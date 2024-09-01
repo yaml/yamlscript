@@ -52,7 +52,7 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Short named function aliases
+;; Shorter named alias functions
 ;;------------------------------------------------------------------------------
 
 (intern 'ys.std 'a clojure.core/identity)
@@ -189,6 +189,8 @@
        a)))
   ([x y & xs]
    (reduce div (div x y) xs)))
+
+(defn sum [xs] (reduce + xs))
 
 (defn pow
   ([x y]
