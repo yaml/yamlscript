@@ -3,15 +3,15 @@
 defn main():
   say: |-
     Open doors after 100 passes:
-    $(open-doors().interpose(', ').str(*))
+    $(open-doors().join(', '))
 
 defn open-doors():
-  ? for [d n] map(vector doors() iterate(inc 1))
+  ? for [d n] map(vector doors() range().drop(1))
         :when d
   : n
 
 defn doors():
   reduce:
-    fn(doors idx): assoc(doors idx true)
+    fn(doors idx): doors.assoc(idx true)
     into []: repeat(100 false)
-    map \(dec (%1 ** 2)): 1 .. 10
+    map \(dec(_ ** 2)): 1 .. 10

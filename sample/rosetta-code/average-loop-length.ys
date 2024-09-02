@@ -8,7 +8,7 @@ TIMES =: 1000000
 # Use *' (vs. *) to allow arbitrary length arithmetic:
 defn factorial(n):
   :: n!
-  range(1 n.inc()): .mul(*)
+  range(1 n.++): .mul(*)
 
 defn pow(n i):
   :: n^i
@@ -16,16 +16,16 @@ defn pow(n i):
 
 defn analytical(n):
   :: Analytical computation
-  ->>: (1 .. n)
-       map(\(factorial(n) / pow(n %1) / factorial(n - %1)))
-       reduce(+ 0)
+  (1 .. n):
+    .map(\(factorial(n) / pow(n _) / factorial(n - _)))
+    .reduce(+ 0 _)
 
 defn single-test-cycle-length(n):
   :: Single random test of cycle length
   loop count 0, bits 0, x 1:
     if zero?(bit-and(x bits)):
-      recur: count.inc() bit-or(bits x) bit-shift-left(1 rand-int(n))
-      do: count
+      recur: count.++ bit-or(bits x) bit-shift-left(1 rand-int(n))
+      else: count
 
 defn avg-cycle-length(n times):
   :: Average results of single tests of cycle lengths
@@ -38,8 +38,8 @@ defn avg-cycle-length(n times):
 say: "\tAvg\tExp\tDiff"
 
 doseq q (1 .. 20):
-  anal =: double(analytical(q))
-  avg  =: double(avg-cycle-length(q TIMES))
+  anal =: analytical(q)
+  avg  =: avg-cycle-length(q TIMES).double()
   diff =: Math/abs(100 * (1 - (avg / anal)))
   say:
     format "%3d\t%.4f\t%.4f\t%.2f%%": q avg anal diff

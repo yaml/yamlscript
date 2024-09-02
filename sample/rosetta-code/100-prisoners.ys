@@ -9,10 +9,10 @@ defn main(n=5000):
   : simulate-n-runs(n)
 
   say: +"Probability of survival with random search:\ " +
-       float(random-successes / run-count)
+       (random-successes / run-count)
 
   say: +"Probability of survival with ordered search:\ " +
-       float(optimal-successes / run-count)
+       (optimal-successes / run-count)
 
 defn simulate-n-runs(n):
   :: Simulate n runs of the 100 prisoner problem and returns a success count
@@ -23,9 +23,9 @@ defn simulate-n-runs(n):
     if n == run-count:
       # return results
       then::
-          :random-successes  :: random-successes
-          :optimal-successes :: optimal-successes
-          :run-count         :: run-count
+        :random-successes  :: random-successes
+        :optimal-successes :: optimal-successes
+        :run-count         :: run-count
 
       # Otherwise, run for another batch of prisoners
       else:
@@ -33,7 +33,7 @@ defn simulate-n-runs(n):
         recur:
           (random-successes + next-result.random)
           (optimal-successes + next-result.optimal)
-          run-count.inc()
+          run-count.++
 
 defn simulate-100-prisoners():
   :: Simulates all prisoners searching the same drawers by both strategies,
@@ -49,7 +49,7 @@ defn try-luck(drawers drawer-searching-function):
   :: Returns 1 if all prisoners find their number otherwise 0.
 
   loop prisoners range(100):
-    if t?(prisoners):
+    if prisoners.?:
       if prisoners.first().drawer-searching-function(drawers):
         recur: rest(prisoners)
         else: 0
@@ -60,12 +60,10 @@ defn search-50-optimal-drawers(prisoner-number drawers):
      prisoner's number was found.
 
   loop next-drawer prisoner-number, drawers-opened 0:
-    if drawers-opened == 50:
-      then: false
-      else:
-        result =: nth(drawers next-drawer)
-        or (result == prisoner-number):
-          recur: result drawers-opened.inc()
+    when drawers-opened != 50:
+      result =: nth(drawers next-drawer)
+      or (result == prisoner-number):
+        recur: result drawers-opened.inc()
 
 defn search-50-random-drawers(prisoner-number drawers):
   :: Select 50 random drawers and return true if the prisoner's number was
@@ -74,11 +72,11 @@ defn search-50-random-drawers(prisoner-number drawers):
   drawers:
     .shuffle()
     .take(50)
-    .filter(\(%1 == prisoner-number))
+    .filter(fun(== prisoner-number))
     .count()
     .eq(1)
 
 defn random-drawers():
   :: Returns a list of shuffled numbers.
 
-  range(100): .shuffle()
+  shuffle: range(100)

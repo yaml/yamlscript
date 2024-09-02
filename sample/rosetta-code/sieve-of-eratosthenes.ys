@@ -3,22 +3,22 @@
 defn main(n):
   primes =: primes-up-to(n)
   say: |
-    The $count(primes) prime numbers less than $n are:
+    The $(primes.#) prime numbers less than $n are:
     $join("\n" primes)
 
 defn primes-up-to(limit):
   :: Returns a lazy sequence of prime numbers less than limit.
 
-  max-i =: int(dec(limit) / 2)
+  max-i =: int(limit.-- / 2)
   refs =: boolean-array(max-i true)
-  root =: limit.sqrt().int().dec() / 2
+  root =: sqrt(limit).int().-- / 2
   ? doseq i (1 .. root)
       :when aget(refs i)
   : ? doseq
         j range(
-            inc(i).mul(2 * i),
+            mul(i.++ 2 i),
             max-i,
-            (i + i + 1))
+            add(i i 1))
     : aset(refs j false)
   cons 2:
     map comp(inc fun(* 2)):

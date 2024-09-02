@@ -3,16 +3,5 @@
 defn main(year):
   say: "$year is $when-not(leap-year(year) 'not ')a leap year."
 
-# NOTE - Either one works:
-
 defn leap-year(year):
-  ((year % 4) == 0) &&
-  (((year % 100) > 0) ||
-   ((year % 400) == 0))
-
-defn leap-year(year):
-  and:
-    zero?: year % 4
-    or:
-      pos? : year % 100
-      zero?: year % 400
+  (year % 4).! &&: (year % 100).? || (year % 400).!

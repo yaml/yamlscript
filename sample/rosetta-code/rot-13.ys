@@ -1,5 +1,5 @@
 !yamlscript/v0
 
-defn main(in):
-  s =: ((\\A .. \\Z) + (\\a .. \\z)).map(char).set()
-  say: cycle(s).drop(13 * 2).zipmap(s).map(in).str(*)
+defn main(input):
+  s =: set((\\A .. \\Z) + (\\a .. \\z))
+  say: cycle(s).drop(13 * 2).zipmap(s).str/escape(input _)

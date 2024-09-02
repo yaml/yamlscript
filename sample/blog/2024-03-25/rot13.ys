@@ -1,7 +1,5 @@
 !yamlscript/v0
 
-defn rot13(i):
-  s =: set(nil).into('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-  m =: s.drop(26).concat(s.take(26)).zipmap(s _)
-  l =: map(\(m %1 %1) i)
-  str: l*
+defn rot13(input):
+  s =: set((\\A .. \\Z) + (\\a .. \\z))
+  cycle(s): .drop(13 * 2).zipmap(s).str/escape(input _)

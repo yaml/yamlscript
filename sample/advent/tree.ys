@@ -4,9 +4,9 @@ defn main(width=5):
   say: tree(width)
 
 defn tree(width):
-  top =:
-    join "\n":
-      map \(line width, %1): width .. 1
+  top =: (width .. 1)
+    .map(fun(line width))
+    .join("\n")
 
   trunk =: trunk(width) * 2
 
@@ -14,11 +14,11 @@ defn tree(width):
     $top
     $trunk
 
-defn trunk(num): spaces(num) + "*\n"
+defn trunk(num): "$spaces(num)*\n"
 
 defn line(width, num):
   :: "`stars` is a lexically defined function"
-  stars =: \(inc(%1) * '*')
+  stars =: \(_.++ * '*')
 
   join '':
     spaces: num

@@ -4,4 +4,4 @@ defn main(n=10):
   loop a 0, b 1, i 1:
     say: a
     when i < n:
-      recur: b, (a + b), (i + 1)
+      recur: b, (a + b), i.++

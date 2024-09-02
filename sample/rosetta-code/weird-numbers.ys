@@ -1,63 +1,48 @@
-# Ported from https://rosettacode.org/wiki/Weird_numbers#Ruby
-
 !yamlscript/v0
 
-defn main(max=25):
-  w =: sieve(17000)
-  say: "The first $max weird numbers:"
-  loop n 2, count 0:
-    when count < max:
-      recur (n + 2):
-        if not(w.$n):
-          then:
-            print: "$n "
-            inc: count
-          else: count
-  say: ''
+defn main(max=16500):
+  weird =: sieve(max)
+  numbers =:
+    filter \(weird.nth(_)): range(2 max 2)
+  say: |
+    The first $(numbers.#) weird numbers:
+    $join(' ' numbers)
 
 defn sieve(limit):
-  loop i 2, w1 vec([false] * limit):
+  weirds =: into([] repeat(limit true))
+  loop i 2, weirds weirds:
     if i < limit:
-      recur (i + 2):
-        if not(w1.$i):
-          then:
+      recur (+ i 2):
+        or _ weirds:
+          when weirds.$i:
             divs =: divisors(i)
-            if not(abundant(i divs)):
-              assoc w1: i true
-              if semiperfect(i divs):
-                loop j i, w3 w1:
+            if abundant(i divs):
+              when semiperfect(i divs):
+                loop j i, weirds weirds:
                   if j < limit:
-                    recur: (j + i) assoc(w3 j true)
-                    else: w3
-                else: w1
-          else: w1
-      else: w1
+                    recur: (+ j i) weirds.assoc(j false)
+                    else: weirds
+              assoc weirds: i false
+      else: weirds
 
-defn divisors(n):
-  loop divs [1], divs2 [], i 2:
-    if sqr(i) <= n:
-      if f?(n % i):
-        then:
-          divs .=: conj(i)
-          j =: n / i
-          divs2 =:
-            if i != j:
-              divs2.conj(j)
-              divs2
-          recur: divs divs2 i.inc()
-        else:
-          recur: divs divs2 i.inc()
-      concat divs2: divs.reverse()
+defn divisors(number):
+  rest:
+    sort >:
+      distinct:
+        mapcat _ range(1 sqrt(number)):
+          fn(n):
+            when 0 == (number % n):
+              -[n (/ number n)]
 
-defn abundant(n, divs):
-  sum(divs*) > n
+defn abundant(n divs):
+  sum(divs) > n
 
-defn semiperfect(n, divs):
-  when divs.count() > 0:
-    +[h & t] =: divs
-    if n < h:
-      semiperfect: n t
+defn semiperfect(n divs):
+  when divs.# > 0:
+    -[div & divs] =: divs
+    if n < div:
+      semiperfect: n divs
       or:
-        (n == h)
-        semiperfect((n - h) t)
-        semiperfect(n t)
+        n ==: div
+        semiperfect: (n - div) divs
+        semiperfect: n divs
