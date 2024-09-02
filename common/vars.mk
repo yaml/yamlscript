@@ -221,7 +221,9 @@ build-bin-ys: $(BUILD_BIN_YS)
 
 $(BUILD_BIN_YS):
 	curl -sSL $(YS_INSTALL_URL) | \
-	  PREFIX=$$(dirname $(BUILD_BIN)) VERSION=$(BUILD_BIN_YS_VERSION) BIN=1 bash
+	  PREFIX=$$(dirname $(BUILD_BIN)) \
+	  VERSION=$(BUILD_BIN_YS_VERSION) \
+	  BIN=1 bash
 
 $(BUILD_BIN):
 	mkdir -p $@

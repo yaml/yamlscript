@@ -7,7 +7,7 @@ v-old =: ENV.YS_RELEASE_VERSION_OLD ||
 v-new =: ENV.YS_RELEASE_VERSION_NEW ||
   die("'YS_RELEASE_VERSION_NEW' env var not defined")
 
-vp =: '0\.[01]\.[0-9]+'
+vp =: '0\.1\.[0-9]+'
 vo =: v-old.str/replace(/\./ '\\.')
 
 
@@ -24,7 +24,8 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ReadMe.md
     - common/install.mk
     - common/release.md
-    - common/vars.mk
+    # Don't update common/vars.mk
+    # - common/vars.mk
     - core/src/yamlscript/runtime.clj
     - doc/ys.md
     - go/ReadMe.md
