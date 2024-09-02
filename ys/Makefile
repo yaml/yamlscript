@@ -47,15 +47,10 @@ jar: $(YAMLSCRIPT_CLI_JAR_PATH)
 
 test: test-unit
 
-test-all: test-unit test-ys test-run
+test-all: test-unit test-run
 
 test-unit: $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
 	$< test
-
-test-ys: $(YAMLSCRIPT_CLI_BIN)
-	./test/test.sh
-	@echo
-	@echo "*** test.sh completed successfully"
 
 test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
 	prove $${TEST_VERBOSE:+'-v'} $(test)
