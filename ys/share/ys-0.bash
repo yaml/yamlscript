@@ -84,9 +84,11 @@ setup() {
 
   # root=$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 
+  ys_tmp=/tmp/yamlscript
+
   lein_url=https://raw.githubusercontent.com/technomancy/
   lein_url+=leiningen/stable/bin/lein
-  lein_path=/tmp/yamlscript/bin
+  lein_path=$ys_tmp/bin
 
   graalvm_subdir=''
   if [[ $OSTYPE == *linux* ]]; then
@@ -109,13 +111,13 @@ setup() {
   fi
 
   graalvm_src=https://download.oracle.com/graalvm
-  graalvm_ver=21
+  graalvm_ver=22
   graalvm_tar=graalvm-jdk-${graalvm_ver}_${graalvm_arch}_bin.tar.gz
   graalvm_dir_prefix=graalvm-jdk-${graalvm_ver}.
   graalvm_url=$graalvm_src/$graalvm_ver/latest/$graalvm_tar
-  graalvm_path=/tmp/graalvm-oracle-$graalvm_ver
+  graalvm_path=$ys_tmp/graalvm-oracle-$graalvm_ver
   graalvm_home=${graalvm_path}$graalvm_subdir
-  graalvm_download=/tmp/$graalvm_tar
+  graalvm_download=$ys_tmp/$graalvm_tar
   graalvm_installed=$graalvm_home/release
 
   export JAVA_HOME=$graalvm_home
@@ -198,7 +200,7 @@ write-makefile() (
   cat > Makefile <<'EOF'
 SHELL := bash
 
-export PATH := /tmp/graalvm-oracle-21/bin:$(PATH)
+export PATH := /tmp/yamlscript/graalvm-oracle-21/bin:$(PATH)
 
 JAR := target/uberjar/program-ys-binary-standalone.jar
 
@@ -239,12 +241,12 @@ EOF
 
 assert-yamlscript-core() (
   ys_version=$1
-  # XXX /tmp/yamlscript/.m2 not fully working yet:
-  # ys_jar=/tmp/yamlscript/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
+  # XXX $ys_tmp/.m2 not fully working yet:
+  # ys_jar=$ys_tmp/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
   ys_jar=$HOME/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
   if ! [[ -f $ys_jar ]]; then
     say "Installing YAMLScript core in '$ys_jar'"
-    repo_path=/tmp/yamlscript/$ys_version
+    repo_path=$ys_tmp/$ys_version
     assert-yamlscript-repo "$repo_path"
     (
       set -x
@@ -270,7 +272,7 @@ assert-yamlscript-repo() (
 )
 
 assert-lein() {
-  if ! [[ -f /tmp/yamlscript/bin/lein ]]; then
+  if ! [[ -f $ys_tmp/bin/lein ]]; then
     say "Installing lein in '$lein_path/lein'"
     mkdir -p "$lein_path"
     (
@@ -288,8 +290,8 @@ assert-graalvm() {
     say "Unpacking GraalVM in '$graalvm_path'"
     (
       set -x
-      tar -xzf "$graalvm_download" -C /tmp
-      mv "/tmp/$graalvm_dir_prefix"* "$graalvm_path"
+      tar -xzf "$graalvm_download" -C $ys_tmp
+      mv "$ys_tmp/$graalvm_dir_prefix"* "$graalvm_path"
     )
   fi
   [[ -f $graalvm_installed ]] ||
