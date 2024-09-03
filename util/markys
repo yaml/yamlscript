@@ -5,7 +5,7 @@ input-dir =: atom(nil)
 DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
 
 defn main(input-file):
-  dir =: dirname(input-file).abspath()
+  dir =: fs-dirname(input-file).fs-abs()
   reset! input-dir: dir
 
   fmt-file =: "$dir/fmt.ys"
@@ -33,7 +33,7 @@ defn process(input-file):
     .triml()
 
 defn load-markys(file):
-  text =: file.abspath().slurp()
+  text =: file.fs-abs().slurp()
   fenced-re =: /(?s)(?:```markys:\S+\n.*?\n```\n)/
   texts =: text.split(fenced-re)
   fenced =: text.re-seq(fenced-re)
@@ -72,7 +72,7 @@ defn format-markys(text):
   call func: data
 
 defn get-path(file):
-  abspath file: input-dir.deref()
+  fs-abs _ file: input-dir.deref()
 
 defn fmt-include(data):
   input-file =: data.file.get-path()
@@ -80,7 +80,7 @@ defn fmt-include(data):
   yank =: data.yank
   markdown =:
     if yank:
-      remove fn([s] re-find(rx(yank) s)): markdown
+      remove fn([s] re-find(qr(yank) s)): markdown
       else: markdown
   =>: +"\n\n" + join("\n" markdown) + "\n\n"
 

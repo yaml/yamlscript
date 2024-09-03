@@ -466,7 +466,10 @@
 (intern 'ys.std 'fs-x fs/executable?)
 (defn            fs-z [p] (= 0 (fs/size p)))
 
-(defn fs-abs [p] (str (fs/canonicalize p)))
+(defn fs-abs
+  ([p] (str (fs/canonicalize p)))
+  ([p f] (str (fs/canonicalize (fs/file p f)))))
+
 (intern 'ys.std 'fs-abs? fs/absolute?)
 
 (defn fs-dirname [p]
