@@ -674,17 +674,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/ys-taptest/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
@@ -720,7 +709,7 @@
       <url>
         <loc>https://yamlscript.org/doc/cheat/</loc>
         
-          <lastmod>2024-08-25T20:22:19.756Z</lastmod>
+          <lastmod>2024-08-28T23:10:50.052Z</lastmod>
         
         
         
@@ -731,7 +720,7 @@
       <url>
         <loc>https://yamlscript.org/doc/yaml/</loc>
         
-          <lastmod>2024-08-25T20:22:19.760Z</lastmod>
+          <lastmod>2024-08-28T23:10:50.052Z</lastmod>
         
         
         
@@ -742,7 +731,7 @@
       <url>
         <loc>https://yamlscript.org/doc/</loc>
         
-          <lastmod>2024-08-25T20:26:12.752Z</lastmod>
+          <lastmod>2024-08-30T14:25:44.208Z</lastmod>
         
         
         
@@ -753,7 +742,7 @@
       <url>
         <loc>https://yamlscript.org/doc/ys/</loc>
         
-          <lastmod>2024-08-27T21:01:12.036Z</lastmod>
+          <lastmod>2024-09-02T23:33:04.524Z</lastmod>
         
         
         
@@ -764,7 +753,18 @@
       <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-08-27T21:01:12.040Z</lastmod>
+          <lastmod>2024-09-02T23:33:04.528Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-09-03T06:11:41.120Z</lastmod>
         
         
         
