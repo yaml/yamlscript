@@ -1,3 +1,31 @@
+- version: 0.1.74
+  date:    Mon 02 Sep 2024 10:23:14 PM PDT
+  changes:
+  - nodejs: Install nodejs locally for testing
+  - www: Delete yarn.lock file to avoid github security warnings
+  - std: Refactor casting functions
+  - std: Refactor truthy functions
+  - std: Refactor fs functions
+  - std: Refactor quoting functions
+  - std: General std library refactoring
+  - core: Support YeS infix triplets across key/val pairs
+  - core: Support .? .! .# .?? .!! .#? .#! .??? specials
+  - core: Properly handle inline comments in a ysexpr
+  - std: Make div cast ratio result to double
+  - std: Fix pow to take multiple args
+  - std: Add an 'add' function alias for '+'
+  - core: Allow _ to mean %1 in anonymous functions
+  - core: Support .-- .++ .#-- .#++
+  - std: Cast to-num support characters
+  - core: Support anonymous fns with only a regex
+  - core: Fix fn(*) compilation
+  - std: Change sum to take 1 sequence argument
+  - sample: Refactor sample programs
+  - test: Refactor ys tests; less bash more ys
+  - release: Prevent bump of BUILD_BIN_YS_VERSION
+  - ys: Update --binary compiler to us graalvm v22
+  - core: Improve debugging functions
+  - make: Prefix GH_ vars with YS_
 - version: 0.1.73
   date:    Tue 27 Aug 2024 02:01:13 PM PDT
   changes:

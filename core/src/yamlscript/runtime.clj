@@ -29,7 +29,7 @@
    [yamlscript.common :as common]
    [yamlscript.util :as util]))
 
-(def ys-version "0.1.73")
+(def ys-version "0.1.74")
 
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))

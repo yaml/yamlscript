@@ -13,7 +13,7 @@ Here's the `ys --help` output:
 ```text
 $ ys --help
 
-ys - The YAMLScript (YS) Command Line Tool - v0.1.73
+ys - The YAMLScript (YS) Command Line Tool - v0.1.74
 
 Usage: ys [<option...>] [<file>]
 

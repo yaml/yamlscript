@@ -108,7 +108,7 @@ checksum = "a5831b979fd7b5439637af1752d535ff49f4860c0f341d1baeb6faf0f4242170"
 dependencies = [
  "proc-macro2 1.0.86",
  "quote 1.0.37",
- "syn 2.0.76",
+ "syn 2.0.77",
 ]
 
 [[package]]
@@ -136,9 +136,9 @@ dependencies = [
 
 [[package]]
 name = "syn"
-version = "2.0.76"
+version = "2.0.77"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "578e081a14e0cefc3279b0472138c513f37b41a08d5a3cca9b6e4e8ceb6cd525"
+checksum = "9f35bcdf61fd8e7be6caf75f429fdca8beb3ed76584befb503b1569faee373ed"
 dependencies = [
  "proc-macro2 1.0.86",
  "quote 1.0.37",
@@ -181,7 +181,7 @@ checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
 name = "yamlscript"
-version = "0.1.73"
+version = "0.1.74"
 dependencies = [
  "dlopen",
  "libc",
