@@ -8,6 +8,7 @@
    [babashka.fs
     :refer [cwd]]
    [clojure.java.io :as io]
+   [clojure.stacktrace]
    [clojure.string :as str]))
 
 (defonce build-vstr (atom nil))
@@ -22,6 +23,12 @@
 (defn die
   ([msg] (throw (Exception. (str msg "\n"))))
   ([x & xs] (die (apply str x xs))))
+
+#_(defn- www [& values]
+  (binding [*out* *err*]
+    (println values
+      (flush)))
+  (last values))
 
 (defn dirname [path]
   (->

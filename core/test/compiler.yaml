@@ -1166,7 +1166,7 @@
     !yamlscript/v0
     =>: foo.???.bar
   clojure: |
-    (get+ (_DBG foo) 'bar)
+    (get+ (DBG foo) 'bar)
 
 
 - name: Error Clojure style comments

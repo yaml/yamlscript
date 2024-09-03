@@ -402,8 +402,7 @@
         [token tokens sym]
         (if (is-symbol-paren? token)
           (let [sym (subs token 0 (-> token count dec))
-                sym (str/replace sym #"::" ".")
-                sym (if (= "DBG" sym) "_DBG" sym)]
+                sym (str/replace sym #"::" ".")]
             ["(" (cons "(" (rest tokens)) (Sym sym)])
           [token tokens nil])]
     (case token

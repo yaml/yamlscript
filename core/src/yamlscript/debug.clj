@@ -7,9 +7,9 @@
   (:require
    [clojure.pprint :as pp]
    [clojure.string :as str]
-   [clj-yaml.core :as yaml]
-   [yamlscript.util :refer [die]])
-  (:refer-clojure :exclude [YSC PPP WWW XXX YYY ZZZ]))
+   [yamlscript.util :refer [die]]
+   [yamlscript.common :as common])
+  (:refer-clojure :exclude [YSC DBG PPP WWW XXX YYY ZZZ]))
 
 (defn YSC [ys-str]
   (let [compile (var-get (resolve 'yamlscript.compiler/compile))
@@ -17,62 +17,70 @@
     (binding [*ns* (find-ns 'yamlscript.compiler)]
       (let [code (eval
                    (->
-                     (str "!yamlscript/v0\n" ys-str)
+                     (if (re-find #"!yamlscript/v0" ys-str)
+                       ys-str
+                       (str "!yamlscript/v0\n" ys-str))
                      compile
                      pretty-format
                      (str/replace #"(?m)^\(\+\+\+ +(.*)\)$" "$1")
                      (str/replace #"(?s)^\(\+\+\+[ \n]+(.*)\)$" "$1")
                      (str/trim-newline)))]
-        (println code)
         code))))
 
-(intern 'clojure.core 'YSC YSC)
+(defn fmt [value]
+  (cond
+    (and (string? value) (re-find #"\n." value) (> (count (pr-str value)) 50))
+    (str "\"\"\"\\\n" value "\"\"\"")
+    :else (if (> (count (pr-str value)) 80)
+            (str/trim-newline
+              (with-out-str
+                (pp/pprint (cond (map? value) (into (sorted-map) value)
+                                 (set? value) (apply sorted-set value)
+                                 :else value))))
+            (pr-str value))))
 
-(defn -dump [o]
-  (let
-   [o (if (= 1 (count o)) (first o) o)]
-    (str
-      "<<<\n"
-      (with-out-str
-        (pp/pprint o))
-      ">>>\n")))
+(defn- dump [values]
+  (let [parts (map fmt values)
+        text (str/join "\n" parts)]
+    (if (re-find #"\n" text)
+      (str ">>>\n" text "\n<<<\n")
+      (str ">>>" text "<<<\n"))))
 
-(defn PPP [& o]
-  (let [l (last o)]
-    (print (-dump o))
-    (flush)
-    l))
+(defn PPP [& values]
+  (print (dump values))
+  (flush)
+  (last values))
 
-(intern 'clojure.core 'PPP PPP)
+(defn DBG [& values]
+  (binding [*out* *err*]
+    (print (dump values))
+    (flush))
+  (last values))
 
-(defn WWW [& o]
-  (let [l (last o)]
-    (binding [*out* *err*]
-      (print (-dump o))
-      (flush))
-    l))
+(defn WWW [& values]
+  (apply DBG values))
 
-(intern 'clojure.core 'WWW WWW)
-(intern 'clojure.core '_DBG WWW)
+(defn XXX [& values]
+  (apply DBG values)
+  (die ""))
 
-(defn XXX [& o]
-  (die "\n" (-dump o)))
-
-(intern 'clojure.core 'XXX XXX)
-
-(defn YYY [& o]
-  (let [l (last o)
-        o (if (= 1 (count o)) (first o) o)]
-    (print (yaml/generate-string o))
-    (flush)
-    l))
-
-(intern 'clojure.core 'YYY YYY)
+(defn YYY [& values]
+  (print (dump values))
+  (flush)
+  (last values))
 
 ; TODO Turn on stack trace printing
-(defn ZZZ [& o]
-  (die "\n" (-dump o)))
+(defn ZZZ [& values]
+  (apply DBG values)
+  (swap! common/opts assoc :stack-trace true)
+  (die ""))
 
+(intern 'clojure.core 'DBG YSC)
+(intern 'clojure.core 'DBG DBG)
+(intern 'clojure.core 'PPP PPP)
+(intern 'clojure.core 'WWW WWW)
+(intern 'clojure.core 'XXX XXX)
+(intern 'clojure.core 'YYY YYY)
 (intern 'clojure.core 'ZZZ ZZZ)
 
 (comment

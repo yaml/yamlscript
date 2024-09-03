@@ -70,7 +70,8 @@
               'NaN? (sci/copy-var clojure.core/NaN? nil)
 
               ;; YAMLScript debugging functions
-              '_DBG (sci/copy-var clojure.core/_DBG nil)
+              'YSC (sci/copy-var yamlscript.debug/YSC nil)
+              'DBG (sci/copy-var yamlscript.debug/DBG nil)
               'PPP (sci/copy-var yamlscript.debug/PPP nil)
               'WWW (sci/copy-var yamlscript.debug/WWW nil)
               'XXX (sci/copy-var yamlscript.debug/XXX nil)
