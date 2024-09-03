@@ -5,8 +5,6 @@ test:: $(LIBYAMLSCRIPT_SO_FQNP)
 $(LIBYAMLSCRIPT_SO_FQNP): $(ROOT)/libyamlscript
 	$(MAKE) -C $< build
 
-export PATH := $(BUILD_BIN):$(PATH)
-
 build-doc:: build-bin
 
 build-bin:
