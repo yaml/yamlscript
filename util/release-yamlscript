@@ -17,13 +17,13 @@ version-file =: '.version.ys'
 steps =: 11
 
 bindings =::
-- java
-- clojure
-- go
-- julia
-- nodejs
-- perl
-- perl-alien
+# - java
+# - clojure
+# - go
+# - julia
+# - nodejs
+# - perl
+# - perl-alien
 - python
 - raku
 - ruby
