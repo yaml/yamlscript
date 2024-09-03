@@ -73,14 +73,14 @@ setup() {
   RELEASE_TAR_PATH=${1:?Usage: $0 <yamlscript-release-tar-file>}
   RELEASE_TAR_FILE=$(basename "$RELEASE_TAR_PATH")
 
-  GH_REPO_USER=yaml
-  GH_REPO=yamlscript
-  GH_USER=${GH_USER:-$(git hub config login)}
-  GH_TOKEN=${GH_TOKEN:-$(git hub config api-token)}
-  GH_TARGET=main
+  YS_GH_REPO_USER=yaml
+  YS_GH_REPO=yamlscript
+  YS_GH_USER=${YS_GH_USER:-$(git hub config login)}
+  YS_GH_TOKEN=${YS_GH_TOKEN:-$(git hub config api-token)}
+  YS_GH_TARGET=main
 
-  [[ $GH_USER && $GH_TOKEN ]] ||
-    die "Error: GH_USER and GH_TOKEN must be set in the environment."
+  [[ $YS_GH_USER && $YS_GH_TOKEN ]] ||
+    die "Error: YS_GH_USER and YS_GH_TOKEN must be set in the environment."
 
   if [[ $RELEASE_TAR_FILE == libyamlscript-* ]]; then
     VERSION=${RELEASE_TAR_FILE#libyamlscript-}
@@ -91,8 +91,8 @@ setup() {
   fi
   VERSION=${VERSION%%-*}
 
-  GH_API_PATH=repos/$GH_REPO_USER/$GH_REPO/releases
-  GH_API_URL=https://api.github.com/$GH_API_PATH
+  YS_GH_API_PATH=repos/$YS_GH_REPO_USER/$YS_GH_REPO/releases
+  YS_GH_API_URL=https://api.github.com/$YS_GH_API_PATH
 
   id=${RELEASE_ID-}
 }
@@ -112,12 +112,12 @@ api-new-release() {
   resp_json=$(
     set -x
     curl -s -S -L \
-      --user "$GH_USER:$GH_TOKEN" \
+      --user "$YS_GH_USER:$YS_GH_TOKEN" \
       -X POST \
-      "$GH_API_URL" \
+      "$YS_GH_API_URL" \
       -d "{
         \"tag_name\": \"$VERSION\",
-        \"target_commitish\": \"$GH_TARGET\",
+        \"target_commitish\": \"$YS_GH_TARGET\",
         \"name\": \"$VERSION\",
         \"body\": $body,
         \"draft\": false,
@@ -143,9 +143,9 @@ api-get-release() {
   resp_json=$(
     set -x
     curl -s -S -L \
-      --user "$GH_USER:$GH_TOKEN" \
+      --user "$YS_GH_USER:$YS_GH_TOKEN" \
       -X GET \
-      "$GH_API_URL/tags/$VERSION"
+      "$YS_GH_API_URL/tags/$VERSION"
   )
 
   error=$(jq -r '.errors[0]' <<<"$resp_json")
@@ -161,13 +161,13 @@ api-get-release() {
 }
 
 api-upload-assets() (
-  GH_ASSET_URL=https://uploads.github.com/$GH_API_PATH/
-  GH_ASSET_URL+="$id/assets?name=$RELEASE_TAR_FILE"
+  YS_GH_ASSET_URL=https://uploads.github.com/$YS_GH_API_PATH/
+  YS_GH_ASSET_URL+="$id/assets?name=$RELEASE_TAR_FILE"
   resp_json=$(
     set -x
     curl -s -S -L \
-      --user "$GH_USER:$GH_TOKEN" \
-      -X POST "$GH_ASSET_URL" \
+      --user "$YS_GH_USER:$YS_GH_TOKEN" \
+      -X POST "$YS_GH_ASSET_URL" \
       --header 'Content-Type: text/javascript' \
       --upload-file "$RELEASE_TAR_PATH"
   )

@@ -18,12 +18,12 @@ deps::
 	$(JULIA) --project=. -e 'using Pkg; Pkg.add("JSON")'
 
 release:
-ifndef GH_TOKEN
-	$(error GH_TOKEN not found)
+ifndef YS_GH_TOKEN
+	$(error YS_GH_TOKEN not found)
 endif
 	curl -L -X POST \
 	  -H "Accept: application/vnd.github+json" \
-	  -H "Authorization: Bearer $(GH_TOKEN)" \
+	  -H "Authorization: Bearer $(YS_GH_TOKEN)" \
 	  -H "X-GitHub-Api-Version: 2022-11-28" \
 	  $(YS_GH_API_URL)/commits/$(HEAD_COMMIT)/comments \
 	  -d '{"body":"@JuliaRegistrator register subdir=julia\n"}'
