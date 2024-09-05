@@ -220,7 +220,11 @@
   (-> string
     (str/replace #"\\\$" "$")
     (str/replace #"\\ " " ")
+    (str/replace #"\\b" "\b")
+    (str/replace #"\\f" "\f")
     (str/replace #"\\n" "\n")
+    (str/replace #"\\r" "\r")
+    (str/replace #"\\t" "\t")
     Str))
 
 (defn build-vstr [node]

@@ -14,7 +14,11 @@
 (def string-escape
   {\\ "\\\\"
    \" "\\\""
-   \newline "\\n"})
+   \backspace "\\b"
+   \formfeed "\\f"
+   \newline "\\n"
+   \return "\\r"
+   \tab "\\t"})
 
 (defn pr-string [s]
   (str/escape s string-escape))
