@@ -286,9 +286,7 @@
 (intern 'ys.std 'die util/die)
 
 (defmacro each [bindings & body]
-  `(do
-     (doall (for [~@bindings] (do ~@body)))
-     nil))
+  `(doall (for [~@bindings] (do ~@body))))
 
 (defn err [& xs]
   (binding [*out* *err*]
