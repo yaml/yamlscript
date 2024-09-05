@@ -271,18 +271,16 @@
 ;;------------------------------------------------------------------------------
 
 (defmacro value [s]
-  `(cond
-     (string? ~s) (var-get (ns-resolve *ns* (symbol ~s)))
-     (symbol? ~s) (var-get (ns-resolve *ns* ~s))
-     (var? ~s) (var-get ~s)))
+  `(let [var# (cond
+                (string? ~s) (ns-resolve *ns* (symbol ~s))
+                (symbol? ~s) (ns-resolve *ns* ~s)
+                (var? ~s) ~s
+                :else nil)]
+     (when var# (var-get var#))))
 
 (defmacro call [f & args]
-  `(let [f# (if (or
-                  (symbol? ~f)
-                  (string? ~f)
-                  (var? ~f))
-              (value ~f)
-              ~f)]
+  `(let [f# (or (value ~f) ~f)]
+     (when-not (fn? f#) (die "Can't call(" (pr-str f#) ")"))
      (f# ~@args)))
 
 (intern 'ys.std 'die util/die)
