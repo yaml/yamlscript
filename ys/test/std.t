@@ -119,6 +119,12 @@ test::
 - code: sum(3 .. 9)
   want: 42
 
+- code: sum([3 nil 4])
+  want: 7
+
+- code: sum()
+  want: 0
+
 
 #-------------------------------------------------------------------------------
 - note: "YAML Anchor and alias functions"

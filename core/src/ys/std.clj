@@ -177,7 +177,6 @@
 ;; Math functions
 ;;------------------------------------------------------------------------------
 (intern 'ys.std 'add clojure.core/+)
-(intern 'ys.std 'sum clojure.core/+)
 (intern 'ys.std 'sub clojure.core/-)
 (intern 'ys.std 'mul clojure.core/*)
 
@@ -190,7 +189,9 @@
   ([x y & xs]
    (reduce div (div x y) xs)))
 
-(defn sum [xs] (reduce + xs))
+(defn sum
+  ([] 0)
+  ([xs] (reduce + 0 (filter identity xs))))
 
 (defn pow
   ([x y]
