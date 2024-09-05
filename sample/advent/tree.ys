@@ -5,7 +5,7 @@ defn main(width=5):
 
 defn tree(width):
   top =: (width .. 1)
-    .map(fun(line width))
+    .map(partial(line width))
     .join("\n")
 
   trunk =: trunk(width) * 2

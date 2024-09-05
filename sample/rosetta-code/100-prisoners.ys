@@ -72,7 +72,7 @@ defn search-50-random-drawers(prisoner-number drawers):
   drawers:
     .shuffle()
     .take(50)
-    .filter(fun(== prisoner-number))
+    .filter(partial(== prisoner-number))
     .count()
     .eq(1)
 

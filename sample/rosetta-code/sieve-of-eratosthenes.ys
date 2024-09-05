@@ -21,6 +21,6 @@ defn primes-up-to(limit):
             add(i i 1))
     : aset(refs j false)
   cons 2:
-    map comp(inc fun(* 2)):
-      filter fun(aget refs):
+    map comp(inc partial(* 2)):
+      filter partial(aget refs):
         range(1 max-i)

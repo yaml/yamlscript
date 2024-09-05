@@ -57,8 +57,6 @@
 
 (intern 'ys.std 'a clojure.core/identity)
 
-(intern 'ys.std 'fun clojure.core/partial)
-
 (intern 'ys.std 'just clojure.core/identity)
 
 (intern 'ys.std 'len clojure.core/count)

@@ -20,16 +20,7 @@ test::
 - note: "Short named functions for very common operations"
 - note: 'Short named functions'
 
-# A is for partials
-- code: (fun(+ 1) 41)
-  want: 42
-- code: call(fun(+ 1) 41)
-  want: 42
-- code: fun(+ 1).call(41)
-  want: 42
-- code: -"inc".call(41)
-  want: 42
-
+# Short named functions for very common operations
 - code: 'just: 123'
   want: 123
 - code: just('123')
