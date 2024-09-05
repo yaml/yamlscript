@@ -322,7 +322,19 @@
 
 (intern 'ys.std 'lc clojure.string/lower-case)
 
-(intern 'ys.std 'lines clojure.string/split-lines)
+(defn lines [text]
+  (if (empty? text)
+    []
+    (let [text (if (= (last text) \newline)
+                 (subs text 0 (dec (count text)))
+                 text)]
+      (str/split text #"\n" -1))))
+
+(defn text [lines]
+  (if (empty? lines)
+    ""
+    (let [lines (concat lines (list ""))]
+      (str/join "\n" lines))))
 
 (defn pretty [o]
   (str/trim-newline
