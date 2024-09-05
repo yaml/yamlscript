@@ -341,7 +341,7 @@
     ".#--" ["count(" ")" "." "dec(" ")"]
     ".#++" ["count(" ")" "." "inc(" ")"]
 
-    ".???" ["DBG(" ")"]))
+    ".>"   ["DBG(" ")"]))
 
 (defn read-scalar [[token & tokens]]
   (cond
