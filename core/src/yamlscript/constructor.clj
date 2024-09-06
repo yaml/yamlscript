@@ -69,15 +69,27 @@
             (concat [(Sym 'apply)] [fun] new splats)))))
     nodes))
 
-(defn apply-yes [key val]
+(defn apply-yes-lhs [key val]
   (if-lets [_ (vector? key)
-            _ (= 2 (count key))
-            _ (map? val)
-            [a b] key
+            _ (= 4 (count key))
+            [a b c d] key
+            _ (re-matches re/osym (str (:Sym d)))
             _ (re-matches re/osym (str (:Sym b)))
             b (or (ast/operators b) b)]
-    [[b a] val]
+    [[(Lst [b a c]) d] val]
     [key val]))
+
+  #_(YSC "=>: foo.>.bar")
+(defn apply-yes [key val]
+  (let [[key val] (apply-yes-lhs key val)]
+    (if-lets [_ (vector? key)
+              _ (= 2 (count key))
+              _ (map? val)
+              [a b] key
+              _ (re-matches re/osym (str (:Sym b)))
+              b (or (ast/operators b) b)]
+      [[b a] val]
+      [key val])))
 
 (defn construct-call [[key val]]
   (let [[key val] (apply-yes key val)]

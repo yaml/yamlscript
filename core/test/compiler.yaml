@@ -1168,7 +1168,6 @@
   clojure: |
     (get+ (DBG foo) 'bar)
 
-
 - name: Error Clojure style comments
   yamlscript: |
     !yamlscript/v0
@@ -1399,3 +1398,11 @@
     (def a (fn [& args] nil))
     (def b (fn [& _] nil))
     (def c (fn c [& _] nil))
+
+
+- name: YeS in LHS or YeS pair
+  yamlscript: |
+    !yamlscript/v0
+    a && b ||: c
+  clojure: |
+    (or (and a b) c)
