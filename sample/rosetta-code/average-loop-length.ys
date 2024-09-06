@@ -1,22 +1,28 @@
 !yamlscript/v0
 
+# Use *' (vs. *) to allow arbitrary length arithmetic:
 mul =: value("*'")
 
 # Number of random times to test each n:
 TIMES =: 1000000
 
-# Use *' (vs. *) to allow arbitrary length arithmetic:
+defn main(max=20):
+  say: "\tAvg\tExp\tDiff"
+
+  doseq n (1 .. max):
+    anal =: analytical(n)
+    avg  =: avg-cycle-length(n TIMES).double()
+    diff =: abs(100 * (1 - (avg / anal)))
+    say:
+      format "%3d\t%.4f\t%.4f\t%.2f%%": n avg anal diff
+
 defn factorial(n):
   :: n!
   range(1 n.++): .mul(*)
 
-defn pow(n i):
-  :: n^i
-  repeat(i n): .mul(*)
-
 defn analytical(n):
   :: Analytical computation
-  (1 .. n):
+  1 .. n:
     .map(\(factorial(n) / pow(n _) / factorial(n - _)))
     .reduce(+ 0 _)
 
@@ -33,13 +39,3 @@ defn avg-cycle-length(n times):
     reduce +:
       for i (range times):
         single-test-cycle-length: n
-
-# Show results:
-say: "\tAvg\tExp\tDiff"
-
-doseq q (1 .. 20):
-  anal =: analytical(q)
-  avg  =: avg-cycle-length(q TIMES).double()
-  diff =: Math/abs(100 * (1 - (avg / anal)))
-  say:
-    format "%3d\t%.4f\t%.4f\t%.2f%%": q avg anal diff

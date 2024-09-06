@@ -3,6 +3,6 @@
 name =: 'World'
 
 =>::
-  foo: [1, 2, ! inc(41)]
+  foo: [1, 2, ! 6 * 7]
   bar:: load('other.yaml')
   baz:: "Hello, $name!"

@@ -1,8 +1,8 @@
-# Ported from https://rosettacode.org/wiki/100_prisoners#Clojure
-
 !yamlscript/v0
 
 defn main(n=5000):
+  :: https://rosettacode.org/wiki/100_prisoners
+
   ? +{:keys [random-successes
              optimal-successes
              run-count]} =
@@ -63,7 +63,7 @@ defn search-50-optimal-drawers(prisoner-number drawers):
     when drawers-opened != 50:
       result =: nth(drawers next-drawer)
       or (result == prisoner-number):
-        recur: result drawers-opened.inc()
+        recur: result drawers-opened.++
 
 defn search-50-random-drawers(prisoner-number drawers):
   :: Select 50 random drawers and return true if the prisoner's number was
@@ -72,7 +72,7 @@ defn search-50-random-drawers(prisoner-number drawers):
   drawers:
     .shuffle()
     .take(50)
-    .filter(partial(== prisoner-number))
+    .filter(\(_ == prisoner-number))
     .count()
     .eq(1)
 

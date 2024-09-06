@@ -1,6 +1,6 @@
 !yamlscript/v0
 
-defn main(n):
+defn main(n=31337):
   not =:
     when str(n) != reverse(str(n)): ' not'
 

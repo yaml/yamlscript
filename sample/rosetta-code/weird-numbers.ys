@@ -22,7 +22,7 @@ defn sieve(limit):
                   if j < limit:
                     recur: (+ j i) weirds.assoc(j false)
                     else: weirds
-              assoc weirds: i false
+              weirds: .assoc(i false)
       else: weirds
 
 defn divisors(number):

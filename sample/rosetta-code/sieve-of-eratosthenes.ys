@@ -1,6 +1,6 @@
 !yamlscript/v0
 
-defn main(n):
+defn main(n=100):
   primes =: primes-up-to(n)
   say: |
     The $(primes.#) prime numbers less than $n are:
@@ -21,6 +21,6 @@ defn primes-up-to(limit):
             add(i i 1))
     : aset(refs j false)
   cons 2:
-    map comp(inc partial(* 2)):
-      filter partial(aget refs):
+    map \((_ * 2).++):
+      filter \(aget refs _):
         range(1 max-i)

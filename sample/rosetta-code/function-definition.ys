@@ -1,8 +1,8 @@
 !yamlscript/v0
 
 # Main function definition with variable arguments:
-defn main(*):
-  say: "multiply($(ARGS.join(', '))) -> $multiply(ARGS*)"
+defn main(*args):
+  say: "multiply($(args.join(', '))) -> $multiply(args*)"
 
 # A multi-arity function definition:
 defn multiply:
@@ -10,4 +10,4 @@ defn multiply:
   (x): x
   (x y): x * y
   (x y *more):
-    reduce multiply: multiply(x y) more
+    reduce multiply: (x * y) more

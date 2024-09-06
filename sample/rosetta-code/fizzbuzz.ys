@@ -9,7 +9,7 @@ defn main(count=100 impl=1):
   fizzbuzz =: "fizzbuzz-$impl"
   say: "Running function '$fizzbuzz' with count=$count"
   mapv say:
-    call value(fizzbuzz): count
+    call fizzbuzz: count
 
 defn fizzbuzz-1(n):
   :: Implementation 1 - with 'map'
@@ -25,7 +25,7 @@ defn fizzbuzz-2(n):
   :: Implementation 2 - with 'loop'
   loop i 1, l []:
     if i <= n:
-      recur inc(i):
+      recur i.++:
         conj l:
           condp eq 0:
             i % 15 : 'FizzBuzz'
