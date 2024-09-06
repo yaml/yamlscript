@@ -1,3 +1,15 @@
+- version: 0.1.75
+  date:    Thu 05 Sep 2024 09:45:59 PM PDT
+  changes:
+  - util: Updates for 0.1.74
+  - core: Change dot debug from .??? to .>
+  - std: Have sum ignore nils
+  - std: Refactor value and each
+  - std: Have 'each' return its evaluation like 'for'
+  - std: Add 'lines' and 'text' opposites
+  - core: Fix for string escapes
+  - std: Remove 'fun' alias for 'partial'
+  - core: Support YeS expr on LHS of YeS pair
 - version: 0.1.74
   date:    Mon 02 Sep 2024 10:23:14 PM PDT
   changes:
