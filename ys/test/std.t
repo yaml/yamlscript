@@ -17,10 +17,25 @@ base =:
 
 test::
 #-------------------------------------------------------------------------------
-- note: "Short named functions for very common operations"
-- note: 'Short named functions'
+- note: 'Special functions'
 
-# Short named functions for very common operations
+- name: Vector def destructuring
+  code: |
+    -[what who] =: qw(Hello World)
+    =>: "$what $who"
+  want: Hello World
+
+- name: Mapping def destructuring
+  code: |
+    -{:strs [what who]} =: -{"what" "Hello" "who" "World"}
+    =>: "$what $who"
+  want: Hello World
+
+
+#-------------------------------------------------------------------------------
+- note: 'Short named alias functions'
+
+# a and just
 - code: 'just: 123'
   want: 123
 - code: just('123')

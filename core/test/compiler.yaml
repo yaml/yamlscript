@@ -743,12 +743,12 @@
       (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (add+ a b c)))
 
 
-- name: Destructuring def not allowed
+- name: Destructuring def
   yamlscript: |
     !yamlscript/v0
     -[a b c] =: -[1 2 3]
-  error: |
-    ~~ Destructured def not allowed
+  clojure: |
+    (+def [a b c] [1 2 3])
 
 
 - name: Multi-arity defn

@@ -14,10 +14,10 @@
 
 (declare
   construct-node
+  construct-pairs
   declare-undefined
   maybe-call-main
-  maybe-trace
-  check-let-bindings)
+  maybe-trace)
 
 (defn construct-ast
   "Construct resolved YAML tree into a YAMLScript AST."
@@ -98,6 +98,36 @@
       (and (:Str key) (nil? val)) key
       :else (Lst (expand-splats (flatten [key val]))))))
 
+(defn apply-let-bindings [lets rest ctx]
+  [[(Sym "let")
+    (vec
+      (concat
+        [(Vec (->>
+                lets
+                flatten
+                (filter #(not= {:Sym 'def} %1))
+                ;; Handle RHS is mapping
+                (partition 2)
+                (map #(let [[k v] %1]
+                        (if (:pairs v)
+                          [k (Lst (get-in
+                                    (construct-pairs v ctx)
+                                    [0 :Lst]))]
+                          %1)))
+                (mapcat identity)
+                vec))]
+        (construct-pairs {:pairs (mapcat identity rest)} ctx)))]])
+
+(defn check-let-bindings [pairs ctx]
+  (let [[lets rest]
+        (map vec
+          (split-with
+            #(= 'def (get-in %1 [0 0 :Sym]))
+            pairs))]
+    (if (seq lets)
+      (apply-let-bindings lets rest ctx)
+      pairs)))
+
 (defn construct-pairs [{nodes :pairs} ctx]
   (let [pairs (vec (map vec (partition 2 nodes)))
         construct-side (fn [n c] (if (vector? n)
@@ -109,6 +139,13 @@
                                (check-let-bindings pairs ctx)
                                pairs)
                        [[lhs rhs] & pairs] pairs
+                       lhs (if (and
+                                 (= 2 (count lhs))
+                                 (= {:Sym 'def} (first lhs))
+                                 (re-find #"^[\[\{]"
+                                   (str (:Sym (second lhs)))))
+                             [(Sym '+def) (second lhs)]
+                             lhs)
                        lhs (if (and (= lhs {:Sym 'do})
                                  (map? rhs)
                                  (not (some #{:pairs :forms} (keys rhs))))
@@ -117,11 +154,6 @@
                                      [true (:form lhs)]
                                      [false lhs])
                        lhs (construct-side lhs ctx)
-                       _ (when (and
-                                 (= 'def (get-in lhs [0 :Sym]))
-                                 (not (re-matches re/symw
-                                        (str (get-in lhs [1 :Sym])))))
-                           (die "Destructured def not allowed"))
                        rhs (construct-side rhs ctx)
                        rhs (or (:forms rhs) rhs)
                        new (if forms
@@ -209,36 +241,6 @@
 ;;------------------------------------------------------------------------------
 ;; Fix-up functions
 ;;------------------------------------------------------------------------------
-(defn apply-let-bindings [lets rest ctx]
-  [[(Sym "let")
-    (vec
-      (concat
-        [(Vec (->>
-                lets
-                flatten
-                (filter #(not= {:Sym 'def} %1))
-                ;; Handle RHS is mapping
-                (partition 2)
-                (map #(let [[k v] %1]
-                        (if (:pairs v)
-                          [k (Lst (get-in
-                                    (construct-pairs v ctx)
-                                    [0 :Lst]))]
-                          %1)))
-                (mapcat identity)
-                vec))]
-        (construct-pairs {:pairs (mapcat identity rest)} ctx)))]])
-
-(defn check-let-bindings [pairs ctx]
-  (let [[lets rest]
-        (map vec
-          (split-with
-            #(= 'def (get-in %1 [0 0 :Sym]))
-            pairs))]
-    (if (seq lets)
-      (apply-let-bindings lets rest ctx)
-      pairs)))
-
 (defn get-declares [node defns]
   (let [declare (atom {})
         defined (atom {})]

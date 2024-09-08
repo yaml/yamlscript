@@ -50,6 +50,38 @@
 ;; Used to run a YAMLScript file as a Bash script:
 (defmacro source [& xs])
 
+;; def destructuring
+(declare +def-defn)
+
+(defn- destructure-vector [v in]
+  (map-indexed
+   (fn [i name]
+     (+def-defn name `(get ~in ~i)))
+   v))
+
+(defn- destructure-map [m in]
+  (map
+   (fn [[k v]]
+     (+def-defn k `(get ~in ~v)))
+   m))
+
+(defn- destructure-in [els in]
+  (let [root (gensym)]
+    `(let [~root ~in]
+       ~@(cond
+           (vector? els) (destructure-vector els root)
+           (list? els) (destructure-vector els root)
+           (map? els) (destructure-map els root)
+           :else []))))
+
+(defn- +def-defn [a b]
+  (if (symbol? a)
+    `(def ~a ~b)
+    (destructure-in a b)))
+
+(defmacro +def [a b]
+  (+def-defn a b))
+
 
 ;;------------------------------------------------------------------------------
 ;; Shorter named alias functions
