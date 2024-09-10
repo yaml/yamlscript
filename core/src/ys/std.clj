@@ -29,18 +29,14 @@
 ;; TODO fix that this prints _X as well
 ;; TODO Move to yamlscript.debug
 ;;------------------------------------------------------------------------------
-(defmacro _X [xs]
-  (let [[fun# & args#] xs
+(defmacro _X [x]
+  (let [[fun# & args#] x
         args# (map pr-str args#)
-        #_#_args# (map (fn [x]
-                     (let [y (str/replace x #"\(_X " "")
-                           n (/ (- (count x) (count y)) 4)]
-                       (subs y 0 (- (count y) n)))) args#)
         args# (str/join " -> " args#)]
     `(do
        (clojure.core/print
          ";;" '~fun# "->" ~args# "\n")
-       (~@xs))))
+       (~@x))))
 
 
 ;;------------------------------------------------------------------------------
@@ -53,34 +49,34 @@
 ;; def destructuring
 (declare +def-defn)
 
-(defn- destructure-vector [v in]
+(defn- destructure-vector [V idx]
   (map-indexed
    (fn [i name]
-     (+def-defn name `(get ~in ~i)))
-   v))
+     (+def-defn name `(get ~idx ~i)))
+   V))
 
-(defn- destructure-map [m in]
+(defn- destructure-map [M idx]
   (map
    (fn [[k v]]
-     (+def-defn k `(get ~in ~v)))
-   m))
+     (+def-defn k `(get ~idx ~v)))
+   M))
 
-(defn- destructure-in [els in]
+(defn- destructure-idx [x idx]
   (let [root (gensym)]
-    `(let [~root ~in]
+    `(let [~root ~idx]
        ~@(cond
-           (vector? els) (destructure-vector els root)
-           (list? els) (destructure-vector els root)
-           (map? els) (destructure-map els root)
+           (vector? x) (destructure-vector x root)
+           (list? x) (destructure-vector x root)
+           (map? x) (destructure-map x root)
            :else []))))
 
-(defn- +def-defn [a b]
-  (if (symbol? a)
-    `(def ~a ~b)
-    (destructure-in a b)))
+(defn- +def-defn [x y]
+  (if (symbol? x)
+    `(def ~x ~y)
+    (destructure-idx x y)))
 
-(defmacro +def [a b]
-  (+def-defn a b))
+(defmacro +def [x y]
+  (+def-defn x y))
 
 
 ;;------------------------------------------------------------------------------
@@ -99,16 +95,14 @@
 ;;------------------------------------------------------------------------------
 
 (defmacro q [x] `(quote ~x))
-(defn qr [s] (re-pattern s))
+(defn qr [S] (re-pattern S))
 (defmacro qw [& xs]
-  `(vec (map (fn [w#]
+  `(vec (map (fn [word#]
                (cond
-                 (nil? w#) "nil"
-                 ,
-                 (not (re-matches #"^[-\w]+$" (str w#)))
-                 (clojure.core/die (str "Invalid qw word: '" w# "'"))
-                 ,
-                 :else (str w#)))
+                 (nil? word#) "nil"
+                 (re-matches #"^[-\w]+$" (str word#)) (str word#)
+                 :else (clojure.core/die
+                         (str "Invalid qw word: '" word# "'"))))
           '(~@xs))))
 
 
@@ -128,25 +122,18 @@
 (defmacro or?
   ([] nil)
   ([x] (if (truey? x) x nil))
-  ([x & next]
-      `(if (truey? ~x) ~x (or? ~@next))))
+  ([x & xs]
+      `(if (truey? ~x) ~x (or? ~@xs))))
 
 (defmacro ||| [x & xs] `(or? ~x ~@xs))
 
 (defmacro and?
   ([] true)
   ([x] (if (truey? x) x nil))
-  ([x & next]
-      `(if (truey? ~x) (and? ~@next) nil)))
+  ([x & xs]
+      `(if (truey? ~x) (and? ~@xs) nil)))
 
 (defmacro &&& [x & xs] `(and? ~x ~@xs))
-
-(comment
-  (||| 0 42) ;; 42
-  (&&& 42 0) ;; nil
-  (||| 0 42 99) ;; 42
-  (&&& 42 99) ;; 99
-  )
 
 
 ;;------------------------------------------------------------------------------
@@ -173,15 +160,16 @@
 (defn to-map
   ([] {})
   ([x] (apply hash-map x))
-  ([k v & xs] (apply hash-map k v xs)))
+  ([x y & xs] (apply hash-map x y xs)))
 
 (defn to-num [x]
   (cond
     (ratio? x) (double x)
     (number? x) x
-    (string? x) (or (if (re-find #"\." x)
-                      (parse-double x)
-                      (parse-long x))
+    (string? x) (or
+                  (if (re-find #"\." x)
+                    (parse-double x)
+                    (parse-long x))
                   0)
     (seqable? x) (count x)
     (char? x) (int x)
@@ -235,9 +223,9 @@
     (let [[& xs] (clojure.core/reverse (conj xs y x))]
       (reduce #(pow %2 %1) 1 xs))))
 
-(defn sqr  [x] (pow x 2))
-(defn cube [x] (pow x 3))
-(defn sqrt [x] (Math/sqrt x))
+(defn sqr  [N] (pow N 2))
+(defn cube [N] (pow N 3))
+(defn sqrt [N] (Math/sqrt N))
 
 (defn add+ [x & xs]
   (cond
@@ -284,14 +272,14 @@
 ;;------------------------------------------------------------------------------
 ;; YAMLScript document result stashing functions
 ;;------------------------------------------------------------------------------
-(defn +++* [value]
-  (let [index (keyword (str (swap! common/$# inc)))]
+(defn +++* [val]
+  (let [idx (keyword (str (swap! common/$# inc)))]
     (reset! common/doc-anchors_ {})
-    (swap! common/$ assoc index value)
-    value))
+    (swap! common/$ assoc idx val)
+    val))
 
-(defmacro +++ [& forms]
-  `(~'+++* (do ~@forms)))
+(defmacro +++ [& xs]
+  `(~'+++* (do ~@xs)))
 
 (defn $$ [] (->> @common/$# str keyword (get @common/$)))
 
@@ -300,23 +288,23 @@
 ;; Control functions
 ;;------------------------------------------------------------------------------
 
-(defmacro value [s]
+(defmacro value [x]
   `(let [var# (cond
-                (string? ~s) (ns-resolve *ns* (symbol ~s))
-                (symbol? ~s) (ns-resolve *ns* ~s)
-                (var? ~s) ~s
+                (string? ~x) (ns-resolve *ns* (symbol ~x))
+                (symbol? ~x) (ns-resolve *ns* ~x)
+                (var? ~x) ~x
                 :else nil)]
      (when var# (var-get var#))))
 
-(defmacro call [f & args]
-  `(let [f# (or (value ~f) ~f)]
+(defmacro call [x & xs]
+  `(let [f# (or (value ~x) ~x)]
      (when-not (fn? f#) (die "Can't call(" (pr-str f#) ")"))
-     (f# ~@args)))
+     (f# ~@xs)))
 
 (intern 'ys.std 'die util/die)
 
 (defmacro each [bindings & body]
-  `(doall (for [~@bindings] (do ~@body))))
+  `(doall (for ~bindings (do ~@body))))
 
 (defn err [& xs]
   (binding [*out* *err*]
@@ -325,14 +313,14 @@
 
 (defn exit
   ([] (exit 0))
-  ([rc] (System/exit rc)))
+  ([I] (System/exit I)))
 
 ;; `if` is a special form in Clojure, but we can make resolve with this for use
 ;; in dot chaining.
 (defn if [cond then else] (if cond then else))
 
-(defn sleep [s]
-  (Thread/sleep (int (* 1000 s))))
+(defn sleep [I]
+  (Thread/sleep (int (* 1000 I))))
 
 (defn throw [e] (throw e))
 
@@ -341,35 +329,37 @@
 ;; String functions
 ;;------------------------------------------------------------------------------
 (intern 'ys.std 'chomp clojure.string/trim-newline)
+(intern 'ys.std 'index clojure.string/index-of)
 
 (defn join
-  ([xs] (join "" xs))
-  ([sep seq]
-   (let [[sep seq] (if (= (type sep) java.lang.String) [sep seq] [seq sep])]
-     (str/join sep seq)))
-  ([sep x & xs]
-   (str/join sep (cons x xs))))
+  ([Ss] (join "" Ss))
+  ([S Ss]
+   (if (= (type S) java.lang.String)
+     (str/join S Ss)
+     (str/join Ss S)))
+  ([S x & xs]
+   (str/join S (cons x xs))))
 
 (intern 'ys.std 'lc clojure.string/lower-case)
 
-(defn lines [text]
-  (if (empty? text)
+(defn lines [S]
+  (if (empty? S)
     []
-    (let [text (if (= (last text) \newline)
-                 (subs text 0 (dec (count text)))
-                 text)]
-      (str/split text #"\n" -1))))
+    (let [S (if (= (last S) \newline)
+              (subs S 0 (dec (count S)))
+              S)]
+      (str/split S #"\n" -1))))
 
-(defn text [lines]
-  (if (empty? lines)
+(defn text [Ss]
+  (if (empty? Ss)
     ""
-    (let [lines (concat lines (list ""))]
-      (str/join "\n" lines))))
+    (str/join "\n"
+      (concat Ss (list "")))))
 
-(defn pretty [o]
+(defn pretty [x]
   (str/trim-newline
     (with-out-str
-      (pp/pprint o))))
+      (pp/pprint x))))
 
 (defn replace
   ([x] (clojure.core/replace x))
@@ -379,13 +369,13 @@
 (intern 'ys.std 'replace1 clojure.string/replace-first)
 
 (defn split
-  ([s] (if (empty? s)
+  ([S] (if (empty? S)
          []
-         (clojure.string/split s #"")))
-  ([s r]
-    (let [[s r] (if (= java.util.regex.Pattern (type s)) [r s] [s r])
-          r (if (string? r) (re-pattern r) r)]
-      (clojure.string/split s r))))
+         (clojure.string/split S #"")))
+  ([S R]
+    (let [[S R] (if (= java.util.regex.Pattern (type S)) [R S] [S R])
+          R (if (string? R) (re-pattern R) R)]
+      (clojure.string/split S R))))
 
 (intern 'ys.std 'trim clojure.string/trim)
 (intern 'ys.std 'triml clojure.string/triml)
@@ -394,51 +384,64 @@
 (intern 'ys.std 'uc clojure.string/upper-case)
 (intern 'ys.std 'uc1 clojure.string/capitalize)
 
-(defn words [s]
-  (clojure.string/split s #"\s+"))
+(defn words [S]
+  (clojure.string/split S #"\s+"))
+
+
+;;------------------------------------------------------------------------------
+;; Regex functions
+;;------------------------------------------------------------------------------
+
+;; See: `qr` function above
+
+(defn =-- [S R]
+  (re-find R S))
+
+(defn !-- [S R]
+  (not (re-find R S)))
 
 
 ;;------------------------------------------------------------------------------
 ;; Collection functions
 ;;------------------------------------------------------------------------------
-(defn get+ [coll key]
+(defn get+ [C K]
   (cond
-    (map? coll) (condp = (type key)
-                  String (get coll key)
-                  clojure.lang.Keyword (get coll key)
+    (map? C) (condp = (type K)
+                  String (get C K)
+                  clojure.lang.Keyword (get C K)
                   clojure.lang.Symbol (or
-                                        (get coll (str key))
-                                        (get coll (keyword key))
-                                        (get coll key))
-                  (get coll key))
-    (nil? coll) nil
-    (seqable? coll) (if (number? key)
-                      (nth coll key)
-                      (die "Can't (get+ " coll " "
-                        (if (nil? key) "nil" key) ")"))
-    :else (die "Can't (get+ " coll " "
-            (if (nil? key) "nil" key) ")")))
+                                        (get C (str K))
+                                        (get C (keyword K))
+                                        (get C K))
+                  (get C K))
+    (nil? C) nil
+    (seqable? C) (if (number? K)
+                      (nth C K)
+                      (die "Can't (get+ " C " "
+                        (if (nil? K) "nil" K) ")"))
+    :else (die "Can't (get+ " C " "
+            (if (nil? K) "nil" K) ")")))
 
-(defn grep [a b]
-  (let [[a b] (if (seqable? b) [a b] [b a])
-        _ (when-not (seqable? b) (die "No seqable arg passed to grep"))
-        t (type a)]
+(defn grep [P C]
+  (let [[P C] (if (seqable? C) [P C] [C P])
+        _ (when-not (seqable? C) (die "No seqable arg passed to grep"))
+        t (type P)]
     (cond
-      (= t java.util.regex.Pattern) (filter #(re-find a %1) b)
-      (fn? a) (filter a b)
-      :else (filter #(= a %1) b))))
+      (= t java.util.regex.Pattern) (filter #(re-find P %1) C)
+      (fn? P) (filter P C)
+      :else (filter #(= P %1) C))))
 
-(defn has? [coll x]
+(defn has? [C x]
   (boolean
-    (if (and (string? coll) (string? x))
-      (re-find (re-pattern x) coll)
-      (some (set coll) [x]))))
+    (if (and (string? C) (string? x))
+      (re-find (re-pattern x) C)
+      (some (set C) [x]))))
 
-(defn in? [x coll]
+(defn in? [x C]
   (boolean
-    (if (and (string? coll) (string? x))
-      (re-find (re-pattern x) coll)
-      (some (set coll) [x]))))
+    (if (and (string? C) (string? x))
+      (re-find (re-pattern x) C)
+      (some (set C) [x]))))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
@@ -450,19 +453,19 @@
     (seqable? x) (clojure.core/reverse x)
     :else (die "Can't reverse " x)))
 
-(defn rng [a b]
-  (let [[x y] (for [n [a b]] (if (char? n) (long n) n))]
+(defn rng [x y]
+  (let [[a b] (for [n [x y]] (if (char? n) (long n) n))]
     (cond
-      (and (number? a) (number? b))
-      (if (> y x)
-        (range x (inc y))
-        (range x (dec y) -1))
-      (and (char? a) (char? b))
-      (if (> y x)
-        (map char (range x (inc y)))
-        (map char (range x (dec y) -1)))
+      (and (number? x) (number? y))
+      (if (> b a)
+        (range a (inc b))
+        (range a (dec b) -1))
+      (and (char? x) (char? y))
+      (if (> b a)
+        (map char (range a (inc b)))
+        (map char (range a (dec b) -1)))
       :else
-      (die "Can't rng(" (pr-str a) ", " (pr-str b) ")"))))
+      (die "Can't rng(" (pr-str x) ", " (pr-str y) ")"))))
 
 
 ;;------------------------------------------------------------------------------
@@ -472,8 +475,8 @@
   (apply clojure.core/print xs)
   (flush))
 
-(defn pp [o]
-  (pp/pprint o))
+(defn pp [x]
+  (pp/pprint x))
 
 (defn print [& xs]
   (apply clojure.core/print xs)
@@ -500,84 +503,71 @@
 (intern 'ys.std 'fs-f fs/regular-file?)
 (intern 'ys.std 'fs-l fs/sym-link?)
 (intern 'ys.std 'fs-r fs/readable?)
-(defn            fs-s [p] (not= 0 (fs/size p)))
+(defn            fs-s [path] (not= 0 (fs/size path)))
 (intern 'ys.std 'fs-w fs/writable?)
 (intern 'ys.std 'fs-x fs/executable?)
-(defn            fs-z [p] (= 0 (fs/size p)))
+(defn            fs-z [path] (= 0 (fs/size path)))
 
 (defn fs-abs
-  ([p] (str (fs/canonicalize p)))
-  ([p f] (str (fs/canonicalize (fs/file p f)))))
+  ([path] (str (fs/canonicalize path)))
+  ([path file] (str (fs/canonicalize (fs/file path file)))))
 
 (intern 'ys.std 'fs-abs? fs/absolute?)
 
-(defn fs-dirname [p]
-  (str (fs/parent (fs/canonicalize p))))
+(defn fs-dirname [path]
+  (str (fs/parent (fs/canonicalize path))))
 
-(defn fs-filename [p]
-  (str (fs/file-name (fs/canonicalize p))))
+(defn fs-filename [path]
+  (str (fs/file-name (fs/canonicalize path))))
 
 (defn fs-glob
-  ([pat] (fs-glob "." pat))
-  ([dir pat] (map str (fs/glob dir pat))))
+  ([path] (fs-glob "." path))
+  ([dir path] (map str (fs/glob dir path))))
 
 (defn fs-ls
   ([] (fs-ls ""))
-  ([d] (map str (fs/list-dir d))))
+  ([dir] (map str (fs/list-dir dir))))
 
-(defn fs-mtime [f]
+(defn fs-mtime [file]
   (fs/file-time->millis
-    (fs/last-modified-time f)))
+    (fs/last-modified-time file)))
 
 (defn fs-rel
-  ([p] (str (fs/relativize (fs/cwd) p)))
-  ([d p] (str (fs/relativize d p))))
+  ([path] (str (fs/relativize (fs/cwd) path)))
+  ([dir path] (str (fs/relativize dir path))))
 
 (intern 'ys.std 'fs-rel? fs/relative?)
 
-(defn fs-which [c]
-  (when-let [p (fs/which c)] (str p)))
-
-
-;;------------------------------------------------------------------------------
-;; Regex functions
-;;------------------------------------------------------------------------------
-
-;; See: `qr` function above
-
-(defn =-- [str rgx]
-  (re-find rgx str))
-
-(defn !-- [str rgx]
-  (not (re-find rgx str)))
+(defn fs-which [name]
+  (when-let [path (fs/which name)] (str path)))
 
 
 ;;------------------------------------------------------------------------------
 ;; Java interop functions
 ;;------------------------------------------------------------------------------
-(defn new [class & args]
+(defn new [class & xs]
   (clojure.lang.Reflector/invokeConstructor
-    class (into-array Object args)))
+    class (into-array Object xs)))
 
 
 ;;------------------------------------------------------------------------------
 ;; IPC functions
 ;;------------------------------------------------------------------------------
-(defn exec [cmd & args]
-  (apply process/exec cmd args))
+(defn exec [cmd & xs]
+  (apply process/exec cmd xs))
 
-(defn process [cmd & args]
-  (apply process/process cmd args))
+(defn process [cmd & xs]
+  (apply process/process cmd xs))
 
-(defn sh [cmd & args]
-  (apply process/sh cmd args))
+(defn sh [cmd & xs]
+  (apply process/sh cmd xs))
 
-(defn shell [cmd & args]
-  (apply process/shell cmd args))
+(defn shell [cmd & xs]
+  (apply process/shell cmd xs))
 
-(defn shout [cmd & args]
+(defn shout [cmd & xs]
   (str/trim-newline
-    (:out (apply process/sh cmd args))))
+    (:out (apply process/sh cmd xs))))
 
 
 ;;------------------------------------------------------------------------------
