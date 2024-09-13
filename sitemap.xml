@@ -553,17 +553,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/core/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/examples/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
@@ -809,6 +798,39 @@
         <loc>https://yamlscript.org/doc/clojure/</loc>
         
           <lastmod>2024-09-12T17:19:20.924Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/control/</loc>
+        
+          <lastmod>2024-09-12T22:21:12.268Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/core/</loc>
+        
+          <lastmod>2024-09-13T15:14:36.948Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/clj-to-ys/</loc>
+        
+          <lastmod>2024-09-13T17:37:41.120Z</lastmod>
         
         
         
