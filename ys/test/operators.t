@@ -47,4 +47,27 @@ test::
 - code: sqrt(25)
   want: 5.0
 
+- note: add+ tests
+
+- code: 2 + \\A
+  want:: \\C
+- code: \\A + 2
+  want:: \\C
+- code: \\A + \\B
+  want: AB
+- code: (\\A + 2) + 3
+  want:: \\F
+- code: -{:a 1} + {:b 2} + {:c 3}
+  want:: -{:a 1 :b 2 :c 3}
+- code: -'J' + 5
+  want: J5
+- code: -'J' + \\5
+  want: J5
+- name: Cannot add+ multiple types when more than 2 arguments
+  code: -'12' + \\3 + 4
+  what: error
+  want: Cannot add+ multiple types when more than 2 arguments
+- code: \{:a :b} + \{:b :c :d}
+  want:: \{:a :b :c :d}
+
 done:

@@ -10,6 +10,7 @@
    [babashka.http-client :as http]
    [babashka.process :as process]
    [clojure.pprint :as pp]
+   [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
    [ys.ys :as ys]
@@ -227,12 +228,34 @@
 (defn cube [N] (pow N 3))
 (defn sqrt [N] (Math/sqrt N))
 
-(defn add+ [x & xs]
-  (cond
-    (string? x) (apply str x xs)
-    (map? x) (apply merge x xs)
-    (seqable? x) (apply concat x xs)
-    :else (apply + x (map to-num xs))))
+(defn- op-error [op x y]
+  (die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
+
+(defn add+
+  ([x y]
+   (cond
+     (nil? y) x
+     (number? x) (if (char? y)
+                   (char (+ x (int y)))
+                   (+ x (to-num y)))
+     (string? x) (str x y)
+     (map? x) (merge x y)      ;; error if y is not a map
+     (set? x) (set/union x y)  ;; error if y is not a set
+     (seqable? x) (concat x y) ;; error if y is not seqable
+     (char? x) (if (number? y)
+                 (char (+ (int x) y))
+                 (str x y))
+     (nil? x) y
+     :else (+ (to-num x) (to-num y))))
+  ([x y & xs]
+   (when (apply not= (type x) (type y) (map type xs))
+     (die "Cannot add+ multiple types when more than 2 arguments"))
+   (reduce add+ (add+ x y) xs)))
+
+(comment
+  (add+ \A \B)
+  (add+ \A \B)
+  )
 
 (defn div+ [& xs] (double (apply / xs)))
 
