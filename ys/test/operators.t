@@ -70,4 +70,23 @@ test::
 - code: \{:a :b} + \{:b :c :d}
   want:: \{:a :b :c :d}
 
+- note: sub+ tests
+
+- code: \\C - 2
+  want:: \\A
+- code: \\C - \\A
+  want: 2
+- code: \\C - 2
+  want:: \\A
+- name: Cannot sub(\\A [])
+  code: \\A - []
+  what: error
+  want: Cannot sub(\A [])
+- code: -'foobarbazbar' - 'bar'
+  want: foobaz
+- name: Cannot subtract with a nil value
+  code: 2 - nil
+  what: error
+  want: Cannot subtract with a nil value
+
 done:

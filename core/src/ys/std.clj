@@ -234,7 +234,7 @@
 (defn add+
   ([x y]
    (cond
-     (nil? y) x
+     (some nil? [x y]) (die "Cannot add with a nil value")
      (number? x) (if (char? y)
                    (char (+ x (int y)))
                    (+ x (to-num y)))
@@ -245,15 +245,35 @@
      (char? x) (if (number? y)
                  (char (+ (int x) y))
                  (str x y))
-     (nil? x) y
      :else (+ (to-num x) (to-num y))))
   ([x y & xs]
    (when (apply not= (type x) (type y) (map type xs))
      (die "Cannot add+ multiple types when more than 2 arguments"))
    (reduce add+ (add+ x y) xs)))
 
+(defn sub+
+  ([x y]
+   (cond
+     (some nil? [x y]) (die "Cannot subtract with a nil value")
+     (string? x) (str/replace x (str y) "")
+     (map? x) (dissoc x y)              ;; error if y is not a map
+     (set? x) (disj x y)                ;; error if y is not a set
+     (seqable? x) (remove #(= y %1) x)  ;; error if y is not seqable
+     (number? x) (if (char? y)
+                   (char (+ x (int y)))
+                   (- x (to-num y)))
+     (char? x) (cond (number? y) (char (- (long x) y))
+                     (char? y) (- (long x) (long y))
+                     :else (op-error "sub" x y))
+     :else (+ (to-num x) (to-num y))))
+  ([x y & xs]
+   (when (apply not= (type x) (type y) (map type xs))
+     (die "Cannot sub+ multiple types when more than 2 arguments"))
+   (reduce sub+ (sub+ x y) xs)))
+
 (comment
-  (add+ \A \B)
+  (sub+ \C \1)
+  (sub+ [1 nil "two" nil nil] nil)
   (add+ \A \B)
   )
 
