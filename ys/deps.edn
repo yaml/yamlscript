@@ -7,7 +7,7 @@
   org.babashka/sci {:mvn/version "0.8.41"},
   babashka/process {:mvn/version "0.5.21"},
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
-  yamlscript/core {:mvn/version "0.1.75"}},
+  yamlscript/core {:mvn/version "0.1.76"}},
  :aliases
  {:lein2deps
   {:deps

@@ -1,3 +1,19 @@
+- version: 0.1.76
+  date:    Sun 15 Sep 2024 04:22:57 PM PDT
+  changes:
+  - sample: Improve sample programs
+  - core: Support basic destructuring for def
+  - std: All more than 2 args for add+
+  - core: Add support for sub+ for infix `-`
+  - core: Support .++ and .-- on characters
+  - std: Remove `just` alias of `identity`
+  - core: Support nil punning in get+ for dot chains
+  - core: Support .++ and .-- on characters
+  - std: Fix add+ short maps with long maps bug
+  - std: The div+ function should have div semantics
+  - std: Add digits function
+  - release: Change rx to qr
+  - doc: More documentation
 - version: 0.1.75
   date:    Thu 05 Sep 2024 09:45:59 PM PDT
   changes:
