@@ -127,6 +127,11 @@ test::
 - code: sum()
   want: 0
 
+- code: 5 / 2
+  want: 2.5
+- code: 6 / 2
+  want: 3
+
 
 #-------------------------------------------------------------------------------
 - note: "YAML Anchor and alias functions"

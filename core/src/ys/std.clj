@@ -279,13 +279,7 @@
      (die "Cannot sub+ multiple types when more than 2 arguments"))
    (reduce sub+ (sub+ x y) xs)))
 
-(comment
-  (sub+ \C \1)
-  (sub+ [1 nil "two" nil nil] nil)
-  (add+ \A \B)
-  )
-
-(defn div+ [& xs] (double (apply / xs)))
+(defn div+ [& xs] (apply div xs))
 
 (defn mul+
   ([x y]
