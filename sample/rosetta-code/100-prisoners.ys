@@ -9,10 +9,10 @@ defn main(n=5000):
   : simulate-n-runs(n)
 
   say: +"Probability of survival with random search:\ " +
-       (random-successes / run-count)
+       double(random-successes / run-count)
 
   say: +"Probability of survival with ordered search:\ " +
-       (optimal-successes / run-count)
+       double(optimal-successes / run-count)
 
 defn simulate-n-runs(n):
   :: Simulate n runs of the 100 prisoner problem and returns a success count

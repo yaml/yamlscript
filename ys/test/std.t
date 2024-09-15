@@ -132,6 +132,15 @@ test::
 - code: 6 / 2
   want: 3
 
+- code: digits(90210)
+  want:: \'(9 0 2 1 0)
+- code: digits("90210")
+  want:: \'(9 0 2 1 0)
+- code: digits("012345")
+  want:: \'(0 1 2 3 4 5)
+- code: digits(012345)
+  want:: \'(1 2 3 4 5)
+
 
 #-------------------------------------------------------------------------------
 - note: "YAML Anchor and alias functions"

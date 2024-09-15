@@ -226,6 +226,14 @@
 (defn cube [N] (pow N 3))
 (defn sqrt [N] (Math/sqrt N))
 
+(defn digits [n]
+  (let [n (str n)]
+    (when (re-matches #"[0-9]+" n)
+      (for [d n]
+        (- (byte d) 48)))))
+
+(digits "01234")
+
 (defn- op-error [op x y]
   (die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
 
