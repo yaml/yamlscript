@@ -255,7 +255,9 @@
                  (str x y))
      :else (+ (to-num x) (to-num y))))
   ([x y & xs]
-   (when (apply not= (type x) (type y) (map type xs))
+   (when (not (or
+                (apply = (type x) (type y) (map type xs))
+                (every? map? (conj xs x y))))
      (die "Cannot add+ multiple types when more than 2 arguments"))
    (reduce add+ (add+ x y) xs)))
 
@@ -264,9 +266,9 @@
    (cond
      (some nil? [x y]) (die "Cannot subtract with a nil value")
      (string? x) (str/replace x (str y) "")
-     (map? x) (dissoc x y)              ;; error if y is not a map
-     (set? x) (disj x y)                ;; error if y is not a set
-     (seqable? x) (remove #(= y %1) x)  ;; error if y is not seqable
+     (map? x) (dissoc x y)
+     (set? x) (disj x y)
+     (seqable? x) (remove #(= y %1) x)
      (number? x) (- x (to-num y))
      (char? x) (cond (number? y) (char (- (long x) y))
                      (char? y) (- (long x) (long y))
