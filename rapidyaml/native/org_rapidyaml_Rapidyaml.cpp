@@ -1,5 +1,6 @@
 #include <jni.h>
-#include "./rapidyaml_edn.hpp"
+#include "ysparse_edn.hpp"
+#include "ysparse_evt.hpp"
 #include <stdio.h>
 
 #ifndef _Included_org_rapidyaml_Rapidyaml
@@ -52,6 +53,18 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *, jobject)
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
+ * Method:    ys2evt_init
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
+{
+    Ryml2Evt *obj = ys2evt_init();
+    return (jlong)obj;
+}
+
+/*
+ * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2edn_destroy
  * Signature: (Ljava/lang/Object;)V
  */
@@ -59,6 +72,17 @@ JNIEXPORT void JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy(JNIEnv *, jobject, jlong obj)
 {
     ys2edn_destroy((Ryml2Edn*)obj);
+}
+
+/*
+ * Class:     org_rapidyaml_Rapidyaml
+ * Method:    ys2evt_destroy
+ * Signature: (Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2evt_1destroy(JNIEnv *, jobject, jlong obj)
+{
+    ys2evt_destroy((Ryml2Evt*)obj);
 }
 
 /*
@@ -89,6 +113,38 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
     }
     env->ReleaseByteArrayElements(src, src_, 0);
     env->ReleaseByteArrayElements(dst, dst_, 0);
+    env->ReleaseStringUTFChars(jfilename, filename);
+    return rc;
+}
+
+/*
+ * Class:     org_rapidyaml_Rapidyaml
+ * Method:    ys2evt_parse
+ * Signature: (Ljava/lang/Object;Ljava/lang/String;[BI[BI)I
+ */
+JNIEXPORT jint JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
+                                           jlong obj, jstring jfilename,
+                                           jbyteArray src, jint src_len,
+                                           jintArray dst, jint dst_len)
+{
+    jboolean src_is_copy, dst_is_copy;
+    jbyte* src_ = env->GetByteArrayElements(src, &src_is_copy);
+    int* dst_ = env->GetIntArrayElements(dst, &dst_is_copy);
+    const char *filename = env->GetStringUTFChars(jfilename, 0);
+    int rc = 0;
+    try
+    {
+        rc = ys2evt_parse((Ryml2Evt*)obj, filename,
+                          (char*)src_, src_len,
+                          dst_, dst_len);
+    }
+    catch (Ryml2EvtParseError const& exc)
+    {
+        throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
+    }
+    env->ReleaseByteArrayElements(src, src_, 0);
+    env->ReleaseIntArrayElements(dst, dst_, 0);
     env->ReleaseStringUTFChars(jfilename, filename);
     return rc;
 }

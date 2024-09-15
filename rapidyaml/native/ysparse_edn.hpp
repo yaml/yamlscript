@@ -1,10 +1,9 @@
 #pragma once
-#ifndef RAPIDYAML_EVENTS_H
-#define RAPIDYAML_EVENTS_H
+#ifndef YSPARSE_EDN_HPP_
+#define YSPARSE_EDN_HPP_
 
 #include <stdexcept>
-#include <rapidyaml_all.hpp>
-#include "rapidyaml_edn_handler.hpp"
+#include "ysparse_edn_handler.hpp"
 
 namespace ryml {
 using namespace c4;
@@ -19,9 +18,9 @@ using size_type = int;
 
 struct RYML_EXPORT Ryml2Edn
 {
-    c4::yml::EventHandlerEdn::EventSink m_sink;
-    c4::yml::EventHandlerEdn m_handler;
-    c4::yml::ParseEngine<c4::yml::EventHandlerEdn> m_parser;
+    ys::EventHandlerEdn::EventSink m_sink;
+    ys::EventHandlerEdn m_handler;
+    c4::yml::ParseEngine<ys::EventHandlerEdn> m_parser;
     Ryml2Edn()
         : m_sink()
         , m_handler(&m_sink)
@@ -68,4 +67,4 @@ RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
 }
 #endif
 
-#endif /* RAPIDYAML_EVENTS_H */
+#endif /* YSPARSE_EDN_HPP_ */

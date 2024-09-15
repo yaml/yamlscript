@@ -3,24 +3,27 @@ include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
 include $(COMMON)/python.mk
 
-RAPIDYAML_H := org_rapidyaml_Rapidyaml.h
-RAPIDYAML_HPP := rapidyaml_all.hpp
-RAPIDYAML_AMALGAMATE_OPTS := --stl
+# TODO change to static library!
+# https://www.graalvm.org/latest/reference-manual/native-image/guides/build-static-executables/
+# https://www.blog.akhil.cc/static-jni
+# https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
+
+THIS_DIR := $(shell pwd)
+BDIR := $(THIS_DIR)/_build/$(BUILD_TYPE)-shared$(SHARED)-timed$(TIMED)-dbg$(DBG)
 
 RAPIDYAML_DEPS := \
   Makefile \
   CMakeLists.txt \
   $(JAVA_HOME) \
-  $(RAPIDYAML_H) \
-  $(RAPIDYAML_HPP) \
+  $(RAPIDYAML_JNI_H) \
   $(wildcard ./*pp) \
 
-CMK_FLAGS :=
-CMK_FLAGS += -D YS2EDN_TIMED=$(RAPIDYAML_TIMED)
-
-BDIR := rapidyaml-build
-
-CMK_BUILD :=
+CMK_ENV :=
+CMK_FLAGS := \
+  -D CMAKE_BUILD_TYPE=$(RAPIDYAML_BUILD_TYPE) \
+  -D YSPARSE_TIMED=$(RAPIDYAML_TIMED) \
+  -D YSPARSE_DBG=$(RAPIDYAML_DBG) \
+  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
 
 
 #------------------------------------------------------------------------------
@@ -39,7 +42,6 @@ rapidyaml:
 
 clean::
 	$(RM) librapidyaml.*
-	$(RM) $(RAPIDYAML_HPP)
 	$(RM) -r $(BDIR)
 	$(RM) -r rapidyaml-install
 
@@ -67,6 +69,3 @@ $(RAPIDYAML_SO): $(RAPIDYAML_DEPS)
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $(RAPIDYAML_JAVA) # $^ doesn't work
-
-$(RAPIDYAML_HPP): rapidyaml
-	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@

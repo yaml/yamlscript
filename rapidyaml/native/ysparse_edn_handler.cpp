@@ -1,18 +1,17 @@
-#ifndef RYML_SINGLE_HEADER
+#include "ysparse_edn_handler.hpp"
 #include <c4/yml/node.hpp>
-#include <c4/yml/std/string.hpp>
 #include <c4/yml/parse_engine.def.hpp>
-#endif
-#include "./rapidyaml_edn_handler.hpp"
 
-
-namespace c4 {
-namespace yml {
 
 // instantiate the template
-template class ParseEngine<EventHandlerEdn>;
+namespace c4 {
+namespace yml {
+template class ParseEngine<ys::EventHandlerEdn>;
+} // namespace yml
+} // namespace c4
 
 
+namespace ys {
 void EventHandlerEdn::EventSink::append_escaped(csubstr val)
 {
     #define _c4flush_use_instead(repl, skip)  \
@@ -78,6 +77,4 @@ void EventHandlerEdn::EventSink::append_escaped(csubstr val)
     this->append(val.sub(prev));
     #undef _c4flush_use_instead
 }
-
-} // namespace yml
-} // namespace c4
+} // namespace ys
