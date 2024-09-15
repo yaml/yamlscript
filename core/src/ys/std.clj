@@ -456,20 +456,21 @@
 (defn get+ [C K]
   (cond
     (map? C) (condp = (type K)
-                  String (get C K)
-                  clojure.lang.Keyword (get C K)
-                  clojure.lang.Symbol (or
-                                        (get C (str K))
-                                        (get C (keyword K))
-                                        (get C K))
-                  (get C K))
+               String (get C K)
+               clojure.lang.Keyword (get C K)
+               clojure.lang.Symbol (or
+                                     (get C (str K))
+                                     (get C (keyword K))
+                                     (get C K))
+               (get C K))
     (nil? C) nil
-    (seqable? C) (if (number? K)
-                      (nth C K)
-                      (die "Can't (get+ " C " "
-                        (if (nil? K) "nil" K) ")"))
-    :else (die "Can't (get+ " C " "
-            (if (nil? K) "nil" K) ")")))
+    (string? C) nil
+    (seqable? C) (cond
+                   (number? K) (nth C K)
+                   (nil? K) nil
+                   :else (die "Can't (get+ " C " "
+                           (if (nil? K) "nil" K) ")"))
+    :else nil))
 
 (defn grep [P C]
   (let [[P C] (if (seqable? C) [P C] [C P])

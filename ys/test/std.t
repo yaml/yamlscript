@@ -148,8 +148,11 @@ test::
 - code: -{}.$NIL
   want: null
 - code: -[].$NIL
-  what: error
-  want: Can't (get+ [] nil)
+  want: null
+- code: true.foo
+  want: null
+- code: -"foo".foo
+  want: null
 
 - code: (1 .. 20).partition(3 5)
   want:: \'((1 2 3) (6 7 8) (11 12 13) (16 17 18))
