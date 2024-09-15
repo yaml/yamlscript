@@ -1374,7 +1374,7 @@
     !yamlscript/v0
     when a.-- > b.++ > c.#-- > d.#++: e
   clojure: |
-    (when (> (dec a) (inc b) (dec (count c)) (inc (count d))) e)
+    (when (> (dec+ a) (inc+ b) (dec (count c)) (inc (count d))) e)
 
 
 - name: Anonymous function with only a regex
