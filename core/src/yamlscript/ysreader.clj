@@ -317,8 +317,8 @@
 
 (defn get-special-expansion [token]
   (condp = token
-    ".--"  ["dec(" ")"]
-    ".++"  ["inc(" ")"]
+    ".--"  ["dec+(" ")"]
+    ".++"  ["inc+(" ")"]
 
     ".?"   ["truey?(" ")"]
     ".??"  ["boolean(" ")"]

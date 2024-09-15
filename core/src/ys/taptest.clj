@@ -15,6 +15,11 @@
                (get test "cmnd")
                (get test "code")
                "")
+        name (if (and
+                   (= "error" (get test "what"))
+                   (get test "want"))
+               (get test "want")
+               name)
         name (str/replace
                (str/trim name)
                #"\n"

@@ -50,7 +50,7 @@ test::
 - note: add+ tests
 
 - code: 2 + \\A
-  want:: \\C
+  want:: 67
 - code: \\A + 2
   want:: \\C
 - code: \\A + \\B
@@ -63,8 +63,7 @@ test::
   want: J5
 - code: -'J' + \\5
   want: J5
-- name: Cannot add+ multiple types when more than 2 arguments
-  code: -'12' + \\3 + 4
+- code: -'12' + \\3 + 4
   what: error
   want: Cannot add+ multiple types when more than 2 arguments
 - code: \{:a :b} + \{:b :c :d}
@@ -78,15 +77,30 @@ test::
   want: 2
 - code: \\C - 2
   want:: \\A
-- name: Cannot sub(\\A [])
-  code: \\A - []
+- code: \\A - []
   what: error
   want: Cannot sub(\A [])
 - code: -'foobarbazbar' - 'bar'
   want: foobaz
-- name: Cannot subtract with a nil value
-  code: 2 - nil
+- code: 2 - nil
   what: error
   want: Cannot subtract with a nil value
+
+- note: .-- and .++
+
+- code: 2 .++
+  want: 3
+- code: 2 .--
+  want: 1
+- code: \\B.++
+  want:: \\C
+- code: \\B.--
+  want:: \\A
+- code: nil.++
+  what: error
+  want: Cannot inc+(nil)
+- code: -"B".++
+  what: error
+  want: Cannot inc+("B")
 
 done:

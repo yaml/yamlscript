@@ -231,13 +231,23 @@
 (defn- op-error [op x y]
   (die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
 
+(defn inc+ [x]
+  (cond
+    (number? x) (inc x)
+    (char? x) (char (inc (long x)))
+    :else (die "Cannot inc+(" (pr-str x) ")")))
+
+(defn dec+ [x]
+  (cond
+    (number? x) (dec x)
+    (char? x) (char (dec (long x)))
+    :else (die "Cannot dec+(" (pr-str x) ")")))
+
 (defn add+
   ([x y]
    (cond
      (some nil? [x y]) (die "Cannot add with a nil value")
-     (number? x) (if (char? y)
-                   (char (+ x (int y)))
-                   (+ x (to-num y)))
+     (number? x) (+ x (to-num y))
      (string? x) (str x y)
      (map? x) (merge x y)      ;; error if y is not a map
      (set? x) (set/union x y)  ;; error if y is not a set
@@ -259,9 +269,7 @@
      (map? x) (dissoc x y)              ;; error if y is not a map
      (set? x) (disj x y)                ;; error if y is not a set
      (seqable? x) (remove #(= y %1) x)  ;; error if y is not seqable
-     (number? x) (if (char? y)
-                   (char (+ x (int y)))
-                   (- x (to-num y)))
+     (number? x) (- x (to-num y))
      (char? x) (cond (number? y) (char (- (long x) y))
                      (char? y) (- (long x) (long y))
                      :else (op-error "sub" x y))
