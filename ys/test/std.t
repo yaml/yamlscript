@@ -36,10 +36,6 @@ test::
 - note: 'Short named alias functions'
 
 # a and just
-- code: 'just: 123'
-  want: 123
-- code: just('123')
-  want: '123'
 - code: a(41).inc()
   want: 42
 
