@@ -10,9 +10,7 @@ RAPIDYAML_JAR_DEPS := \
       pom.xml \
   )
 
-RAPIDYAML_CLASS := \
-  src/main/java/org/rapidyaml/Rapidyaml.class \
-  src/main/java/org/rapidyaml/YamlParseErrorException.class
+RAPIDYAML_CLASS := $(RAPIDYAML_JAVA:.java=.class)
 
 
 #------------------------------------------------------------------------------
@@ -23,7 +21,7 @@ default::
 x:
 	YS -ce 'foo: var'
 
-build:: $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
+build:: $(RAPIDYAML_JNI_H) $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
 	@:
 
 jar: $(RAPIDYAML_JAR)
@@ -51,7 +49,7 @@ sysclean::
 
 
 #------------------------------------------------------------------------------
-$(RAPIDYAML_SO):
+$(RAPIDYAML_SO): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
 $(RAPIDYAML_LIB):
 	$(MAKE) -C native $@
@@ -63,9 +61,12 @@ $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
 	jar -cvf $@ $<
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
-	# this doesn't work:
-	#javac $<
-	# ... but this does:
+	@# this doesn't work:
+	@#javac $<
+	@# ... but this does:
 	javac $(RAPIDYAML_JAVA)
+
+$(RAPIDYAML_JNI_H): $(RAPIDYAML_JAVA)
+	$(MAKE) -C native $@
 
 crl: $(RAPIDYAML_CLASS)
