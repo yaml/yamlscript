@@ -34,7 +34,7 @@ test:: update $(LIBYAMLSCRIPT_SO_FQNP)
 update: $(NVM_DIR)
 	npm install
 
-release: $(NVM_BIN)
+release: $(NVM_DIR)
 	npm publish
 
 clean::
