@@ -1,19 +1,12 @@
-#ifndef _C4_YML_EVENT_HANDLER_YAMLSTD_HPP_
-#define _C4_YML_EVENT_HANDLER_YAMLSTD_HPP_
+#ifndef _YSPARSE_EDN_HANDLER_HPP_
+#define _YSPARSE_EDN_HANDLER_HPP_
 
-#ifdef RYML_SINGLE_HEADER
-#include <rapidyaml_all.hpp>
-#else
-#ifndef _C4_YML_EVENT_HANDLER_STACK_HPP_
-#include "c4/yml/event_handler_stack.hpp"
-#endif
-#ifndef _C4_YML_STD_STRING_HPP_
-#include "c4/yml/std/string.hpp"
-#endif
-#ifndef _C4_YML_DETAIL_PRINT_HPP_
-#include "c4/yml/detail/print.hpp"
-#endif
-#endif
+#include <c4/yml/node_type.hpp>
+#include <c4/yml/node.hpp>
+#include <c4/yml/parse_engine.hpp>
+#include <c4/yml/event_handler_stack.hpp>
+#include <c4/yml/std/string.hpp>
+#include <c4/yml/detail/parser_dbg.hpp>
 
 #include <vector>
 
@@ -22,21 +15,26 @@ C4_SUPPRESS_WARNING_GCC_CLANG("-Wold-style-cast")
 C4_SUPPRESS_WARNING_GCC("-Wuseless-cast")
 
 
-namespace c4 {
-namespace yml {
+namespace ys {
 
+using c4::csubstr;
+using c4::substr;
+using c4::to_substr;
+using c4::to_csubstr;
+using c4::yml::id_type;
+using c4::yml::NodeType_e;
+using c4::yml::type_bits;
+#ifdef RYML_DBG
+using c4::_dbg_printf;
+#endif
 
-/** @addtogroup doc_event_handlers
- * @{ */
-
-
-struct EventHandlerEdnState : public ParserState
+struct EventHandlerEdnState : public c4::yml::ParserState
 {
-    NodeData ev_data;
+    c4::yml::NodeData ev_data;
 };
 
 
-struct EventHandlerEdn : public EventHandlerStack<EventHandlerEdn, EventHandlerEdnState>
+struct EventHandlerEdn : public c4::yml::EventHandlerStack<EventHandlerEdn, EventHandlerEdnState>
 {
 
     /** @name types
@@ -82,20 +80,20 @@ public:
     /** @name construction and resetting
      * @{ */
 
-    EventHandlerEdn(EventSink *sink, Callbacks const& cb)
+    EventHandlerEdn(EventSink *sink, c4::yml::Callbacks const& cb)
         : EventHandlerStack(cb), m_sink(sink), m_val_buffers(), m_first_doc()
     {
         reset();
     }
     EventHandlerEdn(EventSink *sink)
-        : EventHandlerEdn(sink, get_callbacks())
+        : EventHandlerEdn(sink, c4::yml::get_callbacks())
     {
     }
 
     void reset()
     {
         _stack_reset_root();
-        m_curr->flags |= RUNK|RTOP;
+        m_curr->flags |= c4::yml::RUNK|c4::yml::RTOP;
         m_val_buffers.resize((size_t)m_stack.size());
         m_arena.clear();
         m_first_doc = true;
@@ -123,7 +121,7 @@ public:
     /** @name parse events
      * @{ */
 
-    void start_parse(const char* filename, detail::pfn_relocate_arena relocate_arena, void *relocate_arena_data)
+    void start_parse(const char* filename, c4::yml::detail::pfn_relocate_arena relocate_arena, void *relocate_arena_data)
     {
         this->_stack_start_parse(filename, relocate_arena, relocate_arena_data);
     }
@@ -173,7 +171,7 @@ public:
         {
             _c4dbgp("push!");
             _push();
-            _enable_(DOC);
+            _enable_(c4::yml::DOC);
         }
         m_first_doc = false;
     }
@@ -202,7 +200,7 @@ public:
             m_first_doc = false;
         else
             _send_("{:+ \"+DOC\"}\n");
-        _enable_(DOC);
+        _enable_(c4::yml::DOC);
     }
     /** explicit doc end, with ... */
     void end_doc_expl()
@@ -238,7 +236,7 @@ public:
         _send_val_props_();
         _send_(", :flow true}\n");
         _mark_parent_with_children_();
-        _enable_(MAP|FLOW_SL);
+        _enable_(c4::yml::MAP|c4::yml::FLOW_SL);
         _push();
     }
     void begin_map_val_block()
@@ -247,7 +245,7 @@ public:
         _send_val_props_();
         _send_("}\n");
         _mark_parent_with_children_();
-        _enable_(MAP|BLOCK);
+        _enable_(c4::yml::MAP|c4::yml::BLOCK);
         _push();
     }
 
@@ -279,7 +277,7 @@ public:
         _send_val_props_();
         _send_(", :flow true}\n");
         _mark_parent_with_children_();
-        _enable_(SEQ|FLOW_SL);
+        _enable_(c4::yml::SEQ|c4::yml::FLOW_SL);
         _push();
     }
     void begin_seq_val_block()
@@ -288,7 +286,7 @@ public:
         _send_val_props_();
         _send_("}\n");
         _mark_parent_with_children_();
-        _enable_(SEQ|BLOCK);
+        _enable_(c4::yml::SEQ|c4::yml::BLOCK);
         _push();
     }
 
@@ -348,60 +346,60 @@ public:
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
         _send_key_scalar_(scalar, '=');
-        _enable_(KEY|KEY_PLAIN);
+        _enable_(c4::yml::KEY|c4::yml::KEY_PLAIN);
     }
     C4_ALWAYS_INLINE void set_val_scalar_plain(csubstr scalar)
     {
         _send_val_scalar_(scalar, '=');
-        _enable_(VAL|VAL_PLAIN);
+        _enable_(c4::yml::VAL|c4::yml::VAL_PLAIN);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_dquoted(csubstr scalar)
     {
         _send_key_scalar_(scalar, '$');
-        _enable_(KEY|KEY_DQUO);
+        _enable_(c4::yml::KEY|c4::yml::KEY_DQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_dquoted(csubstr scalar)
     {
         _send_val_scalar_(scalar, '$');
-        _enable_(VAL|VAL_DQUO);
+        _enable_(c4::yml::VAL|c4::yml::VAL_DQUO);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_squoted(csubstr scalar)
     {
         _send_key_scalar_(scalar, '\'');
-        _enable_(KEY|KEY_SQUO);
+        _enable_(c4::yml::KEY|c4::yml::KEY_SQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_squoted(csubstr scalar)
     {
         _send_val_scalar_(scalar, '\'');
-        _enable_(VAL|VAL_SQUO);
+        _enable_(c4::yml::VAL|c4::yml::VAL_SQUO);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_literal(csubstr scalar)
     {
         _send_key_scalar_(scalar, '|');
-        _enable_(KEY|KEY_LITERAL);
+        _enable_(c4::yml::KEY|c4::yml::KEY_LITERAL);
     }
     C4_ALWAYS_INLINE void set_val_scalar_literal(csubstr scalar)
     {
         _send_val_scalar_(scalar, '|');
-        _enable_(VAL|VAL_LITERAL);
+        _enable_(c4::yml::VAL|c4::yml::VAL_LITERAL);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_folded(csubstr scalar)
     {
         _send_key_scalar_(scalar, '>');
-        _enable_(KEY|KEY_FOLDED);
+        _enable_(c4::yml::KEY|c4::yml::KEY_FOLDED);
     }
     C4_ALWAYS_INLINE void set_val_scalar_folded(csubstr scalar)
     {
         _send_val_scalar_(scalar, '>');
-        _enable_(VAL|VAL_FOLDED);
+        _enable_(c4::yml::VAL|c4::yml::VAL_FOLDED);
     }
 
 
@@ -423,26 +421,26 @@ public:
 
     void set_key_anchor(csubstr anchor)
     {
-        _enable_(KEYANCH);
+        _enable_(c4::yml::KEYANCH);
         m_curr->ev_data.m_key.anchor = anchor;
     }
     void set_val_anchor(csubstr anchor)
     {
-        _enable_(VALANCH);
+        _enable_(c4::yml::VALANCH);
         m_curr->ev_data.m_val.anchor = anchor;
     }
 
     void set_key_ref(csubstr ref)
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
-        _enable_(KEY|KEYREF);
+        _enable_(c4::yml::KEY|c4::yml::KEYREF);
         _send_("{:+ \"=ALI\" :* \"");
         _send_(ref.sub(1));
         _send_("\"}\n");
     }
     void set_val_ref(csubstr ref)
     {
-        _enable_(VAL|VALREF);
+        _enable_(c4::yml::VAL|c4::yml::VALREF);
         _send_("{:+ \"=ALI\" :* \"");
         _send_(ref.sub(1));
         _send_("\"}\n");
@@ -457,12 +455,12 @@ public:
 
     void set_key_tag(csubstr tag)
     {
-        _enable_(KEYTAG);
+        _enable_(c4::yml::KEYTAG);
         m_curr->ev_data.m_key.tag = _transform_directive(tag, m_key_tag_buf);
     }
     void set_val_tag(csubstr tag)
     {
-        _enable_(VALTAG);
+        _enable_(c4::yml::VALTAG);
         m_curr->ev_data.m_val.tag = _transform_directive(tag, m_val_tag_buf);
     }
 
@@ -512,8 +510,6 @@ public:
     /** @} */
 
 public:
-
-    /** @cond dev */
 
     /** push a new parent, add a child to the new parent, and set the
      * child as the current node */
@@ -619,37 +615,37 @@ public:
 
     void _send_key_props_()
     {
-        if(_has_any_(KEYANCH|KEYREF))
+        if(_has_any_(c4::yml::KEYANCH|c4::yml::KEYREF))
         {
             _send_(", :& \"");
             _send_(m_curr->ev_data.m_key.anchor);
             _send_('\"');
         }
-        if(_has_any_(KEYTAG))
+        if(_has_any_(c4::yml::KEYTAG))
         {
             _send_(", :! \"");
             _send_tag_(m_curr->ev_data.m_key.tag);
             _send_('\"');
         }
         m_curr->ev_data.m_key = {};
-        _disable_(KEYANCH|KEYREF|KEYTAG);
+        _disable_(c4::yml::KEYANCH|c4::yml::KEYREF|c4::yml::KEYTAG);
     }
     void _send_val_props_()
     {
-        if(_has_any_(VALANCH|VALREF))
+        if(_has_any_(c4::yml::VALANCH|c4::yml::VALREF))
         {
             _send_(", :& \"");
             _send_(m_curr->ev_data.m_val.anchor);
             _send_('\"');
         }
-        if(m_curr->ev_data.m_type.type & VALTAG)
+        if(m_curr->ev_data.m_type.type & c4::yml::VALTAG)
         {
             _send_(", :! \"");
             _send_tag_(m_curr->ev_data.m_val.tag);
             _send_('\"');
         }
         m_curr->ev_data.m_val = {};
-        _disable_(VALANCH|VALREF|VALTAG);
+        _disable_(c4::yml::VALANCH|c4::yml::VALREF|c4::yml::VALTAG);
     }
     void _send_tag_(csubstr tag)
     {
@@ -663,12 +659,12 @@ public:
     {
         if(tag.begins_with('!'))
         {
-            if(is_custom_tag(tag))
+            if(c4::yml::is_custom_tag(tag))
             {
                 _RYML_CB_ERR_(m_stack.m_callbacks, "tag not found", m_curr->pos);
             }
         }
-        csubstr result = normalize_tag_long(tag, output);
+        csubstr result = c4::yml::normalize_tag_long(tag, output);
         _RYML_CB_CHECK(m_stack.m_callbacks, result.len > 0);
         _RYML_CB_CHECK(m_stack.m_callbacks, result.str);
         return result;
@@ -677,14 +673,10 @@ public:
 #undef _disable_
 #undef _has_any_
 
-    /** @endcond */
 };
 
-/** @} */
-
-} // namespace yml
-} // namespace c4
+} // namespace ys
 
 C4_SUPPRESS_WARNING_GCC_POP
 
-#endif /* _C4_YML_EVENT_HANDLER_YAMLSTD_HPP_ */
+#endif /* _YSPARSE_EDN_HANDLER_HPP_ */

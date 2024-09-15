@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 
 /**
  * Interface with the shared librapidyaml library
- *
  */
 public class Rapidyaml {
     public static String RAPIDYAML_VERSION = "0.7.2";
@@ -19,13 +18,20 @@ public class Rapidyaml {
     private native int ys2edn_retry_get(
         long ryml2edn, byte[] edn, int edn_size
     );
-
     private final long ryml2edn;
+
+    private native long ys2evt_init();
+    private native void ys2evt_destroy(long ryml2evt);
+    private native int ys2evt_parse(long ryml2evt, String filename,
+                                    byte[] ys, int ys_length,
+                                    int[] evt, int evt_length);
+    private final long ryml2evt;
 
     public Rapidyaml() {
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
         System.loadLibrary(library_name);
         this.ryml2edn = this.ys2edn_init();
+        this.ryml2evt = this.ys2evt_init();
     }
 
     // Likely bad idea to implement finalize:
@@ -35,13 +41,14 @@ public class Rapidyaml {
     protected void finalize() throws Throwable {
         try {
             this.ys2edn_destroy(this.ryml2edn);
+            this.ys2evt_destroy(this.ryml2evt);
         }
         finally {
             super.finalize();
         }
     }
 
-    public String parseYS(String srcstr) throws RuntimeException, org.rapidyaml.YamlParseErrorException {
+    public String parseYsToEdn(String srcstr) throws RuntimeException, org.rapidyaml.YamlParseErrorException {
         String filename = "yamlscript"; // fixme
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;
@@ -57,5 +64,11 @@ public class Rapidyaml {
         }
         String ret = new String(edn, 0, required_size-1, StandardCharsets.UTF_8);
         return ret;
+    }
+
+    public int parseYsToEvt(byte[] src, int[] evts) throws RuntimeException, org.rapidyaml.YamlParseErrorException {
+        String filename = "yamlscript"; // fixme
+        int required_size = ys2evt_parse(this.ryml2evt, filename, src, src.length, evts, evts.length);
+        return required_size;
     }
 }
