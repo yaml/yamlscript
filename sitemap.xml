@@ -410,17 +410,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/chain/</loc>
-        
-          <lastmod>2024-07-16T16:14:18.336Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/common/</loc>
         
           <lastmod>2024-07-16T16:14:18.336Z</lastmod>
@@ -444,17 +433,6 @@
     
       <url>
         <loc>https://yamlscript.org/doc/gotchas/</loc>
-        
-          <lastmod>2024-07-16T16:14:18.336Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/syntax/</loc>
         
           <lastmod>2024-07-16T16:14:18.336Z</lastmod>
         
@@ -553,17 +531,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/examples/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/ext-libs/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
@@ -597,29 +564,7 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/operators/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/referencing/</loc>
-        
-          <lastmod>2024-08-14T18:47:01.936Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/yes/</loc>
         
           <lastmod>2024-08-14T18:47:01.936Z</lastmod>
         
@@ -696,86 +641,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/cheat/</loc>
-        
-          <lastmod>2024-08-28T23:10:50.052Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/yaml/</loc>
-        
-          <lastmod>2024-08-28T23:10:50.052Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/ys/</loc>
-        
-          <lastmod>2024-09-02T23:33:04.524Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/</loc>
-        
-          <lastmod>2024-09-02T23:33:04.528Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-09-03T06:11:41.120Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/</loc>
-        
-          <lastmod>2024-09-10T19:41:30.380Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/run-ys/</loc>
-        
-          <lastmod>2024-09-10T19:41:30.380Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/binary/</loc>
         
-          <lastmod>2024-09-10T21:48:29.668Z</lastmod>
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
         
         
         
@@ -784,20 +652,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/tutorial/</loc>
+        <loc>https://yamlscript.org/doc/chain/</loc>
         
-          <lastmod>2024-09-10T23:23:47.632Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/clojure/</loc>
-        
-          <lastmod>2024-09-12T17:19:20.924Z</lastmod>
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
         
         
         
@@ -806,20 +663,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/control/</loc>
+        <loc>https://yamlscript.org/doc/cheat/</loc>
         
-          <lastmod>2024-09-12T22:21:12.268Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/core/</loc>
-        
-          <lastmod>2024-09-13T15:14:36.948Z</lastmod>
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
         
         
         
@@ -830,7 +676,161 @@
       <url>
         <loc>https://yamlscript.org/doc/clj-to-ys/</loc>
         
-          <lastmod>2024-09-13T17:37:41.120Z</lastmod>
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/clojure/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/control/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/core/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.824Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/examples/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/operators/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/run-ys/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/syntax/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/tutorial/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/yaml/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/yes/</loc>
+        
+          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-09-15T23:09:51.792Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys/</loc>
+        
+          <lastmod>2024-09-15T23:22:53.480Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/</loc>
+        
+          <lastmod>2024-09-15T23:22:53.488Z</lastmod>
         
         
         
