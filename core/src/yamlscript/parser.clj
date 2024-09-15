@@ -68,6 +68,7 @@
       rest)))
 
 (defn parse-rapidyaml [yaml-string]
+  (println "ryml wtf")
   (let [rapid-parser (new Rapidyaml)]
     (->> yaml-string
       ( #(.parseYS ^Rapidyaml rapid-parser %1))

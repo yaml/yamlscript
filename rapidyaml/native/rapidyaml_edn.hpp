@@ -11,6 +11,27 @@ using namespace c4;
 using namespace c4::yml;
 } // namespace ryml
 
+#ifndef YS2EDN_TIMED
+#define TIMED_SECTION(name)
+#else
+#include <chrono>
+#define TIMED_SECTION(name) timed_section C4_XCAT(ts, __LINE__)(name)
+struct timed_section
+{
+    using myclock = std::chrono::steady_clock;
+    using fmsecs = std::chrono::duration<double, std::milli>;
+    ryml::csubstr name;
+    myclock::time_point start;
+    fmsecs since() const { return myclock::now() - start; }
+    timed_section(ryml::csubstr n) : name(n), start(myclock::now()) {}
+    ~timed_section()
+    {
+        fprintf(stderr, "%.6fms: %.*s\n", since().count(), (int)name.len, name.str);
+    }
+};
+#endif
+
+
 #if defined(__cplusplus)
 extern "C" {
 #endif

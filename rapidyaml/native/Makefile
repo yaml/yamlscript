@@ -19,7 +19,7 @@ RAPIDYAML_SO_DEPS := \
 # TODO maybe change to static library!
 # https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
 SHARED := 1
-TIMED := 0
+TIMED := 1
 
 CMK_FLAGS :=
 CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)

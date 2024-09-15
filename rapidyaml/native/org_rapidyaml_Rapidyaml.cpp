@@ -73,9 +73,14 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
                                            jbyteArray dst, jint dst_len)
 {
     jboolean src_is_copy, dst_is_copy;
-    jbyte* src_ = env->GetByteArrayElements(src, &src_is_copy);
-    jbyte* dst_ = env->GetByteArrayElements(dst, &dst_is_copy);
-    const char *filename = env->GetStringUTFChars(jfilename, 0);
+    jbyte *src_, *dst_;
+    const char *filename;
+    {
+        TIMED_SECTION("acquire_java");
+        src_ = env->GetByteArrayElements(src, &src_is_copy);
+        dst_ = env->GetByteArrayElements(dst, &dst_is_copy);
+        filename = env->GetStringUTFChars(jfilename, 0);
+    }
     int rc = 0;
     try
     {
@@ -87,9 +92,12 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
     {
         throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
     }
-    env->ReleaseByteArrayElements(src, src_, 0);
-    env->ReleaseByteArrayElements(dst, dst_, 0);
-    env->ReleaseStringUTFChars(jfilename, filename);
+    {
+        TIMED_SECTION("release_java");
+        env->ReleaseByteArrayElements(src, src_, 0);
+        env->ReleaseByteArrayElements(dst, dst_, 0);
+        env->ReleaseStringUTFChars(jfilename, filename);
+    }
     return rc;
 }
 
