@@ -10,7 +10,7 @@ defn main():
     -{:strs [vers bump all]} =: p
     each b bump:
       -{:strs [regx file]} =: b
-      regx =: rx(regx)
+      regx =: qr(regx)
       each f file:
         f =: "$ROOT/$f"
         text =: slurp(f)
