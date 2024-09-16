@@ -751,17 +751,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/run-ys/</loc>
-        
-          <lastmod>2024-09-15T23:06:29.828Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/syntax/</loc>
         
           <lastmod>2024-09-15T23:06:29.828Z</lastmod>
@@ -830,7 +819,18 @@
       <url>
         <loc>https://yamlscript.org/doc/ys-std/</loc>
         
-          <lastmod>2024-09-15T23:39:33.996Z</lastmod>
+          <lastmod>2024-09-16T04:42:42.682Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/run-ys/</loc>
+        
+          <lastmod>2024-09-16T22:40:31.294Z</lastmod>
         
         
         
