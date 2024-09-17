@@ -1,9 +1,9 @@
 {:paths ["src" "resources" "target/classes"],
  :deps
- {org.clojure/clojure {:mvn/version "1.11.1"},
-  org.babashka/sci {:mvn/version "0.8.40"},
+ {org.clojure/clojure {:mvn/version "1.12.0"},
+  org.babashka/sci {:mvn/version "0.8.41"},
   org.clojure/data.json {:mvn/version "2.4.0"},
-  yamlscript/compiler {:mvn/version "0.1.76"}},
+  yamlscript/core {:mvn/version "0.1.76"}},
  :aliases
  {:lein2deps
   {:deps
@@ -14,4 +14,4 @@
    {:src-dirs ["src"], :class-dir "target/classes"}}},
  :deps/prep-lib
  {:ensure "target/classes", :alias :lein2deps, :fn compile-java},
- #_#_:mvn/repos {"public-github" {:url "git://github.com"}}}
+ :mvn/repos {"public-github" {:url "git://github.com"}}}
