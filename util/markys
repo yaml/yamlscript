@@ -72,7 +72,9 @@ defn format-markys(text):
   call func: data
 
 defn get-path(file):
-  fs-abs _ file: input-dir.deref()
+  if-not fs-abs?(file):
+    fs-abs _ file: input-dir.deref()
+    else: file
 
 defn fmt-include(data):
   input-file =: data.file.get-path()
