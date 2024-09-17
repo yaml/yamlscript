@@ -168,7 +168,7 @@ write-profile() (
   :description "Compile a YAMLScript program to native binary executable"
 
   :dependencies
-  [[org.clojure/clojure "1.11.1"]
+  [[org.clojure/clojure "1.12.0"]
    [org.babashka/sci "0.8.41"]
    [yamlscript/core "$yamlscript_version"]]
 

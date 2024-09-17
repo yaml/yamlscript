@@ -19,7 +19,7 @@
    :dir ".."}
 
   :dependencies
-  [[org.clojure/clojure "1.11.1"]
+  [[org.clojure/clojure "1.12.0"]
    [org.clojure/data.json "2.4.0"]
    [org.json/json "20240205"]
    [net.java.dev.jna/jna "5.14.0"]

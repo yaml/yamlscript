@@ -189,7 +189,8 @@
   {:args (util/get-cmd-args)
    :bin (util/get-cmd-bin)
    :pid (util/get-cmd-pid)
-   :versions {:clojure "1.11.1"
+   :versions {:clojure "1.12.0"
+              ;; TODO Add graalvm and other versions
               :sci (->>
                      (io/resource "SCI_VERSION")
                      slurp

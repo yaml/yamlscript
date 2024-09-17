@@ -14,7 +14,7 @@
    [org.apache.httpcomponents/httpclient "4.5.13"]
    [org.apache.httpcomponents/httpcore "4.4.15"]
    [org.babashka/sci "0.8.41"]
-   [org.clojure/clojure "1.11.1"]
+   [org.clojure/clojure "1.12.0"]
    [org.clojure/data.json "2.4.0"]
    [org.clojure/tools.gitlibs "1.0.100"]
    [org.clojure/tools.reader "1.3.6"]
