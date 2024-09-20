@@ -68,6 +68,7 @@
 
 (def operators
   {(Sym '.)   (Sym '_dot_)
+   (Sym '...) (Sym 'rng+)
    (Sym '..)  (Sym 'rng)
    (Sym '+)   (Sym 'add+)
    (Sym '-)   (Sym 'sub+)
