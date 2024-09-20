@@ -106,4 +106,9 @@ test::
   what: error
   want: Cannot inc+("B")
 
+- code: (1 ... 10).vector?()
+- code: (1 ... 0).#.0?
+- code: (1 ... 1).#.0?
+- code: (1 ... 2).#.1?
+
 done:

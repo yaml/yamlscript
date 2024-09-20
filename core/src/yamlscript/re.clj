@@ -48,21 +48,35 @@
             )")
 (def spec #"(?:~@|[~@`^])")                ; Special token
 (def quot #"(?:\\')")                      ; Quote token
-(def dotx #"(?x)                           # Dot special operator
+(def dotx (re #"(?x)                       # Dot special operator
             (?:\.
               (?:
-                > |
+                \?\~ |
                 \?{1,2} |
                 \!{1,2} |
                 \+\+ |
                 \-\- |
                 \#(?:
-                  [?!] |
+                  \?\~ |
+                  \+\? |
                   \+\+ |
-                  --
-                )?
+                  \-\- |
+                  [?!] |
+                  [012]\?
+                )? |
+                [-+~012][?!] |
+                [-+*/%] 2 | \*\*2 |
+                <-> | -> | <- |
+                >>> |
+                >__ | >\{\} |
+                >[\#\$\@\%\|\+\*\_\>IF]? |
+                \<\<? |
+                \$$tend |
+                \^\* | \^2 | \*\$ |
+                \$\@ | \@\$ | \@\< | \@\+ | \@\* | \@\_\_? |
+                [\~\^]
               )
-            )")
+            )"))
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def dots (re #"(?:\.\w+(?:_\w+)+)$tend")) ; Dot operator word with _ allowed
 (def mnum #"(?:[-+]?\d[-+/*%.:\w]+)")      ; Maybe Number token

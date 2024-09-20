@@ -49,13 +49,13 @@ test::
   want: two
 
 - code: '-[] |||: 1 && 0'
-  want: 0
+  want:: nil
 
 - code: '-"foo" *: 3'
   want: foofoofoo
 
-- code: -[123].#?
-- code: -{}.#!
+- code: -[123].#.?
+- code: -{}.#.!
 - code: a(0).??
 
 done:
