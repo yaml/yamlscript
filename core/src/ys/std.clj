@@ -118,10 +118,11 @@
     :else true))
 
 (defn truey? [x] (not (falsey? x)))
+(defn truey+ [x] (if (falsey? x) nil x))
 
 (defmacro or?
   ([] nil)
-  ([x] (if (truey? x) x nil))
+  ([x] `(truey+ ~x))
   ([x & xs]
       `(if (truey? ~x) ~x (or? ~@xs))))
 
@@ -129,11 +130,14 @@
 
 (defmacro and?
   ([] true)
-  ([x] (if (truey? x) x nil))
+  ([x] `(truey+ ~x))
   ([x & xs]
       `(if (truey? ~x) (and? ~@xs) nil)))
 
 (defmacro &&& [x & xs] `(and? ~x ~@xs))
+
+(defn one? [x] (== 1 x))
+(defn two? [x] (== 2 x))
 
 
 ;;------------------------------------------------------------------------------
@@ -176,8 +180,6 @@
 ;;------------------------------------------------------------------------------
 (defn to-bool [x] (boolean x))
 (defn to-booly [x] (if (truey? x) true false))
-(defn to-float [x] (parse-double x))
-(defn to-int [x] (parse-long x))
 (defn to-list [x] (apply list x))
 
 (defn to-map
@@ -194,10 +196,13 @@
                     (parse-double x)
                     (parse-long x))
                   0)
+    (nil? x) 0
     (seqable? x) (count x)
     (char? x) (int x)
     (boolean? x) (if x 1 0)
     :else (die (str "Can't convert " (type x) " to number"))))
+(defn to-float [x] (double (to-num x)))
+(defn to-int [x] (long (to-num x)))
 
 (defn to-set
   ([] (set []))
@@ -206,11 +211,13 @@
          (set x)))
   ([x & xs] (apply set x xs)))
 
+(declare digits)
 (defn to-vec
   ([] [])
-  ([x] (if (map? x)
-         (vec (flatten (seq x)))
-         (vec x)))
+  ([x] (cond
+         (map? x) (vec (flatten (seq x)))
+         (number? x) (digits x)
+         :else (vec x)))
   ([x & xs] (apply vector x xs)))
 
 
@@ -514,6 +521,11 @@
                            (if (nil? K) "nil" K) ")"))
     :else nil))
 
+(defn flat [C]
+  (mapcat
+    (fn [x] (if (seqable? x) x [x]))
+    C))
+
 (defn grep [P C]
   (let [[P C] (if (seqable? C) [P C] [C P])
         _ (when-not (seqable? C) (die "No seqable arg passed to grep"))
@@ -533,6 +545,11 @@
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
+
+(defn repeat+ [x]
+  (if (coll? x)
+    (cycle x)
+    (repeat x)))
 
 (defn reverse [x]
   (cond

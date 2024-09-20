@@ -122,9 +122,9 @@
       $splt |                   # Splat symbol
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
+      $dotx |                   # Special dot operators
       $dotn |                   # Dot operator followed by number
       $dots |                   # Dot operator word with _ allowed
-      $dotx |                   # Special dot operators
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
       $sett |                   # Set start token
@@ -316,22 +316,83 @@
 (declare read-form)
 
 (defn get-special-expansion [token]
-  (condp = token
-    ".--"  ["dec+(" ")"]
-    ".++"  ["inc+(" ")"]
+  (let [trans
+        (condp = token
+          ".?"   "ys::std/truey?( )"
+         ;".?~"  "ys::std/truey+( )"
+          ".!"   "ys::std/falsey?( )"
+          ".??"  "clojure::core/boolean( )"
+          ".!!"  "clojure::core/not( )"
 
-    ".?"   ["truey?(" ")"]
-    ".??"  ["boolean(" ")"]
-    ".!"   ["falsey?(" ")"]
-    ".!!"  ["not(" ")"]
+          ".0?"  "clojure::core/zero?( )"
+          ".0!"  "clojure::core/zero?( ) . not( )"
+          ".1?"  "ys::std/one?( )"
+          ".2?"  "ys::std/two?( )"
+          ".+?"  "clojure::core/pos?( )"
+          ".+!"  "clojure::core/pos?( ) . clojure::core/not( )"
+          ".-?"  "clojure::core/neg?( )"
+          ".-!"  "clojure::core/neg?( ) . clojure::core/not( )"
+          ".~?"  "clojure::core/nil?( )"
+          ".~!"  "clojure::core/nil?( ) . clojure::core/not( )"
 
-    ".#"   ["count(" ")"]
-    ".#?"  ["count(" ")" "." "truey?(" ")"]
-    ".#!"  ["count(" ")" "." "falsey?(" ")"]
-    ".#--" ["count(" ")" "." "dec(" ")"]
-    ".#++" ["count(" ")" "." "inc(" ")"]
+          ".--"  "ys::std/dec+( )"
+          ".++"  "ys::std/inc+( )"
 
-    ".>"   ["DBG(" ")"]))
+          ".#"   "clojure::core/count( )"
+          ".#--" "clojure::core/count( ) . clojure::core/dec( )"
+          ".#++" "clojure::core/count( ) . clojure::core/inc( )"
+         ;".#?"  "clojure::core/count( ) . ys::std/truey?( )"
+         ;".#?~" "clojure::core/count( ) . ys::std/truey+( )"
+         ;".#!"  "clojure::core/count( ) . ys::std/falsey?( )"
+         ;".#0?" "clojure::core/empty?( )"
+         ;".#1?" "clojure::core/count( ) . ys::std/one?( )"
+         ;".#2?" "clojure::core/count( ) . ys::std/two?( )"
+         ;".#+?" "clojure::core/count( ) . clojure::core/pos?( )"
+
+          ".^"   "clojure::core/first( )"
+         ;".^2"  "clojure::core/second( )"
+          ".^*"  "clojure::core/rest( )"
+          ".$"   "clojure::core/last( )"
+          ".*$"  "clojure::core/butlast( )"
+
+          ".<"   "clojure::core/slurp( )"
+          ".>"   "ys::std/say( )"
+          ".>>"  "ys::std/warn( )"
+          ".>>>" "clojure::core/DBG( )"
+
+          ".>#"  "ys::std/to-num( )"
+          ".>I"  "ys::std/to-int( )"
+          ".>F"  "ys::std/to-float( )"
+          ".>@"  "ys::std/to-vec( )"
+          ".>%"  "ys::std/to-map( )"
+          ".>{}" "ys::std/to-set( )"
+         ;".>$"  "clojure::core/str( )"
+         ;".>+"  "clojure::core/abs( )"
+         ;".<-"  "clojure::core/triml( )"
+         ;".->"  "clojure::core/trimr( )"
+         ;".<->" "clojure::core/trim( )"
+
+          ".$@"  "ys::std/split( )"
+          ".@$"  "ys::std/join( )"
+          ".@<"  "ys::std/to-vec( ) . clojure::core/reverse( )"
+          ".@+"  "ys::std/sum( )"
+          ".@*"  "ys::std/repeat+( )"
+          ".@_"  "ys::std/flat( )"
+          ".@__" "clojure::core/flatten( ) . clojure::core/vec( )"
+         ;".@/~" "clojure::core/remove( clojure::core/nil? )"
+         ;".@/0" "clojure::core/remove( clojure::core/zero? )"
+
+         ;".&"   "ys::ys/eval( )"
+
+         ;".**2" "ys::std/sqr( )"
+         ;".*2"  "ys::std/mul( 2 )"
+         ;".%2"  "clojure::core/mod( 2 )"
+         ;"./2"  "clojure::core/quot( 2 )"
+         ;".+2"  "ys::std/add( 2 )"
+         ;".-2"  "ys::std/sub( 2 )"
+
+          (die "Unsupported dot special operator: " token))]
+    (str/split trans #" ")))
 
 (defn read-scalar [[token & tokens]]
   (cond

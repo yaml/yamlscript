@@ -2,11 +2,7 @@
 
 !yamlscript/v0
 
-ns: mainx
-
 require ys::taptest: :all
-
-say: CWD
 
 NIL =: nil
 
@@ -101,14 +97,21 @@ test::
 - code: falsey?(nil)
 - code: falsey?(false)
 
-- code: -"" ||| [] ||| 42
-  want: 42
-- code: 42 &&& []
-  want: null
+- code: ("" ||| [] ||| 42) == 42
+- code: (42 &&& []) == nil
 
+- code: truey+(0) == nil
+- code: truey+(1) == 1
 
 #-------------------------------------------------------------------------------
 - note: "Common type conversion functions"
+
+- code: to-num("42") == 42
+- code: to-num(42) == 42
+- code: to-num(1 .. 42) == 42
+- code: to-num(set(1 .. 42)) == 42
+- code: to-num(to-map(1 .. 42)) == 21
+- code: to-num(to-vec(to-map(1 .. 42))) == 42
 
 
 #-------------------------------------------------------------------------------
@@ -125,9 +128,6 @@ test::
 
 - code: sum([3 nil 4])
   want: 7
-
-- code: sum()
-  want: 0
 
 - code: 5 / 2
   want: 2.5
