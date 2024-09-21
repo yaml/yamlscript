@@ -140,12 +140,35 @@
 ;; Named function aliases for infix operators
 ;; TODO make these be polymorphic
 ;;------------------------------------------------------------------------------
-(intern 'ys.std 'eq clojure.core/=)
-(intern 'ys.std 'ne clojure.core/not=)
-(intern 'ys.std 'gt clojure.core/>)
-(intern 'ys.std 'ge clojure.core/>=)
-(intern 'ys.std 'lt clojure.core/<)
-(intern 'ys.std 'le clojure.core/<=)
+(defn eq
+  ([x] #(= %1 x))
+  ([x y] (= x y))
+  ([x y & xs] (apply = x y xs)))
+
+(defn ne
+  ([x] #(not= %1 x))
+  ([x y] (not= x y))
+  ([x y & xs] (apply not= x y xs)))
+
+(defn gt
+  ([x] #(> %1 x))
+  ([x y] (> x y))
+  ([x y & xs] (apply > x y xs)))
+
+(defn ge
+  ([x] #(>= %1 x))
+  ([x y] (>= x y))
+  ([x y & xs] (apply >= x y xs)))
+
+(defn lt
+  ([x] #(< %1 x))
+  ([x y] (< x y))
+  ([x y & xs] (apply < x y xs)))
+
+(defn le
+  ([x] #(<= %1 x))
+  ([x y] (<= x y))
+  ([x y & xs] (apply <= x y xs)))
 
 
 ;;------------------------------------------------------------------------------

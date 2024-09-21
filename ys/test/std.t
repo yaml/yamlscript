@@ -70,6 +70,8 @@ test::
 - code: eq({"x" "x"} {"x" "x"})
 - code: eq(false not(true))
 - code: eq(nil first([]) nil)
+- code: (1 .. 10).filter(gt(5))
+  want:: -[6 7 8 9 10]
 
 - code: ne(23 23 23 24)
 - code: ne("x" "x" "x" "y")
