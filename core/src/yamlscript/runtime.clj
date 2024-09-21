@@ -178,7 +178,9 @@
       java.lang.Throwable
 
       java.math.BigDecimal
-      java.math.BigInteger]))
+      java.math.BigInteger
+
+      java.util.regex.Pattern]))
 
 (reset! ys/sci-ctx
   (sci/init

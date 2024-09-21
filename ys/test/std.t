@@ -256,6 +256,11 @@ test::
 - code: -"I Like Pie".split().filter(\(/[A-Z]/)).join()
   want: ILP
 
+- code: -'Hello World'.replace('o')
+  want: Hell Wrld
+- code: -'Hello World'.replace(/[lo]/)
+  want: He Wrd
+
 
 #-------------------------------------------------------------------------------
 - note: "Java interop functions"
