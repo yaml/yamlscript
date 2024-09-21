@@ -416,7 +416,11 @@
 
 (defn replace
   ([x] (clojure.core/replace x))
-  ([x y] (clojure.core/replace x y))
+  ([x y] (if (or
+               (= java.util.regex.Pattern (type y))
+               (= java.lang.String (type y)))
+           (clojure.string/replace x y "")
+           (clojure.core/replace x y)))
   ([x y z] (clojure.string/replace x y z)))
 
 (intern 'ys.std 'replace1 clojure.string/replace-first)

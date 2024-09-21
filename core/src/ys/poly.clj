@@ -51,6 +51,13 @@
          (apply ~name a# b# c#)
          (apply ~name b# a# c#)))))
 
+#_(defmacro ^:private -rgx-2nd [name]
+  (let [dname (symbol (str "+" name))]
+    `(defn ~dname [a# b# & c#]
+       (if (= java.util.regex.Pattern (type a#))
+         (apply ~name b# a# c#)
+         (apply ~name a# b# c#)))))
+
 (defmacro ^:private -clj-mac [name]
   (let [dname (symbol (str "+" name))]
     `(defn ~dname
