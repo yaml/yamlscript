@@ -224,6 +224,15 @@ test::
 - code: '(1 .. 10).has?(5)'
 - code: 'num(5).in?(1 .. 10)'
 
+- code: -"ello".cons(\\H).join()
+  want: Hello
+- code: -[[1 2] [3 4]].mapcat(reverse)
+  want:: -[2 1 4 3]
+- code: (1 .. 5).reduce(+)
+  want: 15
+- code: (1 .. 5).reduce(+ 10)
+  want: 25
+
 
 #-------------------------------------------------------------------------------
 - note: "I/O functions"

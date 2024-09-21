@@ -70,6 +70,7 @@
 
 ;;------------------------------------------------------------------------------
 (-seq-2nd apply)
+(-seq-2nd cons)
 (-seq-1st contains?)
 (-seq-2nd drop)
 (-seq-2nd drop-last)
@@ -80,6 +81,7 @@
 (-seq-2nd interpose)
 (-seq-2nd keep)
 (-seq-2nd+ map)
+(-seq-2nd mapcat)
 (-seq-2nd+ mapv)
 (-seq-2nd not-any?)
 (-seq-1st nth)
@@ -88,6 +90,7 @@
 (-rgx-1st re-find)
 (-rgx-1st re-matches)
 (-rgx-1st re-seq)
+(-seq-last reduce)
 (-seq-2nd remove)
 (-seq-2nd repeat)
 #_(-rgx-2nd replace)
