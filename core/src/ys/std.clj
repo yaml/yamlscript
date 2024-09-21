@@ -9,6 +9,7 @@
    [babashka.fs :as fs]
    [babashka.http-client :as http]
    [babashka.process :as process]
+   [clojure.math :as math]
    [clojure.pprint :as pp]
    [clojure.set :as set]
    [clojure.string :as str]
@@ -206,33 +207,34 @@
   ([x y & xs]
    (reduce div (div x y) xs)))
 
-(defn sum
-  ([] 0)
-  ([xs] (reduce + 0 (filter identity xs))))
+(intern 'ys.std 'floor math/floor)
 
 (defn pow
   ([x y]
    (if (and (integer? x) (integer? y) (>= y 0))
-     (let [a (Math/pow x y)]
+     (let [a (math/pow x y)]
        (if (<= a Long/MAX_VALUE)
          (long a)
          a))
-     (Math/pow x y)))
+     (math/pow x y)))
   ([x y & xs]
     (let [[& xs] (clojure.core/reverse (conj xs y x))]
       (reduce #(pow %2 %1) 1 xs))))
 
+(intern 'ys.std 'round math/round)
+
+(defn sum [xs]
+  (reduce + 0 (filter identity xs)))
+
 (defn sqr  [N] (pow N 2))
 (defn cube [N] (pow N 3))
-(defn sqrt [N] (Math/sqrt N))
+(intern 'ys.std 'sqrt math/sqrt)
 
 (defn digits [n]
   (let [n (str n)]
     (when (re-matches #"[0-9]+" n)
       (for [d n]
         (- (byte d) 48)))))
-
-(digits "01234")
 
 (defn- op-error [op x y]
   (die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
@@ -269,6 +271,19 @@
      (die "Cannot add+ multiple types when more than 2 arguments"))
    (reduce add+ (add+ x y) xs)))
 
+(defn div+ [& xs] (apply div xs))
+
+(defn mul+
+  ([x y]
+   (cond
+     (and (string? x) (number? y)) (apply str (repeat y x))
+     (and (number? x) (string? y)) (apply str (repeat x y))
+     (and (sequential? x) (number? y)) (apply concat (repeat y x))
+     (and (number? x) (sequential? y)) (apply concat (repeat x y))
+     :else  (* x y)))
+  ([x y & xs]
+    (reduce mul+ (mul+ x y) xs)))
+
 (defn sub+
   ([x y]
    (cond
@@ -286,19 +301,6 @@
    (when (apply not= (type x) (type y) (map type xs))
      (die "Cannot sub+ multiple types when more than 2 arguments"))
    (reduce sub+ (sub+ x y) xs)))
-
-(defn div+ [& xs] (apply div xs))
-
-(defn mul+
-  ([x y]
-   (cond
-     (and (string? x) (number? y)) (apply str (repeat y x))
-     (and (number? x) (string? y)) (apply str (repeat x y))
-     (and (sequential? x) (number? y)) (apply concat (repeat y x))
-     (and (number? x) (sequential? y)) (apply concat (repeat x y))
-     :else  (* x y)))
-  ([x y & xs]
-    (reduce mul+ (mul+ x y) xs)))
 
 
 ;;------------------------------------------------------------------------------
@@ -381,17 +383,22 @@
 ;;------------------------------------------------------------------------------
 ;; String functions
 ;;------------------------------------------------------------------------------
+(intern 'ys.std 'blank? clojure.string/blank?)
 (intern 'ys.std 'chomp clojure.string/trim-newline)
+(intern 'ys.std 'ends? clojure.string/ends-with?)
+(intern 'ys.std 'escape clojure.string/escape)
 (intern 'ys.std 'index clojure.string/index-of)
 
 (defn join
   ([Ss] (join "" Ss))
   ([S Ss]
-   (if (= (type S) java.lang.String)
+   (if (string? S)
      (str/join S Ss)
      (str/join Ss S)))
   ([S x & xs]
    (str/join S (cons x xs))))
+
+(defn joins [Ss] (join " " Ss))
 
 (intern 'ys.std 'lc clojure.string/lower-case)
 
@@ -402,12 +409,6 @@
               (subs S 0 (dec (count S)))
               S)]
       (str/split S #"\n" -1))))
-
-(defn text [Ss]
-  (if (empty? Ss)
-    ""
-    (str/join "\n"
-      (concat Ss (list "")))))
 
 (defn pretty [x]
   (str/trim-newline
@@ -424,15 +425,25 @@
   ([x y z] (clojure.string/replace x y z)))
 
 (intern 'ys.std 'replace1 clojure.string/replace-first)
+(intern 'ys.std 'rindex clojure.string/last-index-of)
 
 (defn split
-  ([S] (if (empty? S)
-         []
-         (clojure.string/split S #"")))
+  ([S]
+   (if (empty? S)
+     []
+     (clojure.string/split S #"")))
   ([S R]
-    (let [[S R] (if (= java.util.regex.Pattern (type S)) [R S] [S R])
-          R (if (string? R) (re-pattern R) R)]
-      (clojure.string/split S R))))
+   (let [[S R] (if (= java.util.regex.Pattern (type S)) [R S] [S R])
+         R (if (string? R) (re-pattern R) R)]
+     (clojure.string/split S R))))
+
+(intern 'ys.std 'starts? clojure.string/starts-with?)
+
+(defn text [Ss]
+  (if (empty? Ss)
+    ""
+    (str/join "\n"
+      (concat Ss (list "")))))
 
 (intern 'ys.std 'trim clojure.string/trim)
 (intern 'ys.std 'triml clojure.string/triml)
@@ -492,14 +503,10 @@
 (defn has? [C x]
   (boolean
     (if (and (string? C) (string? x))
-      (re-find (re-pattern x) C)
+      (str/includes? C x)
       (some (set C) [x]))))
 
-(defn in? [x C]
-  (boolean
-    (if (and (string? C) (string? x))
-      (re-find (re-pattern x) C)
-      (some (set C) [x]))))
+(defn in? [x C] (has? C x))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
