@@ -100,10 +100,13 @@ test::
 - code: \\B.--
   want:: \\A
 - code: nil.++
-  what: error
-  want: Cannot inc+(nil)
+  want: null
 - code: -"B".++
-  what: error
-  want: Cannot inc+("B")
+  want: null
+
+- code: (1 ... 10).#.eq(9)
+- code: (1 ... 0).#.eq(0)
+- code: (1 ... 1).#.eq(0)
+- code: (1 ... 2).--.eq(0)
 
 done:

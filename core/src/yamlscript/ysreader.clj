@@ -316,22 +316,18 @@
 (declare read-form)
 
 (defn get-special-expansion [token]
-  (condp = token
-    ".--"  ["dec+(" ")"]
-    ".++"  ["inc+(" ")"]
-
-    ".?"   ["truey?(" ")"]
-    ".??"  ["boolean(" ")"]
-    ".!"   ["falsey?(" ")"]
-    ".!!"  ["not(" ")"]
-
-    ".#"   ["count(" ")"]
-    ".#?"  ["count(" ")" "." "truey?(" ")"]
-    ".#!"  ["count(" ")" "." "falsey?(" ")"]
-    ".#--" ["count(" ")" "." "dec(" ")"]
-    ".#++" ["count(" ")" "." "inc(" ")"]
-
-    ".>"   ["DBG(" ")"]))
+  (let [expanded
+        (condp = token
+          ".#"  "clojure::core/count( )"
+          ".?"  "ys::std/truey?( )"
+          ".!"  "ys::std/falsey?( )"
+          ".??" "clojure::core/boolean( )"
+          ".!!" "clojure::core/not( )"
+          ".--" "ys::std/dec+( )"
+          ".++" "ys::std/inc+( )"
+          ".>"  "clojure::core/DBG( )"
+          (die "Unsupported dot special operation: " token))]
+    (str/split expanded #" ")))
 
 (defn read-scalar [[token & tokens]]
   (cond

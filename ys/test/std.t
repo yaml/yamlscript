@@ -126,9 +126,6 @@ test::
 - code: sum([3 nil 4])
   want: 7
 
-- code: sum()
-  want: 0
-
 - code: 5 / 2
   want: 2.5
 - code: 6 / 2

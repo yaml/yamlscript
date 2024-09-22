@@ -1369,18 +1369,12 @@
     (fn [& [_1 _2]] (add+ _2 _1 _1 _1))
 
 
-- name: Support .-- .++ .#-- .#++ operators
+- name: Support .-- .++ operators
   yamlscript: |
     !yamlscript/v0
-    when a.-- > b.++ > c.#-- > d.#++: e
+    when a.-- > b.++: c
   clojure: |
-    (when
-      (>
-       (ys.std/dec+ a)
-       (ys.std/inc+ b)
-       (clojure.core/dec (clojure.core/count c))
-       (clojure.core/inc (clojure.core/count d)))
-      e)
+    (when (> (ys.std/dec+ a) (ys.std/inc+ b)) c)
 
 
 - name: Anonymous function with only a regex
