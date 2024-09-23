@@ -79,12 +79,10 @@
     [[(Lst [b a c]) d] val]
     [key val]))
 
-  #_(YSC "=>: foo.>.bar")
 (defn apply-yes [key val]
   (let [[key val] (apply-yes-lhs key val)]
     (if-lets [_ (vector? key)
               _ (= 2 (count key))
-              _ (map? val)
               [a b] key
               _ (re-matches re/osym (str (:Sym b)))
               b (or (ast/operators b) b)]

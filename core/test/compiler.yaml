@@ -1406,3 +1406,12 @@
     a && b ||: c
   clojure: |
     (or (and a b) c)
+
+
+- name: YeS in LHS or YeS pair w/ map on RHS
+  yamlscript: |
+    !yamlscript/v0
+    a && b ||:
+      c: d
+  clojure: |
+    (or (and a b) (c d))

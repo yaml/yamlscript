@@ -27,7 +27,7 @@ defn sieve(limit):
 
 defn divisors(number):
   rest:
-    sort >:
+    sort gt:
       distinct:
         mapcat _ range(1 sqrt(number)):
           fn(n):
