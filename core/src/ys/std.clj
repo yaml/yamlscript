@@ -177,11 +177,26 @@
 ;;------------------------------------------------------------------------------
 ;; Common type conversion functions
 ;;------------------------------------------------------------------------------
-(defn to-bool [x] (boolean x))
-(defn to-booly [x] (if (truey? x) true false))
-(defn to-float [x] (parse-double x))
-(defn to-int [x] (parse-long x))
-(defn to-list [x] (apply list x))
+(declare digits to-bool to-keyword to-list to-num to-str)
+
+(intern 'ys.std 'to-bool clojure.core/boolean)
+
+(defn to-char [x]
+  (cond
+    (char? x) x
+    (string? x) (if (= 1 (count x))
+                  (first x)
+                  (die "Can't convert string to char"))
+    (number? x) (char x)
+    :else (die "Can't convert " (type x) " to char")))
+
+(defn to-float [x] (double (to-num x)))
+
+(defn to-int [x] (long (to-num x)))
+
+(intern 'ys.std 'to-keyword clojure.core/keyword)
+
+(intern 'ys.std 'to-list clojure.core/list)
 
 (defn to-map
   ([] {})
@@ -208,12 +223,29 @@
          (set x)))
   ([x & xs] (apply set x xs)))
 
+(intern 'ys.std 'to-str clojure.core/str)
+
 (defn to-vec
   ([] [])
-  ([x] (if (map? x)
-         (vec (flatten (seq x)))
-         (vec x)))
-  ([x & xs] (apply vector x xs)))
+  ([x]
+   (cond
+     (map? x) (vec (flatten (seq x)))
+     (number? x) (digits x)
+     :else (vec x)))
+  ([x & xs]
+    (apply vector x xs)))
+
+(intern 'ys.std 'B to-bool)
+(intern 'ys.std 'C to-char)
+(intern 'ys.std 'F to-float)
+(intern 'ys.std 'I to-int)
+(intern 'ys.std 'K to-keyword)
+(intern 'ys.std 'L to-list)
+(intern 'ys.std 'M to-map)
+(intern 'ys.std 'N to-num)
+(intern 'ys.std 'O to-set)
+(intern 'ys.std 'S to-str)
+(intern 'ys.std 'V to-vec)
 
 
 ;;------------------------------------------------------------------------------
