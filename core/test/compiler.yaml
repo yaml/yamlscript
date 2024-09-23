@@ -1415,3 +1415,11 @@
       c: d
   clojure: |
     (or (and a b) (c d))
+
+
+- name: Seq destruct without []
+  yamlscript: |
+    !yamlscript/v0
+    a b c =: -[1 2 3]
+  clojure: |
+    (+def [a b c] [1 2 3])

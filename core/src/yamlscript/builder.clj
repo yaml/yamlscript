@@ -152,7 +152,10 @@
 ;; XXX The destructure vector is just a string here.
 ;; Needs to be parsed into a proper AST node.
 (defn destruct-vec [s]
-  (str/replace s (re/re #"\[(.*)\*($ysym)\s*\]") "[$1 & $2]"))
+  (let [s (if (re-find (re/re #"(?:^$ysym |\] )") s)
+            (str "[" s "]")
+            s)]
+    (str/replace s (re/re #"\[(.*)\*($ysym)\s*\]") "[$1 & $2]")))
 
 (defn build-def [{node :def}]
   (if-lets [m (re-matches re/defk node)
