@@ -49,7 +49,7 @@ test::
   want: two
 
 - code: '-[] |||: 1 && 0'
-  want: 0
+  want:: nil
 
 - code: '-"foo" *: 3'
   want: foofoofoo

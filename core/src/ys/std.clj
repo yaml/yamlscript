@@ -117,21 +117,24 @@
     x false
     :else true))
 
-(defn truey? [x] (not (falsey? x)))
+(defn truey? [x]
+  (if (falsey? x) nil x))
 
 (defmacro or?
   ([] nil)
-  ([x] (if (truey? x) x nil))
+  ([x]
+   `(truey? ~x))
   ([x & xs]
-      `(if (truey? ~x) ~x (or? ~@xs))))
+   `(or (truey? ~x) (or? ~@xs))))
 
 (defmacro ||| [x & xs] `(or? ~x ~@xs))
 
 (defmacro and?
   ([] true)
-  ([x] (if (truey? x) x nil))
+  ([x]
+   `(truey? ~x))
   ([x & xs]
-      `(if (truey? ~x) (and? ~@xs) nil)))
+   `(and (truey? ~x) (and? ~@xs))))
 
 (defmacro &&& [x & xs] `(and? ~x ~@xs))
 
