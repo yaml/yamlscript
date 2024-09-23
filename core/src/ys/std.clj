@@ -518,6 +518,11 @@
                            (if (nil? K) "nil" K) ")"))
     :else nil))
 
+(defn flat [C]
+  (mapcat
+    (fn [x] (if (seqable? x) x [x]))
+    C))
+
 (defn grep [P C]
   (let [[P C] (if (seqable? C) [P C] [C P])
         _ (when-not (seqable? C) (die "No seqable arg passed to grep"))
