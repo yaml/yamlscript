@@ -408,6 +408,7 @@
 ;;------------------------------------------------------------------------------
 (intern 'ys.std 'blank? clojure.string/blank?)
 (intern 'ys.std 'chomp clojure.string/trim-newline)
+(intern 'ys.std 'chop util/chop)
 (intern 'ys.std 'ends? clojure.string/ends-with?)
 (intern 'ys.std 'escape clojure.string/escape)
 (intern 'ys.std 'index clojure.string/index-of)

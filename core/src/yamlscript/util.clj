@@ -20,6 +20,14 @@
      path
      (.getAbsolutePath (io/file (abspath base) path)))))
 
+(defn chop
+  ([S] (chop 1 S))
+  ([N S]
+   (let [lst (drop-last N S)]
+     (if (string? S)
+       (str/join "" lst)
+       lst))))
+
 (defn die
   ([msg] (throw (Exception. (str msg "\n"))))
   ([x & xs] (die (apply str x xs))))

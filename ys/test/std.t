@@ -2,11 +2,7 @@
 
 !yamlscript/v0
 
-ns: mainx
-
 require ys::taptest: :all
-
-say: CWD
 
 NIL =: nil
 
@@ -200,6 +196,13 @@ test::
 
 - code: -"Hello".split().join()
   want: Hello
+
+- code: chop('hello')
+  want: hell
+- code: chop(3 'hello')
+  want: he
+- code: -'howdy'.chop(2)
+  want: how
 
 
 #-------------------------------------------------------------------------------

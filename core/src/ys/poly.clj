@@ -1,7 +1,8 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.poly)
+(ns ys.poly
+  (:require [yamlscript.util :refer [chop]]))
 
 (defn- regex? [x]
   (= (type x) java.util.regex.Pattern))
@@ -37,10 +38,12 @@
 
 (defmacro ^:private -seq-2nd [name]
   (let [dname (symbol (str "+" name))]
-    `(defn ~dname [a# b#]
-       (if (coll? b#)
-         (~name a# b#)
-         (~name b# a#)))))
+    `(defn ~dname
+       ([a#] (~name a#))
+       ([a# b#]
+        (if (coll? b#)
+          (~name a# b#)
+          (~name b# a#))))))
 
 (defmacro ^:private -seq-last [name]
   (let [dname (symbol (str "+" name))]
@@ -91,6 +94,7 @@
 
 ;;------------------------------------------------------------------------------
 (-seq-2nd apply)
+(-seq-2nd chop)
 (-seq-2nd cons)
 (-seq-1st contains?)
 (-seq-2nd drop)
