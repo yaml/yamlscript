@@ -192,11 +192,10 @@
   (cond
     (ratio? x) (double x)
     (number? x) x
-    (string? x) (or
-                  (if (re-find #"\." x)
-                    (parse-double x)
-                    (parse-long x))
-                  0)
+    (string? x) (if (re-find #"\." x)
+                  (parse-double x)
+                  (parse-long x))
+    (nil? x) nil
     (seqable? x) (count x)
     (char? x) (int x)
     (boolean? x) (if x 1 0)
@@ -269,13 +268,21 @@
   (cond
     (number? x) (inc x)
     (char? x) (char (inc (long x)))
-    :else (die "Cannot inc+(" (pr-str x) ")")))
+    :else (let [n (to-num x)]
+             (cond
+               (number? n) (inc n)
+               (nil? n) nil
+               :else (op-error "inc" x nil)))))
 
 (defn dec+ [x]
   (cond
     (number? x) (dec x)
     (char? x) (char (dec (long x)))
-    :else (die "Cannot dec+(" (pr-str x) ")")))
+    :else (let [n (to-num x)]
+             (cond
+               (number? n) (dec n)
+               (nil? n) nil
+               :else (op-error "dec" x nil)))))
 
 (defn add+
   ([x y]

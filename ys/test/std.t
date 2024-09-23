@@ -104,6 +104,15 @@ test::
 #-------------------------------------------------------------------------------
 - note: "Common type conversion functions"
 
+- code: to-num("42") == 42
+- code: to-num(42) == 42
+- code: to-num(1 .. 42) == 42
+- code: to-num(set(1 .. 42)) == 42
+- code: to-num(to-map(1 .. 42)) == 21
+- code: to-num(to-vec(to-map(1 .. 42))) == 42
+- code: to-num("") == nil
+- code: to-num("xyz") == nil
+
 
 #-------------------------------------------------------------------------------
 - note: "Math functions"
