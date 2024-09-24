@@ -5,5 +5,5 @@ defn main(a=42 b=63):
 
 defn gcd(a b):
   if b.?:
-    recur: b (a % b)
+    recur b: a % b
     else: a

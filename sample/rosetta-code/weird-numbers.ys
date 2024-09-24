@@ -3,16 +3,16 @@
 defn main(max=16500):
   weird =: sieve(max)
   numbers =:
-    filter \(weird.nth(_)): range(2 max 2)
+    filter \(nth weird _): range(2 max 2)
   say: |
     The first $(numbers.#) weird numbers:
-    $join(' ' numbers)
+    $(numbers.joins())
 
 defn sieve(limit):
   weirds =: into([] repeat(limit true))
   loop i 2, weirds weirds:
     if i < limit:
-      recur (+ i 2):
+      recur (i + 2):
         or _ weirds:
           when weirds.$i:
             divs =: divisors(i)
@@ -20,26 +20,26 @@ defn sieve(limit):
               when semiperfect(i divs):
                 loop j i, weirds weirds:
                   if j < limit:
-                    recur: (+ j i) weirds.assoc(j false)
+                    recur (j + i):
+                      weirds.assoc(j false)
                     else: weirds
               weirds: .assoc(i false)
       else: weirds
 
 defn divisors(number):
-  rest:
-    sort gt:
-      distinct:
-        mapcat _ range(1 sqrt(number)):
-          fn(n):
-            when 0 == (number % n):
-              -[n (/ number n)]
+  divisors =:
+    mapcat _ range(1 sqrt(number)):
+      fn(n):
+        when 0 == (number % n):
+          V: n (number / n)
+  divisors: .distinct().sort(gt _).rest()
 
 defn abundant(n divs):
   sum(divs) > n
 
 defn semiperfect(n divs):
   when divs.# > 0:
-    -[div & divs] =: divs
+    div *divs =: divs
     if n < div:
       semiperfect: n divs
       or:

@@ -2,4 +2,4 @@
 
 defn main(input):
   s =: set((\\A .. \\Z) + (\\a .. \\z))
-  say: cycle(s).drop(13 * 2).zipmap(s).str/escape(input _)
+  say: cycle(s).drop(13 * 2).zipmap(s).escape(input _)

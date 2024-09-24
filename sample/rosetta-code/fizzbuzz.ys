@@ -36,8 +36,4 @@ defn fizzbuzz-2(n):
 
 defn fizzbuzz-3(n):
   :: Implementation 3 - with 'for'
-  for x (1 .. n):
-    or? _ x:
-      str:
-        when (x % 3) == 0: 'Fizz'
-        when (x % 5) == 0: 'Buzz'
+  for x (1 .. n): str(((x % 3).! &&& 'Fizz') ((x % 5).! &&& 'Buzz')) ||| x

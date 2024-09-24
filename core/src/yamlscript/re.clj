@@ -51,16 +51,12 @@
 (def dotx #"(?x)                           # Dot special operator
             (?:\.
               (?:
-                > |
                 \?{1,2} |
                 \!{1,2} |
                 \+\+ |
                 \-\- |
-                \#(?:
-                  [?!] |
-                  \+\+ |
-                  --
-                )?
+                \# |
+                \>
               )
             )")
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number

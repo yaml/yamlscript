@@ -2,9 +2,9 @@
 
 defn main(n=100):
   primes =: primes-up-to(n)
-  say: |
+  say: |-
     The $(primes.#) prime numbers less than $n are:
-    $join("\n" primes)
+    $(text(primes).chomp())
 
 defn primes-up-to(limit):
   :: Returns a lazy sequence of prime numbers less than limit.

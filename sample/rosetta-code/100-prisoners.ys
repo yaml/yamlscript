@@ -3,16 +3,13 @@
 defn main(n=5000):
   :: https://rosettacode.org/wiki/100_prisoners
 
-  ? +{:keys [random-successes
-             optimal-successes
-             run-count]} =
-  : simulate-n-runs(n)
+  random-successes optimal-successes run-count =:
+    simulate-n-runs(n)
+      .slice(q(random-successes optimal-successes run-count))
 
-  say: +"Probability of survival with random search:\ " +
-       double(random-successes / run-count)
+  say: "Probability of survival with random search: $F(random-successes / run-count)"
 
-  say: +"Probability of survival with ordered search:\ " +
-       double(optimal-successes / run-count)
+  say: "Probability of survival with ordered search: $F(optimal-successes / run-count)"
 
 defn simulate-n-runs(n):
   :: Simulate n runs of the 100 prisoner problem and returns a success count
@@ -23,9 +20,9 @@ defn simulate-n-runs(n):
     if n == run-count:
       # return results
       then::
-        :random-successes  :: random-successes
-        :optimal-successes :: optimal-successes
-        :run-count         :: run-count
+        random-successes  :: random-successes
+        optimal-successes :: optimal-successes
+        run-count         :: run-count
 
       # Otherwise, run for another batch of prisoners
       else:
@@ -50,7 +47,7 @@ defn try-luck(drawers drawer-searching-function):
 
   loop prisoners range(100):
     if prisoners.?:
-      if prisoners.first().drawer-searching-function(drawers):
+      if prisoners.0.drawer-searching-function(drawers):
         recur: rest(prisoners)
         else: 0
       else: 1
@@ -61,8 +58,8 @@ defn search-50-optimal-drawers(prisoner-number drawers):
 
   loop next-drawer prisoner-number, drawers-opened 0:
     when drawers-opened != 50:
-      result =: nth(drawers next-drawer)
-      or (result == prisoner-number):
+      result =: drawers.$next-drawer
+      result == prisoner-number ||:
         recur: result drawers-opened.++
 
 defn search-50-random-drawers(prisoner-number drawers):
@@ -72,7 +69,7 @@ defn search-50-random-drawers(prisoner-number drawers):
   drawers:
     .shuffle()
     .take(50)
-    .filter(\(_ == prisoner-number))
+    .filter(eq(prisoner-number))
     .count()
     .eq(1)
 

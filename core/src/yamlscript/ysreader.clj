@@ -160,15 +160,15 @@
                       form
                       (QSym (:Sym form)))))
     (:Lst form) (update-in form [:Lst]
-                  (fn [lst] (map #(if (= {:Sym '_} %1)
+                  (fn [list] (map #(if (= {:Sym '_} %1)
                                     (Sym '_)
-                                    %1) lst)))
+                                    %1) list)))
     :else form))
 
 (defn fix-dot-chain [expr]
-  (if-lets [lst (or (get-in expr [0 :Lst]) expr)
-            _ (= (first lst) {:Sym '_dot_})]
-    [{:dot (vec (rest lst))}]
+  (if-lets [list (or (get-in expr [0 :Lst]) expr)
+            _ (= (first list) {:Sym '_dot_})]
+    [{:dot (vec (rest list))}]
     expr))
 
 (def sep (Sym '.))

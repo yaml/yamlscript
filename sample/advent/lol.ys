@@ -1,9 +1,8 @@
 !yamlscript/v0
 
-do:
-  count =: atom(0)
-  counter =: \(swap! count inc)
+count =: atom(0)
+counter =: \(swap! count inc)
 
-  say: counter()
-  say: counter()
-  say: counter()
+say: counter()
+say: counter()
+say: counter()
