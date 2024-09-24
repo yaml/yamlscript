@@ -93,22 +93,21 @@
 (def pnum #"(?:\d+)")                      ; Positive integer
 (def alph #"[a-zA-Z]")                     ; Alpha
 (def anum #"[a-zA-Z0-9]")                  ; Alphanumeric
-(def symw (re #"(?:$alph$anum*(?:->?$anum+)*)"))  ; Symbol word
+(def symw (re #"(?:$alph$anum*(?:-$anum+)*)"))  ; Symbol word
 (def vsym (re #"(?:\$$symw|\$(?=\.))"))    ; Variable lookup symbol
 (def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
-(def ysym (re #"(?:$symw[+?!.]?|_)"))      ; YS symbol token
+(def ysym (re #"(?:$symw[+?!]?|_)"))       ; YS symbol token
 (def splt (re #"(?:$ysym\*)"))             ; Splat symbol
 (def asym (re #"(?:\*$symw)"))             ; Alias symbol
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fsym (re #"(?:(?:$nspc|$symw)\/$ysym)"))  ; Fully qualified symbol
-                                           ; Symbol followed by paren
-(def psym (re #"(?:(?:$fsym|$ysym)\()"))
+(def psym (re #"(?:(?:$fsym|$ysym)\()"))   ; Symbol followed by paren
                                            ; Colon calls
-(def ksym (re #"(?:(?:$fsym|$ysym|[\)\]\}]|\.?\d+)(?:$keyw[-+?!]?)+)"))
+(def ksym (re #"(?:(?:$fsym|$ysym|[\)\]\}]|\.\d+)(?:\.?$keyw[+?!]?)+)"))
 
 (def eqop (re #"(?:\|\|\|?|[-+*/.]|\*\*)"))
                                            ; Pair key for def/let call
