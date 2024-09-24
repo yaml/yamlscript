@@ -94,16 +94,19 @@
 ;; Quoting functions
 ;;------------------------------------------------------------------------------
 
-(defmacro q [x] `(quote ~x))
+(defmacro q
+  ([x] `(quote ~x))
+  ([x & xs] `(quote [~x ~@xs])))
+
 (defn qr [S] (re-pattern S))
+
 (defmacro qw [& xs]
-  `(vec (map (fn [word#]
-               (cond
-                 (nil? word#) "nil"
-                 (re-matches #"^[-\w]+$" (str word#)) (str word#)
-                 :else (clojure.core/die
-                         (str "Invalid qw word: '" word# "'"))))
-          '(~@xs))))
+  (let [xs# (map (fn [w]
+                   (condp = (type w)
+                     nil "nil"
+                     (str w)))
+              xs)]
+    `[~@xs#]))
 
 
 ;;------------------------------------------------------------------------------
@@ -544,17 +547,15 @@
                String (get C K)
                clojure.lang.Keyword (get C K)
                clojure.lang.Symbol (or
+                                     (get C K)
                                      (get C (str K))
-                                     (get C (keyword K))
-                                     (get C K))
+                                     (get C (keyword K)))
                (get C K))
     (nil? C) nil
-    (string? C) nil
     (seqable? C) (cond
-                   (number? K) (nth C K)
+                   (number? K) (nth C K nil)
                    (nil? K) nil
-                   :else (die "Can't (get+ " C " "
-                           (if (nil? K) "nil" K) ")"))
+                   :else nil)
     :else nil))
 
 (defn flat [C]
@@ -602,6 +603,10 @@
         (map char (range a (dec b) -1)))
       :else
       (die "Can't rng(" (pr-str x) ", " (pr-str y) ")"))))
+
+(defn slice [C & ks]
+  (let [ks (flatten ks)]
+    (vec (map (fn [k] (get+ C k)) ks))))
 
 
 ;;------------------------------------------------------------------------------

@@ -53,8 +53,9 @@ test::
 - code: value(q(inc))
   want:: inc
 
-- code: qw(one two three)
-  want: [one, two, three]
+- code: qw(one :two "three" 4 true false nil {} [])
+  want:: -['one' ':two' "three" '4' 'true' 'false' 'nil' '{}' '[]']
+
 
 
 #-------------------------------------------------------------------------------

@@ -61,7 +61,7 @@
                ctx
                (if ctx
                  (cond
-                   (:Int node) (Lst [(Sym 'nth) ctx node])
+                   (:Int node) (Lst [(Sym 'get+) ctx node])
                    (:Str node) (Lst [(Sym 'get) ctx node])
                    (:QSym node) (Lst [(Sym 'get+) ctx node])
                    (:Sym node) (Lst [(Sym 'get+) ctx node])
