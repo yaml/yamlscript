@@ -6,6 +6,6 @@
   fruit =: data.food.fruit
 
 num:    123
-greet:: "$(data.hello.rand-nth()), $name!"
-eat::   fruit.shuffle().first()
+greet:: "$(data.hello:rand-nth), $name!"
+eat::   fruit:shuffle:first
 drink:: (['Bar'] * 3).join(', ').str('!!!')

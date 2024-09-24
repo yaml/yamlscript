@@ -1422,3 +1422,29 @@
     a b c =: -[1 2 3]
   clojure: |
     (+def [a b c] [1 2 3])
+
+
+- name: Colon chain calls
+  yamlscript: |
+    !yamlscript/v0
+    =>: a:b
+    =>: a.b:c
+    =>: a.b.:c:d
+    =>: a.5:b
+    =>: a(5):b
+    =>: -{}:a
+    =>: -[]:a
+    =>: a:b?
+    =>: a:b!
+    =>: a:b+
+  clojure: |
+    (b a)
+    (c (get+ a 'b))
+    (d (:c (get+ a 'b)))
+    (b (get+ a 5))
+    (b (a 5))
+    (a {})
+    (a [])
+    (b? a)
+    (b! a)
+    (b+ a)

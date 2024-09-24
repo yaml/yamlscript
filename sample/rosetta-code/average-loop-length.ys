@@ -10,8 +10,8 @@ defn main(max=20):
   say: "\tAvg\tExp\tDiff"
 
   doseq n (1 .. max):
-    anal =: analytical(n).F()
-    avg  =: avg-cycle-length(n TIMES).F()
+    anal =: analytical(n):F
+    avg  =: avg-cycle-length(n TIMES):F
     diff =: abs(100 * (1 - (avg / anal)))
     say:
       format "%3d\t%.4f\t%.4f\t%.2f%%": n avg anal diff

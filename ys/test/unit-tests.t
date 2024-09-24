@@ -59,4 +59,10 @@ test::
 - code: -{}.#.!
 - code: a(0).??
 
+- code: (1 .. 10):len.--
+  want: 9
+
+- code: a('world'):uc1
+  want: World
+
 done:

@@ -6,7 +6,7 @@ defn main(max=16500):
     filter \(nth weird _): range(2 max 2)
   say: |
     The first $(numbers.#) weird numbers:
-    $(numbers.joins())
+    $(numbers:joins)
 
 defn sieve(limit):
   weirds =: into([] repeat(limit true))
@@ -32,7 +32,7 @@ defn divisors(number):
       fn(n):
         when 0 == (number % n):
           V: n (number / n)
-  divisors: .distinct().sort(gt _).rest()
+  divisors: .distinct().sort(gt _):rest
 
 defn abundant(n divs):
   sum(divs) > n

@@ -4,14 +4,14 @@ defn main(n=100):
   primes =: primes-up-to(n)
   say: |-
     The $(primes.#) prime numbers less than $n are:
-    $(text(primes).chomp())
+    $(text(primes):chomp)
 
 defn primes-up-to(limit):
   :: Returns a lazy sequence of prime numbers less than limit.
 
   max-i =: int(limit.-- / 2)
   refs =: boolean-array(max-i true)
-  root =: sqrt(limit).int().-- / 2
+  root =: sqrt(limit):int.-- / 2
   ? doseq i (1 .. root)
       :when aget(refs i)
   : ? doseq

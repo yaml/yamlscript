@@ -107,6 +107,8 @@
 (def fsym (re #"(?:(?:$nspc|$symw)\/$ysym)"))  ; Fully qualified symbol
                                            ; Symbol followed by paren
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))
+                                           ; Colon calls
+(def ksym (re #"(?:(?:$fsym|$ysym|[\)\]\}]|\.?\d+)(?:$keyw[-+?!]?)+)"))
 
 (def eqop (re #"(?:\|\|\|?|[-+*/.]|\*\*)"))
                                            ; Pair key for def/let call

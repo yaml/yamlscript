@@ -59,6 +59,9 @@
     (and (re-matches re/osym t)
       (not= t "&"))))
 
+(defn is-colon-calls [token]
+  (re-matches re/ksym (str token)))
+
 (defn is-quote? [token]
   (re-matches re/quot (str token)))
 
@@ -120,6 +123,7 @@
       $ssym |                   # Special symbols
       $asym |                   # Alias symbol
       $splt |                   # Splat symbol
+      $ksym |                   # Colon chain calls
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
@@ -329,6 +333,23 @@
           (die "Unsupported dot special operation: " token))]
     (str/split expanded #" ")))
 
+(defn split-colon-calls [token]
+  (let [tokens (str/split token #":")
+        [token1 token2 & xtokens] tokens
+        [start tokens] (cond
+                         (re-find #"\.$" token1)
+                         [[(-> token1 butlast str/join)
+                           "."
+                           (str ":" token2)]
+                          xtokens]
+                         :else
+                         [[token1]
+                          (vec (rest tokens))])]
+    (reduce
+      #(conj %1 "." (str %2 "(") ")")
+      start
+      tokens)))
+
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
@@ -349,6 +370,7 @@
     (is-float? token) [(Flt token) tokens]
     (is-dot-special? token) [(Sym ".")
                              (concat (get-special-expansion token) tokens)]
+    (is-colon-calls token) [nil (concat (split-colon-calls token) tokens)]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
