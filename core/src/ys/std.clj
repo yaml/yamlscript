@@ -199,11 +199,16 @@
 
 (intern 'ys.std 'to-keyword clojure.core/keyword)
 
-(intern 'ys.std 'to-list clojure.core/list)
+(defn to-list
+  ([] [])
+  ([x] (if (map? x) (flatten (seq x)) (list x)))
+  ([x & xs] (apply list x xs)))
 
 (defn to-map
   ([] {})
-  ([x] (apply hash-map x))
+  ([x] (if (set? x)
+         (zipmap (seq x) (repeat nil))
+         (apply hash-map (flatten (seq x)))))
   ([x y & xs] (apply hash-map x y xs)))
 
 (defn to-num [x]
@@ -221,22 +226,18 @@
 
 (defn to-set
   ([] (set []))
-  ([x] (if (map? x)
-         (set (keys x))
-         (set x)))
+  ([x] (if (map? x) (set (keys x)) (set x)))
   ([x & xs] (apply set x xs)))
 
 (intern 'ys.std 'to-str clojure.core/str)
 
 (defn to-vec
   ([] [])
-  ([x]
-   (cond
-     (map? x) (vec (flatten (seq x)))
-     (number? x) (digits x)
-     :else (vec x)))
-  ([x & xs]
-    (apply vector x xs)))
+  ([x] (cond
+         (map? x) (vec (flatten (seq x)))
+         (seqable? x) (vec x)
+         :else (vector x)))
+  ([x & xs] (apply vector x xs)))
 
 (intern 'ys.std 'B to-bool)
 (intern 'ys.std 'C to-char)
@@ -246,7 +247,8 @@
 (intern 'ys.std 'L to-list)
 (intern 'ys.std 'M to-map)
 (intern 'ys.std 'N to-num)
-(intern 'ys.std 'O to-set)
+; XXX holding off on this one for now:
+; (intern 'ys.std 'O to-set)
 (intern 'ys.std 'S to-str)
 (intern 'ys.std 'V to-vec)
 
