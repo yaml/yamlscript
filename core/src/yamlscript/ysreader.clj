@@ -108,6 +108,7 @@
       $ccom |                 # Clojure comment
       $icom |                 # Inline comment
                               # Symbols and operators
+      $ksym |                   # Colon chain calls
       $quot |                   # Quote token
       $spec |                   # Special token
       $char |                   # Character token
@@ -123,7 +124,6 @@
       $ssym |                   # Special symbols
       $asym |                   # Alias symbol
       $splt |                   # Splat symbol
-      $ksym |                   # Colon chain calls
       $csym |                   # Clojure symbol
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number

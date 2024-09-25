@@ -1435,6 +1435,9 @@
     =>: a:b+
     =>: a:b/c
     =>: a:b/c:d
+    =>: a.++:b
+    =>: a.--:b
+    =>: a.#:b
   clojure: |
     (b a)
     (c (get+ a 'b))
@@ -1448,3 +1451,6 @@
     (b+ a)
     (b/c a)
     (d (b/c a))
+    (b (ys.std/inc+ a))
+    (b (ys.std/dec+ a))
+    (b (clojure.core/count a))
