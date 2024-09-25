@@ -1433,6 +1433,8 @@
     =>: a:b?
     =>: a:b!
     =>: a:b+
+    =>: a:b/c
+    =>: a:b/c:d
   clojure: |
     (b a)
     (c (get+ a 'b))
@@ -1444,3 +1446,5 @@
     (b? a)
     (b! a)
     (b+ a)
+    (b/c a)
+    (d (b/c a))
