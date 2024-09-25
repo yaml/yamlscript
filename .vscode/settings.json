@@ -15,6 +15,7 @@
     "distclean",
     "doall",
     "doseq",
+    "dwim",
     "falsey",
     "fizzbuzz",
     "heredocs",

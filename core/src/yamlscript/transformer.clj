@@ -6,7 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
-   [ys.poly]
+   [ys.dwim]
    [yamlscript.ast :refer [Lst Sym QSym]]
    [yamlscript.util :refer [die if-lets]]
    [yamlscript.transformers]))
@@ -22,7 +22,7 @@
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
 (def plus-fn?
-  (-> 'ys.poly
+  (-> 'ys.dwim
     ns-publics
     keys
     (->> (map str)
@@ -39,6 +39,7 @@
         (case (count topics)
           0 (let [+func (if-lets
                           [sym (get-in func [:Sym])
+                           _ (> (count args) 0)
                            _ (plus-fn? sym)
                            sym (symbol (str "+" sym))]
                           (update-in func [:Sym] (constantly sym))

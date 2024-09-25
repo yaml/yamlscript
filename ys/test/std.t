@@ -213,6 +213,9 @@ test::
 - code: -'howdy'.chop(2)
   want: how
 
+- code: -{\\o "xyz"}.escape("foo")
+  want: fxyzxyz
+
 
 #-------------------------------------------------------------------------------
 - note: "Collection functions"

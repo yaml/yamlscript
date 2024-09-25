@@ -144,7 +144,6 @@
 
 ;;------------------------------------------------------------------------------
 ;; Named function aliases for infix operators
-;; TODO make these be polymorphic
 ;;------------------------------------------------------------------------------
 (defn eq
   ([x] #(= %1 x))
@@ -256,11 +255,26 @@
 ;;------------------------------------------------------------------------------
 ;; Math functions
 ;;------------------------------------------------------------------------------
-(intern 'ys.std 'add clojure.core/+)
-(intern 'ys.std 'sub clojure.core/-)
-(intern 'ys.std 'mul clojure.core/*)
+
+(defn add
+  ([] 0)
+  ([x] #(+ %1 x))
+  ([x y] (+ x y))
+  ([x y & xs] (apply + x y xs)))
+
+(defn sub
+  ([x] #(- %1 x))
+  ([x y] (- x y))
+  ([x y & xs] (apply - x y xs)))
+
+(defn mul
+  ([] 1)
+  ([x] #(* %1 x))
+  ([x y] (* x y))
+  ([x y & xs] (apply * x y xs)))
 
 (defn div
+  ([x] #(div %1 x))
   ([x y]
    (let [a (/ x y)]
      (if (ratio? a)
@@ -272,6 +286,7 @@
 (intern 'ys.std 'floor math/floor)
 
 (defn pow
+  ([x] #(pow %1 x))
   ([x y]
    (if (and (integer? x) (integer? y) (>= y 0))
      (let [a (math/pow x y)]

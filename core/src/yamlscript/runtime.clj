@@ -21,7 +21,7 @@
    [sci.core :as sci]
    [ys.clj]
    [ys.std]
-   [ys.poly]
+   [ys.dwim]
    [ys.json]
    [ys.yaml]
    [ys.ys :as ys]
@@ -79,9 +79,9 @@
               'ZZZ (sci/copy-var yamlscript.debug/ZZZ nil)}
         std (ns-publics 'ys.std)
         std (update-vals std #(sci/copy-var* %1 nil))
-        poly (ns-publics 'ys.poly)
-        poly (update-vals poly #(sci/copy-var* %1 nil))]
-    (merge core std poly)))
+        dwim (ns-publics 'ys.dwim)
+        dwim (update-vals dwim #(sci/copy-var* %1 nil))]
+    (merge core std dwim)))
 
 (def babashka-pods-ns
   {'load-pod (sci/copy-var ys/load-pod nil)

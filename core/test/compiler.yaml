@@ -1014,7 +1014,7 @@
     {"rgx" "^v([0-9]+\\.[0-9]+\\.[0-9]+)$\n"}
 
 
-- name: Dot polymorphic functions
+- name: Dot dwim args functions
   yamlscript: |
     !yamlscript/v0
     =>: x.drop(3 _).take(5).nth(3)
