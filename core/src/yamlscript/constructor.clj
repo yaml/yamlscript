@@ -9,6 +9,8 @@
    [clojure.walk :as walk]
    [yamlscript.ast :as ast :refer [Lst Qts Str Sym Vec]]
    [yamlscript.common :as common]
+   [yamlscript.debug :as debug]
+   [yamlscript.util :refer [macro?]]
    [yamlscript.re :as re]
    [yamlscript.util :refer [die if-lets]]))
 
@@ -177,14 +179,22 @@
         nodes (map #(construct-node %1 ctx) nodes)]
     {key (-> nodes flatten vec)}))
 
+(defn construct-trace [node]
+  (Lst [(Sym 'TTT) node]))
+
+(def do-not-trace '[+++ TTT defn defn-])
+(def cannot-trace '[-> ->>])
+
 (defn maybe-trace [node]
-  (if-lets [_ (:xtrace @common/opts)
-            sym (get-in node [:Lst 0 :Sym])
-            _ (type sym)
-            _ (not= '_X sym)]
-    (Lst [(Sym '_X) node])
-    node)
-  )
+  (if (vector? node)
+    (vec (map maybe-trace node))
+    (if-lets [_ (:xtrace @common/opts)
+              sym (get-in node [:Lst 0 :Sym])
+              _ (not (some #{sym} do-not-trace))]
+      (if (some #{sym} cannot-trace)
+        (die "Cannot yet trace YAMLScript code containing: '" sym "'")
+        (construct-trace node))
+      node)))
 
 (defn construct-alias [node]
   (Lst [(Sym '_*) (Qts (:ali node))]))
@@ -234,7 +244,7 @@
                 node)]
      (maybe-trace node)))
   ([node]
-   (construct-node node {:lvl 0 :defn false})))
+   (maybe-trace (construct-node node {:lvl 0 :defn false}))))
 
 ;;------------------------------------------------------------------------------
 ;; Fix-up functions
@@ -274,10 +284,9 @@
       node)))
 
 (defn call-main []
-  (maybe-trace
-    (Lst [(Sym 'apply)
-          (Sym 'main)
-          (Sym 'ARGS)])))
+  (Lst [(Sym 'apply)
+        (Sym 'main)
+        (Sym 'ARGS)]))
 
 (defn maybe-call-main [node]
   (let [need-call-main (atom false)]

@@ -322,14 +322,15 @@
 (defn get-special-expansion [token]
   (let [expanded
         (condp = token
-          ".#"  "clojure::core/count( )"
-          ".?"  "ys::std/truey?( )"
-          ".!"  "ys::std/falsey?( )"
-          ".??" "clojure::core/boolean( )"
-          ".!!" "clojure::core/not( )"
-          ".--" "ys::std/dec+( )"
-          ".++" "ys::std/inc+( )"
-          ".>"  "clojure::core/DBG( )"
+          ".#"   "clojure::core/count( )"
+          ".?"   "ys::std/truey?( )"
+          ".!"   "ys::std/falsey?( )"
+          ".??"  "clojure::core/boolean( )"
+          ".!!"  "clojure::core/not( )"
+          ".--"  "ys::std/dec+( )"
+          ".++"  "ys::std/inc+( )"
+          ".>"   "clojure::core/DBG( )"
+          ".>>>" "clojure::core/DBG( )"
           (die "Unsupported dot special operation: " token))]
     (str/split expanded #" ")))
 

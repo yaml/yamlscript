@@ -56,7 +56,7 @@
                 \+\+ |
                 \-\- |
                 \# |
-                \>
+                \> | \>\>\>
               )
             )")
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number

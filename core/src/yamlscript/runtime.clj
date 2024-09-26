@@ -73,6 +73,7 @@
               'YSC (sci/copy-var yamlscript.debug/YSC nil)
               'DBG (sci/copy-var yamlscript.debug/DBG nil)
               'PPP (sci/copy-var yamlscript.debug/PPP nil)
+              'TTT (sci/copy-var yamlscript.debug/TTT nil)
               'WWW (sci/copy-var yamlscript.debug/WWW nil)
               'XXX (sci/copy-var yamlscript.debug/XXX nil)
               'YYY (sci/copy-var yamlscript.debug/YYY nil)
@@ -92,43 +93,45 @@
 
 (def cli-namespace (use-ns 'cli clojure.tools.cli))
 (def clj-namespace (use-ns 'clj ys.clj))
-(def std-namespace (use-ns 'std ys.std))
-(def ys-namespace (use-ns 'ys ys.ys))
+(def debug-namespace (use-ns 'yamlscript.debug yamlscript.debug))
 (def fs-namespace (use-ns 'fs babashka.fs))
 (def http-namespace (use-ns 'http babashka.http-client))
 (def io-namespace (use-ns 'io clojure.java.io))
+(def json-namespace (use-ns 'json ys.json))
 (def math-namespace (use-ns 'math clojure.math))
 (def process-namespace (use-ns 'process babashka.process))
 (def set-namespace (use-ns 'set clojure.set))
+(def std-namespace (use-ns 'std ys.std))
 (def str-namespace (use-ns 'str clojure.string))
-(def walk-namespace (use-ns 'walk clojure.walk))
-(def json-namespace (use-ns 'json ys.json))
-(def yaml-namespace (use-ns 'yaml ys.yaml))
 (def taptest-namespace (use-ns 'ys.taptest ys.taptest))
+(def walk-namespace (use-ns 'walk clojure.walk))
+(def yaml-namespace (use-ns 'yaml ys.yaml))
+(def ys-namespace (use-ns 'ys ys.ys))
 
 (def namespaces
   {'main {}
 
    ;; These need to be first:
    'clojure.core clojure-core-ns 'core clojure-core-ns
-   'ys      ys-namespace    'ys.ys   ys-namespace
-   'std     std-namespace   'ys.std  std-namespace
-   'clj     clj-namespace   'ys.clj  clj-namespace
+   'ys      ys-namespace      'ys.ys      ys-namespace
+   'std     std-namespace     'ys.std     std-namespace
+   'clj     clj-namespace     'ys.clj     clj-namespace
 
-   'cli     cli-namespace
-   'fs      fs-namespace
-   'http    http-namespace
-   'io      io-namespace
-   'json    json-namespace
-   'math    math-namespace
-   'pods    babashka-pods-ns
-   'process process-namespace
-   'set     set-namespace
-   'str     str-namespace
-   'walk    walk-namespace
-   'yaml    yaml-namespace
+   'cli     cli-namespace     'ys.cli     cli-namespace
+   'fs      fs-namespace      'ys.fs      fs-namespace
+   'http    http-namespace    'ys.http    http-namespace
+   'io      io-namespace      'ys.io      io-namespace
+   'json    json-namespace    'ys.json    json-namespace
+   'math    math-namespace    'ys.math    math-namespace
+   'pods    babashka-pods-ns  'ys.pods    babashka-pods-ns
+   'process process-namespace 'ys.process process-namespace
+   'set     set-namespace     'ys.set     set-namespace
+   'str     str-namespace     'ys.str     str-namespace
+   'walk    walk-namespace    'ys.walk    walk-namespace
+   'yaml    yaml-namespace    'ys.yaml    yaml-namespace
 
-   'ys.taptest taptest-namespace})
+   'ys.taptest taptest-namespace
+   'yamlscript.debug debug-namespace})
 
 (defn classes-map [class-symbols]
   (loop [[class-symbol & class-symbols] class-symbols

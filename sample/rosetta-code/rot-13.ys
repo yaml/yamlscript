@@ -1,5 +1,5 @@
 !yamlscript/v0
 
-defn main(input):
+defn main(input='Hello, World!'):
   s =: set((\\A .. \\Z) + (\\a .. \\z))
   say: cycle(s).drop(13 * 2).zipmap(s).escape(input _)

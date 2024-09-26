@@ -13,6 +13,12 @@
 
 (defonce build-vstr (atom nil))
 
+(defn macro? [x]
+  (and
+    (symbol? x)
+    (when-let [x (resolve x)]
+      (:macro (meta x)))))
+
 (defn abspath
   ([path] (abspath path (str (cwd))))
   ([path base]
