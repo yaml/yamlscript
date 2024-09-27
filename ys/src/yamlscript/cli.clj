@@ -7,18 +7,19 @@
 (ns yamlscript.cli
   (:gen-class)
   (:require
-   [yamlscript.debug]
-   [yamlscript.runtime :as runtime]
-   [yamlscript.common :as common]
-   [yamlscript.compiler :as compiler]
-   [babashka.process :refer [check exec process sh shell]]
+   [babashka.process :refer [check exec process]]
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
    [clojure.pprint :as pp]
    [clojure.set :as set]
    [clojure.string :as str]
    [clojure.stacktrace]
-   [clojure.tools.cli :as cli]))
+   [clojure.tools.cli :as cli]
+   [yamlscript.common]
+   [yamlscript.compiler :as compiler]
+   [yamlscript.global :as global]
+   [yamlscript.runtime :as runtime])
+  (:refer-clojure))
 
 (def yamlscript-version "0.1.76")
 
@@ -37,14 +38,14 @@
     (System/exit n)))
 
 (defn err [e]
-  (let [prefix @common/error-msg-prefix
+  (let [prefix @global/error-msg-prefix
         msg (if (instance? Throwable e)
               (:cause (Throwable->map e))
               e)]
-    (common/reset-error-msg-prefix!)
+    (global/reset-error-msg-prefix!)
     (binding [*out* *err*]
       (print prefix)
-      (if (and (:stack-trace @common/opts) (instance? Throwable e))
+      (if (and (:stack-trace @global/opts) (instance? Throwable e))
         (do
           (clojure.stacktrace/print-stack-trace e)
           (flush))
@@ -312,7 +313,7 @@ Options:
         (compiler/compile-with-options code)
         (compiler/compile code))
       (catch Exception e
-        (common/reset-error-msg-prefix! "Compile error: ")
+        (global/reset-error-msg-prefix! "Compile error: ")
         (err e)))))
 
 (defn get-compiled-code [opts args argv]
@@ -356,7 +357,7 @@ Options:
             "edn"  (pp/pprint result)
             ,      (println (json/write-str result json-options))))))
     (catch Exception e
-      (common/reset-error-msg-prefix! "Runtime error:\n")
+      (global/reset-error-msg-prefix! "Runtime error:\n")
       (err e))))
 
 (defn clojure-format [clojure formatter]
@@ -368,7 +369,7 @@ Options:
                            :err *err*}
                    formatter)))
               (catch Exception e
-                (common/reset-error-msg-prefix!
+                (global/reset-error-msg-prefix!
                   (str "Compiler formatter error in '" formatter "':\n"))
                 (err e)))]
     out))
@@ -518,7 +519,7 @@ Options:
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
                (assoc opts :mode "code") opts)]
 
-    (reset! common/opts opts)
+    (reset! global/opts opts)
 
     (do-main opts args argv help error errs)))
 

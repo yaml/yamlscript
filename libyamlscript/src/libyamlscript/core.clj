@@ -5,11 +5,11 @@
 
 (ns libyamlscript.core
   (:require
-   [yamlscript.debug]
-   [yamlscript.runtime :as runtime]
-   [yamlscript.compiler :as compiler]
    [clojure.data.json :as json]
-   [sci.core :as sci])
+   [sci.core :as sci]
+   [yamlscript.common]
+   [yamlscript.compiler :as compiler]
+   [yamlscript.runtime :as runtime])
   (:gen-class
    :methods [^:static [loadYsToJson [String] String]]))
 

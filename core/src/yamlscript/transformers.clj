@@ -3,10 +3,10 @@
 
 (ns yamlscript.transformers
   (:require
-   [yamlscript.debug]
    [yamlscript.ast :refer [Sym Lst Vec Key]]
-   [yamlscript.util :refer [die if-lets when-lets]]
-   [yamlscript.ysreader]))
+   [yamlscript.common]
+   [yamlscript.ysreader])
+  (:refer-clojure))
 
 (def Q {:Sym 'quote})
 

@@ -7,12 +7,11 @@
 (ns yamlscript.constructor
   (:require
    [clojure.walk :as walk]
-   [yamlscript.ast :as ast :refer [Lst Qts Str Sym Vec]]
-   [yamlscript.common :as common]
-   [yamlscript.debug :as debug]
-   [yamlscript.util :refer [macro?]]
-   [yamlscript.re :as re]
-   [yamlscript.util :refer [die if-lets]]))
+   [yamlscript.ast :as ast :refer [Lst Qts Sym Vec]]
+   [yamlscript.common]
+   [yamlscript.global :as global]
+   [yamlscript.re :as re])
+  (:refer-clojure))
 
 (declare
   construct-node
@@ -41,7 +40,7 @@
     ((fn [m]
        (update-in m [:Top (dec (count (:Top m)))]
          (fn [n]
-           (let [compile (:compile @common/opts)
+           (let [compile (:compile @global/opts)
                  node (if (and last compile)
                         n
                         (Lst [(Sym '+++) n]))]
@@ -188,7 +187,7 @@
 (defn maybe-trace [node]
   (if (vector? node)
     (vec (map maybe-trace node))
-    (if-lets [_ (:xtrace @common/opts)
+    (if-lets [_ (:xtrace @global/opts)
               sym (get-in node [:Lst 0 :Sym])
               _ (not (some #{sym} do-not-trace))]
       (if (some #{sym} cannot-trace)

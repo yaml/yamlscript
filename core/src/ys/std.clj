@@ -5,7 +5,6 @@
 
 (ns ys.std
   (:require
-   [yamlscript.debug]
    [babashka.fs :as fs]
    [babashka.http-client :as http]
    [babashka.process :as process]
@@ -14,15 +13,16 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [ys.ys :as ys]
    [yamlscript.common :as common]
-   [yamlscript.util :as util])
-  (:refer-clojure :exclude [print
+   [yamlscript.global :as global]
+   [yamlscript.util :as util]
+   [ys.ys :as ys])
+  (:refer-clojure :exclude [die
+                            print
                             reverse
                             replace]))
 
 
-(declare die)
 ;; Guard against billion laughs style attacks
 (def _max-alias-size (* 1024 1024))
 
@@ -174,9 +174,9 @@
     (char? x) x
     (string? x) (if (= 1 (count x))
                   (first x)
-                  (die "Can't convert string to char"))
+                  (util/die "Can't convert string to char"))
     (number? x) (char x)
-    :else (die "Can't convert " (type x) " to char")))
+    :else (util/die "Can't convert " (type x) " to char")))
 
 (defn to-float [x] (double (to-num x)))
 
@@ -207,7 +207,7 @@
     (seqable? x) (count x)
     (char? x) (int x)
     (boolean? x) (if x 1 0)
-    :else (die (str "Can't convert " (type x) " to number"))))
+    :else (util/die (str "Can't convert " (type x) " to number"))))
 
 (defn to-set
   ([] (set []))
@@ -300,7 +300,7 @@
         (- (byte d) 48)))))
 
 (defn- op-error [op x y]
-  (die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
+  (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
 
 (defn inc+ [x]
   (cond
@@ -325,7 +325,7 @@
 (defn add+
   ([x y]
    (cond
-     (some nil? [x y]) (die "Cannot add with a nil value")
+     (some nil? [x y]) (util/die "Cannot add with a nil value")
      (number? x) (+ x (to-num y))
      (string? x) (str x y)
      (map? x) (merge x y)      ;; error if y is not a map
@@ -339,7 +339,7 @@
    (when (not (or
                 (apply = (type x) (type y) (map type xs))
                 (every? map? (conj xs x y))))
-     (die "Cannot add+ multiple types when more than 2 arguments"))
+     (util/die "Cannot add+ multiple types when more than 2 arguments"))
    (reduce add+ (add+ x y) xs)))
 
 (defn div+ [& xs] (apply div xs))
@@ -358,7 +358,7 @@
 (defn sub+
   ([x y]
    (cond
-     (some nil? [x y]) (die "Cannot subtract with a nil value")
+     (some nil? [x y]) (util/die "Cannot subtract with a nil value")
      (string? x) (str/replace x (str y) "")
      (map? x) (dissoc x y)
      (set? x) (disj x y)
@@ -370,7 +370,7 @@
      :else (+ (to-num x) (to-num y))))
   ([x y & xs]
    (when (apply not= (type x) (type y) (map type xs))
-     (die "Cannot sub+ multiple types when more than 2 arguments"))
+     (util/die "Cannot sub+ multiple types when more than 2 arguments"))
    (reduce sub+ (sub+ x y) xs)))
 
 
@@ -379,35 +379,35 @@
 ;;------------------------------------------------------------------------------
 (defn _& [sym val]
   (when (> (count (str val)) _max-alias-size)
-    (die "Anchored node &" sym " exceeds max size of " _max-alias-size))
-  (swap! common/stream-anchors_ assoc sym val)
-  (swap! common/doc-anchors_ assoc sym val)
+    (util/die "Anchored node &" sym " exceeds max size of " _max-alias-size))
+  (swap! global/stream-anchors_ assoc sym val)
+  (swap! global/doc-anchors_ assoc sym val)
   val)
 
 (defn _* [sym]
   (or
-    (get @common/doc-anchors_ sym)
-    (die "Anchor not found: &" sym)))
+    (get @global/doc-anchors_ sym)
+    (util/die "Anchor not found: &" sym)))
 
 (defn _** [sym]
   (or
-    (get @common/stream-anchors_ sym)
-    (die "Anchor not found: &" sym)))
+    (get @global/stream-anchors_ sym)
+    (util/die "Anchor not found: &" sym)))
 
 
 ;;------------------------------------------------------------------------------
 ;; YAMLScript document result stashing functions
 ;;------------------------------------------------------------------------------
 (defn +++* [val]
-  (let [idx (keyword (str (swap! common/$# inc)))]
-    (reset! common/doc-anchors_ {})
-    (swap! common/$ assoc idx val)
+  (let [idx (keyword (str (swap! global/$# inc)))]
+    (reset! global/doc-anchors_ {})
+    (swap! global/$ assoc idx val)
     val))
 
 (defmacro +++ [& xs]
   `(~'+++* (do ~@xs)))
 
-(defn $$ [] (->> @common/$# str keyword (get @common/$)))
+(defn $$ [] (->> @global/$# str keyword (get @global/$)))
 
 
 ;;------------------------------------------------------------------------------
@@ -424,10 +424,10 @@
 
 (defmacro call [x & xs]
   `(let [f# (or (value ~x) ~x)]
-     (when-not (fn? f#) (die "Can't call(" (pr-str f#) ")"))
+     (when-not (fn? f#) (util/die "Can't call(" (pr-str f#) ")"))
      (f# ~@xs)))
 
-(intern 'ys.std 'die util/die)
+(intern 'ys.std 'die yamlscript.util/die)
 
 (defmacro each [bindings & body]
   `(doall (for ~bindings (do ~@body))))
@@ -456,7 +456,7 @@
 ;;------------------------------------------------------------------------------
 (intern 'ys.std 'blank? clojure.string/blank?)
 (intern 'ys.std 'chomp clojure.string/trim-newline)
-(intern 'ys.std 'chop util/chop)
+(intern 'ys.std 'chop common/chop)
 (intern 'ys.std 'ends? clojure.string/ends-with?)
 (intern 'ys.std 'escape clojure.string/escape)
 (intern 'ys.std 'index clojure.string/index-of)
@@ -568,7 +568,7 @@
 
 (defn grep [P C]
   (let [[P C] (if (seqable? C) [P C] [C P])
-        _ (when-not (seqable? C) (die "No seqable arg passed to grep"))
+        _ (when-not (seqable? C) (util/die "No seqable arg passed to grep"))
         t (type P)]
     (cond
       (= t java.util.regex.Pattern) (filter #(re-find P %1) C)
@@ -591,7 +591,7 @@
     (string? x) (clojure.string/reverse x)
     (vector? x) (vec (clojure.core/reverse x))
     (seqable? x) (clojure.core/reverse x)
-    :else (die "Can't reverse " x)))
+    :else (util/die "Can't reverse " x)))
 
 (defn rng [x y]
   (let [[a b] (for [n [x y]] (if (char? n) (long n) n))]
@@ -605,7 +605,7 @@
         (map char (range a (inc b)))
         (map char (range a (dec b) -1)))
       :else
-      (die "Can't rng(" (pr-str x) ", " (pr-str y) ")"))))
+      (util/die "Can't rng(" (pr-str x) ", " (pr-str y) ")"))))
 
 (defn slice [C & ks]
   (let [ks (flatten ks)]
@@ -732,7 +732,7 @@
         resp (http/get url)]
     (if-let [body (:body resp)]
       (str body)
-      (die resp))))
+      (util/die resp))))
 
 
 ;;------------------------------------------------------------------------------

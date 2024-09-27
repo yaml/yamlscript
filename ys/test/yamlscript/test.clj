@@ -35,4 +35,5 @@
   (do-verbose label want)
   (test/is (str/index-of got want)))
 
-(comment)
+(comment
+  )

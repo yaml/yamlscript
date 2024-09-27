@@ -2,16 +2,16 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.printer-test
-  #_(:use yamlscript.debug)
   (:require
-   [yamlscript.compiler :as compiler]
-   [yamlscript.parser :as parser]
-   [yamlscript.composer :as composer]
-   [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
-   [yamlscript.transformer :as transformer]
+   [yamlscript.common]
+   [yamlscript.compiler :as compiler]
+   [yamlscript.composer :as composer]
    [yamlscript.constructor :as constructor]
+   [yamlscript.parser :as parser]
    [yamlscript.printer :as printer]
+   [yamlscript.resolver :as resolver]
+   [yamlscript.transformer :as transformer]
    [yamltest.core :as test]))
 
 (test/load-yaml-test-files

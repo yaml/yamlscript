@@ -2,11 +2,11 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.composer-test
-  #_(:use yamlscript.debug)
   (:require
    [clojure.edn :as edn]
-   [yamlscript.parser :as parser]
+   [yamlscript.common]
    [yamlscript.composer :as composer]
+   [yamlscript.parser :as parser]
    [yamltest.core :as test]))
 
 (test/load-yaml-test-files

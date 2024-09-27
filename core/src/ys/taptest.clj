@@ -3,7 +3,7 @@
    [babashka.process :as process]
    [clojure.string :as str]
    [ys.ys :as ys]
-   [yamlscript.util :refer [die]])
+   [yamlscript.common])
   (:refer-clojure
    :exclude [test]))
 

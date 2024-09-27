@@ -55,3 +55,6 @@
 
 (when-not @patched?
   (alter-var-root #'pprint/write (constantly new-write)))
+
+(comment
+  )

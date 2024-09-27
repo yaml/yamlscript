@@ -6,7 +6,9 @@
    [clojure.test :as test]
    [clojure.string :as str]
    [yamlscript.cli :as cli]
-   [yamlscript.test :refer [has is like]]))
+   [yamlscript.common]
+   [yamlscript.test :refer [has is like]])
+  (:refer-clojure))
 
 (defn ys [& args]
   (let [out (try
@@ -166,4 +168,5 @@ baz:
 (swap! cli/testing (constantly true))
 (test/run-tests)
 
-(comment)
+(comment
+  )

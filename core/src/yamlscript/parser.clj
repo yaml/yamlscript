@@ -9,7 +9,7 @@
 
 (ns yamlscript.parser
   (:require
-   [yamlscript.util :refer [die]])
+   [yamlscript.common])
   (:import
    (java.util Optional)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -26,7 +26,8 @@
      MappingStartEvent
      MappingEndEvent
      SequenceStartEvent
-     SequenceEndEvent)))
+     SequenceEndEvent))
+  (:refer-clojure))
 
 (declare ys-event)
 

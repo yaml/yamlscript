@@ -9,7 +9,8 @@
 
 (ns yamlscript.re
   (:require
-   [clojure.string :as str])
+   [clojure.string :as str]
+   [yamlscript.common])
   (:refer-clojure :exclude [char quot]))
 
 (defn re [rgx]

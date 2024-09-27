@@ -7,8 +7,8 @@
 (ns yamlscript.printer
   (:require
    [clojure.string :as str]
-   [yamlscript.common :as common]
-   [yamlscript.util :refer [die]])
+   [yamlscript.common]
+   [yamlscript.global])
   (:refer-clojure :exclude [print]))
 
 (def string-escape
@@ -62,7 +62,7 @@
              "#{"
              (str/join " " (map print-node val))
              "}")
-      :Map (let [[start end] (if (or (:unordered @common/opts)
+      :Map (let [[start end] (if (or (:unordered @yamlscript.global/opts)
                                    (<= (count val) 16))
                                ["{" "}"]
                                ["(omap " ")"])]

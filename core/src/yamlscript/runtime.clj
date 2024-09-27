@@ -3,8 +3,11 @@
 
 (ns yamlscript.runtime
   (:require
-   [yamlscript.debug]
-   [yamlscript.re :as re]
+   ; [babashka.deps]
+   [babashka.fs]
+   [babashka.http-client]
+   [babashka.pods.sci]
+   [babashka.process]
    [clojure.java.io :as io]
    [clojure.math]
    [clojure.pprint]
@@ -13,21 +16,19 @@
    [clojure.tools.cli]
    [clojure.walk]
    ; [clojure.zip]
-   ; [babashka.deps]
-   [babashka.fs]
-   [babashka.http-client]
-   [babashka.pods.sci]
-   [babashka.process]
    [sci.core :as sci]
+   [yamlscript.common :as common]
+   [yamlscript.debug]
+   [yamlscript.global :as global]
+   [yamlscript.re :as re]
+   [yamlscript.util]
    [ys.clj]
-   [ys.std]
    [ys.dwim]
    [ys.json]
-   [ys.yaml]
-   [ys.ys :as ys]
+   [ys.std]
    [ys.taptest]
-   [yamlscript.common :as common]
-   [yamlscript.util :as util]))
+   [ys.yaml]
+   [ys.ys :as ys]))
 
 (def ys-version "0.1.76")
 
@@ -49,8 +50,8 @@
               'INC INC
               'RUN RUN
               'VERSION ys-version
-              '$ common/$
-              '$# common/$#
+              '$ global/$
+              '$# global/$#
 
               ;; clojure.core functions overridden by YS
               'load (sci/copy-var ys.ys/load-file nil)
@@ -70,7 +71,7 @@
               'NaN? (sci/copy-var clojure.core/NaN? nil)
 
               ;; YAMLScript debugging functions
-              'YSC (sci/copy-var yamlscript.debug/YSC nil)
+              ;'YSC (sci/copy-var yamlscript.debug/YSC nil)
               'DBG (sci/copy-var yamlscript.debug/DBG nil)
               'PPP (sci/copy-var yamlscript.debug/PPP nil)
               'TTT (sci/copy-var yamlscript.debug/TTT nil)
@@ -104,6 +105,7 @@
 (def std-namespace (use-ns 'std ys.std))
 (def str-namespace (use-ns 'str clojure.string))
 (def taptest-namespace (use-ns 'ys.taptest ys.taptest))
+(def util-namespace (use-ns 'yamlscript.util yamlscript.util))
 (def walk-namespace (use-ns 'walk clojure.walk))
 (def yaml-namespace (use-ns 'yaml ys.yaml))
 (def ys-namespace (use-ns 'ys ys.ys))
@@ -131,7 +133,8 @@
    'yaml    yaml-namespace    'ys.yaml    yaml-namespace
 
    'ys.taptest taptest-namespace
-   'yamlscript.debug debug-namespace})
+   'yamlscript.debug debug-namespace
+   'yamlscript.util util-namespace})
 
 (defn classes-map [class-symbols]
   (loop [[class-symbol & class-symbols] class-symbols
@@ -191,9 +194,9 @@
      :classes classes}))
 
 (defn get-runtime-info []
-  {:args (util/get-cmd-args)
-   :bin (util/get-cmd-bin)
-   :pid (util/get-cmd-pid)
+  {:args (common/get-cmd-args)
+   :bin (common/get-cmd-bin)
+   :pid (common/get-cmd-pid)
    :versions {:clojure "1.12.0"
               ;; TODO Add graalvm and other versions
               :sci (->>
@@ -201,7 +204,7 @@
                      slurp
                      str/trim-newline)
               :yamlscript ys-version}
-   :yspath (util/get-cmd-path)
+   :yspath (common/get-cmd-path)
    })
 
 (defn eval-string
@@ -217,7 +220,7 @@
    (sci/alter-var-root sci/in (constantly *in*))
 
    (let [clj (str/trim-newline clj)
-         file (util/abspath (or file "NO-NAME"))]
+         file (common/abspath (or file "NO-NAME"))]
      (if (= "" clj)
        ""
        (sci/binding
@@ -232,7 +235,7 @@
          CWD (str (babashka.fs/cwd))
          ENV (into {} (System/getenv))
          ys/FILE file
-         INC (util/get-yspath file)]
+         INC (common/get-yspath file)]
          (let [resp (sci/eval-string+
                       @ys/sci-ctx
                       clj

@@ -4,7 +4,10 @@
 ;; The yamlscript.composer is responsible for converting a stream of YAML
 ;; parse events into a tree of nodes.
 
-(ns yamlscript.composer)
+(ns yamlscript.composer
+  (:require
+   [yamlscript.common])
+  (:refer-clojure))
 
 (comment
   [;

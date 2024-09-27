@@ -4,7 +4,7 @@
 (ns yamlscript.core
   (:require
    [clojure.data.json :as json])
-   (:refer-clojure :exclude [load])
+  (:refer-clojure :exclude [load])
   (:import (org.yamlscript.yamlscript YAMLScript)))
 
 (defn load [ys-code]
@@ -16,3 +16,6 @@
       data data
       :else (throw
               (Exception. "Unexpected response from 'libyamlscript'")))))
+
+(comment
+  )

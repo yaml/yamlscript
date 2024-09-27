@@ -2,13 +2,13 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.builder-test
-  #_(:use yamlscript.debug)
   (:require
    [clojure.edn :as edn]
-   [yamlscript.parser :as parser]
-   [yamlscript.composer :as composer]
-   [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
+   [yamlscript.common]
+   [yamlscript.composer :as composer]
+   [yamlscript.parser :as parser]
+   [yamlscript.resolver :as resolver]
    [yamltest.core :as test]))
 
 (test/load-yaml-test-files

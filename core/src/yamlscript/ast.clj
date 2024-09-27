@@ -5,7 +5,7 @@
 
 (ns yamlscript.ast
   (:require
-   [yamlscript.util :refer [die if-lets]])
+   [yamlscript.common])
   (:refer-clojure :exclude [Vec]))
 
 (defn Lst [list] {:Lst (vec list)})

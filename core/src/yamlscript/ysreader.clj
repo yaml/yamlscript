@@ -11,9 +11,9 @@
    [yamlscript.ast :as ast :refer
     [Bln Chr Flt Form Int Key Lst Map Nil
      QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
-   [yamlscript.re :as re]
-   [yamlscript.debug]
-   [yamlscript.util :as util :refer [die if-lets]])
+   [yamlscript.common]
+   [yamlscript.global :as global]
+   [yamlscript.re :as re])
   (:refer-clojure :exclude [read-string]))
 
 (defn is-clojure-comment? [token]
@@ -298,7 +298,7 @@
     (str/replace "\\\"" "\"")))
 
 (defn read-dq-string [string]
-  (let [build-vstr @util/build-vstr]
+  (let [build-vstr @yamlscript.global/build-vstr]
     (-> string
       (subs 1 (dec (count string)))
       str-unescape

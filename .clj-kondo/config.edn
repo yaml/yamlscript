@@ -1,3 +1,4 @@
-{:lint-as {yamlscript.util/when-lets clojure.core/let
-           yamlscript.util/if-lets clojure.core/let}}
-
+{:lint-as {yamlscript.util/if-lets clojure.core/let
+           yamlscript.builder clojure.core/let}
+ :linters {:unresolved-symbol
+           {:exclude-patterns ["^(die|if-lets|when-lets)"]}}}

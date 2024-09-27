@@ -10,18 +10,18 @@
 
 (ns yamlscript.compiler
   (:require
-   [yamlscript.debug]
    [clojure.pprint]
    [clojure.edn]
    [clojure.string :as str]
-   [yamlscript.parser]
-   [yamlscript.composer]
-   [yamlscript.resolver]
    [yamlscript.builder]
-   [yamlscript.transformer]
+   [yamlscript.common]
+   [yamlscript.composer]
    [yamlscript.constructor]
+   [yamlscript.global]
+   [yamlscript.parser]
    [yamlscript.printer]
-   [yamlscript.common :as common])
+   [yamlscript.resolver]
+   [yamlscript.transformer])
   (:refer-clojure :exclude [compile]))
 
 (defn parse-events-to-groups [events]
@@ -61,7 +61,7 @@
         (.replaceAll (str s#) "[^0-9\\.]" "")])))
 
 (defn stage-with-options [stage-name stage-fn input-args]
-  (if (get-in @common/opts [:debug-stage stage-name])
+  (if (get-in @yamlscript.global/opts [:debug-stage stage-name])
     (let [[value time] (value-time (apply stage-fn input-args))]
       (printf "*** %-9s *** %s ms\n\n" stage-name time)
       (clojure.pprint/pprint value)

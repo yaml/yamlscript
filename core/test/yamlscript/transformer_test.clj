@@ -2,12 +2,12 @@
 ; This code is licensed under MIT license (See License for details)
 
 (ns yamlscript.transformer-test
-  #_(:use yamlscript.debug)
   (:require
-   [yamlscript.parser :as parser]
-   [yamlscript.composer :as composer]
-   [yamlscript.resolver :as resolver]
    [yamlscript.builder :as builder]
+   [yamlscript.common]
+   [yamlscript.composer :as composer]
+   [yamlscript.parser :as parser]
+   [yamlscript.resolver :as resolver]
    [yamlscript.transformer :as transformer]
    [yamltest.core :as test]
    [clojure.edn :as edn]))

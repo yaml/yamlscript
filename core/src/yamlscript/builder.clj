@@ -8,10 +8,15 @@
   (:require
    [clojure.string :as str]
    [yamlscript.ast :refer
-    [Bln Clj Flt Form Int Key Lst Map Nil Str Sym Vec]]
+    [Bln Clj Flt Int Key Lst Map Nil Str Sym Vec]]
+   [yamlscript.common]
+   [yamlscript.composer]
+   [yamlscript.global]
+   [yamlscript.parser]
    [yamlscript.re :as re]
-   [yamlscript.util :refer [die if-lets when-lets]]
-   [yamlscript.ysreader :as ysreader]))
+   [yamlscript.resolver]
+   [yamlscript.ysreader :as ysreader])
+  (:refer-clojure))
 
 (declare build-node)
 
@@ -23,8 +28,7 @@
   (require
     '[yamlscript.parser]
     '[yamlscript.composer]
-    '[yamlscript.resolver]
-    '[yamlscript.builder])
+    '[yamlscript.resolver])
   (-> string
     yamlscript.parser/parse
     yamlscript.composer/compose
@@ -108,10 +112,6 @@
     (or
       (build-defn-defaults name doc args body kind)
       (build-defn-single name doc args body kind))))
-
-(comment
-  (YSC "fn(*): nil")
-  )
 
 (defn build-form-pair [key val]
   (let [key (:form key)]
@@ -236,7 +236,7 @@
       (build-interpolated string)
       (build-dq-string string))))
 
-(reset! yamlscript.util/build-vstr build-vstr)
+(reset! yamlscript.global/build-vstr build-vstr)
 
 (defn build-node [node]
   (let [anchor (:& node)

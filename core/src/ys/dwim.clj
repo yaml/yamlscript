@@ -3,15 +3,12 @@
 
 (ns ys.dwim
   (:require
-   [clojure.string :refer [escape]]
-   [yamlscript.util :refer [chop die]])
+   [clojure.string :refer [escape replace]]
+   [yamlscript.common :as common :refer [chop regex?]])
   (:refer-clojure :exclude [replace]))
 
 
 ;;------------------------------------------------------------------------------
-(defn- regex? [x]
-  (= (type x) java.util.regex.Pattern))
-
 (defn- regex-to-fn [a b f]
   (let [a (if (regex? a) #(re-find a %1) a)]
     (f a b)))

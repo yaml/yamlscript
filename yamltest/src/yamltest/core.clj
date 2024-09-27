@@ -5,11 +5,11 @@
 ;; used to test the YAMLScript compiler.
 
 (ns yamltest.core
-  #_(:use yamlscript.debug)
   (:require
+   [clj-yaml.core :as yaml]
    [clojure.string :as str]
    [clojure.test :as test]
-   [clj-yaml.core :as yaml]))
+   [yamlscript.common]))
 
 
 ;; ----------------------------------------------------------------------------
@@ -232,4 +232,5 @@
 (defn has-keys? [keys map]
   (every? #(contains? map %1) keys))
 
-(comment)
+(comment
+  )

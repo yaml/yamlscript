@@ -7,13 +7,9 @@
    [clojure.java.io :as io]
    [clojure.string :as str]
    [sci.core :as sci]
+   [yamlscript.common :refer [abspath dirname get-yspath]]
    [yamlscript.compiler]
-   [yamlscript.re :as re]
-   [yamlscript.util
-    :refer [abspath
-            die
-            dirname
-            get-yspath]])
+   [yamlscript.re :as re])
   (:refer-clojure
    :exclude [compile
              eval
