@@ -32,12 +32,41 @@
 
 (def ys-version "0.1.76")
 
+(def main-ns (sci/create-ns 'main))
+
 (def ARGS (sci/new-dynamic-var 'ARGS))
 (def ARGV (sci/new-dynamic-var 'ARGV))
 (def CWD (sci/new-dynamic-var 'CWD))
-(def ENV (sci/new-dynamic-var 'ENV))
+(def ENV (sci/new-dynamic-var 'ENV
+           (into {} (System/getenv))
+           {:ns main-ns}))
 (def INC (sci/new-dynamic-var 'INC))
 (def RUN (sci/new-dynamic-var 'RUN))
+
+(defn env-update
+  ([m]
+   (when (or (not (map? m)) (empty? m))
+     (die "env-update(m) requires a non-empty str/str map"))
+
+   (sci/alter-var-root ENV
+     (fn [env]
+       (reduce-kv
+         (fn [env k v]
+           (when-not (string? k)
+             (die "env-update(m) keys must be strings"))
+           (let [v (cond
+                     (string? v) v
+                     (number? v) (str v)
+                     (boolean? v) (str v)
+                     (nil? v) nil
+                     :else (die "env-update(m) values must be scalars"))]
+             (if v
+               (assoc env k v)
+               (dissoc env k))))
+         env m))))
+
+  ([k v & xs] (env-update (apply hash-map k v xs))))
+
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
 (def clojure-core-ns
@@ -69,6 +98,9 @@
               'slurp (sci/copy-var clojure.core/slurp nil)
               'spit (sci/copy-var clojure.core/spit nil)
               'NaN? (sci/copy-var clojure.core/NaN? nil)
+
+              ;; YAMLScript SCI functions
+              'env-update (sci/copy-var env-update nil)
 
               ;; YAMLScript debugging functions
               ;'YSC (sci/copy-var yamlscript.debug/YSC nil)
@@ -233,13 +265,12 @@
          ARGV args
          RUN (get-runtime-info)
          CWD (str (babashka.fs/cwd))
-         ENV (into {} (System/getenv))
          ys/FILE file
          INC (common/get-yspath file)]
          (let [resp (sci/eval-string+
                       @ys/sci-ctx
                       clj
-                      {:ns (sci/create-ns 'main)})]
+                      {:ns main-ns})]
            (ys/unload-pods)
            (shutdown-agents)
            (:val resp)))))))
