@@ -13,6 +13,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
+   [sci.core :as sci]
    [yamlscript.common :as common]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
@@ -65,6 +66,28 @@
 
 (defmacro +def [x y]
   (+def-defn x y))
+
+(defn env-update
+  ([m]
+   (sci/alter-var-root global/ENV
+     (fn [env]
+       (if (empty? m)
+         (reduce dissoc env (keys env))
+         (reduce-kv
+           (fn [env k v]
+             (when-not (string? k)
+               (util/die "env-update() keys must be strings"))
+             (let [v (cond
+                       (string? v) v
+                       (number? v) (str v)
+                       (boolean? v) (str v)
+                       (nil? v) nil
+                       :else (util/die "env-update() values must be scalars"))]
+               (if v
+                 (assoc env k v)
+                 (dissoc env k))))
+           env m)))))
+  ([k v & xs] (env-update (apply hash-map k v xs))))
 
 
 ;;------------------------------------------------------------------------------

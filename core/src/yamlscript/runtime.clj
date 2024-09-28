@@ -32,39 +32,11 @@
 
 (def ys-version "0.1.76")
 
-(def main-ns (sci/create-ns 'main))
-
-(def ARGS (sci/new-dynamic-var 'ARGS [] {:ns main-ns}))
-(def ARGV (sci/new-dynamic-var 'ARGV [] {:ns main-ns}))
-(def CWD (sci/new-dynamic-var 'CWD nil {:ns main-ns}))
-(def ENV (sci/new-dynamic-var 'ENV global/env {:ns main-ns}))
-(def INC (sci/new-dynamic-var 'INC [] {:ns main-ns}))
-(def RUN (sci/new-dynamic-var 'RUN {} {:ns main-ns}))
-
-(defn env-update
-  ([m]
-   (when (or (not (map? m)) (empty? m))
-     (die "env-update(m) requires a non-empty str/str map"))
-
-   (sci/alter-var-root ENV
-     (fn [env]
-       (reduce-kv
-         (fn [env k v]
-           (when-not (string? k)
-             (die "env-update(m) keys must be strings"))
-           (let [v (cond
-                     (string? v) v
-                     (number? v) (str v)
-                     (boolean? v) (str v)
-                     (nil? v) nil
-                     :else (die "env-update(m) values must be scalars"))]
-             (if v
-               (assoc env k v)
-               (dissoc env k))))
-         env m))))
-
-  ([k v & xs] (env-update (apply hash-map k v xs))))
-
+(def ARGS (sci/new-dynamic-var 'ARGS [] {:ns global/main-ns}))
+(def ARGV (sci/new-dynamic-var 'ARGV [] {:ns global/main-ns}))
+(def CWD (sci/new-dynamic-var 'CWD nil {:ns global/main-ns}))
+(def INC (sci/new-dynamic-var 'INC [] {:ns global/main-ns}))
+(def RUN (sci/new-dynamic-var 'RUN {} {:ns global/main-ns}))
 
 ;; Define the clojure.core namespace that is referenced into all namespaces
 (def clojure-core-ns
@@ -72,8 +44,8 @@
               'ARGS ARGS
               'ARGV ARGV
               'CWD CWD
-              'ENV ENV
-              'FILE ys/FILE
+              'ENV global/ENV
+              'FILE global/FILE
               'INC INC
               'RUN RUN
               'VERSION ys-version
@@ -97,11 +69,7 @@
               'spit (sci/copy-var clojure.core/spit nil)
               'NaN? (sci/copy-var clojure.core/NaN? nil)
 
-              ;; YAMLScript SCI functions
-              'env-update (sci/copy-var env-update nil)
-
               ;; YAMLScript debugging functions
-              ;'YSC (sci/copy-var yamlscript.debug/YSC nil)
               'DBG (sci/copy-var yamlscript.debug/DBG nil)
               'PPP (sci/copy-var yamlscript.debug/PPP nil)
               'TTT (sci/copy-var yamlscript.debug/TTT nil)
@@ -218,7 +186,7 @@
 
       java.util.regex.Pattern]))
 
-(reset! ys/sci-ctx
+(reset! global/sci-ctx
   (sci/init
     {:namespaces namespaces
      :classes classes}))
@@ -263,17 +231,17 @@
          ARGV args
          RUN (get-runtime-info)
          CWD (str (babashka.fs/cwd))
-         ys/FILE file
+         global/FILE file
          INC (common/get-yspath file)]
          (let [resp (sci/eval-string+
-                      @ys/sci-ctx
+                      @global/sci-ctx
                       clj
-                      {:ns main-ns})]
+                      {:ns global/main-ns})]
            (ys/unload-pods)
            (shutdown-agents)
            (:val resp)))))))
 
-(sci/intern @ys/sci-ctx 'clojure.core 'eval-string eval-string)
+(sci/intern @global/sci-ctx 'clojure.core 'eval-string eval-string)
 
 (comment
   )

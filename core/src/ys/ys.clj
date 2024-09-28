@@ -9,6 +9,7 @@
    [sci.core :as sci]
    [yamlscript.common :refer [abspath dirname get-yspath]]
    [yamlscript.compiler]
+   [yamlscript.global :as global]
    [yamlscript.re :as re])
   (:refer-clojure
    :exclude [compile
@@ -17,15 +18,6 @@
              load-file
              use
              when]))
-
-
-;;-----------------------------------------------------------------------------
-(def sci-ctx (atom nil))
-
-(def pods (atom []))
-
-(def FILE (sci/new-dynamic-var 'FILE nil))
-
 
 ;;-----------------------------------------------------------------------------
 (defn -get-module [module]
@@ -41,8 +33,8 @@
                    slurp)
         ret (sci/binding
              [sci/file clj-file
-              FILE clj-file]
-              (sci/eval-string+ @sci-ctx clj-code))]
+              global/FILE clj-file]
+              (sci/eval-string+ @global/sci-ctx clj-code))]
     (:val ret)))
 
 (declare load-file)
@@ -71,8 +63,8 @@
   (let [clj-code (yamlscript.compiler/compile ys-code)
         ret (sci/binding
              [sci/file "EVAL"
-              FILE "EVAL"]
-              (sci/eval-string+ @sci-ctx clj-code))]
+              global/FILE "EVAL"]
+              (sci/eval-string+ @global/sci-ctx clj-code))]
     (:val ret)))
 
 (defn load-file [ys-file]
@@ -83,18 +75,18 @@
                    yamlscript.compiler/compile)
         ret (sci/binding
              [sci/file ys-file
-              FILE ys-file]
-              (sci/eval-string+ @sci-ctx clj-code))]
+              global/FILE ys-file]
+              (sci/eval-string+ @global/sci-ctx clj-code))]
     (:val ret)))
 
 (defn load-pod [& args]
-  (let [pod (apply pods/load-pod @sci-ctx args)]
-    (swap! pods conj pod)))
+  (let [pod (apply pods/load-pod @global/sci-ctx args)]
+    (swap! global/pods conj pod)))
 
 (defn unload-pods []
-  (doseq [pod @pods]
+  (doseq [pod @global/pods]
     (pods/unload-pod pod))
-  (reset! pods []))
+  (reset! global/pods []))
 
 (defmacro use [module & args]
   `(let [module# (str (quote ~module))]
