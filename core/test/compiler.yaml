@@ -683,9 +683,9 @@
 - name: Floating point numbers
   yamlscript: |
     !yamlscript/v0
-    =>: -[ 0. 0.1 -1.2e3 2.3e-4 ]
+    =>: -[ -00.00 0.1 -1.2e3 2.3e-4 ]
   clojure: |
-    [0.0 0.1 -1200.0 2.3E-4]
+    [-0.0 0.1 -1200.0 2.3E-4]
 
 
 - name: Exponentiation operator
@@ -794,9 +794,11 @@
 - name: Invalid number B
   yamlscript: |
     !yamlscript/v0
-    =>: -3.foo.5
+    =>: -3/5
+#    =>: -3.foo.5
   error: |
-    ~~ Invalid number: -3.foo.5
+    ~~ Invalid number: -3/5
+#    ~~ Invalid number: -3.foo.5
 
 
 - name: Dot grouping in sub-expression

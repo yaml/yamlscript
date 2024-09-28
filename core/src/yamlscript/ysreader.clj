@@ -116,7 +116,7 @@
       $psym |                   # Symbol followed by paren
       $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
-      $mnum |                   # Maybe a numeric literal token
+      $mnum |                   # Maybe a numeric literal token  # 10
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
       $dsym |                   # Symbol with default
@@ -128,7 +128,7 @@
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
       $dots |                   # Dot operator word with _ allowed
-      $dotx |                   # Special dot operators
+      $dotx |                   # Special dot operators  # 22
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
       $sett |                   # Set start token
@@ -137,6 +137,22 @@
                               # Other tokens
       .                         # Single character tokens
     )"))
+
+(comment
+  (re-seq re-tokenize "5.1.1.:x")
+  (re-matches re/mnum "5.1.1.:x")
+  (def regexes
+    [re/ccom re/icom re/ksym re/quot re/spec re/char re/keyw re/psym re/fsym
+     re/nspc re/mnum re/regx re/xsym re/dsym re/vsym re/ssym re/asym re/splt
+     re/csym re/narg re/dotn re/dots re/dotx re/osym re/anon re/sett re/dstr
+     re/sstr])
+  (map-indexed
+    (fn [i v] (prn [i v])
+      (let [rgx (re-pattern (str "^" v))
+            result (re-find rgx "5.inc()")]
+        (when result (prn result) (die 123))))
+    regexes)
+  )
 
 (defn lex-tokens [expr]
   (->> expr
