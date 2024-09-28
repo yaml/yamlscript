@@ -34,14 +34,12 @@
 
 (def main-ns (sci/create-ns 'main))
 
-(def ARGS (sci/new-dynamic-var 'ARGS))
-(def ARGV (sci/new-dynamic-var 'ARGV))
-(def CWD (sci/new-dynamic-var 'CWD))
-(def ENV (sci/new-dynamic-var 'ENV
-           (into {} (System/getenv))
-           {:ns main-ns}))
-(def INC (sci/new-dynamic-var 'INC))
-(def RUN (sci/new-dynamic-var 'RUN))
+(def ARGS (sci/new-dynamic-var 'ARGS [] {:ns main-ns}))
+(def ARGV (sci/new-dynamic-var 'ARGV [] {:ns main-ns}))
+(def CWD (sci/new-dynamic-var 'CWD nil {:ns main-ns}))
+(def ENV (sci/new-dynamic-var 'ENV global/env {:ns main-ns}))
+(def INC (sci/new-dynamic-var 'INC [] {:ns main-ns}))
+(def RUN (sci/new-dynamic-var 'RUN {} {:ns main-ns}))
 
 (defn env-update
   ([m]

@@ -17,7 +17,7 @@
    [clojure.tools.cli :as cli]
    [yamlscript.common]
    [yamlscript.compiler :as compiler]
-   [yamlscript.global :as global]
+   [yamlscript.global :as global :refer [env]]
    [yamlscript.runtime :as runtime])
   (:refer-clojure))
 
@@ -51,28 +51,6 @@
           (flush))
         (println (str/replace msg "java.lang.Exception: " "")))))
   (exit 1))
-
-#_
-(let [{:keys [cause data trace]} (Throwable->map e)
-      {:keys [file line column]} data
-      stack-trace (:stack-trace opts)
-      msg (if stack-trace
-            (with-out-str
-              (pp/pprint
-                {:stack-trace true
-                 :cause cause
-                 :file file
-                 :line line
-                 :column column
-                 :xtrace trace}))
-            (str cause "\n"
-              (if (seq file)
-                (str
-                  "  in file '" file "'"
-                  " line " line
-                  " column " column "\n")
-                "")))]
-  (err msg))
 
 (defn todo [s & _]
   (err (str "--" s " not implemented yet.")))
@@ -340,9 +318,43 @@ Options:
                             (str "Unsupported key type '" t "'\n"
                               "Key = '" x "'")))))))})
 
+(defn clojure-format [clojure formatter]
+  (let [out (try
+              (:out
+               (check
+                 (process {:in clojure
+                           :out :string
+                           :err *err*}
+                   formatter)))
+              (catch Exception e
+                (global/reset-error-msg-prefix!
+                  (str "Compiler formatter error in '" formatter "':\n"))
+                (err e)))]
+    out))
+
+(defn pretty-clojure [code]
+  (str/trimr
+    (let [code (compiler/pretty-format code)]
+      (if (env "YS_FORMATTER")
+        (let [formatter (env "YS_FORMATTER")]
+          (if formatter
+            (clojure-format code formatter)
+            code))
+        code))))
+
+(defn do-compile [opts args]
+  (let [[code _ _ #_file #_args] (get-compiled-code opts args [])
+        clojure (pretty-clojure code)]
+    (println clojure)
+    (System/exit 0)))
+
+(def line (str (str/join (repeat 80 "-")) "\n"))
+
 (defn do-run [opts args argv]
   (try
     (let [[code file args load] (get-compiled-code opts args argv)
+          _ (when (env "YS_SHOW_COMPILE")
+              (eprint (str line (pretty-clojure code) "\n" line)))
           result (runtime/eval-string code file args)]
       (if (:print opts)
         (pp/pprint result)
@@ -360,33 +372,6 @@ Options:
       (global/reset-error-msg-prefix! "Runtime error:\n")
       (err e))))
 
-(defn clojure-format [clojure formatter]
-  (let [out (try
-              (:out
-               (check
-                 (process {:in clojure
-                           :out :string
-                           :err *err*}
-                   formatter)))
-              (catch Exception e
-                (global/reset-error-msg-prefix!
-                  (str "Compiler formatter error in '" formatter "':\n"))
-                (err e)))]
-    out))
-
-(defn do-compile [opts args]
-  (let [[code _ _ #_file #_args] (get-compiled-code opts args [])
-        clojure (-> code
-                  compiler/pretty-format
-                  str/trim-newline)
-        formatter (System/getenv "YS_FORMATTER")
-        clojure (str/trimr
-                  (if formatter
-                    (clojure-format clojure formatter)
-                    clojure))]
-    (println clojure)
-    (System/exit 0)))
-
 (defn do-repl [opts]
   (todo "repl" opts))
 
@@ -399,14 +384,22 @@ Options:
 (defn do-kill [opts args]
   (todo "kill" opts args))
 
-(defn elide-empty [opt opts]
-  (if (empty? (get opts opt))
-    (dissoc opts opt)
-    opts))
+(defn elide-empty [opts & keys]
+  (reduce
+    (fn [opts key]
+      (if (empty? (key opts))
+        (dissoc opts key)
+        opts))
+    opts keys))
+
+(def env-opts
+  #{:unordered :print :stack-trace :xtrace})
 
 (defn do-default [opts args argv help]
-  (if (or (seq (elide-empty :eval
-                 (elide-empty :debug-stage opts)))
+  (if (or
+        (seq (apply dissoc
+               (elide-empty opts :eval :debug-stage)
+               env-opts))
         (seq args))
     (do-run opts args argv)
     (do-help help)))
@@ -445,11 +438,14 @@ Options:
           " one of ...")))))
 
 (def all-opts
-  #{:run :load :compile :eval
-    :clojure :mode :print :output
-    :to :json :yaml :edn
-    :repl :nrepl :kill
-    :stack-trace :debug-stage
+  #{:run :load :eval
+    :compile :binary
+    :print :output
+    :to :json :yaml :edn :unordered
+    :mode :clojure
+    ;:repl :nrepl :kill
+    :debug-stage :stack-trace :xtrace
+    :install :upgrade
     :version :help})
 
 (def action-opts
@@ -470,8 +466,7 @@ Options:
   #{:version :help})
 
 (defn validate-opts [opts]
-  (let [opts (elide-empty :eval opts)
-        opts (elide-empty :debug-stage opts)]
+  (let [opts (elide-empty opts :eval :debug-stage)]
     (or
       (mutex opts action-opts)
       (mutex opts format-opts)
@@ -517,9 +512,21 @@ Options:
         opts (if (:edn opts) (assoc opts :to "edn") opts)
         opts (if (:to opts) (assoc opts :load true) opts)
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
-               (assoc opts :mode "code") opts)]
+               (assoc opts :mode "code") opts)
+
+        opts (if (env "YS_PRINT") (assoc opts :print true) opts)
+        opts (if (and (env "YS_PRINT_EVAL")
+                   (seq (:eval opts))) (assoc opts :print true) opts)
+        opts (if (env "YS_STACK_TRACE") (assoc opts :stack-trace true) opts)
+        opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
+        opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
+        opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
+        opts opts]
 
     (reset! global/opts opts)
+
+    (when (env "YS_SHOW_OPTS")
+      (pp/pprint @global/opts))
 
     (do-main opts args argv help error errs)))
 

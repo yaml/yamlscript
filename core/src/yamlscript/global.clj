@@ -5,10 +5,9 @@
 
 (defonce build-vstr (atom nil))
 
-(def opts (atom
-            (if (System/getenv "YS_UNORDERED")
-              {:unordered true}
-              {})))
+(defonce env (into {} (System/getenv)))
+
+(def opts (atom {}))
 
 (def $ (atom {}))
 (def $# (atom 0))
@@ -21,3 +20,6 @@
   ([] (reset! error-msg-prefix "Error :"))
   ([prefix] (reset! error-msg-prefix prefix)))
 (reset-error-msg-prefix!)
+
+(comment
+  )

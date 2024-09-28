@@ -142,9 +142,7 @@
   (->> expr
     (re-seq re-tokenize)
     (remove #(re-matches re/ignr %1))
-    (#(if (System/getenv "YS_LEX_DEBUG")
-        (WWW %1)
-        %1))))
+    (#(if (System/getenv "YS_SHOW_LEX") (WWW %1) %1))))
 
 (declare read-form yes-expr)
 

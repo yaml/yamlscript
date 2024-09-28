@@ -20,6 +20,10 @@
   ([msg] (throw (Exception. (str msg "\n"))))
   ([x & xs] (die (apply str x xs))))
 
+(defn eprint [& xs]
+  (binding [*out* *err*]
+    (apply print xs)))
+
 (defn eprintln [& xs]
   (binding [*out* *err*]
     (apply println xs)))
@@ -57,6 +61,8 @@
      `(do ~@body))))
 
 (intern 'clojure.core 'die die)
+(intern 'clojure.core 'eprint eprint)
+(intern 'clojure.core 'eprintln eprintln)
 
 (intern 'clojure.core
         (with-meta 'cond-lets {:macro true})
