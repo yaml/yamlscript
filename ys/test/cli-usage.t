@@ -157,4 +157,17 @@ test::
     - aaa: 1
     - bbb: 2
 
+- cmnd: |-
+    ys -x -e 'each i (1 .. 3): say("$i) Hello \#$i")'
+  what: err
+  want: |
+    +1 >>> each([i (rng 1 3)], (say (str i ") Hello #" i)))
+    +2 >>> rng(1, 3)
+    +3 >>> str(1, ") Hello #", 1)
+    +4 >>> say("1) Hello #1")
+    +5 >>> str(2, ") Hello #", 2)
+    +6 >>> say("2) Hello #2")
+    +7 >>> str(3, ") Hello #", 3)
+    +8 >>> say("3) Hello #3")
+
 done:
