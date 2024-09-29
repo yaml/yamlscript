@@ -9,7 +9,7 @@ defn paragraph(num): |
   $bottles(num) of beer on the wall,
   $bottles(num) of beer.
   Take one down, pass it around.
-  $bottles(num - 1) of beer on the wall.
+  $bottles(num.--) of beer on the wall.
 
 defn bottles(n):
   cond:
