@@ -152,14 +152,14 @@
     (if name
       `((fn [& xs#]
           (swap! ttt-ctr inc)
-          (util/eprintln (str @ttt-ctr " >>> " ~name
+          (util/eprintln (str "+" @ttt-ctr " >>> " ~name
                       "(" (ttt-fmt xs#) ")"))
           (apply ~fun xs#))
         ~@args)
       `(do
          (swap! ttt-ctr inc)
          (when ~fname
-           (util/eprintln (str @ttt-ctr " >>> " ~fname
+           (util/eprintln (str "+" @ttt-ctr " >>> " ~fname
                        "(" ~fargs ")")))
          (~@form)))))
 
