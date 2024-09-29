@@ -51,5 +51,9 @@ test::
   want: 0
 - code: -1.5:inc
   want: -0.5
+- code: 5.in?(1 .. 10)
+  want: true
+- code: 5.5.in?(1 .. 10)
+  want: false
 
-done: #4
+done: 22
