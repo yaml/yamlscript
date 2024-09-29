@@ -1,3 +1,35 @@
+- version: 0.1.77
+  date:    Sat 28 Sep 2024 10:21:21 PM PDT
+  changes:
+  - core: Upgrade to GraalVM 23 and Clojure 1.12.0
+  - core: Add the ... rng+ operator
+  - core: Make s.replace(y) remove y with y is str or rgx
+  - core: Add cons, mapcat, reduce to poly
+  - std: Add more math and string aliases
+  - core: Make 1-arity eq, gt etc be partials
+  - core: Turn regex into function for certain dot functions
+  - core: Refactor special dot operations
+  - std: Add chop function
+  - core: The ... operators uses 'range' now
+  - core: Change truey? to return nil or value
+  - std: Add flat function - shallow flatten
+  - core: Change to-num to return nil for nil or "x"
+  - std: Add one letter type cast aliases
+  - core: Allow map on RHS of YeS pair
+  - core: Support 'a b =:...'  destructuring def/let
+  - core: Add support for slice() lookups
+  - sample: Update sample ys programs
+  - core: Support a:b for a.b()
+  - core: Drop support for a->b style symbols
+  - core: Support a:b/c calls
+  - core: Support a.--:b a.#:b etc
+  - std: Make adjustments to casting functions
+  - core: Make adjustments to chaining functions
+  - core: Make 'ys -x' code tracing work correctly
+  - core: Major refactoring of internal namespaces
+  - core: Add support for 'env-update'
+  - ys: Add YS_* environment variables to set ys options
+  - core: Support numbers at start of dot chains
 - version: 0.1.76
   date:    Sun 15 Sep 2024 04:22:57 PM PDT
   changes:
