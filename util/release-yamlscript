@@ -98,10 +98,10 @@ defn step-3(ctx):
 
     spit 'release-changes.txt': changes
 
-    when prompt("Edit the 'Changes' file?") == 'y':
-      editor =: ENV.EDITOR || 'vi'
-      run: "$editor release-changes.txt"
-      prompt: 'Press Enter to continue or Ctrl-C to abort.'
+    prompt: "Press Enter to edit the 'Changes' file."
+    editor =: ENV.EDITOR || 'vi'
+    run: "$editor release-changes.txt"
+    prompt: 'Press Enter to continue or Ctrl-C to abort.'
 
     validate-yaml: slurp('release-changes.txt')
 
@@ -228,6 +228,8 @@ defn step-9(ctx):
 
 defn step-10(ctx):
   o: "Step 10) Run 'make release' for each language binding library"
+
+  prompt: 'Press Enter when ready to continue.'
 
   each dir bindings:
     try:
