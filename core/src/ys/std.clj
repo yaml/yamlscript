@@ -69,24 +69,20 @@
 
 (defn env-update
   ([m]
-   (sci/alter-var-root global/ENV
-     (fn [env]
-       (if (empty? m)
-         (reduce dissoc env (keys env))
-         (reduce-kv
-           (fn [env k v]
-             (when-not (string? k)
-               (util/die "env-update() keys must be strings"))
-             (let [v (cond
-                       (string? v) v
-                       (number? v) (str v)
-                       (boolean? v) (str v)
-                       (nil? v) nil
-                       :else (util/die "env-update() values must be scalars"))]
-               (if v
-                 (assoc env k v)
-                 (dissoc env k))))
-           env m)))))
+   (let
+    [m (reduce-kv
+         (fn [env k v]
+           (when-not (string? k)
+             (util/die "env-update() keys must be strings"))
+           (let [v (cond
+                     (string? v) v
+                     (number? v) (str v)
+                     (boolean? v) (str v)
+                     (nil? v) nil
+                     :else (util/die "env-update() values must be scalars"))]
+             (assoc env k v))) {} m)]
+     (global/update-env m)
+     (global/update-ENV m)))
   ([k v & xs] (env-update (apply hash-map k v xs))))
 
 
@@ -720,21 +716,24 @@
 ;;------------------------------------------------------------------------------
 ;; IPC functions
 ;;------------------------------------------------------------------------------
+(defn- process-opts []
+  {:extra-env global/env})
+
 (defn exec [cmd & xs]
-  (apply process/exec cmd xs))
+  (apply process/exec (process-opts) cmd xs))
 
 (defn process [cmd & xs]
-  (apply process/process cmd xs))
+  (apply process/process (process-opts) cmd xs))
 
 (defn sh [cmd & xs]
-  (apply process/sh cmd xs))
+  (apply process/sh (process-opts) cmd xs))
 
 (defn shell [cmd & xs]
-  (apply process/shell cmd xs))
+  (apply process/shell (process-opts) cmd xs))
 
 (defn shout [cmd & xs]
   (str/trim-newline
-    (:out (apply process/sh cmd xs))))
+    (:out (apply sh cmd xs))))
 
 
 ;;------------------------------------------------------------------------------

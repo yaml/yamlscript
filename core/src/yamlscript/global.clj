@@ -19,12 +19,30 @@
 
 (def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
 
-(def env nil)
+(def env {})
 
-(defn reset-env []
-  (alter-var-root #'env
-    (constantly (into {} (System/getenv))))
-  nil)
+(defn update-ENV [m]
+  (sci/alter-var-root ENV
+    (fn [env]
+      (if (empty? m)
+        (reduce dissoc env (keys env))
+        (reduce-kv
+          (fn [env k v]
+            (if v
+              (assoc env k v)
+              (dissoc env k)))
+          env m)))))
+
+#_{:clj-kondo/ignore [:var-same-name-except-case]}
+(defn update-env [m]
+  (let [m (reduce-kv
+            (fn [m k v] (if v (assoc m k v) (dissoc m k)))
+            env m)]
+    (alter-var-root #'env (constantly m))))
+
+(defn reset-env [m]
+  (let [m (or m (into {} (System/getenv)))]
+    (alter-var-root #'env (constantly m))))
 
 (def FILE (sci/new-dynamic-var 'FILE nil))
 
