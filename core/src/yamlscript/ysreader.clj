@@ -59,7 +59,7 @@
     (and (re-matches re/osym t)
       (not= t "&"))))
 
-(defn is-colon-calls [token]
+(defn is-colon-calls? [token]
   (re-matches re/ksym (str token)))
 
 (defn is-quote? [token]
@@ -359,7 +359,10 @@
                           xtokens]
                          :else
                          [[token1]
-                          (vec (rest tokens))])]
+                          (vec (rest tokens))])
+        start (if (re-find #"_" (first start))
+                [(str \" (first start) \")]
+                start)]
     (reduce
       #(conj %1 "." (str %2 "(") ")")
       start
@@ -383,9 +386,9 @@
     (is-bad-number? token) (die "Invalid number: " token)
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
+    (is-colon-calls? token) [nil (concat (split-colon-calls token) tokens)]
     (is-dot-special? token) [(Sym ".")
                              (concat (get-special-expansion token) tokens)]
-    (is-colon-calls token) [nil (concat (split-colon-calls token) tokens)]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]

@@ -61,8 +61,8 @@
               )
             )")
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
-(def dots (re #"(?:(?:\.\w+(?:_\w+)+)$tend)")) ; Dot operator word with _ allowed
-(def inum #"(?:-?\d+)")                        ; Integer literal token
+(def ukey #"(?:\w+(?:_\w+)+)")             ; Word with _ allowed
+(def inum #"(?:-?\d+)")                    ; Integer literal token
 (def fnum (re #"(?:$inum\.\d+(?:e$inum)?)"))   ; Floating point literal token
 (def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token
                                            ; Maybe Number token
@@ -106,6 +106,7 @@
 (def vsym (re #"(?:\$$symw|\$(?=\.))"))    ; Variable lookup symbol
 (def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
+(def dots (re #"(?:(?:\.$ukey)$tend)"))    ; Dot operator word with _ allowed
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
 (def ysym (re #"(?:$symw[+?!]?|_)"))       ; YS symbol token
@@ -122,6 +123,7 @@
                     $fsym |
                     $ysym |
                     $xnum |
+                    $ukey |
                     [\)\]\}] |
                     \.
                       (?:
