@@ -1,3 +1,12 @@
+- version: 0.1.79
+  date:    Mon 30 Sep 2024 10:08:16 AM PDT
+  changes:
+  - core: Fix bug with '5.in?(1 .. 10)'
+  - core: Change -x output prefix to '+7 >>> ...'
+  - core: Improve -x debugging output formatting
+  - core: Fix a bug where the environment mapping was wrong
+  - core: Support making env updates visible to launched processes
+  - core: Support m.A_B:C keys with _ followed by :X
 - version: 0.1.78
   date:    Sat 28 Sep 2024 11:04:07 PM PDT
   changes:
