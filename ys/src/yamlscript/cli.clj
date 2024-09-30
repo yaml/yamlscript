@@ -497,6 +497,8 @@ Options:
     :else (do-default opts args argv help)))
 
 (defn -main [& args]
+  (global/reset-env)
+
   (let [[args argv] (if (and (seq args) (not (re-find #"^-" (first args))))
                       [[(first args)] (cons "--" (rest args))]
                       (split-with #(not= "--" %1) args))

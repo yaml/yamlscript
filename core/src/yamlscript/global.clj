@@ -5,6 +5,10 @@
   (:require
    [sci.core :as sci]))
 
+#_(defn WWW [& xs]
+  (println (apply str ">>> " xs) " <<<")
+  (last xs))
+
 (def $ (atom {}))
 (def $# (atom 0))
 
@@ -13,9 +17,14 @@
 
 (defonce build-vstr (atom nil))
 
-(defonce env (into {} (System/getenv)))
+(def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
 
-(def ENV (sci/new-dynamic-var 'ENV env {:ns main-ns}))
+(def env nil)
+
+(defn reset-env []
+  (alter-var-root #'env
+    (constantly (into {} (System/getenv))))
+  nil)
 
 (def FILE (sci/new-dynamic-var 'FILE nil))
 

@@ -231,6 +231,7 @@
          ARGV args
          RUN (get-runtime-info)
          CWD (str (babashka.fs/cwd))
+         global/ENV (into {} (System/getenv))
          global/FILE file
          INC (common/get-yspath file)]
          (let [resp (sci/eval-string+
