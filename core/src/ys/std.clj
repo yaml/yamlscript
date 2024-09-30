@@ -716,24 +716,30 @@
 ;;------------------------------------------------------------------------------
 ;; IPC functions
 ;;------------------------------------------------------------------------------
-(defn- process-opts []
-  {:extra-env global/env})
+(defn- process-opts [[opts & xs]]
+  (let [opts (if (map? opts)
+               (let [env (or (:env opts) global/env)
+                     #_#_ dir (or (:dir opts) CWD)
+                     opts (assoc opts :env env)]
+                 [opts])
+               [{:env global/env} opts])]
+    (vec (concat opts xs))))
 
-(defn exec [cmd & xs]
-  (apply process/exec (process-opts) cmd xs))
+(defn exec [& xs]
+  (apply process/exec (process-opts xs)))
 
-(defn process [cmd & xs]
-  (apply process/process (process-opts) cmd xs))
+(defn process [& xs]
+  (apply process/process (process-opts xs)))
 
-(defn sh [cmd & xs]
-  (apply process/sh (process-opts) cmd xs))
+(defn sh [& xs]
+  (apply process/sh (process-opts xs)))
 
-(defn shell [cmd & xs]
-  (apply process/shell (process-opts) cmd xs))
+(defn shell [& xs]
+  (apply process/shell (process-opts xs)))
 
-(defn shout [cmd & xs]
+(defn sh-out [& xs]
   (str/trim-newline
-    (:out (apply sh cmd xs))))
+    (:out (apply sh xs))))
 
 
 ;;------------------------------------------------------------------------------
