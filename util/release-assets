@@ -75,8 +75,8 @@ setup() {
 
   YS_GH_REPO_USER=yaml
   YS_GH_REPO=yamlscript
-  YS_GH_USER=${YS_GH_USER:-$(git hub config login)}
-  YS_GH_TOKEN=${YS_GH_TOKEN:-$(git hub config api-token)}
+  YS_GH_USER=${YS_GH_USER-}
+  YS_GH_TOKEN=${YS_GH_TOKEN-}
   YS_GH_TARGET=main
 
   [[ $YS_GH_USER && $YS_GH_TOKEN ]] ||
