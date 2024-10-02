@@ -13,7 +13,6 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [sci.core :as sci]
    [yamlscript.common :as common]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
