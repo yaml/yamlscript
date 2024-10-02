@@ -17,6 +17,7 @@
        (cond-lets ~@(nnext clauses)))))
 
 (defn die
+  ([] (throw (Exception. "Died")))
   ([msg] (throw (Exception. (str msg "\n"))))
   ([x & xs] (die (apply str x xs))))
 
