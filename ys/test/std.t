@@ -251,6 +251,9 @@ test::
 - code: (1 .. 5).reduce(+ 10)
   want: 25
 
+- code: qw(foo bar baz).index('bar')
+  want: 1
+
 
 #-------------------------------------------------------------------------------
 - note: "I/O functions"

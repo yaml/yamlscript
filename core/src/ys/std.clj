@@ -479,6 +479,13 @@
 (intern 'ys.std 'escape clojure.string/escape)
 (intern 'ys.std 'index clojure.string/index-of)
 
+(defn index [C x]
+  (cond
+    (string? C) (clojure.string/index-of C x)
+    (sequential? C) (let [i (.indexOf ^java.util.List C x)]
+                      (if (>= i 0) i nil))
+    :else (util/die "Can't index a " (type C))))
+
 (defn join
   ([Ss] (join "" Ss))
   ([S Ss]
