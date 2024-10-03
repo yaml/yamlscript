@@ -1,7 +1,9 @@
 !yamlscript/v0
 
 defn main(year=2024):
-  say: "$year is $when-not(leap-year(year) 'not ')a leap year."
+  say: "$year is $when-not(
+       leap-year(year) 'not ')a
+       leap year."
 
 defn leap-year(year):
   (year % 4) == 0 &&:
