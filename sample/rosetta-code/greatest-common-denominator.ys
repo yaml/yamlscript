@@ -4,6 +4,6 @@ defn main(a=42 b=63):
   say: "gcd($a $b) -> $gcd(a b)"
 
 defn gcd(a b):
-  if b.?:
+  if b > 0:
     recur b: a % b
     else: a
