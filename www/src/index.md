@@ -13,23 +13,52 @@ provide logic and data transformation capabilities that many YAML users need.
 Created by YAML inventor and lead maintainer, Ingy döt Net, YAMLScript solves
 these needs beautifully for all YAML users and uses.
 
+> YAMLScript is now available as a programing language learning track on
+**[Exercism](https://exercism.org/tracks/yamlscript)**.
+It's a great way to learn YAMLScript and get feedback from experienced mentors.
+Check it out!
+
+If you work with apps and frameworks that use YAML for configuration, you can
+simplify your complex YAML files using YAMLScript, even if the app or framework
+does not support it.
+YAMLScript lets you include data from external files and other sources, make use
+of hundreds of existing standard functions, and even define your own variables
+and functions.
+You can filter, map, merge, reduce, generate, concatenate, interpolate and
+manipulate your data as you wish.
+YAMLScript provides these things with syntax that is minimal and unintrusive,
+keeping your clean YAML data clean.
+
 Like many new languages, YAMLScript was built over an existing robust language,
 [Clojure](https://clojure.org), which in turn was built over
 [Java](https://java.com).
-All of the power of Java and Clojure is available to YAMLScript users, via the
-YAMLScript runtime interpreter, `ys`, which is a standalone native binary
-executable.
+All of the power of Clojure and Java is available to YAMLScript users via the
+YAMLScript runtime interpreter, `ys`.
+The `ys` command is a single standalone native binary executable file.
 This means that no Java or JVM installation is required to use YAMLScript!
 
-> YAMLScript is now available as a programing language learning track on
-[Exercism](https://exercism.org/tracks/yamlscript).
-It's a great way to learn YAMLScript and get feedback from experienced mentors.
-Check it out!
+YAMLScript also produces the `libyamlscript.so` shared library.
+It has [binding modules for 10 programming languages](/doc/bindings) including
+Go, JavaScript, Python and Rust, with many more on the way.
+These modules can be used in your programs to load normal YAML files as well as
+YAMLScript enhanced ones.
+
+There are many ways to use YAMLScript:
+
+* [Simplifying your existing YAML files](embedding)
+* [Loading YAMLScript or YAML files into your program](bindings)
+* [Programming/Scripting in YAMLScript](programming)
+<!-- * [Templating with YAMLScript]() -->
+* [Compiling YAMLScript programs to binary executables]()
 
 Skip below to [The YAMLScript Language](#language) to learn more about
 programming in YAMLScript.
 
 ----
+
+## Loading YAML with YAMLScript
+
+If you 
 
 YAMLScript is also a **new YAML Loader** for modern programming languages that
 can add "Super Powers" to your plain old YAML config files.
@@ -172,6 +201,12 @@ dogs:
 - Mastiff
 title: Ingy's Pets
 ```
+
+----
+
+## Using YAMLScript as YAML
+
+Mos
 
 ----
 

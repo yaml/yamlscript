@@ -6,21 +6,27 @@ title: YAMLScript Cheat Sheet
 ### YAMLScript Fundamentals
 
 * Valid YAMLScript code is always valid YAML
+* YAMLScript has 3 modes: code, data, and bare
+  * Code mode data is treated as code (can toggle to data mode)
+  * Data mode data is treated as data (can toggle to code mode)
+  * Bare mode data is treated as data (cannot toggle; always normal YAML)
 * YAMLScript files must start with a YAMLScript tag:
   * `!yamlscript/v0` - Start in code mode
   * `!yamlscript/v0/data` - Start in data mode
   * `!yamlscript/v0/` - Shorthand for data mode
+  * No tag - Start in bare mode (plain YAML; no code evaluation)
 * YAMLScript code mode always uses these YAML forms:
-  * Block mappings
-  * Plain scalars
+  * Block mappings (normal indented mappings; `: ` separated pairs)
+  * Plain scalars (no quotes)
   * Quoted scalars (single or double or literal (`|`))
 * Theses YAML forms are NOT allowed in code mode:
   * Flow mappings and sequences (`{}` and `[]`)
   * Block sequences (lines starting with `- `)
+  * Folded scalars (`>`)
 * All YAML forms are allowed in data mode
 * `!` tag toggles between code and data mode
 * `a:: b` is sugar for `a: ! b` in mapping pairs
-* Use `=>: x` to write `x` as a mapping pair
+* Use `=>: x` to write `x` as a mapping pair in code mode
 
 The following examples are in code mode unless otherwise noted.
 
@@ -33,7 +39,7 @@ The space before the `=` is required.
 
 ```
 hello =: 'Oh hello'
--[a b c] =: -[1 2 3]  # Destructuring assignment
+a b c =: -[1 2 3]  # Destructuring assignment
 ```
 
 
@@ -42,7 +48,7 @@ hello =: 'Oh hello'
 YS expressions need to be written as valid YAML scalars.
 When an expression starts with YAML syntax characters like `{`, `[`, `*`, `#`
 then its not a valid YAML scalar.
-Also expressions that have stuff after a quoted string are not valid YAML.
+Also expressions that have stuff after a quoted string (`''` `""`) are not valid YAML.
 You can turn text into a valid YAML plain scalar by prefixing it with a dash.
 The dash is removed when YAMLScript reads the scalar.
 
@@ -99,18 +105,46 @@ greet 'Bob':
 
 ```
 say: slurp("/usr/share/dict/words")
-     .split(/\n/).shuffle().take(3)
-     .join(".")
+     .lines():shuffle.take(3).join(".")
 # => specialty.mutation's.Kisangani
 ```
+
+> `.lines():shuffle` is short for `.lines().shuffle()`. Must be be attached to
+something on the left.
+
+
+#### Special chain operators
+
+* `.#` - Short for `.count()`
+* `.?` - Short for `.truey?()`
+* `.!` - Short for `.falsey?()`
+* `.++` - Short for `.inc()`
+* `.--` - Short for `.dec()`
+* `.>>>` - Short for `.DBG()`
 
 
 ### Looping
 
+List comprehensions are done with the `for`, `each`, `map`
 ```
 each i (1 .. 3):
   say: i
 ```
+
+```
+map inc: (1 .. 3)
+```
+
+```
+reduce (fn [acc num] acc + num) 0: (1 .. 3)
+```
+
+reduce _ 0 (1 2 3):
+  fn(acc num): acc + num
+The `_` is a placeholder for the defined function argument.
+Use `_` when the function argument is too long to write in place.
+
+
 
 
 ### Conditional (if/else)
@@ -120,6 +154,9 @@ if a > 10:
   say: 'BIG'
   say: 'small'
 ```
+
+The `if` construct must have a 'then' and an 'else' clause.
+Use the `
 
 
 ### Conditional (cond)
