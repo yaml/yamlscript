@@ -37,8 +37,6 @@ main() {
     fi
   fi
 
-  set | grep '^YS_' >&2
-
   if [[ ${YS_FORMAT-} ]]; then
     export YS_FORMAT
   fi
