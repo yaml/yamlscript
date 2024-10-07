@@ -12,7 +12,7 @@ defn paragraph(num): |
   $bottles(num.--) of beer on the wall.
 
 defn bottles(n):
-  condp eq n:
-    0    : 'No more bottles'
-    1    : '1 bottle'
-    else : "$n bottles"
+  cond:
+    n == 0 : 'No more bottles'
+    n == 1 : '1 bottle'
+    else   : "$n bottles"

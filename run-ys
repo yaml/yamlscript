@@ -22,7 +22,34 @@ main() {
   [[ -f $bin/ys-0 && -x $bin/ys-0 ]] ||
     install-ys
 
-  exec ys-0 "$file" "$@"
+  if [[ $YS_OUTPUT == '%.'* ]]; then
+    YS_OUTPUT=${file%.*}${YS_OUTPUT#\%}
+  fi
+
+  if [[ ${YS_OUTPUT-} ]]; then
+    export YS_OUTPUT
+    if [[ $YS_OUTPUT == *.yaml ]]; then
+      export YS_FORMAT=yaml
+    elif [[ $YS_OUTPUT == *.yml ]]; then
+      export YS_FORMAT=yaml
+    elif [[ $YS_OUTPUT == *.json ]]; then
+      export YS_FORMAT=json
+    fi
+  fi
+
+  set | grep '^YS_' >&2
+
+  if [[ ${YS_FORMAT-} ]]; then
+    export YS_FORMAT
+  fi
+
+  YS=${YS_RUN_YS:-'ys-0'}
+
+  if [[ ${YS_OUTPUT-} ]]; then
+    exec "$YS" "$file" "$@" > "$YS_OUTPUT"
+  else
+    exec "$YS" "$file" "$@"
+  fi
 }
 
 initialize() {
@@ -80,9 +107,9 @@ See https://yamlscript.org/doc/run-ys for more information.
     echo
   ) &> "$tty"
 
-                  # XXX - Temporary testing hack
-                  [[ -e ~ingy/src/yamlscript/ys/bin/ys ]] &&
-                    cp ~ingy/src/yamlscript/ys/bin/ys* "$bin/"
+#                 # XXX - Temporary testing hack
+#                 [[ -e ~ingy/src/yamlscript/ys/bin/ys ]] &&
+#                   cp ~ingy/src/yamlscript/ys/bin/ys* "$bin/"
 
   [[ $(command -v "ys-$version") == "$ysbin" ]] ||
     die "Something went wrong"
