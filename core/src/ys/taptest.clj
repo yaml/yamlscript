@@ -154,13 +154,14 @@
                   (when-let [diag (get test "diag")]
                     (binding [*out* *err*]
                       (println (str "# " diag)))))
-              got (cond
-                    (contains? keys "code") [(run-code test)]
-                    (contains? keys "cmnd") [(run-cmnd test)])]
+              got (condp #(contains? %2 %1) keys
+                    "code" [(run-code test)]
+                    "cmnd" [(run-cmnd test)]
+                    nil)]
           (when got
             (let [got (first got)]
-              (cond
-                (contains? keys "want")
+              (condp #(contains? %2 %1) keys
+                "want"
                 (let [got (normalize got test)
                       want (normalize (get test "want")
                              {"what" (get test "what")})]
@@ -168,26 +169,25 @@
                     (passed test)
                     (failed test got)))
                 ,
-                (contains? keys "like")
+                "like"
                 (let [rgx (re-pattern (get test "like"))]
                   (if (re-find rgx got)
                     (passed test)
                     (failed test got)))
                 ,
-                (contains? keys "have")
+                "have"
                 (if (str/includes? got (get test "have"))
                   (passed test)
                   (failed test got))
                 ,
-                (contains? keys "code")
+                "code"
                 (let [test (assoc test "want" true)]
                   (if (= got true)
                     (passed test)
                     (failed test got)))
-                (contains? keys "note") nil
-                (contains? keys "diag") nil
+                "note" nil
+                "diag" nil
                 ,
-                :else
                 (die (str "taptest: Test " @counter
                        " requires one of: 'want', 'like', 'have'"))))))))))
 

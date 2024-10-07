@@ -170,18 +170,18 @@
     xs))
 
 (defn- qf [form]
-  (cond
-    (:Sym form) (let [sym (-> form :Sym str)]
-                  (if (re-find #"^\$\w" sym)
-                    (Sym (subs sym 1))
-                    (if (= sym "$#")
-                      form
-                      (QSym (:Sym form)))))
-    (:Lst form) (update-in form [:Lst]
-                  (fn [list] (map #(if (= {:Sym '_} %1)
-                                    (Sym '_)
-                                    %1) list)))
-    :else form))
+  (condp #(%1 %2) form
+    :Sym (let [sym (-> form :Sym str)]
+           (if (re-find #"^\$\w" sym)
+             (Sym (subs sym 1))
+             (if (= sym "$#")
+               form
+               (QSym (:Sym form)))))
+    :Lst (update-in form [:Lst]
+           (fn [list] (map #(if (= {:Sym '_} %1)
+                              (Sym '_)
+                              %1) list)))
+    form))
 
 (defn fix-dot-chain [expr]
   (if-lets [list (or (get-in expr [0 :Lst]) expr)
@@ -195,26 +195,27 @@
   (fix-dot-chain
     (if (>= (count forms) 3)
       (loop [[a b c :as xs] forms, grp [], acc []]
-        (cond (empty? xs)
-              (conj-seq acc grp)
-              ,
-              (and c (= sep b) (not= a sep) (not= c sep))
-              (recur
-                (drop 3 xs)
-                [a b (qf c)]
-                (conj-seq acc grp))
-              ,
-              (and b (= sep a) (seq grp))
-              (recur
-                (drop 2 xs)
-                (conj grp a (qf b))
-                acc)
-              ,
-              :else
-              (recur
-                (rest xs)
-                []
-                (conj-seq acc grp a))))
+        (cond
+          (empty? xs)
+          (conj-seq acc grp)
+          ,
+          (and c (= sep b) (not= a sep) (not= c sep))
+          (recur
+            (drop 3 xs)
+            [a b (qf c)]
+            (conj-seq acc grp))
+          ,
+          (and b (= sep a) (seq grp))
+          (recur
+            (drop 2 xs)
+            (conj grp a (qf b))
+            acc)
+          ,
+          :else
+          (recur
+            (rest xs)
+            []
+            (conj-seq acc grp a))))
       forms)))
 
 (defn yes-expr [expr]
@@ -351,15 +352,12 @@
 (defn split-colon-calls [token]
   (let [tokens (str/split token #":")
         [token1 token2 & xtokens] tokens
-        [start tokens] (cond
-                         (re-find #"\.$" token1)
+        [start tokens] (if (re-find #"\.$" token1)
                          [[(-> token1 butlast str/join)
                            "."
                            (str ":" token2)]
                           xtokens]
-                         :else
-                         [[token1]
-                          (vec (rest tokens))])
+                         [[token1] (vec (rest tokens))])
         start (if (re-find #"_" (first start))
                 [(str \" (first start) \")]
                 start)]

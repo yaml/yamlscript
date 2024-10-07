@@ -45,38 +45,33 @@
   (let [dname (symbol (str "+" name))
         pname (symbol (str "++" name))
         name (if (resolve pname) pname name)]
-    (cond
-      (= 2.1 type)
-      `(defn ~dname [x# y#]
-         (if (~idfn y#)
-           (~name y# x#)
-           (~name x# y#)))
-      (= 2.2 type)
-      `(defn ~dname [x# y#]
-         (if (~idfn x#)
-           (~name y# x#)
-           (~name x# y#)))
-      (= 23.2 type)
-      `(defn ~dname
-         ([x# y#]
-          (if (~idfn x#)
-            (~name y# x#)
-            (~name x# y#)))
-         ([x# y# z#]
-          (if (~idfn x#)
-            (~name y# x# z#)
-            (~name x# y# z#))))
-      (= 9.1 type)
-      `(defn ~dname [x# y# & xs#]
-         (if (~idfn y#)
-           (apply ~name y# x# xs#)
-           (apply ~name x# y# xs#)))
-      (= 9.9 type)
-      `(defn ~dname [x# & xs#]
-         (if (~idfn x#)
-           (apply ~name (concat xs# [x#]))
-           (apply ~name x# xs#)))
-      :else (die "Bad dwim  type: " type))))
+    (condp = type
+      2.1 `(defn ~dname [x# y#]
+             (if (~idfn y#)
+               (~name y# x#)
+               (~name x# y#)))
+      2.2 `(defn ~dname [x# y#]
+             (if (~idfn x#)
+               (~name y# x#)
+               (~name x# y#)))
+      23.2 `(defn ~dname
+              ([x# y#]
+               (if (~idfn x#)
+                 (~name y# x#)
+                 (~name x# y#)))
+              ([x# y# z#]
+               (if (~idfn x#)
+                 (~name y# x# z#)
+                 (~name x# y# z#))))
+      9.1 `(defn ~dname [x# y# & xs#]
+             (if (~idfn y#)
+               (apply ~name y# x# xs#)
+               (apply ~name x# y# xs#)))
+      9.9 `(defn ~dname [x# & xs#]
+             (if (~idfn x#)
+               (apply ~name (concat xs# [x#]))
+               (apply ~name x# xs#)))
+      (die "Bad dwim  type: " type))))
 
 
 ;;------------------------------------------------------------------------------

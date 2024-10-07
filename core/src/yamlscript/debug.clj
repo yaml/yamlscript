@@ -37,9 +37,10 @@
     :else (if (> (count (pr-str value)) 80)
             (str/trim-newline
               (with-out-str
-                (pp/pprint (cond (map? value) (into (sorted-map) value)
-                                 (set? value) (apply sorted-set value)
-                                 :else value))))
+                (pp/pprint (condp #(%1 %2) value
+                             map? (into (sorted-map) value)
+                             set? (apply sorted-set value)
+                             value))))
             (pr-str value))))
 
 (defn- dump [values]
@@ -85,18 +86,19 @@
         list
         (loop [tokens tokens list [] level 0 levels '()]
           (let [[token & tokens] tokens]
-            (cond (nil? token) list
-                  (= token "(TTT ")
-                  (recur tokens list (inc level) (cons (inc level) levels))
-                  (= token "(")
-                  (recur tokens (conj list token) (inc level) levels)
-                  (= token ")")
-                  (recur
-                    tokens (if (= (first levels) level)
-                             list (conj list token))
-                    (dec level) (if (= (first levels) level)
-                                  (rest levels) levels))
-                  :else (recur tokens (conj list token) level levels))))]
+            (condp = token
+              nil list
+              "(TTT "
+              (recur tokens list (inc level) (cons (inc level) levels))
+              "("
+              (recur tokens (conj list token) (inc level) levels)
+              ")"
+              (recur
+                tokens (if (= (first levels) level)
+                         list (conj list token))
+                (dec level) (if (= (first levels) level)
+                              (rest levels) levels))
+              (recur tokens (conj list token) level levels))))]
     (str/join "" (remove nil? list))))
 
 (defn ttt-fmt

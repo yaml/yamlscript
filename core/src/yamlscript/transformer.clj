@@ -62,14 +62,14 @@
               [node (transform-node node)
                ctx
                (if ctx
-                 (cond
-                   (:Int node) (Lst [(Sym 'get+) ctx node])
-                   (:Str node) (Lst [(Sym 'get) ctx node])
-                   (:QSym node) (Lst [(Sym 'get+) ctx node])
-                   (:Sym node) (Lst [(Sym 'get+) ctx node])
-                   (:Key node) (Lst [node ctx])
-                   (:Lst node) (dot-list ctx node)
-                   :else ctx)
+                 (condp #(%1 %2) node
+                   :Int (Lst [(Sym 'get+) ctx node])
+                   :Str (Lst [(Sym 'get) ctx node])
+                   :QSym (Lst [(Sym 'get+) ctx node])
+                   :Sym (Lst [(Sym 'get+) ctx node])
+                   :Key (Lst [node ctx])
+                   :Lst (dot-list ctx node)
+                   ctx)
                  node)]
                ctx))
            nil lst)]
@@ -214,15 +214,15 @@
 
 (defn transform-node [node]
   (let [anchor (:& node)
-        node (cond
-               (:pairs node) (transform-pairs node)
-               (:forms node) (transform-pairs node)
-               (:dot node) (transform-dot node)
-               (:Lst node) (transform-list node)
-               (:Map node) (transform-map node)
-               (:Vec node) (transform-vec node)
-               (:Sym node) (transform-sym node)
-               :else node)]
+        node (condp #(%1 %2) node
+               :pairs (transform-pairs node)
+               :forms (transform-pairs node)
+               :dot (transform-dot node)
+               :Lst (transform-list node)
+               :Map (transform-map node)
+               :Vec (transform-vec node)
+               :Sym (transform-sym node)
+               node)]
     (if anchor
       (assoc node :& anchor)
       node)))
