@@ -46,13 +46,13 @@
       (:macro (meta x)))))
 
 (defn type-name [x]
-  (cond
-    (map? x) "Map"
-    (set? x) "Set"
-    (vector? x) "Vector"
-    (list? x) "List"
-    (seq? x) "Seq"
-    :else (type x)))
+  (condp #(%1 %2) x
+    map? "Map"
+    set? "Set"
+    vector? "Vector"
+    list? "List"
+    seq? "Seq"
+    (type x)))
 
 (defmacro when-lets
   ([bindings & body]

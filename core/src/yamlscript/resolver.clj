@@ -38,13 +38,13 @@
 ;; Generic helpers:
 ;; ----------------------------------------------------------------------------
 (defn node-type [node]
-  (cond
-    (:% node)  :map
-    (:%% node) :map
-    (:- node)  :seq
-    (:-- node) :seq
-    (:* node)  :ali
-    :else      :val))
+  (condp #(%1 %2) node
+    :%  :map
+    :%% :map
+    :-  :seq
+    :-- :seq
+    :*  :ali
+        :val))
 
 (declare
   resolve-bare-node
@@ -227,13 +227,13 @@
   (let [val (:= node)]
     (when (re-matches re-inf-nan val)
       (die "Inf and NaN not supported in YAMLScript"))
-    (cond
-      (re-matches re-int val) :int
-      (re-matches re-float val) :flt
-      (re-matches re-bool val) :bln
-      (re-matches re-null val) :nil
-      (re-matches re-keyword val) :key
-      :else :str)))
+    (condp re-matches val
+      re-int :int
+      re-float :flt
+      re-bool :bln
+      re-null :nil
+      re-keyword :key
+      :str)))
 
 (defn resolve-data-scalar [node]
   (let [style (get-scalar-style node)]

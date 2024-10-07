@@ -224,9 +224,10 @@
        (sci/binding
         [sci/file file
          ARGS (vec
-                (map #(cond (re-matches re/inum %1) (parse-long %1)
-                            (re-matches re/fnum %1) (parse-double %1)
-                            :else %1)
+                (map #(cond
+                        (re-matches re/inum %1) (parse-long %1)
+                        (re-matches re/fnum %1) (parse-double %1)
+                        :else %1)
                   args))
          ARGV args
          RUN (get-runtime-info)

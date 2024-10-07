@@ -479,22 +479,24 @@ Options:
       (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
 
 (defn do-main [opts args argv help error errs]
-  (cond
-    error (do-error [(str "Error: " error)])
-    (seq errs) (do-error errs)
-    (:help opts) (do-help help)
-    (:version opts) (do-version)
-    (:install opts) (do-install opts args)
-    (:upgrade opts) (do-upgrade opts args)
-    (:binary opts) (do-binary opts args)
-    (:run opts) (do-run opts args argv)
-    (:compile opts) (do-compile opts args)
-    (:load opts) (do-run opts args argv)
-    (:repl opts) (do-repl opts)
-    (:connect opts) (do-connect opts args)
-    (:kill opts) (do-kill opts args)
-    (:nrepl opts) (do-nrepl opts args)
-    :else (do-default opts args argv help)))
+  (if error
+    (do-error [(str "Error: " error)])
+    (if (seq errs)
+      (do-error errs)
+      (condp #(%1 %2) opts
+        :help (do-help help)
+        :version (do-version)
+        :install (do-install opts args)
+        :upgrade (do-upgrade opts args)
+        :binary (do-binary opts args)
+        :run (do-run opts args argv)
+        :compile (do-compile opts args)
+        :load (do-run opts args argv)
+        :repl (do-repl opts)
+        :connect (do-connect opts args)
+        :kill (do-kill opts args)
+        :nrepl (do-nrepl opts args)
+        (do-default opts args argv help)))))
 
 (defn -main [& args]
   (global/reset-env nil)

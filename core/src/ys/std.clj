@@ -13,7 +13,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [yamlscript.common :as common]
+   [yamlscript.common :as common :refer [regex?]]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
@@ -52,11 +52,11 @@
 (defn- destructure-idx [x idx]
   (let [root (gensym)]
     `(let [~root ~idx]
-       ~@(cond
-           (vector? x) (destructure-vector x root)
-           (list? x) (destructure-vector x root)
-           (map? x) (destructure-map x root)
-           :else []))))
+       ~@(condp #(%1 %2) x
+           vector? (destructure-vector x root)
+           list? (destructure-vector x root)
+           map? (destructure-map x root)
+           []))))
 
 (defn- +def-defn [x y]
   (if (symbol? x)
@@ -73,12 +73,12 @@
          (fn [env k v]
            (when-not (string? k)
              (util/die "env-update() keys must be strings"))
-           (let [v (cond
-                     (string? v) v
-                     (number? v) (str v)
-                     (boolean? v) (str v)
-                     (nil? v) nil
-                     :else (util/die "env-update() values must be scalars"))]
+           (let [v (condp #(%1 %2) v
+                     string? v
+                     number? (str v)
+                     boolean? (str v)
+                     nil? nil
+                     (util/die "env-update() values must be scalars"))]
              (assoc env k v))) {} m)]
      (global/update-env m)
      (global/update-environ m)))
@@ -105,11 +105,7 @@
 (defn qr [S] (re-pattern S))
 
 (defmacro qw [& xs]
-  (let [xs# (map (fn [w]
-                   (condp = (type w)
-                     nil "nil"
-                     (str w)))
-              xs)]
+  (let [xs# (map #(if (nil? %1) "nil" (str %1)) xs)]
     `[~@xs#]))
 
 
@@ -118,11 +114,11 @@
 ;;------------------------------------------------------------------------------
 
 (defn falsey? [x]
-  (cond
-    (number? x) (zero? x)
-    (seqable? x) (empty? x)
-    x false
-    :else true))
+  (condp #(%1 %2) x
+    number? (zero? x)
+    seqable? (empty? x)
+    identity false
+    true))
 
 (defn truey? [x]
   (if (falsey? x) nil x))
@@ -188,13 +184,13 @@
 (intern 'ys.std 'to-bool clojure.core/boolean)
 
 (defn to-char [x]
-  (cond
-    (char? x) x
-    (string? x) (if (= 1 (count x))
-                  (first x)
-                  (util/die "Can't convert string to char"))
-    (number? x) (char x)
-    :else (util/die "Can't convert " (type x) " to char")))
+  (condp #(%1 %2) x
+    char? x
+    string? (if (= 1 (count x))
+              (first x)
+              (util/die "Can't convert string to char"))
+    number? (char x)
+    (util/die "Can't convert " (type x) " to char")))
 
 (defn to-float [x] (double (to-num x)))
 
@@ -215,17 +211,17 @@
   ([x y & xs] (apply hash-map x y xs)))
 
 (defn to-num [x]
-  (cond
-    (ratio? x) (double x)
-    (number? x) x
-    (string? x) (if (re-find #"\." x)
-                  (parse-double x)
-                  (parse-long x))
-    (nil? x) nil
-    (seqable? x) (count x)
-    (char? x) (int x)
-    (boolean? x) (if x 1 0)
-    :else (util/die (str "Can't convert " (type x) " to number"))))
+  (condp #(%1 %2) x
+    ratio? (double x)
+    number? x
+    string? (if (re-find #"\." x)
+              (parse-double x)
+              (parse-long x))
+    nil? nil
+    seqable? (count x)
+    char? (int x)
+    boolean? (if x 1 0)
+    (util/die (str "Can't convert " (type x) " to number"))))
 
 (defn to-set
   ([] (set []))
@@ -236,10 +232,10 @@
 
 (defn to-vec
   ([] [])
-  ([x] (cond
-         (map? x) (vec (flatten (seq x)))
-         (seqable? x) (vec x)
-         :else (vector x)))
+  ([x] (condp #(%1 %2) x
+         map? (vec (flatten (seq x)))
+         seqable? (vec x)
+         (vector x)))
   ([x & xs] (apply vector x xs)))
 
 (intern 'ys.std 'B to-bool)
@@ -321,38 +317,39 @@
   (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
 
 (defn inc+ [x]
-  (cond
-    (number? x) (inc x)
-    (char? x) (char (inc (long x)))
-    :else (let [n (to-num x)]
-             (cond
-               (number? n) (inc n)
-               (nil? n) nil
-               :else (op-error "inc" x nil)))))
+  (condp #(%1 %2) x
+    number? (inc x)
+    char? (char (inc (long x)))
+    (let [n (to-num x)]
+      (condp #(%1 %2) n
+        number? (inc n)
+        nil? nil
+        (op-error "inc" x nil)))))
 
 (defn dec+ [x]
-  (cond
-    (number? x) (dec x)
-    (char? x) (char (dec (long x)))
-    :else (let [n (to-num x)]
-             (cond
-               (number? n) (dec n)
-               (nil? n) nil
-               :else (op-error "dec" x nil)))))
+  (condp #(%1 %2) x
+    number? (dec x)
+    char? (char (dec (long x)))
+    (let [n (to-num x)]
+      (condp #(%1 %2) n
+        number? (dec n)
+        nil? nil
+        (op-error "dec" x nil)))))
 
 (defn add+
   ([x y]
-   (cond
-     (some nil? [x y]) (util/die "Cannot add with a nil value")
-     (number? x) (+ x (to-num y))
-     (string? x) (str x y)
-     (map? x) (merge x y)      ;; error if y is not a map
-     (set? x) (set/union x y)  ;; error if y is not a set
-     (seqable? x) (concat x y) ;; error if y is not seqable
-     (char? x) (if (number? y)
-                 (char (+ (int x) y))
-                 (str x y))
-     :else (+ (to-num x) (to-num y))))
+   (when (some nil? [x y])
+     (util/die "Cannot add with a nil value"))
+   (condp #(%1 %2) x
+     number? (+ x (to-num y))
+     string? (str x y)
+     map? (merge x (to-map y))
+     set? (set/union x (to-set y))
+     seqable? (concat x (to-vec y))
+     char? (if (number? y)
+             (char (+ (int x) y))
+             (str x y))
+     (+ (to-num x) (to-num y))))
   ([x y & xs]
    (when (not (or
                 (apply = (type x) (type y) (map type xs))
@@ -371,21 +368,23 @@
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
      :else  (* x y)))
   ([x y & xs]
-    (reduce mul+ (mul+ x y) xs)))
+   (reduce mul+ (mul+ x y) xs)))
 
 (defn sub+
   ([x y]
-   (cond
-     (some nil? [x y]) (util/die "Cannot subtract with a nil value")
-     (string? x) (str/replace x (str y) "")
-     (map? x) (dissoc x y)
-     (set? x) (disj x y)
-     (seqable? x) (remove #(= y %1) x)
-     (number? x) (- x (to-num y))
-     (char? x) (cond (number? y) (char (- (long x) y))
-                     (char? y) (- (long x) (long y))
-                     :else (op-error "sub" x y))
-     :else (+ (to-num x) (to-num y))))
+   (when (some nil? [x y])
+     (util/die "Cannot subtract with a nil value"))
+   (condp #(%1 %2) x
+     string? (str/replace x (str y) "")
+     map? (dissoc x y)
+     set? (disj x y)
+     seqable? (remove #(= y %1) x)
+     number? (- x (to-num y))
+     char? (condp #(%1 %2) y
+             number? (char (- (long x) y))
+             char? (- (long x) (long y))
+             (op-error "sub" x y))
+     (+ (to-num x) (to-num y))))
   ([x y & xs]
    (when (apply not= (type x) (type y) (map type xs))
      (util/die "Cannot sub+ multiple types when more than 2 arguments"))
@@ -433,11 +432,11 @@
 ;;------------------------------------------------------------------------------
 
 (defmacro value [x]
-  `(let [var# (cond
-                (string? ~x) (ns-resolve *ns* (symbol ~x))
-                (symbol? ~x) (ns-resolve *ns* ~x)
-                (var? ~x) ~x
-                :else nil)]
+  `(let [var# (condp #(%1 %2) ~x
+                string? (ns-resolve *ns* (symbol ~x))
+                symbol? (ns-resolve *ns* ~x)
+                var? ~x
+                nil)]
      (when var# (var-get var#))))
 
 (defmacro call [x & xs]
@@ -480,11 +479,11 @@
 (intern 'ys.std 'index clojure.string/index-of)
 
 (defn index [C x]
-  (cond
-    (string? C) (clojure.string/index-of C x)
-    (sequential? C) (let [i (.indexOf ^java.util.List C x)]
-                      (if (>= i 0) i nil))
-    :else (util/die "Can't index a " (type C))))
+  (condp #(%1 %2) C
+    string? (clojure.string/index-of C x)
+    sequential? (let [i (.indexOf ^java.util.List C x)]
+                     (if (>= i 0) i nil))
+    (util/die "Can't index a " (type C))))
 
 (defn join
   ([Ss] (join "" Ss))
@@ -570,21 +569,21 @@
 ;; Collection functions
 ;;------------------------------------------------------------------------------
 (defn get+ [C K]
-  (cond
-    (map? C) (condp = (type K)
-               String (get C K)
-               clojure.lang.Keyword (get C K)
-               clojure.lang.Symbol (or
-                                     (get C K)
-                                     (get C (str K))
-                                     (get C (keyword K)))
-               (get C K))
-    (nil? C) nil
-    (seqable? C) (cond
-                   (number? K) (nth C K nil)
-                   (nil? K) nil
-                   :else nil)
-    :else nil))
+  (condp #(%1 %2) C
+    map? (condp = (type K)
+           String (get C K)
+           clojure.lang.Keyword (get C K)
+           clojure.lang.Symbol (or
+                                 (get C K)
+                                 (get C (str K))
+                                 (get C (keyword K)))
+           (get C K))
+    nil? nil
+    seqable? (condp #(%1 %2) K
+               number? (nth C K nil)
+               nil? nil
+               nil)
+    nil))
 
 (defn flat [C]
   (mapcat
@@ -593,12 +592,12 @@
 
 (defn grep [P C]
   (let [[P C] (if (seqable? C) [P C] [C P])
-        _ (when-not (seqable? C) (util/die "No seqable arg passed to grep"))
-        t (type P)]
-    (cond
-      (= t java.util.regex.Pattern) (filter #(re-find P %1) C)
-      (fn? P) (filter P C)
-      :else (filter #(= P %1) C))))
+        _ (when-not (seqable? C)
+            (util/die "No seqable arg passed to grep"))]
+    (condp #(%1 %2) P
+      regex? (filter #(re-find P %1) C)
+      fn? (filter P C)
+      (filter #(= P %1) C))))
 
 (defn has? [C x]
   (boolean
@@ -612,11 +611,11 @@
   (apply flatland.ordered.map/ordered-map xs))
 
 (defn reverse [x]
-  (cond
-    (string? x) (clojure.string/reverse x)
-    (vector? x) (vec (clojure.core/reverse x))
-    (seqable? x) (clojure.core/reverse x)
-    :else (util/die "Can't reverse " x)))
+  (condp #(%1 %2) x
+    string? (clojure.string/reverse x)
+    vector? (vec (clojure.core/reverse x))
+    seqable? (clojure.core/reverse x)
+    (util/die "Can't reverse " x)))
 
 (defn rng [x y]
   (let [[a b] (for [n [x y]] (if (char? n) (long n) n))]

@@ -118,11 +118,11 @@
     [{:form (build-node key)} (build-node val)]))
 
 (defn build-pair [nodes [key val]]
-  (let [[key val] (cond
-                    (:defn key) (build-defn key val)
-                    (:fn key) (build-defn key val)
-                    (:form key) (build-form-pair key val)
-                    :else [(build-node key) (build-node val)])]
+  (let [[key val] (condp #(%1 %2) key
+                    :defn (build-defn key val)
+                    :fn (build-defn key val)
+                    :form (build-form-pair key val)
+                    [(build-node key) (build-node val)])]
     (conj nodes key val)))
 
 (defn build-pairs [{pairs :pairs}]
@@ -199,20 +199,19 @@
 (defn build-interpolated [string]
   (let [parts (re-seq re-interpolated-string string)
         exprs (map
-                #(cond
-                   (re-matches (re/re #"\$\{$symw\}") %1)
+                #(condp (fn [re s] (re-matches re s)) %1
+                   (re/re #"\$\{$symw\}")
                    (Sym (subs %1 2 (dec (count %1))))
 
-                   (re-matches (re/re #"\$$symw$bpar") %1)
+                   (re/re #"\$$symw$bpar")
                    (build-exp {:exp (subs %1 1)})
 
-                   (re-matches (re/re #"\$$symw") %1)
+                   (re/re #"\$$symw")
                    (Sym (subs %1 1))
 
-                   (re-matches (re/re #"\$$bpar") %1)
+                   (re/re #"\$$bpar")
                    (build-exp-interpolated {:exp (subs %1 1)})
 
-                   :else
                    (Str (str/replace %1 #"\\(\$)" "$1")))
                 parts)]
     (if (= 1 (count exprs))

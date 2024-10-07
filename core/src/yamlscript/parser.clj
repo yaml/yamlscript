@@ -66,16 +66,16 @@
 ;;
 (defn event-obj [^Event event]
   (let [class (class event)
-        name (cond
-               (= class DocumentStartEvent) "+DOC"
-               (= class DocumentEndEvent) "-DOC"
-               (= class MappingStartEvent) "+MAP"
-               (= class MappingEndEvent) "-MAP"
-               (= class SequenceStartEvent) "+SEQ"
-               (= class SequenceEndEvent) "-SEQ"
-               (= class ScalarEvent) "=VAL"
-               (= class AliasEvent) "=ALI"
-               :else (die class))
+        name (condp = class
+               DocumentStartEvent "+DOC"
+               DocumentEndEvent "-DOC"
+               MappingStartEvent "+MAP"
+               MappingEndEvent "-MAP"
+               SequenceStartEvent "+SEQ"
+               SequenceEndEvent "-SEQ"
+               ScalarEvent "=VAL"
+               AliasEvent "=ALI"
+               (die class))
         start ^Optional (. event getStartMark)
         end ^Optional (. event getEndMark)]
     (with-meta
@@ -122,9 +122,10 @@
 (defn scalar-val [^ScalarEvent event]
   (let [obj (event-start event)
         style (.. event (getScalarStyle) (toString))
-        style (cond (= style ":") "="
-                    (= style "\"") "$"
-                    :else style)
+        style (condp = style
+                ":" "="
+                "\"" "$"
+                style)
         style (keyword style)]
     (assoc obj style (. event getValue))))
 (defn alias-val [^AliasEvent event]
