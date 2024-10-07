@@ -26,6 +26,8 @@ main() {
     YS_OUTPUT=${file%.*}${YS_OUTPUT#\%}
   fi
 
+  ys_opts=()
+
   if [[ ${YS_OUTPUT-} ]]; then
     export YS_OUTPUT
     if [[ $YS_OUTPUT == *.yaml ]]; then
@@ -35,18 +37,20 @@ main() {
     elif [[ $YS_OUTPUT == *.json ]]; then
       export YS_FORMAT=json
     fi
+    ys_opts=(--load)  # XXX remove after 0.1.80
   fi
 
   if [[ ${YS_FORMAT-} ]]; then
     export YS_FORMAT
+    ys_opts=(--"$YS_FORMAT")
   fi
 
   YS=${YS_RUN_YS:-'ys-0'}
 
   if [[ ${YS_OUTPUT-} ]]; then
-    exec "$YS" "$file" "$@" > "$YS_OUTPUT"
+    exec "$YS" "${ys_opts[@]}" "$file" "$@" > "$YS_OUTPUT"
   else
-    exec "$YS" "$file" "$@"
+    exec "$YS" "${ys_opts[@]}" "$file" "$@"
   fi
 }
 
