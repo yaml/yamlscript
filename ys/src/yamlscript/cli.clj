@@ -511,6 +511,8 @@ Options:
          errs :errors} options
         argv (rest argv)
         error (validate-opts opts)
+        opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
+        opts (if (env "YS_LOAD") (assoc opts :load true) opts)
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
         opts (if (:edn opts) (assoc opts :to "edn") opts)
@@ -518,11 +520,12 @@ Options:
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
                (assoc opts :mode "code") opts)
 
+        opts (if (env "YS_OUTPUT")
+               (assoc opts :output (env "YS_OUTPUT")) opts)
         opts (if (env "YS_PRINT") (assoc opts :print true) opts)
         opts (if (and (env "YS_PRINT_EVAL")
                    (seq (:eval opts))) (assoc opts :print true) opts)
         opts (if (env "YS_STACK_TRACE") (assoc opts :stack-trace true) opts)
-        opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
         opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
         opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
         opts opts]
