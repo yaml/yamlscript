@@ -50,8 +50,8 @@ test::
   cmnd:: "ys $RC/factorial.ys 10"
   want: 10! -> 3628800
 
-- name: ys fibonacci.ys 10
-  cmnd:: "ys $RC/fibonacci.ys 10"
+- name: ys fibonacci-sequence.ys 10
+  cmnd:: "ys $RC/fibonacci-sequence.ys 10"
   want: |
     0
     1
@@ -86,8 +86,8 @@ test::
   cmnd:: "ys $RC/function-definition.ys 2 3 7"
   want: multiply(2, 3, 7) -> 42
 
-- name: ys greatest-common-denominator.ys 42 63
-  cmnd:: "ys $RC/greatest-common-denominator.ys 42 63"
+- name: ys greatest-common-divisor.ys 42 63
+  cmnd:: "ys $RC/greatest-common-divisor.ys 42 63"
   want: gcd(42 63) -> 21
 
 - name: ys hello-world.ys

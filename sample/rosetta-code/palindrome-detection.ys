@@ -1,7 +1,5 @@
 !yamlscript/v0
 
 defn main(n=31337):
-  not =:
-    when str(n) != reverse(str(n)): ' not'
-
+  not =: when((n:S != n:S:reverse) ' not')
   say: "$n is$not a palindrome."
