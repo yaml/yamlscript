@@ -34,8 +34,9 @@ Like many new languages, YAMLScript was built over an existing robust language,
 [Java](https://java.com).
 All of the power of Clojure and Java is available to YAMLScript users via the
 YAMLScript runtime interpreter, `ys`.
-The `ys` command is a single standalone native binary executable file.
-This means that no Java or JVM installation is required to use YAMLScript!
+However, the `ys` command is compiled into a single standalone native binary
+executable file.
+This means that **NO Java or JVM** installation is required to use YAMLScript!
 
 YAMLScript also produces the `libyamlscript.so` shared library.
 It has [binding modules for 10 programming languages](/doc/bindings) including
@@ -45,11 +46,11 @@ YAMLScript enhanced ones.
 
 There are many ways to use YAMLScript:
 
-* [Simplifying your existing YAML files](embedding)
-* [Loading YAMLScript or YAML files into your program](bindings)
-* [Programming/Scripting in YAMLScript](programming)
+* [Simplifying your existing YAML files](/doc/embedding)
+* [Loading YAMLScript or YAML files into your program](doc/bindings)
+* [Programming/Scripting in YAMLScript](doc/programming)
 <!-- * [Templating with YAMLScript]() -->
-* [Compiling YAMLScript programs to binary executables]()
+<!-- * [Compiling YAMLScript programs to binary executables]() -->
 
 Skip below to [The YAMLScript Language](#language) to learn more about
 programming in YAMLScript.
@@ -58,24 +59,8 @@ programming in YAMLScript.
 
 ## Loading YAML with YAMLScript
 
-If you 
-
 YAMLScript is also a **new YAML Loader** for modern programming languages that
 can add "Super Powers" to your plain old YAML config files.
-
-YAMLScript intends to provide a loader library for every programming language
-that uses YAML.
-Currently we have working libraries for
-[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
-[Go](https://github.com/yaml/yamlscript-go),
-[Java](https://clojars.org/org.yamlscript/yamlscript),
-[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
-[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
-[Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
-[Python](https://pypi.org/project/yamlscript/),
-[Raku](https://raku.land/zef:ingy/YAMLScript),
-[Ruby](https://rubygems.org/search?query=yamlscript) and
-[Rust](https://crates.io/crates/yamlscript).
 
 By using YAMLScript as your YAML loader, you can dynamically include data from
 other data files (YAML, JSON, XML, CSV, etc), pull data in from the web or even
@@ -201,12 +186,6 @@ dogs:
 - Mastiff
 title: Ingy's Pets
 ```
-
-----
-
-## Using YAMLScript as YAML
-
-Mos
 
 ----
 
