@@ -223,8 +223,7 @@ defn step-9(ctx):
 
   when-not dryrun || ENV.RELEASE_ID:
     shell {:out "release-id.txt"}: "grep '^Release id:' release-$(ctx.new).log"
-
-  run:: cat release-id.txt
+    run:: cat release-id.txt
 
 #------------------------------------------------------------------------------
 # For each of the many binding libraries, run 'make release'
