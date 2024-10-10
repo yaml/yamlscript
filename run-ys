@@ -3,7 +3,7 @@
 set -euo pipefail
 
 main() {
-  local YAMLSCRIPT_VERSION=0.1.79
+  local YAMLSCRIPT_VERSION=0.1.80
   local INSTALL_DIR=/tmp/yamlscript-run-ys
   local bin file last prefix tty version ysbin
 
@@ -26,32 +26,22 @@ main() {
     YS_OUTPUT=${file%.*}${YS_OUTPUT#\%}
   fi
 
-  ys_opts=()
-
   if [[ ${YS_OUTPUT-} ]]; then
     export YS_OUTPUT
-    if [[ $YS_OUTPUT == *.yaml ]]; then
-      export YS_FORMAT=yaml
-    elif [[ $YS_OUTPUT == *.yml ]]; then
-      export YS_FORMAT=yaml
-    elif [[ $YS_OUTPUT == *.json ]]; then
-      export YS_FORMAT=json
+    if [[ $YS_OUTPUT == *.yaml ]];   then YS_FORMAT=yaml
+    elif [[ $YS_OUTPUT == *.yml ]];  then YS_FORMAT=yaml
+    elif [[ $YS_OUTPUT == *.json ]]; then YS_FORMAT=json
+    elif [[ $YS_OUTPUT == *.edn ]];  then YS_FORMAT=edn
     fi
-    ys_opts=(--load)  # XXX remove after 0.1.80
   fi
 
   if [[ ${YS_FORMAT-} ]]; then
     export YS_FORMAT
-    ys_opts=(--"$YS_FORMAT")
   fi
 
   YS=${YS_RUN_YS:-'ys-0'}
 
-  if [[ ${YS_OUTPUT-} ]]; then
-    exec "$YS" "${ys_opts[@]}" "$file" "$@" > "$YS_OUTPUT"
-  else
-    exec "$YS" "${ys_opts[@]}" "$file" "$@"
-  fi
+  exec "$YS" "$file" "$@"
 }
 
 initialize() {
@@ -109,9 +99,9 @@ See https://yamlscript.org/doc/run-ys for more information.
     echo
   ) &> "$tty"
 
-#                 # XXX - Temporary testing hack
-#                 [[ -e ~ingy/src/yamlscript/ys/bin/ys ]] &&
-#                   cp ~ingy/src/yamlscript/ys/bin/ys* "$bin/"
+# # XXX - Temporary testing hack
+# [[ -e ~ingy/src/yamlscript/ys/bin/ys ]] &&
+#   cp ~ingy/src/yamlscript/ys/bin/ys* "$bin/"
 
   [[ $(command -v "ys-$version") == "$ysbin" ]] ||
     die "Something went wrong"
