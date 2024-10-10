@@ -82,7 +82,7 @@
                      :else (util/die "env-update() values must be scalars"))]
              (assoc env k v))) {} m)]
      (global/update-env m)
-     (global/update-ENV m)))
+     (global/update-environ m)))
   ([k v & xs] (env-update (apply hash-map k v xs))))
 
 

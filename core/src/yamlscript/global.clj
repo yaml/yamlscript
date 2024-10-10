@@ -21,7 +21,7 @@
 
 (def env {})
 
-(defn update-ENV [m]
+(defn update-environ [m]
   (sci/alter-var-root ENV
     (fn [env]
       (if (empty? m)
