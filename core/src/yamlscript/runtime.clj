@@ -30,7 +30,7 @@
    [ys.yaml]
    [ys.ys :as ys]))
 
-(def ys-version "0.1.79")
+(def ys-version "0.1.80")
 
 (def ARGS (sci/new-dynamic-var 'ARGS [] {:ns global/main-ns}))
 (def ARGV (sci/new-dynamic-var 'ARGV [] {:ns global/main-ns}))

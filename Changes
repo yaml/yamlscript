@@ -1,3 +1,15 @@
+- version: 0.1.80
+  date:    Thu 10 Oct 2024 10:46:40 AM PDT
+  changes:
+  - core: Fix Mac bug; 2 fns w/ same name differing case
+  - std: Support die() with no args
+  - std: Support index on sequentials
+  - sample: Updates to sample programs
+  - core: Refactor most cond forms to condp
+  - ys: Fixes for YS_ env var logic
+  - ys: YS_OUTPUT=file writes output to file
+  - std: Add std 'eval' function to eval a YS string
+  - release: Run tests before release
 - version: 0.1.79
   date:    Mon 30 Sep 2024 01:02:02 PM PDT
   changes:

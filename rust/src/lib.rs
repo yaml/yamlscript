@@ -66,7 +66,7 @@ use crate::error::LibYAMLScriptError;
 const LIBYAMLSCRIPT_BASENAME: &str = "libyamlscript";
 
 /// The version of the yamlscript library this bindings works with.
-const LIBYAMLSCRIPT_VERSION: &str = "0.1.79";
+const LIBYAMLSCRIPT_VERSION: &str = "0.1.80";
 
 /// The extension of the YAMLScript library. On Linux, it's a `.so` file.
 #[cfg(target_os = "linux")]

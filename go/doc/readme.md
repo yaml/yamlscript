@@ -3,7 +3,7 @@
 In `go.mod`:
 
 ```go
-require github.com/yaml/yamlscript-go v0.1.79
+require github.com/yaml/yamlscript-go v0.1.80
 ```
 
 File `prog.go`:
@@ -33,7 +33,7 @@ func main() {
 You can install this module like any other Go module:
 
 ```bash
-$ go get github.com/yaml/yamlscript-go@v0.1.79
+$ go get github.com/yaml/yamlscript-go@v0.1.80
 ```
 
 but you will need to have a system install of `libyamlscript.so`.
