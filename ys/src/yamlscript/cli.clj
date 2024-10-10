@@ -10,6 +10,7 @@
    [babashka.process :refer [check exec process]]
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
+   [clojure.java.io :as io]
    [clojure.pprint :as pp]
    [clojure.set :as set]
    [clojure.string :as str]
@@ -516,26 +517,38 @@ Options:
         opts (if (:json opts) (assoc opts :to "json") opts)
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
         opts (if (:edn opts) (assoc opts :to "edn") opts)
-        opts (if (:to opts) (assoc opts :load true) opts)
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
                (assoc opts :mode "code") opts)
 
         opts (if (env "YS_OUTPUT")
                (assoc opts :output (env "YS_OUTPUT")) opts)
+        out (:output opts)
+        opts (if (and
+                   out
+                   (re-find #"\.(?:yml|yaml|json|edn)$" out)
+                   (not (:to opts)))
+               (let [to (str/replace out #".*\.(\w+)$" "$1")
+                     to (if (= "yml" to) "yaml" to)]
+                 (assoc opts :to to))
+               opts)
+        opts (if (:to opts) (assoc opts :load true) opts)
         opts (if (env "YS_PRINT") (assoc opts :print true) opts)
         opts (if (and (env "YS_PRINT_EVAL")
                    (seq (:eval opts))) (assoc opts :print true) opts)
         opts (if (env "YS_STACK_TRACE") (assoc opts :stack-trace true) opts)
         opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
-        opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
-        opts opts]
+        opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)]
 
     (reset! global/opts opts)
 
     (when (env "YS_SHOW_OPTS")
       (pp/pprint @global/opts))
 
-    (do-main opts args argv help error errs)))
+    (if out
+      (with-open [out (io/writer out)]
+        (binding [*out* out]
+          (do-main opts args argv help error errs)))
+      (do-main opts args argv help error errs))))
 
 (comment
   (-main)

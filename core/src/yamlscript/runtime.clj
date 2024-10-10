@@ -202,8 +202,7 @@
                      slurp
                      str/trim-newline)
               :yamlscript ys-version}
-   :yspath (common/get-cmd-path)
-   })
+   :yspath (common/get-cmd-path)})
 
 (defn eval-string
   ([clj]
