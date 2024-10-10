@@ -18,6 +18,7 @@
    [yamlscript.util :as util]
    [ys.ys :as ys])
   (:refer-clojure :exclude [die
+                            eval
                             print
                             reverse
                             replace]))
@@ -453,6 +454,11 @@
   (binding [*out* *err*]
     (apply clojure.core/print xs)
     (flush)))
+
+(defn eval [S]
+  (->> S
+    (str "!yamlscript/v0\n")
+    ys/eval))
 
 (defn exit
   ([] (exit 0))

@@ -196,6 +196,9 @@ test::
   what: error
   want: Died
 
+- code: eval('sum(3 .. 9)')
+  want: 42
+
 
 #-------------------------------------------------------------------------------
 - note: "String functions"

@@ -9,6 +9,7 @@
   (:refer-clojure :only [intern]))
 
 (intern 'ys.clj 'compile   clojure.core/compile)
+(intern 'ys.clj 'eval      clojure.core/eval)
 (intern 'ys.clj 'load      clojure.core/load)
 (intern 'ys.clj 'load-file clojure.core/load-file)
 (intern 'ys.clj 'print     clojure.core/print)
