@@ -239,16 +239,17 @@
          (vector x)))
   ([x & xs] (apply vector x xs)))
 
+(intern 'ys.std 'A atom)
 (intern 'ys.std 'B to-bool)
 (intern 'ys.std 'C to-char)
+(intern 'ys.std 'D deref)
 (intern 'ys.std 'F to-float)
+;; (intern 'ys.std 'G to-set)  ;; G for group; XXX not convinced this is useful
 (intern 'ys.std 'I to-int)
 (intern 'ys.std 'K to-keyword)
 (intern 'ys.std 'L to-list)
 (intern 'ys.std 'M to-map)
 (intern 'ys.std 'N to-num)
-; XXX holding off on this one for now:
-; (intern 'ys.std 'O to-set)
 (intern 'ys.std 'S to-str)
 (intern 'ys.std 'V to-vec)
 
