@@ -103,7 +103,11 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Common type conversion functions"
+- note: "Common type casting functions"
+
+- code: to-char(nil)
+  what: error
+  want: Can't convert nil to char
 
 - code: to-num("42") == 42
 - code: to-num(42) == 42
@@ -113,7 +117,25 @@ test::
 - code: to-num(to-vec(to-map(1 .. 42))) == 42
 - code: to-num("") == nil
 - code: to-num("xyz") == nil
+
+- code: to-list() == \'()
+- code: to-list([]) == \'()
+- code: to-list({}) == \'()
+- code: to-list('') == \'()
+- code: to-list({:a 1}) == \'(:a 1)
+- code: to-list(range(3)) == \'(0 1 2)
+- code: to-list(1 .. 3) == \'(1 2 3)
+- code: to-list('abc') == \'(\\a \\b \\c)
+- code: to-list(42)
+  what: error
+  want: Can't convert class java.lang.Long to list
+- code: to-list(nil)
+  what: error
+  want: Can't convert nil to list
+
 - code: to-vec(()) == []
+- code: to-vec([]) == []
+- code: to-vec(\'(1 2 3)) == [1 2 3]
 
 
 #-------------------------------------------------------------------------------

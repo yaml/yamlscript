@@ -178,9 +178,9 @@
 
 
 ;;------------------------------------------------------------------------------
-;; Common type conversion functions
+;; Common type casting functions
 ;;------------------------------------------------------------------------------
-(declare digits to-bool to-keyword to-list to-num to-str)
+(declare to-bool to-keyword to-list to-num to-str)
 
 (intern 'ys.std 'to-bool clojure.core/boolean)
 
@@ -191,7 +191,7 @@
               (first x)
               (util/die "Can't convert string to char"))
     number? (char x)
-    (util/die "Can't convert " (type x) " to char")))
+    (util/die "Can't convert " (or (type x) "nil") " to char")))
 
 (defn to-float [x] (double (to-num x)))
 
@@ -201,7 +201,11 @@
 
 (defn to-list
   ([] [])
-  ([x] (if (map? x) (flatten (seq x)) (list x)))
+  ([x] (condp #(%1 %2) x
+         map? (flatten (seq x))
+         sequential? (if (empty? x) '() (seq x))
+         string? (if (empty? x) '() (seq x))
+         (util/die "Can't convert " (or (type x) "nil") " to list")))
   ([x & xs] (apply list x xs)))
 
 (defn to-map
@@ -235,8 +239,9 @@
   ([] [])
   ([x] (condp #(%1 %2) x
          map? (vec (flatten (seq x)))
-         seqable? (vec x)
-         (vector x)))
+         sequential? (vec x)
+         string? (vec x)
+         (util/die "Can't convert " (or (type x) "nil") " to vector")))
   ([x & xs] (apply vector x xs)))
 
 (intern 'ys.std 'A atom)
