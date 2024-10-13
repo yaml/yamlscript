@@ -26,6 +26,9 @@
      path
      (.getAbsolutePath (io/file (abspath base) path)))))
 
+(defn atom? [x]
+  (= (type x) clojure.lang.Atom))
+
 (defn chop
   ([S] (chop 1 S))
   ([N S]
@@ -70,9 +73,6 @@
         _ (when-not yspath
             (util/die "YSPATH environment variable not set"))]
     (map abspath (str/split yspath #":"))))
-
-(defn atom? [x]
-  (= (type x) clojure.lang.Atom))
 
 (defn regex? [x]
   (= (type x) java.util.regex.Pattern))
