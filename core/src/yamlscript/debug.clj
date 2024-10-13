@@ -37,7 +37,7 @@
     :else (if (> (count (pr-str value)) 80)
             (str/trim-newline
               (with-out-str
-                (pp/pprint (condp #(%1 %2) value
+                (pp/pprint (condf value
                              map? (into (sorted-map) value)
                              set? (apply sorted-set value)
                              value))))

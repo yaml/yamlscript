@@ -62,7 +62,7 @@
               [node (transform-node node)
                ctx
                (if ctx
-                 (condp #(%1 %2) node
+                 (condf node
                    :Int (Lst [(Sym 'get+) ctx node])
                    :Str (Lst [(Sym 'get) ctx node])
                    :QSym (Lst [(Sym 'get+) ctx node])
@@ -214,7 +214,7 @@
 
 (defn transform-node [node]
   (let [anchor (:& node)
-        node (condp #(%1 %2) node
+        node (condf node
                :pairs (transform-pairs node)
                :forms (transform-pairs node)
                :dot (transform-dot node)

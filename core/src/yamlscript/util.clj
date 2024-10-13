@@ -5,6 +5,9 @@
 
 (declare die)
 
+(defmacro condf [x & clauses]
+  `(condp (fn [f# x#] (f# x#)) ~x ~@clauses))
+
 (defmacro cond-lets
   "if-lets but works like cond"
   {:style/indent [0]}
@@ -46,7 +49,7 @@
       (:macro (meta x)))))
 
 (defn type-name [x]
-  (condp #(%1 %2) x
+  (condf x
     map? "Map"
     set? "Set"
     vector? "Vector"
@@ -64,6 +67,11 @@
 (intern 'clojure.core 'die die)
 (intern 'clojure.core 'eprint eprint)
 (intern 'clojure.core 'eprintln eprintln)
+
+(intern 'clojure.core
+        (with-meta 'condf {:macro true})
+        @#'condf)
+
 
 (intern 'clojure.core
         (with-meta 'cond-lets {:macro true})

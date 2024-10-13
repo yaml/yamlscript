@@ -38,7 +38,7 @@
 ;; Generic helpers:
 ;; ----------------------------------------------------------------------------
 (defn node-type [node]
-  (condp #(%1 %2) node
+  (condf node
     :%  :map
     :%% :map
     :-  :seq
