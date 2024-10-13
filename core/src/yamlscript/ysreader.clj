@@ -363,12 +363,12 @@
     (str/replace "\\\"" "\"")))
 
 (defn read-dq-string [string]
-  (let [build-vstr @yamlscript.global/build-vstr]
+  (let [build-xstr @yamlscript.global/build-xstr]
     (-> string
       (subs 1 (dec (count string)))
       str-unescape
-      (#(hash-map :vstr %))
-      build-vstr)))
+      (#(hash-map :xstr %))
+      build-xstr)))
 
 (defn sstr-unescape [s]
   (-> s

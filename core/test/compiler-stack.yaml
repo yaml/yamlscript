@@ -15,7 +15,7 @@
   resolve: |
     # Composed tree with tags resolved
   build: |
-    # Read each !exp scalar into Clojure AST forms
+    # Read each !expr scalar into Clojure AST forms
   transform: |
     # Transform the YS macros (defsyn)
   construct: |
@@ -106,16 +106,16 @@
     {:! "yamlscript/v0", :% [
       {:= "a"} {:= "b c"} ]}
   resolve: |
-    {:pairs [
-      {:exp "a"}
-      {:exp "b c"}
+    {:xmap [
+      {:expr "a"}
+      {:expr "b c"}
     ]}
   build: |
-    {:pairs [
+    {:xmap [
       {:Sym a}
       [{:Sym b} {:Sym c}] ]}
   transform: |
-    {:pairs [
+    {:xmap [
       {:Sym a}
       [{:Sym b} {:Sym c}] ]}
   construct: |
@@ -148,7 +148,7 @@
     prn: -{:a 1 :c 2 :b 3}
     prn: -"A longer string"
   build: |
-    {:pairs [
+    {:xmap [
      {:Sym prn}
      {:Vec
       [{:Str "str"}
@@ -179,7 +179,7 @@
     --- !yamlscript/v0
     inc: (6 * 7)
   build: |
-    {:pairs
+    {:xmap
      [{:Sym inc}
       {:Lst [{:Sym mul+} {:Int 6} {:Int 7}]}]}
   print: |
@@ -191,7 +191,7 @@
     --- !yamlscript/v0
     say: str("The number is:\ " inc(41))
   build: |
-    {:pairs
+    {:xmap
      [{:Sym say}
       {:Lst
        [{:Sym str}
@@ -206,9 +206,9 @@
     !yamlscript/v0
     foo =: 123
   resolve: |
-    {:pairs [{:def "foo ="} {:exp "123"}]}
+    {:xmap [{:def "foo ="} {:expr "123"}]}
   build: |
-    {:pairs
+    {:xmap
      [[{:Sym def} {:Sym foo}]
      {:Int 123}]}
   print: |
@@ -220,9 +220,9 @@
     !yamlscript/v0
     defn foo(a b): (a + b)
   resolve: |
-    {:pairs [{:defn "defn foo(a b)"} {:exp "(a + b)"}]}
+    {:xmap [{:defn "defn foo(a b)"} {:expr "(a + b)"}]}
   build: |
-    {:pairs
+    {:xmap
      [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
       {:Lst [{:Sym add+} {:Sym a} {:Sym b}]}]}
   print: |
@@ -235,9 +235,9 @@
     defn foo(a b):
       add: a b
   build: |
-    {:pairs
+    {:xmap
      [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
-      {:pairs
+      {:xmap
        [{:Sym add}
         [{:Sym a} {:Sym b}]]}]}
   print: |
@@ -279,23 +279,23 @@
       {:= "bar"}
       {:= "10 20"} ]}
   resolve: |
-    {:pairs [
+    {:xmap [
       {:def "foo ="}
-      {:exp "123"}
+      {:expr "123"}
       {:defn "defn bar(a b)"}
-      {:pairs [
+      {:xmap [
         {:def "c ="}
-        {:exp "(a + b)"}
-        {:exp "=>"}
-        {:exp "2 * c"} ]}
-      {:exp "bar"}
-      {:exp "10 20"} ]}
+        {:expr "(a + b)"}
+        {:expr "=>"}
+        {:expr "2 * c"} ]}
+      {:expr "bar"}
+      {:expr "10 20"} ]}
   build: |
-    {:pairs
+    {:xmap
      ([{:Sym def} {:Sym foo}]
       {:Int 123}
       [{:Sym defn} {:Sym bar} nil {:Vec [{:Sym a} {:Sym b}]}]
-      {:pairs
+      {:xmap
        ([{:Sym def} {:Sym c}]
         {:Lst [{:Sym add+} {:Sym a} {:Sym b}]}
         {:Sym =>}
@@ -336,7 +336,7 @@
   parse: |
     "=VAL", :! "yamlscript/v0", := "(foo bar)"
   resolve: |
-    {:exp "(foo bar)"}
+    {:expr "(foo bar)"}
   print: |
     (foo bar)
 
@@ -347,7 +347,7 @@
     ; comment
     (foo bar)
   resolve: |
-    {:exp "; comment (foo bar)"}
+    {:expr "; comment (foo bar)"}
   parse: |
     "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
   # Semicolon comments are errors now
@@ -364,9 +364,9 @@
      [{:str "str"}
       {:str "foo bar"}
       {:str "num"}
-      {:exp "inc(41)"}
+      {:expr "inc(41)"}
       {:str "bar"}
-      {:exp "load(\"bar.yaml\")"}]}
+      {:expr "load(\"bar.yaml\")"}]}
   build: |
     {:Map
      [{:Str "str"}
@@ -425,7 +425,7 @@
     "=VAL", := "(\"c\" + \"d\\ne\")"
     "-MAP"
   build: |
-    {:pairs
+    {:xmap
      ([{:Sym def} {:Sym x}]
       {:Str "a\nb"}
       [{:Sym def} {:Sym y}]
@@ -438,8 +438,8 @@
     add =:
       fn(a b): a + b
   resolve: |
-    {:pairs
-     [{:def "add ="} {:pairs [{:fn "fn(a b)"} {:exp "a + b"}]}]}
+    {:xmap
+     [{:def "add ="} {:xmap [{:fn "fn(a b)"} {:expr "a + b"}]}]}
   clojure: |
     (def add (fn [a b] (add+ a b)))
 
@@ -452,15 +452,15 @@
       (a < d): e
       =>: f
   resolve: |
-    {:pairs
-     [{:exp "foo"}
-      {:forms
-       [{:exp "(a > b)"}
-        {:exp "c"}
-        {:exp "(a < d)"}
-        {:exp "e"}
-        {:exp "=>"}
-        {:exp "f"}]}]}
+    {:xmap
+     [{:expr "foo"}
+      {:fmap
+       [{:expr "(a > b)"}
+        {:expr "c"}
+        {:expr "(a < d)"}
+        {:expr "e"}
+        {:expr "=>"}
+        {:expr "f"}]}]}
   construct: |
     {:Top
      [{:Lst
@@ -479,7 +479,7 @@
     !yamlscript/v0
     defn foo(a b=42 c="OK"): -[c b a]
   build: |
-    {:pairs
+    {:xmap
      [[{:Sym defn} {:Sym foo} nil]
       [{:Lst
         [{:Vec [{:Sym a} {:Sym b} {:Sym c}]}
@@ -543,20 +543,20 @@
     foo:: vars.foo
   resolve: |
     {:map
-     ({:exp "=>"}
-      {:pairs [{:def "vars ="} {:exp "load('vars.yaml')"}]}
+     ({:expr "=>"}
+      {:xmap [{:def "vars ="} {:expr "load('vars.yaml')"}]}
       {:str "foo"}
-      {:exp "vars.foo"})}
+      {:expr "vars.foo"})}
   build: |
     {:Map
      [{:Sym =>}
-      {:pairs
+      {:xmap
        [[{:Sym def} {:Sym vars}]
         {:Lst [{:Sym load} {:Str "vars.yaml"}]}]}
       {:Str "foo"}
       {:dot [{:Sym vars} {:QSym foo}]}]}
   transform: |
-    {:pairs
+    {:xmap
      [[{:Sym def} {:Sym vars}]
       {:Lst [{:Sym load} {:Str "vars.yaml"}]}
       {:Sym =>}
@@ -577,13 +577,13 @@
     - bar
   resolve: |
     {:seq
-     ({:pairs
-       [{:exp "=>"}
-        {:pairs [{:def "vars ="} {:exp "load('vars.yaml')"}]}]}
-      {:exp "vars.foo"}
+     ({:xmap
+       [{:expr "=>"}
+        {:xmap [{:def "vars ="} {:expr "load('vars.yaml')"}]}]}
+      {:expr "vars.foo"}
       {:str "bar"})}
   transform: |
-    {:pairs
+    {:xmap
      [[{:Sym def} {:Sym vars}]
       {:Lst [{:Sym load} {:Str "vars.yaml"}]}
       {:Sym =>}
@@ -691,11 +691,11 @@
         `(quote ~x))
     qq: (1 2 3)
   resolve: |
-    {:pairs
-     [{:exp "=>"}
+    {:xmap
+     [{:expr "=>"}
       {:clj "(defmacro qq [x]\n  `(quote ~x))\n"}
-      {:exp "qq"}
-      {:exp "(1 2 3)"}]}
+      {:expr "qq"}
+      {:expr "(1 2 3)"}]}
   clojure: |
     (defmacro
      qq

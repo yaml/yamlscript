@@ -125,7 +125,7 @@ test::
 - code: to-list('abc') == \'(\\a \\b \\c)
 - code: to-list(42)
   what: error
-  want: Can't convert class java.lang.Long to list
+  want: Can't convert int to list
 - code: to-list(nil)
   what: error
   want: Can't convert nil to list

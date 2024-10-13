@@ -180,9 +180,9 @@
 ;;------------------------------------------------------------------------------
 ;; Common type casting functions
 ;;------------------------------------------------------------------------------
-(declare to-bool to-keyword to-list to-num to-str to-type)
+(declare to-num to-type)
 
-(intern 'ys.std 'to-bool clojure.core/boolean)
+(defn to-bool [x] (boolean x))
 
 (defn to-char [x]
   (condf x
@@ -191,20 +191,20 @@
               (first x)
               (util/die "Can't convert string to char"))
     number? (char x)
-    (util/die "Can't convert " (or (type x) "nil") " to char")))
+    (util/die "Can't convert " (to-type x) " to char")))
 
 (defn to-float [x] (double (to-num x)))
 
 (defn to-int [x] (long (to-num x)))
 
-(intern 'ys.std 'to-keyword clojure.core/keyword)
+(defn to-keyw [x] (keyword x))
 
 (defn to-list [x]
   (condf x
     map? (reduce-kv (fn [acc k v] (conj acc v k)) '() x)
     sequential? (if (empty? x) '() (seq x))
     string? (if (empty? x) '() (seq x))
-    (util/die "Can't convert " (or (type x) "nil") " to list")))
+    (util/die "Can't convert " (to-type x) " to list")))
 
 (defn to-map [x]
   (condf x
@@ -212,7 +212,7 @@
     set? (zipmap (seq x) (repeat nil))
     sequential? (apply hash-map (seq x))
     string? (apply hash-map (seq x))
-    (util/die "Can't convert " (or (type x) "nil") " to map")))
+    (util/die "Can't convert " (to-type x) " to map")))
 
 (defn to-num [x]
   (condf x
@@ -225,13 +225,13 @@
     seqable? (count x)
     char? (int x)
     boolean? (if x 1 0)
-    (util/die (str "Can't convert " (type x) " to number"))))
+    (util/die (str "Can't convert " (to-type x) " to number"))))
 
 (defn to-set [x]
   (condf x
     map? (set (keys x))
     seqable? (set (seq x))
-    (util/die "Can't convert " (or (type x) "nil") " to set")))
+    (util/die "Can't convert " (to-type x) " to set")))
 
 (defn to-str [x]
   (condf x
@@ -248,6 +248,7 @@
     number? "num"
     boolean? "bool"
     char? "char"
+    keyword? "keyw"
     regex? "rgx"
     map? "map"
     set? "set"
@@ -275,7 +276,7 @@
 (intern 'ys.std 'F to-float)
 ;; (intern 'ys.std 'G to-set)  ;; G for group; XXX not convinced this is useful
 (intern 'ys.std 'I to-int)
-(intern 'ys.std 'K to-keyword)
+(intern 'ys.std 'K to-keyw)
 (intern 'ys.std 'L to-list)
 (intern 'ys.std 'M to-map)
 (intern 'ys.std 'N to-num)

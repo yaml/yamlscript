@@ -163,7 +163,7 @@
           (transform-def-ops key val))
       [key val])))
 
-(defn transform-pairs [node]
+(defn transform-xmap [node]
   (let [key (key (first node))]
     (->> node
       first
@@ -178,7 +178,7 @@
       (partition 2)
       (reduce
         (fn [acc [k v]]
-          (let [[k v] (if (= :pairs key)
+          (let [[k v] (if (= :xmap key)
                         (apply-transformer k v)
                         [k v])]
             (conj acc k v)))
@@ -210,13 +210,13 @@
     node))
 
 ; TODO:
-; Turn :pairs mappings into :forms groups when appropriate.
+; Turn :xmap mappings into :fmap groups when appropriate.
 
 (defn transform-node [node]
   (let [anchor (:& node)
         node (condf node
-               :pairs (transform-pairs node)
-               :forms (transform-pairs node)
+               :xmap (transform-xmap node)
+               :fmap (transform-xmap node)  ;; :fmap also uses transform-xmap
                :dot (transform-dot node)
                :Lst (transform-list node)
                :Map (transform-map node)
@@ -231,11 +231,11 @@
   (transform-node
     (if-lets [[key1 val1 & rest] (:Map node)
               _ (= key1 {:Sym '=>})
-              pairs (:pairs val1)]
-      {:pairs (concat pairs [{:Sym '=>} {:Map rest}])}
+              xmap (:xmap val1)]
+      {:xmap (concat xmap [{:Sym '=>} {:Map rest}])}
       (if-lets [[first & rest] (:Vec node)
-                pairs (get-in first [:pairs 1 :pairs])]
-        {:pairs (concat pairs [{:Sym '=>} {:Vec rest}])}
+                xmap (get-in first [:xmap 1 :xmap])]
+        {:xmap (concat xmap [{:Sym '=>} {:Vec rest}])}
         node))))
 
 (comment
