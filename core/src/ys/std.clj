@@ -181,7 +181,7 @@
 ;;------------------------------------------------------------------------------
 ;; Common type casting functions
 ;;------------------------------------------------------------------------------
-(declare to-bool to-keyword to-list to-num to-str)
+(declare to-bool to-keyword to-list to-num to-str to-type)
 
 (intern 'ys.std 'to-bool clojure.core/boolean)
 
@@ -202,7 +202,7 @@
 
 (defn to-list [x]
   (condp #(%1 %2) x
-    map? (flatten (seq x))
+    map? (reduce-kv (fn [acc k v] (conj acc v k)) '() x)
     sequential? (if (empty? x) '() (seq x))
     string? (if (empty? x) '() (seq x))
     (util/die "Can't convert " (or (type x) "nil") " to list")))
@@ -211,7 +211,9 @@
   (condp #(%1 %2) x
     map? x
     set? (zipmap (seq x) (repeat nil))
-    (apply hash-map (flatten (seq x)))))
+    sequential? (apply hash-map (seq x))
+    string? (apply hash-map (seq x))
+    (util/die "Can't convert " (or (type x) "nil") " to map")))
 
 (defn to-num [x]
   (condp #(%1 %2) x
@@ -262,7 +264,7 @@
 
 (defn to-vec [x]
   (condp #(%1 %2) x
-    map? (vec (flatten (seq x)))
+    map? (reduce-kv (fn [acc k v] (conj acc k v)) [] x)
     sequential? (vec x)
     string? (vec x)
     (util/die "Can't convert " (or (type x) "nil") " to vector")))
