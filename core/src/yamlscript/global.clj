@@ -15,7 +15,7 @@
 (def sci-ctx (atom nil))
 (def main-ns (sci/create-ns 'main))
 
-(defonce build-vstr (atom nil))
+(defonce build-xstr (atom nil))
 
 (def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
 

@@ -16,14 +16,14 @@
 ;;-----------------------------------------------------------------------------
 
 (defn transform-with-else [lhs rhs subst]
-  (when-lets [forms (:forms rhs)
-              len (count forms)
+  (when-lets [fmap (:fmap rhs)
+              len (count fmap)
               _ (>= len 2)
               last-key-pos (- len 2)
-              last-key (nth forms last-key-pos)
+              last-key (nth fmap last-key-pos)
               _ (= 'else (:Sym last-key))
               rhs (update-in rhs
-                    [:forms last-key-pos]
+                    [:fmap last-key-pos]
                     (fn [_] subst))]
     [lhs rhs]))
 
@@ -76,15 +76,15 @@
               _ (= 2 (count lhs))
               kind (get-in lhs [0 :Sym])
               _ (#{'defn 'fn} kind)
-              pairs (:pairs rhs)
-              _ (every? :Lst (->> pairs (partition 2) (map first)))
-              pairs (reduce
+              xmap (:xmap rhs)
+              _ (every? :Lst (->> xmap (partition 2) (map first)))
+              xmap (reduce
                       (fn [acc [lhs rhs]]
                         (let [lhs (Vec (:Lst lhs))]
                           (conj acc lhs rhs)))
                       []
-                      (partition 2 pairs))
-              rhs {:pairs pairs}]
+                      (partition 2 xmap))
+              rhs {:xmap xmap}]
     [lhs rhs]))
 
 (defn transform_catch [lhs rhs]
@@ -111,32 +111,32 @@
 
 (defn transform_if [lhs rhs]
   (let [[lhs rhs] (lhs-tests lhs rhs)
-        pairs (:pairs rhs)
-        _ (when (and pairs (not= (count pairs) 4))
+        xmap (:xmap rhs)
+        _ (when (and xmap (not= (count xmap) 4))
             (die "Invalid 'if' form"))
         rhs (if-lets
-              [_ pairs
-               [k1 v1 k2 v2] pairs
+              [_ xmap
+               [k1 v1 k2 v2] xmap
                _ (= k1 (Sym 'then))]
               (do
                 (when-not (= k2 (Sym 'else))
                   (die "Form after 'then' must be 'else'"))
                 (let [rhs
-                      (if (> (count (:pairs v1)) 2)
-                        (update-in rhs [:pairs 0] (fn [_] (Sym 'do)))
-                        (update-in rhs [:pairs 0] (fn [_] (Sym '=>))))
+                      (if (> (count (:xmap v1)) 2)
+                        (update-in rhs [:xmap 0] (fn [_] (Sym 'do)))
+                        (update-in rhs [:xmap 0] (fn [_] (Sym '=>))))
                       rhs
-                      (if (> (count (:pairs v2)) 2)
-                        (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))
-                        (update-in rhs [:pairs 2] (fn [_] (Sym '=>))))]
+                      (if (> (count (:xmap v2)) 2)
+                        (update-in rhs [:xmap 2] (fn [_] (Sym 'do)))
+                        (update-in rhs [:xmap 2] (fn [_] (Sym '=>))))]
                   rhs))
               (if-lets
-                [_ pairs
-                 [_ _ k2 v2] pairs
+                [_ xmap
+                 [_ _ k2 v2] xmap
                  _ (= k2 (Sym 'else))]
-                (if (> (count (:pairs v2)) 2)
-                  (update-in rhs [:pairs 2] (fn [_] (Sym 'do)))
-                  (update-in rhs [:pairs 2] (fn [_] (Sym '=>))))
+                (if (> (count (:xmap v2)) 2)
+                  (update-in rhs [:xmap 2] (fn [_] (Sym 'do)))
+                  (update-in rhs [:xmap 2] (fn [_] (Sym '=>))))
                 rhs))]
     [lhs rhs]))
 
@@ -227,11 +227,11 @@
                args)]
     args))
 
-(defn require-pairs [pairs]
+(defn require-xmap [xmap]
   (reduce
     (fn [acc [spc rhs]]
       (or (:Spc spc) (:Sym spc)
-        (die "Invalid 'require' pairs"))
+        (die "Invalid 'require' xmap"))
       (let [args (if (nil? rhs)
                    (Lst [Q spc])
                    (if (= :all (:Key rhs))
@@ -239,7 +239,7 @@
                      (Lst [Q (Vec (concat [spc] (require-args rhs)))])))]
         (conj acc args)))
     []
-    (partition 2 pairs)))
+    (partition 2 xmap)))
 
 (defn transform_require [lhs rhs]
   (or
@@ -256,8 +256,8 @@
       [sym (Lst [Q (Vec (concat [spc] args))])])
 
     (when-lets [_ (:Sym lhs)
-                pairs (:pairs rhs)
-                args (require-pairs pairs)]
+                xmap (:xmap rhs)
+                args (require-xmap xmap)]
       [lhs args])
 
     (die "Invalid 'require' form")))
