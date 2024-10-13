@@ -94,19 +94,19 @@
                  (Vec args)))
         body (build-node
                (if-lets [_ (nil? args)
-                         pairs (:pairs val)]
-                 (let [pairs (loop [[k v & pairs] pairs new []]
+                         xmap (:xmap val)]
+                 (let [xmap (loop [[k v & xmap] xmap new []]
                                (if (nil? v)
                                  new
                                  (let [args (:exp k)
                                        args (fix-args args)
                                        args {:exp args}]
-                                   (recur pairs (conj new args v)))))]
-                   {:pairs pairs})
+                                   (recur xmap (conj new args v)))))]
+                   {:xmap xmap})
                  val))
-        [doc body] (if-lets [[key val & nodes] (:pairs body)
+        [doc body] (if-lets [[key val & nodes] (:xmap body)
                              [doc body] (when (and (nil? key) (:Str val))
-                                          [val {:pairs nodes}])]
+                                          [val {:xmap nodes}])]
                      [doc body]
                      [nil body])]
     (or
@@ -125,9 +125,9 @@
                     [(build-node key) (build-node val)])]
     (conj nodes key val)))
 
-(defn build-pairs [{pairs :pairs}]
-  (let [nodes (reduce build-pair [] (partition 2 pairs))]
-    {:pairs nodes}))
+(defn build-xmap [{xmap :xmap}]
+  (let [nodes (reduce build-pair [] (partition 2 xmap))]
+    {:xmap nodes}))
 
 (defn build-forms [node]
   (->> node
@@ -244,7 +244,7 @@
         [tag] (first node)
         node (case tag
                nil nil
-               :pairs (build-pairs node)
+               :xmap (build-xmap node)
                :forms (build-forms node)
                :exp (build-exp node)
                :vstr (build-vstr node)

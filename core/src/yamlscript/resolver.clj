@@ -13,7 +13,7 @@
 ;; * !bln - YAML boolean scalar
 ;; * !nil - YAML null scalar
 ;;
-;; * !pairs - YAMLScript mapping - pair creates form
+;; * !xmap - YAMLScript expression mapping - pair creates form
 ;; * !forms - YAMLScript mapping - lhs and rhs create separate forms
 ;; * !exp   - YAMLScript expression
 ;; * !form  - YAMLScript expression - node creates form
@@ -96,14 +96,14 @@
   (when-lets [_ (or
                   (re-find #" +%$" (:exp key))
                   (re-matches #"(cond|condp .+|case .+)" (:exp key)))
-              _ (contains? val :pairs)
+              _ (contains? val :xmap)
               key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
-              val (set/rename-keys val {:pairs :forms})]
+              val (set/rename-keys val {:xmap :forms})]
     [key val]))
 
 (defn tag-exp [[key val]]
   (when-lets [_ (contains? key :exp)
-              _ (some val [:exp :str :vstr :pairs])]
+              _ (some val [:exp :str :vstr :xmap])]
     (let [key (if (re-find #" +\|$" (:exp key))
                 {:form (assoc key :exp (str/replace (:exp key) #" +\|$" ""))}
                 key)]
@@ -143,12 +143,12 @@
   (when (:%% node)
     (die "Flow mappings not allowed in code mode"))
   (let [anchor (:& node)
-        node {:pairs (vec
+        node {:xmap (vec
                        (mapcat
                          (fn [[key val]] (resolve-code-pair key val))
                          (partition 2 (:% node))))}
         node (if anchor (assoc node :& anchor) node)]
-    (if-lets [[key val] (:pairs node)
+    (if-lets [[key val] (:xmap node)
               key-str (:exp key)
               _ (re-matches re/dfnk key-str)]
       {:defn [key val]}
@@ -266,10 +266,10 @@
       node)))
 
 (defn resolve-data-node-top [node]
-  (if-lets [pairs (or (:% node) (:%% node))
-            key (get-in pairs [0 :=])
+  (if-lets [xmap (or (:% node) (:%% node))
+            key (get-in xmap [0 :=])
             _ (= "=>" key)
-            [key1 val1 & rest] pairs]
+            [key1 val1 & rest] xmap]
     {:map (concat
             [(resolve-code-node key1)]
             [(resolve-code-node val1)]

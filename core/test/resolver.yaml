@@ -69,7 +69,7 @@
     prn: 'Hello'
     die: "Noooo"
   resolve: |
-    {:pairs [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
+    {:xmap [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
 
 
 - name: Start in code mode with /code tag
@@ -78,7 +78,7 @@
     prn: 'Hello'
     die: "Noooo"
   resolve: |
-    {:pairs [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
+    {:xmap [{:exp "prn"} {:str "Hello"} {:exp "die"} {:vstr "Noooo"}]}
 
 
 - name: Start in bare mode
@@ -146,7 +146,7 @@
     !yamlscript/v0
     num: ! inc(41)
   resolve: |
-    {:pairs [{:exp "num"} {:str "inc(41)"}]}
+    {:xmap [{:exp "num"} {:str "inc(41)"}]}
 
 
 - name: Tag ! switches from data mode to code mode
@@ -165,7 +165,7 @@
     - 2
     - 3
   resolve: |
-    {:pairs
+    {:xmap
      [{:def "list ="}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
 
@@ -178,6 +178,6 @@
     - 2
     - 3
   resolve: |
-    {:pairs
+    {:xmap
      [{:def "list ="}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
