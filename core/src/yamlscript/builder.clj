@@ -118,7 +118,7 @@
     [{:form (build-node key)} (build-node val)]))
 
 (defn build-pair [nodes [key val]]
-  (let [[key val] (condp #(%1 %2) key
+  (let [[key val] (condf key
                     :defn (build-defn key val)
                     :fn (build-defn key val)
                     :form (build-form-pair key val)

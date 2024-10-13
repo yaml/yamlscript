@@ -13,8 +13,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [yamlscript.common :as common :refer [atom?
-                                         regex?]]
+   [yamlscript.common :as common :refer [atom? regex?]]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
@@ -54,7 +53,7 @@
 (defn- destructure-idx [x idx]
   (let [root (gensym)]
     `(let [~root ~idx]
-       ~@(condp #(%1 %2) x
+       ~@(condf x
            vector? (destructure-vector x root)
            list? (destructure-vector x root)
            map? (destructure-map x root)
@@ -75,7 +74,7 @@
          (fn [env k v]
            (when-not (string? k)
              (util/die "env-update() keys must be strings"))
-           (let [v (condp #(%1 %2) v
+           (let [v (condf v
                      string? v
                      number? (str v)
                      boolean? (str v)
@@ -116,7 +115,7 @@
 ;;------------------------------------------------------------------------------
 
 (defn falsey? [x]
-  (condp #(%1 %2) x
+  (condf x
     number? (zero? x)
     seqable? (empty? x)
     identity false
@@ -186,7 +185,7 @@
 (intern 'ys.std 'to-bool clojure.core/boolean)
 
 (defn to-char [x]
-  (condp #(%1 %2) x
+  (condf x
     char? x
     string? (if (= 1 (count x))
               (first x)
@@ -201,14 +200,14 @@
 (intern 'ys.std 'to-keyword clojure.core/keyword)
 
 (defn to-list [x]
-  (condp #(%1 %2) x
+  (condf x
     map? (reduce-kv (fn [acc k v] (conj acc v k)) '() x)
     sequential? (if (empty? x) '() (seq x))
     string? (if (empty? x) '() (seq x))
     (util/die "Can't convert " (or (type x) "nil") " to list")))
 
 (defn to-map [x]
-  (condp #(%1 %2) x
+  (condf x
     map? x
     set? (zipmap (seq x) (repeat nil))
     sequential? (apply hash-map (seq x))
@@ -216,7 +215,7 @@
     (util/die "Can't convert " (or (type x) "nil") " to map")))
 
 (defn to-num [x]
-  (condp #(%1 %2) x
+  (condf x
     ratio? (double x)
     number? x
     string? (if (re-find #"\." x)
@@ -229,19 +228,19 @@
     (util/die (str "Can't convert " (type x) " to number"))))
 
 (defn to-set [x]
-  (condp #(%1 %2) x
+  (condf x
     map? (set (keys x))
     seqable? (set (seq x))
     (util/die "Can't convert " (or (type x) "nil") " to set")))
 
 (defn to-str [x]
-  (condp #(%1 %2) x
+  (condf x
     string? x
     nil? "nil"
     (str x)))
 
 (defn to-type [x]
-  (condp #(%1 %2) x
+  (condf x
     nil? "nil"
     string? "str"
     int? "int"
@@ -263,7 +262,7 @@
     (util/die "Can't determine type of '" (type x) "' value")))
 
 (defn to-vec [x]
-  (condp #(%1 %2) x
+  (condf x
     map? (reduce-kv (fn [acc k v] (conj acc k v)) [] x)
     sequential? (vec x)
     string? (vec x)
@@ -353,20 +352,20 @@
      (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")")))
 
 (defn inc+ [x]
-  (condp #(%1 %2) x
+  (condf x
     number? (inc x)
     char? (char (inc (long x)))
     (let [n (to-num x)]
-      (condp #(%1 %2) n
+      (condf n
         number? (inc n)
         (op-error "inc+" x)))))
 
 (defn dec+ [x]
-  (condp #(%1 %2) x
+  (condf x
     number? (dec x)
     char? (char (dec (long x)))
     (let [n (to-num x)]
-      (condp #(%1 %2) n
+      (condf n
         number? (dec n)
         (op-error "dec+" x)))))
 
@@ -374,7 +373,7 @@
   ([x y]
    (when (some nil? [x y])
      (util/die "Cannot add with a nil value"))
-   (condp #(%1 %2) x
+   (condf x
      number? (+ x (to-num y))
      string? (str x y)
      map? (merge x (to-map y))
@@ -408,13 +407,13 @@
   ([x y]
    (when (some nil? [x y])
      (util/die "Cannot subtract with a nil value"))
-   (condp #(%1 %2) x
+   (condf x
      string? (str/replace x (str y) "")
      map? (dissoc x y)
      set? (disj x y)
      seqable? (remove #(= y %1) x)
      number? (- x (to-num y))
-     char? (condp #(%1 %2) y
+     char? (condf y
              number? (char (- (long x) y))
              char? (- (long x) (long y))
              (op-error "sub" x y))
@@ -518,7 +517,7 @@
 (intern 'ys.std 'index clojure.string/index-of)
 
 (defn index [C x]
-  (condp #(%1 %2) C
+  (condf C
     string? (clojure.string/index-of C x)
     sequential? (let [i (.indexOf ^java.util.List C x)]
                      (if (>= i 0) i nil))
@@ -606,7 +605,7 @@
 ;; Collection functions
 ;;------------------------------------------------------------------------------
 (defn get+ [C K]
-  (condp #(%1 %2) C
+  (condf C
     map? (condp = (type K)
            String (get C K)
            clojure.lang.Keyword (get C K)
@@ -616,7 +615,7 @@
                                  (get C (keyword K)))
            (get C K))
     nil? nil
-    seqable? (condp #(%1 %2) K
+    seqable? (condf K
                number? (nth C K nil)
                nil? nil
                nil)
@@ -631,7 +630,7 @@
   (let [[P C] (if (seqable? C) [P C] [C P])
         _ (when-not (seqable? C)
             (util/die "No seqable arg passed to grep"))]
-    (condp #(%1 %2) P
+    (condf P
       regex? (filter #(re-find P %1) C)
       fn? (filter P C)
       (filter #(= P %1) C))))
@@ -648,7 +647,7 @@
   (apply flatland.ordered.map/ordered-map xs))
 
 (defn reverse [x]
-  (condp #(%1 %2) x
+  (condf x
     string? (clojure.string/reverse x)
     vector? (vec (clojure.core/reverse x))
     seqable? (clojure.core/reverse x)

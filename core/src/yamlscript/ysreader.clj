@@ -170,7 +170,7 @@
     xs))
 
 (defn- qf [form]
-  (condp #(%1 %2) form
+  (condf form
     :Sym (let [sym (-> form :Sym str)]
            (if (re-find #"^\$\w" sym)
              (Sym (subs sym 1))
