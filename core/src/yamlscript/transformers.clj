@@ -16,14 +16,14 @@
 ;;-----------------------------------------------------------------------------
 
 (defn transform-with-else [lhs rhs subst]
-  (when-lets [forms (:forms rhs)
-              len (count forms)
+  (when-lets [fmap (:fmap rhs)
+              len (count fmap)
               _ (>= len 2)
               last-key-pos (- len 2)
-              last-key (nth forms last-key-pos)
+              last-key (nth fmap last-key-pos)
               _ (= 'else (:Sym last-key))
               rhs (update-in rhs
-                    [:forms last-key-pos]
+                    [:fmap last-key-pos]
                     (fn [_] subst))]
     [lhs rhs]))
 

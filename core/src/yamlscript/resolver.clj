@@ -14,7 +14,7 @@
 ;; * !nil - YAML null scalar
 ;;
 ;; * !xmap - YAMLScript expression mapping - pair creates form
-;; * !forms - YAMLScript mapping - lhs and rhs create separate forms
+;; * !fmap - YAMLScript forms mapping - lhs and rhs create separate forms
 ;; * !exp   - YAMLScript expression
 ;; * !form  - YAMLScript expression - node creates form
 ;; * !vstr  - YAMLScript interpolated string
@@ -92,13 +92,13 @@
   (when (re-matches re/dfnk key)
     [{:defn key} val]))
 
-(defn tag-forms [[key val]]
+(defn tag-fmap [[key val]]
   (when-lets [_ (or
                   (re-find #" +%$" (:exp key))
                   (re-matches #"(cond|condp .+|case .+)" (:exp key)))
               _ (contains? val :xmap)
               key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
-              val (set/rename-keys val {:xmap :forms})]
+              val (set/rename-keys val {:xmap :fmap})]
     [key val]))
 
 (defn tag-exp [[key val]]
@@ -135,7 +135,7 @@
        tag-fn
        tag-def
        tag-defn
-       tag-forms
+       tag-fmap
        tag-exp
        identity) pair)))
 

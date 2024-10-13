@@ -129,12 +129,12 @@
   (let [nodes (reduce build-pair [] (partition 2 xmap))]
     {:xmap nodes}))
 
-(defn build-forms [node]
+(defn build-fmap [node]
   (->> node
     first
     val
     (map build-node)
-    (hash-map :forms)))
+    (hash-map :fmap)))
 
 ;; XXX This might belong in the transformer
 (defn optimize-ys-expression [node]
@@ -245,7 +245,7 @@
         node (case tag
                nil nil
                :xmap (build-xmap node)
-               :forms (build-forms node)
+               :fmap (build-fmap node)
                :exp (build-exp node)
                :vstr (build-vstr node)
                :str (Str (:str node))

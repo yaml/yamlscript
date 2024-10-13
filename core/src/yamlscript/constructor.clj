@@ -147,22 +147,22 @@
                              lhs)
                        lhs (if (and (= lhs {:Sym 'do})
                                  (map? rhs)
-                                 (not (some #{:xmap :forms} (keys rhs))))
+                                 (not (some #{:xmap :fmap} (keys rhs))))
                              {:Sym '=>} lhs)
-                       [forms lhs] (if (get-in lhs [:form])
+                       [fmap lhs] (if (get-in lhs [:form])
                                      [true (:form lhs)]
                                      [false lhs])
                        lhs (construct-side lhs ctx)
                        rhs (construct-side rhs ctx)
-                       rhs (or (:forms rhs) rhs)
-                       new (if forms
+                       rhs (or (:fmap rhs) rhs)
+                       new (if fmap
                              (conj new lhs rhs)
                              (conj new (construct-call [lhs rhs])))]
                    (recur xmap, new))
                  new))]
     node))
 
-(defn construct-forms [{nodes :forms} ctx]
+(defn construct-fmap [{nodes :fmap} ctx]
   (let [nodes (reduce
                 (fn [nodes node]
                   (let [node (construct-node node ctx)]
@@ -170,7 +170,7 @@
                       (conj nodes node)
                       nodes)))
                 [] nodes)]
-    {:forms nodes}))
+    {:fmap nodes}))
 
 (defn construct-coll [node ctx key]
   (let [{nodes key} node
@@ -225,7 +225,7 @@
          node (dissoc node :& :!)
          node (case key
                 :xmap (construct-xmap node ctx)
-                :forms (construct-forms node ctx)
+                :fmap (construct-fmap node ctx)
                 :Map (construct-coll node ctx :Map)
                 :Vec (construct-coll node ctx :Vec)
                 :Lst (construct-coll node ctx :Lst)

@@ -454,7 +454,7 @@
   resolve: |
     {:xmap
      [{:exp "foo"}
-      {:forms
+      {:fmap
        [{:exp "(a > b)"}
         {:exp "c"}
         {:exp "(a < d)"}

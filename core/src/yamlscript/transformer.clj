@@ -210,13 +210,13 @@
     node))
 
 ; TODO:
-; Turn :xmap mappings into :forms groups when appropriate.
+; Turn :xmap mappings into :fmap groups when appropriate.
 
 (defn transform-node [node]
   (let [anchor (:& node)
         node (condf node
                :xmap (transform-xmap node)
-               :forms (transform-xmap node)
+               :fmap (transform-xmap node)  ;; :fmap also uses transform-xmap
                :dot (transform-dot node)
                :Lst (transform-list node)
                :Map (transform-map node)
