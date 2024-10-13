@@ -31,7 +31,7 @@ defn divisors(number):
     mapcat _ range(1 sqrt(number)):
       fn(n):
         when 0 == (number % n):
-          V: n (number / n)
+          vector: n (number / n)
   divisors: .distinct().sort(gt _):rest
 
 defn abundant(n divs):
