@@ -220,7 +220,7 @@
     string? (if (re-find #"\." x)
               (parse-double x)
               (parse-long x))
-    nil? nil
+    nil? 0
     seqable? (count x)
     char? (int x)
     boolean? (if x 1 0)
