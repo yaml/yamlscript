@@ -239,11 +239,11 @@ $ ys -cd program.ys
 *** resolve output ***
 {:xmap
  [{:defn "defn main(name='world' n=3)"}
-  {:xmap [{:exp "greet"} {:exp "name n"}]}
+  {:xmap [{:expr "greet"} {:expr "name n"}]}
   {:defn "defn greet(name, times=1)"}
   {:xmap
-   [{:exp "each [i (1 .. times)]"}
-    {:xmap [{:exp "say"} {:vstr "$i) Hello, $name!"}]}]}]}
+   [{:expr "each [i (1 .. times)]"}
+    {:xmap [{:expr "say"} {:vstr "$i) Hello, $name!"}]}]}]}
 
 *** build output ***
 {:xmap

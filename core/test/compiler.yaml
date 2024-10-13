@@ -91,7 +91,7 @@
     foo:
       bar: baz
   resolve: |
-    {:xmap [{:exp "foo"} {:xmap [{:exp "bar"} {:exp "baz"}]}]}
+    {:xmap [{:expr "foo"} {:xmap [{:expr "bar"} {:expr "baz"}]}]}
   clojure: |
     (foo (bar baz))
 

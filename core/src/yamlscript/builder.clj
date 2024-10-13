@@ -1,7 +1,7 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.builder is responsible parsing all the !exp nodes into
+;; The yamlscript.builder is responsible parsing all the !expr nodes into
 ;; YAMLScript AST nodes.
 
 (ns yamlscript.builder
@@ -21,7 +21,7 @@
 (declare build-node)
 
 (defn build
-  "Parse all the !exp nodes into YAMLScript AST nodes."
+  "Parse all the !expr nodes into YAMLScript AST nodes."
   [node] (build-node node))
 
 (defn build-from-string [string]
@@ -89,7 +89,7 @@
         name (when name (Sym name))
         args (when args
                (let [args (fix-args args)
-                     args (build-node {:exp args})
+                     args (build-node {:expr args})
                      args (if (map? args) [args] args)]
                  (Vec args)))
         body (build-node
@@ -98,9 +98,9 @@
                  (let [xmap (loop [[k v & xmap] xmap new []]
                                (if (nil? v)
                                  new
-                                 (let [args (:exp k)
+                                 (let [args (:expr k)
                                        args (fix-args args)
-                                       args {:exp args}]
+                                       args {:expr args}]
                                    (recur xmap (conj new args v)))))]
                    {:xmap xmap})
                  val))
@@ -142,12 +142,12 @@
     (get-in node [:Lst 1])
     node))
 
-(defn build-exp [node]
-  (let [string (:exp node)]
+(defn build-expr [node]
+  (let [string (:expr node)]
     (when-not (empty? string)
-      (let [exp (ysreader/read-string string)]
-        (when exp
-          (optimize-ys-expression exp))))))
+      (let [expr (ysreader/read-string string)]
+        (when expr
+          (optimize-ys-expression expr))))))
 
 ;; XXX The destructure vector is just a string here.
 ;; Needs to be parsed into a proper AST node.
@@ -187,14 +187,14 @@
       (?: [^\$]*\$+[^\$]*)
     )"))
 
-(defn build-exp-interpolated [node]
-  (let [exp (build-exp node)
-        lst1 (:Lst exp)
+(defn build-expr-interpolated [node]
+  (let [expr (build-expr node)
+        lst1 (:Lst expr)
         lst2 (get-in lst1 [0 :Lst])
-        exp (if (and (= 1 (count lst1)) (get-in lst1 [0 :dot]))
+        expr (if (and (= 1 (count lst1)) (get-in lst1 [0 :dot]))
               (first lst1)
-              (if (and (= 1 (count lst1)) lst2) (Lst lst2) exp))]
-    exp))
+              (if (and (= 1 (count lst1)) lst2) (Lst lst2) expr))]
+    expr))
 
 (defn build-interpolated [string]
   (let [parts (re-seq re-interpolated-string string)
@@ -204,13 +204,13 @@
                    (Sym (subs %1 2 (dec (count %1))))
 
                    (re/re #"\$$symw$bpar")
-                   (build-exp {:exp (subs %1 1)})
+                   (build-expr {:expr (subs %1 1)})
 
                    (re/re #"\$$symw")
                    (Sym (subs %1 1))
 
                    (re/re #"\$$bpar")
-                   (build-exp-interpolated {:exp (subs %1 1)})
+                   (build-expr-interpolated {:expr (subs %1 1)})
 
                    (Str (str/replace %1 #"\\(\$)" "$1")))
                 parts)]
@@ -246,7 +246,7 @@
                nil nil
                :xmap (build-xmap node)
                :fmap (build-fmap node)
-               :exp (build-exp node)
+               :expr (build-expr node)
                :vstr (build-vstr node)
                :str (Str (:str node))
                :def (build-def node)

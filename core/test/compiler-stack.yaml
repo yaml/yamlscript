@@ -15,7 +15,7 @@
   resolve: |
     # Composed tree with tags resolved
   build: |
-    # Read each !exp scalar into Clojure AST forms
+    # Read each !expr scalar into Clojure AST forms
   transform: |
     # Transform the YS macros (defsyn)
   construct: |
@@ -107,8 +107,8 @@
       {:= "a"} {:= "b c"} ]}
   resolve: |
     {:xmap [
-      {:exp "a"}
-      {:exp "b c"}
+      {:expr "a"}
+      {:expr "b c"}
     ]}
   build: |
     {:xmap [
@@ -206,7 +206,7 @@
     !yamlscript/v0
     foo =: 123
   resolve: |
-    {:xmap [{:def "foo ="} {:exp "123"}]}
+    {:xmap [{:def "foo ="} {:expr "123"}]}
   build: |
     {:xmap
      [[{:Sym def} {:Sym foo}]
@@ -220,7 +220,7 @@
     !yamlscript/v0
     defn foo(a b): (a + b)
   resolve: |
-    {:xmap [{:defn "defn foo(a b)"} {:exp "(a + b)"}]}
+    {:xmap [{:defn "defn foo(a b)"} {:expr "(a + b)"}]}
   build: |
     {:xmap
      [[{:Sym defn} {:Sym foo} nil {:Vec [{:Sym a} {:Sym b}]}]
@@ -281,15 +281,15 @@
   resolve: |
     {:xmap [
       {:def "foo ="}
-      {:exp "123"}
+      {:expr "123"}
       {:defn "defn bar(a b)"}
       {:xmap [
         {:def "c ="}
-        {:exp "(a + b)"}
-        {:exp "=>"}
-        {:exp "2 * c"} ]}
-      {:exp "bar"}
-      {:exp "10 20"} ]}
+        {:expr "(a + b)"}
+        {:expr "=>"}
+        {:expr "2 * c"} ]}
+      {:expr "bar"}
+      {:expr "10 20"} ]}
   build: |
     {:xmap
      ([{:Sym def} {:Sym foo}]
@@ -336,7 +336,7 @@
   parse: |
     "=VAL", :! "yamlscript/v0", := "(foo bar)"
   resolve: |
-    {:exp "(foo bar)"}
+    {:expr "(foo bar)"}
   print: |
     (foo bar)
 
@@ -347,7 +347,7 @@
     ; comment
     (foo bar)
   resolve: |
-    {:exp "; comment (foo bar)"}
+    {:expr "; comment (foo bar)"}
   parse: |
     "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
   # Semicolon comments are errors now
@@ -364,9 +364,9 @@
      [{:str "str"}
       {:str "foo bar"}
       {:str "num"}
-      {:exp "inc(41)"}
+      {:expr "inc(41)"}
       {:str "bar"}
-      {:exp "load(\"bar.yaml\")"}]}
+      {:expr "load(\"bar.yaml\")"}]}
   build: |
     {:Map
      [{:Str "str"}
@@ -439,7 +439,7 @@
       fn(a b): a + b
   resolve: |
     {:xmap
-     [{:def "add ="} {:xmap [{:fn "fn(a b)"} {:exp "a + b"}]}]}
+     [{:def "add ="} {:xmap [{:fn "fn(a b)"} {:expr "a + b"}]}]}
   clojure: |
     (def add (fn [a b] (add+ a b)))
 
@@ -453,14 +453,14 @@
       =>: f
   resolve: |
     {:xmap
-     [{:exp "foo"}
+     [{:expr "foo"}
       {:fmap
-       [{:exp "(a > b)"}
-        {:exp "c"}
-        {:exp "(a < d)"}
-        {:exp "e"}
-        {:exp "=>"}
-        {:exp "f"}]}]}
+       [{:expr "(a > b)"}
+        {:expr "c"}
+        {:expr "(a < d)"}
+        {:expr "e"}
+        {:expr "=>"}
+        {:expr "f"}]}]}
   construct: |
     {:Top
      [{:Lst
@@ -543,10 +543,10 @@
     foo:: vars.foo
   resolve: |
     {:map
-     ({:exp "=>"}
-      {:xmap [{:def "vars ="} {:exp "load('vars.yaml')"}]}
+     ({:expr "=>"}
+      {:xmap [{:def "vars ="} {:expr "load('vars.yaml')"}]}
       {:str "foo"}
-      {:exp "vars.foo"})}
+      {:expr "vars.foo"})}
   build: |
     {:Map
      [{:Sym =>}
@@ -578,9 +578,9 @@
   resolve: |
     {:seq
      ({:xmap
-       [{:exp "=>"}
-        {:xmap [{:def "vars ="} {:exp "load('vars.yaml')"}]}]}
-      {:exp "vars.foo"}
+       [{:expr "=>"}
+        {:xmap [{:def "vars ="} {:expr "load('vars.yaml')"}]}]}
+      {:expr "vars.foo"}
       {:str "bar"})}
   transform: |
     {:xmap
@@ -692,10 +692,10 @@
     qq: (1 2 3)
   resolve: |
     {:xmap
-     [{:exp "=>"}
+     [{:expr "=>"}
       {:clj "(defmacro qq [x]\n  `(quote ~x))\n"}
-      {:exp "qq"}
-      {:exp "(1 2 3)"}]}
+      {:expr "qq"}
+      {:expr "(1 2 3)"}]}
   clojure: |
     (defmacro
      qq

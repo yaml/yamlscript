@@ -15,7 +15,7 @@
 ;;
 ;; * !xmap - YAMLScript expression mapping - pair creates form
 ;; * !fmap - YAMLScript forms mapping - lhs and rhs create separate forms
-;; * !exp   - YAMLScript expression
+;; * !expr - YAMLScript expression scalar
 ;; * !form  - YAMLScript expression - node creates form
 ;; * !vstr  - YAMLScript interpolated string
 ;;
@@ -23,8 +23,8 @@
 ;;
 ;; The resolver transforms the keys of the YAMLScript special forms:
 ;;
-;; * def  - 'foo =' -> !exp 'def foo'
-;; * defn - 'defn foo(...)' -> !exp 'defn foo [...]'
+;; * def  - 'foo =' -> !expr 'def foo'
+;; * defn - 'defn foo(...)' -> !expr 'defn foo [...]'
 
 (ns yamlscript.resolver
   (:require
@@ -77,35 +77,35 @@
 ;; ----------------------------------------------------------------------------
 (defn tag-str [[key val]]
   (when-lets [str (or (:vstr key) (:str key))
-              _ (= "" (:exp val))]
+              _ (= "" (:expr val))]
     [{:str str} nil]))
 
-(defn tag-fn [[{key :exp} val]]
+(defn tag-fn [[{key :expr} val]]
   (when (re-matches re/afnk key)
     [{:fn key} val]))
 
-(defn tag-def [[{key :exp} val]]
+(defn tag-def [[{key :expr} val]]
   (when (re-matches re/defk key)
     [{:def key} val]))
 
-(defn tag-defn [[{key :exp} val]]
+(defn tag-defn [[{key :expr} val]]
   (when (re-matches re/dfnk key)
     [{:defn key} val]))
 
 (defn tag-fmap [[key val]]
   (when-lets [_ (or
-                  (re-find #" +%$" (:exp key))
-                  (re-matches #"(cond|condp .+|case .+)" (:exp key)))
+                  (re-find #" +%$" (:expr key))
+                  (re-matches #"(cond|condp .+|case .+)" (:expr key)))
               _ (contains? val :xmap)
-              key (assoc key :exp (str/replace (:exp key) #" +%$" ""))
+              key (assoc key :expr (str/replace (:expr key) #" +%$" ""))
               val (set/rename-keys val {:xmap :fmap})]
     [key val]))
 
-(defn tag-exp [[key val]]
-  (when-lets [_ (contains? key :exp)
-              _ (some val [:exp :str :vstr :xmap])]
-    (let [key (if (re-find #" +\|$" (:exp key))
-                {:form (assoc key :exp (str/replace (:exp key) #" +\|$" ""))}
+(defn tag-expr [[key val]]
+  (when-lets [_ (contains? key :expr)
+              _ (some val [:expr :str :vstr :xmap])]
+    (let [key (if (re-find #" +\|$" (:expr key))
+                {:form (assoc key :expr (str/replace (:expr key) #" +\|$" ""))}
                 key)]
       [key val])))
 
@@ -136,7 +136,7 @@
        tag-def
        tag-defn
        tag-fmap
-       tag-exp
+       tag-expr
        identity) pair)))
 
 (defn resolve-code-mapping [node]
@@ -149,7 +149,7 @@
                          (partition 2 (:% node))))}
         node (if anchor (assoc node :& anchor) node)]
     (if-lets [[key val] (:xmap node)
-              key-str (:exp key)
+              key-str (:expr key)
               _ (re-matches re/dfnk key-str)]
       {:defn [key val]}
       node)))
@@ -177,7 +177,7 @@
                       #"^-[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?]" val))
                    (assoc node := (subs val 1))
                    node)]
-             (set/rename-keys node {:= :exp}))
+             (set/rename-keys node {:= :expr}))
         :$ (set/rename-keys node {:$ :vstr})
         :' (set/rename-keys node {:' :str})
         :| (set/rename-keys node {:| :vstr})
