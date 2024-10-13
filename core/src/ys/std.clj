@@ -226,13 +226,17 @@
     boolean? (if x 1 0)
     (util/die (str "Can't convert " (type x) " to number"))))
 
-
-(intern 'ys.std 'to-str clojure.core/str)
 (defn to-set [x]
   (condp #(%1 %2) x
     map? (set (keys x))
     seqable? (set (seq x))
     (util/die "Can't convert " (or (type x) "nil") " to set")))
+
+(defn to-str [x]
+  (condp #(%1 %2) x
+    string? x
+    nil? "nil"
+    (str x)))
 
 (defn to-type [x]
   (condp #(%1 %2) x
@@ -545,9 +549,7 @@
 
 (defn replace
   ([x] (clojure.core/replace x))
-  ([x y] (if (or
-               (= java.util.regex.Pattern (type y))
-               (= java.lang.String (type y)))
+  ([x y] (if (or (regex? y) (string? y))
            (clojure.string/replace x y "")
            (clojure.core/replace x y)))
   ([x y z] (clojure.string/replace x y z)))
@@ -561,7 +563,7 @@
      []
      (clojure.string/split S #"")))
   ([S R]
-   (let [[S R] (if (= java.util.regex.Pattern (type S)) [R S] [S R])
+   (let [[S R] (if (regex? S) [R S] [S R])
          R (if (string? R) (re-pattern R) R)]
      (clojure.string/split S R))))
 
