@@ -118,7 +118,6 @@ test::
 - code: to-num("") == nil
 - code: to-num("xyz") == nil
 
-- code: to-list() == \'()
 - code: to-list([]) == \'()
 - code: to-list({}) == \'()
 - code: to-list('') == \'()

@@ -200,21 +200,18 @@
 
 (intern 'ys.std 'to-keyword clojure.core/keyword)
 
-(defn to-list
-  ([] [])
-  ([x] (condp #(%1 %2) x
-         map? (flatten (seq x))
-         sequential? (if (empty? x) '() (seq x))
-         string? (if (empty? x) '() (seq x))
-         (util/die "Can't convert " (or (type x) "nil") " to list")))
-  ([x & xs] (apply list x xs)))
+(defn to-list [x]
+  (condp #(%1 %2) x
+    map? (flatten (seq x))
+    sequential? (if (empty? x) '() (seq x))
+    string? (if (empty? x) '() (seq x))
+    (util/die "Can't convert " (or (type x) "nil") " to list")))
 
-(defn to-map
-  ([] {})
-  ([x] (if (set? x)
-         (zipmap (seq x) (repeat nil))
-         (apply hash-map (flatten (seq x)))))
-  ([x y & xs] (apply hash-map x y xs)))
+(defn to-map [x]
+  (condp #(%1 %2) x
+    map? x
+    set? (zipmap (seq x) (repeat nil))
+    (apply hash-map (flatten (seq x)))))
 
 (defn to-num [x]
   (condp #(%1 %2) x
@@ -229,21 +226,14 @@
     boolean? (if x 1 0)
     (util/die (str "Can't convert " (type x) " to number"))))
 
-(defn to-set
-  ([] (set []))
-  ([x] (if (map? x) (set (keys x)) (set x)))
-  ([x & xs] (apply set x xs)))
 
 (intern 'ys.std 'to-str clojure.core/str)
+(defn to-set [x]
+  (condp #(%1 %2) x
+    map? (set (keys x))
+    seqable? (set (seq x))
+    (util/die "Can't convert " (or (type x) "nil") " to set")))
 
-(defn to-vec
-  ([] [])
-  ([x] (condp #(%1 %2) x
-         map? (vec (flatten (seq x)))
-         sequential? (vec x)
-         string? (vec x)
-         (util/die "Can't convert " (or (type x) "nil") " to vector")))
-  ([x & xs] (apply vector x xs)))
 (defn to-type [x]
   (condp #(%1 %2) x
     nil? "nil"
@@ -266,6 +256,12 @@
     symbol? "sym"
     (util/die "Can't determine type of '" (type x) "' value")))
 
+(defn to-vec [x]
+  (condp #(%1 %2) x
+    map? (vec (flatten (seq x)))
+    sequential? (vec x)
+    string? (vec x)
+    (util/die "Can't convert " (or (type x) "nil") " to vector")))
 
 (intern 'ys.std 'A atom)
 (intern 'ys.std 'B to-bool)
