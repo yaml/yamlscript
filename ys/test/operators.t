@@ -100,9 +100,11 @@ test::
 - code: \\B.--
   want:: \\A
 - code: nil.++
-  want: null
+  what: error
+  want: Can't convert nil to number
 - code: -"B".++
-  want: null
+  what: error
+  want: Cannot inc+("B")
 
 - code: (1 ... 10).#.eq(9)
 - code: (1 ... 0).#.eq(0)

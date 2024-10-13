@@ -220,7 +220,7 @@
     string? (if (re-find #"\." x)
               (parse-double x)
               (parse-long x))
-    nil? 0
+    nil? (util/die "Can't convert nil to number")
     seqable? (count x)
     char? (int x)
     boolean? (if x 1 0)
@@ -344,8 +344,11 @@
       (for [d n]
         (- (byte d) 48)))))
 
-(defn- op-error [op x y]
-  (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")"))
+(defn- op-error
+  ([op x]
+     (util/die "Cannot " op "(" (pr-str x) ")"))
+  ([op x y]
+     (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")")))
 
 (defn inc+ [x]
   (condp #(%1 %2) x
@@ -354,8 +357,7 @@
     (let [n (to-num x)]
       (condp #(%1 %2) n
         number? (inc n)
-        nil? nil
-        (op-error "inc" x nil)))))
+        (op-error "inc+" x)))))
 
 (defn dec+ [x]
   (condp #(%1 %2) x
@@ -364,8 +366,7 @@
     (let [n (to-num x)]
       (condp #(%1 %2) n
         number? (dec n)
-        nil? nil
-        (op-error "dec" x nil)))))
+        (op-error "dec+" x)))))
 
 (defn add+
   ([x y]
