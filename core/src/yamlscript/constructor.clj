@@ -15,7 +15,7 @@
 
 (declare
   construct-node
-  construct-pairs
+  construct-xmap
   declare-undefined
   maybe-call-main
   maybe-trace)
@@ -108,36 +108,36 @@
                 ;; Handle RHS is mapping
                 (partition 2)
                 (map #(let [[k v] %1]
-                        (if (:pairs v)
+                        (if (:xmap v)
                           [k (Lst (get-in
-                                    (construct-pairs v ctx)
+                                    (construct-xmap v ctx)
                                     [0 :Lst]))]
                           %1)))
                 (mapcat identity)
                 vec))]
-        (construct-pairs {:pairs (mapcat identity rest)} ctx)))]])
+        (construct-xmap {:xmap (mapcat identity rest)} ctx)))]])
 
-(defn check-let-bindings [pairs ctx]
+(defn check-let-bindings [xmap ctx]
   (let [[lets rest]
         (map vec
           (split-with
             #(= 'def (get-in %1 [0 0 :Sym]))
-            pairs))]
+            xmap))]
     (if (seq lets)
       (apply-let-bindings lets rest ctx)
-      pairs)))
+      xmap)))
 
-(defn construct-pairs [{nodes :pairs} ctx]
-  (let [pairs (vec (map vec (partition 2 nodes)))
+(defn construct-xmap [{nodes :xmap} ctx]
+  (let [xmap (vec (map vec (partition 2 nodes)))
         construct-side (fn [n c] (if (vector? n)
                                    (vec (map #(construct-node %1 c) n))
                                    (construct-node n c)))
-        node (loop [pairs pairs, new []]
-               (if (seq pairs)
-                 (let [pairs (if (> (:lvl ctx) 1)
-                               (check-let-bindings pairs ctx)
-                               pairs)
-                       [[lhs rhs] & pairs] pairs
+        node (loop [xmap xmap, new []]
+               (if (seq xmap)
+                 (let [xmap (if (> (:lvl ctx) 1)
+                               (check-let-bindings xmap ctx)
+                               xmap)
+                       [[lhs rhs] & xmap] xmap
                        lhs (if (and
                                  (= 2 (count lhs))
                                  (= {:Sym 'def} (first lhs))
@@ -147,22 +147,22 @@
                              lhs)
                        lhs (if (and (= lhs {:Sym 'do})
                                  (map? rhs)
-                                 (not (some #{:pairs :forms} (keys rhs))))
+                                 (not (some #{:xmap :fmap} (keys rhs))))
                              {:Sym '=>} lhs)
-                       [forms lhs] (if (get-in lhs [:form])
+                       [fmap lhs] (if (get-in lhs [:form])
                                      [true (:form lhs)]
                                      [false lhs])
                        lhs (construct-side lhs ctx)
                        rhs (construct-side rhs ctx)
-                       rhs (or (:forms rhs) rhs)
-                       new (if forms
+                       rhs (or (:fmap rhs) rhs)
+                       new (if fmap
                              (conj new lhs rhs)
                              (conj new (construct-call [lhs rhs])))]
-                   (recur pairs, new))
+                   (recur xmap, new))
                  new))]
     node))
 
-(defn construct-forms [{nodes :forms} ctx]
+(defn construct-fmap [{nodes :fmap} ctx]
   (let [nodes (reduce
                 (fn [nodes node]
                   (let [node (construct-node node ctx)]
@@ -170,7 +170,7 @@
                       (conj nodes node)
                       nodes)))
                 [] nodes)]
-    {:forms nodes}))
+    {:fmap nodes}))
 
 (defn construct-coll [node ctx key]
   (let [{nodes key} node
@@ -224,8 +224,8 @@
          tag (:! node)
          node (dissoc node :& :!)
          node (case key
-                :pairs (construct-pairs node ctx)
-                :forms (construct-forms node ctx)
+                :xmap (construct-xmap node ctx)
+                :fmap (construct-fmap node ctx)
                 :Map (construct-coll node ctx :Map)
                 :Vec (construct-coll node ctx :Vec)
                 :Lst (construct-coll node ctx :Lst)

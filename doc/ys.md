@@ -237,30 +237,30 @@ $ ys -cd program.ys
     {:% [{:= "say"} {:$ "$i) Hello, $name!"}]}]}]}
 
 *** resolve output ***
-{:pairs
+{:xmap
  [{:defn "defn main(name='world' n=3)"}
-  {:pairs [{:exp "greet"} {:exp "name n"}]}
+  {:xmap [{:expr "greet"} {:expr "name n"}]}
   {:defn "defn greet(name, times=1)"}
-  {:pairs
-   [{:exp "each [i (1 .. times)]"}
-    {:pairs [{:exp "say"} {:vstr "$i) Hello, $name!"}]}]}]}
+  {:xmap
+   [{:expr "each [i (1 .. times)]"}
+    {:xmap [{:expr "say"} {:xstr "$i) Hello, $name!"}]}]}]}
 
 *** build output ***
-{:pairs
+{:xmap
  [[{:Sym defn} {:Sym main} nil]
   [{:Lst
     [{:Vec [{:Sym name} {:Sym n}]}
-     {:pairs [{:Sym greet} [{:Sym name} {:Sym n}]]}]}
+     {:xmap [{:Sym greet} [{:Sym name} {:Sym n}]]}]}
    {:Lst
     [{:Vec [{:Sym name}]} {:Lst [{:Sym main} {:Sym name} {:Int 3}]}]}
    {:Lst [{:Vec []} {:Lst [{:Sym main} {:Str "world"} {:Int 3}]}]}]
   [{:Sym defn} {:Sym greet} nil]
   [{:Lst
     [{:Vec [{:Sym name} {:Sym times}]}
-     {:pairs
+     {:xmap
       [[{:Sym each}
         {:Vec [{:Sym i} {:Lst [{:Sym rng} {:Int 1} {:Sym times}]}]}]
-       {:pairs
+       {:xmap
         [{:Sym say}
          {:Lst
           [{:Sym str}
@@ -273,21 +273,21 @@ $ ys -cd program.ys
      {:Lst [{:Sym greet} {:Sym name} {:Int 1}]}]}]]}
 
 *** transform output ***
-{:pairs
+{:xmap
  [[{:Sym defn} {:Sym main} nil]
   [{:Lst
     [{:Vec [{:Sym name} {:Sym n}]}
-     {:pairs [{:Sym greet} [{:Sym name} {:Sym n}]]}]}
+     {:xmap [{:Sym greet} [{:Sym name} {:Sym n}]]}]}
    {:Lst
     [{:Vec [{:Sym name}]} {:Lst [{:Sym main} {:Sym name} {:Int 3}]}]}
    {:Lst [{:Vec []} {:Lst [{:Sym main} {:Str "world"} {:Int 3}]}]}]
   [{:Sym defn} {:Sym greet} nil]
   [{:Lst
     [{:Vec [{:Sym name} {:Sym times}]}
-     {:pairs
+     {:xmap
       [[{:Sym each}
         {:Vec [{:Sym i} {:Lst [{:Sym rng} {:Int 1} {:Sym times}]}]}]
-       {:pairs
+       {:xmap
         [{:Sym say}
          {:Lst
           [{:Sym str}
