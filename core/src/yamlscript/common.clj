@@ -71,6 +71,9 @@
             (util/die "YSPATH environment variable not set"))]
     (map abspath (str/split yspath #":"))))
 
+(defn atom? [x]
+  (= (type x) clojure.lang.Atom))
+
 (defn regex? [x]
   (= (type x) java.util.regex.Pattern))
 

@@ -13,7 +13,8 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [yamlscript.common :as common :refer [regex?]]
+   [yamlscript.common :as common :refer [atom?
+                                         regex?]]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
@@ -243,6 +244,28 @@
          string? (vec x)
          (util/die "Can't convert " (or (type x) "nil") " to vector")))
   ([x & xs] (apply vector x xs)))
+(defn to-type [x]
+  (condp #(%1 %2) x
+    nil? "nil"
+    string? "str"
+    int? "int"
+    float? "float"
+    number? "num"
+    boolean? "bool"
+    char? "char"
+    regex? "rgx"
+    map? "map"
+    set? "set"
+    vector? "vec"
+    list? "list"
+    seq? "seq"
+    fn? "fun"
+    atom? "atom"
+    class? "class"
+    var? "var"
+    symbol? "sym"
+    (util/die "Can't determine type of '" (type x) "' value")))
+
 
 (intern 'ys.std 'A atom)
 (intern 'ys.std 'B to-bool)
@@ -256,6 +279,7 @@
 (intern 'ys.std 'M to-map)
 (intern 'ys.std 'N to-num)
 (intern 'ys.std 'S to-str)
+(intern 'ys.std 'T to-type)
 (intern 'ys.std 'V to-vec)
 
 
