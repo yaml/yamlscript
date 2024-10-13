@@ -4,7 +4,12 @@
 (ns ys.yaml
   (:require
    [clj-yaml.core :as yaml])
-  (:refer-clojure :exclude [load]))
+  (:refer-clojure :exclude [load])
+  #_(:import
+   (java.util Optional)
+   (org.snakeyaml.engine.v2.api DumpSettings)
+   (org.snakeyaml.engine.v2.api.lowlevel Parse)
+   ))
 
 (defn load [str]
   (yaml/parse-string str
@@ -12,6 +17,12 @@
 
 (defn dump [data]
   (yaml/generate-string
+    data
+    :dumper-options
+    {:flow-style :block}))
+
+#_(defn dump-all [data]
+  (yaml/generate-all
     data
     :dumper-options
     {:flow-style :block}))
