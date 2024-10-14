@@ -16,8 +16,8 @@
 ;; * !xmap - YAMLScript expression mapping - pair creates form
 ;; * !fmap - YAMLScript forms mapping - lhs and rhs create separate forms
 ;; * !expr - YAMLScript expression scalar
-;; * !form  - YAMLScript expression - node creates form
-;; * !vstr  - YAMLScript interpolated string
+;; * !form - YAMLScript expression - node creates form
+;; * !xstr - YAMLScript interpolated string
 ;;
 ;; * !empty - YAML empty stream
 ;;
@@ -76,7 +76,7 @@
 ;; Resolve taggers for code mode:
 ;; ----------------------------------------------------------------------------
 (defn tag-str [[key val]]
-  (when-lets [str (or (:vstr key) (:str key))
+  (when-lets [str (or (:xstr key) (:str key))
               _ (= "" (:expr val))]
     [{:str str} nil]))
 
@@ -103,7 +103,7 @@
 
 (defn tag-expr [[key val]]
   (when-lets [_ (contains? key :expr)
-              _ (some val [:expr :str :vstr :xmap])]
+              _ (some val [:expr :str :xstr :xmap])]
     (let [key (if (re-find #" +\|$" (:expr key))
                 {:form (assoc key :expr (str/replace (:expr key) #" +\|$" ""))}
                 key)]
@@ -178,9 +178,9 @@
                    (assoc node := (subs val 1))
                    node)]
              (set/rename-keys node {:= :expr}))
-        :$ (set/rename-keys node {:$ :vstr})
+        :$ (set/rename-keys node {:$ :xstr})
         :' (set/rename-keys node {:' :str})
-        :| (set/rename-keys node {:| :vstr})
+        :| (set/rename-keys node {:| :xstr})
         :> (die "Folded scalars not allowed in code mode")
         ,  (die "Scalar has unknown style")))))
 

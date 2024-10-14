@@ -69,7 +69,7 @@
     prn: 'Hello'
     die: "Noooo"
   resolve: |
-    {:xmap [{:expr "prn"} {:str "Hello"} {:expr "die"} {:vstr "Noooo"}]}
+    {:xmap [{:expr "prn"} {:str "Hello"} {:expr "die"} {:xstr "Noooo"}]}
 
 
 - name: Start in code mode with /code tag
@@ -78,7 +78,7 @@
     prn: 'Hello'
     die: "Noooo"
   resolve: |
-    {:xmap [{:expr "prn"} {:str "Hello"} {:expr "die"} {:vstr "Noooo"}]}
+    {:xmap [{:expr "prn"} {:str "Hello"} {:expr "die"} {:xstr "Noooo"}]}
 
 
 - name: Start in bare mode

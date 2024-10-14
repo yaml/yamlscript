@@ -229,13 +229,13 @@
     (str/replace #"\\t" "\t")
     Str))
 
-(defn build-vstr [node]
-  (let [string (:vstr node)]
+(defn build-xstr [node]
+  (let [string (:xstr node)]
     (if (re-find #"\$[\{\(a-zA-Z]" string)
       (build-interpolated string)
       (build-dq-string string))))
 
-(reset! yamlscript.global/build-vstr build-vstr)
+(reset! yamlscript.global/build-xstr build-xstr)
 
 (defn build-node [node]
   (let [anchor (:& node)
@@ -247,7 +247,7 @@
                :xmap (build-xmap node)
                :fmap (build-fmap node)
                :expr (build-expr node)
-               :vstr (build-vstr node)
+               :xstr (build-xstr node)
                :str (Str (:str node))
                :def (build-def node)
                :ali node

@@ -243,7 +243,7 @@ $ ys -cd program.ys
   {:defn "defn greet(name, times=1)"}
   {:xmap
    [{:expr "each [i (1 .. times)]"}
-    {:xmap [{:expr "say"} {:vstr "$i) Hello, $name!"}]}]}]}
+    {:xmap [{:expr "say"} {:xstr "$i) Hello, $name!"}]}]}]}
 
 *** build output ***
 {:xmap
