@@ -5,6 +5,17 @@
 ;; node tree.
 ;;
 ;; The tags used by YAMLScript are:
+;;
+;; Bare mode:
+;; * !!map - YAML mapping
+;; * !!seq - YAML sequence
+;; * !!str - YAML string scalar
+;; * !!int - YAML integer scalar
+;; * !!float - YAML floating point scalar
+;; * !!bool - YAML boolean scalar
+;; * !!null - YAML null scalar
+;;
+;; Data mode (bare mode tags, plus):
 ;; * !map - YAML mapping
 ;; * !seq - YAML sequence
 ;; * !str - YAML string scalar
@@ -13,11 +24,13 @@
 ;; * !bln - YAML boolean scalar
 ;; * !nil - YAML null scalar
 ;;
+;; Code mode (data mode tags, plus):
 ;; * !xmap - YAMLScript expression mapping - pair creates form
 ;; * !fmap - YAMLScript forms mapping - lhs and rhs create separate forms
+;; * !cmap - YAMLScript code mapping - each node is a form
+;; * !cseq - YAMLScript code sequence - each node is a form
 ;; * !expr - YAMLScript expression scalar
-;; * !form - YAMLScript expression - node creates form
-;; * !xstr - YAMLScript interpolated string
+;; * !xstr - YAMLScript expression string (w/ interpolation)
 ;;
 ;; * !empty - YAML empty stream
 ;;
@@ -25,6 +38,9 @@
 ;;
 ;; * def  - 'foo =' -> !expr 'def foo'
 ;; * defn - 'defn foo(...)' -> !expr 'defn foo [...]'
+;; * form - 'foo(...) |' -> key is entire form (so is value)
+;; * cmap - 'foo !: <block-map>' -> foo: !cmap <block-map>
+;; * cseq - 'foo !: <block-seq>' -> foo: !cseq <block-seq>
 
 (ns yamlscript.resolver
   (:require
@@ -306,7 +322,12 @@
 
 (def bare-mode-tags
   ["tag:yaml.org,2002:map"
-   "tag:yaml.org,2002:seq"])
+   "tag:yaml.org,2002:seq"
+   "tag:yaml.org,2002:str"
+   "tag:yaml.org,2002:int"
+   "tag:yaml.org,2002:float"
+   "tag:yaml.org,2002:bool"
+   "tag:yaml.org,2002:null"])
 
 (defn resolve-bare-alias [node]
   (set/rename-keys node {:* :ali}))
@@ -326,9 +347,4 @@
     (if anchor (assoc node :& anchor) node)))
 
 (comment
-  (resolve
-    #_{:! "yamlscript/v0", :% [{:= "a"} {:= "b c"}]}
-    {:! "yamlscript/v0", := ""}
-    #__)
-  (set/rename-keys {:> 42} {:> :str})
   )
