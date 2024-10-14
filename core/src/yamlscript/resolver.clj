@@ -63,10 +63,10 @@
         :val))
 
 (declare
-  resolve-bare-node
+  resolve-code-node
   resolve-data-node
   resolve-data-node-top
-  resolve-code-node)
+  resolve-bare-node)
 
 (defn resolve
   "Walk YAML tree and tag all nodes according to YAMLScript rules."
@@ -131,6 +131,29 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for code mode:
 ;; ----------------------------------------------------------------------------
+(declare
+  resolve-code-mapping
+  resolve-code-sequence
+  resolve-code-scalar
+  resolve-code-alias)
+
+(defn resolve-code-node
+  "Resolve nodes recursively in code mode"
+  [node]
+  (let [tag (:! node)
+        node (dissoc node :!)]
+    (if (= tag "")
+      (resolve-data-node node)
+      (let [kind (node-kind node)]
+        (condp = [kind tag]
+          [:map nil] (resolve-code-mapping node)
+          [:seq nil] (resolve-code-sequence node)
+          [:val nil] (resolve-code-scalar node)
+          [:ali nil] (resolve-code-alias node)
+          [:val "clj"] (let [style (get-scalar-style node)]
+                         (set/rename-keys node {style (keyword tag)}))
+          (die "Unknown tag in code mode: '!" tag "'"))))))
+
 (defn resolve-mode-swap [key val]
   (let [key-text (:= key)
         [key val] (if (and key-text (re-find #":$" key-text))
@@ -195,27 +218,33 @@
 (defn resolve-code-alias [node]
   (set/rename-keys node {:* :Ali}))
 
-(defn resolve-code-node
-  "Resolve nodes recursively in code mode"
-  [node]
-  (let [tag (:! node)
-        node (dissoc node :!)]
-    (if (= tag "")
-      (resolve-data-node node)
-      (let [kind (node-kind node)]
-        (condp = [kind tag]
-          [:map nil] (resolve-code-mapping node)
-          [:seq nil] (resolve-code-sequence node)
-          [:val nil] (resolve-code-scalar node)
-          [:ali nil] (resolve-code-alias node)
-          [:val "clj"] (let [style (get-scalar-style node)]
-                         (set/rename-keys node {style (keyword tag)}))
-          (die "Unknown tag in code mode: '!" tag "'"))))))
-
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
+(declare
+  resolve-data-mapping
+  resolve-data-sequence
+  resolve-data-scalar
+  resolve-data-alias)
+
+(defn resolve-data-node
+  "Resolve nodes recursively in 'yaml' mode"
+  [node]
+  (let [tag (:! node)
+        anchor (:& node)
+        node (if (= tag "")
+               (resolve-code-node (dissoc node :!))
+               (case (node-kind node)
+                 :map (resolve-data-mapping node)
+                 :seq (resolve-data-sequence node)
+                 :val (resolve-data-scalar node)
+                 :ali (resolve-data-alias node)))
+        node (if anchor (assoc node :& anchor) node)]
+    (if (and tag (re-find #":$" tag))
+      (assoc node :! tag)
+      node)))
+
 (defn resolve-data-mapping [node]
   {:map (vec
           (mapcat
@@ -262,23 +291,6 @@
 (defn resolve-data-alias [node]
   (set/rename-keys node {:* :Ali}))
 
-(defn resolve-data-node
-  "Resolve nodes recursively in 'yaml' mode"
-  [node]
-  (let [tag (:! node)
-        anchor (:& node)
-        node (if (= tag "")
-               (resolve-code-node (dissoc node :!))
-               (case (node-kind node)
-                 :map (resolve-data-mapping node)
-                 :seq (resolve-data-sequence node)
-                 :val (resolve-data-scalar node)
-                 :ali (resolve-data-alias node)))
-        node (if anchor (assoc node :& anchor) node)]
-    (if (and tag (re-find #":$" tag))
-      (assoc node :! tag)
-      node)))
-
 (defn resolve-data-node-top [node]
   (if-lets [xmap (or (:% node) (:%% node))
             key (get-in xmap [0 :=])
@@ -300,6 +312,35 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for bare mode:
 ;; ----------------------------------------------------------------------------
+(declare
+  resolve-bare-mapping
+  resolve-bare-sequence
+  resolve-bare-scalar
+  resolve-bare-alias)
+
+(def bare-mode-tags
+  ["tag:yaml.org,2002:map"
+   "tag:yaml.org,2002:seq"
+   "tag:yaml.org,2002:str"
+   "tag:yaml.org,2002:int"
+   "tag:yaml.org,2002:float"
+   "tag:yaml.org,2002:bool"
+   "tag:yaml.org,2002:null"])
+
+(defn resolve-bare-node
+  "Resolve nodes recursively in 'bare' mode"
+  [node]
+  (let [tag (:! node)
+        anchor (:& node)
+        _ (when (and tag (not (some #{tag} bare-mode-tags)))
+            (die "Unrecognized tag in bare mode: !" tag))
+        node (case (node-kind node)
+               :map (resolve-bare-mapping node)
+               :seq (resolve-bare-sequence node)
+               :val (resolve-bare-scalar node)
+               :ali (resolve-bare-alias node))]
+    (if anchor (assoc node :& anchor) node)))
+
 (defn resolve-bare-mapping [node]
   {:map (vec (map resolve-bare-node
                (or (:% node) (:%% node))))})
@@ -318,31 +359,8 @@
       :> (set/rename-keys node {:> :str})
       ,  (die "Scalar has unknown style: " style))))
 
-(def bare-mode-tags
-  ["tag:yaml.org,2002:map"
-   "tag:yaml.org,2002:seq"
-   "tag:yaml.org,2002:str"
-   "tag:yaml.org,2002:int"
-   "tag:yaml.org,2002:float"
-   "tag:yaml.org,2002:bool"
-   "tag:yaml.org,2002:null"])
-
 (defn resolve-bare-alias [node]
   (set/rename-keys node {:* :ali}))
-
-(defn resolve-bare-node
-  "Resolve nodes recursively in 'bare' mode"
-  [node]
-  (let [tag (:! node)
-        anchor (:& node)
-        _ (when (and tag (not (some #{tag} bare-mode-tags)))
-            (die "Unrecognized tag in bare mode: !" tag))
-        node (case (node-kind node)
-               :map (resolve-bare-mapping node)
-               :seq (resolve-bare-sequence node)
-               :val (resolve-bare-scalar node)
-               :ali (resolve-bare-alias node))]
-    (if anchor (assoc node :& anchor) node)))
 
 (comment
   )
