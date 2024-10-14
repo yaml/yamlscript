@@ -53,7 +53,7 @@
 ;; ----------------------------------------------------------------------------
 ;; Generic helpers:
 ;; ----------------------------------------------------------------------------
-(defn node-type [node]
+(defn node-kind [node]
   (condf node
     :%  :map
     :%% :map
@@ -174,31 +174,23 @@
   (die "Sequences (block and flow) not allowed in code mode"))
 
 (defn resolve-code-scalar [node]
-  (let [tag (:! node)
-        node (dissoc node :!)
-        style (get-scalar-style node)
-        val (style node)
-        _ (when (and tag (not= "clj" tag))
-            (die "Scalar has unknown tag: !" tag))]
-    (if tag
-      (set/rename-keys node {style (keyword tag)})
-      (case style
-        := (let [node
-                 ;; Remove leading escape character from value
-                 (if
-                  (or
-                    (re-find
-                      #"^[\.\+][\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
-                    (re-find
-                      #"^-[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?]" val))
-                   (assoc node := (subs val 1))
-                   node)]
-             (set/rename-keys node {:= :expr}))
-        :$ (set/rename-keys node {:$ :xstr})
-        :' (set/rename-keys node {:' :str})
-        :| (set/rename-keys node {:| :xstr})
-        :> (die "Folded scalars not allowed in code mode")
-        ,  (die "Scalar has unknown style")))))
+  (let [style (get-scalar-style node)
+        val (style node)]
+    (case style
+      := (let [node
+               ;; Remove leading escape character from value
+               (if
+                (or
+                  (re-find #"^[\.\+][\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]" val)
+                  (re-find #"^-[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?]" val))
+                 (assoc node := (subs val 1))
+                 node)]
+           (set/rename-keys node {:= :expr}))
+      :$ (set/rename-keys node {:$ :xstr})
+      :' (set/rename-keys node {:' :str})
+      :| (set/rename-keys node {:| :xstr})
+      :> (die "Folded scalars not allowed in code mode")
+      ,  (die "Scalar has unknown style"))))
 
 (defn resolve-code-alias [node]
   (set/rename-keys node {:* :Ali}))
@@ -206,14 +198,20 @@
 (defn resolve-code-node
   "Resolve nodes recursively in code mode"
   [node]
-  (let [tag (:! node)]
+  (let [tag (:! node)
+        node (dissoc node :!)]
     (if (= tag "")
-      (resolve-data-node (dissoc node :!))
-      (case (node-type node)
-        :map (resolve-code-mapping node)
-        :seq (resolve-code-sequence node)
-        :val (resolve-code-scalar node)
-        :ali (resolve-code-alias node)))))
+      (resolve-data-node node)
+      (let [kind (node-kind node)]
+        (condp = [kind tag]
+          [:map nil] (resolve-code-mapping node)
+          [:seq nil] (resolve-code-sequence node)
+          [:val nil] (resolve-code-scalar node)
+          [:ali nil] (resolve-code-alias node)
+          [:val "clj"] (let [style (get-scalar-style node)]
+                         (set/rename-keys node {style (keyword tag)}))
+          (die "Unknown tag in code mode: '!" tag "'"))))))
+
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for data mode:
@@ -271,7 +269,7 @@
         anchor (:& node)
         node (if (= tag "")
                (resolve-code-node (dissoc node :!))
-               (case (node-type node)
+               (case (node-kind node)
                  :map (resolve-data-mapping node)
                  :seq (resolve-data-sequence node)
                  :val (resolve-data-scalar node)
@@ -339,7 +337,7 @@
         anchor (:& node)
         _ (when (and tag (not (some #{tag} bare-mode-tags)))
             (die "Unrecognized tag in bare mode: !" tag))
-        node (case (node-type node)
+        node (case (node-kind node)
                :map (resolve-bare-mapping node)
                :seq (resolve-bare-sequence node)
                :val (resolve-bare-scalar node)
