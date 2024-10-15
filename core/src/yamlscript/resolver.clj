@@ -342,6 +342,7 @@
   "Resolve nodes recursively in 'bare' mode"
   [node]
   (let [tag (:! node)
+        node (dissoc node :!)
         anchor (:& node)
         _ (when (and tag (not (some #{tag} bare-mode-tags)))
             (die "Unrecognized tag in bare mode: !" tag))
