@@ -1456,3 +1456,54 @@
     (b (ys.std/inc+ a))
     (b (ys.std/dec+ a))
     (b (clojure.core/count a))
+
+
+- name: Bare mode tags
+  yamlscript: |
+    - !!map
+      foo: bar
+    - !!seq
+      - 1
+      - 2
+    - !!str 42
+    - !!int "42"
+    - !!float '42'
+    - !!bool |-
+      true
+    - !!null ''
+  resolve: |
+    {:seq
+     ({:map [{:str "foo"} {:str "bar"}]}
+      {:seq ({:int "1"} {:int "2"})}
+      {:str "42"}
+      {:int "42"}
+      {:flt "42"}
+      {:bln "true"}
+      {:nil ""})}
+  clojure: |
+    [{"foo" "bar"} [1 2] "42" 42 42.0 true nil]
+
+
+- name: Bare mode tag error for !!map
+  yamlscript: |
+    - !!map 42
+  error: |
+    Invalid tag for (bare-mode) scalar: 'tag:yaml.org,2002:map'
+
+- name: Bare mode tag error for !!map
+  yamlscript: |
+    - !!map []
+  error: |
+    Invalid tag for (bare-mode) sequence: 'tag:yaml.org,2002:map'
+
+- name: Bare mode tag error for !!bool
+  yamlscript: |
+    - !!bool []
+  error: |
+    Invalid tag for (bare-mode) sequence: 'tag:yaml.org,2002:bool'
+
+- name: Bare mode tag error for !!bool
+  yamlscript: |
+    - !!bool tRUE
+  error: |
+    Invalid value for (bare-mode) !!bool: 'tRUE'

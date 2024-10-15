@@ -308,32 +308,58 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for bare mode:
 ;; ----------------------------------------------------------------------------
-(def bare-mode-tags
-  ["tag:yaml.org,2002:map"
-   "tag:yaml.org,2002:seq"
-   "tag:yaml.org,2002:str"
-   "tag:yaml.org,2002:int"
-   "tag:yaml.org,2002:float"
-   "tag:yaml.org,2002:bool"
-   "tag:yaml.org,2002:null"])
+(def bare-mode-tag-map
+  {"tag:yaml.org,2002:map" :map
+   "tag:yaml.org,2002:seq" :seq
+   "tag:yaml.org,2002:str" :str
+   "tag:yaml.org,2002:int" :int
+   "tag:yaml.org,2002:float" :flt
+   "tag:yaml.org,2002:bool" :bln
+   "tag:yaml.org,2002:null" :nil})
 
 (defn resolve-bare-mapping [node]
-  {:map (vec (map resolve-bare-node
-               (or (:% node) (:%% node))))})
+  (let [tag (:! node)
+        _ (when (and tag (not= tag "tag:yaml.org,2002:map"))
+            (die "Invalid tag for (bare-mode) mapping: '" tag "'"))
+        node (dissoc node :!)]
+    {:map (vec (map resolve-bare-node
+                 (or (:% node) (:%% node))))}))
 
 (defn resolve-bare-sequence [node]
-  {:seq (map resolve-bare-node
-          (or (:- node) (:-- node)))})
+  (let [tag (:! node)
+        _ (when (and tag (not= tag "tag:yaml.org,2002:seq"))
+            (die "Invalid tag for (bare-mode) sequence: '" tag "'"))]
+    {:seq (map resolve-bare-node
+            (or (:- node) (:-- node)))}))
 
 (defn resolve-bare-scalar [node]
-  (let [style (some #(when (%1 node) %1) [:= :$ :' :| :>])]
-    (case style
-      := (set/rename-keys node {:= (resolve-plain-scalar node)})
-      :$ (set/rename-keys node {:$ :str})
-      :' (set/rename-keys node {:' :str})
-      :| (set/rename-keys node {:| :str})
-      :> (set/rename-keys node {:> :str})
-      ,  (die "Scalar has unknown style: " style))))
+  (let [tag (:! node)
+        style (some #(when (%1 node) %1) [:= :$ :' :| :>])
+        value (get node style)
+        type
+        (when tag
+          (case (bare-mode-tag-map tag)
+            :str :str
+            :int (if (re-matches re-int value) :int
+                     (die "Invalid value for (bare-mode) !!int: '" value "'"))
+            :flt (if (re-matches re-float value) :flt
+                     (die "Invalid value for (bare-mode) !!float: '" value "'"))
+            :bln (if (re-matches re-bool value) :bln
+                     (die "Invalid value for (bare-mode) !!bool: '" value "'"))
+            :nil (if (re-matches re-null value) :nil
+                     (die "Invalid value for (bare-mode) !!null: '" value "'"))
+            :map (die "Invalid tag for (bare-mode) scalar: '" tag "'")
+            :seq (die "Invalid tag for (bare-mode) scalar: '" tag "'")
+            (XXX "node" node "tag" tag "style" style "value" value)))]
+    (if type
+      {type value}
+      (case style
+        := (set/rename-keys node {:= (resolve-plain-scalar node)})
+        :$ (set/rename-keys node {:$ :str})
+        :' (set/rename-keys node {:' :str})
+        :| (set/rename-keys node {:| :str})
+        :> (set/rename-keys node {:> :str})
+        ,  (die "Scalar has unknown style: " style)))))
 
 (defn resolve-bare-alias [node]
   (set/rename-keys node {:* :ali}))
@@ -342,16 +368,13 @@
   "Resolve nodes recursively in 'bare' mode"
   [node]
   (let [tag (:! node)
-        node (dissoc node :!)
-        anchor (:& node)
-        _ (when (and tag (not (some #{tag} bare-mode-tags)))
-            (die "Unrecognized tag in bare mode: !" tag))
-        node (case (node-kind node)
-               :map (resolve-bare-mapping node)
-               :seq (resolve-bare-sequence node)
-               :val (resolve-bare-scalar node)
-               :ali (resolve-bare-alias node))]
-    (if anchor (assoc node :& anchor) node)))
+        _ (when (and tag (not (get bare-mode-tag-map tag)))
+            (die "Unrecognized tag in bare mode: !" tag))]
+    (case (node-kind node)
+      :map (resolve-bare-mapping node)
+      :seq (resolve-bare-sequence node)
+      :val (resolve-bare-scalar node)
+      :ali (resolve-bare-alias node))))
 
 (comment
   )
