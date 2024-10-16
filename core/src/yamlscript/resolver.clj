@@ -95,6 +95,24 @@
 (defn scalar-style [node]
   (some #(when (%1 node) %1) [:= :$ :' :| :>]))
 
+(def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
+(def re-float #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?")
+(def re-bool #"(?:true|True|TRUE|false|False|FALSE)")
+(def re-null #"(?:|~|null|Null|NULL)")
+(def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
+(def re-keyword (re/re #":$symw"))
+
+(defn resolve-mode-swap [key val]
+  (let [key-text (:= key)
+        [key val] (if (and key-text (re-find #":$" key-text))
+                    (let [key (assoc key
+                                :=
+                                (str/replace key-text #"\s*:$" ""))
+                          val (assoc val :! "")]
+                      [key val])
+                    [key val])]
+    [key val]))
+
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for code mode:
@@ -139,17 +157,6 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for code mode:
 ;; ----------------------------------------------------------------------------
-(defn resolve-mode-swap [key val]
-  (let [key-text (:= key)
-        [key val] (if (and key-text (re-find #":$" key-text))
-                    (let [key (assoc key
-                                :=
-                                (str/replace key-text #"\s*:$" ""))
-                          val (assoc val :! "")]
-                      [key val])
-                    [key val])]
-    [key val]))
-
 (defn resolve-code-pair [key val]
   (let [[key val] (resolve-mode-swap key val)
         pair [(resolve-code-node key)
@@ -237,13 +244,6 @@
 (defn resolve-data-sequence [node]
   {:seq (map resolve-data-node
           (or (:- node) (:-- node)))})
-
-(def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
-(def re-float #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?")
-(def re-bool #"(?:true|True|TRUE|false|False|FALSE)")
-(def re-null #"(?:|~|null|Null|NULL)")
-(def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
-(def re-keyword (re/re #":$symw"))
 
 (defn resolve-plain-scalar [node]
   (let [val (:= node)]
