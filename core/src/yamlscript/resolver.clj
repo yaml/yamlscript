@@ -113,6 +113,56 @@
                     [key val])]
     [key val]))
 
+(def yaml-core-tags
+  {"tag:yaml.org,2002:map" :map
+   "tag:yaml.org,2002:seq" :seq
+   "tag:yaml.org,2002:str" :str
+   "tag:yaml.org,2002:int" :int
+   "tag:yaml.org,2002:float" :flt
+   "tag:yaml.org,2002:bool" :bln
+   "tag:yaml.org,2002:null" :nil})
+
+(def data-type-tags
+  {"map" :map
+   "seq" :seq
+   "set" :set
+   "str" :str
+   "chr" :chr
+   "sym" :sym
+   "key" :key
+   "rgx" :rgx
+   "int" :int
+   "float" :flt
+   "bool" :bln
+   "null" :nil
+   "nil" :nil})
+
+(def code-form-tags
+  {"xmap" :xmap
+   "fmap" :fmap
+   "cmap" :cmap
+   "cseq" :cseq
+   "expr" :expr
+   "xstr" :xstr})
+
+(def code-mode-tags
+  (merge
+    yaml-core-tags
+    data-type-tags
+    code-form-tags
+    {"" :data
+     "data" :data}))
+
+(def data-mode-tags
+  (merge
+    yaml-core-tags
+    data-type-tags
+    code-form-tags
+    {"" :code
+     "code" :code}))
+
+(def bare-mode-tags
+  yaml-core-tags)
 
 ;; ----------------------------------------------------------------------------
 ;; Resolve taggers for code mode:
@@ -308,15 +358,6 @@
 ;; ----------------------------------------------------------------------------
 ;; Resolve dispatchers for bare mode:
 ;; ----------------------------------------------------------------------------
-(def bare-mode-tag-map
-  {"tag:yaml.org,2002:map" :map
-   "tag:yaml.org,2002:seq" :seq
-   "tag:yaml.org,2002:str" :str
-   "tag:yaml.org,2002:int" :int
-   "tag:yaml.org,2002:float" :flt
-   "tag:yaml.org,2002:bool" :bln
-   "tag:yaml.org,2002:null" :nil})
-
 (defn resolve-bare-mapping [node]
   (let [tag (:! node)
         _ (when (and tag (not= tag "tag:yaml.org,2002:map"))
@@ -338,7 +379,7 @@
         value (get node style)
         type
         (when tag
-          (case (bare-mode-tag-map tag)
+          (case (bare-mode-tags tag)
             :str :str
             :int (if (re-matches re-int value) :int
                      (die "Invalid value for (bare-mode) !!int: '" value "'"))
@@ -368,7 +409,7 @@
   "Resolve nodes recursively in 'bare' mode"
   [node]
   (let [tag (:! node)
-        _ (when (and tag (not (get bare-mode-tag-map tag)))
+        _ (when (and tag (not (get bare-mode-tags tag)))
             (die "Unrecognized tag in bare mode: !" tag))]
     (case (node-kind node)
       :map (resolve-bare-mapping node)
