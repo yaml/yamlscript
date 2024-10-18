@@ -36,7 +36,8 @@ All of the power of Clojure and Java is available to YAMLScript users via the
 YAMLScript runtime interpreter, `ys`.
 However, the `ys` command is compiled into a single standalone native binary
 executable file.
-This means that **NO Java or JVM** installation is required to use YAMLScript!
+This means that <u>No Java or JVM</u> installation is required to use
+YAMLScript!
 
 YAMLScript also produces the `libyamlscript.so` shared library.
 It has [binding modules for 10 programming languages](/doc/bindings) including
@@ -46,12 +47,15 @@ YAMLScript enhanced ones.
 
 There are many ways to use YAMLScript:
 
-* [Simplifying your existing YAML files](/doc/embedding)
-* [Loading YAMLScript or YAML files into your program](doc/bindings)
-* [Programming/Scripting in YAMLScript](doc/programming)
-<!-- * [Templating with YAMLScript]() -->
-<!-- * [Compiling YAMLScript programs to binary executables]() -->
+* [Simplify your existing YAML configs](/doc/embedding)
+* [Load YAMLScript (or YAML) in your programs](doc/bindings)
+* [Program in YAMLScript](doc/programming)
+* [Templating with YAMLScript](doc/templating)
+* [Compile YAMLScript to binary executables](doc/binary)
 
+----
+
+<!--
 Skip below to [The YAMLScript Language](#language) to learn more about
 programming in YAMLScript.
 
@@ -455,6 +459,8 @@ lifetime.
 That is to say, any files containing `!yamlscript/v0` will always continue to
 work the same.
 
+-->
+
 
 ## YAMLScript Resources
 
@@ -467,13 +473,14 @@ work the same.
 * [Discussions](https://github.com/yaml/yamlscript/discussions)
 * [Issues](https://github.com/yaml/yamlscript/issues)
 
-## YAMLScript Talks
-
-* [March 2024 Seajure](https://www.youtube.com/watch?v=GajOBwBcFyA)
-* [April 2024 Open Source Summit](https://www.youtube.com/watch?v=u-OCEHNdwlU)
-* [June 2024 TPRC](https://www.youtube.com/watch?v=RFIukRdFe1o)
-
-
 ----
-----
+
+## YAMLScript Links
+
+* Nov 2024 [KubeCon Talk](https://sched.co/1i7qP) **<span class="darkred">Upcoming!</span>**
+* Jun 2024 [TPRC Talk](https://www.youtube.com/watch?v=RFIukRdFe1o)
+* Apr 2024 [OSS/NA Talk](https://www.youtube.com/watch?v=u-OCEHNdwlU)
+* Mar 2024 [TheNewStack Article](https://thenewstack.io/with-yamlscript-yaml-becomes-a-proper-programming-language/)
+* Mar 2024 [Seajure Talk](https://www.youtube.com/watch?v=GajOBwBcFyA)
+
 ----

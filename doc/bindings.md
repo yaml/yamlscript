@@ -2,10 +2,18 @@
 title: YAMLScript Binding Libraries
 ---
 
+Your YAML existing YAML files are perfectly valid YAMLScript files!
+Using a YAMLScript binding library (aka module or package) these files can be
+loaded into objects just like a YAML loader would do.
+
+Without a `!yamlscript/v0` tag at the top they will load the same as normal.
+With that tag, they can be made to take advantage of any of YAMLScript's vast
+functional capabilities.
+
 YAMLScript intends to provide a loader library for every programming language
 that uses YAML.
 
-Currently we have working libraries for
+Currently there are working libraries for:
 [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
 [Go](https://github.com/yaml/yamlscript-go),
 [Java](https://clojars.org/org.yamlscript/yamlscript),
