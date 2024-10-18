@@ -38,6 +38,7 @@
 ;;
 ;; * def  - 'foo =' -> !expr 'def foo'
 ;; * defn - 'defn foo(...)' -> !expr 'defn foo [...]'
+;; # XXX Maybe form should be fexp??
 ;; * form - 'foo(...) |' -> key is entire form (so is value)
 ;; * cmap - 'foo !: <block-map>' -> foo: !cmap <block-map>
 ;; * cseq - 'foo !: <block-seq>' -> foo: !cseq <block-seq>
