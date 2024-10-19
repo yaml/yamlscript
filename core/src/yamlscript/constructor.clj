@@ -181,7 +181,7 @@
 (defn construct-trace [node]
   (Lst [(Sym 'TTT) node]))
 
-(def do-not-trace '[+++ TTT defn defn-])
+(def do-not-trace '[+++ TTT catch defn defn- finally])
 (def cannot-trace '[-> ->>])
 
 (defn maybe-trace [node]

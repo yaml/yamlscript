@@ -8,7 +8,8 @@
    [clojure.pprint :as pp]
    [clojure.string :as str]
    [yamlscript.global :as global]
-   [yamlscript.util :as util])
+   [yamlscript.util :as util]
+   [babashka.fs :as fs])
   (:refer-clojure :exclude [YSC DBG PPP WWW XXX YYY ZZZ]))
 
 (def width 50)
@@ -159,13 +160,7 @@
      clojure.core/DBG))
 
 (def clj-specials
-  '(catch
-    def
-    let
-     if
-     do
-     quote
-     recur))
+  '(def do if let quote recur try))
 
 (def skip-trace (concat ys-macros clj-specials))
 
