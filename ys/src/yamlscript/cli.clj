@@ -356,19 +356,26 @@ Options:
     (let [[code file args load] (get-compiled-code opts args argv)
           _ (when (env "YS_SHOW_COMPILE")
               (eprint (str line (pretty-clojure code) "\n" line)))
-          result (runtime/eval-string code file args)]
+          result (runtime/eval-string code file args)
+          results (if (env "YS_MULTI")
+                    (vals @global/$)
+                    [result])]
       (if (:print opts)
         (pp/pprint result)
         (when (and load (not (= "" code)))
-          (case (:to opts)
-            "yaml" (println
-                     (str/trim-newline
-                       (yaml/generate-string
-                         result
-                         :dumper-options {:flow-style :block})))
-            "json" (json/pprint result json-options)
-            "edn"  (pp/pprint result)
-            ,      (println (json/write-str result json-options))))))
+          (doall
+            (for [result results]
+              (case (:to opts)
+                "yaml" (println
+                         (str
+                           (when (> (count results) 1) "---\n")
+                           (str/trim-newline
+                             (yaml/generate-string
+                               result
+                               :dumper-options {:flow-style :block}))))
+                "json" (json/pprint result json-options)
+                "edn"  (pp/pprint result)
+                ,      (println (json/write-str result json-options))))))))
     (catch Exception e
       (global/reset-error-msg-prefix! "Runtime error:\n")
       (err e))))
