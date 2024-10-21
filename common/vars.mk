@@ -95,13 +95,13 @@ endif
 #------------------------------------------------------------------------------
 # Set machine specific variables:
 #------------------------------------------------------------------------------
-ifneq (,$(findstring linux,$(ostype)))
+ifeq (true,$(IS_LINUX))
   GRAALVM_SUBDIR :=
 
-  ifneq (,$(findstring x86_64,$(machtype)))
+  ifeq (true,$(IS_INTEL))
     GRAALVM_ARCH := linux-x64
 
-  else ifneq (,$(findstring aarch64,$(machtype)))
+  else ifeq (true,$(IS_ARM))
     GRAALVM_ARCH := linux-aarch64
 
   else
@@ -111,10 +111,10 @@ ifneq (,$(findstring linux,$(ostype)))
 else ifeq (true,$(IS_MACOS))
   GRAALVM_SUBDIR := /Contents/Home
 
-  ifneq (,$(findstring arm64-apple-darwin,$(machtype)))
+  ifeq (true,$(IS_ARM))
     GRAALVM_ARCH := macos-aarch64
 
-  else ifneq (,$(findstring x86_64,$(machtype)))
+  else ifeq (true,$(IS_INTEL))
     GRAALVM_ARCH := macos-x64
 
   else

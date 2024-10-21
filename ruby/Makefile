@@ -26,6 +26,7 @@ $(RAKE_CMDS):: $(GEM_HOME)
 
 $(GEM_HOME):
 	gem install minitest -v 5.20.0
+	bundle install
 endif
 
 clean::
