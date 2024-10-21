@@ -1,7 +1,5 @@
 #!/usr/bin/env ys-0
 
-!yamlscript/v0
-
 require ys::taptest: :all
 
 # Load the hello-world YS module:
