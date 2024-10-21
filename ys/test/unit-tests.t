@@ -1,7 +1,5 @@
 #!/usr/bin/env ys-0
 
-!yamlscript/v0
-
 require ys::taptest: test done
 
 AV =: fs-abs("$fs-dirname(FILE)/../../sample/advent")
