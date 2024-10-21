@@ -54,14 +54,11 @@ realclean:: clean
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
-$(LEIN): $(BUILD_BIN) $(JAVA_INSTALLED)
+$(LEIN): $(JAVA_INSTALLED) | $(BUILD_BIN)
 ifeq (,$(CURL))
 	$(error *** 'curl' is required but not installed)
 endif
 	$(CURL) -L -o $@ $(LEIN_URL)
-	# XXX Until /tmp/yamlscript/.m2 works
-	# perl -p0i -e 's{\n\n}{\n\nexport HOME=$(YS_TMP)\n\n}' $@
-	# mkdir -p $(YS_TMP)/.lein
 	chmod +x $@
 
 
@@ -89,7 +86,7 @@ ifeq (,$(CURL))
 endif
 	$(CURL) -L -o $@ $(MAVEN_URL)
 
-$(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD) $(MAVEN_HOME)
+$(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD) | $(MAVEN_HOME)
 	(cd $(YS_TMP) && tar xzf $< )
 	touch $@
 

@@ -2,6 +2,7 @@ include ../common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/docker.mk
+include $(COMMON)/native.mk
 
 LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-$(YS_VERSION)-standalone.jar
 
@@ -55,25 +56,11 @@ endif
 	# The next command may take a long time (a minute or so)
 	$(TIME) \
 	native-image \
-	    -O$(GRAALVM_O) \
-	    --verbose \
-	    --native-image-info \
-	    --no-fallback \
+	  $(NATIVE_OPTS) \
 	\
-	    --initialize-at-build-time \
-	    --enable-preview \
-	\
-	    -H:ReflectionConfigurationFiles=reflection.json \
-	    -H:+ReportExceptionStackTraces \
-	    -H:IncludeResources=SCI_VERSION \
-	    -H:Log=registerResource: \
-	    -J-Dclojure.spec.skip-macros=true \
-	    -J-Dclojure.compiler.direct-linking=true \
-	    -J-Xmx3g \
-	\
-	    --shared \
-	    -jar $< \
-	    -o $(LIBYAMLSCRIPT_SO_NAME)
+	  --shared \
+	  -jar $< \
+	  -o $(LIBYAMLSCRIPT_SO_NAME)
 	mv $(LIBYAMLSCRIPT_SO_BASE) $@
 	mv $(LIBYAMLSCRIPT_SO_NAME).h $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h
 	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_APIP)
