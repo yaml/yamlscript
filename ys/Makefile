@@ -2,6 +2,7 @@ include ../common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/docker.mk
+include $(COMMON)/native.mk
 
 YAMLSCRIPT_CLI_BIN := bin/ys-$(YS_VERSION)
 YAMLSCRIPT_CLI_SRC := \
@@ -29,6 +30,17 @@ YS_BUILD_DEPS := \
   $(YAMLSCRIPT_CLI_BIN) \
   $(YAMLSCRIPT_CLI_BIN_BASH) \
 
+ifeq (true,$(IS_LINUX))
+ifeq (true,$(IS_INTEL))
+YS_BUILD_DEPS := $(MUSL_GCC) $(YS_BUILD_DEPS)
+NATIVE_OPTS += \
+  -H:CCompilerOption=-Wl,-z,stack-size=2097152 \
+  --static \
+  --libc=musl
+endif
+endif
+
+
 #------------------------------------------------------------------------------
 build:: $(YS_BUILD_DEPS)
 
@@ -52,7 +64,7 @@ test-all: test-unit test-run
 test-unit: $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
 	$< test
 
-test-run: $(BPAN_LOCAL) $(YAMLSCRIPT_CLI_BIN)
+test-run: $(BPAN_LOCAL) build
 	prove $${TEST_VERBOSE:+'-v'} $(test)
 
 $(BPAN_LOCAL):
@@ -61,33 +73,17 @@ $(BPAN_LOCAL):
 $(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
 ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
-	$(error *** The 'libz.$(SO)' library is required by native-image \
-		but not installed)
+	$(error *** \
+	  The 'libz.$(SO)' library is required by native-image but not installed)
 endif
 	mkdir -p $(dir $@)
 	$(TIME) \
 	native-image \
-	    -O$(GRAALVM_O) \
-	    --verbose \
-	    --native-image-info \
-	    --no-fallback \
+	  -H:ConfigurationFileDirectories=config/ \
+	  $(NATIVE_OPTS) \
 	\
-	    --initialize-at-build-time \
-	    --enable-preview \
-	    --enable-url-protocols=https \
-	\
-	    -H:ConfigurationFileDirectories=config/ \
-	\
-	    -H:ReflectionConfigurationFiles=reflection.json \
-	    -H:+ReportExceptionStackTraces \
-	    -H:IncludeResources=SCI_VERSION \
-	    -H:Log=registerResource: \
-	    -J-Dclojure.spec.skip-macros=true \
-	    -J-Dclojure.compiler.direct-linking=true \
-	    -J-Xmx3g \
-	\
-	    -jar $< \
-	    -o $@
+	  -jar $< \
+	  -o $@
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 endif
