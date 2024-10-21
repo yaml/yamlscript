@@ -10,4 +10,7 @@ test::
 - code: hash.FOO:B
 - code: hash.FOO_BAR:B
 
-done: 2
+- code: (1 .. 5).map(\(_:inc))
+  want: [2, 3, 4, 5, 6]
+
+done: 3
