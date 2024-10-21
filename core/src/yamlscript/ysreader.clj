@@ -154,11 +154,61 @@
     regexes)
   )
 
+(defn split-colon-calls [token]
+  (let [tokens (str/split token #":")
+        [token1 token2 & xtokens] tokens
+        [start tokens] (if (re-find #"\.$" token1)
+                         [[(-> token1 butlast str/join)
+                           "."
+                           (str ":" token2)]
+                          xtokens]
+                         [[token1] (vec (rest tokens))])
+        start (if (re-find #"_." (first start))
+                [(str \" (first start) \")]
+                start)]
+    (reduce
+      #(conj %1 "." (str %2 "(") ")")
+      start
+      tokens)))
+
+(defn get-special-expansion [token]
+  (let [expanded
+        (condp = token
+          ".#"   ". clojure::core/count( )"
+          ".?"   ". ys::std/truey?( )"
+          ".!"   ". ys::std/falsey?( )"
+          ".??"  ". clojure::core/boolean( )"
+          ".!!"  ". clojure::core/not( )"
+          ".--"  ". ys::std/dec+( )"
+          ".++"  ". ys::std/inc+( )"
+          ".>"   ". clojure::core/DBG( )"
+          ".>>>" ". clojure::core/DBG( )"
+          (die "Unsupported dot special operation: " token))]
+    (str/split expanded #" ")))
+
+(defn re-lex-tokens [tokens]
+  (reduce (fn [acc token]
+            (cond
+              (is-colon-calls? token)
+              (vec (concat acc (re-lex-tokens (split-colon-calls token))))
+              ,
+              (is-dot-special? token)
+              (vec (concat acc (re-lex-tokens (get-special-expansion token))))
+              ,
+              :else
+              (conj acc token)))
+    []
+    tokens))
+
 (defn lex-tokens [expr]
-  (->> expr
-    (re-seq re-tokenize)
-    (remove #(re-matches re/ignr %1))
-    (#(if (System/getenv "YS_SHOW_LEX") (WWW %1) %1))))
+  (let [tokens (->> expr
+                 (re-seq re-tokenize)
+                 (remove #(re-matches re/ignr %1))
+                 re-lex-tokens)]
+    ;; XXX Might be too hot of a path to check here:
+    (if (System/getenv "YS_SHOW_LEX")
+      (WWW tokens)
+      tokens)))
 
 (declare read-form yes-expr)
 
@@ -334,38 +384,6 @@
 
 (declare read-form)
 
-(defn get-special-expansion [token]
-  (let [expanded
-        (condp = token
-          ".#"   "clojure::core/count( )"
-          ".?"   "ys::std/truey?( )"
-          ".!"   "ys::std/falsey?( )"
-          ".??"  "clojure::core/boolean( )"
-          ".!!"  "clojure::core/not( )"
-          ".--"  "ys::std/dec+( )"
-          ".++"  "ys::std/inc+( )"
-          ".>"   "clojure::core/DBG( )"
-          ".>>>" "clojure::core/DBG( )"
-          (die "Unsupported dot special operation: " token))]
-    (str/split expanded #" ")))
-
-(defn split-colon-calls [token]
-  (let [tokens (str/split token #":")
-        [token1 token2 & xtokens] tokens
-        [start tokens] (if (re-find #"\.$" token1)
-                         [[(-> token1 butlast str/join)
-                           "."
-                           (str ":" token2)]
-                          xtokens]
-                         [[token1] (vec (rest tokens))])
-        start (if (re-find #"_" (first start))
-                [(str \" (first start) \")]
-                start)]
-    (reduce
-      #(conj %1 "." (str %2 "(") ")")
-      start
-      tokens)))
-
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
@@ -384,9 +402,6 @@
     (is-bad-number? token) (die "Invalid number: " token)
     (is-integer? token) [(Int token) tokens]
     (is-float? token) [(Flt token) tokens]
-    (is-colon-calls? token) [nil (concat (split-colon-calls token) tokens)]
-    (is-dot-special? token) [(Sym ".")
-                             (concat (get-special-expansion token) tokens)]
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
