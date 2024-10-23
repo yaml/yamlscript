@@ -135,14 +135,15 @@
 (def re-keyword (re/re #":$symw"))
 
 (defn check-mode-swap [key val]
-  (let [key-text (:= key)
-        [key val] (if (and key-text (re-find #":$" key-text))
-                    (let [key (assoc key :=
-                                (str/replace key-text #"\s*:$" ""))
-                          val (assoc val :! "")]
-                      [key val])
-                    [key val])]
-    [key val]))
+  (let [key-text (:= key)]
+    (if (and key-text (re-find #":$" key-text))
+      (if (:! val)
+        (die "Can't specify tag on key with trailing colon")
+        (let [key (assoc key :=
+                    (str/replace key-text #"\s*:$" ""))
+              val (assoc val :! "")]
+          [key val]))
+      [key val])))
 
 (defn check-yaml-core-tag [tag value]
   (case tag

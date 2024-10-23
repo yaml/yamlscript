@@ -18,7 +18,8 @@
 
 (defn transform
   "Transform special rules for YAMLScript AST."
-  [node] (transform-node-top node))
+  [node]
+  (transform-node-top node))
 
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
@@ -214,6 +215,7 @@
 
 (defn transform-node [node]
   (let [anchor (:& node)
+        tag (:! node)
         node (condf node
                :xmap (transform-xmap node)
                :fmap (transform-xmap node)  ;; :fmap also uses transform-xmap
@@ -222,10 +224,10 @@
                :Map (transform-map node)
                :Vec (transform-vec node)
                :Sym (transform-sym node)
-               node)]
-    (if anchor
-      (assoc node :& anchor)
-      node)))
+               node)
+        node (if anchor (assoc node :& anchor) node)
+        node (if tag (assoc node :! tag) node)]
+    node))
 
 (defn transform-node-top [node]
   (transform-node
