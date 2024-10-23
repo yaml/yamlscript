@@ -1524,3 +1524,21 @@
       foo: bar
   clojure: |
     [(foo bar)]
+
+
+- name: Method tag in code mode
+  yamlscript: |
+    !yamlscript/v0
+    a =: !WWW:
+      inc: 41
+    b =: !WWW: 42
+
+  resolve: |
+    {:xmap
+     [{:def "a ="}
+      {:xmap [{:expr "inc"} {:expr "41"}], :! "WWW:"}
+      {:def "b ="}
+      {:expr "42", :! "WWW:"}]}
+  clojure: |
+    (def a (WWW (inc 41)))
+    (def b (WWW 42))

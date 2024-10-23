@@ -207,13 +207,15 @@
   (let [tag (subs tag 0 (dec (count tag)))
         [tag splat] (if (re-find #"\*$" tag)
                       [(subs tag 0 (dec (count tag))) true]
-                      [tag false])
-        kind (-> node first key)]
+                      [tag false])]
     (if splat
-      (case kind
-        :Vec (Lst [(Sym 'apply) (Sym tag) node])
-        ,    (die "Splat only allowed on Vec"))
-      (Lst [(Sym tag) node]))))
+      (let [kind (-> node first key)]
+        (case kind
+          :Vec (Lst [(Sym 'apply) (Sym tag) node])
+          ,    (die "Splat only allowed on Vec")))
+      (if (vector? node)
+        (Lst [(Sym tag) (first node)])
+        (Lst [(Sym tag) node])))))
 
 (defn construct-node
   ([node ctx]
