@@ -705,3 +705,55 @@
        (clojure.core/list 'quote)
        (clojure.core/list x))))
     (qq (1 2 3))
+
+
+- name: Anchors in various contexts in bare mode
+  yamlscript: |
+    --- &map1
+    a: &seq2
+    - &map3
+      b: &val4 c
+  resolve: |
+    {:map
+     [{:str "a"}
+      {:seq
+       [{:map [{:str "b"} {:str "c" :& "val4"}], :& "map3"}]
+       :& "seq2"}],
+     :& "map1"}}
+  clojure: |
+    (_& 'map1 {"a" (_& 'seq2 [(_& 'map3 {"b" (_& 'val4 "c")})])})
+
+
+- name: Anchors in various contexts in data mode
+  yamlscript: |
+    --- !yamlscript/v0/ &map1
+    a: &seq2
+    - &map3
+      b: &val4 c
+  resolve: |
+    {:map
+     [{:str "a"}
+      {:seq
+       [{:map [{:str "b"} {:str "c" :& "val4"}], :& "map3"}]
+       :& "seq2"}],
+     :& "map1"}}
+  clojure: |
+    (_& 'map1 {"a" (_& 'seq2 [(_& 'map3 {"b" (_& 'val4 "c")})])})
+
+
+- name: Anchors in various contexts in code mode
+  yamlscript: |
+    --- !yamlscript/v0 &map1
+    a:: &seq2
+    - ! &map3
+      b: &expr4 c
+  resolve: |
+    {:xmap
+     [{:expr "a"}
+      {:seq
+       ({:xmap [{:expr "b"} {:& "expr4", :expr "c"}],
+         :& "map3"}),
+       :& "seq2"}],
+     :& "map1"}
+  clojure: |
+    (_& 'map1 (a (_& 'seq2 [(_& 'map3 (b (_& 'expr4 c)))])))

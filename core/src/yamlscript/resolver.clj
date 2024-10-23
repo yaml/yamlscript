@@ -344,17 +344,25 @@
 ;; Dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-data-mapping [node]
-  {:map (vec
-          (mapcat
-            (fn [[key val]]
-              (let [[key val] (check-mode-swap key val)]
-                [(resolve-data-node key)
-                 (resolve-data-node val)]))
-            (partition 2 (or (:% node) (:%% node)))))})
+  (let [mapping
+        {:map (vec
+                (mapcat
+                  (fn [[key val]]
+                    (let [[key val] (check-mode-swap key val)]
+                      [(resolve-data-node key)
+                       (resolve-data-node val)]))
+                  (partition 2 (or (:% node) (:%% node)))))}]
+    (if-let [anchor (:& node)]
+      (assoc mapping :& anchor)
+      mapping)))
 
 (defn resolve-data-sequence [node]
-  {:seq (map resolve-data-node
-          (or (:- node) (:-- node)))})
+  (let [sequence
+        {:seq (map resolve-data-node
+                (or (:- node) (:-- node)))}]
+    (if-let [anchor (:& node)]
+      (assoc sequence :& anchor)
+      sequence)))
 
 (defn resolve-data-scalar [node type style]
   (set/rename-keys node {style type}))
@@ -448,12 +456,20 @@
 ;; Dispatchers for bare mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-bare-mapping [node]
-  {:map (vec (map resolve-bare-node
-               (or (:% node) (:%% node))))})
+  (let [mapping
+        {:map (vec (map resolve-bare-node
+                     (or (:% node) (:%% node))))}]
+    (if-let [anchor (:& node)]
+      (assoc mapping :& anchor)
+      mapping)))
 
 (defn resolve-bare-sequence [node]
-  {:seq (map resolve-bare-node
-          (or (:- node) (:-- node)))})
+  (let [sequence
+        {:seq (map resolve-bare-node
+                (or (:- node) (:-- node)))}]
+    (if-let [anchor (:& node)]
+      (assoc sequence :& anchor)
+      sequence)))
 
 (defn resolve-bare-scalar [node type style]
   (set/rename-keys node {style type}))
