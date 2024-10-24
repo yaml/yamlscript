@@ -202,9 +202,9 @@
   (Lst [(Sym '_**) (Qts (:Ali node))]))
 
 (defn construct-tag-call [node tag]
-  (or (re-find #":$" tag)
-    (die "Tag must end with a colon"))
-  (let [tag (subs tag 0 (dec (count tag)))
+  (or (re-find #"^:" tag)
+    (die "Function call tag must start with a colon"))
+  (let [tag (subs tag 1)
         [tag splat] (if (re-find #"\*$" tag)
                       [(subs tag 0 (dec (count tag))) true]
                       [tag false])]

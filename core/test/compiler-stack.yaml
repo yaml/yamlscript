@@ -638,14 +638,14 @@
 - name: Function tags in data mode
   yamlscript: |
     !yamlscript/v0/
-    foo: !merge*:
+    foo: !:merge*
     - foo: 1
     - bar: 2
   compose: |
     {:! "yamlscript/v0/",
      :%
      [{:= "foo"}
-      {:! "merge*:",
+      {:! ":merge*",
        :-
        [{:% [{:= "foo"} {:= "1"}]} {:% [{:= "bar"} {:= "2"}]}]}]}
   resolve: |
@@ -654,21 +654,21 @@
       {:seq
        ({:map [{:str "foo"} {:int "1"}]}
         {:map [{:str "bar"} {:int "2"}]}),
-       :! "merge*:"}]}
+       :! ":merge*"}]}
   build: |
     {:Map
      [{:Str "foo"}
       {:Vec
        [{:Map [{:Str "foo"} {:Int 1}]}
         {:Map [{:Str "bar"} {:Int 2}]}],
-       :! "merge*:"}]}
+       :! ":merge*"}]}
   transform: |
     {:Map
      [{:Str "foo"}
       {:Vec
        [{:Map [{:Str "foo"} {:Int 1}]}
         {:Map [{:Str "bar"} {:Int 2}]}],
-       :! "merge*:"}]}
+       :! ":merge*"}]}
   construct: |
     {:Top
      [{:Map
@@ -782,7 +782,7 @@
         {:int "3"}
         {:str "baz"}
         {:int "4"}],
-       :! "+merge:"}]}
+       :! ":+merge"}]}
   clojure: |
     {"default" (_& 'default {"foo" 1, "bar" 2}),
       "foo" (+merge {"<<" (_* 'default), "foo" 3, "baz" 4})}
@@ -811,7 +811,7 @@
         {:int "3"}
         {:str "baz"}
         {:int "4"}],
-       :! "+merge:"}]}
+       :! ":+merge"}]}
   clojure: |
     {"default" (_& 'default {"foo" 1, "bar" 2}),
       "foo" (+merge {"<<" (_** 'default), "foo" 3, "baz" 4})}

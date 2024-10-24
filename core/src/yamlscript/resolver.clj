@@ -132,7 +132,9 @@
 (def re-bool #"(?:true|True|TRUE|false|False|FALSE)")
 (def re-null #"(?:|~|null|Null|NULL)")
 (def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
-(def re-keyword (re/re #":$symw"))
+(def re-keyword re/keyw)
+(def re-call-tag (re/re #":$symw\*?"))
+
 
 (defn check-mode-swap [key val]
   (let [key-text (:= key)]
@@ -306,7 +308,7 @@
         :seq (resolve-bare-sequence node)
         :val (resolve-bare-node node))
       ,
-      (and tag (re-find #":$" tag))
+      (and tag (re-matches re-call-tag tag))
       (assoc (resolve-code-node node) :! tag)
       ,
       (and (= tag "clj") (= :val kind))
@@ -355,7 +357,7 @@
         mapping (if-let [anchor (:& node)]
                   (assoc mapping :& anchor)
                   mapping)
-        mapping (if merge (assoc mapping :! "+merge:") mapping)]
+        mapping (if merge (assoc mapping :! ":+merge") mapping)]
     mapping))
 
 (defn resolve-data-sequence [node]
@@ -403,7 +405,7 @@
         :val (resolve-code-node node)
         :ali (resolve-code-alias node))
       ,
-      (and tag (re-find #":$" tag))
+      (and tag (re-matches re-call-tag tag))
       (assoc (resolve-data-node node) :! tag)
       ,
       (= "bare" tag)
@@ -464,7 +466,7 @@
         mapping (if-let [anchor (:& node)]
                   (assoc mapping :& anchor)
                   mapping)
-        mapping (if merge (assoc mapping :! "+merge:") mapping)]
+        mapping (if merge (assoc mapping :! ":+merge") mapping)]
     mapping))
 
 (defn resolve-bare-sequence [node]
