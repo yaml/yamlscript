@@ -644,6 +644,9 @@
 
 (defn in? [x C] (has? C x))
 
+(defn +merge [M]
+  (merge (get M "<<") (dissoc M "<<")))
+
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
 

@@ -757,3 +757,61 @@
      :& "map1"}
   clojure: |
     (_& 'map1 (a (_& 'seq2 [(_& 'map3 (b (_& 'expr4 c)))])))
+
+
+- name: 'Implicit !+merge: call tag in bare mode'
+  yamlscript: |
+    --- !yamlscript/v0/bare
+    default: &default
+      foo: 1
+      bar: 2
+    foo:
+      <<: *default
+      foo: 3
+      baz: 4
+  resolve: |
+    {:map
+     [{:str "default"}
+      {:map [{:str "foo"} {:int "1"} {:str "bar"} {:int "2"}],
+       :& "default"}
+      {:str "foo"}
+      {:map
+       [{:str "<<"}
+        {:ali "default"}
+        {:str "foo"}
+        {:int "3"}
+        {:str "baz"}
+        {:int "4"}],
+       :! "+merge:"}]}
+  clojure: |
+    {"default" (_& 'default {"foo" 1, "bar" 2}),
+      "foo" (+merge {"<<" (_* 'default), "foo" 3, "baz" 4})}
+
+
+- name: Implicit merge-map call tag in data mode
+  yamlscript: |
+    --- !yamlscript/v0/
+    default: &default
+      foo: 1
+      bar: 2
+    foo:
+      <<: *default
+      foo: 3
+      baz: 4
+  resolve: |
+    {:map
+     [{:str "default"}
+      {:map [{:str "foo"} {:int "1"} {:str "bar"} {:int "2"}],
+       :& "default"}
+      {:str "foo"}
+      {:map
+       [{:str "<<"}
+        {:Ali "default"}
+        {:str "foo"}
+        {:int "3"}
+        {:str "baz"}
+        {:int "4"}],
+       :! "+merge:"}]}
+  clojure: |
+    {"default" (_& 'default {"foo" 1, "bar" 2}),
+      "foo" (+merge {"<<" (_** 'default), "foo" 3, "baz" 4})}
