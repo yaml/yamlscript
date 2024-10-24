@@ -138,9 +138,8 @@
   (let [key-text (:= key)]
     (if (and key-text (re-find #":$" key-text))
       (if (:! val)
-        (die "Can't specify tag on key with trailing colon")
-        (let [key (assoc key :=
-                    (str/replace key-text #"\s*:$" ""))
+        (die "Can't specify tag on value of '::' pair")
+        (let [key (assoc key := (str/replace key-text #"\s*:$" ""))
               val (assoc val :! "")]
           [key val]))
       [key val])))
@@ -219,7 +218,7 @@
         [key val] (check-mode-swap key val)
         pair [(resolve-code-node key)
               (resolve-code-node val)]
-        pair ((some-fn
+        #_#_pair ((some-fn
                 ; tag-cmap
                 ; tag-cseq
                 identity) pair)]
@@ -344,17 +343,20 @@
 ;; Dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-data-mapping [node]
-  (let [mapping
-        {:map (vec
-                (mapcat
-                  (fn [[key val]]
-                    (let [[key val] (check-mode-swap key val)]
-                      [(resolve-data-node key)
-                       (resolve-data-node val)]))
-                  (partition 2 (or (:% node) (:%% node)))))}]
-    (if-let [anchor (:& node)]
-      (assoc mapping :& anchor)
-      mapping)))
+  (let [nodes (or (:% node) (:%% node))
+        merge (some #(= %1 {:= "<<"}) (keys (apply hash-map nodes)))
+        mapping {:map (vec
+                        (mapcat
+                          (fn [[key val]]
+                            (let [[key val] (check-mode-swap key val)]
+                              [(resolve-data-node key)
+                               (resolve-data-node val)]))
+                          (partition 2 nodes)))}
+        mapping (if-let [anchor (:& node)]
+                  (assoc mapping :& anchor)
+                  mapping)
+        mapping (if merge (assoc mapping :! "+merge:") mapping)]
+    mapping))
 
 (defn resolve-data-sequence [node]
   (let [sequence
@@ -456,12 +458,14 @@
 ;; Dispatchers for bare mode:
 ;; ----------------------------------------------------------------------------
 (defn resolve-bare-mapping [node]
-  (let [mapping
-        {:map (vec (map resolve-bare-node
-                     (or (:% node) (:%% node))))}]
-    (if-let [anchor (:& node)]
-      (assoc mapping :& anchor)
-      mapping)))
+  (let [nodes (or (:% node) (:%% node))
+        merge (some #(= %1 {:= "<<"}) (keys (apply hash-map nodes)))
+        mapping {:map (vec (map resolve-bare-node nodes))}
+        mapping (if-let [anchor (:& node)]
+                  (assoc mapping :& anchor)
+                  mapping)
+        mapping (if merge (assoc mapping :! "+merge:") mapping)]
+    mapping))
 
 (defn resolve-bare-sequence [node]
   (let [sequence
