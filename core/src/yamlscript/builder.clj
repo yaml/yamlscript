@@ -7,6 +7,7 @@
 (ns yamlscript.builder
   (:require
    [clojure.string :as str]
+    [clojure.pprint :as pprint]
    [yamlscript.ast :refer
     [Bln Clj Flt Int Key Lst Map Nil Str Sym Vec]]
    [yamlscript.common]
@@ -166,7 +167,27 @@
       (conj v (Sym (m 2))))))
 
 (defn build-map [node]
-  (Map (map build-node (:map node))))
+  (let [body (vec (map build-node (:map node)))]
+    (if (some vector? body)
+      {:dmap (loop [[k v & body] body new []]
+               (if (nil? k)
+                 new
+                 (let [new (if (vector? k)
+                             (conj new (conj k v))
+                             (conj new k v))]
+                   (recur body new))))}
+      (Map (map build-node (:map node))))))
+
+#_(pprint/pprint (build-map
+      {:map
+       [{:str "a"}
+        {:int "1"}
+        {:def "data ="}
+        {:expr "slurp('data.yaml'):yaml/load"}
+        {:str "b"}
+        {:int "2"}
+        {:str "c"}
+        {:str "data.foo"}]}))
 
 (defn build-vec [node]
   (Vec (map build-node (:seq node))))

@@ -228,9 +228,10 @@
                form
                (QSym (:Sym form)))))
     :Lst (update-in form [:Lst]
-           (fn [list] (map #(if (= {:Sym '_} %1)
-                              (Sym '_)
-                              %1) list)))
+           (fn [list]
+             (vec (map #(if (= {:Sym '_} %1)
+                          (Sym '_)
+                          %1) list))))
     form))
 
 (defn fix-dot-chain [expr]

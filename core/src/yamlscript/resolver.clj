@@ -347,16 +347,19 @@
 (defn resolve-data-mapping [node]
   (let [nodes (or (:% node) (:%% node))
         merge (some #(= %1 {:= "<<"}) (keys (apply hash-map nodes)))
-        mapping {:map (vec
-                        (mapcat
-                          (fn [[key val]]
-                            (let [[key val] (check-mode-swap key val)]
-                              [(resolve-data-node key)
-                               (resolve-data-node val)]))
-                          (partition 2 nodes)))}
-        mapping (if-let [anchor (:& node)]
-                  (assoc mapping :& anchor)
-                  mapping)
+        mapping
+        {:map
+         (vec (mapcat
+                (fn [[key val]]
+                  (let [[key val] (check-mode-swap key val)
+                        key-str (:= key)
+                        [key val]
+                        (if (and key-str (re-matches re/defk key-str))
+                          [{:def key-str} (resolve-code-node val)]
+                          [(resolve-data-node key) (resolve-data-node val)])]
+                    [key val]))
+                (partition 2 nodes)))}
+        mapping (if-let [anchor (:& node)] (assoc mapping :& anchor) mapping)
         mapping (if merge (assoc mapping :! ":+merge") mapping)]
     mapping))
 

@@ -7,7 +7,7 @@
 (ns yamlscript.constructor
   (:require
    [clojure.walk :as walk]
-   [yamlscript.ast :as ast :refer [Lst Qts Sym Vec]]
+   [yamlscript.ast :as ast :refer [Lst Map Qts Sym Vec]]
    [yamlscript.common]
    [yamlscript.global :as global]
    [yamlscript.re :as re])
@@ -127,11 +127,13 @@
       (apply-let-bindings lets rest ctx)
       xmap)))
 
+(defn construct-side [side ctx]
+  (if (vector? side)
+    (vec (map #(construct-node %1 ctx) side))
+    (construct-node side ctx)))
+
 (defn construct-xmap [{nodes :xmap} ctx]
   (let [xmap (vec (map vec (partition 2 nodes)))
-        construct-side (fn [n c] (if (vector? n)
-                                   (vec (map #(construct-node %1 c) n))
-                                   (construct-node n c)))
         node (loop [xmap xmap, new []]
                (if (seq xmap)
                  (let [xmap (if (> (:lvl ctx) 1)
@@ -161,6 +163,22 @@
                    (recur xmap, new))
                  new))]
     node))
+
+(defn construct-dmap [node ctx]
+  (let [parts (vec (map vec (partition-by vector? (:dmap node))))
+        parts (reverse parts)
+        parts (if (get-in parts [0 0 :Sym])
+                (cons [] parts)
+                parts)
+        [amap & parts] parts
+        amap (Map amap)]
+    (reduce (fn [dmap part]
+              (if (get-in part [0 0 :Sym])
+                (let [bind (Vec (vec (mapcat rest part)))]
+                  (Lst [(Sym 'let) bind dmap]))
+                (let [amap (Map part)]
+                  (Lst [(Sym 'merge) amap dmap]))))
+      amap parts)))
 
 (defn construct-fmap [{nodes :fmap} ctx]
   (let [nodes (reduce
@@ -228,6 +246,7 @@
          node (case key
                 :xmap (construct-xmap node ctx)
                 :fmap (construct-fmap node ctx)
+                :dmap (construct-dmap node ctx)
                 :Map (construct-coll node ctx :Map)
                 :Vec (construct-coll node ctx :Vec)
                 :Lst (construct-coll node ctx :Lst)

@@ -6,6 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
+   [clojure.pprint :as pp]
    [yamlscript.ast :refer [Lst Sym QSym]]
    [yamlscript.common]
    [yamlscript.transformers]
@@ -186,6 +187,32 @@
         [])
       (hash-map key))))
 
+(defn transform-dmap [node]
+  (->> node
+    :dmap
+    (reduce (fn [acc node]
+              (if (vector? node)
+                (conj acc node nil)
+                (conj acc node)))
+            [])
+    (partition 2)
+    (mapv adjust-dot-def)
+    (mapv adjust-dot-pair)
+    (apply concat)
+    (mapv #(if (vector? %1)
+             (mapv transform-node %1)
+             (transform-node %1)))
+    (partition 2)
+    (reduce
+      (fn [acc [k v]]
+        (let [[k v] (if (= :xmap key)
+                      (apply-transformer k v)
+                      [k v])]
+          (conj acc k v)))
+      [])
+    (remove nil?)
+    (hash-map :dmap)))
+
 (defn transform-list [node]
   (assoc node :Lst
     (mapv
@@ -219,6 +246,7 @@
         node (condf node
                :xmap (transform-xmap node)
                :fmap (transform-xmap node)  ;; :fmap also uses transform-xmap
+               :dmap (transform-dmap node)
                :dot (transform-dot node)
                :Lst (transform-list node)
                :Map (transform-map node)

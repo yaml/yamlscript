@@ -114,6 +114,7 @@
 ;; Alternate truth functions
 ;;------------------------------------------------------------------------------
 
+; XXX rename to not? or F?
 (defn falsey? [x]
   (condf x
     number? (zero? x)
@@ -121,6 +122,7 @@
     identity false
     true))
 
+; XXX rename to is? or T?
 (defn truey? [x]
   (if (falsey? x) nil x))
 

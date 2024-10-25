@@ -815,3 +815,155 @@
   clojure: |
     {"default" (_& 'default {"foo" 1, "bar" 2}),
       "foo" (+merge {"<<" (_** 'default), "foo" 3, "baz" 4})}
+
+
+- name: Code assignment in data mode mapping
+  yamlscript: |
+    !yamlscript/v0/data
+    foo: 1
+    bar: 2
+    x =: 6
+    y =: 7
+    baz:: x * y
+    boom: 1999
+    z =: 8
+    bust: 2000
+  resolve: |
+    {:map
+     [{:str "foo"}
+      {:int "1"}
+      {:str "bar"}
+      {:int "2"}
+      {:def "x ="}
+      {:expr "6"}
+      {:def "y ="}
+      {:expr "7"}
+      {:str "baz"}
+      {:expr "x * y"}
+      {:str "boom"}
+      {:int "1999"}
+      {:def "z ="}
+      {:expr "8"}
+      {:str "bust"}
+      {:int "2000"}]}
+  build: |
+    {:dmap
+     [{:Str "foo"}
+      {:Int 1}
+      {:Str "bar"}
+      {:Int 2}
+      [{:Sym def} {:Sym x} {:Int 6}]
+      [{:Sym def} {:Sym y} {:Int 7}]
+      {:Str "baz"}
+      {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
+      {:Str "boom"}
+      {:Int 1999}
+      [{:Sym def} {:Sym z} {:Int 8}]
+      {:Str "bust"}
+      {:Int 2000}]}
+  construct: |
+    {:Top
+     [{:Lst
+       [{:Sym merge}
+        {:Map [{:Str "foo"} {:Int 1} {:Str "bar"} {:Int 2}]}
+        {:Lst
+         [{:Sym let}
+          {:Vec [{:Sym x} {:Int 6} {:Sym y} {:Int 7}]}
+          {:Lst
+           [{:Sym merge}
+            {:Map
+             [{:Str "baz"}
+              {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
+              {:Str "boom"}
+              {:Int 1999}]}
+            {:Lst
+             [{:Sym let}
+              {:Vec [{:Sym z} {:Int 8}]}
+              {:Map [{:Str "bust"} {:Int 2000}]}]}]}]}]}]}
+  transform: |
+    {:dmap
+     [{:Str "foo"}
+      {:Int 1}
+      {:Str "bar"}
+      {:Int 2}
+      [{:Sym def} {:Sym x} {:Int 6}]
+      [{:Sym def} {:Sym y} {:Int 7}]
+      {:Str "baz"}
+      {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
+      {:Str "boom"}
+      {:Int 1999}
+      [{:Sym def} {:Sym z} {:Int 8}]
+      {:Str "bust"}
+      {:Int 2000}]}
+  clojure: |
+    (merge
+      {"foo" 1, "bar" 2}
+      (let
+       [x 6 y 7]
+       (merge {"baz" (mul+ x y), "boom" 1999} (let [z 8] {"bust" 2000}))))
+
+
+- name: Load yaml file in data map assignment
+  yamlscript: |
+    !yamlscript/v0/
+    a: 1
+    data =: slurp('data.yaml'):yaml/load
+    b: 2
+    c: data.foo
+  resolve: |
+    {:map
+     [{:str "a"}
+      {:int "1"}
+      {:def "data ="}
+      {:expr "slurp('data.yaml'):yaml/load"}
+      {:str "b"}
+      {:int "2"}
+      {:str "c"}
+      {:str "data.foo"}]}
+  build: |
+    {:dmap
+     [{:Str "a"}
+      {:Int 1}
+      [{:Sym def}
+       {:Sym data}
+       {:dot
+        [{:Lst [{:Sym slurp} {:Str "data.yaml"}]}
+         {:Lst [{:Sym yaml/load}]}]}]
+      {:Str "b"}
+      {:Int 2}
+      {:Str "c"}
+      {:Str "data.foo"}]}
+  transform: |
+    {:dmap
+     ({:Str "a"}
+      {:Int 1}
+      [{:Sym def}
+       {:Sym data}
+       {:Lst
+        [{:Sym yaml/load}
+         {:Lst [{:Sym slurp} {:Str "data.yaml"}]}]}]
+      {:Str "b"}
+      {:Int 2}
+      {:Str "c"}
+      {:Str "data.foo"})}
+  construct: |
+    {:Top
+     [{:Lst
+       [{:Sym merge}
+        {:Map [{:Str "a"} {:Int 1}]}
+        {:Lst
+         [{:Sym let}
+          {:Vec
+           [{:Sym data}
+            {:Lst
+             [{:Sym yaml/load}
+              {:Lst [{:Sym slurp} {:Str "data.yaml"}]}]}]}
+          {:Map
+           [{:Str "b"}
+            {:Int 2}
+            {:Str "c"}
+            {:Str "data.foo"}]}]}]}]}
+  clojure: |
+    (merge
+      {"a" 1}
+      (let [data (yaml/load (slurp "data.yaml"))] {"b" 2, "c" "data.foo"}))

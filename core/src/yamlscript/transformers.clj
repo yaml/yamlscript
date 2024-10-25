@@ -189,7 +189,6 @@
 (intern 'yamlscript.transformers 'transform_let        lhs-bindings)
 (intern 'yamlscript.transformers 'transform_loop       lhs-bindings)
 (intern 'yamlscript.transformers 'transform_when-first lhs-bindings)
-(intern 'yamlscript.transformers 'transform_let        lhs-bindings)
 (intern 'yamlscript.transformers 'transform_when-let   lhs-bindings)
 (intern 'yamlscript.transformers 'transform_when-lets  lhs-bindings)
 (intern 'yamlscript.transformers 'transform_when-some  lhs-bindings)

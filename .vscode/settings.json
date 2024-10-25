@@ -13,6 +13,7 @@
     "defn",
     "defsyn",
     "distclean",
+    "dmap",
     "doall",
     "doseq",
     "dwim",
