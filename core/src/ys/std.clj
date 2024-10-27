@@ -282,6 +282,7 @@
 (intern 'ys.std 'L to-list)
 (intern 'ys.std 'M to-map)
 (intern 'ys.std 'N to-num)
+(intern 'ys.std 'P partial)
 (intern 'ys.std 'S to-str)
 (intern 'ys.std 'T to-type)
 (intern 'ys.std 'V to-vec)
