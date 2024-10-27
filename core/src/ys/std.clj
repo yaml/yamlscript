@@ -639,13 +639,19 @@
       fn? (filter P C)
       (filter #(= P %1) C))))
 
-(defn has? [C x]
-  (boolean
-    (if (and (string? C) (string? x))
-      (str/includes? C x)
-      (some (set C) [x]))))
+(defn has?
+  ([C] #(has? C %1))
+  ([C x]
+   (boolean
+     (cond
+       (and (string? C) (string? x)) (str/includes? C x)
+       (map? C) (get+ C (symbol x))
+       :else (some (set C) [x])))))
 
-(defn in? [x C] (has? C x))
+#_{:clj-kondo/ignore [:syntax]}
+(defn in?
+  ([C] #(in? C %1))
+  ([x C] (has? C x)))
 
 (defn +merge [M]
   (merge (get M "<<") (dissoc M "<<")))
