@@ -610,14 +610,14 @@
 ;;------------------------------------------------------------------------------
 (defn get+ [C K]
   (condf C
-    map? (condp = (type K)
-           String (get C K)
-           clojure.lang.Keyword (get C K)
-           clojure.lang.Symbol (or
-                                 (get C K)
-                                 (get C (str K))
-                                 (get C (keyword K)))
-           (get C K))
+    map? (if (symbol? K)
+          (or
+            (get C K)
+            (get C (str K))
+            (get C (keyword K)))
+          (or
+            (get C K)
+            (get C (str K))))
     nil? nil
     seqable? (condf K
                number? (nth C K nil)
