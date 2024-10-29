@@ -1,0 +1,70 @@
+!yamlscript/v0
+
+releases-url =: 'https://github.com/yaml/yamlscript/releases'
+brew-url =: 'git@github.com:yaml/homebrew-yamlscript'
+
+defn main(version):
+  check-version: version
+  download-releases: version
+  update-brew: version
+
+defn update-brew(version):
+  releases =: releases(version)
+
+  when-not fs-e('homebrew-yamlscript'):
+    res =: sh("git clone $brew-url")
+    when-not res.exit:N.?:
+      die: "git clone of '$brew-url' failed"
+
+  text =: slurp('homebrew-yamlscript/template/ys.rb')
+          .replace('VERSION' version)
+  text =:
+    reduce-kv _ text releases:
+      fn(text key file):
+        sha256 =: sh("sha256sum $file").out:words.0
+        text: .replace(key sha256)
+
+  say: "Updating homebrew-yamlscript/ys.rb"
+  spit 'homebrew-yamlscript/ys.rb':
+    text.replace('CLASS' 'Ys')
+
+  vrsn =: version.replace('.')
+  say: "Updating homebrew-yamlscript/ys@version.rb"
+  spit "homebrew-yamlscript/ys@$version.rb":
+    text.replace('CLASS' "YsAT$vrsn")
+
+  say: "Updating homebrew-yamlscript/ReadMe.md"
+  spit "homebrew-yamlscript/ReadMe.md":
+    slurp("homebrew-yamlscript/template/ReadMe.md")
+      .replace('VERSION' version)
+
+  status =: sh('git -C homebrew-yamlscript status --short --ignored').out
+  if status.?:
+    say: status
+    say: "Nothing changed"
+
+defn download-releases(version):
+  releases =: releases(version)
+  reduce-kv _ nil releases:
+    fn(_ _ file):
+      when-not fs-e(file):
+        warn: "Downloading $file"
+        url =: "$releases-url/download/$version/$file"
+        res =: sh("wget -q $url")
+        when-not res.exit:N.?:
+          die: "Download of '$url' failed:\n$(res)"
+
+defn releases(version)::
+  LIN_ARM:: "ys-${version}-linux-aarch64.tar.xz"
+  LIN_INT:: "ys-${version}-linux-x64.tar.xz"
+  MAC_ARM:: "ys-${version}-macos-aarch64.tar.xz"
+  MAC_INT:: "ys-${version}-macos-x64.tar.xz"
+
+defn check-version(version):
+  when version !~ /^0\.1\.\d+$/:
+    die: "Invalid version '$version'"
+
+  try:
+    curl: "$releases-url/tag/$version"
+    catch:
+      die: "No YAMLScript release for version '$version'"

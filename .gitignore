@@ -3,6 +3,7 @@
 /*.yaml
 /*.ys
 /bin/
+/homebrew-yamlscript/
 /issue-*
 /lib/
 /libyamlscript-*

@@ -249,6 +249,7 @@ clean: $(CLEAN)
 	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
+	$(RM) -r homebrew-yamlscript
 	$(RM) NO-NAME release*.log
 clean-%: %
 	$(MAKE) -C $< clean
