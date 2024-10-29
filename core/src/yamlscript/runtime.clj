@@ -49,8 +49,6 @@
               'INC INC
               'RUN RUN
               'VERSION ys-version
-              '$ global/$
-              '$# global/$#
 
               ;; clojure.core functions overridden by YS
               'load (sci/copy-var ys.ys/load-file nil)

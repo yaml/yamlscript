@@ -3,6 +3,7 @@
 
 (ns ys.yaml
   (:require
+   [clojure.string :as str]
    [clj-yaml.core :as yaml])
   (:refer-clojure :exclude [load load-file])
   #_(:import
@@ -24,11 +25,19 @@
     :dumper-options
     {:flow-style :block}))
 
-#_(defn dump-all [data]
-  (yaml/generate-all
-    data
-    :dumper-options
-    {:flow-style :block}))
+(defn dump-all [data]
+  (str/join "\n"
+    (reduce
+      (fn [strings node]
+        (conj strings
+          (let [yaml (str/trimr
+                       (yaml/generate-string node
+                         :dumper-options
+                         {:flow-style :block}))]
+            (if (> (count data) 1)
+              (str "---\n" yaml)
+              yaml))))
+      [] data)))
 
 (comment
   )

@@ -224,9 +224,7 @@
     :Sym (let [sym (-> form :Sym str)]
            (if (re-find #"^\$\w" sym)
              (Sym (subs sym 1))
-             (if (= sym "$#")
-               form
-               (QSym (:Sym form)))))
+             (QSym (:Sym form))))
     :Lst (update-in form [:Lst]
            (fn [list]
              (vec (map #(if (= {:Sym '_} %1)

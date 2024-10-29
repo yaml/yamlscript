@@ -268,9 +268,13 @@ Options:
                    (->> opts
                      :eval
                      (str/join "\n")
-                     (#(if (and (re-find #"^\.\w" %1)
-                             (not (re-find #"\n" %1)))
-                         (str "$$" %1)
+                     (#(if (not (re-find #"\n" %1))
+                         (cond
+                           (re-find #"^\.\w" %1) (str "stream()" %1)
+                           (re-find #"^\:\w" %1)
+                           , (str "stream()"
+                               (str/replace %1 #"^:([-\w]+)" ".$1()"))
+                           :else %1)
                          %1))
                      (add-ys-mode-tag opts))
                    "\n"))
@@ -358,13 +362,13 @@ Options:
               (eprint (str line (pretty-clojure code) "\n" line)))
           result (runtime/eval-string code file args)
           results (if (env "YS_MULTI")
-                    (vals @global/$)
+                    @global/stream-values
                     [result])]
       (if (:print opts)
         (pp/pprint result)
         (when (and load (not (= "" code)))
           (doall
-            (for [result results]
+            (for [result (remove nil? results)]
               (case (:to opts)
                 "yaml" (println
                          (str

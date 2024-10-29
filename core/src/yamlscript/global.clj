@@ -9,12 +9,14 @@
   (println (apply str ">>> " xs) " <<<")
   (last xs))
 
-(def $ (atom {}))
-(def $# (atom 0))
-
-(def sci-ctx (atom nil))
 (def main-ns (sci/create-ns 'main))
+(def sci-ctx (atom nil))
 
+(def stream-anchors_ (atom {}))
+(def doc-anchors_ (atom {}))
+(def stream-values (atom []))
+(def opts (atom {}))
+(def pods (atom []))
 (defonce build-xstr (atom nil))
 
 (def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
@@ -45,13 +47,6 @@
     (alter-var-root #'env (constantly m))))
 
 (def FILE (sci/new-dynamic-var 'FILE nil))
-
-(def opts (atom {}))
-
-(def pods (atom []))
-
-(def stream-anchors_ (atom {}))
-(def doc-anchors_ (atom {}))
 
 (def error-msg-prefix (atom ()))
 (defn reset-error-msg-prefix!

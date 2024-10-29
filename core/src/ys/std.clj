@@ -452,16 +452,19 @@
 ;;------------------------------------------------------------------------------
 ;; YAMLScript document result stashing functions
 ;;------------------------------------------------------------------------------
-(defn +++* [val]
-  (let [idx (keyword (str (swap! global/$# inc)))]
-    (reset! global/doc-anchors_ {})
-    (swap! global/$ assoc idx val)
-    val))
+(defn +++* [value]
+  (reset! global/doc-anchors_ {})
+  (when ((some-fn map? seqable? number? string?) value)
+    (swap! global/stream-values conj value))
+  value)
 
 (defmacro +++ [& xs]
   `(~'+++* (do ~@xs)))
 
-(defn $$ [] (->> @global/$# str keyword (get @global/$)))
+(defn stream
+  ([] @global/stream-values)
+  ([values] (reset! global/stream-values values)
+    nil))
 
 
 ;;------------------------------------------------------------------------------

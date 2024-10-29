@@ -862,13 +862,13 @@
     foo: 42
     --- !yamlscript/v0
     =>::
-      bar:: $$.foo.inc()
+      bar:: stream():last.foo:inc
       foo: 123
     ---
     bar: 44
   clojure: |
     {"foo" 42}
-    {"bar" (inc (get+ ($$) 'foo)), "foo" 123}
+    {"bar" (inc (get+ (last (stream)) 'foo)), "foo" 123}
     {"bar" 44}
 
 
