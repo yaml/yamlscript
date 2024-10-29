@@ -91,6 +91,8 @@
     "Print the result of --run in code mode"]
    ["-o" "--output FILE"
     "Output file for --load, --compile or --binary"]
+   ["-s" "--stream"
+    "Output all results from a multi-document stream"]
 
    ["-T" "--to FORMAT"
     "Output format for --load:
@@ -361,7 +363,7 @@ Options:
           _ (when (env "YS_SHOW_COMPILE")
               (eprint (str line (pretty-clojure code) "\n" line)))
           result (runtime/eval-string code file args)
-          results (if (env "YS_MULTI")
+          results (if (:stream opts)
                     @global/stream-values
                     [result])]
       (if (:print opts)
@@ -452,7 +454,7 @@ Options:
 (def all-opts
   #{:run :load :eval
     :compile :binary
-    :print :output
+    :print :output :stream
     :to :json :yaml :edn :unordered
     :mode :clojure
     ;:repl :nrepl :kill
@@ -534,6 +536,8 @@ Options:
         opts (if (env "YS_OUTPUT")
                (assoc opts :output (env "YS_OUTPUT")) opts)
         out (:output opts)
+        opts (if (env "YS_STREAM")
+               (assoc opts :stream (env "YS_STREAM")) opts)
         opts (if (and
                    out
                    (re-find #"\.(?:yml|yaml|json|edn)$" out)

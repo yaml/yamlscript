@@ -29,6 +29,7 @@ Options:
 
   -p, --print              Print the result of --run in code mode
   -o, --output FILE        Output file for --load, --compile or --binary
+  -s, --stream             Output all results from a multi-document stream
 
   -T, --to FORMAT          Output format for --load:
                              json, yaml, edn
