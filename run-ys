@@ -22,7 +22,7 @@ main() {
   [[ -f $bin/ys-0 && -x $bin/ys-0 ]] ||
     install-ys
 
-  if [[ $YS_OUTPUT == '%.'* ]]; then
+  if [[ ${YS_OUTPUT-} == '%.'* ]]; then
     YS_OUTPUT=${file%.*}${YS_OUTPUT#\%}
   fi
 
