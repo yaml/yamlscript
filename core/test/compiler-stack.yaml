@@ -1313,3 +1313,35 @@
   clojure: |
     (when (foo) {"x" 1})
     {"y" (when (foo) {"a" "b"}), "z" 3}
+
+
+- name: String keys in fmaps
+  yamlscript: |
+    !yamlscript/v0
+    case dir:
+      'N': north()
+      'S': south()
+      else: die()
+  compose: |
+    {:! "yamlscript/v0",
+     :%
+     [{:= "case dir"}
+      {:%
+       [{:' "N"}
+        {:= "north()"}
+        {:' "S"}
+        {:= "south()"}
+        {:= "else"}
+        {:= "die()"}]}]}
+  resolve: |
+    {:xmap
+     [{:expr "case dir"}
+      {:fmap
+       [{:str "N"}
+        {:expr "north()"}
+        {:str "S"}
+        {:expr "south()"}
+        {:expr "else"}
+        {:expr "die()"}]}]}
+  clojure: |
+    (case dir "N" (north) "S" (south) (die))

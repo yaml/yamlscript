@@ -183,23 +183,24 @@
     [{:str str} nil]))
 
 (defn tag-fn [[{key :expr} val]]
-  (when (re-matches re/afnk key)
+  (when (and key (re-matches re/afnk key))
     [{:fn key} val]))
 
 (defn tag-def [[{key :expr} val]]
-  (when (re-matches re/defk key)
+  (when (and key (re-matches re/defk key))
     [{:def key} val]))
 
 (defn tag-defn [[{key :expr} val]]
-  (when (re-matches re/dfnk key)
+  (when (and key (re-matches re/dfnk key))
     [{:defn key} val]))
 
 (defn tag-fmap [[key val]]
-  (when-lets [_ (or
-                  (re-find #" +%$" (:expr key))
-                  (re-matches #"(cond|condp .+|case .+)" (:expr key)))
+  (when-lets [key-str (:expr key)
+              _ (or
+                  (re-find #" +%$" key-str)
+                  (re-matches #"(cond|condp .+|case .+)" key-str))
               _ (contains? val :xmap)
-              key (assoc key :expr (str/replace (:expr key) #" +%$" ""))
+              key (assoc key :expr (str/replace key-str #" +%$" ""))
               val (set/rename-keys val {:xmap :fmap})]
     [key val]))
 
