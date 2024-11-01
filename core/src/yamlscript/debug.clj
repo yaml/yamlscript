@@ -8,8 +8,7 @@
    [clojure.pprint :as pp]
    [clojure.string :as str]
    [yamlscript.global :as global]
-   [yamlscript.util :as util]
-   [babashka.fs :as fs])
+   [yamlscript.util :as util])
   (:refer-clojure :exclude [YSC DBG PPP WWW XXX YYY ZZZ]))
 
 (def width 50)

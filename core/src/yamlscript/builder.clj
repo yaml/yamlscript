@@ -7,7 +7,6 @@
 (ns yamlscript.builder
   (:require
    [clojure.string :as str]
-    [clojure.pprint :as pprint]
    [yamlscript.ast :refer
     [Bln Clj Flt Int Key Lst Map Nil Str Sym Vec]]
    [yamlscript.common]
@@ -21,9 +20,20 @@
 
 (declare build-node)
 
+(defn adjust-special-key-top [node]
+  (if-lets [[key val & rest] (:map node)
+            _ (re-matches #":.*[^-\w].*" (str (:expr key)))]
+    {:map
+     (concat
+       [{:expr "=>"}
+        {:xmap [{:expr (subs (:expr key) 1)}
+                (if (= {:nil ""} val) {:expr ""} val)]}]
+       rest)}
+    node))
+
 (defn build
   "Parse all the !expr nodes into YAMLScript AST nodes."
-  [node] (build-node node))
+  [node] (build-node (adjust-special-key-top node)))
 
 (defn build-from-string [string]
   (require
@@ -166,28 +176,39 @@
       v
       (conj v (Sym (m 2))))))
 
-(defn build-map [node]
-  (let [body (vec (map build-node (:map node)))]
-    (if (some vector? body)
-      {:dmap (loop [[k v & body] body new []]
+(defn build-dmap [body]
+  (let [dmap (loop [[k v & body] body new []]
                (if (nil? k)
                  new
-                 (let [new (if (vector? k)
-                             (conj new (conj k v))
+                 (let [[k v] (if (= k {:Nil nil})
+                               [[v] nil]
+                               [k v])
+                       new (if (vector? k)
+                             (if (nil? v)
+                               (conj new k)
+                               (conj new (conj k v)))
                              (conj new k v))]
-                   (recur body new))))}
-      (Map (map build-node (:map node))))))
+                   (recur body new))))]
+    {:dmap dmap}))
 
-#_(pprint/pprint (build-map
-      {:map
-       [{:str "a"}
-        {:int "1"}
-        {:def "data ="}
-        {:expr "slurp('data.yaml'):yaml/load"}
-        {:str "b"}
-        {:int "2"}
-        {:str "c"}
-        {:str "data.foo"}]}))
+(defn adjust-special-keys [nodes]
+  (reduce
+    (fn [body [key val]]
+      (let [[key val] (if (= \: (first (:expr key)))
+                        [{:nil ""}
+                         {:xmap [{:expr (subs (:expr key) 1)}
+                                 val]}]
+                        [key val])]
+        (conj body key val)))
+    [] (partition 2 nodes)))
+
+(defn build-map [node]
+  (let [body (vec (map build-node (adjust-special-keys (:map node))))]
+    (if (or (some vector? body)
+          (= {:Sym '=>} (first body))
+          (some #(= %1 {:Nil nil}) body))
+      (build-dmap body)
+      (Map (map build-node (:map node))))))
 
 (defn build-vec [node]
   (Vec (map build-node (:seq node))))

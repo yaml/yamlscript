@@ -340,7 +340,6 @@
       ,
       :else (die "Invalid tag for code mode node: " (tagp tag)))))
 
-
 ;; ----------------------------------------------------------------------------
 ;; Dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
@@ -351,11 +350,19 @@
         {:map
          (vec (mapcat
                 (fn [[key val]]
-                  (let [[key val] (check-mode-swap key val)
+                  (let [okey key
+                        [key val] (check-mode-swap key val)
                         key-str (:= key)
                         [key val]
-                        (if (and key-str (re-matches re/defk key-str))
+                        (cond
+                          (and key-str (re-matches re/defk key-str))
                           [{:def key-str} (resolve-code-node val)]
+                          (and key-str (re-matches #":.*[^-\w].*" key-str))
+                          [(resolve-code-node key)
+                           (if (str/ends-with? (:= okey) ":")
+                             (resolve-data-node (dissoc val :!))
+                             (resolve-code-node val))]
+                          :else
                           [(resolve-data-node key) (resolve-data-node val)])]
                     [key val]))
                 (partition 2 nodes)))}
@@ -443,16 +450,17 @@
 ;; XXX Replace this with assignment in data mode
 (defn resolve-data-node-top [node]
   (if-lets [xmap (or (:% node) (:%% node))
-            key (get-in xmap [0 :=])
-            _ (= "=>" key)
-            [key1 val1 & rest] xmap]
-    {:map (concat
-            [(resolve-code-node key1)]
-            [(resolve-code-node val1)]
-            (:map (resolve-data-node {:% rest})))}
+            key-str (get-in xmap [0 :=])
+            _ (some #{":" "=>"} [key-str])
+            [_ val & rest] xmap
+            key {:= "=>"}]
+    {:map (vec (concat
+                 [(resolve-code-node key)]
+                 [(resolve-code-node val)]
+                 (:map (resolve-data-node {:% rest}))))}
     (if-lets [list (or (:- node) (:-- node))
-              key (get-in list [0 :% 0 :=])
-              _ (= "=>" key)
+              key-str (get-in list [0 :% 0 :=])
+              _ (some #{":" "=>"} [key-str])
               [first & rest] list]
       {:seq (cons (resolve-code-mapping first)
               (map resolve-data-node rest))}

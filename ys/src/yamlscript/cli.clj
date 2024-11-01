@@ -566,15 +566,4 @@ Options:
       (do-main opts args argv help error errs))))
 
 (comment
-  (-main)
-  (-main
-    "-pe" "if 1 < 2: 3"
-    ;"--run"
-    ;"--load"
-    ;"--to=json"
-    ;"--compile"
-    ; "--mode=code"
-    ;"--help"
-    ; "-e" "say: 123"
-    #__)
   )

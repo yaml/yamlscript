@@ -50,21 +50,6 @@
     (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
     vec-form))
 
-;; XXX `let` destructuring is faked in the build stage currently.
-#_(defn transform_def [lhs rhs]
-  (if-lets [_ (= 2 (count lhs))
-            [def form] lhs
-            vect (:Sym form)
-            _ (WWW (type vect))
-            _ (vector? vect)
-            form1 (Vec vect)
-            form2 (transform-vec-destructure form1)
-            _ (not= form1 form2)
-            form (Sym (:Vec form2))
-            lhs [def form]]
-    [lhs rhs]
-    [lhs rhs]))
-
 
 ;;-----------------------------------------------------------------------------
 ;; defn and fn

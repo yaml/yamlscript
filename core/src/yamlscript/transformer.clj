@@ -6,7 +6,6 @@
 
 (ns yamlscript.transformer
   (:require
-   [clojure.pprint :as pp]
    [yamlscript.ast :refer [Lst Sym QSym]]
    [yamlscript.common]
    [yamlscript.transformers]
@@ -259,22 +258,22 @@
 
 (defn transform-node-top [node]
   (transform-node
-    (if-lets [[key1 val1 & rest] (:Map node)
-              _ (= key1 {:Sym '=>})
-              xmap (:xmap val1)]
-      {:xmap (concat xmap [{:Sym '=>} {:Map rest}])}
-      (if-lets [[first & rest] (:Vec node)
-                xmap (get-in first [:xmap 1 :xmap])]
-        {:xmap (concat xmap [{:Sym '=>} {:Vec rest}])}
-        node))))
+    (or
+      (when-lets [[key val & rest] (:Map node)
+                  _ (= key {:Sym '=>})
+                  val (or (:xmap val) [{:Sym '=>} val])]
+        {:xmap (vec (concat val [{:Sym '=>} {:Map rest}]))})
+
+      (when-lets [[key val & rest] (:dmap node)
+                  _ (= key {:Sym '=>})
+                  val (or (:xmap val) [{:Sym '=>} val])]
+        {:xmap (vec (concat val [{:Sym '=>} {:dmap rest}]))})
+
+      (when-lets [[first & rest] (:Vec node)
+                  val (get-in first [:xmap 1 :xmap])]
+        {:xmap (concat val [{:Sym '=>} {:Vec rest}])})
+
+      node)))
 
 (comment
-  (->>
-    {:Map
-     [{:Str "my-seq"}
-      {:Lst
-       [{:Sym '+}
-        {:Lst [{:Sym 'load} {:Str "seq1.yaml"}]}
-        {:Lst [{:Sym 'load} {:Str "seq2.yaml"}]}]}]}
-    transform)
   )

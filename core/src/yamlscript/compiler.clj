@@ -108,22 +108,4 @@
     (apply str)))
 
 (comment
-  (do
-    (reset! common/opts
-      {:debug-stage
-       {"parse" true
-        "compose" false
-        "resolve" false
-        "build" true
-        "transform" false
-        "construct" false
-        "print" true}})
-    (compile-with-options "!yamlscript/v0\na =: b.c()"))
-  (compile "!yamlscript/v0\na .=: b.c()")
-  (compile "!yamlscript/v0\na .=: b().c")
-  (compile "
-!yamlscript/v0
-=>: >
-  foo
-")
   )

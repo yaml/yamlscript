@@ -164,21 +164,43 @@
                  new))]
     node))
 
+(defn dmap-code [code dmap ctx]
+  (let [parts (map vec (partition-by #(= (first %1) {:Sym 'def}) code))
+        result (reduce (fn [dmap part]
+                         (if (= (get-in part [0 0]) {:Sym 'def})
+                           (let [bind (Vec (vec (mapcat rest part)))]
+                             (Lst [(Sym 'let) bind dmap]))
+                           (let [form (get-in part [0 0])
+                                 form (construct-node form ctx)
+                                 form (if (map? form)
+                                        form
+                                        (if (= 1 (count form))
+                                          (first form)
+                                          (Lst (apply vector (Sym 'do) form))))]
+                             (if (= dmap {:Map []})
+                               form
+                               (Lst [(Sym 'merge) form dmap])))))
+                 dmap (vec (reverse parts)))]
+    result))
+
 (defn construct-dmap [node ctx]
   (let [parts (vec (map vec (partition-by vector? (:dmap node))))
         parts (reverse parts)
-        parts (if (get-in parts [0 0 :Sym])
+        parts (if (get-in (vec parts) [0 0 0])
                 (cons [] parts)
                 parts)
         [amap & parts] parts
-        amap (Map amap)]
-    (reduce (fn [dmap part]
-              (if (get-in part [0 0 :Sym])
-                (let [bind (Vec (vec (mapcat rest part)))]
-                  (Lst [(Sym 'let) bind dmap]))
-                (let [amap (Map part)]
-                  (Lst [(Sym 'merge) amap dmap]))))
-      amap parts)))
+        amap (construct-node (Map amap) ctx)
+        dmap (reduce (fn [dmap part]
+                       (if (get-in part [0 0])
+                         (dmap-code part dmap ctx)
+                         (let [part (if (vector? part)
+                                      (vec (map #(construct-node %1 ctx) part))
+                                      (construct-node part ctx))
+                               amap (Map part)]
+                           (Lst [(Sym 'merge) amap dmap]))))
+               amap parts)]
+    dmap))
 
 (defn construct-fmap [{nodes :fmap} ctx]
   (let [nodes (reduce

@@ -548,7 +548,7 @@
       {:str "foo"}
       {:expr "vars.foo"})}
   build: |
-    {:Map
+    {:dmap
      [{:Sym =>}
       {:xmap
        [[{:Sym def} {:Sym vars}]
@@ -560,7 +560,7 @@
      [[{:Sym def} {:Sym vars}]
       {:Lst [{:Sym load} {:Str "vars.yaml"}]}
       {:Sym =>}
-      {:Map
+      {:dmap
        [{:Str "foo"}
         {:Lst [{:Sym get+} {:Sym vars} {:QSym foo}]}]}]}
   clojure: |
@@ -967,3 +967,349 @@
     (merge
       {"a" 1}
       (let [data (yaml/load (slurp "data.yaml"))] {"b" 2, "c" "data.foo"}))
+
+
+- name: Conditional pairs in data mode map
+  yamlscript: |
+    !yamlscript/v0/
+    ::
+      use: 'module1'
+      use: 'module2'
+    foo: the foo
+    bar: the bar
+    x =: rand(2)
+    y =: x + 1
+    ::
+      when x > 1::
+        aaa:: x * y
+        bbb: 333
+    baz: the baz
+
+  resolve: |
+    {:map
+     [{:expr "=>"}
+      {:xmap
+       [{:expr "use"}
+        {:str "module1"}
+        {:expr "use"}
+        {:str "module2"}]}
+      {:str "foo"}
+      {:str "the foo"}
+      {:str "bar"}
+      {:str "the bar"}
+      {:def "x ="}
+      {:expr "rand(2)"}
+      {:def "y ="}
+      {:expr "x + 1"}
+      {:nil ""}
+      {:xmap
+       [{:expr "when x > 1"}
+        {:map
+         [{:str "aaa"}
+          {:expr "x * y"}
+          {:str "bbb"}
+          {:int "333"}]}]}
+      {:str "baz"}
+      {:str "the baz"}]}
+  build: |
+    {:dmap
+     [{:Sym =>}
+      {:xmap
+       [{:Sym use} {:Str "module1"} {:Sym use} {:Str "module2"}]}
+      {:Str "foo"}
+      {:Str "the foo"}
+      {:Str "bar"}
+      {:Str "the bar"}
+      [{:Sym def} {:Sym x} {:Lst [{:Sym rand} {:Int 2}]}]
+      [{:Sym def}
+       {:Sym y}
+       {:Lst [{:Sym add+} {:Sym x} {:Int 1}]}]
+      [{:xmap
+        [[{:Sym when} {:Sym x} {:Sym >} {:Int 1}]
+         {:Map
+          [{:Str "aaa"}
+           {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
+           {:Str "bbb"}
+           {:Int 333}]}]}]
+      {:Str "baz"}
+      {:Str "the baz"}]}
+  transform: |
+    {:xmap
+     [{:Sym use}
+      {:Str "module1"}
+      {:Sym use}
+      {:Str "module2"}
+      {:Sym =>}
+      {:dmap
+       ({:Str "foo"}
+        {:Str "the foo"}
+        {:Str "bar"}
+        {:Str "the bar"}
+        [{:Sym def} {:Sym x} {:Lst [{:Sym rand} {:Int 2}]}]
+        [{:Sym def}
+         {:Sym y}
+         {:Lst [{:Sym add+} {:Sym x} {:Int 1}]}]
+        [{:xmap
+          [[{:Sym when} {:Lst [{:Sym >} {:Sym x} {:Int 1}]}]
+           {:Map
+            [{:Str "aaa"}
+             {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
+             {:Str "bbb"}
+             {:Int 333}]}]}]
+        {:Str "baz"}
+        {:Str "the baz"})}]}
+  construct: |
+    {:Top
+     [{:Lst [{:Sym use} {:Str "module1"}]}
+      {:Lst [{:Sym use} {:Str "module2"}]}
+      {:Lst
+       [{:Sym merge}
+        {:Map
+         [{:Str "foo"}
+          {:Str "the foo"}
+          {:Str "bar"}
+          {:Str "the bar"}]}
+        {:Lst
+         [{:Sym let}
+          {:Vec
+           [{:Sym x}
+            {:Lst [{:Sym rand} {:Int 2}]}
+            {:Sym y}
+            {:Lst [{:Sym add+} {:Sym x} {:Int 1}]}]}
+          {:Lst
+           [{:Sym merge}
+            {:Lst
+             [{:Sym when}
+              {:Lst [{:Sym >} {:Sym x} {:Int 1}]}
+              {:Map
+               [{:Str "aaa"}
+                {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
+                {:Str "bbb"}
+                {:Int 333}]}]}
+            {:Map [{:Str "baz"} {:Str "the baz"}]}]}]}]}]}
+  clojure: |
+    (use "module1")
+    (use "module2")
+    (+++
+     (merge
+      {"foo" "the foo", "bar" "the bar"}
+      (let
+       [x (rand 2) y (add+ x 1)]
+       (merge
+        (when (> x 1) {"aaa" (mul+ x y), "bbb" 333})
+        {"baz" "the baz"}))))
+
+
+- name: Conditional pair without other pairs
+  yamlscript: |
+    !yamlscript/v0/
+    ::
+      when x > 1::
+        aaa: bbb
+  clojure: |
+    (when (> x 1) {"aaa" "bbb"})
+    {}
+
+
+- name: Conditional pair with multiple pairs value
+  yamlscript: |
+    !yamlscript/v0/
+    x: 1
+    ::
+      say: 'one'
+      say: 'two'
+      =>::
+        y: 2
+    z: 3
+  clojure: |
+    (merge {"x" 1} (merge (do (say "one") (say "two") {"y" 2}) {"z" 3}))
+
+
+- name: Conditional pair with non-mapping value
+  yamlscript: |
+    !yamlscript/v0/
+    x: 1
+    :: foo(a 3)
+    y: 2
+  build: |
+    {:dmap
+     [{:Str "x"}
+      {:Int 1}
+      [{:Lst [{:Sym foo} {:Sym a} {:Int 3}]}]
+      {:Str "y"}
+      {:Int 2}]}
+  construct: |
+    {:Top
+     [{:Lst
+       [{:Sym merge}
+        {:Map [{:Str "x"} {:Int 1}]}
+        {:Lst
+         [{:Sym merge}
+          {:Lst [{:Sym foo} {:Sym a} {:Int 3}]}
+          {:Map [{:Str "y"} {:Int 2}]}]}]}]}
+  clojure: |
+    (merge {"x" 1} (merge (foo a 3) {"y" 2}))
+
+
+- name: Conditional pair dmap in dmap
+  yamlscript: |
+    --- !yamlscript/v0/
+    :: foo()
+    a:
+      :: bar()
+  resolve: |
+    {:map
+     ({:expr "=>"}
+      {:expr "foo()"}
+      {:str "a"}
+      {:map [{:nil ""} {:expr "bar()"}]})}
+  transform: |
+    {:xmap
+     [{:Sym =>}
+      {:Lst [{:Sym foo}]}
+      {:Sym =>}
+      {:dmap [{:Str "a"} {:dmap ([{:Lst [{:Sym bar}]}])}]}]}
+  construct: |
+    {:Top
+     [{:Lst [{:Sym foo}]}
+      {:Map [{:Str "a"} {:Lst [{:Sym bar}]}]}]}
+  clojure: |
+    (foo)
+    {"a" (bar)}
+
+
+- name: Conditional pair in sequence
+  yamlscript: |
+    --- !yamlscript/v0/
+    a:
+    - b: c
+      :: foo()
+    :: bar()
+  resolve: |
+    {:map
+     [{:str "a"}
+      {:seq
+       ({:map
+         [{:str "b"} {:str "c"} {:nil ""} {:expr "foo()"}]})}
+      {:nil ""}
+      {:expr "bar()"}]}
+  build: |
+    {:dmap
+     [{:Str "a"}
+      {:Vec
+       [{:dmap [{:Str "b"} {:Str "c"} [{:Lst [{:Sym foo}]}]]}]}
+      [{:Lst [{:Sym bar}]}]]}
+  construct: |
+    {:Top
+     [{:Lst
+       [{:Sym merge}
+        {:Map
+         [{:Str "a"}
+          {:Vec
+           [{:Lst
+             [{:Sym merge}
+              {:Map [{:Str "b"} {:Str "c"}]}
+              {:Lst [{:Sym foo}]}]}]}]}
+        {:Lst [{:Sym bar}]}]}]}
+  clojure: |
+    (merge {"a" [(merge {"b" "c"} (foo))]} (bar))
+
+
+- name: Top level data mode mapping first pair has key '::'
+  yamlscript: |
+    !yamlscript/v0/
+    ::
+      use: 'module1'
+      use: 'module2'
+    x: 1
+  resolve: |
+    {:map
+     ({:expr "=>"}
+      {:xmap
+       [{:expr "use"}
+        {:str "module1"}
+        {:expr "use"}
+        {:str "module2"}]}
+      {:str "x"}
+      {:int "1"})}
+  clojure: |
+    (use "module1")
+    (use "module2")
+    {"x" 1}
+
+
+- name: Shorthand syntax for conditionals in data mappings
+  yamlscript: |
+    !yamlscript/v0/
+    :use module1:
+    x: 1
+    :when x > 1::
+      y: 2
+    :z: 3
+  resolve: |
+    {:map
+     [{:expr ":use module1"}
+      {:expr ""}
+      {:str "x"}
+      {:int "1"}
+      {:expr ":when x > 1"}
+      {:map [{:str "y"} {:int "2"}]}
+      {:key ":z"}
+      {:int "3"}]}
+  build: |
+    {:dmap
+     [{:Sym =>}
+      {:xmap [[{:Sym use} {:Sym module1}] nil]}
+      {:Str "x"}
+      {:Int 1}
+      [{:xmap
+        [[{:Sym when} {:Sym x} {:Sym >} {:Int 1}]
+         {:Map [{:Str "y"} {:Int 2}]}]}]
+      {:Key :z}
+      {:Int 3}]}
+  clojure: |
+    (use module1)
+    (merge {"x" 1} (merge (when (> x 1) {"y" 2}) {:z 3}))
+
+
+- name: Shorthand syntax for conditionals in data mappings 2
+  yamlscript: |
+    !yamlscript/v0/
+    :use module1:
+    x: 1
+  build: |
+    {:dmap
+     [{:Sym =>}
+      {:xmap [[{:Sym use} {:Sym module1}] nil]}
+      {:Str "x"}
+      {:Int 1}]}
+  clojure: |
+    (use module1)
+    {"x" 1}
+
+
+- name: Shorthand syntax for conditionals in data mappings 2
+  yamlscript: |
+    !yamlscript/v0/
+    :when foo()::
+     x: 1
+    y:
+      :when foo()::
+       a: b
+    z: 3
+  build: |
+    {:dmap
+     [{:Sym =>}
+      {:xmap
+       [[{:Sym when} {:Lst [{:Sym foo}]}]
+        {:Map [{:Str "x"} {:Int 1}]}]}
+      {:Str "y"}
+      {:dmap
+       [[{:xmap
+          [[{:Sym when} {:Lst [{:Sym foo}]}]
+           {:Map [{:Str "a"} {:Str "b"}]}]}]]}
+      {:Str "z"}
+      {:Int 3}]}
+  clojure: |
+    (when (foo) {"x" 1})
+    {"y" (when (foo) {"a" "b"}), "z" 3}
