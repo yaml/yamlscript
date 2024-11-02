@@ -169,4 +169,13 @@ test::
     +7 >>> str(3, ") Hello #", 3)
     +8 >>> say("3) Hello #3")
 
+- cmnd:: "ys -c $ROOT/util/brew-update"
+  have: apply main
+- cmnd:: "ys -c $ROOT/util/markys"
+  have: apply main
+- cmnd:: "ys -c $ROOT/util/release-yamlscript"
+  have: apply main
+- cmnd:: "ys -c $ROOT/util/version-bump"
+  have: apply main
+
 done:

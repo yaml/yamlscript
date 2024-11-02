@@ -1,4 +1,4 @@
-!yamlscript/v0
+#!/usr/bin/env ys-0
 
 releases-url =: 'https://github.com/yaml/yamlscript/releases'
 brew-url =: 'git@github.com:yaml/homebrew-yamlscript'
@@ -12,9 +12,10 @@ defn update-brew(version):
   releases =: releases(version)
 
   when-not fs-e('homebrew-yamlscript'):
+    say: "Cloning $brew-url"
     res =: sh("git clone $brew-url")
-    when-not res.exit:N.?:
-      die: "git clone of '$brew-url' failed"
+    when res.exit:N.?:
+      die: "git clone of '$brew-url' failed\n$(res.err)"
 
   text =: slurp('homebrew-yamlscript/template/ys.rb')
           .replace('VERSION' version)
@@ -48,11 +49,11 @@ defn download-releases(version):
   reduce-kv _ nil releases:
     fn(_ _ file):
       when-not fs-e(file):
-        warn: "Downloading $file"
+        say: "Downloading $file"
         url =: "$releases-url/download/$version/$file"
         res =: sh("wget -q $url")
-        when-not res.exit:N.?:
-          die: "Download of '$url' failed:\n$(res)"
+        when res.exit:N.?:
+          die: "Download of '$url' failed:\n$(res.err)"
 
 defn releases(version)::
   LIN_ARM:: "ys-${version}-linux-aarch64.tar.xz"
