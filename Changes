@@ -1,3 +1,34 @@
+- version: 0.1.81
+  date:    Fri 01 Nov 2024 06:15:43 PM PDT
+  changes:
+  - std: Add A (atom) D (deref) and G(to-set) aliases
+  - std: Tighten to-list and to-vec casts
+  - std: Add to-type(x) and x:T
+  - std: All cast functions take a single argument
+  - std: Make to-str return "nil" for nil
+  - std: Don't allow nil to be used as a number
+  - std: Fixes for collection casts from seqs
+  - core: Introduce internal condf macro
+  - core: Fix XTRACE to work with try/catch
+  - yaml: Add dump-all function
+  - build: Statically link musl libc to ys on Linux
+  - core: Fix some tokenization bugs
+  - core: Refactor tags and ast node types
+  - core: Support basic tag calls in code mode
+  - core: Fix bugs with anchors in certain contexts
+  - core: Support '<<' merge key in bare and data modes
+  - core: Change `!foo*:` call tags to `!:foo*`
+  - core: Add ys::yaml/load-file function
+  - core: Support assignments in data mode mappings
+  - std: Add P for partial
+  - std: Make get+ work in more situations
+  - std: Make has? and in? return partials
+  - core: Replace $ $$ $# with stream()
+  - release: Add script to update homebrew
+  - cli: Add --stream (-s) option for multi-doc output
+  - core: Support conditional data in data mode mappings
+  - core: Allow quoted string keys in case/condp bodies
+  - www: Fix bash bug in run-ys
 - version: 0.1.80
   date:    Thu 10 Oct 2024 10:46:40 AM PDT
   changes:

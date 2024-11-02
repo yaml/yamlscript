@@ -2,7 +2,7 @@
 
 require ys::taptest: test done
 
-VERSION =: '0.1.80'
+VERSION =: '0.1.81'
 
 ROOT =: -"$fs-dirname(FILE)/../.."
 

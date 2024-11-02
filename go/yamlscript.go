@@ -1,7 +1,7 @@
 package yamlscript
 
-// #cgo LDFLAGS: -lyamlscript.0.1.80
-// #include <libyamlscript.0.1.80.h>
+// #cgo LDFLAGS: -lyamlscript.0.1.81
+// #include <libyamlscript.0.1.81.h>
 // #include <stdlib.h>
 import "C"
 import (
