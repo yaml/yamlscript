@@ -784,28 +784,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-10-19T01:07:11.227Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/ys/</loc>
-        
-          <lastmod>2024-10-29T23:29:02.084Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/cheat/</loc>
         
           <lastmod>2024-11-01T23:54:46.877Z</lastmod>
@@ -828,9 +806,31 @@
   
     
       <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-11-02T00:57:51.071Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys/</loc>
+        
+          <lastmod>2024-11-02T01:15:29.779Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-11-01T23:54:46.878Z</lastmod>
+          <lastmod>2024-11-02T01:15:29.780Z</lastmod>
         
         
         
