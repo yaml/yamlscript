@@ -39,6 +39,8 @@ ifneq (,$(findstring x86_64,$(machtype)))
   IS_INTEL := true
 else ifneq (,$(findstring arm64,$(machtype)))
   IS_ARM := true
+else ifneq (,$(findstring aarch64,$(machtype)))
+  IS_ARM := true
 endif
 
 ifneq (,$(findstring linux,$(ostype)))
