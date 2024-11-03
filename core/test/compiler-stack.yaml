@@ -1345,3 +1345,19 @@
         {:expr "die()"}]}]}
   clojure: |
     (case dir "N" (north) "S" (south) (die))
+
+
+- name: Let bindings in dmap
+  yamlscript: |
+    !yamlscript/v0/
+    m1 =::
+      a: b
+    foo =:
+      merge m1::
+        x: y
+    :when true: foo
+    z: 1
+  clojure: |
+    (let
+      [m1 {"a" "b"} foo (merge m1 {"x" "y"})]
+      (merge (when true foo) {"z" 1}))

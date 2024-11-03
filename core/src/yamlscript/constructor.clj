@@ -166,21 +166,32 @@
 
 (defn dmap-code [code dmap ctx]
   (let [parts (map vec (partition-by #(= (first %1) {:Sym 'def}) code))
-        result (reduce (fn [dmap part]
-                         (if (= (get-in part [0 0]) {:Sym 'def})
-                           (let [bind (Vec (vec (mapcat rest part)))]
-                             (Lst [(Sym 'let) bind dmap]))
-                           (let [form (get-in part [0 0])
-                                 form (construct-node form ctx)
-                                 form (if (map? form)
-                                        form
-                                        (if (= 1 (count form))
-                                          (first form)
-                                          (Lst (apply vector (Sym 'do) form))))]
-                             (if (= dmap {:Map []})
-                               form
-                               (Lst [(Sym 'merge) form dmap])))))
-                 dmap (vec (reverse parts)))]
+        result
+        (reduce
+          (fn [dmap part]
+            (if (= (get-in part [0 0]) {:Sym 'def})
+              (let [bind
+                    (Vec
+                      (vec
+                        (map
+                          (fn [node]
+                            (let [node (construct-node node ctx)]
+                              (if (vector? node)
+                                (first node)
+                                node)))
+                          (mapcat rest part))))]
+                (Lst [(Sym 'let) bind dmap]))
+              (let [form (get-in part [0 0])
+                    form (construct-node form ctx)
+                    form (if (map? form)
+                           form
+                           (if (= 1 (count form))
+                             (first form)
+                             (Lst (apply vector (Sym 'do) form))))]
+                (if (= dmap {:Map []})
+                  form
+                  (Lst [(Sym 'merge) form dmap])))))
+          dmap (vec (reverse parts)))]
     result))
 
 (defn construct-dmap [node ctx]
