@@ -664,6 +664,8 @@
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
 
+(intern 'ys.std '% omap)
+
 (defn reverse [x]
   (condf x
     string? (clojure.string/reverse x)

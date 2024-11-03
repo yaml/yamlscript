@@ -59,10 +59,9 @@
              "#{"
              (str/join " " (map print-node val))
              "}")
-      :Map (let [[start end] (if (or (:unordered @yamlscript.global/opts)
-                                   (<= (count val) 16))
+      :Map (let [[start end] (if (:unordered @yamlscript.global/opts)
                                ["{" "}"]
-                               ["(omap " ")"])]
+                               ["(% " ")"])]
              (str
                start
                (str/join ", " (->> val
