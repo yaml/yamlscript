@@ -30,6 +30,9 @@
 (defn transform_cond [lhs rhs]
   (transform-with-else lhs rhs (Key "else")))
 
+(defn transform_condf [lhs rhs]
+  (transform-with-else lhs rhs (Sym "=>")))
+
 (defn transform_condp [lhs rhs]
   (transform-with-else lhs rhs (Sym "=>")))
 

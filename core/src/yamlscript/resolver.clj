@@ -198,7 +198,7 @@
   (when-lets [key-str (:expr key)
               _ (or
                   (re-find #" +%$" key-str)
-                  (re-matches #"(cond|condp .+|case .+)" key-str))
+                  (re-matches #"(cond|cond[fp] .+|case .+)" key-str))
               _ (contains? val :xmap)
               key (assoc key :expr (str/replace key-str #" +%$" ""))
               val (set/rename-keys val {:xmap :fmap})]
