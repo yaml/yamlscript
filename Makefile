@@ -157,6 +157,12 @@ release: release-check realclean release-pull release-yamlscript
 endif
 
 release-check:
+ifndef YS_GH_TOKEN
+	$(error YAMLScript release requires YS_GH_TOKEN to be set)
+endif
+ifndef YS_GH_USER
+	$(error YAMLScript release requires YS_GH_USER to be set)
+endif
 ifndef d
 ifndef RELEASE_ID
 ifndef YS_RELEASE_VERSION_OLD
@@ -184,9 +190,6 @@ ifndef d
 endif
 
 release-yamlscript: $(BUILD_BIN_YS)
-ifndef YS_GH_TOKEN
-	$(error YAMLScript release requires YS_GH_TOKEN to be set)
-endif
 	(time $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE_LOG)
 
