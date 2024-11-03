@@ -512,6 +512,8 @@
 
 (defn throw [e] (throw e))
 
+(defmacro when+ [test & body]
+  (list 'when-let ['_ test] (cons 'do body)))
 
 ;;------------------------------------------------------------------------------
 ;; String functions
