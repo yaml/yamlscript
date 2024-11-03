@@ -651,7 +651,7 @@
      (cond
        (and (string? C) (string? x)) (str/includes? C x)
        (map? C) (get+ C (symbol x))
-       :else (some (set C) [x])))))
+       :else (some #(= %1 x) C)))))
 
 #_{:clj-kondo/ignore [:syntax]}
 (defn in?
