@@ -7,17 +7,17 @@ defn main():
   plan =: load("$ROOT/.version.ys")
 
   each p plan:
-    -{:strs [vers bump all]} =: p
+    vers bump all =: p.slice(qw(vers bump all))
     each b bump:
-      -{:strs [regx file]} =: b
+      regx file =: b.slice(qw(regx file))
       regx =: qr(regx)
       each f file:
         f =: "$ROOT/$f"
-        text =: slurp(f)
+        text =: f:slurp
         m =: re-matcher(regx text)
         if re-find(m):
           do:
-            -[x m1 m2] =: re-groups(m)
+            x m1 m2 =: re-groups(m)
             replace =:
               if all:
                 str/replace

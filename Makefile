@@ -157,6 +157,9 @@ release: release-check realclean release-pull release-yamlscript
 endif
 
 release-check:
+ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
+	$(error Must be on branch 'main' to release)
+endif
 ifndef YS_GH_TOKEN
 	$(error YAMLScript release requires YS_GH_TOKEN to be set)
 endif

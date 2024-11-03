@@ -1,18 +1,18 @@
 #!/usr/bin/env ys-0
 
-input-dir =: atom(nil)
+input-dir =: A(nil)
 
 DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
 
 defn main(input-file):
-  dir =: fs-dirname(input-file).fs-abs()
+  dir =: fs-dirname(input-file):fs-abs
   reset! input-dir: dir
 
   fmt-file =: "$dir/fmt.ys"
   when fs-f(fmt-file):
     load: fmt-file
 
-  markdown =: input-file.process().trim()
+  markdown =: input-file:process:trim
 
   markdown =:
     replace markdown:
@@ -24,7 +24,7 @@ defn main(input-file):
       markdown
       (DNE + markdown)
 
-  say: markdown.trimr()
+  say: markdown:trimr
 
 defn process(input-file):
   input-file:
@@ -33,11 +33,11 @@ defn process(input-file):
     .triml()
 
 defn load-markys(file):
-  text =: file.fs-abs().slurp()
+  text =: file:fs-abs:slurp
   fenced-re =: /(?s)(?:```markys:\S+\n.*?\n```\n)/
   texts =: text.split(fenced-re)
   fenced =: text.re-seq(fenced-re)
-  fix =: fenced.count() < texts.count()
+  fix =: fenced.# < texts.#
   fenced =:
     if fix:
       (vec(fenced) + [''])
@@ -66,19 +66,19 @@ defn format-markys(text):
   type =: (text =~ /^```markys:(\S+)/).1
   text .=: replace(/^```.*\n/ '')
   yaml =: text.replace(/```\n\z/ '')
-  data =: yaml.ys/compile().eval-string()
+  data =: yaml:ys/compile:eval-string
   func =: value("fmt-$type") ||
     die("Can't find function 'fmt-$type'")
   call func: data
 
 defn get-path(file):
   if-not fs-abs?(file):
-    fs-abs _ file: input-dir.deref()
+    fs-abs _ file: input-dir:D
     else: file
 
 defn fmt-include(data):
-  input-file =: data.file.get-path()
-  markdown =: process(input-file).lines()
+  input-file =: data.file:get-path
+  markdown =: process(input-file):lines
   yank =: data.yank
   markdown =:
     if yank:

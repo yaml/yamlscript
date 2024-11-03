@@ -29,12 +29,11 @@ bindings =::
 - ruby
 - rust
 
-# verbose =: boolean(ENV.YS_RELEASE_VERBOSE)
+# verbose =: B(ENV.YS_RELEASE_VERBOSE)
 verbose =: true
 
 dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
-last-step =:
-  parse-long: ENV.YS_RELEASE_LAST_STEP || str(steps)
+last-step =: (ENV.YS_RELEASE_LAST_STEP || steps):N
 
 
 #------------------------------------------------------------------------------
@@ -121,13 +120,13 @@ defn step-4(ctx):
 
   # Update Changes if tests pass:
   when-not dryrun:
-    changes =: +'release-changes.txt'.slurp()
+    changes =: slurp('release-changes.txt')
 
     file-prepend 'Changes': |
       - version: $(ctx.new)
         date:    $(ctx.date-time)
         changes:
-      $(changes.str/trimr())
+      $(changes:str/trimr)
 
     validate-yaml: slurp('Changes')
 
@@ -269,7 +268,7 @@ defn o(msg): say("\n$msg")
 
 defn prompt(msg):
   print: "$msg "
-  read-line(): .str/trim()
+  trim: read-line()
 
 defn file-prepend(file text):
   spit file:
@@ -277,8 +276,8 @@ defn file-prepend(file text):
 
 defn make-changes-entry(ctx):
   lines =:
-    sh("git log --oneline $(ctx.old)..HEAD").out
-      .str/split-lines().reverse()
+    sh("git log --oneline $(ctx.old)..HEAD")
+      .out:str/split-lines:reverse
 
   str/join "\n":
     map \(str/replace %1, /^\w+ /, '  - '): lines
@@ -311,5 +310,5 @@ defn check-args(old new start):
   =>::
     old:: old
     new:: new
-    date:: sh('date +%Y-%m-%d').out.str/trim-newline()
-    date-time:: sh('date').out.str/trim-newline()
+    date:: sh('date +%Y-%m-%d').out:str/trim-newline
+    date-time:: sh('date').out:str/trim-newline
