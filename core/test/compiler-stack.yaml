@@ -1361,3 +1361,11 @@
     (let
       [m1 {"a" "b"} foo (merge m1 {"x" "y"})]
       (merge (when true foo) {"z" 1}))
+
+
+- name: Colon call after dollar key
+  yamlscript: |
+    !yamlscript/v0
+    say: ENV.$k:uc1
+  clojure: |
+    (say (uc1 (get+ ENV k)))
