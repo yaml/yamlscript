@@ -350,7 +350,7 @@
          %1)
       node)
     (if @need-call-main
-      (update-in node [:Top] conj (call-main))
+      (update-in node [:Top] conj (maybe-trace (call-main)))
       node)))
 
 (comment
