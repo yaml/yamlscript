@@ -10,14 +10,22 @@ YAMLScript is a functional programming language with a stylized YAML syntax.
 
 YAMLScript can be used for:
 
-* Writing new programs and applications
+* Extending YAML config files with functional transformations, external data
+  access, string interpolation; anything a programming language has access to
+* Writing new programs, applications, automation scripts
   * Run with `ys file.ys`
   * Or compile to binary with `ys -C file.ys`
 * Writing reusable shared libraries
   * Bindable to almost any programming language
-* Using as a YAML loader module in many programming languages
-  * Plain / existing YAML files
-  * YAML files with new functional magics
+* As a YAML loader module in many programming languages
+  * Load plain / existing YAML (or JSON) files
+  * Load YAML files with embedded YAMLScript functionality
+
+Most existing YAML files in the wild are already valid YAMLScript.
+
+> YAMLScript is now an official language on the [Exercism](
+  https://exercism.org/tracks) (free) language learning site!
+  It's a great way to learn how to program in YAMLScript.
 
 
 ### Run or Load?
@@ -27,7 +35,6 @@ When a YAMLScript program is run, it is executed as a normal program.
 When a YAMLScript program is loaded, it evaluates to a JSON-model data
 structure.
 
-Most existing YAML files in the wild are already valid YAMLScript programs.
 If you have a valid YAML ([1.2 Core Schema](
 https://yaml.org/spec/1.2.2/#103-core-schema)) file that doesn't use custom
 tags, and loads to a value expressible in JSON, then it is a valid YAMLScript
@@ -75,7 +82,6 @@ It has these main modes of operation:
 * `ys --compile <file>` - Compile a YAMLScript program to Clojure
 * `ys --binary <file>` - Compile YAMLScript to a native binary executable
 * `ys --eval '<expr>'` - Evaluate a YAMLScript expression string
-* `ys --repl` - Start an interactive YAMLScript REPL session
 * `ys --install` - Install the latest libyamlscript shared library
 * `ys --upgrade` - Upgrade ys and libyamlscript
 * `ys --help` - Show the `ys` command help
@@ -178,45 +184,14 @@ Try it out!
 
 ## Installing YAMLScript
 
-At the moment, the best way to install YAMLScript is to build it from source,
-but see the section "Installing YAMLScript Binary Releases" below.
-
-This is very easy to do because the YAMLScript build process has very few
-dependencies:
-
-* `bash` (your interactive shell can be any shell)
-* `curl`
-* `git`
-* `make`
-* `zlib-dev` (need this installed on Linux)
-
-To install the `ys` command line tool, and `libyamlscript` shared library,
-run these commands:
-
-```bash
-git clone https://github.com/yaml/yamlscript
-cd yamlscript
-make build
-make install
-```
-
-The `make install` command will install `ys` and `libyamlscript` to
-`~/.local/bin` and `~/.local/lib` respectively, by default.
-If run as root they will default to `/usr/local/bin` and `/usr/local/lib`.
-
-To install to a different location, run `make install PREFIX=/some/path`.
-
-> Notes:
-> * `make install` triggers a `make build` if needed, but...
-> * You need to run `make build` not as root
-> * The build can take several minutes (`native-image` is slow)
-> * If you install to a custom location, you will need to add that location to
->   your `PATH` and `LD_LIBRARY_PATH` environment variables
+You can install YAMLScript's `ys` interpreter and/or its `libyamlscript.so`
+shared library from pre-built binaries or building from source.
+Both are very easy to do.
 
 
-### Installing YAMLScript Binary Releases
+### Installing YAMLScript Pre-built Binary Releases
 
-YAMLScript now ships binary releases for some platforms [here](
+YAMLScript ships pre-built binaries for each release version [here](
 https://github.com/yaml/yamlscript/releases).
 
 To install a latest release for your machine platform, try:
@@ -237,6 +212,42 @@ You can use the following environment variables to control the installation:
 
 Once you have installed the `ys` command you can upgrade to a bin binary
 version with `ys --upgrade`.
+
+
+### Installing YAMLScript from Source
+
+This is very easy to build and install YAMLScript from its source code because
+the YAMLScript build process has very few dependencies:
+
+* `bash` (your interactive shell can be any shell)
+* `curl`
+* `git`
+* `make`
+
+To install the `ys` command line tool, and `libyamlscript` shared library,
+run these commands:
+
+```bash
+git clone https://github.com/yaml/yamlscript
+cd yamlscript
+make build
+make install
+```
+
+That's it!
+
+The `make install` command will install `ys` and `libyamlscript` to
+`~/.local/bin` and `~/.local/lib` respectively, by default.
+If run as root they will default to `/usr/local/bin` and `/usr/local/lib`.
+
+To install to a different location, run `make install PREFIX=/some/path`.
+
+> Notes:
+> * `make install` triggers a `make build` if needed, but...
+> * You need to run `make build` not as root
+> * The build can take several minutes (`native-image` is slow)
+> * If you install to a custom location, you will need to add that location to
+>   your `PATH` and `LD_LIBRARY_PATH` environment variables
 
 
 ### Installing a YAMLScript Binding for a Programming Language
@@ -265,9 +276,6 @@ you can just do:
 ```bash
 cpanm YAMLScript
 ```
-
-Eventually, the YAMLScript binding installation process will become simpler and
-more consistent across all languages.
 
 
 ## The YAMLScript Repository
@@ -312,17 +320,11 @@ https://github.com/yaml/yamlscript/tree/main/Contributing.md) for more details.
 
 ## YAMLScript Resources
 
-> Note: The documentation linked to below is out of date, but should give you a
-decent idea of what YAMLScript is about.
-It will be rewritten soon.
-
-* [The YAMLScript Blog](https://yamlscript.org/blog/)
+* [YAMLScript Documentation](https://yamlscript.org/doc/)
+* [YAMLScript Blog](https://yamlscript.org/blog/)
+* [Learn YAMLScript at Exercism](http://exercism.org/tracks/yamlscript)
 * [Example YAMLScript Programs on RosettaCode.org](
   https://rosettacode.org/wiki/Category:YAMLScript)
-* [An early YAMLScript Presentation Video](
-  https://www.youtube.com/watch?v=9OcFh-HaCyI)
-* [Old Perl YAMLScript Implementation Documentation](
-  https://metacpan.org/pod/Test::More::YAMLScript) (Out of date but informative)
 
 
 ## Authors
