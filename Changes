@@ -1,3 +1,19 @@
+- version: 0.1.82
+  date:    Sun 03 Nov 2024 07:03:26 PM PST
+  changes:
+  - make: Detect IS_ARM with aarch64
+  - util: Fixes for brew-update
+  - release: Test for YS_GH_USER up front
+  - core: Fix bug in let bindings in dmap construction
+  - core: Fix bug in dot chain colon call after dollar key
+  - core: Apply TTT to auto call to main with -x
+  - std: Add condf macro
+  - std: Add when+ macro that binds _ to the test result
+  - core: Fix bugs with compile to ordered maps by default
+  - std: Fix in? and has? to check nil/false in seq
+  - util: 0.1.81 refactorings to utility scripts
+  - doc: Update main repository ReadMe.md file
+  - doc: Update language binding ReadMe files
 - version: 0.1.81
   date:    Fri 01 Nov 2024 06:15:43 PM PDT
   changes:
