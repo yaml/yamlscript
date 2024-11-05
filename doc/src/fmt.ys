@@ -2,10 +2,10 @@
 
 defn fmt-func-list(data):
   markdown =:
-    loop [elem *data], data markdown '':
+    loop [elem *data] data, markdown '':
       if elem:
         then:
-          -[fname sigs desc opts] =: elem
+          fname sigs desc opts =: elem
           more =: opts.more
 
           markdown +=: |
