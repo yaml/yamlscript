@@ -3744,7 +3744,7 @@ Consider this:</p>
 <p>Finally we can collapse that to a single line by simply using YAML's flow style:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">:</span>when+ data.key1.<span class="token punctuation">?</span><span class="token punctuation">:</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token key atrule">bar</span><span class="token punctuation">:</span> _<span class="token punctuation">}</span></code></pre>
 <h2>Conclusion</h2>
-<p>The YAMLScript project is alive and well.
+<p>This Fall, YAMLScript project is in a great place.
 It's both a great programming language and a great data language.
 While it is already extremely capable, we are always looking for ways to make
 it better.</p>
