@@ -3639,8 +3639,8 @@ with it and seeing what works beautifully and what doesn't.
 If something can be done to make the language better, we do it.</p>
 <p>I can confidently say that YAMLScript produces some of the most beautiful
 solutions to the Exercism exercises.
-In fact I wrote a <a href="https://github.com/ingydotnet/yamlscript-vs-exercism/tree/main/bin/ys-vs-ex">program</a> (in
-YAMLScript) that compares the YAMLScript solutions to all the other languages on
+In fact I wrote <a href="https://github.com/ingydotnet/yamlscript-vs-exercism/">a program</a> (in YAMLScript) that
+compares the YAMLScript solutions to all the other languages on
 Exercism as a markdown page and then posts it as a GitHub gist page.</p>
 <p>I won't share these gists here, because that would be a spoiler for the Exercism
 platform.
