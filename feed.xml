@@ -3617,7 +3617,7 @@ on YAMLScript.</p>
 <a href="https://exercism.org">Exercism</a> in June, it supported 71 <a href="https://exercism.org/tracks">language tracks</a>.
 I hoped that YAMLScript could become number 72.</p>
 <p>I was in Las Vegas at <a href="https://tprc.us/tprc-2024-las/">The Perl and Raku Conference</a> where I met Daniel Mita who is a maintainer of
-the Perl and Raku tracks on Exercism.
+the <a href="https://exercism.org/tracks/perl5">Perl</a> and <a href="https://exercism.org/tracks/raku">Raku</a> tracks on Exercism.
 Over breakfast, he told me all about the Exercism platform and and it sounded
 great.
 I asked him if it would be possible to add a YAMLScript track to Exercism.</p>
@@ -3673,7 +3673,7 @@ I'll be presenting it a week from this Friday (<a href="">November 15th in Salt 
 City</a>).
 If you are going to be at the conference, I hope we get a chance to talk.</p>
 <p>The YAMLScript needs for <a href="https://kubernetes.io/">Kubernetes</a> (and other) config
-files are very different than its needs for Exercism.
+files are very different from its needs for Exercism.
 Kubernetes is configured with YAML, as are many other software frameworks used
 by <a href="https://www.cncf.io/">Cloud Native</a> programmers.</p>
 <p>While YAMLScript is a great as a programming language, one of its main goals has
