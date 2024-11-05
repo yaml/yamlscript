@@ -641,6 +641,17 @@
   
     
       <url>
+        <loc>https://yamlscript.org/posts/2024-11-05/</loc>
+        
+          <lastmod>2024-10-05T00:00:00.000Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
         <loc>https://yamlscript.org/doc/binary/</loc>
         
           <lastmod>2024-10-19T01:07:11.226Z</lastmod>
@@ -806,17 +817,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-11-02T02:36:57.889Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/ys/</loc>
         
           <lastmod>2024-11-04T03:03:01.966Z</lastmod>
@@ -831,6 +831,17 @@
         <loc>https://yamlscript.org/</loc>
         
           <lastmod>2024-11-04T03:03:01.969Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-11-04T04:02:55.471Z</lastmod>
         
         
         
