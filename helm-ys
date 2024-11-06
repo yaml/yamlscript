@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ys_version=0.1.82
+
+ydir=.helm-ys
+cdir=$ydir/yamlscript
+tdir=$cdir/templates
+renderer=$ydir/helm-ys
+
+ypre=/tmp/helm-ys
+ybin=$ypre/bin
+
+die() { echo "$*"; exit 1; }
+
+[[ -e Chart.yaml ]] ||
+  die "Not in a helm chart directory"
+
+if [[ ! -e $ybin/ys-$ys_version ]]; then
+  export PATH=$ybin:$PATH
+  (
+    curl -s https://yamlscript.org/install |
+      BIN=1 PREFIX=$ypre VERSION=$ys_version bash
+  ) >&2
+fi
+
+if [[ ! -e $ydir ]]; then
+  mkdir -p "$cdir"
+  > "$cdir/Chart.yaml" cat <<'...'
+name: helm
+version: 0.1.0
+...
+
+  mkdir -p "$tdir"
+  > "$tdir/helm-data.yaml" cat <<'...'
+!yamlscript/v0
+
+{{ with .Release }}
+helm =::
+  Release:
+    {{- toYaml . | nindent 4 }}
+{{- end }}
+...
+
+  > "$renderer" cat <<...
+#!/bin/sh
+export PATH=$ybin:\$PATH
+ys -Y -s -
+...
+
+  chmod +x "$renderer"
+fi
+
+echo "$renderer"
