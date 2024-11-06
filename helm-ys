@@ -11,7 +11,7 @@ main() (
   die "Not in a helm chart directory"
 
   if ! [[ -d $ydir && -f $renderer ]]; then
-    curl -s $raw | $(BASH)
+    curl -s $raw | $BASH
   fi
 
   echo "$renderer"
