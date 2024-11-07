@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ydir=.helm-ys
+renderer=$ydir/helm-ys-run
+raw=https://raw.githubusercontent.com/ingydotnet/helm-ys/refs/heads/main/helm-ys-setup
+
+main() (
+  [[ -e Chart.yaml ]] ||
+    die "Not in a helm chart directory"
+
+  if [[ -d $ydir && -f $renderer ]]; then
+    echo "$renderer"
+  else
+    curl -s $raw | $BASH
+  fi
+)
+
+die() { echo "$*"; exit 1; }
+
+main "$@"

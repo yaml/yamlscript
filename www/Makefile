@@ -3,6 +3,11 @@ include $(ROOT)/common/docker.mk
 
 DOC_FILES := $(shell cd $(ROOT)/doc && echo *.md)
 DOC_FILES := $(DOC_FILES:%=src/doc/%) src/doc/doc.json
+DOC_FILES_MD := $(filter-out %.ys.md,$(DOC_FILES))
+DOC_FILES_YSMD := $(filter %.ys.md,$(DOC_FILES))
+
+x:
+	@printf '%s\n' $(DOC_FILES) | sort
 
 build:: node_modules main doc
 ifdef DOCKERENV
@@ -11,7 +16,7 @@ else
 	yarn build
 endif
 	cp src/dogs.yaml build/
-	cp src/install* src/try* src/run* build/
+	cp src/install* src/try* src/run* src/helm* build/
 	cp src/blog-redirect-html build/posts/index.html
 	cp src/advent-redirect-html build/posts/advent-2023/index.html
 	mkdir -p build/try
@@ -51,13 +56,15 @@ endif
 main:
 	ln -s .. main
 
-doc: gen-doc $(DOC_FILES)
+doc: src/doc $(DOC_FILES)
+	$(RM) src/doc/*.ys.md
 
-gen-doc:
-	$(MAKE) -C ../doc force build
-
-src/doc/%.md: ../doc/%.md src/doc
-	ln -fs ../../$< $@
+src/doc/%.md: ../doc/%.md
+	@if [[ $* == *.ys ]]; then \
+	  (set -x; ysmd $< > $(subst .ys,,$@)); \
+	else \
+	  (set -x; ln -fs ../../$< $@); \
+	fi
 
 src/doc/%: % src/doc
 	ln -fs ../../$< $@
