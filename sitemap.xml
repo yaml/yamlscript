@@ -806,20 +806,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-11-07T18:30:27.701Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/bindings/</loc>
         
-          <lastmod>2024-11-07T18:34:48.112Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.700Z</lastmod>
         
         
         
@@ -830,7 +819,7 @@
       <url>
         <loc>https://yamlscript.org/doc/cheat/</loc>
         
-          <lastmod>2024-11-07T18:34:48.112Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.700Z</lastmod>
         
         
         
@@ -841,7 +830,7 @@
       <url>
         <loc>https://yamlscript.org/doc/embedding/</loc>
         
-          <lastmod>2024-11-07T18:34:48.112Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.700Z</lastmod>
         
         
         
@@ -852,7 +841,7 @@
       <url>
         <loc>https://yamlscript.org/doc/programming/</loc>
         
-          <lastmod>2024-11-07T18:34:48.112Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.700Z</lastmod>
         
         
         
@@ -863,7 +852,7 @@
       <url>
         <loc>https://yamlscript.org/doc/run-ys/</loc>
         
-          <lastmod>2024-11-07T18:34:48.112Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.700Z</lastmod>
         
         
         
@@ -874,7 +863,18 @@
       <url>
         <loc>https://yamlscript.org/doc/templating/</loc>
         
-          <lastmod>2024-11-07T18:34:48.113Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.702Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-11-08T15:50:49.702Z</lastmod>
         
         
         
@@ -885,7 +885,7 @@
       <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-11-07T18:34:48.113Z</lastmod>
+          <lastmod>2024-11-08T15:50:49.704Z</lastmod>
         
         
         
