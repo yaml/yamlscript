@@ -72,7 +72,7 @@
                    abspath))
         _ (when-not yspath
             (util/die "YSPATH environment variable not set"))]
-    (map abspath (str/split yspath #":"))))
+    (str/split yspath #":")))
 
 (defn regex? [x]
   (= (type x) java.util.regex.Pattern))
