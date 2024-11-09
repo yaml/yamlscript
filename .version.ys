@@ -27,6 +27,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     # Don't update common/vars.mk
     # - common/vars.mk
     - core/src/yamlscript/runtime.clj
+    - doc/run-ys.md
     - doc/ys.md
     - go/ReadMe.md
     - go/doc/readme.md

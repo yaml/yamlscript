@@ -25,8 +25,7 @@ In those cases, the original Clojure function is still available in the
 ## Shorter named alias functions
 
 * `a` - `clojure.core/identity` alias
-* `a` - `clojure.core/identity` alias
-* `a` - `clojure.core/identity` alias
+* `len` - `clojure.core/count` alias
 
 
 ## Quoting functions
@@ -75,7 +74,7 @@ In those cases, the original Clojure function is still available in the
 * `sub(*)` - `clojure.core/-` alias
 * `mul(*)` - `clojure.core/*` alias
 * `div(*)` - Division function that returns a float if needed
-* `sum(nums)` - Sum a list of numbers
+* `sum(nums)` - Sum a sequence of numbers
 * `pow(x *ys)` - Raise a number to a power - right associative
 * `sqr(x)` - Square a number
 * `cube(x)` - Cube a number

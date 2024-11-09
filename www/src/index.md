@@ -6,24 +6,78 @@ title: YAMLScript.org
 <p style="text-align: center; font-weight: bold">Program in YAML — Code is
 Data</p>
 
-**YAMLScript is a new YAML Loader** that can add "Super Powers" to your plain
-old YAML config files.
+**YAMLScript** is a new functional programming language with a clean syntax that
+is also 100% valid [YAML](https://yaml.org).
+It was designed to be easily embedded into existing YAML files in order to
+provide the logic, interpolation and data transformation capabilities that many
+YAML users need.
+Created by YAML inventor and lead maintainer, Ingy döt Net, YAMLScript solves
+these needs beautifully for all YAML users and uses.
 
-YAMLScript intends to provide a loader library for every programming language
-that uses YAML.
-Currently we have working libraries for
-[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
-[Go](https://github.com/yaml/yamlscript-go),
-[Java](https://clojars.org/org.yamlscript/yamlscript),
-[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
-[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
-[Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
-[Python](https://pypi.org/project/yamlscript/),
-[Raku](https://raku.land/zef:ingy/YAMLScript),
-[Ruby](https://rubygems.org/search?query=yamlscript) and
-[Rust](https://crates.io/crates/yamlscript).
+> YAMLScript is now available as a programing language learning track on
+**[Exercism](https://exercism.org/tracks/yamlscript)**.
+It's a great way to learn YAMLScript and get feedback from experienced mentors.
+Check it out!
 
-By using YAMLScript as your YAML loader, You can dynamically include data from
+If you work with apps and frameworks that use YAML for configuration, you can
+simplify your complex YAML files using YAMLScript, even if the app or framework
+does not support it natively.
+YAMLScript lets you include data from external files and other sources, make use
+of hundreds of existing standard functions, and even define your own variables
+and functions.
+You can filter, map, merge, reduce, generate, concatenate, interpolate and
+manipulate your data as you wish.
+YAMLScript provides these things with syntax that is minimal and unobtrusive,
+keeping your clean YAML data clean.
+
+> [KubeCon Friday November 15th](https://sched.co/1i7qP) - Ingy will be
+presenting a 90 minute tutorial on YAMLScript at KubeCon in Salt Lake City.
+Among many YAML and YAMLScript topics, he will show how YAMLScript can be used
+to replace (or work in combination with) Go template usage in Helm 3 charts.
+
+Like many new languages, YAMLScript was built over an existing robust language,
+[Clojure](https://clojure.org), which in turn was built over
+[Java](https://java.com).
+All of the power of Clojure and Java is available to YAMLScript users via the
+YAMLScript runtime interpreter, `ys`.
+However, the `ys` command is compiled into a single standalone native binary
+executable file.
+This means that <u>No Java or JVM</u> installation is required to use
+YAMLScript!
+
+YAMLScript also produces the `libyamlscript.so` shared library.
+It has [binding modules for 10 programming languages](/doc/bindings) including
+Go, JavaScript, Python and Rust, with many more on the way.
+These modules can be used in your programs to load normal YAML files as well as
+YAMLScript enhanced ones.
+
+There are many ways to use YAMLScript:
+
+* [Simplify your existing YAML configs](/doc/embedding)
+  * Works great with Kubernetes, Helm, Docker, Ansible, etc.
+* [Load YAMLScript (or YAML) in your programs](doc/bindings)
+  * Available in 10 programming languages (and counting)
+* [Program in YAMLScript](doc/programming)
+  * Learn how at [Exercism](https://exercism.org/tracks/yamlscript)
+* [Script Automation with YAMLScript](doc/example-scripts)
+  * Many used in the [YAMLScript repository](https://github.com/yaml/yamlscript)
+* [Compile YAMLScript to binary executables](doc/binary)
+  * Fast, standalone, no-source software distribution
+
+----
+
+<!--
+Skip below to [The YAMLScript Language](#language) to learn more about
+programming in YAMLScript.
+
+----
+
+## Loading YAML with YAMLScript
+
+YAMLScript is also a **new YAML Loader** for modern programming languages that
+can add "Super Powers" to your plain old YAML config files.
+
+By using YAMLScript as your YAML loader, you can dynamically include data from
 other data files (YAML, JSON, XML, CSV, etc), pull data in from the web or even
 from a database.
 You can filter, map, merge, reduce, generate, concatenate, interpolate and
@@ -37,8 +91,8 @@ code evaluation magic) that works the same in any programming language, you
 should also give YAMLScript a try.
 
 All valid [YAML 1.2 Core Schema](https://yaml.org/spec/1.2.2/#103-core-schema)
-files are also valid YAMLScript files!  That's pretty much any YAML config file
-you already have.
+files are also valid YAMLScript files!
+That's pretty much any YAML config file you already have.
 
 Without the special `!yamlscript/v0` tag at the top, your YAMLScript loader
 will load any existing YAML (or JSON) just as one would expect a normal YAML
@@ -61,13 +115,13 @@ dogs:: curl("https://yamlscript.org/dogs.yaml")
 --- !yamlscript/v0/
 
 about: A YAMLScript Example about Pets
-title:: "$(ENV.USER.str/capitalize())'s Pets"
+title:: "$(ENV.USER:uc1)'s Pets"
 birds: !sort:
 - Parrot
 - Canary
 - Owl
-cats:: .*pets.cats
-dogs:: .*pets.dogs.shuffle().take(2 _)
+cats:: -*pets.cats
+dogs:: -*pets.dogs:shuffle.take(2)
 ```
 
 And these other files:
@@ -150,10 +204,21 @@ title: Ingy's Pets
 
 ----
 
-**YAMLScript is also a new**, complete, full featured, general purpose,
-functional and dynamic **programming language** whose syntax is encoded in
-YAML.
+<div id="language"></div>
+
+## The YAMLScript Language
+
+YAMLScript is a *complete, full featured, general purpose, functional and
+dynamic* programming language whose syntax is encoded in YAML.
 YAMLScript can be used for writing new software applications and libraries.
+
+> Check out:
+> * [YAMLScript on Rosetta Code](
+    https://rosettacode.org/wiki/Category:YAMLScript)
+    for some example YAMLScript programs.
+> * [YAMLScript on Exercism](https://exercism.org/tracks/yamlscript) for a free
+    YAMLScript language learning course.
+> * The [YAMLScript Documentation](https://yamlscript.org/doc/)
 
 Here's an example of a YAMLScript program called `99-bottles.ys`:
 
@@ -208,7 +273,8 @@ language including:
 * Defining your own namespaces and functions
 * All the standard data types and structures
 * Standard libraries with hundreds of battle tested functions
-* Reasonable performance on par with common dynamic languages
+* Performance on par with dynamic languages like [Python](https://python.org)
+  and [Ruby](https://ruby-lang.org)
 
 
 ## Installing `ys` - The YAMLScript Command Line Tool
@@ -267,7 +333,7 @@ Test your new `ys` installation by running:
 ```text
 ys - The YAMLScript (YS) Command Line Tool - v0.1.82
 
-Usage: ys [<option...>] [<file>]
+Usage: ys [option...] [file]
 
 Options:
 
@@ -404,6 +470,8 @@ lifetime.
 That is to say, any files containing `!yamlscript/v0` will always continue to
 work the same.
 
+-->
+
 
 ## YAMLScript Resources
 
@@ -412,11 +480,18 @@ work the same.
 * [Matrix Chat](https://matrix.to/#/#chat-yamlscript:yaml.io)
 * [Slack Chat](https://clojurians.slack.com/archives/yamlscript)
 * [Blog](https://yamlscript.org/blog)
-* [March 2023 Talk](https://www.youtube.com/watch?v=GajOBwBcFyA)
 * [GitHub Repository](https://github.com/yaml/yamlscript)
 * [Discussions](https://github.com/yaml/yamlscript/discussions)
 * [Issues](https://github.com/yaml/yamlscript/issues)
 
-
 ----
+
+## YAMLScript Links
+
+* Nov 2024 [KubeCon Talk](https://sched.co/1i7qP) **<span class="darkred">Upcoming!</span>**
+* Jun 2024 [TPRC Talk](https://www.youtube.com/watch?v=RFIukRdFe1o)
+* Apr 2024 [OSS/NA Talk](https://www.youtube.com/watch?v=u-OCEHNdwlU)
+* Mar 2024 [TheNewStack Article](https://thenewstack.io/with-yamlscript-yaml-becomes-a-proper-programming-language/)
+* Mar 2024 [Seajure Talk](https://www.youtube.com/watch?v=GajOBwBcFyA)
+
 ----

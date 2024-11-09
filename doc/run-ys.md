@@ -53,8 +53,8 @@ under the `/tmp/` directory.
 The `ys` interpreter will be downloaded only once, and it will be used for all
 subsequent runs of the script.
 
-> Note: The `curl` command will still download and evaluate the `run-ys` script
-on subsequent runs > so the user will need to have internet access.
+> Note: The `curl` command will still download and evaluate the `run-ys` Bash
+script on subsequent runs so the user will need to have internet access.
 
 The program can also be run with the `ys` interpreter if the user installs it.
 In that case the Bash installer line will be ignored.
@@ -73,36 +73,38 @@ its arguments:
 
 source <(curl '-s' 'https://yamlscript.org/run-ys') "$@" :
 
-defn main(in):
-  s =: set((\\A .. \\Z) + (\\a .. \\z))
-  say: cycle(s).drop(13 * 2).zipmap(s).map(in).str(*)
+alphabet =: set((\\A .. \\Z) + (\\a .. \\z))
+rot13 =: cycle(alphabet).drop(13 * 2).zipmap(alphabet)
+
+defn main(*input):
+  say: str/escape(input.join(' ') rot13)
 ```
 
 If we run it with `ys`:
 
 ```bash
-$ ys rot13.ys FooBar
-SbbOne
+$ ys rot13.ys I Love YS
+V Ybir LF
 ```
 
 If we run it with `bash`:
 
 ```bash
-$ bash rot13.ys FooBar
-Installing YAMLScript CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.72' now...
+$ bash rot13.ys I Love YS
+Installing YAMLScript CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.79' now...
 Ctl-C to abort
 See https://yamlscript.org/doc/run-ys for more information.
 
-Installed /tmp/yamlscript-run-ys/bin/ys - version 0.1.72
+Installed /tmp/yamlscript-run-ys/bin/ys - version 0.1.79
 --------------------------------------------------------------------------------
-SbbOne
+V Ybir LF
 ```
 
 and again:
 
 ```bash
-$ bash rot13.ys FooBar
-SbbOne
+$ bash rot13.ys I Love YS
+V Ybir LF
 ```
 
 
@@ -139,7 +141,7 @@ The `source` line is also a valid YAMLScript command.
 It calls the YAMLScript `source` macro which ignores all of its arguments (much
 like the `comment` macro does).
 
-> Note: The `source` macro was added in YAMLScript version 0.1.72.
+> Note: The `source` macro was added in YAMLScript version 0.1.79.
 This technique will not work with earlier versions of YAMLScript.
 
 
@@ -158,14 +160,14 @@ Caveat yamlscriptor!
 [compile it to a binary executable](/doc/binary) and distribute the binary
 instead.
 
-There is at least one use case where this technique is safe and useful:
+There is at least one use case where this Bash technique is safe and useful:
 
 You can easily run a YAMLScript program that you are developing with a
 particular version of the `ys` interpreter without having to install it first.
 Just use the `YS_VERSION` environment variable to specify the version you want:
 
 ```bash
-$ YS_VERSION=0.1.72 bash my-program.ys arg1 arg2 ...
+$ YS_VERSION=0.1.79 bash my-program.ys arg1 arg2 ...
 ```
 
 This might be useful for testing a reported bug with an older version of the
