@@ -3,7 +3,7 @@
 set -euo pipefail
 
 main() {
-  local YAMLSCRIPT_VERSION=0.1.82
+  local YAMLSCRIPT_VERSION=0.1.83
   local INSTALL_DIR=/tmp/yamlscript-run-ys
   local bin file last prefix tty version ysbin
 

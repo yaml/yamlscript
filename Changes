@@ -1,3 +1,10 @@
+- version: 0.1.83
+  date:    Fri 08 Nov 2024 09:40:28 PM PST
+  changes:
+  - www: CSS changes for yamlscript.org site
+  - core: Don't abspath YSPATH paths
+  - blog: November post highlighting Exercism and KubeCon
+  - doc: Doc updates
 - version: 0.1.82
   date:    Sun 03 Nov 2024 07:03:26 PM PST
   changes:
