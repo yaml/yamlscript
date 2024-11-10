@@ -1,0 +1,15 @@
+!yamlscript/v0
+
+defn even-nums(start end):
+  initial-vec step =: -[[] 1]
+  loop current start, result initial-vec:
+    if current <= end:
+      recur:
+        current +: step
+        if even?(current):
+          conj result: current
+          else: result
+      else: result
+
+defn main(x=1,,,, y=100):
+    each i even-nums(x y): say(i)

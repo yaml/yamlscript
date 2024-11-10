@@ -1,0 +1,13 @@
+# Just one anchor will do:
+--- &def
+- key1: val1
+- key2: val2
+
+# We can use . paths from the anchor.
+# Must be in code-mode.
+--- !yamlscript/v0/data
+config:
+  database:
+    <<:: -[*def.0, *def.1]  # the comma is ws
+    key3: val3
+

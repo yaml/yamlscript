@@ -1,0 +1,29 @@
+--- &map1               # Bare mode document
+foo: 1
+bar: 2
+
+--- !yamlscript/v0      # Code mode document
+
+defn double(x): x * 2
+
+map2 =: !
+  foo: 3
+  baz:: sqrt(4:sqr.++ + 8).--  # -> 4
+  boo:
+  - 111
+  - ! 222:double
+
+url =: "https://raw.githubusercontent.com/\
+        dominictarr/random-name/refs/\
+        heads/master/first-names.json"
+
+people =: curl(url):json/load:shuffle.take(5)
+
+--- !yamlscript/v0/data # Data mode document
+
+normal key: plain value
+data: !:merge*
+- *map1
+- ! map2
+- number:: 21:double
+  friends:: people

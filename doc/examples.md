@@ -24,6 +24,23 @@ This page contains a links to programs written in YS.
 
 ## YS Examples of Programs, Utilities and Automation
 
+* [release-yamlscript](
+  https://github.com/yaml/yamlscript/blob/main/util/release-yamlscript)
+  The utility that orchestrates the release of YAMLScript, including 12 binary
+  builds and `libyamlscript.so` bindings for 10 programming languages.
+* [yamllm](https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys)
+  A command line multi LLM (Anthropic, OpenAI, Gemma) query tool
+* [sbs](https://github.com/ingydotnet/sbs/blob/main/bin/sbs)
+  Creates markdown gists to compare pairs of files side by side. Used to show
+  differences between YS and Go templates in Helm.
+  * [Example gist](
+    https://gist.github.com/ingydotnet/ff0638edf1bcb53c45161dce2d777f74)
+* [ys-vs-rc](
+  https://github.com/ingydotnet/yamlscript-vs-rosetta/blob/main/bin/ys-vs-rc)
+  Compares YAMLScript and Rosetta Code solutions to the same problem in many
+  languages.
+  * [Example gist](
+    https://gist.github.com/ingydotnet/9ece4af186c6a6dcfd589c446dab9b38)
 * [Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
   YS (YAMLScript) solutions to Rosetta Code tasks.
 * [yamllm](https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys)
