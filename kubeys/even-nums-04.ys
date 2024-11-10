@@ -1,0 +1,24 @@
+!yamlscript/v0
+
+defn even-nums(start end):
+  # combine assignments to 1 line
+  initial-vec =: -[]
+  step =: 1
+  # Remove unneeded [] and ()
+  loop current start, result initial-vec:
+    # change => to else
+    if current > end:
+      =>: result
+      recur:
+        =>: (current + step)
+        if (even? current):
+          conj result: current
+          =>: result
+
+defn main:
+  (): (main 1 100)
+  (y): (main 1 y)
+  (x y):
+    # change println to say
+    each [i (even-nums x y)]:
+       (println i)

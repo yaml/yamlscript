@@ -1,0 +1,53 @@
+!yamlscript/v0
+
+Chart =: yaml/load-file('Chart.yaml')
+Values =: yaml/load-file('values.yaml')
+Release =:
+  if ENV.HELM_RELEASE:
+    json/load: ENV.HELM_RELEASE
+    else::
+      Name: release-name
+      Service: Helm
+
+defn trunc(s): take(63 s).str(*).replace(/-$/)
+defn trunc+(s): s:trunc.replace(/\+/ '_')
+
+# Expand the name of the chart:
+chart-name =: trunc(Values.nameOverride ||| Chart.name)
+
+# Create a default fully qualified app name.
+# We truncate at 63 chars because some Kubernetes name fields are limited to
+# this (by the DNS naming spec).
+# If release name contains chart name it will be used as a full name.
+chart-fullname =:
+  if Values.fullnameOverride.?:
+    then: Values.fullnameOverride:trunc
+    else:
+      name =: Values.nameOverride ||| Chart.name
+      if name.has?(Release.Name):
+        trunc: Release.Name
+        format "%s-%s": Release.Name name
+
+# Create chart name and version as used by the chart label:
+defn chart-chart():
+  trunc+: format("%s-%s" Chart.Name Chart.Version)
+
+# Common labels:
+defn common-labels():
+  apply merge::
+  - helm.sh/chart:: "$(Chart.name)-$(Chart.version)"
+  - ! selectorLabels()
+  - app.kubernetes.io/version:: Chart.appVersion
+    app.kubernetes.io/managed-by:: Release.Service
+
+# Selector labels:
+defn selectorLabels()::
+  app.kubernetes.io/name:: Chart.name
+  app.kubernetes.io/instance:: Release.Name
+
+# Create the name of the service account to use:
+serviceAccountName =:
+  or? Values.serviceAccount.name:
+    if Values.serviceAccount.create:
+      chart-fullname
+      'default'

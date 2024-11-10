@@ -1,0 +1,8 @@
+!yamlscript/v0
+
+# println won't print without doall
+# Due to the range being "lazy"
+# YS provides 'each'; and eager 'for'
+
+(each [i (range 1 11)]
+ (println (str i ") Hello!")))

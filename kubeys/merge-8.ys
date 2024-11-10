@@ -1,0 +1,17 @@
+---
+- key1: val1
+- key2: val2
+
+# We can pass arguments in function tags,
+# some day very soon!
+--- !yamlscript/v0:
+config:
+  database: !.merge(+++.$)
+    key3: val3
+
+# Tags will also support function chaining:
+#
+# list: !:reverse.concat(*other-list)
+# - foo
+# - bar
+

@@ -1,0 +1,19 @@
+!yamlscript/v0
+
+# Multiline key is illegal:
+when (a < 10) &&
+     (b > 2): say("ok")
+# This is valid:
+? when (a < 10) &&
+       (b > 2)
+: say("ok")
+
+# Error text after string
+say: "Bravo\n" * 3
+# OK. Value is valid plain scalar
+say: -"Bravo\n" * 3
+
+# Error ': ' and ' #' in plain
+say: $ok || "Result: $result # likely"
+# Fixed:
+say: $ok || "Result:\ $result \# likely"
