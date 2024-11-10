@@ -5,14 +5,15 @@ title: YAMLScript Documentation Index
 
 ## TL;DR Topics
 
+* [YAMLScript by Example](/doc/examples) (Recommended)
+* [Learn YAMLScript (for free) at Exercism](
+  https://exercism.org/tracks/yamlscript)
 * [YAMLScript Cheat Sheet](/doc/cheat)
-* [YAMLScript Examples](/doc/examples)
 
 
 ## Getting Started
 
 <!--
-* [Learn YAMLScript at Exercism.org]()
 * [Learn YAMLScript in 15 Minutes](/doc/learn)
 -->
 

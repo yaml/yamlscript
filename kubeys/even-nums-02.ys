@@ -1,0 +1,19 @@
+!yamlscript/v0
+# Convert lets to =: and (loop to loop:
+defn even-nums(start end):
+  initial-vec =: -[]
+  step =: 1
+  loop [current start, result initial-vec]:
+      (if (> current end)
+        result
+        (recur (+ current step),
+               (if (even? current)
+                 (conj result current)
+                 result)))
+# Convert functions to pairs
+defn main:
+  ([] (main 1 100))
+  ([y] (main 1 y))
+  ([x y] (doall
+           (for [i (even-nums x y)]
+             (println i))))

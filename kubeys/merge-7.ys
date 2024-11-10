@@ -1,0 +1,12 @@
+---
+- key1: val1
+- key2: val2
+
+# We can avoid needing to indent
+# by using a function tag:
+--- !yamlscript/v0:
+config:
+  database: !:merge*    # the * part means to splat the seq into 2 args
+  - ! +++.>.0           # .> is for inline print debugging
+  - key3: val3:DBG      # .> is short for :DBG or .DBG()
+
