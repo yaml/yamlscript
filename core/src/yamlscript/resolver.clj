@@ -9,6 +9,7 @@
 ;; Top level tags:
 ;; * !yamlscript/v0 - Start in code mode
 ;; * !yamlscript/v0/ - Start in data mode
+;; * !yamlscript/v0: - Start in data mode
 ;; * !yamlscript/v0/code - Start in code mode
 ;; * !yamlscript/v0/data - Start in data mode
 ;; * !yamlscript/v0/bare - Start in bare mode
@@ -107,6 +108,7 @@
             tag (subs tag (count "yamlscript/v0"))]
         (case tag
           "" (resolve-node node :code)
+          ":" (resolve-node node :data-top)
           "/" (resolve-node node :data-top)
           "/code" (resolve-node node :code)
           "/data" (resolve-node node :data-top)

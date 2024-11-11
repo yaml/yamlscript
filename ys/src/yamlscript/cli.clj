@@ -272,7 +272,10 @@ Options:
                      (str/join "\n")
                      (#(if (not (re-find #"\n" %1))
                          (cond
-                           (re-find #"^\.\w" %1) (str "stream()" %1)
+                           (re-find #"^\.[\w\$]" %1)
+                           (if (:stream opts)
+                             (str "stream()" %1)
+                             (str "stream().last()" %1))
                            (re-find #"^\:\w" %1)
                            , (str "stream()"
                                (str/replace %1 #"^:([-\w]+)" ".$1()"))
