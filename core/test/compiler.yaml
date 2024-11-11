@@ -1542,3 +1542,12 @@
   clojure: |
     (def a (WWW (inc 41)))
     (def b (WWW 42))
+
+
+- name: Merge key in data mode
+  yamlscript: |
+    !yamlscript/v0/data
+    <<:: -[{:a 1 :b 2}]
+    :a: 3
+  clojure: |
+    (+merge {"<<" [{:a 1, :b 2}], :a 3})

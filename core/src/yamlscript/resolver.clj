@@ -346,7 +346,8 @@
 ;; ----------------------------------------------------------------------------
 (defn resolve-data-mapping [node]
   (let [nodes (or (:% node) (:%% node))
-        merge (some #(= %1 {:= "<<"}) (keys (apply hash-map nodes)))
+        merge (some #(re-matches #"<<\s*:?" %1)
+                (remove nil?  (map := (keys (apply hash-map nodes)))))
         mapping
         {:map
          (vec (mapcat

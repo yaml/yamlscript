@@ -659,7 +659,11 @@
   ([x C] (has? C x)))
 
 (defn +merge [M]
-  (merge (get M "<<") (dissoc M "<<")))
+  (let [m (dissoc M "<<")
+        q (get M "<<")
+        v (if (map? q) (vector q) (vec q))
+        v (conj v m)]
+    (apply merge v)))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
