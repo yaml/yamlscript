@@ -273,9 +273,10 @@ Options:
                      (#(if (not (re-find #"\n" %1))
                          (cond
                            (re-find #"^\.[\w\$]" %1)
-                           (if (:stream opts)
-                             (str "stream()" %1)
-                             (str "stream().last()" %1))
+                           (str (if (:stream opts)
+                                  "stream()"
+                                  "stream().last()") %1)
+                           ,
                            (re-find #"^\:\w" %1)
                            , (str "stream()"
                                (str/replace %1 #"^:([-\w]+)" ".$1()"))
@@ -366,7 +367,8 @@ Options:
           _ (when (env "YS_SHOW_COMPILE")
               (eprint (str line (pretty-clojure code) "\n" line)))
           result (runtime/eval-string code file args)
-          results (if (:stream opts)
+          results (if (and (:stream opts) (or load
+                                            (seq (:eval opts))))
                     @global/stream-values
                     [result])]
       (if (:print opts)
