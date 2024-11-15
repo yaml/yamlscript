@@ -1,3 +1,11 @@
+- version: 0.1.84
+  date:    Fri 15 Nov 2024 02:02:06 AM MST
+  changes:
+  - core: Add global var Y to hold current stream
+  - code: Support '<<::' merge in data mode
+  - core: Add '!yamlscript/v0:' for data mode
+  - core: Fix some -s + -e bugs
+  - core: Add +++ symbol, contains current stream value
 - version: 0.1.83
   date:    Fri 08 Nov 2024 09:40:28 PM PST
   changes:
