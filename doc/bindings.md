@@ -14,16 +14,16 @@ YAMLScript intends to provide a loader library for every programming language
 that uses YAML.
 
 Currently there are working libraries for:
-[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
-[Go](https://github.com/yaml/yamlscript-go),
-[Java](https://clojars.org/org.yamlscript/yamlscript),
-[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
-[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
-[Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod),
-[Python](https://pypi.org/project/yamlscript/),
-[Raku](https://raku.land/zef:ingy/YAMLScript),
-[Ruby](https://rubygems.org/search?query=yamlscript) and
-[Rust](https://crates.io/crates/yamlscript).
+* [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+* [Go](https://github.com/yaml/yamlscript-go)
+* [Java](https://clojars.org/org.yamlscript/yamlscript)
+* [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
+* [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
+* [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
+* [Python](https://pypi.org/project/yamlscript/)
+* [Raku](https://raku.land/zef:ingy/YAMLScript)
+* [Ruby](https://rubygems.org/search?query=yamlscript)
+* [Rust](https://crates.io/crates/yamlscript)
 
 Install these libraries like you would any other library for your language.
 You must also install the matching version of the `libyamlscript.so` shared

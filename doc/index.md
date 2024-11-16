@@ -2,17 +2,23 @@
 title: YAMLScript Documentation Index
 ---
 
+> *Note*: This documentation is a work in progress and some of these pages may
+> not be complete or accurate.
+> If you are having trouble finding what you need, learning from the examples in
+> the first link below is recommended for now.
+
 
 ## TL;DR Topics
 
+* [YAMLScript by Example](/doc/examples) (**Recommended**)
+* [Learn YAMLScript (for free) at Exercism](
+  https://exercism.org/tracks/yamlscript)
 * [YAMLScript Cheat Sheet](/doc/cheat)
-* [YAMLScript Examples](/doc/examples)
 
 
 ## Getting Started
 
 <!--
-* [Learn YAMLScript at Exercism.org]()
 * [Learn YAMLScript in 15 Minutes](/doc/learn)
 -->
 
