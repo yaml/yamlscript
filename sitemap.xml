@@ -476,17 +476,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/examples/</loc>
-        
-          <lastmod>2024-11-10T14:30:56.914Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/ext-libs/</loc>
         
           <lastmod>2024-11-10T14:30:56.914Z</lastmod>
@@ -894,9 +883,9 @@
   
     
       <url>
-        <loc>https://yamlscript.org/kubeys24/</loc>
+        <loc>https://yamlscript.org/ingydotnet/</loc>
         
-          <lastmod>2024-11-15T17:58:37.246Z</lastmod>
+          <lastmod>2024-11-15T18:05:07.812Z</lastmod>
         
         
         
@@ -905,9 +894,20 @@
   
     
       <url>
-        <loc>https://yamlscript.org/ingydotnet/</loc>
+        <loc>https://yamlscript.org/kubeys24/</loc>
         
-          <lastmod>2024-11-15T18:05:07.812Z</lastmod>
+          <lastmod>2024-11-16T16:26:05.676Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/examples/</loc>
+        
+          <lastmod>2024-11-16T21:08:42.109Z</lastmod>
         
         
         
