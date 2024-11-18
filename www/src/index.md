@@ -55,9 +55,10 @@ YAMLScript enhanced ones.
 
 There are many ways to use YAMLScript:
 
-<!-- * [Simplify your existing YAML configs](/doc/embedding) -->
 * Simplify your existing YAML configs
-  * Works great with Kubernetes, Helm, Docker, Ansible, etc.
+  * Works great with CI/CD, Helm, Docker, Ansible, etc.
+  * Check out [HelmYS](https://github.com/kubeys/helmys), a tool for using
+    YAMLScript in Kubernetes Helm chart templates painlessly.
 * [Load YAMLScript (or YAML) in your programs](doc/bindings)
   * Available in 10 programming languages (and counting)
 * Program in YAMLScript
@@ -66,9 +67,11 @@ There are many ways to use YAMLScript:
   * Many used in the [YAMLScript repository](https://github.com/yaml/yamlscript)
 * [Compile YAMLScript to binary executables](doc/binary)
   * Fast, standalone, no-source software distribution
+* [Query and Transform YAML (and JSON) data](doc/query)
+  * Use the `ys` command line tool similar to `jq` or `yq`
+
 
 ----
-
 
 ## YAMLScript Resources
 
@@ -85,7 +88,7 @@ There are many ways to use YAMLScript:
 
 ## YAMLScript Links
 
-* Nov 2024 [KubeCon Talk](https://sched.co/1i7qP) **<span class="darkred">Upcoming!</span>**
+* Nov 2024 [KubeCon Talk and Info](https://yamlscript.org/kubeys24)
 * Jun 2024 [TPRC Talk](https://www.youtube.com/watch?v=RFIukRdFe1o)
 * Apr 2024 [OSS/NA Talk](https://www.youtube.com/watch?v=u-OCEHNdwlU)
 * Mar 2024 [TheNewStack Article](https://thenewstack.io/with-yamlscript-yaml-becomes-a-proper-programming-language/)

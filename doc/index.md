@@ -42,6 +42,7 @@ title: YAMLScript Documentation Index
 * [Control Flow](/doc/control)
 * [Operators](/doc/operators)
 * [Dot Chaining](/doc/chain)
+* [Unit Testing](/doc/ys-taptest)
 
 <!--
 * [Syntax Overview](/doc/syntax) - under construction
