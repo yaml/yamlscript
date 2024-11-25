@@ -1551,3 +1551,23 @@
     :a: 3
   clojure: |
     (+merge {"<<" [{:a 1, :b 2}], :a 3})
+
+
+- name: Tag method call with data mode switch to data mode
+  yamlscript: |
+    !yamlscript/v0
+    array =: !:vec:
+    - 1
+    - 2
+    - 3
+    - 4
+  clojure: |
+    (def array (vec [1 2 3 4]))
+
+
+- name: Tag method call with data mode switch to code mode
+  yamlscript: |
+    !yamlscript/v0:
+    foo: !:merge: -[{:a 1 :b 2} {:a 3}]
+  clojure: |
+    {"foo" (merge [{:a 1, :b 2} {:a 3}])}
