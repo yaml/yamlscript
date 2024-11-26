@@ -223,6 +223,29 @@
                 [] nodes)]
     {:fmap nodes}))
 
+(defn construct-vec-dmap [node ctx]
+  (when-lets [nodes (:Vec node)
+              _ (some :dmap nodes)
+              nodes (reduce
+                      (fn [nodes node]
+                        (let [done (construct-node node ctx)]
+                          (if (and (:dmap node) (seq (first nodes)))
+                            [[] (Lst [(Sym 'concat) done (Vec (first nodes))])]
+                            [(vec (cons done (first nodes))) (second nodes)])))
+                      [[] []] (reverse nodes))]
+    (if (seq (second nodes))
+      (Lst [(Sym 'concat) (Vec (first nodes)) (second nodes)])
+      (Vec (first nodes)))))
+
+
+(defn construct-vec [node ctx]
+  (or
+    (construct-vec-dmap node ctx)
+    (let [{nodes :Vec} node
+          nodes (expand-splats nodes)
+          nodes (map #(construct-node %1 ctx) nodes)]
+      {:Vec (-> nodes flatten vec)})))
+
 (defn construct-coll [node ctx key]
   (let [{nodes key} node
         nodes (expand-splats nodes)
@@ -281,7 +304,7 @@
                 :fmap (construct-fmap node ctx)
                 :dmap (construct-dmap node ctx)
                 :Map (construct-coll node ctx :Map)
-                :Vec (construct-coll node ctx :Vec)
+                :Vec (construct-vec node ctx)
                 :Lst (construct-coll node ctx :Lst)
                 :ali (construct-alias node)
                 :Ali (construct-stream-alias node)

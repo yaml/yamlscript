@@ -1180,7 +1180,7 @@
 
 - name: Conditional pair in sequence
   yamlscript: |
-    --- !yamlscript/v0/
+    --- !yamlscript/v0:
     a:
     - b: c
       :: foo()

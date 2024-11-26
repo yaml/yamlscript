@@ -1571,3 +1571,24 @@
     foo: !:merge: -[{:a 1 :b 2} {:a 3}]
   clojure: |
     {"foo" (merge [{:a 1, :b 2} {:a 3}])}
+
+
+- name: Conditional seq insertion in data mode
+  yamlscript: |
+    !yamlscript/v0:
+    - foo
+    - :when rand(2) > 1::
+      - bar
+    - baz
+  clojure: |
+    (concat ["foo"] (concat (when (> (rand 2) 1) ["bar"]) ["baz"]))
+
+
+- name: Fix bug in seq insertion in data mode
+  yamlscript: |
+    !yamlscript/v0:
+    - x: null
+  build: |
+    {:Vec [{:Map [{:Str "x"} {:Nil nil}]}]}
+  clojure: |
+    [{"x" nil}]

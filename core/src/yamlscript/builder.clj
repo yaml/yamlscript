@@ -206,7 +206,7 @@
   (let [body (vec (map build-node (adjust-special-keys (:map node))))]
     (if (or (some vector? body)
           (= {:Sym '=>} (first body))
-          (some #(= %1 {:Nil nil}) body))
+          (some #(= (first %1) {:Nil nil}) (partition 2 body)))
       (build-dmap body)
       (Map (map build-node (:map node))))))
 
