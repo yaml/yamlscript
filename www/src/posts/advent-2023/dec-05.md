@@ -108,7 +108,7 @@ $ ys --help
 It should display:
 
 ```text
-ys - The YAMLScript (YS) Command Line Tool - v0.1.84
+ys - The YAMLScript (YS) Command Line Tool - v0.1.85
 
 Usage: ys [<option...>] [<file>]
 
