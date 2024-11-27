@@ -3669,7 +3669,7 @@ configuration files for Kubernetes and other software frameworks.</p>
 <h2>KubeCon</h2>
 <p>In early June I proposed a 90 minute YAMLScript tutorial for KubeCon and it was
 accepted!
-I'll be presenting it a week from this Friday (<a href="">November 15th in Salt Lake
+I'll be presenting it a week from this Friday (<a href="https://kccncna2024.sched.com/event/1i7qP">November 15th in Salt Lake
 City</a>).
 If you are going to be at the conference, I hope we get a chance to talk.</p>
 <p>The YAMLScript needs for <a href="https://kubernetes.io/">Kubernetes</a> (and other) config
