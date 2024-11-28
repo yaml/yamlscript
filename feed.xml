@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2024-10-27T00:00:00Z</updated>
+    <updated>2024-11-27T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -3759,35 +3759,21 @@ And again, I hope to see you there!</p>
     <entry>
       <title>Conference Driven Developments</title>
       <link href="https://yamlscript.org/posts/2024-11-27/"/>
-      <updated>2024-10-27T00:00:00Z</updated>
+      <updated>2024-11-27T00:00:00Z</updated>
       <id>https://yamlscript.org/posts/2024-11-27/</id>
       <content type="html">
         <![CDATA[
-      <!-- Outline
-* Introduction about KubeCon and Recent YS developments for data mode
-  * Mention HelmYS
-  * As I told you in the last post, KubeCon stuff...
-
-* Multidoc streams for defining data sources
-  * `defn`s
-  * `load`s
-  * `curl`s
-  * databases
-* Inline code in data mode
-* Conditional insertions in mappings
-* Ways to merge mappings in YAMLScript
-* Conditional insertions in sequences
--->
-<p>In my many years of creating Open Source software and talking about it at
+      <p>In my many years of creating Open Source software and talking about it at
 conferences, some of the most productive development times are those leading up
 to the presentation.</p>
-<p>In the last post, I mentioned that I was going to present a 90 minute YAMLScript
-tutorial at KubeCon (November 15th in Salt Lake City).
-At the start of October we realized there were a few things we wanted to add to
+<p>In the last post, I mentioned that I was going to present a
+<a href="https://yamlscript.org/kubeys24">90 minute YAMLScript tutorial</a> at
+<a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/">KubeCon (November 15th in Salt Lake City)</a>.</p>
+<p>At the start of October we realized there were a few things we wanted to add to
 the language to make it great for defining dynamic data in YAML files.</p>
 <p>YAMLScript is a complete programming language and while you could already do
-almost anything with it, we knew that it had blend smoothly into the YAML files
-that people use for Kubernetes and other uses.
+almost anything with it, we knew that it had blend smoothly into the existing
+YAML files that people use for Kubernetes and other uses.
 We started by focusing on Helm charts, and seeing how well YAMLScript could fit
 along side the Go templating system (or replace it entirely).
 In the end it all worked out very well, but a few things needed to be added
@@ -3804,7 +3790,8 @@ lot more in there.</p>
 <p>YAML 1.2 has a few things that let you do things a bit fancier than with a data
 only format like JSON:</p>
 <ul>
-<li>YAML has anchors and aliases for reusing specific nodes by naming them,</li>
+<li>YAML has anchors and aliases for reusing specific nodes by naming them, and
+then later referring to them by name.</li>
 <li>YAML has a special <code>&lt;&lt;</code> &quot;merge key&quot; that you can use to merge mappings.
 This was actually removed from the 1.2 spec but many popular implementations
 still support it (albeit with inconsistent behavior between implementations).</li>
@@ -3814,7 +3801,7 @@ not consistently across different YAML implementations.</li>
 unfortunately the spec doesn't allow you to alias nodes across documents.</li>
 </ul>
 <p>YAMLScript supports all of these features too.
-It needs to since it claims to support current YAML files in the world.
+It needs to since it claims to support the current YAML files of the world.
 But YAMLScript being a complete programming language lets you go so much
 further!</p>
 <p>Let's take a closer look…</p>
@@ -3854,11 +3841,12 @@ More about loading YAMLScript</em></strong></summary>
 Use <code>-J</code> (for <code>--json</code>) to format <code>--load</code> output as a prettier JSON.</p>
 <p>YAMLScript's &quot;load&quot; operation defaults to JSON because YAMLScript's load
 operation is designed to output data in an interoperable form.
-JSON is the very interoperable and the JSON data model is a subset of the YAML
-data model.</p>
+JSON is very interoperable and the JSON data model is a subset of the YAML data
+model.</p>
 <p>Instead of using <code>ys</code> to load YAML/YAMLScript files, you can use a YAMLScript
-library to replace other YAML loaders in 10 (and counting) common programming
-languages, including Python, Go, Ruby, Rust, Java and JavaScript.</p>
+library to replace other YAML loaders in
+<a href="https://yamlscript.org/doc/bindings/">10 (and counting) common programming languages</a>, including Python, Go, Ruby, Rust, Java
+and JavaScript.</p>
 <p>For example, in Python you could do this:</p>
 <pre class="language-python"><code class="language-python"><span class="token keyword">from</span> yamlscript <span class="token keyword">import</span> YAMLScript<br>ys <span class="token operator">=</span> yamlscript<span class="token punctuation">.</span>YAMLScript<span class="token punctuation">(</span><span class="token punctuation">)</span><br>text <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"db-config.yaml"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><br>data <span class="token operator">=</span> ys<span class="token punctuation">.</span>load<span class="token punctuation">(</span>text<span class="token punctuation">)</span></code></pre>
 <p>and similar in any other language that has a YAMLScript binding library.</p>
@@ -3866,14 +3854,14 @@ languages, including Python, Go, Ruby, Rust, Java and JavaScript.</p>
 <p>The careful reader will have noticed that we broke the rules of YAML.
 We aliased  nodes that were anchored in a different document.
 What's up?</p>
-<p>Well, the two YAMLScript documents each have a different <a href="https://yamlscript.org/docs/modes">YAMLScript mode</a> and that makes things work differently.</p>
+<p>Well, the two YAMLScript documents each have a different <a href="https://yamlscript.org/doc/modes">YAMLScript mode</a> and that makes things work differently.</p>
 <p>The first document has no <code>!yamlscript/v0</code> tag and thus is in &quot;bare mode&quot;.
 In bare mode all the rules are the same as YAML 1.2 (using the Core schema).</p>
 <p>The second document has the <code>!yamlscript/v0:</code> tag.
 The <code>!yamlscript/v0</code> tag tells YAMLScript that the document is in &quot;code mode&quot;
 (the content starts as code but can switch to data mode at any time).
 The <code>:</code> in <code>!yamlscript/v0:</code> tells YAMLScript to switch to data mode right away.</p>
-<p>In code mode, aliases are very different.
+<p>In code mode and data mode, aliases are very different than in bare mode.
 They can access anchored nodes in the same document or any previous document.
 Not only that, you can access parts of the anchored node with a path syntax.
 For instance <code>*map1.name</code> would produce the string &quot;Bobbi Datamon&quot; and
@@ -3893,25 +3881,27 @@ That means we don't need anchors at all:</p>
 first document in this case)
 The <code>+++.$</code> is a shorthand for <code>+++.last()</code>.</p>
 <p>Another approach to take here is to make the first document use YAMLScript in
-code mode ad define variables to use in the second document:</p>
+code mode and define variables to use in the second document:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">---</span> <span class="token tag">!yamlscript/v0</span><br>map1 =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">name</span><span class="token punctuation">:</span> Bobbi Datamon<br>list1 =<span class="token punctuation">:</span><span class="token punctuation">:</span><br><span class="token punctuation">-</span> fun<br><span class="token punctuation">-</span> games<br><br><span class="token key atrule">--- !yamlscript/v0</span><span class="token punctuation">:</span><br><span class="token key atrule">person</span><span class="token punctuation">:</span><br>  &lt;&lt;<span class="token punctuation">:</span><span class="token punctuation">:</span> map1<br>  likes<span class="token punctuation">:</span><span class="token punctuation">:</span> list1</code></pre>
+<p>We use <code>=:</code> for assignment expressions in YAMLScript.
+And <code>=::</code> does the same thing but toggles the mode of the value.</p>
 <p>What if <code>list1</code> was a huge list and you really wanted to keep it in a separate
-file?
-No problem:</p>
+file?</p>
+<p>No problem:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token comment"># big-list.yaml</span><br><span class="token punctuation">-</span> fun<br><span class="token punctuation">-</span> games<br><span class="token comment"># ...</span></code></pre>
 <p>Now we just change the first document to load the list from the file:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">---</span> <span class="token tag">!yamlscript/v0</span><br>map1 =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">name</span><span class="token punctuation">:</span> Bobbi Datamon<br><span class="token key atrule">list1 =</span><span class="token punctuation">:</span> load("big<span class="token punctuation">-</span>list.yaml")</code></pre>
+<pre class="language-yaml"><code class="language-yaml"><span class="token punctuation">---</span> <span class="token tag">!yamlscript/v0</span><br>map1 =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">name</span><span class="token punctuation">:</span> Bobbi Datamon<br><span class="token key atrule">list1 =</span><span class="token punctuation">:</span> load('big<span class="token punctuation">-</span>list.yaml')</code></pre>
 <p>Not only can we access external data from a file, YAMLScript supports fetching
-data from the web with the <code>curl</code> function and getting data from databases!</p>
+data from the web with the <code>curl</code> function and also getting data from databases!</p>
 <h2>Inline Code in Data Mode</h2>
 <p>We can do the same things in a single data mode document.
 The trick is that we need to have a way to evaluate code in a way that doesn't
 affect the data.</p>
 <p>The <code>::</code> syntax is our new friend here.</p>
-<p>This lets us do code things lik define variables and even define new functions
+<p>This lets us do code things like define variables and even define new functions
 in a way that doesn't affect the data we are defining.</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">--- !yamlscript/v0</span><span class="token punctuation">:</span><br><span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">defn flip(array)</span><span class="token punctuation">:</span><br>    <span class="token key atrule">reverse</span><span class="token punctuation">:</span> array<br><br>  map1 =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>    <span class="token key atrule">name</span><span class="token punctuation">:</span> Bobbi Datamon<br>  <span class="token key atrule">list1 =</span><span class="token punctuation">:</span> load("big<span class="token punctuation">-</span>list.yaml")<br><br><span class="token key atrule">person</span><span class="token punctuation">:</span><br>  &lt;&lt;<span class="token punctuation">:</span><span class="token punctuation">:</span> map1<br>  likes<span class="token punctuation">:</span><span class="token punctuation">:</span> list1<span class="token punctuation">:</span>flip</code></pre>
-<p>We defined a new function called flip which is a bit contrived since we could
+<p>We defined a new function called <code>flip</code> which is a bit contrived since we could
 have called <code>reverse</code> directly; but it proves the point.</p>
 <p>We also defined our data variables.
 We can actually define variables without <code>::</code>:</p>
@@ -3949,8 +3939,8 @@ thus switching to code mode:</p>
 ability to conditionally insert key/value pairs into mappings depending on some
 value being true or false.</p>
 <p>Functionally that's a bit weird for a data language.
-You can always apply any function to any data to change its value, but how do
-you make it control whether or not it exists at all?</p>
+You can always apply any function to any data node to change its value, but how
+do you make it control whether or not it exists at all?</p>
 <p>You really need to apply a function to its parent mapping to make that happen…</p>
 <p>…or do you?</p>
 <p>YAMLScript ended up solving this using the <code>::</code> syntax, with a special rule.</p>
@@ -3965,12 +3955,12 @@ baz: 333
 If it evaluates to a mapping then merge it into the parent mapping.</p>
 <p>To best understand this we can simply compile this YAMLScript to Clojure code.</p>
 <blockquote>
-<p>You should know by now that everything YAMLScript program is compiled to
-Clojure code and then evaluated.
-Well data files that use YAMLScript are no different!</p>
+<p>You should know by now that every YAMLScript program is compiled to Clojure
+code and then evaluated.
+Well, data files that use YAMLScript are no different!</p>
 </blockquote>
 <pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-U</span> <span class="token parameter variable">--compile</span> file.yaml  <span class="token comment"># or -c</span><br><span class="token punctuation">(</span>merge <span class="token punctuation">{</span><span class="token string">"foo"</span> <span class="token number">111</span><span class="token punctuation">}</span> <span class="token punctuation">(</span>merge <span class="token punctuation">(</span>when <span class="token punctuation">(</span><span class="token operator">></span> a b<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token string">"bar"</span> <span class="token number">222</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token string">"baz"</span> <span class="token number">333</span><span class="token punctuation">}</span><span class="token punctuation">))</span></code></pre>
-<p>That should be as clear as day!</p>
+<p>Given that <code>merge</code> ignores nil values, this is exactly what we want.</p>
 <p>As we worked through the standard Helm templates we found that while this worked
 just fine, it was a bit verbose.
 We &quot;fixed&quot; that by letting you put the condition test &quot;inside&quot; the <code>::</code> key:</p>
@@ -3980,7 +3970,7 @@ foo: 111
   bar: 222
 baz: 333
 </code></pre>
-<p>I changed <code>a &gt; b</code> to something you could actually run yourself.
+<p>I've changed <code>a &gt; b</code> here to something you could actually run yourself.
 Note that before we never defined <code>a</code> or <code>b</code>, so that would have failed.</p>
 <p>We can even get this into a single line by using YAML's flow style:</p>
 <pre><code>!yamlscript/v0:
