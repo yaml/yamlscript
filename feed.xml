@@ -5,7 +5,7 @@
   <link href="https://yamlscript.org/feed.xml" rel="self"/>
   <link href="https://yamlscript.org/"/>
   
-    <updated>2024-10-05T00:00:00Z</updated>
+    <updated>2024-10-27T00:00:00Z</updated>
   
   <id>https://yamlscript.org</id>
   <author>
@@ -3750,6 +3750,416 @@ While it is already extremely capable, we are always looking for ways to make
 it better.</p>
 <p>I'm very excited to present all this next week at KubeCon.
 And again, I hope to see you there!</p>
+
+    ]]>
+      </content>
+    </entry>
+  
+    
+    <entry>
+      <title>Conference Driven Developments</title>
+      <link href="https://yamlscript.org/posts/2024-11-27/"/>
+      <updated>2024-10-27T00:00:00Z</updated>
+      <id>https://yamlscript.org/posts/2024-11-27/</id>
+      <content type="html">
+        <![CDATA[
+      <!-- Outline
+* Introduction about KubeCon and Recent YS developments for data mode
+  * Mention HelmYS
+  * As I told you in the last post, KubeCon stuff...
+
+* Multidoc streams for defining data sources
+  * `defn`s
+  * `load`s
+  * `curl`s
+  * databases
+* Inline code in data mode
+* Conditional insertions in mappings
+* Ways to merge mappings in YAMLScript
+* Conditional insertions in sequences
+-->
+<p>In my many years of creating Open Source software and talking about it at
+conferences, some of the most productive development times are those leading up
+to the presentation.</p>
+<p>In the last post, I mentioned that I was going to present a 90 minute YAMLScript
+tutorial at KubeCon (November 15th in Salt Lake City).
+At the start of October we realized there were a few things we wanted to add to
+the language to make it great for defining dynamic data in YAML files.</p>
+<p>YAMLScript is a complete programming language and while you could already do
+almost anything with it, we knew that it had blend smoothly into the YAML files
+that people use for Kubernetes and other uses.
+We started by focusing on Helm charts, and seeing how well YAMLScript could be
+along side the Go templating system, or replacing it entirely.
+In the end it all worked out very well, but a few things needed to be added
+before tutorial time.</p>
+<p>In this post I want to cover some of the new (and old) features of YAMLScript
+that you can use to do cool things in your YAML files that are not possible
+with YAML alone. And remember, your YAML files are already valid YAMLScript
+files; but if you load them (or preprocess them) with YAMLScript, you can do a
+lot more in there.</p>
+<h2>What YAML Can Do Now</h2>
+<p>YAML 1.2 has a few things that let you do things a bit fancier than with a data
+only format like JSON:</p>
+<ul>
+<li>YAML has anchors and aliases for reusing specific nodes by naming them,</li>
+<li>YAML has a special <code>&lt;&lt;</code> &quot;merge key&quot; that you can use to merge mappings.
+This was actually removed from the 1.2 spec but many popular implementations
+still support it (albeit with inconsistent behavior between implementations).</li>
+<li>YAML allows you to tag nodes and this can sometime be used creatively, though
+this is never consistent across implementations.</li>
+<li>YAML supports multiple &quot;documents&quot; in a single file or stream, although
+unfortunately the spec doesn't allow you to alias nodes across documents.</li>
+</ul>
+<p>YAMLScript supports all these features too.
+It needs to since it claims to support current YAML files in the world.
+But YAMLScript being a complete programming language lets you go so much
+further!</p>
+<p>Let's take a closer look…</p>
+<h2>External (and Internal) Data Sources</h2>
+<p>Even though YAML lets you reuse nodes by name those nodes need to be part of
+your YAML document.
+Say you have a section at the top of your YAML file that defines some default
+values and names them with anchors, to be aliased later throughout the file.</p>
+<p>This is problematic because the node of defaults is also going to be a part of
+your data when you load it.
+It would be nice if you could have 2 documents in a YAML file where you define
+the data sources to be referred to in the first document, and then referred to
+in the second document.
+If the loader returned the final document then you could get the data you wanted
+without also getting the data that you don't.</p>
+<p>Let's try it out:</p>
+<pre class="language-yaml"><code class="language-yaml"><span class="token comment"># file.yaml</span><br><span class="token punctuation">---</span><br><span class="token punctuation">-</span> <span class="token important">&amp;map1</span><br>  <span class="token key atrule">name</span><span class="token punctuation">:</span> Bobbi Datamon<br><span class="token punctuation">-</span> <span class="token important">&amp;list1</span><br>  <span class="token punctuation">-</span> fun<br>  <span class="token punctuation">-</span> games<br><span class="token punctuation">-</span> <span class="token key atrule">more</span><span class="token punctuation">:</span> stuff<br><span class="token key atrule">--- !yamlscript/v0</span><span class="token punctuation">:</span><br><span class="token key atrule">person</span><span class="token punctuation">:</span><br>  <span class="token key atrule">&lt;&lt;</span><span class="token punctuation">:</span> <span class="token important">*map1</span><br>  <span class="token key atrule">likes</span><span class="token punctuation">:</span> <span class="token important">*list1</span></code></pre>
+<p>Now we can load it with the YAMLScript command line interpreter, <code>ys</code>:</p>
+<pre><code>$ ys --load file.yaml
+{&quot;person&quot;:{&quot;name&quot;:&quot;Bobbi Datamon&quot;,&quot;likes&quot;:[&quot;fun&quot;,&quot;games&quot;]}}
+</code></pre>
+<p>Looks like it worked, but <code>ys --load</code> prints the result in compact JSON.
+Before we discuss what happened, let's show the result in YAML:</p>
+<pre><code>$ ys --load --yaml file.yaml
+person:
+  name: Bobbi Datamon
+  likes:
+  - fun
+  - games
+</code></pre>
+<p>Nice!
+<code>ys --load</code> gave us the data from the final document that included data from the
+first document.</p>
+</p><details style="background-color:#eee"><summary><strong><em>
+More about loading YAMLScript</em></strong></summary>
+<p>You can just use <code>ys --yaml</code> instead of <code>ys --load --yaml</code> or even <code>ys -Y</code>,
+and <code>-J</code> (for <code>--json</code>) will format as a prettier JSON.</p>
+<p><code>ys --load</code> defaults to compact JSON because the JSON data model is YAMLScript
+loader data model.
+In other words, you can always depend on YAMLScript to load to this very
+interoperable form.</p>
+<p>Instead of using <code>ys</code> to load YAML/YAMLScript files, you can use a YAMLScript in
+10 (and counting) common programming languages, including Python, Go, Ruby,
+Rust, Java and JavaScript.</p>
+<p>In Python you can do this:</p>
+<pre class="language-python"><code class="language-python"><span class="token keyword">from</span> yamlscript <span class="token keyword">import</span> YAMLScript<br>ys <span class="token operator">=</span> yamlscript<span class="token punctuation">.</span>YAMLScript<span class="token punctuation">(</span><span class="token punctuation">)</span><br>text <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"db-config.yaml"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><br>data <span class="token operator">=</span> ys<span class="token punctuation">.</span>load<span class="token punctuation">(</span>text<span class="token punctuation">)</span></code></pre>
+<p>and similar in any other language that has a YAMLScript binding library.</p>
+</details><p></p>
+<p>The careful reader will have noticed that we broke the rules of YAML.
+We aliased  nodes that were anchored in a different document.
+What's up?</p>
+<p>Well for YAMLScript the two documents have different modes, and that makes
+things work differently.</p>
+<p>The first document has no <code>!yamlscript/v0</code> tag and thus is in &quot;bare mode&quot;.
+In bare mode all the rules are the same as YAML 1.2 (using the Core schema).</p>
+<p>The second document has the <code>!yamlscript/v0:</code> tag.
+The <code>!yamlscript/v0</code> tag tells YAMLScript that the document is in &quot;code mode&quot;
+(the content starts as code but can switch to data mode at any time).
+The <code>:</code> in <code>!yamlscript/v0:</code> tells YAMLScript to switch to data mode right away.</p>
+<p>In code mode, aliases are very different.
+They can access anchored nodes in the same document or any previous document.
+Not only that, you can access parts of the anchored node with a path syntax.
+For instance <code>*map1.name</code> would produce the string &quot;Bobbi Datamon&quot; and
+<code>*list1.1</code> would produce the string &quot;games&quot;.</p>
+<!--
+Greetings!
+
+It's been over 3 months since the last blog post here.
+
+Just to be clear, the YAMLScript project is alive and fantastic!
+
+We've just been busy as hell on 2 very big things: [**Exercism**](
+https://exercism.org) and [**KubeCon**](
+https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/).
+
+To be successful in both of these endeavors, YAMLScript needed to be amazing
+both as a programming language (Exercism) and as a data language (KubeCon).
+
+There's so much new stuff to talk about, and I promise to write about all of
+it after things get back to a normal pace.
+
+Today let's talk about Exercism, KubeCon and the positive impacts they've had
+on YAMLScript.
+
+
+## Exercism
+
+When I learned about the "free programming language learning website" called
+[Exercism](https://exercism.org) in June, it supported 71 [language tracks](
+https://exercism.org/tracks).
+I hoped that YAMLScript could become number 72.
+
+I was in Las Vegas at [The Perl and Raku Conference](
+https://tprc.us/tprc-2024-las/) where I met Daniel Mita who is a maintainer of
+the [Perl](https://exercism.org/tracks/perl5) and [Raku](
+https://exercism.org/tracks/raku) tracks on Exercism.
+Over breakfast, he told me all about the Exercism platform and and it sounded
+great.
+I asked him if it would be possible to add a YAMLScript track to Exercism.
+
+Some hours later he had started the process to make that happen...
+
+Fast forward to mid September; the [**YAMLScript track is live as number 74**](
+https://www.linkedin.com/posts/ihidjeremywalker_yamlscript-on-exercism-activity-7249329338561499136-YKyM/)!
+
+The [YAMLScript track]( https://exercism.org/tracks/yamlscript) currently offers
+60 exercises of varying difficulty levels.
+Try it out and let us know what you think!
+
+
+### How Exercism Made YAMLScript Better
+
+To get the YAMLScript track launched it was required that at least 20 exercises
+be set up.
+We launched with 42, of course!
+
+To set up an exercise for a track, you need to write a program that passes a
+series of tests that are provided for the exercise.
+Personally I wanted these YAMLScript solutions to be as simple and beautiful as
+possible.
+
+The main way YAMLScript has grown as a language is from actually writing code
+with it and seeing what works beautifully and what doesn't.
+If something can be done to make the language better, we do it.
+
+I can confidently say that YAMLScript produces some of the most beautiful
+solutions to the Exercism exercises.
+In fact I wrote [a program](
+https://github.com/ingydotnet/yamlscript-vs-exercism/) (in YAMLScript) that
+compares the YAMLScript solutions to all the other languages on
+Exercism as a markdown page and then posts it as a GitHub gist page.
+
+I won't share these gists here, because that would be a spoiler for the Exercism
+platform.
+But since all these solutions are publicly available and open source, you can
+run that program yourself and see the results.
+
+However I did think of a way to do something similar that I can share here...
+
+I wrote a another (nearly identical) [program](
+https://github.com/ingydotnet/yamlscript-vs-rosetta/blob/main/bin/ys-vs-rc) that
+compares YAMLScript solutions to other languages for the massive open source
+code site [Rosetta Code](https://rosettacode.org).
+
+Here's a few example gists that compare Rosetta Code YAMLScript solutions to
+those in the Exercism set of languages:
+
+* [99-bottles-of-beer](
+  https://gist.github.com/ingydotnet/93753b50508670b22a309322b7236046)
+* [FizzBuzz](
+  https://gist.github.com/ingydotnet/b995728875279d7b508b076525ef5d69)
+* [Floyds-triangle](
+  https://gist.github.com/ingydotnet/337517fb9c599c5a8e01c0a5355b6370)
+* [Rot-13](
+  https://gist.github.com/ingydotnet/c39752822b2197191e320e46ddde025c)
+
+As you can see, YAMLScript programs turn out to to be very clean, simple and
+easy to read.
+
+If you are going to enhance your YAML files with functional logic, it's
+reassuring to know that YAMLScript has the full power of a mature programming
+language behind it (Clojure), presented in a way that is not only as easy to
+read as YAML, but is actually 100% valid YAML.
+
+Let's segue to KubeCon, where we focus on YAMLScript as a way to tame large YAML
+configuration files for Kubernetes and other software frameworks.
+
+## KubeCon
+
+In early June I proposed a 90 minute YAMLScript tutorial for KubeCon and it was
+accepted!
+I'll be presenting it a week from this Friday ([November 15th in Salt Lake
+City](https://kccncna2024.sched.com/event/1i7qP)).
+If you are going to be at the conference, I hope we get a chance to talk.
+
+The YAMLScript needs for [Kubernetes](https://kubernetes.io/) (and other) config
+files are very different from its needs for Exercism.
+Kubernetes is configured with YAML, as are many other software frameworks used
+by [Cloud Native](https://www.cncf.io/) programmers.
+
+While YAMLScript is a great as a programming language, one of its main goals has
+always been to fix as many of the problems people have with YAML as possible.
+
+Of course, we are aware that there are already lots of tools that help with
+managing large YAML files for various applications.
+YAMLScript is not trying to replace those tools, but to augment them.
+
+For instance, many people use [Helm](https://helm.sh/) to manage their
+Kubernetes.
+Helm is a complete package manager for Kubernetes, that comes with a Go based
+templating system.
+
+YAMLScript can be used instead of (or in combination with) Helm's templating
+system.
+
+Let's look at an example of using YAMLScript in a Helm chart template.
+
+Here's a snippet of a template file created by `helm create mychart`:
+
+```yaml
+  spec:
+    {{- with .Values.volumes }}
+    volumes:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.nodeSelector }}
+    nodeSelector:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+  ```
+
+With YAMLScript, you can write this as:
+
+```yaml
+  spec:
+    :when+ Values.volumes.?:: {volumes:: _}
+    :when+ Values.nodeSelector.?::
+     nodeSelector:: _
+```
+
+Not only is the YAMLScript version much shorter and easier to read, its also
+valid YAML.
+That means it can be maintained using other YAML tools, like `yamllint`.
+It also gets rid of the need for the `nindent` explicit indenting function,
+which is a common source of errors in Helm templates.
+
+If you want to see an entire Helm chart written converted to YAMLScript, we made
+[a repository](https://github.com/ingydotnet/ys-test-chart) with 2 commits:
+one with the original Helm chart and one after the conversion.
+
+Or you can simply look at [this gist](
+https://gist.github.com/ingydotnet/9523716467fad01ccebcb1093b2b1f6f) which shows
+the changed files side by side.
+This gist was also generated by a new YAMLScript program called [sbs](
+https://github.com/ingydotnet/sbs/blob/main/bin/sbs) (side by side).
+
+
+
+### How KubeCon Made YAMLScript Better
+
+Just because YAMLScript is a great programming language, and embeddable in YAML,
+doesn't mean that it will be a natural fit for every common config file need.
+
+As we reviewed the needs for using YAMLScript in Helm charts, we found a couple
+things that could be improved.
+
+The first was being able to load external data and define variables in a file
+that is just data.
+
+As you might recall, to use YAMLScript in a YAML file, you need to use the
+special `!yamlscript/v0/` tag at the top.
+Note the difference between that tag and the `!yamlscript/v0` tag that we need
+to start a YAMLScript _program_.
+
+The trailing slash means to start off in "data mode" instead of "code mode".
+This means the the unquoted word `foo` is a string, not a variable or function.
+
+But say you want to load another file and use its contents as data (without
+having any effect on the YAML data you are defining in the current file).
+
+Now you can do that (at any lexical level) with a normal YAMLScript assignment.
+
+```yaml
+!yamlscript/v0/
+
+default =: load('defaults.yaml')
+
+foo:: default.foo.take(3)
+bar:
+  more =: load('more.yaml')
+  baz:: more.stuff * default:count
+```
+
+The `=:` pairs are code expressions that define new variables.
+The first one above applies to the entire file and the second one applies only
+to the map that contains it.
+
+Another thing we found was that we needed a way to conditionally include
+key/value pairs in a YAML map.
+
+We added a general `::` form that evaluates any code.
+If the evaluation result is a map, it is merged into the current map at the
+current position.
+If it evaluates to `nil`, nothing is added.
+
+```yaml
+!yamlscript/v0/
+
+foo: 1
+::
+  when rand(2) > 1::
+    bar: 2
+baz: 3
+```
+
+This is a very powerful way to conditionally add data using any logic you want.
+
+However its a bit verbose for simple cases.
+Consider this:
+
+```yaml
+!yamlscript/v0/
+
+data =: load('data.yaml')
+
+foo: 1
+::
+  when data.key1::
+    bar: data.key1
+baz: 3
+```
+
+We added a shorthand for this common case:
+
+```yaml
+:when data.key1::
+ bar: data.key1
+```
+
+You can collapse the `::` and the `when` function line into a single line.
+
+But notice the glaring redundancy of needing to write `data.key1` twice?
+
+We addressed that with the new `when+` function.
+
+```yaml
+:when+ data.key1::
+ bar: _
+```
+
+It sets the `_` variable to the value of its condition expression `data.key1`.
+
+Finally we can collapse that to a single line by simply using YAML's flow style:
+
+```yaml
+:when+ data.key1.?:: {bar: _}
+```
+
+## Conclusion
+
+This Fall, the YAMLScript project is in a really good place.
+It's both a great programming language and a great data language.
+While it is already extremely capable, we are always looking for ways to make
+it better.
+
+I'm very excited to present all this next week at KubeCon.
+And again, I hope to see you there!
+-->
 
     ]]>
       </content>
