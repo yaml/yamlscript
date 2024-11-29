@@ -3935,10 +3935,6 @@ variable there.</p>
 indent the data you are applying the function to.</p>
 <p>YAMLScript lets you put a function in a tag if you prefix it with a<code>:</code>:</p>
 <pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">--- !yamlscript/v0</span><span class="token punctuation">:</span><br>map1 =<span class="token punctuation">:</span><span class="token punctuation">:</span><br>  <span class="token key atrule">name</span><span class="token punctuation">:</span> Bobbi Datamon<br><span class="token key atrule">list1 =</span><span class="token punctuation">:</span> load("big<span class="token punctuation">-</span>list.yaml")<br><br><span class="token key atrule">person</span><span class="token punctuation">:</span> <span class="token tag">!:merge</span><br><span class="token punctuation">-</span> <span class="token tag">!</span> map1<br><span class="token punctuation">-</span> likes<span class="token punctuation">:</span><span class="token punctuation">:</span> list1</code></pre>
-<p>In this case we can simplify it even more by adding <code>:</code> to the <em>end</em> of the tag,
-thus switching to code mode:</p>
-<pre class="language-yaml"><code class="language-yaml"><span class="token key atrule">person</span><span class="token punctuation">:</span> <span class="token tag">!:</span><span class="token key atrule">merge</span><span class="token punctuation">:</span> <span class="token punctuation">-</span><span class="token punctuation">[</span>map1<span class="token punctuation">,</span> <span class="token punctuation">{</span>'likes' list1<span class="token punctuation">}</span><span class="token punctuation">]</span></code></pre>
-<p>But I digress…</p>
 <h2>Conditional Insertions in Mappings and Sequences</h2>
 <p>A big missing feature (and one definitely needed for Helm charts) was the
 ability to conditionally insert key/value pairs into mappings depending on some
