@@ -3994,6 +3994,13 @@ You should be able to conditionally insert items into a sequence at any point.</
   - bar
 - zzz
 </code></pre>
+<p>Again let's compile this to Clojure code to see exactly what it does:</p>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-c</span> file.yaml<br><span class="token punctuation">(</span>concat <span class="token punctuation">[</span><span class="token string">"aaa"</span><span class="token punctuation">]</span> <span class="token punctuation">(</span>concat <span class="token punctuation">(</span>when <span class="token punctuation">(</span><span class="token operator">></span> <span class="token punctuation">(</span>rand <span class="token number">100</span><span class="token punctuation">)</span> <span class="token number">50</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token string">"foo"</span> <span class="token string">"bar"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token string">"zzz"</span><span class="token punctuation">]</span><span class="token punctuation">))</span></code></pre>
+<p>Similar to the mapping case, but we get <code>concat</code> instead of <code>merge</code> to do the
+right thing with sequences.</p>
+<p>Now we run it a couple times:</p>
+<pre class="language-bash"><code class="language-bash">$ ys <span class="token parameter variable">-Y</span> file.yaml<br>- aaa<br>- zzz<br>$ ys <span class="token parameter variable">-Y</span> file.yaml<br>- aaa<br>- foo<br>- bar<br>- zzz</code></pre>
+<p>and Voilà!</p>
 <h2>Conclusion</h2>
 <p>I hope this post gave you some good ideas about how cleanly you can extend your
 YAML data files with YAMLScript.
