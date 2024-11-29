@@ -167,6 +167,7 @@ In those cases, the original Clojure function is still available in the
 * `fs-abs?(path)` - True if path is absolute
 * `fs-dirname(path)` - Get the directory name of a path
 * `fs-filename(path)` - Get the file name of a path
+* `fs-basename(path [ext])` - Get the file name of a path, without extension
 * `fs-glob(path)` - Glob a path
 * `fs-ls(dir)` - List a directory
 * `fs-mtime(file)` - Get the modification time of a file
