@@ -748,6 +748,10 @@
 (defn fs-filename [path]
   (str (fs/file-name (fs/canonicalize path))))
 
+(defn fs-basename
+  ([path] (str (fs-filename (fs/canonicalize path))))
+  ([path ext] (str (fs-filename (fs/strip-ext (fs/canonicalize path) {:ext ext})))))
+
 (defn fs-glob
   ([path] (fs-glob "." path))
   ([dir path] (map str (fs/glob dir path))))
