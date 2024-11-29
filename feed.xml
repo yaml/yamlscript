@@ -3757,18 +3757,23 @@ And again, I hope to see you there!</p>
   
     
     <entry>
-      <title>Conference Driven Developments</title>
-      <link href="https://yamlscript.org/posts/2024-11-27/"/>
+      <title>The Kubernetes Effect</title>
+      <link href="https://yamlscript.org/posts/2024-11-29/"/>
       <updated>2024-11-27T00:00:00Z</updated>
-      <id>https://yamlscript.org/posts/2024-11-27/</id>
+      <id>https://yamlscript.org/posts/2024-11-29/</id>
       <content type="html">
         <![CDATA[
       <p>In my many years of creating Open Source software and talking about it at
-conferences, some of the most productive development times are those leading up
-to the presentation.</p>
+conferences, some of the most productive development times are often those
+leading up to the presentation.</p>
 <p>In the last post, I mentioned that I was going to present a
 <a href="https://yamlscript.org/kubeys24">90 minute YAMLScript tutorial</a> at
 <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/">KubeCon (November 15th in Salt Lake City)</a>.</p>
+<p>The conference was amazing and the YAMLScript tutorial was a huge success.
+I came away with the feeling that YAML and YAMLScript had found their community.
+<strong>KubeCon felt like YAMLCon</strong>!</p>
+<p>But today's post is about the work leading up to the conference and the new data
+oriented features that were added to YAMLScript as a result.</p>
 <p>At the start of October we realized there were a few things we wanted to add to
 the language to make it great for defining dynamic data in YAML files.</p>
 <p>YAMLScript is a complete programming language and while you could already do
