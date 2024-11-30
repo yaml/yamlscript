@@ -3954,6 +3954,10 @@ baz: 333
 </code></pre>
 <p>The rule is that if the code under <code>::</code> evaluates to nil then ignore it.
 If it evaluates to a mapping then merge it into the parent mapping.</p>
+<blockquote>
+<p>The <code>when</code> function returns nil if the condition is false, and the body
+evaluation value if it is true.</p>
+</blockquote>
 <p>To best understand this we can simply compile this YAMLScript to Clojure code.</p>
 <blockquote>
 <p>You should know by now that every YAMLScript program is compiled to Clojure
