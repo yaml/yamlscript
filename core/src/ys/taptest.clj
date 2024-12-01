@@ -3,6 +3,7 @@
    [babashka.process :as process]
    [clojure.string :as str]
    [ys.ys :as ys]
+   [ys.yaml :as yaml]
    [yamlscript.common])
   (:refer-clojure
    :exclude [test]))
@@ -81,6 +82,22 @@
              (get test "form") (Throwable->map e)
              :else (throw e))))))
 
+(defn- load-data [test]
+  (swap! counter inc)
+  (let [count (deref counter)
+        data (get test "data")
+        what (get test "what")
+        _ (check-string data "data" count)
+        data (str "!yamlscript/v0:\n" data "\n")]
+    (try (if (= "out" what)
+           (with-out-str (ys/eval data))
+           (yaml/dump (ys/eval data)))
+         (catch Exception e
+           (cond
+             (= "error" what) (str/trim-newline (.getMessage e))
+             (get test "form") (Throwable->map e)
+             :else (throw e))))))
+
 (defn- run-cmnd [test]
   (swap! counter inc)
   (let [count (deref counter)
@@ -115,6 +132,9 @@
       (contains? keys "code")
       (assoc test "what" (or what "value"))
       ,
+      (contains? keys "data")
+      (assoc test "what" (or what "value"))
+      ,
       (contains? keys "cmnd")
       (assoc test "what" (or what "out"))
       ,
@@ -122,7 +142,7 @@
       test
       ,
       :else
-      (die "taptest: Test requires one of: 'code', 'cmnd'"))))
+      (die "taptest: Test requires one of: 'code', 'data', 'cmnd'"))))
 
 (defn- normalize [got test]
   (let [what (get test "what")
@@ -156,6 +176,7 @@
                       (println (str "# " diag)))))
               got (condp #(contains? %2 %1) keys
                     "code" [(run-code test)]
+                    "data" [(load-data test)]
                     "cmnd" [(run-cmnd test)]
                     nil)]
           (when got

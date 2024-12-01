@@ -661,9 +661,12 @@
 (defn +merge [M]
   (let [m (dissoc M "<<")
         q (get M "<<")
-        v (if (map? q) (vector q) (vec q))
-        v (conj v m)]
-    (apply merge v)))
+        v (if (map? q)
+            (vector q)
+            (if (seqable? q)
+              (vec q)
+              (util/die "Can't merge " q)))]
+    (apply merge-with (fn [x _] x) m v)))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))

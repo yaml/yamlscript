@@ -112,6 +112,20 @@ test::
     fn(val _): val.out
   want: "Hello, world!\n"
 
+- name: Test for data mode
+  data: |
+    - 111
+    - ! 111 + 111
+  want: |
+    - 111
+    - 222
+
+- name: Test for data mode with error
+  data: |
+    seq:: []
+  what: error
+  want: Sequences (block and flow) not allowed in code mode
+
 
 # Declare we are done with the number of tests:
-done: 21
+done: 23
