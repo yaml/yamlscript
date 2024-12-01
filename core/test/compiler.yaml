@@ -1581,7 +1581,7 @@
       - bar
     - baz
   clojure: |
-    (concat ["foo"] (concat (when (> (rand 2) 1) ["bar"]) ["baz"]))
+    (concat ["foo"] (when (> (rand 2) 1) ["bar"]) ["baz"])
 
 
 - name: Fix bug in seq insertion in data mode

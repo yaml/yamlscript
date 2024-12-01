@@ -223,20 +223,24 @@
                 [] nodes)]
     {:fmap nodes}))
 
+;; Handle sequences with code elements
 (defn construct-vec-dmap [node ctx]
+  ;; Must have a dmap element
   (when-lets [nodes (:Vec node)
               _ (some :dmap nodes)
-              nodes (reduce
-                      (fn [nodes node]
-                        (let [done (construct-node node ctx)]
-                          (if (and (:dmap node) (seq (first nodes)))
-                            [[] (Lst [(Sym 'concat) done (Vec (first nodes))])]
-                            [(vec (cons done (first nodes))) (second nodes)])))
-                      [[] []] (reverse nodes))]
-    (if (seq (second nodes))
-      (Lst [(Sym 'concat) (Vec (first nodes)) (second nodes)])
-      (Vec (first nodes)))))
-
+              nodes (partition-by (comp boolean :dmap) nodes)]
+    (let [vect (reduce
+                 (fn [new group]
+                   (let [nodes (map #(construct-node %1 ctx) group)
+                         node (if (:dmap (first group))
+                                (if (> (count group) 1)
+                                  (Lst (vec (cons (Sym 'concat) (vec nodes))))
+                                  (first nodes))
+                                (Vec (vec nodes)))
+                         new (if new (conj new node) [node])]
+                     new))
+                 nil nodes)]
+      (Lst (vec (cons (Sym 'concat) vect))))))
 
 (defn construct-vec [node ctx]
   (or

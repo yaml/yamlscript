@@ -143,11 +143,14 @@
 (defn check-mode-swap [key val]
   (let [key-text (:= key)]
     (if (and key-text (re-find #":$" key-text))
-      (if (:! val)
-        (die "Can't specify tag on value of '::' pair")
-        (let [key (assoc key := (str/replace key-text #"\s*:$" ""))
-              val (assoc val :! "")]
-          [key val]))
+      (if (re-find #"::$" key-text)
+        (let [key (assoc key := (str/replace key-text #"\s*::$" ""))]
+          [key val])
+        (if (:! val)
+          (die "Can't specify tag on value of '::' pair")
+          (let [key (assoc key := (str/replace key-text #"\s*:$" ""))
+                val (assoc val :! "")]
+            [key val])))
       [key val])))
 
 (defn check-yaml-core-tag [tag value]
@@ -467,7 +470,7 @@
                  (:map (resolve-data-node {:% rest}))))}
     (if-lets [list (or (:- node) (:-- node))
               key-str (get-in list [0 :% 0 :=])
-              _ (some #{":" "=>"} [key-str])
+              _ (= "=>" key-str)
               [first & rest] list]
       {:seq (cons (resolve-code-mapping first)
               (map resolve-data-node rest))}

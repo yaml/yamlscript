@@ -1205,14 +1205,15 @@
        [{:Sym merge}
         {:Map
          [{:Str "a"}
-          {:Vec
-           [{:Lst
+          {:Lst
+           [{:Sym concat}
+            {:Lst
              [{:Sym merge}
               {:Map [{:Str "b"} {:Str "c"}]}
               {:Lst [{:Sym foo}]}]}]}]}
         {:Lst [{:Sym bar}]}]}]}
   clojure: |
-    (merge {"a" [(merge {"b" "c"} (foo))]} (bar))
+    (merge {"a" (concat (merge {"b" "c"} (foo)))} (bar))
 
 
 - name: Top level data mode mapping first pair has key '::'
@@ -1369,3 +1370,77 @@
     say: ENV.$k:uc1
   clojure: |
     (say (uc1 (get+ ENV k)))
+
+
+- name: Multiple conditional seq insertion in data mode
+  yamlscript: |
+    !yamlscript/v0:
+    - aaa
+    - :when true: bbb
+    - ccc
+    - :when true: ddd
+    - eee
+  clojure: |
+    (concat ["aaa"] (when true bbb) ["ccc"] (when true ddd) ["eee"])
+
+
+- name: Multiple code insertions in data mode with mode swap variants
+  yamlscript: |
+    !yamlscript/v0:
+    - aaa
+    - ::
+        bbb
+    - :::
+      - bbb
+    - :when true:
+        bbb
+    - :when true::
+      - bbb
+    - ccc
+  resolve: |
+    {:seq
+     ({:str "aaa"}
+      {:map [{:nil ""} {:expr "bbb"}]}
+      {:map [{:nil ""} {:seq ({:str "bbb"})}]}
+      {:map [{:expr ":when true"} {:expr "bbb"}]}
+      {:map [{:expr ":when true"} {:seq ({:str "bbb"})}]}
+      {:str "ccc"})}
+  clojure: |
+    (concat
+      ["aaa"]
+      (concat bbb ["bbb"] (when true bbb) (when true ["bbb"]))
+      ["ccc"])
+
+
+- name: Two '::' in a data mode sequence
+  yamlscript: |
+    !yamlscript/v0:
+    - 0
+    - 1
+    - :: -[2 3 4]
+    - 5
+    - 5
+    - ::: [6, 7, 8]
+    - 9
+    - 10
+  clojure: |
+    (concat [0 1] [2 3 4] [5 5] [6 7 8] [9 10])
+
+
+- name: Two '::' in a row in a data mode sequence
+  yamlscript: |
+    !yamlscript/v0:
+    - 1
+    - :when x: -[2 3 4]
+    - :when y:: [6, 7, 8]
+    - 9
+  clojure: |
+    (concat [1] (concat (when x [2 3 4]) (when y [6 7 8])) [9])
+
+
+- name: Single '::' in a data mode sequence
+  yamlscript: |
+    !yamlscript/v0:
+    - :when x: -[2 3 4]
+  clojure: |
+    (concat (when x [2 3 4]))
