@@ -667,8 +667,11 @@
             (vector q)
             (if (seqable? q)
               (vec q)
-              (util/die "Can't merge " q)))]
-    (apply merge-with (fn [x _] x) m v)))
+              (util/die "Can't merge " q)))
+        M (apply merge-with (fn [x _] x) m v)]
+    (if (get M "<<")
+      (+merge M)
+      M)))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))

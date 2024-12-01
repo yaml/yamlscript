@@ -54,4 +54,25 @@ test::
     bar: 2
     quux: 4
 
-done: 5
+- name: Chained << merges
+  data: |
+    one: &a
+      a: 1
+    two: &b
+      <<: *a
+      b: 2
+    three:
+      <<: *b
+      c: 3
+  want: |
+    one:
+      a: 1
+    two:
+      b: 2
+      a: 1
+    three:
+      c: 3
+      b: 2
+      a: 1
+
+done: 6
