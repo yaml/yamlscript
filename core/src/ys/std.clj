@@ -114,7 +114,6 @@
 ;; Alternate truth functions
 ;;------------------------------------------------------------------------------
 
-; XXX rename to not? or F?
 (defn falsey? [x]
   (condf x
     number? (zero? x)
@@ -122,9 +121,12 @@
     identity false
     true))
 
-; XXX rename to is? or T?
+(defmacro F? [x] `(falsey? ~x))
+
 (defn truey? [x]
   (if (falsey? x) nil x))
+
+(defmacro T? [x] `(truey? ~x))
 
 (defmacro or?
   ([] nil)
