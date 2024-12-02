@@ -1,3 +1,10 @@
+- version: 0.1.86
+  date:    Sun 01 Dec 2024 10:32:59 PM CST
+  changes:
+  - core: Improvements and tests for << merge key
+  - core: Add aliases for truey? T? and falsey? F?
+  - core: Fix and improve code in data mode sequences
+  - core: Support chained << mapping merges
 - version: 0.1.85
   date:    Tue 26 Nov 2024 08:54:30 PM EST
   changes:
