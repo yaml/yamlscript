@@ -41,8 +41,8 @@ cast to numbers if they look like numbers.
 ```yaml
 !yamlscript/v0
 
-defn main(word='Hello!' times=3)
-  for i (1 .. times):
+defn main(word='Hello!' times=3):
+  each i (1 .. times):
     say: "$i) $word"
 ```
 
