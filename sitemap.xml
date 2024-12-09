@@ -696,17 +696,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/control/</loc>
-        
-          <lastmod>2024-10-19T01:07:11.227Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/operators/</loc>
         
           <lastmod>2024-10-19T01:07:11.227Z</lastmod>
@@ -828,9 +817,20 @@
   
     
       <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-12-02T14:14:43.312Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
         <loc>https://yamlscript.org/doc/bindings/</loc>
         
-          <lastmod>2024-12-02T14:10:41.867Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.507Z</lastmod>
         
         
         
@@ -841,40 +841,7 @@
       <url>
         <loc>https://yamlscript.org/doc/examples/</loc>
         
-          <lastmod>2024-12-02T14:10:41.867Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-12-02T14:10:41.867Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/ingydotnet/</loc>
-        
-          <lastmod>2024-12-02T14:10:41.867Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
-        <loc>https://yamlscript.org/kubeys24/</loc>
-        
-          <lastmod>2024-12-02T14:10:41.867Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.508Z</lastmod>
         
         
         
@@ -885,7 +852,7 @@
       <url>
         <loc>https://yamlscript.org/doc/helmys/</loc>
         
-          <lastmod>2024-12-02T14:11:00.586Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.510Z</lastmod>
         
         
         
@@ -896,7 +863,7 @@
       <url>
         <loc>https://yamlscript.org/doc/</loc>
         
-          <lastmod>2024-12-02T14:11:00.586Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.510Z</lastmod>
         
         
         
@@ -907,7 +874,7 @@
       <url>
         <loc>https://yamlscript.org/doc/query/</loc>
         
-          <lastmod>2024-12-02T14:11:00.586Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.512Z</lastmod>
         
         
         
@@ -918,7 +885,7 @@
       <url>
         <loc>https://yamlscript.org/doc/run-ys/</loc>
         
-          <lastmod>2024-12-02T14:11:00.586Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.513Z</lastmod>
         
         
         
@@ -929,7 +896,7 @@
       <url>
         <loc>https://yamlscript.org/doc/ys/</loc>
         
-          <lastmod>2024-12-02T14:11:00.586Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.514Z</lastmod>
         
         
         
@@ -940,7 +907,40 @@
       <url>
         <loc>https://yamlscript.org/</loc>
         
-          <lastmod>2024-12-02T14:11:00.589Z</lastmod>
+          <lastmod>2024-12-09T02:49:25.531Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/ingydotnet/</loc>
+        
+          <lastmod>2024-12-09T02:49:25.531Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/kubeys24/</loc>
+        
+          <lastmod>2024-12-09T02:49:25.532Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/control/</loc>
+        
+          <lastmod>2024-12-09T05:16:09.482Z</lastmod>
         
         
         
