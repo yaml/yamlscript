@@ -40,21 +40,6 @@
   (transform-with-else lhs rhs (Sym "=>")))
 
 ;;-----------------------------------------------------------------------------
-;; let destructuring
-;;-----------------------------------------------------------------------------
-
-(defn transform-vec-destructure [vec-form]
-  (if-lets [vect (:Vec vec-form)
-            form (last vect)
-            list (:Lst form)
-            _ (= 2 (count list))
-            _ (= {:Sym '_**} (first list))
-            sym (:Qts (second list))]
-    (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
-    vec-form))
-
-
-;;-----------------------------------------------------------------------------
 ;; defn and fn
 ;;-----------------------------------------------------------------------------
 
@@ -135,7 +120,7 @@
 
 
 ;;-----------------------------------------------------------------------------
-;; Group LHS arguments as a single bindings form
+;; let destructuring
 ;;-----------------------------------------------------------------------------
 
 (defn transform-vec-destructure [vec-form]
@@ -147,6 +132,11 @@
             sym (:Qts (second list))]
     (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
     vec-form))
+
+
+;;-----------------------------------------------------------------------------
+;; Group LHS arguments as a single bindings form
+;;-----------------------------------------------------------------------------
 
 (defn transform-bindings [bindings]
   (let [bindings
