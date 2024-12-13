@@ -14,7 +14,8 @@
 
 (defn load [str]
   (yaml/parse-string str
-    :code-point-limit (* 10 1024 1024)))
+    :code-point-limit (* 10 1024 1024)
+    :keywords false))
 
 (defn load-file [file]
   (load (slurp file)))
