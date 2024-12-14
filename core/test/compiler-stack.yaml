@@ -776,7 +776,7 @@
        :& "default"}
       {:str "foo"}
       {:map
-       [{:str "<<"}
+       [{:key ":-<<"}
         {:ali "default"}
         {:str "foo"}
         {:int "3"}
@@ -785,7 +785,7 @@
        :! ":+merge"}]}
   clojure: |
     {"default" (_& 'default {"foo" 1, "bar" 2}),
-      "foo" (+merge {"<<" (_* 'default), "foo" 3, "baz" 4})}
+      "foo" (+merge {:-<< (_* 'default), "foo" 3, "baz" 4})}
 
 
 - name: Implicit merge-map call tag in data mode
@@ -805,7 +805,7 @@
        :& "default"}
       {:str "foo"}
       {:map
-       [{:str "<<"}
+       [{:key ":-<<"}
         {:Ali "default"}
         {:str "foo"}
         {:int "3"}
@@ -814,7 +814,7 @@
        :! ":+merge"}]}
   clojure: |
     {"default" (_& 'default {"foo" 1, "bar" 2}),
-      "foo" (+merge {"<<" (_** 'default), "foo" 3, "baz" 4})}
+      "foo" (+merge {:-<< (_** 'default), "foo" 3, "baz" 4})}
 
 
 - name: Code assignment in data mode mapping

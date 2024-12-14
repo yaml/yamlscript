@@ -371,7 +371,10 @@
                              (resolve-data-node (dissoc val :!))
                              (resolve-code-node val))]
                           :else
-                          [(resolve-data-node key) (resolve-data-node val)])]
+                          [(resolve-data-node key) (resolve-data-node val)])
+                        key (if (and key-str (= key-str "<<"))
+                              {:key ":-<<"}
+                              key)]
                     [key val]))
                 (partition 2 nodes)))}
         mapping (if-let [anchor (:& node)] (assoc mapping :& anchor) mapping)
@@ -482,8 +485,15 @@
 ;; ----------------------------------------------------------------------------
 (defn resolve-bare-mapping [node]
   (let [nodes (or (:% node) (:%% node))
-        merge (some #(= %1 {:= "<<"}) (keys (apply hash-map nodes)))
-        mapping {:map (vec (map resolve-bare-node nodes))}
+        nodes2 (map-indexed
+                 (fn [index item]
+                   (if (and (even? index)
+                         (= item {:= "<<"}))
+                     {:key ":-<<"}
+                     item))
+                 nodes)
+        merge (not= nodes nodes2)
+        mapping {:map (vec (map resolve-bare-node nodes2))}
         mapping (if-let [anchor (:& node)]
                   (assoc mapping :& anchor)
                   mapping)

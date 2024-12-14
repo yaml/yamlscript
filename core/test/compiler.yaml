@@ -1550,7 +1550,7 @@
     <<:: -[{:a 1 :b 2}]
     :a: 3
   clojure: |
-    (+merge {"<<" [{:a 1, :b 2}], :a 3})
+    (+merge {:-<< [{:a 1, :b 2}], :a 3})
 
 
 - name: Tag method call with data mode switch to data mode

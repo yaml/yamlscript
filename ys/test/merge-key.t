@@ -75,4 +75,22 @@ test::
       b: 2
       a: 1
 
-done: 6
+- name: https://github.com/yaml/yamlscript/issues/197#issuecomment-2514783585
+  data: |
+    one: &a
+      a: 1
+    two: &b
+      <<: *a
+      b: 2
+    three: *b
+  want: |
+    one:
+      a: 1
+    two:
+      b: 2
+      a: 1
+    three:
+      b: 2
+      a: 1
+
+done: 7

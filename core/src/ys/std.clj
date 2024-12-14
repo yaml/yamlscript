@@ -431,27 +431,6 @@
 
 
 ;;------------------------------------------------------------------------------
-;; YAML Anchor and alias functions
-;;------------------------------------------------------------------------------
-(defn _& [sym val]
-  (when (> (count (str val)) _max-alias-size)
-    (util/die "Anchored node &" sym " exceeds max size of " _max-alias-size))
-  (swap! global/stream-anchors_ assoc sym val)
-  (swap! global/doc-anchors_ assoc sym val)
-  val)
-
-(defn _* [sym]
-  (or
-    (get @global/doc-anchors_ sym)
-    (util/die "Anchor not found: &" sym)))
-
-(defn _** [sym]
-  (or
-    (get @global/stream-anchors_ sym)
-    (util/die "Anchor not found: &" sym)))
-
-
-;;------------------------------------------------------------------------------
 ;; YAMLScript document result stashing functions
 ;;------------------------------------------------------------------------------
 (defn +++* [value]
@@ -661,17 +640,17 @@
   ([x C] (has? C x)))
 
 (defn +merge [M]
-  (let [m (dissoc M "<<")
-        q (get M "<<")
-        v (if (map? q)
-            (vector q)
-            (if (seqable? q)
-              (vec q)
-              (util/die "Can't merge " q)))
-        M (apply merge-with (fn [x _] x) m v)]
-    (if (get M "<<")
-      (+merge M)
-      M)))
+  (if (:-<< M)
+    (let [m (dissoc M :-<<)
+          q (get M :-<<)
+          v (if (map? q)
+              (vector q)
+              (if (seqable? q)
+                (vec q)
+                (util/die "Can't merge " q)))
+          M (apply merge-with (fn [x _] x) m v)]
+      (+merge M))
+      M))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
@@ -702,6 +681,27 @@
 (defn slice [C & ks]
   (let [ks (flatten ks)]
     (vec (map (fn [k] (get+ C k)) ks))))
+
+
+;;------------------------------------------------------------------------------
+;; YAML anchor and alias functions
+;;------------------------------------------------------------------------------
+(defn _& [sym val]
+  (when (> (count (str val)) _max-alias-size)
+    (util/die "Anchored node &" sym " exceeds max size of " _max-alias-size))
+  (swap! global/stream-anchors_ assoc sym val)
+  (swap! global/doc-anchors_ assoc sym val)
+  val)
+
+(defn _* [sym]
+  (or
+    (+merge (get @global/doc-anchors_ sym))
+    (util/die "1 Anchor not found: &" sym)))
+
+(defn _** [sym]
+  (or
+    (+merge (get @global/stream-anchors_ sym))
+    (util/die "2 Anchor not found: &" sym)))
 
 
 ;;------------------------------------------------------------------------------
