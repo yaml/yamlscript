@@ -35,6 +35,7 @@
 (def ARGS (sci/new-dynamic-var 'ARGS [] {:ns global/main-ns}))
 (def ARGV (sci/new-dynamic-var 'ARGV [] {:ns global/main-ns}))
 (def CWD (sci/new-dynamic-var 'CWD nil {:ns global/main-ns}))
+(def DIR (sci/new-dynamic-var 'DIR nil {:ns global/main-ns}))
 (def INC (sci/new-dynamic-var 'INC [] {:ns global/main-ns}))
 (def RUN (sci/new-dynamic-var 'RUN {} {:ns global/main-ns}))
 
@@ -44,6 +45,7 @@
               'ARGS ARGS
               'ARGV ARGV
               'CWD CWD
+              'DIR DIR
               'ENV global/ENV
               'FILE global/FILE
               'INC INC
@@ -232,6 +234,7 @@
          ARGV args
          RUN (get-runtime-info)
          CWD (str (babashka.fs/cwd))
+         DIR (common/dirname file)
          global/ENV (into {} (System/getenv))
          global/FILE file
          INC (common/get-yspath file)]

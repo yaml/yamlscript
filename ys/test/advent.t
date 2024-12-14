@@ -2,7 +2,7 @@
 
 require ys::taptest: test done
 
-AV =: "$fs-dirname(FILE)/../../sample/advent"
+AV =: "$DIR/../../sample/advent"
 
 w =: /\w+/
 

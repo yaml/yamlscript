@@ -2,7 +2,7 @@
 
 require ys::taptest: test done
 
-RC =: "$fs-dirname(FILE)/../../sample/rosetta-code"
+RC =: "$DIR/../../sample/rosetta-code"
 
 fizz-buzz-want =:
   qw(1 2 Fizz 4 Buzz Fizz 7 8 Fizz
