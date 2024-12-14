@@ -305,6 +305,12 @@ test::
   like: /ys$
 - code: fs-mtime(CWD).str()
   like: ^\d{13}$
+- code: 'fs-basename: "$base/test/std.t"'
+  want: std.t
+- code: fs-basename('$base/test/std.t' 't')
+  want: std
+- code: fs-basename('$base/test/std.t' '*')
+  want: std
 
 
 #-------------------------------------------------------------------------------

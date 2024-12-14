@@ -756,6 +756,13 @@
 (defn fs-filename [path]
   (str (fs/file-name (fs/canonicalize path))))
 
+(defn fs-basename
+  ([path] (fs-filename path))
+  ([path ext]
+   (if (= ext "*")
+     (str/replace (fs-basename path) #"(\w)\.\w{1,12}$" "$1")
+     (fs/strip-ext (fs-basename path) {:ext ext}))))
+
 (defn fs-glob
   ([path] (fs-glob "." path))
   ([dir path] (map str (fs/glob dir path))))
@@ -792,7 +799,6 @@
 (defn- process-opts [[opts & xs]]
   (let [opts (if (map? opts)
                (let [env (or (:env opts) global/env)
-                     #_#_ dir (or (:dir opts) CWD)
                      opts (assoc opts :env env)]
                  [opts])
                [{:env global/env} opts])]
