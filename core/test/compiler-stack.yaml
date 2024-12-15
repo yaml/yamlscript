@@ -1205,15 +1205,14 @@
        [{:Sym merge}
         {:Map
          [{:Str "a"}
-          {:Lst
-           [{:Sym concat}
-            {:Lst
+          {:Vec
+           [{:Lst
              [{:Sym merge}
               {:Map [{:Str "b"} {:Str "c"}]}
               {:Lst [{:Sym foo}]}]}]}]}
         {:Lst [{:Sym bar}]}]}]}
   clojure: |
-    (merge {"a" (concat (merge {"b" "c"} (foo)))} (bar))
+    (merge {"a" [(merge {"b" "c"} (foo))]} (bar))
 
 
 - name: Top level data mode mapping first pair has key '::'

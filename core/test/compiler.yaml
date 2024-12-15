@@ -1592,3 +1592,13 @@
     {:Vec [{:Map [{:Str "x"} {:Nil nil}]}]}
   clojure: |
     [{"x" nil}]
+
+
+- name: Conditional map insertion in data mode bug
+  yamlscript: |
+    !yamlscript/v0:
+    - foo: 1
+      :when x:: {bar: 2}
+      x: 3
+  clojure: |
+    [(merge {"foo" 1} (merge (when x {"bar" 2}) {"x" 3}))]

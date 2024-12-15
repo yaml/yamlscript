@@ -227,7 +227,12 @@
 (defn construct-vec-dmap [node ctx]
   ;; Must have a dmap element
   (when-lets [nodes (:Vec node)
-              _ (some :dmap nodes)
+              _ (some (fn [node]
+                        (when-let [dmap (:dmap node)]
+                          (and
+                            (= 1 (count dmap))
+                            (= 1 (count (first dmap))))))
+                  nodes)
               nodes (partition-by (comp boolean :dmap) nodes)]
     (let [vect (reduce
                  (fn [new group]
