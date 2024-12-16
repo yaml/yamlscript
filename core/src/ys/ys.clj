@@ -10,7 +10,8 @@
    [yamlscript.common :refer [abspath dirname get-yspath]]
    [yamlscript.compiler]
    [yamlscript.global :as global]
-   [yamlscript.re :as re])
+   [yamlscript.re :as re]
+   [yamlscript.util :as util])
   (:refer-clojure
    :exclude [compile
              eval
@@ -41,6 +42,34 @@
 ;;-----------------------------------------------------------------------------
 (defn compile [code]
   (yamlscript.compiler/compile code))
+
+(defn +def-vars [ns m]
+  (let [ns
+        (condf ns
+          #(= (type %1) clojure.lang.Namespace) ns
+          #(= (type %1) sci.lang.Namespace) ns
+          string? (global/create-ns (symbol ns))
+          symbol? (global/create-ns ns)
+          (util/die (str "Invalid namespace for set-vars: '" ns "'")))]
+    (reduce-kv
+      (fn [_ k v]
+        (let [key (condf k
+                    string? k
+                    keyword? (name k)
+                    symbol? (name k)
+                    (util/die (str "Invalid key for set-vars: '" k "'")))
+              key (str/replace key #"_" "-")
+              _ (when-not (re-matches re/symw key)
+                  (util/die (str "Invalid key for set-vars: '" key "'")))
+              key (symbol key)]
+          (global/intern ns key v)))
+      nil m)))
+
+(defmacro def-vars-from-map [ns m]
+  `(let [[m# ns#] (if (~m "+")
+                    [(dissoc ~m "+") (symbol (~m "+"))]
+                    [~m ~ns])]
+     (+def-vars ns# m#)))
 
 (defn eval- [ys-code file stream-mode]
   (let [stream @global/stream-values

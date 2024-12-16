@@ -3,7 +3,9 @@
 
 (ns yamlscript.global
   (:require
-   [sci.core :as sci]))
+   [sci.core :as sci])
+  (:refer-clojure :exclude [create-ns
+                            intern]))
 
 #_(defn WWW [& xs]
   (println (apply str ">>> " xs) " <<<")
@@ -22,6 +24,12 @@
 (def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
 
 (def env {})
+
+(defn create-ns [ns]
+  (sci/create-ns ns))
+
+(defn intern [ns vym val]
+  (sci/intern @sci-ctx ns vym val))
 
 (defn update-environ [m]
   (sci/alter-var-root ENV
