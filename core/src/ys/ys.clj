@@ -42,18 +42,22 @@
 (defn compile [code]
   (yamlscript.compiler/compile code))
 
-(defn eval- [ys-code file]
+(defn eval- [ys-code file stream-mode]
   (let [stream @global/stream-values
         _ (reset! global/stream-values [])
         clj-code (ys.ys/compile ys-code)
-        ret (sci/binding
-             [sci/file file
-              global/FILE file]
-              (sci/eval-string+ @global/sci-ctx clj-code))
+        value (sci/binding
+               [sci/file file
+                global/FILE file]
+                (sci/eval-string+ @global/sci-ctx clj-code))
+        value (if stream-mode
+                @global/stream-values
+                (:val value))
         _ (reset! global/stream-values stream)]
-    (:val ret)))
+    value))
 
-(defn eval [ys-code] (ys.ys/eval- ys-code "EVAL"))
+(defn eval [ys-code] (ys.ys/eval- ys-code "EVAL" false))
+(defn eval-stream [ys-code] (ys.ys/eval- ys-code "EVAL" true))
 
 ;; XXX This should work but doesn't.
 #_(defn load-file [ys-file]
