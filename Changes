@@ -1,3 +1,16 @@
+- version: 0.1.87
+  date:    Mon 16 Dec 2024 09:18:04 AM PST
+  changes:
+  - doc: Updates to docs after KubeCon SLC
+  - core: Remove a duplicated function from transformers.clj
+  - core: Change yaml/load to not load keys as keywords
+  - core: Fix bug for alias to map with a << merge key
+  - std: Add fs-basename function
+  - core: Add DIR global var to runtime
+  - core: Fix bug in conditional pairs in map
+  - core: Add ys/eval-stream function
+  - core: Fix bug with tag calls on let exprs
+  - core: Add ys/def-vars-from-map function
 - version: 0.1.86
   date:    Sun 01 Dec 2024 10:32:59 PM CST
   changes:

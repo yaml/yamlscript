@@ -14,5 +14,5 @@ $ curl https://yamlscript.org/install | bash
 See [Installing YAMLScript](https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript) for more detailed information.
 
 
-## Changes in YAMLScript version 0.1.86
+## Changes in YAMLScript version 0.1.87
 

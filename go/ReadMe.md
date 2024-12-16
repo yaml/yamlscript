@@ -91,7 +91,7 @@ $ ys --compile file.ys
 In `go.mod`:
 
 ```go
-require github.com/yaml/yamlscript-go v0.1.86
+require github.com/yaml/yamlscript-go v0.1.87
 ```
 
 File `prog.go`:
@@ -121,7 +121,7 @@ func main() {
 You can install this module like any other Go module:
 
 ```bash
-$ go get github.com/yaml/yamlscript-go@v0.1.86
+$ go get github.com/yaml/yamlscript-go@v0.1.87
 ```
 
 but you will need to have a system install of `libyamlscript.so`.
