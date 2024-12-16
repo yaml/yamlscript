@@ -97,6 +97,22 @@
       (and (:Str key) (nil? val)) key
       :else (Lst (expand-splats (flatten [key val]))))))
 
+(defn construct-tag-call [node tag]
+  (or (re-find #"^:" tag)
+    (die "Function call tag must start with a colon"))
+  (let [tag (subs tag 1)
+        [tag splat] (if (re-find #"\*$" tag)
+                      [(subs tag 0 (dec (count tag))) true]
+                      [tag false])]
+    (if splat
+      (let [kind (-> node first key)]
+        (case kind
+          :Vec (Lst [(Sym 'apply) (Sym tag) node])
+          ,    (die "Splat only allowed on Vec")))
+      (if (vector? node)
+        (Lst [(Sym tag) (first node)])
+        (Lst [(Sym tag) node])))))
+
 (defn apply-let-bindings [lets rest ctx]
   [[(Sym "let")
     (vec
@@ -109,9 +125,10 @@
                 (partition 2)
                 (map #(let [[k v] %1]
                         (if (:xmap v)
-                          [k (Lst (get-in
-                                    (construct-xmap v ctx)
-                                    [0 :Lst]))]
+                          (let [t (:! v)
+                                v (construct-xmap v ctx)
+                                v (if t [(construct-tag-call v t)] v)]
+                            [k (Lst (get-in v [0 :Lst]))])
                           %1)))
                 (mapcat identity)
                 vec))]
@@ -137,8 +154,8 @@
         node (loop [xmap xmap, new []]
                (if (seq xmap)
                  (let [xmap (if (> (:lvl ctx) 1)
-                               (check-let-bindings xmap ctx)
-                               xmap)
+                              (check-let-bindings xmap ctx)
+                              xmap)
                        [[lhs rhs] & xmap] xmap
                        lhs (if (and
                                  (= 2 (count lhs))
@@ -152,8 +169,8 @@
                                  (not (some #{:xmap :fmap} (keys rhs))))
                              {:Sym '=>} lhs)
                        [fmap lhs] (if (get-in lhs [:form])
-                                     [true (:form lhs)]
-                                     [false lhs])
+                                    [true (:form lhs)]
+                                    [false lhs])
                        lhs (construct-side lhs ctx)
                        rhs (construct-side rhs ctx)
                        rhs (or (:fmap rhs) rhs)
@@ -283,22 +300,6 @@
 
 (defn construct-stream-alias [node]
   (Lst [(Sym '_**) (Qts (:Ali node))]))
-
-(defn construct-tag-call [node tag]
-  (or (re-find #"^:" tag)
-    (die "Function call tag must start with a colon"))
-  (let [tag (subs tag 1)
-        [tag splat] (if (re-find #"\*$" tag)
-                      [(subs tag 0 (dec (count tag))) true]
-                      [tag false])]
-    (if splat
-      (let [kind (-> node first key)]
-        (case kind
-          :Vec (Lst [(Sym 'apply) (Sym tag) node])
-          ,    (die "Splat only allowed on Vec")))
-      (if (vector? node)
-        (Lst [(Sym tag) (first node)])
-        (Lst [(Sym tag) node])))))
 
 (defn construct-node
   ([node ctx]

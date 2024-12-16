@@ -1602,3 +1602,13 @@
       x: 3
   clojure: |
     [(merge {"foo" 1} (merge (when x {"bar" 2}) {"x" 3}))]
+
+
+- name: Tag function on let
+  yamlscript: |
+    !yamlscript/v0
+    defn xyz():
+      foo =: !:WWW
+        bar: 42
+  clojure: |
+    (defn xyz [] (let [foo (WWW (bar 42))]))
