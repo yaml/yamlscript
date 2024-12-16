@@ -817,17 +817,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/ys-std/</loc>
-        
-          <lastmod>2024-12-02T14:14:43.312Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/bindings/</loc>
         
           <lastmod>2024-12-09T02:49:25.507Z</lastmod>
@@ -940,7 +929,18 @@
       <url>
         <loc>https://yamlscript.org/doc/control/</loc>
         
-          <lastmod>2024-12-09T05:16:09.482Z</lastmod>
+          <lastmod>2024-12-09T06:30:38.342Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/ys-std/</loc>
+        
+          <lastmod>2024-12-14T06:14:01.828Z</lastmod>
         
         
         
