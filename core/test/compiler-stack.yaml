@@ -1456,3 +1456,16 @@
     - :when x: -[2 3 4]
   clojure: |
     (concat (when x [2 3 4]))
+
+
+- name: Two '::' in a row in a data mode mapping
+  yamlscript: |
+    !yamlscript/v0:
+    a: 1
+    :when x: -{'b' 2}
+    :when y:: {c: 3}
+    d: 4
+  clojure: |
+    (merge
+      {"a" 1}
+      (merge (when x {"b" 2}) (merge (when y {"c" 3}) {"d" 4})))
