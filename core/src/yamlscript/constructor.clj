@@ -193,22 +193,21 @@
                         (map
                           (fn [node]
                             (let [node (construct-node node ctx)]
-                              (if (vector? node)
-                                (first node)
-                                node)))
+                              (if (vector? node) (first node) node)))
                           (mapcat rest part))))]
                 (Lst [(Sym 'let) bind dmap]))
-              (let [form (get-in part [0 0])
-                    form (construct-node form ctx)
-                    form (if (map? form)
-                           form
-                           (if (= 1 (count form))
-                             (first form)
-                             (Lst (apply vector (Sym 'do) form))))]
-                (if (= dmap {:Map []})
-                  form
-                  (Lst [(Sym 'merge) form dmap])))))
-          dmap (vec (reverse parts)))]
+              (reduce (fn [dmap [form]]
+                        (let [form (construct-node form ctx)
+                              form (if (map? form)
+                                     form
+                                     (if (= 1 (count form))
+                                       (first form)
+                                       (Lst (apply vector (Sym 'do) form))))]
+                          (if (= dmap {:Map []})
+                            form
+                            (Lst [(Sym 'merge) form dmap]))))
+                dmap (reverse part))))
+          dmap (reverse parts))]
     result))
 
 (defn construct-dmap [node ctx]
