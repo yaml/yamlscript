@@ -760,7 +760,7 @@
   ([path] (fs-filename path))
   ([path ext]
    (if (= ext "*")
-     (str/replace (fs-basename path) #"(\w)\.\w{1,12}$" "$1")
+     (str/replace (fs-basename path) #"(\w)\.\w{1,16}$" "$1")
      (fs/strip-ext (fs-basename path) {:ext ext}))))
 
 (defn fs-glob
