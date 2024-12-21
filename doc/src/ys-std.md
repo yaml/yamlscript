@@ -165,6 +165,7 @@ In those cases, the original Clojure function is still available in the
 * `fs-z(path)` - True if path is empty
 * `fs-abs(path)` - Get the absolute path
 * `fs-abs?(path)` - True if path is absolute
+* `fs-basename(path, *ext)` - Get the file name of a path, without extension
 * `fs-dirname(path)` - Get the directory name of a path
 * `fs-filename(path)` - Get the file name of a path
 * `fs-glob(path)` - Glob a path
