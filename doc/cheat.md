@@ -191,6 +191,7 @@ say: |
 - ARGV              # Command line arguments
 - ARGS              # Command line arguments parsed
 - CWD               # Current working directory
+- DIR               # Parent directory path of the current script
 - ENV               # Environment variables mapping
 - FILE              # File path of the current script
 - INC               # File loading include path
