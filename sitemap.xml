@@ -762,17 +762,6 @@
   
     
       <url>
-        <loc>https://yamlscript.org/doc/cheat/</loc>
-        
-          <lastmod>2024-11-09T05:37:23.987Z</lastmod>
-        
-        
-        
-      </url>
-    
-  
-    
-      <url>
         <loc>https://yamlscript.org/doc/embedding/</loc>
         
           <lastmod>2024-11-09T05:37:23.987Z</lastmod>
@@ -941,6 +930,17 @@
         <loc>https://yamlscript.org/doc/control/</loc>
         
           <lastmod>2024-12-21T18:57:02.903Z</lastmod>
+        
+        
+        
+      </url>
+    
+  
+    
+      <url>
+        <loc>https://yamlscript.org/doc/cheat/</loc>
+        
+          <lastmod>2024-12-22T14:41:04.180Z</lastmod>
         
         
         
