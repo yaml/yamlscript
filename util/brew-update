@@ -1,12 +1,19 @@
 #!/usr/bin/env ys-0
 
-releases-url =: 'https://github.com/yaml/yamlscript/releases'
-brew-url =: 'git@github.com:yaml/homebrew-yamlscript'
+releases-url =: "https://github.com/yaml/yamlscript/releases"
+repo =: ENV.GITHUB_REPOSITORY_OWNER || 'yaml'
+brew-url =: "https://github.com/$repo/homebrew-yamlscript"
 
 defn main(version):
   check-version: version
   download-releases: version
   update-brew: version
+
+defn sha256sum(file):
+  os =: System/getProperty("os.name")
+  cond:
+    os =~ /Mac\s?OS/: sh("shasum -a 256 $file")
+    else: sh("sha256sum $file")
 
 defn update-brew(version):
   releases =: releases(version)
@@ -22,7 +29,7 @@ defn update-brew(version):
   text =:
     reduce-kv _ text releases:
       fn(text key file):
-        sha256 =: sh("sha256sum $file").out:words.0
+        sha256 =: sha256sum(file).out:words.0
         text: .replace(key sha256)
 
   say: "Updating homebrew-yamlscript/ys.rb"
@@ -51,7 +58,7 @@ defn download-releases(version):
       when-not fs-e(file):
         say: "Downloading $file"
         url =: "$releases-url/download/$version/$file"
-        res =: sh("wget -q $url")
+        res =: sh("curl --silent --location $url --output $file")
         when res.exit:N.?:
           die: "Download of '$url' failed:\n$(res.err)"
 
@@ -62,7 +69,7 @@ defn releases(version)::
   MAC_INT:: "ys-${version}-macos-x64.tar.xz"
 
 defn check-version(version):
-  when version !~ /^0\.1\.\d+$/:
+  when version !~ /^\d(\.\d+){2}$/:
     die: "Invalid version '$version'"
 
   try:
