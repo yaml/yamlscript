@@ -3,7 +3,7 @@
 A YAMLScript file `some.ys`:
 
 ```yaml
-!yamlscript/v0/
+!yamlscript/v0:
 
 =>:
   name =: "World"

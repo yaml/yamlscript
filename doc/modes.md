@@ -46,7 +46,7 @@ to the top:
 * `!yamlscript/v0/code` - Start in code mode.
 * `!yamlscript/v0/data` - Start in data mode.
 * `!yamlscript/v0` - Short for `!yamlscript/v0/code`
-* `!yamlscript/v0/` - Short for `!yamlscript/v0/data`
+* `!yamlscript/v0:` - Short for `!yamlscript/v0/data`
 
 Consider the following examples.
 
@@ -63,7 +63,7 @@ Data mode:
 
 ```txt
 $ ys --load <(echo '
-!yamlscript/v0/
+!yamlscript/v0:
 foo:
   count: [red, green, blue]')
 {"foo":{"count":["red","green","blue"]}}
@@ -95,7 +95,7 @@ The special tag `!` can be used to switch from data to code and vice versa.
 
 ```txt
 $ ys --load <(echo '
-!yamlscript/v0/
+!yamlscript/v0:
 foo: !
   count: [red, green, blue]')
 Error: Sequences (block and flow) not allowed in code mode
@@ -108,7 +108,7 @@ We need to put `[red, green, blue]` into data mode:
 
 ```txt
 $ ys --load <(echo '
-!yamlscript/v0/
+!yamlscript/v0:
 foo: !
   count: ! [red, green, blue]')
 {"foo":3}
@@ -124,7 +124,7 @@ Let's try it out:
 
 ```txt
 $ ys --load <(echo '
-!yamlscript/v0/
+!yamlscript/v0:
 foo::
   count:: [red, green, blue]')
 {"foo":3}
@@ -136,7 +136,7 @@ However, when *switching in a sequence* you'll need to use `!`:
 
 ```txt
 $ ys --load <(echo '
-!yamlscript/v0/
+!yamlscript/v0:
 - !
   count:: [red, green, blue]')
 [3]

@@ -8,7 +8,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YAMLScript:
 ```yaml
-!yamlscript/v0/
+!yamlscript/v0:
 
 # Get data from external sources:
 names-url =:
@@ -84,7 +84,7 @@ $ ys --compile file.ys
 ```
 
 ```markys:include
-!yamlscript/v0/
+!yamlscript/v0:
 file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 ```
 
@@ -103,7 +103,7 @@ file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 ## Authors
 
 ```markys:include
-!yamlscript/v0/
+!yamlscript/v0:
 file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/authors.md"
 ```
 

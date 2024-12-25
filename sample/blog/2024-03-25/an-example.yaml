@@ -1,5 +1,5 @@
-!yamlscript/v0/
-# /v0/ starts in "data mode"
+!yamlscript/v0:
+# /v0: starts in "data mode"
 
 # This `=>` preamble loads reusable data and code:
 =>:
