@@ -13,7 +13,7 @@ title: YAMLScript Cheat Sheet
 * YAMLScript files must start with a YAMLScript tag:
   * `!yamlscript/v0` - Start in code mode
   * `!yamlscript/v0/data` - Start in data mode
-  * `!yamlscript/v0/` - Shorthand for data mode
+  * `!yamlscript/v0:` - Shorthand for data mode
   * No tag - Start in bare mode (plain YAML; no code evaluation)
 * YAMLScript code mode always uses these YAML forms:
   * Block mappings (normal indented mappings; `: ` separated pairs)

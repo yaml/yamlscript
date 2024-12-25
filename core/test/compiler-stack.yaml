@@ -388,6 +388,19 @@
     {"str" "foo bar", "num" (inc 41), "bar" (load "bar.yaml")}
 
 
+- name: Deprecated data mode tag !yamlscript/v0/
+  yamlscript: |
+    !yamlscript/v0/
+    str: foo bar
+    num: ! inc(41)
+  resolve: |
+    {:map
+     [{:str "str"}
+      {:str "foo bar"}
+      {:str "num"}
+      {:expr "inc(41)"}]}
+
+
 - name: Shebang line with ys-0 implies !yamlscript/v0
   yamlscript: |
     #!/usr/bin/env ys-0
@@ -403,10 +416,10 @@
 - name: Shebang line with ys-0 and !yamlscript/... tag ignored
   yamlscript: |
     #!/usr/bin/env ys-0
-    !yamlscript/v0/:
+    !yamlscript/v0:
     say: "Hi"
   parse: |
-    "+MAP", :! "yamlscript/v0/:"
+    "+MAP", :! "yamlscript/v0:"
     "=VAL", := "say"
     "=VAL", :$ "Hi"
     "-MAP"
@@ -570,7 +583,7 @@
 
 - name: Code preamble in data mode sequence
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     - =>:
         vars =: load('vars.yaml')
     - ! vars.foo
@@ -637,12 +650,12 @@
 
 - name: Function tags in data mode
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     foo: !:merge*
     - foo: 1
     - bar: 2
   compose: |
-    {:! "yamlscript/v0/",
+    {:! "yamlscript/v0:",
      :%
      [{:= "foo"}
       {:! ":merge*",
@@ -726,7 +739,7 @@
 
 - name: Anchors in various contexts in data mode
   yamlscript: |
-    --- !yamlscript/v0/ &map1
+    --- !yamlscript/v0: &map1
     a: &seq2
     - &map3
       b: &val4 c
@@ -790,7 +803,7 @@
 
 - name: Implicit merge-map call tag in data mode
   yamlscript: |
-    --- !yamlscript/v0/
+    --- !yamlscript/v0:
     default: &default
       foo: 1
       bar: 2
@@ -905,7 +918,7 @@
 
 - name: Load yaml file in data map assignment
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     a: 1
     data =: slurp('data.yaml'):yaml/load
     b: 2
@@ -971,7 +984,7 @@
 
 - name: Conditional pairs in data mode map
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     ::
       use: 'module1'
       use: 'module2'
@@ -1102,7 +1115,7 @@
 
 - name: Conditional pair without other pairs
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     ::
       when x > 1::
         aaa: bbb
@@ -1113,7 +1126,7 @@
 
 - name: Conditional pair with multiple pairs value
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     x: 1
     ::
       say: 'one'
@@ -1127,7 +1140,7 @@
 
 - name: Conditional pair with non-mapping value
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     x: 1
     :: foo(a 3)
     y: 2
@@ -1153,7 +1166,7 @@
 
 - name: Conditional pair dmap in dmap
   yamlscript: |
-    --- !yamlscript/v0/
+    --- !yamlscript/v0:
     :: foo()
     a:
       :: bar()
@@ -1217,7 +1230,7 @@
 
 - name: Top level data mode mapping first pair has key '::'
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     ::
       use: 'module1'
       use: 'module2'
@@ -1240,7 +1253,7 @@
 
 - name: Shorthand syntax for conditionals in data mappings
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     :use module1:
     x: 1
     :when x > 1::
@@ -1274,7 +1287,7 @@
 
 - name: Shorthand syntax for conditionals in data mappings 2
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     :use module1:
     x: 1
   build: |
@@ -1290,7 +1303,7 @@
 
 - name: Shorthand syntax for conditionals in data mappings 2
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     :when foo()::
      x: 1
     y:
@@ -1349,7 +1362,7 @@
 
 - name: Let bindings in dmap
   yamlscript: |
-    !yamlscript/v0/
+    !yamlscript/v0:
     m1 =::
       a: b
     foo =:

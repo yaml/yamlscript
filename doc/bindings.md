@@ -46,7 +46,7 @@ print(data)
 File `file.ys`:
 
 ```yaml
-!yamlscript/v0/
+!yamlscript/v0:
 
 =>:  # Set values to use in data
   name =: "World"

@@ -8,8 +8,8 @@
 ;;
 ;; Top level tags:
 ;; * !yamlscript/v0 - Start in code mode
-;; * !yamlscript/v0/ - Start in data mode
 ;; * !yamlscript/v0: - Start in data mode
+;; * !yamlscript/v0/ - Start in data mode (deprecated)
 ;; * !yamlscript/v0/code - Start in code mode
 ;; * !yamlscript/v0/data - Start in data mode
 ;; * !yamlscript/v0/bare - Start in bare mode

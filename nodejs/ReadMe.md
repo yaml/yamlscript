@@ -10,7 +10,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YAMLScript:
 ```yaml
-!yamlscript/v0/
+!yamlscript/v0:
 
 # Get data from external sources:
 names-url =:
@@ -91,7 +91,7 @@ $ ys --compile file.ys
 A YAMLScript file `some.ys`:
 
 ```yaml
-!yamlscript/v0/
+!yamlscript/v0:
 
 =>:
   name =: "World"
