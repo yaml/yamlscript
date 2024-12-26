@@ -46,6 +46,7 @@
     "println",
     "Raku",
     "Seajure",
+    "Seqable",
     "serde",
     "serviceaccount",
     "sexpr",
