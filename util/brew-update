@@ -69,7 +69,7 @@ defn releases(version)::
   MAC_INT:: "ys-${version}-macos-x64.tar.xz"
 
 defn check-version(version):
-  when version !~ /^\d(\.\d+){2}$/:
+  when version !~ /^0\.1\.\d+$/:
     die: "Invalid version '$version'"
 
   try:
