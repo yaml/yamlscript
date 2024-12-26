@@ -552,11 +552,13 @@
 
 (defn split
   ([S]
-   (if (empty? S)
-     []
-     (clojure.string/split S #"")))
+   (let [S (str S)]
+     (if (empty? S)
+       []
+       (clojure.string/split S #""))))
   ([S R]
    (let [[S R] (if (regex? S) [R S] [S R])
+         S (str S)
          R (if (string? R) (re-pattern R) R)]
      (clojure.string/split S R))))
 
