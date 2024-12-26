@@ -16,6 +16,7 @@
    [clojure.tools.cli]
    [clojure.walk]
    ; [clojure.zip]
+   [java-time.api]
    [sci.core :as sci]
    [yamlscript.common :as common]
    [yamlscript.debug]
@@ -97,6 +98,7 @@
 (def clj-namespace (use-ns 'clj ys.clj))
 (def debug-namespace (use-ns 'yamlscript.debug yamlscript.debug))
 (def fs-namespace (use-ns 'fs babashka.fs))
+(def java-time-namespace (use-ns 'java-time java-time.api))
 (def http-namespace (use-ns 'http babashka.http-client))
 (def io-namespace (use-ns 'io clojure.java.io))
 (def json-namespace (use-ns 'json ys.json))
@@ -133,6 +135,7 @@
    'walk    walk-namespace    'ys.walk    walk-namespace
    'yaml    yaml-namespace    'ys.yaml    yaml-namespace
 
+   'java-time java-time-namespace
    'ys.taptest taptest-namespace
    'yamlscript.debug debug-namespace
    'yamlscript.util util-namespace})

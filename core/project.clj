@@ -27,7 +27,8 @@
    [babashka/process "0.5.21"]
    [org.babashka/http-client "0.3.11"]
    [org.babashka/sci "0.8.41"]
-   [org.clojure/tools.cli "1.0.219"]]
+   [org.clojure/tools.cli "1.0.219"]
+   [clojure.java-time "1.4.3"]]
 
   :plugins
   [[lein-exec "0.3.7"]
