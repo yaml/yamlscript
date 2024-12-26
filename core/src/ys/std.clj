@@ -13,6 +13,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
+   [java-time.api :as jtime]
    [yamlscript.common :as common :refer [atom? regex?]]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
@@ -576,6 +577,13 @@
 
 (defn words [S]
   (clojure.string/split S #"\s+"))
+
+
+;;------------------------------------------------------------------------------
+;; Date/Time functions
+;;------------------------------------------------------------------------------
+
+(defn now [] (jtime/instant))
 
 
 ;;------------------------------------------------------------------------------
