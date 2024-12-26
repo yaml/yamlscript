@@ -10,5 +10,6 @@
   babashka/process {:mvn/version "0.5.21"},
   org.babashka/http-client {:mvn/version "0.3.11"},
   org.babashka/sci {:mvn/version "0.8.41"},
-  org.clojure/tools.cli {:mvn/version "1.0.219"}},
+  org.clojure/tools.cli {:mvn/version "1.0.219"},
+  clojure.java-time/clojure.java-time {:mvn/version "1.4.3"}},
  :mvn/repos {"public-github" {:url "https://github.com"}}}
