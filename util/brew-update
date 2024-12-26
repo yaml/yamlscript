@@ -9,11 +9,13 @@ defn main(version):
   download-releases: version
   update-brew: version
 
+os =: System/getProperty('os.name')
+
 defn sha256sum(file):
-  os =: System/getProperty('os.name')
-  cond:
-    os =~ /Mac\s?OS/: sh("shasum -a 256 $file")
-    else: sh("sha256sum $file")
+  sh:
+    if os =~ /Mac\s?OS/:
+      then: "shasum -a 256 $file"
+      else: "sha256sum $file"
 
 defn update-brew(version):
   releases =: releases(version)
@@ -58,9 +60,7 @@ defn download-releases(version):
       when-not fs-e(file):
         say: "Downloading $file"
         url =: "$releases-url/download/$version/$file"
-        res =: sh("curl --silent --location $url --output $file")
-        when res.exit:N.?:
-          die: "Download of '$url' failed:\n$(res.err)"
+        spit file: curl(url)
 
 defn releases(version)::
   LIN_ARM:: "ys-${version}-linux-aarch64.tar.xz"
