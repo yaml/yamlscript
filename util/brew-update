@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-releases-url =: "https://github.com/yaml/yamlscript/releases"
+releases-url =: 'https://github.com/yaml/yamlscript/releases'
 repo =: ENV.GITHUB_REPOSITORY_OWNER || 'yaml'
 brew-url =: "https://github.com/$repo/homebrew-yamlscript"
 
@@ -10,7 +10,7 @@ defn main(version):
   update-brew: version
 
 defn sha256sum(file):
-  os =: System/getProperty("os.name")
+  os =: System/getProperty('os.name')
   cond:
     os =~ /Mac\s?OS/: sh("shasum -a 256 $file")
     else: sh("sha256sum $file")
