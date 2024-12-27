@@ -20,6 +20,10 @@ add_library(rapidyaml
     rapidyaml_edn_handler.cpp
     rapidyaml_edn.hpp
     rapidyaml_edn.cpp
+    rapidyaml_evt_handler.hpp
+    rapidyaml_evt_handler.cpp
+    rapidyaml_evt.hpp
+    rapidyaml_evt.cpp
 )
 target_include_directories(rapidyaml PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}

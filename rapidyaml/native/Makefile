@@ -32,7 +32,6 @@ RAPIDYAML_LIB_DEPS := \
   $(RAPIDYAML_HPP) \
   $(wildcard ./*pp) \
 
-# fixme download and unpack https://musl.cc/x86_64-linux-musl-cross.tgz
 THIS_DIR := $(shell pwd)
 MUSL_DIR := $(THIS_DIR)/_build/x86_64-linux-musl-cross
 
