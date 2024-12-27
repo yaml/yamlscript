@@ -1,4 +1,6 @@
-/rapidyaml/
-/rapidyaml-build/
-/rapidyaml_all.hpp
+/.cache/
+/_build/
+/compile_commands.json
 /librapidyaml.*
+/rapidyaml/
+/rapidyaml_all.hpp
