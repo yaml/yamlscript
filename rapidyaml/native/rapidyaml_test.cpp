@@ -1,6 +1,8 @@
 #include <rapidyaml_edn.hpp>
+#include <rapidyaml_evt.hpp>
 
 using c4::csubstr;
+using c4::substr;
 using c4::substr;
 
 
@@ -9,6 +11,12 @@ struct Ys2EdnScoped
     Ryml2Edn *ryml2edn;
     Ys2EdnScoped() : ryml2edn(ys2edn_init()) {}
     ~Ys2EdnScoped() { if(ryml2edn) ys2edn_destroy(ryml2edn); }
+};
+struct Ys2EvtScoped
+{
+    Ryml2Evt *ryml2evt;
+    Ys2EvtScoped() : ryml2evt(ys2evt_init()) {}
+    ~Ys2EvtScoped() { if(ryml2evt) ys2evt_destroy(ryml2evt); }
 };
 
 
@@ -33,6 +41,9 @@ struct TestCase
 {
     csubstr ys;
     csubstr edn;
+    c4::cspan<ParseEvent> evt;
+
+public:
     bool testeq(csubstr actual) const
     {
         const bool status = (actual == edn);
@@ -47,12 +58,35 @@ struct TestCase
                    (int)actual.len, actual.str);
         return status;
     }
+    bool testeq(std::vector<ParseEvent> const& actual) const
+    {
+        c4::cspan<ParseEvent> expected(actual.data(), actual.size());
+        if(actual.size() != expected.size())
+        {
+            printf("------\n"
+                   "FAIL:\n"
+                   "input:~~~%.*s~~~\n"
+                   "expected size:~~~%zu~~~\n"
+                   "actual size:~~~%zu~~~\n",
+                   (int)ys.len, ys.str,
+                   expected.size(),
+                   actual.size());
+            return false;
+        }
+        const bool status = (0 == memcmp(expected.data(), actual.data(), sizeof(ParseEvent) * actual.size()));
+        if(!status)
+            printf("------\n"
+                   "FAIL:\n"
+                   "input:~~~%.*s~~~\n",
+                   (int)ys.len, ys.str);
+        return status;
+    }
 
-    #define _runtest(name, ...)                             \
-        do {                                                \
+    #define _runtest(name, ...)                               \
+        do {                                                  \
             printf("[ RUN  ] %s ... \n", #name);              \
-            TestResult tr_ = name(__VA_ARGS__);             \
-            tr.add(tr_);                                    \
+            TestResult tr_ = name(__VA_ARGS__);               \
+            tr.add(tr_);                                      \
             printf("[ %s ] %s\n", tr_?"OK  ":"FAIL", #name);  \
         } while(0)
     #define CHECK(cond)                                                 \
@@ -60,25 +94,31 @@ struct TestCase
             bool pass = !!(cond);                                       \
             ++tr.num_assertions;                                        \
             if(!pass) {                                                 \
-                printf("%s:%d: fail! %s", __FILE__, __LINE__, #cond);   \
+                printf("%s:%d: fail! %s\n", __FILE__, __LINE__, #cond);   \
                 ++tr.num_failed_assertions;                             \
             }                                                           \
         } while(0)
 
-    TestResult test(Ryml2Edn *ryml2edn) const
+    TestResult test(Ryml2Edn *ryml2edn, Ryml2Evt *ryml2evt) const
     {
         TestResult tr = {};
-        _runtest(test_large_enough, );
-        _runtest(test_too_small, );
-        _runtest(test_nullptr, );
-        _runtest(test_large_enough_reuse, ryml2edn);
-        _runtest(test_too_small_reuse, ryml2edn);
-        _runtest(test_nullptr_reuse, ryml2edn);
+        _runtest(test_edn_large_enough, );
+        _runtest(test_edn_too_small, );
+        _runtest(test_edn_nullptr, );
+        _runtest(test_edn_large_enough_reuse, ryml2edn);
+        _runtest(test_edn_too_small_reuse, ryml2edn);
+        _runtest(test_edn_nullptr_reuse, ryml2edn);
+        _runtest(test_evt_large_enough, );
+        _runtest(test_evt_too_small, );
+        _runtest(test_evt_nullptr, );
+        _runtest(test_evt_large_enough_reuse, ryml2evt);
+        _runtest(test_evt_too_small_reuse, ryml2evt);
+        _runtest(test_evt_nullptr_reuse, ryml2evt);
         return tr;
     }
 
     // happy path: large-enough destination string
-    TestResult test_large_enough_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_edn_large_enough_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
@@ -94,14 +134,36 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-    TestResult test_large_enough() const
+    TestResult test_evt_large_enough_reuse(Ryml2Evt *ryml2evt) const
+    {
+if(evt.empty()) return {};
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        std::vector<ParseEvent> output;
+        output.resize(2 * evt.size());
+        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         &output[0], (size_type)output.size());
+        CHECK(reqsize == evt.size());
+        CHECK(reqsize != 0);
+        output.resize(reqsize);
+        CHECK(testeq(output));
+        return tr;
+    }
+    TestResult test_edn_large_enough() const
     {
         Ys2EdnScoped lib;
-        return test_large_enough_reuse(lib.ryml2edn);
+        return test_edn_large_enough_reuse(lib.ryml2edn);
+    }
+    TestResult test_evt_large_enough() const
+    {
+        Ys2EvtScoped lib;
+        return test_evt_large_enough_reuse(lib.ryml2evt);
     }
 
     // less-happy path: destination string not large enough
-    TestResult test_too_small_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_edn_too_small_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
@@ -120,14 +182,41 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-    TestResult test_too_small() const
+    TestResult test_evt_too_small_reuse(Ryml2Evt *ryml2evt) const
+    {
+if(evt.empty()) return {};
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        std::vector<ParseEvent> output;
+        output.resize(evt.size() / 2);
+        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         output.data(), (size_type)output.size());
+        CHECK(reqsize == evt.size());
+        CHECK(reqsize != 0);
+        output.resize(reqsize);
+        size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          output.data(), (size_type)output.size());
+        CHECK(reqsize2 == reqsize);
+        output.resize(reqsize2);
+        CHECK(testeq(output));
+        return tr;
+    }
+    TestResult test_edn_too_small() const
     {
         Ys2EdnScoped lib;
-        return test_too_small_reuse(lib.ryml2edn);
+        return test_edn_too_small_reuse(lib.ryml2edn);
+    }
+    TestResult test_evt_too_small() const
+    {
+        Ys2EvtScoped lib;
+        return test_evt_too_small_reuse(lib.ryml2evt);
     }
 
     // safe calling with nullptr
-    TestResult test_nullptr_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_edn_nullptr_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
@@ -139,29 +228,46 @@ struct TestCase
         CHECK(reqsize != 0);
         return tr;
     }
-    TestResult test_nullptr() const
+    TestResult test_evt_nullptr_reuse(Ryml2Evt *ryml2evt) const
+    {
+if(evt.empty()) return {};
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         nullptr, 0);
+        CHECK(reqsize == evt.size());
+        CHECK(reqsize != 0);
+        std::vector<ParseEvent> output;
+        output.resize(reqsize);
+        size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          output.data(), (size_type)output.size());
+        CHECK(reqsize2 == reqsize);
+        CHECK(reqsize2 == output.size());
+        CHECK(testeq(output));
+        return tr;
+    }
+    TestResult test_edn_nullptr() const
     {
         Ys2EdnScoped lib;
-        return test_nullptr_reuse(lib.ryml2edn);
+        return test_edn_nullptr_reuse(lib.ryml2edn);
+    }
+    TestResult test_evt_nullptr() const
+    {
+        Ys2EvtScoped lib;
+        return test_evt_nullptr_reuse(lib.ryml2evt);
     }
 };
 
 
 //-----------------------------------------------------------------------------
 
+#define tc(ys, edn, ...) {ys, edn, c4::cspan<ParseEvent>(__VA_ARGS__)}
 const TestCase test_cases[] = {
     // case ------------------------------
-    {"say: 2 + 2",
-     R"((
-{:+ "+MAP"}
-{:+ "=VAL", := "say"}
-{:+ "=VAL", := "2 + 2"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)"},
-    // case ------------------------------
-    {"a: 1",
+    tc("a: 1",
      R"((
 {:+ "+MAP"}
 {:+ "=VAL", := "a"}
@@ -169,9 +275,38 @@ const TestCase test_cases[] = {
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)"},
+)", {
+             {BSTR},
+             {BDOC},
+             {BMAP|BLCK|VAL_},
+             {KEY_|SCLR|PLAI, 0, 1},
+             {VAL_|SCLR|PLAI, 3, 1},
+             {EMAP},
+             {EDOC},
+             {ESTR},
+       }),
     // case ------------------------------
-    {"𝄞: ✅",
+    tc("say: 2 + 2",
+       R"((
+{:+ "+MAP"}
+{:+ "=VAL", := "say"}
+{:+ "=VAL", := "2 + 2"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)",
+       {
+             {BSTR},
+             {BDOC},
+             {BMAP|BLCK|VAL_},
+             {KEY_|SCLR|PLAI, 0, 3},
+             {VAL_|SCLR|PLAI, 5, 5},
+             {EMAP},
+             {EDOC},
+             {ESTR},
+       }),
+    // case ------------------------------
+    tc("𝄞: ✅",
      R"((
 {:+ "+MAP"}
 {:+ "=VAL", := "𝄞"}
@@ -179,9 +314,9 @@ const TestCase test_cases[] = {
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)"},
+)", {}),
     // case ------------------------------
-    {"[a, b, c]",
+    tc("[a, b, c]",
      R"((
 {:+ "+SEQ", :flow true}
 {:+ "=VAL", := "a"}
@@ -190,9 +325,9 @@ const TestCase test_cases[] = {
 {:+ "-SEQ"}
 {:+ "-DOC"}
 )
-)"},
+)", {}),
     // case ------------------------------
-    {"[a: b]",
+    tc("[a: b]",
      R"((
 {:+ "+SEQ", :flow true}
 {:+ "+MAP", :flow true}
@@ -202,9 +337,9 @@ const TestCase test_cases[] = {
 {:+ "-SEQ"}
 {:+ "-DOC"}
 )
-)"},
+)", {}),
     // case ------------------------------
-    {R"(--- !yamlscript/v0
+    tc(R"(--- !yamlscript/v0
 foo: !
 - {x: y}
 - [x, y]
@@ -255,13 +390,14 @@ another: doc
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)"}
+)", {}),
 };
 
 
 int main()
 {
     Ys2EdnScoped ys2edn;
+    Ys2EvtScoped ys2evt;
     TestResult total = {};
     size_t failed_cases = {};
     size_t num_cases = C4_COUNTOF(test_cases);
@@ -270,7 +406,7 @@ int main()
         printf("-----------------------------------------\n"
                "case %zu/%zu ...\n"
                "[%zu]~~~%.*s~~~\n", i, num_cases, test_cases[i].ys.len, (int)test_cases[i].ys.len, test_cases[i].ys.str);
-        const TestResult tr = test_cases[i].test(ys2edn.ryml2edn);
+        const TestResult tr = test_cases[i].test(ys2edn.ryml2edn, ys2evt.ryml2evt);
         total.add(tr);
         failed_cases += (!tr);
         printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");

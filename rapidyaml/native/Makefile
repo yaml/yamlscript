@@ -14,6 +14,8 @@ MUSL := 1
 # enable timing scopes
 TIMED := 0
 
+BUILD_TYPE := Release
+
 RAPIDYAML_H := org_rapidyaml_Rapidyaml.h
 RAPIDYAML_HPP := rapidyaml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
@@ -37,6 +39,7 @@ MUSL_DIR := $(THIS_DIR)/_build/x86_64-linux-musl-cross
 
 CMK_ENV :=
 CMK_FLAGS :=
+CMK_FLAGS += -D CMAKE_BUILD_TYPE=$(BUILD_TYPE)
 CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)
 CMK_FLAGS += -D BUILD_SHARED_LIBS=$(SHARED)
 ifeq ($(SHARED),0)
@@ -88,12 +91,12 @@ $(BDIR)/CMakeCache.txt:
 
 $(RAPIDYAML_LIB): $(RAPIDYAML_LIB_DEPS) $(BDIR)/CMakeCache.txt
 	$(CMK_BUILD) --target rapidyaml
-	rm $@
+	if [ -d $@ ] ; then rm $@ ; fi
 ifneq ($(SHARED),0)
-	mv -fv $(BDIR)/*.so $@
+	cp -fv $(BDIR)/*.so $@
 	ln -fs $@ librapidyaml.so
 else
-	mv -fv $(BDIR)/*.a $@
+	cp -fv $(BDIR)/*.a $@
 endif
 
 ifeq ($(SHARED),0)
