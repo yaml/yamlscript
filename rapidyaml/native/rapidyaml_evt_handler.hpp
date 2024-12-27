@@ -23,7 +23,7 @@ using EventFlagsType = int32_t;
 enum : EventFlagsType {
     // ---------------------
     // scalar flags
-    SCLR = 1 <<  0,   // =VAL
+    SCLR = 1 <<  0,   // has a scalar
     PLAI = 1 <<  1,   // : (plain scalar)
     SQUO = 1 <<  2,   // ' (single-quoted scalar)
     DQUO = 1 <<  3,   // " (double-quoted scalar)

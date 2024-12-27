@@ -58,10 +58,10 @@ public:
                    (int)actual.len, actual.str);
         return status;
     }
-    bool testeq(std::vector<ParseEvent> const& actual) const
+    bool testeq(std::vector<ParseEvent> const& actual_) const
     {
-        c4::cspan<ParseEvent> expected(actual.data(), actual.size());
-        if(actual.size() != expected.size())
+        c4::cspan<ParseEvent> actual(actual_.data(), actual_.size());
+        if(actual.size() != evt.size())
         {
             printf("------\n"
                    "FAIL:\n"
@@ -69,11 +69,24 @@ public:
                    "expected size:~~~%zu~~~\n"
                    "actual size:~~~%zu~~~\n",
                    (int)ys.len, ys.str,
-                   expected.size(),
+                   evt.size(),
                    actual.size());
             return false;
         }
-        const bool status = (0 == memcmp(expected.data(), actual.data(), sizeof(ParseEvent) * actual.size()));
+        int status = true;
+        for(size_t i = 0; i < actual.size(); ++i)
+        {
+            printf("wtf! i=%zu status=%d: %d vs %d=%d\n", i, status, evt[i].flags, actual[i].flags, evt[i].flags == actual[i].flags);
+            status &= (&evt[i]          != &actual[i]);
+            status &= (evt[i].flags     == actual[i].flags);
+            if((evt[i].flags & (SCLR|ALIA|ANCH|TAG_)) && (evt[i].flags == actual[i].flags))
+            {
+                printf("wtf! i=%zu status=%d: %d vs %d=%d\n", i, status, evt[i].str_start, actual[i].str_start, evt[i].str_start == actual[i].str_start);
+                printf("wtf! i=%zu status=%d: %d vs %d=%d\n", i, status, evt[i].str_len, actual[i].str_len, evt[i].str_len == actual[i].str_len);
+                status &= (evt[i].str_start == actual[i].str_start);
+                status &= (evt[i].str_len   == actual[i].str_len);
+            }
+        }
         if(!status)
             printf("------\n"
                    "FAIL:\n"
@@ -265,6 +278,8 @@ if(evt.empty()) return {};
 //-----------------------------------------------------------------------------
 
 #define tc(ys, edn, ...) {ys, edn, c4::cspan<ParseEvent>(__VA_ARGS__)}
+constexpr ParseEvent e(EventFlagsType flags) { return {flags, 0, 0}; }
+constexpr ParseEvent e(EventFlagsType flags, int start, int end) { return {flags, start, end}; }
 const TestCase test_cases[] = {
     // case ------------------------------
     tc("a: 1",
@@ -276,14 +291,14 @@ const TestCase test_cases[] = {
 {:+ "-DOC"}
 )
 )", {
-             {BSTR},
-             {BDOC},
-             {BMAP|BLCK|VAL_},
-             {KEY_|SCLR|PLAI, 0, 1},
-             {VAL_|SCLR|PLAI, 3, 1},
-             {EMAP},
-             {EDOC},
-             {ESTR},
+             e(BSTR),
+             e(BDOC),
+             e(BMAP|BLCK|VAL_),
+             e(KEY_|SCLR|PLAI, 0, 1),
+             e(VAL_|SCLR|PLAI, 3, 1),
+             e(EMAP),
+             e(EDOC),
+             e(ESTR),
        }),
     // case ------------------------------
     tc("say: 2 + 2",
@@ -296,14 +311,14 @@ const TestCase test_cases[] = {
 )
 )",
        {
-             {BSTR},
-             {BDOC},
-             {BMAP|BLCK|VAL_},
-             {KEY_|SCLR|PLAI, 0, 3},
-             {VAL_|SCLR|PLAI, 5, 5},
-             {EMAP},
-             {EDOC},
-             {ESTR},
+             e(BSTR),
+             e(BDOC),
+             e(BMAP|BLCK|VAL_),
+             e(KEY_|SCLR|PLAI, 0, 3),
+             e(VAL_|SCLR|PLAI, 5, 5),
+             e(EMAP),
+             e(EDOC),
+             e(ESTR),
        }),
     // case ------------------------------
     tc("𝄞: ✅",
