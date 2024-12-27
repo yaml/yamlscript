@@ -4,11 +4,27 @@ include $(COMMON)/java.mk
 include $(COMMON)/python.mk
 include ../rapidyaml.mk
 
+# TODO change to static library!
+# https://www.graalvm.org/latest/reference-manual/native-image/guides/build-static-executables/
+# https://www.blog.akhil.cc/static-jni
+# https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
+SHARED := 1
+# when SHARED=0, also link statically with the musl libc
+MUSL := 1
+# enable timing scopes
+TIMED := 0
+
 RAPIDYAML_H := org_rapidyaml_Rapidyaml.h
 RAPIDYAML_HPP := rapidyaml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
 
-RAPIDYAML_SO_DEPS := \
+ifeq ($(SHARED),0)
+RAPIDYAML_LIB := librapidyaml.a
+else
+RAPIDYAML_LIB := librapidyaml.$(RAPIDYAML_VERSION).so
+endif
+
+RAPIDYAML_LIB_DEPS := \
   Makefile \
   CMakeLists.txt \
   $(JAVA_HOME) \
@@ -16,16 +32,25 @@ RAPIDYAML_SO_DEPS := \
   $(RAPIDYAML_HPP) \
   $(wildcard ./*pp) \
 
-# TODO maybe change to static library!
-# https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
-SHARED := 1
-TIMED := 0
+# fixme download and unpack https://musl.cc/x86_64-linux-musl-cross.tgz
+THIS_DIR := $(shell pwd)
+MUSL_DIR := $(THIS_DIR)/_build/x86_64-linux-musl-cross
 
+CMK_ENV :=
 CMK_FLAGS :=
 CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)
 CMK_FLAGS += -D BUILD_SHARED_LIBS=$(SHARED)
+ifeq ($(SHARED),0)
+  ifneq ($(MUSL),0)
+    CMK_ENV += MUSL_DIR=$(MUSL_DIR)
+    CMK_FLAGS += \
+      -D CMAKE_TOOLCHAIN_FILE=musl.x86_64.cmake \
+      -D CMAKE_C_FLAGS='-static' \
+      -D CMAKE_CXX_FLAGS='-static'
+  endif
+endif
 
-BDIR := rapidyaml-build
+BDIR := $(THIS_DIR)/_build/shared$(SHARED)-musl$(MUSL)-timed$(TIMED)
 
 CMK_BUILD := cmake --build $(BDIR) --parallel --verbose
 
@@ -33,11 +58,11 @@ CMK_BUILD := cmake --build $(BDIR) --parallel --verbose
 #------------------------------------------------------------------------------
 default::
 
-build:: $(RAPIDYAML_SO)
+.PHONY: build
+build:: $(RAPIDYAML_LIB)
 
 test:: build
 	$(CMK_BUILD) --target rapidyaml-test-run
-	./$(BDIR)/rapidyaml-test
 
 rapidyaml:
 	mkdir -p $@
@@ -58,11 +83,30 @@ realclean:: clean
 
 
 #------------------------------------------------------------------------------
-$(RAPIDYAML_SO): $(RAPIDYAML_SO_DEPS)
-	cmake -S . -B $(BDIR) $(CMK_FLAGS)
+$(BDIR)/CMakeCache.txt:
+	mkdir -p $(BDIR)
+	$(CMK_ENV) cmake -S . -B $(BDIR) $(CMK_FLAGS)
+
+$(RAPIDYAML_LIB): $(RAPIDYAML_LIB_DEPS) $(BDIR)/CMakeCache.txt
 	$(CMK_BUILD) --target rapidyaml
-	mv $(BDIR)/*.so $@
+	rm $@
+ifneq ($(SHARED),0)
+	mv -fv $(BDIR)/*.so $@
 	ln -fs $@ librapidyaml.so
+else
+	mv -fv $(BDIR)/*.a $@
+endif
+
+ifeq ($(SHARED),0)
+ifneq ($(MUSL),0)
+$(RAPIDYAML_LIB): $(MUSL_DIR)
+$(MUSL_DIR):
+	mkdir -p `dirname $(MUSL_DIR)`
+	cd `dirname $(MUSL_DIR)` && \
+	  wget https://musl.cc/x86_64-linux-musl-cross.tgz && \
+	  tar xfz x86_64-linux-musl-cross.tgz
+endif
+endif
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $^
