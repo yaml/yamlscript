@@ -63,6 +63,8 @@ default::
 .PHONY: build
 build:: $(RAPIDYAML_LIB)
 
+test_build:: build
+	$(CMK_BUILD) --target rapidyaml-test
 test:: build
 	$(CMK_BUILD) --target rapidyaml-test-run
 

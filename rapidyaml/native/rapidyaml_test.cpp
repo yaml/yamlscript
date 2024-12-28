@@ -5,6 +5,43 @@ using c4::csubstr;
 using c4::substr;
 using c4::substr;
 
+namespace c4
+{
+template<>
+c4::EnumSymbols<evt::EventFlags> const esyms<evt::EventFlags>()
+{
+    static constexpr typename c4::EnumSymbols<evt::EventFlags>::Sym syms[] = {
+        {evt::SCLR, "SCLR"},
+        {evt::PLAI, "PLAI"},
+        {evt::SQUO, "SQUO"},
+        {evt::DQUO, "DQUO"},
+        {evt::LITL, "LITL"},
+        {evt::FOLD, "FOLD"},
+        {evt::BSEQ, "BSEQ"},
+        {evt::ESEQ, "ESEQ"},
+        {evt::BMAP, "BMAP"},
+        {evt::EMAP, "EMAP"},
+        {evt::FLOW, "FLOW"},
+        {evt::BLCK, "BLCK"},
+        {evt::KEY_, "KEY_"},
+        {evt::VAL_, "VAL_"},
+        {evt::BDOC, "BDOC"},
+        {evt::EDOC, "EDOC"},
+        {evt::BSTR, "BSTR"},
+        {evt::ESTR, "ESTR"},
+        {evt::EXPL, "EXPL"},
+        {evt::ALIA, "ALIA"},
+        {evt::ANCH, "ANCH"},
+        {evt::TAG_, "TAG_"},
+    };
+    return c4::EnumSymbols<evt::EventFlags>(syms);
+}
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 struct Ys2EdnScoped
 {
@@ -41,7 +78,7 @@ struct TestCase
 {
     csubstr ys;
     csubstr edn;
-    c4::cspan<ParseEvent> evt;
+    std::vector<evt::ParseEvent> evt;
 
 public:
     bool testeq(csubstr actual) const
@@ -58,9 +95,8 @@ public:
                    (int)actual.len, actual.str);
         return status;
     }
-    bool testeq(std::vector<ParseEvent> const& actual_) const
+    bool testeq(std::vector<evt::ParseEvent> const& actual) const
     {
-        c4::cspan<ParseEvent> actual(actual_.data(), actual_.size());
         if(actual.size() != evt.size())
         {
             printf("------\n"
@@ -76,15 +112,34 @@ public:
         int status = true;
         for(size_t i = 0; i < actual.size(); ++i)
         {
-            printf("wtf! i=%zu status=%d: %d vs %d=%d\n", i, status, evt[i].flags, actual[i].flags, evt[i].flags == actual[i].flags);
+            char actualbuf[100];
+            char expectedbuf[100];
+            size_t reqsize_actual = c4::bm2str<evt::EventFlags>(actual[i].flags & evt::MASK, actualbuf, sizeof(actualbuf));
+            size_t reqsize_expected = c4::bm2str<evt::EventFlags>(evt[i].flags & evt::MASK, expectedbuf, sizeof(expectedbuf));
+            C4_CHECK(reqsize_actual < sizeof(actualbuf));
+            C4_CHECK(reqsize_expected < sizeof(expectedbuf));
+            printf("wtf! status=%d i=%zu cmp=%d: exp=%d(%s) vs act=%d(%s)\n", status, i, evt[i].flags == actual[i].flags, evt[i].flags, expectedbuf, actual[i].flags, actualbuf);
             status &= (&evt[i]          != &actual[i]);
             status &= (evt[i].flags     == actual[i].flags);
-            if((evt[i].flags & (SCLR|ALIA|ANCH|TAG_)) && (evt[i].flags == actual[i].flags))
+            if((evt[i].flags & evt::HAS_STR) && (actual[i].flags & evt::HAS_STR))
             {
-                printf("wtf! i=%zu status=%d: %d vs %d=%d\n", i, status, evt[i].str_start, actual[i].str_start, evt[i].str_start == actual[i].str_start);
-                printf("wtf! i=%zu status=%d: %d vs %d=%d\n", i, status, evt[i].str_len, actual[i].str_len, evt[i].str_len == actual[i].str_len);
+                printf("wtf! status=%d i=%zu cmp=%d:   exp=%d vs act=%d\n", status, i, evt[i].str_start == actual[i].str_start, evt[i].str_start, actual[i].str_start);
+                printf("wtf! status=%d i=%zu cmp=%d:   exp=%d vs act=%d\n", status, i, evt[i].str_len == actual[i].str_len, evt[i].str_len, actual[i].str_len);
                 status &= (evt[i].str_start == actual[i].str_start);
                 status &= (evt[i].str_len   == actual[i].str_len);
+                auto safestr = [this](evt::ParseEvent const& e){
+                    return (e.str_start < (int)ys.len && e.str_start + e.str_len <= (int)ys.len);
+                };
+                if(safestr(evt[i]) && safestr(actual[i]))
+                {
+                    auto extract = [this](evt::ParseEvent const& e){
+                        return ys.sub((size_t)e.str_start, (size_t)e.str_len);
+                    };
+                    csubstr evtstr = extract(evt[i]);
+                    csubstr actualstr = extract(actual[i]);
+                    printf("wtf! status=%d i=%zu cmp=%d:   exp=%.*s vs act=%.*s\n", status, i, evtstr == actualstr, (int)evtstr.len, evtstr.str, (int)actualstr.len, actualstr.str);
+                    status &= (evtstr == actualstr);
+                }
             }
         }
         if(!status)
@@ -149,11 +204,11 @@ public:
     }
     TestResult test_evt_large_enough_reuse(Ryml2Evt *ryml2evt) const
     {
-if(evt.empty()) return {};
+        if(evt.empty()) return {};
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
-        std::vector<ParseEvent> output;
+        std::vector<evt::ParseEvent> output;
         output.resize(2 * evt.size());
         size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
                                          input.str, (size_type)input.len,
@@ -197,11 +252,10 @@ if(evt.empty()) return {};
     }
     TestResult test_evt_too_small_reuse(Ryml2Evt *ryml2evt) const
     {
-if(evt.empty()) return {};
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
-        std::vector<ParseEvent> output;
+        std::vector<evt::ParseEvent> output;
         output.resize(evt.size() / 2);
         size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
                                          input.str, (size_type)input.len,
@@ -209,6 +263,7 @@ if(evt.empty()) return {};
         CHECK(reqsize == evt.size());
         CHECK(reqsize != 0);
         output.resize(reqsize);
+        input_.assign(ys.begin(), ys.end());
         size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
                                           input.str, (size_type)input.len,
                                           output.data(), (size_type)output.size());
@@ -243,7 +298,6 @@ if(evt.empty()) return {};
     }
     TestResult test_evt_nullptr_reuse(Ryml2Evt *ryml2evt) const
     {
-if(evt.empty()) return {};
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
@@ -252,8 +306,9 @@ if(evt.empty()) return {};
                                          nullptr, 0);
         CHECK(reqsize == evt.size());
         CHECK(reqsize != 0);
-        std::vector<ParseEvent> output;
+        std::vector<evt::ParseEvent> output;
         output.resize(reqsize);
+        input_.assign(ys.begin(), ys.end());
         size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
                                           input.str, (size_type)input.len,
                                           output.data(), (size_type)output.size());
@@ -277,30 +332,33 @@ if(evt.empty()) return {};
 
 //-----------------------------------------------------------------------------
 
-#define tc(ys, edn, ...) {ys, edn, c4::cspan<ParseEvent>(__VA_ARGS__)}
-constexpr ParseEvent e(EventFlagsType flags) { return {flags, 0, 0}; }
-constexpr ParseEvent e(EventFlagsType flags, int start, int end) { return {flags, start, end}; }
+// make the declarations shorter
+#define _ evt::
+#define tc(ys, edn, ...) {ys, edn, std::vector<evt::ParseEvent>(__VA_ARGS__)}
+constexpr evt::ParseEvent e(evt::EventFlagsType flags, int start=0, int end=0) { return {flags, start, end}; }
+
 const TestCase test_cases[] = {
-    // case ------------------------------
+    // case -------------------------------------------------
     tc("a: 1",
-     R"((
+       R"((
 {:+ "+MAP"}
 {:+ "=VAL", := "a"}
 {:+ "=VAL", := "1"}
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)", {
-             e(BSTR),
-             e(BDOC),
-             e(BMAP|BLCK|VAL_),
-             e(KEY_|SCLR|PLAI, 0, 1),
-             e(VAL_|SCLR|PLAI, 3, 1),
-             e(EMAP),
-             e(EDOC),
-             e(ESTR),
+)",
+       {
+           e(_ BSTR),
+           e(_ BDOC),
+           e(_ BMAP|_ BLCK|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 0, 1), // a
+           e(_ SCLR|_ VAL_|_ PLAI, 3, 1), // 1
+           e(_ EMAP),
+           e(_ EDOC),
+           e(_ ESTR),
        }),
-    // case ------------------------------
+    // case -------------------------------------------------
     tc("say: 2 + 2",
        R"((
 {:+ "+MAP"}
@@ -311,28 +369,38 @@ const TestCase test_cases[] = {
 )
 )",
        {
-             e(BSTR),
-             e(BDOC),
-             e(BMAP|BLCK|VAL_),
-             e(KEY_|SCLR|PLAI, 0, 3),
-             e(VAL_|SCLR|PLAI, 5, 5),
-             e(EMAP),
-             e(EDOC),
-             e(ESTR),
+           e(_ BSTR),
+           e(_ BDOC),
+           e(_ BMAP|_ BLCK|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 0, 3), // say
+           e(_ SCLR|_ VAL_|_ PLAI, 5, 5), // 2 + 2
+           e(_ EMAP),
+           e(_ EDOC),
+           e(_ ESTR),
        }),
-    // case ------------------------------
+    // case -------------------------------------------------
     tc("𝄞: ✅",
-     R"((
+       R"((
 {:+ "+MAP"}
 {:+ "=VAL", := "𝄞"}
 {:+ "=VAL", := "✅"}
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)", {}),
-    // case ------------------------------
+)",
+       {
+           e(_ BSTR),
+           e(_ BDOC),
+           e(_ BMAP|_ BLCK|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 0, 4),
+           e(_ SCLR|_ VAL_|_ PLAI, 6, 3),
+           e(_ EMAP),
+           e(_ EDOC),
+           e(_ ESTR),
+       }),
+    // case -------------------------------------------------
     tc("[a, b, c]",
-     R"((
+       R"((
 {:+ "+SEQ", :flow true}
 {:+ "=VAL", := "a"}
 {:+ "=VAL", := "b"}
@@ -340,10 +408,21 @@ const TestCase test_cases[] = {
 {:+ "-SEQ"}
 {:+ "-DOC"}
 )
-)", {}),
+)",
+       {
+           e(_ BSTR),
+           e(_ BDOC),
+           e(_ BSEQ|_ FLOW|_ VAL_),
+           e(_ SCLR|_ VAL_|_ PLAI, 1, 1),
+           e(_ SCLR|_ VAL_|_ PLAI, 4, 1),
+           e(_ SCLR|_ VAL_|_ PLAI, 7, 1),
+           e(_ ESEQ),
+           e(_ EDOC),
+           e(_ ESTR),
+       }),
     // case ------------------------------
     tc("[a: b]",
-     R"((
+       R"((
 {:+ "+SEQ", :flow true}
 {:+ "+MAP", :flow true}
 {:+ "=VAL", := "a"}
@@ -352,7 +431,19 @@ const TestCase test_cases[] = {
 {:+ "-SEQ"}
 {:+ "-DOC"}
 )
-)", {}),
+)",
+       {
+           e(_ BSTR),
+           e(_ BDOC),
+           e(_ BSEQ|_ FLOW|_ VAL_),
+           e(_ BMAP|_ FLOW|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 1, 1),
+           e(_ SCLR|_ VAL_|_ PLAI, 4, 1),
+           e(_ EMAP),
+           e(_ ESEQ),
+           e(_ EDOC),
+           e(_ ESTR),
+       }),
     // case ------------------------------
     tc(R"(--- !yamlscript/v0
 foo: !
@@ -370,7 +461,7 @@ foo: !
 ---
 another: doc
 )",
-        R"((
+       R"((
 {:+ "+MAP", :! "yamlscript/v0"}
 {:+ "=VAL", := "foo"}
 {:+ "+SEQ", :! ""}
@@ -405,7 +496,49 @@ another: doc
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)", {}),
+)",
+       {
+           e(_ BSTR),
+           e(_ BDOC|_ EXPL),
+           e(_ TAG_|_ VAL_, 5, 13),
+           e(_ BMAP|_ BLCK|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 19, 3), // foo
+           e(_ TAG_|_ VAL_, 25, 0),
+           e(_ BSEQ|_ BLCK|_ VAL_),
+           e(_ BMAP|_ FLOW|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 29, 1), // x
+           e(_ SCLR|_ VAL_|_ PLAI, 32, 1), // y
+           e(_ EMAP),
+           e(_ BSEQ|_ FLOW|_ VAL_),
+           e(_ SCLR|_ VAL_|_ PLAI, 38, 1), // x
+           e(_ SCLR|_ VAL_|_ PLAI, 41, 1), // y
+           e(_ ESEQ),
+           e(_ SCLR|_ VAL_|_ PLAI, 46, 3), // foo
+           e(_ SCLR|_ VAL_|_ SQUO, 53, 3), // foo
+           e(_ SCLR|_ VAL_|_ DQUO, 61, 3), // foo
+           e(_ SCLR|_ VAL_|_ LITL, 70, 4), // foo FIXME
+           e(_ SCLR|_ VAL_|_ FOLD, 80, 4), // foo FIXME
+           e(_ BSEQ|_ FLOW|_ VAL_),
+           e(_ SCLR|_ VAL_|_ PLAI, 89, 1), // 1
+           e(_ SCLR|_ VAL_|_ PLAI, 92, 1), // 2
+           e(_ SCLR|_ VAL_|_ PLAI, 95, 4), // true
+           e(_ SCLR|_ VAL_|_ PLAI, 101, 5), // false
+           e(_ SCLR|_ VAL_|_ PLAI, 108, 4), // null
+           e(_ ESEQ),
+           e(_ ANCH|_ VAL_, 117, 8), // anchor-1
+           e(_ TAG_|_ VAL_, 127, 5), // tag-1
+           e(_ SCLR|_ VAL_|_ PLAI, 133, 6), // foobar
+           e(_ ESEQ),
+           e(_ EMAP),
+           e(_ EDOC),
+           e(_ BDOC|_ EXPL),
+           e(_ BMAP|_ BLCK|_ VAL_),
+           e(_ SCLR|_ KEY_|_ PLAI, 144, 7), // another
+           e(_ SCLR|_ VAL_|_ PLAI, 153, 3), // doc
+           e(_ EMAP),
+           e(_ EDOC),
+           e(_ ESTR),
+       }),
 };
 
 

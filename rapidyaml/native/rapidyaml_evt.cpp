@@ -70,14 +70,14 @@ RYML_EXPORT void ys2evt_destroy(Ryml2Evt *ryml2evt)
 RYML_EXPORT size_type ys2evt_parse(Ryml2Evt *ryml2evt,
                                    const char *filename,
                                    char *ys, size_type ys_size,
-                                   ParseEvent *evt, size_type evt_size)
+                                   evt::ParseEvent *events, size_type evt_size)
 {
     TIMED_SECTION("ys2evt_parse");
     csubstr filename_ = filename ? to_csubstr(filename) : csubstr{};
     substr ys_(ys, (size_t)ys_size);
     {
         TIMED_SECTION("reset + reserve");
-        ryml2evt->reset({ys, (size_t)ys_size}, evt, evt_size);
+        ryml2evt->reset(ys_, events, evt_size);
         ryml2evt->m_handler.reserve(256u);
     }
     {

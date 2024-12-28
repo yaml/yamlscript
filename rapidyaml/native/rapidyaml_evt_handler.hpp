@@ -19,41 +19,46 @@ C4_SUPPRESS_WARNING_GCC_CLANG_PUSH
 C4_SUPPRESS_WARNING_GCC_CLANG("-Wold-style-cast")
 C4_SUPPRESS_WARNING_GCC("-Wuseless-cast")
 
+namespace evt {
 using EventFlagsType = int32_t;
-enum : EventFlagsType {
+typedef enum : EventFlagsType {
     // ---------------------
     // scalar flags
-    SCLR = 1 <<  0,   // has a scalar
-    PLAI = 1 <<  1,   // : (plain scalar)
-    SQUO = 1 <<  2,   // ' (single-quoted scalar)
-    DQUO = 1 <<  3,   // " (double-quoted scalar)
-    LITL = 1 <<  4,   // | (block literal scalar)
-    FOLD = 1 <<  5,   // > (block folded scalar)
+    SCLR = 1 <<  0,   // ( 1) has a scalar
+    PLAI = 1 <<  1,   // ( 2) : (plain scalar)
+    SQUO = 1 <<  2,   // ( 4) ' (single-quoted scalar)
+    DQUO = 1 <<  3,   // ( 8) " (double-quoted scalar)
+    LITL = 1 <<  4,   // (16) | (block literal scalar)
+    FOLD = 1 <<  5,   // (32) > (block folded scalar)
     // ---------------------
     // container flags
-    BSEQ = 1 <<  6,   // +SEQ (Begin SEQ)
-    ESEQ = 1 <<  7,   // -SEQ (End   SEQ)
-    BMAP = 1 <<  8,   // +MAP (Begin MAP)
-    EMAP = 1 <<  9,   // -MAP (End   MAP)
-    FLOW = 1 << 10,   // flow container: [] for seqs or {} for maps
-    BLCK = 1 << 11,   // block container
+    BSEQ = 1 <<  6,   // (  64) +SEQ (Begin SEQ)
+    ESEQ = 1 <<  7,   // ( 128) -SEQ (End   SEQ)
+    BMAP = 1 <<  8,   // ( 256) +MAP (Begin MAP)
+    EMAP = 1 <<  9,   // ( 512) -MAP (End   MAP)
+    FLOW = 1 << 10,   // (1024) flow container: [] for seqs or {} for maps
+    BLCK = 1 << 11,   // (2048) block container
     // ---------------------
     // structure flags
-    KEY_ = 1 << 12,
-    VAL_ = 1 << 13,
+    KEY_ = 1 << 12,   // (4096)
+    VAL_ = 1 << 13,   // (8192)
     // ---------------------
     // document flags
-    BDOC = 1 << 14,   // +DOC
-    EDOC = 1 << 15,   // -DOC
-    BSTR = 1 << 16,   // +STR
-    ESTR = 1 << 17,   // -STR
-    EXPL = 1 << 18,   // --- (with BDOC) or ... (with EDOC) (may be fused with FLOW if needed)
+    BDOC = 1 << 14,   // ( 16384) +DOC
+    EDOC = 1 << 15,   // ( 32678) -DOC
+    BSTR = 1 << 16,   // ( 65536) +STR
+    ESTR = 1 << 17,   // (131072) -STR
+    EXPL = 1 << 18,   // (262144) --- (with BDOC) or ... (with EDOC) (may be fused with FLOW if needed)
     // ---------------------
     // other flags
-    ALIA = 1 << 19,   // ref
-    ANCH = 1 << 20,   // anchor
-    TAG_ = 1 << 21,   // tag
-};
+    ALIA = 1 << 19,   // ( 524288) ref
+    ANCH = 1 << 20,   // (1048576) anchor
+    TAG_ = 1 << 21,   // (2097152) tag
+    // utility
+    LAST = TAG_,
+    MASK = (LAST << 1) - 1,
+    HAS_STR = SCLR|ALIA|ANCH|TAG_
+} EventFlags;
 
 struct ParseEvent
 {
@@ -61,6 +66,7 @@ struct ParseEvent
     int32_t str_start; // index where the string starts
     int32_t str_len;   // length of the string
 };
+} // namespace evt
 
 
 namespace c4 {
@@ -92,7 +98,7 @@ public:
 
     /** @cond dev */
     csubstr m_str;
-    ParseEvent *C4_RESTRICT m_evt;
+    evt::ParseEvent * m_evt;
     int32_t m_evt_count;
     int32_t m_evt_size;
     char m_key_tag_buf[256];
@@ -120,7 +126,7 @@ public:
     {
     }
 
-    void reset(csubstr str, ParseEvent *dst, int32_t dst_size)
+    void reset(csubstr str, evt::ParseEvent *dst, int32_t dst_size)
     {
         _stack_reset_root();
         m_curr->flags |= RUNK|RTOP;
@@ -168,12 +174,12 @@ public:
 
     void begin_stream()
     {
-        _send_flag_only_(BSTR);
+        _send_flag_only_(evt::BSTR);
     }
 
     void end_stream()
     {
-        _send_flag_only_(ESTR);
+        _send_flag_only_(evt::ESTR);
     }
 
     /** @} */
@@ -187,7 +193,7 @@ public:
     void begin_doc()
     {
         _c4dbgp("begin_doc");
-        _send_flag_only_(BDOC);
+        _send_flag_only_(evt::BDOC);
         if(_stack_should_push_on_begin_doc())
         {
             _c4dbgp("push!");
@@ -198,7 +204,7 @@ public:
     void end_doc()
     {
         _c4dbgp("end_doc");
-        _send_flag_only_(EDOC);
+        _send_flag_only_(evt::EDOC);
         if(_stack_should_pop_on_end_doc())
         {
             _c4dbgp("pop!");
@@ -210,7 +216,7 @@ public:
     void begin_doc_expl()
     {
         _c4dbgp("begin_doc_expl");
-        _send_flag_only_(BDOC|EXPL);
+        _send_flag_only_(evt::BDOC|evt::EXPL);
         if(_stack_should_push_on_begin_doc())
         {
             _c4dbgp("push!");
@@ -221,7 +227,7 @@ public:
     void end_doc_expl()
     {
         _c4dbgp("end_doc_expl");
-        _send_flag_only_(EDOC|EXPL);
+        _send_flag_only_(evt::EDOC|evt::EXPL);
         if(_stack_should_pop_on_end_doc())
         {
             _c4dbgp("pop!");
@@ -247,14 +253,14 @@ public:
 
     void begin_map_val_flow()
     {
-        _send_val_container_(BMAP|FLOW);
+        _send_val_container_(evt::BMAP|evt::FLOW);
         _mark_parent_with_children_();
         _enable_(MAP|FLOW_SL);
         _push();
     }
     void begin_map_val_block()
     {
-        _send_val_container_(BMAP|BLCK);
+        _send_val_container_(evt::BMAP|evt::BLCK);
         _mark_parent_with_children_();
         _enable_(MAP|BLOCK);
         _push();
@@ -263,7 +269,7 @@ public:
     void end_map()
     {
         _pop();
-        _send_flag_only_(EMAP);
+        _send_flag_only_(evt::EMAP);
     }
 
     /** @} */
@@ -284,14 +290,14 @@ public:
 
     void begin_seq_val_flow()
     {
-        _send_val_container_(BSEQ|FLOW);
+        _send_val_container_(evt::BSEQ|evt::FLOW);
         _mark_parent_with_children_();
         _enable_(SEQ|FLOW_SL);
         _push();
     }
     void begin_seq_val_block()
     {
-        _send_val_container_(BSEQ|BLCK);
+        _send_val_container_(evt::BSEQ|evt::BLCK);
         _mark_parent_with_children_();
         _enable_(SEQ|BLOCK);
         _push();
@@ -300,7 +306,7 @@ public:
     void end_seq()
     {
         _pop();
-        _send_flag_only_(EMAP);
+        _send_flag_only_(evt::ESEQ);
     }
 
     /** @} */
@@ -323,7 +329,23 @@ public:
      */
     void actually_val_is_first_key_of_new_map_flow()
     {
-        _RYML_CB_ERR(m_stack.m_callbacks, "not implemented");
+        _RYML_CB_ASSERT(m_stack.m_callbacks, m_evt_count > 2);
+        if(m_evt_count - 1 < m_evt_size)
+        {
+            evt::ParseEvent *C4_RESTRICT prev = &m_evt[m_evt_count - 1];
+            _RYML_CB_ASSERT(m_stack.m_callbacks, (prev->flags & evt::HAS_STR));
+            if(m_evt_count < m_evt_size)
+            {
+                evt::ParseEvent *C4_RESTRICT curr = &m_evt[m_evt_count];
+                *curr = *prev;
+                curr->flags &= ~evt::VAL_;
+                curr->flags |= evt::KEY_;
+            }
+            prev->flags = evt::BMAP|evt::FLOW|evt::VAL_;
+        }
+        ++m_evt_count;
+        _enable_(MAP|FLOW);
+        _push();
     }
 
     void actually_val_is_first_key_of_new_map_block()
@@ -341,60 +363,60 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
-        _send_key_scalar_(scalar, PLAI);
+        _send_key_scalar_(scalar, evt::PLAI);
         _enable_(KEY|KEY_PLAIN);
     }
     C4_ALWAYS_INLINE void set_val_scalar_plain(csubstr scalar)
     {
-        _send_val_scalar_(scalar, PLAI);
+        _send_val_scalar_(scalar, evt::PLAI);
         _enable_(VAL|VAL_PLAIN);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_dquoted(csubstr scalar)
     {
-        _send_key_scalar_(scalar, DQUO);
+        _send_key_scalar_(scalar, evt::DQUO);
         _enable_(KEY|KEY_DQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_dquoted(csubstr scalar)
     {
-        _send_val_scalar_(scalar, DQUO);
+        _send_val_scalar_(scalar, evt::DQUO);
         _enable_(VAL|VAL_DQUO);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_squoted(csubstr scalar)
     {
-        _send_key_scalar_(scalar, SQUO);
+        _send_key_scalar_(scalar, evt::SQUO);
         _enable_(KEY|KEY_SQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_squoted(csubstr scalar)
     {
-        _send_val_scalar_(scalar, SQUO);
+        _send_val_scalar_(scalar, evt::SQUO);
         _enable_(VAL|VAL_SQUO);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_literal(csubstr scalar)
     {
-        _send_key_scalar_(scalar, LITL);
+        _send_key_scalar_(scalar, evt::LITL);
         _enable_(KEY|KEY_LITERAL);
     }
     C4_ALWAYS_INLINE void set_val_scalar_literal(csubstr scalar)
     {
-        _send_val_scalar_(scalar, LITL);
+        _send_val_scalar_(scalar, evt::LITL);
         _enable_(VAL|VAL_LITERAL);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_folded(csubstr scalar)
     {
-        _send_key_scalar_(scalar, FOLD);
+        _send_key_scalar_(scalar, evt::FOLD);
         _enable_(KEY|KEY_FOLDED);
     }
     C4_ALWAYS_INLINE void set_val_scalar_folded(csubstr scalar)
     {
-        _send_val_scalar_(scalar, FOLD);
+        _send_val_scalar_(scalar, evt::FOLD);
         _enable_(VAL|VAL_FOLDED);
     }
 
@@ -430,13 +452,13 @@ public:
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(KEY|KEYREF);
-        _send_key_scalar_(ref, ALIA);
+        _send_key_scalar_(ref, evt::KEY_|evt::ALIA);
     }
     void set_val_ref(csubstr ref)
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(VAL|VALREF);
-        _send_val_scalar_(ref, ALIA);
+        _send_val_scalar_(ref, evt::VAL_|evt::ALIA);
     }
 
     /** @} */
@@ -539,7 +561,7 @@ public:
             m_parent->has_children = true;
     }
 
-    C4_ALWAYS_INLINE void _send_flag_only_(EventFlagsType flags)
+    C4_ALWAYS_INLINE void _send_flag_only_(evt::EventFlagsType flags)
     {
         if(m_evt_count < m_evt_size)
         {
@@ -548,12 +570,12 @@ public:
         ++m_evt_count;
     }
 
-    C4_ALWAYS_INLINE void _send_val_container_(EventFlagsType flags)
+    C4_ALWAYS_INLINE void _send_val_container_(evt::EventFlagsType flags)
     {
         _send_val_props_();
         if(m_evt_count < m_evt_size)
         {
-            m_evt[m_evt_count].flags = VAL_|flags;
+            m_evt[m_evt_count].flags = evt::VAL_|flags;
         }
         ++m_evt_count;
         m_curr->ev_data.m_val = {}; // TODO not needed
@@ -565,12 +587,12 @@ public:
     dst##_start = (int32_t)(csubs.str - m_str.str);                 \
     dst##_len = (int32_t)csubs.len
 
-    C4_ALWAYS_INLINE void _send_key_scalar_(csubstr scalar, EventFlagsType flags) noexcept
+    C4_ALWAYS_INLINE void _send_key_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
     {
         _send_key_props_();
         if(m_evt_count < m_evt_size)
         {
-            m_evt[m_evt_count].flags = SCLR|KEY_|flags;
+            m_evt[m_evt_count].flags = evt::SCLR|evt::KEY_|flags;
             index_to_str(m_evt[m_evt_count].str, scalar);
         }
         ++m_evt_count;
@@ -578,12 +600,12 @@ public:
         _disable_(KEYANCH|KEYTAG); // maybe not needed?
     }
 
-    C4_ALWAYS_INLINE void _send_val_scalar_(csubstr scalar, EventFlagsType flags) noexcept
+    C4_ALWAYS_INLINE void _send_val_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
     {
         _send_val_props_();
         if(m_evt_count < m_evt_size)
         {
-            m_evt[m_evt_count].flags = SCLR|VAL_|flags;
+            m_evt[m_evt_count].flags = evt::SCLR|evt::VAL_|flags;
             index_to_str(m_evt[m_evt_count].str, scalar);
         }
         ++m_evt_count;
@@ -598,7 +620,7 @@ public:
             if(m_evt_count < m_evt_size)
             {
                 index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_key.anchor);
-                m_evt[m_evt_count].flags |= KEY_|ANCH;
+                m_evt[m_evt_count].flags |= evt::KEY_|evt::ANCH;
             }
             ++m_evt_count;
         }
@@ -610,7 +632,7 @@ public:
                 if(m_curr->ev_data.m_key.tag.begins_with('!'))
                     m_curr->ev_data.m_key.tag = m_curr->ev_data.m_key.tag.sub(1);
                 index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_key.tag);
-                m_evt[m_evt_count].flags |= VAL_|TAG_;
+                m_evt[m_evt_count].flags |= evt::VAL_|evt::TAG_;
             }
             ++m_evt_count;
         }
@@ -622,7 +644,7 @@ public:
             if(m_evt_count < m_evt_size)
             {
                 index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_val.anchor);
-                m_evt[m_evt_count].flags |= VAL_|ANCH;
+                m_evt[m_evt_count].flags |= evt::VAL_|evt::ANCH;
             }
             ++m_evt_count;
         }
@@ -634,7 +656,7 @@ public:
                 if(m_curr->ev_data.m_val.tag.begins_with('!'))
                     m_curr->ev_data.m_val.tag = m_curr->ev_data.m_val.tag.sub(1);
                 index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_val.tag);
-                m_evt[m_evt_count].flags |= VAL_|TAG_;
+                m_evt[m_evt_count].flags |= evt::VAL_|evt::TAG_;
             }
             ++m_evt_count;
         }
