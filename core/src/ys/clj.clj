@@ -1,9 +1,9 @@
 ;; Copyright 2023-2024 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; This library containss the clojure.core functions that are replace by the
+;; This library contains the clojure.core functions that are replaced by the
 ;; ys::std library.
-;; They can be accesed with clj/foo instead of foo.
+;; They can be accessed with clj/foo instead of foo.
 
 (ns ys.clj
   (:refer-clojure :only [intern]))
