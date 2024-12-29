@@ -79,7 +79,8 @@ namespace yml {
 
 struct EventHandlerEvtState : public ParserState
 {
-    NodeData ev_data;
+    NodeType evt_type;
+    int32_t evt_id;
 };
 
 
@@ -130,6 +131,8 @@ public:
     {
         _stack_reset_root();
         m_curr->flags |= RUNK|RTOP;
+        m_curr->evt_type = {};
+        m_curr->evt_id = 0;
         m_arena.clear();
         m_str = str;
         m_evt = dst;
@@ -319,7 +322,7 @@ public:
     void add_sibling()
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, m_parent);
-        m_curr->ev_data.m_type = {};
+        m_curr->evt_type = {};
     }
 
     /** set the previous val as the first key of a new map, with flow style.
@@ -343,6 +346,7 @@ public:
             }
             prev->flags = evt::BMAP|evt::FLOW|evt::VAL_;
         }
+        m_curr->evt_id = m_evt_count;
         ++m_evt_count;
         _enable_(MAP|FLOW);
         _push();
@@ -434,18 +438,33 @@ public:
 
 public:
 
+#define index_to_str(dst, csubs)                                    \
+    _RYML_CB_ASSERT(m_stack.m_callbacks, csubs.is_sub(m_str));      \
+    dst##_start = (int32_t)(csubs.str - m_str.str);                 \
+    dst##_len = (int32_t)csubs.len
+
     /** @name YAML anchor/reference events */
     /** @{ */
 
     void set_key_anchor(csubstr anchor)
     {
         _enable_(KEYANCH);
-        m_curr->ev_data.m_key.anchor = anchor;
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags = evt::KEY_|evt::ANCH;
+            index_to_str(m_evt[m_evt_count].str, anchor);
+        }
+        ++m_evt_count;
     }
     void set_val_anchor(csubstr anchor)
     {
         _enable_(VALANCH);
-        m_curr->ev_data.m_val.anchor = anchor;
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags = evt::VAL_|evt::ANCH;
+            index_to_str(m_evt[m_evt_count].str, anchor);
+        }
+        ++m_evt_count;
     }
 
     void set_key_ref(csubstr ref)
@@ -471,12 +490,30 @@ public:
     void set_key_tag(csubstr tag)
     {
         _enable_(KEYTAG);
-        m_curr->ev_data.m_key.tag = _transform_directive(tag, m_key_tag_buf);
+        csubstr ttag = _transform_directive(tag, m_key_tag_buf);
+        _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
+        if(ttag.begins_with('!'))
+            ttag = ttag.sub(1);
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags |= evt::KEY_|evt::TAG_;
+            index_to_str(m_evt[m_evt_count].str, ttag);
+        }
+        ++m_evt_count;
     }
     void set_val_tag(csubstr tag)
     {
         _enable_(VALTAG);
-        m_curr->ev_data.m_val.tag = _transform_directive(tag, m_val_tag_buf);
+        csubstr ttag = _transform_directive(tag, m_val_tag_buf);
+        _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
+        if(ttag.begins_with('!'))
+            ttag = ttag.sub(1);
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags |= evt::VAL_|evt::TAG_;
+            index_to_str(m_evt[m_evt_count].str, ttag);
+        }
+        ++m_evt_count;
     }
 
     /** @} */
@@ -533,7 +570,7 @@ public:
     void _push()
     {
         _stack_push();
-        m_curr->ev_data.m_type = {};
+        m_curr->evt_type = {};
     }
 
     /** end the current scope */
@@ -544,15 +581,15 @@ public:
 
     template<type_bits bits> C4_ALWAYS_INLINE void _enable__() noexcept
     {
-        m_curr->ev_data.m_type.type = static_cast<NodeType_e>(m_curr->ev_data.m_type.type | bits);
+        m_curr->evt_type.type = static_cast<NodeType_e>(m_curr->evt_type.type | bits);
     }
     template<type_bits bits> C4_ALWAYS_INLINE void _disable__() noexcept
     {
-        m_curr->ev_data.m_type.type = static_cast<NodeType_e>(m_curr->ev_data.m_type.type & (~bits));
+        m_curr->evt_type.type = static_cast<NodeType_e>(m_curr->evt_type.type & (~bits));
     }
     template<type_bits bits> C4_ALWAYS_INLINE bool _has_any__() const noexcept
     {
-        return (m_curr->ev_data.m_type.type & bits) != 0;
+        return (m_curr->evt_type.type & bits) != 0;
     }
 
     void _mark_parent_with_children_()
@@ -567,99 +604,43 @@ public:
         {
             m_evt[m_evt_count].flags = flags;
         }
+        m_curr->evt_id = m_evt_count;
         ++m_evt_count;
     }
 
     C4_ALWAYS_INLINE void _send_val_container_(evt::EventFlagsType flags)
     {
-        _send_val_props_();
         if(m_evt_count < m_evt_size)
         {
             m_evt[m_evt_count].flags = evt::VAL_|flags;
         }
+        m_curr->evt_id = m_evt_count;
         ++m_evt_count;
-        m_curr->ev_data.m_val = {}; // TODO not needed
         _disable_(VALANCH|VALREF|VALTAG); // maybe not needed?
     }
 
-#define index_to_str(dst, csubs)                                    \
-    _RYML_CB_ASSERT(m_stack.m_callbacks, csubs.is_sub(m_str));      \
-    dst##_start = (int32_t)(csubs.str - m_str.str);                 \
-    dst##_len = (int32_t)csubs.len
-
     C4_ALWAYS_INLINE void _send_key_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
     {
-        _send_key_props_();
         if(m_evt_count < m_evt_size)
         {
             m_evt[m_evt_count].flags = evt::SCLR|evt::KEY_|flags;
             index_to_str(m_evt[m_evt_count].str, scalar);
         }
+        m_curr->evt_id = m_evt_count;
         ++m_evt_count;
-        m_curr->ev_data.m_key = {}; // TODO not needed
         _disable_(KEYANCH|KEYTAG); // maybe not needed?
     }
 
     C4_ALWAYS_INLINE void _send_val_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
     {
-        _send_val_props_();
         if(m_evt_count < m_evt_size)
         {
             m_evt[m_evt_count].flags = evt::SCLR|evt::VAL_|flags;
             index_to_str(m_evt[m_evt_count].str, scalar);
         }
+        m_curr->evt_id = m_evt_count;
         ++m_evt_count;
-        m_curr->ev_data.m_val = {}; // TODO not needed
         _disable_(VALANCH|VALTAG); // maybe not needed?
-    }
-
-    void _send_key_props_()
-    {
-        if(_has_any_(KEYANCH))
-        {
-            if(m_evt_count < m_evt_size)
-            {
-                index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_key.anchor);
-                m_evt[m_evt_count].flags |= evt::KEY_|evt::ANCH;
-            }
-            ++m_evt_count;
-        }
-        if(_has_any_(KEYTAG))
-        {
-            if(m_evt_count < m_evt_size)
-            {
-                _RYML_CB_ASSERT(m_stack.m_callbacks, !m_curr->ev_data.m_key.tag.empty());
-                if(m_curr->ev_data.m_key.tag.begins_with('!'))
-                    m_curr->ev_data.m_key.tag = m_curr->ev_data.m_key.tag.sub(1);
-                index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_key.tag);
-                m_evt[m_evt_count].flags |= evt::VAL_|evt::TAG_;
-            }
-            ++m_evt_count;
-        }
-    }
-    void _send_val_props_()
-    {
-        if(_has_any_(VALANCH))
-        {
-            if(m_evt_count < m_evt_size)
-            {
-                index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_val.anchor);
-                m_evt[m_evt_count].flags |= evt::VAL_|evt::ANCH;
-            }
-            ++m_evt_count;
-        }
-        if(_has_any_(VALTAG))
-        {
-            if(m_evt_count < m_evt_size)
-            {
-                _RYML_CB_ASSERT(m_stack.m_callbacks, !m_curr->ev_data.m_val.tag.empty());
-                if(m_curr->ev_data.m_val.tag.begins_with('!'))
-                    m_curr->ev_data.m_val.tag = m_curr->ev_data.m_val.tag.sub(1);
-                index_to_str(m_evt[m_evt_count].str, m_curr->ev_data.m_val.tag);
-                m_evt[m_evt_count].flags |= evt::VAL_|evt::TAG_;
-            }
-            ++m_evt_count;
-        }
     }
 
     csubstr _transform_directive(csubstr tag, substr output)
