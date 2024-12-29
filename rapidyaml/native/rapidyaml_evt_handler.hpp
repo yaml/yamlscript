@@ -76,7 +76,7 @@ namespace yml {
 
 struct EventHandlerEvtState : public ParserState
 {
-    NodeType evt_type;
+    type_bits evt_type;
     int32_t evt_id;
 };
 
@@ -578,15 +578,15 @@ public:
 
     template<type_bits bits> C4_ALWAYS_INLINE void _enable__() noexcept
     {
-        m_curr->evt_type.type = static_cast<NodeType_e>(m_curr->evt_type.type | bits);
+        m_curr->evt_type |= bits;
     }
     template<type_bits bits> C4_ALWAYS_INLINE void _disable__() noexcept
     {
-        m_curr->evt_type.type = static_cast<NodeType_e>(m_curr->evt_type.type & (~bits));
+        m_curr->evt_type &= ~bits;
     }
     template<type_bits bits> C4_ALWAYS_INLINE bool _has_any__() const noexcept
     {
-        return (m_curr->evt_type.type & bits) != 0;
+        return (m_curr->evt_type & bits) != type_bits(0);
     }
 
     void _mark_parent_with_children_()
