@@ -616,7 +616,6 @@ public:
         }
         m_curr->evt_id = m_evt_count;
         ++m_evt_count;
-        _disable_(VALANCH|VALREF|VALTAG); // maybe not needed?
     }
 
     C4_ALWAYS_INLINE void _send_key_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
@@ -628,7 +627,6 @@ public:
         }
         m_curr->evt_id = m_evt_count;
         ++m_evt_count;
-        _disable_(KEYANCH|KEYTAG); // maybe not needed?
     }
 
     C4_ALWAYS_INLINE void _send_val_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
@@ -640,7 +638,6 @@ public:
         }
         m_curr->evt_id = m_evt_count;
         ++m_evt_count;
-        _disable_(VALANCH|VALTAG); // maybe not needed?
     }
 
     csubstr _transform_directive(csubstr tag, substr output)
