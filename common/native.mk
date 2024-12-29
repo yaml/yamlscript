@@ -6,6 +6,7 @@ NATIVE_OPTS := \
   --initialize-at-build-time \
   --enable-preview \
   --enable-url-protocols=https \
+  -march=compatibility \
   -H:ReflectionConfigurationFiles=reflection.json \
   -H:+ReportExceptionStackTraces \
   -H:IncludeResources=SCI_VERSION \
