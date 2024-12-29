@@ -11,28 +11,28 @@ template<>
 c4::EnumSymbols<evt::EventFlags> const esyms<evt::EventFlags>()
 {
     static constexpr typename c4::EnumSymbols<evt::EventFlags>::Sym syms[] = {
+        {evt::KEY_, "KEY_"},
+        {evt::VAL_, "VAL_"},
         {evt::SCLR, "SCLR"},
+        {evt::BSEQ, "BSEQ"},
+        {evt::ESEQ, "ESEQ"},
+        {evt::BMAP, "BMAP"},
+        {evt::EMAP, "EMAP"},
+        {evt::ALIA, "ALIA"},
+        {evt::ANCH, "ANCH"},
+        {evt::TAG_, "TAG_"},
         {evt::PLAI, "PLAI"},
         {evt::SQUO, "SQUO"},
         {evt::DQUO, "DQUO"},
         {evt::LITL, "LITL"},
         {evt::FOLD, "FOLD"},
-        {evt::BSEQ, "BSEQ"},
-        {evt::ESEQ, "ESEQ"},
-        {evt::BMAP, "BMAP"},
-        {evt::EMAP, "EMAP"},
         {evt::FLOW, "FLOW"},
         {evt::BLCK, "BLCK"},
-        {evt::KEY_, "KEY_"},
-        {evt::VAL_, "VAL_"},
         {evt::BDOC, "BDOC"},
         {evt::EDOC, "EDOC"},
         {evt::BSTR, "BSTR"},
         {evt::ESTR, "ESTR"},
         {evt::EXPL, "EXPL"},
-        {evt::ALIA, "ALIA"},
-        {evt::ANCH, "ANCH"},
-        {evt::TAG_, "TAG_"},
     };
     return c4::EnumSymbols<evt::EventFlags>(syms);
 }
@@ -97,6 +97,7 @@ public:
     }
     bool testeq(std::vector<evt::ParseEvent> const& actual) const
     {
+        int status = true;
         if(actual.size() != evt.size())
         {
             printf("------\n"
@@ -107,10 +108,10 @@ public:
                    (int)ys.len, ys.str,
                    evt.size(),
                    actual.size());
-            return false;
+            status = false;
         }
-        int status = true;
-        for(size_t i = 0; i < actual.size(); ++i)
+        size_t minsize = actual.size() < evt.size() ? actual.size() : evt.size();
+        for(size_t i = 0; i < minsize; ++i)
         {
             char actualbuf[100];
             char expectedbuf[100];
@@ -137,7 +138,7 @@ public:
                     };
                     csubstr evtstr = extract(evt[i]);
                     csubstr actualstr = extract(actual[i]);
-                    printf("wtf! status=%d i=%zu cmp=%d:   exp=%.*s vs act=%.*s\n", status, i, evtstr == actualstr, (int)evtstr.len, evtstr.str, (int)actualstr.len, actualstr.str);
+                    printf("wtf! status=%d i=%zu cmp=%d:   exp=~~~%.*s~~~ vs act=~~~%.*s~~~\n", status, i, evtstr == actualstr, (int)evtstr.len, evtstr.str, (int)actualstr.len, actualstr.str);
                     status &= (evtstr == actualstr);
                 }
             }
@@ -263,7 +264,7 @@ public:
         CHECK(reqsize == evt.size());
         CHECK(reqsize != 0);
         output.resize(reqsize);
-        input_.assign(ys.begin(), ys.end());
+input_.assign(ys.begin(), ys.end()); // FIXME
         size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
                                           input.str, (size_type)input.len,
                                           output.data(), (size_type)output.size());
@@ -308,7 +309,7 @@ public:
         CHECK(reqsize != 0);
         std::vector<evt::ParseEvent> output;
         output.resize(reqsize);
-        input_.assign(ys.begin(), ys.end());
+input_.assign(ys.begin(), ys.end()); // FIXME
         size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
                                           input.str, (size_type)input.len,
                                           output.data(), (size_type)output.size());
@@ -351,9 +352,9 @@ const TestCase test_cases[] = {
        {
            e(_ BSTR),
            e(_ BDOC),
-           e(_ BMAP|_ BLCK|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 0, 1), // a
-           e(_ SCLR|_ VAL_|_ PLAI, 3, 1), // 1
+           e(_ VAL_|_ BMAP|_ BLCK),
+           e(_ KEY_|_ SCLR|_ PLAI, 0, 1), // a
+           e(_ VAL_|_ SCLR|_ PLAI, 3, 1), // 1
            e(_ EMAP),
            e(_ EDOC),
            e(_ ESTR),
@@ -371,9 +372,9 @@ const TestCase test_cases[] = {
        {
            e(_ BSTR),
            e(_ BDOC),
-           e(_ BMAP|_ BLCK|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 0, 3), // say
-           e(_ SCLR|_ VAL_|_ PLAI, 5, 5), // 2 + 2
+           e(_ VAL_|_ BMAP|_ BLCK),
+           e(_ KEY_|_ SCLR|_ PLAI, 0, 3), // say
+           e(_ VAL_|_ SCLR|_ PLAI, 5, 5), // 2 + 2
            e(_ EMAP),
            e(_ EDOC),
            e(_ ESTR),
@@ -391,9 +392,9 @@ const TestCase test_cases[] = {
        {
            e(_ BSTR),
            e(_ BDOC),
-           e(_ BMAP|_ BLCK|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 0, 4),
-           e(_ SCLR|_ VAL_|_ PLAI, 6, 3),
+           e(_ VAL_|_ BMAP|_ BLCK),
+           e(_ KEY_|_ SCLR|_ PLAI, 0, 4),
+           e(_ VAL_|_ SCLR|_ PLAI, 6, 3),
            e(_ EMAP),
            e(_ EDOC),
            e(_ ESTR),
@@ -412,10 +413,10 @@ const TestCase test_cases[] = {
        {
            e(_ BSTR),
            e(_ BDOC),
-           e(_ BSEQ|_ FLOW|_ VAL_),
-           e(_ SCLR|_ VAL_|_ PLAI, 1, 1),
-           e(_ SCLR|_ VAL_|_ PLAI, 4, 1),
-           e(_ SCLR|_ VAL_|_ PLAI, 7, 1),
+           e(_ VAL_|_ BSEQ|_ FLOW),
+           e(_ VAL_|_ SCLR|_ PLAI, 1, 1), // a
+           e(_ VAL_|_ SCLR|_ PLAI, 4, 1), // b
+           e(_ VAL_|_ SCLR|_ PLAI, 7, 1), // c
            e(_ ESEQ),
            e(_ EDOC),
            e(_ ESTR),
@@ -435,10 +436,10 @@ const TestCase test_cases[] = {
        {
            e(_ BSTR),
            e(_ BDOC),
-           e(_ BSEQ|_ FLOW|_ VAL_),
-           e(_ BMAP|_ FLOW|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 1, 1),
-           e(_ SCLR|_ VAL_|_ PLAI, 4, 1),
+           e(_ VAL_|_ BSEQ|_ FLOW),
+           e(_ VAL_|_ BMAP|_ FLOW),
+           e(_ KEY_|_ SCLR|_ PLAI, 1, 1),
+           e(_ VAL_|_ SCLR|_ PLAI, 4, 1),
            e(_ EMAP),
            e(_ ESEQ),
            e(_ EDOC),
@@ -500,41 +501,41 @@ another: doc
        {
            e(_ BSTR),
            e(_ BDOC|_ EXPL),
-           e(_ TAG_|_ VAL_, 5, 13),
-           e(_ BMAP|_ BLCK|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 19, 3), // foo
-           e(_ TAG_|_ VAL_, 25, 0),
-           e(_ BSEQ|_ BLCK|_ VAL_),
-           e(_ BMAP|_ FLOW|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 29, 1), // x
-           e(_ SCLR|_ VAL_|_ PLAI, 32, 1), // y
+           e(_ VAL_|_ TAG_, 5, 13), // !yamlscript/v0
+           e(_ VAL_|_ BMAP|_ BLCK),
+           e(_ KEY_|_ SCLR|_ PLAI, 19, 3), // foo
+           e(_ VAL_|_ TAG_, 25, 0),
+           e(_ VAL_|_ BSEQ|_ BLCK),
+           e(_ VAL_|_ BMAP|_ FLOW),
+           e(_ KEY_|_ SCLR|_ PLAI, 29, 1), // x
+           e(_ VAL_|_ SCLR|_ PLAI, 32, 1), // y
            e(_ EMAP),
-           e(_ BSEQ|_ FLOW|_ VAL_),
-           e(_ SCLR|_ VAL_|_ PLAI, 38, 1), // x
-           e(_ SCLR|_ VAL_|_ PLAI, 41, 1), // y
+           e(_ VAL_|_ BSEQ|_ FLOW),
+           e(_ VAL_|_ SCLR|_ PLAI, 38, 1), // x
+           e(_ VAL_|_ SCLR|_ PLAI, 41, 1), // y
            e(_ ESEQ),
-           e(_ SCLR|_ VAL_|_ PLAI, 46, 3), // foo
-           e(_ SCLR|_ VAL_|_ SQUO, 53, 3), // foo
-           e(_ SCLR|_ VAL_|_ DQUO, 61, 3), // foo
-           e(_ SCLR|_ VAL_|_ LITL, 70, 4), // foo FIXME
-           e(_ SCLR|_ VAL_|_ FOLD, 80, 4), // foo FIXME
-           e(_ BSEQ|_ FLOW|_ VAL_),
-           e(_ SCLR|_ VAL_|_ PLAI, 89, 1), // 1
-           e(_ SCLR|_ VAL_|_ PLAI, 92, 1), // 2
-           e(_ SCLR|_ VAL_|_ PLAI, 95, 4), // true
-           e(_ SCLR|_ VAL_|_ PLAI, 101, 5), // false
-           e(_ SCLR|_ VAL_|_ PLAI, 108, 4), // null
+           e(_ VAL_|_ SCLR|_ PLAI, 46, 3), // foo
+           e(_ VAL_|_ SCLR|_ SQUO, 53, 3), // foo
+           e(_ VAL_|_ SCLR|_ DQUO, 61, 3), // foo
+           e(_ VAL_|_ SCLR|_ LITL, 70, 4), // foo FIXME
+           e(_ VAL_|_ SCLR|_ FOLD, 80, 4), // foo FIXME
+           e(_ VAL_|_ BSEQ|_ FLOW),
+           e(_ VAL_|_ SCLR|_ PLAI, 89, 1), // 1
+           e(_ VAL_|_ SCLR|_ PLAI, 92, 1), // 2
+           e(_ VAL_|_ SCLR|_ PLAI, 95, 4), // true
+           e(_ VAL_|_ SCLR|_ PLAI, 101, 5), // false
+           e(_ VAL_|_ SCLR|_ PLAI, 108, 4), // null
            e(_ ESEQ),
-           e(_ ANCH|_ VAL_, 117, 8), // anchor-1
-           e(_ TAG_|_ VAL_, 127, 5), // tag-1
-           e(_ SCLR|_ VAL_|_ PLAI, 133, 6), // foobar
+           e(_ VAL_|_ TAG_, 127, 5), // tag-1
+           e(_ VAL_|_ ANCH, 117, 8), // anchor-1
+           e(_ VAL_|_ SCLR|_ PLAI, 133, 6), // foobar
            e(_ ESEQ),
            e(_ EMAP),
            e(_ EDOC),
            e(_ BDOC|_ EXPL),
-           e(_ BMAP|_ BLCK|_ VAL_),
-           e(_ SCLR|_ KEY_|_ PLAI, 144, 7), // another
-           e(_ SCLR|_ VAL_|_ PLAI, 153, 3), // doc
+           e(_ VAL_|_ BMAP|_ BLCK),
+           e(_ KEY_|_ SCLR|_ PLAI, 144, 7), // another
+           e(_ VAL_|_ SCLR|_ PLAI, 153, 3), // doc
            e(_ EMAP),
            e(_ EDOC),
            e(_ ESTR),

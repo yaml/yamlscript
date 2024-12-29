@@ -23,39 +23,36 @@ namespace evt {
 using EventFlagsType = int32_t;
 typedef enum : EventFlagsType {
     // ---------------------
-    // scalar flags
-    SCLR = 1 <<  0,   // ( 1) has a scalar
-    PLAI = 1 <<  1,   // ( 2) : (plain scalar)
-    SQUO = 1 <<  2,   // ( 4) ' (single-quoted scalar)
-    DQUO = 1 <<  3,   // ( 8) " (double-quoted scalar)
-    LITL = 1 <<  4,   // (16) | (block literal scalar)
-    FOLD = 1 <<  5,   // (32) > (block folded scalar)
-    // ---------------------
-    // container flags
-    BSEQ = 1 <<  6,   // (  64) +SEQ (Begin SEQ)
-    ESEQ = 1 <<  7,   // ( 128) -SEQ (End   SEQ)
-    BMAP = 1 <<  8,   // ( 256) +MAP (Begin MAP)
-    EMAP = 1 <<  9,   // ( 512) -MAP (End   MAP)
-    FLOW = 1 << 10,   // (1024) flow container: [] for seqs or {} for maps
-    BLCK = 1 << 11,   // (2048) block container
-    // ---------------------
     // structure flags
-    KEY_ = 1 << 12,   // (4096)
-    VAL_ = 1 << 13,   // (8192)
+    KEY_ = 1 <<  0,   // as key
+    VAL_ = 1 <<  1,   // as value
+    SCLR = 1 <<  2,   // =VAL
+    BSEQ = 1 <<  3,   // +SEQ
+    ESEQ = 1 <<  4,   // -SEQ
+    BMAP = 1 <<  5,   // +MAP
+    EMAP = 1 <<  6,   // -MAP
+    ALIA = 1 <<  7,   // ref
+    ANCH = 1 <<  8,   // anchor
+    TAG_ = 1 <<  9,   // tag
+    // ---------------------
+    // style flags
+    PLAI = 1 << 10,   // : (plain scalar)
+    SQUO = 1 << 11,   // ' (single-quoted scalar)
+    DQUO = 1 << 12,   // " (double-quoted scalar)
+    LITL = 1 << 13,   // | (block literal scalar)
+    FOLD = 1 << 14,   // > (block folded scalar)
+    FLOW = 1 << 15,   // flow container: [] for seqs or {} for maps
+    BLCK = 1 << 16,   // block container
     // ---------------------
     // document flags
-    BDOC = 1 << 14,   // ( 16384) +DOC
-    EDOC = 1 << 15,   // ( 32678) -DOC
-    BSTR = 1 << 16,   // ( 65536) +STR
-    ESTR = 1 << 17,   // (131072) -STR
-    EXPL = 1 << 18,   // (262144) --- (with BDOC) or ... (with EDOC) (may be fused with FLOW if needed)
+    BDOC = 1 << 17,   // +DOC
+    EDOC = 1 << 18,   // -DOC
+    EXPL = 1 << 21,   // --- (with BDOC) or ... (with EDOC) (may be fused with FLOW if needed)
+    BSTR = 1 << 19,   // +STR
+    ESTR = 1 << 20,   // -STR
     // ---------------------
-    // other flags
-    ALIA = 1 << 19,   // ( 524288) ref
-    ANCH = 1 << 20,   // (1048576) anchor
-    TAG_ = 1 << 21,   // (2097152) tag
-    // utility
-    LAST = TAG_,
+    // utility flags
+    LAST = EXPL,
     MASK = (LAST << 1) - 1,
     HAS_STR = SCLR|ALIA|ANCH|TAG_
 } EventFlags;
