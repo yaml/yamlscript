@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright 2023-2024 Ingy dot Net
+# Copyright 2023-2025 Ingy dot Net
 # This code is licensed under MIT license (See License for details)
 
 require 'fiddle'
