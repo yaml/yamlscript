@@ -2,7 +2,7 @@
 	"authors": [
 		"ingy"
 	],
-	"copyright": "Copyright 2022-2024, Ingy döt Net",
+	"copyright": "Copyright 2022-2025, Ingy döt Net",
 	"description": "Program in YAML — Code is Data",
 	"license": "MIT",
 	"name": "yamlscript"

@@ -46,7 +46,7 @@ entrypoint.
 
 ## Copyright and License
 
-Copyright 2022-2024 by Ingy döt Net
+Copyright 2022-2025 by Ingy döt Net
 
 This is free software, licensed under:
 

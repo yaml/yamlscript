@@ -191,7 +191,7 @@ See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
 
 ## License & Copyright
 
-Copyright 2022-2024 Ingy döt Net <ingy@ingy.net>
+Copyright 2022-2025 Ingy döt Net <ingy@ingy.net>
 
 This project is licensed under the terms of the `MIT` license.
 See [LICENSE](https://github.com/yaml/yamlscript/blob/main/License) for
