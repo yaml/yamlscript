@@ -275,8 +275,10 @@ int main()
         failed_cases += (!tr);
         printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
     }
-    printf("%u/%u assertions failed\n", total.num_failed_assertions, total.num_assertions);
-    printf("%u/%u tests failed\n", total.num_failed_tests, total.num_tests);
-    printf("%zu/%zu cases failed\n", failed_cases, num_cases);
+    printf("assertions: %u/%u pass %u/%u fail\n", total.num_assertions - total.num_failed_assertions, total.num_assertions, total.num_failed_assertions, total.num_assertions);
+    printf("tests: %u/%u pass %u/%u fail\n", total.num_tests - total.num_failed_tests, total.num_tests, total.num_failed_tests, total.num_tests);
+    printf("cases: %zu/%zu pass %zu/%zu fail\n", num_cases-failed_cases, num_cases, failed_cases, num_cases);
+    if(total)
+        printf("TESTS SUCCEED!\n");
     return total ? 0 : -1;
 }
