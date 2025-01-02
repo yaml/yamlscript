@@ -78,7 +78,20 @@ struct TestCase
 {
     csubstr ys;
     csubstr edn;
-    std::vector<evt::ParseEvent> evt;
+    struct EvtWithScalar : public evt::ParseEvent
+    {
+        csubstr scalar;
+        bool needs_filter;
+        EvtWithScalar(evt::EventFlagsType t, int32_t start=0, int32_t len=0, csubstr sclr={}, bool needs_filter_=false)
+        {
+            flags = t;
+            str_start = start;
+            str_len = len;
+            scalar = sclr;
+            needs_filter = needs_filter_;
+        }
+    };
+    std::vector<EvtWithScalar> evt;
 
 public:
     bool testeq(csubstr actual) const
@@ -87,12 +100,12 @@ public:
         if(!status)
             printf("------\n"
                    "FAIL:\n"
-                   "input:~~~%.*s~~~\n"
-                   "expected:~~~%.*s~~~\n"
-                   "actual:~~~%.*s~~~\n",
-                   (int)ys.len, ys.str,
-                   (int)edn.len, edn.str,
-                   (int)actual.len, actual.str);
+                   "input:[%zu]~~~%.*s~~~\n"
+                   "expected:[%zu]~~~%.*s~~~\n"
+                   "actual:[%zu]~~~%.*s~~~\n",
+                   ys.len, (int)ys.len, ys.str,
+                   edn.len, (int)edn.len, edn.str,
+                   actual.len, (int)actual.len, actual.str);
         return status;
     }
     bool testeq(std::vector<evt::ParseEvent> const& actual) const
@@ -138,8 +151,15 @@ public:
                     };
                     csubstr evtstr = extract(evt[i]);
                     csubstr actualstr = extract(actual[i]);
-                    printf("wtf! status=%d i=%zu cmp=%d:   exp=~~~%.*s~~~ vs act=~~~%.*s~~~\n", status, i, evtstr == actualstr, (int)evtstr.len, evtstr.str, (int)actualstr.len, actualstr.str);
-                    status &= (evtstr == actualstr);
+                    printf("wtf! status=%d i=%zu cmp=%d:   ref=[%zu]~~~%.*s~~~ vs act=[%zu]~~~%.*s~~~\n",
+                           status, i, evt[i].scalar == actualstr, evtstr.len, (int)evt[i].scalar.len, evt[i].scalar.str, evt[i].scalar.len, (int)actualstr.len, actualstr.str);
+                    status &= (evt[i].scalar == actualstr);
+                    if(!evt[i].needs_filter)
+                    {
+                        printf("wtf! status=%d i=%zu cmp=%d:   exp=[%zu]~~~%.*s~~~ vs act=[%zu]~~~%.*s~~~\n",
+                               status, i, evtstr == actualstr, evtstr.len, (int)evtstr.len, evtstr.str, actualstr.len, (int)actualstr.len, actualstr.str);
+                        status &= (evtstr == actualstr);
+                    }
                 }
             }
         }
@@ -333,11 +353,12 @@ input_.assign(ys.begin(), ys.end()); // FIXME
 
 //-----------------------------------------------------------------------------
 
+namespace {
 // make the declarations shorter
-#define _ evt::
-#define tc(ys, edn, ...) {ys, edn, std::vector<evt::ParseEvent>(__VA_ARGS__)}
-constexpr evt::ParseEvent e(evt::EventFlagsType flags, int start=0, int end=0) { return {flags, start, end}; }
-
+#define tc(ys, edn, ...) {ys, edn, std::vector<TestCase::EvtWithScalar>(__VA_ARGS__)}
+#define e(...) TestCase::EvtWithScalar{__VA_ARGS__}
+using namespace evt;
+inline constexpr bool needs_filter = true;
 const TestCase test_cases[] = {
     // case -------------------------------------------------
     tc("a: 1",
@@ -350,14 +371,14 @@ const TestCase test_cases[] = {
 )
 )",
        {
-           e(_ BSTR),
-           e(_ BDOC),
-           e(_ VAL_|_ BMAP|_ BLCK),
-           e(_ KEY_|_ SCLR|_ PLAI, 0, 1), // a
-           e(_ VAL_|_ SCLR|_ PLAI, 3, 1), // 1
-           e(_ EMAP),
-           e(_ EDOC),
-           e(_ ESTR),
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 1, "a"),
+           e(VAL_|SCLR|PLAI, 3, 1, "1"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
        }),
     // case -------------------------------------------------
     tc("say: 2 + 2",
@@ -370,14 +391,14 @@ const TestCase test_cases[] = {
 )
 )",
        {
-           e(_ BSTR),
-           e(_ BDOC),
-           e(_ VAL_|_ BMAP|_ BLCK),
-           e(_ KEY_|_ SCLR|_ PLAI, 0, 3), // say
-           e(_ VAL_|_ SCLR|_ PLAI, 5, 5), // 2 + 2
-           e(_ EMAP),
-           e(_ EDOC),
-           e(_ ESTR),
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 3, "say"),
+           e(VAL_|SCLR|PLAI, 5, 5, "2 + 2"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
        }),
     // case -------------------------------------------------
     tc("𝄞: ✅",
@@ -390,14 +411,14 @@ const TestCase test_cases[] = {
 )
 )",
        {
-           e(_ BSTR),
-           e(_ BDOC),
-           e(_ VAL_|_ BMAP|_ BLCK),
-           e(_ KEY_|_ SCLR|_ PLAI, 0, 4),
-           e(_ VAL_|_ SCLR|_ PLAI, 6, 3),
-           e(_ EMAP),
-           e(_ EDOC),
-           e(_ ESTR),
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 4, "𝄞"),
+           e(VAL_|SCLR|PLAI, 6, 3, "✅"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
        }),
     // case -------------------------------------------------
     tc("[a, b, c]",
@@ -411,15 +432,15 @@ const TestCase test_cases[] = {
 )
 )",
        {
-           e(_ BSTR),
-           e(_ BDOC),
-           e(_ VAL_|_ BSEQ|_ FLOW),
-           e(_ VAL_|_ SCLR|_ PLAI, 1, 1), // a
-           e(_ VAL_|_ SCLR|_ PLAI, 4, 1), // b
-           e(_ VAL_|_ SCLR|_ PLAI, 7, 1), // c
-           e(_ ESEQ),
-           e(_ EDOC),
-           e(_ ESTR),
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|PLAI, 1, 1, "a"),
+           e(VAL_|SCLR|PLAI, 4, 1, "b"),
+           e(VAL_|SCLR|PLAI, 7, 1, "c"),
+           e(ESEQ),
+           e(EDOC),
+           e(ESTR),
        }),
     // case ------------------------------
     tc("[a: b]",
@@ -434,16 +455,16 @@ const TestCase test_cases[] = {
 )
 )",
        {
-           e(_ BSTR),
-           e(_ BDOC),
-           e(_ VAL_|_ BSEQ|_ FLOW),
-           e(_ VAL_|_ BMAP|_ FLOW),
-           e(_ KEY_|_ SCLR|_ PLAI, 1, 1),
-           e(_ VAL_|_ SCLR|_ PLAI, 4, 1),
-           e(_ EMAP),
-           e(_ ESEQ),
-           e(_ EDOC),
-           e(_ ESTR),
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|BMAP|FLOW),
+           e(KEY_|SCLR|PLAI, 1, 1, "a"),
+           e(VAL_|SCLR|PLAI, 4, 1, "b"),
+           e(EMAP),
+           e(ESEQ),
+           e(EDOC),
+           e(ESTR),
        }),
     // case ------------------------------
     tc(R"(--- !yamlscript/v0
@@ -499,49 +520,99 @@ another: doc
 )
 )",
        {
-           e(_ BSTR),
-           e(_ BDOC|_ EXPL),
-           e(_ VAL_|_ TAG_, 5, 13), // !yamlscript/v0
-           e(_ VAL_|_ BMAP|_ BLCK),
-           e(_ KEY_|_ SCLR|_ PLAI, 19, 3), // foo
-           e(_ VAL_|_ TAG_, 25, 0),
-           e(_ VAL_|_ BSEQ|_ BLCK),
-           e(_ VAL_|_ BMAP|_ FLOW),
-           e(_ KEY_|_ SCLR|_ PLAI, 29, 1), // x
-           e(_ VAL_|_ SCLR|_ PLAI, 32, 1), // y
-           e(_ EMAP),
-           e(_ VAL_|_ BSEQ|_ FLOW),
-           e(_ VAL_|_ SCLR|_ PLAI, 38, 1), // x
-           e(_ VAL_|_ SCLR|_ PLAI, 41, 1), // y
-           e(_ ESEQ),
-           e(_ VAL_|_ SCLR|_ PLAI, 46, 3), // foo
-           e(_ VAL_|_ SCLR|_ SQUO, 53, 3), // foo
-           e(_ VAL_|_ SCLR|_ DQUO, 61, 3), // foo
-           e(_ VAL_|_ SCLR|_ LITL, 70, 4), // foo FIXME
-           e(_ VAL_|_ SCLR|_ FOLD, 80, 4), // foo FIXME
-           e(_ VAL_|_ BSEQ|_ FLOW),
-           e(_ VAL_|_ SCLR|_ PLAI, 89, 1), // 1
-           e(_ VAL_|_ SCLR|_ PLAI, 92, 1), // 2
-           e(_ VAL_|_ SCLR|_ PLAI, 95, 4), // true
-           e(_ VAL_|_ SCLR|_ PLAI, 101, 5), // false
-           e(_ VAL_|_ SCLR|_ PLAI, 108, 4), // null
-           e(_ ESEQ),
-           e(_ VAL_|_ TAG_, 127, 5), // tag-1
-           e(_ VAL_|_ ANCH, 117, 8), // anchor-1
-           e(_ VAL_|_ SCLR|_ PLAI, 133, 6), // foobar
-           e(_ ESEQ),
-           e(_ EMAP),
-           e(_ EDOC),
-           e(_ BDOC|_ EXPL),
-           e(_ VAL_|_ BMAP|_ BLCK),
-           e(_ KEY_|_ SCLR|_ PLAI, 144, 7), // another
-           e(_ VAL_|_ SCLR|_ PLAI, 153, 3), // doc
-           e(_ EMAP),
-           e(_ EDOC),
-           e(_ ESTR),
+           e(BSTR),
+           e(BDOC|EXPL),
+           e(VAL_|TAG_, 5, 13, "yamlscript/v0"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 19, 3, "foo"),
+           e(VAL_|TAG_, 25, 0),
+           e(VAL_|BSEQ|BLCK),
+           e(VAL_|BMAP|FLOW),
+           e(KEY_|SCLR|PLAI, 29, 1, "x"),
+           e(VAL_|SCLR|PLAI, 32, 1, "y"),
+           e(EMAP),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|PLAI, 38, 1, "x"),
+           e(VAL_|SCLR|PLAI, 41, 1, "y"),
+           e(ESEQ),
+           e(VAL_|SCLR|PLAI, 46, 3, "foo"),
+           e(VAL_|SCLR|SQUO, 53, 3, "foo"),
+           e(VAL_|SCLR|DQUO, 61, 3, "foo"),
+           e(VAL_|SCLR|LITL, 70, 4, "foo", needs_filter),
+           e(VAL_|SCLR|FOLD, 80, 4, "foo", needs_filter),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|PLAI, 89, 1, "1"),
+           e(VAL_|SCLR|PLAI, 92, 1, "2"),
+           e(VAL_|SCLR|PLAI, 95, 4, "true"),
+           e(VAL_|SCLR|PLAI, 101, 5, "false"),
+           e(VAL_|SCLR|PLAI, 108, 4, "null"),
+           e(ESEQ),
+           e(VAL_|TAG_, 127, 5, "tag-1"),
+           e(VAL_|ANCH, 117, 8, "anchor-1"),
+           e(VAL_|SCLR|PLAI, 133, 6, "foobar"),
+           e(ESEQ),
+           e(EMAP),
+           e(EDOC),
+           e(BDOC|EXPL),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 144, 7, "another"),
+           e(VAL_|SCLR|PLAI, 153, 3, "doc"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc(R"(plain: well
+  a
+  b
+  c
+squo: 'single''quote'
+dquo: "x\t\ny"
+lit: |
+     X
+     Y
+     Z
+fold: >
+     U
+     V
+     W
+)",
+       R"((
+{:+ "+MAP"}
+{:+ "=VAL", := "plain"}
+{:+ "=VAL", := "well a b c"}
+{:+ "=VAL", := "squo"}
+{:+ "=VAL", :' "single'quote"}
+{:+ "=VAL", := "dquo"}
+{:+ "=VAL", :$ "x\t\ny"}
+{:+ "=VAL", := "lit"}
+{:+ "=VAL", :| "X\nY\nZ\n"}
+{:+ "=VAL", := "fold"}
+{:+ "=VAL", :> "U V W\n"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 5, "plain"),
+           e(VAL_|SCLR|PLAI, 7, 10, "well a b c"),
+           e(KEY_|SCLR|PLAI, 24, 4, "squo"),
+           e(VAL_|SCLR|SQUO, 31, 12, "single'quote", needs_filter),
+           e(KEY_|SCLR|PLAI, 46, 4, "dquo"),
+           e(VAL_|SCLR|DQUO, 53, 4, "x\t\ny", needs_filter),
+           e(KEY_|SCLR|PLAI, 61, 3, "lit"),
+           e(VAL_|SCLR|LITL, 68, 6, "X\nY\nZ\n", needs_filter),
+           e(KEY_|SCLR|PLAI, 89, 4, "fold"),
+           e(VAL_|SCLR|FOLD, 97, 6, "U V W\n", needs_filter),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
        }),
 };
-
+} // namespace
 
 int main()
 {
