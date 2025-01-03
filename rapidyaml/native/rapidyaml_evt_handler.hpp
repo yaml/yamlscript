@@ -1,18 +1,61 @@
-#ifndef _C4_YML_EVENT_HANDLER_EDN_HPP_
-#define _C4_YML_EVENT_HANDLER_EDN_HPP_
-
+#ifndef _C4_YML_EVENT_HANDLER_EVT_HPP_
+#define _C4_YML_EVENT_HANDLER_EVT_HPP_
 
 #include <c4/yml/node_type.hpp>
 #include <c4/yml/parse_engine.hpp>
 #include <c4/yml/event_handler_stack.hpp>
+#include <c4/yml/tag.hpp>
 #include <c4/yml/std/string.hpp>
-#include <c4/yml/detail/print.hpp>
-
-#include <vector>
 
 C4_SUPPRESS_WARNING_GCC_CLANG_PUSH
 C4_SUPPRESS_WARNING_GCC_CLANG("-Wold-style-cast")
 C4_SUPPRESS_WARNING_GCC("-Wuseless-cast")
+
+namespace evt {
+using EventFlagsType = int32_t;
+typedef enum : EventFlagsType {
+    // ---------------------
+    // structure flags
+    KEY_ = 1 <<  0,   // as key
+    VAL_ = 1 <<  1,   // as value
+    SCLR = 1 <<  2,   // =VAL
+    BSEQ = 1 <<  3,   // +SEQ
+    ESEQ = 1 <<  4,   // -SEQ
+    BMAP = 1 <<  5,   // +MAP
+    EMAP = 1 <<  6,   // -MAP
+    ALIA = 1 <<  7,   // ref
+    ANCH = 1 <<  8,   // anchor
+    TAG_ = 1 <<  9,   // tag
+    // ---------------------
+    // style flags
+    PLAI = 1 << 10,   // : (plain scalar)
+    SQUO = 1 << 11,   // ' (single-quoted scalar)
+    DQUO = 1 << 12,   // " (double-quoted scalar)
+    LITL = 1 << 13,   // | (block literal scalar)
+    FOLD = 1 << 14,   // > (block folded scalar)
+    FLOW = 1 << 15,   // flow container: [] for seqs or {} for maps
+    BLCK = 1 << 16,   // block container
+    // ---------------------
+    // document flags
+    BDOC = 1 << 17,   // +DOC
+    EDOC = 1 << 18,   // -DOC
+    EXPL = 1 << 21,   // --- (with BDOC) or ... (with EDOC) (may be fused with FLOW if needed)
+    BSTR = 1 << 19,   // +STR
+    ESTR = 1 << 20,   // -STR
+    // ---------------------
+    // utility flags
+    LAST = EXPL,
+    MASK = (LAST << 1) - 1,
+    HAS_STR = SCLR|ALIA|ANCH|TAG_
+} EventFlags;
+
+struct ParseEvent
+{
+    EventFlagsType flags;
+    int32_t str_start; // index where the string starts
+    int32_t str_len;   // length of the string
+};
+} // namespace evt
 
 
 namespace c4 {
@@ -23,46 +66,34 @@ namespace yml {
  * @{ */
 
 
-struct EventHandlerEdnState : public ParserState
+struct EventHandlerEvtState : public ParserState
 {
-    NodeData ev_data;
+    type_bits evt_type;
+    int32_t evt_id;
 };
 
 
-struct EventHandlerEdn : public EventHandlerStack<EventHandlerEdn, EventHandlerEdnState>
+struct EventHandlerEvt : public EventHandlerStack<EventHandlerEvt, EventHandlerEvtState>
 {
 
     /** @name types
      * @{ */
 
     // our internal state must inherit from parser state
-    using state = EventHandlerEdnState;
-
-    struct EventSink
-    {
-        std::string result;
-        void reset() noexcept { result.clear(); }
-        void append(csubstr s) noexcept { result.append(s.str, s.len); }
-        void append(char c) noexcept { result += c; }
-        void insert(csubstr s, size_t pos) noexcept { result.insert(pos, s.str, s.len); }
-        void insert(char c, size_t pos) noexcept { result.insert(pos, 1, c); }
-        csubstr get() const { return csubstr(&result[0], result.size()); }
-        substr get() { return substr(&result[0], result.size()); }
-        size_t find_last(csubstr s) const { return result.rfind(s.str, std::string::npos, s.len); }
-        void append_escaped(csubstr val);
-    };
+    using state = EventHandlerEvtState;
 
     /** @} */
 
 public:
 
     /** @cond dev */
-    EventSink *C4_RESTRICT m_sink;
-    std::vector<EventSink> m_val_buffers;
+    csubstr m_str;
+    evt::ParseEvent * m_evt;
+    int32_t m_evt_count;
+    int32_t m_evt_size;
     char m_key_tag_buf[256];
     char m_val_tag_buf[256];
     std::string m_arena;
-    bool m_first_doc;
 
     // undefined at the end
     #define _enable_(bits) _enable__<bits>()
@@ -75,37 +106,31 @@ public:
     /** @name construction and resetting
      * @{ */
 
-    EventHandlerEdn(EventSink *sink, Callbacks const& cb)
-        : EventHandlerStack(cb), m_sink(sink), m_val_buffers(), m_first_doc()
+    EventHandlerEvt(Callbacks const& cb)
+        : EventHandlerStack(cb)
     {
-        reset();
+        reset({}, nullptr, 0);
     }
-    EventHandlerEdn(EventSink *sink)
-        : EventHandlerEdn(sink, get_callbacks())
+    EventHandlerEvt()
+        : EventHandlerEvt(get_callbacks())
     {
     }
 
-    void reset()
+    void reset(csubstr str, evt::ParseEvent *dst, int32_t dst_size)
     {
         _stack_reset_root();
         m_curr->flags |= RUNK|RTOP;
-        m_val_buffers.resize((size_t)m_stack.size());
+        m_curr->evt_type = {};
+        m_curr->evt_id = 0;
         m_arena.clear();
-        m_first_doc = true;
+        m_str = str;
+        m_evt = dst;
+        m_evt_size = dst_size;
+        m_evt_count = 0;
     }
 
-    void reserve(int edn_size, int arena_size)
+    void reserve(int arena_size)
     {
-        if(m_val_buffers.empty())
-            m_val_buffers.resize((size_t)m_stack.size());
-        if(m_sink)
-            m_sink->result.reserve(edn_size);
-        for(size_t i = 0; i < m_val_buffers.size(); ++i)
-        {
-            int sz = edn_size / (int(1) << (uint32_t)i);
-            sz = sz >= 128 ? sz : 128;
-            m_val_buffers[i].result.reserve((size_t)sz);
-        }
         m_arena.reserve(arena_size);
     }
 
@@ -130,7 +155,6 @@ public:
     {
         while(m_stack.size() > 1)
             _pop();
-        _buf_flush_();
     }
 
     /** @} */
@@ -142,13 +166,12 @@ public:
 
     void begin_stream()
     {
-        _send_("(\n");
+        _send_flag_only_(evt::BSTR);
     }
 
     void end_stream()
     {
-        _send_(")\n");
-        _buf_flush_();
+        _send_flag_only_(evt::ESTR);
     }
 
     /** @} */
@@ -162,19 +185,18 @@ public:
     void begin_doc()
     {
         _c4dbgp("begin_doc");
+        _send_flag_only_(evt::BDOC);
         if(_stack_should_push_on_begin_doc())
         {
             _c4dbgp("push!");
             _push();
-            _enable_(DOC);
         }
-        m_first_doc = false;
     }
     /** implicit doc end (without ...) */
     void end_doc()
     {
         _c4dbgp("end_doc");
-        _send_("{:+ \"-DOC\"}\n");
+        _send_flag_only_(evt::EDOC);
         if(_stack_should_pop_on_end_doc())
         {
             _c4dbgp("pop!");
@@ -186,22 +208,18 @@ public:
     void begin_doc_expl()
     {
         _c4dbgp("begin_doc_expl");
+        _send_flag_only_(evt::BDOC|evt::EXPL);
         if(_stack_should_push_on_begin_doc())
         {
             _c4dbgp("push!");
             _push();
         }
-        if (m_first_doc)
-            m_first_doc = false;
-        else
-            _send_("{:+ \"+DOC\"}\n");
-        _enable_(DOC);
     }
     /** explicit doc end, with ... */
     void end_doc_expl()
     {
         _c4dbgp("end_doc_expl");
-        _send_("{:+ \"-DOC\"}\n");
+        _send_flag_only_(evt::EDOC|evt::EXPL);
         if(_stack_should_pop_on_end_doc())
         {
             _c4dbgp("pop!");
@@ -227,18 +245,14 @@ public:
 
     void begin_map_val_flow()
     {
-        _send_("{:+ \"+MAP\"");
-        _send_val_props_();
-        _send_(", :flow true}\n");
+        _send_val_container_(evt::BMAP|evt::FLOW);
         _mark_parent_with_children_();
         _enable_(MAP|FLOW_SL);
         _push();
     }
     void begin_map_val_block()
     {
-        _send_("{:+ \"+MAP\"");
-        _send_val_props_();
-        _send_("}\n");
+        _send_val_container_(evt::BMAP|evt::BLCK);
         _mark_parent_with_children_();
         _enable_(MAP|BLOCK);
         _push();
@@ -247,7 +261,7 @@ public:
     void end_map()
     {
         _pop();
-        _send_("{:+ \"-MAP\"}\n");
+        _send_flag_only_(evt::EMAP);
     }
 
     /** @} */
@@ -268,18 +282,14 @@ public:
 
     void begin_seq_val_flow()
     {
-        _send_("{:+ \"+SEQ\"");
-        _send_val_props_();
-        _send_(", :flow true}\n");
+        _send_val_container_(evt::BSEQ|evt::FLOW);
         _mark_parent_with_children_();
         _enable_(SEQ|FLOW_SL);
         _push();
     }
     void begin_seq_val_block()
     {
-        _send_("{:+ \"+SEQ\"");
-        _send_val_props_();
-        _send_("}\n");
+        _send_val_container_(evt::BSEQ|evt::BLCK);
         _mark_parent_with_children_();
         _enable_(SEQ|BLOCK);
         _push();
@@ -288,7 +298,7 @@ public:
     void end_seq()
     {
         _pop();
-        _send_("{:+ \"-SEQ\"}\n");
+        _send_flag_only_(evt::ESEQ);
     }
 
     /** @} */
@@ -301,8 +311,7 @@ public:
     void add_sibling()
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, m_parent);
-        _buf_flush_to_(m_curr->level, m_parent->level);
-        m_curr->ev_data = {};
+        m_curr->evt_type = {};
     }
 
     /** set the previous val as the first key of a new map, with flow style.
@@ -312,17 +321,24 @@ public:
      */
     void actually_val_is_first_key_of_new_map_flow()
     {
-        // ensure we have a temporary buffer to save the current val
-        const id_type tmp = m_curr->level + id_type(2);
-        _buf_ensure_(tmp + id_type(2));
-        // save the current val to the temporary buffer
-        _buf_flush_to_(m_curr->level, tmp);
-        // create the map.
-        // this will push a new level, and tmp is one further
-        begin_map_val_flow();
-        _RYML_CB_ASSERT(m_stack.m_callbacks, tmp != m_curr->level);
-        // now move the saved val as the first key
-        _buf_flush_to_(tmp, m_curr->level);
+        _RYML_CB_ASSERT(m_stack.m_callbacks, m_evt_count > 2);
+        if(m_evt_count - 1 < m_evt_size)
+        {
+            evt::ParseEvent *C4_RESTRICT prev = &m_evt[m_evt_count - 1];
+            _RYML_CB_ASSERT(m_stack.m_callbacks, (prev->flags & evt::HAS_STR));
+            if(m_evt_count < m_evt_size)
+            {
+                evt::ParseEvent *C4_RESTRICT curr = &m_evt[m_evt_count];
+                *curr = *prev;
+                curr->flags &= ~evt::VAL_;
+                curr->flags |= evt::KEY_;
+            }
+            prev->flags = evt::BMAP|evt::FLOW|evt::VAL_;
+        }
+        m_curr->evt_id = m_evt_count;
+        ++m_evt_count;
+        _enable_(MAP|FLOW);
+        _push();
     }
 
     void actually_val_is_first_key_of_new_map_block()
@@ -340,60 +356,60 @@ public:
 
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
-        _send_key_scalar_(scalar, '=');
+        _send_key_scalar_(scalar, evt::PLAI);
         _enable_(KEY|KEY_PLAIN);
     }
     C4_ALWAYS_INLINE void set_val_scalar_plain(csubstr scalar)
     {
-        _send_val_scalar_(scalar, '=');
+        _send_val_scalar_(scalar, evt::PLAI);
         _enable_(VAL|VAL_PLAIN);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_dquoted(csubstr scalar)
     {
-        _send_key_scalar_(scalar, '$');
+        _send_key_scalar_(scalar, evt::DQUO);
         _enable_(KEY|KEY_DQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_dquoted(csubstr scalar)
     {
-        _send_val_scalar_(scalar, '$');
+        _send_val_scalar_(scalar, evt::DQUO);
         _enable_(VAL|VAL_DQUO);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_squoted(csubstr scalar)
     {
-        _send_key_scalar_(scalar, '\'');
+        _send_key_scalar_(scalar, evt::SQUO);
         _enable_(KEY|KEY_SQUO);
     }
     C4_ALWAYS_INLINE void set_val_scalar_squoted(csubstr scalar)
     {
-        _send_val_scalar_(scalar, '\'');
+        _send_val_scalar_(scalar, evt::SQUO);
         _enable_(VAL|VAL_SQUO);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_literal(csubstr scalar)
     {
-        _send_key_scalar_(scalar, '|');
+        _send_key_scalar_(scalar, evt::LITL);
         _enable_(KEY|KEY_LITERAL);
     }
     C4_ALWAYS_INLINE void set_val_scalar_literal(csubstr scalar)
     {
-        _send_val_scalar_(scalar, '|');
+        _send_val_scalar_(scalar, evt::LITL);
         _enable_(VAL|VAL_LITERAL);
     }
 
 
     C4_ALWAYS_INLINE void set_key_scalar_folded(csubstr scalar)
     {
-        _send_key_scalar_(scalar, '>');
+        _send_key_scalar_(scalar, evt::FOLD);
         _enable_(KEY|KEY_FOLDED);
     }
     C4_ALWAYS_INLINE void set_val_scalar_folded(csubstr scalar)
     {
-        _send_val_scalar_(scalar, '>');
+        _send_val_scalar_(scalar, evt::FOLD);
         _enable_(VAL|VAL_FOLDED);
     }
 
@@ -411,34 +427,46 @@ public:
 
 public:
 
+#define index_to_str(dst, csubs)                                    \
+    _RYML_CB_ASSERT(m_stack.m_callbacks, csubs.is_sub(m_str));      \
+    dst##_start = (int32_t)(csubs.str - m_str.str);                 \
+    dst##_len = (int32_t)csubs.len
+
     /** @name YAML anchor/reference events */
     /** @{ */
 
     void set_key_anchor(csubstr anchor)
     {
         _enable_(KEYANCH);
-        m_curr->ev_data.m_key.anchor = anchor;
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags = evt::KEY_|evt::ANCH;
+            index_to_str(m_evt[m_evt_count].str, anchor);
+        }
+        ++m_evt_count;
     }
     void set_val_anchor(csubstr anchor)
     {
         _enable_(VALANCH);
-        m_curr->ev_data.m_val.anchor = anchor;
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags = evt::VAL_|evt::ANCH;
+            index_to_str(m_evt[m_evt_count].str, anchor);
+        }
+        ++m_evt_count;
     }
 
     void set_key_ref(csubstr ref)
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(KEY|KEYREF);
-        _send_("{:+ \"=ALI\" :* \"");
-        _send_(ref.sub(1));
-        _send_("\"}\n");
+        _send_key_scalar_(ref, evt::KEY_|evt::ALIA);
     }
     void set_val_ref(csubstr ref)
     {
+        _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(VAL|VALREF);
-        _send_("{:+ \"=ALI\" :* \"");
-        _send_(ref.sub(1));
-        _send_("\"}\n");
+        _send_val_scalar_(ref, evt::VAL_|evt::ALIA);
     }
 
     /** @} */
@@ -451,12 +479,30 @@ public:
     void set_key_tag(csubstr tag)
     {
         _enable_(KEYTAG);
-        m_curr->ev_data.m_key.tag = _transform_directive(tag, m_key_tag_buf);
+        csubstr ttag = _transform_directive(tag, m_key_tag_buf);
+        _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
+        if(ttag.begins_with('!'))
+            ttag = ttag.sub(1);
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags |= evt::KEY_|evt::TAG_;
+            index_to_str(m_evt[m_evt_count].str, ttag);
+        }
+        ++m_evt_count;
     }
     void set_val_tag(csubstr tag)
     {
         _enable_(VALTAG);
-        m_curr->ev_data.m_val.tag = _transform_directive(tag, m_val_tag_buf);
+        csubstr ttag = _transform_directive(tag, m_val_tag_buf);
+        _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
+        if(ttag.begins_with('!'))
+            ttag = ttag.sub(1);
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags |= evt::VAL_|evt::TAG_;
+            index_to_str(m_evt[m_evt_count].str, ttag);
+        }
+        ++m_evt_count;
     }
 
     /** @} */
@@ -513,29 +559,26 @@ public:
     void _push()
     {
         _stack_push();
-        _buf_ensure_(m_stack.size() + id_type(1));
-        _buf_().reset();
-        m_curr->ev_data = {};
+        m_curr->evt_type = {};
     }
 
     /** end the current scope */
     void _pop()
     {
-        _buf_flush_to_(m_curr->level, m_parent->level);
         _stack_pop();
     }
 
     template<type_bits bits> C4_ALWAYS_INLINE void _enable__() noexcept
     {
-        m_curr->ev_data.m_type.type = static_cast<NodeType_e>(m_curr->ev_data.m_type.type | bits);
+        m_curr->evt_type |= bits;
     }
     template<type_bits bits> C4_ALWAYS_INLINE void _disable__() noexcept
     {
-        m_curr->ev_data.m_type.type = static_cast<NodeType_e>(m_curr->ev_data.m_type.type & (~bits));
+        m_curr->evt_type &= ~bits;
     }
     template<type_bits bits> C4_ALWAYS_INLINE bool _has_any__() const noexcept
     {
-        return (m_curr->ev_data.m_type.type & bits) != 0;
+        return (m_curr->evt_type & bits) != type_bits(0);
     }
 
     void _mark_parent_with_children_()
@@ -544,112 +587,46 @@ public:
             m_parent->has_children = true;
     }
 
-    EventSink& _buf_() noexcept
+    C4_ALWAYS_INLINE void _send_flag_only_(evt::EventFlagsType flags)
     {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, (size_t)m_curr->level < m_val_buffers.size());
-        return m_val_buffers[(size_t)m_curr->level];
-    }
-
-    EventSink& _buf_(id_type level) noexcept
-    {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, (size_t)level < m_val_buffers.size());
-        return m_val_buffers[(size_t)level];
-    }
-
-    EventSink const& _buf_(id_type level) const noexcept
-    {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, (size_t)level < m_val_buffers.size());
-        return m_val_buffers[(size_t)level];
-    }
-
-    static void _buf_flush_to_(EventSink &C4_RESTRICT src, EventSink &C4_RESTRICT dst) noexcept
-    {
-        dst.append(src.get());
-        src.reset();
-    }
-
-    void _buf_flush_to_(id_type level_src, id_type level_dst) noexcept
-    {
-        auto &src = _buf_(level_src);
-        auto &dst = _buf_(level_dst);
-        _buf_flush_to_(src, dst);
-    }
-
-    void _buf_flush_() noexcept
-    {
-        _buf_flush_to_(_buf_(), *m_sink);
-    }
-
-    void _buf_ensure_(id_type size_needed) noexcept
-    {
-        if((size_t)size_needed > m_val_buffers.size())
-            m_val_buffers.resize((size_t)size_needed);
-    }
-
-    C4_ALWAYS_INLINE void _send_(csubstr s) noexcept { _buf_().append(s); }
-    C4_ALWAYS_INLINE void _send_(char c) noexcept { _buf_().append(c); }
-
-    void _send_key_scalar_(csubstr scalar, char scalar_type_code)
-    {
-        _send_("{:+ \"=VAL\"");
-        _send_key_props_();
-        _send_(", :");
-        _send_(scalar_type_code);
-        _send_(" \"");
-        _buf_().append_escaped(scalar);
-        _send_("\"}\n");
-    }
-    void _send_val_scalar_(csubstr scalar, char scalar_type_code)
-    {
-        _send_("{:+ \"=VAL\"");
-        _send_val_props_();
-        _send_(", :");
-        _send_(scalar_type_code);
-        _send_(" \"");
-        _buf_().append_escaped(scalar);
-        _send_("\"}\n");
-    }
-
-    void _send_key_props_()
-    {
-        if(_has_any_(KEYANCH|KEYREF))
+        if(m_evt_count < m_evt_size)
         {
-            _send_(", :& \"");
-            _send_(m_curr->ev_data.m_key.anchor);
-            _send_('\"');
+            m_evt[m_evt_count].flags = flags;
         }
-        if(_has_any_(KEYTAG))
-        {
-            _send_(", :! \"");
-            _send_tag_(m_curr->ev_data.m_key.tag);
-            _send_('\"');
-        }
-        m_curr->ev_data.m_key = {};
-        _disable_(KEYANCH|KEYREF|KEYTAG);
+        m_curr->evt_id = m_evt_count;
+        ++m_evt_count;
     }
-    void _send_val_props_()
+
+    C4_ALWAYS_INLINE void _send_val_container_(evt::EventFlagsType flags)
     {
-        if(_has_any_(VALANCH|VALREF))
+        if(m_evt_count < m_evt_size)
         {
-            _send_(", :& \"");
-            _send_(m_curr->ev_data.m_val.anchor);
-            _send_('\"');
+            m_evt[m_evt_count].flags = evt::VAL_|flags;
         }
-        if(m_curr->ev_data.m_type.type & VALTAG)
-        {
-            _send_(", :! \"");
-            _send_tag_(m_curr->ev_data.m_val.tag);
-            _send_('\"');
-        }
-        m_curr->ev_data.m_val = {};
-        _disable_(VALANCH|VALREF|VALTAG);
+        m_curr->evt_id = m_evt_count;
+        ++m_evt_count;
     }
-    void _send_tag_(csubstr tag)
+
+    C4_ALWAYS_INLINE void _send_key_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
     {
-        _RYML_CB_ASSERT(m_stack.m_callbacks, !tag.empty());
-        if(tag.begins_with('!'))
-            tag = tag.sub(1);
-        _send_(tag);
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags = evt::SCLR|evt::KEY_|flags;
+            index_to_str(m_evt[m_evt_count].str, scalar);
+        }
+        m_curr->evt_id = m_evt_count;
+        ++m_evt_count;
+    }
+
+    C4_ALWAYS_INLINE void _send_val_scalar_(csubstr scalar, evt::EventFlagsType flags) noexcept
+    {
+        if(m_evt_count < m_evt_size)
+        {
+            m_evt[m_evt_count].flags = evt::SCLR|evt::VAL_|flags;
+            index_to_str(m_evt[m_evt_count].str, scalar);
+        }
+        m_curr->evt_id = m_evt_count;
+        ++m_evt_count;
     }
 
     csubstr _transform_directive(csubstr tag, substr output)
@@ -680,4 +657,4 @@ public:
 
 C4_SUPPRESS_WARNING_GCC_POP
 
-#endif /* _C4_YML_EVENT_HANDLER_EDN_HPP_ */
+#endif /* _C4_YML_EVENT_HANDLER_EVT_HPP_ */

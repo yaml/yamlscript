@@ -14,8 +14,9 @@ MUSL := 1
 # enable timing scopes
 TIMED := 0
 
+BUILD_TYPE := Release
+
 RAPIDYAML_H := org_rapidyaml_Rapidyaml.h
-RAPIDYAML_HPP := rapidyaml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
 
 ifeq ($(SHARED),0)
@@ -29,17 +30,17 @@ RAPIDYAML_LIB_DEPS := \
   CMakeLists.txt \
   $(JAVA_HOME) \
   $(RAPIDYAML_H) \
-  $(RAPIDYAML_HPP) \
   $(wildcard ./*pp) \
 
-# fixme download and unpack https://musl.cc/x86_64-linux-musl-cross.tgz
 THIS_DIR := $(shell pwd)
 MUSL_DIR := $(THIS_DIR)/_build/x86_64-linux-musl-cross
 
 CMK_ENV :=
-CMK_FLAGS :=
-CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)
-CMK_FLAGS += -D BUILD_SHARED_LIBS=$(SHARED)
+CMK_FLAGS := \
+  -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+  -D BUILD_SHARED_LIBS=$(SHARED) \
+  -D YS2EDN_TIMED=$(TIMED)
 ifeq ($(SHARED),0)
   ifneq ($(MUSL),0)
     CMK_ENV += MUSL_DIR=$(MUSL_DIR)
@@ -61,6 +62,8 @@ default::
 .PHONY: build
 build:: $(RAPIDYAML_LIB)
 
+test_build:: build
+	$(CMK_BUILD) --target rapidyaml-test
 test:: build
 	$(CMK_BUILD) --target rapidyaml-test-run
 
@@ -89,12 +92,12 @@ $(BDIR)/CMakeCache.txt:
 
 $(RAPIDYAML_LIB): $(RAPIDYAML_LIB_DEPS) $(BDIR)/CMakeCache.txt
 	$(CMK_BUILD) --target rapidyaml
-	rm $@
+	if [ -d $@ ] ; then rm $@ ; fi
 ifneq ($(SHARED),0)
-	mv -fv $(BDIR)/*.so $@
+	cp -fv $(BDIR)/*.so $@
 	ln -fs $@ librapidyaml.so
 else
-	mv -fv $(BDIR)/*.a $@
+	cp -fv $(BDIR)/*.a $@
 endif
 
 ifeq ($(SHARED),0)
@@ -110,6 +113,3 @@ endif
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $^
-
-$(RAPIDYAML_HPP): rapidyaml
-	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@

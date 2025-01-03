@@ -1,9 +1,8 @@
 #pragma once
-#ifndef RAPIDYAML_EVENTS_H
-#define RAPIDYAML_EVENTS_H
+#ifndef RAPIDYAML_EDN_H_
+#define RAPIDYAML_EDN_H_
 
 #include <stdexcept>
-#include <rapidyaml_all.hpp>
 #include "rapidyaml_edn_handler.hpp"
 
 namespace ryml {
@@ -68,4 +67,4 @@ RYML_EXPORT size_type ys2edn_retry_get(Ryml2Edn *ryml2edn,
 }
 #endif
 
-#endif /* RAPIDYAML_EVENTS_H */
+#endif /* RAPIDYAML_EDN_H_ */

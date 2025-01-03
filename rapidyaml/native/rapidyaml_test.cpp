@@ -1,14 +1,59 @@
 #include <rapidyaml_edn.hpp>
+#include <rapidyaml_evt.hpp>
+#include <c4/bitmask.hpp>
 
 using c4::csubstr;
 using c4::substr;
 
+namespace c4
+{
+template<>
+c4::EnumSymbols<evt::EventFlags> const esyms<evt::EventFlags>()
+{
+    static constexpr typename c4::EnumSymbols<evt::EventFlags>::Sym syms[] = {
+        {evt::KEY_, "KEY_"},
+        {evt::VAL_, "VAL_"},
+        {evt::SCLR, "SCLR"},
+        {evt::BSEQ, "BSEQ"},
+        {evt::ESEQ, "ESEQ"},
+        {evt::BMAP, "BMAP"},
+        {evt::EMAP, "EMAP"},
+        {evt::ALIA, "ALIA"},
+        {evt::ANCH, "ANCH"},
+        {evt::TAG_, "TAG_"},
+        {evt::PLAI, "PLAI"},
+        {evt::SQUO, "SQUO"},
+        {evt::DQUO, "DQUO"},
+        {evt::LITL, "LITL"},
+        {evt::FOLD, "FOLD"},
+        {evt::FLOW, "FLOW"},
+        {evt::BLCK, "BLCK"},
+        {evt::BDOC, "BDOC"},
+        {evt::EDOC, "EDOC"},
+        {evt::BSTR, "BSTR"},
+        {evt::ESTR, "ESTR"},
+        {evt::EXPL, "EXPL"},
+    };
+    return c4::EnumSymbols<evt::EventFlags>(syms);
+}
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 struct Ys2EdnScoped
 {
     Ryml2Edn *ryml2edn;
     Ys2EdnScoped() : ryml2edn(ys2edn_init()) {}
     ~Ys2EdnScoped() { if(ryml2edn) ys2edn_destroy(ryml2edn); }
+};
+struct Ys2EvtScoped
+{
+    Ryml2Evt *ryml2evt;
+    Ys2EvtScoped() : ryml2evt(ys2evt_init()) {}
+    ~Ys2EvtScoped() { if(ryml2evt) ys2evt_destroy(ryml2evt); }
 };
 
 
@@ -33,26 +78,104 @@ struct TestCase
 {
     csubstr ys;
     csubstr edn;
+    struct EvtWithScalar : public evt::ParseEvent
+    {
+        csubstr scalar;
+        bool needs_filter;
+        EvtWithScalar(evt::EventFlagsType t, int32_t start=0, int32_t len=0, csubstr sclr={}, bool needs_filter_=false)
+        {
+            flags = t;
+            str_start = start;
+            str_len = len;
+            scalar = sclr;
+            needs_filter = needs_filter_;
+        }
+    };
+    std::vector<EvtWithScalar> evt;
+
+public:
     bool testeq(csubstr actual) const
     {
         const bool status = (actual == edn);
         if(!status)
             printf("------\n"
                    "FAIL:\n"
+                   "input:[%zu]~~~%.*s~~~\n"
+                   "expected:[%zu]~~~%.*s~~~\n"
+                   "actual:[%zu]~~~%.*s~~~\n",
+                   ys.len, (int)ys.len, ys.str,
+                   edn.len, (int)edn.len, edn.str,
+                   actual.len, (int)actual.len, actual.str);
+        return status;
+    }
+    bool testeq(std::vector<evt::ParseEvent> const& actual) const
+    {
+        int status = true;
+        if(actual.size() != evt.size())
+        {
+            printf("------\n"
+                   "FAIL:\n"
                    "input:~~~%.*s~~~\n"
-                   "expected:~~~%.*s~~~\n"
-                   "actual:~~~%.*s~~~\n",
+                   "expected size:~~~%zu~~~\n"
+                   "actual size:~~~%zu~~~\n",
                    (int)ys.len, ys.str,
-                   (int)edn.len, edn.str,
-                   (int)actual.len, actual.str);
+                   evt.size(),
+                   actual.size());
+            status = false;
+        }
+        size_t minsize = actual.size() < evt.size() ? actual.size() : evt.size();
+        for(size_t i = 0; i < minsize; ++i)
+        {
+            char actualbuf[100];
+            char expectedbuf[100];
+            size_t reqsize_actual = c4::bm2str<evt::EventFlags>(actual[i].flags & evt::MASK, actualbuf, sizeof(actualbuf));
+            size_t reqsize_expected = c4::bm2str<evt::EventFlags>(evt[i].flags & evt::MASK, expectedbuf, sizeof(expectedbuf));
+            C4_CHECK(reqsize_actual < sizeof(actualbuf));
+            C4_CHECK(reqsize_expected < sizeof(expectedbuf));
+            printf("wtf! status=%d i=%zu cmp=%d: exp=%d(%s) vs act=%d(%s)\n", status, i, evt[i].flags == actual[i].flags, evt[i].flags, expectedbuf, actual[i].flags, actualbuf);
+            status &= (&evt[i]          != &actual[i]);
+            status &= (evt[i].flags     == actual[i].flags);
+            if((evt[i].flags & evt::HAS_STR) && (actual[i].flags & evt::HAS_STR))
+            {
+                printf("wtf! status=%d i=%zu cmp=%d:   exp=%d vs act=%d\n", status, i, evt[i].str_start == actual[i].str_start, evt[i].str_start, actual[i].str_start);
+                printf("wtf! status=%d i=%zu cmp=%d:   exp=%d vs act=%d\n", status, i, evt[i].str_len == actual[i].str_len, evt[i].str_len, actual[i].str_len);
+                status &= (evt[i].str_start == actual[i].str_start);
+                status &= (evt[i].str_len   == actual[i].str_len);
+                auto safestr = [this](evt::ParseEvent const& e){
+                    return (e.str_start < (int)ys.len && e.str_start + e.str_len <= (int)ys.len);
+                };
+                if(safestr(evt[i]) && safestr(actual[i]))
+                {
+                    auto extract = [this](evt::ParseEvent const& e){
+                        return ys.sub((size_t)e.str_start, (size_t)e.str_len);
+                    };
+                    csubstr evtstr = extract(evt[i]);
+                    csubstr actualstr = extract(actual[i]);
+                    printf("wtf! status=%d i=%zu cmp=%d:   ref=[%zu]~~~%.*s~~~ vs act=[%zu]~~~%.*s~~~\n",
+                           status, i, evt[i].scalar == actualstr, evtstr.len, (int)evt[i].scalar.len, evt[i].scalar.str, evt[i].scalar.len, (int)actualstr.len, actualstr.str);
+                    status &= (evt[i].scalar == actualstr);
+                    if(!evt[i].needs_filter)
+                    {
+                        printf("wtf! status=%d i=%zu cmp=%d:   exp=[%zu]~~~%.*s~~~ vs act=[%zu]~~~%.*s~~~\n",
+                               status, i, evtstr == actualstr, evtstr.len, (int)evtstr.len, evtstr.str, actualstr.len, (int)actualstr.len, actualstr.str);
+                        status &= (evtstr == actualstr);
+                    }
+                }
+            }
+        }
+        if(!status)
+            printf("------\n"
+                   "FAIL:\n"
+                   "input:~~~%.*s~~~\n",
+                   (int)ys.len, ys.str);
         return status;
     }
 
-    #define _runtest(name, ...)                             \
-        do {                                                \
+    #define _runtest(name, ...)                               \
+        do {                                                  \
             printf("[ RUN  ] %s ... \n", #name);              \
-            TestResult tr_ = name(__VA_ARGS__);             \
-            tr.add(tr_);                                    \
+            TestResult tr_ = name(__VA_ARGS__);               \
+            tr.add(tr_);                                      \
             printf("[ %s ] %s\n", tr_?"OK  ":"FAIL", #name);  \
         } while(0)
     #define CHECK(cond)                                                 \
@@ -60,25 +183,31 @@ struct TestCase
             bool pass = !!(cond);                                       \
             ++tr.num_assertions;                                        \
             if(!pass) {                                                 \
-                printf("%s:%d: fail! %s", __FILE__, __LINE__, #cond);   \
+                printf("%s:%d: fail! %s\n", __FILE__, __LINE__, #cond);   \
                 ++tr.num_failed_assertions;                             \
             }                                                           \
         } while(0)
 
-    TestResult test(Ryml2Edn *ryml2edn) const
+    TestResult test(Ryml2Edn *ryml2edn, Ryml2Evt *ryml2evt) const
     {
         TestResult tr = {};
-        _runtest(test_large_enough, );
-        _runtest(test_too_small, );
-        _runtest(test_nullptr, );
-        _runtest(test_large_enough_reuse, ryml2edn);
-        _runtest(test_too_small_reuse, ryml2edn);
-        _runtest(test_nullptr_reuse, ryml2edn);
+        _runtest(test_edn_large_enough, );
+        _runtest(test_edn_too_small, );
+        _runtest(test_edn_nullptr, );
+        _runtest(test_edn_large_enough_reuse, ryml2edn);
+        _runtest(test_edn_too_small_reuse, ryml2edn);
+        _runtest(test_edn_nullptr_reuse, ryml2edn);
+        _runtest(test_evt_large_enough, );
+        _runtest(test_evt_too_small, );
+        _runtest(test_evt_nullptr, );
+        _runtest(test_evt_large_enough_reuse, ryml2evt);
+        _runtest(test_evt_too_small_reuse, ryml2evt);
+        _runtest(test_evt_nullptr_reuse, ryml2evt);
         return tr;
     }
 
     // happy path: large-enough destination string
-    TestResult test_large_enough_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_edn_large_enough_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
@@ -94,14 +223,36 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-    TestResult test_large_enough() const
+    TestResult test_evt_large_enough_reuse(Ryml2Evt *ryml2evt) const
+    {
+        if(evt.empty()) return {};
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        std::vector<evt::ParseEvent> output;
+        output.resize(2 * evt.size());
+        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         &output[0], (size_type)output.size());
+        CHECK(reqsize == evt.size());
+        CHECK(reqsize != 0);
+        output.resize(reqsize);
+        CHECK(testeq(output));
+        return tr;
+    }
+    TestResult test_edn_large_enough() const
     {
         Ys2EdnScoped lib;
-        return test_large_enough_reuse(lib.ryml2edn);
+        return test_edn_large_enough_reuse(lib.ryml2edn);
+    }
+    TestResult test_evt_large_enough() const
+    {
+        Ys2EvtScoped lib;
+        return test_evt_large_enough_reuse(lib.ryml2evt);
     }
 
     // less-happy path: destination string not large enough
-    TestResult test_too_small_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_edn_too_small_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
@@ -120,14 +271,41 @@ struct TestCase
         CHECK(testeq(c4::to_csubstr(output)));
         return tr;
     }
-    TestResult test_too_small() const
+    TestResult test_evt_too_small_reuse(Ryml2Evt *ryml2evt) const
+    {
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        std::vector<evt::ParseEvent> output;
+        output.resize(evt.size() / 2);
+        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         output.data(), (size_type)output.size());
+        CHECK(reqsize == evt.size());
+        CHECK(reqsize != 0);
+        output.resize(reqsize);
+input_.assign(ys.begin(), ys.end()); // FIXME
+        size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          output.data(), (size_type)output.size());
+        CHECK(reqsize2 == reqsize);
+        output.resize(reqsize2);
+        CHECK(testeq(output));
+        return tr;
+    }
+    TestResult test_edn_too_small() const
     {
         Ys2EdnScoped lib;
-        return test_too_small_reuse(lib.ryml2edn);
+        return test_edn_too_small_reuse(lib.ryml2edn);
+    }
+    TestResult test_evt_too_small() const
+    {
+        Ys2EvtScoped lib;
+        return test_evt_too_small_reuse(lib.ryml2evt);
     }
 
     // safe calling with nullptr
-    TestResult test_nullptr_reuse(Ryml2Edn *ryml2edn) const
+    TestResult test_edn_nullptr_reuse(Ryml2Edn *ryml2edn) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
@@ -139,50 +317,112 @@ struct TestCase
         CHECK(reqsize != 0);
         return tr;
     }
-    TestResult test_nullptr() const
+    TestResult test_evt_nullptr_reuse(Ryml2Evt *ryml2evt) const
+    {
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+                                         input.str, (size_type)input.len,
+                                         nullptr, 0);
+        CHECK(reqsize == evt.size());
+        CHECK(reqsize != 0);
+        std::vector<evt::ParseEvent> output;
+        output.resize(reqsize);
+input_.assign(ys.begin(), ys.end()); // FIXME
+        size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          output.data(), (size_type)output.size());
+        CHECK(reqsize2 == reqsize);
+        CHECK(reqsize2 == output.size());
+        CHECK(testeq(output));
+        return tr;
+    }
+    TestResult test_edn_nullptr() const
     {
         Ys2EdnScoped lib;
-        return test_nullptr_reuse(lib.ryml2edn);
+        return test_edn_nullptr_reuse(lib.ryml2edn);
+    }
+    TestResult test_evt_nullptr() const
+    {
+        Ys2EvtScoped lib;
+        return test_evt_nullptr_reuse(lib.ryml2evt);
     }
 };
 
 
 //-----------------------------------------------------------------------------
 
+namespace {
+// make the declarations shorter
+#define tc(ys, edn, ...) {ys, edn, std::vector<TestCase::EvtWithScalar>(__VA_ARGS__)}
+#define e(...) TestCase::EvtWithScalar{__VA_ARGS__}
+using namespace evt;
+inline constexpr bool needs_filter = true;
 const TestCase test_cases[] = {
-    // case ------------------------------
-    {"say: 2 + 2",
-     R"((
-{:+ "+MAP"}
-{:+ "=VAL", := "say"}
-{:+ "=VAL", := "2 + 2"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)"},
-    // case ------------------------------
-    {"a: 1",
-     R"((
+    // case -------------------------------------------------
+    tc("a: 1",
+       R"((
 {:+ "+MAP"}
 {:+ "=VAL", := "a"}
 {:+ "=VAL", := "1"}
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)"},
-    // case ------------------------------
-    {"𝄞: ✅",
-     R"((
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 1, "a"),
+           e(VAL_|SCLR|PLAI, 3, 1, "1"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc("say: 2 + 2",
+       R"((
+{:+ "+MAP"}
+{:+ "=VAL", := "say"}
+{:+ "=VAL", := "2 + 2"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 3, "say"),
+           e(VAL_|SCLR|PLAI, 5, 5, "2 + 2"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc("𝄞: ✅",
+       R"((
 {:+ "+MAP"}
 {:+ "=VAL", := "𝄞"}
 {:+ "=VAL", := "✅"}
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)"},
-    // case ------------------------------
-    {"[a, b, c]",
-     R"((
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 4, "𝄞"),
+           e(VAL_|SCLR|PLAI, 6, 3, "✅"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc("[a, b, c]",
+       R"((
 {:+ "+SEQ", :flow true}
 {:+ "=VAL", := "a"}
 {:+ "=VAL", := "b"}
@@ -190,10 +430,21 @@ const TestCase test_cases[] = {
 {:+ "-SEQ"}
 {:+ "-DOC"}
 )
-)"},
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|PLAI, 1, 1, "a"),
+           e(VAL_|SCLR|PLAI, 4, 1, "b"),
+           e(VAL_|SCLR|PLAI, 7, 1, "c"),
+           e(ESEQ),
+           e(EDOC),
+           e(ESTR),
+       }),
     // case ------------------------------
-    {"[a: b]",
-     R"((
+    tc("[a: b]",
+       R"((
 {:+ "+SEQ", :flow true}
 {:+ "+MAP", :flow true}
 {:+ "=VAL", := "a"}
@@ -202,9 +453,21 @@ const TestCase test_cases[] = {
 {:+ "-SEQ"}
 {:+ "-DOC"}
 )
-)"},
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|BMAP|FLOW),
+           e(KEY_|SCLR|PLAI, 1, 1, "a"),
+           e(VAL_|SCLR|PLAI, 4, 1, "b"),
+           e(EMAP),
+           e(ESEQ),
+           e(EDOC),
+           e(ESTR),
+       }),
     // case ------------------------------
-    {R"(--- !yamlscript/v0
+    tc(R"(--- !yamlscript/v0
 foo: !
 - {x: y}
 - [x, y]
@@ -220,7 +483,7 @@ foo: !
 ---
 another: doc
 )",
-        R"((
+       R"((
 {:+ "+MAP", :! "yamlscript/v0"}
 {:+ "=VAL", := "foo"}
 {:+ "+SEQ", :! ""}
@@ -255,13 +518,106 @@ another: doc
 {:+ "-MAP"}
 {:+ "-DOC"}
 )
-)"}
+)",
+       {
+           e(BSTR),
+           e(BDOC|EXPL),
+           e(VAL_|TAG_, 5, 13, "yamlscript/v0"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 19, 3, "foo"),
+           e(VAL_|TAG_, 25, 0),
+           e(VAL_|BSEQ|BLCK),
+           e(VAL_|BMAP|FLOW),
+           e(KEY_|SCLR|PLAI, 29, 1, "x"),
+           e(VAL_|SCLR|PLAI, 32, 1, "y"),
+           e(EMAP),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|PLAI, 38, 1, "x"),
+           e(VAL_|SCLR|PLAI, 41, 1, "y"),
+           e(ESEQ),
+           e(VAL_|SCLR|PLAI, 46, 3, "foo"),
+           e(VAL_|SCLR|SQUO, 53, 3, "foo"),
+           e(VAL_|SCLR|DQUO, 61, 3, "foo"),
+           e(VAL_|SCLR|LITL, 70, 4, "foo", needs_filter),
+           e(VAL_|SCLR|FOLD, 80, 4, "foo", needs_filter),
+           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|PLAI, 89, 1, "1"),
+           e(VAL_|SCLR|PLAI, 92, 1, "2"),
+           e(VAL_|SCLR|PLAI, 95, 4, "true"),
+           e(VAL_|SCLR|PLAI, 101, 5, "false"),
+           e(VAL_|SCLR|PLAI, 108, 4, "null"),
+           e(ESEQ),
+           e(VAL_|TAG_, 127, 5, "tag-1"),
+           e(VAL_|ANCH, 117, 8, "anchor-1"),
+           e(VAL_|SCLR|PLAI, 133, 6, "foobar"),
+           e(ESEQ),
+           e(EMAP),
+           e(EDOC),
+           e(BDOC|EXPL),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 144, 7, "another"),
+           e(VAL_|SCLR|PLAI, 153, 3, "doc"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc(R"(plain: well
+  a
+  b
+  c
+squo: 'single''quote'
+dquo: "x\t\ny"
+lit: |
+     X
+     Y
+     Z
+fold: >
+     U
+     V
+     W
+)",
+       R"((
+{:+ "+MAP"}
+{:+ "=VAL", := "plain"}
+{:+ "=VAL", := "well a b c"}
+{:+ "=VAL", := "squo"}
+{:+ "=VAL", :' "single'quote"}
+{:+ "=VAL", := "dquo"}
+{:+ "=VAL", :$ "x\t\ny"}
+{:+ "=VAL", := "lit"}
+{:+ "=VAL", :| "X\nY\nZ\n"}
+{:+ "=VAL", := "fold"}
+{:+ "=VAL", :> "U V W\n"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 5, "plain"),
+           e(VAL_|SCLR|PLAI, 7, 10, "well a b c"),
+           e(KEY_|SCLR|PLAI, 24, 4, "squo"),
+           e(VAL_|SCLR|SQUO, 31, 12, "single'quote", needs_filter),
+           e(KEY_|SCLR|PLAI, 46, 4, "dquo"),
+           e(VAL_|SCLR|DQUO, 53, 4, "x\t\ny", needs_filter),
+           e(KEY_|SCLR|PLAI, 61, 3, "lit"),
+           e(VAL_|SCLR|LITL, 68, 6, "X\nY\nZ\n", needs_filter),
+           e(KEY_|SCLR|PLAI, 89, 4, "fold"),
+           e(VAL_|SCLR|FOLD, 97, 6, "U V W\n", needs_filter),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
 };
-
+} // namespace
 
 int main()
 {
     Ys2EdnScoped ys2edn;
+    Ys2EvtScoped ys2evt;
     TestResult total = {};
     size_t failed_cases = {};
     size_t num_cases = C4_COUNTOF(test_cases);
@@ -270,7 +626,7 @@ int main()
         printf("-----------------------------------------\n"
                "case %zu/%zu ...\n"
                "[%zu]~~~%.*s~~~\n", i, num_cases, test_cases[i].ys.len, (int)test_cases[i].ys.len, test_cases[i].ys.str);
-        const TestResult tr = test_cases[i].test(ys2edn.ryml2edn);
+        const TestResult tr = test_cases[i].test(ys2edn.ryml2edn, ys2evt.ryml2evt);
         total.add(tr);
         failed_cases += (!tr);
         printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");

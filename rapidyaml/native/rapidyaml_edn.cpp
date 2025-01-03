@@ -1,5 +1,3 @@
-#define RYML_SINGLE_HDR_DEFINE_NOW
-#include <rapidyaml_all.hpp>
 #include "rapidyaml_edn.hpp"
 #include <string.h>
 
@@ -64,6 +62,7 @@ RYML_EXPORT void ys2edn_destroy(Ryml2Edn *ryml2edn)
 {
     TIMED_SECTION("ys2edn_destroy");
     ryml2edn->~Ryml2Edn();
+    _RYML_CB_FREE(get_callbacks(), ryml2edn, Ryml2Edn, 1);
 }
 
 RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,

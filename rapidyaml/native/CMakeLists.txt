@@ -20,10 +20,31 @@ add_library(rapidyaml
     rapidyaml_edn_handler.cpp
     rapidyaml_edn.hpp
     rapidyaml_edn.cpp
+    rapidyaml_evt_handler.hpp
+    rapidyaml_evt_handler.cpp
+    rapidyaml_evt.hpp
+    rapidyaml_evt.cpp
+    #
+    #
+    rapidyaml/src/c4/yml/common.cpp
+    rapidyaml/src/c4/yml/node_type.cpp
+    rapidyaml/src/c4/yml/parse.cpp
+    rapidyaml/src/c4/yml/tree.cpp
+    rapidyaml/src/c4/yml/tag.cpp
+    rapidyaml/src/c4/yml/reference_resolver.cpp
+    #
+    rapidyaml/ext/c4core/src/c4/base64.cpp
+    rapidyaml/ext/c4core/src/c4/char_traits.cpp
+    rapidyaml/ext/c4core/src/c4/error.cpp
+    rapidyaml/ext/c4core/src/c4/format.cpp
+    rapidyaml/ext/c4core/src/c4/language.cpp
+    rapidyaml/ext/c4core/src/c4/utf.cpp
 )
 target_include_directories(rapidyaml PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/rapidyaml/src
     ${CMAKE_CURRENT_LIST_DIR}/rapidyaml/test
+    ${CMAKE_CURRENT_LIST_DIR}/rapidyaml/ext/c4core/src
 )
 target_compile_definitions(rapidyaml PUBLIC
     RYML_WITH_TAB_TOKENS
