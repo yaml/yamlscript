@@ -17,7 +17,6 @@ TIMED := 0
 BUILD_TYPE := Release
 
 RAPIDYAML_H := org_rapidyaml_Rapidyaml.h
-RAPIDYAML_HPP := rapidyaml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
 
 ifeq ($(SHARED),0)
@@ -31,17 +30,17 @@ RAPIDYAML_LIB_DEPS := \
   CMakeLists.txt \
   $(JAVA_HOME) \
   $(RAPIDYAML_H) \
-  $(RAPIDYAML_HPP) \
   $(wildcard ./*pp) \
 
 THIS_DIR := $(shell pwd)
 MUSL_DIR := $(THIS_DIR)/_build/x86_64-linux-musl-cross
 
 CMK_ENV :=
-CMK_FLAGS :=
-CMK_FLAGS += -D CMAKE_BUILD_TYPE=$(BUILD_TYPE)
-CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)
-CMK_FLAGS += -D BUILD_SHARED_LIBS=$(SHARED)
+CMK_FLAGS := \
+  -D CMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+  -D CMAKE_EXPORT_COMPILE_COMMANDS=ON \
+  -D BUILD_SHARED_LIBS=$(SHARED) \
+  -D YS2EDN_TIMED=$(TIMED)
 ifeq ($(SHARED),0)
   ifneq ($(MUSL),0)
     CMK_ENV += MUSL_DIR=$(MUSL_DIR)
@@ -114,6 +113,3 @@ endif
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
 	javac -h . $^
-
-$(RAPIDYAML_HPP): rapidyaml
-	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@

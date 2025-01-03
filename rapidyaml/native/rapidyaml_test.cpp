@@ -1,8 +1,8 @@
 #include <rapidyaml_edn.hpp>
 #include <rapidyaml_evt.hpp>
+#include <c4/bitmask.hpp>
 
 using c4::csubstr;
-using c4::substr;
 using c4::substr;
 
 namespace c4

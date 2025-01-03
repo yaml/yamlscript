@@ -3,7 +3,6 @@
 #define RAPIDYAML_EVT_H_
 
 #include <stdexcept>
-#include <rapidyaml_all.hpp>
 #include "rapidyaml_evt_handler.hpp"
 
 namespace ryml {
@@ -25,6 +24,7 @@ struct RYML_EXPORT Ryml2Evt
         : m_handler()
         , m_parser(&m_handler)
     {
+        RYML_CHECK(m_parser.options().scalar_filtering());
     }
     void reset(c4::csubstr src, evt::ParseEvent *evt, int32_t evt_size)
     {

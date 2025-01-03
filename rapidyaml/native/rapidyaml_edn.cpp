@@ -1,4 +1,3 @@
-#include <rapidyaml_all.hpp>
 #include "rapidyaml_edn.hpp"
 #include <string.h>
 

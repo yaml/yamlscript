@@ -1,19 +1,11 @@
 #ifndef _C4_YML_EVENT_HANDLER_EVT_HPP_
 #define _C4_YML_EVENT_HANDLER_EVT_HPP_
 
-#ifdef RYML_SINGLE_HEADER
-#include <rapidyaml_all.hpp>
-#else
-#ifndef _C4_YML_EVENT_HANDLER_STACK_HPP_
-#include "c4/yml/event_handler_stack.hpp"
-#endif
-#ifndef _C4_YML_STD_STRING_HPP_
-#include "c4/yml/std/string.hpp"
-#endif
-#ifndef _C4_YML_DETAIL_PRINT_HPP_
-#include "c4/yml/detail/print.hpp"
-#endif
-#endif
+#include <c4/yml/node_type.hpp>
+#include <c4/yml/parse_engine.hpp>
+#include <c4/yml/event_handler_stack.hpp>
+#include <c4/yml/tag.hpp>
+#include <c4/yml/std/string.hpp>
 
 C4_SUPPRESS_WARNING_GCC_CLANG_PUSH
 C4_SUPPRESS_WARNING_GCC_CLANG("-Wold-style-cast")

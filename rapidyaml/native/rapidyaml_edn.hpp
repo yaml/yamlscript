@@ -3,7 +3,6 @@
 #define RAPIDYAML_EDN_H_
 
 #include <stdexcept>
-#include <rapidyaml_all.hpp>
 #include "rapidyaml_edn_handler.hpp"
 
 namespace ryml {

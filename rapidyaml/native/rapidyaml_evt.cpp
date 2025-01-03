@@ -1,5 +1,3 @@
-#define RYML_SINGLE_HDR_DEFINE_NOW
-#include <rapidyaml_all.hpp>
 #include "rapidyaml_evt.hpp"
 #include <string.h>
 
