@@ -1612,3 +1612,11 @@
         bar: 42
   clojure: |
     (defn xyz [] (let [foo (WWW (bar 42))]))
+
+
+- name: Fully qualified tag function call
+  yamlscript: |
+    !yamlscript/v0
+    a =: !:b/c d
+  clojure: |
+    (def a (b/c d))
