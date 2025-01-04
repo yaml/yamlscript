@@ -137,7 +137,8 @@
 (def re-null #"(?:|~|null|Null|NULL)")
 (def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
 (def re-keyword re/keyw)
-(def re-call-tag (re/re #":$symw\*?:?"))
+(def re-call-tag (re/re #"(?::(?:$fsym|$ysym)\*?)+:?"))
+#_(re-matches re-call-tag ":bar:zoo")
 
 
 (defn check-mode-swap [key val]
@@ -318,34 +319,34 @@
         (assoc (resolve-data-node node) :! (subs tag 0 (dec (count tag))))
         (assoc (resolve-code-node node) :! tag))
 
-        (and (= tag "clj") (= :val kind))
-        (resolve-code-scalar node :clj style)
-        ,
-        (re-find #"^tag:yaml.org,2002:" tag)
-        (case kind
-          :map (if (= tag "tag:yaml.org,2002:map")
-                 (resolve-bare-mapping node)
-                 (die "Invalid tag for code mode mapping: " (tagp tag)))
-          :seq (if (= tag "tag:yaml.org,2002:seq")
-                 (resolve-bare-sequence node)
-                 (die "Invalid tag for code mode sequence: " (tagp tag)))
-          :val (case tag
-                 "tag:yaml.org,2002:str"
-                 (resolve-bare-scalar node :str style)
-                 "tag:yaml.org,2002:int"
-                 (resolve-bare-scalar node (check :int value) style)
-                 "tag:yaml.org,2002:float"
-                 (resolve-bare-scalar node (check :flt value) style)
-                 "tag:yaml.org,2002:bool"
-                 (resolve-bare-scalar node (check :bln value) style)
-                 "tag:yaml.org,2002:null"
-                 (resolve-bare-scalar node (check :nil value) style)
-                 "tag:yaml.org,2002:map"
-                 (die "Invalid tag for code mode scalar: " (tagp tag))
-                 "tag:yaml.org,2002:seq"
-                 (die "Invalid tag for code mode scalar: " (tagp tag))))
-        ,
-        :else (die "Invalid tag for code mode node: " (tagp tag)))))
+      (and (= tag "clj") (= :val kind))
+      (resolve-code-scalar node :clj style)
+      ,
+      (re-find #"^tag:yaml.org,2002:" tag)
+      (case kind
+        :map (if (= tag "tag:yaml.org,2002:map")
+               (resolve-bare-mapping node)
+               (die "Invalid tag for code mode mapping: " (tagp tag)))
+        :seq (if (= tag "tag:yaml.org,2002:seq")
+               (resolve-bare-sequence node)
+               (die "Invalid tag for code mode sequence: " (tagp tag)))
+        :val (case tag
+               "tag:yaml.org,2002:str"
+               (resolve-bare-scalar node :str style)
+               "tag:yaml.org,2002:int"
+               (resolve-bare-scalar node (check :int value) style)
+               "tag:yaml.org,2002:float"
+               (resolve-bare-scalar node (check :flt value) style)
+               "tag:yaml.org,2002:bool"
+               (resolve-bare-scalar node (check :bln value) style)
+               "tag:yaml.org,2002:null"
+               (resolve-bare-scalar node (check :nil value) style)
+               "tag:yaml.org,2002:map"
+               (die "Invalid tag for code mode scalar: " (tagp tag))
+               "tag:yaml.org,2002:seq"
+               (die "Invalid tag for code mode scalar: " (tagp tag))))
+      ,
+      :else (die "Invalid tag for code mode node: " (tagp tag)))))
 
 ;; ----------------------------------------------------------------------------
 ;; Dispatchers for data mode:

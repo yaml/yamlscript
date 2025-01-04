@@ -32,6 +32,7 @@
     "Floyds",
     "fmap",
     "fmaps",
+    "fsym",
     "helmys",
     "heredocs",
     "Ingy",
@@ -76,6 +77,7 @@
     "yamlscript",
     "ysexpr",
     "ysexprs",
+    "ysym",
     "zipmap"
   ],
   "java.configuration.updateBuildConfiguration": "disabled",

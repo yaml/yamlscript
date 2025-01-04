@@ -115,7 +115,7 @@
 (def asym (re #"(?:\*$symw)"))             ; Alias symbol
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
-(def fsym (re #"(?:(?:$nspc|$symw)\/$ysym)"))  ; Fully qualified symbol
+(def fsym (re #"(?:(?:$nspc|$symw)/$ysym)"))  ; Fully qualified symbol
 (def psym (re #"(?:(?:$fsym|$ysym)\()"))   ; Symbol followed by paren
                                            ; Colon calls
 (def ksym (re #"(?x)
