@@ -6,6 +6,7 @@
 
 (ns yamlscript.constructor
   (:require
+   [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :as ast :refer [Lst Map Qts Sym Vec]]
    [yamlscript.common]
@@ -100,18 +101,17 @@
 (defn construct-tag-call [node tag]
   (or (re-find #"^:" tag)
     (die "Function call tag must start with a colon"))
-  (let [tag (subs tag 1)
-        [tag splat] (if (re-find #"\*$" tag)
-                      [(subs tag 0 (dec (count tag))) true]
-                      [tag false])]
-    (if splat
-      (let [kind (-> node first key)]
-        (case kind
-          :Vec (Lst [(Sym 'apply) (Sym tag) node])
-          ,    (die "Splat only allowed on Vec")))
-      (if (vector? node)
-        (Lst [(Sym tag) (first node)])
-        (Lst [(Sym tag) node])))))
+  (let [tags (str/split (subs tag 1) #":")]
+    (reduce (fn [node tag]
+              (let [[tag splat] (if (re-find #"\*$" tag)
+                                  [(subs tag 0 (dec (count tag))) true]
+                                  [tag false])]
+                (if splat
+                  (Lst [(Sym 'apply) (Sym tag) node])
+                  (if (vector? node)
+                    (Lst [(Sym tag) (first node)])
+                    (Lst [(Sym tag) node])))))
+      node tags)))
 
 (defn apply-let-bindings [lets rest ctx]
   [[(Sym "let")
