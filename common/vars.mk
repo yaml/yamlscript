@@ -48,12 +48,15 @@ ifneq (,$(findstring linux,$(ostype)))
   GCC := gcc -std=gnu99 -fPIC -shared
   SO := so
   DY :=
+  DOTLIB := a
 else ifneq (,$(findstring darwin,$(ostype)))
   IS_MACOS := true
   GCC := gcc -dynamiclib
   SO := dylib
   DY := DY
+  DOTLIB := a
 else
+  DOTLIB := lib
   $(error Unsupported OSTYPE: $(ostype))
 endif
 
@@ -226,9 +229,15 @@ RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
 RAPIDYAML := $(ROOT)/rapidyaml
 
 RAPIDYAML_VERSION := 0.7.2
+RAPIDYAML_TAG ?= v$(RAPIDYAML_VERSION)
+RAPIDYAML_REPO := https://github.com/biojppm/rapidyaml
+RAPIDYAML_TIMED := 0
+RAPIDYAML_JAVA := \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Rapidyaml.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/YamlParseErrorException.java
+RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_LIB := $(ROOT)/rapidyaml/native/librapidyaml.$(DOTLIB)
 RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
-RAPIDYAML_SO := \
-  $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
 RAPIDYAML_INSTALLED_DIR := \
   $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/
 RAPIDYAML_INSTALLED := \

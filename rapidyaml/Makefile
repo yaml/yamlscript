@@ -1,7 +1,6 @@
 include ../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
-include ./rapidyaml.mk
 
 RAPIDYAML_JAR_DEPS := \
   $(wildcard \
@@ -19,11 +18,12 @@ RAPIDYAML_CLASS := \
 #------------------------------------------------------------------------------
 default::
 	echo $(RAPIDYAML_SO)
+	echo $(RAPIDYAML_LIB)
 
 x:
 	YS -ce 'foo: var'
 
-build:: $(RAPIDYAML_SO)
+build:: $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
 	@:
 
 jar: $(RAPIDYAML_JAR)
@@ -39,7 +39,7 @@ test-x: build $(JAVA_INSTALLED)
 	mvn -X -e test
 
 clean::
-	$(RM) $(RAPIDYAML_CLASS) $(RAPIDYAML_SO)
+	$(RM) $(RAPIDYAML_CLASS) $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
 	$(RM) -r reports/ target/
 	$(MAKE) -C native $@
 
@@ -52,6 +52,8 @@ sysclean::
 
 #------------------------------------------------------------------------------
 $(RAPIDYAML_SO):
+	$(MAKE) -C native $@
+$(RAPIDYAML_LIB):
 	$(MAKE) -C native $@
 
 $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
