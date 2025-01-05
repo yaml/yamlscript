@@ -298,6 +298,9 @@ sysclean: realclean
 ifeq (ingy,$(USER))
 	$(RM) -r $(HOME)/.m2
 endif
+ifeq (jpmag,$(USER))
+	$(RM) -r $(HOME)/.m2
+endif
 
 $(DOCKER_BUILD):
 docker-build: $(DOCKER_BUILD)
