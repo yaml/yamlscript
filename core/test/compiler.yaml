@@ -1620,3 +1620,15 @@
     a =: !:b/c d
   clojure: |
     (def a (b/c d))
+
+
+- name: Chained tag calls
+  yamlscript: |
+    !yamlscript/v0
+    a =: !:b:d/e:f g
+    a =: !:b*:d/e:f* g
+    a =: !:b*:d/e:f*: g
+  clojure: |
+    (def a (f (d/e (b g))))
+    (def a (apply f (d/e (apply b g))))
+    (def a (apply f (d/e (apply b "g"))))
