@@ -2,13 +2,12 @@ include ../../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
 include $(COMMON)/python.mk
-include ../rapidyaml.mk
 
 RAPIDYAML_H := org_rapidyaml_Rapidyaml.h
 RAPIDYAML_HPP := rapidyaml_all.hpp
 RAPIDYAML_AMALGAMATE_OPTS := --stl
 
-RAPIDYAML_SO_DEPS := \
+RAPIDYAML_DEPS := \
   Makefile \
   CMakeLists.txt \
   $(JAVA_HOME) \
@@ -16,28 +15,19 @@ RAPIDYAML_SO_DEPS := \
   $(RAPIDYAML_HPP) \
   $(wildcard ./*pp) \
 
-# TODO maybe change to static library!
-# https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
-SHARED := 1
-TIMED := 0
-
 CMK_FLAGS :=
-CMK_FLAGS += -D YS2EDN_TIMED=$(TIMED)
-CMK_FLAGS += -D BUILD_SHARED_LIBS=$(SHARED)
+CMK_FLAGS += -D YS2EDN_TIMED=$(RAPIDYAML_TIMED)
 
 BDIR := rapidyaml-build
 
-CMK_BUILD := cmake --build $(BDIR) --parallel --verbose
+CMK_BUILD :=
 
 
 #------------------------------------------------------------------------------
 default::
 
-build:: $(RAPIDYAML_SO)
-
-test:: build
-	$(CMK_BUILD) --target rapidyaml-test-run
-	./$(BDIR)/rapidyaml-test
+build:: build-static build-shared
+test: test-static test-shared
 
 rapidyaml:
 	mkdir -p $@
@@ -58,14 +48,25 @@ realclean:: clean
 
 
 #------------------------------------------------------------------------------
-$(RAPIDYAML_SO): $(RAPIDYAML_SO_DEPS)
-	cmake -S . -B $(BDIR) $(CMK_FLAGS)
-	$(CMK_BUILD) --target rapidyaml
-	mv $(BDIR)/*.so $@
+build-static: $(RAPIDYAML_LIB)
+test-static: build-static
+	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml-test-run
+$(RAPIDYAML_LIB): $(RAPIDYAML_DEPS)
+	cmake -S . -B $(BDIR)-static $(CMK_FLAGS) -D BUILD_SHARED_LIBS=OFF
+	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml
+	cp -fv $(BDIR)-static/*.a $@
+
+build-shared: $(RAPIDYAML_SO)
+test-shared: build-shared
+	cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml-test-run
+$(RAPIDYAML_SO): $(RAPIDYAML_DEPS)
+	cmake -S . -B $(BDIR)-shared $(CMK_FLAGS) -D BUILD_SHARED_LIBS=ON
+	cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml
+	cp -fv $(BDIR)-shared/*.so $@
 	ln -fs $@ librapidyaml.so
 
 $(RAPIDYAML_H): $(RAPIDYAML_JAVA)
-	javac -h . $^
+	javac -h . $(RAPIDYAML_JAVA) # $^ doesn't work
 
 $(RAPIDYAML_HPP): rapidyaml
 	$(PYTHON) rapidyaml/tools/amalgamate.py $(RAPIDYAML_AMALGAMATE_OPTS) > $@
