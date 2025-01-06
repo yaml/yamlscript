@@ -140,9 +140,31 @@
 (def re-call-tag (re/re #"(?::(?:$fsym|$ysym)\*?)+:?"))
 #_(re-matches re-call-tag ":bar:zoo")
 
+(comment
+  (YSC "
+foo: !:inc: 1 + 2
+bar:: !:inc 3 + 4
+")
+  )
+
+(defn check-double-colon-with-tag [key val]
+  (let [key-text (:= key)
+        val-tag (:! val)
+        [key val] (if (and
+                        key-text val-tag
+                        (re-find #":$" key-text)
+                        (re-find #"^:\w" val-tag))
+                    (if (re-find #":$" val-tag)
+                      (die "Tag '!" val-tag
+                        "' can't end with ':' after '::' key")
+                      [(assoc key := (str/replace key-text #"\s*:$" ""))
+                       (assoc val :! (str val-tag ":"))])
+                    [key val])]
+    [key val]))
 
 (defn check-mode-swap [key val]
-  (let [key-text (:= key)]
+  (let [[key val] (check-double-colon-with-tag key val)
+        key-text (:= key)]
     (if (and key-text (re-find #":$" key-text))
       (if (re-find #"::$" key-text)
         (let [key (assoc key := (str/replace key-text #"\s*::$" ""))]
