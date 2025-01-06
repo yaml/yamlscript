@@ -1469,3 +1469,18 @@
     (merge
       {"a" 1}
       (merge (when x {"b" 2}) (merge (when y {"c" 3}) {"d" 4})))
+
+
+- name: A '::' before a function call tag
+  yamlscript: |
+    !yamlscript/v0:
+    foo: !:inc: 1 + 2
+    bar:: !:inc 3 + 4
+  resolve: |
+    {:map
+      [{:str "foo"}
+      {:expr "1 + 2", :! ":inc"}
+      {:str "bar"}
+      {:expr "3 + 4", :! ":inc"}]}
+  clojure: |
+    {"foo" (inc (add+ 1 2)), "bar" (inc (add+ 3 4))}
