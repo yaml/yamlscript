@@ -2,12 +2,13 @@ include ../common/base.mk
 include $(COMMON)/python.mk
 
 PYTHON_VENV := $(ROOT)/www/.venv
-VENV := source $(PYTHON_VENV)/bin/activate
+VENV := source $(PYTHON_VENV)/bin/activate &&
 
 # DOC_FILES := $(shell cd $(ROOT)/doc && echo *.md)
 # DOC_FILES := $(DOC_FILES:%=src/doc/%) src/doc/doc.json
 
 build:: venv
+	$(VENV) mkdocs build
 
 # 	cp src/dogs.yaml build/
 # 	cp src/install* src/try* src/run* build/
@@ -16,8 +17,8 @@ build:: venv
 # 	mkdir -p build/try
 # 	cp $(ROOT)/sample/rosetta-code/99-bottles-of-beer.ys build/try/99-bottles.ys
 
-serve:: build
-	$(VENV) && mkdocs $@
+serve:: venv
+	$(VENV) mkdocs $@
 
 site:: build gh-pages
 	rm -fr gh-pages/*
@@ -32,8 +33,8 @@ publish:: site
 test::
 
 clean::
+	$(RM) -r site
 
-# 	$(RM) -r build/ gh-pages/ src/doc
 # 	$(RM) yamlscript-1920x1080.png
 
 realclean:: clean
@@ -43,9 +44,9 @@ venv: $(PYTHON_VENV)
 
 $(PYTHON_VENV):
 	$(PYTHON) -mvenv $@
-	$(VENV) && \
-	  pip install \
-	    mkdocs-material
+	$(VENV) pip install \
+	  mkdocs-material \
+	  mkdocs-awesome-pages-plugin \
 
 # doc: gen-doc $(DOC_FILES)
 # 

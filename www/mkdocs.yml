@@ -5,11 +5,13 @@ site_url: https://www.yamlscript.org
 site_author: Ingy döt Net
 site_description: Code is Data — Program in YAML
 repo_url: https://github.com/yaml/yamlscript
-copyright: 2024 All Rights Reserved
+edit_uri: https://github.com/yaml/yamlscript/tree/documentation/www/src
+docs_dir: src
+copyright: Copyright 2022-2024
 theme:
-  logo: assets/yamlscript-logo.svg
-  favicon: assets/favicon.ico
   name: material
+  logo: images/yamlscript-logo.svg
+  favicon: images/favicon.ico
   palette:
   - scheme: default
     toggle:
@@ -19,5 +21,8 @@ theme:
     toggle:
       icon: material/weather-sunny
       name: Switch to light mode
-strict: true
+strict: false
 dev_addr: 0.0.0.0:8000
+plugins:
+- search
+- awesome-pages

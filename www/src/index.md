@@ -1,10 +1,6 @@
 ---
-layout: home
-title: YAMLScript.org
+title: Program in YAML — Code is Data
 ---
-
-<p style="text-align: center; font-weight: bold">Program in YAML — Code is
-Data</p>
 
 **YAMLScript** is a new functional programming language with a clean syntax that
 is also 100% valid [YAML](https://yaml.org).
