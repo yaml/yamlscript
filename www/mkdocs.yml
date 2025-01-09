@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+site_name: YAMLScript
+site_url: https://www.yamlscript.org
+site_author: Ingy döt Net
+site_description: Code is Data — Program in YAML
+repo_url: https://github.com/yaml/yamlscript
+copyright: 2024 All Rights Reserved
+theme:
+  logo: assets/yamlscript-logo.svg
+  favicon: assets/favicon.ico
+  name: material
+  palette:
+  - scheme: default
+    toggle:
+      icon: material/weather-night
+      name: Switch to dark mode
+  - scheme: slate
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to light mode
+strict: true
+dev_addr: 0.0.0.0:8000
