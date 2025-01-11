@@ -1,0 +1,13 @@
+#!/usr/bin/env ys-0
+
+defn main(in out data=nil):
+  when meta:
+    env-update 'GENYS_DATA': data
+
+  cmd =: sh("$(RUN.yspath) -Y $in")
+  when cmd.err.?: die(cmd.err)
+
+  spit out: |
+    # DO NOT EDIT - GENERATED FROM '$in'
+
+    $(cmd.out)

@@ -1,4 +1,29 @@
 nav:
-- Documentation: doc
-- Tutorials: doc
-- Blog Posts: blog
+- ...
+#- TL;DR Topics:
+#  - YAMLScript by Example (Recommended): examples
+#  - Learn YAMLScript (for free) at Exercism: syntax.md
+#  - YAMLScript Cheat Sheet: syntax.md
+#- Getting Started:
+#  - Introducing YAMLScript: syntax.md
+#  - The ys Command: syntax.md
+#  - YAMLScript Loader Libraries: syntax.md
+#  - Installing YAMLScript: syntax.md
+#- Tutorials:
+#  - Clojure to YAMLScript: syntax.md
+#  - Language Basics: syntax.md
+#  - YAML Basics: syntax.md
+#  - Clojure Basics: syntax.md
+#  - YeS Expressions: syntax.md
+#  - YAMLScript Modes: syntax.md
+#  - Control Flow: syntax.md
+#  - Operators: syntax.md
+#  - Dot Chaining: syntax.md
+#  - Unit Testing: syntax.md
+#- Functions and Libraries:
+#  - Core Library Essentials: syntax.md
+#  - YAMLScript Standard Library: syntax.md
+#  - Builtin Internal Libraries: syntax.md
+#- Advanced Topics:
+#  - Compiling YAMLScript to Binary: syntax.md
+#  - Self Installation Scripts: syntax.md

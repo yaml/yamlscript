@@ -1,13 +1,20 @@
-# DO NOT EDIT - GENERATED FROM 'mkdocs.ys'
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
-site_name: YAMLScript
-site_url: https://yamlscript.org
-site_author: Ingy döt Net
-site_description: Program in YAML — Code is Data
-repo_url: https://github.com/ingydotnet/yamlscript
+--- !yamlscript/v0:
+
+M =: ENV.GENYS_DATA:load
+
+site_name:: M.name
+site_url:: M.homepage
+site_author:: M.author.name
+site_description:: M.abstract
+
+repo_url:: M.devel.git
+
 edit_name: GitHub
-edit_uri: https://github.com/ingydotnet/yamlscript/tree/documentation/www/src
+edit_uri:: "$(M.devel.git)/tree/documentation/www/src"
 docs_dir: src
+
 theme:
   name: material
   logo: images/yamlscript-logo.svg
@@ -21,10 +28,11 @@ theme:
     toggle:
       icon: material/weather-sunny
       name: Switch to light mode
+
 strict: false
 dev_addr: 0.0.0.0:8000
 plugins:
 - search
 - awesome-pages
-copyright: Copyright 2022-2025
-collapse_single_pages: true
+
+copyright:: "Copyright $(M.copyright)"

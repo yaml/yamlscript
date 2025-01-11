@@ -3,11 +3,16 @@ include $(COMMON)/python.mk
 
 PYTHON_VENV := $(ROOT)/www/.venv
 VENV := source $(PYTHON_VENV)/bin/activate &&
+CONFIG := mkdocs.yml
+META := $(ROOT)/Meta
 
 # DOC_FILES := $(shell cd $(ROOT)/doc && echo *.md)
 # DOC_FILES := $(DOC_FILES:%=src/doc/%) src/doc/doc.json
 
-build:: venv
+foo:
+	genys aaa bbb
+
+build:: venv $(CONFIG)
 	$(VENV) mkdocs build
 
 # 	cp src/dogs.yaml build/
@@ -47,6 +52,10 @@ $(PYTHON_VENV):
 	$(VENV) pip install \
 	  mkdocs-material \
 	  mkdocs-awesome-pages-plugin \
+
+%.yml: %.ys
+	genys $< $@
+
 
 # doc: gen-doc $(DOC_FILES)
 # 
