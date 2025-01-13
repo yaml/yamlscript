@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-require ys::taptest: test done
+use ys::taptest: :all
 
 VERSION =: '0.1.87'
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-require ys::taptest: :all
+use ys::taptest: :all
 
 test::
 - name: Operator `==` for generic equality

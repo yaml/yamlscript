@@ -33,6 +33,8 @@
     declare-undefined
     maybe-call-main))
 
+(def ^:dynamic no-wrap false)
+
 (defn construct
   "Make the AST and add wrap the last node."
   [node last]
@@ -42,7 +44,7 @@
        (update-in m [:Top (dec (count (:Top m)))]
          (fn [n]
            (let [compile (:compile @global/opts)
-                 node (if (and last compile)
+                 node (if (or no-wrap (and last compile))
                         n
                         (Lst [(Sym '+++) n]))]
              (maybe-trace node))))))))
