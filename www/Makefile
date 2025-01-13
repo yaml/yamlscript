@@ -1,19 +1,21 @@
 include ../common/base.mk
 include $(COMMON)/python.mk
 
+export ROOT
+
 PYTHON_VENV := $(ROOT)/www/.venv
-VENV := source $(PYTHON_VENV)/bin/activate &&
+VENV := source $(PYTHON_VENV)/bin/activate
 CONFIG := mkdocs.yml
 META := $(ROOT)/Meta
-
-# DOC_FILES := $(shell cd $(ROOT)/doc && echo *.md)
-# DOC_FILES := $(DOC_FILES:%=src/doc/%) src/doc/doc.json
 
 foo:
 	genys aaa bbb
 
 build:: venv $(CONFIG)
-	$(VENV) mkdocs build
+	$(VENV) && mkdocs build
+
+files: $(CONFIG)
+	$(MAKE) -C $(ROOT)/doc build
 
 # 	cp src/dogs.yaml build/
 # 	cp src/install* src/try* src/run* build/
@@ -22,8 +24,11 @@ build:: venv $(CONFIG)
 # 	mkdir -p build/try
 # 	cp $(ROOT)/sample/rosetta-code/99-bottles-of-beer.ys build/try/99-bottles.ys
 
-serve:: venv
-	$(VENV) mkdocs $@
+serve::
+	www-serve
+
+serve-run:: venv $(CONFIG)
+	$(VENV) && mkdocs serve
 
 site:: build gh-pages
 	rm -fr gh-pages/*
@@ -49,31 +54,31 @@ venv: $(PYTHON_VENV)
 
 $(PYTHON_VENV):
 	$(PYTHON) -mvenv $@
-	$(VENV) pip install \
+	$(VENV) && pip install \
 	  mkdocs-material \
 	  mkdocs-awesome-pages-plugin \
 
 %.yml: %.ys
-	genys $< $@
+	genys $< $@ $(ROOT)/Meta
 
 
 # doc: gen-doc $(DOC_FILES)
-# 
+#
 # gen-doc:
 # 	$(MAKE) -C ../doc force build
-# 
+#
 # src/doc/%.md: ../doc/%.md src/doc
 # 	ln -fs ../../$< $@
-# 
+#
 # src/doc/%: % src/doc
 # 	ln -fs ../../$< $@
-# 
+#
 # src/doc:
 # 	mkdir -p $@
-# 
+#
 # gh-pages:
 # 	git branch --track $@ origin/$@ 2>/dev/null || true
 # 	git worktree add -f $@
-# 
+#
 # yamlscript-1920x1080.png: src/images/yamlscript.svg
 # 	svgexport $< $@ 1920:1080 pad

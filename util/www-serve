@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# https://www.npmjs.com/package/simple-file-watch
+
+watcher_cmd=simple-file-watch
+watcher=$(command -v "$watcher_cmd")
+
+if [[ $watcher ]]; then
+ "$watcher" \
+    --delay=2000 \
+    --path="$ROOT/www/mkdocs.ys" \
+    --path="$ROOT/doc" \
+    --command='make files' \
+    --recursive \
+    --silence &
+else
+  echo
+  echo '*** Install https://www.npmjs.com/package/simple-file-watch'
+  echo '*** for full watcher capabilities.'
+  echo
+  sleep 2
+fi
+
+make serve-run

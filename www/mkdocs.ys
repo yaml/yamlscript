@@ -15,6 +15,8 @@ edit_name: GitHub
 edit_uri:: "$(M.devel.git)/tree/documentation/www/src"
 docs_dir: src
 
+# See: https://github.com/squidfunk/mkdocs-material/discussions/3406
+# for info on template overrides.
 theme:
   name: material
   logo: images/yamlscript-logo.svg
