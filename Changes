@@ -1,3 +1,23 @@
+- version: 0.1.88
+  date:    Wed 15 Jan 2025 12:46:13 PM PST
+  changes:
+  - refactor: Change all '!yamlscript/v0/' to '!yamlscript/v0:'
+  - core: Increase max file extension length to 16
+  - core: Include clojure.java-time in runtime as java-time
+  - std: Add std/now datetime function
+  - std: Make std/split call str on input
+  - core: Fix bug for multiple consecutive map conditionals
+  - build: Use -march=compatibility to support more cpus
+  - core: Allow fq function tags like !:a/b
+  - core: Support chained tag calls !:foo*:bar
+  - core: Support '!:foo' after '::' as '!:foo:'
+  - core: Refactor ys.ys internals into yamlscript.externals
+  - core: Major rework of the 'use' command
+  - core: Add ql qm qo qv and to-omap to std
+  - core: Add O and remove P and A in std
+  - core: Infix add works on functions
+  - core: Vector * Number -> Vector
+  - core: Added std/diff (cloure.data/diff)
 - version: 0.1.87
   date:    Mon 16 Dec 2024 09:18:04 AM PST
   changes:
