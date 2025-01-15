@@ -99,7 +99,7 @@ test::
   want:: \\A
 - code: nil.++
   what: error
-  want: Can't convert nil to number
+  want: Can't convert a nil value to a number
 - code: -"B".++
   what: error
   want: Cannot inc+("B")

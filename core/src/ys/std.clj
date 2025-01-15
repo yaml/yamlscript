@@ -100,9 +100,16 @@
 ;; Quoting functions
 ;;------------------------------------------------------------------------------
 
+(declare omap)
+
 (defmacro q
   ([x] `(quote ~x))
   ([x & xs] `(quote [~x ~@xs])))
+
+(defmacro ql [& xs] `(list ~@xs))
+(defmacro qm [& xs] `(hash-map ~@xs))
+(defmacro qo [& xs] `(omap ~@xs))
+(defmacro qv [& xs] `(vector ~@xs))
 
 (defn qr [S] (re-pattern S))
 
@@ -226,11 +233,17 @@
     string? (if (re-find #"\." x)
               (parse-double x)
               (parse-long x))
-    nil? (util/die "Can't convert nil to number")
+    nil? (util/die "Can't convert a nil value to a number")
     seqable? (count x)
     char? (int x)
     boolean? (if x 1 0)
-    (util/die (str "Can't convert " (to-type x) " to number"))))
+    (util/die (str "Can't convert a value of type '"
+                (to-type x) "' to a number"))))
+
+(defn to-omap [x]
+  (condf x
+    sequential? (apply omap x)
+    map? (apply omap (into [] cat x))))
 
 (defn to-set [x]
   (condf x
