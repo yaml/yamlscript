@@ -8,6 +8,7 @@
    [babashka.fs :as fs]
    [babashka.http-client :as http]
    [babashka.process :as process]
+   [clojure.data :as data]
    [clojure.math :as math]
    [clojure.pprint :as pp]
    [clojure.set :as set]
@@ -643,6 +644,8 @@
                nil? nil
                nil)
     nil))
+
+(defn diff [a b] (data/diff a b))
 
 (defn flat [C]
   (mapcat
