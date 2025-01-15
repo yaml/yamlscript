@@ -214,6 +214,8 @@ defn step-8(ctx):
 defn step-9(ctx):
   o: "Step 9) Run 'make release-assets'"
 
+  prompt: 'Press Enter when ready to continue.'
+
   run:: make test-core test-ys
 
   run:: make release-assets
