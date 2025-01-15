@@ -400,6 +400,10 @@
      char? (if (number? y)
              (char (+ (int x) y))
              (str x y))
+     fn? (cond
+           (fn? y) (comp y x)
+           (list? y) (apply partial x y)
+           :else (partial x y))
      (+ (to-num x) (to-num y))))
   ([x y & xs]
    (when (not (or
