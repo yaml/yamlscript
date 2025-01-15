@@ -419,6 +419,8 @@
    (cond
      (and (string? x) (number? y)) (apply str (repeat y x))
      (and (number? x) (string? y)) (apply str (repeat x y))
+     (and (vector? x) (number? y)) (vec (apply concat (repeat y x)))
+     (and (number? x) (vector? y)) (vec (apply concat (repeat x y)))
      (and (sequential? x) (number? y)) (apply concat (repeat y x))
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
      :else  (* x y)))
