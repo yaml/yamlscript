@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-input-dir =: A(nil)
+input-dir =: atom(nil)
 
 DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
 
