@@ -196,12 +196,6 @@ release-yamlscript: $(BUILD_BIN_YS)
 ifneq (main, $(shell git rev-parse --abbrev-ref HEAD))
 	$(error You must be on the 'main' branch to release)
 endif
-ifndef o
-	$(error Please set Makefile variable o=#.#.#)
-endif
-ifndef n
-	$(error Please set Makefile variable n=#.#.#)
-endif
 	@[[ $$YS_GH_USER ]] || { \
 	  echo 'Please export YS_GH_USER'; exit 1; }
 	@[[ $$YS_GH_TOKEN ]] || { \
