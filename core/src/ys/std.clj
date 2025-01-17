@@ -388,30 +388,82 @@
         number? (dec n)
         (op-error "dec+" x)))))
 
-(defn add+
-  ([x y]
-   (when (some nil? [x y])
-     (util/die "Cannot add with a nil value"))
-   (condf x
-     number? (+ x (to-num y))
-     string? (str x y)
-     map? (merge x (to-map y))
-     set? (set/union x (to-set y))
-     seqable? (concat x (to-vec y))
-     char? (if (number? y)
-             (char (+ (int x) y))
-             (str x y))
-     fn? (cond
-           (fn? y) (comp y x)
-           (list? y) (apply partial x y)
-           :else (partial x y))
-     (+ (to-num x) (to-num y))))
-  ([x y & xs]
-   (when (not (or
-                (apply = (type x) (type y) (map type xs))
-                (every? map? (conj xs x y))))
-     (util/die "Cannot add+ multiple types when more than 2 arguments"))
-   (reduce add+ (add+ x y) xs)))
+(defn ts [x]
+  (println (type x))
+  (for [t (vec (supers (type x)))]
+    (println t)))
+
+(do
+  (ns-unmap *ns* 'add+)
+  (defmulti add+ (fn [x y & xs]
+                   (when (seq xs)
+                     (let [c (class x)
+                           c (cond
+                               (isa? c Number) Number
+                               (isa? c clojure.lang.Fn) clojure.lang.Fn
+                               :else c)]
+                       (when-not (every? #(isa? %1 c) (map class (conj xs y)))
+                         (util/die "Cannot add+ multiple types "
+                           "when more than 2 arguments"))))
+                   [(class x) (class y)]))
+  (defmethod add+ [Number Number]
+    ([x y] (+ x y))
+    ([x y & xs] (apply + x y xs)))
+  (defmethod add+ [String Object]
+    ([x y] (str x y))
+    ([x y & xs] (apply str x y xs)))
+  (defmethod add+ [clojure.lang.Associative clojure.lang.Associative]
+    [& xs] (apply merge xs))
+  (defmethod add+ [clojure.lang.PersistentHashSet
+                   clojure.lang.PersistentHashSet]
+    [& xs] (apply set/union xs))
+  (defmethod add+ [clojure.lang.Seqable clojure.lang.Seqable]
+    [& xs] (apply concat xs))
+  (defmethod add+ [Character Number]
+    [x y] (char (+ (int x) y)))
+  (defmethod add+ [Number Character]
+    [x y] (+ x (int y)))
+  (defmethod add+ [Character Object]
+    ([x y] (str x y))
+    ([x y & xs] (apply str x y xs)))
+  (defmethod add+ [clojure.lang.Fn clojure.lang.Fn]
+    ([x y] (comp y x))
+    ([x y & xs] (apply comp (clojure.core/reverse (conj xs y x)))))
+  (defmethod add+ [clojure.lang.Fn Object]
+    [x y] (apply partial x y))
+  (defmethod add+ [nil Object] [x y & xs]
+    (util/die "Cannot add with a nil value"))
+  (defmethod add+ [Object nil]
+    [x y & xs] (util/die "Cannot add with a nil value"))
+  (defmethod add+ [nil nil]
+    [x y & xs] (util/die "Cannot add with a nil value"))
+  (defmethod add+ :default
+    [x y & xs] (apply + (to-num x) (to-num y) (map to-num xs))))
+
+;(defn add+
+; ([x y]
+;  (when (some nil? [x y])
+;    (util/die "Cannot add with a nil value"))
+;  (condf x
+;    number? (+ x (to-num y))
+;    string? (str x y)
+;    map? (merge x (to-map y))
+;    set? (set/union x (to-set y))
+;    seqable? (concat x (to-vec y))
+;    char? (if (number? y)
+;            (char (+ (int x) y))
+;            (str x y))
+;    fn? (cond
+;          (fn? y) (comp y x)
+;          (list? y) (apply partial x y)
+;          :else (partial x y))
+;    (+ (to-num x) (to-num y))))
+; ([x y & xs]
+;  (when (not (or
+;               (apply = (type x) (type y) (map type xs))
+;               (every? map? (conj xs x y))))
+;    (util/die "Cannot add+ multiple types when more than 2 arguments"))
+;  (reduce add+ (add+ x y) xs)))
 
 (defn div+ [& xs] (apply div xs))
 
