@@ -1,0 +1,50 @@
+name: Update Homebrew Formulae
+on:
+  release:
+    types: [released]
+
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+    - .github/workflows/brew-update.yaml
+
+jobs:
+  Update:
+    runs-on: macos-latest
+    steps:
+    - name: Tap
+      run: |
+        brew tap ${{ github.repository_owner }}/yamlscript
+        brew install ys
+
+    - name: Livecheck
+      id:   livecheck
+      env:
+        HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+      run: |
+        brew livecheck --newer-only --quiet --json ys |
+        jq --raw-output '"version=\(.[].version.latest)"' >> $GITHUB_OUTPUT
+
+    - name: Checkout
+      if: steps.livecheck.outputs.version != ''
+      uses: actions/checkout@v4
+
+    - name: Configure Git
+      if: steps.livecheck.outputs.version != ''
+      run: |
+        git config --global user.name  ${{ github.repository_owner }}
+        git config --global user.email ${{ github.event.pusher.email }}
+
+    - name: Bump Version
+      if: steps.livecheck.outputs.version != ''
+      env:
+        version:  ${{ steps.livecheck.outputs.version }}
+        GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        util/brew-update $version
+        cd homebrew-yamlscript
+        gh auth setup-git
+        git add --all
+        git commit --message "Update $version"
+        git push
