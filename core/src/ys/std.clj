@@ -853,8 +853,11 @@
   (apply process/shell (process-opts xs)))
 
 (defn sh-out [& xs]
-  (str/trim-newline
-    (:out (apply sh xs))))
+  (let [ret (apply sh xs)]
+    (when (not= 0 (:exit ret))
+      (util/die (:err ret)))
+    (str/trim-newline
+      (:out ret))))
 
 
 ;;------------------------------------------------------------------------------
