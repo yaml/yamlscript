@@ -302,6 +302,8 @@
 (intern 'ys.std 'T to-type)
 (intern 'ys.std 'V to-vec)
 
+(intern 'ys.std 'V+ vector)
+
 
 ;;------------------------------------------------------------------------------
 ;; Math functions
@@ -515,6 +517,25 @@
 
 (defmacro when+ [test & body]
   (list 'when-let ['_ test] (cons 'do body)))
+
+
+;;------------------------------------------------------------------------------
+;; Function functions
+;;------------------------------------------------------------------------------
+
+(defn flip [f]
+  (fn
+    ([] (f))
+    ([a] (f a))
+    ([a b] (f b a))
+    ([a b c] (f c b a))
+    ([a b c d] (f d c b a))
+    ([a b c d & rest]
+     (->> rest
+       (concat [a b c d])
+       clojure.core/reverse
+       (apply f)))))
+
 
 ;;------------------------------------------------------------------------------
 ;; String functions
