@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+--- !yamlscript/v0:
+
+Meta =: load('../Meta')
+
+site_name:: Meta.name
+site_url:: Meta.homepage
+site_author:: Meta.author.name
+site_description:: Meta.abstract
+
+repo_url:: Meta.devel.git
+
+edit_name: GitHub
+edit_uri:: "$(Meta.devel.git)/tree/documentation/www/src"
+docs_dir: src
+
+# See: https://github.com/squidfunk/mkdocs-material/discussions/3406
+# for info on template overrides.
+theme:
+  name: material
+  logo: images/yamlscript-logo.svg
+  favicon: images/favicon.ico
+  palette:
+  - scheme: default
+    toggle:
+      icon: material/weather-night
+      name: Switch to dark mode
+  - scheme: slate
+    toggle:
+      icon: material/weather-sunny
+      name: Switch to light mode
+
+strict: false
+dev_addr: 0.0.0.0:8000
+plugins:
+- search
+- awesome-pages
+
+copyright:: "Copyright $(Meta.copyright)"

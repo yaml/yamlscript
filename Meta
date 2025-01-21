@@ -14,8 +14,8 @@ author:
   homepage: http://ingy.net
 
 devel:
-  git: https://github.com/ingydotnet/yamlscript
-  bug: https://github.com/ingydotnet/yamlscript/issues
+  git: https://github.com/yaml/yamlscript
+  bug: https://github.com/yaml/yamlscript/issues
   irc: irc.libera.chat#yamlscript
 
 branch: main

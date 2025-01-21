@@ -1,0 +1,4 @@
+/.venv/
+/site/
+/mkdocs.yaml
+/watcher.pid

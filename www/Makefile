@@ -1,93 +1,104 @@
 include ../common/base.mk
-include $(ROOT)/common/docker.mk
+include $(COMMON)/python.mk
 
-DOC_FILES := $(shell cd $(ROOT)/doc && echo *.md)
-DOC_FILES := $(DOC_FILES:%=src/doc/%) src/doc/doc.json
+export ROOT
 
-build:: node_modules main doc
-ifdef DOCKERENV
-	source ~/.bashrc && yarn build
-else
-	yarn build
-endif
-	cp src/dogs.yaml build/
-	cp src/install* src/try* src/run* build/
-	cp src/blog-redirect-html build/posts/index.html
-	cp src/advent-redirect-html build/posts/advent-2023/index.html
-	mkdir -p build/try
-	cp $(ROOT)/sample/rosetta-code/99-bottles-of-beer.ys build/try/99-bottles.ys
+PYTHON_VENV := $(ROOT)/www/.venv
+VENV := source $(PYTHON_VENV)/bin/activate
+CONFIG := mkdocs.yaml
 
-serve:: build
-	yarn dev
+DOC_FILES := $(shell find $(ROOT)/doc -name '*.md' | grep -v /doc/src)
+DOC_FILES := $(DOC_FILES:$(ROOT)/doc/%=src/doc/%)
 
-site:: build gh-pages
-	rm -fr gh-pages/*
-	cp -r build/* gh-pages/
+BLOG_FILES := $(shell find $(ROOT)/blog -name '*.md')
+BLOG_FILES := $(BLOG_FILES:$(ROOT)/blog/%=src/blog/%)
 
-publish:: site
-	git -C gh-pages add -A
-	git -C gh-pages commit -m "$$(date)"
-	git -C gh-pages push origin gh-pages
+WATCHER := $(shell command -v simple-file-watch)
+WATCHER_PID := watcher.pid
 
-test::
+DEPS := \
+  $(PYTHON_VENV) \
+  $(CONFIG) \
+  gen-doc \
+  $(DOC_FILES) \
+  $(BLOG_FILES) \
 
-clean::
-	[[ -h node_modules ]] && $(RM) node_modules || true
-	$(RM) -r build/ gh-pages/ src/doc
-	$(RM) main
-	$(RM) yamlscript-1920x1080.png
-
-distclean::
-	$(RM) yarn.lock
-	$(RM) -r node_modules/
-
-node_modules: package.json
-ifdef DOCKERENV
-	ln -s /$@ $@
-else
-	yarn install
+YS_WWW_DOMAIN_NAME ?= yamlscript.org
+YS_WWW_ORIGIN ?= origin
+ifneq (,$(stage))
+YS_WWW_DOMAIN_NAME := yamlys.org
+YS_WWW_ORIGIN := stage
 endif
 
-main:
-	ln -s .. main
 
-doc: gen-doc $(DOC_FILES)
+default::
+
+files: $(DEPS)
+	@echo =======================================================================
+
+build:: $(DEPS)
+	$(RM) -r site
+	git worktree add -f site
+	$(RM) -r site/*
+	$(VENV) && mkdocs build
+	echo $(YS_WWW_DOMAIN_NAME) > site/CNAME
+	git -C site add -A
+
+serve: files watch
+	$(VENV) && mkdocs serve
+
+publish: build
+	-git -C site commit -m "Publish $$(date)"
+	git -C site push $(YS_WWW_ORIGIN) HEAD:site
+
+watch:
+ifneq (,$(wildcard $(WATCHER_PID)))
+	-kill -9 $$(< $(WATCHER_PID))
+	rm -f $(WATCHER_PID)
+endif
+	$(WATCHER) \
+	  --delay=1000 \
+	  --recursive \
+	  --path="$$ROOT/Meta" \
+	  --path="$$ROOT/doc/src/" \
+	  --path="$$ROOT/www/mkdocs.ys" \
+		--path="$$ROOT/www/Makefile" \
+	  --command='make files' & \
+	echo $$! > watcher.pid
+
+stop-watch:
+ifneq (,$(wildcard $(WATCHER_PID)))
+	-kill -9 $$(< $(WATCHER_PID))
+	rm -f $(WATCHER_PID)
+endif
+
+clean:: stop-watch
+	$(RM) $(CONFIG)
+	$(RM) src/doc/*.md src/blog/*.md src/blog/**/*.md
+	$(RM) -r site
+
+realclean:: clean
+	$(RM) -r $(PYTHON_VENV)
+
+$(VENV_DIR): $(PYTHON_VENV)
+
+$(PYTHON_VENV):
+	$(PYTHON) -m venv $@
+	$(VENV) && pip install -r requirements.txt
+
+mkdocs.yaml: mkdocs.ys ../Meta
+	echo "# DO NOT EDIT - GENERATED FROM '$<'" > $@
+	echo >> $@
+	ys -Y $< >> $@
 
 gen-doc:
-	$(MAKE) -C ../doc force build
+	$(MAKE) -C $(ROOT)/doc build
 
-src/doc/%.md: ../doc/%.md src/doc
-	ln -fs ../../$< $@
+src/doc/%.md: $(ROOT)/doc/%.md
+	ln -fs $< $@
 
-src/doc/%: % src/doc
-	ln -fs ../../$< $@
+src/blog/%.md: $(ROOT)/blog/%.md
+	ln -fs $< $@
 
-src/doc:
-	mkdir -p $@
-
-gh-pages:
-	git branch --track $@ origin/$@ 2>/dev/null || true
-	git worktree add -f $@
-
-yamlscript-1920x1080.png: src/images/yamlscript.svg
-	svgexport $< $@ 1920:1080 pad
-
-docker-site:: docker-build gh-pages
-	rm -fr node_modules
-	docker run --rm -it \
-	    --volume $(ROOT):/host \
-	    --workdir /host/$(SUBDIR) \
-	    -u $$DOCKER_UID:$$DOCKER_GID \
-	    $(DOCKER_IMAGE) \
-	    make site
-	unlink node_modules
-
-Dockerfile:: $(COMMON) Makefile
-	cat \
-	  $</docker-from-ubuntu.dockerfile \
-	  $</docker-apt-base.dockerfile \
-	  $</docker-useradd.dockerfile \
-	  $</docker-apt-node.dockerfile \
-	  $</docker-deps-node.dockerfile \
-	  $</docker-apt-dev.dockerfile \
-		> $@
+# yamlscript-1920x1080.png: src/images/yamlscript.svg
+# 	svgexport $< $@ 1920:1080 pad
