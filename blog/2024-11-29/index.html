@@ -1,0 +1,2675 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Program in YAML — Code is Data">
+      
+      
+        <meta name="author" content="{'name': 'Ingy döt Net', 'url': '/about/#ingydotnet'}">
+      
+      
+        <link rel="canonical" href="https://yamlscript.org/blog/2024-11-29/">
+      
+      
+        <link rel="prev" href="../2024-11-05/">
+      
+      
+        <link rel="next" href="../welcome/">
+      
+      
+      <link rel="icon" href="../../images/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>The Kubernetes Effect - YAMLScript</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.a40c8224.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#what-yaml-can-do-now" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="YAMLScript" class="md-header__button md-logo" aria-label="YAMLScript" data-md-component="logo">
+      
+  <img src="../../images/yamlscript-logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            YAMLScript
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Kubernetes Effect
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ingydotnet/yamlscript" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="YAMLScript" class="md-nav__button md-logo" aria-label="YAMLScript" data-md-component="logo">
+      
+  <img src="../../images/yamlscript-logo.svg" alt="logo">
+
+    </a>
+    YAMLScript
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ingydotnet/yamlscript" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript.org
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About YAMLScript
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contribute/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contribute to YAMLScript
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ingydotnet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About Ingy döt Net
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kubeys24/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    KubeCon 2024 YAMLScript Tutorial Info Page
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tprc2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TPRC 2024 YAMLScript Talks Ingy Page
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Blog
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Blog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2024-03-14/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Firsts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2024-04-16/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Spring Update
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2024-06-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dr. StrangeYAML or How I Learned to Stop Worrying and Love the LLM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2024-07-17/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Go Julia!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2024-11-05/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The Fall of YAMLScript!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    The Kubernetes Effect
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    The Kubernetes Effect
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-yaml-can-do-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      What YAML Can Do Now
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-and-internal-data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      External (and Internal) Data Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-code-in-data-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inline Code in Data Mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-merge-thee" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Do I merge Thee?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-insertions-in-mappings-and-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional Insertions in Mappings and Sequences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../welcome/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Welcome to the YAMLScript Blog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_8" id="__nav_7_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advent 2023
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_8">
+            <span class="md-nav__icon md-icon"></span>
+            Advent 2023
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2023 Advent Index
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-01/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Advent 2023
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-02/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Twas a Bit
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-03/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load em Up!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-04/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Santa's Big Secret
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-05/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Unwrapping Gifts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-06/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modes of Transportation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-07/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sharpen Your Tools
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-08/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Going to the Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-09/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Coding with Style
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-10/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    States and Ladders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-11/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The YeS Express
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-12/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Future Proof
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-13/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    History Lesson
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-14/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stocking Stuffers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-15/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Naughty is Nice!
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-16/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Let Lambda Come Over
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-17/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rosetta Code
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Santa's in d'buggy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-19/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reindeer All The Way Down
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Godspeed
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-21/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML, Python and the Holy Graal
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-22/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Flip Flops
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-23/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Perl to Rust
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advent-2023/dec-24/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Wrapped and Ready
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Doc
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Doc
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Documentation Index
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/binary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compiling YAMLScript to Binary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/bindings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Binding Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/capability/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Managing Capabilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/chain/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Chaining Function Calls
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/cheat/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Cheat Sheet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/clj-to-ys/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Learning YAMLScript from Clojure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/clojure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The Clojure Programming Language
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/common/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Common YAMLScript Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/control/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control Flow
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core Library Essentials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/define/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Defining Variables and Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/embedding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Embedding YAMLScript in YAML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript by Example
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ext-libs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using External Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/gotchas/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Common YAML / YAMLScript Gotchas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/helmys/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HelmYS - Helm Templating with YAMLScript
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installing YAMLScript
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introducing YAMLScript
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/loaders/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Loader Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/macros/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Macros
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/modes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Syntax Modes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/multi-doc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript in Files with Multiple YAML Documents
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/operators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Operators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/programming/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Programming Language
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/query/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Query and Transform YAML/JSON Files
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/referencing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Referencing YAML Nodes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/run-ys/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Self Installation Scripts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/schema/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript and YAML Schemas
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/syntax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Syntax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/templating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Programming Language
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Syntax Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The YAML Data Language
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/yes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YeS Expressions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-clj/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ys::clj — Replaced Clojure Functions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-json/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript JSON Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-libs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript Builtin Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-std/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The YAMLScript Standard Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-taptest/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript TAP Testing Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript YAML Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys-ys/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLScript YAMLScript Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../doc/ys/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ys - The YAMLScript Command Line Tool
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-yaml-can-do-now" class="md-nav__link">
+    <span class="md-ellipsis">
+      What YAML Can Do Now
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-and-internal-data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      External (and Internal) Data Sources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-code-in-data-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inline Code in Data Mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-merge-thee" class="md-nav__link">
+    <span class="md-ellipsis">
+      How Do I merge Thee?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-insertions-in-mappings-and-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional Insertions in Mappings and Sequences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+  <h1>The Kubernetes Effect</h1>
+
+<p>In my many years of creating Open Source software and talking about it at
+conferences, some of the most productive development times are often those
+leading up to the presentation.</p>
+<p>In the last post, I mentioned that I was going to present a
+<a href="https://yamlscript.org/kubeys24">90 minute YAMLScript tutorial</a> at
+<a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/">KubeCon (November 15th in Salt Lake City)</a>.</p>
+<p>The conference was amazing and the YAMLScript tutorial was a huge success.
+I came away with the feeling that YAML and YAMLScript had found their community.
+<strong>KubeCon felt like YAMLCon</strong>!</p>
+<p>But today's post is about the work leading up to the conference and the new data
+oriented features that were added to YAMLScript as a result.</p>
+<p>At the start of October we realized there were a few things we wanted to add to
+the language to make it great for defining dynamic data in YAML files.</p>
+<p>YAMLScript is a complete programming language and while you could already do
+almost anything with it, we knew that it had blend smoothly into the existing
+YAML files that people use for Kubernetes and other uses.
+We started by focusing on Helm charts, and seeing how well YAMLScript could fit
+along side the Go templating system (or replace it entirely).
+In the end it all worked out very well, but a few things needed to be added
+before tutorial time.</p>
+<blockquote>
+<p><strong>TL;DR for Helm Users:</strong> <a href="https://yamlscript.org/doc/helmys">https://yamlscript.org/doc/helmys</a></p>
+</blockquote>
+<p>In this post I want to cover some of the new (and old) features of YAMLScript
+that you can use to do cool things in your YAML files that are not possible
+with YAML alone. And remember, your YAML files are already valid YAMLScript
+files; but if you load them (or preprocess them) with YAMLScript, you can do a
+lot more in there.</p>
+<h2 id="what-yaml-can-do-now">What YAML Can Do Now</h2>
+<p>YAML 1.2 has a few things that let you do things a bit fancier than with a data
+only format like JSON:</p>
+<ul>
+<li>YAML has anchors and aliases for reusing specific nodes by naming them, and
+  then later referring to them by name.</li>
+<li>YAML has a special <code>&lt;&lt;</code> "merge key" that you can use to merge mappings.
+  This was actually removed from the 1.2 spec but many popular implementations
+  still support it (albeit with inconsistent behavior between implementations).</li>
+<li>YAML allows you to tag nodes and this can sometimes be used creatively, though
+  not consistently across different YAML implementations.</li>
+<li>YAML supports multiple "documents" in a single file or stream, although
+  unfortunately the spec doesn't allow you to alias nodes across documents.</li>
+</ul>
+<p>YAMLScript supports all of these features too.
+It needs to since it claims to support the current YAML files of the world.
+But YAMLScript being a complete programming language lets you go so much
+further!</p>
+<p>Let's take a closer look…</p>
+<h2 id="external-and-internal-data-sources">External (and Internal) Data Sources</h2>
+<p>Even though YAML lets you reuse nodes by name, those nodes need to be part of
+your YAML document.
+Say you have a section at the top of your YAML file that defines some default
+values and names them with anchors, to be aliased later throughout the file.</p>
+<p>This is problematic because the node of defaults is also going to be a part of
+your data when you load it.
+It would be nice if you could have 2 documents in a YAML file where you define
+the data sources to be referred to in the first document, and then refer to them
+in the second document.
+If the loader returned the final (second) document then you could get the data
+you wanted without also getting the data that you don't.</p>
+<p>Let's try it out:</p>
+<pre><code class="language-yaml"># file.yaml
+---
+- &amp;map1
+  name: Bobbi Datamon
+- &amp;list1
+  - fun
+  - games
+- more: stuff
+
+--- !yamlscript/v0:
+person:
+  &lt;&lt;: *map1
+  likes: *list1
+</code></pre>
+<p>Now we can load it with the YAMLScript command line interpreter, <code>ys</code>:</p>
+<pre><code>$ ys --load file.yaml
+{&quot;person&quot;:{&quot;name&quot;:&quot;Bobbi Datamon&quot;,&quot;likes&quot;:[&quot;fun&quot;,&quot;games&quot;]}}
+</code></pre>
+<p>Looks like it worked, but <code>ys --load</code> prints the result in compact JSON.
+Before we discuss what happened, let's show the result in YAML:</p>
+<pre><code>$ ys --load --yaml file.yaml
+person:
+  name: Bobbi Datamon
+  likes:
+  - fun
+  - games
+</code></pre>
+<p>Nice!
+<code>ys --load</code> gave us the data from the final document that included data from the
+first document.</p>
+<p></p><details style="background-color:#eee"><summary><strong><em>
+More about loading YAMLScript</em></strong></summary></p>
+<p>You can just use <code>ys --yaml</code> (or even <code>ys -Y</code>) instead of <code>ys --load --yaml</code>.
+Use <code>-J</code> (for <code>--json</code>) to format <code>--load</code> output as a prettier JSON.</p>
+<p>YAMLScript's "load" operation defaults to JSON because YAMLScript's load
+operation is designed to output data in an interoperable form.
+JSON is very interoperable and the JSON data model is a subset of the YAML data
+model.</p>
+<p>Instead of using <code>ys</code> to load YAML/YAMLScript files, you can use a YAMLScript
+library to replace other YAML loaders in
+<a href="https://yamlscript.org/doc/bindings/">10 (and counting) common programming languages</a>, including Python, Go, Ruby, Rust, Java
+and JavaScript.</p>
+<p>For example, in Python you could do this:</p>
+<pre><code class="language-python">from yamlscript import YAMLScript
+ys = yamlscript.YAMLScript()
+text = open(&quot;db-config.yaml&quot;).read()
+data = ys.load(text)
+</code></pre>
+<p>and similar in any other language that has a YAMLScript binding library.</p>
+<p></details><p></p></p>
+<p>The careful reader will have noticed that we broke the rules of YAML.
+We aliased  nodes that were anchored in a different document.
+What's up?</p>
+<p>Well, the two YAMLScript documents each have a different <a href="https://yamlscript.org/doc/modes">YAMLScript mode</a> and that makes things work differently.</p>
+<p>The first document has no <code>!yamlscript/v0</code> tag and thus is in "bare mode".
+In bare mode all the rules are the same as YAML 1.2 (using the Core schema).</p>
+<p>The second document has the <code>!yamlscript/v0:</code> tag.
+The <code>!yamlscript/v0</code> tag tells YAMLScript that the document is in "code mode"
+(the content starts as code but can switch to data mode at any time).
+The <code>:</code> in <code>!yamlscript/v0:</code> tells YAMLScript to switch to data mode right away.</p>
+<p>In code mode and data mode, aliases are very different than in bare mode.
+They can access anchored nodes in the same document or any previous document.
+Not only that, you can access parts of the anchored node with a path syntax.
+For instance <code>*map1.name</code> would produce the string "Bobbi Datamon" and
+<code>*list1.1</code> would produce the string "games".</p>
+<p>That means that this works the same way as the previous example:</p>
+<pre><code class="language-yaml">--- &amp;data
+map1:
+  name: Bobbi Datamon
+list1:
+- fun
+- games
+more: stuff
+
+--- !yamlscript/v0:
+person:
+  &lt;&lt;:: -*data.map1
+  likes:: -*data.list1
+</code></pre>
+<p>Here we only anchored the entire first document and then used the path syntax to
+access the parts we wanted.
+Note that to do this we used <code>::</code> to switch to code mode and we also needed to
+used <code>-</code> to escape the values and have them be treated as YAMLScript
+expressions.</p>
+<p>YAMLScript has special <code>+++</code> symbol that evaluates to an array of all the prior
+documents in the stream.
+That means we don't need anchors at all:</p>
+<pre><code class="language-yaml">map1:
+  name: Bobbi Datamon
+list1:
+- fun
+- games
+more: stuff
+
+--- !yamlscript/v0:
+person:
+  &lt;&lt;:: +++.last().map1
+  likes:: +++.$.list1
+</code></pre>
+<p>The <code>+++.last()</code> function returns the last document in the stream so far (the
+first document in this case)
+The <code>+++.$</code> is a shorthand for <code>+++.last()</code>.</p>
+<p>Another approach to take here is to make the first document use YAMLScript in
+code mode and define variables to use in the second document:</p>
+<pre><code class="language-yaml">--- !yamlscript/v0
+map1 =::
+  name: Bobbi Datamon
+list1 =::
+- fun
+- games
+
+--- !yamlscript/v0:
+person:
+  &lt;&lt;:: map1
+  likes:: list1
+</code></pre>
+<p>We use <code>=:</code> for assignment expressions in YAMLScript.
+And <code>=::</code> does the same thing but toggles the mode of the value.</p>
+<p>What if <code>list1</code> was a huge list and you really wanted to keep it in a separate
+file?</p>
+<p>No problem:</p>
+<pre><code class="language-yaml"># big-list.yaml
+- fun
+- games
+# ...
+</code></pre>
+<p>Now we just change the first document to load the list from the file:</p>
+<pre><code class="language-yaml">--- !yamlscript/v0
+map1 =::
+  name: Bobbi Datamon
+list1 =: load('big-list.yaml')
+</code></pre>
+<p>Not only can we access external data from a file, YAMLScript supports fetching
+data from the web with the <code>curl</code> function and also getting data from databases!</p>
+<h2 id="inline-code-in-data-mode">Inline Code in Data Mode</h2>
+<p>We can do the same things in a single data mode document.
+The trick is that we need to have a way to evaluate code in a way that doesn't
+affect the data.</p>
+<p>The <code>::</code> syntax is our new friend here.</p>
+<p>This lets us do code things like define variables and even define new functions
+in a way that doesn't affect the data we are defining.</p>
+<pre><code class="language-yaml">--- !yamlscript/v0:
+::
+  defn flip(array):
+    reverse: array
+
+  map1 =::
+    name: Bobbi Datamon
+  list1 =: load(&quot;big-list.yaml&quot;)
+
+person:
+  &lt;&lt;:: map1
+  likes:: list1:flip
+</code></pre>
+<p>We defined a new function called <code>flip</code> which is a bit contrived since we could
+have called <code>reverse</code> directly; but it proves the point.</p>
+<p>We also defined our data variables.
+We can actually define variables without <code>::</code>:</p>
+<pre><code class="language-yaml">--- !yamlscript/v0:
+map1 =::
+  name: Bobbi Datamon
+list1 =: load(&quot;big-list.yaml&quot;)
+
+person:
+  &lt;&lt;:: map1
+  likes:: list1
+</code></pre>
+<p>In a big document, it's sometimes nice to define the data variables closer to
+where they are used.</p>
+<pre><code class="language-yaml">--- !yamlscript/v0:
+map1 =::
+  name: Bobbi Datamon
+
+person:
+  &lt;&lt;:: map1
+  list1 =: load(&quot;big-list.yaml&quot;)
+  likes:: list1
+</code></pre>
+<p>In fact, since we only use <code>map1</code> and <code>list1</code> once, we could have just inlined
+them:</p>
+<pre><code class="language-yaml">--- !yamlscript/v0:
+person:
+  &lt;&lt;:
+    name: Bobbi Datamon
+  likes:: load(&quot;big-list.yaml&quot;)
+</code></pre>
+<h2 id="how-do-i-merge-thee">How Do I <code>merge</code> Thee?</h2>
+<p>Let me count the ways :)</p>
+<p>We are still using the <code>&lt;&lt;</code> merge key to merge mappings, but YAMLScript has a
+a standard <code>merge</code> function (among 100s of others).</p>
+<pre><code class="language-yaml">--- !yamlscript/v0:
+map1 =::
+  name: Bobbi Datamon
+list1 =: load(&quot;big-list.yaml&quot;)
+
+person::
+  merge::
+  - ! map1
+  - likes:: list1
+</code></pre>
+<p>Note the <code>!</code> in front of <code>map1</code>.
+It toggles from data mode to code mode.
+We need to use <code>!</code> for that purpose in data mode sequences.
+For mappings we can use <code>key:: variable</code> but it is just a shorthand for
+<code>key: ! variable</code>.</p>
+<p>Another way to write that is:</p>
+<pre><code class="language-yaml">person::
+  merge map1::
+    likes:: list1
+</code></pre>
+<p>Since the <code>merge</code> key is already in code mode we can just put the <code>map1</code>
+variable there.</p>
+<p>Sometimes you want to use a function like <code>merge</code> without needing to further
+indent the data you are applying the function to.</p>
+<p>YAMLScript lets you put a function in a tag if you prefix it with a<code>:</code>:</p>
+<pre><code class="language-yaml">--- !yamlscript/v0:
+map1 =::
+  name: Bobbi Datamon
+list1 =: load(&quot;big-list.yaml&quot;)
+
+person: !:merge
+- ! map1
+- likes:: list1
+</code></pre>
+<h2 id="conditional-insertions-in-mappings-and-sequences">Conditional Insertions in Mappings and Sequences</h2>
+<p>A big missing feature (and one definitely needed for Helm charts) was the
+ability to conditionally insert key/value pairs into mappings depending on some
+value being true or false.</p>
+<p>Functionally that's a bit weird for a data language.
+You can always apply any function to any data node to change its value, but how
+do you make it control whether or not it exists at all?</p>
+<p>You really need to apply a function to its parent mapping to make that happen…</p>
+<p>…or do you?</p>
+<p>YAMLScript ended up solving this using the <code>::</code> syntax, with a special rule.</p>
+<pre><code>!yamlscript/v0:
+foo: 111
+::
+  when a &gt; b::
+    bar: 222
+baz: 333
+</code></pre>
+<p>The rule is that if the code under <code>::</code> evaluates to nil then ignore it.
+If it evaluates to a mapping then merge it into the parent mapping.</p>
+<blockquote>
+<p>The <code>when</code> function returns nil if the condition is false, and the body
+evaluation value if it is true.</p>
+</blockquote>
+<p>To best understand this we can simply compile this YAMLScript to Clojure code.</p>
+<pre><code class="language-bash">$ ys -U --compile file.yaml  # or -c
+(merge {&quot;foo&quot; 111} (merge (when (&gt; a b) {&quot;bar&quot; 222}) {&quot;baz&quot; 333}))
+</code></pre>
+<blockquote>
+<p>You should know by now that every YAMLScript program is compiled to Clojure
+code and then evaluated.
+Well, data files that use YAMLScript are no different!</p>
+</blockquote>
+<p>Given that <code>merge</code> ignores nil values, this is exactly what we want.</p>
+<p>As we worked through the standard Helm templates we found that while this worked
+just fine, it was a bit verbose.
+We "fixed" that by letting you put the condition test "inside" the <code>::</code> key:</p>
+<pre><code>!yamlscript/v0:
+foo: 111
+:when rand(100) &gt; 50::
+  bar: 222
+baz: 333
+</code></pre>
+<p>I've changed <code>a &gt; b</code> here to something you could actually run yourself.
+Note that before we never defined <code>a</code> or <code>b</code>, so that would have failed.</p>
+<p>We can even get this into a single line by using YAML's flow style:</p>
+<pre><code>!yamlscript/v0:
+foo: 111
+:when rand(100) &gt; 50:: {bar: 222}
+baz: 333
+</code></pre>
+<p>Nice!</p>
+<p>Now that you are up to speed, take a look at this page that shows how to
+completely convert a stock Helm chart to use YAMLScript instead of Go
+templating: <a href="https://yamlscript.org/doc/helmys">https://yamlscript.org/doc/helmys</a></p>
+<p>After the KubeCon we realized that this was also needed for sequences.
+You should be able to conditionally insert items into a sequence at any point.</p>
+<p>All you need to do is use all of the above on a <code>- ...</code> sequence entry
+(returning a sequence or nil):</p>
+<pre><code>!yamlscript/v0:
+- aaa
+- :when rand(100) &gt; 50::
+  - foo
+  - bar
+- zzz
+</code></pre>
+<p>Again let's compile this to Clojure code to see exactly what it does:</p>
+<pre><code class="language-bash">$ ys -c file.yaml
+(concat [&quot;aaa&quot;] (concat (when (&gt; (rand 100) 50) [&quot;foo&quot; &quot;bar&quot;]) [&quot;zzz&quot;]))
+</code></pre>
+<p>Similar to the mapping case, but we get <code>concat</code> instead of <code>merge</code> to do the
+right thing with sequences.</p>
+<p>Now we run it a couple times:</p>
+<pre><code class="language-bash">$ ys -Y file.yaml
+- aaa
+- zzz
+$ ys -Y file.yaml
+- aaa
+- foo
+- bar
+- zzz
+</code></pre>
+<p>and Voilà!</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I hope this post gave you some good ideas about how cleanly you can extend your
+YAML data files with YAMLScript.
+And also how this is applicable today in major YAML consumers like Helm.</p>
+<p><a href="https://github.com/yaml/yamlscript/issues">Please let us know</a> where YAMLScript
+can be made even better.</p>
+<p><strong>That's our goal!</strong></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright 2022-2025
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+    
+  </body>
+</html>
