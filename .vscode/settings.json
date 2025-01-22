@@ -5,7 +5,8 @@
     "svgexport",
     "VENV",
     "worktree",
-    "yamlys"
+    "yamlys",
+    "yscode"
   ],
   "java.configuration.updateBuildConfiguration": "disabled",
   "makefile.configureOnOpen": true

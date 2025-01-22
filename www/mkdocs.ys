@@ -10,6 +10,7 @@ site_author:: Meta.author.name
 site_description:: Meta.abstract
 
 repo_url:: Meta.devel.git
+repo_name: GitHub
 
 edit_uri:: "$(Meta.devel.git)/tree/documentation/www/src"
 docs_dir: src
@@ -29,11 +30,14 @@ theme:
     toggle:
       icon: material/weather-sunny
       name: Switch to light mode
+  custom_dir: theme
 
-strict: false
+strict: true
 dev_addr: 0.0.0.0:8000
 plugins:
 - search
 - awesome-pages
+watch:
+- theme
 
 copyright:: "Copyright $(Meta.copyright)"
