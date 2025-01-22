@@ -8,8 +8,8 @@ them to Clojure code and evaluating that Clojure code.
 
 To fully understand YAMLScript you need to know:
 
-* [How YAML works](/doc/yaml)
-* [How Clojure works](/doc/clojure)
+* [How YAML works](yaml.md)
+* [How Clojure works](clojure.md)
 
 This document will show you the basics of YAMLScript syntax and how they
 translate to Clojure code.
@@ -52,7 +52,7 @@ say("Hello, world!")
 
 This compiles to the same Clojure code as the first example.
 We moved the `say` function name outside the parentheses.
-In YAMLScript this is called a [YeS Expression](/doc/yes).
+In YAMLScript this is called a [YeS Expression](yes.md).
 
 Note that from a YAML perspective, the entire YAML document is a single scalar
 value.
@@ -309,5 +309,5 @@ More content will be added soon.
 
 ## See Also
 
-* [YAMLScript Modes](/doc/modes) - Understanding code mode vs data mode
-* [YeS Expressions](/doc/yes)
+* [YAMLScript Modes](modes.md) - Understanding code mode vs data mode
+* [YeS Expressions](yes.md)

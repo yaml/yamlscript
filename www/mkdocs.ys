@@ -11,7 +11,6 @@ site_description:: Meta.abstract
 
 repo_url:: Meta.devel.git
 
-edit_name: GitHub
 edit_uri:: "$(Meta.devel.git)/tree/documentation/www/src"
 docs_dir: src
 

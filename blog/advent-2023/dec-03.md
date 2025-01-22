@@ -13,7 +13,7 @@ author:
 A sequence in a map tree!
 
 Did you know that all JSON _is_ YAML?
-You should, because I told you that [yesterday](/posts/advent-2023/dec-02/)!
+You should, because I told you that [yesterday](dec-02.md)!
 
 It's true.
 YAML is a superset of JSON.

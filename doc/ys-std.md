@@ -11,12 +11,12 @@ them.
 
 YAMLScript exposes most of the functions available in the [Clojure Core](
 https://clojuredocs.org/core-library) standard library.
-See [Core Library Essentials](/doc/core) for an overview of those functions.
+See [Core Library Essentials](core.md) for an overview of those functions.
 
 The YAMLScript standard library replaces some Clojure functions with a version
 more suited to YAMLScript.
 In those cases, the original Clojure function is still available in the
-[`ys::clj`](/doc/ys-clj) namespace.
+[`ys::clj`](ys-clj.md) namespace.
 
 
 ## Special functions

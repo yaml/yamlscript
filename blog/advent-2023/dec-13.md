@@ -102,7 +102,7 @@ This is when I started learning Clojure. (Spring 2023).
 
 ### TPRC 2023
 
-I was also helping to organize the [TPRC 2023](tprc.to) (Perl and Raku)
+I was also helping to organize the [TPRC 2023](https://tprc.to) (Perl and Raku)
 conference.
 I decided I would give a talk called [Lingy and YAMLScript](
 https://www.youtube.com/watch?v=9OcFh-HaCyI).

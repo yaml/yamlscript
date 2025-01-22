@@ -41,4 +41,4 @@ Ruby, Perl or JavaScript.
 And even though Clojure is a JVM (Java) language, YAMLScript doesn't use the JVM
 at all.
 YAMLScript is a fast standalone native binary, as is the `libyamlscript` shared
-library that it is used by all [YAMLScript loader libraries](loaders).
+library that it is used by all [YAMLScript loader libraries](loaders.md).

@@ -1,2 +1,3 @@
-/blog/
-/doc/
+/blog/*.md
+/blog/**/*.md
+/doc/*.md

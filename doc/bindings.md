@@ -28,7 +28,7 @@ Currently there are working libraries for:
 Install these libraries like you would any other library for your language.
 You must also install the matching version of the `libyamlscript.so` shared
 library.
-See [Installing YAMLScript](/doc/install) for more info.
+See [Installing YAMLScript](install.md) for more info.
 
 You can use these libraries like any other YAML loader.
 Here's an example usage in Python:

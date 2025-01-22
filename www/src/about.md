@@ -5,8 +5,8 @@ name: About YAMLScript
 XXX-image: '/images/me.jpeg'
 ---
 
-**YAMLScript** is a new programming language that uses [YAML](
-https://yaml.org) as its syntax.
+**YAMLScript** is a new programming language that uses [YAML](https://yaml.org)
+as its syntax.
 
 It can be easily embedded into your YAML files to make them dynamic at load
 time.
@@ -65,7 +65,7 @@ language.
 * [YAMLScript on GitHub](https://github.com/yaml/yamlscript)
 * [YAML on GitHub](https://github.com/yaml)
 * [YAMLScript Podcast](https://www.therepl.net/episodes/52/)
-* [2023 YAMLScript Advent Blog](/posts/advent-2023/index)
+* [2023 YAMLScript Advent Blog](blog/advent-2023/index.md)
 * [Chat about YAMLScript in Matrix](
   https://matrix.to/#/#chat-yamlscript:yaml.io)
 * [Chat about YAMLScript in Clojurians Slack](

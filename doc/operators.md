@@ -4,7 +4,7 @@ title: YAMLScript Operators
 
 YAMLScript has a number of operators that you can use in your code.
 
-Review [YeS Expressions](/doc/yes) to see how YAMLScript supports infix
+Review [YeS Expressions](yes.md) to see how YAMLScript supports infix
 operator expressions, whereas Clojure requires the operator to precede the
 operands.
 

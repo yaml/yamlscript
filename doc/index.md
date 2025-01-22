@@ -10,67 +10,67 @@ title: YAMLScript Documentation Index
 
 ## TL;DR Topics
 
-* [YAMLScript by Example](/doc/examples) (**Recommended**)
+* [YAMLScript by Example](examples.md) (**Recommended**)
 * [Learn YAMLScript (for free) at Exercism](
   https://exercism.org/tracks/yamlscript)
-* [YAMLScript Cheat Sheet](/doc/cheat)
+* [YAMLScript Cheat Sheet](cheat.md)
 
 
 ## Getting Started
 
 <!--
-* [Learn YAMLScript in 15 Minutes](/doc/learn)
+* [Learn YAMLScript in 15 Minutes](learn.md)
 -->
 
-* [Introducing YAMLScript](/doc/intro)
-* [The `ys` Command](/doc/ys)
-* [YAMLScript Loader Libraries](/doc/loaders)
-* [Installing YAMLScript](/doc/install)
+* [Introducing YAMLScript](intro.md)
+* [The `ys` Command](ys.md)
+* [YAMLScript Loader Libraries](loaders.md)
+* [Installing YAMLScript](install.md)
 
 
 ## Tutorials
 
-* [Clojure to YAMLScript](/doc/clj-to-ys)
+* [Clojure to YAMLScript](clj-to-ys.md)
 
 
 ## Language Basics
 
-* [YAML Basics](/doc/yaml)
-* [Clojure Basics](/doc/clojure)
-* [YeS Expressions](/doc/yes)
-* [YAMLScript Modes](/doc/modes)
-* [Control Flow](/doc/control)
-* [Operators](/doc/operators)
-* [Dot Chaining](/doc/chain)
-* [Unit Testing](/doc/ys-taptest)
+* [YAML Basics](yaml.md)
+* [Clojure Basics](clojure.md)
+* [YeS Expressions](yes.md)
+* [YAMLScript Modes](modes.md)
+* [Control Flow](control.md)
+* [Operators](operators.md)
+* [Dot Chaining](chain.md)
+* [Unit Testing](ys-taptest.md)
 
 <!--
-* [Syntax Overview](/doc/syntax) - under construction
-* [Variables and Functions](/doc/define)
-* [Common Functions](/doc/common) - coming soon
-* [Data Referencing](/doc/referencing) - coming soon
+* [Syntax Overview](syntax.md) - under construction
+* [Variables and Functions](define.md)
+* [Common Functions](common.md) - coming soon
+* [Data Referencing](referencing.md) - coming soon
 -->
 
 
 ## Functions and Libraries
 
-* [Core Library Essentials](/doc/core)
-* [YAMLScript Standard Library](/doc/ys-std)
-* [Builtin Internal Libraries](/doc/ys-libs)
+* [Core Library Essentials](core.md)
+* [YAMLScript Standard Library](ys-std.md)
+* [Builtin Internal Libraries](ys-libs.md)
 
 <!--
-* [Using External Libraries](/doc/ext-libs) - coming soon
+* [Using External Libraries](ext-libs.md) - coming soon
 -->
 
 
 ## Advanced Topics
 
-* [Compiling YAMLScript to Binary](/doc/binary)
-* [Self Installation Scripts](/doc/run-ys)
+* [Compiling YAMLScript to Binary](binary.md)
+* [Self Installation Scripts](run-ys.md)
 
 <!--
-* [Multi Doc Files](/doc/multi-doc) - coming soon
-* [Macros](/doc/macros)
-* [Schemas](/doc/schema)
-* [Capabilities](/doc/capability)
+* [Multi Doc Files](multi-doc.md) - coming soon
+* [Macros](macros.md)
+* [Schemas](schema.md)
+* [Capabilities](capability.md)
 -->

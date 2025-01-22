@@ -48,7 +48,7 @@ This means that <u>No Java or JVM</u> installation is required to use
 YAMLScript, and startup/execution speed is very fast.
 
 YAMLScript also produces the `libyamlscript.so` shared library.
-It has [binding modules for 10 programming languages](/doc/bindings) including
+It has [binding modules for 10 programming languages](doc/bindings.md) including
 Go, JavaScript, Python and Rust, with many more on the way.
 These modules can be used in your programs to load normal YAML files as well as
 YAMLScript enhanced ones.
@@ -59,15 +59,15 @@ There are many ways to use YAMLScript:
   * Works great with CI/CD, Helm, Docker, Ansible, etc.
   * Check out [HelmYS](https://github.com/kubeys/helmys), a tool for using
     YAMLScript in Kubernetes Helm chart templates painlessly.
-* [Load YAMLScript (or YAML) in your programs](doc/bindings)
+* [Load YAMLScript (or YAML) in your programs](doc/bindings.md)
   * Available in 10 programming languages (and counting)
 * Program in YAMLScript
   * Learn how at [Exercism](https://exercism.org/tracks/yamlscript)
-* [Script Automation with YAMLScript](doc/examples)
+* [Script Automation with YAMLScript](doc/examples.md)
   * Many used in the [YAMLScript repository](https://github.com/yaml/yamlscript)
-* [Compile YAMLScript to binary executables](doc/binary)
+* [Compile YAMLScript to binary executables](doc/binary.md)
   * Fast, standalone, no-source software distribution
-* [Query and Transform YAML (and JSON) data](doc/query)
+* [Query and Transform YAML (and JSON) data](doc/query.md)
   * Use the `ys` command line tool similar to `jq` or `yq`
 
 

@@ -18,13 +18,13 @@ function from there.
 This document is a condensed quick reference of the functions that are most
 commonly used in YAMLScript programming.
 
-YAMLScript also has the [`ys::std`](/doc/ys-std) standard library that provides
+YAMLScript also has the [`ys::std`](ys-std.md) standard library that provides
 additional functions.
 
 The YAMLScript standard library replaces some Clojure functions with a version
 more suited to YAMLScript.
 In those cases, the original Clojure function is still available in the
-[`ys::clj`](/doc/ys-clj) namespace.
+[`ys::clj`](ys-clj.md) namespace.
 
 
 ## Number

@@ -71,7 +71,7 @@ YAML adds just a few things to this basic data model:
     to assign a tag to every node that lacks an explicit one.
     This process is known as "implicit tagging" or "tag resolution".
   * In YAMLScript, the tags `!yamlscript/v0` and just `!` are quite common.
-    They control the YAMLScript "[mode](../modes)" of a particular node.
+    They control the YAMLScript "[mode](modes.md)" of a particular node.
 
 
 ## Basic YAML Syntax
@@ -332,4 +332,4 @@ for:
 ## See Also
 
 * [The yaml.info Site](https://www.yaml.info/learn/)
-* [Common YAML / YAMLScript Gotchas](/doc/gotchas)
+* [Common YAML / YAMLScript Gotchas](gotchas.md)

@@ -17,7 +17,7 @@ YAMLScript on the other hand, is all about flip flops!
 
 ### Welcome to Day 22 of the YAMLScript Advent Blog!
 
-Remember way back in [Day 6](../dec-06/) when we talked about the 3 different
+Remember way back in [Day 6](dec-06.md) when we talked about the 3 different
 YAMLScript modes?
 They were **bare**, **data** and **code**.
 The bare mode was what you got then you ran (or loaded) a YAMLScript program

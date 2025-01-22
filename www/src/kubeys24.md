@@ -45,7 +45,7 @@ https://kccncna2024.sched.com/event/1i7qP).
     languages.
     * [Example FizzBuzz gist](
       https://gist.github.com/ingydotnet/9ece4af186c6a6dcfd589c446dab9b38)
-  * See [YAMLScript by Example](/doc/examples) in the YAMLScript documentation
+  * See [YAMLScript by Example](doc/examples.md) in the YAMLScript documentation
     for more examples.
 
 

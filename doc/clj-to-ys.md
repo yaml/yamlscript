@@ -415,7 +415,7 @@ This is probably how I'd write that part:
 ```
 
 See how `fizzbuzz` comes before the paren, not inside it?
-We call that a [YeS expression](/doc/yes) and it's definitely idiomatic!
+We call that a [YeS expression](yes.md) and it's definitely idiomatic!
 
 Finally we replaced the `mod` calls with the `%` operator.
 To be fair, `%` is the `rem` operator and `%%` is the `mod` operator in but with

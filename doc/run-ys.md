@@ -25,7 +25,7 @@ that you can run the program with `ys` instead of `bash`.
 $ curl -s https://yamlscript.org/install-ys | bash
 ```
 
-See the [YAMLScript Installation](/doc/install) page for more information.
+See the [YAMLScript Installation](install.md) page for more information.
 </details>
 </blockquote>
 
@@ -157,7 +157,7 @@ internet.
 Caveat yamlscriptor!
 
 > ** Note**: A more secure way to distribute a YAMLScript program is to
-[compile it to a binary executable](/doc/binary) and distribute the binary
+[compile it to a binary executable](binary.md) and distribute the binary
 instead.
 
 There is at least one use case where this Bash technique is safe and useful:

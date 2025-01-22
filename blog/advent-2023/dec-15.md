@@ -48,7 +48,7 @@ Time for Plan B.
 
 ### mal.ys
 
-I mentioned this in my recent [History Lesson](/blog/advent-2023/dec-13/)...
+I mentioned this in my recent [History Lesson](dec-13.md)...
 I had just finished my Perl implementation of [Make a Lisp](
 https://github.com/kanaka/mal) (mal) and I decided to try to make a YAMLScript
 version next even though there was no YAMLScript yet.

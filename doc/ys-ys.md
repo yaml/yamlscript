@@ -8,7 +8,7 @@ program/file.
 
 It also provides functions that are wrappers around common Clojure functions so
 that they can be used in places where functions are not allowed; like in [dot
-chaining operations](/doc/chain).
+chaining operations](chain.md).
 
 You can use these functions with the `ys/` (or `ys::ys/`) prefix.
 
