@@ -12,9 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/examples/">
+        <link rel="canonical" href="https://yamlscript.org/doc/cli/">
       
       
+        <link rel="prev" href="../yaml/">
+      
+      
+        <link rel="next" href="../loaders/">
       
       
       <link rel="icon" href="../../images/favicon.ico">
@@ -22,7 +26,7 @@
     
     
       
-        <title>YAMLScript by Example - YAMLScript</title>
+        <title>The ys Command - YAMLScript</title>
       
     
     
@@ -75,11 +79,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#yamlscript-examples-of-refactoring-large-yaml-files" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -109,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              YAMLScript by Example
+              The ys Command
             
           </span>
         </div>
@@ -231,10 +230,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../intro/" class="md-tabs__link">
           
   
@@ -405,8 +406,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -421,17 +424,20 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -442,7 +448,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Getting started
@@ -495,10 +501,17 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -507,6 +520,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1214,32 +1228,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#yamlscript-examples-of-refactoring-large-yaml-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      YAMLScript Examples of Refactoring Large YAML Files
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#yamlscript-examples-of-programs-utilities-and-automation" class="md-nav__link">
-    <span class="md-ellipsis">
-      YAMLScript Examples of Programs, Utilities and Automation
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1253,7 +1241,7 @@
                   
 
   
-    <a href="https://github.com/yaml/yamlscript/tree/documentation/www/src/doc/examples.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/yaml/yamlscript/tree/documentation/www/src/doc/cli.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1261,61 +1249,20 @@
   
 
 
-  <h1>YAMLScript by Example</h1>
+  <h1>The ys Command</h1>
 
-<p>One of the best ways to learn a new programming language is to see examples of
-real code written in that language.
-This page contains a links to programs written in YAMLScript.</p>
-<blockquote>
-<p><strong>Note:</strong> YAMLScript's documentation is a work in progress.
-Looking at real life examples is a solid way to get started.
-If you feel the urge to contribute to the documentation, please do so.
-It would be greatly appreciated!</p>
-</blockquote>
-<h2 id="yamlscript-examples-of-refactoring-large-yaml-files">YAMLScript Examples of Refactoring Large YAML Files</h2>
-<ul>
-<li><a href="https://github.com/BetterThanTomorrow/calva/tree/published/.circleci#circleci-configyml">Calva's CircleCI Config</a></li>
-<li><a href="https://github.com/kubeys/helmys?tab=readme-ov-file#helmys">HelmYS Helm Templating</a></li>
-</ul>
-<h2 id="yamlscript-examples-of-programs-utilities-and-automation">YAMLScript Examples of Programs, Utilities and Automation</h2>
-<ul>
-<li><a href="https://rosettacode.org/wiki/Category:YAMLScript">Rosetta Code</a>
-  YAMLScript solutions to Rosetta Code tasks.</li>
-<li><a href="https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys">yamllm</a>
-  A command line multi LLM (Anthropic, OpenAI, Gemma) query tool.</li>
-<li><a href="https://github.com/ingydotnet/sbs/blob/main/bin/sbs">sbs</a>
-  Creates markdown gists to compare pairs of files "side by side".
-  Used to show differences between YS and Go templates in Helm.</li>
-<li><a href="https://gist.github.com/ingydotnet/ff0638edf1bcb53c45161dce2d777f74">Example gist comparing Helm templates in YAMLScript and Go</a></li>
-<li><a href="https://github.com/ingydotnet/yamlscript-vs-rosetta/blob/main/bin/ys-vs-rc">ys-vs-rc</a>
-  Compares YAMLScript and Rosetta Code solutions to the same problem in many
-  languages.</li>
-<li><a href="https://gist.github.com/ingydotnet/9ece4af186c6a6dcfd589c446dab9b38">Example gist comparing FizzBuzz in YAMLScript vs many other languages</a></li>
-<li>YAMLScript Repository Utilities</li>
-<li><a href="https://github.com/yaml/yamlscript/blob/main/util/release-yamlscript">util/release-yamlscript</a>
-    The utility that orchestrates the release of YAMLScript, including 12 binary
-    builds and <code>libyamlscript.so</code> bindings for 10 programming languages.</li>
-<li><a href="https://github.com/yaml/yamlscript/blob/main/util/brew-update">util/brew-update</a>
-    The utility that updates the Homebrew formula for YAMLScript.</li>
-<li><a href="https://github.com/yaml/yamlscript/blob/main/util/markys">util/markys</a>
-    Renders Markdown with embedded YAMLScript code blocks.
-    Used for the YAMLScript documentation.</li>
-<li><a href="https://github.com/yaml/yamlscript/blob/main/util/version-bump">util/version-bump</a>
-    Bumps the version of dozens of YAMLScript files in the repository at
-    release time.</li>
-</ul>
-<p>More examples will be added here as they become known.</p>
-<p>If you have YAMLScript example code you'd like to share, please submit a PR to
-the <a href="https://github.com/yaml/yamlscript">YAMLScript Repo</a>.</p>
+<p>one</p>
+<pre><code class="language-yaml">
+foo: bar
+
+</code></pre>
+<p>two</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
