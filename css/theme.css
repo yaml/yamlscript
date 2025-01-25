@@ -1,4 +1,41 @@
-.md-nav {
-  padding-left: 20x;
-  color: green;
+:root {
+  --md-primary-fg-color:        #EE0F0F;
+  --md-primary-fg-color--light: #ECB7B7;
+  --md-primary-fg-color--dark:  #90030C;
+  --md-typeset-a-color:         blue;
 }
+
+h1.empty {
+  margin-bottom: 0px;
+}
+
+.md-header__button.md-logo {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  float: left;
+}
+
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 50px;
+  width: 50px;
+}
+
+/*
+.md-header__button.md-logo img {
+  float: left;
+  vertical-align: top;
+  height: 100px;
+}
+
+.md-nav__list {
+  margin-left: 20px;
+  padding-left: 0px !important;
+}
+
+.md-nav__title {
+  padding-left: 0px;
+}
+*/
