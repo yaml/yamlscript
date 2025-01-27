@@ -1484,3 +1484,33 @@
       {:expr "3 + 4", :! ":inc"}]}
   clojure: |
     {"foo" (inc (add+ 1 2)), "bar" (inc (add+ 3 4))}
+
+
+- name: Support '!YS v0:' as a shorthand for '!yamlscript/v0:'
+  yamlscript: |
+    !YS v0:
+    foo:: 1 + 1
+  compose: |
+     {:! "yamlscript/v0:", :% ({:= "foo:"} {:= "1 + 1"})}
+
+
+- name: Fix bug with '!YS v0:' used with =>
+  yamlscript: |
+    !YS v0:
+    =>:
+      name =: 'World'
+    foo:: name
+  clojure: |
+    (def name "World")
+    {"foo" name}
+
+
+- name: Fix bug with '!YS v0:' used with '::'
+  yamlscript: |
+    !YS v0:
+    =>:
+      name =: 'World'
+    foo:: name
+  clojure: |
+    (def name "World")
+    {"foo" name}
