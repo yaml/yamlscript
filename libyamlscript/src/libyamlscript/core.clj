@@ -54,5 +54,5 @@
       (apply println msg))))
 
 (comment
-  (-loadYsToJson "!yamlscript/v0/data\nsay: 42")
+  (-loadYsToJson "!YS v0:\nsay: 42")
   )

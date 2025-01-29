@@ -46,9 +46,9 @@ print(data)
 File `file.ys`:
 
 ```yaml
-!yamlscript/v0:
+!YS v0:
 
-=>:  # Set values to use in data
+::  # Set values to use in data
   name =: "World"
   other =: load("other.yaml")
 

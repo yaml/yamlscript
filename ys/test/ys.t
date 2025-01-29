@@ -5,7 +5,8 @@ require ys::taptest: :all
 yaml1 =: |
   ---
   foo: boom
-  --- !yamlscript/v0:
+  ---
+  !YS v0:
   bar:: +++.$.foo
   baz: 123
 

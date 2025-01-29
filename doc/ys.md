@@ -62,9 +62,9 @@ Let's start with a YAML file (`some.yaml`) that wants to use data from another
 YAML file and also do some simple calculations:
 
 ```yaml
-!yamlscript/v0:
+!YS v0:
 
-=>:
+::
   name =: "World"
   data =: load("data1.yaml")
   fruit =: data.food.fruit

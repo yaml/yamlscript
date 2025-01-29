@@ -39,7 +39,7 @@ template version.
 <tr><td>
 
 ```yaml
---- !yamlscript/v0:
+!YS v0:
 :when Values.serviceAccount.create:
   apiVersion: v1
   kind: ServiceAccount
@@ -87,7 +87,7 @@ automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
 <tr><td>
 
 ```yaml
---- !yamlscript/v0:
+!YS v0:
 apiVersion: v1
 kind: Service
 metadata:
@@ -139,7 +139,7 @@ spec:
 <tr><td>
 
 ```yaml
---- !yamlscript/v0:
+!YS v0:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -300,7 +300,7 @@ spec:
 
 {% raw %}
 ```yaml
---- !yamlscript/v0
+!YS v0:
 defn trunc(s): take(63 s).str(*).replace(/-$/)
 
 # Expand the name of the chart:

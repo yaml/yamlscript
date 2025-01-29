@@ -5,10 +5,12 @@ fn load_sample_ys() {
     let ys = yamlscript::YAMLScript::new().unwrap();
     let ret = ys
         .load::<serde_json::Value>(
-            r#"!yamlscript/v0/data
-               say: "Hello"
-               key: ! inc(42)
-               baz: ! range(1 6)"#,
+            r#"
+!YS v0:
+say: "Hello"
+key: ! inc(42)
+baz: ! range(1 6)
+"#,
         )
         .unwrap();
 
@@ -41,10 +43,12 @@ fn load_sample_ys_serde() {
     let ys = yamlscript::YAMLScript::new().unwrap();
     let ret = ys
         .load::<Response>(
-            r#"!yamlscript/v0/data
-               say: "Hello"
-               key: ! inc(42)
-               baz: ! range(1 6)"#,
+            r#"
+!YS v0:
+say: "Hello"
+key: ! inc(42)
+baz: ! range(1 6)
+"#,
         )
         .unwrap();
     assert_eq!(ret.say, "Hello");
@@ -56,7 +60,7 @@ fn load_sample_ys_serde() {
 // fn load_sample_error() {
 //     let ys = yamlscript::YAMLScript::new().unwrap();
 //     let result = ys.load::<Response>(
-//         r#"!yamlscript/v0/data
+//         r#"!YS v0:
 //            : : : : : :
 //         "#,
 //     );
@@ -66,10 +70,12 @@ fn load_sample_ys_serde() {
 
 #[test]
 fn load_multiple() {
-    let data = r#"!yamlscript/v0/data
-               say: "Hello"
-               key: ! inc(42)
-               baz: ! range(1 6)"#;
+    let data = r#"
+!YS v0:
+say: "Hello"
+key: ! inc(42)
+baz: ! range(1 6)
+"#;
     let ys = yamlscript::YAMLScript::new().unwrap();
     let ret = ys.load::<Response>(data).unwrap();
     assert_eq!(ret.say, "Hello");
@@ -89,10 +95,12 @@ fn load_loop() {
     let _ = (0..80000)
         .map(|i| {
             ys.load::<Response>(&format!(
-                r#"!yamlscript/v0/data
-                   say: "Hello"
-                   key: ! inc({i})
-                   baz: ! range(1 6)"#
+                r#"
+!YS v0:
+say: "Hello"
+key: ! inc({i})
+baz: ! range(1 6)
+"#
             ))
             .unwrap()
         })

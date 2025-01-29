@@ -1,8 +1,8 @@
-!yamlscript/v0:
-# /v0: starts in "data mode"
+# Start in "data mode"
+!YS v0:
 
-# This `=>` preamble loads reusable data and code:
-=>:
+# This `::` preamble loads reusable data and code:
+::
   # Set `vars` to an external data mapping:
   vars =: load('data.yaml')
   # Load a local custom YS library file that has a `rot13` function:

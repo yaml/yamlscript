@@ -10,7 +10,7 @@ my %wanted =
 ;
 
 my $program = q:to/.../;
-!yamlscript/v0/data
+!YS v0:
 foo:: 1 .. 10
 ...
 

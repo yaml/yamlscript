@@ -16,7 +16,7 @@ import YAMLScript as YS
 
     @testset "A simple script" begin
         script = """
-!yamlscript/v0/data
+!YS v0:
 say: "Hello"
 key: ! inc(42)
 baz: ! range(1 6)
@@ -33,7 +33,7 @@ baz: ! range(1 6)
 
 #     @testset "An error case" begin
 #         script = """
-# !yamlscript/v0/data
+# !YS v0:
 # : : : : : :
 # """
 #         @test_throws Exception load(script)
@@ -41,7 +41,7 @@ baz: ! range(1 6)
 
     @testset "Load multiple times" begin
         script = """
-!yamlscript/v0/data
+!YS v0:
 say: "Hello"
 key: ! inc(42)
 baz: ! range(1 6)
