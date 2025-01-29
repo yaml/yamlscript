@@ -7,6 +7,7 @@
 (ns yamlscript.cli
   (:gen-class)
   (:require
+   [babashka.fs :as fs]
    [babashka.process :refer [check exec process]]
    [clj-yaml.core :as yaml]
    [clojure.data.json :as json]
@@ -256,9 +257,8 @@ Options:
                (str "---\n" code))]
     code))
 
-(defn get-code [opts args argv]
-  (let [[file & args] args
-        args (concat args argv)
+(defn get-code [opts]
+  (let [file (get opts :file)
         f-code (when file
                  (str
                    (if (= "-" file)
@@ -278,7 +278,9 @@ Options:
                                   "stream().last()") %1)
                            ,
                            (re-find #"^\:\w" %1)
-                           , (str "stream()"
+                           , (str (if (:stream opts)
+                                    "stream()"
+                                    "stream().last()")
                                (str/replace %1 #"^:([-\w]+)" ".$1()"))
                            :else %1)
                          %1))
@@ -292,7 +294,7 @@ Options:
               (println "Warning: No input found.")))
         code (str f-code e-code)
         file (or file "NO-NAME")]
-    [code file args (:load opts)]))
+    [code file (:load opts)]))
 
 (defn compile-code [code opts]
   (if (:clojure opts)
@@ -305,10 +307,10 @@ Options:
         (global/reset-error-msg-prefix! "Compile error: ")
         (err e)))))
 
-(defn get-compiled-code [opts args argv]
-  (let [[code file args load] (get-code opts args argv)
+(defn get-compiled-code [opts]
+  (let [[code file load] (get-code opts)
         code (if code (compile-code code opts) "")]
-    [code file args load]))
+    [code file load]))
 
 (def json-options
   {:escape-unicode false
@@ -354,16 +356,16 @@ Options:
         code))))
 
 (defn do-compile [opts args]
-  (let [[code _ _ #_file #_args] (get-compiled-code opts args [])
+  (let [[code _ _ #_file #_args] (get-compiled-code opts)
         clojure (pretty-clojure code)]
     (println clojure)
     (System/exit 0)))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
 
-(defn do-run [opts args argv]
+(defn do-run [opts args]
   (try
-    (let [[code file args load] (get-compiled-code opts args argv)
+    (let [[code file load] (get-compiled-code opts)
           _ (when (env "YS_SHOW_COMPILE")
               (eprint (str line (pretty-clojure code) "\n" line)))
           result (runtime/eval-string code file args)
@@ -388,7 +390,7 @@ Options:
                 "edn"  (pp/pprint result)
                 ,      (println (json/write-str result json-options))))))))
     (catch Exception e
-      (global/reset-error-msg-prefix! "Runtime error:\n")
+      (global/reset-error-msg-prefix! "Error: ")
       (err e))))
 
 (defn do-repl [opts]
@@ -414,13 +416,14 @@ Options:
 (def env-opts
   #{:unordered :print :stack-trace :xtrace})
 
-(defn do-default [opts args argv help]
+(defn do-default [opts args help]
   (if (or
+        (:file opts)
         (seq (apply dissoc
                (elide-empty opts :eval :debug-stage)
                env-opts))
         (seq args))
-    (do-run opts args argv)
+    (do-run opts args)
     (do-help help)))
 
 (defn mutex [opts keys]
@@ -497,7 +500,7 @@ Options:
       (mutex1 opts :print (set/difference action-opts #{:run}))
       (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
 
-(defn do-main [opts args argv help error errs]
+(defn do-main [opts args help error errs]
   (if error
     (do-error [(str "Error: " error)])
     (if (seq errs)
@@ -508,27 +511,24 @@ Options:
         :install (do-install opts args)
         :upgrade (do-upgrade opts args)
         :binary (do-binary opts args)
-        :run (do-run opts args argv)
+        :run (do-run opts args)
         :compile (do-compile opts args)
-        :load (do-run opts args argv)
+        :load (do-run opts args)
         :repl (do-repl opts)
         :connect (do-connect opts args)
         :kill (do-kill opts args)
         :nrepl (do-nrepl opts args)
-        (do-default opts args argv help)))))
+        (do-run opts args)))))
 
-(defn -main [& args]
+(defn -main [& argv]
   (global/reset-env nil)
 
-  (let [[args argv] (if (and (seq args) (not (re-find #"^-" (first args))))
-                      [[(first args)] (cons "--" (rest args))]
-                      (split-with #(not= "--" %1) args))
-        options (cli/parse-opts args cli-options)
+  (let [options (cli/parse-opts argv cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
-        argv (rest argv)
+        opts (if-not (seq argv) (assoc opts :help true) opts)
         error (validate-opts opts)
         opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
         opts (if (env "YS_LOAD") (assoc opts :load true) opts)
@@ -557,18 +557,50 @@ Options:
                    (seq (:eval opts))) (assoc opts :print true) opts)
         opts (if (env "YS_STACK_TRACE") (assoc opts :stack-trace true) opts)
         opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
-        opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)]
+        opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
+        [file & args] args
+        arg1 (first args)
+        looks-like-expr
+        (fn []
+          (when (and
+                  (string? file)
+                  (re-find #"(?:^(?:\ |(?:_?[.:]\w))|\ $|\()" file))
+            (if (fs/exists? file)
+              (err (str "'" file "' looks like an expression,\n"
+                     "but is also the name of a file. Use --eval or -e."))
+              true)))
+        [opts args] (if (and
+                          (not (seq (:eval opts)))
+                          (looks-like-expr)
+                          (or (nil? arg1)
+                            (= arg1 "-")
+                            (fs/exists? arg1)))
+                      [(assoc opts
+                         :file (or arg1 "-")
+                         :eval [file]
+                         :mode "code"
+                         :load true
+                         :to (or (:to opts) "yaml"))
+                       (drop 1 args)]
+                      [opts args])
+        opts (assoc opts :file (or
+                                 (:file opts)
+                                 file
+                                 (and
+                                   (:load opts)
+                                   (not (seq (:eval opts)))
+                                   "-")))]
 
     (reset! global/opts opts)
 
     (when (env "YS_SHOW_OPTS")
-      (pp/pprint @global/opts))
+      (println (yaml/generate-string{:opts opts :args args})))
 
     (if out
       (with-open [out (io/writer out)]
         (binding [*out* out]
-          (do-main opts args argv help error errs)))
-      (do-main opts args argv help error errs))))
+          (do-main opts args help error errs)))
+      (do-main opts args help error errs))))
 
 (comment
   )

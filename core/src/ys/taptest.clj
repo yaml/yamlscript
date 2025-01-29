@@ -104,7 +104,12 @@
         cmnd (get test "cmnd")
         what (get test "what")
         _ (check-string cmnd "cmnd" count)
-        ret (process/sh cmnd)]
+        opts {}
+        stdi (get test "stdi")
+        opts (if stdi
+               (assoc opts :in stdi)
+               opts)
+        ret (process/sh opts cmnd)]
     (if (get test "form")
       ret
       (case what

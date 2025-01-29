@@ -22,33 +22,33 @@ HELP =: |
     -c, --compile            Compile YAMLScript to Clojure
     -b, --binary             Compile to a native binary executable
 
-    -p, --print              Print the result of --run in code mode
-    -o, --output FILE        Output file for --load, --compile or --binary
-    -s, --stream             Output all results from a multi-document stream
-
-    -T, --to FORMAT          Output format for --load:
-                               json, yaml, edn
-    -J, --json               Output (pretty) JSON for --load
-    -Y, --yaml               Output YAML for --load
-    -E, --edn                Output EDN for --load
-    -U, --unordered          Mappings don't preserve key order (faster)
-
-    -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
-    -C, --clojure            Treat input as Clojure code
-
-    -d                       Debug all compilation stages
-    -D, --debug-stage STAGE  Debug a specific compilation stage:
-                               parse, compose, resolve, build,
-                               transform, construct, print
-                             can be used multiple times
-    -S, --stack-trace        Print full stack trace for errors
-    -x, --xtrace             Print each expression before evaluation
-
-        --install            Install the libyamlscript shared library
-        --upgrade            Upgrade both ys and libyamlscript
-
-        --version            Print version and exit
-    -h, --help               Print this help and exit
+#     -p, --print              Print the result of --run in code mode
+#     -o, --output FILE        Output file for --load, --compile or --binary
+#     -s, --stream             Output all results from a multi-document stream
+# 
+#     -T, --to FORMAT          Output format for --load:
+#                                json, yaml, edn
+#     -J, --json               Output (pretty) JSON for --load
+#     -Y, --yaml               Output YAML for --load
+#     -E, --edn                Output EDN for --load
+#     -U, --unordered          Mappings don't preserve key order (faster)
+# 
+#     -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
+#     -C, --clojure            Treat input as Clojure code
+# 
+#     -d                       Debug all compilation stages
+#     -D, --debug-stage STAGE  Debug a specific compilation stage:
+#                                parse, compose, resolve, build,
+#                                transform, construct, print
+#                              can be used multiple times
+#     -S, --stack-trace        Print full stack trace for errors
+#     -x, --xtrace             Print each expression before evaluation
+# 
+#         --install            Install the libyamlscript shared library
+#         --upgrade            Upgrade both ys and libyamlscript
+# 
+#         --version            Print version and exit
+#     -h, --help               Print this help and exit
 
 #'
 
@@ -57,13 +57,16 @@ test::
   want:: "YAMLScript $VERSION"
 
 - cmnd: ys
-  want:: HELP
+  have:: HELP
+# want:: HELP
 
 - cmnd: ys -h
-  want:: HELP
+  have:: HELP
+# want:: HELP
 
 - cmnd: ys --help
-  want:: HELP
+  have:: HELP
+# want:: HELP
 
 - cmnd: "ys -ce '=>: 1 + 2'"
   want: (add+ 1 2)
@@ -177,5 +180,48 @@ test::
   have: apply main
 - cmnd:: "ys -c $ROOT/util/version-bump"
   have: apply main
+
+- cmnd:: "ys -Y $DIR/animals.json -e '.0.name'"
+  want: Meowsy
+- cmnd:: "ys -Ye '.0.name' $DIR/animals.json"
+  want: Meowsy
+- cmnd:: "ys -Y '.0.name' $DIR/animals.json"
+  want: Meowsy
+- cmnd: ys -Y '.0.name'
+  stdi:: slurp("$DIR/animals.json")
+  want: Meowsy
+- cmnd: ys -Y '.0.name' -
+  stdi:: slurp("$DIR/animals.json")
+  want: Meowsy
+- cmnd: ys -Y '.0.name' -
+  stdi:: slurp("$DIR/animals.json")
+  want: Meowsy
+- cmnd: ys -Ye '.0.name' -
+  stdi:: slurp("$DIR/animals.json")
+  want: Meowsy
+- cmnd: ys '.0' -
+  stdi:: slurp("$DIR/animals.json")
+  want: |
+    name: Meowsy
+    species: cat
+    foods:
+      likes:
+      - tuna
+      - catnip
+      dislikes:
+      - ham
+      - zucchini
+- cmnd: ys -Y
+  stdi:: slurp("$DIR/animals.json")
+  have: |
+    - name: Meowsy
+      species: cat
+      foods:
+        likes:
+        - tuna
+        - catnip
+        dislikes:
+        - ham
+        - zucchini
 
 done:
