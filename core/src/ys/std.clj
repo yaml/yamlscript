@@ -302,6 +302,9 @@
 (intern 'ys.std 'T to-type)
 (intern 'ys.std 'V to-vec)
 
+(intern 'ys.std 'L+ list)
+(intern 'ys.std 'M+ hash-map)
+(intern 'ys.std 'O+ omap)
 (intern 'ys.std 'V+ vector)
 
 
