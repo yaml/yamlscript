@@ -1,3 +1,20 @@
+- version: 0.1.89
+  date:    Wed 29 Jan 2025 02:29:49 PM PST
+  changes:
+  - doc: Fixed program.ys loop program in doc/control
+  - doc: Add DIR global var
+  - doc: Add fs-basename function
+  - util: Change A to atom
+  - make: Fix \#210 - ldconfig not in PATH on Debian 12
+  - std: Make std/sh-out die if command errors
+  - std: Add a std/bash-out command (like sh-out)
+  - core: Support '!YS:\ v0:' first pair
+  - core: Set `_` to last document value
+  - ys: Don't require CLI `-e` or `-` in many CLI situations
+  - refactor: Change '!yamlscript/v0:' to '!YS v0:'
+  - core: Add to list of user facing macros for TTT
+  - std: Add std/flip
+  - std: Add L+ M+ O+ and V+ constructors
 - version: 0.1.88
   date:    Wed 15 Jan 2025 12:46:13 PM PST
   changes:

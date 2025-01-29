@@ -91,11 +91,11 @@ If we run it with `bash`:
 
 ```bash
 $ bash rot13.ys I Love YS
-Installing YAMLScript CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.88' now...
+Installing YAMLScript CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.89' now...
 Ctl-C to abort
 See https://yamlscript.org/doc/run-ys for more information.
 
-Installed /tmp/yamlscript-run-ys/bin/ys - version 0.1.88
+Installed /tmp/yamlscript-run-ys/bin/ys - version 0.1.89
 --------------------------------------------------------------------------------
 V Ybir LF
 ```
@@ -141,7 +141,7 @@ The `source` line is also a valid YAMLScript command.
 It calls the YAMLScript `source` macro which ignores all of its arguments (much
 like the `comment` macro does).
 
-> Note: The `source` macro was added in YAMLScript version 0.1.88.
+> Note: The `source` macro was added in YAMLScript version 0.1.89.
 This technique will not work with earlier versions of YAMLScript.
 
 
@@ -167,7 +167,7 @@ particular version of the `ys` interpreter without having to install it first.
 Just use the `YS_VERSION` environment variable to specify the version you want:
 
 ```bash
-$ YS_VERSION=0.1.88 bash my-program.ys arg1 arg2 ...
+$ YS_VERSION=0.1.89 bash my-program.ys arg1 arg2 ...
 ```
 
 This might be useful for testing a reported bug with an older version of the
