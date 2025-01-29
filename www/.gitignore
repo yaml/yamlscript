@@ -1,5 +1,7 @@
-/.venv/
+# /material/
+/repo/
 /site/
-/templates/
+/.venv/
+
 /mkdocs.yml
-/watcher.pid
+/mt

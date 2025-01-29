@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+--- !yamlscript/v0:
+
+Meta =: load('../Meta')
+
+site_name: YS is the new YAML
+site_url:: Meta.homepage
+site_author:: Meta.author.name
+site_description:: Meta.abstract
+
+repo_name: GitHub
+repo_url:: Meta.devel.git
+
+docs_dir: src
+
+edit_uri:: "$(Meta.devel.git)/blob/documentation"
+
+nav:: load('config/nav.yaml')
+
+theme:: load('config/theme.yaml')
+
+extra_css:
+- css/theme.css
+
+strict: false
+
+dev_addr: 0.0.0.0:8000
+
+plugins:
+- search
+#- awesome-pages
+- redirects:
+    redirect_maps:
+      blog.md: blog/2024-07-17.md
+      foo.md: https://github.com
+
+markdown_extensions:
+- attr_list
+- md_in_html
+- pymdownx.emoji:
+    emoji_index: python/name:material.extensions.emoji.twemoji
+    emoji_generator: python/name:material.extensions.emoji.to_svg
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+
+
+watch:
+- theme
+
+copyright:: "YAMLScript — Copyright $(Meta.copyright)"

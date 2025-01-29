@@ -62,8 +62,11 @@
 (defn get-cmd-pid []
   (-> ^java.lang.ProcessHandle (get-process-handle) .pid))
 
+(def ^:dynamic yspath [])
+
 (defn get-yspath [base]
   (let [yspath (or
+                 yspath
                  (get (System/getenv) "YSPATH")
                  (when (re-matches #"/NO-NAME$" base) (str (cwd)))
                  (->

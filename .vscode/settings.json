@@ -1,8 +1,11 @@
 {
   "calva.fmt.configPath": ".cljfmt.edn",
   "cSpell.words": [
+    "devel",
     "mkdocs",
+    "pymdownx",
     "svgexport",
+    "twemoji",
     "VENV",
     "worktree",
     "yamlys",

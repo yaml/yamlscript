@@ -1,0 +1,37 @@
+# See: https://github.com/squidfunk/mkdocs-material/discussions/3406
+# for info on template overrides.
+# Template source:
+#   https://github.com/squidfunk/mkdocs-material/tree/master/material/templates
+
+name: material
+
+custom_dir: theme
+
+features:
+- content.action.edit
+- content.action.view
+- header.autohide
+- navigation.footer
+- navigation.indexes
+- navigation.tabs
+
+logo: images/yamlscript-logo.svg
+
+favicon: images/favicon.ico
+
+palette:
+- scheme: default
+  # primary: custom
+  toggle:
+    icon: material/weather-night
+    name: Switch to dark mode
+
+- scheme: slate
+  # primary: custom
+  toggle:
+    icon: material/weather-sunny
+    name: Switch to light mode
+
+icon:
+  edit: material/pencil
+  view: material/eye

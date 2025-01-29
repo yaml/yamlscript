@@ -1,0 +1,216 @@
+{% extends "main.html" %}
+{% block tabs %}
+{{ super() }}
+
+<style>
+  :root {
+    --wtf-primary-color: #3f0649;
+    --wtf-dark-text-color: #777777;
+  }
+
+  .md-header {
+    position: initial
+  }
+
+  .md-main__inner {
+    margin: 0
+  }
+
+  .md-content {
+    display: none
+  }
+
+  .tx-container {
+    padding-top: 1rem;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1123 258'><path d='M1124,2c0,0 0,256 0,256l-1125,0l0,-48c0,0 16,5 55,5c116,0 197,-92 325,-92c121,0 114,46 254,46c140,0 214,-167 572,-166Z' style='fill: white' /></svg>") no-repeat bottom, linear-gradient(to bottom, var(--md-primary-fg-color), var(--wtf-primary-color) 99%, #fff 99%)
+  }
+
+  .tx-hero {
+    margin: 0 .8rem;
+    color: var(--md-primary-bg-color)
+  }
+
+  .tx-hero h1 {
+    margin-bottom: 1rem;
+    color: currentColor;
+    font-weight: 700
+  }
+
+  .tx-hero__content {
+    padding-bottom: 6rem
+  }
+
+  .tx-hero .md-button {
+    margin-top: .5rem;
+    margin-right: .5rem;
+    color: var(--md-primary-bg-color)
+  }
+
+  .tx-hero .md-button--primary {
+    background-color: var(--md-primary-bg-color);
+    color: var(--wtf-primary-color);
+    border-color: var(--md-primary-bg-color)
+  }
+
+  .tx-hero .md-button:focus,
+  .tx-hero .md-button:hover {
+    background-color: var(--md-accent-fg-color);
+    color: var(--md-default-bg-color);
+    border-color: var(--md-accent-fg-color)
+  }
+
+  @media screen and (max-width:70em) {
+    .tx-hero h1 {
+      font-size: 1.4rem
+    }
+
+    .tx-hero__image {
+      /*text-align: center;*/
+    }
+
+    .tx-hero__image img {
+      max-width: 15rem;
+    }
+  }
+
+  @media screen and (min-width:70em) {
+    .md-sidebar--secondary {
+      display: none
+    }
+
+    .tx-hero {
+      display: flex;
+      align-items: stretch
+    }
+
+    .tx-hero__content {
+      max-width: 30rem;
+      margin-top: 3.5rem;
+      padding-bottom: 14vw
+    }
+
+    .tx-hero__image {
+      order: 1;
+      margin-left: auto;
+      margin-top: 3.0rem;
+    }
+
+    .tx-hero__image img {
+      max-width: 20rem;
+    }
+  }
+
+  @media screen and (min-width:76.25em) {
+    .md-sidebar--primary {
+      display: none
+    }
+
+    .tx-hero__image {
+      margin-left: auto;
+    }
+
+    .tx-hero__image img {
+      max-width: 20rem;
+    }
+  }
+</style>
+
+<section class="tx-container">
+  <div class="md-grid md-typeset">
+    <div class="tx-hero">
+      <div class="tx-hero__image">
+
+{% include 'home/card1.md' %}
+
+        <pre class="placeholder">
+
+        </pre>
+        <!--img src="assets/display_screenshot.png" alt="" draggable="false"-->
+      </div>
+      <div class="tx-hero__content">
+        {% include 'home/section1.md' %}
+        <pre class="placeholder">
+
+
+
+        </pre>
+
+        <!--
+        <h1>WTF is the personal information dashboard for your terminal</h1>
+        <p>
+          Created by <a style="color: white; font-weight: bold; text-decoration: underline;" href="https://github.com/senorprogrammer">Chris Cummer</a>.
+        </p>
+        <p>
+          Use WTF to monitor systems, services, and important information.
+        </p>
+        <p>
+          Oversee your services with <strong>Airbrake</strong>.  Keep an eye on your <strong>OpsGenie</strong> schedules, <strong>Google
+            Calendar</strong>, <strong>Git</strong> and <strong>GitHub</strong>
+          repositories. Track your deployments via <strong>New Relic</strong>.
+        </p>
+        <p>
+          See who’s away in <strong>BambooHR</strong>, which <strong>Jira</strong>
+          tickets are assigned to you, and what time it is in Barcelona.
+          And <a style="color: white; font-weight: bold; text-decoration: underline;" href="/modules">dozens more</a>.
+        </p>
+        <p>
+          See <a style="color: white; font-weight: bold; text-decoration: underline;" href="installation/">Installation</a> to get started.
+        </p>
+        <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title | striptags }}"
+          class="md-button md-button--primary">
+          Quick start
+        </a>
+        <a href="/modules" class="md-button">
+          Modules
+        </a>
+        -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="md-grid md-typeset">
+    <div class="tx-hero">
+
+      <pre class="placeholder">
+
+      </pre>
+
+      <!--
+      <h1 style="color:var(--wtf-primary-color)">Sponsored by</h1>
+      <table>
+        <tr>
+          <td rowspan="2">
+            <strong style="color: black;">Warp.dev</strong>
+            <br />
+            <a href="https://www.warp.dev/?utm_source=github&utm_medium=referral&utm_campaign=wtf_20230929 " target="_blank">
+              <img src="/assets/sponsors/warp3.png" height="600" width="400" title="Warp" alt="Warp" />
+            </a>
+          </td>
+          <td>
+            <strong style="color: black;">Robusta.dev</strong>
+            <br />
+            <a href="https://home.robusta.dev/?utm_source=wtfutil&utm_medium=oss-sponsorship&utm_id=wtfutil-sponsorship" target="_blank">
+              <img src="/assets/sponsors/robusta.png" height="60" width="176" title="Robusta.dev" alt="Robusta.dev" />
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong style="color: black;">Airbrake</strong>
+            <br />
+            <a href="https://airbrake.io/?utm_medium=sponsor&utm_source=WTFutill&utm_content=airbrake-home-page&utm_campaign=2021-sponsorships" target="_blank">
+              <img src="/assets/sponsors/airbrake.png" height="60" width="176" title="Airbrake" alt="Airbrake" />
+            </a>
+          </td>
+        </tr>
+      </table>
+      -->
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+{% block content %}{% endblock %}
+{% block footer %}{% endblock %}
