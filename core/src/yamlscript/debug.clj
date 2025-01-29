@@ -143,18 +143,21 @@
        t))))
 
 (def ys-macros
-  '(&&&
+  '(+++
+     &&&
      |||
      and?
      call
      +def
      each
      or?
-     q
-     qw
+     q ql qm qo qv qw
      source
      use
      value
+     when+
+     F?
+     T?
      TTT
      clojure.core/DBG))
 
