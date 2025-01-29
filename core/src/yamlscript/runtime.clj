@@ -43,6 +43,7 @@
 ;; Define the clojure.core namespace that is referenced into all namespaces
 (def clojure-core-ns
   (let [core {;; Runtime variables
+              '_ global/_
               'ARGS ARGS
               'ARGV ARGV
               'CWD CWD

@@ -21,6 +21,7 @@
 (def pods (atom []))
 (defonce build-xstr (atom nil))
 
+(def _ (sci/new-dynamic-var 'ARGS nil {:ns main-ns}))
 (def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
 
 (def env {})
@@ -30,6 +31,9 @@
 
 (defn intern [ns vym val]
   (sci/intern @sci-ctx ns vym val))
+
+(defn set-underscore [v]
+  (sci/alter-var-root _ (constantly v)))
 
 (defn update-environ [m]
   (sci/alter-var-root ENV
@@ -58,7 +62,7 @@
 
 (def error-msg-prefix (atom ()))
 (defn reset-error-msg-prefix!
-  ([] (reset! error-msg-prefix "Error :"))
+  ([] (reset! error-msg-prefix "Error: "))
   ([prefix] (reset! error-msg-prefix prefix)))
 (reset-error-msg-prefix!)
 

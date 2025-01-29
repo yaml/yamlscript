@@ -455,6 +455,7 @@
 (defn +++* [value]
   (reset! global/doc-anchors_ {})
   (when ((some-fn map? seqable? number? string?) value)
+    (global/set-underscore value)
     (swap! global/stream-values conj value))
   value)
 
