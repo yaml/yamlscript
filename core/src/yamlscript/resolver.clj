@@ -14,6 +14,7 @@
 ;; * !yamlscript/v0/code - Start in code mode
 ;; * !yamlscript/v0/data - Start in data mode
 ;; * !yamlscript/v0/bare - Start in bare mode
+;; * !YS v0:             - Tagged pair starts data mode
 ;;
 ;; YAML 1.2 Core Schema tags ('!!' -> 'tag:yaml.org,2002:'):
 ;; * !!map - YAML mapping

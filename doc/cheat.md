@@ -15,6 +15,7 @@ title: YAMLScript Cheat Sheet
   * `!yamlscript/v0/data` - Start in data mode
   * `!yamlscript/v0:` - Shorthand for data mode
   * No tag - Start in bare mode (plain YAML; no code evaluation)
+  * Initial tagged pair of `!YS v0:` is an alternative; starts in data mode
 * YAMLScript code mode always uses these YAML forms:
   * Block mappings (normal indented mappings; `: ` separated pairs)
   * Plain scalars (no quotes)
