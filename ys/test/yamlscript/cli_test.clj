@@ -128,7 +128,7 @@ baz:
     #"sci\.lang\.Namespace"
     "clojure.string ns available as str")
 
-  (like (ys "-pe" ".[Character Long Double String Boolean]")
+  (like (ys "-pe" "+[Character Long Double String Boolean]")
     #"(?s)Character.*Long.*Double.*String.*Boolean"
     "Standard java classes available")
 

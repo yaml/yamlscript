@@ -25,17 +25,17 @@ HELP =: |
 #     -p, --print              Print the result of --run in code mode
 #     -o, --output FILE        Output file for --load, --compile or --binary
 #     -s, --stream             Output all results from a multi-document stream
-# 
+#
 #     -T, --to FORMAT          Output format for --load:
 #                                json, yaml, edn
 #     -J, --json               Output (pretty) JSON for --load
 #     -Y, --yaml               Output YAML for --load
 #     -E, --edn                Output EDN for --load
 #     -U, --unordered          Mappings don't preserve key order (faster)
-# 
+#
 #     -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
 #     -C, --clojure            Treat input as Clojure code
-# 
+#
 #     -d                       Debug all compilation stages
 #     -D, --debug-stage STAGE  Debug a specific compilation stage:
 #                                parse, compose, resolve, build,
@@ -43,10 +43,10 @@ HELP =: |
 #                              can be used multiple times
 #     -S, --stack-trace        Print full stack trace for errors
 #     -x, --xtrace             Print each expression before evaluation
-# 
+#
 #         --install            Install the libyamlscript shared library
 #         --upgrade            Upgrade both ys and libyamlscript
-# 
+#
 #         --version            Print version and exit
 #     -h, --help               Print this help and exit
 

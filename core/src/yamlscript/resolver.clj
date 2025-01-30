@@ -281,7 +281,7 @@ bar:: !:inc 3 + 4
 (defn resolve-code-sequence [_]
   (die "Sequences (block and flow) not allowed in code mode"))
 
-(def esc1 #"^[\.\+][\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\>\?]")
+(def esc1 #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
 (def esc2 #"^-[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?]")
 (defn resolve-code-scalar [node type style]
   (if type
