@@ -64,17 +64,18 @@ ifeq (0,$(shell id -u))
 endif
 endif
 
+LIBZ := false
+ifeq (true,$(IS_MACOS))
+  LIBZ := true
+else
 # Fix https://github.com/yaml/yamlscript/issues/210
 LDCONFIG := $(shell PATH=/usr/sbin:$$PATH command -v ldconfig)
 ifeq (,$(LDCONFIG))
 $(error Can't find ldconfig)
 endif
-
-LIBZ := false
-ifeq (true,$(IS_MACOS))
+ifneq (,$(shell $(LDCONFIG) -p | grep $$'^\tlibz.so'))
   LIBZ := true
-else ifneq (,$(shell $(LDCONFIG) -p | grep $$'^\tlibz.so'))
-  LIBZ := true
+endif
 endif
 
 CURL := $(shell command -v curl)
