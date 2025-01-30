@@ -1,3 +1,13 @@
+- version: 0.1.90
+  date:    Thu 30 Jan 2025 10:30:26 AM PST
+  changes:
+  - make: Fix release bug in common/vars..mk
+  - make: Bump BUILD_BIN_YS_VERSION to 0.1.89
+  - refactor: Finish changing '!yamlscript/v0:' to '!YS v0:'
+  - ys: Fix bug in options handling
+  - core: Support '#!/usr/bin/env ys-0.1.89' shebangs
+  - core: Support + escapes followed by ws
+  - core: Convert :foo in ARGV to keyword
 - version: 0.1.89
   date:    Wed 29 Jan 2025 02:29:49 PM PST
   changes:
