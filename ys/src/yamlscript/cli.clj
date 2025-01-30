@@ -523,12 +523,18 @@ Options:
 (defn -main [& argv]
   (global/reset-env nil)
 
-  (let [options (cli/parse-opts argv cli-options)
+  (let [orig argv
+        arg1 (first argv)
+        [args argv] (if (and arg1 (not (re-find #"^-" arg1)))
+                      [[arg1] (cons "--" (rest argv))]
+                      (split-with #(not= "--" %1) argv))
+        options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
-        opts (if-not (seq argv) (assoc opts :help true) opts)
+        args (concat args (rest argv))
+        opts (if-not (seq orig) (assoc opts :help true) opts)
         error (validate-opts opts)
         opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
         opts (if (env "YS_LOAD") (assoc opts :load true) opts)

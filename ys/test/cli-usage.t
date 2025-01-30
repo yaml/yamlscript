@@ -172,6 +172,7 @@ test::
     +7 >>> str(3, ") Hello #", 3)
     +8 >>> say("3) Hello #3")
 
+- note: Test compiling YS scripts in the repo
 - cmnd:: "ys -c $ROOT/util/brew-update"
   have: apply main
 - cmnd:: "ys -c $ROOT/util/markys"
@@ -181,6 +182,7 @@ test::
 - cmnd:: "ys -c $ROOT/util/version-bump"
   have: apply main
 
+- note: Test 'ys' commands with and without -e
 - cmnd:: "ys -Y $DIR/animals.json -e '.0.name'"
   want: Meowsy
 - cmnd:: "ys -Ye '.0.name' $DIR/animals.json"
@@ -223,5 +225,25 @@ test::
         dislikes:
         - ham
         - zucchini
+
+- note: Test args
+- cmnd:: "ys $DIR/show-args"
+  want: nil nil
+- cmnd:: "$DIR/show-args"
+  want: nil nil
+- cmnd:: "ys $DIR/show-args --"
+  want: ("--") ("--")
+- cmnd:: "$DIR/show-args --"
+  want: ("--") ("--")
+- cmnd:: "ys $DIR/show-args :foo -42 bar 3.14"
+  want: (":foo" "-42" "bar" "3.14") (:foo -42 "bar" 3.14)
+- cmnd:: "$DIR/show-args :foo -42 bar 3.14"
+  want: (":foo" "-42" "bar" "3.14") (:foo -42 "bar" 3.14)
+- cmnd:: "$DIR/show-args -a -- -b"
+  want: ("-a" "--" "-b") ("-a" "--" "-b")
+- cmnd:: "$DIR/show-args -- -b"
+  want: ("--" "-b") ("--" "-b")
+- cmnd:: "$DIR/show-args -a --"
+  want: ("-a" "--") ("-a" "--")
 
 done:
