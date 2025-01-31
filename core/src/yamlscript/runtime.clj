@@ -6,6 +6,7 @@
    ; [babashka.deps]
    [babashka.fs]
    [babashka.http-client]
+   [babashka.pods]
    [babashka.pods.sci]
    [babashka.process]
    [clojure.java.io :as io]
@@ -88,10 +89,13 @@
         dwim (update-vals dwim #(sci/copy-var* %1 nil))]
     (merge core std dwim)))
 
-(def babashka-pods-ns
+(def pods-namespace
   {'load-pod (sci/copy-var ys/load-pod nil)
    'unload-pod (sci/copy-var babashka.pods.sci/unload-pod nil)})
-
+(def babashka-pods-ns
+  (sci/copy-ns babashka.pods (sci/create-ns 'babashka.pods)))
+(def babashka-pods-sci-ns
+  (sci/copy-ns babashka.pods.sci (sci/create-ns 'babashka.pods.sci)))
 
 (def cli-namespace
   (sci/copy-ns clojure.tools.cli (sci/create-ns 'cli)))
@@ -111,7 +115,7 @@
   (sci/copy-ns ys.json (sci/create-ns 'json)))
 (def math-namespace
   (sci/copy-ns clojure.math (sci/create-ns 'math)))
-(def process-namespace
+(def process-nspace
   (sci/copy-ns babashka.process (sci/create-ns 'process)))
 (def set-namespace
   (sci/copy-ns clojure.set (sci/create-ns 'set)))
@@ -135,22 +139,25 @@
 
    ;; These need to be first:
    'clojure.core clojure-core-ns 'core clojure-core-ns
-   'ys      ys-namespace      'ys.ys      ys-namespace
-   'std     std-namespace     'ys.std     std-namespace
-   'clj     clj-namespace     'ys.clj     clj-namespace
+   'ys      ys-namespace   'ys.ys      ys-namespace
+   'std     std-namespace  'ys.std     std-namespace
+   'clj     clj-namespace  'ys.clj     clj-namespace
 
-   'cli     cli-namespace     'ys.cli     cli-namespace
-   'fs      fs-namespace      'ys.fs      fs-namespace
-   'http    http-namespace    'ys.http    http-namespace
-   'io      io-namespace      'ys.io      io-namespace
-   'json    json-namespace    'ys.json    json-namespace
-   'math    math-namespace    'ys.math    math-namespace
-   'pods    babashka-pods-ns  'ys.pods    babashka-pods-ns
-   'process process-namespace 'ys.process process-namespace
-   'set     set-namespace     'ys.set     set-namespace
-   'str     str-namespace     'ys.str     str-namespace
-   'walk    walk-namespace    'ys.walk    walk-namespace
-   'yaml    yaml-namespace    'ys.yaml    yaml-namespace
+   'cli     cli-namespace  'ys.cli     cli-namespace
+   'fs      fs-namespace   'ys.fs      fs-namespace
+   'http    http-namespace 'ys.http    http-namespace
+   'io      io-namespace   'ys.io      io-namespace
+   'json    json-namespace 'ys.json    json-namespace
+   'math    math-namespace 'ys.math    math-namespace
+   'pods    pods-namespace 'ys.pods    pods-namespace
+   'process process-nspace 'ys.process process-nspace
+   'set     set-namespace  'ys.set     set-namespace
+   'str     str-namespace  'ys.str     str-namespace
+   'walk    walk-namespace 'ys.walk    walk-namespace
+   'yaml    yaml-namespace 'ys.yaml    yaml-namespace
+
+   'babashka.pods     babashka-pods-ns
+   'babashka.pods.sci babashka-pods-sci-ns
 
    'java-time java-time-namespace
    'ys.taptest taptest-namespace
