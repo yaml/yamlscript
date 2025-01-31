@@ -92,27 +92,43 @@
   {'load-pod (sci/copy-var ys/load-pod nil)
    'unload-pod (sci/copy-var babashka.pods.sci/unload-pod nil)})
 
-(defmacro use-ns [ns-name from-ns]
-  `(sci/copy-ns ~from-ns (sci/create-ns ~ns-name)))
 
-(def cli-namespace (use-ns 'cli clojure.tools.cli))
-(def clj-namespace (use-ns 'clj ys.clj))
-(def debug-namespace (use-ns 'yamlscript.debug yamlscript.debug))
-(def fs-namespace (use-ns 'fs babashka.fs))
-(def java-time-namespace (use-ns 'java-time java-time.api))
-(def http-namespace (use-ns 'http babashka.http-client))
-(def io-namespace (use-ns 'io clojure.java.io))
-(def json-namespace (use-ns 'json ys.json))
-(def math-namespace (use-ns 'math clojure.math))
-(def process-namespace (use-ns 'process babashka.process))
-(def set-namespace (use-ns 'set clojure.set))
-(def std-namespace (use-ns 'std ys.std))
-(def str-namespace (use-ns 'str clojure.string))
-(def taptest-namespace (use-ns 'ys.taptest ys.taptest))
-(def util-namespace (use-ns 'yamlscript.util yamlscript.util))
-(def walk-namespace (use-ns 'walk clojure.walk))
-(def yaml-namespace (use-ns 'yaml ys.yaml))
-(def ys-namespace (use-ns 'ys ys.ys))
+(def cli-namespace
+  (sci/copy-ns clojure.tools.cli (sci/create-ns 'cli)))
+(def clj-namespace
+  (sci/copy-ns ys.clj (sci/create-ns 'clj)))
+(def debug-namespace
+  (sci/copy-ns yamlscript.debug (sci/create-ns 'yamlscript.debug)))
+(def fs-namespace
+  (sci/copy-ns babashka.fs (sci/create-ns 'fs)))
+(def java-time-namespace
+  (sci/copy-ns java-time.api (sci/create-ns 'java-time.api)))
+(def http-namespace
+  (sci/copy-ns babashka.http-client (sci/create-ns 'http)))
+(def io-namespace
+  (sci/copy-ns clojure.java.io (sci/create-ns 'io)))
+(def json-namespace
+  (sci/copy-ns ys.json (sci/create-ns 'json)))
+(def math-namespace
+  (sci/copy-ns clojure.math (sci/create-ns 'math)))
+(def process-namespace
+  (sci/copy-ns babashka.process (sci/create-ns 'process)))
+(def set-namespace
+  (sci/copy-ns clojure.set (sci/create-ns 'set)))
+(def std-namespace
+  (sci/copy-ns ys.std (sci/create-ns 'std)))
+(def str-namespace
+  (sci/copy-ns clojure.string (sci/create-ns 'str)))
+(def taptest-namespace
+  (sci/copy-ns ys.taptest (sci/create-ns 'ys.taptest)))
+(def util-namespace
+  (sci/copy-ns yamlscript.util (sci/create-ns 'yamlscript.util)))
+(def walk-namespace
+  (sci/copy-ns clojure.walk (sci/create-ns 'walk)))
+(def yaml-namespace
+  (sci/copy-ns ys.yaml (sci/create-ns 'yaml)))
+(def ys-namespace
+  (sci/copy-ns ys.ys (sci/create-ns 'ys)))
 
 (def namespaces
   {'main {}
