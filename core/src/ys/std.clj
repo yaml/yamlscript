@@ -22,6 +22,7 @@
   (:refer-clojure :exclude [die
                             eval
                             print
+                            read
                             reverse
                             replace]))
 
@@ -768,6 +769,9 @@
 ;;------------------------------------------------------------------------------
 ;; I/O functions
 ;;------------------------------------------------------------------------------
+(intern 'ys.std 'read clojure.core/slurp)
+(intern 'ys.std 'write clojure.core/spit)
+
 (defn out [& xs]
   (apply clojure.core/print xs)
   (flush))

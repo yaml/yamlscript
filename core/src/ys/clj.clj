@@ -13,4 +13,5 @@
 (intern 'ys.clj 'load      clojure.core/load)
 (intern 'ys.clj 'load-file clojure.core/load-file)
 (intern 'ys.clj 'print     clojure.core/print)
+(intern 'ys.clj 'read      clojure.core/read)
 (intern 'ys.clj 'use       clojure.core/use)
