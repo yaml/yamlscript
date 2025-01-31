@@ -1,12 +1,74 @@
 ---
-title: Home
-# edit_file: www/src/index.md
+title: Widget Testing
 hide:
 - navigation
 - toc
 ---
 
-<h1 class="empty"></h1>
+<div class="grid" markdown>
+
+=== "Unordered list"
+
+    * Sed sagittis eleifend rutrum
+    * Donec vitae suscipit est
+    * Nulla tempor lobortis orci
+
+=== "Ordered list"
+
+    1. Sed sagittis eleifend rutrum
+    2. Donec vitae suscipit est
+    3. Nulla tempor lobortis orci
+
+``` title="Content tabs"
+=== "Unordered list"
+
+    * Sed sagittis eleifend rutrum
+    * Donec vitae suscipit est
+    * Nulla tempor lobortis orci
+
+=== "Ordered list"
+
+    1. Sed sagittis eleifend rutrum
+    2. Donec vitae suscipit est
+    3. Nulla tempor lobortis orci
+```
+
+</div>
+
+<div class="grid cards" markdown>
+  - ### __YAML Made Better__
+    ---
+    :material-code-braces:{.lg .middle}
+      [DevOps Perfected](doc/devops.md)  
+    :material-code-braces:{.lg .middle}
+      [YAMLScript in YAML](doc/examples.md)  
+    :material-code-braces:{.lg .middle}
+      [YAMLScript in Helm]()
+
+  - ### __Full-featured YAML for All__
+    ---
+    :fontawesome-solid-truck-ramp-box:{.lg .middle}
+      [YAML Loader libraries for all languages](doc/bindings.md)  
+    :material-cog:{.lg .middle}
+      [Fully configurable capabilities](doc/capabilities.md)  
+    :material-security:{.lg .middle}
+      [Secure and safe by design](doc/security.md)  
+</div>
+
+<div class="grid cards" markdown>
+  - ### __Functional Programming in YAML__
+    ---
+    :fontawesome-solid-question:{.lg .middle}
+      [Embeds cleanly in YAML](doc/ys.md)  
+    :material-code-parentheses:{.lg .middle}
+      [Import, Interpolate, Transform](doc/functions.md)  
+    :simple-clojure:{.lg .middle}
+      [100's of functions & Libraries](doc/functions.md)  
+</div>
+
+----
+
+<div class="dark" markdown>
 
 **YAMLScript**, or **YS** ("wise") is a functional programming
 language with a clean syntax that is also 100% valid **[YAML](
@@ -56,6 +118,7 @@ It has [binding modules for 10 programming languages](doc/bindings.md) including
 Go, JavaScript, Python and Rust, with many more on the way.
 These modules can be used in your programs to load normal YAML files as well as
 YAMLScript enhanced ones.
+</div>
 
 There are many ways to use YAMLScript:
 

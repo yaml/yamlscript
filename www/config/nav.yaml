@@ -50,7 +50,7 @@
   - blog/2024-11-29.md
   - blog/2024-11-05.md
   - blog/2024-07-17.md
-  - Dr. StangeYAML: blog/2024-06-20.md
+  - Dr. StrangeYAML: blog/2024-06-20.md
   - Older:
     - blog/2024-04-16.md
     - blog/2024-03-14.md
@@ -83,3 +83,7 @@
 # - News:
 #   - YS News: blog/news.md
 #   - YS Releases: blog/releases.md
+
+
+- Dev Stuff:
+  - demos.md

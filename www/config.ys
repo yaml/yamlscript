@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
---- !yamlscript/v0:
+---
+!YS v0:
 
 Meta =: load('../Meta')
 
@@ -31,9 +32,7 @@ plugins:
 - search
 #- awesome-pages
 - redirects:
-    redirect_maps:
-      blog.md: blog/2024-07-17.md
-      foo.md: https://github.com
+    redirect_maps:: load('config/redirect.yaml')
 
 markdown_extensions:
 - attr_list
@@ -44,7 +43,6 @@ markdown_extensions:
 - pymdownx.superfences
 - pymdownx.tabbed:
     alternate_style: true
-
 
 watch:
 - theme
