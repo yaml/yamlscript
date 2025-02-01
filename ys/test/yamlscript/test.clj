@@ -21,11 +21,11 @@
       (println (str "* Testing: " label)))))
 
 (defn is [got want & [label]]
-  (let [want (str/replace want #"''" "\"")]
+  (let [want (if (string? want)
+               (str/replace want #"''" "\"")
+               want)]
     (do-verbose label want)
     (test/is (= want got))))
-
-(count "I like pie")
 
 (defn like [got want & [label]]
   (do-verbose label want)

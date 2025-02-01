@@ -62,7 +62,7 @@ test: test-unit
 test-all: test-unit test-run
 
 test-unit: $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
-	$< test
+	$< test $(lein-test)
 
 test-run: $(BPAN_LOCAL) build
 	prove $${TEST_VERBOSE:+'-v'} $(test)

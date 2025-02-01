@@ -72,16 +72,16 @@
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
   [;
-   [nil "--run"
-    "Run a YAMLScript program file (default)"]
-   ["-l" "--load"
-    "Output (compact) JSON of YAMLScript evaluation"]
    ["-e" "--eval YSEXPR"
     "Evaluate a YAMLScript expression
                            multiple -e values joined by newline"
     :default []
     :update-fn conj
     :multi true]
+   ["-l" "--load"
+    "Output (compact) JSON of YAMLScript evaluation"]
+   ["-f" "--file FILE"
+    "Explicitly indicate input file"]
 
    ["-c" "--compile"
     "Compile YAMLScript to Clojure"]
@@ -89,7 +89,7 @@
     "Compile to a native binary executable"]
 
    ["-p" "--print"
-    "Print the result of --run in code mode"]
+    "Print the final evaluation result value"]
    ["-o" "--output FILE"
     "Output file for --load, --compile or --binary"]
    ["-s" "--stream"
@@ -500,6 +500,15 @@ Options:
       (mutex1 opts :print (set/difference action-opts #{:run}))
       (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
 
+(defn looks-like-expr [file]
+  (when (and
+          (string? file)
+          (re-find #"(?:^(?:\ |(?:_?[.:]\w))|\ $|\(|:\ )" file))
+    (if (fs/exists? file)
+      (err (str "'" file "' looks like an expression,\n"
+             "but is also the name of a file. Use --eval or -e."))
+      true)))
+
 (defn do-main [opts args help error errs]
   (if error
     (do-error [(str "Error: " error)])
@@ -520,20 +529,20 @@ Options:
         :nrepl (do-nrepl opts args)
         (do-run opts args)))))
 
-(defn -main [& argv]
-  (global/reset-env nil)
-
+(defn get-opts [argv]
   (let [orig argv
-        arg1 (first argv)
-        [args argv] (if (and arg1 (not (re-find #"^-" arg1)))
-                      [[arg1] (cons "--" (rest argv))]
-                      (split-with #(not= "--" %1) argv))
+        [args argv] (split-with #(not= "--" %1) argv)
+        [argv is--] (if (= "--" (first argv))
+                      [(rest argv) true]
+                      [argv false])
+        ;_ (WWW "args argv" args argv)
         options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
-        args (concat args (rest argv))
+        ;_ (WWW "args argv" args argv)
+        args (concat args argv)
         opts (if-not (seq orig) (assoc opts :help true) opts)
         error (validate-opts opts)
         opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
@@ -564,44 +573,61 @@ Options:
         opts (if (env "YS_STACK_TRACE") (assoc opts :stack-trace true) opts)
         opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
         opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
-        [file & args] args
-        arg1 (first args)
-        looks-like-expr
-        (fn []
-          (when (and
-                  (string? file)
-                  (re-find #"(?:^(?:\ |(?:_?[.:]\w))|\ $|\()" file))
-            (if (fs/exists? file)
-              (err (str "'" file "' looks like an expression,\n"
-                     "but is also the name of a file. Use --eval or -e."))
-              true)))
+
+        ; _ (WWW "opts" opts "args "args)
+        is-e (seq (:eval opts))
+        [arg1 arg2] args
         [opts args] (if (and
                           (not (seq (:eval opts)))
-                          (looks-like-expr)
-                          (or (nil? arg1)
-                            (= arg1 "-")
-                            (fs/exists? arg1)))
-                      [(assoc opts
-                         :file (or arg1 "-")
-                         :eval [file]
-                         :mode "code"
-                         :load true
-                         :to (or (:to opts) "yaml"))
-                       (drop 1 args)]
+                          (looks-like-expr arg1))
+                      (let [opts (assoc opts
+                                   :eval [arg1]
+                                   :mode (or (:mode opts) "code")
+                                   :load true
+                                   :to (or (:to opts) "yaml"))
+                            args (rest args)
+                            [opts args] (if (and arg2
+                                              (not is--)
+                                              (not (re-find #"^-" arg2)))
+                                          [(assoc opts :file arg2) (rest args)]
+                                          [opts args])
+                            file (or (:file opts)
+                                   (when is-- "-"))
+                            opts (if file
+                                   (assoc opts :file file)
+                                   opts)]
+                        [opts args])
                       [opts args])
-        opts (assoc opts :file (or
-                                 (:file opts)
-                                 file
-                                 (and
-                                   (:load opts)
-                                   (not (seq (:eval opts)))
-                                   "-")))]
-
-    (reset! global/opts opts)
-
+        ; _ (WWW "opts" opts "args" args)
+        file (:file opts)
+        file (or file
+               (and (seq (:eval opts)) (not is-e) (not is--) "-"))
+        ; _ (WWW file)
+        [file args] (if file
+                      [file args]
+                      (if (and (not is--)
+                            (seq args)
+                            (not (re-find #"^-." (first args))))
+                        [(first args) (rest args)]
+                        [nil args]))
+        file (or file
+               (and (not (seq (:eval opts))) (:load opts) "-"))
+        opts (if file (assoc opts :file file) opts)
+        args (vec args)]
     (when (env "YS_SHOW_OPTS")
       (println (yaml/generate-string{:opts opts :args args})))
+    [opts args error errs help]))
 
+(comment
+  (take 2 (get-opts [".foo" "bar" "baz"]))
+  (take 2 (get-opts [".foo"]))
+  #__)
+
+(defn -main [& argv]
+  (global/reset-env nil)
+  (let [[opts args error errs help] (get-opts argv)
+        out (:output opts)]
+    (reset! global/opts opts)
     (if out
       (with-open [out (io/writer out)]
         (binding [*out* out]

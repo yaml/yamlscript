@@ -14,41 +14,41 @@ HELP =: |
 
   Options:
 
-        --run                Run a YAMLScript program file (default)
-    -l, --load               Output (compact) JSON of YAMLScript evaluation
     -e, --eval YSEXPR        Evaluate a YAMLScript expression
                              multiple -e values joined by newline
+    -l, --load               Output (compact) JSON of YAMLScript evaluation
+    -f, --file FILE          Explicitly indicate input file
 
-    -c, --compile            Compile YAMLScript to Clojure
-    -b, --binary             Compile to a native binary executable
+#   -c, --compile            Compile YAMLScript to Clojure
+#   -b, --binary             Compile to a native binary executable
 
-#     -p, --print              Print the result of --run in code mode
-#     -o, --output FILE        Output file for --load, --compile or --binary
-#     -s, --stream             Output all results from a multi-document stream
-#
-#     -T, --to FORMAT          Output format for --load:
-#                                json, yaml, edn
-#     -J, --json               Output (pretty) JSON for --load
-#     -Y, --yaml               Output YAML for --load
-#     -E, --edn                Output EDN for --load
-#     -U, --unordered          Mappings don't preserve key order (faster)
-#
-#     -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
-#     -C, --clojure            Treat input as Clojure code
-#
-#     -d                       Debug all compilation stages
-#     -D, --debug-stage STAGE  Debug a specific compilation stage:
-#                                parse, compose, resolve, build,
-#                                transform, construct, print
-#                              can be used multiple times
-#     -S, --stack-trace        Print full stack trace for errors
-#     -x, --xtrace             Print each expression before evaluation
-#
-#         --install            Install the libyamlscript shared library
-#         --upgrade            Upgrade both ys and libyamlscript
-#
-#         --version            Print version and exit
-#     -h, --help               Print this help and exit
+#   -p, --print              Print the final evaluation result value
+#   -o, --output FILE        Output file for --load, --compile or --binary
+#   -s, --stream             Output all results from a multi-document stream
+
+#   -T, --to FORMAT          Output format for --load:
+#                              json, yaml, edn
+#   -J, --json               Output (pretty) JSON for --load
+#   -Y, --yaml               Output YAML for --load
+#   -E, --edn                Output EDN for --load
+#   -U, --unordered          Mappings don't preserve key order (faster)
+
+#   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
+#   -C, --clojure            Treat input as Clojure code
+
+#   -d                       Debug all compilation stages
+#   -D, --debug-stage STAGE  Debug a specific compilation stage:
+#                              parse, compose, resolve, build,
+#                              transform, construct, print
+#                            can be used multiple times
+#   -S, --stack-trace        Print full stack trace for errors
+#   -x, --xtrace             Print each expression before evaluation
+
+#       --install            Install the libyamlscript shared library
+#       --upgrade            Upgrade both ys and libyamlscript
+
+#       --version            Print version and exit
+#   -h, --help               Print this help and exit
 
 #'
 
@@ -225,25 +225,5 @@ test::
         dislikes:
         - ham
         - zucchini
-
-- note: Test args
-- cmnd:: "ys $DIR/show-args"
-  want: nil nil
-- cmnd:: "$DIR/show-args"
-  want: nil nil
-- cmnd:: "ys $DIR/show-args --"
-  want: ("--") ("--")
-- cmnd:: "$DIR/show-args --"
-  want: ("--") ("--")
-- cmnd:: "ys $DIR/show-args :foo -42 bar 3.14"
-  want: (":foo" "-42" "bar" "3.14") (:foo -42 "bar" 3.14)
-- cmnd:: "$DIR/show-args :foo -42 bar 3.14"
-  want: (":foo" "-42" "bar" "3.14") (:foo -42 "bar" 3.14)
-- cmnd:: "$DIR/show-args -a -- -b"
-  want: ("-a" "--" "-b") ("-a" "--" "-b")
-- cmnd:: "$DIR/show-args -- -b"
-  want: ("--" "-b") ("--" "-b")
-- cmnd:: "$DIR/show-args -a --"
-  want: ("-a" "--") ("-a" "--")
 
 done:

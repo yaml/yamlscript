@@ -64,7 +64,7 @@
     "'say' evaluates to a symbol")
 
   ;; Figure out why this stopped working
-  #_(has (ys "-ce" "std/say: 123")
+  #_(is (ys "-ce" "std/say: 123")
     "(std/say 123)"
     "-c prints Clojure code of compilation")
 
@@ -80,10 +80,6 @@
     "must be one of: json, yaml, edn"
     "Validate --to=...")
 
-  (has (ys "--run" "--load" "...")
-    "Error: Options --load and --run are mutually exclusive"
-    "Can't use multiple action options together")
-
   (has (ys "-J" "-Y" "...")
     "Error: Options --yaml and --json are mutually exclusive"
     "Can't use multiple data format options together")
@@ -96,21 +92,9 @@
     "Error: Options --version and --stack-trace are mutually exclusive"
     "Can't use other options with --version")
 
-  #_(has (ys "--mode=code" "--run" "...")
-    "Error: Options --mode and --run are mutually exclusive"
-    "Can't use --mode with certain actions")
-
-  #_(has (ys "--kill" "-e" "...")
-    "Error: Options --eval and --kill are mutually exclusive"
-    "Can't --eval with certain actions")
-
   (has (ys "-ple" "...")
     "Error: Options --print and --load are mutually exclusive"
     "Can't use --print with --load")
-
-  (has (ys "--run" "--to=json" "-e" "...")
-    "Error: Options --to and --run are mutually exclusive"
-    "Can't use --to with --run")
 
   (is (ys "-Y" "test/loader.ys")
     "foo: This is a string
