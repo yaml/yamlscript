@@ -19,6 +19,7 @@
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
+  (:import java.security.MessageDigest)
   (:refer-clojure :exclude [die
                             eval
                             print
@@ -856,6 +857,25 @@
 (defn new [class & xs]
   (clojure.lang.Reflector/invokeConstructor
     class (into-array Object xs)))
+
+
+;;------------------------------------------------------------------------------
+;; Security functions
+;;------------------------------------------------------------------------------
+(defn md5 [^String string]
+  (let [digest (.digest (MessageDigest/getInstance "MD5")
+                 (.getBytes string "UTF-8"))]
+    (apply str (map (partial format "%02x") digest))))
+
+(defn sha1 [^String string]
+  (let [digest (.digest (MessageDigest/getInstance "SHA-1")
+                 (.getBytes string "UTF-8"))]
+    (apply str (map (partial format "%02x") digest))))
+
+(defn sha256 [^String string]
+  (let [digest (.digest (MessageDigest/getInstance "SHA-256")
+                 (.getBytes string "UTF-8"))]
+    (apply str (map (partial format "%02x") digest))))
 
 
 ;;------------------------------------------------------------------------------

@@ -214,6 +214,8 @@
       java.math.BigDecimal
       java.math.BigInteger
 
+      java.security.MessageDigest
+
       java.util.regex.Pattern]))
 
 (reset! global/sci-ctx

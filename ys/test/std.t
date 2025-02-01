@@ -339,6 +339,17 @@ test::
 
 
 #-------------------------------------------------------------------------------
+- note: "Security functions"
+
+- code: md5("foo\n")
+  want: d3b07384d113edec49eaa6238ad5ff00
+- code: sha1("foo\n")
+  want: f1d2d2f924e986ac86fdf7b36c94bcdf32beec15
+- code: sha256("foo\n")
+  want: b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c
+
+
+#-------------------------------------------------------------------------------
 - note: "IPC functions"
 
 
