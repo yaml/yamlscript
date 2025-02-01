@@ -32,20 +32,30 @@
 
 (defn compose
   "Compose YAML parse events into a tree."
-  [events]
-  (let [node (if (seq events)
-               (->
-                 events
-                 compose-events
-                 first)
-               {:! "yamlscript/v0", := ""})]
-    (if (and
-          (= "YS" (get-in node [:% 0 :!]))
-          (= "v0" (get-in node [:% 0 :=]))
-          (= {:= ""} (get-in node [:% 1])))
-      (let [node (assoc-in node [:%] (vec (drop 2 (get-in node [:%]))))]
-        (merge {:! "yamlscript/v0:"} node))
-      node)))
+  ([events]
+    (compose events true))
+  ([events first]
+   (let [node (if (seq events)
+                (->
+                  events
+                  compose-events
+                  clojure.core/first)
+                {:! "yamlscript/v0", := ""})
+         node (if (and
+                    (= "YS" (get-in node [:% 0 :!]))
+                    (= "v0" (get-in node [:% 0 :=]))
+                    (= {:= ""} (get-in node [:% 1])))
+                (let [node (assoc-in node [:%]
+                             (vec (drop 2 (get-in node [:%]))))]
+                  (merge {:! "yamlscript/v0:"} node))
+                node)
+         node (if (not first)
+                (cond
+                  (= "code" (:! node)) (assoc node :! "yamlscript/v0/code")
+                  (= "data" (:! node)) (assoc node :! "yamlscript/v0/data")
+                  :else node)
+                node)]
+     node)))
 
 (defn compose-mapping [events]
   (let [[event & events] events

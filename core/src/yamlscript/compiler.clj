@@ -43,7 +43,7 @@
         blocks (loop [[group & groups] groups blocks [] i 1]
                  (let [blocks (conj blocks
                                 (-> group
-                                  yamlscript.composer/compose
+                                  (yamlscript.composer/compose (= i 1))
                                   yamlscript.resolver/resolve
                                   yamlscript.builder/build
                                   yamlscript.transformer/transform
@@ -80,7 +80,8 @@
                  (let [blocks (conj blocks
                                 (-> group
                                   (#(stage-with-options "compose"
-                                      yamlscript.composer/compose [%1]))
+                                      yamlscript.composer/compose
+                                      [%1 (= i 1)]))
                                   (#(stage-with-options "resolve"
                                       yamlscript.resolver/resolve [%1]))
                                   (#(stage-with-options "build"
