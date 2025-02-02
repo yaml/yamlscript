@@ -1,3 +1,10 @@
+- version: 0.1.91
+  date:    Sat 01 Feb 2025 06:45:53 PM PST
+  changes:
+  - std: Add 'read' and 'write' for 'slurp' and 'spit'
+  - std: Add md5, sha1 and sha256 functions
+  - ys: Fixes for CLI getopts with more tests
+  - core: Support top level !code and !data tags
 - version: 0.1.90
   date:    Thu 30 Jan 2025 10:30:26 AM PST
   changes:
