@@ -153,6 +153,10 @@
          <lastmod>2025-02-04</lastmod>
     </url>
     <url>
+         <loc>https://yamlscript.org/community/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
          <loc>https://yamlscript.org/doc/</loc>
          <lastmod>2025-02-04</lastmod>
     </url>
@@ -214,6 +218,10 @@
     </url>
     <url>
          <loc>https://yamlscript.org/doc/examples/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/doc/exercism/</loc>
          <lastmod>2025-02-04</lastmod>
     </url>
     <url>
@@ -330,6 +338,10 @@
     </url>
     <url>
          <loc>https://yamlscript.org/doc/ys/</loc>
+         <lastmod>2025-02-04</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/press/</loc>
          <lastmod>2025-02-04</lastmod>
     </url>
 </urlset>

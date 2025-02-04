@@ -39,6 +39,22 @@
 }
 */
 
+.md-header__title {
+  color: gold;
+  margin-left: 0px !important;ZZ
+}
+
+.md-header__button.md-logo {
+  visibility: hidden;
+  width: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+}
+
 .dark {
   background-color: #ccc;
   width: 100%;
@@ -61,15 +77,6 @@ h1.empty {
 
 .md-nav__list {
   margin-left: 5px;
-}
-
-.md-header__button.md-logo {
-  visibility: hidden;
-}
-
-.md-header__button.md-logo img,
-.md-header__button.md-logo svg {
-  visibility: hidden;
 }
 
 /*
