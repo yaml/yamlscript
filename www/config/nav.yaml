@@ -1,89 +1,15 @@
+!yamlscript/v0:
+
 - index.md
 
-# - Getting started:
-#   # - Foo: doc/foo.md
-#   - About YS: doc/intro.md
-#   - YAML is YS: doc/yaml.md
-#   - The ys Command: doc/cli.md
-#   - YS YAML Loaders: doc/loaders.md
-#   - Installation: doc/install.md
+- About:: load('about.yaml')
 
-# - Use Cases:
-#   - Extending YAML: doc/extending.md
-#   - YS Scripting: doc/scripting.md
-#   - Query & Transform: doc/query.md
+- Learn:: load('learn.yaml')
 
-- Reference:
-  - What is YS?:
-    - Introduction: doc/intro.md
-    - Features: doc/features.md
-    - Requirements: doc/install.md
-  - Getting Started:
-    - Install YS: doc/install.md
-  - Tutorials:
-    - Writing YS Modules: doc/modules.md
-# - Overview: docs/overview.md
-# - Configuration: docs/configuration.md
-# - Usage: docs/usage.md
-# - Examples: docs/examples.md
-# - Contributing: docs/contributing.md
-# - Changelog: docs/changelog.md
+- Reference:: load('reference.yaml')
 
-# - Gallery:
-#   - YS for YAML Users: doc/yaml.md
-#   - YS on Exercism: doc/exercism.md
-#   - YS on Rosetta Code: doc/rosetta.md
-#   - YS for Jsonnet Users: doc/jsonnet.md
-#   - YS for Cue Users: doc/cue.md
-#   - YS for HCL Users: doc/hcl.md
-#   - YS for Jinja2 Users: doc/jinja2.md
-#   - YS for Python Programmers: doc/python.md
-#   - YS for Clojure Programmers: doc/clojure.md
-# 
-# - Community:
-#   - Chat: community/chat.md
-#   - GitHub: community/github.md
-#   - Stack Overflow: community/stackoverflow.md
-#   - Twitter: community/twitter.md
+- Community:: load('community.yaml')
 
-- Blog:
-  - blog/2024-11-29.md
-  - blog/2024-11-05.md
-  - blog/2024-07-17.md
-  - Dr. StrangeYAML: blog/2024-06-20.md
-  - Older:
-    - blog/2024-04-16.md
-    - blog/2024-03-14.md
-  - 2023 Advent Posts:
-    - blog/advent-2023/dec-24.md
-    - blog/advent-2023/dec-23.md
-    - blog/advent-2023/dec-22.md
-    - blog/advent-2023/dec-21.md
-    - blog/advent-2023/dec-20.md
-    - blog/advent-2023/dec-19.md
-    - blog/advent-2023/dec-18.md
-    - blog/advent-2023/dec-17.md
-    - blog/advent-2023/dec-16.md
-    - blog/advent-2023/dec-15.md
-    - blog/advent-2023/dec-14.md
-    - blog/advent-2023/dec-13.md
-    - blog/advent-2023/dec-12.md
-    - blog/advent-2023/dec-11.md
-    - blog/advent-2023/dec-10.md
-    - blog/advent-2023/dec-09.md
-    - blog/advent-2023/dec-08.md
-    - blog/advent-2023/dec-07.md
-    - blog/advent-2023/dec-06.md
-    - blog/advent-2023/dec-05.md
-    - blog/advent-2023/dec-04.md
-    - blog/advent-2023/dec-03.md
-    - blog/advent-2023/dec-02.md
-    - blog/advent-2023/dec-01.md
+- Press:: load('press.yaml')
 
-# - News:
-#   - YS News: blog/news.md
-#   - YS Releases: blog/releases.md
-
-
-- Dev Stuff:
-  - demos.md
+- X: demos.md

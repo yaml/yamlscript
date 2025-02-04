@@ -1,4 +1,5 @@
-# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+# yaml-language-server:
+#   $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
 ---
 !YS v0:
@@ -17,7 +18,16 @@ docs_dir: src
 
 edit_uri:: "$(Meta.devel.git)/blob/documentation"
 
-nav:: load('config/nav.yaml')
+nav:
+- index.md      # Landing page
+# - About:: load('config/about.yaml')
+# - Start:: load('config/start.yaml')
+# - Learn:: load('config/learn.yaml')
+- Documentation:: load('config/documentation.yaml')
+- Press:: load('config/press.yaml')
+- Community:: load('config/community.yaml')
+
+# - X: demos.md
 
 theme:: load('config/theme.yaml')
 

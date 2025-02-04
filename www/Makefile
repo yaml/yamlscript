@@ -29,7 +29,7 @@ DEPS := \
 YS_WWW_DOMAIN_NAME ?= yamlscript.org
 YS_WWW_ORIGIN ?= origin
 ifneq (,$(stage))
-  YS_WWW_DOMAIN_NAME := yamlys.org
+  YS_WWW_DOMAIN_NAME := stage.yamlscript.org
   YS_WWW_ORIGIN := stage
 endif
 
@@ -55,6 +55,9 @@ serve: deps watch
 # XXX - See 'mkdocs gh-deploy' for a more standard way to do this
 # Options remote_branch and remote_name are used for gh-deploy
 publish: build
+ifeq (,$(stage))
+	$(error NOT READY FOR PRIMETIME YET)
+endif
 	-git -C site commit -m "Publish $$(date)"
 	git -C site push $(YS_WWW_ORIGIN) HEAD:site
 

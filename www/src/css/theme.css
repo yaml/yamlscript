@@ -64,17 +64,12 @@ h1.empty {
 }
 
 .md-header__button.md-logo {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  float: left;
+  visibility: hidden;
 }
 
 .md-header__button.md-logo img,
 .md-header__button.md-logo svg {
-  height: 50px;
-  width: 50px;
+  visibility: hidden;
 }
 
 /*

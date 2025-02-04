@@ -6,9 +6,15 @@ hide:
 - toc
 ---
 
-<h1 class="empty"></h1>
 
-**YAMLScript**, or **YS** ("wise") is a functional programming
+<!--
+Landing page for YS:
+
+* What is YS?
+-->
+<h1 class="empty"></h1><!-- disable auto title -->
+
+**YS** (pronounced "wise", aka YAMLScript) is a functional programming
 language with a clean syntax that is also 100% valid **[YAML](
 https://yaml.org)**.
 It was designed to be easily embedded into existing YAML files in order to
