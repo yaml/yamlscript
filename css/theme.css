@@ -29,7 +29,6 @@
   --md-footer-fg-color--light: hsla(0, 0%, 100%, 0.7);
   --md-footer-fg-color--lighter: hsla(0, 0%, 100%, 0.3);
 }
-*/
 
 :root > * {
   --md-primary-fg-color:        #cb6;
@@ -38,6 +37,23 @@
   --md-primary-bg-color--light: #000000;
   --md-typeset-a-color:         #000000;
 }
+*/
+
+.dark {
+  background-color: #ccc;
+  width: 100%;
+  padding: 0px 20px;
+  display:flow-root
+}
+
+.cards hr {
+  border: 1px solid #888;
+}
+
+hr {
+  border: 2px solid #861f41;
+}
+
 
 h1.empty {
   margin-bottom: 0px;
@@ -48,17 +64,12 @@ h1.empty {
 }
 
 .md-header__button.md-logo {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  float: left;
+  visibility: hidden;
 }
 
 .md-header__button.md-logo img,
 .md-header__button.md-logo svg {
-  height: 50px;
-  width: 50px;
+  visibility: hidden;
 }
 
 /*
