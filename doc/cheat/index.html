@@ -21,15 +21,12 @@
         <link rel="next" href="../ys/">
       
       
-        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../feed_rss_created.xml">
-        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../feed_rss_updated.xml">
-      
       <link rel="icon" href="../../images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>YAMLScript Cheat Sheet - YS is YAML Done Right</title>
+        <title>YAMLScript Cheat Sheet - YS is YAML's Friend</title>
       
     
     
@@ -82,6 +79,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#yamlscript-fundamentals" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -92,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="YS is YAML Done Right" class="md-header__button md-logo" aria-label="YS is YAML Done Right" data-md-component="logo">
+    <a href="../.." title="YS is YAML&#39;s Friend" class="md-header__button md-logo" aria-label="YS is YAML's Friend" data-md-component="logo">
       
   <img src="../../images/yamlscript-logo.svg" alt="logo">
 
@@ -105,7 +107,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            YS is YAML Done Right
+            YS is YAML's Friend
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -331,12 +333,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="YS is YAML Done Right" class="md-nav__button md-logo" aria-label="YS is YAML Done Right" data-md-component="logo">
+    <a href="../.." title="YS is YAML&#39;s Friend" class="md-nav__button md-logo" aria-label="YS is YAML's Friend" data-md-component="logo">
       
   <img src="../../images/yamlscript-logo.svg" alt="logo">
 
     </a>
-    YS is YAML Done Right
+    YS is YAML's Friend
   </label>
   
     <div class="md-nav__source">
@@ -551,6 +553,17 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    YS Cheat Sheet
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -560,6 +573,146 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#yamlscript-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      YAMLScript Fundamentals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assignment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dash-expression-escapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dash ('-') expression escapes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#printing-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Printing text
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#define-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Define a function
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#call-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Call a function
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chain-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chain calls
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chain calls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-chain-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Special chain operators
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#looping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Looping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-ifelse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional (if/else)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-cond" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional (cond)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpolation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Global variables
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1911,6 +2064,137 @@
   
   
   
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#yamlscript-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      YAMLScript Fundamentals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Assignment
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dash-expression-escapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dash ('-') expression escapes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#printing-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      Printing text
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#define-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Define a function
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#call-a-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      Call a function
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chain-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chain calls
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chain calls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#special-chain-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Special chain operators
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#looping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Looping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-ifelse" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional (if/else)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-cond" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional (cond)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interpolation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Global variables
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>

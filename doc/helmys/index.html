@@ -17,15 +17,12 @@
       
       
       
-        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../feed_rss_created.xml">
-        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../feed_rss_updated.xml">
-      
       <link rel="icon" href="../../images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>HelmYS - Helm Templating with YAMLScript - YS is YAML Done Right</title>
+        <title>HelmYS - Helm Templating with YAMLScript - YS is YAML's Friend</title>
       
     
     
@@ -78,6 +75,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#template-file-comparisons" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -88,7 +90,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="YS is YAML Done Right" class="md-header__button md-logo" aria-label="YS is YAML Done Right" data-md-component="logo">
+    <a href="../.." title="YS is YAML&#39;s Friend" class="md-header__button md-logo" aria-label="YS is YAML's Friend" data-md-component="logo">
       
   <img src="../../images/yamlscript-logo.svg" alt="logo">
 
@@ -101,7 +103,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            YS is YAML Done Right
+            YS is YAML's Friend
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -327,12 +329,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="YS is YAML Done Right" class="md-nav__button md-logo" aria-label="YS is YAML Done Right" data-md-component="logo">
+    <a href="../.." title="YS is YAML&#39;s Friend" class="md-nav__button md-logo" aria-label="YS is YAML's Friend" data-md-component="logo">
       
   <img src="../../images/yamlscript-logo.svg" alt="logo">
 
     </a>
-    YS is YAML Done Right
+    YS is YAML's Friend
   </label>
   
     <div class="md-nav__source">
@@ -1897,6 +1899,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#template-file-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Template File Comparisons
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1951,105 +1970,114 @@ by <code>helm create &lt;chart-name&gt;</code> and then converted to use YAMLScr
 The left side is the YAMLScript version and the right side is the original Go
 template version.</p>
 <table>
+
 <tr><td>
+<div class="highlight"><span class="filename">ys-chart/templates/helpers.yaml</span><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<span class="nt">defn trunc(s)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">take(63 s).str(*).replace(/-$/)</span>
 
-**`ys-chart/templates/serviceaccount.yaml`**
+<span class="c1"># Expand the name of the chart:</span>
+<span class="nt">chart-name =</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.nameOverride ||| Chart.name</span>
 
+<span class="c1"># Create a default fully qualified app name.</span>
+<span class="nt">chart-fullname =</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">if Values.fullnameOverride.?</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.fullnameOverride</span>
+<span class="w">    </span><span class="nt">else</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.nameOverride ||| Chart.name</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">if name.has?(Release.Name)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">format &quot;%s-%s&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name name</span>
+
+<span class="c1"># Selector labels:</span>
+<span class="nt">selectorLabels =:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.name</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/instance:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name</span>
+
+<span class="c1"># Chart labels:</span>
+<span class="nt">chart-labels =:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">helm.sh/chart:</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$(Chart.name)-$(Chart.version)&quot;</span>
+<span class="w">  </span><span class="nt">:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/version:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.appVersion</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/managed-by:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Service</span>
+
+<span class="c1"># Create the name of the service account to use:</span>
+<span class="nt">serviceAccountName =</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Values.serviceAccount.name |||</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">if Values.serviceAccount.create</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&#39;default&#39;</span>
+</code></pre></div>
 </td><td>
+<div class="highlight"><span class="filename">go-chart/templates/_helpers.tpl</span><pre><span></span><code>{{/*
+Expand the name of the chart.
+*/}}
+{{- define &quot;go-chart.name&quot; -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- end }}
 
-**`go-chart/templates/serviceaccount.yaml`**
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to
+this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define &quot;go-chart.fullname&quot; -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- else }}
+{{- printf &quot;%s-%s&quot; .Release.Name $name | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- end }}
+{{- end }}
+{{- end }}
 
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define &quot;go-chart.chart&quot; -}}
+{{- printf &quot;%s-%s&quot; .Chart.Name .Chart.Version | replace &quot;+&quot; &quot;_&quot; | trunc 63 |
+    trimSuffix &quot;-&quot; }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define &quot;go-chart.labels&quot; -}}
+helm.sh/chart: {{ include &quot;go-chart.chart&quot; . }}
+{{ include &quot;go-chart.selectorLabels&quot; . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define &quot;go-chart.selectorLabels&quot; -}}
+app.kubernetes.io/name: {{ include &quot;go-chart.name&quot; . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define &quot;go-chart.serviceAccountName&quot; -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include &quot;go-chart.fullname&quot; .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default &quot;default&quot; .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+</code></pre></div>
 </td></tr>
+
 <tr><td>
-
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
-<span class="nt">:when Values.serviceAccount.create</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
-<span class="w">  </span><span class="nt">metadata</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serviceAccountName</span>
-<span class="w">    </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.serviceAccount.annotations.?:</span><span class="p p-Indicator">:</span>
-<span class="w">     </span><span class="nt">annotations:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_</span>
-<span class="w">  </span><span class="nt">automountServiceAccountToken:</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Values.serviceAccount.automount</span>
-</code></pre></div>
-
-</td><td>
-
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.serviceAccount.create -</span><span class="p p-Indicator">}}</span>
-<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.serviceAccountName&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.serviceAccount.annotations</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.serviceAccount.automount</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-</code></pre></div>
-
-</td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
-
-**`ys-chart/templates/service.yaml`**
-
-</td><td>
-
-**`go-chart/templates/service.yaml`**
-
-</td></tr>
-<tr><td>
-
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
-<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
-<span class="w">  </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">type:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.type</span>
-<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.port</span>
-<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">  </span><span class="nt">selector:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
-</code></pre></div>
-
-</td><td>
-
-<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="nt">spec</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.type</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.port</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
-<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.selectorLabels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
-</code></pre></div>
-
-</td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
-
-**`ys-chart/templates/deployment.yaml`**
-
-</td><td>
-
-**`go-chart/templates/deployment.yaml`**
-
-</td></tr>
-<tr><td>
-
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<div class="highlight"><span class="filename">ys-chart/templates/deployment.yaml</span><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -2091,10 +2119,8 @@ template version.</p>
 <span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.affinity.?:</span><span class="p p-Indicator">:</span><span class="w">     </span><span class="p p-Indicator">{</span><span class="nv">affinity</span><span class="p p-Indicator">::</span><span class="w"> </span><span class="nv">_</span><span class="p p-Indicator">}</span>
 <span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.tolerations.?:</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">{</span><span class="nv">tolerations</span><span class="p p-Indicator">::</span><span class="w"> </span><span class="nv">_</span><span class="p p-Indicator">}</span>
 </code></pre></div>
-
 </td><td>
-
-<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<div class="highlight"><span class="filename">go-chart/templates/deployment.yaml</span><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
@@ -2164,124 +2190,73 @@ template version.</p>
 <span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 <span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
-</td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
-
-**`ys-chart/templates/helpers.yaml`**
-
-</td><td>
-
-**`go-chart/templates/_helpers.tpl`**
-
 </td></tr>
+
 <tr><td>
-
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
-<span class="nt">defn trunc(s)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">take(63 s).str(*).replace(/-$/)</span>
-
-<span class="c1"># Expand the name of the chart:</span>
-<span class="nt">chart-name =</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.nameOverride ||| Chart.name</span>
-
-<span class="c1"># Create a default fully qualified app name.</span>
-<span class="nt">chart-fullname =</span><span class="p">:</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">if Values.fullnameOverride.?</span><span class="p p-Indicator">:</span>
-<span class="w">    </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.fullnameOverride</span>
-<span class="w">    </span><span class="nt">else</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.nameOverride ||| Chart.name</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">if name.has?(Release.Name)</span><span class="p p-Indicator">:</span>
-<span class="w">        </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">format &quot;%s-%s&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name name</span>
-
-<span class="c1"># Selector labels:</span>
-<span class="nt">selectorLabels =:</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.name</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/instance:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name</span>
-
-<span class="c1"># Chart labels:</span>
-<span class="nt">chart-labels =:</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">helm.sh/chart:</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$(Chart.name)-$(Chart.version)&quot;</span>
-<span class="w">  </span><span class="nt">:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/version:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.appVersion</span>
-<span class="w">  </span><span class="nt">app.kubernetes.io/managed-by:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Service</span>
-
-<span class="c1"># Create the name of the service account to use:</span>
-<span class="nt">serviceAccountName =</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">Values.serviceAccount.name |||</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">if Values.serviceAccount.create</span><span class="p">:</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&#39;default&#39;</span>
+<div class="highlight"><span class="filename">ys-chart/templates/serviceaccount.yaml</span><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<span class="nt">:when Values.serviceAccount.create</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="w">  </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serviceAccountName</span>
+<span class="w">    </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.serviceAccount.annotations.?:</span><span class="p p-Indicator">:</span>
+<span class="w">     </span><span class="nt">annotations:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_</span>
+<span class="w">  </span><span class="nt">automountServiceAccountToken:</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Values.serviceAccount.automount</span>
 </code></pre></div>
-
 </td><td>
-
-<div class="highlight"><pre><span></span><code>{{/*
-Expand the name of the chart.
-*/}}
-{{- define &quot;go-chart.name&quot; -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to
-this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define &quot;go-chart.fullname&quot; -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix &quot;-&quot; }}
-{{- else }}
-{{- printf &quot;%s-%s&quot; .Release.Name $name | trunc 63 | trimSuffix &quot;-&quot; }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define &quot;go-chart.chart&quot; -}}
-{{- printf &quot;%s-%s&quot; .Chart.Name .Chart.Version | replace &quot;+&quot; &quot;_&quot; | trunc 63 |
-    trimSuffix &quot;-&quot; }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define &quot;go-chart.labels&quot; -}}
-helm.sh/chart: {{ include &quot;go-chart.chart&quot; . }}
-{{ include &quot;go-chart.selectorLabels&quot; . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define &quot;go-chart.selectorLabels&quot; -}}
-app.kubernetes.io/name: {{ include &quot;go-chart.name&quot; . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define &quot;go-chart.serviceAccountName&quot; -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include &quot;go-chart.fullname&quot; .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default &quot;default&quot; .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+<div class="highlight"><span class="filename">go-chart/templates/serviceaccount.yaml</span><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.serviceAccount.create -</span><span class="p p-Indicator">}}</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.serviceAccountName&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.serviceAccount.annotations</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.serviceAccount.automount</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
 </code></pre></div>
-
 </td></tr>
+
+<tr><td>
+<div class="highlight"><span class="filename">ys-chart/templates/service.yaml</span><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
+<span class="w">  </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.type</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.port</span>
+<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">  </span><span class="nt">selector:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
+</code></pre></div>
+</td><td>
+<div class="highlight"><span class="filename">go-chart/templates/service.yaml</span><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.type</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.port</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.selectorLabels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+</td></tr>
+
 </table>
 
 
