@@ -26,7 +26,7 @@
     
     
       
-        <title>Perl to Rust - YS is the new YAML</title>
+        <title>Perl to Rust - YS is YAML Done Right</title>
       
     
     
@@ -94,7 +94,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="YS is the new YAML" class="md-header__button md-logo" aria-label="YS is the new YAML" data-md-component="logo">
+    <a href="../../.." title="YS is YAML Done Right" class="md-header__button md-logo" aria-label="YS is YAML Done Right" data-md-component="logo">
       
   <img src="../../../images/yamlscript-logo.svg" alt="logo">
 
@@ -107,7 +107,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            YS is the new YAML
+            YS is YAML Done Right
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -333,12 +333,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="YS is the new YAML" class="md-nav__button md-logo" aria-label="YS is the new YAML" data-md-component="logo">
+    <a href="../../.." title="YS is YAML Done Right" class="md-nav__button md-logo" aria-label="YS is YAML Done Right" data-md-component="logo">
       
   <img src="../../../images/yamlscript-logo.svg" alt="logo">
 
     </a>
-    YS is the new YAML
+    YS is YAML Done Right
   </label>
   
     <div class="md-nav__source">
@@ -2128,7 +2128,24 @@ bindings: <strong>Perl</strong>, <strong>Rust</strong> and <strong>Raku</strong>
 YAMLScript bindings:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># hearsay.ys</span>
 
-<span class="p p-Indicator">{</span><span class="err">%</span><span class="w"> </span><span class="nv">include &quot;../../../main/sample/advent/hearsay.ys&quot; %</span><span class="p p-Indicator">}</span>
+<span class="c1"># ys --load hearsay.ys | jq -r .</span>
+
+<span class="kt">!yamlscript/v0</span>
+
+<span class="nt">hackers =:</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ethiraric</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ingydotnet</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jjatria</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tony-o</span>
+
+<span class="nt">languages =:</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Perl</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Python</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Raku</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Rust</span>
+
+<span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;I</span><span class="nv"> </span><span class="s">heard</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">@$rand-nth(hackers)</span><span class="nv"> </span><span class="s">uses</span><span class="nv"> </span><span class="s">YAMLScript</span>
+<span class="w">    </span><span class="s">in</span><span class="nv"> </span><span class="s">their</span><span class="nv"> </span><span class="s">$rand-nth(languages)</span><span class="nv"> </span><span class="s">code!&quot;</span>
 </code></pre></div>
 <p>Now run (actually "load") this a few times using the YAMLScript <code>ys --load</code>
 command:</p>
@@ -2164,7 +2181,11 @@ He got it done in no time, and now I'm writing about it!!!</p>
 <p>JJ used the newer Perl FFI binding framework called <a href="https://metacpan.org/pod/FFI::Platypus">FFI::Platypus&nbsp;⧉</a>.</p>
 <p>Let's use the new CPAN module YAMLScript to run our <code>hearsay.ys</code> program:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># hearsay.pl</span>
-<span class="p">{</span><span class="nv">%</span><span class="w"> </span><span class="nv">include</span><span class="w"> </span><span class="s">&quot;../../../main/sample/advent/hearsay.pl&quot;</span><span class="w"> </span><span class="nv">%</span><span class="err">}</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">v5</span><span class="mf">.16.0</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">YAMLScript</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">Slurp</span><span class="p">;</span>
+<span class="k">my</span><span class="w"> </span><span class="nv">$program</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slurp</span><span class="w"> </span><span class="s">&#39;hearsay.ys&#39;</span><span class="p">;</span>
+<span class="n">say</span><span class="w"> </span><span class="nn">YAMLScript</span><span class="o">-&gt;</span><span class="k">new</span><span class="o">-&gt;</span><span class="n">load</span><span class="p">(</span><span class="nv">$program</span><span class="p">);</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>perl<span class="w"> </span>hearsay.pl
 I<span class="w"> </span>heard<span class="w"> </span>that<span class="w"> </span>@ethiraric<span class="w"> </span>uses<span class="w"> </span>YAMLScript<span class="w"> </span><span class="k">in</span><span class="w"> </span>their<span class="w"> </span>Rust<span class="w"> </span>code!
@@ -2241,7 +2262,10 @@ Writing a Raku binding was a perfect way to get him started.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>zef<span class="w"> </span>install<span class="w"> </span>YAMLScript
 </code></pre></div>
 <p>Here's the example Raku program:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nv">%</span><span class="w"> </span><span class="nv">include</span><span class="w"> </span><span class="s">&quot;../../../main/sample/advent/hearsay.raku&quot;</span><span class="w"> </span><span class="nv">%</span><span class="err">}</span>
+<div class="highlight"><pre><span></span><code><span class="k">use</span><span class="w"> </span><span class="nn">YAMLScript</span><span class="p">;</span>
+<span class="k">my</span><span class="w"> </span><span class="nv">$program</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">slurp</span><span class="w"> </span><span class="s">&#39;hearsay.ys&#39;</span><span class="p">;</span>
+<span class="k">my</span><span class="w"> </span><span class="n">YAMLScript</span><span class="w"> </span><span class="nv">$ys</span><span class="w"> </span><span class="o">.=</span><span class="w"> </span><span class="k">new</span><span class="p">;</span>
+<span class="n">say</span><span class="w"> </span><span class="nv">$ys</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nv">$program</span><span class="p">);</span>
 </code></pre></div>
 <p>Then you can run our hearsay program like this:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/lib<span class="w"> </span>raku<span class="w"> </span>hearsay.raku
@@ -2358,7 +2382,7 @@ Santa's nice list!!! (as far as I'm concerned)</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "header.autohide", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
