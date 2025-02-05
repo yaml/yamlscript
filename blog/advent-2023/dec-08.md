@@ -150,7 +150,7 @@ For fun let's write a silly YS program that uses them.
 Let's call it `silly.ys`:
 
 ```yaml
-{% include "../../../main/sample/advent/silly.ys" %}
+--8<-- "sample/advent/silly.ys"
 ```
 
 Now let's run it a few times:

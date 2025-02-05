@@ -57,7 +57,6 @@ template version.
 
 </td><td>
 
-{% raw %}
 ```yaml
 {{- if .Values.serviceAccount.create -}}
 apiVersion: v1
@@ -73,7 +72,6 @@ metadata:
 automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
 {{- end }}
 ```
-{% endraw %}
 
 </td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
 
@@ -107,7 +105,6 @@ spec:
 
 </td><td>
 
-{% raw %}
 ```yaml
 apiVersion: v1
 kind: Service
@@ -125,7 +122,6 @@ spec:
   selector:
     {{- include "go-chart.selectorLabels" . | nindent 4 }}
 ```
-{% endraw %}
 
 </td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
 
@@ -213,7 +209,6 @@ spec:
 
 </td><td>
 
-{% raw %}
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -285,7 +280,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ```
-{% endraw %}
 
 </td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
 
@@ -298,7 +292,6 @@ spec:
 </td></tr>
 <tr><td>
 
-{% raw %}
 ```yaml
 !YS v0:
 defn trunc(s): take(63 s).str(*).replace(/-$/)
@@ -366,11 +359,9 @@ serviceAccountName =:
 
 
 ```
-{% endraw %}
 
 </td><td>
 
-{% raw %}
 ```txt
 {{/*
 Expand the name of the chart.
@@ -437,7 +428,6 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 ```
-{% endraw %}
 
 </td></tr>
 </table>

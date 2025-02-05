@@ -25,6 +25,7 @@ DEPS := \
   gen-doc \
   $(DOC_FILES) \
   $(BLOG_FILES) \
+  sample \
 
 YS_WWW_DOMAIN_NAME ?= yamlscript.org
 YS_WWW_ORIGIN ?= origin
@@ -67,7 +68,8 @@ ifneq (,$(WATCHER))
 	  --delay=1000 \
 	  --recursive \
 	  --path="$$ROOT/Meta" \
-	  --path="$$ROOT/doc/src/" \
+	  --path="$$ROOT/doc/" \
+	  --path="$$ROOT/sample/" \
 	  --path="$$ROOT/www/config.ys" \
 	  --path="$$ROOT/www/config/" \
 	  --path="$$ROOT/www/Makefile" \
@@ -104,7 +106,7 @@ endif
 	$(VENV) && pip freeze > requirements.txt
 
 clean::
-	$(RM) $(CONFIG)
+	$(RM) $(CONFIG) sample
 	$(RM) src/doc/*.md src/blog/*.md src/blog/**/*.md
 	$(RM) -r site
 
@@ -140,11 +142,17 @@ mkdocs.yml: config.ys ../Meta config/*
 gen-doc:
 	$(MAKE) --no-print-directory -C $(ROOT)/doc build
 
-src/doc/%.md: $(ROOT)/doc/%.md
+src/doc/%.md: $(ROOT)/doc/%.md src/doc
 	ln -fs $< $@
 
-src/blog/%.md: $(ROOT)/blog/%.md
+src/blog/%.md: $(ROOT)/blog/%.md src/blog src/blog/advent-2023
 	ln -fs $< $@
+
+src/doc src/blog src/blog/advent-2023:
+	mkdir -p $@
+
+sample:
+	ln -s ../$@ $@
 
 # yamlscript-1920x1080.png: src/images/yamlscript.svg
 # 	svgexport $< $@ 1920:1080 pad

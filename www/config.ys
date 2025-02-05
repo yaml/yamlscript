@@ -6,7 +6,7 @@
 
 Meta =: load('../Meta')
 
-site_name: YS is the new YAML
+site_name: YS is YAML Done Right
 site_url:: Meta.homepage
 site_author:: Meta.author.name
 site_description:: Meta.abstract
@@ -40,11 +40,12 @@ strict: false
 dev_addr: 0.0.0.0:8000
 
 plugins:
-- search
-#- awesome-pages
+- awesome-pages
 - link-marker
 - redirects:
     redirect_maps:: load('config/redirect.yaml')
+- search
+
 
 markdown_extensions:
 - attr_list
@@ -52,6 +53,7 @@ markdown_extensions:
 - pymdownx.emoji:
     emoji_index: python/name:material.extensions.emoji.twemoji
     emoji_generator: python/name:material.extensions.emoji.to_svg
+- pymdownx.snippets
 - pymdownx.superfences
 - pymdownx.tabbed:
     alternate_style: true

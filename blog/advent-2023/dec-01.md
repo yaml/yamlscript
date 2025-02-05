@@ -16,7 +16,7 @@ generate a Christmas tree?
 Well, you can! Here's how:
 
 ```yaml
-{% include "../../../main/sample/advent/tree.ys" %}
+--8<-- "sample/advent/tree.ys"
 ```
 
 Let's get a tree!
@@ -81,7 +81,7 @@ And they evaluate to the same result that a YAML loader would produce.
 For example, here's a YAML file that defines a list of fruits:
 
 ```yaml
-{% include "../../../main/sample/advent/fruits.yaml" %}
+--8<-- "sample/advent/fruits.yaml"
 ```
 
 Let's run this file as a YAMLScript program:
@@ -142,7 +142,7 @@ loaded just like any other YAML loader would do it.
 Let's fix this to do what we want:
 
 ```yaml
-{% include "../../../main/sample/advent/grocery.yaml" %}
+--8<-- "sample/advent/grocery.yaml"
 ```
 
 Now when we run it:

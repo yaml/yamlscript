@@ -7,9 +7,13 @@ name: material
 
 custom_dir: theme
 
+# * For dark themed code blocks
+#   See: https://github.com/squidfunk/mkdocs-material/issues/768
+
 features:
 - content.action.edit
 - content.action.view
+- content.code.copy
 - header.autohide
 - navigation.footer
 - navigation.indexes
