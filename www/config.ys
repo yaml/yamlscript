@@ -23,8 +23,9 @@ nav:
 # - About:: load('config/about.yaml')
 # - Start:: load('config/start.yaml')
 # - Learn:: load('config/learn.yaml')
-- Documentation:: load('config/documentation.yaml')
-- Press:: load('config/press.yaml')
+- Documentation:: load('config/doc.yaml')
+- Blog:: load('config/blog.yaml')
+- Press: press.md
 - Community:: load('config/community.yaml')
 
 # - X: demos.md
@@ -41,6 +42,7 @@ dev_addr: 0.0.0.0:8000
 plugins:
 - search
 #- awesome-pages
+- link-marker
 - redirects:
     redirect_maps:: load('config/redirect.yaml')
 

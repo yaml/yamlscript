@@ -1,71 +1,70 @@
 ---
-title: Contribute to YAMLScript
-layout: about.njk
-name: Contribute to YAMLScript
+title: Contribute to YS
 ---
 
-Want to help out with YAMLScript?
+YS is an open-source project and we welcome contributions from the community.
+There are many ways to contribute, from writing tutorials or blog posts,
+improving the documentation, submitting bug reports and feature requests or
+writing code which can be incorporated into YS itself.
+
+Want to help out with YS?
 Great!
 Here are some ways you can contribute:
 
-* **Use YAMLScript** --
-  The more people that use YAMLScript, the more feedback we get, and the better
+* **Use YS** --
+  The more people that use YS, the more feedback we get, and the better
   the language becomes.
-* **Report Bugs** --
-  If you find a bug in YAMLScript, please report it.
-* **Request Features** --
-  If you have an idea for a feature in YAMLScript, please let us know.
+* **[Report Bugs](https://github.com/yaml/yamlscript/issues/)** --
+  If you find a bug in YS, please report it.
+* **[Request Features](https://github.com/yaml/yamlscript/discussions/)** --
+  If you have an idea for a feature in YS, please let us know.
 * **Write Documentation** --
-    YAMLScript is a new language and needs lots of good documentation.
+    YS is a new language and needs lots of good documentation.
+    Please file an issue if you find something that needs to be documented.
 * **Write Tests** --
-  YAMLScript has a test suite that can always use more tests.
-* **Discuss YAMLScript with Us**
-  * [YAMLScript Matrix Chat](https://matrix.to/#/#chat-yamlscript:yaml.io)
-  * [YAMLScript on IRC](https://web.libera.chat/#yamlscript)
-  * [YAMLScript in Clojurians Slack](
-    https://clojurians.slack.com/archives/yamlscript)
+  YS has a test suite that can always use more tests.
 
 
 <!-- copilot says:
-1. **Use YAMLScript**. The more people that use YAMLScript, the more feedback we
+1. **Use YS**. The more people that use YS, the more feedback we
    get, and the better the language becomes.
-2. **Write YAMLScript**. If you have a YAML file that could benefit from some
-    dynamic behavior, try adding some YAMLScript to it.
-3. **Write Libraries**. YAMLScript is a general purpose programming language.
-    Write libraries that can be used by other YAMLScript programs.
-4. **Write Documentation**. YAMLScript is a new language and needs lots of good
+2. **Write YS**. If you have a YAML file that could benefit from some
+    dynamic behavior, try adding some YS to it.
+3. **Write Libraries**. YS is a general purpose programming language.
+    Write libraries that can be used by other YS programs.
+4. **Write Documentation**. YS is a new language and needs lots of good
     documentation.
-5. **Write Tests**. YAMLScript has a test suite that can always use more tests.
-6. **Report Bugs**. If you find a bug in YAMLScript, please report it.
-7. **Request Features**. If you have an idea for a feature in YAMLScript, please
+5. **Write Tests**. YS has a test suite that can always use more tests.
+6. **Report Bugs**. If you find a bug in YS, please report it.
+7. **Request Features**. If you have an idea for a feature in YS, please
     let us know.
-8. **Write Blog Posts**. Write about your experiences with YAMLScript.
-9. **Write Tutorials**. Write tutorials for using YAMLScript.
-10. **Write Examples**. Write example YAMLScript programs.
-11. **Write Tools**. Write tools that use YAMLScript.
-12. **Write Translators**. Write translators that convert YAMLScript to other
+8. **Write Blog Posts**. Write about your experiences with YS.
+9. **Write Tutorials**. Write tutorials for using YS.
+10. **Write Examples**. Write example YS programs.
+11. **Write Tools**. Write tools that use YS.
+12. **Write Translators**. Write translators that convert YS to other
     languages.
-13. **Write Loaders**. Write loaders that load YAMLScript into your favorite
+13. **Write Loaders**. Write loaders that load YS into your favorite
     programming language.
-14. **Write Editors**. Write editors that support YAMLScript.
-15. **Write IDEs**. Write IDEs that support YAMLScript.
-16. **Write Linters**. Write linters that check YAMLScript programs for errors.
-17. **Write Formatters**. Write formatters that format YAMLScript programs.
-18. **Write Compilers**. Write compilers that compile YAMLScript to other
+14. **Write Editors**. Write editors that support YS.
+15. **Write IDEs**. Write IDEs that support YS.
+16. **Write Linters**. Write linters that check YS programs for errors.
+17. **Write Formatters**. Write formatters that format YS programs.
+18. **Write Compilers**. Write compilers that compile YS to other
     languages.
-19. **Write Interpreters**. Write interpreters that interpret YAMLScript.
-20. **Write Runtimes**. Write runtimes that run YAMLScript programs.
-21. **Write Debuggers**. Write debuggers that debug YAMLScript programs.
-22. **Write Profilers**. Write profilers that profile YAMLScript programs.
-23. **Write Optimizers**. Write optimizers that optimize YAMLScript programs.
-24. **Write Analyzers**. Write analyzers that analyze YAMLScript programs.
-25. **Write Transpilers**. Write transpilers that transpile YAMLScript to other
+19. **Write Interpreters**. Write interpreters that interpret YS.
+20. **Write Runtimes**. Write runtimes that run YS programs.
+21. **Write Debuggers**. Write debuggers that debug YS programs.
+22. **Write Profilers**. Write profilers that profile YS programs.
+23. **Write Optimizers**. Write optimizers that optimize YS programs.
+24. **Write Analyzers**. Write analyzers that analyze YS programs.
+25. **Write Transpilers**. Write transpilers that transpile YS to other
     languages.
-26. **Write Converters**. Write converters that convert YAMLScript to other data
+26. **Write Converters**. Write converters that convert YS to other data
     formats.
-27. **Write Validators**. Write validators that validate YAMLScript programs.
-28. **Write Generators**. Write generators that generate YAMLScript programs.
-29. **Write Parsers**. Write parsers that parse YAMLScript programs.
+27. **Write Validators**. Write validators that validate YS programs.
+28. **Write Generators**. Write generators that generate YS programs.
+29. **Write Parsers**. Write parsers that parse YS programs.
 -->
 
 
