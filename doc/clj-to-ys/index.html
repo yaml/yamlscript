@@ -26,7 +26,7 @@
     
     
       
-        <title>Learning YAMLScript from Clojure - YS is YAML's Friend</title>
+        <title>Learning YS from Clojure - YS is YAML's Friend</title>
       
     
     
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Learning YAMLScript from Clojure
+              Learning YS from Clojure
             
           </span>
         </div>
@@ -2037,7 +2037,7 @@
 <pre>
 page: >>><<<
 page.meta: >>>{
-  "title": "Learning YAMLScript from Clojure"
+  "title": "Learning YS from Clojure"
 }<<<
 page.previous_page: >>>Page(title='Installing YS', url='/doc/install/')<<<
 page.next_page: >>>Page(title='YAML Basics', url='/doc/yaml/')<<<
@@ -2054,18 +2054,17 @@ author: >>><<<
 
   <h1>Clojure to YS</h1>
 
-<p>YAMLScript works by translating code written in YAMLScript to Clojure code,
-which is then evaluated.</p>
-<p>A good way to learn YAMLScript is to convert existing Clojure programs to
-YAMLScript.</p>
+<p>YS/YAMLScript works by translating code written in YS to Clojure code, which is
+then evaluated.</p>
+<p>A good way to learn YS is to convert existing Clojure programs to YS.</p>
 <p>This tutorial will guide you through the process of converting various Clojure
-programs to idiomatic YAMLScript a step at a time.</p>
+programs to idiomatic YS a step at a time.</p>
 <p>For each Clojure program, we will:</p>
 <ul>
 <li>Start with a working Clojure program</li>
-<li>Refactor some parts of the program to YAMLScript</li>
-<li>Repeat until YAMLScript is idiomatic</li>
-<li>Have working YAMLScript code every step of the way</li>
+<li>Refactor some parts of the program to YS</li>
+<li>Repeat until YS is idiomatic</li>
+<li>Have working YS code every step of the way</li>
 </ul>
 <p>If you don't know Clojure, that's okay.
 We're starting simple and you can learn 2 languages for the price of one.</p>
@@ -2075,7 +2074,7 @@ We're starting simple and you can learn 2 languages for the price of one.</p>
 let's look at the simplest hello-world in Clojure:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">println </span><span class="s">&quot;Hello, World!&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>It turns out the this program is already valid YAMLScript!</p>
+<p>It turns out the this program is already valid YS!</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;(println &quot;Hello, World!&quot;)&#39;</span>
 Hello,<span class="w"> </span>World!
 </code></pre></div>
@@ -2092,7 +2091,7 @@ $
 </code></pre></div>
 <p>Ah! It compiled to a string, because we forgot to add <code>!yamlscript/v0</code> to the
 top of the file.
-All YAML files are valid YAMLScript files.
+All YAML files are valid YS files.
 They won't evaluate any code unless you explicitly tell them to.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 <span class="l l-Scalar l-Scalar-Plain">(println &quot;Hello, World!&quot;)</span>
@@ -2108,7 +2107,7 @@ Hello,<span class="w"> </span>World!
 <p>Look mom, no parentheses!</p>
 <p>We turned the YAML scalar into a single pair mapping, and we changed the
 double-quoted string to a single-quoted string.</p>
-<p>Single-quoted strings are preferred in YAMLScript unless you need interpolation
+<p>Single-quoted strings are preferred in YS unless you need interpolation
 or special escaped characters.</p>
 <p>We also changed the <code>println</code> function to the <code>say</code> function, because who has
 time to type <code>println</code> when you just want to <code>say</code> something?!?!</p>
@@ -2119,19 +2118,19 @@ time to type <code>println</code> when you just want to <code>say</code> somethi
 <p>We got our Clojure parentheses and double-quoted string back.
 Clojure doesn't use single quotes for strings.</p>
 <p>We still have <code>say</code> instead of <code>println</code>, but that's okay because <code>ys -c</code>
-compiles to Clojure code intended to be run by a YAMLScript runtime, and <code>say</code>
-is part of the YAMLScript standard library.</p>
+compiles to Clojure code intended to be run by a YS runtime, and <code>say</code> is part
+of the YS standard library.</p>
 <h2 id="hello-20">Hello 2.0</h2>
 <p>Let's make our little program a little more interesting.</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="kd">defn </span><span class="nv">hello</span>
 <span class="w">  </span><span class="p">([</span><span class="nv">name</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nb">println </span><span class="p">(</span><span class="nb">str </span><span class="s">&quot;Hello, &quot;</span><span class="w"> </span><span class="nb">name </span><span class="s">&quot;!&quot;</span><span class="p">)))</span>
 <span class="w">  </span><span class="p">([]</span><span class="w"> </span><span class="p">(</span><span class="nf">hello</span><span class="w"> </span><span class="s">&quot;World&quot;</span><span class="p">)))</span>
 <span class="p">(</span><span class="nf">hello</span><span class="p">)</span>
-<span class="p">(</span><span class="nf">hello</span><span class="w"> </span><span class="s">&quot;YAMLScript&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">hello</span><span class="w"> </span><span class="s">&quot;YS&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>We've defined a function <code>hello</code> that takes an optional <code>name</code> argument.
 If <code>name</code> is not provided, it defaults to <code>"World"</code>.</p>
-<p>Let's convert this to YAMLScript, but change as little as possible.</p>
+<p>Let's convert this to YS, but change as little as possible.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 <span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="kt">!clj</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">(defn hello</span>
@@ -2144,19 +2143,18 @@ If <code>name</code> is not provided, it defaults to <code>"World"</code>.</p>
 Does that work?</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>program.ys
 Hello,<span class="w"> </span>World!
-Hello,<span class="w"> </span>YAMLScript!
+Hello,<span class="w"> </span>YS!
 </code></pre></div>
 <p>Apparently it does!</p>
 <p>We already know about the first line.
-The <code>=&gt;</code> is a special key in YAMLScript, when you need to write a YAML key/value
-pair, but you only have a value.
+The <code>=&gt;</code> is a special key in YS, when you need to write a YAML key/value pair,
+but you only have a value.
 The compiler simply removes the <code>=&gt;</code> and uses the value as the expression.</p>
 <p>What did here is keep the entire Clojure code string intact using a YAML literal
-scalar (think heredocs) and then use the <code>!clj</code> tag to tell the YAMLScript
-compiler to treat the string as Clojure code.</p>
-<p>The <code>!clj</code> tag is a way to write Clojure things that YAMLScript does not yet
-support.
-But it can also be a good first step to converting Clojure code to YAMLScript.</p>
+scalar (think heredocs) and then use the <code>!clj</code> tag to tell the YS compiler to
+treat the string as Clojure code.</p>
+<p>The <code>!clj</code> tag is a way to write Clojure things that YS does not yet support.
+But it can also be a good first step to converting Clojure code to YS.</p>
 <p>Let's keep going by leaving the function defn alone but playing with the
 function calls.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
@@ -2165,39 +2163,39 @@ function calls.</p>
 <span class="w">    </span><span class="no">([name] (println (str &quot;Hello, &quot; name &quot;!&quot;)))</span>
 <span class="w">    </span><span class="no">([] (hello &quot;World&quot;)))</span>
 <span class="nt">hello</span><span class="p">:</span>
-<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YAMLScript&#39;</span>
+<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YS&#39;</span>
 </code></pre></div>
 <p>We made the 2 calls to <code>hello</code> into YAML mapping pairs.
-The first one has no value, and that's valid in YAMLScript when a function has
-no arguments.</p>
-<p>Now let's convert the function defn to YAMLScript.</p>
+The first one has no value, and that's valid in YS when a function has no
+arguments.</p>
+<p>Now let's convert the function defn to YS.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 <span class="nt">defn hello</span><span class="p">:</span>
 <span class="w"> </span><span class="nt">(name)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(println (str &quot;Hello, &quot; name &quot;!&quot;))</span>
 <span class="w"> </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(hello &quot;World&quot;)</span>
 <span class="nt">hello</span><span class="p">:</span>
-<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YAMLScript&#39;</span>
+<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YS&#39;</span>
 </code></pre></div>
-<p>That's how you write a multi-arity function in YAMLScript.
+<p>That's how you write a multi-arity function in YS.
 It's advanced stuff and you already learned it during hello-world!
 Take a moment! You deserve it!</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 <span class="l l-Scalar l-Scalar-Plain">defn hello(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">(println (str &quot;Hello, &quot; name &quot;!&quot;))</span>
 <span class="nt">hello</span><span class="p">:</span>
-<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YAMLScript&#39;</span>
+<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YS&#39;</span>
 </code></pre></div>
 <p>Hey! What happened to our multi-arity accomplishment?
-We don't need it here in YAMLScript, because YAMLScript has support for default
-function arguments.</p>
+We don't need it here in YS, because YS has support for default function
+arguments.</p>
 <p>Let's finish up with a little interpolation.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 <span class="l l-Scalar l-Scalar-Plain">defn hello(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">$name!&quot;</span>
 <span class="nt">hello</span><span class="p">:</span>
-<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YAMLScript&#39;</span>
+<span class="nt">hello</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;YS&#39;</span>
 </code></pre></div>
-<p>That's come idiomatic YAMLScript if I've ever seen it!</p>
+<p>That's some idiomatic YS if I've ever seen it!</p>
 <h2 id="fizzbuzz">FizzBuzz</h2>
 <p>Let's continue our journey of refactoring cliche coding conundrums with
 the classic <a href="https://wikipedia.org/wiki/Fizz_buzz">FizzBuzz&nbsp;⧉</a>.</p>
@@ -2250,7 +2248,7 @@ removing the outer parentheses and adding a colon in the middle.</p>
 <span class="l l-Scalar l-Scalar-Plain">doseq [x (fizzbuzz 1 101)]</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="nt">println</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x</span>
 </code></pre></div>
-<p>We also changed <code>:else</code> to <code>else</code> because YAMLScript likes it that way.</p>
+<p>We also changed <code>:else</code> to <code>else</code> because YS likes it that way.</p>
 <p>Does it work?
 You betcha!
 Are we done?
@@ -2272,8 +2270,8 @@ Heck no!</p>
 <p>Ok, hmm. We moved the range up to the top of the map call but put a <code>_</code> right
 before it.
 And it's not a range call anymore, it's some operator expression.</p>
-<p><code>..</code> is the <code>rng</code> operator in YAMLScript and the end is inclusive so we didn't
-need to say 101 when we meant 100.</p>
+<p><code>..</code> is the <code>rng</code> operator in YS and the end is inclusive so we didn't need to
+say 101 when we meant 100.</p>
 <p>The <code>_</code> is a placeholder for the pair value to go.
 In Clojure, many functions take a function as the first argument.
 If we need to actually define a big function there it would be nicer if we could
@@ -2295,11 +2293,11 @@ In these cases <code>_</code> is our friend.</p>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x</span>
 </code></pre></div>
 <p>We replaced the <code>zero?</code> calls with a <code>.!</code> (short for <code>.falsey?()</code>) call.
-We also removed the square brackets from the <code>doseq</code> call because YAMLScript is
-cool like that.</p>
+We also removed the square brackets from the <code>doseq</code> call because YS is cool
+like that.</p>
 <p>Getting better...</p>
-<p>In YAMLScript, if you define a function called <code>main</code> it will be called
-automatically when the program is run.</p>
+<p>In YS, if you define a function called <code>main</code> it will be called automatically
+when the program is run.</p>
 <p>Let's try that.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 
@@ -2344,8 +2342,8 @@ Fizz
 </code></pre></div>
 <p>We made the body of <code>main</code> into a single pair by chaining the <code>x</code>, <code>fizzbuzz()</code>,
 and <code>say()</code> together.
-I wouldn't say this is idiomatic YAMLScript, it's a little less readable imho,
-but sometimes we got to show off a little.</p>
+I wouldn't say this is idiomatic YS, it's a little less readable imho, but
+sometimes we got to show off a little.</p>
 <p>This is probably how I'd write that part:</p>
 <div class="highlight"><pre><span></span><code><span class="w">  </span><span class="nt">each x (start .. finish)</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fizzbuzz(x)</span>
@@ -2358,7 +2356,7 @@ positive numbers they do the same thing.</p>
 <p>I'm fizzed out! Let's move on!</p>
 <h2 id="to-be-continued">To Be Continued...</h2>
 <p>We'll continue this journey soon. I promise.</p>
-<p>I have lots more Idiomatic YAMLScript to show you.</p>
+<p>I have lots more Idiomatic YS to show you.</p>
 <p>Stay tuned!</p>
 
 
