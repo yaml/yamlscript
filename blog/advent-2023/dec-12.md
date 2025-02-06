@@ -1,11 +1,11 @@
 ---
 title: Future Proof
-date: '2023-12-12'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-12'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 Santa has very little margin for error.

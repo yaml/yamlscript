@@ -1,0 +1,88 @@
+# yaml-language-server:
+#   $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+### To Do
+# * Add google analytics
+# See:
+# https://support.google.com/analytics/answer/9304153
+# https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-analytics/
+
+---
+!YS v0:
+
+Meta =: load('../Meta')
+
+site_name: YS is YAML's Friend
+# site_name: YS for YAML
+site_url:: Meta.homepage
+site_author:: Meta.author.name
+site_description:: Meta.abstract
+
+repo_name: GitHub
+repo_url:: Meta.devel.git
+
+docs_dir: src
+
+edit_uri:: "$(Meta.devel.git)/blob/documentation"
+
+nav:
+- index.md      # Landing page
+# - About:: load('config/about.yaml')
+# - Start:: load('config/start.yaml')
+# - Learn:: load('config/learn.yaml')
+- Documentation:: load('config/doc.yaml')
+- Blog:: load('config/blog.yaml')
+- Press: press.md
+- Community:: load('config/community.yaml')
+
+# - X: demos.md
+
+theme:: load('config/theme.yaml')
+
+extra_css:
+- css/theme.css
+
+strict: false
+
+validation:
+  omitted_files: ignore
+  absolute_links: ignore
+  unrecognized_links: ignore
+  anchors: ignore
+
+dev_addr: 0.0.0.0:8000
+
+plugins:
+# - awesome-pages
+# - blog:
+#     post_dir: blog/posts
+#     post_date_format: full
+- link-marker
+- redirects:
+    redirect_maps:: load('config/redirect.yaml')
+# - rss:
+#     # enabled: +!ENV [YS_WWW_DEV, false]
+#     match_path: blog/.*
+#     date_from_meta:
+#       as_creation: date
+#     categories:
+#     - categories
+#     - tags
+- search
+
+
+markdown_extensions:
+- attr_list
+- md_in_html
+- pymdownx.emoji:
+    emoji_index: +!!python/name:material.extensions.emoji.twemoji
+    emoji_generator: +!!python/name:material.extensions.emoji.to_svg
+- pymdownx.snippets
+- pymdownx.superfences
+- pymdownx.tabbed:
+    alternate_style: true
+
+watch:
+- theme
+
+copyright:: "YAMLScript — Copyright $(Meta.copyright)"

@@ -1,18 +1,28 @@
 ---
-layout: home
-title: YAMLScript.org
+title: Home
+# edit_file: www/src/index.md
+hide:
+- navigation
+- toc
 ---
 
-<p style="text-align: center; font-weight: bold">Program in YAML — Code is
-Data</p>
 
-**YAMLScript** is a new functional programming language with a clean syntax that
-is also 100% valid [YAML](https://yaml.org).
+<!--
+Landing page for YS:
+
+* What is YS?
+-->
+<h1 class="empty"></h1><!-- disable auto title -->
+
+**YS** (pronounced "wise", aka YAMLScript) is a functional programming
+language with a clean syntax that is also 100% valid **[YAML](
+https://yaml.org)**.
 It was designed to be easily embedded into existing YAML files in order to
 provide the logic, interpolation and data transformation capabilities that many
 YAML users need.
 Created by YAML inventor and lead maintainer, Ingy döt Net, YAMLScript solves
 these needs beautifully for all YAML users and uses.
+
 
 > YAMLScript is now available as a programming language learning track on
 **[Exercism](https://exercism.org/tracks/yamlscript)**.

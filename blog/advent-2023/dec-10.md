@@ -1,11 +1,11 @@
 ---
 title: States and Ladders
-date: '2023-12-10'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-10'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 Santa is a busy guy.

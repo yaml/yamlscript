@@ -1,11 +1,11 @@
 ---
 title: Rosetta Code
-date: '2023-12-17'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-17'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 How does Santa read all the signs in all the languages of the world?

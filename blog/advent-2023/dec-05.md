@@ -1,11 +1,11 @@
 ---
 title: Unwrapping Gifts
-date: '2023-12-05'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-05'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 It's certainly a relief now that I've told you the big secret about YAMLScript.

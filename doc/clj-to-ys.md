@@ -1,22 +1,21 @@
 ---
-title: Learning YAMLScript from Clojure
+title: Learning YS from Clojure
 ---
 
-YAMLScript works by translating code written in YAMLScript to Clojure code,
-which is then evaluated.
+YS/YAMLScript works by translating code written in YS to Clojure code, which is
+then evaluated.
 
-A good way to learn YAMLScript is to convert existing Clojure programs to
-YAMLScript.
+A good way to learn YS is to convert existing Clojure programs to YS.
 
 This tutorial will guide you through the process of converting various Clojure
-programs to idiomatic YAMLScript a step at a time.
+programs to idiomatic YS a step at a time.
 
 For each Clojure program, we will:
 
 * Start with a working Clojure program
-* Refactor some parts of the program to YAMLScript
-* Repeat until YAMLScript is idiomatic
-* Have working YAMLScript code every step of the way
+* Refactor some parts of the program to YS
+* Repeat until YS is idiomatic
+* Have working YS code every step of the way
 
 If you don't know Clojure, that's okay.
 We're starting simple and you can learn 2 languages for the price of one.
@@ -33,7 +32,7 @@ let's look at the simplest hello-world in Clojure:
 (println "Hello, World!")
 ```
 
-It turns out the this program is already valid YAMLScript!
+It turns out the this program is already valid YS!
 
 ```sh
 $ ys -e '(println "Hello, World!")'
@@ -62,7 +61,7 @@ $ ys -c program.ys
 
 Ah! It compiled to a string, because we forgot to add `!yamlscript/v0` to the
 top of the file.
-All YAML files are valid YAMLScript files.
+All YAML files are valid YS files.
 They won't evaluate any code unless you explicitly tell them to.
 
 ```yaml
@@ -89,7 +88,7 @@ Look mom, no parentheses!
 We turned the YAML scalar into a single pair mapping, and we changed the
 double-quoted string to a single-quoted string.
 
-Single-quoted strings are preferred in YAMLScript unless you need interpolation
+Single-quoted strings are preferred in YS unless you need interpolation
 or special escaped characters.
 
 We also changed the `println` function to the `say` function, because who has
@@ -106,8 +105,8 @@ We got our Clojure parentheses and double-quoted string back.
 Clojure doesn't use single quotes for strings.
 
 We still have `say` instead of `println`, but that's okay because `ys -c`
-compiles to Clojure code intended to be run by a YAMLScript runtime, and `say`
-is part of the YAMLScript standard library.
+compiles to Clojure code intended to be run by a YS runtime, and `say` is part
+of the YS standard library.
 
 
 ## Hello 2.0
@@ -119,13 +118,13 @@ Let's make our little program a little more interesting.
   ([name] (println (str "Hello, " name "!")))
   ([] (hello "World")))
 (hello)
-(hello "YAMLScript")
+(hello "YS")
 ```
 
 We've defined a function `hello` that takes an optional `name` argument.
 If `name` is not provided, it defaults to `"World"`.
 
-Let's convert this to YAMLScript, but change as little as possible.
+Let's convert this to YS, but change as little as possible.
 
 ```yaml
 !yamlscript/v0
@@ -143,23 +142,22 @@ Does that work?
 ```sh
 $ ys program.ys
 Hello, World!
-Hello, YAMLScript!
+Hello, YS!
 ```
 
 Apparently it does!
 
 We already know about the first line.
-The `=>` is a special key in YAMLScript, when you need to write a YAML key/value
-pair, but you only have a value.
+The `=>` is a special key in YS, when you need to write a YAML key/value pair,
+but you only have a value.
 The compiler simply removes the `=>` and uses the value as the expression.
 
 What did here is keep the entire Clojure code string intact using a YAML literal
-scalar (think heredocs) and then use the `!clj` tag to tell the YAMLScript
-compiler to treat the string as Clojure code.
+scalar (think heredocs) and then use the `!clj` tag to tell the YS compiler to
+treat the string as Clojure code.
 
-The `!clj` tag is a way to write Clojure things that YAMLScript does not yet
-support.
-But it can also be a good first step to converting Clojure code to YAMLScript.
+The `!clj` tag is a way to write Clojure things that YS does not yet support.
+But it can also be a good first step to converting Clojure code to YS.
 
 Let's keep going by leaving the function defn alone but playing with the
 function calls.
@@ -171,14 +169,14 @@ function calls.
     ([name] (println (str "Hello, " name "!")))
     ([] (hello "World")))
 hello:
-hello: 'YAMLScript'
+hello: 'YS'
 ```
 
 We made the 2 calls to `hello` into YAML mapping pairs.
-The first one has no value, and that's valid in YAMLScript when a function has
-no arguments.
+The first one has no value, and that's valid in YS when a function has no
+arguments.
 
-Now let's convert the function defn to YAMLScript.
+Now let's convert the function defn to YS.
 
 ```yaml
 !yamlscript/v0
@@ -186,10 +184,10 @@ defn hello:
  (name): (println (str "Hello, " name "!"))
  (): (hello "World")
 hello:
-hello: 'YAMLScript'
+hello: 'YS'
 ```
 
-That's how you write a multi-arity function in YAMLScript.
+That's how you write a multi-arity function in YS.
 It's advanced stuff and you already learned it during hello-world!
 Take a moment! You deserve it!
 
@@ -199,12 +197,12 @@ Take a moment! You deserve it!
 defn hello(name='world'):
   (println (str "Hello, " name "!"))
 hello:
-hello: 'YAMLScript'
+hello: 'YS'
 ```
 
 Hey! What happened to our multi-arity accomplishment?
-We don't need it here in YAMLScript, because YAMLScript has support for default
-function arguments.
+We don't need it here in YS, because YS has support for default function
+arguments.
 
 Let's finish up with a little interpolation.
 
@@ -213,10 +211,10 @@ Let's finish up with a little interpolation.
 defn hello(name='world'):
   say: "Hello, $name!"
 hello:
-hello: 'YAMLScript'
+hello: 'YS'
 ```
 
-That's come idiomatic YAMLScript if I've ever seen it!
+That's some idiomatic YS if I've ever seen it!
 
 
 ## FizzBuzz
@@ -286,7 +284,7 @@ doseq [x (fizzbuzz 1 101)]:
   println: x
 ```
 
-We also changed `:else` to `else` because YAMLScript likes it that way.
+We also changed `:else` to `else` because YS likes it that way.
 
 Does it work?
 You betcha!
@@ -313,8 +311,8 @@ Ok, hmm. We moved the range up to the top of the map call but put a `_` right
 before it.
 And it's not a range call anymore, it's some operator expression.
 
-`..` is the `rng` operator in YAMLScript and the end is inclusive so we didn't
-need to say 101 when we meant 100.
+`..` is the `rng` operator in YS and the end is inclusive so we didn't need to
+say 101 when we meant 100.
 
 The `_` is a placeholder for the pair value to go.
 In Clojure, many functions take a function as the first argument.
@@ -341,13 +339,13 @@ doseq x (fizzbuzz 1 100):
 ```
 
 We replaced the `zero?` calls with a `.!` (short for `.falsey?()`) call.
-We also removed the square brackets from the `doseq` call because YAMLScript is
-cool like that.
+We also removed the square brackets from the `doseq` call because YS is cool
+like that.
 
 Getting better...
 
-In YAMLScript, if you define a function called `main` it will be called
-automatically when the program is run.
+In YS, if you define a function called `main` it will be called automatically
+when the program is run.
 
 Let's try that.
 
@@ -404,8 +402,8 @@ defn- fizzbuzz(n):
 
 We made the body of `main` into a single pair by chaining the `x`, `fizzbuzz()`,
 and `say()` together.
-I wouldn't say this is idiomatic YAMLScript, it's a little less readable imho,
-but sometimes we got to show off a little.
+I wouldn't say this is idiomatic YS, it's a little less readable imho, but
+sometimes we got to show off a little.
 
 This is probably how I'd write that part:
 
@@ -428,6 +426,6 @@ I'm fizzed out! Let's move on!
 
 We'll continue this journey soon. I promise.
 
-I have lots more Idiomatic YAMLScript to show you.
+I have lots more Idiomatic YS to show you.
 
 Stay tuned!

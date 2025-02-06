@@ -1,11 +1,11 @@
 ---
 title: Naughty is Nice!
-date: '2023-12-15'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about#ingydotnet
+# date: '2023-12-15'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about#ingydotnet
 ---
 
 As the architect of a major world holiday, Santa Claus has hard design choices

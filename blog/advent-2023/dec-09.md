@@ -1,11 +1,11 @@
 ---
 title: Coding with Style
-date: '2023-12-09'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-09'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 What's the best thing about Rudolph's nose?

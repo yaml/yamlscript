@@ -1,11 +1,11 @@
 ---
 title: Perl to Rust
-date: '2023-12-23'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-23'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 When Santa is doing his job in the Luxembourg area, I've always wondered how he
@@ -42,7 +42,7 @@ YAMLScript bindings:
 ```yaml
 # hearsay.ys
 
-{% include "../../../main/sample/advent/hearsay.ys" %}
+--8<-- "sample/advent/hearsay.ys"
 ```
 
 Now run (actually "load") this a few times using the YAMLScript `ys --load`
@@ -94,7 +94,7 @@ Let's use the new CPAN module YAMLScript to run our `hearsay.ys` program:
 
 ```perl
 # hearsay.pl
-{% include "../../../main/sample/advent/hearsay.pl" %}
+--8<-- "sample/advent/hearsay.pl"
 ```
 
 ```bash
@@ -212,7 +212,7 @@ $ zef install YAMLScript
 Here's the example Raku program:
 
 ```perl
-{% include "../../../main/sample/advent/hearsay.raku" %}
+--8<-- "sample/advent/hearsay.raku"
 ```
 
 Then you can run our hearsay program like this:

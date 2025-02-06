@@ -1,11 +1,11 @@
 ---
 title: Let Lambda Come Over
-date: '2023-12-16'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-16'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 We know the names of Santa's reindeer: Dasher, Dancer, Prancer, Vixen, Comet,

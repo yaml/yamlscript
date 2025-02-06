@@ -1,11 +1,11 @@
 ---
 title: YAML, Python and the Holy Graal
-date: '2023-12-21'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-21'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 Which has a greater airspeed velocity... an unladen swallow or Santa's sleigh?

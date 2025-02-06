@@ -1,11 +1,11 @@
 ---
 title: Going to the Library
-date: '2023-12-08'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-08'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 Programming in YAMLScript is as easy as reading a book.
@@ -150,7 +150,7 @@ For fun let's write a silly YS program that uses them.
 Let's call it `silly.ys`:
 
 ```yaml
-{% include "../../../main/sample/advent/silly.ys" %}
+--8<-- "sample/advent/silly.ys"
 ```
 
 Now let's run it a few times:

@@ -65,7 +65,7 @@ language.
 * [YAMLScript on GitHub](https://github.com/yaml/yamlscript)
 * [YAML on GitHub](https://github.com/yaml)
 * [YAMLScript Podcast](https://www.therepl.net/episodes/52/)
-* [2023 YAMLScript Advent Blog](blog/advent-2023/index.md)
+* [2023 YAMLScript Advent Blog](blog/advent-2023/dec-01.md)
 * [Chat about YAMLScript in Matrix](
   https://matrix.to/#/#chat-yamlscript:yaml.io)
 * [Chat about YAMLScript in Clojurians Slack](

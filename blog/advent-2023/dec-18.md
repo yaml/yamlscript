@@ -1,11 +1,11 @@
 ---
 title: Santa's in d'buggy
-date: '2023-12-18'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-18'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 With one week to go, Santa's gotta get his sleigh in top shape.

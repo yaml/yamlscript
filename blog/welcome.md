@@ -1,8 +1,8 @@
 ---
 title: Welcome to the YAMLScript Blog
-date: '2023-10-26'
-tags: [blog, about]
-permalink: posts/{{ title | slug }}/index.html
+# date: '2023-10-26'
+# tags: [blog, about]
+# permalink: posts/{{ title | slug }}/index.html
 ---
 
 **Greetings!**

@@ -1,11 +1,11 @@
 ---
 title: Twas a Bit
-date: '2023-12-02'
-tags: [blog, advent-2023]
-permalink: '{{ page.filePathStem }}/'
-author:
-  name: Ingy döt Net
-  url: /about/#ingydotnet
+# date: '2023-12-02'
+# tags: [blog, advent-2023]
+# permalink: '{{ page.filePathStem }}/'
+# author:
+#   name: Ingy döt Net
+#   url: /about/#ingydotnet
 ---
 
 
@@ -53,7 +53,7 @@ open and enjoy!
 <details><summary><strong style="color:green">Open Me!!!</strong></summary>
 
 ```yaml
-{% include "../../../main/sample/advent/twas-a-bit" %}
+--8<-- "sample/advent/twas-a-bit"
 ```
 </details>
 
@@ -74,7 +74,7 @@ I hid it in a secret place... see if you can find it!
 <details><summary><strong style="color:red">Don't Open Me!!!</strong></summary>
 
 ```yaml
-{% include "../../../main/sample/advent/a-bit-of-data.ys" %}
+--8<-- "sample/advent/a-bit-of-data.ys"
 ```
 </details>
 

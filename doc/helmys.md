@@ -1,5 +1,8 @@
 ---
 title: HelmYS - Helm Templating with YAMLScript
+hide:
+- navigation
+- toc
 ---
 
 
@@ -27,118 +30,116 @@ The left side is the YAMLScript version and the right side is the original Go
 template version.
 
 <table>
+
 <tr><td>
-
-**`ys-chart/templates/serviceaccount.yaml`**
-
-</td><td>
-
-**`go-chart/templates/serviceaccount.yaml`**
-
-</td></tr>
-<tr><td>
-
-```yaml
+```yaml title="ys-chart/templates/helpers.yaml"
 !YS v0:
-:when Values.serviceAccount.create:
-  apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name:: serviceAccountName
-    labels:: chart-labels
-    :when+ Values.serviceAccount.annotations.?::
-     annotations:: _
-  automountServiceAccountToken::
-    Values.serviceAccount.automount
+defn trunc(s): take(63 s).str(*).replace(/-$/)
 
+# Expand the name of the chart:
+chart-name =:
+  trunc: Values.nameOverride ||| Chart.name
 
+# Create a default fully qualified app name.
+chart-fullname =:
+  if Values.fullnameOverride.?:
+    trunc: Values.fullnameOverride
+    else:
+      name =: Values.nameOverride ||| Chart.name
+      if name.has?(Release.Name):
+        trunc: Release.Name
+        format "%s-%s": Release.Name name
 
+# Selector labels:
+selectorLabels =::
+  app.kubernetes.io/name:: Chart.name
+  app.kubernetes.io/instance:: Release.Name
+
+# Chart labels:
+chart-labels =::
+  helm.sh/chart:: "$(Chart.name)-$(Chart.version)"
+  :: selectorLabels
+  app.kubernetes.io/version:: Chart.appVersion
+  app.kubernetes.io/managed-by:: Release.Service
+
+# Create the name of the service account to use:
+serviceAccountName =:
+  Values.serviceAccount.name |||:
+    if Values.serviceAccount.create:
+      chart-fullname
+      'default'
 ```
-
 </td><td>
+```txt title="go-chart/templates/_helpers.tpl"
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "go-chart.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
-{% raw %}
-```yaml
-{{- if .Values.serviceAccount.create -}}
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ include "go-chart.serviceAccountName" . }}
-  labels:
-    {{- include "go-chart.labels" . | nindent 4 }}
-  {{- with .Values.serviceAccount.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to
+this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "go-chart.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "go-chart.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 |
+    trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "go-chart.labels" -}}
+helm.sh/chart: {{ include "go-chart.chart" . }}
+{{ include "go-chart.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "go-chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "go-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "go-chart.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "go-chart.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
 {{- end }}
 ```
-{% endraw %}
-
-</td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
-
-**`ys-chart/templates/service.yaml`**
-
-</td><td>
-
-**`go-chart/templates/service.yaml`**
-
 </td></tr>
+
 <tr><td>
-
-```yaml
-!YS v0:
-apiVersion: v1
-kind: Service
-metadata:
-  name:: chart-fullname
-  labels:: chart-labels
-spec:
-  type:: Values.service.type
-  ports:
-  - port:: Values.service.port
-    targetPort: http
-    protocol: TCP
-    name: http
-  selector:: selectorLabels
-
-
-```
-
-</td><td>
-
-{% raw %}
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ include "go-chart.fullname" . }}
-  labels:
-    {{- include "go-chart.labels" . | nindent 4 }}
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    {{- include "go-chart.selectorLabels" . | nindent 4 }}
-```
-{% endraw %}
-
-</td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
-
-**`ys-chart/templates/deployment.yaml`**
-
-</td><td>
-
-**`go-chart/templates/deployment.yaml`**
-
-</td></tr>
-<tr><td>
-
-```yaml
+```yaml title="ys-chart/templates/deployment.yaml"
 !YS v0:
 apiVersion: apps/v1
 kind: Deployment
@@ -180,41 +181,9 @@ spec:
       :when+ Values.nodeSelector.?:: {nodeSelector:: _}
       :when+ Values.affinity.?::     {affinity:: _}
       :when+ Values.tolerations.?::  {tolerations:: _}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ```
-
 </td><td>
-
-{% raw %}
-```yaml
+```yaml title="go-chart/templates/deployment.yaml"
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -285,159 +254,75 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 ```
-{% endraw %}
-
-</td></tr><tr><td><p>&nbsp;</td><td></td></tr><tr><td>
-
-**`ys-chart/templates/helpers.yaml`**
-
-</td><td>
-
-**`go-chart/templates/_helpers.tpl`**
-
 </td></tr>
+
 <tr><td>
-
-{% raw %}
-```yaml
+```yaml title="ys-chart/templates/serviceaccount.yaml"
 !YS v0:
-defn trunc(s): take(63 s).str(*).replace(/-$/)
-
-# Expand the name of the chart:
-chart-name =:
-  trunc: Values.nameOverride ||| Chart.name
-
-# Create a default fully qualified app name.
-chart-fullname =:
-  if Values.fullnameOverride.?:
-    trunc: Values.fullnameOverride
-    else:
-      name =: Values.nameOverride ||| Chart.name
-      if name.has?(Release.Name):
-        trunc: Release.Name
-        format "%s-%s": Release.Name name
-
-# Selector labels:
-selectorLabels =::
-  app.kubernetes.io/name:: Chart.name
-  app.kubernetes.io/instance:: Release.Name
-
-# Chart labels:
-chart-labels =::
-  helm.sh/chart:: "$(Chart.name)-$(Chart.version)"
-  :: selectorLabels
-  app.kubernetes.io/version:: Chart.appVersion
-  app.kubernetes.io/managed-by:: Release.Service
-
-# Create the name of the service account to use:
-serviceAccountName =:
-  Values.serviceAccount.name |||:
-    if Values.serviceAccount.create:
-      chart-fullname
-      'default'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+:when Values.serviceAccount.create:
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name:: serviceAccountName
+    labels:: chart-labels
+    :when+ Values.serviceAccount.annotations.?::
+     annotations:: _
+  automountServiceAccountToken::
+    Values.serviceAccount.automount
 ```
-{% endraw %}
-
 </td><td>
-
-{% raw %}
-```txt
-{{/*
-Expand the name of the chart.
-*/}}
-{{- define "go-chart.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to
-this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "go-chart.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "go-chart.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 |
-    trimSuffix "-" }}
-{{- end }}
-
-{{/*
-Common labels
-*/}}
-{{- define "go-chart.labels" -}}
-helm.sh/chart: {{ include "go-chart.chart" . }}
-{{ include "go-chart.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "go-chart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "go-chart.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "go-chart.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "go-chart.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
+```yaml title="go-chart/templates/serviceaccount.yaml"
+{{- if .Values.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "go-chart.serviceAccountName" . }}
+  labels:
+    {{- include "go-chart.labels" . | nindent 4 }}
+  {{- with .Values.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
 {{- end }}
 ```
-{% endraw %}
-
 </td></tr>
+
+<tr><td>
+```yaml title="ys-chart/templates/service.yaml"
+!YS v0:
+apiVersion: v1
+kind: Service
+metadata:
+  name:: chart-fullname
+  labels:: chart-labels
+spec:
+  type:: Values.service.type
+  ports:
+  - port:: Values.service.port
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:: selectorLabels
+```
+</td><td>
+```yaml title="go-chart/templates/service.yaml"
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "go-chart.fullname" . }}
+  labels:
+    {{- include "go-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "go-chart.selectorLabels" . | nindent 4 }}
+```
+</td></tr>
+
 </table>
