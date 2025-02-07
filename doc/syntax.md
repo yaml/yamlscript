@@ -1,22 +1,22 @@
 ---
-title: YAMLScript Syntax
+title: YS Syntax
 ---
 
 
-The `ys` YAMLScript interpreter command runs YAMLScript programs by compiling
+The `ys` YS interpreter command runs YS programs by compiling
 them to Clojure code and evaluating that Clojure code.
 
-To fully understand YAMLScript you need to know:
+To fully understand YS you need to know:
 
 * [How YAML works](yaml.md)
 * [How Clojure works](clojure.md)
 
-This document will show you the basics of YAMLScript syntax and how they
-translate to Clojure code.
+This document will show you the basics of YS syntax and how they translate to
+Clojure code.
 
 > Note: You can play with all the concepts here by putting example code into a
 file like `example.ys` and running `ys -c example.ys` which will print the
-Clojure code that the YAMLScript code compiles to.
+Clojure code that the YS code compiles to.
 
 
 ## First Steps
@@ -26,22 +26,22 @@ Clojure code that the YAMLScript code compiles to.
 (say "Hello, world!")
 ```
 
-This is a simple YAMLScript program that prints "Hello, world!".
+This is a simple YS program that prints "Hello, world!".
 
-An interesting point about YAMLScript is that is always valid YAML, and the
-YAMLScript compiler (`ys -c`) is really just a fancy YAML loader.
-Almost all YAML files are valid YAMLScript and the compiler turns them into the
+An interesting point about YS is that is always valid YAML, and the
+YS compiler (`ys -c`) is really just a fancy YAML loader.
+Almost all YAML files are valid YS and the compiler turns them into the
 expected data structure.
 
 This is where the `!yamlscript/v0` tag comes in.
-It tells the YS compiler to "load" the YAML into a YAMLScript AST which prints
+It tells the YS compiler to "load" the YAML into a YS AST which prints
 naturally to Clojure code.
 
-The point is that every YAMLScript program needs to start with the
-`!yamlscript/v0` tag, or else it just compiles to a regular data structure.
+The point is that every YS program needs to start with the `!yamlscript/v0`
+tag, or else it just compiles to a regular data structure.
 
-The second line is a YAMLScript function call that happens to be a Clojure
-function call.
+The second line is a YS function call that happens to be a Clojure function
+call.
 
 Let's play around with that function call syntax a bit.
 
@@ -52,12 +52,12 @@ say("Hello, world!")
 
 This compiles to the same Clojure code as the first example.
 We moved the `say` function name outside the parentheses.
-In YAMLScript this is called a [YeS Expression](yes.md).
+In YS this is called a [YeS Expression](yes.md).
 
 Note that from a YAML perspective, the entire YAML document is a single scalar
 value.
 
-YAMLScript code uses YAML scalars and YAML block mappings for code.
+YS code uses YAML scalars and YAML block mappings for code.
 Generally a mix of the two where the top (file level) structure is a nested
 mapping and the leaf values are scalar expressions.
 
@@ -78,9 +78,8 @@ say: 'Hello, world!'
 This is the same as the previous example, but the string is single-quoted.
 Single quotes aren't used for strings in Clojure, but they are in YAML.
 
-In YAMLScript, like Perl and Ruby, double quoted strings
-support variable interpolation and character escaping while single quoted
-strings do not.
+In YS, like Perl and Ruby, double quoted strings support variable interpolation
+and character escaping while single quoted strings do not.
 
 Let's get a bit fancier with our string:
 
@@ -102,10 +101,10 @@ Clojure as a `str` function that concatenates strings together.
 
 See the commas between the `str` call arguments?
 In Clojure, commas are whitespace and are completely ignored.
-This is also true in YAMLScript!
+This is also true in YS!
 
-In general Clojure and YAMLScript only use commas in places where the code is
-hard to follow without them.
+In general Clojure and YS only use commas in places where the code is hard to
+follow without them.
 
 ```yaml
 !yamlscript/v0
@@ -116,8 +115,8 @@ say: -'Hello, ' + name + '!'
 Here we are doing something that you don't see in Clojure.
 We're using `+` to concatenate strings.
 
-When YAMLScript operators are infix they compile to polymorphic functions that
-work on types of data other than numbers.
+When YS operators are infix they compile to polymorphic functions that work on
+types of data other than numbers.
 
 But what about the `-` in front of the string?
 
@@ -153,7 +152,7 @@ It's pretty easy to see what's going on here.
 
 Note how we use indentation nesting where Clojure uses parentheses.
 That's just the natural way to do things in YAML.
-Most of YAMLScript's syntax design is about making code look natural in YAML.
+Most of the YS syntax design is about making code look natural in YAML.
 It works out surprisingly well!
 
 
@@ -163,7 +162,7 @@ In the remaining examples we'll assume the `!yamlscript/v0` tag is present.
 
 > What we are calling variable assignment is known as symbol binding in Clojure.
 Clojure differentiates between symbols and variables but the distinction is not
-so important for YAMLScript.
+so important for YS.
 
 Assignments are done by using `name =: expression`.
 
@@ -188,11 +187,11 @@ foo   =   :
 ```
 
 > The second form above uses YAML's rarely seen explicit key syntax.
-It can be useful sometimes in YAMLScript when you need spread the key portion of
-a key/value mapping pair over multiple lines.
+It can be useful sometimes in YS when you need spread the key portion of a
+key/value mapping pair over multiple lines.
 Without it mapping keys are required by YAML to be a single line.
 The 'value' side can always be multiline and can start on the next line too.
-This is a very common pattern in YAMLScript to make code more readable.
+This is a very common pattern in YS to make code more readable.
 
 Assignment statements written at the file level compile to `def` forms in
 Clojure, while those written inside a function compile to `let` forms.
@@ -214,7 +213,7 @@ This compiles to:
 ```
 
 Notice how multiple consecutive assignments are compiled to a single `let` form.
-This is the preferred Clojure style and YAMLScript tries to compile to idiomatic
+This is the preferred Clojure style and YS tries to compile to idiomatic
 Clojure code whenever possible.
 
 What's with the `=>`?
@@ -231,7 +230,7 @@ assignment looks like a data structure instead of a single variable.
 This quasi-data-structure is a collection of variables that are assigned values
 from the RHS of the assignment.
 
-Clojure and YAMLScript have destructuring assignment support for both sequences
+Clojure and YS have destructuring assignment support for both sequences
 and mappings.
 
 ```yaml
@@ -254,14 +253,14 @@ f: 2 [3 4] 7  # => 2
 Here you would call `f` with a single sequence argument and the first three
 values of that sequence would be assigned to `a`, `b`, and `c` respectively.
 
-For some reason Clojure does not support destructuring assignment in `def` forms
-but YAMLScript makes it work just fine.
+For some reason Clojure does not support destructuring assignment in `def`
+forms but YS makes it work just fine.
 
 
 ### Function Arguments
 
-Like Clojure, all YAMLScript functions must be defined with the number of
-arguments they take.
+Like Clojure, all YS functions must be defined with the number of arguments
+they take.
 This is know as the function's arity.
 Functions can be written to take different specific numbers of arguments, where
 each arity has its own definition body.
@@ -293,8 +292,7 @@ It would be an error to call the above function with 2 arguments.
 
 ## Default Values
 
-Clojure does not support default values for function arguments but YAMLScript
-does.
+Clojure does not support default values for function arguments but YS does.
 
 ```yaml
 defn foo(a b=10 c='horse'): ...
@@ -309,5 +307,5 @@ More content will be added soon.
 
 ## See Also
 
-* [YAMLScript Modes](modes.md) - Understanding code mode vs data mode
+* [YS Modes](modes.md) - Understanding code mode vs data mode
 * [YeS Expressions](yes.md)

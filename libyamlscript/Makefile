@@ -70,7 +70,7 @@ endif
 ifeq (true,$(IS_ROOT))
 $(LIBYAMLSCRIPT_JAR_PATH):
 ifeq (true,$(IS_ROOT))
-	$(error *** YAMLScript 'make build' must be run as non-root user)
+	$(error *** YS 'make build' must be run as non-root user)
 endif
 else
 $(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(JAVA_INSTALLED) $(YAMLSCRIPT_CORE_INSTALLED) $(LYS_SOURCES)

@@ -3,11 +3,11 @@ title: Core Library Essentials
 ---
 
 
-YAMLScript has a very large set of useful functions that it inherits from
-Clojure's [`clojure.core` library](
+YS has a very large set of useful functions that it inherits from Clojure's
+[`clojure.core` library](
 https://github.com/clojure/clojure/blob/clojure-1.12.0/src/clj/clojure/core.clj).
 
-These functions are the bread and butter building blocks of YAMLScript
+These functions are the bread and butter building blocks of YS
 programming.
 
 The functions are very well organized in the [Clojure Docs Quick Reference](
@@ -15,13 +15,13 @@ https://clojuredocs.org/quickref) and you can get to the documentation for each
 function from there.
 
 This document is a condensed quick reference of the functions that are most
-commonly used in YAMLScript programming.
+commonly used in YS programming.
 
-YAMLScript also has the [`ys::std`](ys-std.md) standard library that provides
+YS also has the [`ys::std`](ys-std.md) standard library that provides
 additional functions.
 
-The YAMLScript standard library replaces some Clojure functions with a version
-more suited to YAMLScript.
+The YS standard library replaces some Clojure functions with a version
+more suited to YS.
 In those cases, the original Clojure function is still available in the
 [`ys::clj`](ys-clj.md) namespace.
 
@@ -35,7 +35,7 @@ In those cases, the original Clojure function is still available in the
 + - * / inc dec max min rand rand-int
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `%`, `%%` infix operators
 * `add`, `sub`, `mul`, `div` named math functions
@@ -45,7 +45,7 @@ YAMLScript Std:
 See Also:
 
 * [`clojure.math`](https://clojure.github.io/clojure/clojure.math-api.html)
-  functions callable as `math/<func-name>` in YAMLScript.
+  functions callable as `math/<func-name>` in YS.
 
 
 ### Comparison
@@ -54,7 +54,7 @@ See Also:
 < > <= >=
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `==`, `!=` infix operators
 * `eq`, `ne`, `lt`, `gt`, `le`, `ge` named comparison functions
@@ -66,7 +66,7 @@ YAMLScript Std:
 byte short int long float double num
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `to-num`, `to-int`, `to-float` - polymorphic cast functions
 
@@ -84,7 +84,7 @@ zero? pos? neg? even? odd? number?
 nil? true? false? boolean
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `truey?`, `falsey?`, `to-bool`, `to-booly`
 
@@ -95,7 +95,7 @@ YAMLScript Std:
 str pr-str prn-str with-out-str count subs format string?
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `words`, `split`, `join`, `lines`, `text`, `replace`, `replace1`
 * `chomp`, `trim`, `triml`, `trimr`, `lc`, `uc`, `uc1`, `index`, `pretty`
@@ -103,7 +103,7 @@ YAMLScript Std:
 See Also:
 
 * [`clojure.string`](https://clojure.github.io/clojure/clojure.string-api.html)
-  functions callable as `str/<func-name>` in YAMLScript.
+  functions callable as `str/<func-name>` in YS.
 
 
 ## Regular Expression
@@ -112,7 +112,7 @@ See Also:
 re-pattern re-matches re-find re-seq re-groups
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `=~`, `!~` infix operators
 * `/.../` regex literals
@@ -127,7 +127,7 @@ YAMLScript Std:
 not and or
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `||`, `&&`, `|||`, `&&&` infix operators
 * `or?`, `and?` booly named functions
@@ -140,7 +140,7 @@ if when if-not when-not if-let when-let if-some when-some
 cond condp case do eval loop recur while
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `if-lets`, `when-lets`, `call`, `each`, `exit`, `sleep`
 
@@ -151,7 +151,7 @@ YAMLScript Std:
 try catch finally throw assert
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `die`, `warn`, `exit`, `err`
 
@@ -163,7 +163,7 @@ fn defn defn- identity comp partial complement constantly
 -> ->> apply fn? ifn?
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `\(...)` anonymous function syntax
 * `.` dot chaining infix operator
@@ -180,7 +180,7 @@ contains? distinct? empty? every? some not-every? not-any?
 coll? seq? vector? list? map? set? sorted? sequential? associative?
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `grep`, `has?`, `in?`
 
@@ -207,7 +207,7 @@ assoc assoc-in dissoc find get-in update-in
 key val keys vals merge reduce-kv
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `omap`, `get+`
 
@@ -221,7 +221,7 @@ conj concat map filter remove sort shuffle flatten
 for doseq dorun doall mapcat reduce keep
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `..` infix rng operator
 * `rng`, `reverse`
@@ -235,7 +235,7 @@ var var-get resolve find-var alter-var-root
 var? bound?
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `=:`, `.=:`, `+=:`, `-=:`, `*=:`, `/=:` def/let syntax
 * `value`
@@ -250,6 +250,6 @@ newline flush slurp spit
 with-out-str with-open with-in-str
 ```
 
-YAMLScript Std:
+YS Std:
 
 * `say`, `out`, `warn`, `pp`

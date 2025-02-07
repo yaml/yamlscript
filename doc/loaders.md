@@ -1,16 +1,16 @@
 ---
-title: YAMLScript Loader Libraries
+title: YS Loader Libraries
 ---
 
-YAMLScript is focused on providing a loader library for every programming
-language where YAML is used.
+YS is focused on providing a loader library for every programming language
+where YAML is used.
 Ideally it should be a drop-in replacement for the existing YAML loader library
 you are using.
 
-All existing YAML config files are already valid YAMLScript files and using the
-YAMLScript loader to load them should work without any changes.
-The advantage of using the YAMLScript loader is that they all work the same way
-and provide the same capabilities, regardless of the underlying programming
+All existing YAML config files are already valid YS files and using the YS
+loader to load them should work without any changes.
+The advantage of using the YS loader is that they all work the same way and
+provide the same capabilities, regardless of the underlying programming
 language.
 
 The following loader libraries are currently available:

@@ -1,5 +1,5 @@
 ---
-title: HelmYS - Helm Templating with YAMLScript
+title: HelmYS - Helm Templating with YS
 hide:
 - navigation
 - toc
@@ -9,13 +9,13 @@ hide:
 [HelmYS](https://github.com/kubeys/helmys) is a
 [Kubernetes Helm](https://helm.sh/)
 ["post renderer"](https://helm.sh/docs/topics/charts/#post-rendering) that lets
-you write your Helm chart templates with YAMLScript.
+you write your Helm chart templates with YS.
 
-YAMLScript can be used in combination with Helm's standard
+YS can be used in combination with Helm's standard
 [Go template](https://pkg.go.dev/text/template) syntax or it can replace it
 entirely.
 
-When YAMLScript is used exclusively, the Helm chart templates are not only
+When YS is used exclusively, the Helm chart templates are not only
 simpler and more concise, but they are also valid YAML files (just like the
 `Chart.yaml` and `values.yaml` files).
 That means they can be processed with any YAML tools, such as being validated
@@ -25,8 +25,8 @@ with a YAML linter like [yamllint](https://www.yamllint.com/).
 ## Template File Comparisons
 
 This is a side by side comparison of the Helm chart template YAML files created
-by `helm create <chart-name>` and then converted to use YAMLScript.
-The left side is the YAMLScript version and the right side is the original Go
+by `helm create <chart-name>` and then converted to use YS.
+The left side is the YS version and the right side is the original Go
 template version.
 
 <table>

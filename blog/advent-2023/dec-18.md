@@ -1,11 +1,6 @@
 ---
 title: Santa's in d'buggy
-# date: '2023-12-18'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-18
 ---
 
 With one week to go, Santa's gotta get his sleigh in top shape.
@@ -17,11 +12,11 @@ But this is Santa we're talking about.
 He's done this a few times, so he knows how to get the bugs out.
 
 
-### Welcome to Day 18 of the YAMLScript Advent Calendar
+### Welcome to Day 18 of the YS Advent Calendar
 
-Today we're going to look at a few ways to debug YAMLScript programs.
+Today we're going to look at a few ways to debug YS programs.
 We'll also cover some of the common mistakes that you might make when writing
-YAMLScript code.
+YS code.
 
 ```yaml
 # hello.ys
@@ -37,8 +32,8 @@ $
 
 Hmmm. Nothing happened. What's wrong?
 
-This first thing I do when my YAMLScript program doesn't work is see what the
-Clojure code that it compiled to looks like.
+This first thing I do when my YS program doesn't work is see what the Clojure
+code that it compiled to looks like.
 We didn't get a compile error there when we ran `ys`, so let's look at the
 code we were running:
 
@@ -93,8 +88,8 @@ That's scary!
 And what's up with Java?!
 I don't think it even compiled.
 
-When this happens, I like to debug the 7 layers of YAMLScript compilation, with
-the `--debug-stage=all` option, aka `-d`:
+When this happens, I like to debug the 7 layers of YS compilation, with the
+`--debug-stage=all` option, aka `-d`:
 
 ```bash
 $ ys map.ys -d
@@ -116,8 +111,8 @@ $ ys map.ys -l -d
 Compile error: Sequences (block and flow) not allowed in code mode
 ```
 
-The 7 stages of YAMLScript compilation are: `parse`, `compose`, `resolve`,
-`build`, `transform`, `construct`, and `print`.
+The 7 stages of YS compilation are: `parse`, `compose`, `resolve`, `build`,
+`transform`, `construct`, and `print`.
 It looks like we are getting an error in the `resolve` stage.
 
 The `-d` option means the same thing as `-Dparse -Dcompose -Dresolve -Dbuild
@@ -127,17 +122,17 @@ So we parsed the YAML input into pieces and then composed a tree out of them.
 In the resolve stage we look at each node of the tree and figure out what it
 means semantically.
 
-YAMLScript doesn't allow sequences in code mode. And it doesn't allow any flow
-style collections `[] {}` in code mode either.
+YS doesn't allow sequences in code mode. And it doesn't allow any flow style
+collections `[] {}` in code mode either.
 But we wrote `[1 2 3]`, not `[1, 2, 3]`.
 To YAML, `[1 2 3]` is valid but it means `["1 2 3"]`.
-We really meant this list to be a YAMLScript ysexpr vector not a YAML sequence.
+We really meant this list to be a YS ysexpr vector not a YAML sequence.
 
 We wanted YAML to see the RHS as a scalar value, not a sequence.
 YAML plain (unquoted) scalars can't begin with certain characters, like `[`,
 `{`, `*`, `&`, `!`, `|`, `>`, `%`, `@`, `#` etc because they are YAML syntax.
-In YAMLScript when we want a ysexpr string that starts with one of these
-characters, we can escape it with a plus `+`.
+In YS when we want a ysexpr string that starts with one of these characters, we
+can escape it with a plus `+`.
 
 ```yaml
 !yamlscript/v0
@@ -161,9 +156,9 @@ $ ys map.ys -l -Dresolve
 It resolved! And it worked! We got our list of numbers.
 
 > Note: The error message indicated a `java.lang.Exception`.
-Remember that YAMLScript is Clojure and Clojure is Java.
-The JVM is compiled out of the picture in YAMLScript, but the error message
-still comes from Java stuff.
+Remember that YS is Clojure and Clojure is Java.
+The JVM is compiled out of the picture in YS, but the error message still comes
+from Java stuff.
 
 ----
 
@@ -262,7 +257,7 @@ Well... You asked for it. :- )
 ----
 
 Print debugging is a great way to debug programs.
-YAMLScript provides some help here with it's `WWW` and `XXX` standard library
+YS provides some help here with it's `WWW` and `XXX` standard library
 functions.
 Conceptually these come from an old Perl module I wrote years ago called
 [XXX](https://metacpan.org/pod/XXX).
@@ -318,8 +313,8 @@ The `->>` threading macro adds its value as the last argument to each function.
 So the way we did it here we are adding a label to each debugging section.
 
 I used `=>: WWW` to show how to call it with no extra label argument.
-Remember that `=>:` is the YAMLScript way to write a mapping pair when you only
-need one thing (the `WWW` function in this case).
+Remember that `=>:` is the YS way to write a mapping pair when you only need
+one thing (the `WWW` function in this case).
 
 ```txt
 $ ys pipeline.ys
@@ -346,8 +341,8 @@ the output starts and ends.
 
 ----
 
-I hope you enjoyed this little tour of YAMLScript debugging.
-There are many more ways to debug YAMLScript programs.
+I hope you enjoyed this little tour of YS debugging.
+There are many more ways to debug YS programs.
 Likely many than I've even thought of yet.
 
-See you tomorrow for Day 19 of the YAMLScript Advent Calendar.
+See you tomorrow for Day 19 of the YS Advent Calendar.

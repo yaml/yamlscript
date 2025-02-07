@@ -2,7 +2,7 @@
 ;; This code is licensed under MIT license (See License for details)
 
 ;; The yamlscript.cli library compiles into the `ys` command line binary for
-;; YAMLScript.
+;; YS.
 
 (ns yamlscript.cli
   (:gen-class)
@@ -73,18 +73,18 @@
 (def cli-options
   [;
    ["-e" "--eval YSEXPR"
-    "Evaluate a YAMLScript expression
+    "Evaluate a YS expression
                            multiple -e values joined by newline"
     :default []
     :update-fn conj
     :multi true]
    ["-l" "--load"
-    "Output (compact) JSON of YAMLScript evaluation"]
+    "Output (compact) JSON of YS evaluation"]
    ["-f" "--file FILE"
     "Explicitly indicate input file"]
 
    ["-c" "--compile"
-    "Compile YAMLScript to Clojure"]
+    "Compile YS to Clojure"]
    ["-b" "--binary"
     "Compile to a native binary executable"]
 
@@ -119,7 +119,7 @@
     "Treat input as Clojure code"]
 
    #_["-R" "--repl"
-      "Start an interactive YAMLScript REPL"]
+      "Start an interactive YS REPL"]
    #_["-N" "--nrepl"
       "Start a new nREPL server"]
    #_["-K" "--kill"
@@ -210,10 +210,10 @@
       in-file out-file yamlscript-version)))
 
 (defn do-version []
-  (println (str "YAMLScript " yamlscript-version)))
+  (println (str "YS " yamlscript-version)))
 
 (def help-heading (str "
-ys - The YAMLScript (YS) Command Line Tool - v" yamlscript-version "
+ys - The YS Command Line Tool - v" yamlscript-version "
 
 Usage: ys [<option...>] [<file>]
 

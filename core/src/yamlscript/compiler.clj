@@ -1,12 +1,12 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; YAMLScript is a programming language that is hosted by Clojure platforms.
+;; YS is a programming language that is hosted by Clojure platforms.
 ;; It can be used to add scripting to abilities to YAML files.
 
-;; The yamlscript.compiler is responsible for converting YAMLScript code to
-;; Clojure code. It does this by sending the input through a stack of 7
-;; transformation libraries.
+;; The yamlscript.compiler is responsible for converting YS code to Clojure
+;; code. It does this by sending the input through a stack of 7 transformation
+;; libraries.
 
 (ns yamlscript.compiler
   (:require

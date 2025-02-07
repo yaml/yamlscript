@@ -9,19 +9,19 @@ data.
 Modern programmers generally have a decent understanding of YAML basics as it
 ends up in many places in the tech world.
 That said, there are many lesser well-known YAML concepts and features and
-YAMLScript makes use of most of them.
+YS makes use of most of them.
 
-Remember, all valid YAMLScript is required to be valid YAML syntax.
-To write YAMLScript well, you'll need to have a solid understanding of YAML
-concepts and also Clojure concepts.
+Remember, all valid YS is required to be valid YAML syntax.
+To write YS well, you'll need to have a solid understanding of YAML concepts
+and also Clojure concepts.
 
 This document will cover all the YAML syntax, concepts and vocabulary that you
-need to know to write YAMLScript effectively.
+need to know to write YS effectively.
 
 > NOTE: When a word or phrase is presented in double quotes here, it is intended
 to be a YAML vocabulary term that you should commit to memory.
-These terms are used consistently throughout the YAMLScript documentation (and
-also the YAML specification and other YAML-related writings).
+These terms are used consistently throughout the YS documentation (and also the
+YAML specification and other YAML-related writings).
 
 
 ## YAML Data Model
@@ -59,8 +59,7 @@ YAML adds just a few things to this basic data model:
     ```
 * A mapping key can be any "kind" of YAML node, (not just a scalar node like in
   JSON).
-  * This is not commonly used either in YAML or YAMLScript, but it is completely
-    valid.
+  * This is not commonly used either in YAML or YS, but it is completely valid.
   * The term "kind" is used to refer to those three different YAML node shapes:
     "mapping", "sequence" or "scalar".
 * Any YAML node can have a "explicit tag".
@@ -70,8 +69,8 @@ YAML adds just a few things to this basic data model:
   * Even though it is rare to see tags in YAML, part of the loading process is
     to assign a tag to every node that lacks an explicit one.
     This process is known as "implicit tagging" or "tag resolution".
-  * In YAMLScript, the tags `!yamlscript/v0` and just `!` are quite common.
-    They control the YAMLScript "[mode](modes.md)" of a particular node.
+  * In YS, the tags `!yamlscript/v0` and just `!` are quite common.
+    They control the YS "[mode](modes.md)" of a particular node.
 
 
 ## Basic YAML Syntax
@@ -113,7 +112,7 @@ second-key: second value
 
 # Notice that both of them are unquoted.
 # Scalars of can be expressed with or without quotes.
-# This is very common in YAML and very important in YAMLScript.
+# This is very common in YAML and very important in YS.
 
 # The kind of quoting (or lack thereof) is called the scalar's "style" in YAML.
 # The different quoting styles have different encoding rules and different
@@ -181,7 +180,7 @@ folded: >
 
   They are the most rarely used scalar style.
 
-In YAMLScript's code mode:
+In YS code mode:
 - plain: Used for code expressions
 - single quoted: Used for character strings
 - double quoted: Used for strings with interpolation support
@@ -264,7 +263,7 @@ empty sequence: []
 ## Less Common YAML Syntax
 
 Here's a few YAML syntax variants that you won't see very often.
-Some of these are used in YAMLScript, so it's good to know about them.
+Some of these are used in YS, so it's good to know about them.
 
 ```
 # YAML has a top level "directive" syntax.
@@ -279,7 +278,7 @@ Some of these are used in YAMLScript, so it's good to know about them.
 
 %TAG !ys! tag:yamlscript.org,2022:
 
-# To date, directives are not used in YAMLScript.
+# To date, directives are not used in YS.
 
 # The `---` indicator is required to start a new document if you have used any
 # directives (even on the first document).
@@ -308,13 +307,13 @@ Some of these are used in YAMLScript, so it's good to know about them.
 
 ---
 
-# The collection key does have a good use case in YAMLScript.
+# The collection key does have a good use case in YS.
 # Consider this `for` loop:
 
 for a foo(), b bar(), c [1 2 3]:
   say: a + b + c
 
-# YAMLScript requires that the `for […]` key be a plain scalar, and YAML
+# YS requires that the `for […]` key be a plain scalar, and YAML
 # requires that plain scalar keys need to be a single line.
 # This could lead to unreadable code if we our "for binding" is complex.
 
@@ -332,4 +331,4 @@ for:
 ## See Also
 
 * [The yaml.info Site](https://www.yaml.info/learn/)
-* [Common YAML / YAMLScript Gotchas](gotchas.md)
+* [Common YAML / YS Gotchas](gotchas.md)

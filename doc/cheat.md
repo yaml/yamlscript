@@ -1,22 +1,22 @@
 ---
-title: YAMLScript Cheat Sheet
+title: YS Cheat Sheet
 ---
 
 
-### YAMLScript Fundamentals
+### YS Fundamentals
 
-* Valid YAMLScript code is always valid YAML
-* YAMLScript has 3 modes: code, data, and bare
+* Valid YS code is always valid YAML
+* YS has 3 modes: code, data, and bare
   * Code mode data is treated as code (can toggle to data mode)
   * Data mode data is treated as data (can toggle to code mode)
   * Bare mode data is treated as data (cannot toggle; always normal YAML)
-* YAMLScript files must start with a YAMLScript tag:
+* YS files must start with a YS (YAMLScript) tag:
   * `!yamlscript/v0` - Start in code mode
   * `!yamlscript/v0/data` - Start in data mode
   * `!yamlscript/v0:` - Shorthand for data mode
   * No tag - Start in bare mode (plain YAML; no code evaluation)
   * Initial tagged pair of `!YS v0:` is an alternative; starts in data mode
-* YAMLScript code mode always uses these YAML forms:
+* YS code mode always uses these YAML forms:
   * Block mappings (normal indented mappings; `: ` separated pairs)
   * Plain scalars (no quotes)
   * Quoted scalars (single or double or literal (`|`))
@@ -30,8 +30,6 @@ title: YAMLScript Cheat Sheet
 * Use `=>: x` to write `x` as a mapping pair in code mode
 
 The following examples are in code mode unless otherwise noted.
-
-"YS" is short for "YAMLScript".
 
 
 ### Assignment
@@ -51,7 +49,7 @@ When an expression starts with YAML syntax characters like `{`, `[`, `*`, `#`
 then its not a valid YAML scalar.
 Also expressions that have stuff after a quoted string (`''` `""`) are not valid YAML.
 You can turn text into a valid YAML plain scalar by prefixing it with a dash.
-The dash is removed when YAMLScript reads the scalar.
+The dash is removed when YS reads the scalar.
 
 ```
 -[1 2 3]: .map(inc)  # => [2 3 4]
@@ -197,5 +195,5 @@ say: |
 - FILE              # File path of the current script
 - INC               # File loading include path
 - RUN               # Runtime information mapping
-- VERSION           # YAMLScript version
+- VERSION           # YS version
 ```

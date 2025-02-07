@@ -1,11 +1,6 @@
 ---
 title: Coding with Style
-# date: '2023-12-09'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-09
 ---
 
 What's the best thing about Rudolph's nose?
@@ -19,12 +14,12 @@ They do the whole thing with style.
 That makes the program easier to read, understand and maintain.
 It also gives the code a certain je ne sais quoi.
 
-### Welcome to Day 9 of the YAMLScript Advent Calendar
+### Welcome to Day 9 of the YS Advent Calendar
 
-We know that YAMLScript compiles to Clojure.
+We know that YS compiles to Clojure.
 And we know that YAML doesn't really look anything like a Lisp.
-But it turns out that YAMLScript can use as much or as little Lisp style as you
-want it to.
+But it turns out that YS can use as much or as little Lisp style as you want it
+to.
 It's all about your personal style.
 
 Here's a YS program that sings my favorite drinking song:
@@ -97,8 +92,7 @@ $ ys -c 99-bottles.ys
 (apply main ARGS)
 ```
 
-It turns out that the compiled Clojure code is actually valid YAMLScript syntax
-as well.
+It turns out that the compiled Clojure code is actually valid YS syntax as well.
 Well, almost.
 
 The file is valid YAML.
@@ -113,9 +107,9 @@ We didn't add the `!yamlscript/v0` tag to the beginning of the file.
 
 If we do that it works fine.
 
-So apparently we can write YAMLScript in a purely Lisp style.
-The truth is you can write YAMLScript is a completely YAML style (no parens),
-a completely Lisp style (all parens), or somewhere in between.
+So apparently we can write YS in a purely Lisp style.
+The truth is you can write YS is a completely YAML style (no parens), a
+completely Lisp style (all parens), or somewhere in between.
 
 Good looking YS programs start with YAML style and then switch to the Lisp style
 for certain nicer idioms.
@@ -155,8 +149,8 @@ defn paragraph(num): |
 
 That's so much easier to read and understand.
 
-I hope you are inspired to write some beautiful YAMLScript code.
+I hope you are inspired to write some beautiful YS code.
 
 **You've got style, baby!**
 
-Come back tomorrow for day 10 of the YAMLScript Advent Calendar.
+Come back tomorrow for day 10 of the YS Advent Calendar.

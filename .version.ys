@@ -48,7 +48,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - www/src/index.md
     - www/src/install
     - www/src/run-ys
-    - www/src/posts/advent-2023/dec-07.md
+    - blog/advent-2023/dec-07.md
     - ys/src/yamlscript/cli.clj
     - ys/test/cli-usage.t
 
@@ -74,9 +74,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - libyamlscript/project.clj
     - ys/project.clj
 
-  - regx:: "(YAMLScript.*)${vp}(.*)"
+  - regx:: "(YS.*)${vp}(.*)"
     file:
-    - www/src/posts/advent-2023/dec-05.md
+    - blog/advent-2023/dec-05.md
 
   - regx:: "(yamlscript\/yamlscript.*)${vp}(.*)"
     file:

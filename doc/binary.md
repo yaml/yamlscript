@@ -1,10 +1,10 @@
 ---
-title: Compiling YAMLScript to Binary
+title: Compiling YS to Binary
 ---
 
 
-You can compile any YAMLScript program that has a `main` function to a machine
-native binary executable.
+You can compile any YS program that has a `main` function to a machine native
+binary executable.
 
 This is done using the `ys --compile --binary` command.
 
@@ -21,7 +21,7 @@ You can run:
 
 ```sh
 $ time ys --compile --binary hello.ys
-* Compiling YAMLScript 'hello.ys' to 'hello' executable
+* Compiling YS 'hello.ys' to 'hello' executable
 * Setting up build env in '/tmp/tmp.W0u4SGljdY'
 * This may take a few minutes...
 [1/8] Initializing              (3.1s @ 0.24GB)
@@ -32,7 +32,7 @@ $ time ys --compile --binary hello.ys
 [6/8] Compiling methods         (17.7s @ 0.43GB)
 [7/8] Laying out methods                (1.0s @ 0.49GB)
 [8/8] Creating image            (1.7s @ 0.54GB)
-* Compiled YAMLScript 'hello.ys' to 'hello' executable
+* Compiled YS 'hello.ys' to 'hello' executable
 
 real    0m48.929s
 user    6m44.965s
@@ -79,7 +79,7 @@ Note that we can even compile the one-liner if we want to:
 ```sh
 $ ys --compile --binary -e 'defn main(name="world"): say("Hello, $name!")'
 ... time passes ...
-* Compiled YAMLScript '-e' to './NO-NAME' executable
+* Compiled YS '-e' to './NO-NAME' executable
 ```
 
 Since there is no input file, the binary is named `NO-NAME`.
@@ -91,6 +91,6 @@ The options listed above have short names as well:
 
 ```sh
 $ ys -cbo say-hi hello.ys
-* Compiling YAMLScript 'hello.ys' to 'say-hi' executable
+* Compiling YS 'hello.ys' to 'say-hi' executable
 ...
 ```

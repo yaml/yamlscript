@@ -1,11 +1,6 @@
 ---
-title: YAMLScript Advent 2023
-# date: '2023-12-01'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+title: YS Advent 2023
+# date: 2023-12-01
 ---
 
 ### Seasons Greetings, my YAML friends!
@@ -50,14 +45,14 @@ $ ys tree.ys 10
           *
 ```
 
-Welcome to the first day of YAMLScript Advent 2023!
-We're going to be writing a lot of YAMLScript this month, so let's get started…
+Welcome to the first day of YS Advent 2023!
+We're going to be writing a lot of YS this month, so let's get started…
 
-Wait! What is YAMLScript?
+Wait! What is YS?
 
-YAMLScript is a new programming language that uses YAML as its syntax.
-You can do anything in YAMLScript that you can do in a language like
-Python or JavaScript such as:
+YS (aka YAMLScript) is a new programming language that uses YAML as its syntax.
+You can do anything in YS that you can do in a language like Python or
+JavaScript such as:
 
 * Defining functions
 * Using variables
@@ -66,16 +61,16 @@ Python or JavaScript such as:
 * Importing modules
 * And more!
 
-YAMLScript looks and feels like an imperative programming language, but it's
-actually a functional programming language.
-This means that YAMLScript programs are made up of expressions that are
-evaluated to produce a result.
+YS looks and feels like an imperative programming language, but it's actually a
+functional programming language.
+This means that YS programs are made up of expressions that are evaluated to
+produce a result.
 
 But why would you even want to write a program in YAML?
 
-YAMLScript is a full-featured, general purpose programming language, but it's
-also designed to be a great language for writing YAML configuration files.
-To that point, almost all YAML files are valid YAMLScript programs!
+YS is a full-featured, general purpose programming language, but it's also
+designed to be a great language for writing YAML configuration files.
+To that point, almost all YAML files are valid YS programs!
 And they evaluate to the same result that a YAML loader would produce.
 
 For example, here's a YAML file that defines a list of fruits:
@@ -84,7 +79,7 @@ For example, here's a YAML file that defines a list of fruits:
 --8<-- "sample/advent/fruits.yaml"
 ```
 
-Let's run this file as a YAMLScript program:
+Let's run this file as a YS program:
 ```bash
 $ ys fruits.yaml
 $
@@ -100,8 +95,8 @@ $ python -c '["apple", "banana", "cherry"]'
 $
 ```
 
-To obtain the evaluation result of a YAMLScript program, we need to use the
-`--load` option:
+To obtain the evaluation result of a YS program, we need to use the `--load`
+option:
 ```bash
 $ ys --load fruits.yaml
 ["apple", "banana", "cherry"]
@@ -109,8 +104,8 @@ $
 ```
 
 We got some JSON back!
-That's because by default, `--load` evaluates the YAMLScript and prints the
-result as JSON.
+That's because by default, `--load` evaluates the YS and prints the result as
+JSON.
 
 What if we want to include these fruits in our YAML grocery list?
 Let's try it:
@@ -136,8 +131,8 @@ That's not what we wanted!
 We wanted the contents of the fruits list to be included in the grocery list.
 
 But if you think about it, this is exactly what we asked for.
-Since every YAML file is a valid YAMLScript program, it certainly should be
-loaded just like any other YAML loader would do it.
+Since every YAML file is a valid YS program, it certainly should be loaded just
+like any other YAML loader would do it.
 
 Let's fix this to do what we want:
 
@@ -169,37 +164,37 @@ We won't get into the details of what these tags mean today, but you'll learn
 about them soon enough.
 
 
-### YAMLScript Advent 2023 Teasers
+### YS Advent 2023 Teasers
 
 My name is [Ingy döt Net](https://github.com/ingydotnet).
 I'm one of the original creators of the [YAML data language](
 https://yaml.org/) and I lead the [YAML Language Development Team](
 https://yaml.org/spec/1.2.2/ext/team/).
 
-I've been working on YAMLScript for about a year now, and I'm excited to finally
-share it with you.
-I believe that YAMLScript is going to take YAML to exciting new places, while
-remedying many of its shortcomings, limitations and frustrations.
+I've been working on YS for about a year now, and I'm excited to finally share
+it with you.
+I believe that YS is going to take YAML to exciting new places, while remedying
+many of its shortcomings, limitations and frustrations.
 I hope you'll come to agree as you join me on this holiday season unwrapping of
-the gift that is YAMLScript!
+the gift that is YS!
 
-I also hope that you enjoyed this first day of the **YAMLScript Advent 2023**!
+I also hope that you enjoyed this first day of the **YS Advent 2023**!
 I'll be posting a new blog article every day this month, so stay tuned!
 Well at least until December 25th, but I might keep going after that. :-)
 
 Here's a sneak peek of some of the things to come:
 
-* Installing and using `ys` — the YAMLScript interpreter
-* The history of YAMLScript
-* How YAMLScript is compiled and evaluated
-* How YAMLScript can fix many of YAML's problems
-* How to use YAMLScript like a YAML loader in any programming language
-* Is YAMLScript actually a Lisp???
-* Refactoring complicated YAML configurations with YAMLScript
-* Writing polyglot libraries in YAMLScript
-* What makes a YAML file a valid (or invalid) YAMLScript program?
-* Compiling YAMLScript to native binaries and shared libraries
+* Installing and using `ys` — the YS interpreter
+* The history of YS
+* How YS is compiled and evaluated
+* How YS can fix many of YAML's problems
+* How to use YS like a YAML loader in any programming language
+* Is YS actually a Lisp???
+* Refactoring complicated YAML configurations with YS
+* Writing polyglot libraries in YS
+* What makes a YAML file a valid (or invalid) YS program?
+* Compiling YS to native binaries and shared libraries
 
-Hopefully you're as excited as I am to learn more about YAMLScript!
+Hopefully you're as excited as I am to learn more about YS!
 
 See you tomorrow!

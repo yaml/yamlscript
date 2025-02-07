@@ -73,14 +73,14 @@
     {"foo" [-42 {"bar" 3.1415, "baz" [true false :string]}]}
 
 
-- name: Empty YAMLScript File
+- name: Empty YS File
   yamlscript: ''
   build: |
     nil
   print: |
 
 
-- name: Empty YAMLScript File w/ yamlscript Tag
+- name: Empty YS File w/ yamlscript Tag
   yamlscript: |
     !yamlscript/v0
   build: |

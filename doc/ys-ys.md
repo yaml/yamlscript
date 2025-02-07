@@ -1,10 +1,9 @@
 ---
-title: YAMLScript YAMLScript Library
+title: The YS YS Library
 ---
 
 This library serves 2 purposes.
-It provides functions for working with YAMLScript code from within a YAMLScript
-program/file.
+It provides functions for working with YS code from within a YS program/file.
 
 It also provides functions that are wrappers around common Clojure functions so
 that they can be used in places where functions are not allowed; like in [dot
@@ -13,19 +12,19 @@ chaining operations](chain.md).
 You can use these functions with the `ys/` (or `ys::ys/`) prefix.
 
 
-## YAMLScript Functions
+## YS Functions
 
-* `compile` — Compile a YAMLScript string to a Clojure string
+* `compile` — Compile a YS string to a Clojure string
 
-* `eval` — Evaluate a YAMLScript string
+* `eval` — Evaluate a YS string
 
-* `load-file` — Load a YAMLScript file path
+* `load-file` — Load a YS file path
 
 * `load-pod` — Load a Babashka Pod
 
 * `unload-pods` — Unload all loaded pods
 
-* `use` — Use a YAMLScript or Clojure library found in `YSPATH`.
+* `use` — Use a YS or Clojure library found in `YSPATH`.
   Normally called as `use`, not `ys/use`.
 
 

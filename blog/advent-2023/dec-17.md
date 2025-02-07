@@ -1,11 +1,6 @@
 ---
 title: Rosetta Code
-# date: '2023-12-17'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-17
 ---
 
 How does Santa read all the signs in all the languages of the world?
@@ -14,7 +9,7 @@ Luckily he has his trusty polyglot elf, Rosetta, at his side.
 Bet you didn't know that!
 
 
-### Welcome to Day 17 of the YAMLScript Advent Calendar
+### Welcome to Day 17 of the YS Advent Calendar
 
 A cool guy named Mike Mol made a website called [Rosetta Code](
 https://rosettacode.org/wiki/Rosetta_Code) for programmers who want to
@@ -31,7 +26,7 @@ Here's one of my all time favorite programs from the site:
 https://rosettacode.org/wiki/FizzBuzz/EsoLang#SNUSP)!!
 
 One thing people like to use Rosetta Code for is to show off a new language.
-YAMLScript is a new language, and I've put a few solutions up there myself:
+YS is a new language, and I've put a few solutions up there myself:
 
 * [99 Bottles of Beer](
   https://rosettacode.org/wiki/99_Bottles_of_Beer#YAMLScript)
@@ -45,7 +40,7 @@ YAMLScript is a new language, and I've put a few solutions up there myself:
   https://rosettacode.org/wiki/Fibonacci_sequence#YAMLScript)
 
 Adding solutions to Rosetta Code is a one of the best ways I've found to figure
-out what YAMLScript needs to do and what it needs to do better.
+out what YS needs to do and what it needs to do better.
 
 
 ### Rosetta Code Data
@@ -102,10 +97,9 @@ Pretty cool, huh?
 
 ### RC Needs More YS!
 
-Let's try adding a new YAMLScript solution to Rosetta Code.
+Let's try adding a new YS solution to Rosetta Code.
 
-The first thing to do is to find a task that doesn't have a YAMLScript solution
-yet.
+The first thing to do is to find a task that doesn't have a YS solution yet.
 You can find all the tasks listed [here](
 https://rosettacode.org/wiki/Category:Programming_Tasks).
 
@@ -113,9 +107,8 @@ Let's take the first one: [100 doors](
 https://rosettacode.org/wiki/100_doors).
 
 What I like to do next is cheat!
-Clojure has solved most of the tasks on Rosetta Code, and YAMLScript is another
-way to write Clojure, so let's just pick a Clojure solution and translate it to
-YAMLScript.
+Clojure has solved most of the tasks on Rosetta Code, and YS is another way to
+write Clojure, so let's just pick a Clojure solution and translate it to YS.
 
 ```clojure
 (defn doors []
@@ -133,7 +126,7 @@ YAMLScript.
 (print-open-doors)
 ```
 
-Here's a quick translation to YAMLScript:
+Here's a quick translation to YS:
 
 ```yaml
 !yamlscript/v0
@@ -187,7 +180,7 @@ defn doors():
 ```
 
 I also ordered the functions top-down in the order they are called since we know
-that YAMLScript will auto-declare them in the generated Clojure code.
+that YS will auto-declare them in the generated Clojure code.
 
 ```bash
 $ time ys 100-doors.ys
@@ -203,7 +196,7 @@ Let's add it to Rosetta Code!
 To do this you need to create an account on the site, login, and then click the
 "Edit" tab on the task page.
 It's a pretty terrible plain text editor, but scroll way down to where
-the YAMLScript solutions should go and add this:
+the YS solutions should go and add this:
 
 ```text
 =={&lcub;header|YAMLScript}}==
@@ -241,7 +234,7 @@ Click "Save changes" and you're done!
 
 ----
 
-Don't wait for me to add more YAMLScript solutions to Rosetta Code.
+Don't wait for me to add more YS solutions to Rosetta Code.
 You can do it yourself!
 If you do, send me (`@ingydotnet`) a DM on the [Rosetta Code Discord](
 https://discord.com/channels/1011262808001880065/) server and I'll update the
@@ -250,4 +243,4 @@ Rosetta Code Data Project repo with your solutions.
 If you had never heard of Rosetta Code before, I hope you'll find it as
 interesting as I do.
 
-Check back tomorrow for Day 18 of the YAMLScript Advent Calendar!
+Check back tomorrow for Day 18 of the YS Advent Calendar!

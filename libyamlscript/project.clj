@@ -2,7 +2,7 @@
 ;; Copyright 2023-2025 Ingy dot Net
 
 (defproject yamlscript/libyamlscript "0.1.91"
-  :description "Shared Library for YAMLScript"
+  :description "Shared Library for YS"
 
   :url "https://yamlscript.org"
 

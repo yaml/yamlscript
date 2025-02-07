@@ -1,7 +1,7 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.ast library defines the YAMLScript AST nodes.
+;; The yamlscript.ast library defines the YS AST nodes.
 
 (ns yamlscript.ast
   (:require

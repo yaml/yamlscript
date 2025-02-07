@@ -1,11 +1,6 @@
 ---
 title: Santa's Big Secret
-# date: '2023-12-04'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-04
 ---
 
 I've got a little secret to tell you.
@@ -13,33 +8,33 @@ I've been hiding a little something from you.
 Even that's a lie.
 I've actually been hiding something very very big something from you.
 
-> ### \*\*\* YAMLScript is a Lisp! \*\*\***
+> ### \*\*\* YS is a Lisp! \*\*\***
 
-### Welcome to day 4 of YAMLScript Advent 2023!
+### Welcome to day 4 of YS Advent 2023!
 
 Today is Monday and Monday's are made for big headlines.
 
 That's right.
-Not only is YAMLScript a Lisp, it's a very specific and modern Lisp.
+Not only is YS a Lisp, it's a very specific and modern Lisp.
 It's a Lisp that has a community and conferences and books and jobs that pay
 people to write code in Lisp!
 
 If you know the slightest thing about Lisp, you must think I'm crazy.
-YAMLScript is YAML, and YAML is no Lisp.
+YS is YAML, and YAML is no Lisp.
 It's almost the Anti-Lisp incarnate.
 
 OK. Here's the deal...
 
-> ### YAMLScript _is_ Clojure
+> ### YS _is_ Clojure
 
 There you go. The secret is out.
-Every YAMLScript program is program is a Clojure program.
+Every YS program is program is a Clojure program.
 
-Every time you run (or load!) a YAMLScript program, it compiles to Clojure code
-that is then run by a Clojure runtime engine.
+Every time you run (or load!) a YS program, it compiles to Clojure code that is
+then run by a Clojure runtime engine.
 I can prove it!
 
-Consider this YAMLScript program:
+Consider this YS program:
 
 ```yaml
 # hw.ys
@@ -71,7 +66,7 @@ Hello, world!
 ```
 
 It works!
-YAMLScript really _is_ Clojure.
+YS really _is_ Clojure.
 And Clojure most definitely _is_ a Lisp.
 Soooooo...?!
 Yeah, you get it. QED, baby!
@@ -109,10 +104,9 @@ Clojure an extremely practical language.
 In a phrase: **"Clojure makes Java not suck"**. (Ingy's words, not Rich's)
 
 
-### What does this all have to say about YAMLScript?
+### What does this all have to say about YS?
 
-**Yesterday we learned that all JSON is YAML and that almost all YAML is
-YAMLScript.
+**Yesterday we learned that all JSON is YAML and that almost all YAML is YS.
 Does this means that all JSON is Clojure?**
 
 Actually it kind of does.
@@ -132,14 +126,14 @@ usually does with `-e` to make your YS life easier.
 We'll learn more about `-m` another time.
 
 **Lisp puts parentheses around everything.
-Does that mean that YAMLScript does too?**
+Does that mean that YS does too?**
 
 Good question. The answer may surprise you.
-YAMLScript has a lot of different ways to express code.
+YS has a lot of different ways to express code.
 It embraces diversity. (As long as that diversity can be written as YAML!)
-One of the ways to write code in YAMLScript is in Clojure syntax!
+One of the ways to write code in YS is in Clojure syntax!
 
-This YAMLScript prints 3 symbol names available in the current namespace:
+This YS prints 3 symbol names available in the current namespace:
 
 ```bash
 $ ys -e '(say (take (+ 1 2) (keys (ns-map NS))))'
@@ -152,7 +146,7 @@ That means arithmetic expressions like `1 + 2` are written as `(+ 1 2)`.
 
 This feels very natural to Lisp programmers, but it can be a bit of a shock to
 the rest of us.
-YAMLScript offers alternate ways (called ysexprs or YeS Expressions) to write
+YS offers alternate ways (called ysexprs or YeS Expressions) to write
 these Lisp basic forms.
 
 We'll learn the gritty details in another post, but here's the basics:
@@ -163,7 +157,7 @@ We'll learn the gritty details in another post, but here's the basics:
 =>: foo(bar(42 true))   # (foo (bar 42 true))
 ```
 
-We could write the above YAMLScript expression like this:
+We could write the above YS expression like this:
 
 ```yaml
 say:
@@ -173,24 +167,24 @@ say:
       ns-map: NS
 ```
 
-Both YAMLScript forms compile to the same Clojure code.
+Both YS forms compile to the same Clojure code.
 
-Basically at any level of YAML in YAMLScript, you can switch to using Clojure.
+Basically at any level of YAML in YS, you can switch to using Clojure.
 Since an entire YAML document can be a single string you can sometimes use an
-entire Clojure file as a YAMLScript program.
+entire Clojure file as a YS program.
 As long as it's valid YAML, of course.
 
 
 **Clojure is a JVM Language.
-Does that mean that YAMLScript is a JVM language?**
+Does that mean that YS is a JVM language?**
 
 This one is crazy.
-YAMLScript does not need the JVM or anything Java whatsoever.
+YS does not need the JVM or anything Java whatsoever.
 The `ys` binary is a native machine code executable.
 The `libyamlscript` shared library is also native machine code and thus can be
 FFI bound to almost any programming language.
 
-You don't even need to have Java installed on your system to *build* YAMLScript.
+You don't even need to have Java installed on your system to *build* YS.
 That's a little fib.
 The build system always downloads a Java build system and then discards it when
 it's done.
@@ -204,7 +198,7 @@ GraalVM's `native-image` compiler can magically turn anything Java into native
 machine code on Linux, macOS and Windows.
 **Wow!**
 
-A very noticeable difference between YAMLScript and Clojure is startup time:
+A very noticeable difference between YS and Clojure is startup time:
 
 ```bash
 $ time ys -e 1
@@ -220,15 +214,15 @@ Clojure's not 10 times slower than YS (or Perl).
 It just takes 10 times longer to start up a JVM.
 
 
-**Do you need to know Clojure to use YAMLScript?**
+**Do you need to know Clojure to use YS?**
 
 No, not at first.
 Proof?
-I just got through 3 days of YAMLScript Advent without mentioning Clojure once.
+I just got through 3 days of YS Advent without mentioning Clojure once.
 
 If you just want to make your out of control YAML files more manageable,
-composable and maintainable, you can easily learn how to wield YAMLScript
-without knowing a lick of Clojure.
+composable and maintainable, you can easily learn how to wield YS without
+knowing a lick of Clojure.
 
 When you need more power it's there for you because Clojure is there for you.
 But you have to learn some new things first.
@@ -247,16 +241,16 @@ Clojure is a great gift and I hope YS can help more people benefit from it in
 the languages and technologies they already use.
 
 
-**How does YAMLScript benefit from building over Clojure?**
+**How does YS benefit from building over Clojure?**
 
-In a nutshell, it makes YAMLScript a complete, robust, battle tested, and
+In a nutshell, it makes YS a complete, robust, battle tested, and
 well-documented language from the get go.
 Rich knew that to make a new language in 2006 he needed to build on something
 that was already a big deal; the Java ecosystem.
 
-I feel the exact same way about YAMLScript.
+I feel the exact same way about YS.
 
-YAMLScript is poised to take YAML to a whole new level.
+YS is poised to take YAML to a whole new level.
 This is all thanks to the shoulders of these specific giants:
 
 * [YAML](https://yaml.org/)
@@ -268,4 +262,4 @@ This is all thanks to the shoulders of these specific giants:
 I'll have more to say about each of these in future posts.
 For now, I'll just say that I'm extremely grateful for all of them.
 
-I'll see you tomorrow for day 5 of YAMLScript Advent 2023!
+I'll see you tomorrow for day 5 of YS Advent 2023!

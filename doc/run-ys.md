@@ -10,7 +10,7 @@ happened?".
 
 <details><summary><strong>What just happened?</strong></summary>
 
-If you are reading this you probably just ran a YAMLScript program with `bash`.
+If you are reading this you probably just ran a YS program with `bash`.
 The first time you do that, the program installed the `ys` interpreter under the
 `/tmp/` directory for you and then ran the program with it.
 Subsequent runs of the program will use that installed `ys` interpreter.
@@ -25,19 +25,19 @@ that you can run the program with `ys` instead of `bash`.
 $ curl -s https://yamlscript.org/install-ys | bash
 ```
 
-See the [YAMLScript Installation](install.md) page for more information.
+See the [YS Installation](install.md) page for more information.
 </details>
 </blockquote>
 
 ----
 
-YAMLScript has a way to publish programs that people can run immediately without
-having installed the `ys` interpreter first.
+YS has a way to publish programs that people can run immediately without having
+installed the `ys` interpreter first.
 
 > **Warning**: See the [Security Considerations](
   #use-cases-and-security-considerations) below before using this technique.
 
-Just begin your YAMLScript program with these lines:
+Just begin your YS program with these lines:
 
 ```yaml
 #!/usr/bin/env ys-0
@@ -65,8 +65,8 @@ if the file is marked as executable.
 
 ## Example
 
-Here's a small YAMLScript program that program that prints the ROT13 encoding of
-its arguments:
+Here's a small YS program that program that prints the ROT13 encoding of its
+arguments:
 
 ```yaml
 #!/usr/bin/env ys-0
@@ -91,7 +91,7 @@ If we run it with `bash`:
 
 ```bash
 $ bash rot13.ys I Love YS
-Installing YAMLScript CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.91' now...
+Installing the YS CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.91' now...
 Ctl-C to abort
 See https://yamlscript.org/doc/run-ys for more information.
 
@@ -110,9 +110,9 @@ V Ybir LF
 
 ## How It Works
 
-The program is both valid YAMLScript and valid Bash.
+The program is both valid YS and valid Bash.
 
-YAMLScript programs are required to start with a YAML tag like this:
+YS programs are required to start with a YAML tag like this:
 
 ```yaml
 !yamlscript/v0
@@ -137,18 +137,18 @@ interpreter under the `/tmp/` directory if it is not already installed.
 It then `exec`s the installed `ys` interpreter with your original program and
 any arguments you provided.
 
-The `source` line is also a valid YAMLScript command.
-It calls the YAMLScript `source` macro which ignores all of its arguments (much
-like the `comment` macro does).
+The `source` line is also a valid YS command.
+It calls the YS `source` macro which ignores all of its arguments (much like
+the `comment` macro does).
 
-> Note: The `source` macro was added in YAMLScript version 0.1.91.
-This technique will not work with earlier versions of YAMLScript.
+> Note: The `source` macro was added in YS version 0.1.85.
+This technique will not work with earlier versions of YS.
 
 
 ## Use Cases and Security Considerations
 
-This technique is may be useful in situations where you want to share a
-YAMLScript program with people who are not yet familiar with YAMLScript.
+This technique is may be useful in situations where you want to share a YS
+program with people who are not yet familiar with YS.
 
 Since the program is run with Bash which gets more Bash code from the internet,
 it is subject to the many security risks of running arbitrary code from the
@@ -156,13 +156,13 @@ internet.
 
 Caveat yamlscriptor!
 
-> ** Note**: A more secure way to distribute a YAMLScript program is to
+> ** Note**: A more secure way to distribute a YS program is to
 [compile it to a binary executable](binary.md) and distribute the binary
 instead.
 
 There is at least one use case where this Bash technique is safe and useful:
 
-You can easily run a YAMLScript program that you are developing with a
+You can easily run a YS program that you are developing with a
 particular version of the `ys` interpreter without having to install it first.
 Just use the `YS_VERSION` environment variable to specify the version you want:
 

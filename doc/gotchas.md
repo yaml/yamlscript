@@ -1,17 +1,16 @@
 ---
-title: Common YAML / YAMLScript Gotchas
+title: Common YAML / YS Gotchas
 ---
 
-All YAMLScript files are required to be valid YAML.
-YAMLScript uses most of YAML's capabilities and flexibilities to create a
-clean programming language (one that doesn't look like just a bunch of data).
+All YS files are required to be valid YAML.
+YS uses most of YAML's capabilities and flexibilities to create a clean
+programming language (one that doesn't look like just a bunch of data).
 
 Unfortunately, this means that you can run into some situations where your
-YAMLScript code looks perfectly fine but is actually invalid YAML.
+YS code looks perfectly fine but is actually invalid YAML.
 
 Here's a common gotcha.
-YAMLScript can repeat a string with this syntax: `'foo' * 3` yields
-`'foofoofoo'`.
+YS can repeat a string with this syntax: `'foo' * 3` yields `'foofoofoo'`.
 
 However, the following is not valid and would cause a YAML parsing error:
 
@@ -22,7 +21,7 @@ say: 'foo' * 3
 This is because YAML sees a single quoted scalar and text content is not allowed
 to follow the closing quote.
 
-YAMLScript provides the `+` escaping character to fix this:
+YS provides the `+` escaping character to fix this:
 
 ```yaml
 say: +'foo' * 3
@@ -33,22 +32,22 @@ say: 3 * 'foo'
 
 Now the right-hand side is a plain scalar wThis is because YAML sees a single quoted scalar and text content is not allowed to
 follow the closing quote.hose value is `+'foo' * 3`.
-YAMLScript will ignore the leading `+` and evaluate the expression as expected.
+YS will ignore the leading `+` and evaluate the expression as expected.
 
 This `+` escaping character can be used anywhere that you need to use a plain
-scalar to write a YAMLScript expression but the leading character would
-otherwise be interpreted as YAML syntax.
+scalar to write a YS expression but the leading character would otherwise be
+interpreted as YAML syntax.
 
 Another example:
 
 ```yaml
-# Here [3 4 5] is a YAMLScript vector, not a YAML sequence.
+# Here [3 4 5] is a YS vector, not a YAML sequence.
 # Again we make the entire RHS a plain scalar by starting with a `+`.
 say: +[3 4 5].reverse()
 ```
 
 It is super common to use `[]` vectors and `{}` mappings in Clojure code
-expressions and thus in YAMLScript code expressions.
+expressions and thus in YS code expressions.
 In YAML, the same syntax is used for flow sequence and mapping nodes.
 This can cause confusion.
 

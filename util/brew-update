@@ -68,4 +68,4 @@ defn check-version(version):
   try:
     curl: "$releases-url/tag/$version"
     catch:
-      die: "No YAMLScript release for version '$version'"
+      die: "No YS release for version '$version'"

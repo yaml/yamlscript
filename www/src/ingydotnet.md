@@ -7,8 +7,8 @@ name: About Ingy döt Net
 Ingy döt Net is a software developer and speaker.
 He is best known for his work on the YAML data serialization language.
 
-Recently Ingy created the YAMLScript programming language, which embeds cleanly
-into YAML, adding the functional features that many YAML users need.
+Recently Ingy created the YS programming language, which embeds cleanly into
+YAML, adding the functional features that many YAML users need.
 
 
 ## Contact Ingy
@@ -23,5 +23,5 @@ into YAML, adding the functional features that many YAML users need.
 ## Hire Ingy
 
 [Ingy](https://yamlscript.org/ingydotnet) is available for consulting,
-training, and speaking engagements worldwide on YAMLScript, YAML, and other
-related topics.
+training, and speaking engagements worldwide on YS, YAML, and other related
+topics.

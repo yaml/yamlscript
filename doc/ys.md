@@ -1,9 +1,9 @@
 ---
-title: ys - The YAMLScript Command Line Tool
+title: ys - The YS Command Line Tool
 ---
 
-The YAMLScript `ys` command line tool is the primary way to run, load and
-compile YAMLScript programs.
+The YS `ys` command line tool is the primary way to run, load and compile YS
+programs.
 
 > Loading is essentially the same as running, but the result is output is
 printed as JSON.
@@ -13,18 +13,17 @@ Here's the `ys --help` output:
 ```text
 $ ys --help
 
-ys - The YAMLScript (YS) Command Line Tool - v0.1.91
+ys - The YS (YAMLScript) Command Line Tool - v0.1.91
 
 Usage: ys [<option...>] [<file>]
 
 Options:
 
-      --run                Run a YAMLScript program file (default)
-  -l, --load               Output (compact) JSON of YAMLScript evaluation
-  -e, --eval YSEXPR        Evaluate a YAMLScript expression
+  -l, --load               Output (compact) JSON of YS evaluation
+  -e, --eval YSEXPR        Evaluate a YS expression
                            multiple -e values joined by newline
 
-  -c, --compile            Compile YAMLScript to Clojure
+  -c, --compile            Compile YS to Clojure
   -b, --binary             Compile to a native binary executable
 
   -p, --print              Print the result of --run in code mode
@@ -92,8 +91,8 @@ hello:
 - Dzień dobry
 ```
 
-We can "load" the YAML/YAMLScript file with the `ys` command and it will print
-the result as JSON:
+We can "load" the YAML/YS file with the `ys` command and it will print the
+result as JSON:
 
 ```bash
 $ ys -l some.yaml 
@@ -112,7 +111,7 @@ drink: Bar, Bar, Bar!!!
 
 ----
 
-Here's a tiny YAMLScript program called `program.ys`:
+Here's a tiny YS program called `program.ys`:
 
 ```yaml
 !yamlscript/v0
@@ -173,7 +172,7 @@ You can compile the program to a native binary executable:
 
 ```text
 $ time ys -b program.ys 
-* Compiling YAMLScript 'program.ys' to 'program' executable
+* Compiling YS 'program.ys' to 'program' executable
 * Setting up build env in '/tmp/tmp.xU8K3OPymt'
 * This may take a few minutes...
 [1/8] Initializing		(2.8s @ 0.14GB)
@@ -184,7 +183,7 @@ $ time ys -b program.ys
 [6/8] Compiling methods		(10.6s @ 0.50GB)
 [7/8] Layouting methods		(1.0s @ 0.50GB)
 [8/8] Creating image		(1.5s @ 0.44GB)
-* Compiled YAMLScript 'program.ys' to 'program' executable
+* Compiled YS 'program.ys' to 'program' executable
 
 real	0m36.340s
 user	4m34.165s

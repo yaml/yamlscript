@@ -1,11 +1,6 @@
 ---
 title: Reindeer All The Way Down
-# date: '2023-12-19'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-19
 ---
 
 Santa is in charge of Christmas.
@@ -20,21 +15,19 @@ More reindeer!
 It's reindeer all the way down.
 
 
-### Welcome to Day 19 of the YAMLScript Advent Calendar
+### Welcome to Day 19 of the YS Advent Calendar
 
-YAMLScript is a new programming language that is based on Clojure.
+YS is a new programming language that is based on Clojure.
 It's written in Clojure and compiles to Clojure.
-In effect YAMLScript is Clojure.
-So if YAMLScript is written in Clojure, why not just use YAMLScript to write
-YAMLScript?
+In effect YS is Clojure.
+So if YS is written in Clojure, why not just use YS to write YS?
 
 Isn't there a chicken and egg problem here?
 Sure, but that's easy to solve.
 
-Once you have a stable version of YAMLScript, you can rewrite YAMLScript in
-YAMLScript.
-You just need to use a previously compiled version of YAMLScript to compile
-the new YAMLScript-in-YAMLScript with.
+Once you have a stable version of YS, you can rewrite YS in YS.
+You just need to use a previously compiled version of YS to compile the new
+YS-in-YS with.
 
 This is called self-hosting and it's a common practice in the programming
 language world.
@@ -43,9 +36,9 @@ Not all of it.
 It's also written in Java, since it runs on the JVM.
 But all the core libraries are written in Clojure.
 
-YAMLScript isn't quite ready to be self-hosted yet.
-But I was able to convert the `ys::std` library to YAMLScript and then build
-YAMLScript with it!
+YS isn't quite ready to be self-hosted yet.
+But I was able to convert the `ys::std` library to YS and then build YS with
+it!
 
 Have a look at this [gist](
 https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933).
@@ -57,16 +50,16 @@ https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-orig-st
   — The original Clojure version of `ys::std` as of today.
 * [std.clj](
 https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-std-clj)
-  — The compiled version of YAMLScript port of `ys::std`.
+  — The compiled version of YS port of `ys::std`.
 * [std.ys](
 https://gist.github.com/ingydotnet/480d7243a797c9323b973cf5c5dea933#file-std-ys)
-  — The YAMLScript port of `ys::std`.
+  — The YS port of `ys::std`.
 
-I don't know about you but I find the YAMLScript version much easier to read
-than the Clojure version.
+I don't know about you but I find the YS version much easier to read than the
+Clojure version.
 
-However since there's still a lot of work left to do on YAMLScript, before the
-first stable release, some of the YAMLScript code is a bit ugly.
+However since there's still a lot of work left to do on YS, before the first
+stable release, some of the YS code is a bit ugly.
 
 Let's look at a few ugly forms and think about how to make them better.
 
@@ -81,8 +74,8 @@ ns ys::std:
   (:refer-clojure :exclude [print])
 ```
 
-Soon we'll have a YAMLScript macro system for making certain calls look better
-than they do with the base syntax.
+Soon we'll have a YS macro system for making certain calls look better than
+they do with the base syntax.
 The future `ns` declaration might look like this:
 
 ```yaml
@@ -136,12 +129,12 @@ defmacro each [bindings & body]:
 I pretty much had to leave the original Clojure syntax alone here.
 The backtick is a reserved character in YAML so we had to plus-escape it.
 
-There's actually quite a few problems that macros cause for YAMLScript.
+There's actually quite a few problems that macros cause for YS.
 I won't bore you with the details.
-We'll figure out a good way to code macros in YAMLScript but I can't say that I
-have it figured out yet.
+We'll figure out a good way to code macros in YS but I can't say that I have it
+figured out yet.
 
-At this point I'd say that about 80% of Clojure code ports nicely to YAMLScript.
+At this point I'd say that about 80% of Clojure code ports nicely to YS.
 The other 20% is a bit of a struggle.
 But that's stuff I want to improve before the first stable release.
 
@@ -149,10 +142,10 @@ But that's stuff I want to improve before the first stable release.
 
 I hope you enjoyed today's post.
 It was a little shorter than usual.
-But YAMLScript is keeping me very busy and I was a little short on time today.
+But YS is keeping me very busy and I was a little short on time today.
 
 I have something really special planned for tomorrow.
 But I need to make it work first!
 Fingers crossed.
 
-Come back tomorrow for Day 20 of the YAMLScript Advent Calendar.
+Come back tomorrow for Day 20 of the YS Advent Calendar.

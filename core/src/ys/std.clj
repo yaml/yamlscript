@@ -1,7 +1,7 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; This is the YAMLScript standard library.
+;; This is the YS standard library.
 
 (ns ys.std
   (:require
@@ -36,7 +36,7 @@
 ;; Special functions
 ;;------------------------------------------------------------------------------
 
-;; Used to run a YAMLScript file as a Bash script:
+;; Used to run a YS file as a Bash script:
 (defmacro source [& xs])
 
 ;; def destructuring
@@ -457,7 +457,7 @@
 
 
 ;;------------------------------------------------------------------------------
-;; YAMLScript document result stashing functions
+;; YS document result stashing functions
 ;;------------------------------------------------------------------------------
 (defn +++* [value]
   (reset! global/doc-anchors_ {})

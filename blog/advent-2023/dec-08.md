@@ -1,26 +1,21 @@
 ---
 title: Going to the Library
-# date: '2023-12-08'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-08
 ---
 
-Programming in YAMLScript is as easy as reading a book.
+Programming in YS is as easy as reading a book.
 The only thing you really need is some good books!
 For that let's go to the library.
 
-By books of course I mean YAMLScript functions.
-And by library I mean the YAMLScript Standard Library!
+By books of course I mean YS functions.
+And by library I mean the YS Standard Library!
 There you'll find all-time best sellers like `map`, `filter`, `reduce` and
 `say`.
 
 And Standard isn't the only Library in town...
 
 
-### Welcome to Day 8 of the YAMLScript Advent Calendar
+### Welcome to Day 8 of the YS Advent Calendar
 
 In our YS programming so far, we've been using various functions like `say`,
 `take`, `keys`, `join` and `map`.
@@ -28,7 +23,7 @@ Also we've been using various operators like `+`, `*`, `=>` and `..`.
 Operators are just functions with names made out of punctuation characters.
 
 Where do these functions come from?
-Are they built into the YAMLScript language?
+Are they built into the YS language?
 
 Nope. They all come from the Library!
 
@@ -49,7 +44,7 @@ namespace and be located at `foo/bar.clj` in your Java classpath.
 To access a function called `thinger` in `foo.bar`, you would use the fully
 qualified name (aka a Clojure symbol) `foo.bar/thinger`.
 
-YAMLScript is the same except:
+YS is the same except:
 
 * File names end with `.ys`
 * The 2 or more words are separated by `::` instead of `.`
@@ -58,13 +53,12 @@ YAMLScript is the same except:
 
 </details>
 
-The YAMLScript runtime has several libraries that are always available.
+The YS runtime has several libraries that are always available.
 The two primary ones are `clojure::core` and `ys::std`.
 
-The `clojure::core` library is what YAMLScript calls Clojure's famous
-`clojure.core` library.
-In Clojure (and thus YAMLScript!) `clojure.core` is the heart and soul of the
-language.
+The `clojure::core` library is what YS calls Clojure's famous `clojure.core`
+library.
+In Clojure (and thus YS!) `clojure.core` is the heart and soul of the language.
 It's where all the Good Parts live.
 All of the functions (and macros) that you use constantly in your day-to-day
 programming.
@@ -73,7 +67,7 @@ How many publicly accessible functions does `clojure::core` give you?
 581!!
 
 How do I know that?
-YAMLScript just told me so:
+YS just told me so:
 
 ```bash
 $ ys -pe '->(clojure::core quote find-ns ns-publics count)'
@@ -92,14 +86,14 @@ $ clojure -M -e '(-> clojure.core quote ns-publics count)'
 671
 ```
 
-The reason for this is because YAMLScript uses a special version of Clojure
-the [SCI](https://github.com/babashka/sci) (Small Clojure Interpreter).
+The reason for this is because YS uses a special version of Clojure the
+[SCI](https://github.com/babashka/sci) (Small Clojure Interpreter).
 
 SCI offers a subset of Clojure's functionality, but it's a very useful subset.
 It's also a "safe" subset.
 
 I don't think you'll run into anything that's not available in your day to day
-YAMLScripting.
+YS coding.
 If you do, give me a ring and we'll see what we can do to get it added.
 </details>
 
@@ -107,7 +101,7 @@ The `clojure.core` library is very well documented so we won't talk about it
 more right now.
 
 Let's discuss the other one I mentioned, `ys::std`.
-This is the YAMLScript Standard Library.
+This is the YS Standard Library.
 It's where you'll find functions that make YS nicer to work with.
 The `say` function that shows up constantly is defined as `ys::std.say`.
 
@@ -124,7 +118,7 @@ Here's a few of them:
 
 * `say` - A shorter way to say `println`
 * `warn` - Like `say` but prints to stderr
-* `load` - Load an external YAMLScript file
+* `load` - Load an external YS file
 * `=>` - `=>: 123` or `(=> 123)` compiles to `123`
 * `pretty` - Pretty formats a data structure (without printing it)
 * `toInt`, `toStr`, `toBool` etc casting functions (Integer, String, Boolean)
@@ -142,7 +136,7 @@ Here are a few of them:
 * `ys::yaml` - YAML `load` and `dump` functions
 * `ys::json` - JSON `load` and `dump` functions
 * `ys::ys` - `compile`, `eval` and `load` YS from within YS!
-* `ys::clj` - Clojure core functions replaced by YAMLScript ones
+* `ys::clj` - Clojure core functions replaced by YS ones
 * `ys::taptest` - A TAP-based testing library
 
 For fun let's write a silly YS program that uses them.
@@ -172,11 +166,13 @@ Hello, Elves!!
 That's a lot of fun!
 We wrote a program in YAML to play with some YAML that was inside the YAML!
 
-I hope you're starting to see the power of YAMLScript, and I hope you have a
-wonderful day.
+I hope you're starting to see the power of YS, and I hope you have a wonderful
+day.
 
 Full disclosure: I'm stuck in the Winnipeg airport, writing this and hacking on
-YAMLScript because my flight's toilets stopped working and they decided to land
-here for the night. True story.
+YS because my flight's toilets stopped working and they decided to land here
+for the night.
 
-Tune in tomorrow for Day 9 of the YAMLScript Advent Calendar.
+True story.
+
+Tune in tomorrow for Day 9 of the YS Advent Calendar.

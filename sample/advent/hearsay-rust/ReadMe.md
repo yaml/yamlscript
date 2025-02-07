@@ -2,6 +2,6 @@ Run:
 
 ```
 $ LD_LIBRARY_PATH=/usr/local/lib cargo run
-"data":"I heard that @ethiraric uses YAMLScript in their Python code!"}
+"data":"I heard that @ethiraric uses YS in their Python code!"}
 $
 ```

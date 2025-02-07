@@ -170,7 +170,7 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "YAMLScript document result stashing functions"
+- note: "YS document result stashing functions"
 
 
 #-------------------------------------------------------------------------------

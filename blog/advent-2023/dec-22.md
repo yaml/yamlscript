@@ -1,45 +1,40 @@
 ---
 title: Flip Flops
-# date: '2023-12-22'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-22
 ---
 
 Can you imagine Santa walking around in flip flops?
 I've never been up to the North Pole, but I'm pretty sure there's no beaches.
 I always pictured Santa wearing moon boots around the workshop.
 
-YAMLScript on the other hand, is all about flip flops!
+YS on the other hand, is all about flip flops!
 
 
-### Welcome to Day 22 of the YAMLScript Advent Blog!
+### Welcome to Day 22 of the YS Advent Blog!
 
-Remember way back in [Day 6](dec-06.md) when we talked about the 3 different
-YAMLScript modes?
+Remember way back in [Day 6](dec-06.md) when we talked about the 3 different YS
+modes?
 They were **bare**, **data** and **code**.
-The bare mode was what you got then you ran (or loaded) a YAMLScript program
-with no `!yamlscript/v0` tag at the top.
+The bare mode was what you got then you ran (or loaded) a YS program with no
+`!yamlscript/v0` tag at the top.
 It just meant that you were effectively stuck in data mode, with no possibility
 of executing any code.
 
 There's actually comfort in **bare** mode.
-You are using YAMLScript to process your data because it is one of the best
-YAML loaders available, but you don't have to worry about any code being
-run accidentally.
+You are using YS to process your data because it is one of the best YAML
+loaders available, but you don't have to worry about any code being run
+accidentally.
 
 Today's post is about the other two modes.
 Either you are writing a program (thus starting in **code** mode) or you are
 doing cool stuff with your data files (thus starting in **data** mode).
 
 In either case you are going to want to switch modes at various places in your
-YAMLScript.
+YS.
 We learned before that you could switch modes by using the `!` tag.
 This is the smallest possible tag and we use it for the most common need.
 
-Here's an example of using YAMLScript to generate data to be loaded.
+Here's an example of using YS to generate data to be loaded.
 We'll start in code mode by using `!yamlscript/v0`:
 
 ```yaml
@@ -81,9 +76,9 @@ Let's walk through it:
 * `vars =: !` - We are setting the value of a variable named `vars` to the some
   data we want to write in plain old YAML. Before we can do that, we need to
   switch to `data` mode.
-* `! ("gre" + "en")` - This is a YAMLScript expression that evaluates to the
-  string `green`. To let YAMLScript know that we want to evaluate this
-  expression, we switch back to `code` mode.
+* `! ("gre" + "en")` - This is a YS expression that evaluates to the string
+  `green`. To let YS know that we want to evaluate this expression, we switch
+  back to `code` mode.
 * `numbers: !` - Even though we just switched to `code` mode,
   in the previous point, it was only for that scalar / expression.
   We need to do it again since the mapping we are in is in data mode.
@@ -146,6 +141,6 @@ when you feel the need to be explicit.
 ----
 
 That was a quick post but also an important one for learning how to write
-better YAMLScript.
+better YS.
 
-See you tomorrow for Day 23 of the YAMLScript Advent Blog!
+See you tomorrow for Day 23 of the YS Advent Blog!

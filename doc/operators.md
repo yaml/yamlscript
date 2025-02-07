@@ -1,14 +1,13 @@
 ---
-title: YAMLScript Operators
+title: YS Operators
 ---
 
-YAMLScript has a number of operators that you can use in your code.
+YS has a number of operators that you can use in your code.
 
-Review [YeS Expressions](yes.md) to see how YAMLScript supports infix
-operator expressions, whereas Clojure requires the operator to precede the
-operands.
+Review [YeS Expressions](yes.md) to see how YS supports infix operator
+expressions, whereas Clojure requires the operator to precede the operands.
 
-When YAMLScript operators are used with infix notation, they often become
+When YS operators are used with infix notation, they often become
 polymorphic and do things according to the types of the operands.
 
 
@@ -65,7 +64,7 @@ These operators have the respective named functions: `eq`, `ne`, `gt`, `ge`,
 In Clojure `false` and `nil` are treated as "false" and everything else is
 treated as "true".
 
-YAMLScript adds the concept of "truey" and "falsey" values.
+YS adds the concept of "truey" and "falsey" values.
 Empty strings, empty collections, `0`, `false`, and `nil` are "falsey" and
 everything else is "truey".
 

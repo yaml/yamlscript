@@ -4,8 +4,8 @@
 #
 # Re: https://yamlscript.org/posts/advent-2023/dec-21/
 #
-# Run the example Python program that loads a YAML file with embedded
-# YAMLScript commands.
+# Run the example Python program that loads a YAML file with embedded YS
+# commands.
 #
 # This script only assumes you have bash, python3 and curl
 # It installs a local libyamlscript.so library and yamlscript.py module.

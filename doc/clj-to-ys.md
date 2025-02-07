@@ -2,8 +2,8 @@
 title: Learning YS from Clojure
 ---
 
-YS/YAMLScript works by translating code written in YS to Clojure code, which is
-then evaluated.
+YS (YAMLScript) works by translating code written in YS to Clojure code, which
+is then evaluated.
 
 A good way to learn YS is to convert existing Clojure programs to YS.
 
@@ -133,7 +133,7 @@ Let's convert this to YS, but change as little as possible.
     ([name] (println (str "Hello, " name "!")))
     ([] (hello "World")))
   (hello)
-  (hello "YAMLScript")
+  (hello "YS")
 ```
 
 Hmm. We added 2 lines to the top and then indented the Clojure code.

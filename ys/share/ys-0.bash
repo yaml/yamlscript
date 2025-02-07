@@ -53,7 +53,7 @@ do-compile-to-binary() (
 
   dir=$(mktemp -d)
   (
-    say "Compiling YAMLScript '$in_file' to '$out_file' executable"
+    say "Compiling YS '$in_file' to '$out_file' executable"
     say "Setting up build env in '$dir'"
     cd "$dir" || exit
     write-makefile
@@ -65,7 +65,7 @@ do-compile-to-binary() (
       grep '^\[' |
       perl -pe 's/\.\.\..*\(/\t\t\(/g'
     cp program "$out_path"
-    say "Compiled YAMLScript '$in_file' to '$out_file' executable"
+    say "Compiled YS '$in_file' to '$out_file' executable"
   )
   rm -fr "$dir"
 )
@@ -165,7 +165,7 @@ EOF
 write-profile() (
   cat > project.clj <<EOF
 (defproject program "ys-binary"
-  :description "Compile a YAMLScript program to native binary executable"
+  :description "Compile a YS program to native binary executable"
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]
@@ -245,7 +245,7 @@ assert-yamlscript-core() (
   # ys_jar=$ys_tmp/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
   ys_jar=$HOME/.m2/repository/yamlscript/core/$ys_version/core-$ys_version.jar
   if ! [[ -f $ys_jar ]]; then
-    say "Installing YAMLScript core in '$ys_jar'"
+    say "Installing YS core in '$ys_jar'"
     repo_path=$ys_tmp/$ys_version
     assert-yamlscript-repo "$repo_path"
     (
@@ -254,13 +254,13 @@ assert-yamlscript-core() (
     )
   fi
   [[ -f $ys_jar ]] ||
-    die "Could not download YAMLScript core"
+    die "Could not download YS core"
 )
 
 assert-yamlscript-repo() (
   repo_path=$1
   if ! [[ -d $repo_path ]]; then
-    say "git cloning YAMLScript repo to '$repo_path'"
+    say "git cloning the YS repo to '$repo_path'"
     mkdir -p "$repo_path"
     (
       set -x

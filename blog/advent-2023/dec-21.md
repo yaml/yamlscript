@@ -1,11 +1,6 @@
 ---
 title: YAML, Python and the Holy Graal
-# date: '2023-12-21'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-21
 ---
 
 Which has a greater airspeed velocity... an unladen swallow or Santa's sleigh?
@@ -23,10 +18,9 @@ Well, that depends... are we talking about an African or European swallow?
   allowfullscreen></iframe>
 </details>
 
-### Welcome to Day 21 of the YAMLScript Advent Blog!
+### Welcome to Day 21 of the YS Advent Blog!
 
-So far we've been using the YAMLScript CLI `ys` to run (or load) our YAMLScript
-programs.
+So far we've been using the YS CLI `ys` to run (or load) our YS programs.
 YAML users are used to using a YAML framework module inside their programs.
 For example, in Python you might do:
 
@@ -45,7 +39,7 @@ print(data)
 # => [40, 50, 60]
 ```
 
-Wouldn't it be nice if we could do the same thing in YAMLScript?
+Wouldn't it be nice if we could do the same thing in YS?
 As of today, we can!
 
 ```python
@@ -81,7 +75,7 @@ print(data)
 # => [40, 50, 60]
 ```
 
-We can use YAMLScript functions in our YAML text to generate or manipulate data.
+We can use YS functions in our YAML text to generate or manipulate data.
 
 That example was a bit contrived, but I just wanted to show how easy it is to
 load plain old YAML or super powered YAML with the new `yamlscript` Python
@@ -108,7 +102,7 @@ cars:
   color: blue
 ```
 
-We could have another YAML file that uses YAMLScript:
+We could have another YAML file that uses YS:
 
 ```yaml
 # racers.yaml
@@ -163,7 +157,7 @@ Pretty cool, huh?
 
 There's no end to the things you can do with this.
 
-Today we're showing off the [Python YAMLScript module](
+Today we're showing off the [Python YS module](
 https://pypi.org/project/yamlscript/) but soon this module will be available in
 every language that has a need for it.
 
@@ -176,7 +170,7 @@ Normally to install a Python module you would do:
 pip install a-python-module
 ```
 
-With YAMLScript, you do the same:
+With YS, you do the same:
 
 ```sh
 pip install yamlscript
@@ -220,13 +214,13 @@ project.
 Not only does GraalVM's `native-image` tool compile to binary executables, it
 also can compile to shared libraries.
 
-YAMLScript generates and publishes the `libyamlscript` shared library and then
-offers binding modules for it in many languages.
+YS generates and publishes the `libyamlscript` shared library and then offers
+binding modules for it in many languages.
 
 ----
 
-I hope you are starting to see the power of YAMLScript.
+I hope you are starting to see the power of YS.
 Not only as a new programming language, but also as a new way to work with YAML
 files that you already have.
 
-Join me tomorrow for Day 22 of the YAMLScript Advent Blog!
+Join me tomorrow for Day 22 of the YS Advent Blog!

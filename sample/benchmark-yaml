@@ -1,7 +1,7 @@
 #!/usr/bin/env ys
 
 #------------------------------------------------------------------------------
-# A YAMLScript program to benchmark loading of long YAML strings.
+# A YS program to benchmark loading of long YAML strings.
 # See: https://yamlscript.org
 #
 # Usage examples:
@@ -120,11 +120,11 @@ defn test-perl-ypp(yaml):
 defn test-nodejs(yaml):
   test yaml: "node -e '$str($$.nodejs-loader)'"
 
-# Test YAMLScript loading as YAMLScript:
+# Test YS loading as YS:
 defn test-ys(yaml):
   test yaml: 'ys -l -'
 
-# Test YAMLScript loading with Java's SnakeYAML Engine:
+# Test YS loading with Java's SnakeYAML Engine:
 defn test-ys-yaml(yaml):
   test yaml: "ys -e 'yaml/load: slurp(IN)'"
 

@@ -1,15 +1,10 @@
 ---
 title: Load em Up!
-# date: '2023-12-03'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-03
 ---
 
 
-> On the 3rd day of Advent, my YS gave to me...  
+> On the 3rd day of Advent, my YS code gave to me...  
 A sequence in a map tree!
 
 Did you know that all JSON _is_ YAML?
@@ -26,7 +21,7 @@ from the same JSON input.
 > Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema
 
 
-### Welcome to day 3 of YAMLScript Advent 2023!
+### Welcome to day 3 of YS Advent 2023!
 
 This YAML/JSON relationship has some interesting implications for people
 interacting with systems that read YAML or JSON as input.
@@ -47,22 +42,22 @@ Going the other way, people can refactor large YAML configurations by first
 converting them to JSON, using JSON tools like `jq` to manipulate the data and
 then converting the data back to YAML.
 
-YAMLScript is an ideal technology for performing these kinds of conversions and
+YS is an ideal technology for performing these kinds of conversions and
 manipulations.
 
 
-### Loading vs Running YAMLScript
+### Loading vs Running YS
 
-On one hand, YAMLScript is a complete programming language that you can use for
-writing new applications (and libraries).
-In YAMLScript jargon, we "run" these applications.
-We'll discuss YAMLScript apps and "running" them extensively in the coming days.
+On one hand, YS is a complete programming language that you can use for writing
+new applications (and libraries).
+In YS jargon, we "run" these applications.
+We'll discuss YS apps and "running" them extensively in the coming days.
 
-Today we are covering YAMLScript's purpose we just described: reading YAML
-files into data; possibly transforming the data dynamically along the way.
+Today we are covering YS's purpose we just described: reading YAML files into
+data; possibly transforming the data dynamically along the way.
 
-This use of YAMLScript is called "loading" and can be done on most existing YAML
-files and all existing JSON files.
+This use of YS is called "loading" and can be done on most existing YAML files
+and all existing JSON files.
 
 <details><summary>What does "most" mean?</summary>
 
@@ -96,7 +91,7 @@ $ python -c 'import yaml; print(yaml.safe_load("Advent day: 3"))'
 {'Advent day': 3}
 ```
 
-YAMLScript has a Python binding that does the same thing:
+YS has a Python binding that does the same thing:
 
 ```bash
 $ python -c 'from yamlscript import YAMLScript; print(YAMLScript().load("Advent day: 3"))'
@@ -106,16 +101,15 @@ $ python -c 'from yamlscript import YAMLScript; print(YAMLScript().load("Advent 
 It also has these bindings in many other programming languages and plans to have
 them in all modern programming languages.
 
-A major goal of the YAMLScript project is to have these YAMLScript binding
-libraries be the best way to load YAML config files in all modern programming
-languages.
+A major goal of the YS project is to have these YS binding libraries be the
+best way to load YAML config files in all modern programming languages.
 This will be a big improvement over the current situation where every YAML
 framework has its own API and its own set of bugs and quirks.
 
 
-### Loading YAMLScript from the Command Line
+### Loading YS from the Command Line
 
-We can also load YAMLScript outside of any programming language.
+We can also load YS outside of any programming language.
 
 We can do it from the command line using the `ys` command with the `--load`
 option.
@@ -147,12 +141,9 @@ In the CLI-as-programming-language analogy, the functions are other programs!
 
 ### Loading YAML Dynamically
 
-The main point of today's post is to show how YAMLScript can be used as a normal
-YAML loader.
+The main point of today's post is to show how YS can be used as a normal YAML
+loader.
 But of course, YS has SuperPowers™ that other YAML loaders don't have.
-
-> NOTE: From now on I will sometimes use "YS" as shorthand for "YAMLScript".
-This is distinct from `ys` which is the command-line tool that runs/loads YS.
 
 With great SuperPowers comes SuperResponsibility.
 YS won't use its SuperPowers unless you ask it to.
@@ -288,8 +279,8 @@ my-map: ! load('map1.yaml') + load('map2.yaml')
 my-seq: ! load('seq1.yaml') + load('seq2.yaml')
 ```
 
-YAMLScript's `+` operator is a general purpose joiner.
+THe YS `+` operator is a general purpose joiner.
 It's polymorphic for numbers, strings, sequences and mappings.
 
 As ususal, I hope you enjoyed today's post.
-I'll see you tomorrow for day 4 of YAMLScript Advent 2023!
+I'll see you tomorrow for day 4 of YS Advent 2023!

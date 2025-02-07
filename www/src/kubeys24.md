@@ -1,29 +1,28 @@
 ---
-title: KubeCon 2024 YAMLScript Tutorial Info Page
+title: KubeCon 2024 YS Tutorial Info Page
 layout: about.njk
-name: KubeCon 2024 YAMLScript Tutorial Info Page
+name: KubeCon 2024 YS Tutorial Info Page
 ---
 
 <!--
 # https://yamlscript.org/kubeys24
 
-![YAMLScript KubeCon 2024 Tutorial](
-/images/kubeys24.png "YAMLScript KubeCon 2024 Tutorial")
+![YS KubeCon 2024 Tutorial](/images/kubeys24.png "YS KubeCon 2024 Tutorial")
 -->
 
 This page has info from Ingy döt Net's
-[YAMLScript tutorial at KubeCon 2024 in Salt Lake City](
+[YS tutorial at KubeCon 2024 in Salt Lake City](
 https://kccncna2024.sched.com/event/1i7qP).
 
 * [Ingy döt Net](https://yamlscript.org/ingydotnet)
 * [Video](https://www.youtube.com/watch?v=Cdi3Q4Wrt48)
 * [Slides](https://github.com/yaml/yamlscript/tree/talk/kubeys/slides.vroom)
-* [YAMLScript Documentation](https://yamlscript.org/doc)
-* [YAMLScript Blog](https://yamlscript.org/blog)
-* [YAMLScript Repository](https://github.com/yaml/yamlscript)
-* [YAMLScript on Exercism](https://exercism.org/tracks/yamlscript)
+* [YS Documentation](https://yamlscript.org/doc)
+* [YS Blog](https://yamlscript.org/blog)
+* [YS Repository](https://github.com/yaml/yamlscript)
+* [YS on Exercism](https://exercism.org/tracks/yamlscript)
 * [HelmYS Helm Templating](https://github.com/kubeys/helmys)
-* [YAMLScript on Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
+* [YS on Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
 * [RosettaCodeData Repository](https://github.com/acmeism/RosettaCodeData)
 * [Calva CircleCI Refactor](
   https://github.com/BetterThanTomorrow/calva/tree/dev/.circleci)
@@ -31,7 +30,7 @@ https://kccncna2024.sched.com/event/1i7qP).
 
 <p></p>
 
-* Programs written in YAMLScript
+* Programs written in YS
   * [sbs](https://github.com/ingydotnet/sbs/blob/main/bin/sbs)
     Creates markdown gists to compare pairs of files side by side. Used to show
     differences between YS and Go templates in Helm.
@@ -41,12 +40,12 @@ https://kccncna2024.sched.com/event/1i7qP).
     A command line multi LLM (Anthropic, OpenAI, Gemma) query tool
   * [ys-vs-rc](
     https://github.com/ingydotnet/yamlscript-vs-rosetta/blob/main/bin/ys-vs-rc)
-    Compares YAMLScript and Rosetta Code solutions to the same problem in many
+    Compares YS and Rosetta Code solutions to the same problem in many
     languages.
     * [Example FizzBuzz gist](
       https://gist.github.com/ingydotnet/9ece4af186c6a6dcfd589c446dab9b38)
-  * See [YAMLScript by Example](doc/examples.md) in the YAMLScript documentation
-    for more examples.
+  * See [YS by Example](doc/examples.md) in the YS documentation for more
+    examples.
 
 
 
@@ -76,18 +75,18 @@ https://kccncna2024.sched.com/event/1i7qP).
 * Learning YAMLScript in Reverse
 
 
-## Contributing to YAMLScript
+## Contributing to YS
 
-YAMLScript is a young language and we are looking for contributors to help
+YS is a young language and we are looking for contributors to help
 improve the language, the documentation, and the ecosystem.
 We welcome your contributions!
 
 
-## Funding YAMLScript and YAML
+## Funding YS and YAML
 
-YAMLScript is a free and open source programming language.
-If you would like to help fund the development of YAMLScript, please consider
-becoming a YAMLScript sponsor.
+YS is a free and open source programming language.
+If you would like to help fund the development of YS, please consider
+becoming a YS sponsor.
 
 Reach out to Ingy about this.
 
@@ -95,5 +94,5 @@ Reach out to Ingy about this.
 ## Hire Ingy
 
 [Ingy](https://yamlscript.org/ingydotnet) is available for consulting,
-training, and speaking engagements worldwide on YAMLScript, YAML, and other
-related topics.
+training, and speaking engagements worldwide on YS, YAML, and other related
+topics.

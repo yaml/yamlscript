@@ -29,7 +29,7 @@ Try out these commands:
     curl https://yamlscript.org/try/99-bottles.ys | ys - 3
     curl https://yamlscript.org/try/99-bottles.ys | ys - -c -X
 
-For more information about YAMLScript and ys:
+For more information about YS and `ys`:
 
 * https://github.com/yaml/yamlscript#readme
 * https://yamlscript.org/

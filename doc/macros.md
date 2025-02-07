@@ -1,3 +1,3 @@
 ---
-title: YAMLScript Macros
+title: YS Macros
 ---

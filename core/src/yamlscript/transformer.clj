@@ -1,7 +1,7 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.transformer is responsible for transforming the YAMLScript AST
+;; The yamlscript.transformer is responsible for transforming the YS AST
 ;; according to certain special rules.
 
 (ns yamlscript.transformer
@@ -17,7 +17,7 @@
   transform-node-top)
 
 (defn transform
-  "Transform special rules for YAMLScript AST."
+  "Transform special rules for YS AST."
   [node]
   (transform-node-top node))
 

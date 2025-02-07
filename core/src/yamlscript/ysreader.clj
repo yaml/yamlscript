@@ -1,7 +1,7 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.ysreader is responsible for reading YAMLScript ysexpr (yes
+;; The yamlscript.ysreader is responsible for reading YS ysexpr (yes
 ;; expression) strings into a set of Clojure AST nodes.
 
 (ns yamlscript.ysreader

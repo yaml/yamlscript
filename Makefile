@@ -161,10 +161,10 @@ ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
 	$(error Must be on branch 'main' to release)
 endif
 ifndef YS_GH_TOKEN
-	$(error YAMLScript release requires YS_GH_TOKEN to be set)
+	$(error YS release requires YS_GH_TOKEN to be set)
 endif
 ifndef YS_GH_USER
-	$(error YAMLScript release requires YS_GH_USER to be set)
+	$(error YS release requires YS_GH_USER to be set)
 endif
 ifndef d
 ifndef RELEASE_ID

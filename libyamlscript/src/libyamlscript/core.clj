@@ -16,8 +16,8 @@
 (declare json-write-str error-map debug)
 
 (defn -loadYsToJson
-  "Convert a YAMLScript code string to Clojure, eval the Clojure code with
-  SCI, encode the resulting value as JSON and return the JSON string."
+  "Convert a YS code string to Clojure, eval the Clojure code with SCI, encode
+  the resulting value as JSON and return the JSON string."
   [^String ys-str]
   (debug "CLJ libyamlscript load - input string:" ys-str)
   (let [resp (sci/binding [sci/out *out*]
