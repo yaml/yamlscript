@@ -11,11 +11,13 @@ YS has a concept called "YeS Expressions" (aka `ysexpr`s) which offer alternate
 ways to write sexprs in a style that feels more familiar to non-Lisp
 language expressions.
 
-> Note: In general, YS supports writing code as sexprs, ysexprs or as block
-mapping pairs.
-Nested expressions can combine any of those forms.
-It's up to the programmer to decide which works best for them in any given
-context.
+!!! note
+
+    In general, YS supports writing code as sexprs, ysexprs or as block mapping
+    pairs.
+    Nested expressions can combine any of those forms.
+    It's up to the programmer to decide which works best for them in any given
+    context.
 
 ```clojure
 (def var1 (sqrt (+ (* 3 4) 5)))
@@ -51,9 +53,11 @@ There are 3 notable transformations happening here:
 We'll discuss the a few more details of each of these YeS expression transforms
 below.
 
-> Note: YS has many other transformations that strive to make YS code clean and
-> easy to read and understand.
-> YeS expression transformations are among the most commonly used.
+!!! note
+
+    YS has many other transformations that strive to make YS code clean and
+    easy to read and understand.
+    YeS expression transformations are among the most commonly used.
 
 
 ## Prefix Call Notation
@@ -69,6 +73,7 @@ IOW, `a (b c)` is not the same as `a(b c)`!
 
 Another way to write the function call `(a b c)` in YS is to use it in a
 mapping pair context:
+
 ```yaml
 a: b c
 # Or sometimes:
@@ -79,6 +84,7 @@ a b: c
 ## Infix Operator Notation
 
 Lisps write binary operator expressions like:
+
 ```clojure
 (+ a 5)  ;; a + 5
 (> a 5)  ;; a > 5
@@ -89,12 +95,14 @@ addition and greater-than functions.
 
 One advantage of this prefix notation is that this operations can take more than
 2 arguments:
+
 ```clojure
 (+ a b c d)  ;; a + b + c + d
 (> a b c d)  ;; a > b > c > d  or  (a > b) && (b > c) && (c > d)
 ```
 
 YeS expressions allow you to do these things:
+
 ```yaml
 =>: a + b        # (+ a b)
 =>: a + b + c    # (+ a b c)
@@ -106,6 +114,7 @@ Note that we didn't need any parentheses around `a + b`.
 When a YAML plain scalar with an operator triplet (or multiple forms separated
 by the same operator) the parentheses are implied and thus optional.
 The parentheses are implied in a few other contexts as well like:
+
 ```yaml
 if a > b: c d
 # Equivalent to:
@@ -122,6 +131,7 @@ translate that to `(+ apply numbers)`.
 This is easily avoided by using the prefix call notation described above:
 `apply(+ numbers)`.
 It is also avoided when using the block mapping pair form:
+
 ```yaml
 apply +: numbers
 ```

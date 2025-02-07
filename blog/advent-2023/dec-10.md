@@ -117,14 +117,16 @@ implement.
 Why?
 Because it uses somebody else's YAML parser!!
 
-> Note: YS currently uses the
-[SnakeYAML Engine](https://bitbucket.org/snakeyaml/snakeyaml-engine) framework
-(only for it's YAML 1.2 parser component).
-Later we plan to use [libfyaml](https://github.com/pantoniou/libfyaml) which is
-currently considered the best YAML parser in the world.
-SnakeYAML was the obvious first choice because it's written in Java, YS is
-written in Clojure and Clojure is a JVM language.
-It's doing a great job for now!
+!!! note
+
+    YS currently uses the
+    [SnakeYAML Engine](https://bitbucket.org/snakeyaml/snakeyaml-engine)
+    framework (only for it's YAML 1.2 parser component).
+    Later we plan to use [libfyaml](https://github.com/pantoniou/libfyaml)
+    which is currently considered the best YAML parser in the world.
+    SnakeYAML was the obvious first choice because it's written in Java, YS is
+    written in Clojure and Clojure is a JVM language.
+    It's doing a great job for now!
 
 This is a good time to mention that the YAML data language spec describes
 "loading" YAML text into native data structures as a several step process of
@@ -225,10 +227,12 @@ This is how YS stores the tag.
 Each tag knows what kind of node it is attached to (map, seq or scalar) so, to
 keep things simple, it doesn't store that info in the AST.
 
-> Note: Keeping the structure of each state AST as simple as possible is a key
-concern of the YS compiler.
-It makes it easier to see what's going on when debugging and even more
-importantly, it makes it easier to write tests for each transformation.
+!!! note
+
+    Keeping the structure of each state AST as simple as possible is a key
+    concern of the YS compiler.
+    It makes it easier to see what's going on when debugging and even more
+    importantly, it makes it easier to write tests for each transformation.
 
 The keywords seen above are:
 

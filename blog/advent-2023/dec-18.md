@@ -155,10 +155,12 @@ $ ys map.ys -l -Dresolve
 
 It resolved! And it worked! We got our list of numbers.
 
-> Note: The error message indicated a `java.lang.Exception`.
-Remember that YS is Clojure and Clojure is Java.
-The JVM is compiled out of the picture in YS, but the error message still comes
-from Java stuff.
+!!! note
+
+    The error message indicated a `java.lang.Exception`.
+    Remember that YS is Clojure and Clojure is Java.
+    The JVM is compiled out of the picture in YS, but the error message still
+    comes from Java stuff.
 
 ----
 

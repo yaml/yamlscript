@@ -8,7 +8,7 @@ I've been hiding a little something from you.
 Even that's a lie.
 I've actually been hiding something very very big something from you.
 
-> ### \*\*\* YS is a Lisp! \*\*\***
+> ## \*\*\* YS is a Lisp! \*\*\***
 
 ### Welcome to day 4 of YS Advent 2023!
 
@@ -25,7 +25,7 @@ It's almost the Anti-Lisp incarnate.
 
 OK. Here's the deal...
 
-> ### YS _is_ Clojure
+> ## YS _is_ Clojure
 
 There you go. The secret is out.
 Every YS program is program is a Clojure program.
@@ -121,9 +121,11 @@ $ ys -md -ce '{ "foo": "bar", "baz": [1, 2, null, true] }'
 Yep. That's Clojure.
 It also happens to be EDN, which is Clojure's native data format.
 
-> Note: The `-md` option tells `ys` not to add the `!yamlscript/v0` tag that it
-usually does with `-e` to make your YS life easier.
-We'll learn more about `-m` another time.
+!!! note
+
+    The `-md` option tells `ys` not to add the `!yamlscript/v0` tag that it
+    usually does with `-e` to make your YS life easier.
+    We'll learn more about `-m` another time.
 
 **Lisp puts parentheses around everything.
 Does that mean that YS does too?**

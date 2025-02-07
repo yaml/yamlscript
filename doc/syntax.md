@@ -14,9 +14,11 @@ To fully understand YS you need to know:
 This document will show you the basics of YS syntax and how they translate to
 Clojure code.
 
-> Note: You can play with all the concepts here by putting example code into a
-file like `example.ys` and running `ys -c example.ys` which will print the
-Clojure code that the YS code compiles to.
+!!! note
+
+    You can play with all the concepts here by putting example code into a file
+    like `example.ys` and running `ys -c example.ys` which will print the
+    Clojure code that the YS code compiles to.
 
 
 ## First Steps
@@ -160,9 +162,12 @@ It works out surprisingly well!
 
 In the remaining examples we'll assume the `!yamlscript/v0` tag is present.
 
-> What we are calling variable assignment is known as symbol binding in Clojure.
-Clojure differentiates between symbols and variables but the distinction is not
-so important for YS.
+!!! note
+
+    What we are calling variable assignment is known as symbol binding in
+    Clojure.
+    Clojure differentiates between symbols and variables but the distinction is
+    not so important for YS.
 
 Assignments are done by using `name =: expression`.
 
@@ -186,12 +191,15 @@ foo   =   :
   + 17
 ```
 
-> The second form above uses YAML's rarely seen explicit key syntax.
-It can be useful sometimes in YS when you need spread the key portion of a
-key/value mapping pair over multiple lines.
-Without it mapping keys are required by YAML to be a single line.
-The 'value' side can always be multiline and can start on the next line too.
-This is a very common pattern in YS to make code more readable.
+!!! note
+
+    The second form above uses YAML's rarely seen explicit key syntax.
+    It can be useful sometimes in YS when you need spread the key portion of a
+    key/value mapping pair over multiple lines.
+    Without it mapping keys are required by YAML to be a single line.
+    The 'value' side can always be multiline and can start on the next line
+    too.
+    This is a very common pattern in YS to make code more readable.
 
 Assignment statements written at the file level compile to `def` forms in
 Clojure, while those written inside a function compile to `let` forms.

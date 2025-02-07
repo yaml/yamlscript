@@ -51,8 +51,10 @@ $ ys -c fib.ys
 (apply main ARGS)
 ```
 
-> Note: When learning or debugging YS programs, it's often very helpful to look
-> at the generated Clojure code using `ys -c`.
+note:
+
+    When learning or debugging YS programs, it's often very helpful to look at
+    the generated Clojure code using `ys -c`.
 
 We can see 2 top-level forms in the generated Clojure code.
 The first is the `main` function definition, and the second is the call to the

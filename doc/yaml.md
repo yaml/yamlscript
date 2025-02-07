@@ -18,10 +18,12 @@ and also Clojure concepts.
 This document will cover all the YAML syntax, concepts and vocabulary that you
 need to know to write YS effectively.
 
-> NOTE: When a word or phrase is presented in double quotes here, it is intended
-to be a YAML vocabulary term that you should commit to memory.
-These terms are used consistently throughout the YS documentation (and also the
-YAML specification and other YAML-related writings).
+!!! note
+
+    When a word or phrase is presented in double quotes here, it is intended
+    to be a YAML vocabulary term that you should commit to memory.
+    These terms are used consistently throughout the YS documentation (and also
+    the YAML specification and other YAML-related writings).
 
 
 ## YAML Data Model

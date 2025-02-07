@@ -42,3 +42,16 @@ palette:
 icon:
   edit: material/pencil
   view: material/eye
+  admonition:
+    abstract: fontawesome/solid/book
+    bug: fontawesome/solid/robot
+    danger: fontawesome/solid/skull
+    example: fontawesome/solid/flask
+    failure: fontawesome/solid/bomb
+    info: fontawesome/solid/circle-info
+    note: fontawesome/solid/note-sticky
+    question: fontawesome/solid/circle-question
+    quote: fontawesome/solid/quote-left
+    success: fontawesome/solid/check
+    tip: fontawesome/solid/bullhorn
+    warning: fontawesome/solid/triangle-exclamation

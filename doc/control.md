@@ -18,9 +18,11 @@ This document will cover:
 * Looping functions and recursion
 * Conditional expressions
 
-> Note: Some of the things that are called "functions" in in this document are
-actually "macros" or "special forms" in Clojure.
-The distinction is not particularly important here, but worth mentioning.
+!!! note
+
+    Some of the things that are called "functions" in in this document are
+    actually "macros" or "special forms" in Clojure.
+    The distinction is not particularly important here, but worth mentioning.
 
 
 ## Starting a Program
@@ -105,8 +107,10 @@ if a > b:
   say: 'Nothing to see here'
 ```
 
-> Note: The `if` function actually supports the better named `then` and `else`
-words for grouping, but `do` can also be used.
+!!! note
+
+    The `if` function actually supports the better named `then` and `else`
+    words for grouping, but `do` can also be used.
 
 
 ## Looping Functions and Recursion

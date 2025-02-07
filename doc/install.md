@@ -10,10 +10,12 @@ YS has 3 main things you might want to install:
 3. A YS loader library for your particular programming language, like Python,
    Rust, NodeJS, etc.
 
-> NOTE: Currently when you install a YS loader library for your
-particular programming language you must also install the `libyamlscript`
-shared library of the **exact same version**.
-Fortunately this is simple.
+!!! note
+
+    Currently when you install a YS loader library for your
+    particular programming language you must also install the `libyamlscript`
+    shared library of the **exact same version**.
+    Fortunately this is simple.
 
 
 ### Quick Install of `ys` and `libyamlscript`
@@ -76,7 +78,9 @@ You can also easily build and install `ys` and `libyamlscript` from source:
 This will take a few minutes but it requires no dependencies besides `bash`,
 `make` and `curl`.
 
-> On linux it also requires the `libz-dev` package.
+!!! note
+
+    On linux it also requires the `libz-dev` package.
 
 
 ### Install a YS Loader Library

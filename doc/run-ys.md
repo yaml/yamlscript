@@ -2,40 +2,40 @@
 title: Self Installation Scripts
 ---
 
-<blockquote>
+!!! note
 
-**Note**: If you just ran a program with `bash` that printed a URL
-to this page, click the arrow below for more information on "What just
-happened?".
+    If you just ran a program with `bash` that printed a URL to this page, click
+    the arrow below for more information on "What just happened?" below.
 
-<details><summary><strong>What just happened?</strong></summary>
+    ??? note "What just happened?"
 
-If you are reading this you probably just ran a YS program with `bash`.
-The first time you do that, the program installed the `ys` interpreter under the
-`/tmp/` directory for you and then ran the program with it.
-Subsequent runs of the program will use that installed `ys` interpreter.
+        If you are reading this you probably just ran a YS program with `bash`.
+        The first time you do that, the program installed the `ys` interpreter
+        under the `/tmp/` directory for you and then ran the program with it.
+        Subsequent runs of the program will use that installed `ys` interpreter.
 
-You may continue to run the program this way, but there will be a slight delay
-at the start each time while the `run-ys` auto-installer script is downloaded.
+        You may continue to run the program this way, but there will be a slight
+        delay at the start each time while the `run-ys` auto-installer script is
+        downloaded.
 
-It is very easy to install the `ys` interpreter permanently on your system so
-that you can run the program with `ys` instead of `bash`.
+        It is very easy to install the `ys` interpreter permanently on your
+        system so that you can run the program with `ys` instead of `bash`.
 
-```bash
-$ curl -s https://yamlscript.org/install-ys | bash
-```
+        ```bash
+        $ curl -s https://yamlscript.org/install-ys | bash
+        ```
 
-See the [YS Installation](install.md) page for more information.
-</details>
-</blockquote>
+        See the [YS Installation](install.md) page for more information.
 
 ----
 
 YS has a way to publish programs that people can run immediately without having
 installed the `ys` interpreter first.
 
-> **Warning**: See the [Security Considerations](
-  #use-cases-and-security-considerations) below before using this technique.
+!!! warning
+
+    See the [Security Considerations](#use-cases-and-security-considerations)
+    below before using this technique.
 
 Just begin your YS program with these lines:
 
@@ -53,8 +53,10 @@ under the `/tmp/` directory.
 The `ys` interpreter will be downloaded only once, and it will be used for all
 subsequent runs of the script.
 
-> Note: The `curl` command will still download and evaluate the `run-ys` Bash
-script on subsequent runs so the user will need to have internet access.
+!!! note
+
+    The `curl` command will still download and evaluate the `run-ys` Bash script
+    on subsequent runs so the user will need to have internet access.
 
 The program can also be run with the `ys` interpreter if the user installs it.
 In that case the Bash installer line will be ignored.
@@ -141,9 +143,6 @@ The `source` line is also a valid YS command.
 It calls the YS `source` macro which ignores all of its arguments (much like
 the `comment` macro does).
 
-> Note: The `source` macro was added in YS version 0.1.85.
-This technique will not work with earlier versions of YS.
-
 
 ## Use Cases and Security Considerations
 
@@ -156,14 +155,14 @@ internet.
 
 Caveat yamlscriptor!
 
-> ** Note**: A more secure way to distribute a YS program is to
-[compile it to a binary executable](binary.md) and distribute the binary
-instead.
+    A more secure way to distribute a YS program is to
+    [compile it to a binary executable](binary.md) and distribute the binary
+    instead.
 
 There is at least one use case where this Bash technique is safe and useful:
 
-You can easily run a YS program that you are developing with a
-particular version of the `ys` interpreter without having to install it first.
+You can easily run a YS program that you are developing with a particular
+version of the `ys` interpreter without having to install it first.
 Just use the `YS_VERSION` environment variable to specify the version you want:
 
 ```bash

@@ -6,10 +6,12 @@ One of the best ways to learn a new programming language is to see examples of
 real code written in that language.
 This page contains a links to programs written in YS.
 
-> **Note:** The YS documentation is a work in progress.
-> Looking at real life examples is a solid way to get started.
-> If you feel the urge to contribute to the documentation, please do so.
-> It would be greatly appreciated!
+!!! note
+
+    The YS documentation is a work in progress.
+    Looking at real life examples is a solid way to get started.
+    If you feel the urge to contribute to the documentation, please do so.
+    It would be greatly appreciated!
 
 ## YS Examples of Refactoring Large YAML Files
 

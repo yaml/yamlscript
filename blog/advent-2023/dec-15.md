@@ -238,12 +238,15 @@ It then inserts a `declare` expression for them at the top of the output code.
 
 Problem solved!
 
-> If you are interested in why Clojure's author Rich Hickey chose to make
-Clojure "bottom-up", read about it [here](
-https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f#why-clojure-compiler-is-single-pass-arent-many-possible-optimizations-lost-this-way).
-Then read the rest of that page.
-It's full of great insights into the design of Clojure and programming in
-general.
+!!! note
+
+    If you are interested in why Clojure's author Rich Hickey chose to make
+    Clojure "bottom-up", read about it [here](
+    https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f#why-clojure-compiler-is-single-pass-arent-many-possible-optimizations-lost-this-way).
+
+    Then read the rest of that page.
+    It's full of great insights into the design of Clojure and programming in
+    general.
 
 ----
 

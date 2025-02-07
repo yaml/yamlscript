@@ -23,11 +23,12 @@ YAML users need.
 Created by YAML inventor and lead maintainer, Ingy döt Net, YS solves these
 needs beautifully for all YAML users and uses.
 
+!!! note "YS Exercism Track"
 
-> YS is now available as a programming language learning track on
-**[Exercism](https://exercism.org/tracks/yamlscript)**.
-It's a great way to learn YS and get feedback from experienced mentors.
-Check it out!
+    YS is now available as a programming language learning track on
+    **[Exercism](https://exercism.org/tracks/yamlscript)**.
+    It's a great way to learn YS and get feedback from experienced mentors.
+    Check it out!
 
 If you work with apps and frameworks that use YAML for configuration, you can
 simplify your complex YAML files using YS, even if the app or framework
@@ -40,12 +41,14 @@ manipulate your data as you wish.
 YS provides these things with syntax that is minimal and unobtrusive, keeping
 your clean YAML data clean.
 
-> Slides and information from Ingy's [KubeCon 2024 talk](
-https://www.youtube.com/watch?v=Cdi3Q4Wrt48)
-are available [here](https://yamlscript.org/kubeys24).
-The highlight was [HelmYS](https://github.com/kubeys/helmys) a new Helm
-post-renderer that lets you template Helm charts with YS (which is actual
-YAML).
+!!! note "YAMLScript at KubeCon 2024"
+
+    Slides and information from Ingy's [KubeCon 2024 talk](
+    https://www.youtube.com/watch?v=Cdi3Q4Wrt48)
+    are available [here](https://yamlscript.org/kubeys24).
+    The highlight was [HelmYS](https://github.com/kubeys/helmys) a new Helm
+    post-renderer that lets you template Helm charts with YS (which is actual
+    YAML).
 
 Like many new languages, YS was built over an existing robust language,
 [Clojure](https://clojure.org), which in turn was built over
@@ -80,28 +83,3 @@ There are many ways to use YS:
 * [Query and Transform YAML (and JSON) data](doc/query.md)
   * Use the `ys` command line tool similar to `jq` or `yq`
 
-
-----
-
-## YS Resources
-
-* [Web Site](https://yamlscript.org)
-* [Documentation](https://yamlscript.org/doc)
-* [Matrix Chat](https://matrix.to/#/#chat-yamlscript:yaml.io)
-* [Slack Chat](https://clojurians.slack.com/archives/yamlscript)
-* [Blog](https://yamlscript.org/blog)
-* [GitHub Repository](https://github.com/yaml/yamlscript)
-* [Discussions](https://github.com/yaml/yamlscript/discussions)
-* [Issues](https://github.com/yaml/yamlscript/issues)
-
-----
-
-## YS Links
-
-* Nov 2024 [KubeCon Talk and Info](https://yamlscript.org/kubeys24)
-* Jun 2024 [TPRC Talk](https://www.youtube.com/watch?v=RFIukRdFe1o)
-* Apr 2024 [OSS/NA Talk](https://www.youtube.com/watch?v=u-OCEHNdwlU)
-* Mar 2024 [TheNewStack Article](https://thenewstack.io/with-yamlscript-yaml-becomes-a-proper-programming-language/)
-* Mar 2024 [Seajure Talk](https://www.youtube.com/watch?v=GajOBwBcFyA)
-
-----

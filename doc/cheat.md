@@ -108,8 +108,10 @@ say: slurp("/usr/share/dict/words")
 # => specialty.mutation's.Kisangani
 ```
 
-> `.lines():shuffle` is short for `.lines().shuffle()`. Must be be attached to
-something on the left.
+!!! note
+
+    `.lines():shuffle` is short for `.lines().shuffle()`.
+    It must be be attached to something on the left.
 
 
 #### Special chain operators

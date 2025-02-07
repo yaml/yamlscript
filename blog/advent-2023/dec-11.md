@@ -55,9 +55,11 @@ If you have a parenthesized expression with more than 2 operands and the
 operators are all the same, then the compiler will make a Lisp form starting
 with the operator and followed by the operands.
 
-> Note: In rare cases in Lisp `(a + 1)` is valid when `a` is a function that
-takes two arguments, an operator function add a number in this case.
-There are ways to specifiy this in YS, but we won't cover them here.
+!!! note
+
+    In rare cases in Lisp `(a + 1)` is valid when `a` is a function that takes
+    two arguments, an operator function add a number in this case.
+    There are ways to specifiy this in YS, but we won't cover them here.
 
 In simple cases where the infix expression is the only thing in the YAML scalar,
 you can omit the parentheses.

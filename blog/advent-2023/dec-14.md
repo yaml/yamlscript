@@ -63,9 +63,11 @@ if a > b:
   say: "$b is greater than or equal to $a"
 ```
 
-> All the YS examples in this post use code-mode which requires the
-> `!yamlscript/v0` tag at the top of the file.
-> We'll leave it out of the rest of the examples for brevity.
+!!! note
+
+    All the YS examples in this post use code-mode which requires the
+    `!yamlscript/v0` tag at the top of the file.
+    We'll leave it out of the rest of the examples for brevity.
 
 Let's see what happens when we compile that YS program:
 
@@ -86,14 +88,17 @@ The key has both the `if` command symbol and the condition form in it.
 The value is another YAML mapping with two pairs: one for the "then" form and
 one for the "else" form.
 
-> Notice that both pairs have the same key, `say`.
-Duplicate keys aren't allowed in YAML, but they are allowed in YS code-mode.
-That's because the YS compiler (a fancy YAML loader) isn't loading the mapping
-into a data structure, but rather into an AST.
-For the AST, the "duplicate keys" are no problem, because they're not actually
-being used as mapping keys.
-By contrast, in YS data-mode, duplicate keys are not allowed because they are
-actually being used as mapping keys (like normal YAML).
+!!! note
+
+    Notice that both pairs have the same key, `say`.
+    Duplicate keys aren't allowed in YAML, but they are allowed in YS
+    code-mode.
+    That's because the YS compiler (a fancy YAML loader) isn't loading the
+    mapping into a data structure, but rather into an AST.
+    For the AST, the "duplicate keys" are no problem, because they're not
+    actually being used as mapping keys.
+    By contrast, in YS data-mode, duplicate keys are not allowed because they
+    are actually being used as mapping keys (like normal YAML).
 
 YS code-mode does everything using only YAML block mappings or scalars.
 Using sequences or flow nodes is not allowed in code-mode.
@@ -118,8 +123,10 @@ Using sequences or flow nodes is not allowed in code-mode.
 * key - the first part of a pair or lefthand side
 * value - the second part of a pair or righthand side
 
-> YAML block mapping values can span multiple lines, and can start after the
-line with the key and the `:` separator.
+!!! note
+
+    YAML block mapping values can span multiple lines, and can start after the
+    line with the key and the `:` separator.
 
 ----
 
@@ -167,7 +174,9 @@ a b:
   =>: d
 ```
 
-> ***This is important to understand!***
+!!! note
+
+    ***This is important to understand!***
 
 All the pairs above compile to the same Clojure form: `(a b c d)`, which is
 calling a function `a` with 3 arguments: `b`, `c` and `d`.

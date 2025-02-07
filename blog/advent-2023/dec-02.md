@@ -4,22 +4,24 @@ title: Twas a Bit
 ---
 
 
-> 'Twas a bit before Hanukkah, and all through the igloo,  
-not a creature was stirring, not even a frog.  
-The stockings were hung by the window with care,  
-In hopes that St. Krampus soon would be there.  
-The offspring were nestled all snug in their bunks,  
-While visions of spicy-cookies danced in their heads.  
-And cuz in their 'kerchief, and I in my bonnet,  
-Had just settled down for a long winter's snooze.  
-When out on the lawn there arose such a clatter,  
-I sprang from my bench to see what was the matter.  
-Away to the window, I flew like a jet,  
-Tore open the shutters and threw up the curtain.  
-The asteroid on the breast of the new-fallen frost,  
-Gave the lustre of mid-day to dirt below.  
-When what to my wondering eyes should materialize?  
-But a miniature car, and eight tiny elephants.
+!!! quote
+
+    'Twas a bit before Hanukkah, and all through the igloo,  
+    not a creature was stirring, not even a frog.  
+    The stockings were hung by the window with care,  
+    In hopes that St. Krampus soon would be there.  
+    The offspring were nestled all snug in their bunks,  
+    While visions of spicy-cookies danced in their heads.  
+    And cuz in their 'kerchief, and I in my bonnet,  
+    Had just settled down for a long winter's snooze.  
+    When out on the lawn there arose such a clatter,  
+    I sprang from my bench to see what was the matter.  
+    Away to the window, I flew like a jet,  
+    Tore open the shutters and threw up the curtain.  
+    The asteroid on the breast of the new-fallen frost,  
+    Gave the lustre of mid-day to dirt below.  
+    When what to my wondering eyes should materialize?  
+    But a miniature car, and eight tiny elephants.
 
 Well that was a bit weird.
 Let's try again.
@@ -177,16 +179,17 @@ We passed it as an argument to the `map` function.
 
 I'll tell you about `=>` and `->>` later.
 
+!!! info
 
-> ### Comma Chameleon
->
-> I was going to save this for later, but I just can't wait...
->
-> **Commas are a Lie!**
->
-> In YS, commas are optional whitespace.
-> You can use them to make your code more readable, if that's your thing.
-> It's not my thing, so I won't use them much from here on out.
+    ### Comma Chameleon
+
+    I was going to save this for later, but I just can't wait...
+
+    **Commas are a Lie!**
+
+    In YS, commas are optional whitespace.
+    You can use them to make your code more readable, if that's your thing.
+    It's not my thing, so I won't use them much from here on out.
 
 
 ### Variables
@@ -283,19 +286,21 @@ See you tomorrow!
 
 I'll leave you with a little poem that a close friend of mine just wrote:
 
-> 'Twas a bit before Winter, and all through the hut,  
-not a creature was stirring, not even a snake.  
-The stockings were hung by the faucet with care,  
-In hopes that St. Frosty soon would be there.  
-The tots were nestled all snug in their bunks,  
-While visions of pungent-candies danced in their heads.  
-And uncle in their 'kerchief, and I in my fedora,  
-Had just settled down for a long winter's rest.  
-When out on the lawn there arose such a clatter,  
-I sprang from my sofa to see what was the matter.  
-Away to the window, I flew like a bullet,  
-Tore open the panels and threw up the blind.  
-The planet on the breast of the new-fallen snow,  
-Gave the lustre of mid-day to flowers below.  
-When what to my wondering eyes should materialize?  
-But a miniature train, and eight tiny oxen.
+!!! quote
+
+    'Twas a bit before Winter, and all through the hut,  
+    not a creature was stirring, not even a snake.  
+    The stockings were hung by the faucet with care,  
+    In hopes that St. Frosty soon would be there.  
+    The tots were nestled all snug in their bunks,  
+    While visions of pungent-candies danced in their heads.  
+    And uncle in their 'kerchief, and I in my fedora,  
+    Had just settled down for a long winter's rest.  
+    When out on the lawn there arose such a clatter,  
+    I sprang from my sofa to see what was the matter.  
+    Away to the window, I flew like a bullet,  
+    Tore open the panels and threw up the blind.  
+    The planet on the breast of the new-fallen snow,  
+    Gave the lustre of mid-day to flowers below.  
+    When what to my wondering eyes should materialize?  
+    But a miniature train, and eight tiny oxen.

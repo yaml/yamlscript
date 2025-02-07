@@ -28,9 +28,11 @@ aarch64.
 If you happen to be running on one of those platforms, you can run the following
 command to install the YS CLI, `ys`:
 
-> UPDATE: Releases are now available for Linux and macOS on both x86_64 and
-aarch64 (for either). See the [YS Releases Page](
-https://github.com/yaml/yamlscript/releases/)
+!!! info
+
+    **UPDATE**: Releases are now available for Linux and macOS on both `x86_64`
+    and `aarch64` (for either). See the [YS Releases Page](
+    https://github.com/yaml/yamlscript/releases/)
 
 ```bash
 curl https://yamlscript.org/install | bash
