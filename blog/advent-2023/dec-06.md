@@ -79,8 +79,10 @@ The `ys` command has a `--mode` (aka `-m`) option that lets you set the mode to
 Thus the last one liner could be written as:
 `ys -mb -l -e 'foo: 111' -e 'bar: 222'`.
 
-> Note: The `-m` option only works with the `-e` option.
-You can't use it to change the mode of a file that you are loading or running.
+!!! note
+
+    The `-m` option only works with the `-e` option.
+    You can't use it to change the mode of a file that you are loading or running.
 
 
 ### Switching Modes

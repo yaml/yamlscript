@@ -28,8 +28,10 @@ $ ys -c -e "s =: ('foo' + 'bar')" -e "s =: (+ 'foo' 'bar')"
 See how the infix `+` operator compiles to the `add+` function?
 The `add+` function works on numbers, strings, sequences, and mappings!
 
-> If you absolutely need the Clojure `+` function for performance reasons, you
-can simply use the prefix form: `(+ a b)`.
+!!! note
+
+    If you absolutely need the Clojure `+` function for performance reasons,
+    you can simply use the prefix form: `(+ a b)`.
 
 
 ## Arithmetic Operators

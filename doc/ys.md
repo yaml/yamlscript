@@ -5,8 +5,10 @@ title: ys - The YS Command Line Tool
 The YS `ys` command line tool is the primary way to run, load and compile YS
 programs.
 
-> Loading is essentially the same as running, but the result is output is
-printed as JSON.
+!!! note
+
+    Loading is essentially the same as running, but the result is output is
+    printed as JSON.
 
 Here's the `ys --help` output:
 

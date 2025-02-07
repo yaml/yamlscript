@@ -141,16 +141,19 @@ Let and Lambdas are 2 of the most important features for Lisp (thus Clojure)
 programmers.
 There's a famous book called "Let Over Lambda" that is a must read for any
 serious Lisp programmer.
-Note: I haven't read it yet, but I am serious, therefore it's a must!
+(I haven't read it yet, but I am serious, therefore it's a must!)
 
 Here's a great snippet from the book:
-> Sometimes it's called a closure, other times a saved lexical environment.
-Or, as some of us like to say, let over lambda.
-Whatever terminology you use, mastering this concept of a closure is the first
-step to becoming a professional lisp programmer.
-In fact, this skill is vital for the proper use of many modern programming
-languages, even ones that don't explicitly contain let or lambda, such as Perl
-or Javascript.
+
+!!! quote
+
+    Sometimes it's called a closure, other times a saved lexical environment.
+    Or, as some of us like to say, let over lambda.
+    Whatever terminology you use, mastering this concept of a closure is the
+    first step to becoming a professional lisp programmer.
+    In fact, this skill is vital for the proper use of many modern programming
+    languages, even ones that don't explicitly contain let or lambda, such as
+    Perl or JavaScript.
 
 Let over Lambda (LoL!) is built around this simple Lisp idiom:
 

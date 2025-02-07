@@ -12,7 +12,8 @@
 
 Meta =: load('../Meta')
 
-site_name: YS is YAML — YAML is YS
+site_name: YS we can!
+# site_name: YS is YAML — YAML is YS
 # site_name: YS is YAML's Friend
 # site_name: YS for YAML
 site_url:: Meta.homepage
@@ -71,13 +72,14 @@ plugins:
 #     - tags
 - search
 
-
 markdown_extensions:
+- admonition
 - attr_list
 - md_in_html
 - pymdownx.emoji:
     emoji_index: +!!python/name:material.extensions.emoji.twemoji
     emoji_generator: +!!python/name:material.extensions.emoji.to_svg
+- pymdownx.details
 - pymdownx.snippets
 - pymdownx.superfences
 - pymdownx.tabbed:

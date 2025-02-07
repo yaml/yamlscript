@@ -18,7 +18,9 @@ This means that any possible valid JSON input is also valid as a YAML input.
 A proper YAML loader and a JSON loader should produce the same data structure
 from the same JSON input.
 
-> Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema
+!!! note
+
+    Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema
 
 
 ### Welcome to day 3 of YS Advent 2023!
@@ -119,8 +121,10 @@ $ ys -le 'Advent day: 3'
 {"Advent day": 3}
 ```
 
-> Note: The `-le` option is a short for `-l` (short for `--load`) and `-e`
-(short for `--eval).
+!!! note
+
+    The `-le` option is a short for `-l` (short for `--load`) and `-e` (short
+    for `--eval).
 
 Since the command line doesn't have any way to store the loaded YAML (like a
 programming language would as a data structure) we have to get it back as text.
@@ -229,8 +233,10 @@ map1 =: load('map1.yaml')
 Here everything is code, and the final expression is the data we want to load.
 When you run `ys --load file2.ys` you get the same result as before.
 
-> Note: The things starting with `:` are called keywords, and they turn into one
-word strings on output.
+!!! note
+
+The things starting with `:` are called keywords, and they turn into one word
+strings on output.
 More on keywords another day.
 
 

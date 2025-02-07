@@ -29,6 +29,7 @@ YS currently has working loader libraries for:
 [Raku](https://raku.land/zef:ingy/YAMLScript),
 [Ruby](https://rubygems.org/search?query=yamlscript) and
 [Rust](https://crates.io/crates/yamlscript).
+
 It has [binary releases](https://github.com/yaml/yamlscript/releases)
 for `ys` and `libyamlscript` that you can install with:
 
@@ -36,13 +37,15 @@ for `ys` and `libyamlscript` that you can install with:
 $ curl https://yamlscript.org/install | bash
 ```
 
-> #### YS Status
->
-> YS is currently a fully functional programming language, but
-> the v0 API has not yet been declared stable.
-> A stable v0 API is planned for Q2 2024.
-> Once the v0 API is declared stable, it will always remain backwards
-compatible.
+!!! info
+
+    #### YS Status
+
+    YS is currently a fully functional programming language, but
+    the v0 API has not yet been declared stable.
+    A stable v0 API is planned for Q2 2024.
+    Once the v0 API is declared stable, it will always remain backwards
+    compatible.
 
 
 ### About Ingy döt Net<a name="ingydotnet"></a>
