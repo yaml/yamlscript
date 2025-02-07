@@ -12,7 +12,8 @@
 
 Meta =: load('../Meta')
 
-site_name: YS is YAML's Friend
+site_name: YS is YAML — YAML is YS
+# site_name: YS is YAML's Friend
 # site_name: YS for YAML
 site_url:: Meta.homepage
 site_author:: Meta.author.name
@@ -85,4 +86,4 @@ markdown_extensions:
 watch:
 - theme
 
-copyright:: "YAMLScript — Copyright $(Meta.copyright)"
+copyright:: "YS / YAMLScript — Copyright $(Meta.copyright)"

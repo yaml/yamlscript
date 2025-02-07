@@ -1,8 +1,8 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.constructor is responsible for converting the YAMLScript AST
-;; into a Clojure AST.
+;; The yamlscript.constructor is responsible for converting the YS AST into a
+;; Clojure AST.
 
 (ns yamlscript.constructor
   (:require
@@ -22,7 +22,7 @@
   maybe-trace)
 
 (defn construct-ast
-  "Construct resolved YAML tree into a YAMLScript AST."
+  "Construct resolved YAML tree into a YS AST."
   [node]
   (->> node
     (#(construct-node %1))
@@ -292,7 +292,7 @@
               sym (get-in node [:Lst 0 :Sym])
               _ (not (some #{sym} do-not-trace))]
       (if (some #{sym} cannot-trace)
-        (die "Cannot yet trace YAMLScript code containing: '" sym "'")
+        (die "Cannot yet trace YS code containing: '" sym "'")
         (construct-trace node))
       node)))
 

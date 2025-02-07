@@ -2,8 +2,8 @@
 title: Chaining Function Calls
 ---
 
-One of the most powerful features of YAMLScript is the ability to chain function
-calls together.
+One of the most powerful features of YS is the ability to chain function calls
+together.
 Functions are chained together using the `.` operator.
 
 Here are some examples:

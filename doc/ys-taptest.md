@@ -1,11 +1,11 @@
 ---
-title: YAMLScript TAP Testing Library
+title: YS TAP Testing Library
 ---
 
 This library provides an implementation of the [Test Anything Protocol (TAP)](
-https://testanything.org/) for YAMLScript.
+https://testanything.org/) for YS.
 
-It's a really clean way to write unit tests for your YAMLScript code.
+It's a really clean way to write unit tests for your YS code.
 
 Here's an example of a simple test file (test-1.t):
 
@@ -65,7 +65,7 @@ were run.
 Each test mapping has certain keys that determine how the test is run.
 
 You must specify `code` or `cmnd` for each test.
-This indicates either the YAMLScript code to run or the CLI command to run.
+This indicates either the YS code to run or the CLI command to run.
 
 You must specify one of `want`, `like` or `have` for each test.
 This indicates how the result should be tested.
@@ -74,7 +74,7 @@ Here are the test mapping keys you can use in a test:
 
 * `name` — The name/description of the test. This is optional.
 
-* `code` — The YAMLScript code to run for the test.
+* `code` — The YS code to run for the test.
 
 * `cmnd` — The CLI command to run for the test.
 

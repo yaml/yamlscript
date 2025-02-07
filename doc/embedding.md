@@ -1,3 +1,3 @@
 ---
-title: Embedding YAMLScript in YAML
+title: Embedding YS in YAML
 ---

@@ -1,3 +1,3 @@
 ---
-title: Common YAMLScript Functions
+title: Common YS Functions
 ---

@@ -1,11 +1,6 @@
 ---
 title: Let Lambda Come Over
-# date: '2023-12-16'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-16
 ---
 
 We know the names of Santa's reindeer: Dasher, Dancer, Prancer, Vixen, Comet,
@@ -19,7 +14,7 @@ They are anonymous!
 They're also the hardest working of the bunch.
 
 
-### Welcome to Day 16 of the YAMLScript Advent Calendar
+### Welcome to Day 16 of the YS Advent Calendar
 
 Today we're going to talk about YS lambdas and their frontman named "let".
 
@@ -42,7 +37,7 @@ Here's a simple lambda that squares a number:
 
 Note: Clojure just calls them "anonymous functions".
 
-Here's both of those in YAMLScript:
+Here's both of those in YS:
 
 ```yaml
 # Using the fn keyword
@@ -106,7 +101,7 @@ The Clojure code looks a little more complicated than the Python code.
 That's the price for needing to write everything the same way with
 parenthesized lists.
 
-Let's see how YAMLScript does it:
+Let's see how YS does it:
 
 ```yaml
 defn foo(x):
@@ -136,7 +131,7 @@ the Clojure code by hand.
 
 The big win here is that the code you write looks clean like the Python code,
 but works perfectly as Clojure code.
-It's one of my favorite features of YAMLScript.
+It's one of my favorite features of YS.
 The need for lexical variables is constant and this makes it painless.
 
 
@@ -191,7 +186,7 @@ Let's make the quintessential LoL example, a counter, in Clojure:
 (println (counter)) # => 13
 ```
 
-Writing this in YAMLScript is a simple port:
+Writing this in YS is a simple port:
 
 ```yaml
 !yamlscript/v0
@@ -204,7 +199,7 @@ say: counter() # => 12
 say: counter() # => 13
 ```
 
-Someone told me the other day that YAMLScript was a "lol language".
+Someone told me the other day that YS was a "lol language".
 This must be what they meant.
 
-The lols continue tomorrow, on Day 17 of the YAMLScript Advent Calendar!
+The lols continue tomorrow, on Day 17 of the YS Advent Calendar!

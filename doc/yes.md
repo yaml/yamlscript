@@ -7,12 +7,12 @@ https://en.wikipedia.org/wiki/S-expression) (aka `sexpr`s), nested parenthesized
 expressions where the parentheses contain a function (usually a symbol bound to
 a function) followed by its arguments.
 
-YAMLScript has a concept called "YeS Expressions" (aka `ysexpr`s) which offer
-alternate ways to write sexprs in a style that feels more familiar to non-Lisp
+YS has a concept called "YeS Expressions" (aka `ysexpr`s) which offer alternate
+ways to write sexprs in a style that feels more familiar to non-Lisp
 language expressions.
 
-> Note: In general, YAMLScript supports writing code as sexprs, ysexprs or as
-block mapping pairs.
+> Note: In general, YS supports writing code as sexprs, ysexprs or as block
+mapping pairs.
 Nested expressions can combine any of those forms.
 It's up to the programmer to decide which works best for them in any given
 context.
@@ -27,7 +27,7 @@ The equivalent code in Python would be:
 var1 = sqrt(3 * 4 + 5)
 ```
 
-In YAMLScript, we could write:
+In YS, we could write:
 
 ```yaml
 var1 =: sqrt((3 * 4) + 5)
@@ -51,9 +51,9 @@ There are 3 notable transformations happening here:
 We'll discuss the a few more details of each of these YeS expression transforms
 below.
 
-> Note: YAMLScript has many other transformations that strive to make YS code
-clean and easy to read and understand.
-YeS expression transformations are among the most commonly used.
+> Note: YS has many other transformations that strive to make YS code clean and
+> easy to read and understand.
+> YeS expression transformations are among the most commonly used.
 
 
 ## Prefix Call Notation
@@ -63,11 +63,11 @@ The most common way to call a function in non-Lisp programming languages is
 are arguments that the function is called with.
 Lisp languages use the same format but put the `a` inside the parens.
 
-YAMLScript lets you do either.
+YS lets you do either.
 Again the `a` must be next to the `(`.
 IOW, `a (b c)` is not the same as `a(b c)`!
 
-Another way to write the function call `(a b c)` in YAMLScript is to use it in a
+Another way to write the function call `(a b c)` in YS is to use it in a
 mapping pair context:
 ```yaml
 a: b c
@@ -116,7 +116,7 @@ if (a > b): c d
 ### When Operators are Arguments
 
 Every once in a while you might want to pass an operator as an argument to a
-function call triplet like `(apply + numbers)` and YAMLScript would wrongly
+function call triplet like `(apply + numbers)` and YS would wrongly
 translate that to `(+ apply numbers)`.
 
 This is easily avoided by using the prefix call notation described above:
@@ -156,7 +156,7 @@ Unless it was inside a function scope, in which case you would use a `let` form:
     (d a)))
 ```
 
-In YAMLScript you can write them both the same way:
+In YS you can write them both the same way:
 
 ```
 a =: b(c)
@@ -175,7 +175,7 @@ In Clojure you can define multiple `let` bindings in a single `let` form.
     (d b c)))
 ```
 
-In YAMLScript you can do the same thing:
+In YS you can do the same thing:
 
 ```yaml
 defn f(a):
@@ -184,7 +184,7 @@ defn f(a):
   d: b c
 ```
 
-The YAMLScript compiler joins consecutive `=:` pairs into a single `let` form,
+The YS compiler joins consecutive `=:` pairs into a single `let` form,
 resulting in the same Clojure code as the example above.
 
 In Clojure you can bind multiple symbols at once using destructuring:
@@ -204,7 +204,7 @@ Note that this works for a `let` expression but not for a `def` expression:
 (def [a b] (c))  ;; Syntax error
 ```
 
-In YAMLScript it works fine:
+In YS it works fine:
 
 ```yaml
 -[a b] =: c()
@@ -213,14 +213,14 @@ In YAMLScript it works fine:
 
 ## Conclusion
 
-YeS Expressions are a key way to help you write YAMLScript code that looks more
-like the code you're used to writing in non-Lisp languages, while still
-retaining the full power of Lisp (Clojure).
-It's your choice how you want your code to look, and YAMLScript gives you
-many options for that.
+YeS Expressions are a key way to help you write YS code that looks more like
+the code you're used to writing in non-Lisp languages, while still retaining
+the full power of Lisp (Clojure).
+It's your choice how you want your code to look, and YS gives you many options
+for that.
 
-No matter what your valid YAMLScript code looks like, it always compiles to
-valid Lisp, which makes it extremely reliable to reason about.
+No matter what your valid YS code looks like, it always compiles to valid Lisp,
+which makes it extremely reliable to reason about.
 
 The power of Lisp is that its input expressions almost completely match the
 internal evaluation forms that it compiles to.
@@ -231,5 +231,5 @@ This is called [homoiconicity](https://wikipedia.org/wiki/Homoiconicity).
 In dynamic languages like JavaScript, Python, Ruby or Perl you don't really get
 to see what your code turns into before it is evaluated.
 
-YAMLScript tries to offer a very flexible set of coding styles that always
-compile to Lisp's extremely robust evaluation form.
+YS tries to offer a very flexible set of coding styles that always compile to
+Lisp's extremely robust evaluation form.

@@ -1,3 +1,3 @@
 ---
-title: YAMLScript YAML Library
+title: The YS YAML Library
 ---

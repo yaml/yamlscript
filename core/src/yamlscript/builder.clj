@@ -1,8 +1,8 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.builder is responsible parsing all the !expr nodes into
-;; YAMLScript AST nodes.
+;; The yamlscript.builder is responsible parsing all the !expr nodes into YS
+;; AST nodes.
 
 (ns yamlscript.builder
   (:require
@@ -32,7 +32,7 @@
     node))
 
 (defn build
-  "Parse all the !expr nodes into YAMLScript AST nodes."
+  "Parse all the !expr nodes into YS AST nodes."
   [node] (build-node (adjust-special-key-top node)))
 
 (defn build-from-string [string]

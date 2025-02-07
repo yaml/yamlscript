@@ -1,30 +1,25 @@
 ---
 title: Modes of Transportation
-# date: '2023-12-06'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-06
 ---
 
 How do you get around?
 Some people walk, some ride bikes, some drive cars (or the cars drive them),
 some take trains, some in planes, so many ways, even some in sleighs.
 
-In YAMLScript, data gets around via various modes of transportation...
-3 modes to be exact.
+In YS, data gets around via various modes of transportation...  3 modes to be
+exact.
 
 Rememeber back on December 3rd when we talked about the 2 different states that
-a YAMLScript program can be in?
+a YS program can be in?
 In one state `say` is a function, and in the other it's just a plain string.
 
 We call these states "modes", and there is actually three of them.
 
 
-### Welcome to Day 6 of the YAMLScript Advent Calendar
+### Welcome to Day 6 of the YS Advent Calendar
 
-YAMLScript has these 3 modes:
+YS has these 3 modes:
 
 * Code Mode
 
@@ -43,8 +38,8 @@ YAMLScript has these 3 modes:
 
   Without a magic starting `!yamlscript` tag, the YS file is in Bare Mode.
   This is like Data Mode but you aren't allowed to ever switch to Code Mode.
-  This is the default mode for YAMLScript files, and the reason we can claim
-  that almost all existing YAML files are valid YAMLScript files.
+  This is the default mode for YS files, and the reason we can claim that
+  almost all existing YAML files are valid YS files.
   _Specifically all those that adhere to the JSON data model, which is almost
   all YAML config files._
 
@@ -105,11 +100,11 @@ It is implicitly tagged with `!!int`, which happens to be shorthand for
 
 All YAML loaders understand the set of `yaml.org,2002` tags: `!!map`, `!!seq`,
 `!!str`, etc.
-In fact you are free to use these tags in YAMLScript programs, even in Bare
+In fact you are free to use these tags in YS programs, even in Bare
 Mode.
 But there is really no good reason to do so.
 
-The `!` tag is a valid YAML tag, but it is special in YAMLScript.
+The `!` tag is a valid YAML tag, but it is special in YS.
 It switches between Code Mode and Data Mode.
 
 If you think `!` looks weird, there is another cleaner looking way to switch
@@ -136,7 +131,7 @@ my-map =: !
 At this point you can't do the same thing to switch from Data Mode to Code Mode.
 
 
-Well that concludes our coverage of YAMLScript a la Mode!
+Well that concludes our coverage of YS a la Mode!
 Mmmm... Now doesn't that just sound delicious? (or at least fashionable!)
 
-I'll see you tomorrow for day 7 of YAMLScript Advent 2023!
+I'll see you tomorrow for day 7 of YS Advent 2023!

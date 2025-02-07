@@ -2,22 +2,22 @@
 title: The Clojure Programming Language
 ---
 
-YAMLScript as a technology has many goals.
-YAMLScript as a programming language is essentially a different syntax for
+YS as a technology has many goals.
+YS as a programming language is essentially a different syntax for
 Clojure.
-However, YAMLScript is certainly not an attempt to replace Clojure.
+However, YS is certainly not an attempt to replace Clojure.
 
-In theory YAMLScript could have been written in any language.
+In theory YS could have been written in any language.
 But in reality, Clojure was the best choice for many reasons including:
 
-1. Clojure is a Lisp and Lisps are "code as data". Since YAMLScript is YAML and
-   YAML is data, Clojure is a natural fit.
+1. Clojure is a Lisp and Lisps are "code as data". Since YS is YAML and YAML is
+   data, Clojure is a natural fit.
 2. GraalVM's native-image compiler and Clojure's SCI runtime make it possible to
-   to use YAMLScript without Java or the JVM.
+   to use YS without Java or the JVM.
 3. Clojure's core libraries are extensive, robust and well-documented.
 
-Since YAMLScript code always translates to Clojure code, it's important to have
-a good understanding of Clojure to write good YAMLScript code.
+Since YS code always translates to Clojure code, it's important to have a good
+understanding of Clojure to write good YS code.
 
 Again, Clojure is a Lisp dialect.
 Lisps work entirely with parenthesized expressions containing a function

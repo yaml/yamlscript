@@ -1,10 +1,9 @@
 ---
-title: YAMLScript Syntax Basics
+title: YS Syntax Basics
 ---
 
 
-Let's start learning about YAMLScript syntax by looking at a simple YAMLScript
-program.
+Let's start learning about YS syntax by looking at a simple YS program.
 
 Here's a program to print some numbers (10 of them by default) from the
 fibonacci sequence:
@@ -19,9 +18,9 @@ defn main(n=10):
       recur: b, (a + b), i.++
 ```
 
-When you run a YAMLScript program using the `ys` interpreter command it:
+When you run a YS program using the `ys` interpreter command it:
 
-* Compiles the YAMLScript code to Clojure code
+* Compiles the YS code to Clojure code
 * Evaluates the Clojure code
 
 Let's try it (requesting 8 numbers from the fibonacci sequence):
@@ -52,8 +51,8 @@ $ ys -c fib.ys
 (apply main ARGS)
 ```
 
-> Note: When learning or debugging YAMLScript programs, it's often very helpful
-> to look at the generated Clojure code using `ys -c`.
+> Note: When learning or debugging YS programs, it's often very helpful to look
+> at the generated Clojure code using `ys -c`.
 
 We can see 2 top-level forms in the generated Clojure code.
 The first is the `main` function definition, and the second is the call to the
@@ -65,9 +64,7 @@ was defined but not called in the program.
 
 The Clojure `main` function has 2 bodies, one with an argument `n` and the other
 without any arguments.
-In the YAMLScript program there is only one function body, but not that the
-`n` argument has a default value of `10`.
+In the YS program there is only one function body, but not that the `n`
+argument has a default value of `10`.
 Clojure doesn't support default arguments, but the YS compiler can generate a
 second body that takes no arguments and calls the first body with the default.
-
-

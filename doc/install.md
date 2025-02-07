@@ -1,18 +1,18 @@
 ---
-title: Installing YAMLScript
+title: Installing YS
 ---
 
-YAMLScript has 3 main things you might want to install:
+YS has 3 main things you might want to install:
 
 1. The `ys` compiler, loader and runner command.
-2. The `libyamlscript.so` shared library needed by a YAMLScript loader library
-   for your particular programming language.
-3. A YAMLScript loader library for your particular programming language, like
-   Python, Rust, NodeJS, etc.
+2. The `libyamlscript.so` shared library needed by a YS loader library for your
+   particular programming language.
+3. A YS loader library for your particular programming language, like Python,
+   Rust, NodeJS, etc.
 
-> NOTE: Currently when you install a YAMLScript loader library for your
-particular programming language you must also install the `libyamlscript` shared
-library of the **exact same version**.
+> NOTE: Currently when you install a YS loader library for your
+particular programming language you must also install the `libyamlscript`
+shared library of the **exact same version**.
 Fortunately this is simple.
 
 
@@ -20,7 +20,7 @@ Fortunately this is simple.
 
 You can install both `ys` and `libyamlscript` with a single CLI command, where:
 
-* `VERSION` defaults to the latest YAMLScript version.
+* `VERSION` defaults to the latest YS version.
 * `PREFIX` defaults to `$HOME/.local`.
 * `LIB=1` means only install the shared library.
 * `BIN=1` means only install the `ys` binary.
@@ -79,12 +79,12 @@ This will take a few minutes but it requires no dependencies besides `bash`,
 > On linux it also requires the `libz-dev` package.
 
 
-### Install a YAMLScript Loader Library
+### Install a YS Loader Library
 
-YAMLScript loader libraries are intended to be a  drop in replacement for your
+YS loader libraries are intended to be a  drop in replacement for your
 current YAML loader.
 
-YAMLScript loader libraries are currently available for these programming
+YS loader libraries are currently available for these programming
 languages:
 
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)

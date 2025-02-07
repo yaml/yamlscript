@@ -1,3 +1,3 @@
 ---
-title: YAMLScript JSON Library
+title: The YS JSON Library
 ---

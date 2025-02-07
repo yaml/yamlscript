@@ -2,7 +2,7 @@
 ;; Copyright 2023-2025 Ingy dot Net
 
 (defproject yamlscript.cli "0.1.91-SNAPSHOT"
-  :description "YAMLScript Command Line Tool"
+  :description "The YS Command Line Tool"
 
   :url "https://github.com/yaml/yamlscript"
 

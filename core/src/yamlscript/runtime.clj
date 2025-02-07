@@ -72,10 +72,10 @@
               'spit (sci/copy-var clojure.core/spit nil)
               'NaN? (sci/copy-var clojure.core/NaN? nil)
 
-              ;; YAMLScript util public functions
+              ;; YS util public functions
               'condf (sci/copy-var yamlscript.util/condf nil)
 
-              ;; YAMLScript debugging functions
+              ;; YS debugging functions
               'DBG (sci/copy-var yamlscript.debug/DBG nil)
               'PPP (sci/copy-var yamlscript.debug/PPP nil)
               'TTT (sci/copy-var yamlscript.debug/TTT nil)

@@ -1,3 +1,3 @@
 ---
-title: YAMLScript and YAML Schemas
+title: YS and YAML Schemas
 ---

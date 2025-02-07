@@ -2,7 +2,7 @@
 title: Defining Variables and Functions
 ---
 
-Two of the most common things you'll want to do in YAMLScript code is to define
+Two of the most common things you'll want to do in YS code is to define
 variables and functions.
 
 It's very simple.
@@ -19,7 +19,7 @@ defn main():
 ```
 
 To define a variable with a value we specify a symbol name, followed by one or
-more spaces, followed by `=:` for the YAMLScript key (the LHS).
+more spaces, followed by `=:` for the YS key (the LHS).
 The variable will be set to the result of the evaluation of the mapping pair's
 value (the RHS).
 
@@ -35,7 +35,7 @@ Let's see how this compiles to Clojure internally using `ys -c file.ys`:
 (apply main ARGS)
 ```
 
-In our YAMLScript code we defined 2 variables: `name` and `greeting`.
+In our YS code we defined 2 variables: `name` and `greeting`.
 But in the Clojure code one became a `def` expression and the other used `let`.
 Using `=:` outside a function uses `def` and it's a file scope variable.
 Using `=:` inside a function uses `let` and the scope is the remainder of the

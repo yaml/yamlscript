@@ -1,8 +1,8 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.printer is responsible for serializing YAMLScript Clojure AST
-;; into Clojure code.
+;; The yamlscript.printer is responsible for serializing YS Clojure AST into
+;; Clojure code.
 
 (ns yamlscript.printer
   (:require
@@ -39,7 +39,7 @@
     "=~" "=--"
     "!~" "!--"
     "==" "="
-    "=" (die "Operator '=' is not allowed in YAMLScript")
+    "=" (die "Operator '=' is not allowed in YS")
     , s))
 
 (defn print-node [node]
@@ -89,7 +89,7 @@
       ,    (die "Unknown AST node type:" node))))
 
 (defn print
-  "Render a YAMLScript AST as Clojure code."
+  "Render a YS AST as Clojure code."
   [node]
   (let [list (or (:Top node) [node])
         code (->> list

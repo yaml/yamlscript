@@ -1,11 +1,6 @@
 ---
 title: Godspeed
-# date: '2023-12-20'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-20
 ---
 
 I wonder if Santa has a Hemi?
@@ -15,32 +10,31 @@ Dude's got to get around the world in one night.
 Godspeed, my festive friend!
 
 
-### Welcome to Day 20 of the YAMLScript Advent Blog!
+### Welcome to Day 20 of the YS Advent Blog!
 
-Are YAMLScript programs compiled or interpreted?
+Are YS programs compiled or interpreted?
 The answer is yes.
 
-Clojure (thus YAMLScript) is a very dynamic language.
+Clojure (thus YS) is a very dynamic language.
 Clojure code gets compiled to Java bytecode just in time.
 The JVM compiles the bytecode to machine code just in time.
 Libraries that Clojure uses are compiled ahead of time.
-The whole YAMLScript runtime was compiled by GraalVM native-image into a native
-binary so there is no JVM involved for us in the end.
+The whole YS runtime was compiled by GraalVM native-image into a native binary
+so there is no JVM involved for us in the end.
 
 It's all pretty complicated.
 
-But I was talking about YAMLScript programs being run by the YAMLScript CLI
-`ys`.
+But I was talking about YS programs being run by the YS CLI `ys`.
 You can think of `ys` as an interpreter like Python, Perl, Ruby or Java.
 Sure, those languages _compile_ to an intermediate AST/opcode-tree to be faster,
 but the programs are still interpreted (not binary compiled).
 
-What if you could compile your YAMLScript program to a native binary?
+What if you could compile your YS program to a native binary?
 Like an ELF file on Linux or a Mach-O file on macOS.
 
 > Can you guess why I like Linux better this time of year? :- )
 
-**As of today, you can natively compile YAMLScript programs!!**
+**As of today, you can natively compile YS programs!!**
 
 Merry, Merry!
 
@@ -96,7 +90,7 @@ Let's see if we can drink a little faster, shall we?
 
 ```bash
 $ ys --binary 99-bottles.ys
-* Compiling YAMLScript '99-bottles.ys' to '99-bottles' executable
+* Compiling YS '99-bottles.ys' to '99-bottles' executable
 * Setting up build env in '/tmp/tmp.wpt7O1KsWg'
 * This may take a few minutes...
 [1/8] Initializing              (5.0s @ 0.08GB)
@@ -107,7 +101,7 @@ $ ys --binary 99-bottles.ys
 [6/8] Compiling methods         (22.2s @ 0.42GB)
 [7/8] Layouting methods         (1.7s @ 0.44GB)
 [8/8] Creating image            (2.3s @ 0.51GB)
-* Compiled YAMLScript '99-bottles.ys' to '99-bottles' executable
+* Compiled YS '99-bottles.ys' to '99-bottles' executable
 $ ls -lh 99-bottles*
 -rwxr-xr-x 1 ingy ingy 13M Dec 19 18:14 99-bottles*
 -rwxr-xr-x 1 ingy ingy 468 Dec 19 18:10 99-bottles.ys*
@@ -145,7 +139,7 @@ Woah! 16 milliseconds! Now we're drinking with gas!
 Errr... never mind.
 
 You may have noticed that the native binary is 13 megabytes.
-That's because it contains the entire YAMLScript runtime.
+That's because it contains the entire YS runtime.
 Hopefully we can get that down to a smaller size in the future.
 
 Also did you notice that it took an annoying amount of time to compile?
@@ -154,7 +148,7 @@ Let's time native compiling a minimal program:
 
 ```bash
 $ time ys -be 'say: "Hello, world!"'
-* Compiling YAMLScript '-e' to './EVAL' executable
+* Compiling YS '-e' to './EVAL' executable
 * Setting up build env in '/tmp/tmp.mahWVLE9gi'
 Could not find main function in '-e'
 
@@ -162,13 +156,12 @@ real    0m0.103s
 ```
 
 I forgot to mention.
-In order to `--binary` compile a YAMLScript program, it must have a `main`
-function.
+In order to `--binary` compile a YS program, it must have a `main` function.
 That's an easy fix:
 
 ```bash
 $ time ys -be 'defn main(): say("Hello, world!")'
-* Compiling YAMLScript '-e' to './EVAL' executable
+* Compiling YS '-e' to './EVAL' executable
 * Setting up build env in '/tmp/tmp.1zpmh6L1jM'
 * This may take a few minutes...
 [1/8] Initializing              (4.4s @ 0.17GB)
@@ -179,7 +172,7 @@ $ time ys -be 'defn main(): say("Hello, world!")'
 [6/8] Compiling methods         (20.4s @ 0.42GB)
 [7/8] Layouting methods         (1.6s @ 0.46GB)
 [8/8] Creating image            (2.5s @ 0.40GB)
-* Compiled YAMLScript '-e' to './EVAL' executable
+* Compiled YS '-e' to './EVAL' executable
 
 real    0m59.855s
 ```
@@ -189,8 +182,8 @@ You can native compile a `-e` one liner!
 
 Since the output file needs a name, `ys` uses `./EVAL` when you use `-e`.
 You can use the `-o` option to to name the file explicitly.
-Otherwise it defaults to the name of the YAMLScript file with the `.ys`
-extension removed.
+Otherwise it defaults to the name of the YS file with the `.ys` extension
+removed.
 
 The bad news is that it took almost a minute to compile.
 Currently that's the price you pay for a one-liner race car!
@@ -208,21 +201,21 @@ real    0m0.010s
 
 ----
 
-YAMLScript's `--binary` compiler is based on GraalVM's `native-image` tool.
+The YS `--binary` compiler is based on GraalVM's `native-image` tool.
 The same process that is used to compile the `ys` CLI binary.
 
 I wish it were faster to compile to binary, but at least now we can be fast
-while developing our YAMLScript programs and then compile them to native
-binaries when we are ready to ship them.
+while developing our YS programs and then compile them to native binaries when
+we are ready to ship them.
 
-Let's look at where YAMLScript is at now from a high level view:
+Let's look at where YS is at now from a high level view:
 
 * We have a new language that feels clean like Python
 * It is actually a functional language adding reliability
 * It's really Clojure so very complete and powerful
 * It's embeddable in YAML so you can enhance existing YAML files
 * It's a better YAML loader for plain old YAML with no magics
-* It's quite fast when run with the YAMLScript CLI `ys`
+* It's quite fast when run with the YS CLI `ys`
 * It's even faster when compiled to a native binary
 
 I think we have a winner here!
@@ -233,4 +226,4 @@ Full disclosure: I only came up the the `--binary` idea 2 days ago.
 
 Climb aboard and let's fly this baby to the moon!
 
-Come back tomorrow for Day 21 of the YAMLScript Advent Blog!
+Come back tomorrow for Day 21 of the YS Advent Blog!

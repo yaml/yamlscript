@@ -1,7 +1,7 @@
 yamlscript/libyamlscript
 ========================
 
-Build the YAMLScript compiler into a shared library
+Build the YS compiler into a shared library
 
 
 ## Synopsis
@@ -13,14 +13,14 @@ $ make build
 
 ## Description
 
-This directory builds the YAMLScript compiler (written in Clojure) into a shared
+This directory builds the YS compiler (written in Clojure) into a shared
 library for binding to other programming languages.
 
 The compilation is achieved by using the GraalVM native-image tool to compile
 the compiled Clojure code into a shared library.
 
-The `yamlscript.compiler/compile` function takes a YAMLScript input string and
-compiles it to a Clojure code string.
+The `yamlscript.compiler/compile` function takes a YS input string and compiles
+it to a Clojure code string.
 
 
 ## Prerequisites

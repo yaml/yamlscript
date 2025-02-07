@@ -1,4 +1,4 @@
 ---
-title: YAMLScript Programming Language
+title: Templating with YS
 ---
 

@@ -1,16 +1,16 @@
 ---
-title: YAMLScript Binding Libraries
+title: YS Binding Libraries
 ---
 
-Your YAML existing YAML files are perfectly valid YAMLScript files!
-Using a YAMLScript binding library (aka module or package) these files can be
-loaded into objects just like a YAML loader would do.
+Your YAML existing YAML files are perfectly valid YS files!
+Using a YS binding library (aka module or package) these files can be loaded
+into objects just like a YAML loader would do.
 
 Without a `!yamlscript/v0` tag at the top they will load the same as normal.
-With that tag, they can be made to take advantage of any of YAMLScript's vast
+With that tag, they can be made to take advantage of any of the vast YS
 functional capabilities.
 
-YAMLScript intends to provide a loader library for every programming language
+YS intends to provide a loader library for every programming language
 that uses YAML.
 
 Currently there are working libraries for:
@@ -28,7 +28,7 @@ Currently there are working libraries for:
 Install these libraries like you would any other library for your language.
 You must also install the matching version of the `libyamlscript.so` shared
 library.
-See [Installing YAMLScript](install.md) for more info.
+See [Installing YS](install.md) for more info.
 
 You can use these libraries like any other YAML loader.
 Here's an example usage in Python:

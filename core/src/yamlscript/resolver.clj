@@ -4,7 +4,7 @@
 ;; The yamlscript.resolver is responsible for tagging each node in the YAML
 ;; node tree.
 ;;
-;; The tags used by YAMLScript are:
+;; The tags used by YS are:
 ;;
 ;; Top level tags:
 ;; * !YS v0: ...         - Start in data mode
@@ -48,14 +48,14 @@
 ;; * :nil - YAML null scalar
 ;;
 ;; Code mode (data mode tags, plus):
-;; * :xmap - YAMLScript expression mapping - each pair creates form
-;; * :fmap - YAMLScript forms mapping - every node is a form
-;; * :cmap - YAMLScript code mapping - map where each node is a form
-;; * :cseq - YAMLScript code sequence - seq where each node is a form
-;; * :expr - YAMLScript expression scalar
-;; * :xstr - YAMLScript expression string (w/ interpolation)
+;; * :xmap - YS expression mapping - each pair creates form
+;; * :fmap - YS forms mapping - every node is a form
+;; * :cmap - YS code mapping - map where each node is a form
+;; * :cseq - YS code sequence - seq where each node is a form
+;; * :expr - YS expression scalar
+;; * :xstr - YS expression string (w/ interpolation)
 ;;
-;; The resolver transforms the keys of the YAMLScript special forms:
+;; The resolver transforms the keys of the YS special forms:
 ;;
 ;; * :def  - 'foo ='
 ;; * :defn - 'defn foo(...)'
@@ -101,7 +101,7 @@
     :code (resolve-code-node node)))
 
 (defn resolve
-  "Walk YAML tree and tag all nodes according to YAMLScript rules."
+  "Walk YAML tree and tag all nodes according to YS rules."
   [node]
   (let [tag (:! node)
         node (if (and tag (re-find #"^yamlscript/v0" tag))
@@ -192,7 +192,7 @@ bar:: !:inc 3 + 4
 (defn resolve-plain-scalar [node]
   (let [val (:= node)]
     (when (re-matches re-inf-nan val)
-      (die "Inf and NaN not supported in YAMLScript"))
+      (die "Inf and NaN not supported in YS"))
     (condp re-matches val
       re-int :int
       re-float :flt

@@ -14,5 +14,5 @@ languages =::
 - Raku
 - Rust
 
-=>: "I heard that @$rand-nth(hackers) uses YAMLScript
+=>: "I heard that @$rand-nth(hackers) uses YS
     in their $rand-nth(languages) code!"

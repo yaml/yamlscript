@@ -1,31 +1,26 @@
 ---
 title: Sharpen Your Tools
-# date: '2023-12-07'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-07
 ---
 
-Wanna make some fun toys with YAMLScript?
+Wanna make some fun toys with YS?
 You'll need some sharp tools.
 You think those elves make all those toys with dull tools?
 
-The CLI tool `ys` is the main tool you'll use to work with YAMLScript.
+The CLI tool `ys` is the main tool you'll use to work with YS.
 Today we'll learn about all the things you can do with it.
 
 
-### Welcome to Day 7 of the YAMLScript Advent Calendar
+### Welcome to Day 7 of the YS Advent Calendar
 
-On Tuesday you learned how to install YAMLScript.
+On Tuesday you learned how to install YS.
 Reminder, here's the quick way to install the latest version:
 
 ```bash
 $ curl https://yamlscript.org/install | PREFIX=~/.yamlscript bash
 $ export PATH=$HOME/.yamlscript/bin:$PATH
 $ ys --version
-YAMLScript v0.1.91
+YS (YAMLScript) v0.1.91
 ```
 
 The best first command to run is `ys --help`:
@@ -33,18 +28,17 @@ The best first command to run is `ys --help`:
 ```bash
 $ ys --help
 
-ys - The YAMLScript (YS) Command Line Tool - v0.1.91
+ys - The YS Command Line Tool - v0.1.91
 
 Usage: ys [<option...>] [<file>]
 
 Options:
 
-      --run                Run a YAMLScript program file (default)
-  -l, --load               Output (compact) JSON of YAMLScript evaluation
-  -e, --eval YSEXPR        Evaluate a YAMLScript expression
+  -l, --load               Output (compact) JSON of YS evaluation
+  -e, --eval YSEXPR        Evaluate a YS expression
                            multiple -e values joined by newline
 
-  -c, --compile            Compile YAMLScript to Clojure
+  -c, --compile            Compile YS to Clojure
   -b, --binary             Compile to a native binary executable
 
   -p, --print              Print the result of --run in code mode
@@ -80,18 +74,18 @@ Options:
 
 The first thing to notice is that `ys` has 3 "actions":
 
-* `--run` (default) - Compile and evaluate a YAMLScript file
-* `--load` - Output the evaluated YAMLScript value as JSON (by default)
-* `--compile` - Compile YAMLScript code to Clojure code
+* Run (default) - Compile and evaluate a YS file
+* `--load` - Output the evaluated YS value as JSON (by default)
+* `--compile` - Compile YS code to Clojure code
 
-For each action you'll need some YAMLScript source code.
+For each action you'll need some YS source code.
 This can come from 3 different places:
 
-* The `--eval` (`-e`) option - specifies a line of YAMLScript code.
+* The `--eval` (`-e`) option - specifies a line of YS code.
   You can use this option multiple times to specify multiple lines of code.
-* A file path - specify a path to a file containing YAMLScript code.
-* Standard input - specify `-` as the file path to read YAMLScript code from
-  standard input.
+* A file path - specify a path to a file containing YS code.
+* Standard input - specify `-` as the file path to read YS code from standard
+  input.
   If no file or `-e` options are specified, `ys` will check to see if there is
   data on stdin.
   That means you can leave off the `-` and pipe data into `ys` like this:
@@ -101,18 +95,18 @@ This can come from 3 different places:
 
 ### Running Clojure  with `ys`
 
-Clojure code is often valid YAMLScript code:
+Clojure code is often valid YS code:
 
 ```bash
 $ ys --compile -e '(println (+ 1 2))'
 (println (+ 1 2))
 ```
 
-This YAMLScript compiles to the exact same Clojure code.
+This YS compiles to the exact same Clojure code.
 
 If you want the code you run to be considered to be Clojure code (thus not
 compiled by the yamlscript compiler), you can use the `--clj` (`-C`) option.
-This is useful when you want to test out the YAMLScript runtime envronment
+This is useful when you want to test out the YS runtime envronment
 directly with Clojure code.
 
 Also you can pipe the output of `ys --compile` to `ys --clj` to run the
@@ -129,7 +123,7 @@ We learned about modes and the `--mode` option yesterday.
 You can set the mode for `--eval` (`-e`) code with the `--mode` (`-m`) option.
 The accepted values are `code` (`c`), `data` (`d`) and `bare` (`b`).
 
-When you "load" YAMLScript using `--load` you get the result printed to stdout
+When you "load" YS using `--load` you get the result printed to stdout
 as JSON.
 These are 3 formatting options to control how the output is displayed:
 
@@ -144,7 +138,7 @@ Note that when you specify a formatting option, it implies the `--load` action.
 
 ### Debugging
 
-When you "run" a YAMLScript program it doesn't print anything unless you use a
+When you "run" a YS program it doesn't print anything unless you use a
 printing command.
 This isn't surprising; all languages work this way.
 
@@ -159,10 +153,10 @@ Finally there a 3 special debugging options:
 * `--debug-stage` (`-D`) - Display the result of a stage/stages
 * `-d` - Short for `--debug-stage=all` - Display the result of all stages
 
-The `--debug-stage` option is super useful for understanding exactly how
-YAMLScript code compiles to Clojure code.
+The `--debug-stage` option is super useful for understanding exactly how YS
+code compiles to Clojure code.
 
-For example, to see the internal AST when compiling some YAMLScript:
+For example, to see the internal AST when compiling some YS:
 
 ```bash
 $ ys -c -e 'say: "Hello"' -Dconstruct
@@ -209,4 +203,4 @@ We'll go over all of these stages in detail in a future post.
 In the meantime, try out your new `ys` tool and see what you can do with it.
 The more you use it, the sharper it will get.
 
-I'll see you tomorrow for day 8 of YAMLScript Advent 2023!
+I'll see you tomorrow for day 8 of YS Advent 2023!

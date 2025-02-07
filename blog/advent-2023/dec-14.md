@@ -1,34 +1,27 @@
 ---
 title: Stocking Stuffers
-# date: '2023-12-14'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-14
 ---
 
 It's always nice to get a little something extra in your stocking whilst waiting
 for the big guy to show up on the big day.
 
-Learning eveything you need to know about YAMLScript in 24 days is a tall order.
+Learning eveything you need to know about YS in 24 days is a tall order.
 I still have a quite a bit to learn about it myself! :-)
 
 It helps to learn the small stuff first.
 
-### Welcome to Day 14 of YAMLScript Advent 2023!
+### Welcome to Day 14 of YS Advent 2023!
 
-Today we'll look at some of the little things that make YAMLScript a joy to work
-with.
-We'll go over some of the basic syntax, semantics, features and commands of
-YAMLScript.
+Today we'll look at some of the little things that make YS a joy to work with.
+We'll go over some of the basic syntax, semantics, features and commands of YS.
 
 What if...
 What if?
 What `if`!
 
 Let's start out by looking at some of the various ways you can write the
-ubiquituous `if` statement in YAMLScript.
+ubiquituous `if` statement in YS.
 
 To set the tone here, let's code an `if` in another simple language, Python,
 since it can often be used as pseudocode:
@@ -43,8 +36,8 @@ else:
 Abstractly we are saying that if some condition is true, then do one thing,
 otherwise do another thing.
 
-Since YAMLScript compiles to Clojure, it's important to understand how Clojure
-does `if`.
+Since YS compiles to Clojure, it's important to understand how Clojure does
+`if`.
 Let's look at the same code in Clojure.
 
 ```clojure
@@ -60,7 +53,7 @@ The Clojure code has an `if` command followed by:
 
 This is how all `if` statements look in Clojure.
 
-There are many ways to do the same thing in YAMLScript.
+There are many ways to do the same thing in YS.
 Here's a one good way to do it:
 
 ```yaml
@@ -70,11 +63,11 @@ if a > b:
   say: "$b is greater than or equal to $a"
 ```
 
-> All the YAMLScript examples in this post use code-mode which requires the
-`!yamlscript/v0` tag at the top of the file.
-We'll leave it out of the rest of the examples for brevity.
+> All the YS examples in this post use code-mode which requires the
+> `!yamlscript/v0` tag at the top of the file.
+> We'll leave it out of the rest of the examples for brevity.
 
-Let's see what happens when we compile that YAMLScript program:
+Let's see what happens when we compile that YS program:
 
 ```bash
 $ ys -c if.ys
@@ -85,8 +78,8 @@ $ ys -c if.ys
 ```
 
 We get the exact same Clojure code as above! (in a slightly different format)
-Note that `say` is an alternate way to write `println` in YAMLScript, but you
-can use `println` if you prefer to type more.
+Note that `say` is an alternate way to write `println` in YS, but you can use
+`println` if you prefer to type more.
 
 The `if` command is an interesting YAML mapping.
 The key has both the `if` command symbol and the condition form in it.
@@ -94,16 +87,15 @@ The value is another YAML mapping with two pairs: one for the "then" form and
 one for the "else" form.
 
 > Notice that both pairs have the same key, `say`.
-Duplicate keys aren't allowed in YAML, but they are allowed in YAMLScript
-code-mode.
-That's because the YAMLScript compiler (a fancy YAML loader) isn't loading the
-mapping into a data structure, but rather into an AST.
+Duplicate keys aren't allowed in YAML, but they are allowed in YS code-mode.
+That's because the YS compiler (a fancy YAML loader) isn't loading the mapping
+into a data structure, but rather into an AST.
 For the AST, the "duplicate keys" are no problem, because they're not actually
 being used as mapping keys.
-By contrast, in YAMLScript data-mode, duplicate keys are not allowed because
-they are actually being used as mapping keys (like normal YAML).
+By contrast, in YS data-mode, duplicate keys are not allowed because they are
+actually being used as mapping keys (like normal YAML).
 
-YAMLScript code-mode does everything using only YAML block mappings or scalars.
+YS code-mode does everything using only YAML block mappings or scalars.
 Using sequences or flow nodes is not allowed in code-mode.
 
 <details><summary><strong style="color:green">Quick YAML Jargon Review</strong></summary>
@@ -146,12 +138,12 @@ In this case the value of the top YAML mapping is just a scalar.
 Even though it is 2 lines of code, it represents a a single long line containing
 two function calls, one for "then" and one for "else".
 
-So that's 2 ways to write the `if` statement in YAMLScript.
+So that's 2 ways to write the `if` statement in YS.
 The two best ways.
 There are several other ways to do it that are less readable but still valid
 syntax.
 And there's nothing special about this being an `if` statement; the same rules
-apply to all YAMLScript commands in general.
+apply to all YS commands in general.
 
 
 ### General Syntax Rules
@@ -180,20 +172,20 @@ a b:
 All the pairs above compile to the same Clojure form: `(a b c d)`, which is
 calling a function `a` with 3 arguments: `b`, `c` and `d`.
 
-The `=>` symbol is a special YAMLScript key symbol that can be used when you
-only care about using a scalar in that spot.
-Since YAMLScript always needs to be valid YAML, this can often be useful.
+The `=>` symbol is a special YS key symbol that can be used when you only care
+about using a scalar in that spot.
+Since YS always needs to be valid YAML, this can often be useful.
 
 So now you can see what I was talking about with all the ways to write an `if`
 statement.
 Only the `a b: c d` forms look normal to most programmers.
 
 
-### YAMLScript Loops
+### YS Loops
 
 Let's look at another common control structure: looping.
 
-There are a lot of ways to do loops in Clojure (thus YAMLScript).
+There are a lot of ways to do loops in Clojure (thus YS).
 They have lots of subtle differences and properties.
 We'll just cover one or two here for now.
 (We're not even halfway through December yet!)
@@ -212,7 +204,7 @@ Here's the same loop in Clojure:
   (println i))
 ```
 
-So in YAMLScript we can do this:
+So in YS we can do this:
 
 ```yaml
 for i range(5):
@@ -247,7 +239,7 @@ To make things work as expected in the REPL Clojure forces the lazy structures
 to be evaluated.
 
 Clojure also has a `doall` function that forces evaluation.
-Let's use that in our YAMLScript program:
+Let's use that in our YS program:
 
 ```yaml
 doall:
@@ -270,7 +262,7 @@ Success!
 But at what cost?
 That's a lot of code to print 5 numbers.
 
-YAMLScript has a nicer way to do this.
+YS has a nicer way to do this.
 It has an `each` command that calls `doall` and `for` for you:
 
 ```yaml
@@ -293,9 +285,9 @@ each i (0 .. 4): say(i)
 Doesn't it seem strange to you that `(range 5)` really means 0 to 4?
 There are technical reasons for this, but it's not very intuitive.
 
-YAMLScript's `..` operator does what you told it to.
-It really just compiles to `(ys.std/rng 0 4)` which is a standard YAMLScript
-function that returns a range from 0 to 4.
+YS's `..` operator does what you told it to.
+It really just compiles to `(ys.std/rng 0 4)` which is a standard YS function
+that returns a range from 0 to 4.
 
 It also works in reverse:
 
@@ -324,4 +316,4 @@ I know that was only 2 or 3 things in your stocking, but they were quite a lot
 to chew on.
 Maybe we'll have to stuff your stocking a couple more times this month!
 
-See you tomorrow for Day 15 of YAMLScript Advent 2023!
+See you tomorrow for Day 15 of YS Advent 2023!

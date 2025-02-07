@@ -8,18 +8,18 @@ ROOT =: -"$DIR/../.."
 
 HELP =: |
 
-  ys - The YAMLScript (YS) Command Line Tool - v$VERSION
+  ys - The YS Command Line Tool - v$VERSION
 
   Usage: ys [<option...>] [<file>]
 
   Options:
 
-    -e, --eval YSEXPR        Evaluate a YAMLScript expression
+    -e, --eval YSEXPR        Evaluate a YS expression
                              multiple -e values joined by newline
-    -l, --load               Output (compact) JSON of YAMLScript evaluation
+    -l, --load               Output (compact) JSON of YS evaluation
     -f, --file FILE          Explicitly indicate input file
 
-#   -c, --compile            Compile YAMLScript to Clojure
+#   -c, --compile            Compile YS to Clojure
 #   -b, --binary             Compile to a native binary executable
 
 #   -p, --print              Print the final evaluation result value
@@ -54,7 +54,7 @@ HELP =: |
 
 test::
 - cmnd: ys --version
-  want:: "YAMLScript $VERSION"
+  want:: "YS $VERSION"
 
 - cmnd: ys
   have:: HELP

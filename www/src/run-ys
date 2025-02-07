@@ -79,7 +79,7 @@ initialize() {
 
   file=${BASH_SOURCE[${#BASH_SOURCE[*]}-1]}
   [[ -f $file ]] ||
-    die "Can't find YAMLScript program file '$file'"
+    die "Can't find YS program file '$file'"
 }
 
 install-ys() {
@@ -88,7 +88,7 @@ install-ys() {
 
   (
     cat <<...
-Installing YAMLScript CLI '$ysbin' now...
+Installing YS CLI '$ysbin' now...
 Ctl-C to abort
 See https://yamlscript.org/doc/run-ys for more information.
 

@@ -1,11 +1,6 @@
 ---
 title: Perl to Rust
-# date: '2023-12-23'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-23
 ---
 
 When Santa is doing his job in the Luxembourg area, I've always wondered how he
@@ -15,16 +10,16 @@ Maybe he takes [this route](
 https://oylenshpeegul.gitlab.io/from-perl-to-rust/introduction.html)!
 
 
-### Welcome to Day 23 of the YAMLScript Advent Blog!
+### Welcome to Day 23 of the YS Advent Blog!
 
-A couple of days ago we showed you how to use YAMLScript from Python.
+A couple of days ago we showed you how to use YS from Python.
 
 One language binding down, forty-one to go!
 
-Today we'll show you how to use YAMLScript with 3 new programming language
-bindings: **Perl**, **Rust** and **Raku** (aka Perl 6).
+Today we'll show you how to use YS with 3 new programming language bindings:
+**Perl**, **Rust** and **Raku** (aka Perl 6).
 
-YAMLScript gets by with a little help from its friends:
+YS gets by with a little help from its friends:
 
 * [@tony-o](https://github.com/tony-o) - Raku binding
 * [@ethiraric](https://github.com/ethiraric) - Rust binding
@@ -36,8 +31,7 @@ These guys are awesome!
 
 ### I Heard a Rumor!
 
-Let's make up a little YAMLScript program that we can run from all the new
-YAMLScript bindings:
+Let's make up a little YS program that we can run from all the new YS bindings:
 
 ```yaml
 # hearsay.ys
@@ -45,20 +39,19 @@ YAMLScript bindings:
 --8<-- "sample/advent/hearsay.ys"
 ```
 
-Now run (actually "load") this a few times using the YAMLScript `ys --load`
-command:
+Now run (actually "load") this a few times using the YS `ys --load` command:
 
 ```bash
 $ ys --load hearsay.ys | jq -r .
-I heard that @tony-o uses YAMLScript in their Rust code!
+I heard that @tony-o uses YS in their Rust code!
 $ ys --load hearsay.ys | jq -r .
-I heard that @ethiraric uses YAMLScript in their Python code!
+I heard that @ethiraric uses YS in their Python code!
 $ ys --load hearsay.ys | jq -r .
-I heard that @jjatria uses YAMLScript in their Rust code!
+I heard that @jjatria uses YS in their Rust code!
 $ ys --load hearsay.ys | jq -r .
-I heard that @ingydotnet uses YAMLScript in their Perl code!
+I heard that @ingydotnet uses YS in their Perl code!
 $ ys --load hearsay.ys | jq -r .
-I heard that @vendethiel uses YAMLScript in their Raku code!
+I heard that @vendethiel uses YS in their Raku code!
 $
 ```
 
@@ -90,7 +83,8 @@ He got it done in no time, and now I'm writing about it!!!
 JJ used the newer Perl FFI binding framework called [FFI::Platypus](
 https://metacpan.org/pod/FFI::Platypus).
 
-Let's use the new CPAN module YAMLScript to run our `hearsay.ys` program:
+Let's use the new YS CPAN module `YAMLScript.pm` to run our `hearsay.ys`
+program:
 
 ```perl
 # hearsay.pl
@@ -99,15 +93,15 @@ Let's use the new CPAN module YAMLScript to run our `hearsay.ys` program:
 
 ```bash
 $ perl hearsay.pl
-I heard that @ethiraric uses YAMLScript in their Rust code!
+I heard that @ethiraric uses YS in their Rust code!
 $ perl hearsay.pl
-I heard that @ingydotnet uses YAMLScript in their Python code!
+I heard that @ingydotnet uses YS in their Python code!
 ```
 
 Just like the Python binding, the Perl module has a `load` method that takes a
-YAMLScript program as a string and returns the result as a Perl data structure.
+YS program as a string and returns the result as a Perl data structure.
 
-Install YAMLScript with:
+Install `YAMLScript.pm` with:
 
 ```bash
 $ cpanm YAMLScript
@@ -132,7 +126,7 @@ run this as root.
 @ethiraric is a Rust programmer who dropped by the [YAML matrix chat](
 https://matrix.to/#/#chat:yaml.io) a couple of weeks ago looking to improve
 Rust's YAML support.
-I told him about YAMLScript and suggested he write a Rust binding for it since
+I told him about YS and suggested he write a Rust binding for it since
 it's just one FFI call.
 
 He did and today we get to show it off.
@@ -167,7 +161,7 @@ Now run `cargo run` and you should see something like this:
 $ cargo run
     Finished dev [unoptimized + debuginfo] target(s) in 0.01s
      Running `target/debug/hearsay`
-{"data":"I heard that @ethiraric uses YAMLScript in their Python code!"}
+{"data":"I heard that @ethiraric uses YS in their Python code!"}
 ```
 
 That's not quite right, but that's where things are at this moment.
@@ -179,8 +173,8 @@ It's actually fortunate that the Rust binding is not working yet, because it
 shows us _how_ libyamlscript actually works.
 
 The libyamlscript library currently has a single function that takes a
-YAMLScript string and returns a JSON string.
-Internally it compiles the YAMLScript to Clojure and evaluates the code using
+YS string and returns a JSON string.
+Internally it compiles the YS to Clojure and evaluates the code using
 SCI.
 Then it converts the result to JSON and returns it.
 If the evaluation fails it returns JSON with all the error information under an
@@ -200,7 +194,7 @@ It's a completely different language than Perl 5, but it's still a lot like
 Perl.
 
 @tony-o is a Raku programmer and my personal friend IRL for many years now.
-He really loves YAMLScript and wants to work on the language as a whole.
+He really loves YS and wants to work on the language as a whole.
 Writing a Raku binding was a perfect way to get him started.
 
 You can install the Raku binding with:
@@ -219,7 +213,7 @@ Then you can run our hearsay program like this:
 
 ```bash
 $ LD_LIBRARY_PATH=/usr/local/lib raku hearsay.raku
-I heard that @tony-o uses YAMLScript in their Python code!
+I heard that @tony-o uses YS in their Python code!
 ```
 
 The Raku effort was a two person job.
@@ -234,7 +228,7 @@ He's Polyglot to the core and possibly more [Acmeist](https://acmeism.org) than
 Ingy!
 
 But my biggest thanks to Ven is for being my daily sounding board and
-protaganist for YAMLScript.
+protaganist for YS.
 He encourages my good ideas even when they are ambitious and crazy sounding.
 Every time he's disagreed with me, he's been right...
 Even if it sometimes takes me a while to see it.
@@ -242,5 +236,5 @@ Even if it sometimes takes me a while to see it.
 Everyone in this penuiltimate advent blog post is a hero to me and definitely on
 Santa's nice list!!! (as far as I'm concerned)
 
-Please do join me tomorrow for the final post of the YAMLScript Advent Blog
+Please do join me tomorrow for the final post of the YS Advent Blog
 2023!

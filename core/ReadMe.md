@@ -1,7 +1,7 @@
 yamlscript/core
 ===============
 
-The YAMLScript compiler and runtime written in Clojure
+The YS compiler and runtime written in Clojure
 
 
 ## Synopsis
@@ -17,10 +17,10 @@ The YAMLScript compiler and runtime written in Clojure
 
 ## Description
 
-This directory builds the YAMLScript language written in Clojure.
+This directory builds the YS language written in Clojure.
 
-The `yamlscript.compiler/compile` function takes a YAMLScript input string and
-compiles it to a Clojure code string.
+The `yamlscript.compiler/compile` function takes a YS input string and compiles
+it to a Clojure code string.
 
 
 ## Makefile usage

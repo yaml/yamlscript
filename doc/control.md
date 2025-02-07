@@ -3,11 +3,11 @@ title: Control Flow
 ---
 
 
-YAMLScript (iow Clojure) is a functional programming language.
+YS (iow Clojure) is a functional programming language.
 That means that everything is a function.
 Running a program is just a calling a function that calls other functions.
 
-Even though YAMLScript tries hard to look like an imperative language, you must
+Even though YS tries hard to look like an imperative language, you must
 keep in mind that it's functional and get familiar with how the flow works.
 
 This document will cover:
@@ -25,7 +25,7 @@ The distinction is not particularly important here, but worth mentioning.
 
 ## Starting a Program
 
-A YAMLScript file generally is just a bunch of `defn` calls to define functions.
+A YS file generally is just a bunch of `defn` calls to define functions.
 
 Sometimes there will be assignment expressions at the top level.
 Top level variables are global and can be used anywhere in the program.
@@ -54,20 +54,20 @@ $ ys program.ys
 ```
 
 ```sh
-$ ys program.ys YAMLScript 2
-1) YAMLScript
-2) YAMLScript
+$ ys program.ys YS 2
+1) YS
+2) YS
 ```
 
 If a program does not define a `main` function, then nothing will happen unless
 you've defined a top level function call yourself.
-YAMLScript files that are meant to be used as libraries will not have a `main`
-function or a top level function call.
+YS files that are meant to be used as libraries will not have a `main` function
+or a top level function call.
 
 
 ## Variable Scope
 
-One cool thing about YAMLScript (and Clojure) is that you can use any word as a
+One cool thing about YS (and Clojure) is that you can use any word as a
 variable name.
 Even things like `if` and `for` which are reserved words in many languages.
 
@@ -111,7 +111,7 @@ words for grouping, but `do` can also be used.
 
 ## Looping Functions and Recursion
 
-YAMLScript has a few looping functions: `loop`, `reduce`, `for` and `each`.
+YS has a few looping functions: `loop`, `reduce`, `for` and `each`.
 
 These will be documented in more detail in the future, but for now you can see
 the Clojure documentation for them:
@@ -119,7 +119,7 @@ the Clojure documentation for them:
 * [loop](https://clojuredocs.org/clojure.core/loop)
 * [reduce](https://clojuredocs.org/clojure.core/reduce)
 * [for](https://clojuredocs.org/clojure.core/for)
-* `each` is a YAMLScript function that calls to a `for` expression inside a
+* `each` is a YS function that calls to a `for` expression inside a
   `doall` expression.
   This allows you to print things in the loop body.
   In every other way it's the same as `for`.
@@ -127,13 +127,12 @@ the Clojure documentation for them:
 
 ## Conditional Expressions
 
-YAMLScript has a few common conditional expressions: `if`, `when`, `cond` and
-`case`.
+YS has a few common conditional expressions: `if`, `when`, `cond` and `case`.
 
 
 ### The `if` Function
 
-In YAMLScript, an `if` expression is a function that takes 3 arguments: a
+In YS, an `if` expression is a function that takes 3 arguments: a
 condition, a then expression and an else expression.
 
 ```yaml
@@ -205,8 +204,7 @@ return `nil`.
 
 ### The `when` Function
 
-YAMLScript also has a `when` function that is like `if` but without an else
-expression.
+YS also has a `when` function that is like `if` but without an else expression.
 
 ```yaml
 when a:

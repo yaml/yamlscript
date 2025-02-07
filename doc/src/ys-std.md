@@ -1,25 +1,25 @@
 ---
-title: The YAMLScript Standard Library
+title: The YS Standard Library
 ---
 
-The YAMLScript standard library is a collection of functions that are available
-to all YAMLScript programs.
+The YS standard library is a collection of functions that are available to all
+YS programs.
 This document describes the functions in the standard library and how to use
 them.
 
-YAMLScript exposes most of the functions available in the [Clojure Core](
+YS exposes most of the functions available in the [Clojure Core](
 https://clojuredocs.org/core-library) standard library.
 See [Core Library Essentials](core.md) for an overview of those functions.
 
-The YAMLScript standard library replaces some Clojure functions with a version
-more suited to YAMLScript.
+The YS standard library replaces some Clojure functions with a version more
+suited to YS.
 In those cases, the original Clojure function is still available in the
 [`ys::clj`](ys-clj.md) namespace.
 
 
 ## Special functions
 
-* source(*) - Run a YAMLScript file as a Bash script
+* source(*) - Run a YS file as a Bash script
 
 
 ## Shorter named alias functions

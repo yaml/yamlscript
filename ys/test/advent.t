@@ -18,7 +18,7 @@ test::
 
 - name: ys -p hearsay.ys
   cmnd:: "ys -p $AV/hearsay.ys"
-  like: I heard that @\S+ uses YAMLScript in their \w+ code!
+  like: I heard that @\S+ uses YS in their \w+ code!
 
 - name: ys lol.ys
   cmnd:: "ys $AV/lol.ys"

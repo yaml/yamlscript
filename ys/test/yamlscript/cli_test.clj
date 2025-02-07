@@ -32,7 +32,7 @@
     "--help prints help")
 
   (like (ys "--version")
-    #"^YAMLScript \d+\.\d+\.\d+$"
+    #"^YS \d+\.\d+\.\d+$"
     "--version prints version")
 
   (is (ys "-mb" "-le" "a: b")

@@ -2,7 +2,7 @@
 ;; This code is licensed under MIT license (See License for details)
 
 ;; The yamlscript.re library defines the regex parts that are used to match
-;; YAMLScript ysexpr tokens.
+;; YS ysexpr tokens.
 ;;
 ;; It defines an `re` function that takes a regex template and expands the
 ;; interpolations to create a regex pattern.

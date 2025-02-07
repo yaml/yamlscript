@@ -1,8 +1,8 @@
 #!/usr/bin/env ys-0
 
-# This script is for automating the YAMLScript release process as much as
-# possible. The release process involves many steps, and might need to be
-# restarted at a certain step.
+# This script is for automating the YS release process as much as possible.
+# The release process involves many steps, and might need to be restarted at a
+# certain step.
 #
 # Usage: release-yamlscript <old-version> <new-version> [<starting-step>]
 #
@@ -48,7 +48,7 @@ defn main(old-version=0 new-version=0 start=1):
       else:
         check-args: old-version new-version start
 
-  say: "\nReleasing YAMLScript v$new-version at $(ctx.date-time)\n"
+  say: "\nReleasing YS v$new-version at $(ctx.date-time)\n"
 
   if ENV.RELEASE_ID:
     step-9: ctx

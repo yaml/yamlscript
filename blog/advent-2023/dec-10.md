@@ -1,11 +1,6 @@
 ---
 title: States and Ladders
-# date: '2023-12-10'
-# tags: [blog, advent-2023]
-# permalink: '{{ page.filePathStem }}/'
-# author:
-#   name: Ingy döt Net
-#   url: /about/#ingydotnet
+# date: 2023-12-10
 ---
 
 Santa is a busy guy.
@@ -14,15 +9,15 @@ He has to make a list and check it twice.
 He has to find out who's naughty and nice.
 He has the monumental task of transforming wishes into happiness.
 
-YS only needs to transform YAMLScript into Clojure.
+YS only needs to transform YS code into Clojure code.
 But it's a bit more involved than you might think.
 
 To make things easier the YS compiler breaks the transformation into eight
 distinct States and seven distinct ~~Ladders~~ transformations.
 
-### Welcome to Day 10 of the YAMLScript Advent Calendar
+### Welcome to Day 10 of the YS Advent Calendar
 
-Today we're going to learn more exactly how `ys --compile` turns YAMLScript into
+Today we're going to learn more exactly how `ys --compile` turns YS into
 Clojure.  
 _Fair Warning: This is going to be a long post_.
 
@@ -249,8 +244,8 @@ to the node in the following transformation.
 
 The build transformation is where a lot of the magic happens.
 
-Most importantly, it's where scalars containing YAMLScript expressions are lexed
-and parsed into Clojure expression ASTs.
+Most importantly, it's where scalars containing YS expressions are lexed and
+parsed into Clojure expression ASTs.
 
 ```clojure
 {:ysm
@@ -362,15 +357,15 @@ Aaaand, we're done!
 
 ### Transformation 1-7: Compile
 
-The YAMLScript compiler is just all the above crammed together is sequence;
-passing YS input through the 7 transformations we just described.
+The YS compiler is just all the above crammed together is sequence; passing YS
+input through the 7 transformations we just described.
 
-I'd like to show you the actual YAMLScript `compile` function (written in
+I'd like to show you the actual YS `compile` function (written in
 Clojure):
 
 ```clojure
 (defn compile
-  "Convert YAMLScript code string to an equivalent Clojure code string."
+  "Convert YS code string to an equivalent Clojure code string."
   [^String yamlscript-string]
   (->> yamlscript-string
     yamlscript.parser/parse
@@ -383,11 +378,11 @@ Clojure):
 ```
 
 Pretty straightforward, right?
-Or if you are more familiar with YAMLScript than Clojure:
+Or if you are more familiar with YS than Clojure:
 
 ```yaml
 defn compile(yamlscript-string):
-  "Convert YAMLScript code string to an equivalent Clojure code string.":
+  "Convert YS code string to an equivalent Clojure code string.":
   ->>:
     yamlscript-string
     yamlscript::parser/parse
@@ -401,8 +396,8 @@ defn compile(yamlscript-string):
 
 I hope I didn't waste too much of your Sunday on this post.
 I know it was a lot to take in, and I also know you don't need to know all this
-to be a good YAMLScript programmer.
+to be a good YS programmer.
 
 But then again, you probably want to know all about this to become a great one!
 
-See you tomorrow for Day 11 of the YAMLScript Advent Calendar.
+See you tomorrow for Day 11 of the YS Advent Calendar.
