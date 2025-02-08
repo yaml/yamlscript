@@ -25,7 +25,7 @@ repo_url:: Meta.devel.git
 
 docs_dir: src
 
-edit_uri:: "$(Meta.devel.git)/blob/documentation"
+edit_uri:: "$(Meta.devel.git)/blob/web-site"
 
 nav:
 - index.md      # Landing page

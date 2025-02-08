@@ -1,5 +1,4 @@
-<!--
-<pre>
+<!-- pre>
 page: >>>{{ page.file_content_string }}<<<
 page.meta: >>>{{ page.meta | tojson(indent=2) }}<<<
 page.previous_page: >>>{{ page.previous_page }}<<<
@@ -9,11 +8,21 @@ tag: >>>{{ tag }}<<<
 title: >>>{{ title }}<<<
 app: >>>{{ app }}<<<
 author: >>>{{ config.author }}<<<
-</pre>
--->
+url: {{ page.url }}
+edit_uri: {{ config.edit_uri }}
+src_path: {{ page.file.src_path }}
+</pre -->
 
-{% if page.meta.edit_file %}
-  {% set url = config.edit_uri ~ page.meta.edit_file %}
+
+{% set url = "" %}
+{% if page.url.startswith("doc/") or page.url.startswith("blog/") %}
+  {% set url = config.edit_uri ~ page.file.src_path %}
+{% elif page.url == "" %}
+{% else %}
+  {% set url = config.edit_uri ~ "www/src/" ~ page.file.src_path %}
+{% endif %}
+
+{% if url != "" %}
   <a href="{{ url }}"
      title="{{ lang.t('action.edit') }}"
      class="md-content__button md-icon">
