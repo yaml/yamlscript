@@ -17,7 +17,20 @@ DOC_FILES := $(DOC_FILES:$(ROOT)/doc/%=src/doc/%)
 BLOG_FILES := $(shell find $(ROOT)/blog -name '*.md')
 BLOG_FILES := $(BLOG_FILES:$(ROOT)/blog/%=src/blog/%)
 
-WATCHER := $(shell command -v simple-file-watch)
+WATCHER := $(VENV) && watchmedo shell-command
+WATCH := \
+  Meta \
+  doc/src \
+  sample \
+  www/config.ys \
+  www/config \
+  www/Makefile \
+  END
+
+null :=
+space := ${null} ${null}
+
+WATCH := $(subst $(space),;,$(WATCH))
 
 DEPS := \
   $(PYTHON_VENV) \
@@ -54,6 +67,12 @@ build:: $(DEPS)
 serve: deps watch
 	$(VENV) && mkdocs serve
 
+deps-update: deps-update-notify deps
+
+deps-update-notify:
+	: *** Rebuilding dependencies ***
+
+
 # XXX - See 'mkdocs gh-deploy' for a more standard way to do this
 # Options remote_branch and remote_name are used for gh-deploy
 ifeq (,$(YS_WWW_REMOTE))
@@ -65,19 +84,19 @@ publish: build
 	git -C site push $(YS_WWW_REMOTE) HEAD:$(YS_WWW_BRANCH) --force
 endif
 
+watchmedo-help:
+	$(WATCHER) --help
+
 watch:
-ifneq (,$(WATCHER))
+	cd .. && \
 	$(WATCHER) \
-	  --delay=1000 \
+	  --command='$(MAKE) -C www deps-update' \
+	  --patterns='$(WATCH)' \
+	  --timeout=2 \
 	  --recursive \
-	  --path="$$ROOT/Meta" \
-	  --path="$$ROOT/doc/" \
-	  --path="$$ROOT/sample/" \
-	  --path="$$ROOT/www/config.ys" \
-	  --path="$$ROOT/www/config/" \
-	  --path="$$ROOT/www/Makefile" \
-	  --command='make deps' &
-endif
+	  --wait \
+	  --drop \
+	  &
 
 material:
 	git \
@@ -128,7 +147,6 @@ $(PYTHON_VENV):
 YS_YAML_TAG_HACK := perl -pe 's{: \+!}{: !}'
 
 mkdocs.yml: config.ys ../Meta config/*
-	: *** Rebuild $@ from $< ***
 	@( \
 	  set -euo pipefail; \
 	  echo "# DO NOT EDIT - GENERATED FROM '$<'"; \
