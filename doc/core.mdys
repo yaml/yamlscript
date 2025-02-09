@@ -1,5 +1,6 @@
 ---
 title: Core Library Essentials
+edit: doc/core.mdys
 ---
 
 
@@ -31,7 +32,7 @@ In those cases, the original Clojure function is still available in the
 
 ### Arithmetic
 
-```markys:quick-ref
+```mdys:quick-ref
 + - * / inc dec max min rand rand-int
 ```
 
@@ -50,7 +51,7 @@ See Also:
 
 ### Comparison
 
-```markys:quick-ref
+```mdys:quick-ref
 < > <= >=
 ```
 
@@ -62,7 +63,7 @@ YS Std:
 
 ### Cast
 
-```markys:quick-ref
+```mdys:quick-ref
 byte short int long float double num
 ```
 
@@ -73,14 +74,14 @@ YS Std:
 
 ### Test
 
-```markys:quick-ref
+```mdys:quick-ref
 zero? pos? neg? even? odd? number?
 ```
 
 
 ## Boolean
 
-```markys:quick-ref
+```mdys:quick-ref
 nil? true? false? boolean
 ```
 
@@ -91,7 +92,7 @@ YS Std:
 
 ## String
 
-```markys:quick-ref
+```mdys:quick-ref
 str pr-str prn-str with-out-str count subs format string?
 ```
 
@@ -108,7 +109,7 @@ See Also:
 
 ## Regular Expression
 
-```markys:quick-ref
+```mdys:quick-ref
 re-pattern re-matches re-find re-seq re-groups
 ```
 
@@ -123,7 +124,7 @@ YS Std:
 
 ## Boolean
 
-```markys:quick-ref
+```mdys:quick-ref
 not and or
 ```
 
@@ -135,7 +136,7 @@ YS Std:
 
 ### Normal
 
-```markys:quick-ref
+```mdys:quick-ref
 if when if-not when-not if-let when-let if-some when-some
 cond condp case do eval loop recur while
 ```
@@ -147,7 +148,7 @@ YS Std:
 
 ### Exception
 
-```markys:quick-ref
+```mdys:quick-ref
 try catch finally throw assert
 ```
 
@@ -158,7 +159,7 @@ YS Std:
 
 ## Function
 
-```markys:quick-ref
+```mdys:quick-ref
 fn defn defn- identity comp partial complement constantly
 -> ->> apply fn? ifn?
 ```
@@ -174,7 +175,7 @@ YS Std:
 
 ### General
 
-```markys:quick-ref
+```mdys:quick-ref
 count empty not-empty into conj
 contains? distinct? empty? every? some not-every? not-any?
 coll? seq? vector? list? map? set? sorted? sequential? associative?
@@ -187,21 +188,21 @@ YS Std:
 
 ### Vector
 
-```markys:quick-ref
+```mdys:quick-ref
 vec vector vec-of conj peek pop get
 ```
 
 
 ### List
 
-```markys:quick-ref
+```mdys:quick-ref
 list cons conj peek pop first rest
 ```
 
 
 ### Map
 
-```markys:quick-ref
+```mdys:quick-ref
 hash-map array-map sorted-map zipmap frequencies
 assoc assoc-in dissoc find get-in update-in
 key val keys vals merge reduce-kv
@@ -214,7 +215,7 @@ YS Std:
 
 ### Sequence
 
-```markys:quick-ref
+```mdys:quick-ref
 seq repeat range iterate cycle interleave interpose
 first second last rest next butlast nth take drop take-while drop-while
 conj concat map filter remove sort shuffle flatten
@@ -229,7 +230,7 @@ YS Std:
 
 ## Variable
 
-```markys:quick-ref
+```mdys:quick-ref
 def intern declare binding gensym
 var var-get resolve find-var alter-var-root
 var? bound?
@@ -243,7 +244,7 @@ YS Std:
 
 ## I/O
 
-```markys:quick-ref
+```mdys:quick-ref
 print printf println pr prn
 print-str println-str pr-str prn-str
 newline flush slurp spit

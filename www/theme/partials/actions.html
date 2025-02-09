@@ -1,3 +1,4 @@
+<!-- Uncomment section below to find available data -->
 <!-- pre>
 page: >>>{{ page.file_content_string }}<<<
 page.meta: >>>{{ page.meta | tojson(indent=2) }}<<<
@@ -13,13 +14,16 @@ edit_uri: {{ config.edit_uri }}
 src_path: {{ page.file.src_path }}
 </pre -->
 
+{% set path = page.file.src_path %}
 
 {% set url = "" %}
-{% if page.url.startswith("doc/") or page.url.startswith("blog/") %}
-  {% set url = config.edit_uri ~ page.file.src_path %}
-{% elif page.url == "" %}
+{% if page.url == "" %}
+{% elif page.meta.edit %}
+  {% set url = config.edit_uri ~ page.meta.edit %}
+{% elif page.url.startswith("doc/") or page.url.startswith("blog/") %}
+  {% set url = config.edit_uri ~ path %}
 {% else %}
-  {% set url = config.edit_uri ~ "www/src/" ~ page.file.src_path %}
+  {% set url = config.edit_uri ~ "www/src/" ~ path %}
 {% endif %}
 
 {% if url != "" %}

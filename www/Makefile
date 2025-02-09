@@ -11,16 +11,17 @@ MKDOCS_MATERIAL_REPO := https://github.com/squidfunk/mkdocs-material
 PYTHON_VENV := $(ROOT)/www/.venv
 VENV := source $(PYTHON_VENV)/bin/activate
 
-DOC_FILES := $(shell find $(ROOT)/doc -name '*.md' | grep -v /doc/src)
-DOC_FILES := $(DOC_FILES:$(ROOT)/doc/%=src/doc/%)
+MD_FILES := $(shell find $(ROOT)/doc -name '*.md' | sort)
+MD_FILES += $(shell find $(ROOT)/doc -name '*.mdys' | sort)
+MD_FILES := $(MD_FILES:$(ROOT)/doc/%=src/doc/%)
+MD_FILES := $(MD_FILES:%.mdys=%.md)
 
-BLOG_FILES := $(shell find $(ROOT)/blog -name '*.md')
+BLOG_FILES := $(shell find $(ROOT)/blog -name '*.md' | sort)
 BLOG_FILES := $(BLOG_FILES:$(ROOT)/blog/%=src/blog/%)
 
 WATCHER := $(VENV) && watchmedo shell-command
 WATCH := \
   Meta \
-  doc/src \
   sample \
   www/config.ys \
   www/config \
@@ -35,13 +36,13 @@ WATCH := $(subst $(space),;,$(WATCH))
 DEPS := \
   $(PYTHON_VENV) \
   $(CONFIG) \
-  gen-doc \
-  $(DOC_FILES) \
+  $(MD_FILES) \
   $(BLOG_FILES) \
   sample \
 
 
 default::
+	@printf '%s\n' $(MD_FILES)
 
 deps: line1 $(DEPS) line2
 
@@ -82,6 +83,9 @@ else
 publish: build
 	-git -C site commit -m "Publish $$(date)"
 	git -C site push $(YS_WWW_REMOTE) HEAD:$(YS_WWW_BRANCH) --force
+	@echo
+	@echo "Published to https://$(YS_WWW_DOMAIN)"
+	@echo
 endif
 
 watchmedo-help:
@@ -129,8 +133,7 @@ endif
 
 clean::
 	$(RM) $(CONFIG) sample
-	$(RM) src/doc/*.md src/blog/*.md src/blog/**/*.md
-	$(RM) -r site
+	$(RM) -r site src/doc src/blog
 
 realclean:: clean
 	$(RM) -r $(PYTHON_VENV) material
@@ -165,16 +168,19 @@ mkdocs.yml: config.ys ../Meta config/*
 	  mv $@.tmp $@; \
 	fi
 
-gen-doc:
-	$(MAKE) --no-print-directory -C $(ROOT)/doc build
+export YSPATH := $(ROOT)/util/lib
 
-src/doc/%.md:
-	@mkdir -p src/doc
-	ln -fs $(@:src/doc/%.md=$(ROOT)/doc/%.md) $@
+src/doc/%.md: $(ROOT)/doc/%.md src/doc
+	ln -fs $< $@
+src/doc/%.md: $(ROOT)/doc/%.mdys
+	mdys $< > $@
 
-src/blog/%.md:
-	@mkdir -p src/blog src/blog/advent-2023
-	ln -fs $(@:src/blog/%.md=$(ROOT)/blog/%.md) $@
+src/blog/%.md: $(ROOT)/blog/%.md src/blog
+	ln -fs $< $@
+src/doc src/blog:
+	mkdir -p \
+	  src/doc \
+	  src/blog/advent-2023
 
 sample:
 	[[ -h $@ ]] || ln -s ../$@ $@

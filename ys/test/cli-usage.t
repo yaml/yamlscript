@@ -175,7 +175,7 @@ test::
 - note: Test compiling YS scripts in the repo
 - cmnd:: "ys -c $ROOT/util/brew-update"
   have: apply main
-- cmnd:: "ys -c $ROOT/util/markys"
+- cmnd:: "ys -c $ROOT/util/mdys"
   have: apply main
 - cmnd:: "ys -c $ROOT/util/release-yamlscript"
   have: apply main

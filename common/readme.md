@@ -81,7 +81,7 @@ $ ys --compile file.ys
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
 
-```markys:include
+```mdys:include
 !YS v0:
 file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 ```
@@ -100,7 +100,7 @@ file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 
 ## Authors
 
-```markys:include
+```mdys:include
 !YS v0:
 file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/authors.md"
 ```

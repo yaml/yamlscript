@@ -1,8 +1,7 @@
 ---
 title: The YS Standard Library
+edit: doc/ys-std.mdys
 ---
-
-<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
 The YS standard library is a collection of functions that are available to all
 YS programs.

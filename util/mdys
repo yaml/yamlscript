@@ -8,7 +8,7 @@ defn main(input-file):
   dir =: fs-dirname(input-file):fs-abs
   reset! input-dir: dir
 
-  fmt-file =: "$dir/fmt.ys"
+  fmt-file =: "$dir/mdys.ys"
   when fs-f(fmt-file):
     load: fmt-file
 
@@ -28,13 +28,13 @@ defn main(input-file):
 
 defn process(input-file):
   input-file:
-    .load-markys()
+    .load-mdys()
     .generate-markdown()
     .triml()
 
-defn load-markys(file):
+defn load-mdys(file):
   text =: file:fs-abs:slurp
-  fenced-re =: /(?s)(?:```markys:\S+\n.*?\n```\n)/
+  fenced-re =: /(?s)(?:```mdys:\S+\n.*?\n```\n)/
   texts =: text.split(fenced-re)
   fenced =: text.re-seq(fenced-re)
   fix =: fenced.# < texts.#
@@ -53,8 +53,8 @@ defn generate-markdown(data):
     if section:
       then:
         markdown +=:
-          if section =~ /^```markys:/:
-            format-markys: section
+          if section =~ /^```mdys:/:
+            format-mdys: section
             trim: section
         recur sections:
           if empty?(markdown):
@@ -62,8 +62,8 @@ defn generate-markdown(data):
             (markdown + "\n")
       else: markdown
 
-defn format-markys(text):
-  type =: (text =~ /^```markys:(\S+)/).1
+defn format-mdys(text):
+  type =: (text =~ /^```mdys:(\S+)/).1
   text .=: replace(/^```.*\n/ '')
   yaml =: text.replace(/```\n\z/ '')
   data =: yaml:ys/compile:eval-string

@@ -45,8 +45,8 @@ This page contains a links to programs written in YS.
   * [util/brew-update](
     https://github.com/yaml/yamlscript/blob/main/util/brew-update)
     The utility that updates the Homebrew formula for YS.
-  * [util/markys](
-    https://github.com/yaml/yamlscript/blob/main/util/markys)
+  * [util/mdys](
+    https://github.com/yaml/yamlscript/blob/main/util/mdys)
     Renders Markdown with embedded YS code blocks.
     Used for the YS documentation.
   * [util/version-bump](

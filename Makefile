@@ -124,6 +124,7 @@ build-%: %
 
 $(BUILD_DOC):
 build-doc: $(BUILD_DOC)
+	@:
 build-doc-%: %
 	$(MAKE) -C $< build-doc
 
