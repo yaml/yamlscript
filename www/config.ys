@@ -12,10 +12,11 @@
 
 Meta =: load('../Meta')
 
-site_name: YS we can!
-# site_name: YS is YAML — YAML is YS
-# site_name: YS is YAML's Friend
-# site_name: YS for YAML
+site_name: YS — YAML Sage, Secure, and Simple
+# Sophisticated, Spirited, Suitable, Synergy, Spectacular, Sublime, Satisfying
+# Secure, Simple, Smart, Swift, Slick, Sane, Speedy, Sweet, Solid, Sound, Strict
+# Steadfast, Sturdy, Stable, Strong, Sensible, Smooth, Snappy, Savvy, Succinct
+# Supportive, Stalwart, Slick, Supercharged, Smart, Soulful, Sage, Sentient
 site_url:: Meta.homepage
 site_author:: Meta.author.name
 site_description:: Meta.abstract
@@ -32,6 +33,7 @@ nav:
 # - About:: load('config/about.yaml')
 # - Start:: load('config/start.yaml')
 # - Learn:: load('config/learn.yaml')
+# - Use Cases:: load('config/use.yaml')
 - Documentation:: load('config/doc.yaml')
 - Blog:: load('config/blog.yaml')
 - Press: press.md
@@ -39,6 +41,8 @@ nav:
 
 theme:: load('config/theme.yaml')
 
+# For multi-version docs see:
+# https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
 extra_css:
 - css/theme.css
 

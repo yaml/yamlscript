@@ -12,5 +12,6 @@
     "yscode"
   ],
   "java.configuration.updateBuildConfiguration": "disabled",
-  "makefile.configureOnOpen": true
+  "makefile.configureOnOpen": true,
+  "search.useIgnoreFiles": false
 }
