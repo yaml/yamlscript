@@ -45,11 +45,11 @@ default::
 
 deps: line1 $(DEPS) line2
 
-ifeq (live,$(web-site))
+ifeq (live,$(website))
   YS_WWW_DOMAIN := yamlscript.org
   YS_WWW_REMOTE := origin
   YS_WWW_BRANCH ?= gh-pages
-else ifeq (stage,$(web-site))
+else ifeq (stage,$(website))
   export YS_WWW_DEV := true
   YS_WWW_DOMAIN := stage.yamlscript.org
   YS_WWW_REMOTE := stage
@@ -77,7 +77,7 @@ deps-update-notify:
 # Options remote_branch and remote_name are used for gh-deploy
 ifeq (,$(YS_WWW_REMOTE))
 publish:
-	$(error Use 'make publish web-site=<live|stage>' to publish)
+	$(error Use 'make publish website=<live|stage>' to publish)
 else
 publish: build
 	-git -C site commit -m "Publish $$(date)"

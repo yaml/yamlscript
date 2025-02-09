@@ -25,7 +25,7 @@ repo_url:: Meta.devel.git
 
 docs_dir: src
 
-edit_uri:: "$(Meta.devel.git)/edit/web-site"
+edit_uri:: "$(Meta.devel.git)/edit/website"
 
 nav:
 - index.md      # Landing page
@@ -36,8 +36,6 @@ nav:
 - Blog:: load('config/blog.yaml')
 - Press: press.md
 - Community:: load('config/community.yaml')
-
-# - X: demos.md
 
 theme:: load('config/theme.yaml')
 
