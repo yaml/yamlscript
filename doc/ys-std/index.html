@@ -2666,6 +2666,8 @@ In those cases, the original Clojure function is still available in the
 <p><strong>See also</strong>: <a href="https://clojure.github.io/clojure/clojure.math-api.html">https://clojure.github.io/clojure/clojure.math-api.html&nbsp;⧉</a></p>
 <h2 id="infix-operators">Infix operators</h2>
 <ul>
+<li><code>.</code> — For chaining functions (<code>foo.bar.baz()</code>)</li>
+<li><code>:</code> — This <code>foo:bar</code> is same as <code>foo.bar()</code></li>
 <li><code>+</code> — For <code>add+</code></li>
 <li><code>-</code> — For <code>sub+</code></li>
 <li><code>*</code> — For <code>mul+</code></li>
@@ -2857,6 +2859,7 @@ In those cases, the original Clojure function is still available in the
 <li><code>fs-rel?(path)</code> — True if path is relative</li>
 <li><code>fs-which(name)</code> — Find the path of an executable</li>
 </ul>
+<p><strong>See also</strong>: <a href="https://github.com/babashka/fs/blob/master/API.md">https://github.com/babashka/fs/blob/master/API.md&nbsp;⧉</a></p>
 <h2 id="datetime-functions">Date/Time functions</h2>
 <ul>
 <li><code>now()</code> — Returns <code>java.time.Instant</code> object</li>
