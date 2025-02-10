@@ -1,0 +1,15 @@
+!yamlscript/v0
+
+defn mdys-question(text, marker='???+'):
+  m =:
+    text =~ /^(.*)\n\n((?s:\S.+))/ ||:
+      die: "Invalid content for mdys::question:\n$text"
+  X question answer =: m
+
+  =>: |
+    $marker question "$question"
+
+    $(answer.indent(4))
+
+defn mdys-question-expand(text):
+  mdys-question: text, '???'

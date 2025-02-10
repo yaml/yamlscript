@@ -1,7 +1,5 @@
 ---
 title: KubeCon 2024 YS Tutorial Info Page
-layout: about.njk
-name: KubeCon 2024 YS Tutorial Info Page
 ---
 
 <!--

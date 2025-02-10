@@ -5,35 +5,47 @@ export ROOT
 
 CONFIG := mkdocs.yml
 
-MKDOCS_MATERIAL_VERSION := 9.5.50
-MKDOCS_MATERIAL_REPO := https://github.com/squidfunk/mkdocs-material
-
 PYTHON_VENV := $(ROOT)/www/.venv
 VENV := source $(PYTHON_VENV)/bin/activate
 
-MD_FILES := $(shell find $(ROOT)/doc -name '*.md' | sort)
-MD_FILES += $(shell find $(ROOT)/doc -name '*.mdys' | sort)
-MD_FILES := $(MD_FILES:$(ROOT)/doc/%=src/doc/%)
+MD_FILES := $(shell find ../doc -name '*.md' | sort)
+MDYS_FILES := $(shell find ../doc src -name '*.mdys' | sort)
+MDYSMD_FILES := $(MDYS_FILES:%.mdys=%.md)
+MD_FILES += $(MDYS_FILES)
+MD_FILES := $(MD_FILES:../doc/%=src/doc/%)
 MD_FILES := $(MD_FILES:%.mdys=%.md)
 
-BLOG_FILES := $(shell find $(ROOT)/blog -name '*.md' | sort)
-BLOG_FILES := $(BLOG_FILES:$(ROOT)/blog/%=src/blog/%)
+BLOG_FILES := $(shell find ../blog -name '*.md' | sort)
+BLOG_FILES := $(BLOG_FILES:../blog/%=src/blog/%)
 
 WATCHER := $(VENV) && watchmedo shell-command
 WATCH := \
   Meta \
-  sample \
+  doc/ \
+  blog/ \
+  sample/ \
+  util/mdys \
   www/config.ys \
-  www/config \
+  www/config/ \
+  www/src/mdys.ys \
+  www/src/*.mdys \
   www/Makefile \
   END
 
 null :=
 space := ${null} ${null}
 
+T := /tmp/ys-website.tmp
+
 WATCH := $(subst $(space),;,$(WATCH))
 
+DIRS := \
+  src/doc \
+  src/blog \
+  src/blog/advent-2023 \
+
 DEPS := \
+	$(DIRS) \
   $(PYTHON_VENV) \
   $(CONFIG) \
   $(MD_FILES) \
@@ -43,6 +55,9 @@ DEPS := \
 
 default::
 	@printf '%s\n' $(MD_FILES)
+
+x:
+	@echo $(MDYSMD_FILES)
 
 deps: line1 $(DEPS) line2
 
@@ -57,7 +72,7 @@ else ifeq (stage,$(website))
   YS_WWW_BRANCH := site
 endif
 
-build:: $(DEPS)
+build:: $(DIRS) $(DEPS)
 	$(RM) -r site
 	git worktree add -f site
 	$(RM) -r site/*
@@ -65,13 +80,15 @@ build:: $(DEPS)
 	echo $(YS_WWW_DOMAIN) > site/CNAME
 	git -C site add -A
 
-serve: deps watch
+serve: $(DIRS) $(DEPS) watch
 	$(VENV) && mkdocs serve
 
 deps-update: deps-update-notify deps
 
 deps-update-notify:
 	: *** Rebuilding dependencies ***
+
+dirs: src/doc src/blog src/blog/advent-2023
 
 
 # XXX - See 'mkdocs gh-deploy' for a more standard way to do this
@@ -89,39 +106,38 @@ publish: build
 endif
 
 watchmedo-help:
-	$(WATCHER) --help
+	$(WATCHER) --help | less
 
 watch:
-	cd .. && \
+	: Starting watching: '$(WATCH)'
+	@cd .. && \
 	$(WATCHER) \
-	  --command='$(MAKE) -C www deps-update' \
+	  --command='\
+	    bash -c "\
+	      : CHANGED $$watch_src_path $$watch_event_type; \
+	      [[ $$watch_event_type == modified ]] && \
+	        $(MAKE) -C www deps-update; \
+	  "' \
 	  --patterns='$(WATCH)' \
-	  --timeout=2 \
 	  --recursive \
+	  --timeout=2 \
 	  --wait \
 	  --drop \
 	  &
 
-material:
-	git \
-	  -c advice.detachedHead=false \
-	  clone \
-	  --quiet \
-	  --depth 1 \
-	  --branch $(MKDOCS_MATERIAL_VERSION) \
-	  $(MKDOCS_MATERIAL_REPO) $@
-	printf '%s\n' material/* | \
-	  grep -Ev '/(docs|material|mkdocs.yml)' | \
-	  xargs $(RM) -r
-	$(RM) -r $@/.git
-	ln -s $@/material/templates mt
+material: $(PYTHON_VENV)
+	ln -s $(PYTHON_VENV)/lib/python*/site-packages/material $@
 
 override: material
 ifeq (,$(f))
 	@echo 'f=<file> is not set'
 	@exit 1
 endif
-	cp $</$</templates/$f theme/$f
+ifneq (,$(wildcard theme/partials/$f))
+	@echo 'theme/partials/$f already exists'
+	@exit 1
+endif
+	cp $</templates/partials/$f theme/partials/$f
 
 pip-install: $(PYTHON_VENV)
 ifeq (,$(m))
@@ -132,12 +148,13 @@ endif
 	$(VENV) && pip freeze > requirements.txt
 
 clean::
-	$(RM) $(CONFIG) sample
+	killall watchmedo || true
+	$(RM) src/index.md src/faq.md
+	$(RM) $(CONFIG) sample $T material
 	$(RM) -r site src/doc src/blog
 
 realclean:: clean
-	$(RM) -r $(PYTHON_VENV) material
-	rm -f mt
+	$(RM) -r $(PYTHON_VENV)
 
 $(VENV_DIR): $(PYTHON_VENV)
 
@@ -149,38 +166,45 @@ $(PYTHON_VENV):
 # This hack is a workaround to preserve them.
 YS_YAML_TAG_HACK := perl -pe 's{: \+!}{: !}'
 
-mkdocs.yml: config.ys ../Meta config/*
+$(CONFIG): config.ys ../Meta config/*
 	@( \
 	  set -euo pipefail; \
 	  echo "# DO NOT EDIT - GENERATED FROM '$<'"; \
 	  echo; \
 	  ys -Y $< | $(YS_YAML_TAG_HACK) \
-	) > $@.tmp
-	@if ! [[ -s $@.tmp ]]; then \
+	) > $T
+	@if ! [[ -s $T ]]; then \
 	  echo "*** Error: failed to generate $@"; \
-	  $(RM) -f $@.tmp; \
+	  $(RM) -f $T; \
 	  exit 1; \
-	elif diff $@.tmp $@ &>/dev/null; then \
-		echo "*** No changes to $@"; \
-	  $(RM) $@.tmp; \
+	elif diff $T $@ &>/dev/null; then \
+	  echo "*** No changes to $@"; \
+	  $(RM) $T; \
 	else \
 	  echo "*** Updated $@"; \
-	  mv $@.tmp $@; \
+	  mv $T $@; \
 	fi
 
-export YSPATH := $(ROOT)/util/lib
+src/%.md: src/%.mdys src/mdys.ys ../util/mdys
+	mdys $< > $T
+	[[ -s $T ]] && mv $T $@
 
-src/doc/%.md: $(ROOT)/doc/%.md src/doc
-	ln -fs $< $@
-src/doc/%.md: $(ROOT)/doc/%.mdys
-	mdys $< > $@
+src/mdys.ys:
 
-src/blog/%.md: $(ROOT)/blog/%.md src/blog
-	ln -fs $< $@
-src/doc src/blog:
-	mkdir -p \
-	  src/doc \
-	  src/blog/advent-2023
+src/doc/%.md: ../doc/%.md
+	copy-md $< > $T
+	[[ -s $T ]] && mv $T $@
+
+src/doc/%.md: ../doc/%.mdys ../doc/mdys.ys ../util/mdys
+	mdys $< > $T
+	[[ -s $T ]] && mv $T $@
+
+src/blog/%.md: ../blog/%.md
+	copy-md $< > $T
+	[[ -s $T ]] && mv $T $@
+
+$(DIRS):
+	mkdir -p $@
 
 sample:
 	[[ -h $@ ]] || ln -s ../$@ $@

@@ -8,8 +8,7 @@ YS has a very large set of useful functions that it inherits from Clojure's
 [`clojure.core` library](
 https://github.com/clojure/clojure/blob/clojure-1.12.0/src/clj/clojure/core.clj).
 
-These functions are the bread and butter building blocks of YS
-programming.
+These functions are the bread and butter building blocks of YS programming.
 
 The functions are very well organized in the [Clojure Docs Quick Reference](
 https://clojuredocs.org/quickref) and you can get to the documentation for each

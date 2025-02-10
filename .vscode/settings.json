@@ -13,5 +13,6 @@
   ],
   "java.configuration.updateBuildConfiguration": "disabled",
   "makefile.configureOnOpen": true,
-  "search.useIgnoreFiles": false
+  "search.useIgnoreFiles": false,
+  "git.ignoreLimitWarning": true
 }

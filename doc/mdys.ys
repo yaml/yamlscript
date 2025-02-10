@@ -1,51 +1,40 @@
 !yamlscript/v0
 
-defn fmt-func-list(data):
-  markdown =:
-    loop [elem *data] data, markdown '':
-      if elem:
-        then:
-          fname sigs desc opts =: elem
-          more =: opts.more
+defn mdys-stdlib(o):
+  str "\n":
+    reduce-kv _ '' o:
+      fn(md head body):
+        md +:
+          str "## $head\n\n":
+            if body:map?:
+              stdlib-map: body
+              str:
+                stdlib-map(body.0)
+                "\n**See also**:\ <$(body.1)>\n\n"
 
-          markdown +=: |
+defn stdlib-map(body):
+  reduce-kv _ '' body:
+    fn(md fn-sig desc):
+      desc =:
+        desc.has?(\\|).if("$desc\n" desc)
+        .replace(/\b(C[CDS])\/(\S+)/ clojure-docs-link)
+      md +: |
+        * `$fn-sig` — $(desc.replace(/\| / "\n\n    "))
 
-            * **$fname** — $desc
+defn clojure-docs-link([_ type name]):
+  func =: name.replace(/\?$/ '_q')
+  cond:
+    type == 'CC':
+      "[`clojure.core/$name`](https://clojuredocs.org/clojure.core/$func)"
+    type == 'CD':
+      "[`clojure.data/$name`](https://clojuredocs.org/clojure.data/$func)"
+    type == 'CS':
+      "[`clojure.string/$name`](https://clojuredocs.org/clojure.string/$func)"
 
-          markdown +=:
-            loop [sig *sigs] sigs, markdown '':
-              if sig:
-                then:
-                  +[ret & args] =: sig.words().reverse()
-                  args .=: reverse().join(' ' _)
-                  markdown +=:
-                    "  * ${fname}($args) -> $ret\n"
-                  recur: sigs, markdown
-                else: markdown
-
-          markdown +=:
-            when more: |2
-
-                <details>
-                <summary
-                style="font-size:smaller;
-                       font-weight:bold;
-                       color:#888">More</summary>
-              $(more.chomp().indent())
-                </details>
-
-          recur: data, markdown
-        else: markdown
-
-  =>: |
-    <div class="func-list">
-    $chomp(markdown)
-    </div>
-
-defn fmt-quick-ref(data):
+defn mdys-quick-ref(o):
   links =:
     join ', ':
-      for name words(data):
+      for name words(o):
         "[$name](https://clojuredocs.org/clojure.core/$name)"
 
   =>: |+

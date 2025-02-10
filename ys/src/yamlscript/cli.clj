@@ -210,7 +210,7 @@
       in-file out-file yamlscript-version)))
 
 (defn do-version []
-  (println (str "YS " yamlscript-version)))
+  (println (str "YS (YAMLScript) " yamlscript-version)))
 
 (def help-heading (str "
 ys - The YS Command Line Tool - v" yamlscript-version "

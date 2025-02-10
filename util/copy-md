@@ -1,0 +1,9 @@
+#!/usr/bin/env ys-0
+
+DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
+
+defn main(input-file):
+  print: input-file:slurp
+    .replace(
+      /^(---\n(?s:.*?)\n---\n)\n*/
+      "$1\n$DNE")

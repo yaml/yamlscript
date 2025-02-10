@@ -1,7 +1,5 @@
 ---
 title: About Ingy döt Net
-layout: about.njk
-name: About Ingy döt Net
 ---
 
 Ingy döt Net is a software developer and speaker.
@@ -13,11 +11,13 @@ YAML, adding the functional features that many YAML users need.
 
 ## Contact Ingy
 
-* Email: ingy@yaml.com ingy@ingy.net
+* Email: <mailto:ingy@ingy.net>
 * LinkedIn: <https://www.linkedin.com/in/ingydotnet>
 * GitHub: <https://github.com/ingydotnet>
-* Matrix: <https://matrix.to/#/@ingy:yaml.io>
+* Matrix: <https://matrix.to/#/@ingy:yaml.io> (primary chat)
 * Slack: <https://kubernetes.slack.com/team/U080RUYTQL8>
+* BlueSky: <https://bsky.app/profile/ingydotnet.bsky.social>
+* Mastodon: <https://mastodon.cloud/@ingydotnet>
 
 
 ## Hire Ingy

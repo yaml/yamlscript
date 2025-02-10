@@ -8,9 +8,9 @@ defn main(input-file):
   dir =: fs-dirname(input-file):fs-abs
   reset! input-dir: dir
 
-  fmt-file =: "$dir/mdys.ys"
-  when fs-f(fmt-file):
-    load: fmt-file
+  mdys-lib =: "$dir/mdys.ys"
+  when fs-f(mdys-lib):
+    load: mdys-lib
 
   markdown =: input-file:process:trim
 
@@ -27,25 +27,27 @@ defn main(input-file):
   say: markdown:trimr
 
 defn process(input-file):
-  input-file:
-    .load-mdys()
+  sections =: input-file:load-mdys
+  sections:
     .generate-markdown()
     .triml()
 
+fenced-re =: /(?sm)(?:^```mdys:\S+\n.*?\n```\n)/
 defn load-mdys(file):
   text =: file:fs-abs:slurp
-  fenced-re =: /(?s)(?:```mdys:\S+\n.*?\n```\n)/
   texts =: text.split(fenced-re)
   fenced =: text.re-seq(fenced-re)
-  fix =: fenced.# < texts.#
-  fenced =:
-    if fix:
-      (vec(fenced) + [''])
-      fenced
-  all =: texts.interleave(fenced)
-  if fix:
-    drop-last(all)
-    all
+  fenced =: fenced:V.conj('')
+  all =: texts
+    .interleave(fenced)
+    .remove(empty?)
+    .remove(mdys-section-regex('ignore'))
+  code =: all.filter(mdys-section-regex('eval'))
+  all =: all.remove(mdys-section-regex('eval'))
+  concat: code all
+
+defn mdys-section-regex(type):
+  qr("^```mdys:$type\n((?s).*?)```\n")
 
 defn generate-markdown(data):
   markdown =: ''
@@ -65,18 +67,29 @@ defn generate-markdown(data):
 defn format-mdys(text):
   type =: (text =~ /^```mdys:(\S+)/).1
   text .=: replace(/^```.*\n/ '')
-  yaml =: text.replace(/```\n\z/ '')
-  data =: yaml:ys/compile:eval-string
-  func =: value("fmt-$type") ||
-    die("Can't find function 'fmt-$type'")
-  call func: data
+  text =: text.replace(/```\n\z/ '')
+  cond:
+    type == 'eval':
+      do:
+        eval: text
+        =>: ''
+    type.starts?(':'):
+      do:
+        func =: value("mdys-$(type.subs(1))") ||
+          die("Can't find function 'mdys-$type'")
+        call func: text
+    else:
+      data =: text:ys/compile:eval-string
+      func =: value("mdys-$type") ||
+        die("Can't find function 'mdys-$type'")
+      call func: data
 
 defn get-path(file):
   if-not fs-abs?(file):
     fs-abs _ file: input-dir:D
     else: file
 
-defn fmt-include(data):
+defn mdys-include(data):
   input-file =: data.file:get-path
   markdown =: process(input-file):lines
   yank =: data.yank
@@ -84,7 +97,7 @@ defn fmt-include(data):
     if yank:
       remove fn([s] re-find(qr(yank) s)): markdown
       else: markdown
-  =>: +"\n\n" + join("\n" markdown) + "\n\n"
+  =>: +"\n" + join("\n" markdown) + "\n"
 
 defn indent(text n=2):
   replace text:

@@ -2,21 +2,30 @@
 #   $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
 ### To Do
+#
 # * Add google analytics
 # See:
 # https://support.google.com/analytics/answer/9304153
 # https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-analytics/
+#
+# * Use proper blog plugin
+# * Add RSS feed
+#
 
 ---
 !YS v0:
 
 Meta =: load('../Meta')
 
-site_name: YS — YAML Simple, Supercharged & Secure
-# Sophisticated, Spirited, Suitable, Synergy, Spectacular, Sublime, Satisfying
-# Secure, Simple, Smart, Swift, Slick, Sane, Speedy, Sweet, Solid, Sound, Strict
-# Steadfast, Sturdy, Stable, Strong, Sensible, Smooth, Snappy, Savvy, Succinct
-# Supportive, Stalwart, Slick, Supercharged, Smart, Soulful, Sage, Sentient
+site_name: YS — YAML Done Wisely
+# site_name: YS is YAML Scripted, Standard, Solid, Simple, Secure
+# Scripted, Simple, Secure, Sophisticated, Spirited, Suitable, Synergy,
+# Spectacular, Sublime, Satisfying, Smart, Swift, Slick, Sane, Speedy, Sweet,
+# Solid, Sound, Strict, Steadfast, Sturdy, Stable, Strong, Sensible, Smooth,
+# Snappy, Savvy, Succinct, Supportive, Stalwart, Slick, Supercharged, Smart,
+# Soulful, Sage, Sentient, Specialized, Standardized, Stabilized, Supersonic,
+# Strengthened, Streamlined,
+
 site_url:: Meta.homepage
 site_author:: Meta.author.name
 site_description:: Meta.abstract
@@ -29,15 +38,17 @@ docs_dir: src
 edit_uri:: "$(Meta.devel.git)/edit/website"
 
 nav:
-- index.md      # Landing page
+# - index.md      # Landing page
 # - About:: load('config/about.yaml')
 # - Start:: load('config/start.yaml')
 # - Learn:: load('config/learn.yaml')
-# - Use Cases:: load('config/use.yaml')
+- Using YS:: load('config/use.yaml')
 - Documentation:: load('config/doc.yaml')
+# - Playground: play.md # load('config/play.yaml')
 - Blog:: load('config/blog.yaml')
 - Press: press.md
 - Community:: load('config/community.yaml')
+- FAQ: faq.md
 
 theme:: load('config/theme.yaml')
 
@@ -77,6 +88,7 @@ plugins:
 markdown_extensions:
 - admonition
 - attr_list
+- footnotes
 - md_in_html
 - pymdownx.emoji:
     emoji_index: +!!python/name:material.extensions.emoji.twemoji

@@ -28,13 +28,13 @@ favicon: images/favicon.ico
 
 palette:
 - scheme: default
-  # primary: custom
+  primary: brown
   toggle:
     icon: material/weather-night
     name: Switch to dark mode
 
 - scheme: slate
-  # primary: custom
+  primary: brown
   toggle:
     icon: material/weather-sunny
     name: Switch to light mode

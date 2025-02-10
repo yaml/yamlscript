@@ -49,6 +49,13 @@ install() (
     echo
     echo "  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***"
     echo
+    echo "  You can add it by running:"
+    echo "    export PATH=$PREFIX/bin:\$PATH"
+    echo
+    echo "  Make it permanent by adding the above line to your shell profile."
+    echo
+    echo "  For full details: https://yamlscript.org/doc/install"
+    echo
   fi
 
   if [[ $name == libyamlscript &&
