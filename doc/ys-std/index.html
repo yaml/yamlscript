@@ -929,6 +929,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#infix-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infix operators
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chaining-short-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chaining short forms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#control-functions" class="md-nav__link">
     <span class="md-ellipsis">
       Control functions
@@ -2215,6 +2233,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#infix-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Infix operators
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chaining-short-forms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chaining short forms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#control-functions" class="md-nav__link">
     <span class="md-ellipsis">
       Control functions
@@ -2628,6 +2664,40 @@ In those cases, the original Clojure function is still available in the
 <li><code>sum(nums)</code> — Sum a sequence of numbers</li>
 </ul>
 <p><strong>See also</strong>: <a href="https://clojure.github.io/clojure/clojure.math-api.html">https://clojure.github.io/clojure/clojure.math-api.html&nbsp;⧉</a></p>
+<h2 id="infix-operators">Infix operators</h2>
+<ul>
+<li><code>+</code> — For <code>add+</code></li>
+<li><code>-</code> — For <code>sub+</code></li>
+<li><code>*</code> — For <code>mul+</code></li>
+<li><code>/</code> — For <code>div</code></li>
+<li><code>**</code> — For <code>pow</code></li>
+<li><code>..</code> — For <code>rng</code></li>
+<li><code>==</code> — For <code>eq</code></li>
+<li><code>!=</code> — For <code>ne</code></li>
+<li><code>&gt;</code> — For <code>gt</code></li>
+<li><code>&gt;=</code> — For <code>ge</code></li>
+<li><code>&lt;</code> — For <code>lt</code></li>
+<li><code>&lt;=</code> — For <code>le</code></li>
+<li><code>&amp;&amp;</code> — For <code>and</code></li>
+<li><code>||</code> — For <code>or</code></li>
+<li><code>&amp;&amp;&amp;</code> — For <code>and?</code></li>
+<li><code>|||</code> — For <code>or?</code></li>
+</ul>
+<h2 id="chaining-short-forms">Chaining short forms</h2>
+<ul>
+<li><code>x.#</code> — Short for <code>x.count()</code></li>
+<li><code>x.$</code> — Short for <code>x.last()</code></li>
+<li><code>x.++</code> — Short for <code>x.inc()</code></li>
+<li><code>x.--</code> — Short for <code>x.dec()</code></li>
+<li><code>x.?</code> — Short for <code>x.truey?()</code></li>
+<li><code>x.!</code> — Short for <code>x.falsey?()</code></li>
+<li><code>x.??</code> — Short for <code>x.boolean()</code></li>
+<li><code>x.!!</code> — Short for <code>x.not()</code></li>
+<li>
+<p><code>x.&gt;&gt;&gt;</code> — Short for <code>x.DBG()</code></p>
+<p>Print value/data to stderr and return the value unchanged</p>
+</li>
+</ul>
 <h2 id="control-functions">Control functions</h2>
 <ul>
 <li>
@@ -2637,7 +2707,7 @@ In those cases, the original Clojure function is still available in the
 <li>
 <p><code>die(msg)</code> — Idiomatic error function</p>
 </li>
-<li><code>each(bindings *body)</code> — Non-lazy for loop</li>
+<li><code>each(bindings *body)</code> — Non-lazy <a href="https://clojuredocs.org/clojure.core/for"><code>clojure.core/for</code>&nbsp;⧉</a></li>
 <li><code>eval(s)</code> — Evaluate a string as YS code</li>
 <li><code>exit(rc=0)</code> — Exit the program</li>
 <li><code>if(cond then else)</code> — Functional if used in dot chaining</li>
