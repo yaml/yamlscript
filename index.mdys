@@ -12,7 +12,9 @@ hide:
 
     ```bash
     curl -s https://yamlscript.org/install | BIN=1 bash
-    export PATH=~/.local/bin:$PATH
+    [[ $PATH == *$HOME/.local/bin* ]] ||
+      export PATH=~/.local/bin:$PATH
+
     ys --help
     ys -e 'say: "Hello, world!"'
     ```
@@ -62,6 +64,13 @@ hide:
       Lint, Query, Validate w/ existing tools
     * [YS has YAML Loaders for all languages](doc/bindings.md)
     * Same Capabilities, Features, Bugs and Fixes
+
+- name: Learn YS Today!
+  body: |
+    * [YS Exercism Track](https://exercism.org/tracks/yamlscript)
+    * [KubeCon 2024 YS Tutorial](https://yamlscript.org/kubeys24)
+    * [YS on Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
+    * [YS Documentation](https://yamlscript.org/doc)
 ```
 
 ```mdys:eval
@@ -75,7 +84,7 @@ defn mdys-cards(o): |
 defn mdys-card(o):
   name body more =: o.slice(qw(name body more))
   card =:
-    ":material-hockey-sticks:{.lg .middle} __$(o.name)__\n\n\
+    ":material-owl:{.lg .middle} __$(o.name)__\n\n\
      ----\n\n$body\n"
 
   card =:
