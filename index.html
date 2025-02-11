@@ -24,7 +24,7 @@
     
     
       
-        <title>Home - YS — YAML Simple, Supercharged & Secure</title>
+        <title>Home - YS — YAML Done Wisely</title>
       
     
     
@@ -128,7 +128,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="YS — YAML Simple, Supercharged &amp; Secure" class="md-header__button md-logo" aria-label="YS — YAML Simple, Supercharged & Secure" data-md-component="logo">
+    <a href="." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
   <img src="images/yamlscript-logo.svg" alt="logo">
 
@@ -141,7 +141,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            YS — YAML Simple, Supercharged & Secure
+            YS — YAML Done Wisely
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -369,12 +369,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="YS — YAML Simple, Supercharged &amp; Secure" class="md-nav__button md-logo" aria-label="YS — YAML Simple, Supercharged & Secure" data-md-component="logo">
+    <a href="." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
   <img src="images/yamlscript-logo.svg" alt="logo">
 
     </a>
-    YS — YAML Simple, Supercharged & Secure
+    YS — YAML Done Wisely
   </label>
   
     <div class="md-nav__source">
@@ -1988,76 +1988,78 @@ src_path: index.md
 
 
 
-<!--
-Landing page for YS:
+<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
-* What is YS?
--->
-<h1 class="empty"></h1>
-<p><strong>YS</strong> (pronounced "wise", aka YAMLScript) is a functional programming
-language with a clean syntax that is also 100% valid <strong><a href="https://yaml.org">YAML&nbsp;⧉</a></strong>.
-It was designed to be easily embedded into existing YAML files in order to
-provide the logic, interpolation and data transformation capabilities that many
-YAML users need.
-Created by YAML inventor and lead maintainer, Ingy döt Net, YS solves these
-needs beautifully for all YAML users and uses.</p>
+<h1>YS is the best way to work with YAML</h1>
+
 <div class="admonition note">
-<p class="admonition-title">YS Exercism Track</p>
-<p>YS is now available as a programming language learning track on
-<strong><a href="https://exercism.org/tracks/yamlscript">Exercism&nbsp;⧉</a></strong>.
-It's a great way to learn YS and get feedback from experienced mentors.
-Check it out!</p>
+<p class="admonition-title">Install <code>ys</code> Now!</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">BIN</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>~/.local/bin:<span class="nv">$PATH</span>
+ys<span class="w"> </span>--help
+ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;Hello, world!&quot;&#39;</span>
+</code></pre></div>
 </div>
-<p>If you work with apps and frameworks that use YAML for configuration, you can
-simplify your complex YAML files using YS, even if the app or framework
-does not support it natively.
-YS lets you include data from external files and other sources, make use of
-hundreds of existing standard functions, and even define your own variables and
-functions.
-You can filter, map, merge, reduce, generate, concatenate, interpolate and
-manipulate your data as you wish.
-YS provides these things with syntax that is minimal and unobtrusive, keeping
-your clean YAML data clean.</p>
-<div class="admonition note">
-<p class="admonition-title">YAMLScript at KubeCon 2024</p>
-<p>Slides and information from Ingy's <a href="https://www.youtube.com/watch?v=Cdi3Q4Wrt48">KubeCon 2024 talk&nbsp;⧉</a>
-are available <a href="https://yamlscript.org/kubeys24">here&nbsp;⧉</a>.
-The highlight was <a href="https://github.com/kubeys/helmys">HelmYS&nbsp;⧉</a> a new Helm
-post-renderer that lets you template Helm charts with YS (which is actual
-YAML).</p>
-</div>
-<p>Like many new languages, YS was built over an existing robust language,
-<a href="https://clojure.org">Clojure&nbsp;⧉</a>, which in turn was built over
-<a href="https://java.com">Java&nbsp;⧉</a>.
-The power of Clojure and Java is available to YS users via the YS runtime
-interpreter, <code>ys</code>.
-However, the <code>ys</code> command is compiled into a single standalone native binary
-executable file.
-This means that <u>No Java or JVM</u> installation is required to use YS, and
-startup/execution speed is very fast.</p>
-<p>YS also produces the <code>libyamlscript.so</code> shared library.
-It has <a href="doc/bindings/">binding modules for 10 programming languages</a> including
-Go, JavaScript, Python and Rust, with many more on the way.
-These modules can be used in your programs to load normal YAML files as well as
-YS enhanced ones.</p>
-<p>There are many ways to use YS:</p>
+<div class="grid cards">
 <ul>
-<li>Simplify your existing YAML configs</li>
-<li>Works great with CI/CD, Helm, Docker, Ansible, etc.</li>
-<li>Check out <a href="https://github.com/kubeys/helmys">HelmYS&nbsp;⧉</a>, a tool for using
-    YS in Kubernetes Helm chart templates painlessly.</li>
-<li><a href="doc/bindings/">Load YS (or YAML) in your programs</a></li>
-<li>Available in 10 programming languages (and counting)</li>
-<li>Program in YS</li>
-<li>Learn how at <a href="https://exercism.org/tracks/yamlscript">Exercism&nbsp;⧉</a></li>
-<li><a href="doc/examples/">Script Automation with YS</a></li>
-<li>Many used in the <a href="https://github.com/yaml/yamlscript">YS repository&nbsp;⧉</a></li>
-<li><a href="doc/binary/">Compile YS to binary executables</a></li>
-<li>Fast, standalone, no-source software distribution</li>
-<li><a href="doc/query/">Query and Transform YAML (and JSON) data</a></li>
-<li>Use the <code>ys</code> command line tool similar to <code>jq</code> or <code>yq</code></li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.68 4H14.3l-1.74 4c-.03.04-.11.22-.25.5s-.25.54-.31.69L9.7 4H6.32l4.09 8.84c.09.22.32.75.7 1.59.39.85.67 1.48.89 1.92l1.41 3.09c.19.34.48.51.89.51L19 20v-4h-4l-1.4-3.16zm2.35 12v4H22v-3c0-.27-.09-.5-.28-.72-.19-.2-.42-.28-.72-.28zM5 16v4l4.7-.05c.41 0 .7-.17.89-.51l.85-1.94-1.6-3.44L9 16zm-3 4h1.97v-4H3c-.3 0-.53.08-.72.28-.19.22-.28.45-.28.72z"/></svg></span> <strong>YAML now has Unlimited Logic</strong></p>
+<hr />
+<p>YS offers functional logic to any YAML file.
+<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<span class="nt">vars =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;vars.yaml&#39;)</span>
+<span class="nt">normal key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
+<span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars.names:shuffle.0</span>
+<span class="nt">data:</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">curl(&quot;https://example.com/data.json&quot;)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.stuff.take(3)</span>
+<span class="nt">:when ENV.DEBUG:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">debug:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.68 4H14.3l-1.74 4c-.03.04-.11.22-.25.5s-.25.54-.31.69L9.7 4H6.32l4.09 8.84c.09.22.32.75.7 1.59.39.85.67 1.48.89 1.92l1.41 3.09c.19.34.48.51.89.51L19 20v-4h-4l-1.4-3.16zm2.35 12v4H22v-3c0-.27-.09-.5-.28-.72-.19-.2-.42-.28-.72-.28zM5 16v4l4.7-.05c.41 0 .7-.17.89-.51l.85-1.94-1.6-3.44L9 16zm-3 4h1.97v-4H3c-.3 0-.53.08-.72.28-.19.22-.28.45-.28.72z"/></svg></span> <strong>Plays Well in Your DevOps Environment</strong></p>
+<hr />
+<ul>
+<li><a href="doc/helmys/">HelmYS for Kubernetes Helm chart templates</a></li>
+<li>CI/CD, Docker, Ansible, etc.</li>
+<li>Your existing YAML files are valid YS!</li>
+<li>Take them to the next level</li>
 </ul>
-<!-- disable auto title -->
+<p><br/>
+<a href="doc/devops.md"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Learn More</a></p>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.68 4H14.3l-1.74 4c-.03.04-.11.22-.25.5s-.25.54-.31.69L9.7 4H6.32l4.09 8.84c.09.22.32.75.7 1.59.39.85.67 1.48.89 1.92l1.41 3.09c.19.34.48.51.89.51L19 20v-4h-4l-1.4-3.16zm2.35 12v4H22v-3c0-.27-.09-.5-.28-.72-.19-.2-.42-.28-.72-.28zM5 16v4l4.7-.05c.41 0 .7-.17.89-.51l.85-1.94-1.6-3.44L9 16zm-3 4h1.97v-4H3c-.3 0-.53.08-.72.28-.19.22-.28.45-.28.72z"/></svg></span> <strong>YS Simplifies your existing YAML Files</strong></p>
+<hr />
+<ul>
+<li>Refactor, Deduplicate, DRY</li>
+<li>Import, Interpolate, Transform</li>
+<li>Take advantage of 100s of useful functions</li>
+</ul>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.68 4H14.3l-1.74 4c-.03.04-.11.22-.25.5s-.25.54-.31.69L9.7 4H6.32l4.09 8.84c.09.22.32.75.7 1.59.39.85.67 1.48.89 1.92l1.41 3.09c.19.34.48.51.89.51L19 20v-4h-4l-1.4-3.16zm2.35 12v4H22v-3c0-.27-.09-.5-.28-.72-.19-.2-.42-.28-.72-.28zM5 16v4l4.7-.05c.41 0 .7-.17.89-.51l.85-1.94-1.6-3.44L9 16zm-3 4h1.97v-4H3c-.3 0-.53.08-.72.28-.19.22-.28.45-.28.72z"/></svg></span> <strong>Import, Transform, Interpolate and More</strong></p>
+<hr />
+<ul>
+<li><a href="doc/bindings/">Load YS in your programs</a></li>
+<li><a href="doc/examples/">Script Automation with YS</a></li>
+<li><a href="doc/query/">Query and Transform YAML data</a></li>
+<li><a href="doc/binary/">Compile YS to binary executables</a></li>
+</ul>
+</li>
+<li>
+<p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.68 4H14.3l-1.74 4c-.03.04-.11.22-.25.5s-.25.54-.31.69L9.7 4H6.32l4.09 8.84c.09.22.32.75.7 1.59.39.85.67 1.48.89 1.92l1.41 3.09c.19.34.48.51.89.51L19 20v-4h-4l-1.4-3.16zm2.35 12v4H22v-3c0-.27-.09-.5-.28-.72-.19-.2-.42-.28-.72-.28zM5 16v4l4.7-.05c.41 0 .7-.17.89-.51l.85-1.94-1.6-3.44L9 16zm-3 4h1.97v-4H3c-.3 0-.53.08-.72.28-.19.22-.28.45-.28.72z"/></svg></span> <strong>Take Full Control of Your YAML</strong></p>
+<hr />
+<ul>
+<li>YS is always 100% valid YAML<br />
+  Lint, Query, Validate w/ existing tools</li>
+<li><a href="doc/bindings/">YS has YAML Loaders for all languages</a></li>
+<li>Same Capabilities, Features, Bugs and Fixes</li>
+</ul>
+</li>
+</ul>
+</div>
 
 
 

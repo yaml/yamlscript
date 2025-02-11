@@ -39,9 +39,29 @@
 }
 */
 
+.grid.cards>ul>li {
+  border-width: 4px !important;
+}
+
+.grid.cards ul li {
+  margin-bottom: 0px;
+  code {
+    padding: 2px 5px;
+  }
+}
+.grid.card {
+    position: relative;
+}
+
+span.more {
+    position: relative;
+    bottom: 0;
+    right: 0;
+}
+
 .md-header__title {
   color: gold;
-  margin-left: 0px !important;ZZ
+  margin-left: 0px !important;
 }
 
 .md-header__button.md-logo {
