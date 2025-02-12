@@ -1,44 +1,3 @@
-/*
-:root {
-
-  /* Primary color shades * /
-  --md-primary-fg-color: #861f41;
-  --md-primary-fg-color--light: #861f4194;
-  --md-primary-fg-color--dark: #ac325a;
-  --md-primary-bg-color: hsla(0, 0%, 100%, 1);
-  --md-primary-bg-color--light: hsla(0, 0%, 100%, 0.7);
-  --md-text-link-color: hsla(231, 48%, 48%, 1);
-
-  /* Accent color shades * /
-  --md-accent-fg-color: rgb(98, 18, 189);
-  --md-accent-fg-color--transparent: hsla(189, 100%, 37%, 0.1);
-  --md-accent-bg-color: hsla(0, 0%, 100%, 1);
-  --md-accent-bg-color--light: hsla(0, 0%, 100%, 0.7);
-}
-
-:root > * {
-
-  /* Code block color shades * /
-  --md-code-bg-color: hsla(0, 0%, 96%, 1);
-  --md-code-fg-color: hsla(200, 18%, 26%, 1);
-
-  /* Footer * /
-  --md-footer-bg-color: #861f41;
-  --md-footer-bg-color--dark: hsla(0, 0%, 0%, 0.32);
-  --md-footer-fg-color: hsla(0, 0%, 100%, 1);
-  --md-footer-fg-color--light: hsla(0, 0%, 100%, 0.7);
-  --md-footer-fg-color--lighter: hsla(0, 0%, 100%, 0.3);
-}
-
-:root > * {
-  --md-primary-fg-color:        #cb6;
-  --md-primary-fg-color--light: #cb6;
-  --md-primary-bg-color:        #000000;
-  --md-primary-bg-color--light: #000000;
-  --md-typeset-a-color:         #000000;
-}
-*/
-
 div.code code {
   max-height: 195px;
 }
@@ -47,10 +6,14 @@ div.code code {
   border-width: 4px !important;
 }
 
-.grid.cards ul li {
+.grid.cards ul {
+  margin-top: 0px;
   margin-bottom: 0px;
-  code {
-    padding: 2px 5px;
+  li {
+    margin-bottom: 0px;
+    code {
+      padding: 2px 5px;
+    }
   }
 }
 .grid.card {
@@ -68,17 +31,6 @@ span.more {
   margin-left: 0px !important;
 }
 
-.md-header__button.md-logo {
-  visibility: hidden;
-  width: 0px;
-  margin: 0px;
-  padding: 0px;
-}
-
-.md-header__button.md-logo img,
-.md-header__button.md-logo svg {
-}
-
 .dark {
   background-color: #ccc;
   width: 100%;
@@ -94,7 +46,6 @@ hr {
   border: 2px solid #861f41;
 }
 
-
 h1.empty {
   margin-bottom: 0px;
 }
@@ -107,19 +58,6 @@ h1.empty {
   font-size: .8rem;
 }
 
-/*
-.md-header__button.md-logo img {
-  float: left;
-  vertical-align: top;
-  height: 100px;
+.md-header__button.md-logo img, .md-header__button.md-logo svg {
+  height: 2rem;
 }
-
-.md-nav__list {
-  margin-left: 20px;
-  padding-left: 0px !important;
-}
-
-.md-nav__title {
-  padding-left: 0px;
-}
-*/

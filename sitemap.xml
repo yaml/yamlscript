@@ -13,11 +13,19 @@
          <lastmod>2025-02-12</lastmod>
     </url>
     <url>
+         <loc>https://yamlscript.org/faq/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
          <loc>https://yamlscript.org/ingydotnet/</loc>
          <lastmod>2025-02-12</lastmod>
     </url>
     <url>
          <loc>https://yamlscript.org/kubeys24/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/play/</loc>
          <lastmod>2025-02-12</lastmod>
     </url>
     <url>
@@ -30,6 +38,10 @@
     </url>
     <url>
          <loc>https://yamlscript.org/tprc2024/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/use/</loc>
          <lastmod>2025-02-12</lastmod>
     </url>
     <url>
@@ -338,6 +350,22 @@
     </url>
     <url>
          <loc>https://yamlscript.org/doc/ys/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/use/cicd/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/use/circleci/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/use/gha/</loc>
+         <lastmod>2025-02-12</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/use/helmys/</loc>
          <lastmod>2025-02-12</lastmod>
     </url>
 </urlset>

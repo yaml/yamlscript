@@ -1,0 +1,58 @@
+---
+title: Frequently Asked Questions
+hide:
+- navigation
+---
+
+```mdys::question
+How do you pronounce YS?
+
+We like to say "wise" since its how you might pronounce the plural of "Y".  You
+can also say "why-ess" for "Y S" or the long name for YS: "YAMLSCript" ("YAML
+(rhymes with camel) Script").
+
+YS has many side projects like [HelmYS](/doc/helmys) ("helm-wise") or
+[SchemaYS](#) ("schema-wise").
+```
+
+```mdys::question
+Who created YS?
+
+YS was created by [Ingy döt Net](ingydotnet.md), a founder and maintainer of
+the [YAML Data Language](https://yaml.org).
+```
+
+```mdys::question
+What is the preferred file extension for YS files?
+
+The preferred file extension for YS files is `.ys`, but you can use `.yaml` or
+`.yml` if you prefer for most files.
+The `ys` command line tool doesn't look at the file extension and will treat
+them all the same.
+
+If you are enhancing an existing YAML file, there is no need to change the file
+extension to `.ys`. You can just start using YS features in the file.
+
+On the other hand, YS libraries loaded with the `use` function are required to
+use the `.ys` extension.
+```
+
+```mdys::question
+Clojure is a JVM language. Does YS need the JVM?
+
+No. YS is written in Clojure and exposes the Clojure/Java runtime ecosystem, but
+there is no JVM involved.
+This is thanks to the [GraalVM](https://www.graalvm.org/) project's
+[native-image](https://www.graalvm.org/latest/reference-manual/native-image/)
+which can compile anything compiled to jar files into a standalone native binary
+executable or shared library.
+
+This is how the `ys` binary and the `libyamlscript.so` shared library are
+created.
+
+!!! note
+    Even the YS build system does not require you to have any Java or Clojure
+    stuff installed.
+    It simply downloads a GraalVM tarball into `/tmp`, and the Makefile takes
+    care of everything without leaving any mess behind.
+```
