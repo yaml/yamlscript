@@ -46,13 +46,11 @@ hide:
 - name: YS Simplifies your existing YAML Files
   body: |
     * Refactor, Deduplicate, DRY
-    * Import, Interpolate, Transform
     * 100s of standard functions built in
     * Dozens of built in libraries
     * External libraries as well
-    * Define your own functions
-    * Publish your own libraries
-
+    * Define your own functions and libraries
+    * Limit YS capabilities to your exact needs
 
 - name: Import, Transform, Interpolate and More
   body: |
@@ -63,8 +61,9 @@ hide:
 
 - name: Take Full Control of Your YAML
   body: |
-    * YS is always 100% valid YAML  
-      Lint, Query, Validate w/ existing tools
+    * YS is always 100% valid YAML
+        * Lint, Query, Validate w/ existing tools
+    * Created by [YAML inventor/maintainer](ingydotnet.md)
     * [YS has YAML Loaders for all languages](doc/bindings.md)
     * Same Capabilities, Features, Bugs and Fixes
 
@@ -115,13 +114,6 @@ defn indent4(text):
 
 
 ```mdys:ignore
-<div>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-</div>
 <h1 class="empty"></h1><!-- disable auto title -->
 
 **YS** (pronounced "wise", aka YAMLScript) is a functional programming
