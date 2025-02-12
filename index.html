@@ -1994,30 +1994,33 @@ src_path: index.md
 
 <div class="admonition note">
 <p class="admonition-title">Install <code>ys</code> Now!</p>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">BIN</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash
+<p><div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 <span class="o">[[</span><span class="w"> </span><span class="nv">$PATH</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="nv">$HOME</span>/.local/bin*<span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span>
 <span class="w">  </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>~/.local/bin:<span class="nv">$PATH</span>
 
 ys<span class="w"> </span>--help
-ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;Hello, world!&quot;&#39;</span>
+ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;Hello, World!&quot;&#39;</span>
 </code></pre></div>
+<a href="doc/install/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Learn More</a></p>
 </div>
 <div class="grid cards">
 <ul>
 <li>
 <p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16c.56.84 1.31 1.53 2.2 2L12 20.2 9.8 18c.89-.47 1.65-1.16 2.2-2m5-4.8a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m-10 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m10-2.5a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m-10 0a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4M2.24 1c1.76 3.7.49 6.46-.69 9.2-.36.8-.55 1.63-.55 2.5a6 6 0 0 0 6 6c.21-.01.42-.02.63-.05l2.96 2.96L12 23l1.41-1.39 2.96-2.96c.21.03.42.04.63.05a6 6 0 0 0 6-6c0-.87-.19-1.7-.55-2.5C21.27 7.46 20 4.7 21.76 1c-2.64 2.06-6.4 3.69-9.76 3.7C8.64 4.69 4.88 3.06 2.24 1"/></svg></span> <strong>YAML now has Unlimited Logic</strong></p>
 <hr />
-<p>YS offers functional logic to any YAML file.
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<div class="code highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
 <span class="nt">vars =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;vars.yaml&#39;)</span>
-<span class="nt">normal key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">value</span>
-<span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars.names:shuffle.0</span>
-<span class="nt">data:</span><span class="p">:</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">curl(&quot;https://example.com/data.json&quot;)</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.stuff.take(3)</span>
-<span class="nt">:when ENV.DEBUG:</span><span class="p">:</span>
+<span class="nt">json-file =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;data.json&#39;</span>
+
+<span class="nt">a normal key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and normal value</span>
+<span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENV.USER:uc1</span>
+<span class="nt">color:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars.colors:shuffle.0</span>
+<span class="nt">some stuff:</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">curl(&quot;https://example.com/$json-file&quot;)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.stuff.take(rand-int(5).++)</span>
+<span class="nt">:when ENV.DEBUG_VARS:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">debug:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars</span>
-</code></pre></div></p>
+</code></pre></div>
 </li>
 <li>
 <p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16c.56.84 1.31 1.53 2.2 2L12 20.2 9.8 18c.89-.47 1.65-1.16 2.2-2m5-4.8a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m-10 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m10-2.5a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m-10 0a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4M2.24 1c1.76 3.7.49 6.46-.69 9.2-.36.8-.55 1.63-.55 2.5a6 6 0 0 0 6 6c.21-.01.42-.02.63-.05l2.96 2.96L12 23l1.41-1.39 2.96-2.96c.21.03.42.04.63.05a6 6 0 0 0 6-6c0-.87-.19-1.7-.55-2.5C21.27 7.46 20 4.7 21.76 1c-2.64 2.06-6.4 3.69-9.76 3.7C8.64 4.69 4.88 3.06 2.24 1"/></svg></span> <strong>Plays Well in Your DevOps Environment</strong></p>
@@ -2037,7 +2040,11 @@ ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &
 <ul>
 <li>Refactor, Deduplicate, DRY</li>
 <li>Import, Interpolate, Transform</li>
-<li>Take advantage of 100s of useful functions</li>
+<li>100s of standard functions built in</li>
+<li>Dozens of built in libraries</li>
+<li>External libraries as well</li>
+<li>Define your own functions</li>
+<li>Publish your own libraries</li>
 </ul>
 </li>
 <li>

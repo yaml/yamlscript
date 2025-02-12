@@ -11,30 +11,31 @@ hide:
 !!! note "Install `ys` Now!"
 
     ```bash
-    curl -s https://yamlscript.org/install | BIN=1 bash
+    curl -s https://getys.org/ys | bash
     [[ $PATH == *$HOME/.local/bin* ]] ||
       export PATH=~/.local/bin:$PATH
 
     ys --help
-    ys -e 'say: "Hello, world!"'
+    ys -e 'say: "Hello, World!"'
     ```
+    [:octicons-arrow-right-24: Learn More](doc/install.md)
 
 ```mdys:cards
 - name: YAML now has Unlimited Logic
-  type: code
+  type: code:yaml
   body: |
-    YS offers functional logic to any YAML file.
-    ```yaml
     !YS v0:
     vars =: load('vars.yaml')
-    normal key: value
-    name:: vars.names:shuffle.0
-    data::
-      curl("https://example.com/data.json")
-        .stuff.take(3)
-    :when ENV.DEBUG::
+    json-file =: 'data.json'
+
+    a normal key: and normal value
+    name:: ENV.USER:uc1
+    color:: vars.colors:shuffle.0
+    some stuff::
+      curl("https://example.com/$json-file")
+        .stuff.take(rand-int(5).++)
+    :when ENV.DEBUG_VARS::
       debug:: vars
-    ```
 
 - name: Plays Well in Your DevOps Environment
   body: |
@@ -48,7 +49,11 @@ hide:
   body: |
     * Refactor, Deduplicate, DRY
     * Import, Interpolate, Transform
-    * Take advantage of 100s of useful functions
+    * 100s of standard functions built in
+    * Dozens of built in libraries
+    * External libraries as well
+    * Define your own functions
+    * Publish your own libraries
 
 
 - name: Import, Transform, Interpolate and More
@@ -82,7 +87,12 @@ defn mdys-cards(o): |
   </div>
 
 defn mdys-card(o):
-  name body more =: o.slice(qw(name body more))
+  name type body more =: o.slice(qw(name type body more))
+  body =:
+    if type == 'code:yaml': +
+      "```yaml {.code}\n$body\n```"
+      body
+
   card =:
     ":material-owl:{.lg .middle} __$(o.name)__\n\n\
      ----\n\n$body\n"

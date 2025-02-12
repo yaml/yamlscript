@@ -39,6 +39,10 @@
 }
 */
 
+div.code code {
+  max-height: 195px;
+}
+
 .grid.cards>ul>li {
   border-width: 4px !important;
 }
@@ -97,6 +101,10 @@ h1.empty {
 
 .md-nav__list {
   margin-left: 5px;
+}
+
+.md-tabs__link {
+  font-size: .8rem;
 }
 
 /*
