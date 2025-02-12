@@ -12,9 +12,7 @@ hide:
 
     ```bash
     curl -s https://getys.org/ys | bash
-    [[ $PATH == *$HOME/.local/bin* ]] ||
-      export PATH=~/.local/bin:$PATH
-
+    # Adjust PATH if asked to.
     ys --help
     ys -e 'say: "Hello, World!"'
     ```

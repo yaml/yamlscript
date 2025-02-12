@@ -1995,9 +1995,7 @@ src_path: index.md
 <div class="admonition note">
 <p class="admonition-title">Install <code>ys</code> Now!</p>
 <p><div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
-<span class="o">[[</span><span class="w"> </span><span class="nv">$PATH</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="nv">$HOME</span>/.local/bin*<span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span>
-<span class="w">  </span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>~/.local/bin:<span class="nv">$PATH</span>
-
+<span class="c1"># Adjust PATH if asked to.</span>
 ys<span class="w"> </span>--help
 ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;Hello, World!&quot;&#39;</span>
 </code></pre></div>
