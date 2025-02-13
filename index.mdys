@@ -6,7 +6,7 @@ hide:
 - toc
 ---
 
-<h1><a href="use/">YS is the best way to work with YAML</a></h1>
+<h1><a href="/about">YS is the best way to work with YAML</a></h1>
 
 !!! note "Install `ys` Now!"
 
@@ -60,7 +60,7 @@ hide:
 
 - name: Take Full Control of Your YAML
   body: |
-    * YS is always 100% valid YAML  
+    * [YS is always 100% valid YAML  
         * Lint, Query, Validate w/ existing tools
     * Created by [YAML inventor/maintainer](ingydotnet.md)
     * [YS has YAML Loaders for all languages](doc/bindings.md)
@@ -85,9 +85,9 @@ defn mdys-cards(o): |
 defn mdys-card(o):
   name type body more =: o.slice(qw(name type body more))
   body =:
-    if type == 'code:yaml': +
-      "```yaml {.code}\n$body\n```"
-      body
+    if type == 'code:yaml':
+      then: "```yaml {.code}\n$body\n```"
+      else: body
 
   card =:
     ":material-owl:{.lg .middle} __$(o.name)__\n\n\

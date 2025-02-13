@@ -4,23 +4,38 @@ hide:
 - navigation
 ---
 
+
 ```mdys::question
 How do you pronounce YS?
 
 We like to say "wise" since its how you might pronounce the plural of "Y".  You
-can also say "why-ess" for "Y S" or the long name for YS: "YAMLSCript" ("YAML
+can also say "why-ess" for "Y S" or the long name for YS: "YAMLScript" ("YAML
 (rhymes with camel) Script").
 
 YS has many side projects like [HelmYS](/doc/helmys) ("helm-wise") or
 [SchemaYS](#) ("schema-wise").
 ```
 
+
+```mdys::question
+Is YS really YAML?
+
+Yes. Empirically.
+The YS compiler has 7 stages (phases) to transform YS (YAML) into Clojure.
+The first phase is call `parse` and it currently uses the
+[SnakeYAML Engine parser](
+https://github.com/snakeyaml/snakeyaml-engine/blob/master/src/main/java/org/snakeyaml/engine/v2/parser/Parser.java)
+code for this process.
+```
+
+
 ```mdys::question
 Who created YS?
 
-YS was created by [Ingy döt Net](ingydotnet.md), a founder and maintainer of
-the [YAML Data Language](https://yaml.org).
+YS was created by [Ingy döt Net](ingydotnet.md), a founding creator and current
+maintainer of the [YAML Data Language](https://yaml.org).
 ```
+
 
 ```mdys::question
 What is the preferred file extension for YS files?
@@ -36,6 +51,7 @@ extension to `.ys`. You can just start using YS features in the file.
 On the other hand, YS libraries loaded with the `use` function are required to
 use the `.ys` extension.
 ```
+
 
 ```mdys::question
 Clojure is a JVM language. Does YS need the JVM?

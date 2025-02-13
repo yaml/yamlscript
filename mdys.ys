@@ -1,6 +1,6 @@
 !yamlscript/v0
 
-defn mdys-question(text, marker='!!!'):
+defn mdys-question(text, marker='???+'):
   m =:
     text =~ /^(.*)\n\n((?s:\S.+))/ ||:
       die: "Invalid content for mdys::question:\n$text"
