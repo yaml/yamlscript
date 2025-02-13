@@ -2405,21 +2405,27 @@ Toronto</p>
 <ul>
 <li>YS is a functional programming language</li>
 <li>YAML based syntax; clean and flexible</li>
-<li>Extends YAML in a way that feels like YAML</li>
-</ul>
-<p>$ vim 99-charts-of-yaml.ys
-$ ys 99-charts-of-yaml.ys
-$ ys 99-charts-of-yaml.ys 3</p>
-<ul>
-<li>YS is 100% valid YAML always</li>
+<li>
+<p>Extends YAML in a way that feels like YAML</p>
+</li>
+<li>
+<p>vim 99-charts-of-yaml.ys</p>
+</li>
+<li>ys 99-charts-of-yaml.ys</li>
+<li>
+<p>ys 99-charts-of-yaml.ys 3</p>
+</li>
+<li>
+<p>YS is 100% valid YAML always</p>
+</li>
 <li>Can be linted and evaluated as YAML</li>
 <li>All your YAML configs are already valid YS</li>
 </ul>
 <hr />
 <h2 id="about-ys">About YS</h2>
 <ul>
-<li>YS code transpiles to Clojure; a JVM Lisp
-$ vim &lt;( ys --compile 99-charts-of-yaml.ys )</li>
+<li>YS code transpiles to Clojure; a JVM Lisp</li>
+<li>vim &lt;( ys --compile 99-charts-of-yaml.ys )</li>
 <li>This makes YS VERY COMPLETE from the get go</li>
 <li><code>ys</code> is written in Clojure but compiled to native code</li>
 <li>
@@ -2428,9 +2434,9 @@ $ vim &lt;( ys --compile 99-charts-of-yaml.ys )</li>
 <li>
 <p>The YS command line interpreter is called <code>ys</code></p>
 </li>
+<li>A single binary with no dependencies</li>
 <li>
-<p>A single binary with no dependencies
-$ curl -s https://getys.org/ys | bash</p>
+<p>curl -s https://getys.org/ys | bash</p>
 </li>
 <li>
 <p>Great for DevOps and CI/CD</p>
@@ -2468,13 +2474,17 @@ $ curl -s https://getys.org/ys | bash</p>
 <hr />
 <h2 id="extending-yaml-with-ys">Extending YAML with YS</h2>
 <ul>
-<li>https://yamlscript.org/</li>
+<li>
+<p>https://yamlscript.org/</p>
+</li>
+<li>
+<p>vim -O file.yaml vars.yaml</p>
+</li>
+<li>ys --load file.yaml</li>
+<li>ys -Y file.yaml</li>
+<li>ys -J file.yaml</li>
+<li>ys -J file.yaml | jq</li>
 </ul>
-<p>$ vim -O file.yaml vars.yaml
-$ ys --load file.yaml
-$ ys -Y file.yaml
-$ ys -J file.yaml
-$ ys -J file.yaml | jq</p>
 <hr />
 <h2 id="cicd-refactoring-large-messy-yaml-configs">CI/CD Refactoring large messy YAML configs</h2>
 <ul>
@@ -2504,22 +2514,30 @@ $ ys -J file.yaml | jq</p>
 <li>
 <p>https://github.com/kubeys/helmys</p>
 </li>
-</ul>
-<p>$ helm install <name> <chart> --post-renderer helmys</p>
-<p>$ helmys install <name> <chart></p>
-<ul>
-<li>Ingy is working with the Helm 4 team</li>
+<li>
+<p>helm install <name> <chart> --post-renderer helmys</p>
+</li>
+<li>
+<p>helmys install <name> <chart></p>
+</li>
+<li>
+<p>Ingy is working with the Helm 4 team</p>
+</li>
 <li>Nobody lves Go templating in YAML!</li>
 <li>HelmYS should be solid when Helm 4 ships</li>
 </ul>
 <hr />
 <h2 id="yamllm">YAMLLM</h2>
 <ul>
-<li>On the topic of AI and Smarter DevOps…</li>
-</ul>
-<p>$ yamllm 'Will YAMLScript take over the DevOps world?'</p>
-<ul>
-<li>https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys</li>
+<li>
+<p>On the topic of AI and Smarter DevOps…</p>
+</li>
+<li>
+<p>yamllm 'Will YAMLScript take over the DevOps world?'</p>
+</li>
+<li>
+<p>https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys</p>
+</li>
 </ul>
 <hr />
 <h2 id="the-end">The End</h2>
@@ -2534,14 +2552,9 @@ $ ys -J file.yaml | jq</p>
 <li>https://yamlscript.org/ingydotnet/</li>
 </ul>
 <p>Let's Talk About YAML!</p>
-<p>$ Questions?</p>
 <ul>
-<li>Join Us Now! We Are Literally Here:</li>
+<li>Questions?</li>
 </ul>
-<p>CHEFS HALL
-111 Richmond St W, Toronto, ON M5H 2G4
-https://maps.app.goo.gl/co9GL2gax4XH9kGq5
-`````</p>
 
 
 
