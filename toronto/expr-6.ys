@@ -1,0 +1,8 @@
+!yamlscript/v0
+
+# Use string interpolation instead of str()
+# Use 'say' alias of 'println'
+# Use .. range operator
+
+each [i (1 .. 10)]:
+  say: "$i) Hello!"

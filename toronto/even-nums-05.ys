@@ -1,0 +1,20 @@
+!yamlscript/v0
+
+# Change (f a b) f(a b)
+defn even-nums(start end):
+  initial-vec step =: -[[] 1]
+  loop current start, result initial-vec:
+    if current <= end:
+      recur:
+        # get rid of =>
+        current +: step
+        if even?(current):
+          conj result: current
+          else: result
+      else: result
+
+defn main:
+  (): main(1 100)
+  (y): main(1 y)
+  (x y):
+    each i even-nums(x y): say(i)

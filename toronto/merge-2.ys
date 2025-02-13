@@ -1,0 +1,20 @@
+# Define defaults in a separate document:
+---                       # bare mode document
+- &map1
+  key1: val1
+- &map2
+  key2: val2
+
+# By default YS returns last document.
+# No extra data to worry about.
+--- !yamlscript/v0/data   # data mode document
+config:
+  database:
+    <<:
+    - *map1
+    - *map2
+    key3: val3
+
+# YAML doesn't support aliases to anchors in other documents.
+# YAMLScript does in code mode and data mode (not bare mode).
+

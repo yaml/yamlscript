@@ -1,0 +1,8 @@
+
+!yamlscript/v0
+
+# YS lets you get rid of binding brackets
+# in keys of block pair expressions
+
+each i (1 .. 10):
+  say: "$i) Hello!"
