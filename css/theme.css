@@ -1,3 +1,11 @@
+.v {
+  background-image: url("/images/v.png");
+  background-color: pink;
+  h2 {
+    font-weight: bold;
+  }
+}
+
 div.code code {
   max-height: 195px;
 }
