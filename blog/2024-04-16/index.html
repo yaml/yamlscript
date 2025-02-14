@@ -2532,7 +2532,7 @@ src_path: blog/2024-04-16.md
 <p>It's been a while since I let you know what's been happening with YS.
 I've been busy working on it every day this year and I have a lot to tell you
 about!</p>
-<h3 id="ys-activity-in-2024">YS Activity in 2024</h3>
+<h3 id="ys-activity-in-2024">YS Activity in 2024<a class="headerlink" href="#ys-activity-in-2024" title="Permanent link">🔗</a></h3>
 <p>Let me start by telling you about some of the events that have happened in the
 YS world recently.</p>
 <ul>
@@ -2545,7 +2545,7 @@ YS world recently.</p>
 </ul>
 <p>Finally I'm presenting a talk about <a href="https://sched.co/1aBPY">YS at the Open Source Summit North America&nbsp;⧉</a> this Thursday, April 18th.
 Super excited about that!</p>
-<h3 id="ys-progress-since-the-advent-series">YS Progress Since the Advent Series</h3>
+<h3 id="ys-progress-since-the-advent-series">YS Progress Since the Advent Series<a class="headerlink" href="#ys-progress-since-the-advent-series" title="Permanent link">🔗</a></h3>
 <p>I blogged about YS every day in December 2023.
 That was something.
 We were madly trying to implement all the stuff I was talking about.
@@ -2553,7 +2553,7 @@ I may have told a few small lies along the way, but I'm happy to say that
 everything I talked about is now implemented and working.</p>
 <p>And of course we've added a lot more since then.</p>
 <p>Let's talk about some of the highlights.</p>
-<h3 id="more-ys-yamlscript-language-binding-libraries">More YS (YAMLScript) Language Binding Libraries</h3>
+<h3 id="more-ys-yamlscript-language-binding-libraries">More YS (YAMLScript) Language Binding Libraries<a class="headerlink" href="#more-ys-yamlscript-language-binding-libraries" title="Permanent link">🔗</a></h3>
 <p>We've added 4 new binding libraries for YS in 2024, bringing the total to 8:
 <a href="https://clojars.org/org.yamlscript/clj-yamlscript">Clojure&nbsp;⧉</a> (new),
 <a href="https://clojars.org/org.yamlscript/yamlscript">Java&nbsp;⧉</a> (new),
@@ -2571,7 +2571,7 @@ consider writing a binding library for it and submitting a PR to the <a href="ht
 Repository</a>.</p>
 <p>All the libraries are a small amount of code and are easy to write.</p>
 <p>If you need help, please stop by the <a href="https://matrix.to/#/#chat-yamlscript:yaml.io">YS Matrix Chat Room&nbsp;⧉</a> and we'll get you what you need.</p>
-<h3 id="new-dot-chaining-operator">New Dot Chaining Operator</h3>
+<h3 id="new-dot-chaining-operator">New Dot Chaining Operator<a class="headerlink" href="#new-dot-chaining-operator" title="Permanent link">🔗</a></h3>
 <p>In Clojure you can write:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">take </span><span class="mi">5</span>
 <span class="w">  </span><span class="p">(</span><span class="nf">shuffle</span>
@@ -2614,7 +2614,7 @@ readable:</p>
 <p>Or all on one line:</p>
 <div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">$ ys -e &#39;say</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">range(100).filter(even?).shuffle().take(5)&#39;</span>
 </code></pre></div>
-<h4 id="more-about-the-dot-chaining-operator">More about the Dot Chaining Operator</h4>
+<h4 id="more-about-the-dot-chaining-operator">More about the Dot Chaining Operator<a class="headerlink" href="#more-about-the-dot-chaining-operator" title="Permanent link">🔗</a></h4>
 <p>Above we used the dot operator to chain function calls together.
 But it's even more useful than that.</p>
 <p>Consider:</p>
@@ -2628,7 +2628,7 @@ But it's even more useful than that.</p>
 Finally the key in variable <code>h</code> is looked up in the result of <code>f</code>.</p>
 <p>One common idiom is looking up environment variables.
 For example: <code>ENV.HOME</code> or <code>ENV.USER.str/upper-case()</code>.</p>
-<h3 id="new-operators-and-syntax">New Operators and Syntax</h3>
+<h3 id="new-operators-and-syntax">New Operators and Syntax<a class="headerlink" href="#new-operators-and-syntax" title="Permanent link">🔗</a></h3>
 <p>In the last section we saw the new chaining operator: <code>.</code>.</p>
 <p>The interesting thing to note here is that <code>.</code> already had a meaning in Clojure.
 It's the namespace separator, as in <code>clojure.core/println</code>.</p>
@@ -2670,7 +2670,7 @@ So if <code>xs</code> is a sequence of numbers, you'd say <code>(apply f xs)</co
 <p>In YS you can say <code>f(xs*)</code> instead.</p>
 <p>But it gets better.
 You can you use <code>xs*</code> anywhere in a list of arguments: <code>f(1 xs* 3 ys* 5)</code>.</p>
-<h3 id="standard-global-variables">Standard Global Variables</h3>
+<h3 id="standard-global-variables">Standard Global Variables<a class="headerlink" href="#standard-global-variables" title="Permanent link">🔗</a></h3>
 <p>Clojure has dynamic variables like <code>*out*</code> and <code>*command-line-args*</code>.</p>
 <p>YS now has a few of these, but we decided to use symbols with <code>ALL-CAPS</code>
 instead of <code>*earmuffs*</code> for these. We also made them shorter in some cases.</p>
@@ -2684,7 +2684,7 @@ instead of <code>*earmuffs*</code> for these. We also made them shorter in some 
 <li><code>VERSIONS</code> - Mapping of versions of key components in YS</li>
 </ul>
 <p>We'll be adding more of these as needed.</p>
-<h3 id="the-ysstd-ys-standard-library">The <code>ys::std</code> YS Standard Library</h3>
+<h3 id="the-ysstd-ys-standard-library">The <code>ys::std</code> YS Standard Library<a class="headerlink" href="#the-ysstd-ys-standard-library" title="Permanent link">🔗</a></h3>
 <p>We added many libraries that are automatically available in every YS program:</p>
 <ul>
 <li><code>ys::std</code> - The standard library (also available <code>std</code>)</li>
@@ -2717,7 +2717,7 @@ replaced Clojure functions in it.</p>
 </code></pre></div>
 <p>Not too many.</p>
 <p>We'll look at <code>use</code> in the next section.</p>
-<h3 id="including-ys-libraries-and-modules">Including YS Libraries and Modules</h3>
+<h3 id="including-ys-libraries-and-modules">Including YS Libraries and Modules<a class="headerlink" href="#including-ys-libraries-and-modules" title="Permanent link">🔗</a></h3>
 <p>I'll start by saying we made the <code>require</code> function nice to use in YS.</p>
 <p>The best way to describe it is to show you the actual test case for it:</p>
 <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Various require transformations in one pair</span>
@@ -2757,7 +2757,7 @@ You can override the <code>INC</code> path by setting the <code>YSPATH</code> en
 You can use a pod in YS like this:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">use-pod</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;org.babashka/go-sqlite3&quot;</span><span class="w"> </span><span class="s">&quot;0.1.0&quot;</span>
 </code></pre></div>
-<h3 id="multi-doc-and-anchor-alias-support">Multi-doc and Anchor / Alias Support</h3>
+<h3 id="multi-doc-and-anchor-alias-support">Multi-doc and Anchor / Alias Support<a class="headerlink" href="#multi-doc-and-anchor-alias-support" title="Permanent link">🔗</a></h3>
 <p>This is the last topic for today, but it's a big one.</p>
 <p>Anchors and aliases are an important feature of YAML.
 They let you mark a node with a name and then refer to that node by name later.</p>
@@ -2837,7 +2837,7 @@ use an alias to it in another document.</p>
 </div>
 <p>I'll let you figure out what's happening here.
 It should be fairly obvious and I think it's all pretty cool.</p>
-<h3 id="moving-forward">Moving Forward</h3>
+<h3 id="moving-forward">Moving Forward<a class="headerlink" href="#moving-forward" title="Permanent link">🔗</a></h3>
 <p>That was a lot of information, I know.
 I haven't really found the time to blog about these changes on a regular basis.</p>
 <p>Hopefully I'll be able to do that more in the future.</p>

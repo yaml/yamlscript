@@ -2490,7 +2490,7 @@ He has the monumental task of transforming wishes into happiness.</p>
 But it's a bit more involved than you might think.</p>
 <p>To make things easier the YS compiler breaks the transformation into eight
 distinct States and seven distinct ~~Ladders~~ transformations.</p>
-<h3 id="welcome-to-day-10-of-the-ys-advent-calendar">Welcome to Day 10 of the YS Advent Calendar</h3>
+<h3 id="welcome-to-day-10-of-the-ys-advent-calendar">Welcome to Day 10 of the YS Advent Calendar<a class="headerlink" href="#welcome-to-day-10-of-the-ys-advent-calendar" title="Permanent link">🔗</a></h3>
 <p>Today we're going to learn more exactly how <code>ys --compile</code> turns YS into
 Clojure.<br />
 <em>Fair Warning: This is going to be a long post</em>.</p>
@@ -2562,7 +2562,7 @@ But it's exactly what I want to tell you about today.</p>
 Above that is the output of each of the seven transformations (aka the 7 states
 that come after the first state: our YS input).</p>
 <p>Let's look at each of these transformations in turn...</p>
-<h3 id="transformation-1-parse">Transformation 1: Parse</h3>
+<h3 id="transformation-1-parse">Transformation 1: Parse<a class="headerlink" href="#transformation-1-parse" title="Permanent link">🔗</a></h3>
 <p>The first transformation is parsing YAML into a sequence of "parse events".
 This is by far the hardest transformation, not just for YS but for any YAML
 processor.
@@ -2628,7 +2628,7 @@ post.</p>
 <li><a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml">https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml&nbsp;⧉</a></li>
 <li><a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler.yaml">https://github.com/yaml/yamlscript/blob/main/core/test/compiler.yaml&nbsp;⧉</a></li>
 </ul>
-<h3 id="transformation-2-compose">Transformation 2: Compose</h3>
+<h3 id="transformation-2-compose">Transformation 2: Compose<a class="headerlink" href="#transformation-2-compose" title="Permanent link">🔗</a></h3>
 <p>The second transformer is called the composer (in the <code>yamlscript.composer</code>
 library).</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="ss">:!</span><span class="w"> </span><span class="s">&quot;yamlscript/v0&quot;</span>,
@@ -2642,7 +2642,7 @@ Sequence nodes use the keyword <code>:-</code> but they only show up in data mod
 aren't using here.</p>
 <p>Now we have all the important information from the YAML input in an AST form
 that we can refine (transform) a few more times until it becomes a Clojure AST!</p>
-<h3 id="transformation-3-resolve">Transformation 3: Resolve</h3>
+<h3 id="transformation-3-resolve">Transformation 3: Resolve<a class="headerlink" href="#transformation-3-resolve" title="Permanent link">🔗</a></h3>
 <p>YAML tags are rarely seen in the wild.
 Many YAML users don't even know they exist.
 But tags play an important role in the YAML load process.
@@ -2674,7 +2674,7 @@ importantly, it makes it easier to write tests for each transformation.</p>
 </ul>
 <p>Tags are are essentially the names of the transformations that will be applied
 to the node in the following transformation.</p>
-<h3 id="transformation-4-build">Transformation 4: Build</h3>
+<h3 id="transformation-4-build">Transformation 4: Build<a class="headerlink" href="#transformation-4-build" title="Permanent link">🔗</a></h3>
 <p>The build transformation is where a lot of the magic happens.</p>
 <p>Most importantly, it's where scalars containing YS expressions are lexed and
 parsed into Clojure expression ASTs.</p>
@@ -2693,7 +2693,7 @@ into a single string.</p>
 structure of the YAML input.
 Mappings still have key/value pairs, and the key info stays separate from the
 value info.</p>
-<h3 id="transformation-5-transform">Transformation 5: Transform</h3>
+<h3 id="transformation-5-transform">Transformation 5: Transform<a class="headerlink" href="#transformation-5-transform" title="Permanent link">🔗</a></h3>
 <p>The transformer transformation (that's a bit awkward I'll admit) is where
 "special cases" are handled.</p>
 <p>Not much happens in this stage yet.
@@ -2714,7 +2714,7 @@ you'll be able to make it so.
 As long as you don't break the rules of physics... or YAML!</p>
 <p>Note that even though this transformation can change the AST quite a bit, it
 still retains its overall YAML structure.</p>
-<h3 id="transformation-6-construct">Transformation 6: Construct</h3>
+<h3 id="transformation-6-construct">Transformation 6: Construct<a class="headerlink" href="#transformation-6-construct" title="Permanent link">🔗</a></h3>
 <p>The constructor phase's job is simple.
 Turn the final YAML structured AST into an AST that directly represents the
 intended Clojure code compilation result.</p>
@@ -2729,7 +2729,7 @@ to the node's value.</p>
 </code></pre></div>
 <p>Every node in this AST directy represents a Clojure code construct.
 Voila!</p>
-<h3 id="transformation-7-print">Transformation 7: Print</h3>
+<h3 id="transformation-7-print">Transformation 7: Print<a class="headerlink" href="#transformation-7-print" title="Permanent link">🔗</a></h3>
 <p>Just like in any Lisp, a Clojure AST "prints" directly to Clojure code.
 This is because every node in the AST is essentially a token that knows how to
 print itself!</p>
@@ -2750,7 +2750,7 @@ code):</p>
 <span class="p">(</span><span class="nf">say</span><span class="w"> </span><span class="p">(</span><span class="nb">str </span><span class="s">&quot;Hello, &quot;</span><span class="w"> </span><span class="nb">name </span><span class="s">&quot;!&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>Aaaand, we're done!</p>
-<h3 id="transformation-1-7-compile">Transformation 1-7: Compile</h3>
+<h3 id="transformation-1-7-compile">Transformation 1-7: Compile<a class="headerlink" href="#transformation-1-7-compile" title="Permanent link">🔗</a></h3>
 <p>The YS compiler is just all the above crammed together is sequence; passing YS
 input through the 7 transformations we just described.</p>
 <p>I'd like to show you the actual YS <code>compile</code> function (written in

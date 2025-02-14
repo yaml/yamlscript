@@ -2433,7 +2433,7 @@ He doesn't have time to deal with confusing maps and directions.</p>
 syntax, most people prefer the familiarity of this world.</p>
 <p>YS fully embraces all that Clojure has to offer, but syntax-wise it
 also offers a more familiar face.</p>
-<h3 id="welcome-to-day-11-of-the-ys-advent-calendar">Welcome to Day 11 of the YS Advent Calendar!</h3>
+<h3 id="welcome-to-day-11-of-the-ys-advent-calendar">Welcome to Day 11 of the YS Advent Calendar!<a class="headerlink" href="#welcome-to-day-11-of-the-ys-advent-calendar" title="Permanent link">🔗</a></h3>
 <p>Today we'll look at YS Expressions, aka YeS-Expressions.
 Lisp has S-Expressions, YS has YeS-Expressions!</p>
 <p>When writing YS instructions in "code mode" you are always working with
@@ -2445,7 +2445,7 @@ Lisp has S-Expressions, YS has YeS-Expressions!</p>
 </ul>
 <p>YS treats all YAML plain scalars as YeS-Expressions (ysexprs).</p>
 <p>Let's look at some examples.</p>
-<h3 id="infix-expressions">Infix Expressions</h3>
+<h3 id="infix-expressions">Infix Expressions<a class="headerlink" href="#infix-expressions" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(y * 2)</span>
 <span class="nt">z =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(x + 5 + y)</span>
 </code></pre></div>
@@ -2476,7 +2476,7 @@ you can omit the parentheses.</p>
 You must use parentheses to group expressions and group operations in triplets.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">((y * 2) + 5) / 2</span>
 </code></pre></div>
-<h3 id="prefix-expressions">Prefix Expressions</h3>
+<h3 id="prefix-expressions">Prefix Expressions<a class="headerlink" href="#prefix-expressions" title="Permanent link">🔗</a></h3>
 <p>In Lisp you might see a function call like this:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nf">abspath</span><span class="w"> </span><span class="p">(</span><span class="nb">join </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;foo&quot;</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">]))</span>
 </code></pre></div>
@@ -2496,7 +2496,7 @@ You could do the above in all the ways below:</p>
 <p>Look closely at the last example (<code>path4</code>).
 It looks like a Clojure form, but it actually makes use of prefix function
 calls.</p>
-<h3 id="special-operators">Special Operators</h3>
+<h3 id="special-operators">Special Operators<a class="headerlink" href="#special-operators" title="Permanent link">🔗</a></h3>
 <p>YS has a few special operators that are not part of Clojure.</p>
 <p>The <code>..</code> operator is used to create a range of consectutive integers.
 The expression <code>(1 .. 3)</code> is equivalent to the Clojure form <code>(range 1 4)</code> and
@@ -2510,12 +2510,12 @@ evaluates to the list <code>(3 2 1)</code>.</p>
 <li><code>{a: 1} + {b: 2}</code> -&gt; <code>{a: 1, b: 2}</code></li>
 <li><code>[1 2] + [3 4]</code> -&gt; <code>[1 2 3 4]</code></li>
 </ul>
-<h3 id="special-thanks">Special Thanks</h3>
+<h3 id="special-thanks">Special Thanks<a class="headerlink" href="#special-thanks" title="Permanent link">🔗</a></h3>
 <p>I'd like to say thank you to David A. Wheeler for his web page <a href="https://dwheeler.com/readable/sweet-expressions.html">Curly infix,
 Modern-expressions, and Sweet-expressions: A suite of readable formats for
 Lisp-like languages</a>.</p>
 <p>I adapted many of those ideas to make YeS-Expressions.</p>
-<h3 id="conclusion">Conclusion</h3>
+<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">🔗</a></h3>
 <p>As I've said before, YS is very flexible, allowing you to decide how much Lisp
 or YAML style you want to use at any point.
 YeS-Expressions allow you to lean to the Lisp but keep it readable for your

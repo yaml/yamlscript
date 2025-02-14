@@ -2563,7 +2563,7 @@ src_path: doc/cheat.md
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
-<h3 id="ys-fundamentals">YS Fundamentals</h3>
+<h3 id="ys-fundamentals">YS Fundamentals<a class="headerlink" href="#ys-fundamentals" title="Permanent link">🔗</a></h3>
 <ul>
 <li>Valid YS code is always valid YAML</li>
 <li>YS has 3 modes: code, data, and bare</li>
@@ -2590,12 +2590,12 @@ src_path: doc/cheat.md
 <li>Use <code>=&gt;: x</code> to write <code>x</code> as a mapping pair in code mode</li>
 </ul>
 <p>The following examples are in code mode unless otherwise noted.</p>
-<h3 id="assignment">Assignment</h3>
+<h3 id="assignment">Assignment<a class="headerlink" href="#assignment" title="Permanent link">🔗</a></h3>
 <p>The space before the <code>=</code> is required.</p>
 <div class="highlight"><pre><span></span><code>hello =: &#39;Oh hello&#39;
 a b c =: -[1 2 3]  # Destructuring assignment
 </code></pre></div>
-<h3 id="dash-expression-escapes">Dash ('-') expression escapes</h3>
+<h3 id="dash-expression-escapes">Dash ('-') expression escapes<a class="headerlink" href="#dash-expression-escapes" title="Permanent link">🔗</a></h3>
 <p>YS expressions need to be written as valid YAML scalars.
 When an expression starts with YAML syntax characters like <code>{</code>, <code>[</code>, <code>*</code>, <code>#</code>
 then its not a valid YAML scalar.
@@ -2605,7 +2605,7 @@ The dash is removed when YS reads the scalar.</p>
 <div class="highlight"><pre><span></span><code>-[1 2 3]: .map(inc)  # =&gt; [2 3 4]
 =&gt;: -&#39;foo&#39; + &#39;bar&#39;   # =&gt; &#39;foobar&#39;
 </code></pre></div>
-<h3 id="printing-text">Printing text</h3>
+<h3 id="printing-text">Printing text<a class="headerlink" href="#printing-text" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>say: &#39;hello&#39;        # String
 say: hello          # Variable
 say: &quot;$hello!!!&quot;    # Interpolated string
@@ -2615,7 +2615,7 @@ say: |              # Multiline interpolated string
 print: &#39;I have no newline&#39;
 warn: &#39;Prints to stderr (with trailing newline)&#39;
 </code></pre></div>
-<h3 id="define-a-function">Define a function</h3>
+<h3 id="define-a-function">Define a function<a class="headerlink" href="#define-a-function" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>defn greet(name):
   say: &quot;Hello, $name!&quot;
 
@@ -2627,7 +2627,7 @@ defn foo(*):        # Any number of arguments
 
 defn foo(_ x _):    # Ignored arguments
 </code></pre></div>
-<h3 id="call-a-function">Call a function</h3>
+<h3 id="call-a-function">Call a function<a class="headerlink" href="#call-a-function" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>greet()             # Scalar call variations
 greet(&#39;Bob&#39;)
 (greet &#39;Bob&#39;)
@@ -2637,7 +2637,7 @@ greet:              # Map pair call variations
 greet: &#39;Bob&#39;
 greet &#39;Bob&#39;:
 </code></pre></div>
-<h3 id="chain-calls">Chain calls</h3>
+<h3 id="chain-calls">Chain calls<a class="headerlink" href="#chain-calls" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>say: slurp(&quot;/usr/share/dict/words&quot;)
      .lines():shuffle.take(3).join(&quot;.&quot;)
 # =&gt; specialty.mutation&#39;s.Kisangani
@@ -2647,7 +2647,7 @@ greet &#39;Bob&#39;:
 <p><code>.lines():shuffle</code> is short for <code>.lines().shuffle()</code>.
 It must be be attached to something on the left.</p>
 </div>
-<h4 id="special-chain-operators">Special chain operators</h4>
+<h4 id="special-chain-operators">Special chain operators<a class="headerlink" href="#special-chain-operators" title="Permanent link">🔗</a></h4>
 <ul>
 <li><code>.#</code> - Short for <code>.count()</code></li>
 <li><code>.?</code> - Short for <code>.truey?()</code></li>
@@ -2656,7 +2656,7 @@ It must be be attached to something on the left.</p>
 <li><code>.--</code> - Short for <code>.dec()</code></li>
 <li><code>.&gt;&gt;&gt;</code> - Short for <code>.DBG()</code></li>
 </ul>
-<h3 id="looping">Looping</h3>
+<h3 id="looping">Looping<a class="headerlink" href="#looping" title="Permanent link">🔗</a></h3>
 <p>List comprehensions are done with the <code>for</code>, <code>each</code>, <code>map</code>
 <div class="highlight"><pre><span></span><code>each i (1 .. 3):
   say: i
@@ -2669,21 +2669,21 @@ It must be be attached to something on the left.</p>
   fn(acc num): acc + num
 The <code>_</code> is a placeholder for the defined function argument.
 Use <code>_</code> when the function argument is too long to write in place.</p>
-<h3 id="conditional-ifelse">Conditional (if/else)</h3>
+<h3 id="conditional-ifelse">Conditional (if/else)<a class="headerlink" href="#conditional-ifelse" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>if a &gt; 10:
   say: &#39;BIG&#39;
   say: &#39;small&#39;
 </code></pre></div>
 <p>The <code>if</code> construct must have a 'then' and an 'else' clause.
 Use the `</p>
-<h3 id="conditional-cond">Conditional (cond)</h3>
+<h3 id="conditional-cond">Conditional (cond)<a class="headerlink" href="#conditional-cond" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>cond:
   a &lt; 5: &#39;S&#39;
   a &lt; 10: &#39;M&#39;
   a &lt; 15: &#39;L&#39;
   =&gt;: &#39;XL&#39;
 </code></pre></div>
-<h3 id="interpolation">Interpolation</h3>
+<h3 id="interpolation">Interpolation<a class="headerlink" href="#interpolation" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>say: |
   Dear $name,
 
@@ -2691,7 +2691,7 @@ Use the `</p>
 
   Yours truly, $get(ENV &quot;USER&quot;)
 </code></pre></div>
-<h3 id="global-variables">Global variables</h3>
+<h3 id="global-variables">Global variables<a class="headerlink" href="#global-variables" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>- $                 # Runtime state mapping
 - $$                # Previous document value
 - $#                # Document evaluation count

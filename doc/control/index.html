@@ -2510,7 +2510,7 @@ keep in mind that it's functional and get familiar with how the flow works.</p>
 actually "macros" or "special forms" in Clojure.
 The distinction is not particularly important here, but worth mentioning.</p>
 </div>
-<h2 id="starting-a-program">Starting a Program</h2>
+<h2 id="starting-a-program">Starting a Program<a class="headerlink" href="#starting-a-program" title="Permanent link">🔗</a></h2>
 <p>A YS file generally is just a bunch of <code>defn</code> calls to define functions.</p>
 <p>Sometimes there will be assignment expressions at the top level.
 Top level variables are global and can be used anywhere in the program.
@@ -2539,7 +2539,7 @@ cast to numbers if they look like numbers.</p>
 you've defined a top level function call yourself.
 YS files that are meant to be used as libraries will not have a <code>main</code> function
 or a top level function call.</p>
-<h2 id="variable-scope">Variable Scope</h2>
+<h2 id="variable-scope">Variable Scope<a class="headerlink" href="#variable-scope" title="Permanent link">🔗</a></h2>
 <p>One cool thing about YS (and Clojure) is that you can use any word as a
 variable name.
 Even things like <code>if</code> and <code>for</code> which are reserved words in many languages.</p>
@@ -2556,7 +2556,7 @@ Even things like <code>if</code> and <code>for</code> which are reserved words i
 Often this is just fine.
 And it feels nice that you don't have to think up a synonym or alternative
 mangling for <code>count</code>.</p>
-<h2 id="grouping-expressions">Grouping Expressions</h2>
+<h2 id="grouping-expressions">Grouping Expressions<a class="headerlink" href="#grouping-expressions" title="Permanent link">🔗</a></h2>
 <p>Some expression contexts allow multiple expressions to be grouped together and
 some only allow a single expression.</p>
 <p>You can group multiple expressions together with a <code>do</code> function call when you
@@ -2572,7 +2572,7 @@ need to to do multiple things in a context that only allows a single expression.
 <p>The <code>if</code> function actually supports the better named <code>then</code> and <code>else</code>
 words for grouping, but <code>do</code> can also be used.</p>
 </div>
-<h2 id="looping-functions-and-recursion">Looping Functions and Recursion</h2>
+<h2 id="looping-functions-and-recursion">Looping Functions and Recursion<a class="headerlink" href="#looping-functions-and-recursion" title="Permanent link">🔗</a></h2>
 <p>YS has a few looping functions: <code>loop</code>, <code>reduce</code>, <code>for</code> and <code>each</code>.</p>
 <p>These will be documented in more detail in the future, but for now you can see
 the Clojure documentation for them:</p>
@@ -2585,9 +2585,9 @@ the Clojure documentation for them:</p>
   This allows you to print things in the loop body.
   In every other way it's the same as <code>for</code>.</li>
 </ul>
-<h2 id="conditional-expressions">Conditional Expressions</h2>
+<h2 id="conditional-expressions">Conditional Expressions<a class="headerlink" href="#conditional-expressions" title="Permanent link">🔗</a></h2>
 <p>YS has a few common conditional expressions: <code>if</code>, <code>when</code>, <code>cond</code> and <code>case</code>.</p>
-<h3 id="the-if-function">The <code>if</code> Function</h3>
+<h3 id="the-if-function">The <code>if</code> Function<a class="headerlink" href="#the-if-function" title="Permanent link">🔗</a></h3>
 <p>In YS, an <code>if</code> expression is a function that takes 3 arguments: a
 condition, a then expression and an else expression.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">if a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b c</span><span class="w">  </span><span class="c1"># If a is true, return b, else return c</span>
@@ -2635,7 +2635,7 @@ expression and not to the surrounding scope.</p>
 </code></pre></div>
 <p>Note that <code>say</code> returns <code>nil</code>, so all the <code>if</code> expressions above would also
 return <code>nil</code>.</p>
-<h3 id="the-when-function">The <code>when</code> Function</h3>
+<h3 id="the-when-function">The <code>when</code> Function<a class="headerlink" href="#the-when-function" title="Permanent link">🔗</a></h3>
 <p>YS also has a <code>when</code> function that is like <code>if</code> but without an else expression.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">when a</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
@@ -2648,7 +2648,7 @@ Otherwise, use <code>when</code>.</p>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
 </code></pre></div>
-<h3 id="the-cond-function">The <code>cond</code> Function</h3>
+<h3 id="the-cond-function">The <code>cond</code> Function<a class="headerlink" href="#the-cond-function" title="Permanent link">🔗</a></h3>
 <p>The <code>cond</code> function is like a series of <code>if</code> expressions but with multiple
 conditions.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">size =</span><span class="p">:</span>
@@ -2658,7 +2658,7 @@ conditions.</p>
 <span class="w">    </span><span class="nt">a &lt; 100</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;large&#39;</span>
 <span class="w">    </span><span class="nt">else</span><span class="p">:</span><span class="w">    </span><span class="s">&#39;huge&#39;</span>
 </code></pre></div>
-<h3 id="the-case-function">The <code>case</code> Function</h3>
+<h3 id="the-case-function">The <code>case</code> Function<a class="headerlink" href="#the-case-function" title="Permanent link">🔗</a></h3>
 <p>The <code>case</code> function is like a <code>cond</code> but with a single expression to compare
 against.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">count =</span><span class="p">:</span>

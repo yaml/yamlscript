@@ -2363,7 +2363,7 @@ Clojure code.</p>
 like <code>example.ys</code> and running <code>ys -c example.ys</code> which will print the
 Clojure code that the YS code compiles to.</p>
 </div>
-<h2 id="first-steps">First Steps</h2>
+<h2 id="first-steps">First Steps<a class="headerlink" href="#first-steps" title="Permanent link">🔗</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
 <span class="l l-Scalar l-Scalar-Plain">(say &quot;Hello, world!&quot;)</span>
 </code></pre></div>
@@ -2435,7 +2435,7 @@ the same line after a quoted string.</p>
 This is like an escape character for situations where you want to write an
 expression but the first character is a syntax character in YAML.
 The <code>-</code> is removed and the rest of the scalar is compiled as an expression.</p>
-<h2 id="basic-function-definition">Basic Function Definition</h2>
+<h2 id="basic-function-definition">Basic Function Definition<a class="headerlink" href="#basic-function-definition" title="Permanent link">🔗</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nt">defn greet(name)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">$name!&quot;</span>
 
@@ -2452,7 +2452,7 @@ The <code>-</code> is removed and the rest of the scalar is compiled as an expre
 That's just the natural way to do things in YAML.
 Most of the YS syntax design is about making code look natural in YAML.
 It works out surprisingly well!</p>
-<h2 id="variable-assignment-def-and-let">Variable Assignment (def and let)</h2>
+<h2 id="variable-assignment-def-and-let">Variable Assignment (def and let)<a class="headerlink" href="#variable-assignment-def-and-let" title="Permanent link">🔗</a></h2>
 <p>In the remaining examples we'll assume the <code>!yamlscript/v0</code> tag is present.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2507,7 +2507,7 @@ The special token <code>=&gt;</code> can be used as a placeholder key for when y
 a single expression but being inside a mapping requires you use a key/value
 pair.
 The <code>=&gt;</code> is removed during compilation and the expression is left as the value.</p>
-<h2 id="destructuring-assignment">Destructuring Assignment</h2>
+<h2 id="destructuring-assignment">Destructuring Assignment<a class="headerlink" href="#destructuring-assignment" title="Permanent link">🔗</a></h2>
 <p>Many modern languages have destructuring assignment, where the LHS of an
 assignment looks like a data structure instead of a single variable.
 This quasi-data-structure is a collection of variables that are assigned values
@@ -2529,7 +2529,7 @@ and mappings.</p>
 values of that sequence would be assigned to <code>a</code>, <code>b</code>, and <code>c</code> respectively.</p>
 <p>For some reason Clojure does not support destructuring assignment in <code>def</code>
 forms but YS makes it work just fine.</p>
-<h3 id="function-arguments">Function Arguments</h3>
+<h3 id="function-arguments">Function Arguments<a class="headerlink" href="#function-arguments" title="Permanent link">🔗</a></h3>
 <p>Like Clojure, all YS functions must be defined with the number of arguments
 they take.
 This is know as the function's arity.
@@ -2550,14 +2550,14 @@ the arguments is not used to determine which body to evaluate.</p>
 <span class="w">  </span><span class="nt">(a b c *more)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div>
 <p>It would be an error to call the above function with 2 arguments.</p>
-<h2 id="default-values">Default Values</h2>
+<h2 id="default-values">Default Values<a class="headerlink" href="#default-values" title="Permanent link">🔗</a></h2>
 <p>Clojure does not support default values for function arguments but YS does.</p>
 <div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">defn foo(a b=10 c=&#39;horse&#39;)</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div>
-<h2 id="work-in-progress">Work in Progress</h2>
+<h2 id="work-in-progress">Work in Progress<a class="headerlink" href="#work-in-progress" title="Permanent link">🔗</a></h2>
 <p>This document is a work in progress.
 More content will be added soon.</p>
-<h2 id="see-also">See Also</h2>
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">🔗</a></h2>
 <ul>
 <li><a href="../modes/">YS Modes</a> - Understanding code mode vs data mode</li>
 <li><a href="../yes/">YeS Expressions</a></li>

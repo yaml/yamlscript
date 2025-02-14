@@ -2418,7 +2418,7 @@ on subsequent runs so the user will need to have internet access.</p>
 In that case the Bash installer line will be ignored.</p>
 <p>Since the program has a shebang line, it can also be run as a <code>PATH</code> command
 if the file is marked as executable.</p>
-<h2 id="example">Example</h2>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">🔗</a></h2>
 <p>Here's a small YS program that program that prints the ROT13 encoding of its
 arguments:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-0</span>
@@ -2449,7 +2449,7 @@ V<span class="w"> </span>Ybir<span class="w"> </span>LF
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>bash<span class="w"> </span>rot13.ys<span class="w"> </span>I<span class="w"> </span>Love<span class="w"> </span>YS
 V<span class="w"> </span>Ybir<span class="w"> </span>LF
 </code></pre></div>
-<h2 id="how-it-works">How It Works</h2>
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">🔗</a></h2>
 <p>The program is both valid YS and valid Bash.</p>
 <p>YS programs are required to start with a YAML tag like this:</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
@@ -2469,7 +2469,7 @@ any arguments you provided.</p>
 <p>The <code>source</code> line is also a valid YS command.
 It calls the YS <code>source</code> macro which ignores all of its arguments (much like
 the <code>comment</code> macro does).</p>
-<h2 id="use-cases-and-security-considerations">Use Cases and Security Considerations</h2>
+<h2 id="use-cases-and-security-considerations">Use Cases and Security Considerations<a class="headerlink" href="#use-cases-and-security-considerations" title="Permanent link">🔗</a></h2>
 <p>This technique is may be useful in situations where you want to share a YS
 program with people who are not yet familiar with YS.</p>
 <p>Since the program is run with Bash which gets more Bash code from the internet,

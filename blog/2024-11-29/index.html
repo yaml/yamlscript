@@ -2454,7 +2454,7 @@ can use to do cool things in your YAML files that are not possible with YAML
 alone.
 And remember, your YAML files are already valid YS files; but if you load them
 (or preprocess them) with YS, you can do a lot more in there.</p>
-<h2 id="what-yaml-can-do-now">What YAML Can Do Now</h2>
+<h2 id="what-yaml-can-do-now">What YAML Can Do Now<a class="headerlink" href="#what-yaml-can-do-now" title="Permanent link">🔗</a></h2>
 <p>YAML 1.2 has a few things that let you do things a bit fancier than with a data
 only format like JSON:</p>
 <ul>
@@ -2473,7 +2473,7 @@ It needs to since it claims to support the current YAML files of the world.
 But YS being a complete programming language lets you go so much
 further!</p>
 <p>Let's take a closer look…</p>
-<h2 id="external-and-internal-data-sources">External (and Internal) Data Sources</h2>
+<h2 id="external-and-internal-data-sources">External (and Internal) Data Sources<a class="headerlink" href="#external-and-internal-data-sources" title="Permanent link">🔗</a></h2>
 <p>Even though YAML lets you reuse nodes by name, those nodes need to be part of
 your YAML document.
 Say you have a section at the top of your YAML file that defines some default
@@ -2620,7 +2620,7 @@ file?</p>
 </code></pre></div>
 <p>Not only can we access external data from a file, YS supports fetching
 data from the web with the <code>curl</code> function and also getting data from databases!</p>
-<h2 id="inline-code-in-data-mode">Inline Code in Data Mode</h2>
+<h2 id="inline-code-in-data-mode">Inline Code in Data Mode<a class="headerlink" href="#inline-code-in-data-mode" title="Permanent link">🔗</a></h2>
 <p>We can do the same things in a single data mode document.
 The trick is that we need to have a way to evaluate code in a way that doesn't
 affect the data.</p>
@@ -2672,7 +2672,7 @@ them:</p>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 <span class="w">  </span><span class="nt">likes:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;big-list.yaml&quot;)</span>
 </code></pre></div>
-<h2 id="how-do-i-merge-thee">How Do I <code>merge</code> Thee?</h2>
+<h2 id="how-do-i-merge-thee">How Do I <code>merge</code> Thee?<a class="headerlink" href="#how-do-i-merge-thee" title="Permanent link">🔗</a></h2>
 <p>Let me count the ways :)</p>
 <p>We are still using the <code>&lt;&lt;</code> merge key to merge mappings, but YS has a standard
 <code>merge</code> function (among 100s of others).</p>
@@ -2710,7 +2710,7 @@ indent the data you are applying the function to.</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">map1</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">likes:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list1</span>
 </code></pre></div>
-<h2 id="conditional-insertions-in-mappings-and-sequences">Conditional Insertions in Mappings and Sequences</h2>
+<h2 id="conditional-insertions-in-mappings-and-sequences">Conditional Insertions in Mappings and Sequences<a class="headerlink" href="#conditional-insertions-in-mappings-and-sequences" title="Permanent link">🔗</a></h2>
 <p>A big missing feature (and one definitely needed for Helm charts) was the
 ability to conditionally insert key/value pairs into mappings depending on some
 value being true or false.</p>
@@ -2794,7 +2794,7 @@ $<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>fil
 -<span class="w"> </span>zzz
 </code></pre></div>
 <p>and Voilà!</p>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">🔗</a></h2>
 <p>I hope this post gave you some good ideas about how cleanly you can extend your
 YAML data files with YS.
 And also how this is applicable today in major YAML consumers like Helm.</p>

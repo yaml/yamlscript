@@ -2414,7 +2414,7 @@ You'll need some sharp tools.
 You think those elves make all those toys with dull tools?</p>
 <p>The CLI tool <code>ys</code> is the main tool you'll use to work with YS.
 Today we'll learn about all the things you can do with it.</p>
-<h3 id="welcome-to-day-7-of-the-ys-advent-calendar">Welcome to Day 7 of the YS Advent Calendar</h3>
+<h3 id="welcome-to-day-7-of-the-ys-advent-calendar">Welcome to Day 7 of the YS Advent Calendar<a class="headerlink" href="#welcome-to-day-7-of-the-ys-advent-calendar" title="Permanent link">🔗</a></h3>
 <p>On Tuesday you learned how to install YS.
 Reminder, here's the quick way to install the latest version:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">PREFIX</span><span class="o">=</span>~/.yamlscript<span class="w"> </span>bash
@@ -2465,7 +2465,7 @@ Options:
 <span class="w">      </span>--version<span class="w">            </span>Print<span class="w"> </span>version<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 <span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">               </span>Print<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 </code></pre></div>
-<h3 id="ready-set-actions">Ready, set, actions!</h3>
+<h3 id="ready-set-actions">Ready, set, actions!<a class="headerlink" href="#ready-set-actions" title="Permanent link">🔗</a></h3>
 <p>The first thing to notice is that <code>ys</code> has 3 "actions":</p>
 <ul>
 <li>Run (default) - Compile and evaluate a YS file</li>
@@ -2486,7 +2486,7 @@ This can come from 3 different places:</p>
   <code>echo $'!yamlscript/v0\nsay: "Hello"' | ys</code>.
   Of course, it doesn't hurt to specify the <code>-</code> anyway.</li>
 </ul>
-<h3 id="running-clojure-with-ys">Running Clojure  with <code>ys</code></h3>
+<h3 id="running-clojure-with-ys">Running Clojure  with <code>ys</code><a class="headerlink" href="#running-clojure-with-ys" title="Permanent link">🔗</a></h3>
 <p>Clojure code is often valid YS code:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;(println (+ 1 2))&#39;</span>
 <span class="o">(</span>println<span class="w"> </span><span class="o">(</span>+<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="o">))</span>
@@ -2500,7 +2500,7 @@ directly with Clojure code.</p>
 compiler's Clojure code ouput:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: 123&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ys<span class="w"> </span>-C<span class="w"> </span>-
 </code></pre></div>
-<h3 id="modes-and-formats">Modes and Formats</h3>
+<h3 id="modes-and-formats">Modes and Formats<a class="headerlink" href="#modes-and-formats" title="Permanent link">🔗</a></h3>
 <p>We learned about modes and the <code>--mode</code> option yesterday.
 You can set the mode for <code>--eval</code> (<code>-e</code>) code with the <code>--mode</code> (<code>-m</code>) option.
 The accepted values are <code>code</code> (<code>c</code>), <code>data</code> (<code>d</code>) and <code>bare</code> (<code>b</code>).</p>
@@ -2515,7 +2515,7 @@ These are 3 formatting options to control how the output is displayed:</p>
   It is also valid Clojure code.</li>
 </ul>
 <p>Note that when you specify a formatting option, it implies the <code>--load</code> action.</p>
-<h3 id="debugging">Debugging</h3>
+<h3 id="debugging">Debugging<a class="headerlink" href="#debugging" title="Permanent link">🔗</a></h3>
 <p>When you "run" a YS program it doesn't print anything unless you use a
 printing command.
 This isn't surprising; all languages work this way.</p>

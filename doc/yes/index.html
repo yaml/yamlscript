@@ -2464,7 +2464,7 @@ below.</p>
 easy to read and understand.
 YeS expression transformations are among the most commonly used.</p>
 </div>
-<h2 id="prefix-call-notation">Prefix Call Notation</h2>
+<h2 id="prefix-call-notation">Prefix Call Notation<a class="headerlink" href="#prefix-call-notation" title="Permanent link">🔗</a></h2>
 <p>The most common way to call a function in non-Lisp programming languages is
 <code>a()</code>, <code>a(b)</code>, <code>a(b c)</code> etc where <code>a</code> is the name of a function and <code>b</code> and <code>c</code>
 are arguments that the function is called with.
@@ -2478,7 +2478,7 @@ mapping pair context:</p>
 <span class="c1"># Or sometimes:</span>
 <span class="nt">a b</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c</span>
 </code></pre></div>
-<h2 id="infix-operator-notation">Infix Operator Notation</h2>
+<h2 id="infix-operator-notation">Infix Operator Notation<a class="headerlink" href="#infix-operator-notation" title="Permanent link">🔗</a></h2>
 <p>Lisps write binary operator expressions like:</p>
 <div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">+ </span><span class="nv">a</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">  </span><span class="c1">;; a + 5</span>
 <span class="p">(</span><span class="nb">&gt; </span><span class="nv">a</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">  </span><span class="c1">;; a &gt; 5</span>
@@ -2504,7 +2504,7 @@ The parentheses are implied in a few other contexts as well like:</p>
 <span class="c1"># Equivalent to:</span>
 <span class="nt">if (a &gt; b)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c d</span>
 </code></pre></div>
-<h3 id="when-operators-are-arguments">When Operators are Arguments</h3>
+<h3 id="when-operators-are-arguments">When Operators are Arguments<a class="headerlink" href="#when-operators-are-arguments" title="Permanent link">🔗</a></h3>
 <p>Every once in a while you might want to pass an operator as an argument to a
 function call triplet like <code>(apply + numbers)</code> and YS would wrongly
 translate that to <code>(+ apply numbers)</code>.</p>
@@ -2515,7 +2515,7 @@ It is also avoided when using the block mapping pair form:</p>
 </code></pre></div>
 <p>Also note that the operator switching only applies to triplet forms, so
 expressions like <code>(a +)</code> and <code>(a + b c)</code> are never affected.</p>
-<h2 id="assignment-symbol-binding-expressions">Assignment (Symbol Binding) Expressions</h2>
+<h2 id="assignment-symbol-binding-expressions">Assignment (Symbol Binding) Expressions<a class="headerlink" href="#assignment-symbol-binding-expressions" title="Permanent link">🔗</a></h2>
 <p>In many programming languages, like Python for instance, it's common to see
 things like:</p>
 <div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">b</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -2564,7 +2564,7 @@ calling <code>c</code>.</p>
 <p>In YS it works fine:</p>
 <div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">-[a b] =</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">c()</span>
 </code></pre></div>
-<h2 id="conclusion">Conclusion</h2>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">🔗</a></h2>
 <p>YeS Expressions are a key way to help you write YS code that looks more like
 the code you're used to writing in non-Lisp languages, while still retaining
 the full power of Lisp (Clojure).
