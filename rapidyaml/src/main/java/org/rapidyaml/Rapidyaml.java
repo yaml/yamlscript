@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * Interface with the shared librapidyaml library
  */
 public class Rapidyaml {
-    public static String RAPIDYAML_VERSION = "0.7.2";
+    public static String RAPIDYAML_VERSION = "0.8.0";
 
     private native long ys2edn_init();
     private native void ys2edn_destroy(long ryml2edn);
