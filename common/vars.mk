@@ -228,7 +228,7 @@ RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
 #------------------------------------------------------------------------------
 RAPIDYAML := $(ROOT)/rapidyaml
 
-RAPIDYAML_VERSION := 0.7.2
+RAPIDYAML_VERSION := 0.8.0
 RAPIDYAML_TAG ?= v$(RAPIDYAML_VERSION)
 RAPIDYAML_REPO := https://github.com/biojppm/rapidyaml
 RAPIDYAML_BUILD_TYPE := Release
