@@ -10,6 +10,7 @@
    [babashka.fs :as fs]
    [babashka.process :refer [check exec process]]
    [clj-yaml.core :as yaml]
+   [clojure.data.csv :as csv]
    [clojure.data.json :as json]
    [clojure.java.io :as io]
    [clojure.pprint :as pp]
@@ -58,7 +59,7 @@
   (err (str "--" s " not implemented yet.")))
 
 ;; ----------------------------------------------------------------------------
-(def to-fmts #{"json" "yaml" "edn"})
+(def to-fmts #{"json" "yaml" "csv" "tsv" "edn"})
 
 (def stages
   {"parse" true
@@ -97,16 +98,14 @@
 
    ["-T" "--to FORMAT"
     "Output format for --load:
-                             json, yaml, edn"
+                             json, yaml, csv, tsv, edn"
     :validate
     [#(contains? to-fmts %1)
-     (str "must be one of: " (str/join ", " to-fmts))]]
+     (str "must be one of: json, yaml, csv, tsv, edn")]]
    ["-J" "--json"
     "Output (pretty) JSON for --load"]
    ["-Y" "--yaml"
     "Output YAML for --load"]
-   ["-E" "--edn"
-    "Output EDN for --load"]
    ["-U" "--unordered"
     "Mappings don't preserve key order (faster)"]
 
@@ -387,6 +386,14 @@ Options:
                                result
                                :dumper-options {:flow-style :block}))))
                 "json" (json/pprint result json-options)
+                "csv"  (println
+                         (with-open [s (java.io.StringWriter.)]
+                           (csv/write-csv s result :separator \,)
+                           (str s)))
+                "tsv"  (println
+                         (with-open [s (java.io.StringWriter.)]
+                           (csv/write-csv s result :separator \tab)
+                           (str s)))
                 "edn"  (pp/pprint result)
                 ,      (println (json/write-str result json-options))))))))
     (catch Exception e
@@ -560,7 +567,7 @@ Options:
                (assoc opts :stream (env "YS_STREAM")) opts)
         opts (if (and
                    out
-                   (re-find #"\.(?:yml|yaml|json|edn)$" out)
+                   (re-find #"\.(?:yml|yaml|json|csv|tsv|edn)$" out)
                    (not (:to opts)))
                (let [to (str/replace out #".*\.(\w+)$" "$1")
                      to (if (= "yml" to) "yaml" to)]

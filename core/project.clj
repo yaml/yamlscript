@@ -18,6 +18,7 @@
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]
+   [org.clojure/data.csv "1.1.0"]
    [org.clojure/data.json "2.4.0"]
    [clj-commons/clj-yaml "1.0.27"]
    [org.flatland/ordered "1.15.11"]

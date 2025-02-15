@@ -25,6 +25,7 @@
    [yamlscript.re :as re]
    [yamlscript.util]
    [ys.clj]
+   [ys.csv]
    [ys.dwim]
    [ys.json]
    [ys.std]
@@ -101,6 +102,8 @@
   (sci/copy-ns clojure.tools.cli (sci/create-ns 'cli)))
 (def clj-namespace
   (sci/copy-ns ys.clj (sci/create-ns 'clj)))
+(def csv-namespace
+  (sci/copy-ns ys.csv (sci/create-ns 'csv)))
 (def debug-namespace
   (sci/copy-ns yamlscript.debug (sci/create-ns 'yamlscript.debug)))
 (def fs-namespace
@@ -144,6 +147,7 @@
    'clj     clj-namespace  'ys.clj     clj-namespace
 
    'cli     cli-namespace  'ys.cli     cli-namespace
+   'csv     csv-namespace  'ys.csv     csv-namespace
    'fs      fs-namespace   'ys.fs      fs-namespace
    'http    http-namespace 'ys.http    http-namespace
    'io      io-namespace   'ys.io      io-namespace

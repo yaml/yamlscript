@@ -19,6 +19,7 @@
   :dependencies
   [[org.clojure/clojure "1.12.0"]
    [org.clojure/core.async "1.6.681"]
+   [org.clojure/data.csv "1.1.0"]
    [org.clojure/data.json "2.4.0"]
    [org.clojure/tools.cli "1.0.219"]
    [org.babashka/sci "0.8.41"]

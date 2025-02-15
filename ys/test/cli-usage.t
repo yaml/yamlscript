@@ -27,10 +27,9 @@ HELP =: |
 #   -s, --stream             Output all results from a multi-document stream
 
 #   -T, --to FORMAT          Output format for --load:
-#                              json, yaml, edn
+#                              json, yaml, csv, tsv, edn
 #   -J, --json               Output (pretty) JSON for --load
 #   -Y, --yaml               Output YAML for --load
-#   -E, --edn                Output EDN for --load
 #   -U, --unordered          Mappings don't preserve key order (faster)
 
 #   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
@@ -123,7 +122,7 @@ test::
     - 4
 
 - cmnd: |-
-    ys -Ee 'range: 5'
+    ys -T edn -e 'range: 5'
   want: |
     (0 1 2 3 4)
 
