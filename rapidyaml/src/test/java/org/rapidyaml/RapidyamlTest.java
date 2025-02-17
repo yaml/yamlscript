@@ -6,6 +6,9 @@ import java.nio.ByteBuffer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Unit test for simple App.
@@ -379,4 +382,47 @@ public class RapidyamlTest extends TestCase
         }
         assertTrue(gotit);
     }
+
+    /*
+    public void compareEdnEvt(int evtSize, String path)
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        //
+        try {
+            String ys = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
+            int[] evt = new int[evtSize];
+            //
+            long t0 = System.nanoTime();
+            byte[] ysBytes = ys.getBytes(StandardCharsets.UTF_8);
+            long tys2Bytes = System.nanoTime() - t0;
+            //
+            t0 = System.nanoTime();
+            String edn = rapidyaml.parseYsToEdn(ys);
+            long tEdn = System.nanoTime() - t0;
+            //
+            t0 = System.nanoTime();
+            int numEvts = rapidyaml.parseYsToEvt(ysBytes, evt);
+            long tEvt = System.nanoTime() - t0;
+            //
+            System.out.printf("-----\n%s\nys.length=%d\nys2bytes=%fus\n", path, ys.length(), (double)tys2Bytes / 1.e6);
+            System.out.printf("edn=%fus, length=%d -> %dB\n", (double)tEdn / 1.e6, edn.length(), edn.length());
+            System.out.printf("evt=%fus, length=%d -> %dB\n", (double)tEvt / 1.e6, numEvts, 4*numEvts);
+        }
+        catch(Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    public void testEdnVsEvt()
+    {
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/appveyor.yml");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/compile_commands.json");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner100.yml");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner100.yml");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000.yml");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000.yml");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000_json.json");
+        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000_json.yml");
+    }
+    */
 }

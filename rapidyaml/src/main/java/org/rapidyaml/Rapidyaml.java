@@ -48,7 +48,9 @@ public class Rapidyaml {
         }
     }
 
-    public String parseYsToEdn(String srcstr) throws RuntimeException, org.rapidyaml.YamlParseErrorException {
+    public String parseYsToEdn(String srcstr)
+        throws RuntimeException, org.rapidyaml.YamlParseErrorException
+    {
         String filename = "yamlscript"; // fixme
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;
@@ -66,7 +68,9 @@ public class Rapidyaml {
         return ret;
     }
 
-    public int parseYsToEvt(byte[] src, int[] evts) throws RuntimeException, org.rapidyaml.YamlParseErrorException {
+    public int parseYsToEvt(byte[] src, int[] evts)
+        throws RuntimeException, org.rapidyaml.YamlParseErrorException
+    {
         String filename = "yamlscript"; // fixme
         int required_size = ys2evt_parse(this.ryml2evt, filename, src, src.length, evts, evts.length);
         return required_size;
