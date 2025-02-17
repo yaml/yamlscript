@@ -147,6 +147,7 @@ Chaining short forms:
   value.!: Short for `value.falsey?()`
   value.??: Short for `value.boolean()`
   value.!!: Short for `value.not()`
+  value.@: Short for `value.deref()
   value.>>>: Short for `value.DBG()`|
     Print value/data to stderr and return the value unchanged
 

@@ -86,7 +86,7 @@ defn format-mdys(text):
 
 defn get-path(file):
   if-not fs-abs?(file):
-    fs-abs _ file: input-dir:D
+    fs-abs _ file: input-dir:deref
     else: file
 
 defn mdys-include(data):

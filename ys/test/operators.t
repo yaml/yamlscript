@@ -109,4 +109,6 @@ test::
 - code: (1 ... 1).#.eq(0)
 - code: (1 ... 2).--.eq(0)
 
+- code: atom(42).@.eq(42)
+
 done:

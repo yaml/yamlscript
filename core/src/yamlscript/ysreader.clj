@@ -174,6 +174,7 @@
 (defn get-special-expansion [token]
   (let [expanded
         (condp = token
+          ".@"   ". clojure::core/deref( )"
           ".$"   ". clojure::core/last( )"
           ".#"   ". clojure::core/count( )"
           ".?"   ". ys::std/truey?( )"

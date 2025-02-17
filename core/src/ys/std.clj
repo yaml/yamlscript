@@ -647,7 +647,6 @@
 
 (intern 'ys.std 'B to-bool)
 (intern 'ys.std 'C to-char)
-(intern 'ys.std 'D deref)
 (intern 'ys.std 'F to-float)
 (intern 'ys.std 'I to-int)
 (intern 'ys.std 'K to-keyw)
