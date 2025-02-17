@@ -36,4 +36,5 @@ profiles.clj
 reports/
 target/
 .vscode/
+.yamllm/
 **/.idea/

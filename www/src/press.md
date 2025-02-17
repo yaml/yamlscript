@@ -27,3 +27,7 @@ title: Press
   Ingy at Open Source Summit North America 2024 in Seattle
 * [Seajure March 2024 - YAMLScript](
   https://www.youtube.com/watch?v=GajOBwBcFyA)
+
+## Meetups
+
+* [Toronto Smarter DevOps 2025-02-13](https://yamlscript.org/talk/20250213/)

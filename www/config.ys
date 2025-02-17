@@ -10,7 +10,6 @@
 #
 # * Use proper blog plugin
 # * Add RSS feed
-#
 
 ---
 !YS v0:
@@ -38,10 +37,6 @@ docs_dir: src
 edit_uri:: "$(Meta.devel.git)/edit/website"
 
 nav:
-# - index.md      # Landing page
-# - About:: load('config/about.yaml')
-# - Start:: load('config/start.yaml')
-# - Learn:: load('config/learn.yaml')
 - Using YS:: load('config/use.yaml')
 - Documentation:: load('config/doc.yaml')
 # - Playground: play.md # load('config/play.yaml')
@@ -49,6 +44,10 @@ nav:
 - Press: press.md
 - Community:: load('config/community.yaml')
 - FAQ: faq.md
+
+# - About:: load('config/about.yaml')
+# - Start:: load('config/start.yaml')
+# - Learn:: load('config/learn.yaml')
 
 theme:: load('config/theme.yaml')
 
@@ -85,6 +84,7 @@ plugins:
 #     - tags
 - search
 
+# * https://facelessuser.github.io/pymdown-extensions/
 markdown_extensions:
 - admonition
 - attr_list
@@ -98,6 +98,8 @@ markdown_extensions:
 - pymdownx.superfences
 - pymdownx.tabbed:
     alternate_style: true
+- toc:
+    permalink: 🔗
 
 watch:
 - theme

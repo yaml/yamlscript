@@ -54,7 +54,7 @@ HELP =: |
 
 test::
 - cmnd: ys --version
-  want:: "YS $VERSION"
+  want:: "YS (YAMLScript) $VERSION"
 
 - cmnd: ys
   have:: HELP
