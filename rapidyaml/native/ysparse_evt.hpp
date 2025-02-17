@@ -2,19 +2,12 @@
 #ifndef YSPARSE_EVT_HPP_
 #define YSPARSE_EVT_HPP_
 
-#include <stdexcept>
 #include "ysparse_evt_handler.hpp"
-
-namespace ryml {
-using namespace c4;
-using namespace c4::yml;
-} // namespace ryml
+#include "ysparse_common.hpp"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
-using size_type = int;
 
 struct RYML_EXPORT Ryml2Evt
 {
@@ -30,13 +23,6 @@ struct RYML_EXPORT Ryml2Evt
     {
         m_handler.reset(src, evt, evt_size);
     }
-};
-
-struct RYML_EXPORT Ryml2EvtParseError : public std::exception
-{
-    c4::yml::Location location;
-    std::string msg;
-    const char* what() const noexcept override { return msg.c_str(); }
 };
 
 

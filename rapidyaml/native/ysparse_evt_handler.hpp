@@ -367,6 +367,27 @@ public:
     /** @{ */
 
 
+    C4_ALWAYS_INLINE void set_key_scalar_plain_empty()
+    {
+        _c4dbgpf("{}/{}: set_key_scalar_plain_empty", m_evt_curr, m_evt_size);
+        _send_key_scalar_(_get_latest_empty_scalar(), evt::PLAI);
+        _enable_(c4::yml::KEY|c4::yml::KEY_PLAIN|c4::yml::KEYNIL);
+    }
+    C4_ALWAYS_INLINE void set_val_scalar_plain_empty()
+    {
+        _c4dbgpf("{}/{}: set_val_scalar_plain_empty", m_evt_curr, m_evt_size);
+        _send_val_scalar_(_get_latest_empty_scalar(), evt::PLAI);
+        _enable_(c4::yml::VAL|c4::yml::VAL_PLAIN|c4::yml::VALNIL);
+    }
+    C4_ALWAYS_INLINE csubstr _get_latest_empty_scalar() const
+    {
+        // ideally we should search back in the latest event that has
+        // a scalar, than select a zero-length scalar immediately
+        // after that scalar. But this also works for now:
+        return m_str.first(0);
+    }
+
+
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
         _c4dbgpf("{}/{}: set_key_scalar_plain: @{} [{}]~~~{}~~~", m_evt_curr, m_evt_size, scalar.str-m_str.str, scalar.len, scalar);
@@ -490,13 +511,13 @@ public:
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(c4::yml::KEY|c4::yml::KEYREF);
-        _send_key_scalar_(ref, evt::KEY_|evt::ALIA);
+        _send_str_(ref.sub(1), evt::KEY_|evt::ALIA); // skip the leading *
     }
     void set_val_ref(csubstr ref)
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(c4::yml::VAL|c4::yml::VALREF);
-        _send_val_scalar_(ref, evt::VAL_|evt::ALIA);
+        _send_str_(ref.sub(1), evt::VAL_|evt::ALIA); // skip the leading *
     }
 
     /** @} */
@@ -511,7 +532,7 @@ public:
         _enable_(c4::yml::KEYTAG);
         csubstr ttag = _transform_directive(tag, m_key_tag_buf);
         _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
-        if(ttag.begins_with('!'))
+        if(ttag.begins_with('!') && !ttag.begins_with("!!"))
             ttag = ttag.sub(1);
         if(m_evt_curr + 2 < m_evt_size)
         {
@@ -526,7 +547,7 @@ public:
         _enable_(c4::yml::VALTAG);
         csubstr ttag = _transform_directive(tag, m_val_tag_buf);
         _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
-        if(ttag.begins_with('!'))
+        if(ttag.begins_with('!') && !ttag.begins_with("!!"))
             ttag = ttag.sub(1);
         if(m_evt_curr + 2 < m_evt_size)
         {
@@ -653,9 +674,26 @@ public:
         m_evt_curr += 3;
     }
 
+    C4_ALWAYS_INLINE void _send_str_(csubstr scalar, evt::DataType flags)
+    {
+        _c4dbgpf("{}/{}: send str", m_evt_curr, m_evt_size);
+        if(m_evt_curr + 2 < m_evt_size)
+        {
+            m_evt[m_evt_curr] = flags;
+            _add_scalar_(m_evt_curr, scalar);
+        }
+        m_curr->evt_id = m_evt_curr;
+        m_evt_prev = m_evt_curr;
+        m_evt_curr += 3;
+    }
+
     csubstr _transform_directive(csubstr tag, substr output)
     {
-        if(tag.begins_with('!'))
+        if(tag.begins_with("!!"))
+        {
+            return tag;
+        }
+        else if(tag.begins_with('!'))
         {
             if(c4::yml::is_custom_tag(tag))
             {

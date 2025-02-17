@@ -1,11 +1,14 @@
 package org.rapidyaml;
 
 import org.rapidyaml.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.ByteBuffer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import java.nio.charset.StandardCharsets;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Unit test for simple App.
@@ -87,6 +90,7 @@ public class RapidyamlTest extends TestCase
 
     private void testEvt_(String ys, ExpectedEvent[] expected)
     {
+	boolean dbglog = false;
         Rapidyaml rapidyaml = new Rapidyaml();
         try {
             int[] actual = new int[2 * required_size_(expected)];
@@ -107,14 +111,16 @@ public class RapidyamlTest extends TestCase
                     if(ie >= expected.length)
                         break;
                     int cmp = 1;
-                    System.out.printf("status=%d evt=%d pos=%d expflags=%d actualflags=%d", status, ie, ia, expected[ie].flags, actual[ia]);
+		    if(dbglog)
+    			System.out.printf("status=%d evt=%d pos=%d expflags=%d actualflags=%d", status, ie, ia, expected[ie].flags, actual[ia]);
                     cmp &= (expected[ie].flags == actual[ia]) ? 1 : 0;
                     if(((actual[ia] & Evt.HAS_STR) != 0) && ((expected[ie].flags & Evt.HAS_STR)) != 0) {
                         cmp &= (ia + 2 < numEvts) ? 1 : 0;
                         if(cmp != 0) {
                             cmp &= (expected[ie].str_start == actual[ia + 1]) ? 1 : 0;
                             cmp &= (expected[ie].str_len == actual[ia + 2]) ? 1 : 0;
-                            System.out.printf("  exp=(%d,%d) actual=(%d,%d)", expected[ie].str_start, expected[ie].str_len, actual[ia + 1], actual[ia + 2]);
+                            if(dbglog)
+				System.out.printf("  exp=(%d,%d) actual=(%d,%d)", expected[ie].str_start, expected[ie].str_len, actual[ia + 1], actual[ia + 2]);
                             if(cmp != 0) {
                                 cmp &= (actual[ia + 1] >= 0) ? 1 : 0;
                                 cmp &= (actual[ia + 2] >= 0) ? 1 : 0;
@@ -122,15 +128,18 @@ public class RapidyamlTest extends TestCase
                                 if(cmp != 0) {
                                     String actualStr = new String(src, actual[ia + 1], actual[ia + 2], StandardCharsets.UTF_8);
                                     cmp &= actualStr.equals(expected[ie].str) ? 1 : 0;
-                                    System.out.printf("  exp=~~~%s~~~ actual=~~~%s~~~", expected[ie].str, actualStr);
+                                    if(dbglog)
+					System.out.printf("  exp=~~~%s~~~ actual=~~~%s~~~", expected[ie].str, actualStr);
                                 }
                                 else {
-                                    System.out.printf("  BAD RANGE len=%d yslen=%d", src.length, ys.length());
+				    if(dbglog)
+					System.out.printf("  BAD RANGE len=%d yslen=%d", src.length, ys.length());
                                 }
                             }
                         }
                     }
-                    System.out.printf("  --> %s\n", cmp != 0 ? "ok!" : "FAIL");
+		    if(dbglog)
+                        System.out.printf("  --> %s\n", cmp != 0 ? "ok!" : "FAIL");
                     status &= cmp;
                     ia += ((actual[ia] & Evt.HAS_STR) != 0) ? 3 : 1;
                     ++ie;
@@ -196,6 +205,56 @@ public class RapidyamlTest extends TestCase
             new ExpectedEvent(Evt.KEY_|Evt.SCLR|Evt.PLAI, 0, 4, "𝄞"),
             new ExpectedEvent(Evt.VAL_|Evt.SCLR|Evt.PLAI, 6, 3, "✅"),
             new ExpectedEvent(Evt.EMAP),
+            new ExpectedEvent(Evt.EDOC),
+            new ExpectedEvent(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+
+    public void testTaggedInt()
+    {
+        String ys = "- !!int 42";
+        testEdn_(ys,
+            "(\n" +
+            "{:+ \"+SEQ\"}\n" +
+            "{:+ \"=VAL\", :! \"tag:yaml.org,2002:int\", := \"42\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            ")\n"
+            );
+        ExpectedEvent[] expected = {
+            new ExpectedEvent(Evt.BSTR),
+            new ExpectedEvent(Evt.BDOC),
+            new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.BLCK),
+            new ExpectedEvent(Evt.VAL_|Evt.TAG_, 2, 5, "!!int"),
+            new ExpectedEvent(Evt.VAL_|Evt.SCLR|Evt.PLAI, 8, 2, "42"),
+            new ExpectedEvent(Evt.ESEQ),
+            new ExpectedEvent(Evt.EDOC),
+            new ExpectedEvent(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+
+    public void testTaggedSeq()
+    {
+        String ys = "- !!seq []";
+        testEdn_(ys,
+            "(\n" +
+            "{:+ \"+SEQ\"}\n" +
+            "{:+ \"+SEQ\", :! \"tag:yaml.org,2002:seq\", :flow true}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            ")\n"
+            );
+        ExpectedEvent[] expected = {
+            new ExpectedEvent(Evt.BSTR),
+            new ExpectedEvent(Evt.BDOC),
+            new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.BLCK),
+            new ExpectedEvent(Evt.VAL_|Evt.TAG_, 2, 5, "!!seq"),
+            new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.FLOW),
+            new ExpectedEvent(Evt.ESEQ),
+            new ExpectedEvent(Evt.ESEQ),
             new ExpectedEvent(Evt.EDOC),
             new ExpectedEvent(Evt.ESTR),
         };

@@ -47,11 +47,13 @@ realclean:: clean
 sysclean::
 	$(RM) -r $(MAVEN_REPOSITORY)/org/rapidyaml
 
+jni: $(RAPIDYAML_JNI_H)
+
 
 #------------------------------------------------------------------------------
 $(RAPIDYAML_SO): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
-$(RAPIDYAML_LIB):
+$(RAPIDYAML_LIB): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
 
 $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
@@ -68,5 +70,3 @@ $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
 
 $(RAPIDYAML_JNI_H): $(RAPIDYAML_JAVA)
 	$(MAKE) -C native $@
-
-crl: $(RAPIDYAML_CLASS)
