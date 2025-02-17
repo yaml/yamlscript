@@ -2,19 +2,12 @@
 #ifndef YSPARSE_EDN_HPP_
 #define YSPARSE_EDN_HPP_
 
-#include <stdexcept>
 #include "ysparse_edn_handler.hpp"
-
-namespace ryml {
-using namespace c4;
-using namespace c4::yml;
-} // namespace ryml
+#include "ysparse_common.hpp"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
-using size_type = int;
 
 struct RYML_EXPORT Ryml2Edn
 {
@@ -32,13 +25,6 @@ struct RYML_EXPORT Ryml2Edn
         m_sink.reset();
         m_handler.reset();
     }
-};
-
-struct RYML_EXPORT Ryml2EdnParseError : public std::exception
-{
-    c4::yml::Location location;
-    std::string msg;
-    const char* what() const noexcept override { return msg.c_str(); }
 };
 
 
