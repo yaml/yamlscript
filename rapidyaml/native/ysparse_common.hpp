@@ -20,7 +20,9 @@ struct YsParseError : public std::exception
 
 #ifndef YSPARSE_TIMED
 #define TIMED_SECTION(...)
+#error
 #else
+#include <stdio.h>
 #include <chrono>
 #define TIMED_SECTION(...) timed_section C4_XCAT(ts, __LINE__)(__VA_ARGS__)
 struct timed_section
@@ -29,13 +31,18 @@ struct timed_section
     ryml::csubstr name;
     size_type len;
     myclock::time_point start;
-    timed_section(ryml::csubstr n, size_type len_=0) : name(n), len(len_), start(myclock::now()) {}
+    timed_section(ryml::csubstr n, size_type len_=0)
+        : name(n)
+        , len(len_)
+        , start(myclock::now())
+    {
+    }
     ~timed_section()
     {
-        const std::chrono::duration<double, std::milli> t = myclock::now() - start;
+        const std::chrono::duration<float, std::milli> t = myclock::now() - start;
         fprintf(stderr, "%.6fms: %.*s", t.count(), (int)name.len, name.str);
         if(len)
-            fprintf(stderr, "  %.3fMB/s", (double)len / t.count() * 1.e-3);
+            fprintf(stderr, "  %.3fMB/s", (float)len / t.count() * 1.e-3);
         fprintf(stderr, "\n");
     }
 };

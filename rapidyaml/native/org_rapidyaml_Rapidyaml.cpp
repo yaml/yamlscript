@@ -3,59 +3,14 @@
 #include "ysparse_evt.hpp"
 #include <stdio.h>
 
-#ifndef _Included_org_rapidyaml_Rapidyaml
-#define _Included_org_rapidyaml_Rapidyaml
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void throw_java_exception(JNIEnv * env,
-                          const char* type,
-                          const char* msg)
-{
-    jclass clazz = env->FindClass(type);
-    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
-        env->ThrowNew(clazz, msg);
-}
-
-void throw_parse_error(JNIEnv *env, size_t offset, size_t line, size_t column, const char *msg)
-{
-    // see https://stackoverflow.com/questions/55013243/jni-custom-exceptions-with-more-than-one-parameter
-    jclass clazz = env->FindClass("org/rapidyaml/YamlParseErrorException");
-    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
-    {
-        jstring jmsg = env->NewStringUTF(msg);
-        jint joffset = (jint)offset;
-        jint jline = (jint)line;
-        jint jcol = (jint)column;
-        // see https://www.rgagnon.com/javadetails/java-0286.html
-        // about the proper signature.
-        // we want <init>(int, int, int, String):
-        const char * const signature = "(IIILjava/lang/String;)V";
-        jmethodID ctor = env->GetMethodID(clazz, "<init>", signature);
-        jobject jexc = env->NewObject(clazz, ctor, joffset, jline, jcol, jmsg);
-        env->Throw((jthrowable)jexc); // https://stackoverflow.com/questions/2455668/jni-cast-between-jobect-and-jthrowable
-    }
-}
+static C4_NO_INLINE void throw_runtime_exception(JNIEnv * env, const char* msg);
+static C4_NO_INLINE void throw_parse_error(JNIEnv *env, size_t offset, size_t line, size_t column, const char *msg);
 
 
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_init
- * Signature: ()Ljava/lang/Object;
- */
-JNIEXPORT jlong JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *, jobject)
-{
-    Ryml2Edn *obj = ys2edn_init();
-    return (jlong)obj;
-}
-
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2evt_init
- * Signature: ()J
- */
 JNIEXPORT jlong JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
 {
@@ -63,49 +18,139 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
     return (jlong)obj;
 }
 
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_destroy
- * Signature: (Ljava/lang/Object;)V
- */
-JNIEXPORT void JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy(JNIEnv *, jobject, jlong obj)
+JNIEXPORT jlong JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *, jobject)
 {
-    ys2edn_destroy((Ryml2Edn*)obj);
+    Ryml2Edn *obj = ys2edn_init();
+    return (jlong)obj;
 }
 
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2evt_destroy
- * Signature: (Ljava/lang/Object;)V
- */
 JNIEXPORT void JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2evt_1destroy(JNIEnv *, jobject, jlong obj)
 {
     ys2evt_destroy((Ryml2Evt*)obj);
 }
 
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_retry_get
- * Signature: (Ljava/lang/Object;[BI)I
- */
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1retry_1get(JNIEnv *env, jobject,
-                                                                       jlong obj,
-                                                                       jbyteArray dst, jint dst_len)
+JNIEXPORT void JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy(JNIEnv *, jobject, jlong obj)
 {
-    jboolean dst_is_copy;
-    jbyte* dst_ = env->GetByteArrayElements(dst, &dst_is_copy);
-    int rc = ys2edn_retry_get((Ryml2Edn*)obj, (char*)dst_, dst_len);
-    env->ReleaseByteArrayElements(dst, dst_, 0);
+    ys2edn_destroy((Ryml2Edn*)obj);
+}
+
+
+JNIEXPORT jint JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
+                                           jlong obj, jstring jfilename,
+                                           jbyteArray src, jint src_len,
+                                           jintArray dst, jint dst_len)
+{
+    TIMED_SECTION("jni_ys2evt_parse", (size_type)src_len);
+    jbyte* src_ = nullptr;
+    int* dst_ = nullptr;
+    const char *filename = nullptr;
+    jboolean dst_is_copy = false;
+    jboolean src_is_copy = false;
+    {
+        TIMED_SECTION("jni_ys2evt_parse/get_jni", (size_type)src_len);
+        {
+            TIMED_SECTION("jni_ys2evt_parse/GetByteArray(src)");
+            src_ = env->GetByteArrayElements(src, &src_is_copy);
+        }
+        {
+            // TODO this is __S__L__O__W__
+            //
+            // the problem is with GetIntArrayElements(). we should
+            // use GetDirectBufferAddress(), but that requires a ByteBuffer->jobject
+            // instead of a int[]->jintArray
+            //
+            // see:
+            // https://stackoverflow.com/questions/43763129/jni-is-getintarrayelements-always-linear-in-time
+            // https://stackoverflow.com/questions/7395695/how-to-convert-from-bytebuffer-to-integer-and-string
+            TIMED_SECTION("jni_ys2evt_parse/GetIntArray(dst)");
+            dst_ = env->GetIntArrayElements(dst, &dst_is_copy);
+        }
+        {
+            TIMED_SECTION("jni_ys2evt_parse/GetStringUTFChars()");
+            filename = env->GetStringUTFChars(jfilename, 0);
+        }
+    }
+    int rc = 0;
+    {
+        TIMED_SECTION("jni_ys2evt_parse/call_parse", (size_type)src_len);
+        try
+        {
+            rc = ys2evt_parse((Ryml2Evt*)obj, filename,
+                              (char*)src_, src_len,
+                              dst_, dst_len);
+        }
+        catch (YsParseError const& exc)
+        {
+            throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
+        }
+        catch (std::exception const& exc)
+        {
+            throw_runtime_exception(env, exc.what());
+        }
+    }
+    {
+        TIMED_SECTION("jni_ys2evt_parse/release");
+        {
+            TIMED_SECTION("jni_ys2evt_parse/ReleaseByteArray(src)");
+            env->ReleaseByteArrayElements(src, src_, 0);
+        }
+        {
+            // TODO __S__L__O__W__
+            TIMED_SECTION("jni_ys2evt_parse/ReleaseIntArray(dst)");
+            env->ReleaseIntArrayElements(dst, dst_, 0);
+        }
+        {
+            TIMED_SECTION("jni_ys2evt_parse/ReleaseStringUTFChars()");
+            env->ReleaseStringUTFChars(jfilename, filename);
+        }
+    }
     return rc;
 }
 
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_parse
- * Signature: (Ljava/lang/Object;Ljava/lang/String;[BI[BI)I
- */
+
+JNIEXPORT jint JNICALL
+Java_org_rapidyaml_Rapidyaml_ys2evt_1parse_1buf(JNIEnv *env, jobject,
+                                                jlong obj, jstring jfilename,
+                                                jobject src, jint src_len,
+                                                jobject dst, jint dst_len)
+{
+    TIMED_SECTION("jni_ys2evt_parse", (size_type)src_len);
+    char* src_ = nullptr;
+    int* dst_ = nullptr;
+    const char *filename = nullptr;
+    {
+        TIMED_SECTION("jni_ys2evt_parse/get_jni", (size_type)src_len);
+        src_ = (char*)env->GetDirectBufferAddress(src);
+        dst_ = (int*)env->GetDirectBufferAddress(dst);
+        filename = env->GetStringUTFChars(jfilename, 0);
+        if(!src_)
+            throw_runtime_exception(env, "null pointer: src");
+        if(!dst_)
+            throw_runtime_exception(env, "null pointer: dst");
+    }
+    {
+        TIMED_SECTION("jni_ys2evt_parse/call_parse", (size_type)src_len);
+        try
+        {
+            return ys2evt_parse((Ryml2Evt*)obj, filename, src_, src_len, dst_, dst_len);
+        }
+        catch (YsParseError const& exc)
+        {
+            throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
+        }
+        catch (std::exception const& exc)
+        {
+            throw_runtime_exception(env, exc.what());
+        }
+    }
+    return 0; // this is executed even if there is an exception
+}
+
+
 JNIEXPORT jint JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
                                            jlong obj, jstring jfilename,
@@ -153,78 +198,97 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
     return rc;
 }
 
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2evt_parse
- * Signature: (Ljava/lang/Object;Ljava/lang/String;[BI[BI)I
- */
+
 JNIEXPORT jint JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
-                                           jlong obj, jstring jfilename,
-                                           jbyteArray src, jint src_len,
-                                           jintArray dst, jint dst_len)
+Java_org_rapidyaml_Rapidyaml_ys2edn_1parse_1buf(JNIEnv *env, jobject,
+                                                jlong obj, jstring jfilename,
+                                                jobject src, jint src_len,
+                                                jobject dst, jint dst_len)
 {
-    TIMED_SECTION("jni_ys2evt_parse", (size_type)src_len);
-    jbyte* src_ = nullptr;
-    int* dst_ = nullptr;
+    TIMED_SECTION("jni_ys2edn_parse", (size_type)src_len);
+    char* src_ = nullptr;
+    char* dst_ = nullptr;
     const char *filename = nullptr;
-    jboolean dst_is_copy = false;
-    jboolean src_is_copy = false;
     {
-        TIMED_SECTION("jni_ys2evt_parse/get_jni_data", (size_type)src_len);
-        {
-            TIMED_SECTION("jni_ys2evt_parse/GetByteArray(src)");
-            src_ = env->GetByteArrayElements(src, &src_is_copy);
-        }
-        {
-            // TODO this is __S__L__O__W__
-            //
-            // the problem is with GetIntArrayElements(). we should
-            // use GetDirectBufferAddress(), but that requires a ByteBuffer->jobject
-            // instead of a int[]->jintArray
-            //
-            // see:
-            // https://stackoverflow.com/questions/43763129/jni-is-getintarrayelements-always-linear-in-time
-            // https://stackoverflow.com/questions/7395695/how-to-convert-from-bytebuffer-to-integer-and-string
-            TIMED_SECTION("jni_ys2evt_parse/GetIntArray(dst)");
-            dst_ = env->GetIntArrayElements(dst, &dst_is_copy);
-        }
-        {
-            TIMED_SECTION("jni_ys2evt_parse/GetStringUTFChars()");
-            filename = env->GetStringUTFChars(jfilename, 0);
-        }
-    }
-    int rc = 0;
-    try
-    {
-        rc = ys2evt_parse((Ryml2Evt*)obj, filename,
-                          (char*)src_, src_len,
-                          dst_, dst_len);
-    }
-    catch (YsParseError const& exc)
-    {
-        throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
+        TIMED_SECTION("jni_ys2edn_parse/get_jni_data", (size_type)src_len);
+        src_ = (char*)env->GetDirectBufferAddress(src);
+        dst_ = (char*)env->GetDirectBufferAddress(dst);
+        filename = env->GetStringUTFChars(jfilename, 0);
+        if(!src_)
+            throw_runtime_exception(env, "null pointer: src");
+        if(!dst_)
+            throw_runtime_exception(env, "null pointer: dst");
     }
     {
-        TIMED_SECTION("jni_ys2evt_parse/release");
+        TIMED_SECTION("jni_ys2edn_parse/call_parse", (size_type)src_len);
+        try
         {
-            TIMED_SECTION("jni_ys2evt_parse/ReleaseByteArray(src)");
-            env->ReleaseByteArrayElements(src, src_, 0);
+            return ys2edn_parse((Ryml2Edn*)obj, filename, src_, src_len, dst_, dst_len);
         }
+        catch (YsParseError const& exc)
         {
-            // TODO __S__L__O__W__
-            TIMED_SECTION("jni_ys2evt_parse/ReleaseIntArray(dst)");
-            env->ReleaseIntArrayElements(dst, dst_, 0);
+            throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
         }
+        catch (std::exception const& exc)
         {
-            TIMED_SECTION("jni_ys2evt_parse/ReleaseStringUTFChars()");
-            env->ReleaseStringUTFChars(jfilename, filename);
+            throw_runtime_exception(env, exc.what());
         }
     }
+    return 0; // this is executed even if there is an exception
+}
+
+
+JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1retry_1get(JNIEnv *env, jobject,
+                                                                       jlong obj,
+                                                                       jobject dst, jint dst_len)
+{
+    char* dst_ = nullptr;
+    {
+        TIMED_SECTION("jni_ys2evt_retry_get/get_dst");
+        dst_ = (char*)env->GetDirectBufferAddress(dst);
+        printf("edn: aqui 1 %p\n", dst_);
+    }
+    int rc = ys2edn_retry_get((Ryml2Edn*)obj, (char*)dst_, dst_len);
     return rc;
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+static C4_NO_INLINE void throw_java_exception(JNIEnv * env, const char* type, const char* msg)
+{
+    jclass clazz = env->FindClass(type);
+    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
+        env->ThrowNew(clazz, msg);
+}
+
+static C4_NO_INLINE void throw_runtime_exception(JNIEnv *env, const char* msg)
+{
+    throw_java_exception(env, "java/lang/RuntimeException", msg);
+}
+
+static C4_NO_INLINE void throw_parse_error(JNIEnv *env, size_t offset, size_t line, size_t column, const char *msg)
+{
+    // see https://stackoverflow.com/questions/55013243/jni-custom-exceptions-with-more-than-one-parameter
+    jclass clazz = env->FindClass("org/rapidyaml/YamlParseErrorException");
+    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
+    {
+        jstring jmsg = env->NewStringUTF(msg);
+        jint joffset = (jint)offset;
+        jint jline = (jint)line;
+        jint jcol = (jint)column;
+        // see https://www.rgagnon.com/javadetails/java-0286.html
+        // about the proper signature.
+        // we want <init>(int, int, int, String):
+        const char * const signature = "(IIILjava/lang/String;)V";
+        jmethodID ctor = env->GetMethodID(clazz, "<init>", signature);
+        jobject jexc = env->NewObject(clazz, ctor, joffset, jline, jcol, jmsg);
+        env->Throw((jthrowable)jexc); // https://stackoverflow.com/questions/2455668/jni-cast-between-jobect-and-jthrowable
+    }
 }
 
 #ifdef __cplusplus
 }
-#endif
 #endif
