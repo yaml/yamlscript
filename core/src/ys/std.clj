@@ -99,6 +99,25 @@
 
 (intern 'ys.std 'starts? clojure.string/starts-with?)
 
+(defn substr
+  ([str off] (substr str off (- (count str) off)))
+  ([str off len]
+   (let [slen (count str)
+         off (if (neg? off) (+ slen off) off)
+         [len slen] (if (neg? len)
+                      (let [len (max 0 (+ slen len))]
+                                  [len len])
+                      [len slen])]
+     (condp apply [off slen]
+       < (when (>= (+ off len) 0)
+           (let [[off len] (if (neg? off)
+                             [0 (+ off len)]
+                             [off len])
+                 len (if (> (+ off len) slen) (- slen off) len)]
+             (subs str off (+ off len))))
+       = ""
+       > nil))))
+
 (defn text [Ss]
   (if (empty? Ss)
     ""

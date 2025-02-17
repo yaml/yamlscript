@@ -33,6 +33,27 @@ test::
 - code: -{\\o "xyz"}.escape("foo")
   want: fxyzxyz
 
+- code: substr('abcde' 2 2)
+  want: cd
+- code: substr('abcde' 2)
+  want: cde
+- code: substr('abcde' -2)
+  want: de
+- code: substr('abcde' -4 2)
+  want: bc
+- code: substr('abcde' 1 -1)
+  want: bcd
+- code: substr('abcde' -6 4)
+  want: abc
+- code: substr('abcde' -6 -2)
+  want: ab
+- code: substr('abcde' -10 1)
+  want:: nil
+- code: substr('abcde' -10)
+  want: abcde
+- code: substr('abcde' 10)
+  want:: nil
+
 
 #-------------------------------------------------------------------------------
 - note: "Collection functions"
