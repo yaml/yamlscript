@@ -343,6 +343,18 @@ public:
     /** @{ */
 
 
+    C4_ALWAYS_INLINE void set_key_scalar_plain_empty()
+    {
+        _send_key_scalar_({}, ':');
+        _enable_(c4::yml::KEY|c4::yml::KEY_PLAIN|c4::yml::KEYNIL);
+    }
+    C4_ALWAYS_INLINE void set_val_scalar_plain_empty()
+    {
+        _send_val_scalar_({}, ':');
+        _enable_(c4::yml::VAL|c4::yml::VAL_PLAIN|c4::yml::VALNIL);
+    }
+
+
     C4_ALWAYS_INLINE void set_key_scalar_plain(csubstr scalar)
     {
         _send_key_scalar_(scalar, '=');
@@ -665,6 +677,8 @@ public:
             }
         }
         csubstr result = c4::yml::normalize_tag_long(tag, output);
+        if(result.begins_with('<') && result.ends_with('>'))
+            result = result.offs(1, 1);
         _RYML_CB_CHECK(m_stack.m_callbacks, result.len > 0);
         _RYML_CB_CHECK(m_stack.m_callbacks, result.str);
         return result;
