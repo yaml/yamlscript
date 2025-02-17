@@ -222,14 +222,17 @@ RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
 RAPIDYAML := $(ROOT)/rapidyaml
 
 RAPIDYAML_VERSION := 0.8.0
-RAPIDYAML_TAG ?= v$(RAPIDYAML_VERSION)
+#RAPIDYAML_TAG ?= v$(RAPIDYAML_VERSION)
+RAPIDYAML_TAG ?= 8c37616378aefd376690a19459c31a56ce596b5e
 RAPIDYAML_REPO := https://github.com/biojppm/rapidyaml
-RAPIDYAML_BUILD_TYPE := Release
-RAPIDYAML_DBG := 0
-RAPIDYAML_TIMED := 0
+RAPIDYAML_BUILD_TYPE ?= Release
+RAPIDYAML_DBG ?= 0
+RAPIDYAML_TIMED ?= 0
 RAPIDYAML_JAVA := \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Rapidyaml.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Evt.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/YamlParseErrorException.java
+RAPIDYAML_JNI_H := $(ROOT)/rapidyaml/native/org_rapidyaml_Rapidyaml.h
 RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
 RAPIDYAML_LIB := $(ROOT)/rapidyaml/native/librapidyaml.$(DOTLIB)
 RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar

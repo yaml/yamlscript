@@ -9,7 +9,7 @@ include $(COMMON)/python.mk
 # https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
 
 THIS_DIR := $(shell pwd)
-BDIR := $(THIS_DIR)/_build/$(BUILD_TYPE)-shared$(SHARED)-timed$(TIMED)-dbg$(DBG)
+BDIR := $(THIS_DIR)/_build/$(RAPIDYAML_BUILD_TYPE)-shared$(RAPIDYAML_SHARED)-timed$(RAPIDYAML_TIMED)-dbg$(RAPIDYAML_DBG)
 
 RAPIDYAML_DEPS := \
   Makefile \
@@ -18,7 +18,8 @@ RAPIDYAML_DEPS := \
   $(RAPIDYAML_JNI_H) \
   $(wildcard ./*pp) \
 
-CMK_ENV :=
+CMK_ENV ?=
+CMK_FLAGS_EXTRA ?=
 CMK_FLAGS := \
   -D CMAKE_BUILD_TYPE=$(RAPIDYAML_BUILD_TYPE) \
   -D YSPARSE_TIMED=$(RAPIDYAML_TIMED) \
@@ -50,22 +51,25 @@ realclean:: clean
 
 
 #------------------------------------------------------------------------------
+
+$(RAPIDYAML_LIB): rapidyaml
 build-static: $(RAPIDYAML_LIB)
 test-static: build-static
-	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml-test-run
+	$(CMK_ENV) cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml-test-run
 $(RAPIDYAML_LIB): $(RAPIDYAML_DEPS)
-	cmake -S . -B $(BDIR)-static $(CMK_FLAGS) -D BUILD_SHARED_LIBS=OFF
+	$(CMK_ENV) cmake -S . -B $(BDIR)-static $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=OFF
 	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml
 	cp -fv $(BDIR)-static/*.a $@
 
+$(RAPIDYAML_SO): rapidyaml
 build-shared: $(RAPIDYAML_SO)
 test-shared: build-shared
 	cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml-test-run
 $(RAPIDYAML_SO): $(RAPIDYAML_DEPS)
-	cmake -S . -B $(BDIR)-shared $(CMK_FLAGS) -D BUILD_SHARED_LIBS=ON
-	cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml
+	$(CMK_ENV) cmake -S . -B $(BDIR)-shared $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=ON
+	$(CMK_ENV) cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml
 	cp -fv $(BDIR)-shared/*.so $@
 	ln -fs $@ librapidyaml.so
 
-$(RAPIDYAML_H): $(RAPIDYAML_JAVA)
+$(RAPIDYAML_JNI_H): $(RAPIDYAML_JAVA)
 	javac -h . $(RAPIDYAML_JAVA) # $^ doesn't work

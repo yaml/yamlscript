@@ -22,6 +22,7 @@ add_library(${libname}
     org_rapidyaml_Rapidyaml.cpp
     #
     # ysparse files
+    ysparse_common.hpp
     ysparse_edn_handler.hpp
     ysparse_edn_handler.cpp
     ysparse_edn.hpp
