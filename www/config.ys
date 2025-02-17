@@ -72,6 +72,7 @@ plugins:
 #     post_dir: blog/posts
 #     post_date_format: full
 - link-marker
+- open-in-new-tab
 - redirects:
     redirect_maps:: load('config/redirect.yaml')
 # - rss:
