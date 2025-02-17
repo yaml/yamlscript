@@ -6,9 +6,12 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import java.nio.charset.StandardCharsets;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 
 /**
  * Unit test for simple App.
@@ -31,147 +34,6 @@ public class RapidyamlTest extends TestCase
     public static Test suite()
     {
         return new TestSuite(RapidyamlTest.class);
-    }
-
-    private void testEdn_(String ys, String expected)
-    {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        try {
-            String actual = rapidyaml.parseYsToEdn(ys);
-            try {
-                assertEquals(expected, actual);
-                assertEquals(expected.length(), actual.length());
-            }
-            catch (Exception e) {
-                System.err.println("expected:");
-                System.err.println(expected);
-                System.err.println("actual");
-                System.err.println(actual);
-                throw e;
-            }
-        }
-        catch (YamlParseErrorException e) {
-            fail("parse error:\n" + e.getMessage());
-        }
-    }
-
-    // the result is an array of integers, but we use this to simplify
-    // running the tests
-    private class ExpectedEvent
-    {
-        int flags;
-        int str_start;
-        int str_len;
-        String str;
-        ExpectedEvent(int flags)
-        {
-            this.flags = flags;
-            this.str_start = 0;
-            this.str_len = 0;
-            this.str = "";
-        }
-        ExpectedEvent(int flags, int str_start, int str_len, String str)
-        {
-            this.flags = flags;
-            this.str_start = str_start;
-            this.str_len = str_len;
-            this.str = str;
-        }
-        int required_size()
-        {
-            return ((flags & Evt.HAS_STR) != 0) ? 3 : 1;
-        }
-    };
-    private static int required_size_(ExpectedEvent[] evts)
-    {
-        int sz = 0;
-        for(int i = 0; i < evts.length; ++i) {
-            sz += evts[i].required_size();
-        }
-        return sz;
-    }
-
-    private void testEvt_(String ys, ExpectedEvent[] expected)
-    {
-        boolean dbglog = false;
-        Rapidyaml rapidyaml = new Rapidyaml();
-        try {
-            int[] actual = new int[2 * required_size_(expected)];
-            byte[] src = ys.getBytes(StandardCharsets.UTF_8);
-            int numEvts = rapidyaml.parseYsToEvt(src, actual);
-            assertTrue(numEvts < actual.length);
-            try {
-                int ia = 0;
-                int ie = 0;
-                int status = 1;
-                while(true) {
-                    if((ia < numEvts) != (ie < expected.length)) {
-                        status = 0;
-                        break;
-                    }
-                    if(ia >= numEvts)
-                        break;
-                    if(ie >= expected.length)
-                        break;
-                    int cmp = 1;
-                    if(dbglog)
-                        System.out.printf("status=%d evt=%d pos=%d expflags=%d actualflags=%d", status, ie, ia, expected[ie].flags, actual[ia]);
-                    cmp &= (expected[ie].flags == actual[ia]) ? 1 : 0;
-                    if(((actual[ia] & Evt.HAS_STR) != 0) && ((expected[ie].flags & Evt.HAS_STR)) != 0) {
-                        cmp &= (ia + 2 < numEvts) ? 1 : 0;
-                        if(cmp != 0) {
-                            cmp &= (expected[ie].str_start == actual[ia + 1]) ? 1 : 0;
-                            cmp &= (expected[ie].str_len == actual[ia + 2]) ? 1 : 0;
-                            if(dbglog)
-                                System.out.printf("  exp=(%d,%d) actual=(%d,%d)", expected[ie].str_start, expected[ie].str_len, actual[ia + 1], actual[ia + 2]);
-                            if(cmp != 0) {
-                                cmp &= (actual[ia + 1] >= 0) ? 1 : 0;
-                                cmp &= (actual[ia + 2] >= 0) ? 1 : 0;
-                                cmp &= (actual[ia + 1] + actual[ia + 2] <= src.length) ? 1 : 0;
-                                if(cmp != 0) {
-                                    String actualStr = new String(src, actual[ia + 1], actual[ia + 2], StandardCharsets.UTF_8);
-                                    cmp &= actualStr.equals(expected[ie].str) ? 1 : 0;
-                                    if(dbglog)
-                                        System.out.printf("  exp=~~~%s~~~ actual=~~~%s~~~", expected[ie].str, actualStr);
-                                }
-                                else {
-                                    if(dbglog)
-                                        System.out.printf("  BAD RANGE len=%d yslen=%d", src.length, ys.length());
-                                }
-                            }
-                        }
-                    }
-                    if(dbglog)
-                        System.out.printf("  --> %s\n", cmp != 0 ? "ok!" : "FAIL");
-                    status &= cmp;
-                    ia += ((actual[ia] & Evt.HAS_STR) != 0) ? 3 : 1;
-                    ++ie;
-                }
-                if(required_size_(expected) != numEvts)
-                    status = 0;
-                assertEquals(1, status);
-            }
-            catch (Exception e) {
-                System.err.println("expected:");
-                System.err.println(expected);
-                System.err.println("actual");
-                System.err.println(actual);
-                throw e;
-            }
-        }
-        catch (YamlParseErrorException e) {
-            fail("parse error:\n" + e.getMessage());
-        }
-    }
-
-    ExpectedEvent mkev(int flags)
-    {
-        return new ExpectedEvent(flags);
-    }
-
-    ExpectedEvent mkev(int flags, int offs, int len, String ref)
-    {
-        return new ExpectedEvent(flags, offs, len, ref);
     }
 
     public void testPlainMap()
@@ -429,13 +291,13 @@ public class RapidyamlTest extends TestCase
         testEvt_(ys, expected);
     }
 
-    public void testFailure()
+    public void testFailure() throws Exception
     {
         Rapidyaml rapidyaml = new Rapidyaml();
         String ys = ": : : :";
         boolean gotit = false;
         try {
-            rapidyaml.parseYsToEdn(ys);
+            callEdn(ys);
         }
         catch(YamlParseErrorException e) {
             gotit = true;
@@ -451,6 +313,325 @@ public class RapidyamlTest extends TestCase
         catch(Exception e) {
             fail("wrong exception type");
         }
+        //catch(Throwable e) {
+        //    throw e;
+        //    //fail("wrong exception type");
+        //}
         assertTrue(gotit);
     }
+
+
+    private void testEdn_(String ys, String expected)
+    {
+        String actual;
+        try {
+            actual = callEdn(ys);
+        }
+        catch (Exception e) {
+            fail("parse error:\n" + e.getMessage());
+            actual = "";
+        }
+        try {
+            cmpEdn_(actual, expected);
+        }
+        catch (Exception e) {
+            System.err.printf("error: edn (no buf)");
+        }
+        //------
+        try {
+            actual = callEdnBuf(ys);
+        }
+        catch (Exception e) {
+            fail("parse error:\n" + e.getMessage());
+            actual = "";
+        }
+        try {
+            cmpEdn_(actual, expected);
+        }
+        catch (Exception e) {
+            System.err.printf("error: ednbuf");
+        }
+    }
+
+    private void testEvt_(String ys, ExpectedEvent[] expected)
+    {
+        byte[] src = ys.getBytes(StandardCharsets.UTF_8);
+        byte[] srcbuf = new byte[src.length];
+        int[] actual;
+        try {
+            actual = callEvt(src, srcbuf);
+        }
+        catch (Exception e) {
+            fail("parse error:\n" + e.getMessage());
+            actual = new int[1];
+        }
+        try {
+            cmpEvt_(ys, srcbuf, actual, expected);
+        }
+        catch (Exception e) {
+            System.err.printf("error: evt (no buf)");
+            throw e;
+        }
+        //------
+        src = ys.getBytes(StandardCharsets.UTF_8);
+        ByteBuffer bbuf = ByteBuffer.allocateDirect(src.length);
+        bbuf.put(src);
+        IntBuffer buf;
+        try {
+            buf = callEvtBuf(src, bbuf);
+            actual = buf2arr(buf);
+        }
+        catch (Exception e) {
+            fail("parse error:\n" + e.getMessage());
+            actual = new int[1];
+        }
+        try {
+            cmpEvt_(ys, srcbuf, actual, expected);
+        }
+        catch (Exception e) {
+            System.err.printf("error: evtbuf");
+            throw e;
+        }
+    }
+
+    private void cmpEdn_(String actual, String expected) throws Exception
+    {
+        try {
+            assertEquals(expected, actual);
+            assertEquals(expected.length(), actual.length());
+        }
+        catch (Exception e) {
+            System.err.println("expected:");
+            System.err.println(expected);
+            System.err.println("actual");
+            System.err.println(actual);
+            throw e;
+        }
+    }
+
+    boolean dbglog = true;
+    private void cmpEvt_(String ys, byte[] src, int[] actual, ExpectedEvent[] expected)
+    {
+        if(dbglog) {
+            System.out.printf("----------------------\n~~~\n%s\n~~~\n", ys);
+        }
+        int numEvts = actual.length;
+        try {
+            int ia = 0;
+            int ie = 0;
+            int status = 1;
+            while(true) {
+                if((ia < numEvts) != (ie < expected.length)) {
+                    System.out.printf("status=%d szActual=%d szExpected=%d\n", status, numEvts, ExpectedEvent.required_size_(expected));
+                    status = 0;
+                    break;
+                }
+                if(ia >= numEvts)
+                    break;
+                if(ie >= expected.length)
+                    break;
+                int cmp = 1;
+                if(dbglog)
+                    System.out.printf("status=%d evt=%d pos=%d expflags=%d actualflags=%d", status, ie, ia, expected[ie].flags, actual[ia]);
+                cmp &= (expected[ie].flags == actual[ia]) ? 1 : 0;
+                if(((actual[ia] & Evt.HAS_STR) != 0) && ((expected[ie].flags & Evt.HAS_STR)) != 0) {
+                    cmp &= (ia + 2 < numEvts) ? 1 : 0;
+                    if(cmp != 0) {
+                        cmp &= (expected[ie].str_start == actual[ia + 1]) ? 1 : 0;
+                        cmp &= (expected[ie].str_len == actual[ia + 2]) ? 1 : 0;
+                        if(dbglog)
+                            System.out.printf("  exp=(%d,%d) actual=(%d,%d)", expected[ie].str_start, expected[ie].str_len, actual[ia + 1], actual[ia + 2]);
+                        if(cmp != 0) {
+                            cmp &= (actual[ia + 1] >= 0) ? 1 : 0;
+                            cmp &= (actual[ia + 2] >= 0) ? 1 : 0;
+                            cmp &= (actual[ia + 1] + actual[ia + 2] <= src.length) ? 1 : 0;
+                            if(cmp != 0) {
+                                String actualStr = new String(src, actual[ia + 1], actual[ia + 2], StandardCharsets.UTF_8);
+                                cmp &= actualStr.equals(expected[ie].str) ? 1 : 0;
+                                if(dbglog)
+                                    System.out.printf("  exp=~~~%s~~~ actual=~~~%s~~~", expected[ie].str, actualStr);
+                            }
+                            else {
+                                if(dbglog)
+                                    System.out.printf("  BAD RANGE len=%d", src.length);
+                            }
+                        }
+                    }
+                }
+                if(dbglog)
+                    System.out.printf("  --> %s\n", cmp != 0 ? "ok!" : "FAIL");
+                status &= cmp;
+                ia += ((actual[ia] & Evt.HAS_STR) != 0) ? 3 : 1;
+                ++ie;
+            }
+            if(ExpectedEvent.required_size_(expected) != numEvts)
+                status = 0;
+            assertEquals(1, status);
+        }
+        catch (Exception e) {
+            System.err.println("expected:");
+            System.err.println(expected);
+            System.err.println("actual");
+            System.err.println(actual);
+            throw e;
+        }
+    }
+
+    public static String buf2str(ByteBuffer edn)
+    {
+        int size = edn.position();
+        size = size > 0 ? size - 1 : 0;
+        edn.position(0);
+        edn.limit(size);
+        return StandardCharsets.UTF_8.decode(edn).toString();
+    }
+
+    public static int[] buf2arr(IntBuffer evt)
+    {
+        int[] ret = new int[evt.position()];
+        for(int i = 0; i < evt.position(); ++i) {
+            ret[i] = evt.get(i);
+        }
+        return ret;
+    }
+
+    static String callEdn(String orig) throws Exception
+    {
+        byte[] src = orig.getBytes(StandardCharsets.UTF_8);
+        byte[] srcbuf = new byte[src.length];
+        return callEdn(src, srcbuf);
+    }
+
+    static String callEdnBuf(String orig) throws Exception
+    {
+        byte[] src = orig.getBytes(StandardCharsets.UTF_8);
+        ByteBuffer srcbuf = ByteBuffer.allocateDirect(src.length);
+        ByteBuffer edn = callEdnBuf(src, srcbuf);
+        return buf2str(edn);
+    }
+
+    static String callEdn(byte[] src, byte[] srcbuf) throws Exception
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        System.arraycopy(src, 0, srcbuf, 0, src.length);
+        byte[] edn = new byte[10 * src.length];
+        int reqsize = rapidyaml.parseYsToEdn(srcbuf, edn);
+        if(reqsize > edn.length) {
+            edn = new byte[reqsize];
+            System.arraycopy(src, 0, srcbuf, 0, src.length);
+            int reqsize2 = rapidyaml.parseYsToEdn(srcbuf, edn);
+            if(reqsize2 != reqsize) {
+                throw new RuntimeException("reqsize");
+            }
+        }
+        String ret = new String(edn, 0, reqsize-1, StandardCharsets.UTF_8);
+        return ret;
+    }
+
+    static ByteBuffer callEdnBuf(byte[] src, ByteBuffer srcbuf) throws Exception
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        srcbuf.position(0);
+        srcbuf.put(src);
+        ByteBuffer edn = ByteBuffer.allocateDirect(10000);
+        int reqsize = rapidyaml.parseYsToEdnBuf(srcbuf, edn);
+        if(reqsize > edn.capacity()) {
+            edn = ByteBuffer.allocateDirect(reqsize);
+            srcbuf.position(0);
+            srcbuf.put(src);
+            int reqsize2 = rapidyaml.parseYsToEdnBuf(srcbuf, edn);
+            if(reqsize2 != reqsize) {
+                throw new RuntimeException("reqsize");
+            }
+        }
+        edn.position(reqsize);
+        return edn;
+    }
+
+    static int[] callEvt(byte[] src, byte[] srcbuf) throws Exception
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        System.arraycopy(src, 0, srcbuf, 0, src.length);
+        int[] evt = new int[10000];
+        int reqsize = rapidyaml.parseYsToEvt(srcbuf, evt);
+        if(reqsize > evt.length) {
+            evt = new int[reqsize];
+            System.arraycopy(src, 0, srcbuf, 0, src.length);
+            int reqsize2 = rapidyaml.parseYsToEvt(srcbuf, evt);
+            if(reqsize2 != reqsize) {
+                throw new RuntimeException("reqsize");
+            }
+            return evt;
+        }
+        int[] ret = new int[reqsize];
+        System.arraycopy(evt, 0, ret, 0, reqsize);
+        return ret;
+    }
+
+    static IntBuffer callEvtBuf(byte[] src, ByteBuffer srcbuf) throws Exception
+    {
+        Rapidyaml rapidyaml = new Rapidyaml();
+        srcbuf.position(0);
+        srcbuf.put(src);
+        IntBuffer evt = Rapidyaml.mkIntBuffer(10000);
+        int reqsize = rapidyaml.parseYsToEvtBuf(srcbuf, evt);
+        if(reqsize > evt.capacity()) {
+            evt = Rapidyaml.mkIntBuffer(reqsize);
+            srcbuf.position(0);
+            srcbuf.put(src);
+            int reqsize2 = rapidyaml.parseYsToEvtBuf(srcbuf, evt);
+            if(reqsize2 != reqsize) {
+                throw new RuntimeException("reqsize");
+            }
+        }
+        evt.position(reqsize);
+        return evt;
+    }
+
+    ExpectedEvent mkev(int flags)
+    {
+        return new ExpectedEvent(flags);
+    }
+
+    ExpectedEvent mkev(int flags, int offs, int len, String ref)
+    {
+        return new ExpectedEvent(flags, offs, len, ref);
+    }
 }
+
+// the result is an array of integers, but we use this to simplify
+// running the tests
+class ExpectedEvent
+{
+    int flags;
+    int str_start;
+    int str_len;
+    String str;
+    ExpectedEvent(int flags)
+    {
+        this.flags = flags;
+        this.str_start = 0;
+        this.str_len = 0;
+        this.str = "";
+    }
+    ExpectedEvent(int flags, int str_start, int str_len, String str)
+    {
+        this.flags = flags;
+        this.str_start = str_start;
+        this.str_len = str_len;
+        this.str = str;
+    }
+    int required_size()
+    {
+        return ((flags & Evt.HAS_STR) != 0) ? 3 : 1;
+    }
+
+    public static int required_size_(ExpectedEvent[] evts)
+    {
+        int sz = 0;
+        for(int i = 0; i < evts.length; ++i) {
+            sz += evts[i].required_size();
+        }
+        return sz;
+    }
+};

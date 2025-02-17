@@ -234,7 +234,7 @@ RAPIDYAML_TAG ?= 8c37616378aefd376690a19459c31a56ce596b5e
 RAPIDYAML_REPO := https://github.com/biojppm/rapidyaml
 RAPIDYAML_BUILD_TYPE ?= Release
 RAPIDYAML_DBG ?= 0
-RAPIDYAML_TIMED ?= 0
+RAPIDYAML_TIMED ?= 1
 RAPIDYAML_JAVA := \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Rapidyaml.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Evt.java \
