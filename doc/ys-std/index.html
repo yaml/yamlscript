@@ -2767,102 +2767,106 @@ In those cases, the original Clojure function is still available in the
 <h2 id="string-functions">String functions<a class="headerlink" href="#string-functions" title="Permanent link">🔗</a></h2>
 <ul>
 <li>
-<p><code>blank?(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/blank_q"><code>clojure.string/blank?</code>&nbsp;⧉</a> </p>
+<p><code>blank?(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/blank_q"><code>clojure.string/blank?</code>&nbsp;⧉</a> </p>
 <p>True if string is nil, empty or only whitespace</p>
 </li>
 <li>
-<p><code>chomp(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim-newline"><code>clojure.string/trim-newline</code>&nbsp;⧉</a> </p>
+<p><code>chomp(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim-newline"><code>clojure.string/trim-newline</code>&nbsp;⧉</a> </p>
 <p>Remove trailing newlines</p>
 </li>
 <li>
-<p><code>chop(s)</code> — Remove last character</p>
+<p><code>chop(S)</code> — Remove last character</p>
 </li>
 <li>
-<p><code>ends?(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/ends-with_q"><code>clojure.string/ends-with?</code>&nbsp;⧉</a> </p>
+<p><code>ends?(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/ends-with_q"><code>clojure.string/ends-with?</code>&nbsp;⧉</a> </p>
 <p>True if string ends with suffix</p>
 </li>
 <li>
-<p><code>escape(s char-map)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/escape"><code>clojure.string/escape</code>&nbsp;⧉</a> </p>
+<p><code>escape(S char-map)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/escape"><code>clojure.string/escape</code>&nbsp;⧉</a> </p>
 <p>Escape special characters in a string</p>
 </li>
 <li>
-<p><code>index(s sub)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/index-of"><code>clojure.string/index-of</code>&nbsp;⧉</a> </p>
+<p><code>index(S sub)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/index-of"><code>clojure.string/index-of</code>&nbsp;⧉</a> </p>
 <p>Find index of substring</p>
 </li>
 <li>
-<p><code>join(*xs)</code> — Join strings or seqs with <code>""</code></p>
+<p><code>join(*X)</code> — Join strings or seqs with <code>""</code></p>
 </li>
-<li><code>join(sep *xs)</code> — Join strings or seqs with a separator</li>
-<li><code>joins(*xs)</code> — Join strings with <code>" "</code></li>
+<li><code>join(sep *X)</code> — Join strings or seqs with a separator</li>
+<li><code>joins(*X)</code> — Join strings with <code>" "</code></li>
 <li>
-<p><code>lc(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/lower-case"><code>clojure.string/lower-case</code>&nbsp;⧉</a> </p>
+<p><code>lc(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/lower-case"><code>clojure.string/lower-case</code>&nbsp;⧉</a> </p>
 <p>Lowercase a string</p>
 </li>
 <li>
-<p><code>lines(s)</code> — Split a string into lines</p>
+<p><code>lines(S)</code> — Split a string into lines</p>
 </li>
-<li><code>pretty(x)</code> — Pretty print a value</li>
-<li><code>replace(x)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/replace"><code>clojure.core/replace</code>&nbsp;⧉</a></li>
+<li><code>pretty(X)</code> — Pretty print a value</li>
+<li><code>replace(X)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/replace"><code>clojure.core/replace</code>&nbsp;⧉</a></li>
 <li>
-<p><code>replace(s old)</code> — Like <a href="https://clojuredocs.org/clojure.string/replace"><code>clojure.string/replace</code>&nbsp;⧉</a> </p>
+<p><code>replace(S old)</code> — Like <a href="https://clojuredocs.org/clojure.string/replace"><code>clojure.string/replace</code>&nbsp;⧉</a> </p>
 <p>Replace all occurrences of old with <code>""</code></p>
 </li>
 <li>
-<p><code>replace(s old new)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace"><code>clojure.string/replace</code>&nbsp;⧉</a> </p>
+<p><code>replace(S old new)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace"><code>clojure.string/replace</code>&nbsp;⧉</a> </p>
 <p>Replace all occurrences of old with new</p>
 </li>
 <li>
-<p><code>replace1(s old new)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace-first"><code>clojure.string/replace-first</code>&nbsp;⧉</a> </p>
+<p><code>replace1(S old new)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace-first"><code>clojure.string/replace-first</code>&nbsp;⧉</a> </p>
 <p>Replace first occurrence of old with new</p>
 </li>
 <li>
-<p><code>rindex(s sub)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/last-index-of"><code>clojure.string/last-index-of</code>&nbsp;⧉</a> </p>
+<p><code>rindex(S sub)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/last-index-of"><code>clojure.string/last-index-of</code>&nbsp;⧉</a> </p>
 <p>Find last index of substring</p>
 </li>
 <li>
-<p><code>split(s)</code> — Like <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;⧉</a> </p>
+<p><code>split(S)</code> — Like <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;⧉</a> </p>
 <p>Split on <code>""</code></p>
 </li>
 <li>
-<p><code>split(s re)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;⧉</a> </p>
+<p><code>split(S rgx)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;⧉</a> </p>
 <p>Split a string by a regex</p>
 </li>
 <li>
-<p><code>starts?(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/starts-with_q"><code>clojure.string/starts-with?</code>&nbsp;⧉</a> </p>
+<p><code>starts?(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/starts-with_q"><code>clojure.string/starts-with?</code>&nbsp;⧉</a> </p>
 <p>True if string starts with prefix</p>
+</li>
+<li>
+<p><code>substr(S off len?)</code> — Substring function with Perl semantics </p>
+<p>Offset is 0-based, negative offset counts from end; Optional length is from offset and defaults to end of string; Negative length counts from end of string</p>
 </li>
 <li>
 <p><code>text(*S)</code> — Join list of strings with newlines, adding a newline at the end</p>
 </li>
 <li>
-<p><code>trim(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim"><code>clojure.string/trim</code>&nbsp;⧉</a> </p>
+<p><code>trim(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim"><code>clojure.string/trim</code>&nbsp;⧉</a> </p>
 <p>Trim whitespace from both ends</p>
 </li>
 <li>
-<p><code>triml(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/triml"><code>clojure.string/triml</code>&nbsp;⧉</a> </p>
+<p><code>triml(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/triml"><code>clojure.string/triml</code>&nbsp;⧉</a> </p>
 <p>Trim whitespace from left end</p>
 </li>
 <li>
-<p><code>trimr(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trimr"><code>clojure.string/trimr</code>&nbsp;⧉</a> </p>
+<p><code>trimr(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trimr"><code>clojure.string/trimr</code>&nbsp;⧉</a> </p>
 <p>Trim whitespace from right end</p>
 </li>
 <li>
-<p><code>uc(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/upper-case"><code>clojure.string/upper-case</code>&nbsp;⧉</a> </p>
+<p><code>uc(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/upper-case"><code>clojure.string/upper-case</code>&nbsp;⧉</a> </p>
 <p>Uppercase a string</p>
 </li>
 <li>
-<p><code>uc1(s)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/capitalize"><code>clojure.string/capitalize</code>&nbsp;⧉</a> </p>
+<p><code>uc1(S)</code> — Alias of <a href="https://clojuredocs.org/clojure.string/capitalize"><code>clojure.string/capitalize</code>&nbsp;⧉</a> </p>
 <p>Uppercase the first character</p>
 </li>
 <li>
-<p><code>words(s)</code> — Split a string into words (split on whitespace)</p>
+<p><code>words(S)</code> — Split a string into words (split on whitespace)</p>
 </li>
 </ul>
 <p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#strings-characters">https://clojuredocs.org/quickref#strings-characters&nbsp;⧉</a></p>
 <h2 id="collection-functions">Collection functions<a class="headerlink" href="#collection-functions" title="Permanent link">🔗</a></h2>
 <ul>
 <li>
-<p><code>diff(a b)</code> — Alias of <a href="https://clojuredocs.org/clojure.data/diff"><code>clojure.data/diff</code>&nbsp;⧉</a> </p>
+<p><code>diff(C1 C2)</code> — Alias of <a href="https://clojuredocs.org/clojure.data/diff"><code>clojure.data/diff</code>&nbsp;⧉</a> </p>
 <p>Return the difference of two collections</p>
 </li>
 <li>
@@ -2872,26 +2876,26 @@ In those cases, the original Clojure function is still available in the
 <li>
 <p><code>get+(C K)</code> — Get a string, keyword or symbol from a map or sequence</p>
 </li>
-<li><code>grep(P C)</code> — Filter a collection by a predicate</li>
+<li><code>grep(FN C)</code> — Filter a collection by a predicate function</li>
 <li><code>has?(C)</code> — Returns a partial function closed over C</li>
 <li>
-<p><code>has?(C x)</code> — True if collection has x</p>
+<p><code>has?(C X)</code> — True if collection has X </p>
 <p>Works with strings, maps and sequences</p>
 </li>
 <li>
 <p><code>in?(C)</code> — Returns a partial function closed over C</p>
 </li>
 <li>
-<p><code>in?(x C)</code> — True if x is in collection</p>
+<p><code>in?(X C)</code> — True if X is in collection </p>
 <p>Works with strings, maps and sequences</p>
 </li>
 <li>
-<p><code>omap(*xs)</code> — Create an ordered map</p>
+<p><code>omap(*X)</code> — Create an ordered map</p>
 </li>
 <li><code>reverse(C)</code> — Reverse a string, vector or sequence</li>
 <li>
-<p><code>rng(x y)</code> — Create a range of numbers or characters, y is inclusive</p>
-<p>If x is greater than y, the range is descending</p>
+<p><code>rng(X Y)</code> — Create a range of numbers or characters, Y is inclusive</p>
+<p>If X is greater than Y, the range is descending</p>
 </li>
 <li>
 <p><code>..</code> — Infix <code>rng</code> operator</p>
@@ -2901,36 +2905,36 @@ In those cases, the original Clojure function is still available in the
 <p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#collections">https://clojuredocs.org/quickref#collections&nbsp;⧉</a></p>
 <h2 id="math-functions">Math functions<a class="headerlink" href="#math-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>add(*)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/+"><code>clojure.core/+</code>&nbsp;⧉</a></li>
-<li><code>sub(*)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/-"><code>clojure.core/-</code>&nbsp;⧉</a></li>
-<li><code>mul(*)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/*"><code>clojure.core/*</code>&nbsp;⧉</a></li>
-<li><code>div(*)</code> — Division function that returns a float if needed</li>
+<li><code>add(*N)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/+"><code>clojure.core/+</code>&nbsp;⧉</a></li>
+<li><code>sub(*N)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/-"><code>clojure.core/-</code>&nbsp;⧉</a></li>
+<li><code>mul(*N)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/*"><code>clojure.core/*</code>&nbsp;⧉</a></li>
+<li><code>div(*N)</code> — Division function that returns a float if needed</li>
 <li>
-<p><code>add+(*)</code> — Polymorphic addition function</p>
+<p><code>add+(*X)</code> — Polymorphic addition function</p>
 <p>Adds numbers, strings, chars, sequences, maps, sets and functions</p>
 </li>
 <li>
-<p><code>sub+(*)</code> — Polymorphic subtraction function</p>
+<p><code>sub+(*X)</code> — Polymorphic subtraction function</p>
 <p>Subtracts numbers, strings, chars, sequences, maps and sets</p>
 </li>
 <li>
-<p><code>mul+(*)</code> — Polymorphic multiplication function</p>
+<p><code>mul+(*X)</code> — Polymorphic multiplication function</p>
 <p>Multiplies numbers, strings and sequences</p>
 </li>
 <li>
-<p><code>digits(s)</code> — Convert a string of digits to a sequence of numbers</p>
+<p><code>digits(S)</code> — Convert a string of digits to a sequence of numbers</p>
 </li>
 <li>
-<p><code>floor(x)</code> — Alias of CM/floor </p>
+<p><code>floor(X)</code> — Alias of CM/floor </p>
 <p>Round down to the nearest integer</p>
 </li>
 <li>
-<p><code>pow(x *ys)</code> — Raise a number to a power</p>
+<p><code>pow(N *N)</code> — Raise a number to a power</p>
 </li>
 <li><code>**</code> — Infix <code>pow</code> operator - right associative</li>
-<li><code>sqr(x)</code> — Square a number</li>
-<li><code>cube(x)</code> — Cube a number</li>
-<li><code>sqrt(x)</code> — Square root of a number</li>
+<li><code>sqr(X)</code> — Square a number</li>
+<li><code>cube(X)</code> — Cube a number</li>
+<li><code>sqrt(X)</code> — Square root of a number</li>
 <li><code>sum(nums)</code> — Sum a sequence of numbers</li>
 </ul>
 <p><strong>See also</strong>: <a href="https://clojure.github.io/clojure/clojure.math-api.html">https://clojure.github.io/clojure/clojure.math-api.html&nbsp;⧉</a></p>
@@ -2957,35 +2961,36 @@ In those cases, the original Clojure function is still available in the
 </ul>
 <h2 id="chaining-short-forms">Chaining short forms<a class="headerlink" href="#chaining-short-forms" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>x.#</code> — Short for <code>x.count()</code></li>
-<li><code>x.$</code> — Short for <code>x.last()</code></li>
-<li><code>x.++</code> — Short for <code>x.inc()</code></li>
-<li><code>x.--</code> — Short for <code>x.dec()</code></li>
-<li><code>x.?</code> — Short for <code>x.truey?()</code></li>
-<li><code>x.!</code> — Short for <code>x.falsey?()</code></li>
-<li><code>x.??</code> — Short for <code>x.boolean()</code></li>
-<li><code>x.!!</code> — Short for <code>x.not()</code></li>
+<li><code>value.#</code> — Short for <code>value.count()</code></li>
+<li><code>value.$</code> — Short for <code>value.last()</code></li>
+<li><code>value.++</code> — Short for <code>value.inc()</code></li>
+<li><code>value.--</code> — Short for <code>value.dec()</code></li>
+<li><code>value.?</code> — Short for <code>value.truey?()</code></li>
+<li><code>value.!</code> — Short for <code>value.falsey?()</code></li>
+<li><code>value.??</code> — Short for <code>value.boolean()</code></li>
+<li><code>value.!!</code> — Short for <code>value.not()</code></li>
+<li><code>value.@</code> — Short for `value.deref()</li>
 <li>
-<p><code>x.&gt;&gt;&gt;</code> — Short for <code>x.DBG()</code></p>
+<p><code>value.&gt;&gt;&gt;</code> — Short for <code>value.DBG()</code></p>
 <p>Print value/data to stderr and return the value unchanged</p>
 </li>
 </ul>
 <h2 id="control-functions">Control functions<a class="headerlink" href="#control-functions" title="Permanent link">🔗</a></h2>
 <ul>
 <li>
-<p><code>call(f *args)</code> — Call a function or value</p>
-<p>Function f can be a string, symbol or function</p>
+<p><code>call(FN *args)</code> — Call a function or value</p>
+<p>Function FN can be a string, symbol or function</p>
 </li>
 <li>
 <p><code>die(msg)</code> — Idiomatic error function</p>
 </li>
 <li><code>each(bindings *body)</code> — Non-lazy <a href="https://clojuredocs.org/clojure.core/for"><code>clojure.core/for</code>&nbsp;⧉</a></li>
-<li><code>eval(s)</code> — Evaluate a string as YS code</li>
+<li><code>eval(S)</code> — Evaluate a string as YS code</li>
 <li><code>exit(rc=0)</code> — Exit the program</li>
 <li><code>if(cond then else)</code> — Functional if used in dot chaining</li>
 <li><code>sleep(secs)</code> — Sleep for a number of seconds</li>
 <li>
-<p><code>value(x)</code> — Get var value from var, symbol or string</p>
+<p><code>value(X)</code> — Get var value from var, symbol or string</p>
 <p>Often used to convert a string to a function.</p>
 </li>
 <li>
@@ -2996,7 +3001,7 @@ In those cases, the original Clojure function is still available in the
 <p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#flow-control">https://clojuredocs.org/quickref#flow-control&nbsp;⧉</a></p>
 <h2 id="function-functions">Function functions<a class="headerlink" href="#function-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>defn flip(f)</code> — Flip the arguments of a function</li>
+<li><code>defn flip(FN)</code> — Flip the arguments of a function</li>
 </ul>
 <h2 id="regex-functions">Regex functions<a class="headerlink" href="#regex-functions" title="Permanent link">🔗</a></h2>
 <ul>
@@ -3006,31 +3011,31 @@ In those cases, the original Clojure function is still available in the
 <p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#regular-expressions">https://clojuredocs.org/quickref#regular-expressions&nbsp;⧉</a></p>
 <h2 id="io-functions">I/O functions<a class="headerlink" href="#io-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>err(*xs)</code> — Print to stderr</li>
+<li><code>err(*S)</code> — Print to stderr</li>
 <li>
-<p><code>out(*xs)</code> — Print to stdout</p>
+<p><code>out(*S)</code> — Print to stdout</p>
 <p>Flushes stdout after printing</p>
 </li>
 <li>
-<p><code>pp(x)</code> — Pretty print a value</p>
+<p><code>pp(X)</code> — Pretty print a value</p>
 </li>
 <li>
-<p><code>print(*xs)</code> — Print to stdout without newline</p>
+<p><code>print(*S)</code> — Print to stdout without newline</p>
 <p>Flushes stdout after printing</p>
 </li>
 <li>
-<p><code>read(f)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/slurp"><code>clojure.core/slurp</code>&nbsp;⧉</a> </p>
+<p><code>read(F)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/slurp"><code>clojure.core/slurp</code>&nbsp;⧉</a> </p>
 <p>Read a file into a string</p>
 </li>
 <li>
-<p><code>say(*xs)</code> — Print to stdout with newline</p>
+<p><code>say(*S)</code> — Print to stdout with newline</p>
 </li>
 <li>
-<p><code>warn(*xs)</code> — Print to stderr with newline</p>
+<p><code>warn(*S)</code> — Print to stderr with newline</p>
 <p>Flushes stderr after printing</p>
 </li>
 <li>
-<p><code>write(f s)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/spit"><code>clojure.core/spit</code>&nbsp;⧉</a> </p>
+<p><code>write(F S)</code> — Alias of <a href="https://clojuredocs.org/clojure.core/spit"><code>clojure.core/spit</code>&nbsp;⧉</a> </p>
 <p>Write a string to a file</p>
 </li>
 </ul>
@@ -3056,53 +3061,53 @@ In those cases, the original Clojure function is still available in the
 </ul>
 <h2 id="common-type-conversion-functions">Common type conversion functions<a class="headerlink" href="#common-type-conversion-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>to-bool(x)</code> — Convert x to a boolean</li>
-<li><code>to-char(x)</code> — Convert x to a character</li>
-<li><code>to-float(x)</code> — Convert x to a float</li>
-<li><code>to-int(x)</code> — Convert x to an integer</li>
-<li><code>to-keyw(x)</code> — Convert x to a keyword</li>
-<li><code>to-list(x)</code> — Convert x to a list</li>
-<li><code>to-map(x)</code> — Convert x to a map</li>
-<li><code>to-num(x)</code> — Convert x to a number</li>
-<li><code>to-omap(x)</code> — Convert x to an ordered map</li>
-<li><code>to-set(x)</code> — Convert x to a set</li>
-<li><code>to-str(x)</code> — Convert x to a string</li>
+<li><code>to-bool(X)</code> — Convert X to a boolean</li>
+<li><code>to-char(X)</code> — Convert X to a character</li>
+<li><code>to-float(X)</code> — Convert X to a float</li>
+<li><code>to-int(X)</code> — Convert X to an integer</li>
+<li><code>to-keyw(X)</code> — Convert X to a keyword</li>
+<li><code>to-list(X)</code> — Convert X to a list</li>
+<li><code>to-map(X)</code> — Convert X to a map</li>
+<li><code>to-num(X)</code> — Convert X to a number</li>
+<li><code>to-omap(X)</code> — Convert X to an ordered map</li>
+<li><code>to-set(X)</code> — Convert X to a set</li>
+<li><code>to-str(X)</code> — Convert X to a string</li>
 <li>
-<p><code>to-type(x)</code> — Convert x to a string name of its type:</p>
+<p><code>to-type(X)</code> — Convert X to a string name of its type:</p>
 <p><code>"atom"</code>, <code>"bool"</code>, <code>"char"</code>, <code>"class"</code>, <code>"float"</code>, <code>"fun"</code>, <code>"int"</code>, <code>"keyw"</code>, <code>"list"</code>, <code>"map"</code>, <code>"nil"</code>, <code>"num"</code>, <code>"rgx"</code>, <code>"seq"</code>, <code>"set"</code>, <code>"str"</code>, <code>"sym"</code>, <code>"var"</code>, <code>"vec"</code></p>
 </li>
 <li>
-<p><code>to-vec(x)</code> — Convert x to a vector</p>
+<p><code>to-vec(X)</code> — Convert X to a vector</p>
 </li>
 </ul>
 <h2 id="single-character-casting-functions">Single character casting functions<a class="headerlink" href="#single-character-casting-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>B(x)</code> — Convert to a boolean</li>
-<li><code>C(x)</code> — Convert to a character</li>
-<li><code>D(x)</code> — Deref an atom</li>
-<li><code>F(x)</code> — Convert to a float</li>
-<li><code>I(x)</code> — Convert to an integer</li>
-<li><code>K(x)</code> — Convert to a keyword</li>
-<li><code>L(x)</code> — Convert to a list</li>
-<li><code>M(x)</code> — Convert to a map</li>
-<li><code>N(x)</code> — Convert to a number</li>
-<li><code>O(x)</code> — Convert to an ordered map</li>
-<li><code>S(x)</code> — Convert to a set</li>
-<li><code>T(x)</code> — Convert to a type name string</li>
-<li><code>V(x)</code> — Convert to a vector</li>
-<li><code>L+(*xs)</code> — Convert to a list</li>
-<li><code>M+(*xs)</code> — Convert to a map</li>
-<li><code>O+(*xs)</code> — Convert to an ordered map</li>
-<li><code>V+(*xs)</code> — Convert to a vector</li>
+<li><code>B(X)</code> — Convert to a boolean</li>
+<li><code>C(X)</code> — Convert to a character</li>
+<li><code>D(X)</code> — Deref an atom</li>
+<li><code>F(X)</code> — Convert to a float</li>
+<li><code>I(X)</code> — Convert to an integer</li>
+<li><code>K(X)</code> — Convert to a keyword</li>
+<li><code>L(X)</code> — Convert to a list</li>
+<li><code>M(X)</code> — Convert to a map</li>
+<li><code>N(X)</code> — Convert to a number</li>
+<li><code>O(X)</code> — Convert to an ordered map</li>
+<li><code>S(X)</code> — Convert to a set</li>
+<li><code>T(X)</code> — Convert to a type name string</li>
+<li><code>V(X)</code> — Convert to a vector</li>
+<li><code>L+(*X)</code> — Convert to a list</li>
+<li><code>M+(*X)</code> — Convert to a map</li>
+<li><code>O+(*X)</code> — Convert to an ordered map</li>
+<li><code>V+(*X)</code> — Convert to a vector</li>
 </ul>
 <h2 id="alternate-truth-functions">Alternate truth functions<a class="headerlink" href="#alternate-truth-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>falsey?(x)</code> — True if x is falsey - 0, nil, false, empty</li>
-<li><code>F?(x)</code> — Short for <code>falsey?</code></li>
-<li><code>truey?(x)</code> — True if x is not falsey</li>
-<li><code>T?(x)</code> — Short for <code>truey?</code></li>
-<li><code>or?(x *xs)</code> — Return first truey value or nil</li>
-<li><code>and?(x *xs)</code> — Return last truey value or nil</li>
+<li><code>falsey?(X)</code> — True if X is falsey - 0, nil, false, empty</li>
+<li><code>F?(X)</code> — Short for <code>falsey?</code></li>
+<li><code>truey?(X)</code> — True if X is not falsey</li>
+<li><code>T?(X)</code> — Short for <code>truey?</code></li>
+<li><code>or?(X *X)</code> — Return first truey value or nil</li>
+<li><code>and?(X *X)</code> — Return last truey value or nil</li>
 <li><code>|||</code> — <code>or?</code> operator</li>
 <li><code>&amp;&amp;&amp;</code> — <code>and?</code> operator</li>
 </ul>
@@ -3136,17 +3141,17 @@ In those cases, the original Clojure function is still available in the
 </ul>
 <h2 id="security-functions">Security functions<a class="headerlink" href="#security-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>md5(s)</code> — Calculate the MD5 hash of a string</li>
-<li><code>sha1(s)</code> — Calculate the SHA-1 hash of a string</li>
-<li><code>sha256(s)</code> — Calculate the SHA-256 hash of a string</li>
+<li><code>md5(S)</code> — Calculate the MD5 hash of a string</li>
+<li><code>sha1(S)</code> — Calculate the SHA-1 hash of a string</li>
+<li><code>sha256(S)</code> — Calculate the SHA-256 hash of a string</li>
 </ul>
 <h2 id="ipc-functions">IPC functions<a class="headerlink" href="#ipc-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>exec(cmd *xs)</code> — Execute a command</li>
-<li><code>process(cmd *xs)</code> — Execute a command</li>
-<li><code>sh(cmd *xs)</code> — Execute a command</li>
-<li><code>shell(cmd *xs)</code> — Execute a command</li>
-<li><code>shout(cmd *xs)</code> — Execute a command and return the output</li>
+<li><code>exec(cmd *S)</code> — Execute a command</li>
+<li><code>process(cmd *S)</code> — Execute a command</li>
+<li><code>sh(cmd *S)</code> — Execute a command</li>
+<li><code>shell(cmd *S)</code> — Execute a command</li>
+<li><code>shout(cmd *S)</code> — Execute a command and return the output</li>
 </ul>
 <p><strong>See also</strong>: <a href="https://github.com/babashka/process#readme">https://github.com/babashka/process#readme&nbsp;⧉</a></p>
 <h2 id="external-library-functions">External library functions<a class="headerlink" href="#external-library-functions" title="Permanent link">🔗</a></h2>
@@ -3270,6 +3275,8 @@ In those cases, the original Clojure function is still available in the
     
     
       <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../js/open_in_new_tab.js"></script>
       
     
   </body>
