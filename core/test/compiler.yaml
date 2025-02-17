@@ -1633,3 +1633,12 @@
     (def a (f (d/e (b g))))
     (def a (apply f (d/e (apply b g))))
     (def a (apply f (d/e (apply b "g"))))
+
+
+- name: Allow _ in destructured assignment
+  yamlscript: |
+    !yamlscript/v0
+    defn foo():
+      _ a _ b _ *c =: 1 .. 10
+  clojure: |
+    (defn foo [] (let [[_ a _ b _ & c] (rng 1 10)]))

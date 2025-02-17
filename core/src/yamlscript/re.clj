@@ -151,7 +151,7 @@
 
 (def eqop (re #"(?:\|\|\|?|[-+*/.]|\*\*)"))
                                            ; Pair key for def/let call
-(def defk (re #"(?:((?:\[.*\]|\{.*\}|$symw).*?) +($eqop?)=)"))
+(def defk (re #"(?:((?:\[.*\]|\{.*\}|$symw|_).*?) +($eqop?)=)"))
 (def dfnk (re #"(?:^(defn-?) +($ysym)(?:\((.*)\))?$)")) ; Pair key for defn call
 (def afnk (re #"(?:^(fn)( +$ysym)?(?:\((.*)\))?$)"))    ; Pair key for a fn call
 

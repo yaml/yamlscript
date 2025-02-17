@@ -36,8 +36,10 @@
                     keyword? (name k)
                     symbol? (name k)
                     (util/die (str "Invalid key for set-vars: '" k "'")))
-              key (str/replace key #"_" "-")
-              _ (when-not (re-matches re/symw key)
+              key (if (> (count key) 1)
+                    (str/replace key #"_" "-")
+                    key)
+              _ (when-not (or (re-matches re/symw key) (=  key "_"))
                   (util/die (str "Invalid key for set-vars: '" key "'")))
               key (symbol key)]
           (global/intern ns key v)))
