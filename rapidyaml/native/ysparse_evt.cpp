@@ -8,7 +8,7 @@ using namespace c4::yml;
 
 using namespace ryml;
 
-#ifndef YS2PARSE_TIMED
+#ifndef YSPARSE_TIMED
 #define TIMED_SECTION(name)
 #else
 #include <chrono>

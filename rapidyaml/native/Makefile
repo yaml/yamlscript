@@ -9,7 +9,7 @@ include $(COMMON)/python.mk
 # https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
 
 THIS_DIR := $(shell pwd)
-BDIR := $(THIS_DIR)/_build/$(BUILD_TYPE)-shared$(SHARED)-timed$(TIMED)-dbg$(DBG)
+BDIR := $(THIS_DIR)/_build/$(RAPIDYAML_BUILD_TYPE)-shared$(RAPIDYAML_SHARED)-timed$(RAPIDYAML_TIMED)-dbg$(RAPIDYAML_DBG)
 
 RAPIDYAML_DEPS := \
   Makefile \
@@ -50,6 +50,8 @@ realclean:: clean
 
 
 #------------------------------------------------------------------------------
+
+$(RAPIDYAML_LIB): rapidyaml
 build-static: $(RAPIDYAML_LIB)
 test-static: build-static
 	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml-test-run
@@ -58,6 +60,7 @@ $(RAPIDYAML_LIB): $(RAPIDYAML_DEPS)
 	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml
 	cp -fv $(BDIR)-static/*.a $@
 
+$(RAPIDYAML_SO): rapidyaml
 build-shared: $(RAPIDYAML_SO)
 test-shared: build-shared
 	cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml-test-run

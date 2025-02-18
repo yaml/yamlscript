@@ -1,11 +1,11 @@
 package org.rapidyaml;
 
 import org.rapidyaml.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.ByteBuffer;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import java.nio.charset.StandardCharsets;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -405,8 +405,8 @@ public class RapidyamlTest extends TestCase
             long tEvt = System.nanoTime() - t0;
             //
             System.out.printf("-----\n%s\nys.length=%d\nys2bytes=%fus\n", path, ys.length(), (double)tys2Bytes / 1.e6);
-            System.out.printf("edn=%fus, length=%d -> %dB\n", (double)tEdn / 1.e6, edn.length(), edn.length());
-            System.out.printf("evt=%fus, length=%d -> %dB\n", (double)tEvt / 1.e6, numEvts, 4*numEvts);
+            System.out.printf("edn=%.6fms, length=%d -> %dB\n", (double)tEdn / 1.e6, edn.length(), edn.length());
+            System.out.printf("evt=%.6fms, length=%d -> %dB\n", (double)tEvt / 1.e6, numEvts, 4*numEvts);
         }
         catch(Exception e) {
             fail(e.getMessage());
