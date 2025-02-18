@@ -1,10 +1,14 @@
+---
+title: Learn YS at Exercism
+---
+
 [Exercism](https://exercism.io) is a platform that offers code practice and
 mentorship for everyone.
 It is a great way to improve your coding skills and learn new programming
 languages.
 
 Exercism provides a series of exercises in over [70 programming languages](
-https://exercism.io/tracks) including YS / [YAMLScript](
+https://exercism.io/tracks) including [YS / YAMLScript](
 https://exercism.io/tracks/yamlscript) , and you can get feedback from mentors
 on your solutions.
 

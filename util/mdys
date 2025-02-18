@@ -36,7 +36,7 @@ fenced-re =: /(?sm)(?:^```mdys:\S+\n.*?\n```\n)/
 defn load-mdys(file):
   text =: file:fs-abs:slurp
   texts =: text.split(fenced-re)
-  fenced =: text.re-seq(fenced-re)
+  fenced =: text.re-seq(fenced-re) || []
   fenced =: fenced:V.conj('')
   all =: texts
     .interleave(fenced)

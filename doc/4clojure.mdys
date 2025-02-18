@@ -1,0 +1,102 @@
+---
+title: YS for Clojurians
+edit: doc/4clojure.mdys
+---
+
+If you happen to already be fluent in the Clojure programming language, you have
+a huge head start for learning YS; at least for reading and understanding YS
+code.
+
+For the most part understanding YS code is a matter is simply understanding a
+bunch of simple transformations that turn it into Clojure code.
+
+This page will cover most of the transformations you'll need to know.
+
+!!! note
+    After reading this page, you should be able to read YS code and also be able
+    write working YS code fairly easily.
+    To write really good, idiomatic YS code, you should also be well versed in
+    all the various YAML forms, and when to best use them.
+    Like anything, practice makes perfect!
+
+
+## Foreword
+
+YS is a language made from a combination of YAML and Clojure, and its design
+tries to combine the best of both worlds.
+This might seem like a bad idea at first, but it actually works out surprisingly
+well.
+
+YS interpreter (compiler and runtime) is:
+
+* Written in Clojure
+* Compiles to Clojure code
+* Evaluates with a Clojure runtime
+
+But the primary YS audience is not Clojure programmers!
+While YS is a complete programming language, and can be used for any task in
+general, it will likely be most useful for people who need more from their YAML.
+All YAML config files are valid YS code and YS code is always 100% valid YAML.
+
+This document is not an attempt to convert Clojure programmers to YS.
+It is simply meant to help people learn YS faster if they already know Clojure.
+
+
+## Syntax Intro
+
+Clojure is a Lisp.
+Lisp code is comprised of list forms, value forms, comments and whitespace.
+Clojure has a somewhat richer syntax than your typical Lisp, adding brackets and
+braces for some forms and reader macros for others.
+Still, structurally there is very little to learn.
+
+YAML code is a data language that unlike JSON or EDN offers quite a few
+syntactic constructs like comments, anchors, aliases, tags, block (indented) and
+flow (bracketed) collections styles and 5 different scalar quoting styles: plain
+(unquoted), single quoted, double quoted, literal and folded.
+
+YS makes use of all of these constructs to make a clean looking programming
+language that simultaneously works as a data language.
+
+The main takeaway here is that YS offers a lot more flexibility in ways to write
+code than Clojure (Lisp) does.
+
+!!! note
+
+    Whether "more" ways is better or worse is entirely up to you.
+    It's just important to point out from the start that YS has this
+    flexibility and you should expect to see it in the code.
+
+<!--
+### List Forms
+
+````
+# XXX Add Try/Catch for bad invocations
+X``mdys:tmtowtdi
+name: Basic List Form
+clojure: |
+  (concat [1 2 3] [4 5 6])
+ys:
+- concat [1 2 3]: + [4 5 6]
+```
+````
+
+=== ":octicons-file-code-16: `docs/javascripts/tablesort.js`"
+
+    ``` js
+    document$.subscribe(function() {
+      var tables = document.querySelectorAll("article table:not([class])")
+      tables.forEach(function(table) {
+        new Tablesort(table)
+      })
+    })
+    ```
+
+=== ":octicons-file-code-16: `mkdocs.yml`"
+
+    ``` yaml
+    extra_javascript:
+      - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+      - javascripts/tablesort.js
+    ```
+-->

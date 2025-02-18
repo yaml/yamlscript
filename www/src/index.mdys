@@ -8,7 +8,7 @@ hide:
 
 <h1><a href="/about">YS is the best way to work with YAML</a></h1>
 
-!!! note "Install `ys` Now!"
+!!! note "Zero to YS in 10 seconds!"
 
     ```bash
     curl -s https://getys.org/ys | bash
@@ -19,7 +19,7 @@ hide:
     [:octicons-arrow-right-24: Learn More](doc/install.md)
 
 ```mdys:cards
-- name: YAML now has Unlimited Logic
+- name: YAML Made Functional
   type: code:yaml
   body: |
     !YS v0:
@@ -35,21 +35,21 @@ hide:
     :when ENV.DEBUG_VARS::
       debug:: vars
 
-- name: Plays Well in Your DevOps Environment
+- name: Plays Well with DevOps Tools
   body: |
-    * [HelmYS for Kubernetes Helm chart templates](doc/helmys.md)
+    * [HelmYS for Kubernetes Helm charts](doc/helmys.md)
     * CI/CD, Docker, Ansible, etc.
     * Your existing YAML files are valid YS!
     * Take them to the next level
 
-- name: YS Simplifies your existing YAML Files
+- name: Simplify your existing YAML
   body: |
     * Refactor, Deduplicate, DRY
     * 100s of standard functions built in
     * Dozens of built in libraries
     * External libraries as well
     * Define your own functions and libraries
-    * Limit YS capabilities to your exact needs
+    * Limit the capabilities to your exact needs
 
 - name: Import, Transform, Interpolate and More
   body: |

@@ -1,5 +1,5 @@
 ---
-title: The YS YS Library
+title: YS Internals Library
 ---
 
 This library serves 2 purposes.

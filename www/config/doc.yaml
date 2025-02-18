@@ -1,29 +1,42 @@
-- Introducing YS: doc/intro.md
-- YS by Example: doc/examples.md
-- Learn at YS Exercism: doc/exercism.md
-- YS Cheat Sheet: doc/cheat.md
+- doc/intro.md
+- doc/ys4yaml.md
 
-- The `ys` Command: doc/ys.md
-- YS Loader Libraries: doc/loaders.md
-- Installing YS: doc/install.md
+- Learn YS:
+  - doc/exercism.md
+  - doc/examples.md
+  - YS Cheat Sheet: doc/cheat.md
+  - YS for Clojurians: doc/4clojure.md
+  - Clojure to YS: doc/clj-to-ys.md
 
-- Clojure to YS: doc/clj-to-ys.md
+- Use YS:
+  - The `ys` Command: doc/ys.md
+  - YS Loader Libraries: doc/loaders.md
+  - Installing YS: doc/install.md
 
-- YAML Basics: doc/yaml.md
-- Clojure Basics: doc/clojure.md
-- YeS Expressions: doc/yes.md
-- YS Modes: doc/modes.md
-- Control Flow: doc/control.md
-- Operators: doc/operators.md
-- Dot Chaining: doc/chain.md
-- Unit Testing: doc/ys-taptest.md
+- YS Libraries:
+  - doc/ys-std.md
+  - doc/core.md
+  - doc/ys-ys.md
+  - doc/ys-yaml.md
+  - doc/ys-json.md
+  - doc/ys-csv.md
+  - doc/ys-clj.md
+  - doc/ys-taptest.md
 
-- YS Standard Library: doc/ys-std.md
-- Core Library Essentials: doc/core.md
-- Builtin Internal Libraries: doc/ys-libs.md
 
-- Compiling YS to Binary: doc/binary.md
-- Self Installation Scripts: doc/run-ys.md
+- YS Reference:
+  - YAML Basics: doc/yaml.md
+  - Clojure Basics: doc/clojure.md
+  - YeS Expressions: doc/yes.md
+  - YS Modes: doc/modes.md
+  - Control Flow: doc/control.md
+  - Operators: doc/operators.md
+  - Dot Chaining: doc/chain.md
+  - Unit Testing: doc/ys-taptest.md
+
+- More YS Topics:
+  - Compiling YS to Binary: doc/binary.md
+  - Self Installation Scripts: doc/run-ys.md
 
 
 ###

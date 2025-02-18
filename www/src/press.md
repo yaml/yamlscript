@@ -1,5 +1,7 @@
 ---
 title: Press
+hide:
+- navigation
 ---
 
 
@@ -11,7 +13,9 @@ title: Press
 
 ## PodCasts
 
-* [Coding in YAML with Ingy döt Net](https://www.therepl.net/episodes/52/)
+* [Dead Code — February 11, 2025](
+  https://shows.acast.com/dead-code/episodes/yet-another-podcast-episode-with-ingy-dot-net)
+* [The REPL — April 15, 2024](https://www.therepl.net/episodes/52/)
 
 <!-- - Events: '' -->
 
@@ -28,6 +32,8 @@ title: Press
 * [Seajure March 2024 - YAMLScript](
   https://www.youtube.com/watch?v=GajOBwBcFyA)
 
+<!--
 ## Meetups
 
 * [Toronto Smarter DevOps 2025-02-13](https://yamlscript.org/talk/20250213/)
+-->

@@ -17,6 +17,7 @@ features:
 - content.action.view
 - content.code.copy
 - header.autohide
+- navigation.expand
 - navigation.footer
 - navigation.indexes
 # - navigation.instant  # For single page application

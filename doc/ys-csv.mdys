@@ -1,0 +1,23 @@
+---
+title: CSV and TSV
+edit: doc/ys-csv.mdys
+---
+
+
+This library provides functions for reading and writing the [CSV](
+https://en.wikipedia.org/wiki/Comma-separated_values) and [TSV](
+https://en.wikipedia.org/wiki/Tab-separated_values) formats.
+
+```mdys:fmt-fns
+read(S): Short name for `csv/read-csv(S)`
+
+read-csv(s): Convert a CSV string to a list of lists
+
+read-tsv(s): Convert a TSV string to a list of lists
+
+write(S): Short name for `csv/write-csv(S)`
+
+write-csv(LoL): Convert a list of lists to a CSV string |
+
+write-tsv(LoL): Convert a list of lists to a TSV string
+```

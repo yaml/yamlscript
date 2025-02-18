@@ -1,0 +1,13 @@
+---
+title: JSON Library
+edit: doc/ys-json.mdys
+---
+
+
+```mdys:fmt-fns
+load(S): Load a JSON string to a native data structure.
+
+dump(X): Dump a native data structure to a JSON string.
+
+pretty(X): Dump a native data structure to a pretty JSON string.
+```

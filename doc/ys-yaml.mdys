@@ -1,0 +1,16 @@
+---
+title: YAML Library
+edit: doc/ys-yaml.mdys
+---
+
+
+```mdys:fmt-fns
+load(S): Load a YAML string to a native data structure.
+
+load-file(file): Load a YAML file to a native data structure.
+
+dump(X): Dump a native data structure to a YAML string.
+
+dump-all(V): Dump an array of native data structures to a multi-document YAML
+  string.
+```

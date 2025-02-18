@@ -2,16 +2,38 @@
 title: YS Binding Libraries
 ---
 
-Your YAML existing YAML files are perfectly valid YS files!
+Your existing YAML files are perfectly valid YS files!
 Using a YS binding library (aka module or package) these files can be loaded
-into objects just like a YAML loader would do.
+into native objects just like a YAML loader would do.
 
 Without a `!yamlscript/v0` tag at the top they will load the same as normal.
 With that tag, they can be made to take advantage of any of the vast YS
 functional capabilities.
 
-YS intends to provide a loader library for every programming language
-that uses YAML.
+YS intends to provide a YS capable YAML loader library (module/package) for
+every programming language that uses YAML.
+These libraries are meant to be full replacements for the existing YAML loaders
+in that language.
+
+!!! note
+
+    YS loaders only return data values that adhere to the **JSON** data model.
+    While that model is a subset of what can be represented in YAML 1.2, it is
+    what most users of YAML expect.
+    In other words, YS is targeted at YAML's most popular use cases.
+
+
+## Advantages of using YS
+
+YS YAML loaders have major advantages over the existing YAML loaders:
+
+* Same API and capabilities regardless of the programming language.
+* New features and bux fixes released to all languages at the same time.
+* Highly configurable. Limit YAML and YS capabilities to your exact needs.
+* Created by a YAML Specification creator & maintainer.
+
+
+## Curretly Available Libraries
 
 Currently there are working libraries for:
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)

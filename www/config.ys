@@ -1,3 +1,11 @@
+#------------------------------------------------------------------------------
+# This YS config file is used to generate the MkDocs Material `mkdocs.yml` file
+# for the https://yamlscript.org website.
+# This happens  automatically when you run `make serve` or any other `make`
+# command in this directory.
+#------------------------------------------------------------------------------
+
+
 # yaml-language-server:
 #   $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
@@ -55,6 +63,11 @@ theme:: load('config/theme.yaml')
 # https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
 extra_css:
 - css/theme.css
+
+extra:
+  analytics:
+    provider: google
+    property: G-VN2VN7ESCQ
 
 strict: false
 

@@ -1,5 +1,9 @@
 !yamlscript/v0
 
+defn mdys-fmt-fns(o):
+  str "\n":
+    fmt-fns: o
+
 defn mdys-stdlib(o):
   str "\n":
     reduce-kv _ '' o:
@@ -7,12 +11,12 @@ defn mdys-stdlib(o):
         md +:
           str "## $head\n\n":
             if body:map?:
-              stdlib-map: body
+              fmt-fns: body
               str:
-                stdlib-map(body.0)
+                fmt-fns(body.0)
                 "\n**See also**:\ <$(body.1)>\n\n"
 
-defn stdlib-map(body):
+defn fmt-fns(body):
   reduce-kv _ '' body:
     fn(md fn-sig desc):
       desc =:

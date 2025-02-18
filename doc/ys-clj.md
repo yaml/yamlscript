@@ -1,5 +1,5 @@
 ---
-title: ys::clj — Replaced Clojure Functions
+title: Replaced Clojure Functions
 ---
 
 A number of standard functions from Clojure's standard library `clojure::core`

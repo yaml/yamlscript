@@ -2,8 +2,7 @@
 title: YS Community
 ---
 
-* [Contribute to YS](../contribute.md)
-
+* [Contribute to YS](../contrib/index.md)
 
 * [YS Social](../social.md)
 
