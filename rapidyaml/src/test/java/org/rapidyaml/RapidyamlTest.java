@@ -32,7 +32,7 @@ public class RapidyamlTest extends TestCase
     {
         return new TestSuite(RapidyamlTest.class);
     }
-
+/*
     private void testEdn_(String ys, String expected)
     {
         Rapidyaml rapidyaml = new Rapidyaml();
@@ -382,8 +382,7 @@ public class RapidyamlTest extends TestCase
         }
         assertTrue(gotit);
     }
-
-    /*
+*/
     public void compareEdnEvt(int evtSize, String path)
     {
         Rapidyaml rapidyaml = new Rapidyaml();
@@ -424,5 +423,4 @@ public class RapidyamlTest extends TestCase
         compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000_json.json");
         compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000_json.yml");
     }
-    */
 }

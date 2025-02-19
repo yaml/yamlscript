@@ -1,33 +1,6 @@
 #include "ysparse_edn.hpp"
 #include <string.h>
 
-namespace ryml {
-using namespace c4;
-using namespace c4::yml;
-} // namespace ryml
-
-using namespace ryml;
-
-#ifndef YSPARSE_TIMED
-#define TIMED_SECTION(name)
-#else
-#include <chrono>
-#define TIMED_SECTION(name) timed_section C4_XCAT(ts, __LINE__)(name)
-struct timed_section
-{
-    using myclock = std::chrono::steady_clock;
-    using fmsecs = std::chrono::duration<double, std::milli>;
-    csubstr name;
-    myclock::time_point start;
-    fmsecs since() const { return myclock::now() - start; }
-    timed_section(csubstr n) : name(n), start(myclock::now()) {}
-    ~timed_section()
-    {
-        fprintf(stderr, "%.6fms: %.*s\n", since().count(), (int)name.len, name.str);
-    }
-};
-#endif
-
 
 #if defined(__cplusplus)
 extern "C" {
@@ -39,7 +12,7 @@ extern "C" {
 namespace {
 C4_NORETURN void ys2edn_parse_error(const char* msg, size_t msg_len, Location location, void *user_data)
 {
-    Ryml2EdnParseError exc;
+    YsParseError exc;
     exc.location = location;
     exc.msg.assign(msg, msg_len);
     throw exc;
@@ -70,7 +43,7 @@ RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,
                                    char *ys, size_type ys_size,
                                    char *edn, size_type edn_size)
 {
-    TIMED_SECTION("ys2edn_parse");
+    TIMED_SECTION("ys2edn_parse", ys_size);
     csubstr filename_ = filename ? to_csubstr(filename) : csubstr{};
     substr ys_(ys, (size_t)ys_size);
     {
@@ -79,7 +52,7 @@ RYML_EXPORT size_type ys2edn_parse(Ryml2Edn *ryml2edn,
         ryml2edn->m_handler.reserve(ys_size > edn_size ? 3 * ys_size : edn_size, 256u);
     }
     {
-        TIMED_SECTION("parse_in_place");
+        TIMED_SECTION("parse_in_place", ys_size);
         ryml2edn->m_parser.parse_in_place_ev(filename_, ys_);
     }
     return ys2edn_retry_get(ryml2edn, edn, edn_size);

@@ -107,7 +107,7 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
                           (char*)src_, src_len,
                           (char*)dst_, dst_len);
     }
-    catch (Ryml2EdnParseError const& exc)
+    catch (YsParseError const& exc)
     {
         throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
     }
@@ -139,7 +139,7 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
                           (char*)src_, src_len,
                           dst_, dst_len);
     }
-    catch (Ryml2EvtParseError const& exc)
+    catch (YsParseError const& exc)
     {
         throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
     }

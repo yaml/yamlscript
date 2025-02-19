@@ -57,6 +57,7 @@ struct Ys2EvtScoped
 };
 
 
+static bool showcmp = false;
 struct TestResult
 {
     uint32_t num_assertions;
@@ -339,7 +340,7 @@ public:
                 break;
             }
             #define _testcmp(fmt, cmp, ...) \
-                printf("status=%d cmp=%d evt=%zu i=%zu: " fmt "\n", status, (cmp), ie, i, ## __VA_ARGS__); \
+                if(showcmp) { printf("status=%d cmp=%d evt=%zu i=%zu: " fmt "\n", status, (cmp), ie, i, ## __VA_ARGS__); } \
                 status &= (cmp)
             char actualbuf[100];
             char expectedbuf[100];
