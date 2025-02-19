@@ -12,9 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/bindings/">
+        <link rel="canonical" href="https://yamlscript.org/doc/ys4yaml/">
       
       
+        <link rel="prev" href="../intro/">
+      
+      
+        <link rel="next" href="../examples/">
       
       
       <link rel="icon" href="../../images/favicon.ico">
@@ -22,7 +26,7 @@
     
     
       
-        <title>YS Binding Libraries - YS — YAML Done Wisely</title>
+        <title>Extend Your YAML - YS — YAML Done Wisely</title>
       
     
     
@@ -117,7 +121,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#advantages-of-using-ys" class="md-skip">
+        <a href="#turn-on-the-ys" class="md-skip">
           Skip to content
         </a>
       
@@ -151,7 +155,7 @@
           <a href="/">
           <span class="md-ellipsis">
             
-              YS Binding Libraries
+              Extend Your YAML
             
           </span>
           </a>
@@ -277,10 +281,12 @@
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../intro/" class="md-tabs__link">
           
   
@@ -684,8 +690,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -708,19 +716,20 @@
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -731,7 +740,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Documentation
@@ -763,10 +772,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../ys4yaml/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Extend Your YAML
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -775,6 +802,42 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#turn-on-the-ys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Turn On the YS!
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#string-interpolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      String Interpolation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2716,18 +2779,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#advantages-of-using-ys" class="md-nav__link">
+  <a href="#turn-on-the-ys" class="md-nav__link">
     <span class="md-ellipsis">
-      Advantages of using YS
+      Turn On the YS!
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#curretly-available-libraries" class="md-nav__link">
+  <a href="#string-interpolation" class="md-nav__link">
     <span class="md-ellipsis">
-      Curretly Available Libraries
+      String Interpolation
     </span>
   </a>
   
@@ -2750,18 +2813,18 @@
 <!-- pre>
 page: >>><<<
 page.meta: >>>{
-  "title": "YS Binding Libraries"
+  "title": "Extend Your YAML"
 }<<<
-page.previous_page: >>>None<<<
-page.next_page: >>>None<<<
+page.previous_page: >>>Page(title='Introducing YS', url='/doc/intro/')<<<
+page.next_page: >>>Page(title='YS by Example', url='/doc/examples/')<<<
 scheme: >>>default<<<
 tag: >>><<<
 title: >>><<<
 app: >>><<<
 author: >>><<<
-url: doc/bindings/
+url: doc/ys4yaml/
 edit_uri: https://github.com/yaml/yamlscript/edit/website/
-src_path: doc/bindings.md
+src_path: doc/ys4yaml.md
 </pre -->
 
 
@@ -2772,14 +2835,14 @@ src_path: doc/bindings.md
 
 
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/doc/bindings.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/doc/ys4yaml.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/doc/bindings.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/doc/ys4yaml.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2787,85 +2850,87 @@ src_path: doc/bindings.md
   </a>
 
 
-  <h1>YS Binding Libraries</h1>
+  <h1>Extend Your YAML</h1>
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
-<p>Your existing YAML files are perfectly valid YS files!
-Using a YS binding library (aka module or package) these files can be loaded
-into native objects just like a YAML loader would do.</p>
-<p>Without a <code>!yamlscript/v0</code> tag at the top they will load the same as normal.
-With that tag, they can be made to take advantage of any of the vast YS
-functional capabilities.</p>
-<p>YS intends to provide a YS capable YAML loader library (module/package) for
-every programming language that uses YAML.
-These libraries are meant to be full replacements for the existing YAML loaders
-in that language.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>YS loaders only return data values that adhere to the <strong>JSON</strong> data model.
-While that model is a subset of what can be represented in YAML 1.2, it is
-what most users of YAML expect.
-In other words, YS is targeted at YAML's most popular use cases.</p>
-</div>
-<h2 id="advantages-of-using-ys">Advantages of using YS<a class="headerlink" href="#advantages-of-using-ys" title="Permanent link">🔗</a></h2>
-<p>YS YAML loaders have major advantages over the existing YAML loaders:</p>
-<ul>
-<li>Same API and capabilities regardless of the programming language.</li>
-<li>New features and bux fixes released to all languages at the same time.</li>
-<li>Highly configurable. Limit YAML and YS capabilities to your exact needs.</li>
-<li>Created by a YAML Specification creator &amp; maintainer.</li>
-</ul>
-<h2 id="curretly-available-libraries">Curretly Available Libraries<a class="headerlink" href="#curretly-available-libraries" title="Permanent link">🔗</a></h2>
-<p>Currently there are working libraries for:
-* <a href="https://clojars.org/org.yamlscript/clj-yamlscript">Clojure&nbsp;⧉</a>
-* <a href="https://github.com/yaml/yamlscript-go">Go&nbsp;⧉</a>
-* <a href="https://clojars.org/org.yamlscript/yamlscript">Java&nbsp;⧉</a>
-* <a href="https://juliahub.com/ui/Packages/General/YAMLScript">Julia&nbsp;⧉</a>
-* <a href="https://www.npmjs.com/package/@yaml/yamlscript">NodeJS&nbsp;⧉</a>
-* <a href="https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod">Perl&nbsp;⧉</a>
-* <a href="https://pypi.org/project/yamlscript/">Python&nbsp;⧉</a>
-* <a href="https://raku.land/zef:ingy/YAMLScript">Raku&nbsp;⧉</a>
-* <a href="https://rubygems.org/search?query=yamlscript">Ruby&nbsp;⧉</a>
-* <a href="https://crates.io/crates/yamlscript">Rust&nbsp;⧉</a></p>
-<p>Install these libraries like you would any other library for your language.
-You must also install the matching version of the <code>libyamlscript.so</code> shared
-library.
-See <a href="../install/">Installing YS</a> for more info.</p>
-<p>You can use these libraries like any other YAML loader.
-Here's an example usage in Python:</p>
-<p>File <code>program.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">yamlscript</span><span class="w"> </span><span class="kn">import</span> <span class="n">YAMLScript</span>
-<span class="n">ys</span> <span class="o">=</span> <span class="n">YAMLScript</span><span class="p">()</span>
-<span class="nb">input</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;file.ys&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">ys</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<p>If you want to use YS to get more out of your YAML files, this page is a good
+place to start.</p>
+<p>We'll cover the most common ways to use YS in YAML files without diving into all
+the YS details first.</p>
+<h2 id="turn-on-the-ys">Turn On the YS!<a class="headerlink" href="#turn-on-the-ys" title="Permanent link">🔗</a></h2>
+<p>It's an extremely good chance that your YAML files are already valid YAML.</p>
+<p>To find out, run a command like this:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>your-file.yaml
 </code></pre></div>
-<p>File <code>file.ys</code>:</p>
+<p>If the output is your data converted to JSON, then you're good to go!</p>
+<p>To turn on YS, just add a <code>!YS v0:</code> comment to the top of your YAML file.</p>
+<p>Try running that command again.
+The output should be exactly the same as before.</p>
+<p>You've turned on YS but you haven't used it yet!</p>
+<h2 id="string-interpolation">String Interpolation<a class="headerlink" href="#string-interpolation" title="Permanent link">🔗</a></h2>
+<p>YS supports the interpolation (expansion) of variables and expressions in
+double-quoted and literal YAML scalars (strings).</p>
+<p>First we need some variables to interpolate.
+We'll show how to define variables shortly, but for now we'll just use some of
+the global variables that are built into YS.</p>
+<p>The <code>ENV</code> variable is a great place to start, because it contains a map of your
+current environment variables.
+For instance you can access your <code>USER</code> variable with <code>ENV.USER</code>.
+Also let's use the <code>VERSION</code> variable, which contains the current YS version.</p>
+<p>Here's an example of string interpolation:
 <div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
-
-<span class="nt">:</span><span class="p">:</span><span class="w">  </span><span class="c1"># Set values to use in data</span>
-<span class="w">  </span><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;World&quot;</span>
-<span class="w">  </span><span class="nt">other =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;other.yaml&quot;)</span>
-
-<span class="nt">foo:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-[(6 * 7), inc(41), 43.--, (3 .. 9):sum]</span>
-<span class="nt">bar:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other.stuff:shuffle.take(3)</span>
-<span class="nt">baz:</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">$name!&quot;</span>
+<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span><span class="w">   </span><span class="c1"># Normal YAML data</span>
+<span class="nt">greeting</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">My name is $(ENV.USER).</span>
+<span class="w">  </span><span class="no">I&#39;m using YS $VERSION!</span>
+<span class="nt">bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baz</span>
+</code></pre></div></p>
+<p>Lets see load this file to YAML with the <code>ys</code> command:
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>file.yaml
+foo:<span class="w"> </span>bar
+greeting:<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>My<span class="w"> </span>name<span class="w"> </span>is<span class="w"> </span><span class="k">$(</span>ENV.USER<span class="k">)</span>.
+<span class="w">  </span>I<span class="err">&#39;</span>m<span class="w"> </span>using<span class="w"> </span>YS<span class="w"> </span><span class="nv">$VERSION</span>!
+bar:<span class="w"> </span>baz
+</code></pre></div></p>
+<p>Well that's not what we expected.
+No interpolation happened!</p>
+<p>In order for the YS YAML loader to see a particular YAML node as YS code, we
+need to flip that node to <a href="../modes/">code mode</a>.
+YS makes this easy.
+Just change the <code>:</code> before that particuar node to <code>::</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span><span class="w">   </span><span class="c1"># Normal YAML data</span>
+<span class="nt">greeting:</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">My name is $(ENV.USER).</span>
+<span class="w">  </span><span class="no">I&#39;m using YS $VERSION!</span>
+<span class="nt">bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">baz</span>
 </code></pre></div>
-<p>File <code>other.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">stuff</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ark</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">banana</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cat</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">doll</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">electron</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">flan</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">golf ball</span>
-</code></pre></div>
-<p>Run:</p>
-<div class="highlight"><pre><span></span><code>$ python prog.py
-{&#39;foo&#39;: [42, 42, 42, 42], &#39;bar&#39;: [&#39;cat&#39;, &#39;flan&#39;, &#39;doll&#39;], &#39;baz&#39;: &#39;Hello, World!&#39;}
-</code></pre></div>
+<p>And now we get the expected output:
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>file.yaml
+foo:<span class="w"> </span>bar
+greeting:<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>My<span class="w"> </span>name<span class="w"> </span>is<span class="w"> </span>ingy.
+<span class="w">  </span>I<span class="err">&#39;</span>m<span class="w"> </span>using<span class="w"> </span>YS<span class="w"> </span><span class="m">0</span>.1.91!
+bar:<span class="w"> </span>baz
+</code></pre></div></p>
+<p>YS has 3 different ways to interpolate in strings:</p>
+<ul>
+<li>Expand variables: <code>"I am $name."</code><ul>
+<li>Put a <code>$</code> in front of a variable name.</li>
+</ul>
+</li>
+<li>Expand expressions: <code>"In reverse I'm $(name:reverse)."</code><ul>
+<li>Put a <code>$()</code> around an expression.</li>
+</ul>
+</li>
+<li>Separate variable from text: <code>"${name}ami!"</code><ul>
+<li>Put a <code>${}</code> around a variable name when it is followed by alphanumeric
+  characters.</li>
+</ul>
+</li>
+</ul>
 
 
 
@@ -2893,6 +2958,44 @@ Here's an example usage in Python:</p>
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../intro/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introducing YS">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Introducing YS
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../examples/" class="md-footer__link md-footer__link--next" aria-label="Next: YS by Example">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                YS by Example
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">

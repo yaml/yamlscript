@@ -72,3 +72,15 @@ created.
     It simply downloads a GraalVM tarball into `/tmp`, and the Makefile takes
     care of everything without leaving any mess behind.
 ```
+
+
+```mdys::question
+Do I need to know Clojure to use YS?
+
+All YS/YAML code is compiled to Clojure and evaluated when you run or load it.
+
+That said, you can get pretty far with YS without knowing any Clojure.
+Just read the docs and look at the examples.
+
+To become a YS expert, you will need to know Clojure (and YAML) well.
+```
