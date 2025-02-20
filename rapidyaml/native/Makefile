@@ -70,5 +70,5 @@ $(RAPIDYAML_SO): $(RAPIDYAML_DEPS)
 	cp -fv $(BDIR)-shared/*.so $@
 	ln -fs $@ librapidyaml.so
 
-$(RAPIDYAML_H): $(RAPIDYAML_JAVA)
+$(RAPIDYAML_JNI_H): $(RAPIDYAML_JAVA)
 	javac -h . $(RAPIDYAML_JAVA) # $^ doesn't work

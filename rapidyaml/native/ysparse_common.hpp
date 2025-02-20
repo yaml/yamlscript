@@ -9,7 +9,6 @@ using namespace c4;
 using namespace c4::yml;
 } // namespace ryml
 
-using namespace ryml;
 using size_type = int;
 
 struct YsParseError : public std::exception
@@ -30,7 +29,7 @@ struct timed_section
     ryml::csubstr name;
     size_type len;
     myclock::time_point start;
-    timed_section(csubstr n, size_type len_=0) : name(n), len(len_), start(myclock::now()) {}
+    timed_section(ryml::csubstr n, size_type len_=0) : name(n), len(len_), start(myclock::now()) {}
     ~timed_section()
     {
         const std::chrono::duration<double, std::milli> t = myclock::now() - start;

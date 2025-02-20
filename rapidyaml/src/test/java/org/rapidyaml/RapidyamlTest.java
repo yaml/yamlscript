@@ -32,7 +32,7 @@ public class RapidyamlTest extends TestCase
     {
         return new TestSuite(RapidyamlTest.class);
     }
-/*
+
     private void testEdn_(String ys, String expected)
     {
         Rapidyaml rapidyaml = new Rapidyaml();
@@ -90,6 +90,7 @@ public class RapidyamlTest extends TestCase
 
     private void testEvt_(String ys, ExpectedEvent[] expected)
     {
+	boolean dbglog = false;
         Rapidyaml rapidyaml = new Rapidyaml();
         try {
             int[] actual = new int[2 * required_size_(expected)];
@@ -110,14 +111,16 @@ public class RapidyamlTest extends TestCase
                     if(ie >= expected.length)
                         break;
                     int cmp = 1;
-                    System.out.printf("status=%d evt=%d pos=%d expflags=%d actualflags=%d", status, ie, ia, expected[ie].flags, actual[ia]);
+		    if(dbglog)
+    			System.out.printf("status=%d evt=%d pos=%d expflags=%d actualflags=%d", status, ie, ia, expected[ie].flags, actual[ia]);
                     cmp &= (expected[ie].flags == actual[ia]) ? 1 : 0;
                     if(((actual[ia] & Evt.HAS_STR) != 0) && ((expected[ie].flags & Evt.HAS_STR)) != 0) {
                         cmp &= (ia + 2 < numEvts) ? 1 : 0;
                         if(cmp != 0) {
                             cmp &= (expected[ie].str_start == actual[ia + 1]) ? 1 : 0;
                             cmp &= (expected[ie].str_len == actual[ia + 2]) ? 1 : 0;
-                            System.out.printf("  exp=(%d,%d) actual=(%d,%d)", expected[ie].str_start, expected[ie].str_len, actual[ia + 1], actual[ia + 2]);
+                            if(dbglog)
+				System.out.printf("  exp=(%d,%d) actual=(%d,%d)", expected[ie].str_start, expected[ie].str_len, actual[ia + 1], actual[ia + 2]);
                             if(cmp != 0) {
                                 cmp &= (actual[ia + 1] >= 0) ? 1 : 0;
                                 cmp &= (actual[ia + 2] >= 0) ? 1 : 0;
@@ -125,15 +128,18 @@ public class RapidyamlTest extends TestCase
                                 if(cmp != 0) {
                                     String actualStr = new String(src, actual[ia + 1], actual[ia + 2], StandardCharsets.UTF_8);
                                     cmp &= actualStr.equals(expected[ie].str) ? 1 : 0;
-                                    System.out.printf("  exp=~~~%s~~~ actual=~~~%s~~~", expected[ie].str, actualStr);
+                                    if(dbglog)
+					System.out.printf("  exp=~~~%s~~~ actual=~~~%s~~~", expected[ie].str, actualStr);
                                 }
                                 else {
-                                    System.out.printf("  BAD RANGE len=%d yslen=%d", src.length, ys.length());
+				    if(dbglog)
+					System.out.printf("  BAD RANGE len=%d yslen=%d", src.length, ys.length());
                                 }
                             }
                         }
                     }
-                    System.out.printf("  --> %s\n", cmp != 0 ? "ok!" : "FAIL");
+		    if(dbglog)
+                        System.out.printf("  --> %s\n", cmp != 0 ? "ok!" : "FAIL");
                     status &= cmp;
                     ia += ((actual[ia] & Evt.HAS_STR) != 0) ? 3 : 1;
                     ++ie;
@@ -381,46 +387,5 @@ public class RapidyamlTest extends TestCase
             fail("wrong exception type");
         }
         assertTrue(gotit);
-    }
-*/
-    public void compareEdnEvt(int evtSize, String path)
-    {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        //
-        try {
-            String ys = Files.readString(Paths.get(path), StandardCharsets.UTF_8);
-            int[] evt = new int[evtSize];
-            //
-            long t0 = System.nanoTime();
-            byte[] ysBytes = ys.getBytes(StandardCharsets.UTF_8);
-            long tys2Bytes = System.nanoTime() - t0;
-            //
-            t0 = System.nanoTime();
-            String edn = rapidyaml.parseYsToEdn(ys);
-            long tEdn = System.nanoTime() - t0;
-            //
-            t0 = System.nanoTime();
-            int numEvts = rapidyaml.parseYsToEvt(ysBytes, evt);
-            long tEvt = System.nanoTime() - t0;
-            //
-            System.out.printf("-----\n%s\nys.length=%d\nys2bytes=%fus\n", path, ys.length(), (double)tys2Bytes / 1.e6);
-            System.out.printf("edn=%.6fms, length=%d -> %dB\n", (double)tEdn / 1.e6, edn.length(), edn.length());
-            System.out.printf("evt=%.6fms, length=%d -> %dB\n", (double)tEvt / 1.e6, numEvts, 4*numEvts);
-        }
-        catch(Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    public void testEdnVsEvt()
-    {
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/appveyor.yml");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/compile_commands.json");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner100.yml");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner100.yml");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000.yml");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000.yml");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000_json.json");
-        compareEdnEvt(10000000, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000_json.yml");
     }
 }

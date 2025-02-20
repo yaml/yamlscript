@@ -27,7 +27,8 @@ public class Rapidyaml {
                                     int[] evt, int evt_length);
     private final long ryml2evt;
 
-    public Rapidyaml() {
+    public Rapidyaml()
+    {
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
         System.loadLibrary(library_name);
         this.ryml2edn = this.ys2edn_init();
@@ -38,7 +39,8 @@ public class Rapidyaml {
     //
     // https://stackoverflow.com/questions/158174/why-would-you-ever-implement-finalize
     //
-    protected void finalize() throws Throwable {
+    protected void finalize() throws Throwable
+    {
         try {
             this.ys2edn_destroy(this.ryml2edn);
             this.ys2evt_destroy(this.ryml2evt);

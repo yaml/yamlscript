@@ -1,6 +1,6 @@
 #include "ysparse_evt.hpp"
-#include <string.h>
 
+using namespace ryml;
 
 #if defined(__cplusplus)
 extern "C" {
