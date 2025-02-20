@@ -232,7 +232,7 @@
 ;;------------------------------------------------------------------------------
 ;; Math functions
 ;;------------------------------------------------------------------------------
-(declare to-num to-map to-set to-vec)
+(declare to-list to-num to-map to-set to-vec)
 
 (defn add
   ([] 0)
@@ -278,6 +278,7 @@
          (long a)
          a))
      (math/pow x y)))
+
   ([x y & xs]
     (let [[& xs] (clojure.core/reverse (conj xs y x))]
       (reduce #(pow %2 %1) 1 xs))))
@@ -317,22 +318,22 @@
 
 (defn add+
   ([x y]
-   (when (some nil? [x y])
-     (util/die "Cannot add with a nil value"))
-   (condf x
-     number? (+ x (to-num y))
+   (condf (if (nil? x) y x)
+     number? (+ (to-num x) (to-num y))
      string? (str x y)
-     map? (merge x (to-map y))
-     set? (set/union x (to-set y))
-     seqable? (concat x (to-vec y))
+     map? (merge (to-map x) (to-map y))
+     set? (set/union (to-set x) (to-set y))
+     vector? (vec (concat (to-vec x) (to-vec y)))
+     seqable? (concat (to-list x) (to-list y))
      char? (if (number? y)
              (char (+ (int x) y))
              (str x y))
      fn? (cond
            (fn? y) (comp y x)
-           (list? y) (apply partial x y)
+           (sequential? y) (apply partial x y)
            :else (partial x y))
      (+ (to-num x) (to-num y))))
+
   ([x y & xs]
    (when (not (or
                 (apply = (type x) (type y) (map type xs))
@@ -340,7 +341,7 @@
      (util/die "Cannot add+ multiple types when more than 2 arguments"))
    (reduce add+ (add+ x y) xs)))
 
-(defn div+ [& xs] (apply div xs))
+(defn div+ [& xs] (apply div (map to-num xs)))
 
 (defn mul+
   ([x y]
@@ -351,18 +352,18 @@
      (and (number? x) (vector? y)) (vec (apply concat (repeat x y)))
      (and (sequential? x) (number? y)) (apply concat (repeat y x))
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
-     :else  (* x y)))
+     :else  (* (to-num x) (to-num y))))
+
   ([x y & xs]
    (reduce mul+ (mul+ x y) xs)))
 
 (defn sub+
   ([x y]
-   (when (some nil? [x y])
-     (util/die "Cannot subtract with a nil value"))
    (condf x
      string? (str/replace x (str y) "")
      map? (dissoc x y)
      set? (disj x y)
+     vector? (vec (remove #(= y %1) x))
      seqable? (remove #(= y %1) x)
      number? (- x (to-num y))
      char? (condf y
@@ -370,6 +371,7 @@
              char? (- (long x) (long y))
              (op-error "sub" x y))
      (+ (to-num x) (to-num y))))
+
   ([x y & xs]
    (when (apply not= (type x) (type y) (map type xs))
      (util/die "Cannot sub+ multiple types when more than 2 arguments"))
@@ -559,7 +561,7 @@
     char? x
     string? (if (= 1 (count x))
               (first x)
-              (util/die "Can't convert string to char"))
+              (util/die "Can't convert multi-char string to char"))
     number? (char x)
     (util/die "Can't convert " (to-type x) " to char")))
 
@@ -574,6 +576,7 @@
     map? (reduce-kv (fn [acc k v] (conj acc v k)) '() x)
     sequential? (if (empty? x) '() (seq x))
     string? (if (empty? x) '() (seq x))
+    nil? '()
     (util/die "Can't convert " (to-type x) " to list")))
 
 (defn to-map [x]
@@ -582,6 +585,7 @@
     set? (zipmap (seq x) (repeat nil))
     sequential? (apply hash-map (seq x))
     string? (apply hash-map (seq x))
+    nil? {}
     (util/die "Can't convert " (to-type x) " to map")))
 
 (defn to-num [x]
@@ -601,12 +605,15 @@
 (defn to-omap [x]
   (condf x
     sequential? (apply omap x)
-    map? (apply omap (into [] cat x))))
+    map? (apply omap (into [] cat x))
+    nil? (omap)
+    (util/die "Can't convert " (to-type x) " to omap")))
 
 (defn to-set [x]
   (condf x
     map? (set (keys x))
     seqable? (set (seq x))
+    nil? (set nil)
     (util/die "Can't convert " (to-type x) " to set")))
 
 (defn to-str [x]
@@ -643,6 +650,7 @@
     map? (reduce-kv (fn [acc k v] (conj acc k v)) [] x)
     sequential? (vec x)
     string? (vec x)
+    nil? []
     (util/die "Can't convert " (or (type x) "nil") " to vector")))
 
 (intern 'ys.std 'B to-bool)

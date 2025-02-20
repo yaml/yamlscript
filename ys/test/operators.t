@@ -85,7 +85,7 @@ test::
   want: foobaz
 - code: 2 - nil
   what: error
-  want: Cannot subtract with a nil value
+  want: Can't convert a nil value to a number
 
 - note: .-- and .++
 

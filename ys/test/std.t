@@ -260,8 +260,7 @@ test::
   what: error
   want: Can't convert int to list
 - code: to-list(nil)
-  what: error
-  want: Can't convert nil to list
+  want:: \'()
 
 - code: to-vec(()) == []
 - code: to-vec([]) == []
