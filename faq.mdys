@@ -49,7 +49,7 @@ If you are enhancing an existing YAML file, there is no need to change the file
 extension to `.ys`. You can just start using YS features in the file.
 
 On the other hand, YS libraries loaded with the `use` function are required to
-use the `.ys` extension.
+have the `.ys` extension.
 ```
 
 
