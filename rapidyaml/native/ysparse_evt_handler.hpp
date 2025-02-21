@@ -15,39 +15,46 @@ C4_SUPPRESS_WARNING_GCC("-Wuseless-cast")
 namespace evt {
 using DataType = int32_t;
 typedef enum : DataType {
-    // ---------------------
-    // structure flags
-    KEY_ = 1 <<  0,   // as key
-    VAL_ = 1 <<  1,   // as value
-    SCLR = 1 <<  2,   // =VAL
-    BSEQ = 1 <<  3,   // +SEQ
-    ESEQ = 1 <<  4,   // -SEQ
-    BMAP = 1 <<  5,   // +MAP
-    EMAP = 1 <<  6,   // -MAP
-    ALIA = 1 <<  7,   // ref
-    ANCH = 1 <<  8,   // anchor
-    TAG_ = 1 <<  9,   // tag
-    // ---------------------
-    // style flags
-    PLAI = 1 << 10,   // : (plain scalar)
-    SQUO = 1 << 11,   // ' (single-quoted scalar)
-    DQUO = 1 << 12,   // " (double-quoted scalar)
-    LITL = 1 << 13,   // | (block literal scalar)
-    FOLD = 1 << 14,   // > (block folded scalar)
-    FLOW = 1 << 15,   // flow container: [] for seqs or {} for maps
-    BLCK = 1 << 16,   // block container
-    // ---------------------
-    // document flags
-    BDOC = 1 << 17,   // +DOC
-    EDOC = 1 << 18,   // -DOC
-    EXPL = 1 << 21,   // --- (with BDOC) or ... (with EDOC) (may be fused with FLOW if needed)
-    BSTR = 1 << 19,   // +STR
-    ESTR = 1 << 20,   // -STR
-    // ---------------------
-    // utility flags
+    // Event types
+    BSTR = 1 <<  0,  // +STR
+    ESTR = 1 <<  1,  // -STR
+    BDOC = 1 <<  2,  // +DOC
+    EDOC = 1 <<  3,  // -DOC
+    BMAP = 1 <<  4,  // +MAP
+    EMAP = 1 <<  5,  // -MAP
+    BSEQ = 1 <<  6,  // +SEQ
+    ESEQ = 1 <<  7,  // -SEQ
+    SCLR = 1 <<  8,  // =VAL
+    ALIA = 1 <<  9,  // =ALI
+
+    // Style flags
+    PLAI = 1 << 16,  // : (plain scalar)
+    SQUO = 1 << 17,  // ' (single-quoted scalar)
+    DQUO = 1 << 18,  // " (double-quoted scalar)
+    LITL = 1 << 19,  // | (block literal scalar)
+    FOLD = 1 << 20,  // > (block folded scalar)
+    FLOW = 1 << 21,  // flow container:
+                     // [] for seqs or {} for maps
+    BLCK = 1 << 22,  // block container
+
+    // Modifiers
+    ANCH = 1 << 24,  // anchor
+    TAG_ = 1 << 25,  // tag
+
+    // Structure flags
+    KEY_ = 1 << 26,  // as key
+    VAL_ = 1 << 27,  // as value
+    EXPL = 1 << 28,  // --- (with BDOC) or
+                                             // ... (with EDOC)
+                                             // (may be fused with FLOW
+                                             // if needed)
+
+    // Utility flags
     LAST = EXPL,
     MASK = (LAST << 1) - 1,
-    HAS_STR = SCLR|ALIA|ANCH|TAG_ // the event requires a string. the next two integers will provide respectively the string's offset and length
+    // the event requires a string. the next two integers will provide
+    // respectively the string's offset and length
+    HAS_STR = SCLR|ALIA|ANCH|TAG_
 } EventFlags;
 } // namespace evt
 
