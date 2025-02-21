@@ -54,7 +54,7 @@ public class Rapidyaml {
         throws RuntimeException, org.rapidyaml.YamlParseErrorException
     {
         String filename = "yamlscript"; // fixme
-long t = System.nanoTime();
+        long t = System.nanoTime();
         byte[] src = srcstr.getBytes(StandardCharsets.UTF_8);
         int edn_size = 10 * src.length;
         byte[] edn = new byte[edn_size];
@@ -67,8 +67,10 @@ long t = System.nanoTime();
                 throw new RuntimeException("inconsistent size");
             }
         }
-t = System.nanoTime() - t;
-System.out.printf("     edn@java=%.6fms\n", (double)t / 1.e6);
+        if (System.getenv("YS_RYML_TIMER") != null) {
+            t = System.nanoTime() - t;
+            System.out.printf("     edn@java=%.6fms\n", (double)t / 1.e6);
+        }
         String ret = new String(edn, 0, required_size-1, StandardCharsets.UTF_8);
         return ret;
     }
@@ -77,10 +79,12 @@ System.out.printf("     edn@java=%.6fms\n", (double)t / 1.e6);
         throws RuntimeException, org.rapidyaml.YamlParseErrorException
     {
         String filename = "yamlscript"; // fixme
-long t = System.nanoTime();
+        long t = System.nanoTime();
         int required_size = ys2evt_parse(this.ryml2evt, filename, src, src.length, evts, evts.length);
-t = System.nanoTime() - t;
-System.out.printf("     evt@java=%.6fms\n", (double)t / 1.e6);
+        if (System.getenv("YS_RYML_TIMER") != null) {
+            t = System.nanoTime() - t;
+            System.out.printf("     evt@java=%.6fms\n", (double)t / 1.e6);
+        }
         return required_size;
     }
 }

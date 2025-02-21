@@ -8,6 +8,11 @@
    [yamlscript.parser :as parser]
    [yamltest.core :as test]))
 
+(defn parse-test-case [yaml-string]
+  (->> yaml-string
+    parser/parse
+    (remove (fn [ev] (= "DOC" (subs (:+ ev) 1))))))
+
 (test/load-yaml-test-files
   ["test/compiler-stack.yaml"
    "test/resolver.yaml"
@@ -16,7 +21,7 @@
    :test (fn [test]
            (->> test
              :yamlscript
-             parser/parse-test-case
+             parse-test-case
              (map pr-str)
              (map #(subs %1 4 (dec (count %1))))))
    :want (fn [test]
