@@ -145,7 +145,7 @@ Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
         throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
     }
     {
-        TIMED_SECTION("jni_ys2evt_parse/release");
+        TIMED_SECTION("jni_ys2edn_parse/release");
         env->ReleaseByteArrayElements(src, src_, 0);
         env->ReleaseByteArrayElements(dst, dst_, 0);
         env->ReleaseStringUTFChars(jfilename, filename);
@@ -180,8 +180,8 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
             // TODO this is __S__L__O__W__
             //
             // the problem is with GetIntArrayElements(). we should
-            // use GetDirectBufferAddress(), but that requires a jobject
-            // instead of a jintArray
+            // use GetDirectBufferAddress(), but that requires a ByteBuffer->jobject
+            // instead of a int[]->jintArray
             //
             // see:
             // https://stackoverflow.com/questions/43763129/jni-is-getintarrayelements-always-linear-in-time
