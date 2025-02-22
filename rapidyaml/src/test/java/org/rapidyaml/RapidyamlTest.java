@@ -211,6 +211,30 @@ public class RapidyamlTest extends TestCase
         testEvt_(ys, expected);
     }
 
+    public void testTaggedInt()
+    {
+        String ys = "- !!int 42";
+        testEdn_(ys,
+            "(\n" +
+            "{:+ \"+SEQ\"}\n" +
+            "{:+ \"=VAL\", :! \"tag:yaml.org,2002:int\", := \"42\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            ")\n"
+            );
+        ExpectedEvent[] expected = {
+            new ExpectedEvent(Evt.BSTR),
+            new ExpectedEvent(Evt.BDOC),
+            new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.BLCK),
+            new ExpectedEvent(Evt.VAL_|Evt.TAG_, 2, 5, "!!int"),
+            new ExpectedEvent(Evt.VAL_|Evt.SCLR|Evt.PLAI, 8, 2, "42"),
+            new ExpectedEvent(Evt.ESEQ),
+            new ExpectedEvent(Evt.EDOC),
+            new ExpectedEvent(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+
     public void testLargeCase()
     {
         String ys = "--- !yamlscript/v0\n" +

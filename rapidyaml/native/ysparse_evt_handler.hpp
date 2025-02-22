@@ -532,7 +532,7 @@ public:
         _enable_(c4::yml::KEYTAG);
         csubstr ttag = _transform_directive(tag, m_key_tag_buf);
         _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
-        if(ttag.begins_with('!'))
+        if(ttag.begins_with('!') && !ttag.begins_with("!!"))
             ttag = ttag.sub(1);
         if(m_evt_curr + 2 < m_evt_size)
         {
@@ -547,7 +547,7 @@ public:
         _enable_(c4::yml::VALTAG);
         csubstr ttag = _transform_directive(tag, m_val_tag_buf);
         _RYML_CB_ASSERT(m_stack.m_callbacks, !ttag.empty());
-        if(ttag.begins_with('!'))
+        if(ttag.begins_with('!') && !ttag.begins_with("!!"))
             ttag = ttag.sub(1);
         if(m_evt_curr + 2 < m_evt_size)
         {
@@ -689,7 +689,11 @@ public:
 
     csubstr _transform_directive(csubstr tag, substr output)
     {
-        if(tag.begins_with('!'))
+        if(tag.begins_with("!!"))
+        {
+            return tag;
+        }
+        else if(tag.begins_with('!'))
         {
             if(c4::yml::is_custom_tag(tag))
             {
