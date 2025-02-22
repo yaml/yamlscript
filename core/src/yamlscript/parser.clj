@@ -99,17 +99,12 @@
 (defn parse-rapidyaml-evt [^String yaml-string]
   (rest
     (let [parser ^Rapidyaml (new Rapidyaml)
-          size 1000
-          masks (int-array size)
           buffer (.getBytes yaml-string StandardCharsets/UTF_8)
+          masks (int-array 5)
           needed (.parseYsToEvt parser buffer masks)
-          [buffer masks] (if (> needed size)
-                           (let [buffer (.getBytes yaml-string
-                                          StandardCharsets/UTF_8)
-                                 masks (int-array needed)
-                                 _ (.parseYsToEvt parser buffer masks)]
-                             [buffer masks])
-                           [buffer masks])
+          buffer (.getBytes yaml-string StandardCharsets/UTF_8)
+          masks (int-array needed)
+          _ (.parseYsToEvt parser buffer masks)
           get-str (fn [i]
                     (let [off (aget masks (inc i))
                           len (aget masks (+ i 2))]
