@@ -1,0 +1,109 @@
+name: rapidyaml
+
+defaults:
+  run:
+    shell: bash -xeo pipefail {0}
+'on':
+  workflow_dispatch: null
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+env:
+
+jobs:
+
+  # check that the spec'ed version of rapidyaml passes its own tests
+  ryml:
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - bt: Debug
+        - bt: Release
+    env:
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: checkout rapidyaml
+      run: |
+        cd rapidyaml/native
+        make rapidyaml
+    - name: configure
+      run: |
+        cd rapidyaml/native/rapidyaml
+        cmake -B build -D CMAKE_BUILD_TYPE=${{matrix.bt}} -D RYML_BUILD_TESTS=ON
+    - name: build
+      run: |
+        cd rapidyaml/native/rapidyaml
+        cmake --build build --target ryml-test-build --parallel --verbose
+    - name: run tests
+      run: |
+        cd rapidyaml/native/rapidyaml
+        cmake --build build --target ryml-test-run
+
+  # run the c++ tests
+  cpp:
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+    env:
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: run c++ tests
+      run: |
+        make -C rapidyaml/native test
+
+  # run the java tests
+  java:
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+    env:
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - make -C rapidyaml|
+      cd rapidyaml
+    - name: run java tests
+      run: |
+        make -C rapidyaml test
+
+  # run core and ys tests
+  ystest:
+    name: core/${{matrix.ysparser}}
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - ysparser: ryml-evt
+        #- ysparser: ryml-edn
+    env:
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: run core tests
+      run: |
+        . .profile
+        YS_PARSER=${{matrix.ysparser}} make test-core v=1
+    - name: run ys tests
+      run: |
+        . .profile
+        YS_PARSER=${{matrix.ysparser}} make test-ys v=1
