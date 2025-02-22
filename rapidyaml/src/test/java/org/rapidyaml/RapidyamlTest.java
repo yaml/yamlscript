@@ -241,7 +241,7 @@ public class RapidyamlTest extends TestCase
         testEdn_(ys,
             "(\n" +
             "{:+ \"+SEQ\"}\n" +
-            "{:+ \"+SEQ\", :flow true, :! \"tag:yaml.org,2002:seq\"}\n" +
+            "{:+ \"+SEQ\", :! \"tag:yaml.org,2002:seq\", :flow true}\n" +
             "{:+ \"-SEQ\"}\n" +
             "{:+ \"-SEQ\"}\n" +
             "{:+ \"-DOC\"}\n" +
@@ -251,8 +251,9 @@ public class RapidyamlTest extends TestCase
             new ExpectedEvent(Evt.BSTR),
             new ExpectedEvent(Evt.BDOC),
             new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.BLCK),
-            new ExpectedEvent(Evt.VAL_|Evt.TAG_, 2, 5, "!!int"),
-            new ExpectedEvent(Evt.VAL_|Evt.SCLR|Evt.PLAI, 8, 2, "42"),
+            new ExpectedEvent(Evt.VAL_|Evt.TAG_, 2, 5, "!!seq"),
+            new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.FLOW),
+            new ExpectedEvent(Evt.ESEQ),
             new ExpectedEvent(Evt.ESEQ),
             new ExpectedEvent(Evt.EDOC),
             new ExpectedEvent(Evt.ESTR),

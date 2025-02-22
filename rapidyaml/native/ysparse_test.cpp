@@ -652,7 +652,7 @@ fold: >
     tc("- !!seq []",
        R"((
 {:+ "+SEQ"}
-{:+ "+SEQ", :! "tag:yaml.org,2002:int", := "42"}
+{:+ "+SEQ", :! "tag:yaml.org,2002:seq", :flow true}
 {:+ "-SEQ"}
 {:+ "-SEQ"}
 {:+ "-DOC"}
@@ -661,10 +661,11 @@ fold: >
        {
            e(BSTR),
            e(BDOC),
-           e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 0, 4, "𝄞"),
-           e(VAL_|SCLR|PLAI, 6, 3, "✅"),
-           e(EMAP),
+           e(VAL_|BSEQ|BLCK),
+           e(VAL_|TAG_, 2, 5, "!!seq"),
+           e(VAL_|BSEQ|FLOW),
+           e(ESEQ),
+           e(ESEQ),
            e(EDOC),
            e(ESTR),
        }),
@@ -706,7 +707,6 @@ fold: >
            e(EDOC),
            e(ESTR),
        }),
-#endif
     // case -------------------------------------------------
     tc(R"_(#!/usr/bin/env ys-0
 
