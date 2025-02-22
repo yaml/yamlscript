@@ -128,7 +128,11 @@
                               event (if (flag? FLOW mask)
                                       (assoc event :flow true) event)
                               event (if anchor (assoc event :& anchor) event)
-                              event (if tag (assoc event :! tag) event)
+                              event (if tag
+                                      (let [tag (str/replace tag
+                                                  #"^!!"
+                                                  "tag:yaml.org,2002:")]
+                                        (assoc event :! tag)) event)
                               event (if sval (assoc event
                                                (get-skey mask) sval) event)
                               event (if (= type "=ALI")
@@ -155,11 +159,6 @@
                   (die "Unknown YS_PARSER value: " parser-name))
                 ; parse-rapidyaml-evt
                 parse-snakeyaml))
-
-(defn parse-test-case [yaml-string]
-  (->> yaml-string
-    parse
-    (remove (fn [ev] (= "DOC" (subs (:+ ev) 1))))))
 
 ;;
 ;; Functions to turn Java event objects into Clojure objects
