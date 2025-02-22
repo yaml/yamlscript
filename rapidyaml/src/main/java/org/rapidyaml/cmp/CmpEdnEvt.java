@@ -13,6 +13,7 @@ public class CmpEdnEvt
     {
         Rapidyaml rapidyaml = new Rapidyaml();
         int evtSize = 10000000;
+        compareEdnEvt(evtSize, rapidyaml, "./yamllm.ys");
         compareEdnEvt(evtSize, rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/appveyor.yml");
         compareEdnEvt(evtSize, rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/compile_commands.json");
         compareEdnEvt(evtSize, rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner100.yml");
