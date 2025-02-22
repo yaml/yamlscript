@@ -377,14 +377,21 @@ public:
     C4_ALWAYS_INLINE void set_key_scalar_plain_empty()
     {
         _c4dbgpf("{}/{}: set_key_scalar_plain_empty", m_evt_curr, m_evt_size);
-        _send_key_scalar_({}, evt::PLAI);
+        _send_key_scalar_(_get_latest_empty_scalar(), evt::PLAI);
         _enable_(c4::yml::KEY|c4::yml::KEY_PLAIN|c4::yml::KEYNIL);
     }
     C4_ALWAYS_INLINE void set_val_scalar_plain_empty()
     {
         _c4dbgpf("{}/{}: set_val_scalar_plain_empty", m_evt_curr, m_evt_size);
-        _send_val_scalar_({}, evt::PLAI);
+        _send_val_scalar_(_get_latest_empty_scalar(), evt::PLAI);
         _enable_(c4::yml::VAL|c4::yml::VAL_PLAIN|c4::yml::VALNIL);
+    }
+    C4_ALWAYS_INLINE csubstr _get_latest_empty_scalar() const
+    {
+        // ideally we should search back in the latest event that has
+        // a scalar, than select a zero-length scalar immediately
+        // after that scalar. But this also works for now:
+        return m_str.first(0);
     }
 
 
