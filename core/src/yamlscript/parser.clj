@@ -103,11 +103,13 @@
           masks (int-array size)
           buffer (.getBytes yaml-string StandardCharsets/UTF_8)
           needed (.parseYsToEvt parser buffer masks)
-          masks (if (> needed size)
-                  (let [masks (int-array needed)
-                        _ (.parseYsToEvt parser buffer masks)]
-                    masks)
-                  masks)
+          [buffer masks] (if (> needed size)
+                           (let [buffer (.getBytes yaml-string
+                                          StandardCharsets/UTF_8)
+                                 masks (int-array needed)
+                                 _ (.parseYsToEvt parser buffer masks)]
+                             [buffer masks])
+                           [buffer masks])
           get-str (fn [i]
                     (let [off (aget masks (inc i))
                           len (aget masks (+ i 2))]
