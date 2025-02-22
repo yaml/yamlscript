@@ -677,6 +677,8 @@ public:
             }
         }
         csubstr result = c4::yml::normalize_tag_long(tag, output);
+        if(result.begins_with('<') && result.ends_with('>'))
+            result = result.offs(1, 1);
         _RYML_CB_CHECK(m_stack.m_callbacks, result.len > 0);
         _RYML_CB_CHECK(m_stack.m_callbacks, result.str);
         return result;
