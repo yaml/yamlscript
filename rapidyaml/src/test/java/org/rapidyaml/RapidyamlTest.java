@@ -235,6 +235,31 @@ public class RapidyamlTest extends TestCase
         testEvt_(ys, expected);
     }
 
+    public void testTaggedSeq()
+    {
+        String ys = "- !!seq []";
+        testEdn_(ys,
+            "(\n" +
+            "{:+ \"+SEQ\"}\n" +
+            "{:+ \"+SEQ\", :flow true, :! \"tag:yaml.org,2002:seq\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-SEQ\"}\n" +
+            "{:+ \"-DOC\"}\n" +
+            ")\n"
+            );
+        ExpectedEvent[] expected = {
+            new ExpectedEvent(Evt.BSTR),
+            new ExpectedEvent(Evt.BDOC),
+            new ExpectedEvent(Evt.VAL_|Evt.BSEQ|Evt.BLCK),
+            new ExpectedEvent(Evt.VAL_|Evt.TAG_, 2, 5, "!!int"),
+            new ExpectedEvent(Evt.VAL_|Evt.SCLR|Evt.PLAI, 8, 2, "42"),
+            new ExpectedEvent(Evt.ESEQ),
+            new ExpectedEvent(Evt.EDOC),
+            new ExpectedEvent(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+
     public void testLargeCase()
     {
         String ys = "--- !yamlscript/v0\n" +

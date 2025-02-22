@@ -319,17 +319,18 @@ public:
         int status = true;
         size_t num_events_expected = evt.size();
         size_t num_ints_expected = expected_size(evt);
+        bool same_size = true;
         if(actual.size() != num_ints_expected)
         {
             printf("------\n"
-                   "FAIL:\n"
+                   "FAIL: different size\n"
                    "input:~~~%.*s~~~\n"
                    "expected size:~~~%zu~~~\n"
                    "actual size:~~~%zu~~~\n",
                    (int)ys.len, ys.str,
                    num_ints_expected,
                    actual.size());
-            status = false;
+            same_size = false;
         }
         for(size_t i = 0, ie = 0; ie < num_events_expected; ++ie)
         {
@@ -382,7 +383,7 @@ public:
                    "FAIL:\n"
                    "input:~~~%.*s~~~\n",
                    (int)ys.len, ys.str);
-        return status;
+        return status && same_size;
     }
 };
 
@@ -643,6 +644,169 @@ fold: >
            e(VAL_|SCLR|LITL, 68, 6, "X\nY\nZ\n", needs_filter),
            e(KEY_|SCLR|PLAI, 89, 4, "fold"),
            e(VAL_|SCLR|FOLD, 97, 6, "U V W\n", needs_filter),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc("- !!seq []",
+       R"((
+{:+ "+SEQ"}
+{:+ "+SEQ", :! "tag:yaml.org,2002:int", := "42"}
+{:+ "-SEQ"}
+{:+ "-SEQ"}
+{:+ "-DOC"}
+)
+)",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 4, "𝄞"),
+           e(VAL_|SCLR|PLAI, 6, 3, "✅"),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+    // case -------------------------------------------------
+    tc(R"_(defn run(prompt session=nil):
+  when session:
+    write session _ :append true: |+
+      Q: $(orig-prompt:trim)
+      A ($api-model):
+      $(answer:trim)
+)_",
+       R"_((
+{:+ "+MAP"}
+{:+ "=VAL", := "defn run(prompt session=nil)"}
+{:+ "+MAP"}
+{:+ "=VAL", := "when session"}
+{:+ "+MAP"}
+{:+ "=VAL", := "write session _ :append true"}
+{:+ "=VAL", :| "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n"}
+{:+ "-MAP"}
+{:+ "-MAP"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)_",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 0, 28, "defn run(prompt session=nil)"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 32, 12, "when session"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 50, 28, "write session _ :append true"),
+           e(VAL_|SCLR|LITL, 83, 54, "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n", needs_filter),
+           e(EMAP),
+           e(EMAP),
+           e(EMAP),
+           e(EDOC),
+           e(ESTR),
+       }),
+#endif
+    // case -------------------------------------------------
+    tc(R"_(#!/usr/bin/env ys-0
+
+defn run(prompt session=nil):
+  session-text =:
+    when session && session:fs-e:
+
+  answer =:
+    cond:
+      api-model =~ /^dall-e/:
+        openai-image(prompt).data.0.url
+      api-model.in?(anthropic-models):
+        anthropic(prompt):anthropic-message:format
+      api-model.in?(groq-models):
+        groq(prompt).choices.0.message.content:format
+      api-model.in?(openai-models):
+        openai-chat(prompt).choices.0.message.content:format
+      else: die()
+
+  say: answer
+
+  when session:
+    write session _ :append true: |+
+      Q: $(orig-prompt:trim)
+      A ($api-model):
+      $(answer:trim)
+
+)_",
+       R"_((
+{:+ "+MAP"}
+{:+ "=VAL", := "defn run(prompt session=nil)"}
+{:+ "+MAP"}
+{:+ "=VAL", := "session-text ="}
+{:+ "+MAP"}
+{:+ "=VAL", := "when session && session:fs-e"}
+{:+ "=VAL", :: ""}
+{:+ "-MAP"}
+{:+ "=VAL", := "answer ="}
+{:+ "+MAP"}
+{:+ "=VAL", := "cond"}
+{:+ "+MAP"}
+{:+ "=VAL", := "api-model =~ /^dall-e/"}
+{:+ "=VAL", := "openai-image(prompt).data.0.url"}
+{:+ "=VAL", := "api-model.in?(anthropic-models)"}
+{:+ "=VAL", := "anthropic(prompt):anthropic-message:format"}
+{:+ "=VAL", := "api-model.in?(groq-models)"}
+{:+ "=VAL", := "groq(prompt).choices.0.message.content:format"}
+{:+ "=VAL", := "api-model.in?(openai-models)"}
+{:+ "=VAL", := "openai-chat(prompt).choices.0.message.content:format"}
+{:+ "=VAL", := "else"}
+{:+ "=VAL", := "die()"}
+{:+ "-MAP"}
+{:+ "-MAP"}
+{:+ "=VAL", := "say"}
+{:+ "=VAL", := "answer"}
+{:+ "=VAL", := "when session"}
+{:+ "+MAP"}
+{:+ "=VAL", := "write session _ :append true"}
+{:+ "=VAL", :| "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n\n"}
+{:+ "-MAP"}
+{:+ "-MAP"}
+{:+ "-MAP"}
+{:+ "-DOC"}
+)
+)_",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 21, 28, "defn run(prompt session=nil)"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 53, 14, "session-text ="),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 73, 28, "when session && session:fs-e"),
+           e(VAL_|SCLR|PLAI, 0, 0, ""), // note empty scalar pointing at the front
+           e(EMAP),
+           e(KEY_|SCLR|PLAI, 106, 8, "answer ="),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 120, 4, "cond"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 132, 22, "api-model =~ /^dall-e/"),
+           e(VAL_|SCLR|PLAI, 164, 31, "openai-image(prompt).data.0.url"),
+           e(KEY_|SCLR|PLAI, 202, 31, "api-model.in?(anthropic-models)"),
+           e(VAL_|SCLR|PLAI, 243, 42, "anthropic(prompt):anthropic-message:format"),
+           e(KEY_|SCLR|PLAI, 292, 26, "api-model.in?(groq-models)"),
+           e(VAL_|SCLR|PLAI, 328, 45, "groq(prompt).choices.0.message.content:format"),
+           e(KEY_|SCLR|PLAI, 380, 28, "api-model.in?(openai-models)"),
+           e(VAL_|SCLR|PLAI, 418, 52, "openai-chat(prompt).choices.0.message.content:format"),
+           e(KEY_|SCLR|PLAI, 477, 4, "else"),
+           e(VAL_|SCLR|PLAI, 483, 5, "die()"),
+           e(EMAP),
+           e(EMAP),
+           e(KEY_|SCLR|PLAI, 492, 3, "say"),
+           e(VAL_|SCLR|PLAI, 497, 6, "answer"),
+           e(KEY_|SCLR|PLAI, 507, 12, "when session"),
+           e(VAL_|BMAP|BLCK),
+           e(KEY_|SCLR|PLAI, 525, 28, "write session _ :append true"),
+           e(VAL_|SCLR|LITL, 558, 55, "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n\n", needs_filter),
+           e(EMAP),
+           e(EMAP),
            e(EMAP),
            e(EDOC),
            e(ESTR),
