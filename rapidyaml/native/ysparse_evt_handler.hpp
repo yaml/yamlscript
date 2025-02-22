@@ -504,13 +504,13 @@ public:
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(c4::yml::KEY|c4::yml::KEYREF);
-        _send_key_scalar_(ref, evt::KEY_|evt::ALIA);
+        _send_str_(ref.sub(1), evt::KEY_|evt::ALIA); // skip the leading *
     }
     void set_val_ref(csubstr ref)
     {
         _RYML_CB_ASSERT(m_stack.m_callbacks, ref.begins_with('*'));
         _enable_(c4::yml::VAL|c4::yml::VALREF);
-        _send_val_scalar_(ref, evt::VAL_|evt::ALIA);
+        _send_str_(ref.sub(1), evt::VAL_|evt::ALIA); // skip the leading *
     }
 
     /** @} */
@@ -660,6 +660,19 @@ public:
         if(m_evt_curr + 2 < m_evt_size)
         {
             m_evt[m_evt_curr] = evt::SCLR|evt::VAL_|flags;
+            _add_scalar_(m_evt_curr, scalar);
+        }
+        m_curr->evt_id = m_evt_curr;
+        m_evt_prev = m_evt_curr;
+        m_evt_curr += 3;
+    }
+
+    C4_ALWAYS_INLINE void _send_str_(csubstr scalar, evt::DataType flags)
+    {
+        _c4dbgpf("{}/{}: send str", m_evt_curr, m_evt_size);
+        if(m_evt_curr + 2 < m_evt_size)
+        {
+            m_evt[m_evt_curr] = flags;
             _add_scalar_(m_evt_curr, scalar);
         }
         m_curr->evt_id = m_evt_curr;
