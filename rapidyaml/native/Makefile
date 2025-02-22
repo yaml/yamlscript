@@ -9,7 +9,7 @@ include $(COMMON)/python.mk
 # https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
 
 THIS_DIR := $(shell pwd)
-BDIR := $(THIS_DIR)/_build/$(RAPIDYAML_BUILD_TYPE)-shared$(RAPIDYAML_SHARED)-timed$(RAPIDYAML_TIMED)-dbg$(RAPIDYAML_DBG)
+BDIR := $(THIS_DIR)/_build/$(RAPIDYAML_BUILD_TYPE)-timed$(RAPIDYAML_TIMED)-dbg$(RAPIDYAML_DBG)
 
 RAPIDYAML_DEPS := \
   Makefile \
@@ -30,46 +30,52 @@ CMK_FLAGS := \
 #------------------------------------------------------------------------------
 default::
 
+cfg:: cfg-static cfg-shared
 build:: build-static build-shared
 test: test-static test-shared
 
 rapidyaml:
 	mkdir -p $@
-	git -C $@ init -q .
-	git -C $@ remote add origin $(RAPIDYAML_REPO)
-	git -C $@ fetch origin $(RAPIDYAML_TAG)
-	git -C $@ reset --hard FETCH_HEAD
-	git -C $@ submodule update --init --recursive
+	$(GIT) -C $@ init -q .
+	$(GIT) -C $@ remote add origin $(RAPIDYAML_REPO)
+	$(GIT) -C $@ fetch origin $(RAPIDYAML_TAG)
+	$(GIT) -C $@ reset --hard FETCH_HEAD
+	$(GIT) -C $@ submodule update --init --recursive
 
 clean::
 	$(RM) librapidyaml.*
-	$(RM) -r $(BDIR)
+	$(RM) -r _build
 	$(RM) -r rapidyaml-install
 
 realclean:: clean
 	$(RM) -r rapidyaml
 
+jni: $(RAPIDYAML_JNI_H)
+
+jnicheck: jni
+	$(GIT) diff --exit-code $(RAPIDYAML_JNI_H)
+
 
 #------------------------------------------------------------------------------
 
-$(RAPIDYAML_LIB): rapidyaml
 build-static: $(RAPIDYAML_LIB)
+cfg-static: rapidyaml
+	$(CMK_ENV) $(CMAKE) -S . -B $(BDIR)-static $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=OFF
 test-static: build-static
-	$(CMK_ENV) cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml-test-run
-$(RAPIDYAML_LIB): $(RAPIDYAML_DEPS)
-	$(CMK_ENV) cmake -S . -B $(BDIR)-static $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=OFF
-	cmake --build $(BDIR)-static --parallel --verbose --target rapidyaml
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target rapidyaml-test-run
+$(RAPIDYAML_LIB): cfg-static $(RAPIDYAML_DEPS)
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --target rapidyaml --parallel --verbose
 	cp -fv $(BDIR)-static/*.a $@
 
-$(RAPIDYAML_SO): rapidyaml
 build-shared: $(RAPIDYAML_SO)
+cfg-shared: rapidyaml
+	$(CMK_ENV) $(CMAKE) -S . -B $(BDIR)-shared $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=ON
 test-shared: build-shared
-	cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml-test-run
-$(RAPIDYAML_SO): $(RAPIDYAML_DEPS)
-	$(CMK_ENV) cmake -S . -B $(BDIR)-shared $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=ON
-	$(CMK_ENV) cmake --build $(BDIR)-shared --parallel --verbose --target rapidyaml
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --target rapidyaml-test-run --verbose
+$(RAPIDYAML_SO): cfg-shared $(RAPIDYAML_DEPS)
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --target rapidyaml --parallel --verbose
 	cp -fv $(BDIR)-shared/*.so $@
 	ln -fs $@ librapidyaml.so
 
-$(RAPIDYAML_JNI_H): $(RAPIDYAML_JAVA)
-	javac -h . $(RAPIDYAML_JAVA) # $^ doesn't work
+$(RAPIDYAML_JNI_H): $(JAVAC) $(RAPIDYAML_JAVA)
+	$(JAVAC) -h . $(RAPIDYAML_JAVA) # $^ doesn't work
