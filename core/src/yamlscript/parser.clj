@@ -40,7 +40,9 @@
   (let [has-code-mode-shebang (or
                                 (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
-        events (parse-fn yaml-string)
+        events (if (System/getenv "YS_PARSER_TIME")
+                 (time (parse-fn yaml-string))
+                 (parse-fn yaml-string))
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
