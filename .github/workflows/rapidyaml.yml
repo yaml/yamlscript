@@ -7,11 +7,8 @@ defaults:
   workflow_dispatch: null
   push:
     branches:
-    - master
+    - main
   pull_request:
-    branches:
-    - master
-env:
 
 jobs:
 
@@ -26,7 +23,6 @@ jobs:
         include:
         - bt: Debug
         - bt: Release
-    env:
     steps:
     - name: checkout (action)
       uses: actions/checkout@v4
@@ -48,43 +44,8 @@ jobs:
         cd rapidyaml/native/rapidyaml
         cmake --build build --target ryml-test-run
 
-  # run the c++ tests
+  # run the c++ tests, also in Debug to test with assertions
   cpp:
-    runs-on: ubuntu-24.04
-    if: always()
-    continue-on-error: false
-    strategy:
-      fail-fast: false
-    env:
-    steps:
-    - name: checkout (action)
-      uses: actions/checkout@v4
-      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
-    - name: run c++ tests
-      run: |
-        make -C rapidyaml/native test
-
-  # run the java tests
-  java:
-    runs-on: ubuntu-24.04
-    if: always()
-    continue-on-error: false
-    strategy:
-      fail-fast: false
-    env:
-    steps:
-    - name: checkout (action)
-      uses: actions/checkout@v4
-      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
-    - make -C rapidyaml|
-      cd rapidyaml
-    - name: run java tests
-      run: |
-        make -C rapidyaml test
-
-  # run core and ys tests
-  ystest:
-    name: core/${{matrix.ysparser}}
     runs-on: ubuntu-24.04
     if: always()
     continue-on-error: false
@@ -92,9 +53,87 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - ysparser: ryml-evt
-        #- ysparser: ryml-edn
-    env:
+        - bt: Debug
+        - bt: Release
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: check jni header up to date
+      run: |
+        make -C rapidyaml/native -B jni jnicheck
+    - name: get rapidyaml
+      run: |
+        make -C rapidyaml/native rapidyaml
+    - name: c++ tests, no timing ---------------------------------------------------
+      run: echo
+    - name: cfg c++ tests, no timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        RAPIDYAML_TIMED=0 \
+        make -C rapidyaml/native cfg
+    - name: build c++ tests, no timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        RAPIDYAML_TIMED=0 \
+        make -C rapidyaml/native build
+    - name: run c++ tests, no timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        RAPIDYAML_TIMED=0 \
+        make -C rapidyaml/native test
+    - name: c++ tests, with timing ---------------------------------------------------
+      run: echo
+    - name: cfg c++ tests, with timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        RAPIDYAML_TIMED=1 \
+        make -C rapidyaml/native cfg
+    - name: build c++ tests, with timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        RAPIDYAML_TIMED=1 \
+        make -C rapidyaml/native build
+    - name: run c++ tests, with timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        RAPIDYAML_TIMED=1 \
+        make -C rapidyaml/native test
+
+  # run the java tests, also in Debug to test with assertions
+  java:
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - bt: Debug
+        - bt: Release
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: run java tests
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        make -C rapidyaml test
+
+  # run core and ys tests, also in Debug to test with assertions
+  ys:
+    name: ys/${{matrix.ysparser}}/${{matrix.bt}}
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - {ysparser: ryml-evt, bt: Debug}
+        - {ysparser: ryml-evt, bt: Release}
+        - {ysparser: ryml-edn, bt: Debug}
+        - {ysparser: ryml-edn, bt: Release}
     steps:
     - name: checkout (action)
       uses: actions/checkout@v4
@@ -102,8 +141,18 @@ jobs:
     - name: run core tests
       run: |
         . .profile
-        YS_PARSER=${{matrix.ysparser}} make test-core v=1
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        YS_PARSER=${{matrix.ysparser}} \
+        make test-core v=1
     - name: run ys tests
       run: |
         . .profile
-        YS_PARSER=${{matrix.ysparser}} make test-ys v=1
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        YS_PARSER=${{matrix.ysparser}} \
+        make -C ys test-run v=1
+    - name: run ys tests ?
+      run: |
+        . .profile
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        YS_PARSER=${{matrix.ysparser}} \
+        make test-ys v=1   # is this the same as above?
