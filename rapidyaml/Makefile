@@ -30,11 +30,11 @@ install:: $(RAPIDYAML_INSTALLED)
 
 test:: build $(JAVA_INSTALLED)
 	$(MAKE) -C native $@
-	mvn $@
+	$(MVN) $@
 
 test-x: build $(JAVA_INSTALLED)
 	$(MAKE) -C native $@
-	mvn -X -e test
+	$(MVN) -X -e test
 
 clean::
 	$(RM) $(RAPIDYAML_CLASS) $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
@@ -57,16 +57,16 @@ $(RAPIDYAML_LIB): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
 
 $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
-	mvn install
+	$(MVN) install
 
 $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
-	jar -cvf $@ $<
+	$(JAR) -cvf $@ $<
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
 	@# this doesn't work:
-	@#javac $<
+	@#$(JAVAC) $<
 	@# ... but this does:
-	javac $(RAPIDYAML_JAVA)
+	$(JAVAC) $(RAPIDYAML_JAVA)
 
 $(RAPIDYAML_JNI_H): $(RAPIDYAML_JAVA)
 	$(MAKE) -C native $@
