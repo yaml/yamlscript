@@ -1,5 +1,6 @@
 /rapidyaml/
 /_build/
+/build/
 /librapidyaml.*
 /.cache
 /compile_commands.json
