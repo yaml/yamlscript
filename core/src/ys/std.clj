@@ -20,12 +20,14 @@
    [yamlscript.util :as util]
    [ys.ys :as ys])
   (:import java.security.MessageDigest)
-  (:refer-clojure :exclude [die
+  (:refer-clojure :exclude [atom
+                            die
                             eval
                             print
                             read
                             reverse
-                            replace]))
+                            replace
+                            set]))
 
 
 ;; Guard against billion laughs style attacks
@@ -46,7 +48,7 @@
   (condf C
     string? (clojure.string/index-of C x)
     sequential? (let [i (.indexOf ^java.util.List C x)]
-                     (if (>= i 0) i nil))
+                  (if (>= i 0) i nil))
     (util/die "Can't index a " (type C))))
 
 (defn join
@@ -106,7 +108,7 @@
          off (if (neg? off) (+ slen off) off)
          [len slen] (if (neg? len)
                       (let [len (max 0 (+ slen len))]
-                                  [len len])
+                        [len len])
                       [len slen])]
      (condp apply [off slen]
        < (when (>= (+ off len) 0)
@@ -141,13 +143,13 @@
 (defn get+ [C K]
   (condf C
     map? (if (symbol? K)
-          (or
-            (get C K)
-            (get C (str K))
-            (get C (keyword K)))
-          (or
-            (get C K)
-            (get C (str K))))
+           (or
+             (get C K)
+             (get C (str K))
+             (get C (keyword K)))
+           (or
+             (get C K)
+             (get C (str K))))
     nil? nil
     seqable? (condf K
                number? (nth C K nil)
@@ -196,7 +198,7 @@
                 (util/die "Can't merge " q)))
           M (apply merge-with (fn [x _] x) m v)]
       (+merge M))
-      M))
+    M))
 
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
@@ -280,8 +282,8 @@
      (math/pow x y)))
 
   ([x y & xs]
-    (let [[& xs] (clojure.core/reverse (conj xs y x))]
-      (reduce #(pow %2 %1) 1 xs))))
+   (let [[& xs] (clojure.core/reverse (conj xs y x))]
+     (reduce #(pow %2 %1) 1 xs))))
 
 (intern 'ys.std 'round math/round)
 
@@ -294,9 +296,9 @@
 
 (defn- op-error
   ([op x]
-     (util/die "Cannot " op "(" (pr-str x) ")"))
+   (util/die "Cannot " op "(" (pr-str x) ")"))
   ([op x y]
-     (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")")))
+   (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")")))
 
 (defn inc+ [x]
   (condf x
@@ -611,10 +613,14 @@
 
 (defn to-set [x]
   (condf x
-    map? (set (keys x))
-    seqable? (set (seq x))
-    nil? (set nil)
+    map? (clojure.core/set (keys x))
+    seqable? (clojure.core/set (seq x))
+    nil? (clojure.core/set nil)
     (util/die "Can't convert " (to-type x) " to set")))
+
+(defn set
+  ([] #{})
+  ([x] (to-set x)))
 
 (defn to-str [x]
   (condf x
@@ -895,7 +901,22 @@
 (defn stream
   ([] @global/stream-values)
   ([values] (reset! global/stream-values values)
-    nil))
+            nil))
+
+
+;;------------------------------------------------------------------------------
+;; Atom functions
+;;------------------------------------------------------------------------------
+
+(defn atom
+  ([] (atom nil))
+  ([x] (clojure.core/atom x)))
+
+(defn reset
+  ([x y] (clojure.core/reset! x y)))
+
+(defn swap
+  ([f & xs] (apply clojure.core/swap! f xs)))
 
 
 ;;------------------------------------------------------------------------------
@@ -910,15 +931,15 @@
 
 (defn- destructure-vector [V idx]
   (map-indexed
-   (fn [i name]
-     (+def-defn name `(get ~idx ~i)))
-   V))
+    (fn [i name]
+      (+def-defn name `(get ~idx ~i)))
+    V))
 
 (defn- destructure-map [M idx]
   (map
-   (fn [[k v]]
-     (+def-defn k `(get ~idx ~v)))
-   M))
+    (fn [[k v]]
+      (+def-defn k `(get ~idx ~v)))
+    M))
 
 (defn- destructure-idx [x idx]
   (let [root (gensym)]
@@ -954,7 +975,6 @@
      (global/update-env m)
      (global/update-environ m)))
   ([k v & xs] (env-update (apply hash-map k v xs))))
-
 
 ;;------------------------------------------------------------------------------
 (comment

@@ -8,10 +8,11 @@ base =:
   if CWD =~ /\/yamlscript$/:
     then: "$CWD/ys"
     else: CWD
+#/
 
 test::
 #-------------------------------------------------------------------------------
-- note: "String functions"
+- note: String functions
 
 - code: ('foo' == 'oof'.reverse())
 - code: ('foo' != 'bar')
@@ -56,7 +57,7 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Collection functions"
+- note: Collection functions
 
 - code: nil.in?([1 nil 3])
 
@@ -73,6 +74,7 @@ test::
   want:: \'(97 98 99)
 - code: int.map('abc')
   want:: \'(97 98 99)
+#'
 - code: -"abc".map(int).mapv(inc)
   want:: -[98 99 100]
 - code: '(1 .. 10).has?(5)'
@@ -95,7 +97,7 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Math functions"
+- note: Math functions
 
 - code: 4 ** 3 ** 2
   want: 262144
@@ -122,10 +124,11 @@ test::
   want:: \'(0 1 2 3 4 5)
 - code: digits(012345)
   want:: \'(1 2 3 4 5)
+#'
 
 
 #-------------------------------------------------------------------------------
-- note: "Control functions"
+- note: Control functions
 
 # call a function by reference, string, or symbol
 - code: -'inc'.call(41)
@@ -139,6 +142,7 @@ test::
 - code: |
     each x (1 .. 3): x.++
   want:: \'(2 3 4)
+#'
 
 - code: die()
   what: error
@@ -149,7 +153,7 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Function functions"
+- note: Function functions
 
 - code: |
     bus =: sub:flip
@@ -158,7 +162,7 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Regex functions"
+- note: Regex functions
 
 - code: -"I Like Pie".split().filter(\(/[A-Z]/)).join()
   want: ILP
@@ -170,11 +174,11 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "I/O functions"
+- note: I/O functions
 
 
 #-------------------------------------------------------------------------------
-- note: 'Shorter named alias functions'
+- note: Shorter named alias functions
 
 # a and just
 - code: a(41).inc()
@@ -190,6 +194,7 @@ test::
   want:: \'name
 - code: q((1 2 3))
   want:: \'(1 2 3)
+#'
 
 - code: value('inc')
   want:: inc
@@ -203,11 +208,11 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Quoting functions"
+- note: Quoting functions
 
 
 #-------------------------------------------------------------------------------
-- note: "Named function aliases for infix operators"
+- note: Named function aliases for infix operators
 
 - code: eq(23 23 23 23)
 - code: eq("x" "x" "x" "x")
@@ -234,11 +239,20 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Common type casting functions"
+- note: Common type casting functions
+
+- name: Test std/set for zero args
+  code: set()
+  want:: \{}
+
+- name: Test std/set for one args
+  code: set([1 2 3])
+  want:: \{1 2 3}
 
 - code: to-char(nil)
   what: error
   want: Can't convert nil to char
+#'
 
 - code: to-num("42") == 42
 - code: to-num(42) == 42
@@ -265,10 +279,11 @@ test::
 - code: to-vec(()) == []
 - code: to-vec([]) == []
 - code: to-vec(\'(1 2 3)) == [1 2 3]
+#'
 
 
 #-------------------------------------------------------------------------------
-- note: "Alternate truth functions"
+- note: Alternate truth functions
 
 - code: falsey?(0)
 - code: falsey?(0.0)
@@ -285,7 +300,7 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "File system functions"
+- note: File system functions
 
 - code: 'fs-d: CWD'
 - code: 'fs-e: CWD'
@@ -312,19 +327,19 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "Date/Time functions"
+- note: Date/Time functions
 
 
 #-------------------------------------------------------------------------------
-- note: "YAML anchor and alias functions"
+- note: YAML anchor and alias functions
 
 
 #-------------------------------------------------------------------------------
-- note: "Java interop functions"
+- note: Java interop functions
 
 
 #-------------------------------------------------------------------------------
-- note: "Security functions"
+- note: Security functions
 
 - code: md5("foo\n")
   want: d3b07384d113edec49eaa6238ad5ff00
@@ -335,23 +350,36 @@ test::
 
 
 #-------------------------------------------------------------------------------
-- note: "IPC functions"
+- note: IPC functions
 
 
 #-------------------------------------------------------------------------------
-- note: "External library functions"
+- note: External library functions
 
 
 #-------------------------------------------------------------------------------
-- note: "HTTP functions"
+- note: HTTP functions
 
 
 #-------------------------------------------------------------------------------
-- note: "YS document result stashing functions"
+- note: YS document result stashing functions
 
 
 #-------------------------------------------------------------------------------
-- note: 'Special functions'
+- note: Atom functions
+
+- name: Test std/reset
+  code: |
+    a =: atom(nil)
+    reset a: -[1 2 3]
+  want:: -[1 2 3]
+
+- name: Test std/atom with no args
+  code: atom().@ == nil
+
+
+#-------------------------------------------------------------------------------
+- note: Special functions
 
 - name: Vector def destructuring
   code: |
