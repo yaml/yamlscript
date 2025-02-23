@@ -10,7 +10,6 @@
    [yamlscript.common])
   (:import
    (java.util Optional)
-   (java.nio ByteBuffer)
    (java.nio.charset StandardCharsets)
    (org.rapidyaml Evt Rapidyaml)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -57,6 +56,10 @@
 
 (declare snake-event)
 
+;;
+;; SnakeYAML Parser
+;;
+
 ;; TODO - Set bigger buffer size in scanner class
 (defn parse-snakeyaml [yaml-string]
   (let [parser (new Parse (.build (LoadSettings/builder)))]
@@ -65,99 +68,6 @@
       (map snake-event)
       (remove nil?)
       rest)))
-
-(defn parse-rapidyaml-edn [yaml-string]
-  (let [rapid-parser (new Rapidyaml)]
-    (->> yaml-string
-      (#(.parseYsToEdn ^Rapidyaml rapid-parser %1))
-      read-string)))
-
-(defn event-type [mask]
-  (condp = (bit-and mask 2r11111111111)
-    Evt/BSTR nil
-    Evt/ESTR nil
-    Evt/BDOC "+DOC"
-    Evt/EDOC "-DOC"
-    Evt/BMAP "+MAP"
-    Evt/EMAP "-MAP"
-    Evt/BSEQ "+SEQ"
-    Evt/ESEQ "-SEQ"
-    Evt/SCLR "=VAL"
-    Evt/ALIA "=ALI"
-    nil))
-
-(defmacro flag? [flag mask]
-  `(pos? (bit-and ~mask (. Evt ~flag))))
-
-(defn get-skey [mask]
-  (condp = (bit-and mask 2r111110000000000000000)
-    Evt/PLAI :=
-    Evt/SQUO :'
-    Evt/DQUO :$
-    Evt/LITL :|
-    Evt/FOLD :>
-    nil))
-
-(defn parse-rapidyaml-evt [^String yaml-string]
-  (rest
-    (let [parser ^Rapidyaml (new Rapidyaml)
-          buffer (.getBytes yaml-string StandardCharsets/UTF_8)
-          masks (int-array 5)
-          needed (.parseYsToEvt parser buffer masks)
-          buffer (.getBytes yaml-string StandardCharsets/UTF_8)
-          masks (int-array needed)
-          _ (.parseYsToEvt parser buffer masks)
-          get-str (fn [i]
-                    (let [off (aget masks (inc i))
-                          len (aget masks (+ i 2))]
-                      (reduce
-                        (fn [slice i] (str slice (char (aget buffer i))))
-                        "" (range off (+ off len)))))]
-
-      (loop [i 0, tag nil, anchor nil, events []]
-        (if (< i needed)
-          (let [mask (aget masks i)
-                type (event-type mask)
-                ; _ (WWW (Integer/toString mask 2) type)
-                sval (when (flag? HAS_STR mask) (get-str i))
-                tag (if (flag? TAG_ mask) sval tag)
-                anchor (if (flag? ANCH mask) sval anchor)
-                event (when type
-                        (let [event {:+ type}
-                              event (if (flag? FLOW mask)
-                                      (assoc event :flow true) event)
-                              event (if anchor (assoc event :& anchor) event)
-                              event (if tag
-                                      (let [tag (str/replace tag
-                                                  #"^!!"
-                                                  "tag:yaml.org,2002:")]
-                                        (assoc event :! tag)) event)
-                              event (if sval (assoc event
-                                               (get-skey mask) sval) event)
-                              event (if (= type "=ALI")
-                                      {:+ "=ALI" :* sval}
-                                      event)]
-                          event))
-                events (if event (conj events event) events)
-                i (+ i (if sval 3 1))]
-            (if event
-              (recur i nil nil events)
-              (recur i tag anchor events)))
-          events)))))
-
-(def parse-fn (if-let [parser-name (System/getenv "YS_PARSER")]
-                (condp = parser-name
-                  "" parse-snakeyaml
-                  "snake" parse-snakeyaml
-                  "ry1" parse-rapidyaml-edn
-                  "ry2" parse-rapidyaml-evt
-                  "ry-edn" parse-rapidyaml-edn
-                  "ry-evt" parse-rapidyaml-evt
-                  "ryml-edn" parse-rapidyaml-edn
-                  "ryml-evt" parse-rapidyaml-evt
-                  (die "Unknown YS_PARSER value: " parser-name))
-                ; parse-rapidyaml-evt
-                parse-snakeyaml))
 
 ;;
 ;; Functions to turn Java event objects into Clojure objects
@@ -240,6 +150,92 @@
 (defmethod snake-event ScalarEvent        [event] (scalar-val event))
 (defmethod snake-event AliasEvent         [event] (alias-val  event))
 (defmethod snake-event :default [_] nil)
+
+;;
+;; RapidYAML Parser
+;;
+
+(defn event-type [mask]
+  (condp = (bit-and mask 2r11111111111)
+    Evt/BSTR nil
+    Evt/ESTR nil
+    Evt/BDOC "+DOC"
+    Evt/EDOC "-DOC"
+    Evt/BMAP "+MAP"
+    Evt/EMAP "-MAP"
+    Evt/BSEQ "+SEQ"
+    Evt/ESEQ "-SEQ"
+    Evt/SCLR "=VAL"
+    Evt/ALIA "=ALI"
+    nil))
+
+(defmacro flag? [flag mask]
+  `(pos? (bit-and ~mask (. Evt ~flag))))
+
+(defn get-skey [mask]
+  (condp = (bit-and mask 2r111110000000000000000)
+    Evt/PLAI :=
+    Evt/SQUO :'
+    Evt/DQUO :$
+    Evt/LITL :|
+    Evt/FOLD :>
+    nil))
+
+(defn parse-rapidyaml [^String yaml-string]
+  (rest
+    (let [parser ^Rapidyaml (new Rapidyaml)
+          buffer (.getBytes yaml-string StandardCharsets/UTF_8)
+          masks (int-array 5)
+          needed (.parseYsToEvt parser buffer masks)
+          buffer (.getBytes yaml-string StandardCharsets/UTF_8)
+          masks (int-array needed)
+          _ (.parseYsToEvt parser buffer masks)
+          get-str (fn [i]
+                    (let [off (aget masks (inc i))
+                          len (aget masks (+ i 2))]
+                      (reduce
+                        (fn [slice i] (str slice (char (aget buffer i))))
+                        "" (range off (+ off len)))))]
+
+      (loop [i 0, tag nil, anchor nil, events []]
+        (if (< i needed)
+          (let [mask (aget masks i)
+                type (event-type mask)
+                ; _ (WWW (Integer/toString mask 2) type)
+                sval (when (flag? HAS_STR mask) (get-str i))
+                tag (if (flag? TAG_ mask) sval tag)
+                anchor (if (flag? ANCH mask) sval anchor)
+                event (when type
+                        (let [event {:+ type}
+                              event (if (flag? FLOW mask)
+                                      (assoc event :flow true) event)
+                              event (if anchor (assoc event :& anchor) event)
+                              event (if tag
+                                      (let [tag (str/replace tag
+                                                  #"^!!"
+                                                  "tag:yaml.org,2002:")]
+                                        (assoc event :! tag)) event)
+                              event (if sval (assoc event
+                                               (get-skey mask) sval) event)
+                              event (if (= type "=ALI")
+                                      {:+ "=ALI" :* sval}
+                                      event)]
+                          event))
+                events (if event (conj events event) events)
+                i (+ i (if sval 3 1))]
+            (if event
+              (recur i nil nil events)
+              (recur i tag anchor events)))
+          events)))))
+
+(def parse-fn (if-let [parser-name (System/getenv "YS_PARSER")]
+                (condp = parser-name
+                  "" parse-snakeyaml
+                  "snake" parse-snakeyaml
+                  "rapid" parse-rapidyaml
+                  (die "Unknown YS_PARSER value: " parser-name))
+                ; parse-rapidyaml-evt
+                parse-snakeyaml))
 
 (comment
   )
