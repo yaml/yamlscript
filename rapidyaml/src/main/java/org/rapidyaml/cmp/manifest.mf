@@ -1,1 +1,1 @@
-Main-class: cmp.CmpEdnEvt
+Main-class: cmp.CmpEvt

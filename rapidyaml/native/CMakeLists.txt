@@ -23,10 +23,6 @@ add_library(${libname}
     #
     # ysparse files
     ysparse_common.hpp
-    ysparse_edn_handler.hpp
-    ysparse_edn_handler.cpp
-    ysparse_edn.hpp
-    ysparse_edn.cpp
     ysparse_evt_handler.hpp
     ysparse_evt_handler.cpp
     ysparse_evt.hpp
