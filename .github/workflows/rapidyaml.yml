@@ -130,10 +130,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - {ysparser: ryml-evt, bt: Debug}
-        - {ysparser: ryml-evt, bt: Release}
-        - {ysparser: ryml-edn, bt: Debug}
-        - {ysparser: ryml-edn, bt: Release}
+        - {ysparser: ryml, bt: Debug}
+        - {ysparser: ryml, bt: Release}
     steps:
     - name: checkout (action)
       uses: actions/checkout@v4

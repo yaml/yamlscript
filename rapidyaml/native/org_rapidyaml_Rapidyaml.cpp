@@ -1,7 +1,5 @@
 #include <jni.h>
-#include "ysparse_edn.hpp"
 #include "ysparse_evt.hpp"
-#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,23 +16,10 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
     return (jlong)obj;
 }
 
-JNIEXPORT jlong JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1init(JNIEnv *, jobject)
-{
-    Ryml2Edn *obj = ys2edn_init();
-    return (jlong)obj;
-}
-
 JNIEXPORT void JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2evt_1destroy(JNIEnv *, jobject, jlong obj)
 {
     ys2evt_destroy((Ryml2Evt*)obj);
-}
-
-JNIEXPORT void JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy(JNIEnv *, jobject, jlong obj)
-{
-    ys2edn_destroy((Ryml2Edn*)obj);
 }
 
 
@@ -148,108 +133,6 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse_1buf(JNIEnv *env, jobject,
         }
     }
     return 0; // this is executed even if there is an exception
-}
-
-
-JNIEXPORT jint JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1parse(JNIEnv *env, jobject,
-                                           jlong obj, jstring jfilename,
-                                           jbyteArray src, jint src_len,
-                                           jbyteArray dst, jint dst_len)
-{
-    TIMED_SECTION("jni_ys2edn_parse", (size_type)src_len);
-    jbyte* src_ = nullptr;
-    jbyte* dst_ = nullptr;
-    jboolean src_is_copy = false;
-    jboolean dst_is_copy = false;
-    const char *filename = nullptr;
-    {
-        TIMED_SECTION("jni_ys2edn_parse/get_jni_data", (size_type)src_len);
-        {
-            TIMED_SECTION("jni_ys2edn_parse/GetByteArray(src)");
-            src_ = env->GetByteArrayElements(src, &src_is_copy);
-        }
-        {
-            TIMED_SECTION("jni_ys2edn_parse/GetByteArray(dst)");
-            dst_ = env->GetByteArrayElements(dst, &dst_is_copy);
-        }
-        {
-            TIMED_SECTION("jni_ys2evt_parse/GetStringUTFChars()");
-            filename = env->GetStringUTFChars(jfilename, 0);
-        }
-    }
-    int rc = 0;
-    try
-    {
-        rc = ys2edn_parse((Ryml2Edn*)obj, filename,
-                          (char*)src_, src_len,
-                          (char*)dst_, dst_len);
-    }
-    catch (YsParseError const& exc)
-    {
-        throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
-    }
-    {
-        TIMED_SECTION("jni_ys2edn_parse/release");
-        env->ReleaseByteArrayElements(src, src_, 0);
-        env->ReleaseByteArrayElements(dst, dst_, 0);
-        env->ReleaseStringUTFChars(jfilename, filename);
-    }
-    return rc;
-}
-
-
-JNIEXPORT jint JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2edn_1parse_1buf(JNIEnv *env, jobject,
-                                                jlong obj, jstring jfilename,
-                                                jobject src, jint src_len,
-                                                jobject dst, jint dst_len)
-{
-    TIMED_SECTION("jni_ys2edn_parse", (size_type)src_len);
-    char* src_ = nullptr;
-    char* dst_ = nullptr;
-    const char *filename = nullptr;
-    {
-        TIMED_SECTION("jni_ys2edn_parse/get_jni_data", (size_type)src_len);
-        src_ = (char*)env->GetDirectBufferAddress(src);
-        dst_ = (char*)env->GetDirectBufferAddress(dst);
-        filename = env->GetStringUTFChars(jfilename, 0);
-        if(!src_)
-            throw_runtime_exception(env, "null pointer: src");
-        if(!dst_)
-            throw_runtime_exception(env, "null pointer: dst");
-    }
-    {
-        TIMED_SECTION("jni_ys2edn_parse/call_parse", (size_type)src_len);
-        try
-        {
-            return ys2edn_parse((Ryml2Edn*)obj, filename, src_, src_len, dst_, dst_len);
-        }
-        catch (YsParseError const& exc)
-        {
-            throw_parse_error(env, exc.location.offset, exc.location.line, exc.location.col, exc.msg.c_str());
-        }
-        catch (std::exception const& exc)
-        {
-            throw_runtime_exception(env, exc.what());
-        }
-    }
-    return 0; // this is executed even if there is an exception
-}
-
-
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1retry_1get(JNIEnv *env, jobject,
-                                                                       jlong obj,
-                                                                       jobject dst, jint dst_len)
-{
-    char* dst_ = nullptr;
-    {
-        TIMED_SECTION("jni_ys2evt_retry_get/get_dst");
-        dst_ = (char*)env->GetDirectBufferAddress(dst);
-        printf("edn: aqui 1 %p\n", dst_);
-    }
-    int rc = ys2edn_retry_get((Ryml2Edn*)obj, (char*)dst_, dst_len);
-    return rc;
 }
 
 
