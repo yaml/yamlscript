@@ -14,32 +14,20 @@ public class Rapidyaml
     public static String RAPIDYAML_VERSION = "0.8.0";
 
     private native long ys2evt_init();
-    private native long ys2edn_init();
-
     private native void ys2evt_destroy(long ryml2evt);
-    private native void ys2edn_destroy(long ryml2edn);
-
     private native int ys2evt_parse(long ryml2evt, String filename,
                                     byte[] ys, int ys_length,
                                     int[] evt, int evt_length);
     private native int ys2evt_parse_buf(long ryml2evt, String filename,
                                         ByteBuffer ys, int ys_length,
                                         IntBuffer evt, int evt_length);
-    private native int ys2edn_parse(long ryml2edn, String filename,
-                                    byte[] ys, int ys_length,
-                                    byte[] edn, int edn_length);
-    private native int ys2edn_parse_buf(long ryml2edn, String filename,
-                                        ByteBuffer ys, int ys_length,
-                                        ByteBuffer edn, int edn_length);
 
-    private final long ryml2edn;
     private final long ryml2evt;
 
     public Rapidyaml()
     {
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
         System.loadLibrary(library_name);
-        this.ryml2edn = this.ys2edn_init();
         this.ryml2evt = this.ys2evt_init();
         // TODO: receive this argument as ctor parameter
         timingEnabled(System.getenv("YS_RYML_TIMER") != null);
@@ -52,7 +40,6 @@ public class Rapidyaml
     protected void finalize() throws Throwable
     {
         try {
-            this.ys2edn_destroy(this.ryml2edn);
             this.ys2evt_destroy(this.ryml2evt);
         }
         finally {
@@ -108,45 +95,6 @@ public class Rapidyaml
         ByteBuffer bb = ByteBuffer.allocateDirect(/*numBytes*/4 * numInts);
         // !!! need to explicitly set the byte order to the native order
         return bb.order(ByteOrder.nativeOrder()).asIntBuffer();
-    }
-
-
-    //------------------------
-    // EDN
-    //------------------------
-
-    public int parseYsToEdn(byte[] src, byte[] edn) throws Exception
-    {
-        return parseYsToEdn("yamlscript", src, edn);
-    }
-
-    public int parseYsToEdnBuf(ByteBuffer src, ByteBuffer edn) throws Exception
-    {
-        return parseYsToEdnBuf("yamlscript", src, edn);
-    }
-
-    public int parseYsToEdn(String filename, byte[] src, byte[] edn) throws Exception
-    {
-        long t = timingStart("ys2edn");
-        int ret = ys2edn_parse(this.ryml2edn, filename, src, src.length, edn, edn.length);
-        timingStop("ys2edn", t, src.length);
-        return ret;
-    }
-
-    public int parseYsToEdnBuf(String filename, ByteBuffer src, ByteBuffer edn) throws Exception
-    {
-        if(!src.isDirect())
-            throw new RuntimeException("src must be direct");
-        if(!edn.isDirect())
-            throw new RuntimeException("edn must be direct");
-        long t = timingStart("ys2ednBuf");
-        edn.position(edn.capacity());
-        int reqsize = ys2edn_parse_buf(this.ryml2edn, filename, src, src.position(), edn, edn.capacity());
-        if(reqsize <= edn.capacity()) {
-            edn.position(reqsize);
-        }
-        timingStop("ys2ednBuf", t, src.position());
-        return reqsize;
     }
 
 

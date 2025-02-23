@@ -1,6 +1,6 @@
-#include <ysparse_edn.hpp>
 #include <ysparse_evt.hpp>
 #include <c4/bitmask.hpp>
+#include <vector>
 
 using c4::csubstr;
 using c4::substr;
@@ -43,12 +43,6 @@ c4::EnumSymbols<evt::EventFlags> const esyms<evt::EventFlags>()
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-struct Ys2EdnScoped
-{
-    Ryml2Edn *ryml2edn;
-    Ys2EdnScoped() : ryml2edn(ys2edn_init()) {}
-    ~Ys2EdnScoped() { if(ryml2edn) ys2edn_destroy(ryml2edn); }
-};
 struct Ys2EvtScoped
 {
     Ryml2Evt *ryml2evt;
@@ -103,7 +97,6 @@ size_t expected_size(std::vector<EvtWithScalar> const& evt)
 struct TestCase
 {
     csubstr ys;
-    csubstr edn;
     std::vector<EvtWithScalar> evt;
 
 public:
@@ -134,15 +127,9 @@ public:
             }                                                           \
         } while(0)
 
-    TestResult test(Ryml2Edn *ryml2edn, Ryml2Evt *ryml2evt) const
+    TestResult test(Ryml2Evt *ryml2evt) const
     {
         TestResult tr = {};
-        _runtest(test_edn_large_enough, );
-        _runtest(test_edn_too_small, );
-        _runtest(test_edn_nullptr, );
-        _runtest(test_edn_large_enough_reuse, ryml2edn);
-        _runtest(test_edn_too_small_reuse, ryml2edn);
-        _runtest(test_edn_nullptr_reuse, ryml2edn);
         _runtest(test_evt_large_enough, );
         _runtest(test_evt_too_small, );
         _runtest(test_evt_nullptr, );
@@ -153,22 +140,6 @@ public:
     }
 
     // happy path: large-enough destination string
-    TestResult test_edn_large_enough_reuse(Ryml2Edn *ryml2edn) const
-    {
-        TestResult tr = {};
-        std::string input_(ys.begin(), ys.end());
-        substr input = c4::to_substr(input_);
-        std::string output;
-        output.resize(2 * edn.len);
-        size_type reqsize = ys2edn_parse(ryml2edn, "ysfilename",
-                                         input.str, (size_type)input.len,
-                                         &output[0], (size_type)output.size());
-        CHECK(reqsize == edn.len+1);
-        CHECK(reqsize != 0);
-        output.resize(reqsize - 1u);
-        CHECK(testeq(c4::to_csubstr(output)));
-        return tr;
-    }
     TestResult test_evt_large_enough_reuse(Ryml2Evt *ryml2evt) const
     {
         if(evt.empty()) return {};
@@ -186,11 +157,6 @@ public:
         CHECK(testeq(output, input));
         return tr;
     }
-    TestResult test_edn_large_enough() const
-    {
-        Ys2EdnScoped lib;
-        return test_edn_large_enough_reuse(lib.ryml2edn);
-    }
     TestResult test_evt_large_enough() const
     {
         Ys2EvtScoped lib;
@@ -198,25 +164,6 @@ public:
     }
 
     // less-happy path: destination string not large enough
-    TestResult test_edn_too_small_reuse(Ryml2Edn *ryml2edn) const
-    {
-        TestResult tr = {};
-        std::string input_(ys.begin(), ys.end());
-        substr input = c4::to_substr(input_);
-        std::string output = "?";
-        size_type reqsize = ys2edn_parse(ryml2edn, "ysfilename",
-                                         input.str, (size_type)input.len,
-                                         output.data(), (size_type)output.size());
-        CHECK(reqsize == edn.len+1);
-        CHECK(reqsize != 0);
-        CHECK(output != "?");
-        output.resize(reqsize);
-        size_type getsize = ys2edn_retry_get(ryml2edn, &output[0], (size_type)output.size());
-        CHECK(getsize == reqsize);
-        output.resize(reqsize - 1u);
-        CHECK(testeq(c4::to_csubstr(output)));
-        return tr;
-    }
     TestResult test_evt_too_small_reuse(Ryml2Evt *ryml2evt) const
     {
         TestResult tr = {};
@@ -240,11 +187,6 @@ public:
         CHECK(testeq(output, input));
         return tr;
     }
-    TestResult test_edn_too_small() const
-    {
-        Ys2EdnScoped lib;
-        return test_edn_too_small_reuse(lib.ryml2edn);
-    }
     TestResult test_evt_too_small() const
     {
         Ys2EvtScoped lib;
@@ -252,18 +194,6 @@ public:
     }
 
     // safe calling with nullptr
-    TestResult test_edn_nullptr_reuse(Ryml2Edn *ryml2edn) const
-    {
-        TestResult tr = {};
-        std::string input_(ys.begin(), ys.end());
-        substr input = c4::to_substr(input_);
-        size_type reqsize = ys2edn_parse(ryml2edn, "ysfilename",
-                                         input.str, (size_type)input.len,
-                                         nullptr, 0);
-        CHECK(reqsize == edn.len+1);
-        CHECK(reqsize != 0);
-        return tr;
-    }
     TestResult test_evt_nullptr_reuse(Ryml2Evt *ryml2evt) const
     {
         TestResult tr = {};
@@ -286,11 +216,6 @@ public:
         CHECK(testeq(output, input));
         return tr;
     }
-    TestResult test_edn_nullptr() const
-    {
-        Ys2EdnScoped lib;
-        return test_edn_nullptr_reuse(lib.ryml2edn);
-    }
     TestResult test_evt_nullptr() const
     {
         Ys2EvtScoped lib;
@@ -298,21 +223,6 @@ public:
     }
 
 public:
-
-    bool testeq(csubstr actual) const
-    {
-        const bool status = (actual == edn);
-        if(!status)
-            printf("------\n"
-                   "FAIL:\n"
-                   "input:[%zu]~~~%.*s~~~\n"
-                   "expected:[%zu]~~~%.*s~~~\n"
-                   "actual:[%zu]~~~%.*s~~~\n",
-                   ys.len, (int)ys.len, ys.str,
-                   edn.len, (int)edn.len, edn.str,
-                   actual.len, (int)actual.len, actual.str);
-        return status;
-    }
 
     bool testeq(std::vector<evt::DataType> const& actual, csubstr parsed_source) const
     {
@@ -392,21 +302,13 @@ public:
 
 namespace {
 // make the declarations shorter
-#define tc(ys, edn, ...) {ys, edn, std::vector<EvtWithScalar>(__VA_ARGS__)}
+#define tc(ys, ...) {ys, std::vector<EvtWithScalar>(__VA_ARGS__)}
 #define e(...) EvtWithScalar{__VA_ARGS__}
 using namespace evt;
 inline constexpr bool needs_filter = true;
 const TestCase test_cases[] = {
     // case -------------------------------------------------
     tc("a: 1",
-       R"((
-{:+ "+MAP"}
-{:+ "=VAL", := "a"}
-{:+ "=VAL", := "1"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -419,14 +321,6 @@ const TestCase test_cases[] = {
        }),
     // case -------------------------------------------------
     tc("say: 2 + 2",
-       R"((
-{:+ "+MAP"}
-{:+ "=VAL", := "say"}
-{:+ "=VAL", := "2 + 2"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -439,14 +333,6 @@ const TestCase test_cases[] = {
        }),
     // case -------------------------------------------------
     tc("𝄞: ✅",
-       R"((
-{:+ "+MAP"}
-{:+ "=VAL", := "𝄞"}
-{:+ "=VAL", := "✅"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -459,15 +345,6 @@ const TestCase test_cases[] = {
        }),
     // case -------------------------------------------------
     tc("[a, b, c]",
-       R"((
-{:+ "+SEQ", :flow true}
-{:+ "=VAL", := "a"}
-{:+ "=VAL", := "b"}
-{:+ "=VAL", := "c"}
-{:+ "-SEQ"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -481,16 +358,6 @@ const TestCase test_cases[] = {
        }),
     // case ------------------------------
     tc("[a: b]",
-       R"((
-{:+ "+SEQ", :flow true}
-{:+ "+MAP", :flow true}
-{:+ "=VAL", := "a"}
-{:+ "=VAL", := "b"}
-{:+ "-MAP"}
-{:+ "-SEQ"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -519,42 +386,6 @@ foo: !
 - &anchor-1 !tag-1 foobar
 ---
 another: doc
-)",
-       R"((
-{:+ "+MAP", :! "yamlscript/v0"}
-{:+ "=VAL", := "foo"}
-{:+ "+SEQ", :! ""}
-{:+ "+MAP", :flow true}
-{:+ "=VAL", := "x"}
-{:+ "=VAL", := "y"}
-{:+ "-MAP"}
-{:+ "+SEQ", :flow true}
-{:+ "=VAL", := "x"}
-{:+ "=VAL", := "y"}
-{:+ "-SEQ"}
-{:+ "=VAL", := "foo"}
-{:+ "=VAL", :' "foo"}
-{:+ "=VAL", :$ "foo"}
-{:+ "=VAL", :| "foo\n"}
-{:+ "=VAL", :> "foo\n"}
-{:+ "+SEQ", :flow true}
-{:+ "=VAL", := "1"}
-{:+ "=VAL", := "2"}
-{:+ "=VAL", := "true"}
-{:+ "=VAL", := "false"}
-{:+ "=VAL", := "null"}
-{:+ "-SEQ"}
-{:+ "=VAL", :& "anchor-1", :! "tag-1", := "foobar"}
-{:+ "-SEQ"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-{:+ "+DOC"}
-{:+ "+MAP"}
-{:+ "=VAL", := "another"}
-{:+ "=VAL", := "doc"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
 )",
        {
            e(BSTR),
@@ -614,22 +445,6 @@ fold: >
      V
      W
 )",
-       R"((
-{:+ "+MAP"}
-{:+ "=VAL", := "plain"}
-{:+ "=VAL", := "well a b c"}
-{:+ "=VAL", := "squo"}
-{:+ "=VAL", :' "single'quote"}
-{:+ "=VAL", := "dquo"}
-{:+ "=VAL", :$ "x\t\ny"}
-{:+ "=VAL", := "lit"}
-{:+ "=VAL", :| "X\nY\nZ\n"}
-{:+ "=VAL", := "fold"}
-{:+ "=VAL", :> "U V W\n"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -650,14 +465,6 @@ fold: >
        }),
     // case -------------------------------------------------
     tc("- !!seq []",
-       R"((
-{:+ "+SEQ"}
-{:+ "+SEQ", :! "tag:yaml.org,2002:seq", :flow true}
-{:+ "-SEQ"}
-{:+ "-SEQ"}
-{:+ "-DOC"}
-)
-)",
        {
            e(BSTR),
            e(BDOC),
@@ -676,20 +483,6 @@ fold: >
       Q: $(orig-prompt:trim)
       A ($api-model):
       $(answer:trim)
-)_",
-       R"_((
-{:+ "+MAP"}
-{:+ "=VAL", := "defn run(prompt session=nil)"}
-{:+ "+MAP"}
-{:+ "=VAL", := "when session"}
-{:+ "+MAP"}
-{:+ "=VAL", := "write session _ :append true"}
-{:+ "=VAL", :| "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n"}
-{:+ "-MAP"}
-{:+ "-MAP"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
 )_",
        {
            e(BSTR),
@@ -735,43 +528,6 @@ defn run(prompt session=nil):
       $(answer:trim)
 
 )_",
-       R"_((
-{:+ "+MAP"}
-{:+ "=VAL", := "defn run(prompt session=nil)"}
-{:+ "+MAP"}
-{:+ "=VAL", := "session-text ="}
-{:+ "+MAP"}
-{:+ "=VAL", := "when session && session:fs-e"}
-{:+ "=VAL", :: ""}
-{:+ "-MAP"}
-{:+ "=VAL", := "answer ="}
-{:+ "+MAP"}
-{:+ "=VAL", := "cond"}
-{:+ "+MAP"}
-{:+ "=VAL", := "api-model =~ /^dall-e/"}
-{:+ "=VAL", := "openai-image(prompt).data.0.url"}
-{:+ "=VAL", := "api-model.in?(anthropic-models)"}
-{:+ "=VAL", := "anthropic(prompt):anthropic-message:format"}
-{:+ "=VAL", := "api-model.in?(groq-models)"}
-{:+ "=VAL", := "groq(prompt).choices.0.message.content:format"}
-{:+ "=VAL", := "api-model.in?(openai-models)"}
-{:+ "=VAL", := "openai-chat(prompt).choices.0.message.content:format"}
-{:+ "=VAL", := "else"}
-{:+ "=VAL", := "die()"}
-{:+ "-MAP"}
-{:+ "-MAP"}
-{:+ "=VAL", := "say"}
-{:+ "=VAL", := "answer"}
-{:+ "=VAL", := "when session"}
-{:+ "+MAP"}
-{:+ "=VAL", := "write session _ :append true"}
-{:+ "=VAL", :| "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n\n"}
-{:+ "-MAP"}
-{:+ "-MAP"}
-{:+ "-MAP"}
-{:+ "-DOC"}
-)
-)_",
        {
            e(BSTR),
            e(BDOC),
@@ -816,7 +572,6 @@ defn run(prompt session=nil):
 
 int main()
 {
-    Ys2EdnScoped ys2edn;
     Ys2EvtScoped ys2evt;
     TestResult total = {};
     size_t failed_cases = {};
@@ -826,7 +581,7 @@ int main()
         printf("-----------------------------------------\n"
                "case %zu/%zu ...\n"
                "[%zu]~~~%.*s~~~\n", i, num_cases, test_cases[i].ys.len, (int)test_cases[i].ys.len, test_cases[i].ys.str);
-        const TestResult tr = test_cases[i].test(ys2edn.ryml2edn, ys2evt.ryml2evt);
+        const TestResult tr = test_cases[i].test(ys2evt.ryml2evt);
         total.add(tr);
         failed_cases += (!tr);
         printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");

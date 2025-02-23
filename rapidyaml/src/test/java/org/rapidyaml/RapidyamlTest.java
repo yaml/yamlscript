@@ -39,15 +39,6 @@ public class RapidyamlTest extends TestCase
     public void testPlainMap()
     {
         String ys = "a: 1";
-        testEdn_(ys,
-            "(\n" +
-            "{:+ \"+MAP\"}\n" +
-            "{:+ \"=VAL\", := \"a\"}\n" +
-            "{:+ \"=VAL\", := \"1\"}\n" +
-            "{:+ \"-MAP\"}\n" +
-            "{:+ \"-DOC\"}\n" +
-            ")\n"
-            );
         ExpectedEvent[] expected = {
             mkev(Evt.BSTR),
             mkev(Evt.BDOC),
@@ -64,15 +55,6 @@ public class RapidyamlTest extends TestCase
     public void testUtf8()
     {
         String ys = "𝄞: ✅";
-        testEdn_(ys,
-            "(\n" +
-            "{:+ \"+MAP\"}\n" +
-            "{:+ \"=VAL\", := \"𝄞\"}\n" +
-            "{:+ \"=VAL\", := \"✅\"}\n" +
-            "{:+ \"-MAP\"}\n" +
-            "{:+ \"-DOC\"}\n" +
-            ")\n"
-            );
         ExpectedEvent[] expected = {
             mkev(Evt.BSTR),
             mkev(Evt.BDOC),
@@ -89,14 +71,6 @@ public class RapidyamlTest extends TestCase
     public void testTaggedInt()
     {
         String ys = "- !!int 42";
-        testEdn_(ys,
-            "(\n" +
-            "{:+ \"+SEQ\"}\n" +
-            "{:+ \"=VAL\", :! \"tag:yaml.org,2002:int\", := \"42\"}\n" +
-            "{:+ \"-SEQ\"}\n" +
-            "{:+ \"-DOC\"}\n" +
-            ")\n"
-            );
         ExpectedEvent[] expected = {
             mkev(Evt.BSTR),
             mkev(Evt.BDOC),
@@ -113,15 +87,6 @@ public class RapidyamlTest extends TestCase
     public void testTaggedSeq()
     {
         String ys = "- !!seq []";
-        testEdn_(ys,
-            "(\n" +
-            "{:+ \"+SEQ\"}\n" +
-            "{:+ \"+SEQ\", :! \"tag:yaml.org,2002:seq\", :flow true}\n" +
-            "{:+ \"-SEQ\"}\n" +
-            "{:+ \"-SEQ\"}\n" +
-            "{:+ \"-DOC\"}\n" +
-            ")\n"
-            );
         ExpectedEvent[] expected = {
             mkev(Evt.BSTR),
             mkev(Evt.BDOC),
@@ -155,43 +120,6 @@ public class RapidyamlTest extends TestCase
             "- &anchor-1 !tag-1 foobar\n" +
             "---\n" +
             "another: doc\n";
-        testEdn_(ys,
-            "(\n" +
-            "{:+ \"+MAP\", :! \"yamlscript/v0\"}\n" +
-            "{:+ \"=VAL\", := \"foo\"}\n" +
-            "{:+ \"+SEQ\", :! \"\"}\n" +
-            "{:+ \"+MAP\", :flow true}\n" +
-            "{:+ \"=VAL\", := \"x\"}\n" +
-            "{:+ \"=VAL\", := \"y\"}\n" +
-            "{:+ \"-MAP\"}\n" +
-            "{:+ \"+SEQ\", :flow true}\n" +
-            "{:+ \"=VAL\", := \"x\"}\n" +
-            "{:+ \"=VAL\", := \"y\"}\n" +
-            "{:+ \"-SEQ\"}\n" +
-            "{:+ \"=VAL\", := \"foo\"}\n" +
-            "{:+ \"=VAL\", :' \"foo\"}\n" +
-            "{:+ \"=VAL\", :$ \"foo\"}\n" +
-            "{:+ \"=VAL\", :| \"foo\\nliteral\\n\"}\n" +
-            "{:+ \"=VAL\", :> \"foo folded\\n\"}\n" +
-            "{:+ \"+SEQ\", :flow true}\n" +
-            "{:+ \"=VAL\", := \"1\"}\n" +
-            "{:+ \"=VAL\", := \"2\"}\n" +
-            "{:+ \"=VAL\", := \"true\"}\n" +
-            "{:+ \"=VAL\", := \"false\"}\n" +
-            "{:+ \"=VAL\", := \"null\"}\n" +
-            "{:+ \"-SEQ\"}\n" +
-            "{:+ \"=VAL\", :& \"anchor-1\", :! \"tag-1\", := \"foobar\"}\n" +
-            "{:+ \"-SEQ\"}\n" +
-            "{:+ \"-MAP\"}\n" +
-            "{:+ \"-DOC\"}\n" +
-            "{:+ \"+DOC\"}\n" +
-            "{:+ \"+MAP\"}\n" +
-            "{:+ \"=VAL\", := \"another\"}\n" +
-            "{:+ \"=VAL\", := \"doc\"}\n" +
-            "{:+ \"-MAP\"}\n" +
-            "{:+ \"-DOC\"}\n" +
-            ")\n"
-            );
         ExpectedEvent[] expected = {
             mkev(Evt.BSTR),
             mkev(Evt.BDOC|Evt.EXPL),
@@ -254,22 +182,6 @@ public class RapidyamlTest extends TestCase
             "     U\n" +
             "     V\n" +
             "     W\n";
-        testEdn_(ys,
-                 "(\n" +
-                 "{:+ \"+MAP\"}\n" +
-                 "{:+ \"=VAL\", := \"plain\"}\n" +
-                 "{:+ \"=VAL\", := \"well a b c\"}\n" +
-                 "{:+ \"=VAL\", := \"squo\"}\n" +
-                 "{:+ \"=VAL\", :' \"single'quote\"}\n" +
-                 "{:+ \"=VAL\", := \"dquo\"}\n" +
-                 "{:+ \"=VAL\", :$ \"x\\t\\ny\"}\n" +
-                 "{:+ \"=VAL\", := \"lit\"}\n" +
-                 "{:+ \"=VAL\", :| \"X\\nY\\nZ\\n\"}\n" +
-                 "{:+ \"=VAL\", := \"fold\"}\n" +
-                 "{:+ \"=VAL\", :> \"U V W\\n\"}\n" +
-                 "{:+ \"-MAP\"}\n" +
-                 "{:+ \"-DOC\"}\n" +
-                 ")\n");
         ExpectedEvent[] expected = {
            mkev(Evt.BSTR),
            mkev(Evt.BDOC),
@@ -295,9 +207,11 @@ public class RapidyamlTest extends TestCase
     {
         Rapidyaml rapidyaml = new Rapidyaml();
         String ys = ": : : :";
+        byte[] src = ys.getBytes(StandardCharsets.UTF_8);
+        byte[] srcbuf = new byte[src.length];
         boolean gotit = false;
         try {
-            callEdn(ys);
+            callEvt(src, srcbuf);
         }
         catch(YamlParseErrorException e) {
             gotit = true;
@@ -313,45 +227,37 @@ public class RapidyamlTest extends TestCase
         catch(Exception e) {
             fail("wrong exception type");
         }
-        //catch(Throwable e) {
-        //    throw e;
-        //    //fail("wrong exception type");
-        //}
         assertTrue(gotit);
     }
 
-
-    private void testEdn_(String ys, String expected)
+    public void testFailureBuf() throws Exception
     {
-        String actual;
+        Rapidyaml rapidyaml = new Rapidyaml();
+        String ys = ": : : :";
+        byte[] src = ys.getBytes(StandardCharsets.UTF_8);
+        ByteBuffer bbuf = ByteBuffer.allocateDirect(src.length);
+        bbuf.put(src);
+        boolean gotit = false;
         try {
-            actual = callEdn(ys);
+            callEvtBuf(src, bbuf);
         }
-        catch (Exception e) {
-            fail("parse error:\n" + e.getMessage());
-            actual = "";
+        catch(YamlParseErrorException e) {
+            gotit = true;
+            assertEquals(2, e.offset);
+            assertEquals(1, e.line);
+            assertEquals(3, e.column);
+            assertTrue(e.getMessage() != null);
+            assertFalse(e.getMessage().isEmpty());
         }
-        try {
-            cmpEdn_(actual, expected);
+        catch(RuntimeException e) {
+            fail("wrong exception type");
         }
-        catch (Exception e) {
-            System.err.printf("error: edn (no buf)");
+        catch(Exception e) {
+            fail("wrong exception type");
         }
-        //------
-        try {
-            actual = callEdnBuf(ys);
-        }
-        catch (Exception e) {
-            fail("parse error:\n" + e.getMessage());
-            actual = "";
-        }
-        try {
-            cmpEdn_(actual, expected);
-        }
-        catch (Exception e) {
-            System.err.printf("error: ednbuf");
-        }
+        assertTrue(gotit);
     }
+
 
     private void testEvt_(String ys, ExpectedEvent[] expected)
     {
@@ -390,21 +296,6 @@ public class RapidyamlTest extends TestCase
         }
         catch (Exception e) {
             System.err.printf("error: evtbuf");
-            throw e;
-        }
-    }
-
-    private void cmpEdn_(String actual, String expected) throws Exception
-    {
-        try {
-            assertEquals(expected, actual);
-            assertEquals(expected.length(), actual.length());
-        }
-        catch (Exception e) {
-            System.err.println("expected:");
-            System.err.println(expected);
-            System.err.println("actual");
-            System.err.println(actual);
             throw e;
         }
     }
@@ -493,59 +384,6 @@ public class RapidyamlTest extends TestCase
             ret[i] = evt.get(i);
         }
         return ret;
-    }
-
-    static String callEdn(String orig) throws Exception
-    {
-        byte[] src = orig.getBytes(StandardCharsets.UTF_8);
-        byte[] srcbuf = new byte[src.length];
-        return callEdn(src, srcbuf);
-    }
-
-    static String callEdnBuf(String orig) throws Exception
-    {
-        byte[] src = orig.getBytes(StandardCharsets.UTF_8);
-        ByteBuffer srcbuf = ByteBuffer.allocateDirect(src.length);
-        ByteBuffer edn = callEdnBuf(src, srcbuf);
-        return buf2str(edn);
-    }
-
-    static String callEdn(byte[] src, byte[] srcbuf) throws Exception
-    {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        System.arraycopy(src, 0, srcbuf, 0, src.length);
-        byte[] edn = new byte[10 * src.length];
-        int reqsize = rapidyaml.parseYsToEdn(srcbuf, edn);
-        if(reqsize > edn.length) {
-            edn = new byte[reqsize];
-            System.arraycopy(src, 0, srcbuf, 0, src.length);
-            int reqsize2 = rapidyaml.parseYsToEdn(srcbuf, edn);
-            if(reqsize2 != reqsize) {
-                throw new RuntimeException("reqsize");
-            }
-        }
-        String ret = new String(edn, 0, reqsize-1, StandardCharsets.UTF_8);
-        return ret;
-    }
-
-    static ByteBuffer callEdnBuf(byte[] src, ByteBuffer srcbuf) throws Exception
-    {
-        Rapidyaml rapidyaml = new Rapidyaml();
-        srcbuf.position(0);
-        srcbuf.put(src);
-        ByteBuffer edn = ByteBuffer.allocateDirect(10000);
-        int reqsize = rapidyaml.parseYsToEdnBuf(srcbuf, edn);
-        if(reqsize > edn.capacity()) {
-            edn = ByteBuffer.allocateDirect(reqsize);
-            srcbuf.position(0);
-            srcbuf.put(src);
-            int reqsize2 = rapidyaml.parseYsToEdnBuf(srcbuf, edn);
-            if(reqsize2 != reqsize) {
-                throw new RuntimeException("reqsize");
-            }
-        }
-        edn.position(reqsize);
-        return edn;
     }
 
     static int[] callEvt(byte[] src, byte[] srcbuf) throws Exception

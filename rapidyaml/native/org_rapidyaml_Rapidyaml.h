@@ -17,26 +17,10 @@ JNIEXPORT jlong JNICALL Java_org_rapidyaml_Rapidyaml_ys2evt_1init
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_init
- * Signature: ()J
- */
-JNIEXPORT jlong JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1init
-  (JNIEnv *, jobject);
-
-/*
- * Class:     org_rapidyaml_Rapidyaml
  * Method:    ys2evt_destroy
  * Signature: (J)V
  */
 JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ys2evt_1destroy
-  (JNIEnv *, jobject, jlong);
-
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_destroy
- * Signature: (J)V
- */
-JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1destroy
   (JNIEnv *, jobject, jlong);
 
 /*
@@ -53,22 +37,6 @@ JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2evt_1parse
  * Signature: (JLjava/lang/String;Ljava/nio/ByteBuffer;ILjava/nio/IntBuffer;I)I
  */
 JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2evt_1parse_1buf
-  (JNIEnv *, jobject, jlong, jstring, jobject, jint, jobject, jint);
-
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_parse
- * Signature: (JLjava/lang/String;[BI[BI)I
- */
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1parse
-  (JNIEnv *, jobject, jlong, jstring, jbyteArray, jint, jbyteArray, jint);
-
-/*
- * Class:     org_rapidyaml_Rapidyaml
- * Method:    ys2edn_parse_buf
- * Signature: (JLjava/lang/String;Ljava/nio/ByteBuffer;ILjava/nio/ByteBuffer;I)I
- */
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ys2edn_1parse_1buf
   (JNIEnv *, jobject, jlong, jstring, jobject, jint, jobject, jint);
 
 #ifdef __cplusplus
