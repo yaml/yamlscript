@@ -93,7 +93,7 @@ public class RapidyamlTest extends TestCase
 
     private void testEvt_(String ys, ExpectedEvent[] expected)
     {
-        boolean dbglog = true;
+        boolean dbglog = false;
         Rapidyaml rapidyaml = new Rapidyaml();
         try {
             int[] actual = new int[2 * required_size_(expected)];
