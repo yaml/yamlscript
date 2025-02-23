@@ -9,6 +9,7 @@
    [babashka.pods]
    [babashka.pods.sci]
    [babashka.process]
+   [clojure.core.async :as async]
    [clojure.java.io :as io]
    [clojure.math]
    [clojure.pprint]
@@ -98,6 +99,8 @@
 (def babashka-pods-sci-ns
   (sci/copy-ns babashka.pods.sci (sci/create-ns 'babashka.pods.sci)))
 
+(def async-namespace
+  (sci/copy-ns clojure.core.async (sci/create-ns 'async)))
 (def cli-namespace
   (sci/copy-ns clojure.tools.cli (sci/create-ns 'cli)))
 (def clj-namespace
@@ -146,6 +149,7 @@
    'std     std-namespace  'ys.std     std-namespace
    'clj     clj-namespace  'ys.clj     clj-namespace
 
+   'async   async-namespace  'ys.async  async-namespace
    'cli     cli-namespace  'ys.cli     cli-namespace
    'csv     csv-namespace  'ys.csv     csv-namespace
    'fs      fs-namespace   'ys.fs      fs-namespace

@@ -30,6 +30,7 @@
    [org.babashka/http-client "0.3.11"]
    [org.babashka/sci "0.8.41"]
    [org.clojure/tools.cli "1.0.219"]
+   [org.clojure/core.async "1.7.701"]
    [clojure.java-time "1.4.3"]]
 
   :plugins
