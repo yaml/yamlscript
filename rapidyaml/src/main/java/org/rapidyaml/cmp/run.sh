@@ -11,10 +11,12 @@ make -C $rymldir test RAPIDYAML_TIMED=1
 
 
 cd $thisdir
-wget https://raw.githubusercontent.com/yaml/yamllm/refs/heads/main/bin/yamllm.ys
+if [ ! -f yamllm.ys ] ; then
+    wget https://raw.githubusercontent.com/yaml/yamllm/refs/heads/main/bin/yamllm.ys
+fi
 ls -lFhp
 jd=${jd:-/usr/lib/jvm/java-23-openjdk/bin}
 $jd/javac -d . ../*.java
-$jd/javac -d . -cp . CmpEdnEvt.java
-$jd/jar -cmf manifest.mf CmpEdnEvt.jar cmp org
-$jd/java -jar -Djava.library.path=$nativedir CmpEdnEvt.jar
+$jd/javac -d . -cp . CmpEvt.java
+$jd/jar -cmf manifest.mf CmpEvt.jar cmp org
+$jd/java -jar -Djava.library.path=$nativedir CmpEvt.jar
