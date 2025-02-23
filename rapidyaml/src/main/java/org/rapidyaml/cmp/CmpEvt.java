@@ -9,24 +9,24 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 // https://stackoverflow.com/questions/804466/how-do-i-create-executable-java-program
-public class CmpEdnEvt
+public class CmpEvt
 {
     public static void main(String[] args) throws Exception
     {
         Rapidyaml rapidyaml = new Rapidyaml();
         rapidyaml.timingEnabled(true);
-        compareEdnEvt(rapidyaml, "./yamllm.ys");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/appveyor.yml");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/compile_commands.json");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner100.yml");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner100.yml");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000.yml");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000.yml");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000_json.json");
-        compareEdnEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000_json.yml");
+        compareEvt(rapidyaml, "./yamllm.ys");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/appveyor.yml");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/compile_commands.json");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner100.yml");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner100.yml");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000.yml");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000.yml");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_seqs_flow_outer1000_inner1000_json.json");
+        compareEvt(rapidyaml, "/home/jpmag/proj/rapidyaml/bm/cases/style_maps_flow_outer1000_inner1000_json.yml");
     }
 
-    public static void compareEdnEvt(Rapidyaml rapidyaml, String path) throws Exception
+    public static void compareEvt(Rapidyaml rapidyaml, String path) throws Exception
     {
         String ys_ = java.nio.file.Files.readString(Paths.get(path), StandardCharsets.UTF_8);
         byte[] ys = ys_.getBytes(StandardCharsets.UTF_8);
@@ -37,57 +37,13 @@ public class CmpEdnEvt
         System.out.printf("%s\n", path);
         System.out.printf("     ys.length=%d\n", ys.length);
         //
-        long t = timingStart("edn");
-        String ednStr = callEdn(rapidyaml, ys, ysarr);
-        timingStop("edn", t, ys.length);
-        //
-        t = timingStart("ednBuf");
-        ByteBuffer edn = callEdnBuf(rapidyaml, ys, ysbuf);
-        timingStop("ednBuf", t, ys.length);
-        //
-        t = timingStart("evt");
+        long t = timingStart("evt");
         int[] evtarr = callEvt(rapidyaml, ys, ysarr);
         timingStop("evt", t, ys.length);
         //
         t = timingStart("evtBuf");
         IntBuffer evtbuf = callEvtBuf(rapidyaml, ys, ysbuf);
         timingStop("evtBuf", t, ys.length);
-    }
-
-    static String callEdn(Rapidyaml rapidyaml, byte[] src, byte[] srcbuf) throws Exception
-    {
-        System.arraycopy(src, 0, srcbuf, 0, src.length);
-        byte[] edn = new byte[10000000];
-        int reqsize = rapidyaml.parseYsToEdn(srcbuf, edn);
-        if(reqsize > edn.length) {
-            edn = new byte[reqsize];
-            System.arraycopy(src, 0, srcbuf, 0, src.length);
-            int reqsize2 = rapidyaml.parseYsToEdn(srcbuf, edn);
-            if(reqsize2 != reqsize) {
-                throw new RuntimeException("reqsize");
-            }
-        }
-        String ret = new String(edn, 0, reqsize-1, StandardCharsets.UTF_8);
-        return ret;
-    }
-
-    static ByteBuffer callEdnBuf(Rapidyaml rapidyaml, byte[] src, ByteBuffer srcbuf) throws Exception
-    {
-        srcbuf.position(0);
-        srcbuf.put(src);
-        ByteBuffer edn = ByteBuffer.allocateDirect(10000000);
-        int reqsize = rapidyaml.parseYsToEdnBuf(srcbuf, edn);
-        if(reqsize > edn.capacity()) {
-            edn = ByteBuffer.allocateDirect(reqsize);
-            srcbuf.position(0);
-            srcbuf.put(src);
-            int reqsize2 = rapidyaml.parseYsToEdnBuf(srcbuf, edn);
-            if(reqsize2 != reqsize) {
-                throw new RuntimeException("reqsize");
-            }
-        }
-        edn.position(reqsize);
-        return edn;
     }
 
     static int[] callEvt(Rapidyaml rapidyaml, byte[] src, byte[] srcbuf) throws Exception

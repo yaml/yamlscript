@@ -233,8 +233,11 @@
                   "" parse-snakeyaml
                   "snake" parse-snakeyaml
                   "rapid" parse-rapidyaml
+                  "ryml" parse-rapidyaml
+                  ; TODO:
+                  ;"rapid-buf" parse-rapidyaml-buf
+                  ;"ryml-buf" parse-rapidyaml-buf
                   (die "Unknown YS_PARSER value: " parser-name))
-                ; parse-rapidyaml-evt
                 parse-snakeyaml))
 
 (comment
