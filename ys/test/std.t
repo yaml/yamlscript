@@ -365,6 +365,22 @@ test::
     =>: "$what $who"
   want: Hello World
 
+- name: Test std/set for zero args
+  code: set()
+  want:: \{}
+
+- name: Test std/set for one args
+  code: set([1 2 3])
+  want:: \{1 2 3}
+
+- name: Test std/set for two args
+  code: |
+    a =: atom(nil)
+    set a: -[1 2 3]
+  want:: -[1 2 3]
+
+- name: Test std/atom with no args
+  code: atom().@ == nil
 
 #-------------------------------------------------------------------------------
 done:

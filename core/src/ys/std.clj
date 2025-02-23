@@ -20,12 +20,14 @@
    [yamlscript.util :as util]
    [ys.ys :as ys])
   (:import java.security.MessageDigest)
-  (:refer-clojure :exclude [die
+  (:refer-clojure :exclude [atom
+                            die
                             eval
                             print
                             read
                             reverse
-                            replace]))
+                            replace
+                            set]))
 
 
 ;; Guard against billion laughs style attacks
@@ -611,9 +613,9 @@
 
 (defn to-set [x]
   (condf x
-    map? (set (keys x))
-    seqable? (set (seq x))
-    nil? (set nil)
+    map? (clojure.core/set (keys x))
+    seqable? (clojure.core/set (seq x))
+    nil? (clojure.core/set nil)
     (util/die "Can't convert " (to-type x) " to set")))
 
 (defn to-str [x]
@@ -955,6 +957,14 @@
      (global/update-environ m)))
   ([k v & xs] (env-update (apply hash-map k v xs))))
 
+(defn set
+ ([] #{})
+ ([x] (clojure.core/set x))
+ ([x y] (clojure.core/reset! x y)))
+
+(defn atom
+ ([] (atom nil))
+ ([x] (clojure.core/atom x)))
 
 ;;------------------------------------------------------------------------------
 (comment
