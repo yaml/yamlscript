@@ -5,6 +5,10 @@
 export JAVA_HOME := $(GRAALVM_HOME)
 export PATH := $(JAVA_HOME)/bin:$(PATH)
 
+MVN ?= mvn
+JAR ?= $(GRAALVM_HOME)/bin/jar
+JAVAC ?= $(GRAALVM_HOME)/bin/javac
+
 YAMLSCRIPT_JAVA_INSTALLED := \
   $(MAVEN_REPOSITORY)/org/yamlscript/yamlscript/maven-metadata-local.xml
 
@@ -31,3 +35,6 @@ endif
 
 $(YAMLSCRIPT_JAVA_INSTALLED): $(YAMLSCRIPT_JAVA_SRC)
 	$(MAKE) -C $(ROOT)/java install
+
+$(JAVAC): $(GRAALVM_INSTALLED)
+$(JAR): $(GRAALVM_INSTALLED)
