@@ -65,40 +65,34 @@ jobs:
     - name: get rapidyaml
       run: |
         make -C rapidyaml/native rapidyaml
-    - name: c++ tests, no timing ---------------------------------------------------
+    - name: run c++ tests, static -----------------------------
       run: echo
-    - name: cfg c++ tests, no timing
+    - name: cfg c++, static
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        RAPIDYAML_TIMED=0 \
-        make -C rapidyaml/native cfg
-    - name: build c++ tests, no timing
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native cfg-static
+    - name: build c++ tests, static
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        RAPIDYAML_TIMED=0 \
-        make -C rapidyaml/native build
-    - name: run c++ tests, no timing
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native build-static
+    - name: run c++ tests, static
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        RAPIDYAML_TIMED=0 \
-        make -C rapidyaml/native test
-    - name: c++ tests, with timing ---------------------------------------------------
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native test-static
+    - name: run c++ tests, static with timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native test-static-timing
+    - name: run c++ tests, shared -----------------------------
       run: echo
-    - name: cfg c++ tests, with timing
+    - name: cfg c++, shared
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        RAPIDYAML_TIMED=1 \
-        make -C rapidyaml/native cfg
-    - name: build c++ tests, with timing
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native cfg-shared
+    - name: build c++ tests, shared
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        RAPIDYAML_TIMED=1 \
-        make -C rapidyaml/native build
-    - name: run c++ tests, with timing
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native build-shared
+    - name: run c++ tests, shared
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        RAPIDYAML_TIMED=1 \
-        make -C rapidyaml/native test
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native test-shared
+    - name: run c++ tests, shared with timing
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml/native test-shared-timing
 
   # run the java tests, also in Debug to test with assertions
   java:
@@ -115,12 +109,20 @@ jobs:
     - name: checkout (action)
       uses: actions/checkout@v4
       with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: build lib
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml build
+    - name: build jar
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml jar
+    - name: install
+      run: |
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml install
     - name: run java tests
       run: |
-        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
-        make -C rapidyaml test
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} make -C rapidyaml test
 
-  # run core and ys tests, also in Debug to test with assertions
+  # run ys tests, also in Debug to test with assertions
   ys:
     name: ys/${{matrix.ysparser}}/${{matrix.bt}}
     runs-on: ubuntu-24.04
