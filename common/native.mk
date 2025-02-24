@@ -12,6 +12,7 @@ NATIVE-OPTS := \
   -march=compatibility \
   -H:IncludeResources=SCI_VERSION \
   -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
+  -H:IncludeResources='librapidyaml\.0\.8\.0\.so' \
   -H:+ReportExceptionStackTraces \
   -H:Log=registerResource: \
   -J-Dclojure.spec.skip-macros=true \

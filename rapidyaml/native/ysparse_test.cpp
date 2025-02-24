@@ -4,6 +4,8 @@
 
 using c4::csubstr;
 using c4::substr;
+using ryml::Location;
+
 
 namespace c4
 {
@@ -94,38 +96,53 @@ size_t expected_size(std::vector<EvtWithScalar> const& evt)
     return exp;
 }
 
+#define _runtest(name, ...)                               \
+    do {                                                  \
+        printf("[ RUN  ] %s ... \n", #name);              \
+        TestResult tr_ = name(__VA_ARGS__);               \
+        tr.add(tr_);                                      \
+        printf("[ %s ] %s\n", tr_?"OK  ":"FAIL", #name);  \
+        } while(0)
+
+#define CHECK(cond)                                                 \
+    do {                                                            \
+        bool pass = !!(cond);                                       \
+        ++tr.num_assertions;                                        \
+        if(!pass) {                                                 \
+            printf("%s:%d: fail! %s\n", __FILE__, __LINE__, #cond); \
+            ++tr.num_failed_assertions;                             \
+        }                                                           \
+    } while(0)
+
+#define CHECK_EQ(lhs, rhs)                                          \
+    do {                                                            \
+        bool pass = !!(lhs == rhs);                                 \
+        ++tr.num_assertions;                                        \
+        if(!pass) {                                                 \
+            std::string slhs = c4::catrs<std::string>(lhs);         \
+            std::string srhs = c4::catrs<std::string>(rhs);         \
+            printf("%s:%d: fail! %s=%s == %s=%s\n", __FILE__, __LINE__, #lhs, slhs.c_str(), #rhs, srhs.c_str()); \
+            ++tr.num_failed_assertions;                             \
+        }                                                           \
+    } while(0)
+
+#define CHECK_MSG(cond, fmt, ...)                                       \
+    do {                                                                \
+        bool pass = !!(cond);                                           \
+        ++tr.num_assertions;                                            \
+        if(!pass) {                                                     \
+            printf("%s:%d: fail! %s:" fmt "\n", __FILE__, __LINE__, #cond, ## __VA_ARGS__); \
+            ++tr.num_failed_assertions;                                 \
+        }                                                               \
+    } while(0)
+
+
 struct TestCase
 {
     csubstr ys;
     std::vector<EvtWithScalar> evt;
 
 public:
-
-    #define _runtest(name, ...)                               \
-        do {                                                  \
-            printf("[ RUN  ] %s ... \n", #name);              \
-            TestResult tr_ = name(__VA_ARGS__);               \
-            tr.add(tr_);                                      \
-            printf("[ %s ] %s\n", tr_?"OK  ":"FAIL", #name);  \
-        } while(0)
-    #define CHECK(cond)                                                 \
-        do {                                                            \
-            bool pass = !!(cond);                                       \
-            ++tr.num_assertions;                                        \
-            if(!pass) {                                                 \
-                printf("%s:%d: fail! %s\n", __FILE__, __LINE__, #cond); \
-                ++tr.num_failed_assertions;                             \
-            }                                                           \
-        } while(0)
-    #define CHECK_MSG(cond, fmt, ...)                                   \
-        do {                                                            \
-            bool pass = !!(cond);                                       \
-            ++tr.num_assertions;                                        \
-            if(!pass) {                                                 \
-                printf("%s:%d: fail! %s:" fmt "\n", __FILE__, __LINE__, #cond, ## __VA_ARGS__);   \
-                ++tr.num_failed_assertions;                             \
-            }                                                           \
-        } while(0)
 
     TestResult test(ysparse *ryml2evt) const
     {
@@ -300,6 +317,65 @@ public:
 
 //-----------------------------------------------------------------------------
 
+struct TestCaseErr
+{
+    csubstr ys;
+    bool is_parse_err;
+    ryml::Location loc;
+
+    TestCaseErr(csubstr ys_) : ys(ys_), is_parse_err(false), loc() {}
+    TestCaseErr(csubstr ys_, ryml::Location loc_) : ys(ys_), is_parse_err(true), loc(loc_) {}
+
+    TestResult test(ysparse *ryml2evt) const
+    {
+        TestResult tr = {};
+        _runtest(test_err, );
+        _runtest(test_err_reuse, ryml2evt);
+        return tr;
+    }
+
+    TestResult test_err_reuse(ysparse *ryml2evt) const
+    {
+        TestResult tr = {};
+        std::string input_(ys.begin(), ys.end());
+        substr input = c4::to_substr(input_);
+        bool gotit = false;
+        try
+        {
+            size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
+                                              input.str, (size_type)input.len,
+                                              nullptr, 0);
+        }
+        catch(YsParseError const& exc)
+        {
+            if(is_parse_err)
+            {
+                gotit = true;
+                CHECK_EQ(exc.location.name, "ysfilename");
+                CHECK_EQ(exc.location.line, loc.line);
+                CHECK_EQ(exc.location.col, loc.col);
+                CHECK_EQ(exc.location.offset, loc.offset);
+            }
+        }
+        catch(std::exception const& exc)
+        {
+            if(!is_parse_err)
+                gotit = true;
+        }
+        CHECK(gotit);
+        return tr;
+        return tr;
+    }
+    TestResult test_err() const
+    {
+        Ys2EvtScoped lib;
+        return test_err_reuse(lib.ryml2evt);
+    }
+};
+
+
+//-----------------------------------------------------------------------------
+
 namespace {
 // make the declarations shorter
 #define tc(ys, ...) {ys, std::vector<EvtWithScalar>(__VA_ARGS__)}
@@ -307,6 +383,20 @@ namespace {
 using namespace evt;
 inline constexpr bool needs_filter = true;
 const TestCase test_cases[] = {
+    // case -------------------------------------------------
+    tc("!yamlscript/v0/bare\n--- !code\n42\n",
+       {
+           e(BSTR),
+           e(BDOC),
+           e(VAL_|TAG_, 1, 18, "yamlscript/v0/bare"),
+           e(VAL_|SCLR|PLAI, 0, 0, ""),
+           e(EDOC),
+           e(BDOC|EXPL),
+           e(VAL_|TAG_, 25, 4, "code"),
+           e(VAL_|SCLR|PLAI, 30, 2, "42"),
+           e(EDOC),
+           e(ESTR),
+       }),
     // case -------------------------------------------------
     tc("a: 1",
        {
@@ -568,7 +658,15 @@ defn run(prompt session=nil):
            e(ESTR),
        }),
 };
+#define tcf(...) TestCaseErr(__VA_ARGS__)
+const TestCaseErr test_cases_err[] = {
+    tcf("- !!str, xxx\n", Location(13, 2, 1)),
+    //FIXME tcf(": : : :", Location(2, 1, 3)),
+};
 } // namespace
+
+
+//-----------------------------------------------------------------------------
 
 int main(int argc, const char *argv[])
 {
@@ -592,9 +690,20 @@ int main(int argc, const char *argv[])
         failed_cases += (!tr);
         printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
     }
+    size_t num_cases_err = C4_COUNTOF(test_cases_err);
+    for(size_t i = 0; i < C4_COUNTOF(test_cases_err); ++i)
+    {
+        printf("-----------------------------------------\n"
+               "errcase %zu/%zu ...\n"
+               "[%zu]~~~%.*s~~~\n", i, num_cases_err, test_cases_err[i].ys.len, (int)test_cases_err[i].ys.len, test_cases_err[i].ys.str);
+        const TestResult tr = test_cases_err[i].test(ys2evt.ryml2evt);
+        total.add(tr);
+        failed_cases += (!tr);
+        printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
+    }
     printf("assertions: %u/%u pass %u/%u fail\n", total.num_assertions - total.num_failed_assertions, total.num_assertions, total.num_failed_assertions, total.num_assertions);
     printf("tests: %u/%u pass %u/%u fail\n", total.num_tests - total.num_failed_tests, total.num_tests, total.num_failed_tests, total.num_tests);
-    printf("cases: %zu/%zu pass %zu/%zu fail\n", num_cases-failed_cases, num_cases, failed_cases, num_cases);
+    printf("cases: %zu/%zu pass %zu/%zu fail\n", num_cases-failed_cases, num_cases+num_cases_err, failed_cases, num_cases);
     if(total)
         printf("TESTS SUCCEED!\n");
     return total ? 0 : -1;

@@ -9,14 +9,6 @@ extern "C" {
 #endif
 /*
  * Class:     org_rapidyaml_Rapidyaml
- * Method:    ysparse_timing_set
- * Signature: (Z)V
- */
-JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1timing_1set
-  (JNIEnv *, jobject, jboolean);
-
-/*
- * Class:     org_rapidyaml_Rapidyaml
  * Method:    ysparse_init
  * Signature: ()J
  */
@@ -30,6 +22,14 @@ JNIEXPORT jlong JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1init
  */
 JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1destroy
   (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     org_rapidyaml_Rapidyaml
+ * Method:    ysparse_timing_set
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1timing_1set
+  (JNIEnv *, jobject, jboolean);
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
