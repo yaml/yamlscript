@@ -2891,18 +2891,16 @@ it's very important to know what mode you are in at any given point.</p>
 <p>The most important ones to learn about are data and code modes.
 To use YS effectively you'll need to be comfortable with switching back and
 forth between the two.</p>
-<p>Bare mode is the default when you haven't added a <code>!yamlscript/…</code> tag to the
-start of a YS document.
+<p>Bare mode is the default when you haven't added a <code>!YS-v0</code> tag to the start of
+a YS document.
 It means that everything in the file is data; code can never be used.
 This is how we can make sure that existing YAML files are valid YS.</p>
 <p>To enable a YAML file to use YS code, you need to add one of these tags to the
 top:</p>
 <ul>
-<li><code>!yamlscript/v0/code</code> - Start in code mode.</li>
-<li><code>!yamlscript/v0/data</code> - Start in data mode.</li>
-<li><code>!yamlscript/v0</code> - Short for <code>!yamlscript/v0/code</code></li>
-<li><code>!yamlscript/v0:</code> - Short for <code>!yamlscript/v0/data</code></li>
-<li><code>!YS v0:</code> - Alternative that starts in data mode.</li>
+<li><code>!YS-v0</code> - Start in code mode.</li>
+<li><code>!YS-v0:</code> - Start in data mode.</li>
+<li><code>!YS v0:</code> - Tagged key/val pair that starts in bare mode.</li>
 </ul>
 <p>Consider the following examples.</p>
 <p>Bare mode:</p>
@@ -2913,14 +2911,14 @@ foo:
 </code></pre></div>
 <p>Data mode:</p>
 <div class="highlight"><pre><span></span><code>$ ys --load &lt;(echo &#39;
-!YS v0:
+!YS-v0:
 foo:
   count: [red, green, blue]&#39;)
 {&quot;foo&quot;:{&quot;count&quot;:[&quot;red&quot;,&quot;green&quot;,&quot;blue&quot;]}}
 </code></pre></div>
 <p>Code mode:</p>
 <div class="highlight"><pre><span></span><code>$ ys --load &lt;(echo &#39;
-!yamlscript/v0
+!YS-v0
 foo:
   count: [red, green, blue]&#39;)
 Error: Sequences (block and flow) not allowed in code mode
@@ -2934,7 +2932,7 @@ Then we should switch to code mode for things that are code.</p>
 number of elements in the sequence.</p>
 <p>The special tag <code>!</code> can be used to switch from data to code and vice versa.</p>
 <div class="highlight"><pre><span></span><code>$ ys --load &lt;(echo &#39;
-!YS v0:
+!YS-v0:
 foo: !
   count: [red, green, blue]&#39;)
 Error: Sequences (block and flow) not allowed in code mode
@@ -2944,7 +2942,7 @@ We got the same error.
 YS only allows block mappings for code.
 We need to put <code>[red, green, blue]</code> into data mode:</p>
 <div class="highlight"><pre><span></span><code>$ ys --load &lt;(echo &#39;
-!YS v0:
+!YS-v0:
 foo: !
   count: ! [red, green, blue]&#39;)
 {&quot;foo&quot;:3}
@@ -2955,7 +2953,7 @@ mapping pair value.
 If you use <code>::</code> instead of <code>:</code> it does the same thing.</p>
 <p>Let's try it out:</p>
 <div class="highlight"><pre><span></span><code>$ ys --load &lt;(echo &#39;
-!YS v0:
+!YS-v0:
 foo::
   count:: [red, green, blue]&#39;)
 {&quot;foo&quot;:3}
@@ -2963,7 +2961,7 @@ foo::
 <p>Sweet!</p>
 <p>However, when <em>switching in a sequence</em> you'll need to use <code>!</code>:</p>
 <div class="highlight"><pre><span></span><code>$ ys --load &lt;(echo &#39;
-!YS v0:
+!YS-v0:
 - !
   count:: [red, green, blue]&#39;)
 [3]

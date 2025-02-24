@@ -2813,7 +2813,7 @@ printed as JSON.</p>
 <p>Here's the <code>ys --help</code> output:</p>
 <div class="highlight"><pre><span></span><code>$ ys --help
 
-ys - The YS (YAMLScript) Command Line Tool - v0.1.91
+ys - The YS (YAMLScript) Command Line Tool - v0.1.92
 
 Usage: ys [&lt;option...&gt;] [&lt;file&gt;]
 
@@ -2857,7 +2857,7 @@ Options:
 <hr />
 <p>Let's start with a YAML file (<code>some.yaml</code>) that wants to use data from another
 YAML file and also do some simple calculations:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
 
 <span class="nt">:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;World&quot;</span>
@@ -2897,7 +2897,7 @@ drink:<span class="w"> </span>Bar,<span class="w"> </span>Bar,<span class="w"> <
 </code></pre></div>
 <hr />
 <p>Here's a tiny YS program called <code>program.ys</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!yamlscript/v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
 
 <span class="l l-Scalar l-Scalar-Plain">defn main(name=&#39;world&#39; n=3)</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="nt">greet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name n</span>

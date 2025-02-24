@@ -3098,11 +3098,10 @@ src_path: doc/cheat.md
 <li>Data mode data is treated as data (can toggle to code mode)</li>
 <li>Bare mode data is treated as data (cannot toggle; always normal YAML)</li>
 <li>YS files must start with a YS (YAMLScript) tag:</li>
-<li><code>!yamlscript/v0</code> - Start in code mode</li>
-<li><code>!yamlscript/v0/data</code> - Start in data mode</li>
-<li><code>!yamlscript/v0:</code> - Shorthand for data mode</li>
+<li><code>!YS-v0</code> - Start in code mode</li>
+<li><code>!YS-v0:</code> - Start in data mode</li>
 <li>No tag - Start in bare mode (plain YAML; no code evaluation)</li>
-<li>Initial tagged pair of <code>!YS v0:</code> is an alternative; starts in data mode</li>
+<li>Initial tagged pair of <code>!YS v0:</code> is an alternative; starts in bare mode</li>
 <li>YS code mode always uses these YAML forms:</li>
 <li>Block mappings (normal indented mappings; <code>:</code> separated pairs)</li>
 <li>Plain scalars (no quotes)</li>

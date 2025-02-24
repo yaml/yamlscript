@@ -2891,7 +2891,7 @@ the YS details first.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>your-file.yaml
 </code></pre></div>
 <p>If the output is your data converted to JSON, then you're good to go!</p>
-<p>To turn on YS functional capabilities, just add a <code>!YS v0:</code> line to the top of
+<p>To turn on YS functional capabilities, just add a <code>!YS-v0:</code> line to the top of
 your YAML file.</p>
 <p>Try running that command again.
 The output should be exactly the same as before.</p>
@@ -2907,7 +2907,7 @@ current environment variables.
 For instance you can access your <code>USER</code> variable with <code>ENV.USER</code>.
 Also let's use the <code>VERSION</code> variable, which contains the current YS version.</p>
 <p>Here's an example of string interpolation:
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span><span class="w">   </span><span class="c1"># Normal YAML data</span>
 <span class="nt">greeting</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">My name is $(ENV.USER).</span>
@@ -2928,7 +2928,7 @@ No interpolation happened!</p>
 need to flip that node to <a href="../modes/">code mode</a>.
 YS makes this easy.
 Just change the <code>:</code> before that particuar node to <code>::</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span><span class="w">   </span><span class="c1"># Normal YAML data</span>
 <span class="nt">greeting:</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">My name is $(ENV.USER).</span>
