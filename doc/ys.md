@@ -15,7 +15,7 @@ Here's the `ys --help` output:
 ```text
 $ ys --help
 
-ys - The YS (YAMLScript) Command Line Tool - v0.1.91
+ys - The YS (YAMLScript) Command Line Tool - v0.1.92
 
 Usage: ys [<option...>] [<file>]
 

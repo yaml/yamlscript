@@ -14,5 +14,5 @@ $ curl https://yamlscript.org/install | bash
 See [Installing YS](https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript) for more detailed information.
 
 
-## Changes in YS version 0.1.91
+## Changes in YS version 0.1.92
 

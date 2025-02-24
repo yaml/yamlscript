@@ -1,3 +1,19 @@
+- version: 0.1.92
+  date:    Mon 24 Feb 2025 05:47:05 PM EST
+  changes:
+  - www: Redo website using mkdocs-material
+  - refactor: Change "YAMLScript" to "YS" in most cases
+  - www: Add action links to all pages
+  - www: Update ys::std doc
+  - core: Add CSV/TSV support and ys::csv library
+  - std: Add substr function with Perl semantics
+  - core: Use .@ for :deref instead of :D
+  - core: Support _ symbol in destructured assignment
+  - www: Add page for website contributions
+  - std: Support more nil punning for infix arithmetic ops
+  - core: Add atom and set to std
+  - core: Rework YS top level mode tags
+  - std: Add base64 functions
 - version: 0.1.91
   date:    Sat 01 Feb 2025 06:45:53 PM PST
   changes:
