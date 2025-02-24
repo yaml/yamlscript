@@ -1,0 +1,49 @@
+name: ys
+
+defaults:
+  run:
+    shell: bash -xeo pipefail {0}
+'on':
+  workflow_dispatch: null
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+
+  # run ys tests, also in Debug to test with assertions
+  ys:
+    name: ys/${{matrix.ysparser}}/${{matrix.bt}}
+    runs-on: ubuntu-24.04
+    if: always()
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - {v: 1, ysparser: snake}
+        - {v: 1, ysparser: ryml, bt: Debug}
+        - {v: 1, ysparser: ryml, bt: Release}
+    steps:
+    - name: checkout (action)
+      uses: actions/checkout@v4
+      with: {submodules: recursive, fetch-depth: 0} # use fetch-depth to ensure all tags are fetched
+    - name: run core tests
+      run: |
+        . .profile
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        YS_PARSER=${{matrix.ysparser}} \
+        make test-core v=${{matrix.v}}
+    - name: run ys tests
+      run: |
+        . .profile
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        YS_PARSER=${{matrix.ysparser}} \
+        make -C ys test-run v=${{matrix.v}}
+    - name: run ys tests ?
+      run: |
+        . .profile
+        RAPIDYAML_BUILD_TYPE=${{matrix.bt}} \
+        YS_PARSER=${{matrix.ysparser}} \
+        make test-ys v=${{matrix.v}}
