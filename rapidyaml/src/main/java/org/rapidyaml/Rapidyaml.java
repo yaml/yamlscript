@@ -11,6 +11,11 @@ import java.nio.ByteOrder;
  */
 public class Rapidyaml
 {
+
+    //------------------------
+    // JNI
+    //------------------------
+
     public static String RAPIDYAML_VERSION = "0.8.0";
 
     private native void ysparse_timing_set(boolean yes);
@@ -26,13 +31,17 @@ public class Rapidyaml
 
     private final long ysparse;
 
+
+    //------------------------
+    // CTOR/DTOR
+    //------------------------
+
     public Rapidyaml()
     {
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
         System.loadLibrary(library_name);
         this.ysparse = this.ysparse_init();
-        // TODO: receive this argument as ctor parameter
-        timingEnabled(System.getenv("YS_RYML_TIMER") != null);
+        timingEnabled(false);
     }
 
     // Likely bad idea to implement finalize:
