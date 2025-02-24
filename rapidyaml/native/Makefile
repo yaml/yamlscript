@@ -63,17 +63,21 @@ cfg-static: rapidyaml
 	$(CMK_ENV) $(CMAKE) -S . -B $(BDIR)-static $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=OFF
 test-static: build-static
 	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target rapidyaml-test-run
+test-static-timing: build-static
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target rapidyaml-test-run-timing
 $(RAPIDYAML_LIB): cfg-static $(RAPIDYAML_DEPS)
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --target rapidyaml --parallel --verbose
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --parallel --target rapidyaml
 	cp -fv $(BDIR)-static/*.a $@
 
 build-shared: $(RAPIDYAML_SO)
 cfg-shared: rapidyaml
 	$(CMK_ENV) $(CMAKE) -S . -B $(BDIR)-shared $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=ON
 test-shared: build-shared
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --target rapidyaml-test-run --verbose
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --target rapidyaml-test-run
+test-shared-timing: build-shared
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --target rapidyaml-test-run-timing
 $(RAPIDYAML_SO): cfg-shared $(RAPIDYAML_DEPS)
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --target rapidyaml --parallel --verbose
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --parallel --target rapidyaml
 	cp -fv $(BDIR)-shared/*.so $@
 	ln -fs $@ librapidyaml.so
 
