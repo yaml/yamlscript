@@ -43,6 +43,7 @@
   (-> string
     yamlscript.parser/parse
     yamlscript.composer/compose
+    first
     yamlscript.resolver/resolve
     yamlscript.builder/build))
 

@@ -1,5 +1,5 @@
 # Start in "data mode"
-!YS v0:
+!YS-v0:
 
 # This `::` preamble loads reusable data and code:
 ::

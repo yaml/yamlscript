@@ -10,7 +10,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YS:
 ```yaml
-!YS v0:
+!YS-v0:
 
 # Get data from external sources:
 names-url =:
@@ -83,7 +83,6 @@ $ ys --compile file.ys
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
 
-
 ## Julia Usage
 
 File `prog.jl`:
@@ -146,7 +145,6 @@ You may need to add this install directory to `LD_LIBRARY_PATH`.
 
 See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
-
 ## See Also
 
 * [YS Web Site](https://yamlscript.org)
@@ -160,10 +158,8 @@ See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
 ## Authors
 
-
 * [Ingy döt Net](https://github.com/ingydotnet)
 * [Kenta Murata](https://github.com/mrkn)
-
 
 ## License & Copyright
 

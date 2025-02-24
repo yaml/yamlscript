@@ -10,7 +10,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YS:
 ```yaml
-!YS v0:
+!YS-v0:
 
 # Get data from external sources:
 names-url =:
@@ -82,7 +82,6 @@ $ ys --compile file.ys
   "color" (_& 'hue (first (shuffle (qw red green blue yellow))))
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
-
 
 ## Rust Usage
 
@@ -165,7 +164,6 @@ command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 
 See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
 
-
 ## See Also
 
 * [YS Web Site](https://yamlscript.org)
@@ -179,10 +177,8 @@ See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
 
 ## Authors
 
-
 * [Ingy döt Net](https://github.com/ingydotnet)
 * [Ethiraric](https://github.com/Ethiraric)
-
 
 ## License & Copyright
 

@@ -37,17 +37,18 @@
 
 (defn construct
   "Make the AST and add wrap the last node."
-  [node last]
-  (-> node
-    construct-ast
-    ((fn [m]
-       (update-in m [:Top (dec (count (:Top m)))]
-         (fn [n]
-           (let [compile (:compile @global/opts)
-                 node (if (or no-wrap (and last compile))
-                        n
-                        (Lst [(Sym '+++) n]))]
-             (maybe-trace node))))))))
+  [node ctx]
+  (let [last (:last ctx)]
+    (-> node
+      construct-ast
+      ((fn [m]
+         (update-in m [:Top (dec (count (:Top m)))]
+           (fn [n]
+             (let [compile (:compile @global/opts)
+                   node (if (or (not n) no-wrap (and last compile))
+                          n
+                          (Lst [(Sym '+++) n]))]
+               (maybe-trace node)))))))))
 
 (defn is-splat? [value]
   (re-matches re/splt (str value)))

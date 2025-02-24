@@ -37,20 +37,26 @@
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
+  (when (System/getenv "YS_SHOW_PARSER_INPUT")
+    (WWW "parser-input" yamlscript-string))
   (let [events (yamlscript.parser/parse yamlscript-string)
         groups (parse-events-to-groups events)
         n (count groups)
-        blocks (loop [[group & groups] groups blocks [] i 1]
-                 (let [blocks (conj blocks
-                                (-> group
-                                  (yamlscript.composer/compose (= i 1))
+        ctx {:first nil :last nil :init nil}
+        blocks (loop [[events & groups] groups, ctx ctx, blocks [], i 1]
+                 (let [ctx (assoc ctx
+                             :first (= i 1)
+                             :last (>= i n))
+                       [node ctx] (yamlscript.composer/compose events ctx)
+                       blocks (conj blocks
+                                (-> node
                                   yamlscript.resolver/resolve
                                   yamlscript.builder/build
                                   yamlscript.transformer/transform
-                                  (yamlscript.constructor/construct (>= i n))
+                                  (yamlscript.constructor/construct ctx)
                                   yamlscript.printer/print))]
                    (if (seq groups)
-                     (recur groups blocks (inc i))
+                     (recur groups ctx blocks (inc i))
                      blocks)))]
     (str/join "" blocks)))
 
@@ -72,16 +78,23 @@
 (defn compile-with-options
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
+  (when (System/getenv "YS_SHOW_PARSER_INPUT")
+    (WWW "parser-input" yamlscript-string))
   (let [events (stage-with-options "parse"
                  yamlscript.parser/parse [yamlscript-string])
         groups (parse-events-to-groups events)
         n (count groups)
-        blocks (loop [[group & groups] groups blocks [] i 1]
-                 (let [blocks (conj blocks
-                                (-> group
-                                  (#(stage-with-options "compose"
-                                      yamlscript.composer/compose
-                                      [%1 (= i 1)]))
+        ctx {:first nil :last nil :init nil}
+        blocks (loop [[events & groups] groups, ctx ctx, blocks [], i 1]
+                 (let [ctx (assoc ctx
+                             :first (= i 1)
+                             :last (>= i n))
+                       [node ctx]
+                       (stage-with-options "compose"
+                         yamlscript.composer/compose
+                         [events ctx])
+                       blocks (conj blocks
+                                (-> node
                                   (#(stage-with-options "resolve"
                                       yamlscript.resolver/resolve [%1]))
                                   (#(stage-with-options "build"
@@ -90,11 +103,11 @@
                                       yamlscript.transformer/transform [%1]))
                                   (#(stage-with-options "construct"
                                       yamlscript.constructor/construct
-                                      [%1 (>= i n)]))
+                                      [%1 ctx]))
                                   (#(stage-with-options "print"
                                       yamlscript.printer/print [%1]))))]
                    (if (seq groups)
-                     (recur groups blocks (inc i))
+                     (recur groups ctx blocks (inc i))
                      blocks)))]
     (str/join "" blocks)))
 

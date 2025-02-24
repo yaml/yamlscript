@@ -18,8 +18,25 @@
            (-> test
              :yamlscript
              parser/parse
-             composer/compose))
+             composer/compose
+             first))
    :want (fn [test]
            (-> test
              :compose
              edn/read-string))})
+
+#_(test/load-yaml-test-files
+  ["test/compiler-stack.yaml"]
+  {:add-tests true
+   :pick #(test/has-keys? [:yamlscript :compose-error] %1)
+   :test (fn [test]
+           (try
+             (-> test
+               :yamlscript
+               parser/parse
+               composer/compose
+               first)
+             ""
+             (catch Exception e
+               (:cause (Throwable->map e)))))
+   :want :compose-error})

@@ -231,25 +231,25 @@ Options:
         help (str/replace help #"    ([A-Z])" #(second %1))]
     (println help)))
 
-(defn add-ys-mode-tag [opts code]
+(defn add-ecode-mode-tag [opts ecode]
   (let [mode (:mode opts)
         code (str/join ""
                [(cond
-                  (or (str/starts-with? code "--- !yamlscript/v0")
-                    (str/starts-with? code "!yamlscript/v0")
+                  (or
+                    (re-find #"^(?:---[ \n])?!(?:yamlscript|YS)" ecode)
                     (:clojure opts))
                   ""
                   (or (= "c" mode) (= "code" mode))
-                  "--- !yamlscript/v0/code\n"
+                  "--- !code\n"
                   (or (= "d" mode) (= "data" mode))
-                  "--- !yamlscript/v0/data\n"
+                  "--- !data\n"
                   (or (= "b" mode) (= "bare" mode))
-                  "--- !yamlscript/v0/bare\n"
+                  "--- !bare\n"
                   (:load opts)
                   ""
                   :else
-                  "--- !yamlscript/v0\n")
-                code])
+                  "--- !code\n")
+                ecode])
         code (if (or (:clojure opts)
                    (re-find #"^---(?:[ \n]|$)" code))
                code
@@ -283,7 +283,7 @@ Options:
                                (str/replace %1 #"^:([-\w]+)" ".$1()"))
                            :else %1)
                          %1))
-                     (add-ys-mode-tag opts))
+                     (add-ecode-mode-tag opts))
                    "\n"))
         opts (if (and e-code f-code)
                (assoc opts :load true)
@@ -292,6 +292,12 @@ Options:
             (binding [*out* *err*]
               (println "Warning: No input found.")))
         code (str f-code e-code)
+        code (if (and
+                   e-code
+                   (not (re-find #"(?m)^(?:--- +)?!(?:yamlscript|YS)" code))
+                   (not (:clojure opts)))
+               (str "!yamlscript/v0/bare\n" code)
+               code)
         file (or file "NO-NAME")]
     [code file (:load opts)]))
 
@@ -299,7 +305,7 @@ Options:
   (if (:clojure opts)
     code
     (try
-      (if (:debug-stage opts)
+      (if (seq (:debug-stage opts))
         (compiler/compile-with-options code)
         (compiler/compile code))
       (catch Exception e

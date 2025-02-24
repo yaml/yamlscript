@@ -23,6 +23,10 @@
 
 (def _ (sci/new-dynamic-var 'ARGS nil {:ns main-ns}))
 (def ENV (sci/new-dynamic-var 'ENV nil {:ns main-ns}))
+(def PUN (sci/new-dynamic-var 'PUN nil {:ns main-ns}))
+
+(defn get-PUN []
+  (sci/eval-string+ @sci-ctx "(var-get (resolve 'PUN))"))
 
 (def env {})
 

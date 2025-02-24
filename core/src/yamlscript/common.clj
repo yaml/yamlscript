@@ -79,6 +79,7 @@
 
 (intern 'clojure.core (with-meta 'TTT {:macro true}) @#'yamlscript.debug/TTT)
 (intern 'clojure.core 'YSC yamlscript.debug/YSC)
+(intern 'clojure.core 'YSC0 yamlscript.debug/YSC0)
 (intern 'clojure.core 'DBG yamlscript.debug/DBG)
 (intern 'clojure.core 'PPP yamlscript.debug/PPP)
 (intern 'clojure.core 'WWW yamlscript.debug/WWW)

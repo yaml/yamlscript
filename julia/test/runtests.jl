@@ -16,10 +16,10 @@ import YAMLScript as YS
 
     @testset "A simple script" begin
         script = """
-!YS v0:
+!YS-v0:
 say: "Hello"
-key: ! inc(42)
-baz: ! range(1 6)
+key:: inc(42)
+baz:: range(1 6)
 """
         obj = load(script)
         @test haskey(obj, "say")
@@ -33,7 +33,7 @@ baz: ! range(1 6)
 
 #     @testset "An error case" begin
 #         script = """
-# !YS v0:
+# !YS-v0:
 # : : : : : :
 # """
 #         @test_throws Exception load(script)
@@ -41,10 +41,10 @@ baz: ! range(1 6)
 
     @testset "Load multiple times" begin
         script = """
-!YS v0:
+!YS-v0:
 say: "Hello"
-key: ! inc(42)
-baz: ! range(1 6)
+key:: inc(42)
+baz:: range(1 6)
 """
         ys = YS.Runtime()
         obj = YS.load(ys, script)

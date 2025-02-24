@@ -22,6 +22,7 @@
                :yamlscript
                parser/parse
                composer/compose
+               first
                resolver/resolve)
              (catch Exception e
                (if (:error test)

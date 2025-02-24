@@ -15,8 +15,8 @@
 //! // Load some YAMLScript.
 //! let data = ys.load::<serde_json::Value>(
 //!         r#"
-//! !YS v0:
-//! key: ! inc(42)
+//! !YS-v0:
+//! key:: inc(42)
 //! "#
 //!     )
 //!     .unwrap();
@@ -42,8 +42,8 @@
 //! // Load some YAMLScript and deserialize as `Foo`.
 //! let foo = ys.load::<Foo>(
 //!         r#"
-//! !YS v0:
-//! key: ! inc(42)
+//! !YS-v0:
+//! key:: inc(42)
 //! "#
 //!     )
 //!     .unwrap();

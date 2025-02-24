@@ -57,7 +57,7 @@
     "-SEQ"
     "-MAP"
   compose: |
-    {:! "yamlscript/v0",
+    {:+ "code",
      :%
      [{:= "a"}
       {:' "b"}
@@ -103,7 +103,7 @@
     "=VAL", := "b c"
     "-MAP"
   compose: |
-    {:! "yamlscript/v0", :% [
+    {:+ "code", :% [
       {:= "a"} {:= "b c"} ]}
   resolve: |
     {:xmap [
@@ -134,7 +134,7 @@
     "=VAL", := "-[2 4 6 8]"
     "-MAP"
   compose: |
-    {:! "yamlscript/v0" :% [
+    {:+ "code" :% [
       {:= "map inc"}
       {:= "-[2 4 6 8]"} ]}
   print: |
@@ -267,7 +267,7 @@
     "=VAL", := "10 20"
     "-MAP"
   compose: |
-    {:! "yamlscript/v0" :% [
+    {:+ "code" :% [
       {:= "foo ="}
       {:= "123"}
       {:= "defn bar(a b)"}
@@ -618,7 +618,7 @@
      "=ALI", :* "bar"
      "-SEQ"
   compose: |
-    {:- [{:& "bar", := "42"} {:* "bar"}]}
+    {:+ "bare", :- [{:& "bar", := "42"} {:* "bar"}]}
   resolve: |
     {:seq ({:& "bar", :int "42"} {:ali "bar"})}
   build: |
@@ -638,6 +638,8 @@
 
 - name: Anchors and aliases in code mode
   yamlscript: |
+    !YS-v0
+    ---
     &a 123
     --- !yamlscript/v0
     x =: *a
@@ -655,7 +657,7 @@
     - foo: 1
     - bar: 2
   compose: |
-    {:! "yamlscript/v0:",
+    {:+ "data",
      :%
      [{:= "foo"}
       {:! ":merge*",
@@ -1336,7 +1338,7 @@
       'S': south()
       else: die()
   compose: |
-    {:! "yamlscript/v0",
+    {:+ "code",
      :%
      [{:= "case dir"}
       {:%
@@ -1486,17 +1488,17 @@
     {"foo" (inc (add+ 1 2)), "bar" (inc (add+ 3 4))}
 
 
-- name: Support '!YS v0:' as a shorthand for '!yamlscript/v0:'
+- name: Support '!YS-v0:' as a shorthand for '!yamlscript/v0:'
   yamlscript: |
-    !YS v0:
+    !YS-v0:
     foo:: 1 + 1
   compose: |
-     {:! "yamlscript/v0:", :% ({:= "foo:"} {:= "1 + 1"})}
+     {:+ "data", :% ({:= "foo:"} {:= "1 + 1"})}
 
 
-- name: Fix bug with '!YS v0:' used with =>
+- name: Fix bug with '!YS-v0:' used with =>
   yamlscript: |
-    !YS v0:
+    !YS-v0:
     =>:
       name =: 'World'
     foo:: name
@@ -1505,9 +1507,9 @@
     {"foo" name}
 
 
-- name: Fix bug with '!YS v0:' used with '::'
+- name: Fix bug with '!YS-v0:' used with '::'
   yamlscript: |
-    !YS v0:
+    !YS-v0:
     =>:
       name =: 'World'
     foo:: name
@@ -1530,16 +1532,21 @@
     {"z" (add+ x y)}
 
 
-- name: Support top level !code and !data tags with '!YS v0:'
+- name: Support top level !code and !data tags with '!YS-v0:'
   yamlscript: |
-    !YS v0:
+    !YS-v0:
     --- !code
     x =: 1
     y =: 2
     --- !data
     z:: x + y
   clojure: |
-    {}
     (def x 1)
     (def y 2)
     {"z" (add+ x y)}
+
+
+- name: Only top level '!YS v0:' pair
+  yamlscript: |
+    !YS v0:
+  clojure: |

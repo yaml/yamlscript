@@ -53,6 +53,7 @@
               'ENV global/ENV
               'FILE global/FILE
               'INC INC
+              'PUN global/PUN
               'RUN RUN
               'VERSION ys-version
 

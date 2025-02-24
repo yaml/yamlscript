@@ -54,5 +54,4 @@
       (apply println msg))))
 
 (comment
-  (-loadYsToJson "!YS v0:\nsay: 42")
   )

@@ -3,15 +3,16 @@
 require ys::taptest: :all
 
 yaml1 =: |
+  !YS-v0
   ---
   foo: boom
   ---
-  !YS v0:
+  !data
   bar:: +++.$.foo
   baz: 123
 
 test::
-- code: yaml1:eval:yaml/dump
+- code: yaml1:lines:rest:text:eval:yaml/dump
   want: |
     bar: boom
     baz: 123

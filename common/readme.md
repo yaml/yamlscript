@@ -8,7 +8,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YS:
 ```yaml
-!YS v0:
+!YS-v0:
 
 # Get data from external sources:
 names-url =:

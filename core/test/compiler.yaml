@@ -859,6 +859,8 @@
 
 - name: Multiple document stream
   yamlscript: |
+    !YS-v0
+    ---
     foo: 42
     --- !yamlscript/v0
     =>::

@@ -1,4 +1,4 @@
-!YS v0:
+!YS-v0:
 
 foo: This is a string
 bar:: load("loadme.ys")

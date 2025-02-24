@@ -21,7 +21,7 @@ $ ys -J your-file.yaml
 
 If the output is your data converted to JSON, then you're good to go!
 
-To turn on YS functional capabilities, just add a `!YS v0:` line to the top of
+To turn on YS functional capabilities, just add a `!YS-v0:` line to the top of
 your YAML file.
 
 Try running that command again.
@@ -46,7 +46,7 @@ Also let's use the `VERSION` variable, which contains the current YS version.
 
 Here's an example of string interpolation:
 ```yaml
-!YS v0:
+!YS-v0:
 foo: bar   # Normal YAML data
 greeting: |
   My name is $(ENV.USER).
@@ -73,7 +73,7 @@ YS makes this easy.
 Just change the `: ` before that particuar node to `:: `.
 
 ```yaml
-!YS v0:
+!YS-v0:
 foo: bar   # Normal YAML data
 greeting:: |
   My name is $(ENV.USER).

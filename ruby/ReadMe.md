@@ -10,7 +10,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YS:
 ```yaml
-!YS v0:
+!YS-v0:
 
 # Get data from external sources:
 names-url =:
@@ -83,7 +83,6 @@ $ ys --compile file.ys
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
 
-
 ## Ruby Usage
 
 File `prog.rb`:
@@ -145,7 +144,6 @@ command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 
 See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
-
 ## See Also
 
 * [YS Web Site](https://yamlscript.org)
@@ -159,10 +157,8 @@ See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 
 ## Authors
 
-
 * [Ingy döt Net](https://github.com/ingydotnet)
 * [Delon R.Newman](https://github.com/delonnewman)
-
 
 ## License & Copyright
 

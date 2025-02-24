@@ -10,7 +10,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YS:
 ```yaml
-!YS v0:
+!YS-v0:
 
 # Get data from external sources:
 names-url =:
@@ -82,7 +82,6 @@ $ ys --compile file.ys
   "color" (_& 'hue (first (shuffle (qw red green blue yellow))))
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
-
 
 ## Go Usage
 
@@ -156,7 +155,6 @@ Your feedback is very welcome.
 Please open an issue on this repository or chat with us directly at
 <https://matrix.to/#/#chat-yamlscript:yaml.io>.
 
-
 ## See Also
 
 * [YS Web Site](https://yamlscript.org)
@@ -170,10 +168,8 @@ Please open an issue on this repository or chat with us directly at
 
 ## Authors
 
-
 * [Ingy döt Net](https://github.com/ingydotnet)
 * [Andrew Pam](https://github.com/xanni)
-
 
 ## License & Copyright
 

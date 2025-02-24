@@ -6,16 +6,6 @@
 ;;
 ;; The tags used by YS are:
 ;;
-;; Top level tags:
-;; * !YS v0: ...         - Start in data mode
-;; * !yamlscript/v0      - Start in code mode
-;; * !yamlscript/v0:     - Start in data mode
-;; * !yamlscript/v0/     - Start in data mode (deprecated)
-;; * !yamlscript/v0/code - Start in code mode
-;; * !yamlscript/v0/data - Start in data mode
-;; * !yamlscript/v0/bare - Start in bare mode
-;; * !YS v0:             - Tagged pair starts data mode
-;;
 ;; YAML 1.2 Core Schema tags ('!!' -> 'tag:yaml.org,2002:'):
 ;; * !!map - YAML mapping
 ;; * !!seq - YAML sequence
@@ -87,12 +77,6 @@
   resolve-bare-sequence
   resolve-bare-scalar)
 
-;; TODO:
-;; * If !yamlscript/v0 is on first document, we can start other docs with short
-;;   tags like !code, !data, !bare !xmap
-;; * !yamlscript/v0;xxxx can use any valid !xxxx tag for xxxx
-;; * Support function call tags at top level: !yamlscript/v0/data;merge*:
-
 (defn resolve-node [node mode]
   (case mode
     :bare (resolve-bare-node node)
@@ -103,22 +87,12 @@
 (defn resolve
   "Walk YAML tree and tag all nodes according to YS rules."
   [node]
-  (let [tag (:! node)
-        node (if (and tag (re-find #"^yamlscript/v0" tag))
-               (dissoc node :!)
-               node)]
-    (if (and tag (re-find #"^yamlscript/v0" tag))
-      (let [full-tag tag
-            tag (subs tag (count "yamlscript/v0"))]
-        (case tag
-          "" (resolve-node node :code)
-          ":" (resolve-node node :data-top)
-          "/" (resolve-node node :data-top)
-          "/code" (resolve-node node :code)
-          "/data" (resolve-node node :data-top)
-          "/bare" (resolve-node node :bare)
-          (die "Unknown yamlscript tag: !" full-tag)))
-      (resolve-node node :bare))))
+  (let [mode (:+ node)
+        node (dissoc node :+)]
+    (case mode
+      "code" (resolve-node node :code)
+      "data" (resolve-node node :data-top)
+      "bare" (resolve-node node :bare))))
 
 
 ;; ----------------------------------------------------------------------------

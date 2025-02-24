@@ -23,6 +23,7 @@
              :yamlscript
              parser/parse
              composer/compose
+             first
              resolver/resolve
              builder/build
              transformer/transform

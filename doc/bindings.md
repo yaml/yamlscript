@@ -6,7 +6,7 @@ Your existing YAML files are perfectly valid YS files!
 Using a YS binding library (aka module or package) these files can be loaded
 into native objects just like a YAML loader would do.
 
-Without a `!yamlscript/v0` tag at the top they will load the same as normal.
+Without a `!YS-v0` tag at the top they will load the same as normal.
 With that tag, they can be made to take advantage of any of the vast YS
 functional capabilities.
 
@@ -68,7 +68,7 @@ print(data)
 File `file.ys`:
 
 ```yaml
-!YS v0:
+!YS-v0:
 
 ::  # Set values to use in data
   name =: "World"

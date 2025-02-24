@@ -63,7 +63,7 @@ Let's start with a YAML file (`some.yaml`) that wants to use data from another
 YAML file and also do some simple calculations:
 
 ```yaml
-!YS v0:
+!YS-v0:
 
 ::
   name =: "World"
@@ -116,7 +116,7 @@ drink: Bar, Bar, Bar!!!
 Here's a tiny YS program called `program.ys`:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn main(name='world' n=3):
   greet: name n

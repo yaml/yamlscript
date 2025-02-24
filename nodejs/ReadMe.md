@@ -10,7 +10,7 @@ Add Logic to Your YAML Files
 
 Load `file.yaml` with YS:
 ```yaml
-!YS v0:
+!YS-v0:
 
 # Get data from external sources:
 names-url =:
@@ -83,13 +83,12 @@ $ ys --compile file.ys
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
 
-
 ## NodeJS Usage
 
 A YAMLScript file `some.ys`:
 
 ```yaml
-!YS v0:
+!YS-v0:
 
 =>:
   name =: "World"
@@ -169,7 +168,6 @@ command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 
 See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
 
-
 ## See Also
 
 * [YS Web Site](https://yamlscript.org)
@@ -183,9 +181,7 @@ See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
 
 ## Authors
 
-
 * [Ingy döt Net](https://github.com/ingydotnet)
-
 
 ## License & Copyright
 

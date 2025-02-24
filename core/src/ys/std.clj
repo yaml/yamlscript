@@ -304,7 +304,7 @@
   (condf x
     number? (inc x)
     char? (char (inc (long x)))
-    (let [n (to-num x)]
+    (let [n (to-num x 0)]
       (condf n
         number? (inc n)
         (op-error "inc+" x)))))
@@ -313,7 +313,7 @@
   (condf x
     number? (dec x)
     char? (char (dec (long x)))
-    (let [n (to-num x)]
+    (let [n (to-num x 0)]
       (condf n
         number? (dec n)
         (op-error "dec+" x)))))
@@ -321,7 +321,7 @@
 (defn add+
   ([x y]
    (condf (if (nil? x) y x)
-     number? (+ (to-num x) (to-num y))
+     number? (+ (to-num x 0) (to-num y 0))
      string? (str x y)
      map? (merge (to-map x) (to-map y))
      set? (set/union (to-set x) (to-set y))
@@ -334,7 +334,7 @@
            (fn? y) (comp y x)
            (sequential? y) (apply partial x y)
            :else (partial x y))
-     (+ (to-num x) (to-num y))))
+     (+ (to-num x 0) (to-num y 0))))
 
   ([x y & xs]
    (when (not (or
@@ -354,7 +354,7 @@
      (and (number? x) (vector? y)) (vec (apply concat (repeat x y)))
      (and (sequential? x) (number? y)) (apply concat (repeat y x))
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
-     :else  (* (to-num x) (to-num y))))
+     :else  (* (to-num x 1) (to-num y 1))))
 
   ([x y & xs]
    (reduce mul+ (mul+ x y) xs)))
@@ -367,12 +367,12 @@
      set? (disj x y)
      vector? (vec (remove #(= y %1) x))
      seqable? (remove #(= y %1) x)
-     number? (- x (to-num y))
+     number? (- x (to-num y 0))
      char? (condf y
              number? (char (- (long x) y))
              char? (- (long x) (long y))
              (op-error "sub" x y))
-     (+ (to-num x) (to-num y))))
+     (+ (to-num x 0) (to-num y 0))))
 
   ([x y & xs]
    (when (apply not= (type x) (type y) (map type xs))
@@ -408,9 +408,7 @@
     (flush)))
 
 (defn eval [S]
-  (->> S
-    (str "!yamlscript/v0\n")
-    ys/eval))
+  (ys/eval (str "!YS-v0\n" S)))
 
 (defn exit
   ([] (exit 0))
@@ -590,19 +588,21 @@
     nil? {}
     (util/die "Can't convert " (to-type x) " to map")))
 
-(defn to-num [x]
-  (condf x
-    ratio? (double x)
-    number? x
-    string? (if (re-find #"\." x)
-              (parse-double x)
-              (parse-long x))
-    nil? (util/die "Can't convert a nil value to a number")
-    seqable? (count x)
-    char? (int x)
-    boolean? (if x 1 0)
-    (util/die (str "Can't convert a value of type '"
-                (to-type x) "' to a number"))))
+(defn to-num
+  ([x] (to-num x nil))
+  ([x default]
+   (condf x
+     ratio? (double x)
+     number? x
+     string? (if (re-find #"\." x)
+               (parse-double x)
+               (parse-long x))
+     nil? (util/die "Can't convert a nil value to a number")
+     seqable? (count x)
+     char? (int x)
+     boolean? (if x 1 0)
+     (util/die (str "Can't convert a value of type '"
+                 (to-type x) "' to a number")))))
 
 (defn to-omap [x]
   (condf x
@@ -975,6 +975,7 @@
      (global/update-env m)
      (global/update-environ m)))
   ([k v & xs] (env-update (apply hash-map k v xs))))
+
 
 ;;------------------------------------------------------------------------------
 (comment

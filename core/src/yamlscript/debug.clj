@@ -13,21 +13,25 @@
 
 (def width 50)
 
-(defn YSC [ys-str]
+(defn YSC0 [ys-str]
   (let [compile (var-get (resolve 'yamlscript.compiler/compile))
         pretty-format (var-get (resolve 'yamlscript.compiler/pretty-format))]
     (binding [*ns* (find-ns 'yamlscript.compiler)]
       (let [code (eval
                    (->
-                     (if (re-find #"!yamlscript/v0" ys-str)
-                       ys-str
-                       (str "!yamlscript/v0\n" ys-str))
+                     ys-str
                      compile
                      pretty-format
                      (str/replace #"(?m)^\(\+\+\+ +(.*)\)$" "$1")
                      (str/replace #"(?s)^\(\+\+\+[ \n]+(.*)\)$" "$1")
                      (str/trim-newline)))]
         code))))
+
+(defn YSC [ys-str]
+  (let [code (if (re-find #"^\n*!(?:yamlscript|YS)" ys-str)
+               ys-str
+               (str "!yamlscript/v0\n" ys-str))]
+    (YSC0 code)))
 
 (defn fmt [value]
   (cond

@@ -24,38 +24,103 @@
 
    :!  ; tag
    :&  ; anchor
-   :*  ; alias
-   ]
-  )
+   :*])  ; alias
 
 (declare compose-events)
+
+; !yamlscript/v0      (code)
+; !yamlscript/v0:     (data)
+; !yamlscript/v0/data
+; !yamlscript/v0/code
+; !yamlscript/v0/bare
+; !YS-v0              (code)
+; !YS-v0:             (data)
+; !YS v0:             (bare)
+; !YS-v0 data:        (data)
+; !YS-v0 code:        (code)
+; !YS-v0 bare:        (bare)
+; !YS-v0 yaml:        (bare)
+
+;; TODO:
+;; * Support function call tags at top level: !yamlscript/v0/data;merge*:
 
 (defn compose
   "Compose YAML parse events into a tree."
   ([events]
-    (compose events true))
-  ([events first]
-   (let [node (if (seq events)
+   (compose events {:first true, :last true, :init false}))
+  ([events ctx]
+   (let [node (or
                 (->
                   events
                   compose-events
-                  clojure.core/first)
-                {:! "yamlscript/v0", := ""})
+                  first)
+                ;; Empty stream
+                {:+ "code", := ""})
+         ys-tag (:! node)
+         node (dissoc node :!)
+         node (case ys-tag
+                "YS-v0" (assoc node :+ "code")
+                "YS-v0:" (assoc node :+ "data")
+                "yamlscript/v0" (assoc node :+ "code")
+                "yamlscript/v0:" (assoc node :+ "data")
+                "yamlscript/v0/" (assoc node :+ "data")  ; deprecated
+                "yamlscript/v0/bare" (assoc node :+ "bare")
+                "yamlscript/v0/code" (assoc node :+ "code")
+                "yamlscript/v0/data" (assoc node :+ "data")
+                (let [key1-tag (get-in node [:% 0 :!])
+                      key1-val (get-in node [:% 0 :=])
+                      val1 (get-in node [:% 1])]
+                  (if (and
+                        (= "YS" key1-tag)
+                        (= "v0" key1-val))
+                    (if (= {:= ""} val1)
+                      (let [node (assoc-in node [:%]
+                                   (vec (drop 2 (get-in node [:%]))))]
+                        (merge {:+ "bare"} node))
+                      ;; TODO Get YS config from value
+                      (die "Values not yet supported for '!YS v0:' key"))
+                    node)))
+
          node (if (and
-                    (= "YS" (get-in node [:% 0 :!]))
-                    (= "v0" (get-in node [:% 0 :=]))
-                    (= {:= ""} (get-in node [:% 1])))
-                (let [node (assoc-in node [:%]
-                             (vec (drop 2 (get-in node [:%]))))]
-                  (merge {:! "yamlscript/v0:"} node))
+                    (:+ node)
+                    (= "" (:= node)))
+                (assoc node :+ "code")
                 node)
-         node (if (not first)
+
+         mode (fn [mode]
+                (when-not (:init ctx)
+                  (die "YS tags not allowed w/o a YS tag at the top"))
+                (assoc node :+ mode))
+
+         node (if (not (:first ctx))
                 (cond
-                  (= "code" (:! node)) (assoc node :! "yamlscript/v0/code")
-                  (= "data" (:! node)) (assoc node :! "yamlscript/v0/data")
+                  (= "code" ys-tag) (mode "code")
+                  (= "data" ys-tag) (mode "data")
+                  (= "bare" ys-tag) (mode "bare")
+                  (= "yaml" ys-tag) (mode "bare")
+                  (= "yamlscript/v0" ys-tag) (mode "code")
+                  (= "yamlscript/v0:" ys-tag) (mode "data")
+                  (= "yamlscript/v0/data" ys-tag) (mode "data")
+                  ys-tag (die "Invalid tag: !" ys-tag)
                   :else node)
+                node)
+         ctx (if (:+ node) (assoc ctx :init true) ctx)
+         node (if (:+ node) node (assoc node :+ "bare"))
+         node (if (= node {:+ "bare", :% []})
+                {:+ "code", := ""}
                 node)]
-     node)))
+     [node ctx])))
+
+(comment
+  (YSC0 "
+!YS-v0:
+--- !code
+x =: 1
+y =: 2
+--- !data
+z:: x + y
+")
+  )
 
 (defn compose-mapping [events]
   (let [[event & events] events
@@ -126,7 +191,8 @@
     "+MAP" (compose-mapping events)
     "+SEQ" (compose-sequence events)
     "=VAL" (compose-scalar events)
-    "=ALI" (compose-alias events)))
+    "=ALI" (compose-alias events)
+    []))
 
-(comment
-  )
+(comment)
+  
