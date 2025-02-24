@@ -14,6 +14,11 @@ test::
 #-------------------------------------------------------------------------------
 - note: String functions
 
+- code: a("abcde"):base64 == "YWJjZGU="
+- code: a("abcde"):base64-encode == "YWJjZGU="
+- code: a("abcde"):base64-points.map(char):join == "YWJjZGU="
+- code: a("abcde"):base64-points.map(char):join:base64-decode == "abcde"
+
 - code: ('foo' == 'oof'.reverse())
 - code: ('foo' != 'bar')
 

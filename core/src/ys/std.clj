@@ -19,7 +19,8 @@
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
-  (:import java.security.MessageDigest)
+  (:import java.security.MessageDigest
+           java.util.Base64)
   (:refer-clojure :exclude [atom
                             die
                             eval
@@ -37,6 +38,14 @@
 ;;------------------------------------------------------------------------------
 ;; String functions
 ;;------------------------------------------------------------------------------
+(defn base64-decode [S]
+  (String. (.decode (Base64/getDecoder) ^String S)))
+(defn base64-encode [S]
+  (.encodeToString (Base64/getEncoder) (.getBytes ^String S)))
+(defn base64-points [S]
+  (.encode (Base64/getEncoder) (.getBytes ^String S)))
+(defn base64 [S] (base64-encode S))
+
 (intern 'ys.std 'blank? clojure.string/blank?)
 (intern 'ys.std 'chomp clojure.string/trim-newline)
 (intern 'ys.std 'chop common/chop)
