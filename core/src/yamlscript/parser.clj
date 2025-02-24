@@ -10,6 +10,7 @@
    [yamlscript.common])
   (:import
    (java.util Optional)
+   (java.nio ByteBuffer)
    (java.nio.charset StandardCharsets)
    (org.rapidyaml Evt Rapidyaml)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -31,6 +32,8 @@
 
 (declare parse-fn)
 
+(def TIME_VAR #"YS_PARSER_TIME") ;; TODO: define as constant?
+
 (def shebang-ys #"^#!.*/env ys-0(?:\.d+\.\d+)?\n")
 (def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
 (defn parse
@@ -39,7 +42,7 @@
   (let [has-code-mode-shebang (or
                                 (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
-        events (if (System/getenv "YS_PARSER_TIME")
+        events (if (System/getenv TIME_VAR)
                  (time (parse-fn yaml-string))
                  (parse-fn yaml-string))
         [first-event & rest-events] events
@@ -184,12 +187,69 @@
 (defn parse-rapidyaml [^String yaml-string]
   (rest
     (let [parser ^Rapidyaml (new Rapidyaml)
+          _ (when (System/getenv TIME_VAR)
+              (.timingEnabled parser true))
           buffer (.getBytes yaml-string StandardCharsets/UTF_8)
           masks (int-array 5)
           needed (.parseYsToEvt parser buffer masks)
           buffer (.getBytes yaml-string StandardCharsets/UTF_8)
           masks (int-array needed)
           _ (.parseYsToEvt parser buffer masks)
+          ;; TODO: aget slow?
+          ;; https://stackoverflow.com/questions/10133094/clojure-why-is-aget-so-slow
+          get-str (fn [i]
+                    (let [off (aget masks (inc i))
+                          len (aget masks (+ i 2))]
+                      (reduce
+                        (fn [slice i] (str slice (char (aget buffer i))))
+                        "" (range off (+ off len)))))]
+
+      (loop [i 0, tag nil, anchor nil, events []]
+        (if (< i needed)
+          (let [mask (aget masks i)
+                type (event-type mask)
+                ; _ (WWW (Integer/toString mask 2) type)
+                sval (when (flag? HAS_STR mask) (get-str i))
+                tag (if (flag? TAG_ mask) sval tag)
+                anchor (if (flag? ANCH mask) sval anchor)
+                event (when type
+                        (let [event {:+ type}
+                              event (if (flag? FLOW mask)
+                                      (assoc event :flow true) event)
+                              event (if anchor (assoc event :& anchor) event)
+                              event (if tag
+                                      (let [tag (str/replace tag
+                                                  #"^!!"
+                                                  "tag:yaml.org,2002:")]
+                                        (assoc event :! tag)) event)
+                              event (if sval (assoc event
+                                               (get-skey mask) sval) event)
+                              event (if (= type "=ALI")
+                                      {:+ "=ALI" :* sval}
+                                      event)]
+                          event))
+                events (if event (conj events event) events)
+                i (+ i (if sval 3 1))]
+            (if event
+              (recur i nil nil events)
+              (recur i tag anchor events)))
+          events)))))
+
+(defn parse-rapidyaml-buf [^String yaml-string]
+  (rest
+    (let [parser ^Rapidyaml (new Rapidyaml)
+          _ (when (System/getenv TIME_VAR)
+              (.timingEnabled parser true))
+          srcbytes (.getBytes yaml-string StandardCharsets/UTF_8)
+          srcbuffer (ByteBuffer/allocateDirect (alength srcbytes))
+          _ (.put srcbuffer srcbytes)
+          masks (Rapidyaml/mkIntBuffer 5)
+          needed (.parseYsToEvtBuf parser srcbuffer masks)
+          _ (.put srcbuffer srcbytes)
+          masks (Rapidyaml/mkIntBuffer needed)
+          _ (.parseYsToEvtBuf parser srcbuffer masks)
+          ;; TODO: aget slow?
+          ;; https://stackoverflow.com/questions/10133094/clojure-why-is-aget-so-slow
           get-str (fn [i]
                     (let [off (aget masks (inc i))
                           len (aget masks (+ i 2))]
@@ -233,10 +293,9 @@
                   "" parse-snakeyaml
                   "snake" parse-snakeyaml
                   "rapid" parse-rapidyaml
+                  "rapid-buf" parse-rapidyaml-buf
                   "ryml" parse-rapidyaml
-                  ; TODO:
-                  ;"rapid-buf" parse-rapidyaml-buf
-                  ;"ryml-buf" parse-rapidyaml-buf
+                  "ryml-buf" parse-rapidyaml-buf
                   (die "Unknown YS_PARSER value: " parser-name))
                 parse-snakeyaml))
 

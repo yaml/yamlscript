@@ -25,6 +25,8 @@ jobs:
         - {v: 1, ysparser: snake}
         - {v: 1, ysparser: ryml, bt: Debug}
         - {v: 1, ysparser: ryml, bt: Release}
+        - {v: 1, ysparser: ryml-buf, bt: Debug}
+        - {v: 1, ysparser: ryml-buf, bt: Release}
     steps:
     - name: checkout (action)
       uses: actions/checkout@v4
