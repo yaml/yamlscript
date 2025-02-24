@@ -17,62 +17,56 @@ Java_org_rapidyaml_Rapidyaml_ysparse_1timing_1set(JNIEnv *, jobject, jboolean ye
 }
 
 JNIEXPORT jlong JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
+Java_org_rapidyaml_Rapidyaml_ysparse_1init(JNIEnv *env, jobject)
 {
-    Ryml2Evt *obj = ys2evt_init();
+    ysparse *obj = ysparse_init();
     return (jlong)obj;
 }
 
 
 JNIEXPORT void JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2evt_1destroy(JNIEnv *, jobject, jlong obj)
+Java_org_rapidyaml_Rapidyaml_ysparse_1destroy(JNIEnv *, jobject, jlong obj)
 {
-    ys2evt_destroy((Ryml2Evt*)obj);
+    ysparse_destroy((ysparse*)obj);
 }
 
 
 JNIEXPORT jint JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
+Java_org_rapidyaml_Rapidyaml_ysparse_1parse(JNIEnv *env, jobject,
                                            jlong obj, jstring jfilename,
                                            jbyteArray src, jint src_len,
                                            jintArray dst, jint dst_len)
 {
-    TIMED_SECTION("jni_ys2evt_parse", (size_type)src_len);
+    TIMED_SECTION("jni:ysparse", (size_type)src_len);
     jbyte* src_ = nullptr;
     int* dst_ = nullptr;
     const char *filename = nullptr;
     jboolean dst_is_copy = false;
     jboolean src_is_copy = false;
     {
-        TIMED_SECTION("jni_ys2evt_parse/get_jni", (size_type)src_len);
+        TIMED_SECTION("jni:ysparse/get_jni", (size_type)src_len);
+        // this is __S__L__O__W__
+        // https://stackoverflow.com/questions/43763129/jni-is-getintarrayelements-always-linear-in-time
+        // https://stackoverflow.com/questions/7395695/how-to-convert-from-bytebuffer-to-integer-and-string
         {
-            TIMED_SECTION("jni_ys2evt_parse/GetByteArray(src)");
+            TIMED_SECTION("jni:ysparse/GetByteArray(src)");
             src_ = env->GetByteArrayElements(src, &src_is_copy);
         }
         {
-            // TODO this is __S__L__O__W__
-            //
-            // the problem is with GetIntArrayElements(). we should
-            // use GetDirectBufferAddress(), but that requires a ByteBuffer->jobject
-            // instead of a int[]->jintArray
-            //
-            // see:
-            // https://stackoverflow.com/questions/43763129/jni-is-getintarrayelements-always-linear-in-time
-            // https://stackoverflow.com/questions/7395695/how-to-convert-from-bytebuffer-to-integer-and-string
-            TIMED_SECTION("jni_ys2evt_parse/GetIntArray(dst)");
+            TIMED_SECTION("jni:ysparse/GetIntArray(dst)");
             dst_ = env->GetIntArrayElements(dst, &dst_is_copy);
         }
         {
-            TIMED_SECTION("jni_ys2evt_parse/GetStringUTFChars()");
+            TIMED_SECTION("jni:ysparse/GetStringUTFChars()");
             filename = env->GetStringUTFChars(jfilename, 0);
         }
     }
     int rc = 0;
     {
-        TIMED_SECTION("jni_ys2evt_parse/call_parse", (size_type)src_len);
+        TIMED_SECTION("jni:ysparse/parse", (size_type)src_len);
         try
         {
-            rc = ys2evt_parse((Ryml2Evt*)obj, filename,
+            rc = ysparse_parse((ysparse*)obj, filename,
                               (char*)src_, src_len,
                               dst_, dst_len);
         }
@@ -86,18 +80,18 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
         }
     }
     {
-        TIMED_SECTION("jni_ys2evt_parse/release");
+        TIMED_SECTION("jni:ysparse/release");
+        // __S__L__O__W__
         {
-            TIMED_SECTION("jni_ys2evt_parse/ReleaseByteArray(src)");
+            TIMED_SECTION("jni:ysparse/ReleaseByteArray(src)");
             env->ReleaseByteArrayElements(src, src_, 0);
         }
         {
-            // TODO __S__L__O__W__
-            TIMED_SECTION("jni_ys2evt_parse/ReleaseIntArray(dst)");
+            TIMED_SECTION("jni:ysparse/ReleaseIntArray(dst)");
             env->ReleaseIntArrayElements(dst, dst_, 0);
         }
         {
-            TIMED_SECTION("jni_ys2evt_parse/ReleaseStringUTFChars()");
+            TIMED_SECTION("jni:ysparse/ReleaseStringUTFChars()");
             env->ReleaseStringUTFChars(jfilename, filename);
         }
     }
@@ -106,17 +100,17 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse(JNIEnv *env, jobject,
 
 
 JNIEXPORT jint JNICALL
-Java_org_rapidyaml_Rapidyaml_ys2evt_1parse_1buf(JNIEnv *env, jobject,
+Java_org_rapidyaml_Rapidyaml_ysparse_1parse_1buf(JNIEnv *env, jobject,
                                                 jlong obj, jstring jfilename,
                                                 jobject src, jint src_len,
                                                 jobject dst, jint dst_len)
 {
-    TIMED_SECTION("jni_ys2evt_parse", (size_type)src_len);
+    TIMED_SECTION("jni:ysparse_buf", (size_type)src_len);
     char* src_ = nullptr;
     int* dst_ = nullptr;
     const char *filename = nullptr;
     {
-        TIMED_SECTION("jni_ys2evt_parse/get_jni", (size_type)src_len);
+        TIMED_SECTION("jni:ysparse_buf/get_jni", (size_type)src_len);
         src_ = (char*)env->GetDirectBufferAddress(src);
         dst_ = (int*)env->GetDirectBufferAddress(dst);
         filename = env->GetStringUTFChars(jfilename, 0);
@@ -126,10 +120,10 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse_1buf(JNIEnv *env, jobject,
             throw_runtime_exception(env, "null pointer: dst");
     }
     {
-        TIMED_SECTION("jni_ys2evt_parse/call_parse", (size_type)src_len);
+        TIMED_SECTION("jni:ysparse_buf/parse", (size_type)src_len);
         try
         {
-            return ys2evt_parse((Ryml2Evt*)obj, filename, src_, src_len, dst_, dst_len);
+            return ysparse_parse((ysparse*)obj, filename, src_, src_len, dst_, dst_len);
         }
         catch (YsParseError const& exc)
         {

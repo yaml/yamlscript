@@ -15,22 +15,22 @@ public class Rapidyaml
 
     private native void ysparse_timing_set(boolean yes);
     // TODO: rename these to ysparse_init() etc
-    private native long ys2evt_init();
-    private native void ys2evt_destroy(long ryml2evt);
-    private native int ys2evt_parse(long ryml2evt, String filename,
-                                    byte[] ys, int ys_length,
-                                    int[] evt, int evt_length);
-    private native int ys2evt_parse_buf(long ryml2evt, String filename,
-                                        ByteBuffer ys, int ys_length,
-                                        IntBuffer evt, int evt_length);
+    private native long ysparse_init();
+    private native void ysparse_destroy(long ysparse);
+    private native int ysparse_parse(long ysparse, String filename,
+                                     byte[] ys, int ys_length,
+                                     int[] evt, int evt_length);
+    private native int ysparse_parse_buf(long ysparse, String filename,
+                                         ByteBuffer ys, int ys_length,
+                                         IntBuffer evt, int evt_length);
 
-    private final long ryml2evt;
+    private final long ysparse;
 
     public Rapidyaml()
     {
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
         System.loadLibrary(library_name);
-        this.ryml2evt = this.ys2evt_init();
+        this.ysparse = this.ysparse_init();
         // TODO: receive this argument as ctor parameter
         timingEnabled(System.getenv("YS_RYML_TIMER") != null);
     }
@@ -42,7 +42,7 @@ public class Rapidyaml
     protected void finalize() throws Throwable
     {
         try {
-            this.ys2evt_destroy(this.ryml2evt);
+            this.ysparse_destroy(this.ysparse);
         }
         finally {
             super.finalize();
@@ -66,9 +66,9 @@ public class Rapidyaml
 
     public int parseYsToEvt(String filename, byte[] src, int[] evts) throws Exception
     {
-        long t = timingStart("ys2evt");
-        int required_size = ys2evt_parse(this.ryml2evt, filename, src, src.length, evts, evts.length);
-        timingStop("ys2evt", t, src.length);
+        long t = timingStart("ysparse");
+        int required_size = ysparse_parse(this.ysparse, filename, src, src.length, evts, evts.length);
+        timingStop("ysparse", t, src.length);
         return required_size;
     }
 
@@ -82,13 +82,13 @@ public class Rapidyaml
         // but for evt it really does
         if(evt.order() != ByteOrder.nativeOrder())
             throw new RuntimeException("evt byte order must be native");
-        long t = timingStart("ys2evtBuf");
+        long t = timingStart("ysparseBuf");
         evt.position(evt.capacity());
-        int reqsize = ys2evt_parse_buf(this.ryml2evt, filename, src, src.position(), evt, evt.capacity());
+        int reqsize = ysparse_parse_buf(this.ysparse, filename, src, src.position(), evt, evt.capacity());
         if(reqsize <= evt.capacity()) {
             evt.position(reqsize);
         }
-        timingStop("ys2evtBuf", t, src.position());
+        timingStop("ysparseBuf", t, src.position());
         return reqsize;
     }
 

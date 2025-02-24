@@ -45,9 +45,9 @@ c4::EnumSymbols<evt::EventFlags> const esyms<evt::EventFlags>()
 
 struct Ys2EvtScoped
 {
-    Ryml2Evt *ryml2evt;
-    Ys2EvtScoped() : ryml2evt(ys2evt_init()) {}
-    ~Ys2EvtScoped() { if(ryml2evt) ys2evt_destroy(ryml2evt); }
+    ysparse *ryml2evt;
+    Ys2EvtScoped() : ryml2evt(ysparse_init()) {}
+    ~Ys2EvtScoped() { if(ryml2evt) ysparse_destroy(ryml2evt); }
 };
 
 
@@ -127,7 +127,7 @@ public:
             }                                                           \
         } while(0)
 
-    TestResult test(Ryml2Evt *ryml2evt) const
+    TestResult test(ysparse *ryml2evt) const
     {
         TestResult tr = {};
         _runtest(test_evt_large_enough, );
@@ -140,7 +140,7 @@ public:
     }
 
     // happy path: large-enough destination string
-    TestResult test_evt_large_enough_reuse(Ryml2Evt *ryml2evt) const
+    TestResult test_evt_large_enough_reuse(ysparse *ryml2evt) const
     {
         if(evt.empty()) return {};
         TestResult tr = {};
@@ -148,7 +148,7 @@ public:
         substr input = c4::to_substr(input_);
         std::vector<evt::DataType> output;
         output.resize(2 * expected_size(evt));
-        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+        size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
                                          input.str, (size_type)input.len,
                                          &output[0], (size_type)output.size());
         CHECK_MSG((size_t)reqsize == expected_size(evt), "%d vs %zu", reqsize, expected_size(evt));
@@ -164,14 +164,14 @@ public:
     }
 
     // less-happy path: destination string not large enough
-    TestResult test_evt_too_small_reuse(Ryml2Evt *ryml2evt) const
+    TestResult test_evt_too_small_reuse(ysparse *ryml2evt) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
         std::vector<evt::DataType> output;
         output.resize(expected_size(evt));
-        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+        size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
                                          input.str, (size_type)input.len,
                                          output.data(), (size_type)output.size());
         CHECK(reqsize == expected_size(evt));
@@ -179,7 +179,7 @@ public:
         output.resize(reqsize);
         input_.assign(ys.begin(), ys.end()); // FIXME
         input = c4::to_substr(input_);
-        size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
+        size_type reqsize2 = ysparse_parse(ryml2evt, "ysfilename",
                                           input.str, (size_type)input.len,
                                           output.data(), (size_type)output.size());
         CHECK(reqsize2 == reqsize);
@@ -194,12 +194,12 @@ public:
     }
 
     // safe calling with nullptr
-    TestResult test_evt_nullptr_reuse(Ryml2Evt *ryml2evt) const
+    TestResult test_evt_nullptr_reuse(ysparse *ryml2evt) const
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
-        size_type reqsize = ys2evt_parse(ryml2evt, "ysfilename",
+        size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
                                          input.str, (size_type)input.len,
                                          nullptr, 0);
         CHECK(reqsize == expected_size(evt));
@@ -208,7 +208,7 @@ public:
         output.resize(reqsize);
         input_.assign(ys.begin(), ys.end()); // FIXME
         input = c4::to_substr(input_);
-        size_type reqsize2 = ys2evt_parse(ryml2evt, "ysfilename",
+        size_type reqsize2 = ysparse_parse(ryml2evt, "ysfilename",
                                           input.str, (size_type)input.len,
                                           output.data(), (size_type)output.size());
         CHECK(reqsize2 == reqsize);
