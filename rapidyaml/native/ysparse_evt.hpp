@@ -9,11 +9,11 @@
 extern "C" {
 #endif
 
-struct RYML_EXPORT Ryml2Evt
+struct RYML_EXPORT ysparse
 {
     ys::EventHandlerEvt m_handler;
     c4::yml::ParseEngine<ys::EventHandlerEvt> m_parser;
-    Ryml2Evt()
+    ysparse()
         : m_handler()
         , m_parser(&m_handler)
     {
@@ -29,10 +29,10 @@ struct RYML_EXPORT Ryml2Evt
 //-----------------------------------------------------------------------------
 
 /** Initialize the resources */
-RYML_EXPORT Ryml2Evt *ys2evt_init();
+RYML_EXPORT ysparse *ysparse_init();
 
 /** Destroy the resources */
-RYML_EXPORT void ys2evt_destroy(Ryml2Evt *ryml2evt);
+RYML_EXPORT void ysparse_destroy(ysparse *ryml2evt);
 
 /** Parse YAML in the string `ys` of size `ys_size`, and write the
  * result into the array of (integer) events `evt` of size
@@ -82,10 +82,10 @@ RYML_EXPORT void ys2evt_destroy(Ryml2Evt *ryml2evt);
  * in-place in the input string, and the extra integers will pertain
  * to the resulting filtered string.
  */
-RYML_EXPORT size_type ys2evt_parse(Ryml2Evt *ryml2evt,
-                                   const char *filename,
-                                   char *ys, size_type ys_size,
-                                   evt::DataType *evt, size_type evt_size);
+RYML_EXPORT size_type ysparse_parse(ysparse *ryml2evt,
+                                    const char *filename,
+                                    char *ys, size_type ys_size,
+                                    evt::DataType *evt, size_type evt_size);
 
 #if defined(__cplusplus)
 }
