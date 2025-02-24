@@ -64,3 +64,8 @@ add_custom_target(${libname}-test-run
     COMMAND $<TARGET_FILE:${libname}-test>
     COMMENT "running C++ tests"
 )
+add_custom_target(${libname}-test-run-timing
+    DEPENDS ${libname}-test
+    COMMAND $<TARGET_FILE:${libname}-test> --timing
+    COMMENT "running C++ tests, with timing"
+)
