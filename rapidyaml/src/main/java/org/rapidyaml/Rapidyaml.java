@@ -13,6 +13,8 @@ public class Rapidyaml
 {
     public static String RAPIDYAML_VERSION = "0.8.0";
 
+    private native void ysparse_timing_set(boolean yes);
+    // TODO: rename these to ysparse_init() etc
     private native long ys2evt_init();
     private native void ys2evt_destroy(long ryml2evt);
     private native int ys2evt_parse(long ryml2evt, String filename,
@@ -64,7 +66,7 @@ public class Rapidyaml
 
     public int parseYsToEvt(String filename, byte[] src, int[] evts) throws Exception
     {
-        long t = timingStart("ys2evtBuf");
+        long t = timingStart("ys2evt");
         int required_size = ys2evt_parse(this.ryml2evt, filename, src, src.length, evts, evts.length);
         timingStop("ys2evt", t, src.length);
         return required_size;
@@ -107,6 +109,7 @@ public class Rapidyaml
     public void timingEnabled(boolean yes)
     {
         showTiming = yes;
+        ysparse_timing_set(yes);
     }
 
     private long timingStart(String name)

@@ -570,8 +570,14 @@ defn run(prompt session=nil):
 };
 } // namespace
 
-int main()
+int main(int argc, const char *argv[])
 {
+    for(int i = 1; i < argc; ++i)
+    {
+        csubstr arg = ryml::to_csubstr(argv[i]);
+        if(arg == "--timing" || arg == "-t")
+            ysparse_timing_set(true);
+    }
     Ys2EvtScoped ys2evt;
     TestResult total = {};
     size_t failed_cases = {};

@@ -5,9 +5,16 @@
 extern "C" {
 #endif
 
+
 static C4_NO_INLINE void throw_runtime_exception(JNIEnv * env, const char* msg);
 static C4_NO_INLINE void throw_parse_error(JNIEnv *env, size_t offset, size_t line, size_t column, const char *msg);
 
+
+JNIEXPORT void JNICALL
+Java_org_rapidyaml_Rapidyaml_ysparse_1timing_1set(JNIEnv *, jobject, jboolean yes)
+{
+    ysparse_timing_set(yes);
+}
 
 JNIEXPORT jlong JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
@@ -15,6 +22,7 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1init(JNIEnv *env, jobject)
     Ryml2Evt *obj = ys2evt_init();
     return (jlong)obj;
 }
+
 
 JNIEXPORT void JNICALL
 Java_org_rapidyaml_Rapidyaml_ys2evt_1destroy(JNIEnv *, jobject, jlong obj)
@@ -139,6 +147,16 @@ Java_org_rapidyaml_Rapidyaml_ys2evt_1parse_1buf(JNIEnv *env, jobject,
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+
+static bool s_timing_enabled = false;
+RYML_EXPORT bool ysparse_timing_get()
+{
+    return s_timing_enabled;
+}
+RYML_EXPORT void ysparse_timing_set(bool yes)
+{
+    s_timing_enabled = yes;
+}
 
 static C4_NO_INLINE void throw_java_exception(JNIEnv * env, const char* type, const char* msg)
 {
