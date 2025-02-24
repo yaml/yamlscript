@@ -223,21 +223,23 @@ RAPIDYAML := $(ROOT)/rapidyaml
 
 RAPIDYAML_VERSION := 0.8.0
 #RAPIDYAML_TAG ?= v$(RAPIDYAML_VERSION)
-RAPIDYAML_TAG ?= 8c37616378aefd376690a19459c31a56ce596b5e
+RAPIDYAML_TAG ?= d3132a25ec21c65e27ff46ab8c3d61c72a321302
 RAPIDYAML_REPO := https://github.com/biojppm/rapidyaml
 RAPIDYAML_BUILD_TYPE ?= Release
 RAPIDYAML_DBG ?= 0
 RAPIDYAML_TIMED ?= 1
 RAPIDYAML_JAVA := \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Rapidyaml.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/NativeLibLoader.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Evt.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/YamlParseErrorException.java
 RAPIDYAML_JNI_H := $(ROOT)/rapidyaml/native/org_rapidyaml_Rapidyaml.h
-RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_SO_NAME := librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_SO := $(ROOT)/rapidyaml/native/$(RAPIDYAML_SO_NAME)
 RAPIDYAML_LIB := $(ROOT)/rapidyaml/native/librapidyaml.$(DOTLIB)
 RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
 RAPIDYAML_INSTALLED_DIR := \
-  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)/
+  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)
 RAPIDYAML_INSTALLED := \
   $(RAPIDYAML_INSTALLED_DIR)/rapidyaml-$(RAPIDYAML_VERSION).jar
 

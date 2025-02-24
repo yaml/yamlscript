@@ -154,9 +154,9 @@ RYML_EXPORT void ysparse_timing_set(bool yes)
 
 static C4_NO_INLINE void throw_java_exception(JNIEnv * env, const char* type, const char* msg)
 {
-    jclass clazz = env->FindClass(type);
-    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
-        env->ThrowNew(clazz, msg);
+    jclass cls = env->FindClass(type);
+    if (cls != NULL) // if it is null, a NoClassDefFoundError was already thrown
+        env->ThrowNew(cls, msg);
 }
 
 static C4_NO_INLINE void throw_runtime_exception(JNIEnv *env, const char* msg)
@@ -167,8 +167,8 @@ static C4_NO_INLINE void throw_runtime_exception(JNIEnv *env, const char* msg)
 static C4_NO_INLINE void throw_parse_error(JNIEnv *env, size_t offset, size_t line, size_t column, const char *msg)
 {
     // see https://stackoverflow.com/questions/55013243/jni-custom-exceptions-with-more-than-one-parameter
-    jclass clazz = env->FindClass("org/rapidyaml/YamlParseErrorException");
-    if (clazz != NULL) // if it is null, a NoClassDefFoundError was already thrown
+    jclass cls = env->FindClass("org/rapidyaml/YamlParseErrorException");
+    if (cls != NULL) // if it is null, a NoClassDefFoundError was already thrown
     {
         jstring jmsg = env->NewStringUTF(msg);
         jint joffset = (jint)offset;
@@ -178,8 +178,8 @@ static C4_NO_INLINE void throw_parse_error(JNIEnv *env, size_t offset, size_t li
         // about the proper signature.
         // we want <init>(int, int, int, String):
         const char * const signature = "(IIILjava/lang/String;)V";
-        jmethodID ctor = env->GetMethodID(clazz, "<init>", signature);
-        jobject jexc = env->NewObject(clazz, ctor, joffset, jline, jcol, jmsg);
+        jmethodID ctor = env->GetMethodID(cls, "<init>", signature);
+        jobject jexc = env->NewObject(cls, ctor, joffset, jline, jcol, jmsg);
         env->Throw((jthrowable)jexc); // https://stackoverflow.com/questions/2455668/jni-cast-between-jobect-and-jthrowable
     }
 }

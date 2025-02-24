@@ -1,6 +1,6 @@
 package org.rapidyaml;
 
-import org.rapidyaml.*;
+import org.rapidyaml.Rapidyaml;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -36,6 +36,8 @@ public class RapidyamlTest extends TestCase
         return new TestSuite(RapidyamlTest.class);
     }
 
+    public void testPass() { }
+
     public void testPlainMap()
     {
         String ys = "a: 1";
@@ -61,6 +63,22 @@ public class RapidyamlTest extends TestCase
             mkev(Evt.VAL_|Evt.BMAP|Evt.BLCK),
             mkev(Evt.KEY_|Evt.SCLR|Evt.PLAI, 0, 4, "𝄞"),
             mkev(Evt.VAL_|Evt.SCLR|Evt.PLAI, 6, 3, "✅"),
+            mkev(Evt.EMAP),
+            mkev(Evt.EDOC),
+            mkev(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+
+    public void testUtf8_2()
+    {
+        String ys = "star: ★";
+        ExpectedEvent[] expected = {
+            mkev(Evt.BSTR),
+            mkev(Evt.BDOC),
+            mkev(Evt.VAL_|Evt.BMAP|Evt.BLCK),
+            mkev(Evt.KEY_|Evt.SCLR|Evt.PLAI, 0, 4, "star"),
+            mkev(Evt.VAL_|Evt.SCLR|Evt.PLAI, 6, 3, "★"),
             mkev(Evt.EMAP),
             mkev(Evt.EDOC),
             mkev(Evt.ESTR),
@@ -95,6 +113,24 @@ public class RapidyamlTest extends TestCase
             mkev(Evt.VAL_|Evt.BSEQ|Evt.FLOW),
             mkev(Evt.ESEQ),
             mkev(Evt.ESEQ),
+            mkev(Evt.EDOC),
+            mkev(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+ 
+    public void testDocTag()
+    {
+        String ys = "!yamlscript/v0/bare\n--- !code\n42\n";
+        ExpectedEvent[] expected = {
+            mkev(Evt.BSTR),
+            mkev(Evt.BDOC),
+            mkev(Evt.VAL_|Evt.TAG_, 1, 18, "yamlscript/v0/bare"),
+            mkev(Evt.VAL_|Evt.SCLR|Evt.PLAI, 0, 0, ""),
+            mkev(Evt.EDOC),
+            mkev(Evt.BDOC|Evt.EXPL),
+            mkev(Evt.VAL_|Evt.TAG_, 25, 4, "code"),
+            mkev(Evt.VAL_|Evt.SCLR|Evt.PLAI, 30, 2, "42"),
             mkev(Evt.EDOC),
             mkev(Evt.ESTR),
         };
@@ -164,7 +200,7 @@ public class RapidyamlTest extends TestCase
         };
         testEvt_(ys, expected);
     }
-
+ 
     public void testFilterCase()
     {
         String ys = "" +
@@ -202,11 +238,11 @@ public class RapidyamlTest extends TestCase
         };
         testEvt_(ys, expected);
     }
-
+ 
     public void testFailure() throws Exception
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String ys = ": : : :";
+        String ys = "{a: b";
         byte[] src = ys.getBytes(StandardCharsets.UTF_8);
         byte[] srcbuf = new byte[src.length];
         boolean gotit = false;
@@ -215,9 +251,9 @@ public class RapidyamlTest extends TestCase
         }
         catch(YamlParseErrorException e) {
             gotit = true;
-            assertEquals(2, e.offset);
+            assertEquals(5, e.offset);
             assertEquals(1, e.line);
-            assertEquals(3, e.column);
+            assertEquals(6, e.column);
             assertTrue(e.getMessage() != null);
             assertFalse(e.getMessage().isEmpty());
         }
@@ -229,11 +265,11 @@ public class RapidyamlTest extends TestCase
         }
         assertTrue(gotit);
     }
-
+ 
     public void testFailureBuf() throws Exception
     {
         Rapidyaml rapidyaml = new Rapidyaml();
-        String ys = ": : : :";
+        String ys = "{a: b";
         byte[] src = ys.getBytes(StandardCharsets.UTF_8);
         ByteBuffer bbuf = ByteBuffer.allocateDirect(src.length);
         bbuf.put(src);
@@ -243,9 +279,9 @@ public class RapidyamlTest extends TestCase
         }
         catch(YamlParseErrorException e) {
             gotit = true;
-            assertEquals(2, e.offset);
+            assertEquals(5, e.offset);
             assertEquals(1, e.line);
-            assertEquals(3, e.column);
+            assertEquals(6, e.column);
             assertTrue(e.getMessage() != null);
             assertFalse(e.getMessage().isEmpty());
         }
@@ -300,7 +336,7 @@ public class RapidyamlTest extends TestCase
         }
     }
 
-    boolean dbglog = true;
+    boolean dbglog = false;
     private void cmpEvt_(String ys, byte[] src, int[] actual, ExpectedEvent[] expected)
     {
         if(dbglog) {

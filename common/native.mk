@@ -9,6 +9,7 @@ NATIVE_OPTS := \
   --emit=build-report \
   -march=compatibility \
   -H:IncludeResources=SCI_VERSION \
+  -H:IncludeResources='librapidyaml\.0\.8\.0\.so' \
   -H:ReflectionConfigurationFiles=reflection.json \
   -H:+ReportExceptionStackTraces \
   -H:Log=registerResource: \
