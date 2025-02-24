@@ -52,6 +52,7 @@ struct timed_section
             name = n;
             len = len_;
             start = myclock::now();
+            //fprintf(stderr, "%10s  : %s...\n", " ", name);
         }
     }
     C4_NO_INLINE ~timed_section()
@@ -59,7 +60,7 @@ struct timed_section
         if(ysparse_timing_get())
         {
             const std::chrono::duration<float, std::milli> t = myclock::now() - start;
-            fprintf(stderr, "%.6fms: %s", t.count(), name);
+            fprintf(stderr, "%10.6fms: %s", t.count(), name);
             if(len)
                 fprintf(stderr, "  %.3fMB/s", (float)len / t.count() * 1.e-3);
             fprintf(stderr, "\n");
