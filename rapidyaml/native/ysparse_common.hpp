@@ -3,6 +3,7 @@
 #define YSPARSE_COMMON_HPP_
 
 #include <stdexcept>
+#include <c4/yml/export.hpp>
 
 namespace ryml {
 using namespace c4;
@@ -18,6 +19,19 @@ struct YsParseError : public std::exception
     const char* what() const noexcept override { return msg.c_str(); }
 };
 
+
+//-----------------------------------------------------------------------------
+// timing
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+RYML_EXPORT bool ysparse_timing_get();
+RYML_EXPORT void ysparse_timing_set(bool yes);
+#ifdef __cplusplus
+}
+#endif
+
 #ifndef YSPARSE_TIMED
 #define TIMED_SECTION(...)
 #error
@@ -28,22 +42,28 @@ struct YsParseError : public std::exception
 struct timed_section
 {
     using myclock = std::chrono::steady_clock;
-    ryml::csubstr name;
+    const char* name;
     size_type len;
     myclock::time_point start;
-    timed_section(ryml::csubstr n, size_type len_=0)
-        : name(n)
-        , len(len_)
-        , start(myclock::now())
+    C4_NO_INLINE timed_section(const char* n, size_type len_=0)
     {
+        if(ysparse_timing_get())
+        {
+            name = n;
+            len = len_;
+            start = myclock::now();
+        }
     }
-    ~timed_section()
+    C4_NO_INLINE ~timed_section()
     {
-        const std::chrono::duration<float, std::milli> t = myclock::now() - start;
-        fprintf(stderr, "%.6fms: %.*s", t.count(), (int)name.len, name.str);
-        if(len)
-            fprintf(stderr, "  %.3fMB/s", (float)len / t.count() * 1.e-3);
-        fprintf(stderr, "\n");
+        if(ysparse_timing_get())
+        {
+            const std::chrono::duration<float, std::milli> t = myclock::now() - start;
+            fprintf(stderr, "%.6fms: %s", t.count(), name);
+            if(len)
+                fprintf(stderr, "  %.3fMB/s", (float)len / t.count() * 1.e-3);
+            fprintf(stderr, "\n");
+        }
     }
 };
 #endif // YSPARSE_TIMED
