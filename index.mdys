@@ -1,6 +1,6 @@
 ---
 title: YS — YAML Done Wisely
-# edit_file: www/src/index.md
+# edit_file: www/src/index.mdys
 hide:
 - navigation
 - toc
@@ -22,7 +22,7 @@ hide:
 - name: YAML Made Functional
   type: code:yaml
   body: |
-    !YS v0:
+    !YS-v0:
     vars =: load('vars.yaml')
     json-file =: 'data.json'
 
@@ -60,7 +60,7 @@ hide:
 
 - name: Take Full Control of Your YAML
   body: |
-    * [YS is always 100% valid YAML  
+    * YS is always 100% valid YAML
         * Lint, Query, Validate w/ existing tools
     * Created by [YAML inventor/maintainer](ingydotnet.md)
     * [YS has YAML Loaders for all languages](doc/bindings.md)

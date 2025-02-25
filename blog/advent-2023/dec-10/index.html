@@ -3093,7 +3093,13 @@ This is by far the hardest transformation, not just for YS but for any YAML
 processor.
 Sadly, it's so hard that only a few of the dozens of YAML processors out there
 actually do it correctly.
-See: <a href="https://matrix.yaml.info/">https://matrix.yaml.info/&nbsp;⧉</a></p>
+See: <a href="https://matrix.yaml.info/">https://matrix.yaml.info/&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a></p>
 <p>On the other hand, this is actually the simplest part for the YS compiler to
 implement.
 Why?
@@ -3101,9 +3107,21 @@ Because it uses somebody else's YAML parser!!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>YS currently uses the
-<a href="https://bitbucket.org/snakeyaml/snakeyaml-engine">SnakeYAML Engine&nbsp;⧉</a>
+<a href="https://bitbucket.org/snakeyaml/snakeyaml-engine">SnakeYAML Engine&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>
 framework (only for it's YAML 1.2 parser component).
-Later we plan to use <a href="https://github.com/pantoniou/libfyaml">libfyaml&nbsp;⧉</a>
+Later we plan to use <a href="https://github.com/pantoniou/libfyaml">libfyaml&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>
 which is currently considered the best YAML parser in the world.
 SnakeYAML was the obvious first choice because it's written in Java, YS is
 written in Clojure and Clojure is a JVM language.
@@ -3148,10 +3166,28 @@ serialization that we use in the YS compiler tests.</p>
 post.</p>
 <p>If you are interested in seeing how all this is implemented, check out:</p>
 <ul>
-<li><a href="https://github.com/yaml/yamlscript/tree/main/core/src/yamlscript">All the YS transformation libraries source code&nbsp;⧉</a></li>
+<li><a href="https://github.com/yaml/yamlscript/tree/main/core/src/yamlscript">All the YS transformation libraries source code&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a></li>
 <li>The YS Test Suite Files:</li>
-<li><a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml">https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml&nbsp;⧉</a></li>
-<li><a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler.yaml">https://github.com/yaml/yamlscript/blob/main/core/test/compiler.yaml&nbsp;⧉</a></li>
+<li><a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml">https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a></li>
+<li><a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler.yaml">https://github.com/yaml/yamlscript/blob/main/core/test/compiler.yaml&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a></li>
 </ul>
 <h3 id="transformation-2-compose">Transformation 2: Compose<a class="headerlink" href="#transformation-2-compose" title="Permanent link">🔗</a></h3>
 <p>The second transformer is called the composer (in the <code>yamlscript.composer</code>

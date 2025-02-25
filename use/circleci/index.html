@@ -2803,11 +2803,29 @@ src_path: use/circleci.md
 
 <p>Here is an example of refactoring a CircleCI <code>config.yml</code> file to YS:
 https://github.com/BetterThanTomorrow/calva/blob/published/.circleci/README.md</p>
-<p>What started out as one big <a href="https://github.com/ingydotnet/calva/blob/9483828c23d117cf8f3c5cfe2ec2bef7be3b51f6/.circleci/config.yml">636 line YAML file&nbsp;⧉</a>
-with lots of embedded Bash scripts, was refactored into <a href="https://github.com/BetterThanTomorrow/calva/tree/published/.circleci">nearly 40 small files&nbsp;⧉</a> each with
+<p>What started out as one big <a href="https://github.com/ingydotnet/calva/blob/9483828c23d117cf8f3c5cfe2ec2bef7be3b51f6/.circleci/config.yml">636 line YAML file&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>
+with lots of embedded Bash scripts, was refactored into <a href="https://github.com/BetterThanTomorrow/calva/tree/published/.circleci">nearly 40 small files&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a> each with
 a clear and specific purpose.</p>
 <p>You can see the how the migration was made over 30 single purpose commits in
-<a href="https://github.com/BetterThanTomorrow/calva/pull/2511">this Pull Request&nbsp;⧉</a>.</p>
+<a href="https://github.com/BetterThanTomorrow/calva/pull/2511">this Pull Request&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>.</p>
 <p>Now changes are made in a much more maintainable way, and the CircleCI required
 <code>config.yml</code> file is generated from the YS files using a simple <code>ys</code> command:</p>
 <div class="highlight"><pre><span></span><code>$ ys -Y config.ys &gt; config.yml
