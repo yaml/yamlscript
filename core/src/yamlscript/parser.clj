@@ -11,6 +11,7 @@
   (:import
    (java.util Optional)
    (java.nio ByteBuffer)
+   (java.nio IntBuffer)
    (java.nio.charset StandardCharsets)
    (org.rapidyaml Evt Rapidyaml)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -240,26 +241,25 @@
     (let [parser ^Rapidyaml (new Rapidyaml)
           _ (when TIMER
               (.timingEnabled parser true))
-          srcbytes (.getBytes yaml-string StandardCharsets/UTF_8)
-          srcbuffer (ByteBuffer/allocateDirect (alength srcbytes))
+          srcbytes ^"[B" (.getBytes yaml-string StandardCharsets/UTF_8)
+          srcbuffer ^ByteBuffer (ByteBuffer/allocateDirect (alength srcbytes))
           _ (.put srcbuffer srcbytes)
-          masks (Rapidyaml/mkIntBuffer 5)
+          masks ^IntBuffer (Rapidyaml/mkIntBuffer 5)
           needed (.parseYsToEvtBuf parser srcbuffer masks)
+          _ (.position srcbuffer 0)
           _ (.put srcbuffer srcbytes)
-          masks (Rapidyaml/mkIntBuffer needed)
+          masks ^IntBuffer (Rapidyaml/mkIntBuffer needed)
           _ (.parseYsToEvtBuf parser srcbuffer masks)
-          ;; TODO: aget slow?
-          ;; https://stackoverflow.com/questions/10133094/clojure-why-is-aget-so-slow
           get-str (fn [i]
-                    (let [off (aget masks (inc i))
-                          len (aget masks (+ i 2))]
+                    (let [off (.get masks (inc i))
+                          len (.get masks (+ i 2))]
                       (reduce
-                        (fn [slice i] (str slice (char (aget srcbuffer i))))
+                        (fn [slice i] (str slice (char (.get srcbuffer i))))
                         "" (range off (+ off len)))))]
 
       (loop [i 0, tag nil, anchor nil, events []]
         (if (< i needed)
-          (let [mask (aget masks i)
+          (let [mask (.get masks i)
                 type (event-type mask)
                 ; _ (WWW (Integer/toString mask 2) type)
                 sval (when (flag? HAS_STR mask) (get-str i))
