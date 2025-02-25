@@ -11,7 +11,6 @@
   (:import
    (java.util Optional)
    (java.nio ByteBuffer)
-   (java.nio IntBuffer)
    (java.nio.charset StandardCharsets)
    (org.rapidyaml Evt Rapidyaml)
    (org.snakeyaml.engine.v2.api LoadSettings)
@@ -238,23 +237,24 @@
 
 (defn parse-rapidyaml-buf [^String yaml-string]
   (rest
-    (let [parser ^Rapidyaml (new Rapidyaml)
+    (let [parser (new Rapidyaml)
           _ (when TIMER
               (.timingEnabled parser true))
-          srcbytes ^"[B" (.getBytes yaml-string StandardCharsets/UTF_8)
-          srcbuffer ^ByteBuffer (ByteBuffer/allocateDirect (alength srcbytes))
+          srcbytes (.getBytes yaml-string StandardCharsets/UTF_8)
+          srcbuffer (ByteBuffer/allocateDirect (alength srcbytes))
           _ (.put srcbuffer srcbytes)
-          masks ^IntBuffer (Rapidyaml/mkIntBuffer 5)
+          masks (Rapidyaml/mkIntBuffer 5)
           needed (.parseYsToEvtBuf parser srcbuffer masks)
           _ (.position srcbuffer 0)
           _ (.put srcbuffer srcbytes)
-          masks ^IntBuffer (Rapidyaml/mkIntBuffer needed)
+          masks (Rapidyaml/mkIntBuffer needed)
           _ (.parseYsToEvtBuf parser srcbuffer masks)
           get-str (fn [i]
-                    (let [off (.get masks (inc i))
-                          len (.get masks (+ i 2))]
+                    (let [off (.get masks ^Long (inc i))
+                          len (.get masks ^Long (+ i 2))]
                       (reduce
-                        (fn [slice i] (str slice (char (.get srcbuffer i))))
+                        (fn [slice i] (str slice
+                                        (char (.get srcbuffer ^Long i))))
                         "" (range off (+ off len)))))]
 
       (loop [i 0, tag nil, anchor nil, events []]
