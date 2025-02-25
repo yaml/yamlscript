@@ -117,7 +117,7 @@ The program is both valid YS and valid Bash.
 YS programs are required to start with a YAML tag like this:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 ```
 
 But if they start with a shebang line like this:
@@ -126,7 +126,7 @@ But if they start with a shebang line like this:
 #!/usr/bin/env ys-0
 ```
 
-then the `!yamlscript/v0` tag is optional.
+then the `!YS-v0` tag is optional.
 
 When you run the program with `bash`, the shebang line is merely a comment and
 ignored by Bash.

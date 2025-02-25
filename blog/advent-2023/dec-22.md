@@ -16,7 +16,7 @@ Remember way back in [Day 6](dec-06.md) when we talked about the 3 different YS
 modes?
 They were **bare**, **data** and **code**.
 The bare mode was what you got then you ran (or loaded) a YS program with no
-`!yamlscript/v0` tag at the top.
+`!YS-v0` tag at the top.
 It just meant that you were effectively stuck in data mode, with no possibility
 of executing any code.
 
@@ -35,10 +35,10 @@ We learned before that you could switch modes by using the `!` tag.
 This is the smallest possible tag and we use it for the most common need.
 
 Here's an example of using YS to generate data to be loaded.
-We'll start in code mode by using `!yamlscript/v0`:
+We'll start in code mode by using `!YS-v0`:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 vars =: !
   colors:
@@ -71,8 +71,8 @@ to `data` or vice versa.
 
 Let's walk through it:
 
-* `!yamlscript/v0` - This tag starts the program in `code` mode. If we wanted to
-  start in `data` mode, we would use `!yamlscript/v0/data`.
+* `!YS-v0` - This tag starts the program in `code` mode. If we wanted to
+  start in `data` mode, we would use `!YS-v0:`.
 * `vars =: !` - We are setting the value of a variable named `vars` to the some
   data we want to write in plain old YAML. Before we can do that, we need to
   switch to `data` mode.
@@ -94,7 +94,7 @@ find it a bit noisy.
 Here's another way to switch modes:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 vars =::
   colors:

@@ -1,5 +1,5 @@
 ---
-title: HelmYS - Helm Templating with YS
+title: HelmYS - YS Helm Charts
 hide:
 - navigation
 - toc

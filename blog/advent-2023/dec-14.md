@@ -57,7 +57,7 @@ There are many ways to do the same thing in YS.
 Here's a one good way to do it:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 if a > b:
   say: "$a is greater than $b"
   say: "$b is greater than or equal to $a"
@@ -66,7 +66,7 @@ if a > b:
 !!! note
 
     All the YS examples in this post use code-mode which requires the
-    `!yamlscript/v0` tag at the top of the file.
+    `!YS-v0` tag at the top of the file.
     We'll leave it out of the rest of the examples for brevity.
 
 Let's see what happens when we compile that YS program:

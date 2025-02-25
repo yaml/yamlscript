@@ -9,7 +9,7 @@ Here's a program to print some numbers (10 of them by default) from the
 fibonacci sequence:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn main(n=10):
   loop a 0, b 1, i 1:

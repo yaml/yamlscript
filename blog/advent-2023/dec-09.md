@@ -103,7 +103,7 @@ also define a top level scalar (string).
 If I run this program though, it doesn't print anything.
 The reason is simple.
 We didn't give it the power to.
-We didn't add the `!yamlscript/v0` tag to the beginning of the file.
+We didn't add the `!YS-v0` tag to the beginning of the file.
 
 If we do that it works fine.
 

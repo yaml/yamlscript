@@ -13,9 +13,13 @@
 #
 # * Use proper blog plugin
 # * Add RSS feed
+#
+# * Publish mdys as a mkdocs plugin
+# * Publish YS as a mkdocs plugin
+
 
 ---
-!YS v0:
+!YS-v0:
 
 Meta =: load('../Meta')
 
@@ -42,12 +46,12 @@ edit_uri:: "$(Meta.devel.git)/edit/website"
 nav:
 - Using YS:: load('config/use.yaml')
 - Documentation:: load('config/doc.yaml')
-# - Playground: play.md # load('config/play.yaml')
 - Blog:: load('config/blog.yaml')
 - Press: press.md
 - Community:: load('config/community.yaml')
 - FAQ: faq.md
 
+# - Playground: play.md # load('config/play.yaml')
 # - About:: load('config/about.yaml')
 # - Start:: load('config/start.yaml')
 # - Learn:: load('config/learn.yaml')
@@ -59,6 +63,7 @@ theme:: load('config/theme.yaml')
 extra_css:
 - css/theme.css
 
+# See theme/main.html for Google Tag Manager setup code
 extra:
   analytics:
     provider: google
@@ -78,14 +83,26 @@ validation:
 dev_addr: 0.0.0.0:8000
 
 plugins:
-# - awesome-pages
-# - blog:
-#     post_dir: blog/posts
-#     post_date_format: full
-- link-marker
+- search
+- link-marker:
+    icon_external_link: |
+      <svg xmlns="http://www.w3.org/2000/svg"
+           width="12" height="12" viewBox="0 0 12 12">
+          <title>External link</title>
+          <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+                3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+          /></svg>
+
 - open-in-new-tab
 - redirects:
     redirect_maps:: load('config/redirect.yaml')
+
+# - awesome-pages
+
+# - blog:
+#     post_dir: blog/posts
+#     post_date_format: full
+
 # - rss:
 #     # enabled: +!ENV [YS_WWW_DEV, false]
 #     match_path: blog/.*
@@ -94,9 +111,8 @@ plugins:
 #     categories:
 #     - categories
 #     - tags
-- search
 
-# * https://facelessuser.github.io/pymdown-extensions/
+# See https://facelessuser.github.io/pymdown-extensions/
 markdown_extensions:
 - admonition
 - attr_list

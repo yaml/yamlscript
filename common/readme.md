@@ -82,7 +82,7 @@ $ ys --compile file.ys
 ```
 
 ```mdys:include
-!YS v0:
+!YS-v0:
 file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 ```
 
@@ -101,7 +101,7 @@ file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/readme.md"
 ## Authors
 
 ```mdys:include
-!YS v0:
+!YS-v0:
 file:: "$(ENV.ROOT)/$(ENV.YSLANG)/doc/authors.md"
 ```
 

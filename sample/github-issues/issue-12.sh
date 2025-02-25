@@ -64,11 +64,10 @@ cars:
 ...
 
 cat <<... > racers.yaml
-!yamlscript/v0
+!YS-v0:
 
 db =: load("db.yaml")
 
-=>: !
 - name: Ingy dot Net
   car: ! db.cars.0
 - name: Santa Claus
@@ -82,7 +81,7 @@ cat <<... > race-report.py
 
 import yaml, yamlscript
 
-data = yamlscript.load(open('racers.yaml'))
+data = yamlscript.YAMLScript().load(open('racers.yaml'))
 
 print(yaml.dump(data))
 ...

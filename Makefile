@@ -122,8 +122,10 @@ build: $(BUILD)
 build-%: %
 	$(MAKE) -C $< build
 
+force:
+
 $(BUILD_DOC):
-build-doc: $(BUILD_DOC)
+build-doc: force $(BUILD_DOC)
 	@:
 build-doc-%: %
 	$(MAKE) -C $< build-doc

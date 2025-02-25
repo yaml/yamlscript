@@ -1,6 +1,6 @@
 # Used by util/version-bump to update versions in repo
 
-!yamlscript/v0
+!YS-v0
 
 v-old =: ENV.YS_RELEASE_VERSION_OLD ||
   die("'YS_RELEASE_VERSION_OLD' env var not defined")

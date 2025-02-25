@@ -41,7 +41,7 @@ cast to numbers if they look like numbers.
 `program.ys`:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn main(word='Hello!' times=3):
   each i (1 .. times):

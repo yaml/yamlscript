@@ -9,8 +9,6 @@ custom_dir: theme
 
 # * For dark themed code blocks
 #   See: https://github.com/squidfunk/mkdocs-material/issues/768
-# * Link title to home page
-#   See: https://github.com/squidfunk/mkdocs-material/discussions/5318
 
 features:
 - content.action.edit
@@ -20,8 +18,9 @@ features:
 - navigation.expand
 - navigation.footer
 - navigation.indexes
-# - navigation.instant  # For single page application
 - navigation.tabs
+
+# - navigation.instant  # For single page application
 
 logo: images/yamlscript-logo.svg
 
@@ -50,7 +49,7 @@ icon:
     example: fontawesome/solid/flask
     failure: fontawesome/solid/bomb
     info: fontawesome/solid/circle-info
-    note: fontawesome/solid/note-sticky
+    note: octicons/note-16
     question: fontawesome/solid/circle-question
     quote: fontawesome/solid/quote-left
     success: fontawesome/solid/check

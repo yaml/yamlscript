@@ -1,4 +1,4 @@
-!yamlscript/v0
+!YS-v0
 
 defn main(year=2024):
   say: "$year is $when-not(

@@ -1,5 +1,5 @@
 ---
-title: The YAML Data Language
+title: YAML Basics
 ---
 
 YAML was created to make data documents simple (most of the time).
@@ -71,7 +71,7 @@ YAML adds just a few things to this basic data model:
   * Even though it is rare to see tags in YAML, part of the loading process is
     to assign a tag to every node that lacks an explicit one.
     This process is known as "implicit tagging" or "tag resolution".
-  * In YS, the tags `!yamlscript/v0` and just `!` are quite common.
+  * In YS, the tags `!YS-v0` and just `!` are quite common.
     They control the YS "[mode](modes.md)" of a particular node.
 
 

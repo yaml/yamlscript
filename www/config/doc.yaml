@@ -4,14 +4,15 @@
 - Learn YS:
   - doc/exercism.md
   - doc/examples.md
-  - YS Cheat Sheet: doc/cheat.md
-  - YS for Clojurians: doc/4clojure.md
-  - Clojure to YS: doc/clj-to-ys.md
+  - doc/modes.md
+  - doc/cheat.md
+  # - doc/4clojure.md
+  - doc/clj-to-ys.md
 
 - Use YS:
-  - The `ys` Command: doc/ys.md
-  - YS Loader Libraries: doc/loaders.md
-  - Installing YS: doc/install.md
+  - doc/ys.md
+  - doc/loaders.md
+  - doc/install.md
 
 - YS Libraries:
   - doc/ys-std.md
@@ -25,18 +26,18 @@
 
 
 - YS Reference:
-  - YAML Basics: doc/yaml.md
-  - Clojure Basics: doc/clojure.md
-  - YeS Expressions: doc/yes.md
-  - YS Modes: doc/modes.md
-  - Control Flow: doc/control.md
-  - Operators: doc/operators.md
-  - Dot Chaining: doc/chain.md
-  - Unit Testing: doc/ys-taptest.md
+  - doc/yaml.md
+  - doc/clojure.md
+  - doc/yes.md
+  - doc/modes.md
+  - doc/control.md
+  - doc/operators.md
+  - doc/chain.md
+  - YS Unit Testing: doc/ys-taptest.md
 
 - More YS Topics:
-  - Compiling YS to Binary: doc/binary.md
-  - Self Installation Scripts: doc/run-ys.md
+  - doc/binary.md
+  - doc/run-ys.md
 
 
 ###

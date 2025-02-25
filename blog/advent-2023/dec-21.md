@@ -65,7 +65,7 @@ But this module has super powers.
 import yamlscript
 
 yaml_text = """
-!yamlscript/v0
+!YS-v0
 mapv \(% * 10): 4..6
 """
 
@@ -106,7 +106,7 @@ We could have another YAML file that uses YS:
 
 ```yaml
 # racers.yaml
-!yamlscript/v0
+!YS-v0
 
 db =: load("db.yaml")
 

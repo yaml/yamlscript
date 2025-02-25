@@ -24,98 +24,101 @@ It also links to related functions in the Clojure core library.
 
 ```mdys:stdlib
 String functions:
-- blank?(S): Alias of CS/blank? |
+- base64-decode(Str) Str: Decode a base64 string
+  base64-encode(Str) Str: Encode a string to base64
+  base64-points(Str) [Int]: Decode a base64 string to code points
+  base64(Str) Str: Alias of base64-encode
+  blank?(Str) Str: Alias of CS/blank? |
     True if string is nil, empty or only whitespace
-  chomp(S): Alias of CS/trim-newline |
+  chomp(Str) Str: Alias of CS/trim-newline |
     Remove trailing newlines
-  chop(S): Remove last character
-  ends?(S): Alias of CS/ends-with? |
+  chop(Str) Str: Remove last character
+  ends?(Str) B: Alias of CS/ends-with? |
     True if string ends with suffix
-  escape(S char-map): Alias of CS/escape |
+  escape(Str {Chr:Str}) Str: Alias of CS/escape |
     Escape special characters in a string
-  index(S sub): Alias of CS/index-of |
+  index(Str Str) Int: Alias of CS/index-of |
     Find index of substring
-  join(*X): Join strings or seqs with `""`
-  join(sep *X): Join strings or seqs with a separator
-  joins(*X): Join strings with `" "`
-  lc(S): Alias of CS/lower-case |
+  join([Str]) Str: Join strings or seqs with `""`
+  join(sep [Str]) Str: Join strings or seqs with a separator
+  joins([Str]) Str: Join strings with `" "`
+  lc(Str) Str: Alias of CS/lower-case |
     Lowercase a string
-  lines(S): Split a string into lines
-  pretty(X): Pretty print a value
-  replace(X): Alias of CC/replace
-  replace(S old): Like CS/replace |
-    Replace all occurrences of old with `""`
-  replace(S old new): Alias of CS/replace |
-    Replace all occurrences of old with new
-  replace1(S old new): Alias of CS/replace-first |
-    Replace first occurrence of old with new
-  rindex(S sub): Alias of CS/last-index-of |
+  lines(Str) [Str]: Split a string into lines
+  pretty(Str) Str: Pretty print a value
+  replace(X) X: Alias of CC/replace
+  replace(Str Rgx Str?) Str: Alias of CS/replace |
+    Replace all occurrences of regex with new string (default "")
+  replace1(Str Rgx Str) Str: Alias of CS/replace-first |
+    Replace first occurrence of regex with new string
+  rindex(Str Str) Int: Alias of CS/last-index-of |
     Find last index of substring
-  split(S): Like CS/split |
+  split(Str) [Str]: Like CS/split |
     Split on `""`
-  split(S rgx): Alias of CS/split |
+  split(Str rgx) [Str]: Alias of CS/split |
     Split a string by a regex
-  starts?(S): Alias of CS/starts-with? |
+  starts?(Str Str) Str: Alias of CS/starts-with? |
     True if string starts with prefix
-  substr(S off len?): Substring function with Perl semantics |
+  substr(Str Int Int?) Str: Substring function with Perl semantics |
     Offset is 0-based, negative offset counts from end;
     Optional length is from offset and defaults to end of string;
     Negative length counts from end of string
-  text(*S): Join list of strings with newlines, adding a newline at the end
-  trim(S): Alias of CS/trim |
+  text([Str]) Str: Join list of strings with newlines, adding a newline at the end
+  trim(Str) Str: Alias of CS/trim |
     Trim whitespace from both ends
-  triml(S): Alias of CS/triml |
+  triml(Str) Str: Alias of CS/triml |
     Trim whitespace from left end
-  trimr(S): Alias of CS/trimr |
+  trimr(Str) Str: Alias of CS/trimr |
     Trim whitespace from right end
-  uc(S): Alias of CS/upper-case |
+  uc(Str) Str: Alias of CS/upper-case |
     Uppercase a string
-  uc1(S): Alias of CS/capitalize |
+  uc1(Str) Str: Alias of CS/capitalize |
     Uppercase the first character
-  words(S): Split a string into words (split on whitespace)
+  words(Str) [Str]: Split a string into words (split on whitespace)
+
 - https://clojuredocs.org/quickref#strings-characters
 
 Collection functions:
-- diff(C1 C2): Alias of CD/diff |
+- diff(Col Col) [Str Str Str]: Alias of CD/diff |
     Return the difference of two collections
-  flat(V): Like CC/flatten |
+  flat(Vec) Vec: Like CC/flatten |
     Only flattens one level
-  get+(C K): Get a string, keyword or symbol from a map or sequence
-  grep(FN C): Filter a collection by a predicate function
-  has?(C): Returns a partial function closed over C
-  has?(C X): True if collection has X |
+  get+(Col Key) X: Get a string, keyword or symbol from a map or sequence
+  grep(Fn Col) Col: Filter a collection by a predicate function
+  has?(Col) Fn: Returns a partial function closed over Col
+  has?(Col X) B: True if collection has X |
     Works with strings, maps and sequences
-  in?(C): Returns a partial function closed over C
-  in?(X C): True if X is in collection |
+  in?(Col) Fn: Returns a partial function closed over Col
+  in?(X Col) B: True if X is in collection |
     Works with strings, maps and sequences
-  omap(*X): Create an ordered map
-  reverse(C): Reverse a string, vector or sequence
-  rng(X Y): Create a range of numbers or characters, Y is inclusive|
+  omap([X]) Omap: Create an ordered map
+  reverse(Col) Col: Reverse a string, vector or sequence
+  rng(Int Int) [Int]: Create a range of numbers or characters, Y is inclusive|
     If X is greater than Y, the range is descending
-  ..: Infix `rng` operator
-  slice(C *K): Get a sequence of values from the keys
+  slice(Col [Key]) [X]: Get a sequence of values from the keys
+
 - https://clojuredocs.org/quickref#collections
 
 Math functions:
-- add(*N): Alias of CC/+
-  sub(*N): Alias of CC/-
-  mul(*N): Alias of CC/*
-  div(*N): Division function that returns a float if needed
-  add+(*X): Polymorphic addition function|
+- add(Num*) Num: Alias of CC/+
+  sub(Num+) Num: Alias of CC/-
+  mul(Num*) Num: Alias of CC/*
+  div(Num+) Num: Division function that returns a float if needed
+  add+(X+) X: Polymorphic addition function|
     Adds numbers, strings, chars, sequences, maps, sets and functions
-  sub+(*X): Polymorphic subtraction function|
+  sub+(X+) X: Polymorphic subtraction function|
     Subtracts numbers, strings, chars, sequences, maps and sets
-  mul+(*X): Polymorphic multiplication function|
+  mul+(X+) X: Polymorphic multiplication function|
     Multiplies numbers, strings and sequences
-  digits(S): Convert a string of digits to a sequence of numbers
-  floor(X): Alias of CM/floor |
+  digits(Str) [Int]: Convert a string of digits to a sequence of numbers
+  floor(Num) Num: Alias of CM/floor |
     Round down to the nearest integer
-  pow(N *N): Raise a number to a power
-  '**': Infix `pow` operator - right associative
-  sqr(X): Square a number
-  cube(X): Cube a number
-  sqrt(X): Square root of a number
-  sum(nums): Sum a sequence of numbers
+  pow(Num Num+) Num: Raise a number to a power
+  sqr(Num) Num: Square a number
+  cube(Num) Num: Cube a number
+  sqrt(Num) Num: Square root of a number
+  sum([Num]) Num: Sum a sequence of numbers
+
 - https://clojure.github.io/clojure/clojure.math-api.html
 
 Infix operators:
@@ -127,6 +130,8 @@ Infix operators:
   '/': For `div`
   '**': For `pow`
   '..': For `rng`
+  '=~': For `re-find`
+  '!~': For `re-find + not`
   '==': For `eq`
   '!=': For `ne`
   '>': For `gt`
@@ -152,51 +157,53 @@ Chaining short forms:
     Print value/data to stderr and return the value unchanged
 
 Control functions:
-- call(FN *args): Call a function or value|
-    Function FN can be a string, symbol or function
-  die(msg): Idiomatic error function
-  each(bindings *body): Non-lazy CC/for
-  eval(S): Evaluate a string as YS code
-  exit(rc=0): Exit the program
-  if(cond then else): Functional if used in dot chaining
-  sleep(secs): Sleep for a number of seconds
-  value(X): Get var value from var, symbol or string|
+- call(Fn X*) X: Call a function or value|
+    Function can be a string, symbol or function
+  die(Msg): Idiomatic error function
+  each(Bindings Body) X: Non-lazy CC/for
+  eval(Str) X: Evaluate a string as YS code
+  exit(RC=0): Exit the program
+  if(Cond Then Else) X: Functional if used in dot chaining
+  sleep(Secs) X: Sleep for a number of seconds
+  value(X) X: Get var value from var, symbol or string|
     Often used to convert a string to a function.
-  when+(cond *body): Like CC/when |
+  when+(Cond Body) X: Like CC/when |
     Binds the result of the condition to the `_` symbol
+
 - https://clojuredocs.org/quickref#flow-control
 
 Function functions:
-  defn flip(FN): Flip the arguments of a function
+  defn flip(Fn) X: Flip the arguments of a function
 
 Regex functions:
-- '=~': Infix re-find operator
-  '!~': Infix re-find complement operator
+- '=~ X': Infix re-find operator
+  '!~ X': Infix re-find complement operator
+
 - https://clojuredocs.org/quickref#regular-expressions
 
 I/O functions:
-  err(*S): Print to stderr
-  out(*S): Print to stdout|
+  err(Str*) nil: Print to stderr
+  out(Str*) nil: Print to stdout|
     Flushes stdout after printing
-  pp(X): Pretty print a value
-  print(*S): Print to stdout without newline|
+  pp(X) nil: Pretty print a value
+  print(Str*) nil: Print to stdout without newline|
     Flushes stdout after printing
-  read(F): Alias of CC/slurp |
+  read(path) Str: Alias of CC/slurp |
     Read a file into a string
-  say(*S): Print to stdout with newline
-  warn(*S): Print to stderr with newline|
+  say(Str*) nil: Print to stdout with newline
+  warn(Str*) nil: Print to stderr with newline|
     Flushes stderr after printing
-  write(F S): Alias of CC/spit |
+  write(path Str) nil: Alias of CC/spit |
     Write a string to a file
 
 Shorter named alias functions:
-  a: Alias of CC/identity
-  len: Alias of CC/count
+  a(X) X: Alias of CC/identity
+  len(X) Int: Alias of CC/count
 
 Quoting functions:
-  q(form): Alias of CC/quote
-  qr(str): Alias of CC/re-pattern
-  qw(symbols): Turn symbols into a vector of strings
+  q(form) X: Alias of CC/quote
+  qr(str) Rgx: Alias of CC/re-pattern
+  qw(symbols) [Str]: Turn symbols into a vector of strings
 
 Named function for infix operators:
   eq: Alias of CC/=
@@ -207,22 +214,22 @@ Named function for infix operators:
   le: Alias of CC/<=
 
 Common type conversion functions:
-  to-bool(X): Convert X to a boolean
-  to-char(X): Convert X to a character
-  to-float(X): Convert X to a float
-  to-int(X): Convert X to an integer
-  to-keyw(X): Convert X to a keyword
-  to-list(X): Convert X to a list
-  to-map(X): Convert X to a map
-  to-num(X): Convert X to a number
-  to-omap(X): Convert X to an ordered map
-  to-set(X): Convert X to a set
-  to-str(X): Convert X to a string
-  to-type(X): Convert X to a string name of its type:|
+  to-bool(X) B: Convert X to a boolean
+  to-char(X) Chr: Convert X to a character
+  to-float(X) Flt: Convert X to a float
+  to-int(X) Int: Convert X to an integer
+  to-keyw(X) Kwd: Convert X to a keyword
+  to-list(X) List: Convert X to a list
+  to-map(X) Map: Convert X to a map
+  to-num(X) Num: Convert X to a number
+  to-omap(X) Omap: Convert X to an ordered map
+  to-set(X) Set: Convert X to a set
+  to-str(X) Str: Convert X to a string
+  to-type(X) Str: Convert X to a string name of its type:|
     `"atom"`, `"bool"`, `"char"`, `"class"`, `"float"`, `"fun"`, `"int"`,
     `"keyw"`, `"list"`, `"map"`, `"nil"`, `"num"`, `"rgx"`, `"seq"`, `"set"`,
     `"str"`, `"sym"`, `"var"`, `"vec"`
-  to-vec(X): Convert X to a vector
+  to-vec(X) Vec: Convert X to a vector
 
 Single character casting functions:
   B(X): Convert to a boolean
@@ -239,72 +246,82 @@ Single character casting functions:
   T(X): Convert to a type name string
   V(X): Convert to a vector
 
-  L+(*X): Convert to a list
-  M+(*X): Convert to a map
-  O+(*X): Convert to an ordered map
-  V+(*X): Convert to a vector
+  L+(X*) List: Convert to a list
+  M+(X*) Map: Convert to a map
+  O+(X*) Omap: Convert to an ordered map
+  V+(X*) Vec: Convert to a vector
 
 Alternate truth functions:
-  falsey?(X): True if X is falsey - 0, nil, false, empty
+  falsey?(X) X: True if X is falsey - 0, nil, false, empty
   F?(X): Short for `falsey?`
-  truey?(X): True if X is not falsey
+  truey?(X) X: True if X is not falsey
   T?(X): Short for `truey?`
-  or?(X *X): Return first truey value or nil
-  and?(X *X): Return last truey value or nil
-  '|||': '`or?` operator'
-  '&&&': '`and?` operator'
+  or?(X X+) X: Return first truey value or nil
+  and?(X X+) X: Return last truey value or nil
 
 File system functions:
-- fs-d(path): True if path is a directory
-  fs-e(path): True if path exists
-  fs-f(path): True if path is a regular file
-  fs-l(path): True if path is a symbolic link
-  fs-r(path): True if path is readable
-  fs-s(path): True if path is not empty
-  fs-w(path): True if path is writable
-  fs-x(path): True if path is executable
-  fs-z(path): True if path is empty
-  fs-abs(path): Get the absolute path
-  fs-abs?(path): True if path is absolute
-  fs-basename(path *ext): Get the file name of a path, without extension
-  fs-dirname(path): Get the directory name of a path
-  fs-filename(path): Get the file name of a path
-  fs-glob(path): Glob a path
-  fs-ls(dir): List a directory
-  fs-mtime(file): Get the modification time of a file
-  fs-rel(path): Get the relative path
-  fs-rel?(path): True if path is relative
-  fs-which(name): Find the path of an executable
+- fs-d(Path) B: True if path is a directory
+  fs-e(Path) B: True if path exists
+  fs-f(Path) B: True if path is a regular file
+  fs-l(Path) B: True if path is a symbolic link
+  fs-r(Path) B: True if path is readable
+  fs-s(Path) B: True if path is not empty
+  fs-w(Path) B: True if path is writable
+  fs-x(Path) B: True if path is executable
+  fs-z(Path) B: True if path is empty
+  fs-abs(Path) Path: Get the absolute path
+  fs-abs?(Path) B: True if path is absolute
+  fs-basename(Path Ext?) B: Get the file name of a path, without extension
+  fs-dirname(Path) Dir: Get the directory name of a path
+  fs-filename(Path) File: Get the file name of a path
+  fs-glob(Path) [Path]: Glob a path
+  fs-ls(dir) [File]: List a directory
+  fs-mtime(file) Int: Get the modification time of a file
+  fs-rel(Path) Path: Get the relative path
+  fs-rel?(Path) B: True if path is relative
+  fs-which(name) B: Find the path of an executable
+
 - https://github.com/babashka/fs/blob/master/API.md
 
 Date/Time functions:
-  now(): Returns `java.time.Instant` object
+  now() Instant: Returns `java.time.Instant` object
 
 Security functions:
-  md5(S): Calculate the MD5 hash of a string
-  sha1(S): Calculate the SHA-1 hash of a string
-  sha256(S): Calculate the SHA-256 hash of a string
+  md5(S) X: Calculate the MD5 hash of a string
+  sha1(S) X: Calculate the SHA-1 hash of a string
+  sha256(S) X: Calculate the SHA-256 hash of a string
 
 IPC functions:
-- exec(cmd *S): Execute a command
-  process(cmd *S): Execute a command
-  sh(cmd *S): Execute a command
-  shell(cmd *S): Execute a command
-  shout(cmd *S): Execute a command and return the output
+- exec(Cmd Str*) Result: Execute a command
+  process(Cmd Str*) Result: Execute a command
+  sh(Cmd Str*) Result: Execute a command
+  shell(Cmd Str*) Result: Execute a command
+  shout(Cmd Str*) Result: Execute a command and return the output
+
 - https://github.com/babashka/process#readme
 
 External library functions:
-  use-pod(pod-name version): Load an external library pod
+  use-pod(pod-name version) nil: Load an external library pod
 
 HTTP functions:
-  curl(url): Get a URL and return the body
+  curl(URL) Str: Get a URL and return the body
 
 YAML document result stashing functions:
-  stream(): Mapping of document results|
+  stream() X: Mapping of document results|
     The symbol `_` at the top level compiles to `(stream)`
 
+Atom functions:
+  atom() Atom: Create an atom with a nil value
+  atom(X) Atom: Create an atom with a value X
+  reset(Atom X) X: Alias of CC/reset! |
+    Set the value of an atom
+  swap(Atom Fn Arg*) X: Alias of CC/swap! |
+    Update the value of an atom
+
+
 Special functions:
-  source(*): Run a YS file as a Bash script
+  source(X*) nil: Run a YS file as a Bash script|
+    Acts like CC/comment. Does nothing in YS. Intended for Bash.
 ```
 
 ## See Also

@@ -40,7 +40,7 @@ test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
 	        print(yamlscript.YAMLScript().load("inc: 41"))' && \
 	  $(PYTHON) \
 	    -c 'import yamlscript; \
-	        print(yamlscript.YAMLScript().load("!yamlscript/v0\ninc: 41"))'
+	        print(yamlscript.YAMLScript().load("!YS-v0\ninc: 41"))'
 
 pkg-test: venv
 	$(MAKE) clean

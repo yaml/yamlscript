@@ -1,5 +1,5 @@
 ---
-title: ys - The YS Command Line Tool
+title: ys - The YS CLI Tool
 ---
 
 The YS `ys` command line tool is the primary way to run, load and compile YS
@@ -15,28 +15,28 @@ Here's the `ys --help` output:
 ```text
 $ ys --help
 
-ys - The YS (YAMLScript) Command Line Tool - v0.1.92
+ys - The YS Command Line Tool - v0.1.92
 
 Usage: ys [<option...>] [<file>]
 
 Options:
 
-  -l, --load               Output (compact) JSON of YS evaluation
   -e, --eval YSEXPR        Evaluate a YS expression
                            multiple -e values joined by newline
+  -l, --load               Output (compact) JSON of YS evaluation
+  -f, --file FILE          Explicitly indicate input file
 
   -c, --compile            Compile YS to Clojure
   -b, --binary             Compile to a native binary executable
 
-  -p, --print              Print the result of --run in code mode
+  -p, --print              Print the final evaluation result value
   -o, --output FILE        Output file for --load, --compile or --binary
   -s, --stream             Output all results from a multi-document stream
 
   -T, --to FORMAT          Output format for --load:
-                             json, yaml, edn
+                             json, yaml, csv, tsv, edn
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
-  -E, --edn                Output EDN for --load
   -U, --unordered          Mappings don't preserve key order (faster)
 
   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
@@ -55,8 +55,6 @@ Options:
 
       --version            Print version and exit
   -h, --help               Print this help and exit
-```
-
 ----
 
 Let's start with a YAML file (`some.yaml`) that wants to use data from another
@@ -211,7 +209,7 @@ When debugging, you can see the output of each compilation stage by adding the
 ```text
 $ ys -cd program.ys
 *** parse output ***
-({:+ "+MAP", :! "yamlscript/v0"}
+({:+ "+MAP", :! "YS-v0"}
  {:+ "=VAL", := "defn main(name='world' n=3)"}
  {:+ "+MAP"}
  {:+ "=VAL", := "greet"}
@@ -229,7 +227,7 @@ $ ys -cd program.ys
  {:+ "-DOC"})
 
 *** compose output ***
-{:! "yamlscript/v0",
+{:! "YS-v0",
  :%
  [{:= "defn main(name='world' n=3)"}
   {:% [{:= "greet"} {:= "name n"}]}

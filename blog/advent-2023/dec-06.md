@@ -23,14 +23,14 @@ YS has these 3 modes:
 
 * Code Mode
 
-  A starting `!yamlscript/v0` tag puts the YS file into Code Mode.
+  A starting `!YS-v0` tag puts the YS file into Code Mode.
   Unquoted strings are code expressions which are further parsed into AST
   forms.
   A `!` tag can switch the mode to Data Mode.
 
 * Data Mode
 
-  A starting `!yamlscript/v0/data` tag puts the YS file into Data Mode.
+  A starting `!YS-v0:` tag puts the YS file into Data Mode.
   Everything is the regular YAML data language that you are used to.
   But a `!` tag can switch the mode to Code Mode.
 
@@ -43,7 +43,7 @@ YS has these 3 modes:
   _Specifically all those that adhere to the JSON data model, which is almost
   all YAML config files._
 
-The `ys` CLI tool will implicitly add a `!yamlscript/v0` tag when you use the
+The `ys` CLI tool will implicitly add a `!YS-v0` tag when you use the
 `--eval` (aka `-e`) option, unless you actually provide a tag yourself.
 This is simply for convenience when you are testing out code snippets.
 
@@ -53,23 +53,23 @@ line of code in a file.
 So `ys -e 'say: "Hello"' -e 'say: "World"'` is the same as this YS program:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 say: "Hello"
 say: "World"
 ```
 
 If you wanted to write a `ys` one-liner that used Data Mode, you could do this:
-`ys --load -e '!yamlscript/v0/data' -e 'foo: 111' -e 'bar: 222'` which is the
+`ys --load -e '!YS-v0:' -e 'foo: 111' -e 'bar: 222'` which is the
 same as this YS program:
 
 ```yaml
-!yamlscript/v0/data
+!YS-v0:
 foo: 111
 bar: 222
 ```
 
 If you wanted to write a `ys` one-liner that used Bare Mode, you could do this:
-`ys --load -e `!yamlscript/v0/bare` -e 'foo: 111' -e 'bar: 222'` which is the
+`ys --load -e '!YS-v0' -e '--- !bare' -e 'foo: 111' -e 'bar: 222'` which is the
 same as the Data Mode example above.
 
 There's actually a better way to write Data and Bare Mode one-liners.
@@ -115,7 +115,7 @@ from Code Mode to Data Mode.
 You can use `::` instead of `:` to separate the key and value of a mapping.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 my-map =::
   foo = 111
   bar = 222
@@ -124,7 +124,7 @@ my-map =::
 is the same as:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 my-map =: !
   foo: 111
   bar: 222

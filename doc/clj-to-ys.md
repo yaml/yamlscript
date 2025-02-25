@@ -1,5 +1,5 @@
 ---
-title: Learning YS from Clojure
+title: From Clojure to YS
 ---
 
 YS (YAMLScript) works by translating code written in YS to Clojure code, which
@@ -59,13 +59,13 @@ $ ys -c program.ys
 "(println \"Hello, World!\")"
 ```
 
-Ah! It compiled to a string, because we forgot to add `!yamlscript/v0` to the
+Ah! It compiled to a string, because we forgot to add `!YS-v0` to the
 top of the file.
 All YAML files are valid YS files.
 They won't evaluate any code unless you explicitly tell them to.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 (println "Hello, World!")
 ```
 
@@ -79,7 +79,7 @@ There we go!
 Let's make it idiomatic now.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 say: 'Hello, World!'
 ```
 
@@ -127,7 +127,7 @@ If `name` is not provided, it defaults to `"World"`.
 Let's convert this to YS, but change as little as possible.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 =>: !clj |
   (defn hello
     ([name] (println (str "Hello, " name "!")))
@@ -163,7 +163,7 @@ Let's keep going by leaving the function defn alone but playing with the
 function calls.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 =>: !clj |
   (defn hello
     ([name] (println (str "Hello, " name "!")))
@@ -179,7 +179,7 @@ arguments.
 Now let's convert the function defn to YS.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 defn hello:
  (name): (println (str "Hello, " name "!"))
  (): (hello "World")
@@ -193,7 +193,7 @@ Take a moment! You deserve it!
 
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 defn hello(name='world'):
   (println (str "Hello, " name "!"))
 hello:
@@ -207,7 +207,7 @@ arguments.
 Let's finish up with a little interpolation.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 defn hello(name='world'):
   say: "Hello, $name!"
 hello:
@@ -243,7 +243,7 @@ We'll skip the `!clj` step this time and start by making this a top level YAML
 mapping.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn fizzbuzz(start finish):
   (map (fn [n]
@@ -268,7 +268,7 @@ We also changed the defn args to use parens instead of square brackets.
 Let's make more expressions into pairs now.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn fizzbuzz(start finish):
   map:
@@ -292,7 +292,7 @@ Are we done?
 Heck no!
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn fizzbuzz(start finish):
   map _ (start .. finish):
@@ -323,7 +323,7 @@ In these cases `_` is our friend.
 Double quotes to single. What's next?
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn fizzbuzz(start finish):
   map _ (start .. finish):
@@ -350,7 +350,7 @@ when the program is run.
 Let's try that.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn main(start=1 finish=100):
   each x (start .. finish):
@@ -387,7 +387,7 @@ Pretty sweet!
 Let's tidy up this code a bit more, and come down from our fizzy buzz.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn main(start=1 finish=100):
   each x (start .. finish): x.fizzbuzz().say()

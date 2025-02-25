@@ -9,7 +9,7 @@ It's very simple.
 Here's an example:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 name =: 'world'
 

@@ -1,4 +1,4 @@
-!yamlscript/v0
+!YS-v0
 
 defn main(n=5000):
   :: https://rosettacode.org/wiki/100_prisoners

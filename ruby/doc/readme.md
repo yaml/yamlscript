@@ -13,14 +13,13 @@ puts data
 File `file.ys`:
 
 ```yaml
-!yamlscript/v0
+!YS-v0:
 
 name =: "World"
 
-=>::
-  foo: [1, 2, ! inc(41)]
-  bar:: load("other.yaml")
-  baz:: "Hello, $name!"
+foo: [1, 2, ! inc(41)]
+bar:: load("other.yaml")
+baz:: "Hello, $name!"
 ```
 
 File `other.yaml`:

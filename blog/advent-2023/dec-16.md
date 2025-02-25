@@ -192,7 +192,7 @@ Let's make the quintessential LoL example, a counter, in Clojure:
 Writing this in YS is a simple port:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 defn new-counter(n):
   x =: atom(n)
   =>: \(swap! x inc)

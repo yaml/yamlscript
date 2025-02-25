@@ -72,7 +72,7 @@ pyjson-loader: |
     json.loads(sys.stdin.read())
 
 
---- !yamlscript/v0
+--- !code
 
 # Entrypoint function takes 2 args: name of test and count:
 defn main(loader='libyaml' n=5):
