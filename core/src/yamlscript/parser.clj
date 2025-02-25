@@ -32,7 +32,7 @@
 
 (declare parse-fn)
 
-(def TIME_VAR #"YS_PARSER_TIME") ;; TODO: define as constant?
+(def TIMER (System/getenv "YS_TIMER"))
 
 (def shebang-ys #"^#!.*/env ys-0(?:\.d+\.\d+)?\n")
 (def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
@@ -42,7 +42,7 @@
   (let [has-code-mode-shebang (or
                                 (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
-        events (if (System/getenv TIME_VAR)
+        events (if TIMER
                  (time (parse-fn yaml-string))
                  (parse-fn yaml-string))
         [first-event & rest-events] events
@@ -187,7 +187,7 @@
 (defn parse-rapidyaml [^String yaml-string]
   (rest
     (let [parser ^Rapidyaml (new Rapidyaml)
-          _ (when (System/getenv TIME_VAR)
+          _ (when TIMER
               (.timingEnabled parser true))
           buffer (.getBytes yaml-string StandardCharsets/UTF_8)
           masks (int-array 5)
@@ -238,7 +238,7 @@
 (defn parse-rapidyaml-buf [^String yaml-string]
   (rest
     (let [parser ^Rapidyaml (new Rapidyaml)
-          _ (when (System/getenv TIME_VAR)
+          _ (when TIMER
               (.timingEnabled parser true))
           srcbytes (.getBytes yaml-string StandardCharsets/UTF_8)
           srcbuffer (ByteBuffer/allocateDirect (alength srcbytes))
@@ -254,7 +254,7 @@
                     (let [off (aget masks (inc i))
                           len (aget masks (+ i 2))]
                       (reduce
-                        (fn [slice i] (str slice (char (aget buffer i))))
+                        (fn [slice i] (str slice (char (aget srcbuffer i))))
                         "" (range off (+ off len)))))]
 
       (loop [i 0, tag nil, anchor nil, events []]
