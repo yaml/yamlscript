@@ -11,11 +11,6 @@
 
 ### To Do
 #
-# * Add google analytics
-# See:
-# https://support.google.com/analytics/answer/9304153
-# https://squidfunk.github.io/mkdocs-material/setup/setting-up-site-analytics/
-#
 # * Use proper blog plugin
 # * Add RSS feed
 
@@ -71,6 +66,9 @@ extra:
 
 strict: false
 
+watch:
+- theme
+
 validation:
   omitted_files: ignore
   absolute_links: ignore
@@ -114,8 +112,5 @@ markdown_extensions:
     alternate_style: true
 - toc:
     permalink: 🔗
-
-watch:
-- theme
 
 copyright:: "YS / YAMLScript — Copyright $(Meta.copyright)"
