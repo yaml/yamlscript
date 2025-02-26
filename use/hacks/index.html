@@ -12,28 +12,28 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/advent-2023/dec-12/">
+        <link rel="canonical" href="https://yamlscript.org/use/hacks/">
       
       
-        <link rel="prev" href="../dec-13/">
+        <link rel="prev" href="../circleci/">
       
       
-        <link rel="next" href="../dec-11/">
+        <link rel="next" href="../../doc/intro/">
       
       
-      <link rel="icon" href="../../../images/favicon.ico">
+      <link rel="icon" href="../../images/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>Future Proof - YS — YAML Done Wisely</title>
+        <title>YS Hacks - YS — YAML Done Wisely</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.a40c8224.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
   
@@ -93,9 +93,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../css/theme.css">
+      <link rel="stylesheet" href="../../css/theme.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -141,7 +141,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-day-12-of-the-ys-advent-calendar" class="md-skip">
+        <a href="#yamllm" class="md-skip">
           Skip to content
         </a>
       
@@ -160,9 +160,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
+    <a href="../.." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../../images/yamlscript-logo.svg" alt="logo">
+  <img src="../../images/yamlscript-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -180,7 +180,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Future Proof
+              YS Hacks
             
           </span>
           </a>
@@ -287,11 +287,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../use/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
     
@@ -311,7 +313,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../../doc/intro/" class="md-tabs__link">
+        <a href="../../doc/intro/" class="md-tabs__link">
           
   
     
@@ -327,13 +329,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../2024-11-29/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../blog/2024-11-29/" class="md-tabs__link">
           
   
     
@@ -351,7 +351,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-tabs__item">
-      <a href="../../../press/" class="md-tabs__link">
+      <a href="../../press/" class="md-tabs__link">
         
   
     
@@ -370,7 +370,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../../community/" class="md-tabs__link">
+        <a href="../../community/" class="md-tabs__link">
           
   
     
@@ -388,7 +388,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-tabs__item">
-      <a href="../../../faq/" class="md-tabs__link">
+      <a href="../../faq/" class="md-tabs__link">
         
   
     
@@ -422,9 +422,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
+    <a href="../.." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../../images/yamlscript-logo.svg" alt="logo">
+  <img src="../../images/yamlscript-logo.svg" alt="logo">
 
     </a>
     YS — YAML Done Wisely
@@ -448,8 +448,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
+    
   
   
+  
     
     
       
@@ -464,19 +466,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -487,7 +490,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             Using YS
@@ -501,7 +504,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -566,7 +569,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/helmys/" class="md-nav__link">
+      <a href="../../doc/helmys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -643,7 +646,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/cicd/" class="md-nav__link">
+      <a href="../cicd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -664,7 +667,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/gha/" class="md-nav__link">
+      <a href="../gha/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -685,7 +688,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/circleci/" class="md-nav__link">
+      <a href="../circleci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -711,10 +714,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../use/hacks/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    YS Hacks
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -723,6 +744,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#yamllm" class="md-nav__link">
+    <span class="md-ellipsis">
+      YAMLLM
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -798,7 +846,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/intro/" class="md-nav__link">
+      <a href="../../doc/intro/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -819,7 +867,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys4yaml/" class="md-nav__link">
+      <a href="../../doc/ys4yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -892,7 +940,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/exercism/" class="md-nav__link">
+      <a href="../../doc/exercism/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -913,7 +961,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/examples/" class="md-nav__link">
+      <a href="../../doc/examples/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -934,7 +982,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/cheat/" class="md-nav__link">
+      <a href="../../doc/cheat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -955,7 +1003,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/4clojure/" class="md-nav__link">
+      <a href="../../doc/4clojure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -976,7 +1024,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/clj-to-ys/" class="md-nav__link">
+      <a href="../../doc/clj-to-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1053,7 +1101,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys/" class="md-nav__link">
+      <a href="../../doc/ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1074,7 +1122,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/loaders/" class="md-nav__link">
+      <a href="../../doc/loaders/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1095,7 +1143,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/install/" class="md-nav__link">
+      <a href="../../doc/install/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1182,7 +1230,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-std/" class="md-nav__link">
+      <a href="../../doc/ys-std/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1203,7 +1251,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/core/" class="md-nav__link">
+      <a href="../../doc/core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1224,7 +1272,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-ys/" class="md-nav__link">
+      <a href="../../doc/ys-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1245,7 +1293,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-yaml/" class="md-nav__link">
+      <a href="../../doc/ys-yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1266,7 +1314,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-json/" class="md-nav__link">
+      <a href="../../doc/ys-json/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1287,7 +1335,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-csv/" class="md-nav__link">
+      <a href="../../doc/ys-csv/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1308,7 +1356,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-clj/" class="md-nav__link">
+      <a href="../../doc/ys-clj/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1329,7 +1377,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-taptest/" class="md-nav__link">
+      <a href="../../doc/ys-taptest/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1416,7 +1464,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/yaml/" class="md-nav__link">
+      <a href="../../doc/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1437,7 +1485,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/clojure/" class="md-nav__link">
+      <a href="../../doc/clojure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1458,7 +1506,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/yes/" class="md-nav__link">
+      <a href="../../doc/yes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1479,7 +1527,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/modes/" class="md-nav__link">
+      <a href="../../doc/modes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1500,7 +1548,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/control/" class="md-nav__link">
+      <a href="../../doc/control/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1521,7 +1569,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/operators/" class="md-nav__link">
+      <a href="../../doc/operators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1542,7 +1590,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/chain/" class="md-nav__link">
+      <a href="../../doc/chain/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1563,7 +1611,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/ys-taptest/" class="md-nav__link">
+      <a href="../../doc/ys-taptest/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1638,7 +1686,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/binary/" class="md-nav__link">
+      <a href="../../doc/binary/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1659,7 +1707,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../doc/run-ys/" class="md-nav__link">
+      <a href="../../doc/run-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1692,10 +1740,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
-    
   
   
-  
     
     
       
@@ -1714,20 +1760,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1738,7 +1783,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Blog
@@ -1752,7 +1797,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../2024-11-29/" class="md-nav__link">
+      <a href="../../blog/2024-11-29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1773,7 +1818,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../2024-11-05/" class="md-nav__link">
+      <a href="../../blog/2024-11-05/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1794,7 +1839,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../2024-07-17/" class="md-nav__link">
+      <a href="../../blog/2024-07-17/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1815,7 +1860,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../2024-06-20/" class="md-nav__link">
+      <a href="../../blog/2024-06-20/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1882,7 +1927,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../2024-04-16/" class="md-nav__link">
+      <a href="../../blog/2024-04-16/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1903,7 +1948,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../2024-03-14/" class="md-nav__link">
+      <a href="../../blog/2024-03-14/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1929,10 +1974,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
     
     
       
@@ -1990,11 +2033,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_6" >
         
           
           <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="0">
@@ -2008,7 +2053,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_6">
             <span class="md-nav__icon md-icon"></span>
             2023 Advent Posts
@@ -2022,7 +2067,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-24/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-24/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2043,7 +2088,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-23/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-23/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2064,7 +2109,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-22/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-22/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2085,7 +2130,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-21/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-21/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2106,7 +2151,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-20/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-20/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2127,7 +2172,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-19/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-19/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2148,7 +2193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-18/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-18/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2169,7 +2214,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-17/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-17/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2190,7 +2235,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-16/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-16/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2211,7 +2256,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-15/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-15/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2232,7 +2277,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-14/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-14/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2253,7 +2298,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-13/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-13/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2271,28 +2316,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Future Proof
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../blog/advent-2023/dec-12/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2301,60 +2328,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#welcome-to-day-12-of-the-ys-advent-calendar" class="md-nav__link">
-    <span class="md-ellipsis">
-      Welcome to Day 12 of the YS Advent Calendar!
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-ys-api-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      The YS API Version
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#new-versions-of-ys" class="md-nav__link">
-    <span class="md-ellipsis">
-      New Versions of YS
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusion
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2367,7 +2340,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-11/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-11/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2388,7 +2361,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-10/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-10/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2409,7 +2382,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-09/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-09/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2430,7 +2403,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-08/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-08/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2451,7 +2424,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-07/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-07/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2472,7 +2445,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-06/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-06/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2493,7 +2466,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-05/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-05/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2514,7 +2487,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-04/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-04/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2535,7 +2508,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-03/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-03/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2556,7 +2529,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-02/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-02/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2577,7 +2550,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../dec-01/" class="md-nav__link">
+      <a href="../../blog/advent-2023/dec-01/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2613,7 +2586,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../press/" class="md-nav__link">
+      <a href="../../press/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2660,7 +2633,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../community/" class="md-nav__link ">
+            <a href="../../community/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2718,7 +2691,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../contrib/" class="md-nav__link ">
+            <a href="../../contrib/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2751,7 +2724,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../contrib/website/" class="md-nav__link">
+      <a href="../../contrib/website/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2780,7 +2753,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../social/" class="md-nav__link">
+      <a href="../../social/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2808,7 +2781,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2846,36 +2819,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#welcome-to-day-12-of-the-ys-advent-calendar" class="md-nav__link">
+  <a href="#yamllm" class="md-nav__link">
     <span class="md-ellipsis">
-      Welcome to Day 12 of the YS Advent Calendar!
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-ys-api-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      The YS API Version
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#new-versions-of-ys" class="md-nav__link">
-    <span class="md-ellipsis">
-      New Versions of YS
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusion
+      YAMLLM
     </span>
   </a>
   
@@ -2898,18 +2844,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- pre>
 page: >>><<<
 page.meta: >>>{
-  "title": "Future Proof"
+  "title": "YS Hacks"
 }<<<
-page.previous_page: >>>Page(title='History Lesson', url='/blog/advent-2023/dec-13/')<<<
-page.next_page: >>>Page(title='The YeS Express', url='/blog/advent-2023/dec-11/')<<<
+page.previous_page: >>>Page(title='YS and CircleCI', url='/use/circleci/')<<<
+page.next_page: >>>Page(title='Introducing YS', url='/doc/intro/')<<<
 scheme: >>>default<<<
 tag: >>><<<
 title: >>><<<
 app: >>><<<
 author: >>><<<
-url: blog/advent-2023/dec-12/
+url: use/hacks/
 edit_uri: https://github.com/yaml/yamlscript/edit/website/
-src_path: blog/advent-2023/dec-12.md
+src_path: use/hacks.md
 </pre -->
 
 
@@ -2920,14 +2866,14 @@ src_path: blog/advent-2023/dec-12.md
 
 
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/advent-2023/dec-12.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/www/src/use/hacks.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/advent-2023/dec-12.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/www/src/use/hacks.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2935,74 +2881,71 @@ src_path: blog/advent-2023/dec-12.md
   </a>
 
 
-  <h1>Future Proof</h1>
+  <h1>YS Hacks</h1>
 
-<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
-
-<p>Santa has very little margin for error.
-He has to get everything just right all in one night.</p>
-<p>YS is a work in progress, and will be for a long time.
-I'm trying to get it right, but I'm no Santa!
-In fact I'm quite sure I'll get some things wrong.
-That's just the nature of the beast when you're a programmer.</p>
-<p>Also, have you ever wondered why the magic YS starter tag has that <code>/v0</code> at the
-end?</p>
-<h3 id="welcome-to-day-12-of-the-ys-advent-calendar">Welcome to Day 12 of the YS Advent Calendar!<a class="headerlink" href="#welcome-to-day-12-of-the-ys-advent-calendar" title="Permanent link">🔗</a></h3>
-<p>Today we'll discuss how YS is designed to be future proof.</p>
-<p>I've been programming for quite a long time now.
-I've learned that no matter how good I think an idea it today, I'll almost
-certainly think of a better way to do it in the future.</p>
-<p>This means I'll almost certainly want to make big changes to YS long after it's
-in use in the real world.</p>
-<p>I also believe that it is really important for things like APIs and progamming
-languages to be stable and backwards compatible, basically forever.</p>
-<p>If I could always have the freedom to make big changes to YS, but never break
-backwards compatibility, then I could have my cake and eat it too.
-And I think I can!</p>
-<h3 id="the-ys-api-version">The YS API Version<a class="headerlink" href="#the-ys-api-version" title="Permanent link">🔗</a></h3>
-<p>I call <code>v0</code> the YS API version.
-YS v0 isn't done yet, but it should be in the next couple months.
-At that point I'll release it as a stable version of the API version <code>0</code>.</p>
-<p>So you've seen that to make a <code>.ys</code> file executable, you need to add a special
-starter tag to the top of the file:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!yamlscript/v0</span>
-<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello!&quot;</span>
-</code></pre></div>
-<p>Or you can write it with the shebang line:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-0</span>
-<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello!&quot;</span>
-</code></pre></div>
-<p>Leaving off that <code>0</code> here will make things not work as you intended.</p>
-<p>You might also have noticed that when you install the <code>ys</code> binary CLI is is a
-symlink to <code>ys-0.1.26</code>.
-And there is another symlink called <code>ys-0</code> that points to <code>ys-0.1.26</code>.</p>
-<p>This is all by design.</p>
-<p>The leading <code>0</code> in <code>!yamlscript/v0</code> and in <code>bin/ys-0</code> and also in <code>0.1.26</code> is
-the YS API version.</p>
-<p>When YS v0 is declared stable, there will never be changes that break backwards
-compatibility with the <code>v0</code> API version.</p>
-<p>That means you can write YS programs today, and they will continue to work
-forever, even if you upgrade to a new version of YS.</p>
-<h3 id="new-versions-of-ys">New Versions of YS<a class="headerlink" href="#new-versions-of-ys" title="Permanent link">🔗</a></h3>
-<p>At some point after YS v0 is released as stable, I'll start working on
-YS v1.</p>
-<p>I can make any changes I want in YS v1, even ones that break backwards
-compatibility with YS v0.
-That's because I set up the rules such that you need to declare the version when
-you write a YS program.</p>
-<h3 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">🔗</a></h3>
-<p>This doesn't mean that I don't think extremely carefully about every change I
-make to YS.
-But it does mean that I don't have to worry about everything being perfect
-before I release stable v0.</p>
-<p>That's exciting as I strive to make YS a great language today and a better
-language in the future.</p>
-<p>I hope that also encorages you write more YS today, knowing that it will
-continue to work in the future.</p>
-<p>That wraps up Day 12.
-And that also means we're half way through the Advent Calendar.
-I hope you're enjoying it as much as I am, and I hope the best is yet to come!</p>
-<p>Tune in tomorrow for Day 13 of the YS Advent Calendar.</p>
+<p>Here are some interesting real-world hacks that have been done with YS.</p>
+<h2 id="yamllm">YAMLLM<a class="headerlink" href="#yamllm" title="Permanent link">🔗</a></h2>
+<p>YAMLLM is a command line tool <a href="https://github.com/yaml/yamllm/blob/main/bin/yamllm.ys">written in YS&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a> to query common LLM
+APIs.</p>
+<p>It currently works with these APIs from <a href="https://openai.com/">OpenAI&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>,
+<a href="https://anthropic.com/">Anthropic&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>, and <a href="https://groq.com/">Groq&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
+     width="12" height="12" viewBox="0 0 12 12">
+    <title>External link</title>
+    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
+          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
+    /></svg>
+</a>:</p>
+<ul>
+<li>
+<p>Anthropic Models</p>
+<ul>
+<li>claude-3-5-haiku-latest</li>
+<li>claude-3-5-sonnet-latest</li>
+<li>claude-3-opus-latest</li>
+</ul>
+</li>
+<li>
+<p>Groq Models</p>
+<ul>
+<li>llama3-70b-8192</li>
+<li>llama3-8b-8192</li>
+<li>gemma-7b-it</li>
+<li>gemma2-9b-it</li>
+<li>mixtral-8x7b-32768</li>
+<li>whisper-large-v3</li>
+</ul>
+</li>
+<li>
+<p>Openai Models</p>
+<ul>
+<li>gpt-4o</li>
+<li>gpt-4o-mini</li>
+<li>gpt-4-turbo</li>
+<li>gpt-4</li>
+<li>gpt-3.5-turbo</li>
+<li>dall-e-2</li>
+<li>dall-e-3</li>
+</ul>
+</li>
+</ul>
 
 
 
@@ -3037,7 +2980,7 @@ I hope you're enjoying it as much as I am, and I hope the best is yet to come!</
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../dec-13/" class="md-footer__link md-footer__link--prev" aria-label="Previous: History Lesson">
+          <a href="../circleci/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS and CircleCI">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -3047,20 +2990,20 @@ I hope you're enjoying it as much as I am, and I hope the best is yet to come!</
                 Previous
               </span>
               <div class="md-ellipsis">
-                History Lesson
+                YS and CircleCI
               </div>
             </div>
           </a>
         
         
           
-          <a href="../dec-11/" class="md-footer__link md-footer__link--next" aria-label="Next: The YeS Express">
+          <a href="../../doc/intro/" class="md-footer__link md-footer__link--next" aria-label="Next: Introducing YS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                The YeS Express
+                Introducing YS
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3098,12 +3041,12 @@ I hope you're enjoying it as much as I am, and I hope the best is yet to come!</
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
-        <script src="../../../js/open_in_new_tab.js"></script>
+        <script src="../../js/open_in_new_tab.js"></script>
       
     
   </body>

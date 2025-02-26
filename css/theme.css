@@ -9,6 +9,10 @@
   --md-accent-fg-color:       	#335723;
 }
 
+.success>.admonition-title:before{
+  background-color: #444 !important;
+}
+
 div.code code {
   max-height: 195px;
 }

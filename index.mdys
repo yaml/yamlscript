@@ -8,7 +8,7 @@ hide:
 
 <h1><a href="/about">YS is the best way to work with YAML</a></h1>
 
-!!! note "Zero to YS in 10 seconds!"
+!!! success "Zero to YS in 10 seconds!" 
 
     ```bash
     curl -s https://getys.org/ys | bash
@@ -16,9 +16,19 @@ hide:
     ys --help
     ys -e 'say: "Hello, World!"'
     ```
-    [:octicons-arrow-right-24: Learn More](doc/install.md)
+    [:octicons-arrow-right-24: Learn More](about.md)
 
 ```mdys:cards
+- name: Take Full Control of Your YAML
+  body: |
+    * **YS** (say "[wise](faq.md)") is always 100% valid [YAML](
+      https://yaml.org)
+        * Lint, Query, Validate w/ existing tools
+    * Created by [YAML inventor/maintainer](ingydotnet.md)
+    * [YS has YAML Loaders for all languages](doc/bindings.md)
+    * Same Capabilities, Features, Bugs and Fixes
+    * A Common and Consistent YAML Experience
+
 - name: YAML Made Functional
   type: code:yaml
   body: |
@@ -57,14 +67,6 @@ hide:
     * [Script Automation with YS](doc/examples.md)
     * [Query and Transform YAML data](doc/query.md)
     * [Compile YS to binary executables](doc/binary.md)
-
-- name: Take Full Control of Your YAML
-  body: |
-    * YS is always 100% valid YAML
-        * Lint, Query, Validate w/ existing tools
-    * Created by [YAML inventor/maintainer](ingydotnet.md)
-    * [YS has YAML Loaders for all languages](doc/bindings.md)
-    * Same Capabilities, Features, Bugs and Fixes
 
 - name: Learn YS Today!
   body: |
