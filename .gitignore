@@ -1,5 +1,6 @@
 /*.clj
 /*.md
+*.md.tmp
 /*.yaml
 /*.ys
 /bin/

@@ -22,12 +22,14 @@ BINDINGS := \
     rust \
 
 DIRS := \
+    rapidyaml \
     core \
     libyamlscript \
     $(BINDINGS) \
     ys \
 
 BUILD_DIRS := \
+    rapidyaml \
     libyamlscript \
     go \
     nodejs \
@@ -122,8 +124,10 @@ build: $(BUILD)
 build-%: %
 	$(MAKE) -C $< build
 
+force:
+
 $(BUILD_DOC):
-build-doc: $(BUILD_DOC)
+build-doc: force $(BUILD_DOC)
 	@:
 build-doc-%: %
 	$(MAKE) -C $< build-doc
@@ -292,6 +296,9 @@ sysclean: realclean
 	$(RM) -r $(YS_TMP)
 	$(RM) -r /tmp/yamlscript-* /tmp/ys-local
 ifeq (ingy,$(USER))
+	$(RM) -r $(HOME)/.m2
+endif
+ifeq (jpmag,$(USER))
 	$(RM) -r $(HOME)/.m2
 endif
 

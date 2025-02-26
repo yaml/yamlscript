@@ -42,7 +42,7 @@ So you've seen that to make a `.ys` file executable, you need to add a special
 starter tag to the top of the file:
 
 ```yaml
---- !yamlscript/v0
+--- !YS-v0
 say: "Hello!"
 ```
 
@@ -61,7 +61,7 @@ And there is another symlink called `ys-0` that points to `ys-0.1.26`.
 
 This is all by design.
 
-The leading `0` in `!yamlscript/v0` and in `bin/ys-0` and also in `0.1.26` is
+The leading `0` in `!YS-v0` and in `bin/ys-0` and also in `0.1.26` is
 the YS API version.
 
 When YS v0 is declared stable, there will never be changes that break backwards

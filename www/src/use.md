@@ -17,9 +17,10 @@ have there, but it it also stands on its own in many other contexts.
 
 We hope you will find lots of excellent uses for YS.
 If you discover use cases that we haven't thought of, please let us know!
-We'll showcase them right here.
+We'll showcase them here.
 
 
+<!--
 ## YS for DevOps
 
 * [HelmYS](use/helmys.md) is a project that makes it trivial to use YS instead of
@@ -40,3 +41,4 @@ We'll showcase them right here.
 
 
 ## Advent of Code with YS
+-->

@@ -7,15 +7,8 @@ YS has 3 main things you might want to install:
 1. The `ys` compiler, loader and runner command.
 2. The `libyamlscript.so` shared library needed by a YS loader library for your
    particular programming language.
-3. A YS loader library for your particular programming language, like Python,
-   Rust, NodeJS, etc.
-
-!!! note
-
-    Currently when you install a YS loader library for your
-    particular programming language you must also install the `libyamlscript`
-    shared library of the **exact same version**.
-    Fortunately this is simple.
+3. A [YS loader library](bindings.md) for your particular programming language,
+   like Python, Rust, NodeJS, etc.
 
 
 ### Quick Install of `ys` and `libyamlscript`
@@ -30,16 +23,27 @@ You can install both `ys` and `libyamlscript` with a single CLI command, where:
 Examples:
 ```bash
 $ curl https://yamlscript.org/install | bash
-$ curl https://yamlscript.org/install | VERSION=0.1.47 bash
-$ curl https://yamlscript.org/install | VERSION=0.1.47 LIB=1 bash
+$ curl https://yamlscript.org/install | VERSION=0.1.92 bash
+$ curl https://yamlscript.org/install | VERSION=0.1.92 LIB=1 bash
 $ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
 ```
 
-You'll need to have `PREFIX/bin` in your `PATH`.
-Unless you use the default `PREFIX` you'll need to add `PREFIX/lib` to
-`LD_LIBRARY_PATH` and export that variable.
+For the `ys` command you'll need to have `PREFIX/bin` in your `PATH`, but the
+install script will tell you that.
+
+For `libyamlscript`, unless you use the default `PREFIX` you'll need to add
+`PREFIX/lib` to `LD_LIBRARY_PATH` and export that variable.
+
+!!! note "An even shorter command to install `ys`"
+
+    ```bash
+    $ curl -s https://getys.org/ys | bash
+    ```
+
+    You can use all the same options as above (before `bash`).
 
 
+<!--
 ### Temporary Test Install
 
 If you just want to try out the `ys` command but not install it permanently, you
@@ -52,6 +56,7 @@ This will install the `ys` binary under `/tmp/` and add the directory to you
 current shell's `PATH`.
 It will only be available for the duration of the shell session that you run it
 in.
+-->
 
 
 ### Download and Install
@@ -80,7 +85,7 @@ This will take a few minutes but it requires no dependencies besides `bash`,
 
 !!! note
 
-    On linux it also requires the `libz-dev` package.
+    On Linux it also requires the `libz-dev` package.
 
 
 ### Install a YS Loader Library
@@ -106,3 +111,10 @@ Install the library you want using the normal library installer for your
 language.
 Then install the matching version of the `libyamlscript` shared library as
 described above.
+
+!!! note
+
+    Currently when you install a YS loader library for your
+    particular programming language you must also install the `libyamlscript`
+    shared library of the **exact same version**.
+    Fortunately this is simple.

@@ -5,10 +5,9 @@ A YAMLScript file `some.ys`:
 ```yaml
 !YS-v0:
 
-=>:
-  name =: "World"
-  data =: load("some.yaml")
-  fruit =: data.food.fruit
+name =: "World"
+data =: load("some.yaml")
+fruit =: data.food.fruit
 
 num: 123
 greet:: "$(data.hello.rand-nth()), $name!"

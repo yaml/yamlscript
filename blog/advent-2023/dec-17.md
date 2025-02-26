@@ -129,7 +129,7 @@ write Clojure, so let's just pick a Clojure solution and translate it to YS.
 Here's a quick translation to YS:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn doors():
   reduce:
@@ -162,7 +162,7 @@ to the top of the file.
 The `main` function (if defined) is called automatically when the script is run.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 
 defn main():
   say:
@@ -201,7 +201,7 @@ the YS solutions should go and add this:
 ```text
 =={&lcub;header|YAMLScript}}==
 &lt;syntaxhighlight lang="yaml">
-!yamlscript/v0
+!YS-v0
 
 defn main():
   say:

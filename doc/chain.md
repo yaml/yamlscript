@@ -1,5 +1,5 @@
 ---
-title: Chaining Function Calls
+title: YS Dot Chaining
 ---
 
 One of the most powerful features of YS is the ability to chain function calls
@@ -25,6 +25,7 @@ x.#?                # -> (not (empty? x))
 x.#!                # -> (empty? x)
 x.#++               # -> (inc (count x))
 x.#--               # -> (dec (count x))
+x.@                 # -> (deref x)
 x.>                 # -> (DBG x)
 x.abc.5.foo(22).#++ # -> (inc (count (foo (nth (get+ x 'abc) 5) 22)))
 x.>.abc.>.foo()     # -> (foo (DBG (get+ (DBG x) 'abc)))

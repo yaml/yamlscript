@@ -1,6 +1,6 @@
 # ys --load hearsay.ys | jq -r .
 
-!yamlscript/v0
+!YS-v0
 
 hackers =::
 - ethiraric

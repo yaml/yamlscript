@@ -30,12 +30,14 @@ YS YAML loaders have major advantages over the existing YAML loaders:
 * Same API and capabilities regardless of the programming language.
 * New features and bux fixes released to all languages at the same time.
 * Highly configurable. Limit YAML and YS capabilities to your exact needs.
-* Created by a YAML Specification creator & maintainer.
+* Created by a [YAML Specification](https://yaml.org/spec/1.2.2/)
+  [creator & maintainer](../ingydotnet.md).
 
 
-## Curretly Available Libraries
+## Currently Available Libraries
 
 Currently there are working libraries for:
+
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
 * [Go](https://github.com/yaml/yamlscript-go)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)

@@ -6,6 +6,8 @@ Program in YAML — Code is Data
 
 ## About YS
 
+> See https://yamlscript.org for the most/latest/best information about YS.
+
 YS is a functional programming language with a stylized YAML syntax.
 
 YS can be used for:
@@ -50,15 +52,15 @@ foo: inc(41)
 
 Is it `{"foo": "inc(41)"}` or `{"foo": 42}`?
 
-YS programs must start with a special YAML tag `!yamlscript/v0` to indicate
+YS programs must start with a special YAML tag `!YS-v0` to indicate
 that they have functional capabilities.
 
 ```yaml
-!yamlscript/v0/data
+!YS-v0:
 foo:: inc(41)
 ```
 
-> Note: The `/v0` in the tag indicates the YS API version.
+> Note: The `-v0` in the tag indicates the YS API version.
 This is so that future versions of YS can run programs written to an older API
 version, and also so that older versions of YS don't try to run programs
 written to a newer API version.
@@ -75,7 +77,6 @@ The `ys` command line tool is the easiest way to get started with YS.
 It has these main modes of operation:
 
 * `ys <file>` - Run a YS program
-* `ys --run <file>` - Same as above but explicit
 * `ys --load <file>` - Load a YS program
 * `ys --compile <file>` - Compile a YS program to Clojure
 * `ys --binary <file>` - Compile YS to a native binary executable
@@ -339,7 +340,7 @@ https://github.com/yaml/yamlscript/tree/main/Contributing.md) for more details.
 
 ## Copyright and License
 
-Copyright 2022-2024 by Ingy döt Net
+Copyright 2022-2025 by Ingy döt Net
 
 This is free software, licensed under:
 

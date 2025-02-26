@@ -38,7 +38,7 @@ Consider this YS program:
 
 ```yaml
 # hw.ys
-!yamlscript/v0
+!YS-v0
 println: 'Hello, world!'
 ```
 
@@ -123,7 +123,7 @@ It also happens to be EDN, which is Clojure's native data format.
 
 !!! note
 
-    The `-md` option tells `ys` not to add the `!yamlscript/v0` tag that it
+    The `-md` option tells `ys` not to add the `!YS-v0` tag that it
     usually does with `-e` to make your YS life easier.
     We'll learn more about `-m` another time.
 

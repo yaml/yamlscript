@@ -1,7 +1,11 @@
 - use.md
+
 - DevOps:
-  - use/helmys.md
+  - doc/helmys.md
+
 - CI/CD:
   - use/cicd.md
   - use/gha.md
   - use/circleci.md
+
+- use/hacks.md

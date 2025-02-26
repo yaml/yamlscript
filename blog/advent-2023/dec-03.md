@@ -153,14 +153,14 @@ With great SuperPowers comes SuperResponsibility.
 YS won't use its SuperPowers unless you ask it to.
 You may ask it (politely) in one of these ways:
 
-* Start the YS with the `!yamlscript/v0` tag
+* Start the YS with the `!YS-v0` tag
   * Words are commands by default
-* Start the YS with the `!yamlscript/v0/data` tag
+* Start the YS with the `!YS-v0:` tag
   * Words are data by default
 * Use a `ys-0` shebang line like: `#!/usr/bin/env ys-0`
-  * Implicitly defaults to `!yamlscript/v0`
+  * Implicitly defaults to `!YS-v0`
 * Use the `-e` option for YS one-liners
-  * Imlicitly defaults to `!yamlscript/v0` (for one-liner convenience)
+  * Imlicitly defaults to `!YS-v0` (for one-liner convenience)
 
 After that you are good to go!
 
@@ -179,7 +179,7 @@ We can pull data from these files into our YAML dynamically:
 
 ```yaml
 # file1.ys
-!yamlscript/v0/data
+!YS-v0:
 
 key1: val1
 key2: ! load('map1.yaml')
@@ -205,20 +205,20 @@ Well, it depends.
 It could be a command to print the number 123 as text to the console.
 Or it could be a mapping pair with the key `say` and the value `123`.
 The starting tag tells us which it is.
-The `!yamlscript/v0` tag means that we start off things in a state where plain
+The `!YS-v0` tag means that we start off things in a state where plain
 (unquoted) YAML scalars are code.
-OTOH, with `!yamlscript/v0/data` these scalars are data like in normal YAML.
+OTOH, with `!YS-v0:` these scalars are data like in normal YAML.
 
 The `!` tag is how we switch back and forth (toggle) between these two states.
 If you have existing YAML files and you want to use a couple of YS functions in
-them, start them with `!yamlscript/v0/data` and then use `!` tags before the
+them, start them with `!YS-v0:` and then use `!` tags before the
 functional parts.
 
 Another way to accomplish the same result is:
 
 ```yaml
 # file2.ys
-!yamlscript/v0
+!YS-v0
 
 map1 =: load('map1.yaml')
 
@@ -247,7 +247,7 @@ kids: `merge` and `concat`.
 
 ```yaml
 # file3.ys
-!yamlscript/v0/data
+!YS-v0:
 
 my-map: !
   merge:
@@ -279,7 +279,7 @@ Well... YS gives you more.
 Let's end this day by making that last YS file even cooler than Rudolph's toes!
 
 ```yaml
-!yamlscript/v0/data
+!YS-v0:
 
 my-map: ! load('map1.yaml') + load('map2.yaml')
 my-seq: ! load('seq1.yaml') + load('seq2.yaml')

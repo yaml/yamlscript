@@ -36,7 +36,7 @@ ys --compile --debug-stage=all -e 'name =: "Clojure"' -e 'say: "Hello, $name!"'
 The one line program is equivalent to the file containing:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 name =: "Clojure"
 say: "Hello, $name!"
 ```
@@ -46,7 +46,7 @@ Let's run the command now (but we'll use the shorter options):
 ```bash
 $ ys -c -e 'name =: "Clojure"' -e 'say: "Hello, $name!"' -d
 *** parse     *** 0.127737 ms
-({:+ "+MAP", :! "yamlscript/v0/code"}
+({:+ "+MAP", :! "YS-v0"}
  {:+ "=VAL", := "name ="}
  {:+ "=VAL", :$ "Clojure"}
  {:+ "=VAL", := "say"}
@@ -55,7 +55,7 @@ $ ys -c -e 'name =: "Clojure"' -e 'say: "Hello, $name!"' -d
  {:+ "-DOC"})
 
 *** compose   *** 0.009495 ms
-{:! "yamlscript/v0/code",
+{:! "YS-v0",
  :% [{:= "name ="} {:$ "Clojure"} {:= "say"} {:$ "Hello, $name!"}]}
 
 *** resolve   *** 0.073969 ms
@@ -151,7 +151,7 @@ YS (currently) doesn't care about the first 4 events, so it just ignores them.
 That leaves use with a mapping containing 2 key/value pairs:
 
 ```clojure
-[{:+ "+MAP", :! "yamlscript/v0"}
+[{:+ "+MAP", :! "YS-v0"}
  {:+ "=VAL", := "name ="}
  {:+ "=VAL", :$ "Clojure"}
  {:+ "=VAL", := "say"}
@@ -187,7 +187,7 @@ The second transformer is called the composer (in the `yamlscript.composer`
 library).
 
 ```clojure
-{:! "yamlscript/v0",
+{:! "YS-v0",
  :% [{:= "name ="} {:$ "Clojure"} {:= "say"} {:$ "Hello, $name!"}]}
 ```
 

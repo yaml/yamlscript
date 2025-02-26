@@ -1,5 +1,5 @@
 ---
-title: The Clojure Programming Language
+title: Clojure Basics
 ---
 
 YS as a technology has many goals.

@@ -157,7 +157,7 @@ There we go! We got our fruits!
 
 So what did we do here?
 We added 2 things:
-* A `!yamlscript/v0/data` tag at the top
+* A `!YS-v0:` tag at the top
 * A `!` tag before the `load` function call
 
 We won't get into the details of what these tags mean today, but you'll learn

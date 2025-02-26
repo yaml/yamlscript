@@ -42,7 +42,7 @@ $ ys hello.ys -c
 {"say" "Hello, world!"}
 ```
 
-Oh snap! We forgot to start the program with `!yamlscript/v0`.
+Oh snap! We forgot to start the program with `!YS-v0`.
 The program started of in `bare` mode, which is just a YAML mapping.
 
 We also could have run the program with `--print` to see what it evaluated to:
@@ -55,7 +55,7 @@ $ ys hello.ys -p
 Same thing. Let's fix the program now:
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 say: "Hello, world!"
 ```
 now:
@@ -72,7 +72,7 @@ Let's write a program to dynamically generate a list of numbers:
 
 ```yaml
 # map.ys
-!yamlscript/v0
+!YS-v0
 map inc: [1 2 3]
 ```
 
@@ -98,7 +98,7 @@ $ ys map.ys -d
 ```txt
 $ ys map.ys -l -d
 *** parse output ***
-({:+ "+MAP", :! "yamlscript/v0"}
+({:+ "+MAP", :! "YS-v0"}
  {:+ "=VAL", := "map inc"}
  {:+ "+SEQ", :flow true}
  {:+ "=VAL", := "1 2 3"}
@@ -106,7 +106,7 @@ $ ys map.ys -l -d
  {:+ "-MAP"})
 
 *** compose output ***
-{:! "yamlscript/v0", :% [{:= "map inc"} {:-- [{:= "1 2 3"}]}]}
+{:! "YS-v0", :% [{:= "map inc"} {:-- [{:= "1 2 3"}]}]}
 
 Compile error: Sequences (block and flow) not allowed in code mode
 ```
@@ -135,7 +135,7 @@ In YS when we want a ysexpr string that starts with one of these characters, we
 can escape it with a plus `+`.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 map inc: +[1 2 3]
 ```
 
@@ -271,7 +271,7 @@ Here's a contrived example that passes data through a pipeline of functions:
 
 ```yaml
 # pipeline.ys
-!yamlscript/v0
+!YS-v0
 ->> (1..10):
   map: inc
   filter: \(= 0 (mod % 2))  # odd?
@@ -296,7 +296,7 @@ looks like after a particular transformation or maybe after several of them.
 I almost always us `WWW` for this.
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 ->> (1..10):
   WWW: "before map"
   map: inc

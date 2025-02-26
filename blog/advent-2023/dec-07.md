@@ -17,8 +17,8 @@ On Tuesday you learned how to install YS.
 Reminder, here's the quick way to install the latest version:
 
 ```bash
-$ curl https://yamlscript.org/install | PREFIX=~/.yamlscript bash
-$ export PATH=$HOME/.yamlscript/bin:$PATH
+$ curl https://yamlscript.org/install | PREFIX=~/.ys bash
+$ export PATH=$HOME/.ys/bin:$PATH
 $ ys --version
 YS (YAMLScript) v0.1.92
 ```
@@ -89,7 +89,7 @@ This can come from 3 different places:
   If no file or `-e` options are specified, `ys` will check to see if there is
   data on stdin.
   That means you can leave off the `-` and pipe data into `ys` like this:
-  `echo $'!yamlscript/v0\nsay: "Hello"' | ys`.
+  `echo $'!YS-v0\nsay: "Hello"' | ys`.
   Of course, it doesn't hurt to specify the `-` anyway.
 
 
@@ -171,14 +171,14 @@ And to see all 7 compilation stages:
 ```bash
 $ ys -c -e 'say: "Hello"' -d
 *** parse     *** 0.181519 ms
-({:+ "+MAP", :! "yamlscript/v0/code"}
+({:+ "+MAP", :! "YS-v0"}
  {:+ "=VAL", := "say"}
  {:+ "=VAL", :$ "Hello"}
  {:+ "-MAP"}
  {:+ "-DOC"})
 
 *** compose   *** 0.005334 ms
-{:! "yamlscript/v0/code", :% [{:= "say"} {:$ "Hello"}]}
+{:! "YS-v0", :% [{:= "say"} {:$ "Hello"}]}
 
 *** resolve   *** 0.055135 ms
 {:pairs [{:exp "say"} {:vstr "Hello"}]}

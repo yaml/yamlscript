@@ -12,7 +12,7 @@ polymorphic and do things according to the types of the operands.
 
 
 ```yaml
-!yamlscript/v0
+!YS-v0
 s =: ('foo' + 'bar')  # => 'foobar'
 s =: (+ 'foo' 'bar')  # ERROR - Clojure + only works on numbers
 ```

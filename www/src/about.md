@@ -29,7 +29,7 @@ The more commonly needed capabilities include:
 
 Here's file that demonstrates some of the capabilities of YS:
 ```yaml
-!YS v0:  # Allow functional capabilities in this YAML document
+!YS-v0:  # Allow functional capabilities in this YAML document
 
 # Define a local function inline:
 ::

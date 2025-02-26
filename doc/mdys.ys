@@ -1,4 +1,4 @@
-!yamlscript/v0
+!YS-v0
 
 defn mdys-fmt-fns(o):
   str "\n":
@@ -19,11 +19,12 @@ defn mdys-stdlib(o):
 defn fmt-fns(body):
   reduce-kv _ '' body:
     fn(md fn-sig desc):
+      sig =: fn-sig.replace(/\) / ') → ')
       desc =:
         desc.has?(\\|).if("$desc\n" desc)
         .replace(/\b(C[CDS])\/(\S+)/ clojure-docs-link)
       md +: |
-        * `$fn-sig` — $(desc.replace(/\| / "\n\n    "))
+        * `$sig` — $(desc.replace(/\| / "\n\n    "))
 
 defn clojure-docs-link([_ type name]):
   func =: name.replace(/\?$/ '_q')
