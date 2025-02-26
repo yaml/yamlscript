@@ -6,9 +6,16 @@ hide:
 - toc
 ---
 
-<h1><a href="/about">YS is the best way to work with YAML</a></h1>
+<h1 class="headline">YS <small><a href="/faq/">(say "wise")</a></small> is the best way to
+work with YAML</h1>
 
-!!! success "Zero to YS in 10 seconds!" 
+<div class="subtitle" markdown>
+<a href="/about/">
+:octicons-arrow-right-24:
+Learn More About YS</a></div>
+
+<!--
+!!! success "Zero to YS in 10 seconds!"
 
     ```bash
     curl -s https://getys.org/ys | bash
@@ -17,17 +24,18 @@ hide:
     ys -e 'say: "Hello, World!"'
     ```
     [:octicons-arrow-right-24: Learn More](about.md)
+-->
 
 ```mdys:cards
 - name: Take Full Control of Your YAML
   body: |
-    * **YS** (say "[wise](faq.md)") is always 100% valid [YAML](
-      https://yaml.org)
+    * **YS** is always 100% valid [YAML](https://yaml.org)
         * Lint, Query, Validate w/ existing tools
     * Created by [YAML inventor/maintainer](ingydotnet.md)
     * [YS has YAML Loaders for all languages](doc/bindings.md)
     * Same Capabilities, Features, Bugs and Fixes
-    * A Common and Consistent YAML Experience
+    * A Common and Consistent YAML Experience  
+      (with or without using YS logic features)
 
 - name: YAML Made Functional
   type: code:yaml
@@ -45,21 +53,22 @@ hide:
     :when ENV.DEBUG_VARS::
       debug:: vars
 
+- name: Simplify your existing YAML
+  body: |
+    * Refactor, Deduplicate, DRY
+    * Over 1000 standard functions built in
+    * Dozens of built in libraries
+    * External libraries as well
+    * Define your own functions and libraries
+    * Limit YS capabilities to your exact needs
+
 - name: Plays Well with DevOps Tools
   body: |
     * [HelmYS for Kubernetes Helm charts](doc/helmys.md)
     * CI/CD, Docker, Ansible, etc.
     * Your existing YAML files are valid YS!
-    * Take them to the next level
-
-- name: Simplify your existing YAML
-  body: |
-    * Refactor, Deduplicate, DRY
-    * 100s of standard functions built in
-    * Dozens of built in libraries
-    * External libraries as well
-    * Define your own functions and libraries
-    * Limit the capabilities to your exact needs
+    * [Take them to the next level](
+      doc/ys4yaml.md)
 
 - name: Import, Transform, Interpolate and More
   body: |
@@ -76,6 +85,18 @@ hide:
     * [YS Documentation](https://yamlscript.org/doc)
 ```
 
+```mdys:cards
+- name: '"Zero to YS in 10 seconds!"'
+  icon: material-clock-fast
+  body: |
+    ```bash
+    curl -s https://getys.org/ys | bash
+    # Adjust PATH if asked to.
+    ys --help
+    ys -e 'say: "Hello, World!"'
+    ```
+```
+
 ```mdys:eval
 defn mdys-cards(o): |
   <div class="grid cards" markdown>
@@ -90,9 +111,10 @@ defn mdys-card(o):
     if type == 'code:yaml':
       then: "```yaml {.code}\n$body\n```"
       else: body
+  icon =: o.icon || "material-owl"
 
   card =:
-    ":material-owl:{.lg .middle} __$(o.name)__\n\n\
+    ":$icon:{.lg .middle} __$name__\n\n\
      ----\n\n$body\n"
 
   card =:

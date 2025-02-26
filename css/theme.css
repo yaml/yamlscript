@@ -2,11 +2,29 @@
  * https://github.com/squidfunk/mkdocs-material/blob/master/src/templates/assets/stylesheets/main/_colors.scss
  * https://www.color-hex.com/color-palette/1055765
  */
+
 :root  > * {
   --md-primary-fg-color:        #335723;
   --md-primary-bg-color:        #e0e0e0;
   --md-typeset-a-color:       	#9f4118;
   --md-accent-fg-color:       	#335723;
+}
+
+.headline {
+  color: var(--md-primary-fg-color) !important;
+  margin-bottom: 15px !important;
+  a {
+    color: var(--md-primary-fg-color) !important;
+  }
+}
+
+.subtitle {
+  margin-left: 30px !important;
+  margin-bottom: 30px !important;
+}
+
+small {
+  font-style: italic;
 }
 
 .success>.admonition-title:before{
