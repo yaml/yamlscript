@@ -27,6 +27,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     # Don't update common/vars.mk
     # - common/vars.mk
     - core/src/yamlscript/runtime.clj
+    - doc/install.md
     - doc/run-ys.md
     - doc/ys.md
     - go/ReadMe.md
@@ -48,6 +49,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - www/src/index.mdys
     - www/src/install
     - www/src/run-ys
+    - www/src/use/cicd.md
     - blog/advent-2023/dec-07.md
     - ys/src/yamlscript/cli.clj
     - ys/test/cli-usage.t
