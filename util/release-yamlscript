@@ -258,7 +258,10 @@ defn step-10(ctx):
 defn step-11(ctx):
   o: 'Step 11) Publish the yamlscript.org website'
 
-  run: 'make -C www realclean publish'
+  run: 'rm -fr website'
+  run: 'git worktree add -f website'
+  run: 'git -C website rebase main'
+  run: 'make -C website/www realclean publish website=live'
 
 
 #------------------------------------------------------------------------------
