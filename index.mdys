@@ -6,8 +6,8 @@ hide:
 - toc
 ---
 
-<h1 class="headline">YS <small><a href="/faq/">(say "wise")</a></small> is the best way to
-work with YAML</h1>
+<h1 class="headline">YS <small><a href="/faq/">(say "wise")</a></small> is the
+best way to work with YAML</h1>
 
 <div class="subtitle" markdown>
 <a href="/about/">
@@ -33,8 +33,8 @@ Learn More About YS</a></div>
         * Lint, Query, Validate w/ existing tools
     * Created by [YAML inventor/maintainer](ingydotnet.md)
     * [YS has YAML Loaders for all languages](doc/bindings.md)
-    * Same Capabilities, Features, Bugs and Fixes
-    * A Common and Consistent YAML Experience  
+    * Same Capabilities, Features, Bugs & Fixes
+    * A Common & Consistent YAML Experience  
       (with or without using YS logic features)
 
 - name: YAML Made Functional
