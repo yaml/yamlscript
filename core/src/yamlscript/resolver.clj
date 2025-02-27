@@ -116,13 +116,6 @@
 (def re-call-tag (re/re #"(?::(?:$fsym|$ysym)\*?)+:?"))
 #_(re-matches re-call-tag ":bar:zoo")
 
-(comment
-  (YSC "
-foo: !:inc: 1 + 2
-bar:: !:inc 3 + 4
-")
-  )
-
 (defn check-double-colon-with-tag [key val]
   (let [key-text (:= key)
         val-tag (:! val)

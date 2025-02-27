@@ -15,8 +15,8 @@ HELP =: |
   Options:
 
     -e, --eval YSEXPR        Evaluate a YS expression
-                             multiple -e values joined by newline
-    -l, --load               Output (compact) JSON of YS evaluation
+                               multiple -e values are joined by newline
+    -l, --load               Output the (compact) JSON of YS evaluation
     -f, --file FILE          Explicitly indicate input file
 
 #   -c, --compile            Compile YS to Clojure

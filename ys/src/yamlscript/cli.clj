@@ -75,12 +75,12 @@
   [;
    ["-e" "--eval YSEXPR"
     "Evaluate a YS expression
-                           multiple -e values joined by newline"
+                             multiple -e values are joined by newline"
     :default []
     :update-fn conj
     :multi true]
    ["-l" "--load"
-    "Output (compact) JSON of YS evaluation"]
+    "Output the (compact) JSON of YS evaluation"]
    ["-f" "--file FILE"
     "Explicitly indicate input file"]
 
@@ -231,24 +231,29 @@ Options:
         help (str/replace help #"    ([A-Z])" #(second %1))]
     (println help)))
 
-(defn add-ecode-mode-tag [opts ecode]
+(defn add-ecode-mode-tag
+  "When we use 'ys -e' we don't want to require the leading !YS-v0 tag.
+   We can assume code mode by default.
+   We need to check if -m was used or if there is already a tag."
+  [opts ecode]
   (let [mode (:mode opts)
         code (str/join ""
                [(cond
                   (or
-                    (re-find #"^(?:---[ \n])?!(?:yamlscript|YS)" ecode)
+                    (re-find #"(?m)^---\s" ecode)
+                    (re-find #"(?m)^(?:---\s+)?!(?:yamlscript/v0|YS-v0)" ecode)
                     (:clojure opts))
                   ""
                   (or (= "c" mode) (= "code" mode))
-                  "--- !code\n"
+                  "--- !YS-v0\n"
                   (or (= "d" mode) (= "data" mode))
-                  "--- !data\n"
+                  "--- !YS-v0:\n"
                   (or (= "b" mode) (= "bare" mode))
-                  "--- !bare\n"
+                  "---\n"
                   (:load opts)
                   ""
                   :else
-                  "--- !code\n")
+                  "--- !YS-v0\n")
                 ecode])
         code (if (or (:clojure opts)
                    (re-find #"^---(?:[ \n]|$)" code))
@@ -292,12 +297,6 @@ Options:
             (binding [*out* *err*]
               (println "Warning: No input found.")))
         code (str f-code e-code)
-        code (if (and
-                   e-code
-                   (not (re-find #"(?m)^(?:--- +)?!(?:yamlscript|YS)" code))
-                   (not (:clojure opts)))
-               (str "!yamlscript/v0/bare\n" code)
-               code)
         file (or file "NO-NAME")]
     [code file (:load opts)]))
 

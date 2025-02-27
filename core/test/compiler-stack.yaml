@@ -388,19 +388,6 @@
     {"str" "foo bar", "num" (inc 41), "bar" (load "bar.yaml")}
 
 
-- name: Deprecated data mode tag !yamlscript/v0/
-  yamlscript: |
-    !yamlscript/v0/
-    str: foo bar
-    num: ! inc(41)
-  resolve: |
-    {:map
-     [{:str "str"}
-      {:str "foo bar"}
-      {:str "num"}
-      {:expr "inc(41)"}]}
-
-
 - name: Shebang line with ys-0 implies !yamlscript/v0
   yamlscript: |
     #!/usr/bin/env ys-0
@@ -1523,6 +1510,20 @@
     !yamlscript/v0
     x =: 1
     --- !code
+    y =: 2
+    --- !data
+    z:: x + y
+  clojure: |
+    (def x 1)
+    (def y 2)
+    {"z" (add+ x y)}
+
+
+- name: Support top level !code and !data tags with '!YS-v0'
+  yamlscript: |
+    !YS-v0
+    --- !code
+    x =: 1
     y =: 2
     --- !data
     z:: x + y

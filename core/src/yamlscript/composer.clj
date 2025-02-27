@@ -44,83 +44,79 @@
 ;; TODO:
 ;; * Support function call tags at top level: !yamlscript/v0/data;merge*:
 
+(defn get-ys-tag [node]
+  (if-let [tag (:! node)]
+    (cond
+      (or (re-find #"^YS-v0:?$" tag)
+        (re-find #"^yamlscript/v0(?:/code|/data|/bare|:)?$" tag)
+        (re-find #"^(?:code|data|bare)$" tag)) [tag (dissoc node :!)]
+      (re-find #"^tag:yaml.org,2002:" tag) [nil node]
+      :else (die "Invalid tag: !" tag))
+    [nil node]))
+
 (defn compose
   "Compose YAML parse events into a tree."
   ([events]
    (compose events {:first true, :last true, :init false}))
   ([events ctx]
    (let [node (or
-                (->
-                  events
-                  compose-events
-                  first)
-                ;; Empty stream
-                {:+ "code", := ""})
-         ys-tag (:! node)
-         node (dissoc node :!)
-         node (case ys-tag
-                "YS-v0" (assoc node :+ "code")
-                "YS-v0:" (assoc node :+ "data")
-                "yamlscript/v0" (assoc node :+ "code")
-                "yamlscript/v0:" (assoc node :+ "data")
-                "yamlscript/v0/" (assoc node :+ "data")  ; deprecated
-                "yamlscript/v0/bare" (assoc node :+ "bare")
-                "yamlscript/v0/code" (assoc node :+ "code")
-                "yamlscript/v0/data" (assoc node :+ "data")
-                (let [key1-tag (get-in node [:% 0 :!])
-                      key1-val (get-in node [:% 0 :=])
-                      val1 (get-in node [:% 1])]
-                  (if (and
-                        (= "YS" key1-tag)
-                        (= "v0" key1-val))
-                    (if (= {:= ""} val1)
-                      (let [node (assoc-in node [:%]
-                                   (vec (drop 2 (get-in node [:%]))))]
-                        (merge {:+ "bare"} node))
-                      ;; TODO Get YS config from value
-                      (die "Values not yet supported for '!YS v0:' key"))
-                    node)))
+                (-> events compose-events first)
+                {:+ "code", := ""})  ;; Empty stream
+         [ys-tag node] (get-ys-tag node)
 
-         node (if (and
-                    (:+ node)
-                    (= "" (:= node)))
-                (assoc node :+ "code")
-                node)
+         mode (fn
+                ([mode] (assoc node :+ mode)))
 
-         mode (fn [mode]
-                (when-not (:init ctx)
-                  (die "YS tags not allowed w/o a YS tag at the top"))
-                (assoc node :+ mode))
+         ys-pair? (fn [node]
+                    (let [key1-tag (get-in node [:% 0 :!])
+                          key1-val (get-in node [:% 0 :=])
+                          val1 (get-in node [:% 1])]
+                      (if (and (= "YS" key1-tag) (= "v0" key1-val))
+                        (if (= {:= ""} val1)
+                          true
+                          (die "Values not yet supported for '!YS v0:' key"))
+                        false)))
 
-         node (if (not (:first ctx))
-                (cond
-                  (= "code" ys-tag) (mode "code")
-                  (= "data" ys-tag) (mode "data")
-                  (= "bare" ys-tag) (mode "bare")
-                  (= "yaml" ys-tag) (mode "bare")
-                  (= "yamlscript/v0" ys-tag) (mode "code")
-                  (= "yamlscript/v0:" ys-tag) (mode "data")
-                  (= "yamlscript/v0/data" ys-tag) (mode "data")
-                  ys-tag (die "Invalid tag: !" ys-tag)
-                  :else node)
-                node)
-         ctx (if (:+ node) (assoc ctx :init true) ctx)
+         node (if ys-tag
+                (if-not (:init ctx)
+                  (case ys-tag
+                    "YS-v0" (mode "code")
+                    "YS-v0:" (mode "data")
+                    "yamlscript/v0" (mode "code")
+                    "yamlscript/v0:" (mode "data")
+                    "yamlscript/v0/bare" (mode "bare")
+                    "yamlscript/v0/code" (mode "code")
+                    "yamlscript/v0/data" (mode "data")
+                    (die "Invalid tag: !" ys-tag))
+                  (case ys-tag
+                    "code" (mode "code")
+                    "data" (mode "data")
+                    "bare" (mode "bare")
+                    "yaml" (mode "bare")
+                    "YS-v0" (mode "code")
+                    "YS-v0:" (mode "data")
+                    "yamlscript/v0" (mode "code")
+                    "yamlscript/v0:" (mode "data")
+                    "yamlscript/v0/data" (mode "data")
+                    (if ys-tag
+                      (die "Invalid tag: !" ys-tag)
+                      node)))
+                (if (ys-pair? node)
+                  (let [node (mode "bare")]
+                    (assoc-in node [:%]
+                      (vec (drop 2 (get-in node [:%])))))
+                  node))
+
+         ctx (if (re-find #"^(?:code|data|bare)$" (str (:+ node)))
+               (assoc ctx :init true)
+               ctx)
          node (if (:+ node) node (assoc node :+ "bare"))
-         node (if (= node {:+ "bare", :% []})
+         node (if (or
+                    (= node {:+ "bare", :% []})
+                    (= node {:+ "data", := ""}))
                 {:+ "code", := ""}
                 node)]
      [node ctx])))
-
-(comment
-  (YSC0 "
-!YS-v0:
---- !code
-x =: 1
-y =: 2
---- !data
-z:: x + y
-")
-  )
 
 (defn compose-mapping [events]
   (let [[event & events] events
@@ -194,5 +190,5 @@ z:: x + y
     "=ALI" (compose-alias events)
     []))
 
-(comment)
-  
+(comment
+  )
