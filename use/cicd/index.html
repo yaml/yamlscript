@@ -3093,7 +3093,7 @@ but you need to make sure that the YAML files are always up to date.</p>
 end in <code>.ys</code> from the corresponding <code>.yaml</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">SHELL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>bash
 
-<span class="nv">YS_VERSION</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="m">0</span>.1.92
+<span class="nv">YS_VERSION</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="m">0</span>.1.93
 <span class="nv">YS</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>/tmp/bin/ys-<span class="k">$(</span>YS_VERSION<span class="k">)</span>
 <span class="nv">YS_FILES</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.ys&#39;</span><span class="k">)</span>
 <span class="nv">YAML_FILES</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>YS_FILES:.ys<span class="o">=</span>.yaml<span class="k">)</span>
