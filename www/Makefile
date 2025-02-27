@@ -56,17 +56,14 @@ DEPS := \
 default::
 	@printf '%s\n' $(MD_FILES)
 
-x:
-	@echo $(MDYSMD_FILES)
-
 deps: line1 $(DEPS) line2
 
 ifeq (live,$(website))
+  export YS_WWW_LIVE := true
   YS_WWW_DOMAIN := yamlscript.org
   YS_WWW_REMOTE := origin
   YS_WWW_BRANCH ?= gh-pages
 else ifeq (stage,$(website))
-  export YS_WWW_DEV := true
   YS_WWW_DOMAIN := stage.yamlscript.org
   YS_WWW_REMOTE := stage
   YS_WWW_BRANCH := site
@@ -151,7 +148,7 @@ clean::
 	killall watchmedo || true
 	$(RM) src/index.md src/faq.md
 	$(RM) $(CONFIG) sample $T material
-	$(RM) -r site src/doc src/blog
+	$(RM) -r site src/doc src/blog .cache
 
 realclean:: clean
 	$(RM) -r $(PYTHON_VENV)
@@ -212,5 +209,5 @@ sample:
 line1 line2:
 	@echo =======================================================================
 
-# yamlscript-1920x1080.png: src/images/yamlscript.svg
+# yamlscript-1920x1080.png: src/image/yamlscript.svg
 # 	svgexport $< $@ 1920:1080 pad

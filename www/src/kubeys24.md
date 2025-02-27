@@ -1,11 +1,12 @@
 ---
 title: KubeCon 2024 YS Tutorial Info Page
+talk: 0
 ---
 
 <!--
 # https://yamlscript.org/kubeys24
 
-![YS KubeCon 2024 Tutorial](/images/kubeys24.png "YS KubeCon 2024 Tutorial")
+![YS KubeCon 2024 Tutorial](/image/kubeys24.png "YS KubeCon 2024 Tutorial")
 -->
 
 This page has info from Ingy döt Net's

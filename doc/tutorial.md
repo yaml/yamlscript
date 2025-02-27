@@ -1,5 +1,6 @@
 ---
 title: YS Syntax Basics
+talk: 0
 ---
 
 

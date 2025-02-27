@@ -1,5 +1,6 @@
 ---
 title: YS Use Cases
+talk: 0
 ---
 
 The primary goal of the YS project is to make YAML be able to do more.
@@ -23,9 +24,9 @@ We'll showcase them here.
 <!--
 ## YS for DevOps
 
-* [HelmYS](use/helmys.md) is a project that makes it trivial to use YS instead of
-  (or along side of) Helms's standard Go template language, when templating your
-  Kubernetes Helm charts.
+* [HelmYS](use/helmys.md) is a project that makes it trivial to use YS instead
+  of (or along side of) Helms's standard Go template language, when templating
+  your Kubernetes Helm charts.
 
 
 ## YS for CI/CD

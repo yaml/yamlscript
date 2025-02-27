@@ -1,5 +1,6 @@
 ---
 title: Contribution Guidelines
+talk: 0
 ---
 
 ## Please and Thank You

@@ -1,5 +1,6 @@
 ---
 title: YS Syntax
+talk: 0
 ---
 
 

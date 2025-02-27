@@ -48,7 +48,7 @@ nav:
 - Documentation:: load('config/doc.yaml')
 - Blog:: load('config/blog.yaml')
 - Press: press.md
-- Community:: load('config/community.yaml')
+- Get Involved:: load('config/community.yaml')
 - FAQ: faq.md
 
 # - Playground: play.md # load('config/play.yaml')
@@ -68,6 +68,8 @@ extra:
   analytics:
     provider: google
     property: G-VN2VN7ESCQ
+  talk_uri:: "$(Meta.devel.git)/discussions"
+  talk_new_id: 221
 
 strict: false
 
@@ -86,16 +88,16 @@ plugins:
 - search
 - link-marker:
     icon_external_link: |
-      <svg xmlns="http://www.w3.org/2000/svg"
-           width="12" height="12" viewBox="0 0 12 12">
-          <title>External link</title>
-          <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-                3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-          /></svg>
-
+      <img src="/image/external-link.svg"
+           class="external-link"
+           alt="External link">
 - open-in-new-tab
 - redirects:
     redirect_maps:: load('config/redirect.yaml')
+- social:
+    enabled: +!ENV [YS_WWW_LIVE, false]
+    cards_layout_options:
+      background_color: '#335723'
 
 # - awesome-pages
 
@@ -104,7 +106,7 @@ plugins:
 #     post_date_format: full
 
 # - rss:
-#     # enabled: +!ENV [YS_WWW_DEV, false]
+#     enabled: +!ENV [YS_WWW_LIVE, false]
 #     match_path: blog/.*
 #     date_from_meta:
 #       as_creation: date

@@ -1,5 +1,6 @@
 ---
 title: About Ingy döt Net
+talk: 0
 ---
 
 Ingy döt Net is a software developer and speaker.

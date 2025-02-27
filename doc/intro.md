@@ -1,5 +1,6 @@
 ---
 title: Introducing YS
+talk: 0
 ---
 
 YS is a new approach to providing the extra capabilities that YAML users have

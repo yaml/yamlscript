@@ -1,5 +1,6 @@
 babel==2.16.0
 bracex==2.5.post1
+cairosvg==2.7.1
 certifi==2024.12.14
 charset-normalizer==3.4.1
 click==8.1.8
@@ -25,6 +26,7 @@ natsort==8.4.0
 packaging==24.2
 paginate==0.5.7
 pathspec==0.12.1
+pillow==11.1.0
 platformdirs==4.3.6
 Pygments==2.19.1
 pymdown-extensions==10.14
