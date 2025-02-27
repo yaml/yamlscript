@@ -284,7 +284,7 @@ endif
 $(DISTCLEAN):
 distclean: realclean $(DISTCLEAN)
 	$(MAKE) -C www $@
-	$(RM) -r bin/ lib/
+	$(RM) -r bin/ lib/ website/
 distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/.cache .lsp/
