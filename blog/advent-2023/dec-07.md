@@ -20,7 +20,7 @@ Reminder, here's the quick way to install the latest version:
 $ curl https://yamlscript.org/install | PREFIX=~/.ys bash
 $ export PATH=$HOME/.ys/bin:$PATH
 $ ys --version
-YS (YAMLScript) v0.1.92
+YS (YAMLScript) v0.1.93
 ```
 
 The best first command to run is `ys --help`:
@@ -28,7 +28,7 @@ The best first command to run is `ys --help`:
 ```bash
 $ ys --help
 
-ys - The YS Command Line Tool - v0.1.92
+ys - The YS Command Line Tool - v0.1.93
 
 Usage: ys [<option...>] [<file>]
 

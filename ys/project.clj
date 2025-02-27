@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2025 Ingy dot Net
 
-(defproject yamlscript.cli "0.1.92-SNAPSHOT"
+(defproject yamlscript.cli "0.1.93-SNAPSHOT"
   :description "The YS Command Line Tool"
 
   :url "https://github.com/yaml/yamlscript"
@@ -25,7 +25,7 @@
    [org.babashka/sci "0.8.41"]
    [babashka/process "0.5.21"]
    [clj-commons/clj-yaml "1.0.27"]
-   [yamlscript/core "0.1.92"]]
+   [yamlscript/core "0.1.93"]]
 
   :main ^:skip-aot yamlscript.cli
 

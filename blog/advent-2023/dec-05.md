@@ -104,7 +104,7 @@ $ ys --help
 It should display:
 
 ```text
-ys - The YS Command Line Tool - v0.1.92
+ys - The YS Command Line Tool - v0.1.93
 
 Usage: ys [<option...>] [<file>]
 

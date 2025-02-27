@@ -93,11 +93,11 @@ If we run it with `bash`:
 
 ```bash
 $ bash rot13.ys I Love YS
-Installing the YS CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.92' now...
+Installing the YS CLI '/tmp/yamlscript-run-ys/bin/ys-0.1.93' now...
 Ctl-C to abort
 See https://yamlscript.org/doc/run-ys for more information.
 
-Installed /tmp/yamlscript-run-ys/bin/ys - version 0.1.92
+Installed /tmp/yamlscript-run-ys/bin/ys - version 0.1.93
 --------------------------------------------------------------------------------
 V Ybir LF
 ```
@@ -166,7 +166,7 @@ version of the `ys` interpreter without having to install it first.
 Just use the `YS_VERSION` environment variable to specify the version you want:
 
 ```bash
-$ YS_VERSION=0.1.92 bash my-program.ys arg1 arg2 ...
+$ YS_VERSION=0.1.93 bash my-program.ys arg1 arg2 ...
 ```
 
 This might be useful for testing a reported bug with an older version of the
