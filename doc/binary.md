@@ -1,5 +1,6 @@
 ---
 title: Compiling YS to Binary
+talk: 0
 ---
 
 

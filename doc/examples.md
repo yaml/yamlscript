@@ -1,5 +1,6 @@
 ---
 title: YS by Example
+talk: 0
 ---
 
 One of the best ways to learn a new programming language is to see examples of

@@ -1,5 +1,6 @@
 ---
 title: YS TAP Testing Library
+talk: 0
 ---
 
 This library provides an implementation of the [Test Anything Protocol (TAP)](

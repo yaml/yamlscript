@@ -1,5 +1,6 @@
 ---
 title: The YS Road Map
+talk: 0
 ---
 
 While the YS language is quite capable today for both extending YAML files and

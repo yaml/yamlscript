@@ -1,5 +1,6 @@
 ---
 title: YAML Basics
+talk: 0
 ---
 
 YAML was created to make data documents simple (most of the time).

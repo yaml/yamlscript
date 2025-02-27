@@ -1,5 +1,6 @@
 ---
 title: Clojure Basics
+talk: 0
 ---
 
 YS as a technology has many goals.

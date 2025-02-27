@@ -1,3 +1,4 @@
+- doc/index.md
 - doc/intro.md
 - doc/ys4yaml.md
 
@@ -36,6 +37,7 @@
   - YS Unit Testing: doc/ys-taptest.md
 
 - More YS Topics:
+  - doc/v0.md
   - doc/binary.md
   - doc/run-ys.md
 

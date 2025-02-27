@@ -1,5 +1,6 @@
 ---
 title: About YS
+talk: 0
 ---
 
 **YS** (aka YAMLScript) is a functional programming language that uses

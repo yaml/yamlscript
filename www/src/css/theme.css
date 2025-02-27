@@ -35,6 +35,13 @@ div.code code {
   max-height: 195px;
 }
 
+.external-link {
+  opacity: 0.75;
+  width: 12px;
+  padding-bottom: 5px;
+  margin-left: -3px;
+}
+
 .grid.cards>ul>li {
   border-width: 4px !important;
 }
@@ -92,6 +99,6 @@ h1.empty {
 }
 
 .md-header__button.md-logo img, .md-header__button.md-logo svg {
-  height: 3rem;
+  height: 2rem;
   fill: #861f41;
 }

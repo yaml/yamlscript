@@ -1,3 +1,5 @@
+!YS-v0:
+
 # See: https://github.com/squidfunk/mkdocs-material/discussions/3406
 # for info on template overrides.
 # Template source:
@@ -22,9 +24,10 @@ features:
 
 # - navigation.instant  # For single page application
 
-logo: images/yamlscript-logo.svg
+logo-image =: 'image/yamlscript-logo.svg'
 
-favicon: images/favicon.ico
+logo:: logo-image
+favicon:: logo-image
 
 palette:
 - scheme: default
@@ -42,6 +45,7 @@ palette:
 icon:
   edit: material/pencil
   view: material/eye
+  talk: material/chat-question
   admonition:
     abstract: fontawesome/solid/book
     bug: fontawesome/solid/robot

@@ -1,5 +1,6 @@
 ---
 title: YS Internals Library
+talk: 0
 ---
 
 This library serves 2 purposes.

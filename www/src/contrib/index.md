@@ -1,5 +1,6 @@
 ---
 title: Contribute to YS
+talk: 0
 ---
 
 YS is an open-source project and we welcome contributions from the community.
@@ -11,18 +12,30 @@ Want to help out with YS?
 Great!
 Here are some ways you can contribute:
 
-* **Use YS** --
+* **Use YS** —
   The more people that use YS, the more feedback we get, and the better
   the language becomes.
-* **[Report Bugs](https://github.com/yaml/yamlscript/issues/)** --
+* **[Report Bugs](https://github.com/yaml/yamlscript/issues/)** —
   If you find a bug in YS, please report it.
-* **[Request Features](https://github.com/yaml/yamlscript/discussions/)** --
+* **[Request Features](https://github.com/yaml/yamlscript/discussions/)** —
   If you have an idea for a feature in YS, please let us know.
-* **Write Documentation** --
-    YS is a new language and needs lots of good documentation.
-    Please file an issue if you find something that needs to be documented.
-* **Write Tests** --
-  YS has a test suite that can always use more tests.
+* **Submit Pull Requests** —
+  If you know your way around [Clojure](
+  https://clojure.org/guides/getting_started) a bit (or are willing to learn),
+  try improving YS by submitting a code pull request.
+
+    Adding a new function or fixing a bug in the [YS Standard Library](
+    https://github.com/yaml/yamlscript/blob/main/core/src/ys/std.clj) is a great
+    way to start.
+
+* **Write Documentation** —
+  Go [here](../doc/index.md) to learn how to contribute to the YS documentation.
+* **Write Tests** —
+  Have a look at these tests:
+    * [YS Compiler/Core Tests](
+      https://github.com/yaml/yamlscript/tree/main/core/test/yamlscript)
+    * [YS Runtime Tests](
+      https://github.com/yaml/yamlscript/tree/main/ys/test)
 
 
 <!-- copilot says:

@@ -1,5 +1,6 @@
 ---
 title: Common YAML / YS Gotchas
+talk: 0
 ---
 
 All YS files are required to be valid YAML.

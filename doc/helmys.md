@@ -1,5 +1,6 @@
 ---
 title: HelmYS - YS Helm Charts
+talk: 0
 hide:
 - navigation
 - toc

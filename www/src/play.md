@@ -1,5 +1,6 @@
 ---
 title: Playing with YS
+talk: 0
 hide:
 - toc
 ---

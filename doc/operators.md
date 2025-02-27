@@ -1,5 +1,6 @@
 ---
 title: YS Operators
+talk: 0
 ---
 
 YS has a number of operators that you can use in your code.

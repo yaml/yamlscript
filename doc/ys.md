@@ -1,5 +1,6 @@
 ---
 title: ys - The YS CLI Tool
+talk: 0
 ---
 
 The YS `ys` command line tool is the primary way to run, load and compile YS
@@ -22,8 +23,8 @@ Usage: ys [<option...>] [<file>]
 Options:
 
   -e, --eval YSEXPR        Evaluate a YS expression
-                           multiple -e values joined by newline
-  -l, --load               Output (compact) JSON of YS evaluation
+                             multiple -e values are joined by newline
+  -l, --load               Output the (compact) JSON of YS evaluation
   -f, --file FILE          Explicitly indicate input file
 
   -c, --compile            Compile YS to Clojure
@@ -55,6 +56,8 @@ Options:
 
       --version            Print version and exit
   -h, --help               Print this help and exit
+```
+
 ----
 
 Let's start with a YAML file (`some.yaml`) that wants to use data from another

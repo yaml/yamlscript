@@ -1,11 +1,16 @@
-- use.md
+- use/index.md
 
 - DevOps:
   - doc/helmys.md
 
 - CI/CD:
-  - use/cicd.md
-  - use/gha.md
-  - use/circleci.md
+  - cicd.md
+  - gha.md
+  - circleci.md
 
-- use/hacks.md
+- doc/query.md
+
+# - Static Site Generators:
+#   - This site
+
+- hacks.md

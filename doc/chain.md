@@ -1,5 +1,6 @@
 ---
 title: YS Dot Chaining
+talk: 0
 ---
 
 One of the most powerful features of YS is the ability to chain function calls

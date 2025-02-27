@@ -1,5 +1,6 @@
 ---
 title: YS Cheat Sheet
+talk: 0
 ---
 
 

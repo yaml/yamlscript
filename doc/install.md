@@ -1,5 +1,6 @@
 ---
 title: Installing YS
+talk: 0
 ---
 
 YS has 3 main things you might want to install:
@@ -7,8 +8,8 @@ YS has 3 main things you might want to install:
 1. The `ys` compiler, loader and runner command.
 2. The `libyamlscript.so` shared library needed by a YS loader library for your
    particular programming language.
-3. A [YS loader library](bindings.md) for your particular programming language,
-   like Python, Rust, NodeJS, etc.
+3. A [YS loader library](bindings.md#currently-available-libraries) for your
+   particular programming language, like Python, Rust, NodeJS, etc.
 
 
 ### Quick Install of `ys` and `libyamlscript`

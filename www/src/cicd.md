@@ -1,5 +1,6 @@
 ---
 title: YS for CI/CD
+talk: 0
 ---
 
 YS is a great language for CI/CD pipelines.

@@ -1,5 +1,6 @@
 ---
 title: From Clojure to YS
+talk: 0
 ---
 
 YS (YAMLScript) works by translating code written in YS to Clojure code, which
