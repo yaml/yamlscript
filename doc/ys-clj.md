@@ -1,5 +1,6 @@
 ---
 title: Replaced Clojure Functions
+talk: 0
 ---
 
 A number of standard functions from Clojure's standard library `clojure::core`

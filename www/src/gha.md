@@ -1,5 +1,6 @@
 ---
 title: YS and GitHub Actions
+talk: 0
 ---
 
 [RapidYAML](https://rapidyaml.readthedocs.io/latest/) is the world's fastest and

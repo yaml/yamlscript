@@ -26,7 +26,24 @@ src_path: {{ page.file.src_path }}
   {% set url = config.edit_uri ~ "www/src/" ~ path %}
 {% endif %}
 
+{% if page.meta.talk or page.meta.talk == 0 %}
+  {% if page.meta.talk == 0 %}
+    {% set durl = config.extra.talk_uri ~ "/" ~ config.extra.talk_new_id %}
+  {% else %}
+    {% set durl = config.extra.talk_uri ~ "/" ~ page.meta.talk %}
+  {% endif %}
+{% endif %}
+
 {% if url != "" %}
+  {% if durl %}
+    <a href="{{ durl }}"
+      title="Discuss this page"
+      class="md-content__button md-icon">
+      {% set icon = config.theme.icon.talk or "material/chat-questions" %}
+      {% include ".icons/" ~ icon ~ ".svg" %}
+    </a>
+  {% endif %}
+
   <a href="{{ url }}"
      title="{{ lang.t('action.edit') }}"
      class="md-content__button md-icon">

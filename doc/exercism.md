@@ -1,5 +1,6 @@
 ---
 title: Learn YS at Exercism
+talk: 0
 ---
 
 [Exercism](https://exercism.io) is a platform that offers code practice and

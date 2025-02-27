@@ -1,15 +1,23 @@
 ---
 title: Website Contribution
+talk: 0
 ---
 
 
 ## Please and Thank You
 
 The YS website needs your help!
-Especially with the docs.
+Especially with the [documentation](doc/index.md).
 
 Everyone is welcome to contribute to the website, and your contributions are
 greatly appreciated.
+
+
+## About this Website
+
+[Read This Page](about-website.md) to learn how this website combined
+**Material for MkDocs** with **YS** to make a site that is super easy to
+contribute to.
 
 
 ## How to Contribute
@@ -24,7 +32,7 @@ Also, every page in the site (except the front page) has a "view source" button
 and an "edit this page" button.
 These buttons will take you to the source file for that page.
 
-THe "edit" button will drop you into the GitHub editor for that page.
+The "edit" button will drop you into the GitHub editor for that page.
 You can make your changes and then submit a pull request.
 
 This is the easiest way to contribute to the site for small changes.
@@ -79,8 +87,10 @@ The prerequisites for building the site are very minimal:
 
 !!! note
 
-    The `bash` command just needs to be in your `PATH`; it doesn't need to be
-    your interactive shell.
+    The `bash` command just needs to be found in your `PATH`; it doesn't need to
+    be your interactive shell.
+    In other words, you can do development work on this site from from a
+    terminal using `zsh`, `fish`, or whatever shell you prefer.
 
 The most important files for the website are:
 
@@ -91,8 +101,8 @@ The most important files for the website are:
 * `www/src/` - The source files for the site.
 * `doc/` - The source files for the documentation.
 * `blog/` - The source files for the blog.
-* `requirements.txt` - The Python requirements for the site.
-* `theme/**` - The theme override files for the site.
+* `www/requirements.txt` - The Python requirements for the site.
+* `www/theme/**` - The theme override files for the site.
 
 
 ## Ask Us for Help

@@ -1,5 +1,6 @@
 ---
 title: YS Syntax Modes
+talk: 0
 ---
 
 One of the most important things to understand when learning YS is the concept

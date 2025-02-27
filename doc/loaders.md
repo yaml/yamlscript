@@ -1,5 +1,6 @@
 ---
 title: YS Loader Libraries
+talk: 0
 ---
 
 YS is focused on providing a loader library for every programming language

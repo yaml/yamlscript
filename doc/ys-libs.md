@@ -1,5 +1,6 @@
 ---
 title: YS Builtin Libraries
+talk: 0
 ---
 
 * [`ys::clj`](ys-clj.md) — Original Clojure functions replaced by [`ys::std`](

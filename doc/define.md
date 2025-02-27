@@ -1,5 +1,6 @@
 ---
 title: Defining Variables and Functions
+talk: 0
 ---
 
 Two of the most common things you'll want to do in YS code is to define

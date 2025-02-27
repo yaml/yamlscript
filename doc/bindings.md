@@ -1,5 +1,6 @@
 ---
 title: YS Binding Libraries
+talk: 0
 ---
 
 Your existing YAML files are perfectly valid YS files!

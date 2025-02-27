@@ -1,5 +1,6 @@
 ---
 title: Self Installation Scripts
+talk: 0
 ---
 
 !!! note

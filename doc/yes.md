@@ -1,5 +1,6 @@
 ---
 title: YeS Expressions
+talk: 0
 ---
 
 Lisp has the concept of [S-Expressions](
