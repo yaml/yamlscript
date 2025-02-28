@@ -39,6 +39,7 @@
     "=~" "=--"
     "!~" "!--"
     "==" "="
+    "===" "=="
     "=" (die
           "Operator '=' is not allowed in YS.\n"
           "Use '==' for equality comparison.")
