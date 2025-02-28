@@ -2879,8 +2879,8 @@ Usage: ys [&lt;option...&gt;] [&lt;file&gt;]
 Options:
 
   -e, --eval YSEXPR        Evaluate a YS expression
-                           multiple -e values joined by newline
-  -l, --load               Output (compact) JSON of YS evaluation
+                             multiple -e values are joined by newline
+  -l, --load               Output the (compact) JSON of YS evaluation
   -f, --file FILE          Explicitly indicate input file
 
   -c, --compile            Compile YS to Clojure
@@ -2912,23 +2912,21 @@ Options:
 
       --version            Print version and exit
   -h, --help               Print this help and exit
-----
+</code></pre></div>
+<hr />
+<p>Let's start with a YAML file (<code>some.yaml</code>) that wants to use data from another
+YAML file and also do some simple calculations:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
 
-Let&#39;s start with a YAML file (`some.yaml`) that wants to use data from another
-YAML file and also do some simple calculations:
+<span class="nt">:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;World&quot;</span>
+<span class="w">  </span><span class="nt">data =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;data1.yaml&quot;)</span>
+<span class="w">  </span><span class="nt">fruit =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data.food.fruit</span>
 
-```yaml
-!YS-v0:
-
-::
-  name =: &quot;World&quot;
-  data =: load(&quot;data1.yaml&quot;)
-  fruit =: data.food.fruit
-
-num: 123
-greet:: &quot;$(data.hello.rand-nth()), $name!&quot;
-eat:: fruit.shuffle().first()
-drink:: ([&quot;Bar&quot;] * 3).join(&#39;, &#39;).str(&#39;!!!&#39;)
+<span class="nt">num</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123</span>
+<span class="nt">greet:</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$(data.hello.rand-nth()),</span><span class="nv"> </span><span class="s">$name!&quot;</span>
+<span class="nt">eat:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fruit.shuffle().first()</span>
+<span class="nt">drink:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">([&quot;Bar&quot;] * 3).join(&#39;, &#39;).str(&#39;!!!&#39;)</span>
 </code></pre></div>
 <p>Here's the other YAML file (<code>data1.yaml</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">food</span><span class="p">:</span>
