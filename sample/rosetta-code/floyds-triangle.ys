@@ -1,0 +1,13 @@
+!YS-v0
+
+defn main(n=14):
+  nums =: range().map(inc).map(str)
+  rows =:
+    loop row-n 1, nums nums, rows []:
+      if rows.# < n:
+        recur: row-n.++ nums.drop(row-n)
+          conj(rows nums.take(row-n))
+        else: rows
+  width =: rows:last:last:len
+  fmt =: \((' ' * (width - _:len)) + _)
+  each row rows: say(row.map(fmt):joins)
