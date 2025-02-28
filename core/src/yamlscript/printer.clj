@@ -39,7 +39,9 @@
     "=~" "=--"
     "!~" "!--"
     "==" "="
-    "=" (die "Operator '=' is not allowed in YS")
+    "=" (die
+          "Operator '=' is not allowed in YS.\n"
+          "Use '==' for equality comparison.")
     , s))
 
 (defn print-node [node]
