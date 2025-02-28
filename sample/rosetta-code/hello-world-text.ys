@@ -1,0 +1,18 @@
+!YS-v0
+
+say: "Hello, world!"
+
+=>: (say "Hello, world!")
+
+=>: say("Hello, world!")
+
+say:
+  =>: "Hello, world!"
+
+say: ("Hello, " + "world!")
+
+say: ."Hello," "world!"
+
+say "Hello,": "world!"
+
+say "Hello," "world!":
