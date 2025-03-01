@@ -18,7 +18,7 @@
         <link rel="prev" href="../contrib/">
       
       
-        <link rel="next" href="../social/">
+        <link rel="next" href="../faq/">
       
       
       <link rel="icon" href="../image/yamlscript-logo.svg">
@@ -2672,6 +2672,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../social/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YS Social
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2695,7 +2716,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
         
           
           
@@ -2711,14 +2732,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
             Contributing to YS
           </label>
@@ -2784,6 +2805,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#about-this-website" class="md-nav__link">
+    <span class="md-ellipsis">
+      About this Website
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#how-to-contribute" class="md-nav__link">
     <span class="md-ellipsis">
       How to Contribute
@@ -2831,27 +2861,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </ul>
         </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../social/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    YS Social
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -2912,6 +2921,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#please-and-thank-you" class="md-nav__link">
     <span class="md-ellipsis">
       Please and Thank You
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#about-this-website" class="md-nav__link">
+    <span class="md-ellipsis">
+      About this Website
     </span>
   </a>
   
@@ -3024,7 +3042,7 @@ page.meta: >>>{
   "title": "Website Contribution"
 }<<<
 page.previous_page: >>>Page(title='Contribute to YS', url='/contrib/')<<<
-page.next_page: >>>Page(title='YS Social', url='/social/')<<<
+page.next_page: >>>Page(title='FAQ', url='/faq/')<<<
 scheme: >>>default<<<
 tag: >>><<<
 title: >>><<<
@@ -3080,6 +3098,10 @@ src_path: contrib-website.md
 Especially with the <a href="../doc/">documentation</a>.</p>
 <p>Everyone is welcome to contribute to the website, and your contributions are
 greatly appreciated.</p>
+<h2 id="about-this-website">About this Website<a class="headerlink" href="#about-this-website" title="Permanent link">🔗</a></h2>
+<p><a href="../about-website/">Read This Page</a> to learn how this website combined
+<strong>Material for MkDocs</strong> with <strong>YS</strong> to make a site that is super easy to
+contribute to.</p>
 <h2 id="how-to-contribute">How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permanent link">🔗</a></h2>
 <p>The yamlscript.org website is designed to be very easy to contribute to.</p>
 <p>Every single page on the site is created from a Markdown file in the
@@ -3142,8 +3164,10 @@ to learn a bit.</p>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <code>bash</code> command just needs to be in your <code>PATH</code>; it doesn't need to be
-your interactive shell.</p>
+<p>The <code>bash</code> command just needs to be found in your <code>PATH</code>; it doesn't need to
+be your interactive shell.
+In other words, you can do development work on this site from from a
+terminal using <code>zsh</code>, <code>fish</code>, or whatever shell you prefer.</p>
 </div>
 <p>The most important files for the website are:</p>
 <ul>
@@ -3154,8 +3178,8 @@ your interactive shell.</p>
 <li><code>www/src/</code> - The source files for the site.</li>
 <li><code>doc/</code> - The source files for the documentation.</li>
 <li><code>blog/</code> - The source files for the blog.</li>
-<li><code>requirements.txt</code> - The Python requirements for the site.</li>
-<li><code>theme/**</code> - The theme override files for the site.</li>
+<li><code>www/requirements.txt</code> - The Python requirements for the site.</li>
+<li><code>www/theme/**</code> - The theme override files for the site.</li>
 </ul>
 <h2 id="ask-us-for-help">Ask Us for Help<a class="headerlink" href="#ask-us-for-help" title="Permanent link">🔗</a></h2>
 <p>If you need help with anything, start a discussion <a href="https://github.com/yaml/yamlscript/discussions">here&nbsp;<img src="/image/external-link.svg"
@@ -3213,13 +3237,13 @@ your interactive shell.</p>
         
         
           
-          <a href="../social/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Social">
+          <a href="../faq/" class="md-footer__link md-footer__link--next" aria-label="Next: FAQ">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                YS Social
+                FAQ
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -3241,9 +3265,10 @@ your interactive shell.</p>
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+    <a href="/about-website/" target="_blank" rel="noopener">
+      Material for MkDocs and YS!
     </a>
+
   
 </div>
       
