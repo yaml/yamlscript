@@ -12,28 +12,24 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/control/">
+        <link rel="canonical" href="https://yamlscript.org/json/">
       
       
-        <link rel="prev" href="../modes/">
       
       
-        <link rel="next" href="../operators/">
-      
-      
-      <link rel="icon" href="../../image/yamlscript-logo.svg">
+      <link rel="icon" href="../image/yamlscript-logo.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>Control Flow - YS — YAML Done Wisely</title>
+        <title>JSON is YAML! - YS — YAML Done Wisely</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a40c8224.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
   
@@ -93,9 +89,9 @@
       
     
     
-      <link rel="stylesheet" href="../../css/theme.css">
+      <link rel="stylesheet" href="../css/theme.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -124,11 +120,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Control Flow - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="JSON is YAML! - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/control.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/json.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -136,15 +132,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/doc/control/" >
+        <meta  property="og:url"  content="https://yamlscript.org/json/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Control Flow - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="JSON is YAML! - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/control.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/json.png" >
       
     
     
@@ -166,11 +162,6 @@ f.parentNode.insertBefore(j,f);
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#starting-a-program" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -186,9 +177,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
+    <a href=".." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../image/yamlscript-logo.svg" alt="logo">
+  <img src="../image/yamlscript-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -206,7 +197,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Control Flow
+              JSON is YAML!
             
           </span>
           </a>
@@ -317,7 +308,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../use/" class="md-tabs__link">
+        <a href="../use/" class="md-tabs__link">
           
   
     
@@ -333,13 +324,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../doc/" class="md-tabs__link">
           
   
     
@@ -359,7 +348,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../blog/2024-11-29/" class="md-tabs__link">
+        <a href="../blog/2024-11-29/" class="md-tabs__link">
           
   
     
@@ -377,7 +366,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-tabs__item">
-      <a href="../../press/" class="md-tabs__link">
+      <a href="../press/" class="md-tabs__link">
         
   
     
@@ -396,7 +385,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../community/" class="md-tabs__link">
+        <a href="../community/" class="md-tabs__link">
           
   
     
@@ -414,7 +403,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-tabs__item">
-      <a href="../../faq/" class="md-tabs__link">
+      <a href="../faq/" class="md-tabs__link">
         
   
     
@@ -448,9 +437,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
+    <a href=".." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../image/yamlscript-logo.svg" alt="logo">
+  <img src="../image/yamlscript-logo.svg" alt="logo">
 
     </a>
     YS — YAML Done Wisely
@@ -508,7 +497,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../use/" class="md-nav__link ">
+            <a href="../use/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -585,7 +574,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../helmys/" class="md-nav__link">
+      <a href="../doc/helmys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -662,7 +651,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../cicd/" class="md-nav__link">
+      <a href="../cicd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -683,7 +672,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../gha/" class="md-nav__link">
+      <a href="../gha/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -704,7 +693,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../circleci/" class="md-nav__link">
+      <a href="../circleci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -733,7 +722,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../query/" class="md-nav__link">
+      <a href="../doc/query/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -754,7 +743,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../hacks/" class="md-nav__link">
+      <a href="../hacks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -779,8 +768,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
-    
-  
   
   
     
@@ -807,22 +794,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../doc/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -833,13 +819,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Documentation
@@ -855,7 +841,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../intro/" class="md-nav__link">
+      <a href="../doc/intro/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -876,7 +862,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys4yaml/" class="md-nav__link">
+      <a href="../doc/ys4yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -949,7 +935,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../exercism/" class="md-nav__link">
+      <a href="../doc/exercism/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -970,7 +956,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
+      <a href="../doc/examples/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -991,7 +977,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../modes/" class="md-nav__link">
+      <a href="../doc/modes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1012,7 +998,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../cheat/" class="md-nav__link">
+      <a href="../doc/cheat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1033,7 +1019,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../clj-to-ys/" class="md-nav__link">
+      <a href="../doc/clj-to-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1110,7 +1096,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys/" class="md-nav__link">
+      <a href="../doc/ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1131,7 +1117,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../loaders/" class="md-nav__link">
+      <a href="../doc/loaders/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1152,7 +1138,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
+      <a href="../doc/install/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1239,7 +1225,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-std/" class="md-nav__link">
+      <a href="../doc/ys-std/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1260,7 +1246,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../core/" class="md-nav__link">
+      <a href="../doc/core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1281,7 +1267,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-ys/" class="md-nav__link">
+      <a href="../doc/ys-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1302,7 +1288,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-yaml/" class="md-nav__link">
+      <a href="../doc/ys-yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1323,7 +1309,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-json/" class="md-nav__link">
+      <a href="../doc/ys-json/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1344,7 +1330,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-csv/" class="md-nav__link">
+      <a href="../doc/ys-csv/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1365,7 +1351,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-clj/" class="md-nav__link">
+      <a href="../doc/ys-clj/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1386,7 +1372,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-taptest/" class="md-nav__link">
+      <a href="../doc/ys-taptest/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1412,10 +1398,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
     
     
       
@@ -1441,11 +1425,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_7" >
         
           
           <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
@@ -1459,7 +1445,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_7">
             <span class="md-nav__icon md-icon"></span>
             YS Reference
@@ -1473,7 +1459,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../yaml/" class="md-nav__link">
+      <a href="../doc/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1494,7 +1480,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../clojure/" class="md-nav__link">
+      <a href="../doc/clojure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1515,7 +1501,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../yes/" class="md-nav__link">
+      <a href="../doc/yes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1536,7 +1522,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../modes/" class="md-nav__link">
+      <a href="../doc/modes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1554,28 +1540,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Control Flow
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../doc/control/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1584,111 +1552,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#starting-a-program" class="md-nav__link">
-    <span class="md-ellipsis">
-      Starting a Program
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#variable-scope" class="md-nav__link">
-    <span class="md-ellipsis">
-      Variable Scope
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#grouping-expressions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Grouping Expressions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#looping-functions-and-recursion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Looping Functions and Recursion
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conditional-expressions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conditional Expressions
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Conditional Expressions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-if-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The if Function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-when-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The when Function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-cond-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The cond Function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-case-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The case Function
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1701,7 +1564,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../operators/" class="md-nav__link">
+      <a href="../doc/operators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1722,7 +1585,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../chain/" class="md-nav__link">
+      <a href="../doc/chain/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1743,7 +1606,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-taptest/" class="md-nav__link">
+      <a href="../doc/ys-taptest/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1820,7 +1683,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../v0/" class="md-nav__link">
+      <a href="../doc/v0/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1841,7 +1704,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../binary/" class="md-nav__link">
+      <a href="../doc/binary/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1862,7 +1725,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../run-ys/" class="md-nav__link">
+      <a href="../doc/run-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1952,7 +1815,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/2024-11-29/" class="md-nav__link">
+      <a href="../blog/2024-11-29/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1973,7 +1836,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/2024-11-05/" class="md-nav__link">
+      <a href="../blog/2024-11-05/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1994,7 +1857,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/2024-07-17/" class="md-nav__link">
+      <a href="../blog/2024-07-17/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2015,7 +1878,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/2024-06-20/" class="md-nav__link">
+      <a href="../blog/2024-06-20/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2082,7 +1945,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/2024-04-16/" class="md-nav__link">
+      <a href="../blog/2024-04-16/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2103,7 +1966,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/2024-03-14/" class="md-nav__link">
+      <a href="../blog/2024-03-14/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2222,7 +2085,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-24/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-24/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2243,7 +2106,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-23/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-23/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2264,7 +2127,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-22/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-22/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2285,7 +2148,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-21/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-21/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2306,7 +2169,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-20/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-20/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2327,7 +2190,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-19/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-19/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2348,7 +2211,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-18/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-18/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2369,7 +2232,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-17/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-17/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2390,7 +2253,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-16/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-16/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2411,7 +2274,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-15/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-15/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2432,7 +2295,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-14/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-14/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2453,7 +2316,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-13/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-13/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2474,7 +2337,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-12/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-12/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2495,7 +2358,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-11/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-11/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2516,7 +2379,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-10/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-10/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2537,7 +2400,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-09/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-09/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2558,7 +2421,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-08/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-08/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2579,7 +2442,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-07/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-07/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2600,7 +2463,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-06/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-06/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2621,7 +2484,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-05/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-05/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2642,7 +2505,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-04/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-04/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2663,7 +2526,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-03/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-03/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2684,7 +2547,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-02/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-02/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2705,7 +2568,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/advent-2023/dec-01/" class="md-nav__link">
+      <a href="../blog/advent-2023/dec-01/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2741,7 +2604,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../press/" class="md-nav__link">
+      <a href="../press/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2788,7 +2651,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../community/" class="md-nav__link ">
+            <a href="../community/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2821,7 +2684,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../social/" class="md-nav__link">
+      <a href="../social/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2867,7 +2730,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../contrib/" class="md-nav__link ">
+            <a href="../contrib/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2900,7 +2763,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../contrib-website/" class="md-nav__link">
+      <a href="../contrib-website/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2936,7 +2799,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../faq/" class="md-nav__link">
+      <a href="../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2967,101 +2830,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#starting-a-program" class="md-nav__link">
-    <span class="md-ellipsis">
-      Starting a Program
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#variable-scope" class="md-nav__link">
-    <span class="md-ellipsis">
-      Variable Scope
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#grouping-expressions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Grouping Expressions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#looping-functions-and-recursion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Looping Functions and Recursion
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conditional-expressions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conditional Expressions
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Conditional Expressions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-if-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The if Function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-when-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The when Function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-cond-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The cond Function
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-case-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      The case Function
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3083,7 +2851,7 @@ page.meta: >>>{
       "property": "og:type"
     },
     {
-      "content": "Control Flow - YS \u2014 YAML Done Wisely",
+      "content": "JSON is YAML! - YS \u2014 YAML Done Wisely",
       "property": "og:title"
     },
     {
@@ -3091,7 +2859,7 @@ page.meta: >>>{
       "property": "og:description"
     },
     {
-      "content": "https://yamlscript.org/assets/images/social/doc/control.png",
+      "content": "https://yamlscript.org/assets/images/social/json.png",
       "property": "og:image"
     },
     {
@@ -3107,7 +2875,7 @@ page.meta: >>>{
       "property": "og:image:height"
     },
     {
-      "content": "https://yamlscript.org/doc/control/",
+      "content": "https://yamlscript.org/json/",
       "property": "og:url"
     },
     {
@@ -3115,7 +2883,7 @@ page.meta: >>>{
       "name": "twitter:card"
     },
     {
-      "content": "Control Flow - YS \u2014 YAML Done Wisely",
+      "content": "JSON is YAML! - YS \u2014 YAML Done Wisely",
       "name": "twitter:title"
     },
     {
@@ -3123,23 +2891,23 @@ page.meta: >>>{
       "name": "twitter:description"
     },
     {
-      "content": "https://yamlscript.org/assets/images/social/doc/control.png",
+      "content": "https://yamlscript.org/assets/images/social/json.png",
       "name": "twitter:image"
     }
   ],
   "talk": 0,
-  "title": "Control Flow"
+  "title": "JSON is YAML!"
 }<<<
-page.previous_page: >>>Page(title='YS Syntax Modes', url='/doc/modes/')<<<
-page.next_page: >>>Page(title='YS Operators', url='/doc/operators/')<<<
+page.previous_page: >>>None<<<
+page.next_page: >>>None<<<
 scheme: >>>default<<<
 tag: >>><<<
 title: >>><<<
 app: >>><<<
 author: >>><<<
-url: doc/control/
+url: json/
 edit_uri: https://github.com/yaml/yamlscript/edit/website/
-src_path: doc/control.md
+src_path: json.md
 </pre -->
 
 
@@ -3165,14 +2933,14 @@ src_path: doc/control.md
     </a>
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/doc/control.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/www/src/json.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/doc/control.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/www/src/json.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -3180,196 +2948,25 @@ src_path: doc/control.md
   </a>
 
 
-  <h1>Control Flow</h1>
+  <h1>JSON is YAML!</h1>
 
-<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
-
-<p>YS (iow Clojure) is a functional programming language.
-That means that everything is a function.
-Running a program is just a calling a function that calls other functions.</p>
-<p>Even though YS tries hard to look like an imperative language, you must
-keep in mind that it's functional and get familiar with how the flow works.</p>
-<p>This document will cover:</p>
-<ul>
-<li>Starting a program</li>
-<li>Variable scope</li>
-<li>Grouping expressions</li>
-<li>Looping functions and recursion</li>
-<li>Conditional expressions</li>
-</ul>
+<p>Since <a href="https://yaml.org/spec/1.2/spec.html">YAML 1.2&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> (2009) JSON is a complete
+subset of YAML.
+This means that any valid JSON file is also a valid YAML file and can be loaded
+by a YAML loader to produce the equivalent data structure as if it were loaded
+by a JSON parser.</p>
+<p>Since YS is a YAML loader it can used on JSON files as well.</p>
+<p>This is very useful for converting between the two formats and for using YS to
+<a href="../doc/query/">query and transform</a> JSON files.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Some of the things that are called "functions" in in this document are
-actually "macros" or "special forms" in Clojure.
-The distinction is not particularly important here, but worth mentioning.</p>
+<p>Just because the YAML spec says it's a subset doesn't mean that all YAML
+tools can be trusted to handle JSON files 100% correctly.
+Caveat emptor.</p>
 </div>
-<h2 id="starting-a-program">Starting a Program<a class="headerlink" href="#starting-a-program" title="Permanent link">🔗</a></h2>
-<p>A YS file generally is just a bunch of <code>defn</code> calls to define functions.</p>
-<p>Sometimes there will be assignment expressions at the top level.
-Top level variables are global and can be used anywhere in the program.
-They belong to the file's namespace which is <code>main</code> by default.</p>
-<p>If a program defines a function called <code>main</code>, it will be called when the
-program is run.
-Any command line arguments will be passed to the <code>main</code> function after being
-cast to numbers if they look like numbers.</p>
-<p><code>program.ys</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
-
-<span class="l l-Scalar l-Scalar-Plain">defn main(word=&#39;Hello!&#39; times=3)</span><span class="p p-Indicator">:</span>
-<span class="w">  </span><span class="nt">each i (1 .. times)</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$i)</span><span class="nv"> </span><span class="s">$word&quot;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>program.ys
-<span class="m">1</span><span class="o">)</span><span class="w"> </span>Hello!
-<span class="m">2</span><span class="o">)</span><span class="w"> </span>Hello!
-<span class="m">3</span><span class="o">)</span><span class="w"> </span>Hello!
-</code></pre></div>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>program.ys<span class="w"> </span>YS<span class="w"> </span><span class="m">2</span>
-<span class="m">1</span><span class="o">)</span><span class="w"> </span>YS
-<span class="m">2</span><span class="o">)</span><span class="w"> </span>YS
-</code></pre></div>
-<p>If a program does not define a <code>main</code> function, then nothing will happen unless
-you've defined a top level function call yourself.
-YS files that are meant to be used as libraries will not have a <code>main</code> function
-or a top level function call.</p>
-<h2 id="variable-scope">Variable Scope<a class="headerlink" href="#variable-scope" title="Permanent link">🔗</a></h2>
-<p>One cool thing about YS (and Clojure) is that you can use any word as a
-variable name.
-Even things like <code>if</code> and <code>for</code> which are reserved words in many languages.</p>
-<p>For example you might do this:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">defn foo(list)</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">count =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">count(list)</span>
-<span class="w">  </span><span class="nt">if count &gt; 0</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;The</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">empty&#39;</span>
-<span class="w">  </span><span class="nt">else</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;The</span><span class="nv"> </span><span class="s">list</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">empty&#39;</span>
-</code></pre></div>
-<p>Once we bind <code>count</code> to the result of the <code>count</code> function, we can't use the
-<code>count</code> function again in that scope.
-Often this is just fine.
-And it feels nice that you don't have to think up a synonym or alternative
-mangling for <code>count</code>.</p>
-<h2 id="grouping-expressions">Grouping Expressions<a class="headerlink" href="#grouping-expressions" title="Permanent link">🔗</a></h2>
-<p>Some expression contexts allow multiple expressions to be grouped together and
-some only allow a single expression.</p>
-<p>You can group multiple expressions together with a <code>do</code> function call when you
-need to to do multiple things in a context that only allows a single expression.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">if a &gt; b</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">do</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;a</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">greater</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">b&#39;</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;a</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">HUGE!&#39;</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Nothing</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">see</span><span class="nv"> </span><span class="s">here&#39;</span>
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <code>if</code> function actually supports the better named <code>then</code> and <code>else</code>
-words for grouping, but <code>do</code> can also be used.</p>
-</div>
-<h2 id="looping-functions-and-recursion">Looping Functions and Recursion<a class="headerlink" href="#looping-functions-and-recursion" title="Permanent link">🔗</a></h2>
-<p>YS has a few looping functions: <code>loop</code>, <code>reduce</code>, <code>for</code> and <code>each</code>.</p>
-<p>These will be documented in more detail in the future, but for now you can see
-the Clojure documentation for them:</p>
-<ul>
-<li><a href="https://clojuredocs.org/clojure.core/loop">loop&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a></li>
-<li><a href="https://clojuredocs.org/clojure.core/reduce">reduce&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a></li>
-<li><a href="https://clojuredocs.org/clojure.core/for">for&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a></li>
-<li><code>each</code> is a YS function that calls to a <code>for</code> expression inside a
-  <code>doall</code> expression.
-  This allows you to print things in the loop body.
-  In every other way it's the same as <code>for</code>.</li>
-</ul>
-<h2 id="conditional-expressions">Conditional Expressions<a class="headerlink" href="#conditional-expressions" title="Permanent link">🔗</a></h2>
-<p>YS has a few common conditional expressions: <code>if</code>, <code>when</code>, <code>cond</code> and <code>case</code>.</p>
-<h3 id="the-if-function">The <code>if</code> Function<a class="headerlink" href="#the-if-function" title="Permanent link">🔗</a></h3>
-<p>In YS, an <code>if</code> expression is a function that takes 3 arguments: a
-condition, a then expression and an else expression.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">if a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b c</span><span class="w">  </span><span class="c1"># If a is true, return b, else return c</span>
-</code></pre></div>
-<p>The <code>b</code> and <code>c</code> expressions can also be mapping pairs:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">if a</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span>
-</code></pre></div>
-<p>Sometimes you want to do more than one thing in the then or else expression:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">if a</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">then</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-<span class="w">  </span><span class="nt">else</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span>
-</code></pre></div>
-<p>If you use <code>then</code> you must also use <code>else</code>, but <code>else</code> can be used without a
-<code>then</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">if a</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-<span class="w">  </span><span class="nt">else</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;no&#39;</span>
-</code></pre></div>
-<p>Since <code>if</code> is a function, it has a return value.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">say</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">if a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-&#39;yes&#39; &#39;no&#39;</span>
-</code></pre></div>
-<p>Any variable assigned in the <code>then</code> or <code>else</code> expression will only apply to that
-expression and not to the surrounding scope.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="nt">if a &gt; b</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">  </span><span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x</span><span class="w">    </span><span class="c1"># =&gt; 1</span>
-</code></pre></div>
-<p>What you want to do here is capture the result of the <code>if</code> expression:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">x =</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">if a &gt; b</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">then</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">    </span><span class="nt">else</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x</span><span class="w">    </span><span class="c1"># =&gt; 2 or 3</span>
-</code></pre></div>
-<p>Note that <code>say</code> returns <code>nil</code>, so all the <code>if</code> expressions above would also
-return <code>nil</code>.</p>
-<h3 id="the-when-function">The <code>when</code> Function<a class="headerlink" href="#the-when-function" title="Permanent link">🔗</a></h3>
-<p>YS also has a <code>when</code> function that is like <code>if</code> but without an else expression.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">when a</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-</code></pre></div>
-<p>The <code>if</code> function should only be used wen you have a then and an else
-expression.
-Otherwise, use <code>when</code>.</p>
-<p>One thing about <code>when</code> is that its body can have multiple expressions.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">when a</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;yes&#39;</span>
-</code></pre></div>
-<h3 id="the-cond-function">The <code>cond</code> Function<a class="headerlink" href="#the-cond-function" title="Permanent link">🔗</a></h3>
-<p>The <code>cond</code> function is like a series of <code>if</code> expressions but with multiple
-conditions.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">size =</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">cond</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">a &lt; 20</span><span class="p">:</span><span class="w">  </span><span class="s">&#39;small&#39;</span>
-<span class="w">    </span><span class="nt">a &lt; 50</span><span class="p">:</span><span class="w">  </span><span class="s">&#39;medium&#39;</span>
-<span class="w">    </span><span class="nt">a &lt; 100</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;large&#39;</span>
-<span class="w">    </span><span class="nt">else</span><span class="p">:</span><span class="w">    </span><span class="s">&#39;huge&#39;</span>
-</code></pre></div>
-<h3 id="the-case-function">The <code>case</code> Function<a class="headerlink" href="#the-case-function" title="Permanent link">🔗</a></h3>
-<p>The <code>case</code> function is like a <code>cond</code> but with a single expression to compare
-against.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">count =</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">case a</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;one&#39;</span>
-<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;two&#39;</span>
-<span class="w">    </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;three&#39;</span>
-<span class="w">    </span><span class="nt">else</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;many&#39;</span>
-</code></pre></div>
 
 
 
@@ -3400,44 +2997,6 @@ against.</p>
         <footer class="md-footer">
   
     
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../modes/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Syntax Modes">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                YS Syntax Modes
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../operators/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Operators">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                YS Operators
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -3466,12 +3025,12 @@ against.</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../assets/javascripts/bundle.60a45f97.min.js"></script>
       
-        <script src="../../js/open_in_new_tab.js"></script>
+        <script src="../js/open_in_new_tab.js"></script>
       
     
   </body>

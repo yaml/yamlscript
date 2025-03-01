@@ -15,6 +15,10 @@
         <link rel="canonical" href="https://yamlscript.org/doc/query/">
       
       
+        <link rel="prev" href="../../circleci/">
+      
+      
+        <link rel="next" href="../../hacks/">
       
       
       <link rel="icon" href="../../image/yamlscript-logo.svg">
@@ -22,7 +26,7 @@
     
     
       
-        <title>Query and Transform YAML/JSON Files - YS — YAML Done Wisely</title>
+        <title>Convert/Query/Transform - YS — YAML Done Wisely</title>
       
     
     
@@ -120,7 +124,7 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Query and Transform YAML/JSON Files - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Convert/Query/Transform - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
@@ -136,7 +140,7 @@ f.parentNode.insertBefore(j,f);
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Query and Transform YAML/JSON Files - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Convert/Query/Transform - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
@@ -161,6 +165,11 @@ f.parentNode.insertBefore(j,f);
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#ys-conversion-examples" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -197,7 +206,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Query and Transform YAML/JSON Files
+              Convert/Query/Transform
             
           </span>
           </a>
@@ -304,10 +313,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../../use/" class="md-tabs__link">
           
   
@@ -463,6 +474,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
+    
+  
   
   
     
@@ -478,19 +491,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
     
     
+      
+        
+        
       
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
           
@@ -506,13 +522,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
             
               
-              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             Using YS
@@ -707,6 +723,72 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
           </ul>
         </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Convert/Query/Transform
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Convert/Query/Transform
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ys-conversion-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS Conversion Examples
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2807,6 +2889,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ys-conversion-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS Conversion Examples
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2828,7 +2927,7 @@ page.meta: >>>{
       "property": "og:type"
     },
     {
-      "content": "Query and Transform YAML/JSON Files - YS \u2014 YAML Done Wisely",
+      "content": "Convert/Query/Transform - YS \u2014 YAML Done Wisely",
       "property": "og:title"
     },
     {
@@ -2860,7 +2959,7 @@ page.meta: >>>{
       "name": "twitter:card"
     },
     {
-      "content": "Query and Transform YAML/JSON Files - YS \u2014 YAML Done Wisely",
+      "content": "Convert/Query/Transform - YS \u2014 YAML Done Wisely",
       "name": "twitter:title"
     },
     {
@@ -2873,10 +2972,10 @@ page.meta: >>>{
     }
   ],
   "talk": 0,
-  "title": "Query and Transform YAML/JSON Files"
+  "title": "Convert/Query/Transform"
 }<<<
-page.previous_page: >>>None<<<
-page.next_page: >>>None<<<
+page.previous_page: >>>Page(title='YS and CircleCI', url='/circleci/')<<<
+page.next_page: >>>Page(title='YS Hacks', url='/hacks/')<<<
 scheme: >>>default<<<
 tag: >>><<<
 title: >>><<<
@@ -2925,22 +3024,53 @@ src_path: doc/query.md
   </a>
 
 
-  <h1>Query and Transform YAML/JSON Files</h1>
+  <h1>Convert/Query/Transform</h1>
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
-<p>You can use the <code>ys</code> command line tool to query and transform YAML and JSON
-files.</p>
-<div class="highlight"><pre><span></span><code># Convert YAML to JSON
-$ ys -J file.yaml
+<p>You can use the <code>ys</code> command line tool to convert, query and transform YAML (or
+JSON since <a href="json.md">JSON is YAML</a>) files much like you would with
+<a href="https://stedolan.github.io/jq/"><code>jq</code>&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> or
+<a href="https://mikefarah.gitbook.io/yq"><code>yq</code>&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While <code>yq</code> currently has features that <code>ys</code> does not (like updating files
+in place and preserving comments), <code>ys</code> has a much larger set of functions
+(it's an entire programming language) to make use of.</p>
+<p>Both are fantastic tools and can be used together for great good!</p>
+</div>
+<p>YS also works with CSV, TSV and Clojure's EDN formats, with even more formats
+planned for the future.</p>
+<h2 id="ys-conversion-examples">YS Conversion Examples<a class="headerlink" href="#ys-conversion-examples" title="Permanent link">🔗</a></h2>
+<ul>
+<li>
+<p>Convert YAML to JSON</p>
+<div class="highlight"><pre><span></span><code>$ ys -l file.yaml  # Compact JSON output
+$ ys -J file.yaml  # Pretty JSON output
+$ ys -l file.yaml | jq .   # Pipe to jq for even prettier JSON output
 
+$ cat file.yaml | ys -l -  # Read from stdin (use - for file name)
+$ cat file.yaml | ys -l    # -l with no file argument reads from stdin
+</code></pre></div>
+</li>
+</ul>
+<!--
 # Convert JSON to YAML
-$ ys -Y file.json
+
+<div class="highlight"><pre><span></span><code>$ ys -Y file.json
 
 # Query a YAML file and reverse the result and print as JSON
 $ ys -Je &#39;.foo.0.bar:reverse&#39; - &lt; file.yaml
 </code></pre></div>
-<p>More examples soon.</p>
+
+More examples soon.
+-->
 
 
 
@@ -2970,6 +3100,44 @@ $ ys -Je &#39;.foo.0.bar:reverse&#39; - &lt; file.yaml
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../circleci/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS and CircleCI">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                YS and CircleCI
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../hacks/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Hacks">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                YS Hacks
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
