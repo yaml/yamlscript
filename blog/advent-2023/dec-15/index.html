@@ -21,7 +21,7 @@
         <link rel="next" href="../dec-14/">
       
       
-      <link rel="icon" href="../../../images/yamlscript-logo.svg">
+      <link rel="icon" href="../../../image/yamlscript-logo.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
@@ -188,7 +188,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../../images/yamlscript-logo.svg" alt="logo">
+  <img src="../../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -450,7 +450,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <label class="md-nav__title" for="__drawer">
     <a href="../../.." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../../images/yamlscript-logo.svg" alt="logo">
+  <img src="../../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
     YS — YAML Done Wisely
@@ -660,7 +660,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/cicd/" class="md-nav__link">
+      <a href="../../../cicd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -681,7 +681,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/gha/" class="md-nav__link">
+      <a href="../../../gha/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -702,7 +702,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/circleci/" class="md-nav__link">
+      <a href="../../../circleci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -731,7 +731,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../use/hacks/" class="md-nav__link">
+      <a href="../../../hacks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2805,7 +2805,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../../contrib/website/" class="md-nav__link">
+      <a href="../../../contrib-website/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -3074,12 +3074,12 @@ The results were just not "feel good".</p>
 <p>Time for Plan B.</p>
 <h3 id="malys">mal.ys<a class="headerlink" href="#malys" title="Permanent link">🔗</a></h3>
 <p>I mentioned this in my recent <a href="../dec-13/">History Lesson</a>...
-I had just finished my Perl implementation of <a href="https://github.com/kanaka/mal">Make a Lisp&nbsp;<img src="/images/external-link.svg"
+I had just finished my Perl implementation of <a href="https://github.com/kanaka/mal">Make a Lisp&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a> (mal) and I decided to try to make a YS version
 next even though there was no YS yet.</p>
-<p>Take a look at the implementation of <a href="https://github.com/kanaka/mal/blob/master/impls/mal/stepA_mal.mal">Mal in Mal&nbsp;<img src="/images/external-link.svg"
+<p>Take a look at the implementation of <a href="https://github.com/kanaka/mal/blob/master/impls/mal/stepA_mal.mal">Mal in Mal&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>.</p>
@@ -3092,7 +3092,7 @@ implementation.</p>
 I revised it over and over until I liked how it looked and felt.
 Certainly I had to think about how my new creation would scale to other
 YS programming problems.</p>
-<p>Here's what I came up with on March 12th, 2023: <a href="https://github.com/ingydotnet/mal/blob/yamlscript/impls/yamlscript/src/yamlscript.ys">yamlscript.ys&nbsp;<img src="/images/external-link.svg"
+<p>Here's what I came up with on March 12th, 2023: <a href="https://github.com/ingydotnet/mal/blob/yamlscript/impls/yamlscript/src/yamlscript.ys">yamlscript.ys&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>.</p>
@@ -3155,7 +3155,7 @@ But from the word by word perspective, Clojure is a bit long-winded at times.</p
 But I didn't take <code>println</code> away from you either.
 That's your choice.</p>
 <p>YS is about choices.
-It embraces the <a href="https://en.wikipedia.org/wiki/There%27s_more_than_one_way_to_do_it">TMTOWTDI&nbsp;<img src="/images/external-link.svg"
+It embraces the <a href="https://en.wikipedia.org/wiki/There%27s_more_than_one_way_to_do_it">TMTOWTDI&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a> philosophy.
@@ -3183,7 +3183,7 @@ Using the <code>$some-var</code> or <code>$(some-expression)</code> inline synta
 insert the values just like you'd expect.</p>
 <p>This makes things like templating and testing multi-line output a breeze.
 In fact, the YS test suite (testing YS inputs, Clojure outputs, and
-intermediary stage forms) is based on <a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml">YAML Literals&nbsp;<img src="/images/external-link.svg"
+intermediary stage forms) is based on <a href="https://github.com/yaml/yamlscript/blob/main/core/test/compiler-stack.yaml">YAML Literals&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>.</p>
@@ -3228,7 +3228,7 @@ It then inserts a <code>declare</code> expression for them at the top of the out
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you are interested in why Clojure's author Rich Hickey chose to make
-Clojure "bottom-up", read about it <a href="https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f#why-clojure-compiler-is-single-pass-arent-many-possible-optimizations-lost-this-way">here&nbsp;<img src="/images/external-link.svg"
+Clojure "bottom-up", read about it <a href="https://gist.github.com/reborg/dc8b0c96c397a56668905e2767fd697f#why-clojure-compiler-is-single-pass-arent-many-possible-optimizations-lost-this-way">here&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>.</p>

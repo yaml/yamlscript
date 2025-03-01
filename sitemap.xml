@@ -9,7 +9,39 @@
          <lastmod>2025-03-01</lastmod>
     </url>
     <url>
+         <loc>https://yamlscript.org/cicd/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/circleci/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/contrib-roadmap/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/contrib-rules/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/contrib-website/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
          <loc>https://yamlscript.org/faq/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/gha/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/hacks/</loc>
+         <lastmod>2025-03-01</lastmod>
+    </url>
+    <url>
+         <loc>https://yamlscript.org/helmys/</loc>
          <lastmod>2025-03-01</lastmod>
     </url>
     <url>
@@ -166,18 +198,6 @@
     </url>
     <url>
          <loc>https://yamlscript.org/contrib/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/contrib/roadmap/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/contrib/rules/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/contrib/website/</loc>
          <lastmod>2025-03-01</lastmod>
     </url>
     <url>
@@ -378,26 +398,6 @@
     </url>
     <url>
          <loc>https://yamlscript.org/use/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/use/cicd/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/use/circleci/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/use/gha/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/use/hacks/</loc>
-         <lastmod>2025-03-01</lastmod>
-    </url>
-    <url>
-         <loc>https://yamlscript.org/use/helmys/</loc>
          <lastmod>2025-03-01</lastmod>
     </url>
 </urlset>
