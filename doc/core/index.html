@@ -3403,20 +3403,14 @@ src_path: doc/core.md
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
 <p>YS has a very large set of useful functions that it inherits from Clojure's
-<a href="https://github.com/clojure/clojure/blob/clojure-1.12.0/src/clj/clojure/core.clj"><code>clojure.core</code> library&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<a href="https://github.com/clojure/clojure/blob/clojure-1.12.0/src/clj/clojure/core.clj"><code>clojure.core</code> library&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a>.</p>
 <p>These functions are the bread and butter building blocks of YS programming.</p>
-<p>The functions are very well organized in the <a href="https://clojuredocs.org/quickref">Clojure Docs Quick Reference&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p>The functions are very well organized in the <a href="https://clojuredocs.org/quickref">Clojure Docs Quick Reference&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> and you can get to the documentation for each
 function from there.</p>
 <p>This document is a condensed quick reference of the functions that are most
@@ -3431,66 +3425,36 @@ In those cases, the original Clojure function is still available in the
 <h3 id="arithmetic">Arithmetic<a class="headerlink" href="#arithmetic" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/+">+&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/-">-&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/*">*&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core//">/&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/inc">inc&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/dec">dec&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/max">max&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/min">min&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/rand">rand&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/rand-int">rand-int&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/+">+&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/-">-&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/*">*&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core//">/&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/inc">inc&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/dec">dec&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/max">max&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/min">min&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/rand">rand&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/rand-int">rand-int&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3502,42 +3466,27 @@ In those cases, the original Clojure function is still available in the
 </ul>
 <p>See Also:</p>
 <ul>
-<li><a href="https://clojure.github.io/clojure/clojure.math-api.html"><code>clojure.math</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojure.github.io/clojure/clojure.math-api.html"><code>clojure.math</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a>
   functions callable as <code>math/&lt;func-name&gt;</code> in YS.</li>
 </ul>
 <h3 id="comparison">Comparison<a class="headerlink" href="#comparison" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/&lt;">&lt;&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/&gt;">&gt;&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/&lt;=">&lt;=&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/&gt;=">&gt;=&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/&lt;">&lt;&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/&gt;">&gt;&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/&lt;=">&lt;=&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/&gt;=">&gt;=&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3548,48 +3497,27 @@ In those cases, the original Clojure function is still available in the
 <h3 id="cast">Cast<a class="headerlink" href="#cast" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/byte">byte&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/short">short&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/int">int&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/long">long&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/float">float&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/double">double&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/num">num&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/byte">byte&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/short">short&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/int">int&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/long">long&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/float">float&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/double">double&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/num">num&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3599,71 +3527,41 @@ In those cases, the original Clojure function is still available in the
 <h3 id="test">Test<a class="headerlink" href="#test" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/zero?">zero?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/pos?">pos?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/neg?">neg?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/even?">even?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/odd?">odd?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/number?">number?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/zero?">zero?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/pos?">pos?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/neg?">neg?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/even?">even?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/odd?">odd?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/number?">number?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <h2 id="boolean">Boolean<a class="headerlink" href="#boolean" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/nil?">nil?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/true?">true?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/false?">false?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/boolean">boolean&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/nil?">nil?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/true?">true?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/false?">false?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/boolean">boolean&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3673,54 +3571,30 @@ In those cases, the original Clojure function is still available in the
 <h2 id="string">String<a class="headerlink" href="#string" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/str">str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/pr-str">pr-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/prn-str">prn-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/with-out-str">with-out-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/count">count&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/subs">subs&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/format">format&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/string?">string?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/str">str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/pr-str">pr-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/prn-str">prn-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/with-out-str">with-out-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/count">count&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/subs">subs&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/format">format&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/string?">string?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3730,48 +3604,30 @@ In those cases, the original Clojure function is still available in the
 </ul>
 <p>See Also:</p>
 <ul>
-<li><a href="https://clojure.github.io/clojure/clojure.string-api.html"><code>clojure.string</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojure.github.io/clojure/clojure.string-api.html"><code>clojure.string</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a>
   functions callable as <code>str/&lt;func-name&gt;</code> in YS.</li>
 </ul>
 <h2 id="regular-expression">Regular Expression<a class="headerlink" href="#regular-expression" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/re-pattern">re-pattern&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/re-matches">re-matches&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/re-find">re-find&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/re-seq">re-seq&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/re-groups">re-groups&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/re-pattern">re-pattern&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/re-matches">re-matches&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/re-find">re-find&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/re-seq">re-seq&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/re-groups">re-groups&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3784,24 +3640,15 @@ In those cases, the original Clojure function is still available in the
 <h2 id="boolean_1">Boolean<a class="headerlink" href="#boolean_1" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/not">not&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/and">and&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/or">or&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/not">not&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/and">and&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/or">or&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3812,102 +3659,54 @@ In those cases, the original Clojure function is still available in the
 <h3 id="normal">Normal<a class="headerlink" href="#normal" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/if">if&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/when">when&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/if-not">if-not&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/when-not">when-not&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/if-let">if-let&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/when-let">when-let&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/if-some">if-some&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/when-some">when-some&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/cond">cond&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/condp">condp&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/case">case&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/do">do&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/eval">eval&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/loop">loop&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/recur">recur&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/while">while&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/if">if&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/when">when&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/if-not">if-not&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/when-not">when-not&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/if-let">if-let&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/when-let">when-let&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/if-some">if-some&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/when-some">when-some&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/cond">cond&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/condp">condp&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/case">case&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/do">do&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/eval">eval&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/loop">loop&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/recur">recur&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/while">while&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3917,36 +3716,21 @@ In those cases, the original Clojure function is still available in the
 <h3 id="exception">Exception<a class="headerlink" href="#exception" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/try">try&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/catch">catch&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/finally">finally&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/throw">throw&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/assert">assert&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/try">try&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/catch">catch&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/finally">finally&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/throw">throw&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/assert">assert&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -3956,84 +3740,45 @@ In those cases, the original Clojure function is still available in the
 <h2 id="function">Function<a class="headerlink" href="#function" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/fn">fn&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/defn">defn&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/defn-">defn-&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/identity">identity&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/comp">comp&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/partial">partial&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/complement">complement&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/constantly">constantly&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/-&gt;">-&gt;&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/-&gt;&gt;">-&gt;&gt;&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/apply">apply&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/fn?">fn?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/ifn?">ifn?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/fn">fn&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/defn">defn&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/defn-">defn-&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/identity">identity&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/comp">comp&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/partial">partial&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/complement">complement&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/constantly">constantly&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/-&gt;">-&gt;&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/-&gt;&gt;">-&gt;&gt;&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/apply">apply&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/fn?">fn?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/ifn?">ifn?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -4046,132 +3791,69 @@ In those cases, the original Clojure function is still available in the
 <h3 id="general">General<a class="headerlink" href="#general" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/count">count&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/empty">empty&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/not-empty">not-empty&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/into">into&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/contains?">contains?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/distinct?">distinct?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/empty?">empty?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/every?">every?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/some">some&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/not-every?">not-every?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/not-any?">not-any?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/coll?">coll?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/seq?">seq?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/vector?">vector?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/list?">list?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/map?">map?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/set?">set?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/sorted?">sorted?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/sequential?">sequential?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/associative?">associative?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/count">count&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/empty">empty&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/not-empty">not-empty&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/into">into&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/contains?">contains?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/distinct?">distinct?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/empty?">empty?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/every?">every?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/some">some&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/not-every?">not-every?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/not-any?">not-any?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/coll?">coll?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/seq?">seq?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/vector?">vector?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/list?">list?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/map?">map?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/set?">set?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/sorted?">sorted?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/sequential?">sequential?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/associative?">associative?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -4181,202 +3863,109 @@ In those cases, the original Clojure function is still available in the
 <h3 id="vector">Vector<a class="headerlink" href="#vector" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/vec">vec&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/vector">vector&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/vec-of">vec-of&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/peek">peek&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/pop">pop&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/get">get&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/vec">vec&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/vector">vector&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/vec-of">vec-of&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/peek">peek&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/pop">pop&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/get">get&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <h3 id="list">List<a class="headerlink" href="#list" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/list">list&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/cons">cons&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/peek">peek&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/pop">pop&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/first">first&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/rest">rest&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/list">list&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/cons">cons&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/peek">peek&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/pop">pop&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/first">first&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/rest">rest&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <h3 id="map">Map<a class="headerlink" href="#map" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/hash-map">hash-map&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/array-map">array-map&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/sorted-map">sorted-map&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/zipmap">zipmap&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/frequencies">frequencies&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/assoc">assoc&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/assoc-in">assoc-in&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/dissoc">dissoc&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/find">find&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/get-in">get-in&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/update-in">update-in&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/key">key&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/val">val&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/keys">keys&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/vals">vals&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/merge">merge&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/reduce-kv">reduce-kv&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/hash-map">hash-map&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/array-map">array-map&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/sorted-map">sorted-map&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/zipmap">zipmap&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/frequencies">frequencies&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/assoc">assoc&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/assoc-in">assoc-in&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/dissoc">dissoc&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/find">find&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/get-in">get-in&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/update-in">update-in&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/key">key&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/val">val&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/keys">keys&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/vals">vals&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/merge">merge&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/reduce-kv">reduce-kv&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -4386,204 +3975,105 @@ In those cases, the original Clojure function is still available in the
 <h3 id="sequence">Sequence<a class="headerlink" href="#sequence" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/seq">seq&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/repeat">repeat&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/range">range&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/iterate">iterate&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/cycle">cycle&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/interleave">interleave&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/interpose">interpose&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/first">first&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/second">second&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/last">last&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/rest">rest&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/next">next&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/butlast">butlast&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/nth">nth&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/take">take&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/drop">drop&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/take-while">take-while&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/drop-while">drop-while&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/concat">concat&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/map">map&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/filter">filter&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/remove">remove&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/sort">sort&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/shuffle">shuffle&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/flatten">flatten&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/for">for&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/doseq">doseq&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/dorun">dorun&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/doall">doall&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/mapcat">mapcat&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/reduce">reduce&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/keep">keep&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/seq">seq&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/repeat">repeat&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/range">range&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/iterate">iterate&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/cycle">cycle&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/interleave">interleave&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/interpose">interpose&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/first">first&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/second">second&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/last">last&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/rest">rest&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/next">next&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/butlast">butlast&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/nth">nth&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/take">take&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/drop">drop&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/take-while">take-while&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/drop-while">drop-while&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/conj">conj&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/concat">concat&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/map">map&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/filter">filter&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/remove">remove&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/sort">sort&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/shuffle">shuffle&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/flatten">flatten&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/for">for&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/doseq">doseq&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/dorun">dorun&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/doall">doall&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/mapcat">mapcat&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/reduce">reduce&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/keep">keep&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -4594,78 +4084,42 @@ In those cases, the original Clojure function is still available in the
 <h2 id="variable">Variable<a class="headerlink" href="#variable" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/def">def&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/intern">intern&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/declare">declare&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/binding">binding&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/gensym">gensym&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/var">var&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/var-get">var-get&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/resolve">resolve&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/find-var">find-var&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/alter-var-root">alter-var-root&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/var?">var?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/bound?">bound?&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/def">def&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/intern">intern&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/declare">declare&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/binding">binding&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/gensym">gensym&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/var">var&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/var-get">var-get&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/resolve">resolve&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/find-var">find-var&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/alter-var-root">alter-var-root&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/var?">var?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/bound?">bound?&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>
@@ -4676,102 +4130,54 @@ In those cases, the original Clojure function is still available in the
 <h2 id="io">I/O<a class="headerlink" href="#io" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/print">print&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/printf">printf&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/println">println&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/pr">pr&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/prn">prn&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/print-str">print-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/println-str">println-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/pr-str">pr-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/prn-str">prn-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/newline">newline&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/flush">flush&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/slurp">slurp&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/spit">spit&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/with-out-str">with-out-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/with-open">with-open&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
-</a>, <a href="https://clojuredocs.org/clojure.core/with-in-str">with-in-str&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><a href="https://clojuredocs.org/clojure.core/print">print&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/printf">printf&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/println">println&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/pr">pr&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/prn">prn&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/print-str">print-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/println-str">println-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/pr-str">pr-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/prn-str">prn-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/newline">newline&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/flush">flush&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/slurp">slurp&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/spit">spit&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/with-out-str">with-out-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/with-open">with-open&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, <a href="https://clojuredocs.org/clojure.core/with-in-str">with-in-str&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <p>YS Std:</p>

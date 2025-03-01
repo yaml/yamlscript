@@ -3441,12 +3441,9 @@ src_path: doc/ys-std.md
 <p>YS has over 1000 functions that are always available to your YS programs without
 needing to explicitly import (<code>use</code>) any libraries.
 Over 800 of these can be used without a namespace prefix like <code>str/</code> or <code>math/</code>.</p>
-<p>Most of these functions are from the <a href="https://clojuredocs.org/quickref">Clojure standard library&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p>Most of these functions are from the <a href="https://clojuredocs.org/quickref">Clojure standard library&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a>, but YS also has the <code>ys::std</code> standard
 library that provides additional functions.</p>
 <p>This document describes the <code>ys::std</code> functions and how to use them.
@@ -3465,22 +3462,16 @@ In those cases, the original Clojure function is still available in the
 <li><code>base64-points(Str) → [Int]</code> — Decode a base64 string to code points</li>
 <li><code>base64(Str) → Str</code> — Alias of base64-encode</li>
 <li>
-<p><code>blank?(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/blank_q"><code>clojure.string/blank?</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>blank?(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/blank_q"><code>clojure.string/blank?</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>True if string is nil, empty or only whitespace</p>
 </li>
 <li>
-<p><code>chomp(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim-newline"><code>clojure.string/trim-newline</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>chomp(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim-newline"><code>clojure.string/trim-newline</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Remove trailing newlines</p>
 </li>
@@ -3488,32 +3479,23 @@ In those cases, the original Clojure function is still available in the
 <p><code>chop(Str) → Str</code> — Remove last character</p>
 </li>
 <li>
-<p><code>ends?(Str) → B</code> — Alias of <a href="https://clojuredocs.org/clojure.string/ends-with_q"><code>clojure.string/ends-with?</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>ends?(Str) → B</code> — Alias of <a href="https://clojuredocs.org/clojure.string/ends-with_q"><code>clojure.string/ends-with?</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>True if string ends with suffix</p>
 </li>
 <li>
-<p><code>escape(Str {Chr:Str}) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/escape"><code>clojure.string/escape</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>escape(Str {Chr:Str}) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/escape"><code>clojure.string/escape</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Escape special characters in a string</p>
 </li>
 <li>
-<p><code>index(Str Str) → Int</code> — Alias of <a href="https://clojuredocs.org/clojure.string/index-of"><code>clojure.string/index-of</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>index(Str Str) → Int</code> — Alias of <a href="https://clojuredocs.org/clojure.string/index-of"><code>clojure.string/index-of</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Find index of substring</p>
 </li>
@@ -3523,12 +3505,9 @@ In those cases, the original Clojure function is still available in the
 <li><code>join(sep [Str]) → Str</code> — Join strings or seqs with a separator</li>
 <li><code>joins([Str]) → Str</code> — Join strings with <code>" "</code></li>
 <li>
-<p><code>lc(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/lower-case"><code>clojure.string/lower-case</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>lc(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/lower-case"><code>clojure.string/lower-case</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Lowercase a string</p>
 </li>
@@ -3536,70 +3515,49 @@ In those cases, the original Clojure function is still available in the
 <p><code>lines(Str) → [Str]</code> — Split a string into lines</p>
 </li>
 <li><code>pretty(Str) → Str</code> — Pretty print a value</li>
-<li><code>replace(X) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/replace"><code>clojure.core/replace</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>replace(X) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/replace"><code>clojure.core/replace</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 <li>
-<p><code>replace(Str Rgx Str?) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace"><code>clojure.string/replace</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>replace(Str Rgx Str?) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace"><code>clojure.string/replace</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Replace all occurrences of regex with new string (default "")</p>
 </li>
 <li>
-<p><code>replace1(Str Rgx Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace-first"><code>clojure.string/replace-first</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>replace1(Str Rgx Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/replace-first"><code>clojure.string/replace-first</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Replace first occurrence of regex with new string</p>
 </li>
 <li>
-<p><code>rindex(Str Str) → Int</code> — Alias of <a href="https://clojuredocs.org/clojure.string/last-index-of"><code>clojure.string/last-index-of</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>rindex(Str Str) → Int</code> — Alias of <a href="https://clojuredocs.org/clojure.string/last-index-of"><code>clojure.string/last-index-of</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Find last index of substring</p>
 </li>
 <li>
-<p><code>split(Str) → [Str]</code> — Like <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>split(Str) → [Str]</code> — Like <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Split on <code>""</code></p>
 </li>
 <li>
-<p><code>split(Str rgx) → [Str]</code> — Alias of <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>split(Str rgx) → [Str]</code> — Alias of <a href="https://clojuredocs.org/clojure.string/split"><code>clojure.string/split</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Split a string by a regex</p>
 </li>
 <li>
-<p><code>starts?(Str Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/starts-with_q"><code>clojure.string/starts-with?</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>starts?(Str Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/starts-with_q"><code>clojure.string/starts-with?</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>True if string starts with prefix</p>
 </li>
@@ -3611,52 +3569,37 @@ In those cases, the original Clojure function is still available in the
 <p><code>text([Str]) → Str</code> — Join list of strings with newlines, adding a newline at the end</p>
 </li>
 <li>
-<p><code>trim(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim"><code>clojure.string/trim</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>trim(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trim"><code>clojure.string/trim</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Trim whitespace from both ends</p>
 </li>
 <li>
-<p><code>triml(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/triml"><code>clojure.string/triml</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>triml(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/triml"><code>clojure.string/triml</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Trim whitespace from left end</p>
 </li>
 <li>
-<p><code>trimr(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trimr"><code>clojure.string/trimr</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>trimr(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/trimr"><code>clojure.string/trimr</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Trim whitespace from right end</p>
 </li>
 <li>
-<p><code>uc(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/upper-case"><code>clojure.string/upper-case</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>uc(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/upper-case"><code>clojure.string/upper-case</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Uppercase a string</p>
 </li>
 <li>
-<p><code>uc1(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/capitalize"><code>clojure.string/capitalize</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>uc1(Str) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.string/capitalize"><code>clojure.string/capitalize</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Uppercase the first character</p>
 </li>
@@ -3664,32 +3607,23 @@ In those cases, the original Clojure function is still available in the
 <p><code>words(Str) → [Str]</code> — Split a string into words (split on whitespace)</p>
 </li>
 </ul>
-<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#strings-characters">https://clojuredocs.org/quickref#strings-characters&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#strings-characters">https://clojuredocs.org/quickref#strings-characters&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="collection-functions">Collection functions<a class="headerlink" href="#collection-functions" title="Permanent link">🔗</a></h2>
 <ul>
 <li>
-<p><code>diff(Col Col) → [Str Str Str]</code> — Alias of <a href="https://clojuredocs.org/clojure.data/diff"><code>clojure.data/diff</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>diff(Col Col) → [Str Str Str]</code> — Alias of <a href="https://clojuredocs.org/clojure.data/diff"><code>clojure.data/diff</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Return the difference of two collections</p>
 </li>
 <li>
-<p><code>flat(Vec) → Vec</code> — Like <a href="https://clojuredocs.org/clojure.core/flatten"><code>clojure.core/flatten</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>flat(Vec) → Vec</code> — Like <a href="https://clojuredocs.org/clojure.core/flatten"><code>clojure.core/flatten</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Only flattens one level</p>
 </li>
@@ -3721,35 +3655,23 @@ In those cases, the original Clojure function is still available in the
 <p><code>slice(Col [Key]) → [X]</code> — Get a sequence of values from the keys</p>
 </li>
 </ul>
-<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#collections">https://clojuredocs.org/quickref#collections&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#collections">https://clojuredocs.org/quickref#collections&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="math-functions">Math functions<a class="headerlink" href="#math-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>add(Num*) → Num</code> — Alias of <a href="https://clojuredocs.org/clojure.core/+"><code>clojure.core/+</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>add(Num*) → Num</code> — Alias of <a href="https://clojuredocs.org/clojure.core/+"><code>clojure.core/+</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>sub(Num+) → Num</code> — Alias of <a href="https://clojuredocs.org/clojure.core/-"><code>clojure.core/-</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>sub(Num+) → Num</code> — Alias of <a href="https://clojuredocs.org/clojure.core/-"><code>clojure.core/-</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>mul(Num*) → Num</code> — Alias of <a href="https://clojuredocs.org/clojure.core/*"><code>clojure.core/*</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>mul(Num*) → Num</code> — Alias of <a href="https://clojuredocs.org/clojure.core/*"><code>clojure.core/*</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 <li><code>div(Num+) → Num</code> — Division function that returns a float if needed</li>
 <li>
@@ -3779,12 +3701,9 @@ In those cases, the original Clojure function is still available in the
 <li><code>sqrt(Num) → Num</code> — Square root of a number</li>
 <li><code>sum([Num]) → Num</code> — Sum a sequence of numbers</li>
 </ul>
-<p><strong>See also</strong>: <a href="https://clojure.github.io/clojure/clojure.math-api.html">https://clojure.github.io/clojure/clojure.math-api.html&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://clojure.github.io/clojure/clojure.math-api.html">https://clojure.github.io/clojure/clojure.math-api.html&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="infix-operators">Infix operators<a class="headerlink" href="#infix-operators" title="Permanent link">🔗</a></h2>
 <ul>
@@ -3834,12 +3753,9 @@ In those cases, the original Clojure function is still available in the
 <li>
 <p><code>die(Msg)</code> — Idiomatic error function</p>
 </li>
-<li><code>each(Bindings Body) → X</code> — Non-lazy <a href="https://clojuredocs.org/clojure.core/for"><code>clojure.core/for</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>each(Bindings Body) → X</code> — Non-lazy <a href="https://clojuredocs.org/clojure.core/for"><code>clojure.core/for</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 <li><code>eval(Str) → X</code> — Evaluate a string as YS code</li>
 <li><code>exit(RC=0)</code> — Exit the program</li>
@@ -3850,22 +3766,16 @@ In those cases, the original Clojure function is still available in the
 <p>Often used to convert a string to a function.</p>
 </li>
 <li>
-<p><code>when+(Cond Body) → X</code> — Like <a href="https://clojuredocs.org/clojure.core/when"><code>clojure.core/when</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>when+(Cond Body) → X</code> — Like <a href="https://clojuredocs.org/clojure.core/when"><code>clojure.core/when</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Binds the result of the condition to the <code>_</code> symbol</p>
 </li>
 </ul>
-<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#flow-control">https://clojuredocs.org/quickref#flow-control&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#flow-control">https://clojuredocs.org/quickref#flow-control&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="function-functions">Function functions<a class="headerlink" href="#function-functions" title="Permanent link">🔗</a></h2>
 <ul>
@@ -3876,12 +3786,9 @@ In those cases, the original Clojure function is still available in the
 <li><code>=~ X</code> — Infix re-find operator</li>
 <li><code>!~ X</code> — Infix re-find complement operator</li>
 </ul>
-<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#regular-expressions">https://clojuredocs.org/quickref#regular-expressions&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://clojuredocs.org/quickref#regular-expressions">https://clojuredocs.org/quickref#regular-expressions&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="io-functions">I/O functions<a class="headerlink" href="#io-functions" title="Permanent link">🔗</a></h2>
 <ul>
@@ -3898,12 +3805,9 @@ In those cases, the original Clojure function is still available in the
 <p>Flushes stdout after printing</p>
 </li>
 <li>
-<p><code>read(path) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.core/slurp"><code>clojure.core/slurp</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>read(path) → Str</code> — Alias of <a href="https://clojuredocs.org/clojure.core/slurp"><code>clojure.core/slurp</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Read a file into a string</p>
 </li>
@@ -3915,94 +3819,61 @@ In those cases, the original Clojure function is still available in the
 <p>Flushes stderr after printing</p>
 </li>
 <li>
-<p><code>write(path Str) → nil</code> — Alias of <a href="https://clojuredocs.org/clojure.core/spit"><code>clojure.core/spit</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>write(path Str) → nil</code> — Alias of <a href="https://clojuredocs.org/clojure.core/spit"><code>clojure.core/spit</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Write a string to a file</p>
 </li>
 </ul>
 <h2 id="shorter-named-alias-functions">Shorter named alias functions<a class="headerlink" href="#shorter-named-alias-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>a(X) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/identity"><code>clojure.core/identity</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>a(X) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/identity"><code>clojure.core/identity</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>len(X) → Int</code> — Alias of <a href="https://clojuredocs.org/clojure.core/count"><code>clojure.core/count</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>len(X) → Int</code> — Alias of <a href="https://clojuredocs.org/clojure.core/count"><code>clojure.core/count</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <h2 id="quoting-functions">Quoting functions<a class="headerlink" href="#quoting-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>q(form) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/quote"><code>clojure.core/quote</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>q(form) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/quote"><code>clojure.core/quote</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>qr(str) → Rgx</code> — Alias of <a href="https://clojuredocs.org/clojure.core/re-pattern"><code>clojure.core/re-pattern</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>qr(str) → Rgx</code> — Alias of <a href="https://clojuredocs.org/clojure.core/re-pattern"><code>clojure.core/re-pattern</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 <li><code>qw(symbols) → [Str]</code> — Turn symbols into a vector of strings</li>
 </ul>
 <h2 id="named-function-for-infix-operators">Named function for infix operators<a class="headerlink" href="#named-function-for-infix-operators" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>eq</code> — Alias of <a href="https://clojuredocs.org/clojure.core/="><code>clojure.core/=</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>eq</code> — Alias of <a href="https://clojuredocs.org/clojure.core/="><code>clojure.core/=</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>ne</code> — Alias of <a href="https://clojuredocs.org/clojure.core/not="><code>clojure.core/not=</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>ne</code> — Alias of <a href="https://clojuredocs.org/clojure.core/not="><code>clojure.core/not=</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>gt</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&gt;"><code>clojure.core/&gt;</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>gt</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&gt;"><code>clojure.core/&gt;</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>ge</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&gt;="><code>clojure.core/&gt;=</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>ge</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&gt;="><code>clojure.core/&gt;=</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>lt</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&lt;"><code>clojure.core/&lt;</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>lt</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&lt;"><code>clojure.core/&lt;</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li><code>le</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&lt;="><code>clojure.core/&lt;=</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li><code>le</code> — Alias of <a href="https://clojuredocs.org/clojure.core/&lt;="><code>clojure.core/&lt;=</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 <h2 id="common-type-conversion-functions">Common type conversion functions<a class="headerlink" href="#common-type-conversion-functions" title="Permanent link">🔗</a></h2>
@@ -4078,12 +3949,9 @@ In those cases, the original Clojure function is still available in the
 <li><code>fs-rel?(Path) → B</code> — True if path is relative</li>
 <li><code>fs-which(name) → B</code> — Find the path of an executable</li>
 </ul>
-<p><strong>See also</strong>: <a href="https://github.com/babashka/fs/blob/master/API.md">https://github.com/babashka/fs/blob/master/API.md&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://github.com/babashka/fs/blob/master/API.md">https://github.com/babashka/fs/blob/master/API.md&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="datetime-functions">Date/Time functions<a class="headerlink" href="#datetime-functions" title="Permanent link">🔗</a></h2>
 <ul>
@@ -4103,12 +3971,9 @@ In those cases, the original Clojure function is still available in the
 <li><code>shell(Cmd Str*) → Result</code> — Execute a command</li>
 <li><code>shout(Cmd Str*) → Result</code> — Execute a command and return the output</li>
 </ul>
-<p><strong>See also</strong>: <a href="https://github.com/babashka/process#readme">https://github.com/babashka/process#readme&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><strong>See also</strong>: <a href="https://github.com/babashka/process#readme">https://github.com/babashka/process#readme&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></p>
 <h2 id="external-library-functions">External library functions<a class="headerlink" href="#external-library-functions" title="Permanent link">🔗</a></h2>
 <ul>
@@ -4130,22 +3995,16 @@ In those cases, the original Clojure function is still available in the
 <li><code>atom() → Atom</code> — Create an atom with a nil value</li>
 <li><code>atom(X) → Atom</code> — Create an atom with a value X</li>
 <li>
-<p><code>reset(Atom X) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/reset!"><code>clojure.core/reset!</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>reset(Atom X) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/reset!"><code>clojure.core/reset!</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Set the value of an atom</p>
 </li>
 <li>
-<p><code>swap(Atom Fn Arg*) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/swap!"><code>clojure.core/swap!</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p><code>swap(Atom Fn Arg*) → X</code> — Alias of <a href="https://clojuredocs.org/clojure.core/swap!"><code>clojure.core/swap!</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> </p>
 <p>Update the value of an atom</p>
 </li>
@@ -4154,30 +4013,21 @@ In those cases, the original Clojure function is still available in the
 <ul>
 <li>
 <p><code>source(X*) → nil</code> — Run a YS file as a Bash script</p>
-<p>Acts like <a href="https://clojuredocs.org/clojure.core/comment."><code>clojure.core/comment.</code>&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<p>Acts like <a href="https://clojuredocs.org/clojure.core/comment."><code>clojure.core/comment.</code>&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a> Does nothing in YS. Intended for Bash.</p>
 </li>
 </ul>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">🔗</a></h2>
 <ul>
-<li>The <code>ys::std</code> <a href="https://github.com/yaml/yamlscript/blob/website/core/src/ys/std.clj">source code&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li>The <code>ys::std</code> <a href="https://github.com/yaml/yamlscript/blob/website/core/src/ys/std.clj">source code&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
-<li>The <code>clojure::core</code> <a href="https://github.com/clojure/clojure/blob/clojure-1.12.0/src/clj/clojure/core.clj">source code&nbsp;<svg xmlns="http://www.w3.org/2000/svg"
-     width="12" height="12" viewBox="0 0 12 12">
-    <title>External link</title>
-    <path fill="#36c" d="M6 1h5v5L8.86 3.85 4.7 8 4 7.3l4.15-4.16zM2
-          3h2v1H2v6h6V8h1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1"
-    /></svg>
+<li>The <code>clojure::core</code> <a href="https://github.com/clojure/clojure/blob/clojure-1.12.0/src/clj/clojure/core.clj">source code&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
 </a></li>
 </ul>
 

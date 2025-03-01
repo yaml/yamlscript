@@ -35,6 +35,12 @@ div.code code {
   max-height: 195px;
 }
 
+.external-link {
+  width: 12px;
+  padding-bottom: 5px;
+  margin-left: -3px;
+}
+
 .grid.cards>ul>li {
   border-width: 4px !important;
 }

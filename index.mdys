@@ -32,8 +32,8 @@ Learn More About YS</a></div>
     * **YS** is always 100% valid [YAML](https://yaml.org)
         * Lint, Query, Validate w/ existing tools
     * Created by [YAML inventor/maintainer](ingydotnet.md)
-    * [YS has YAML Loaders for all languages](doc/bindings.md)
-    * Same Capabilities, Features, Bugs & Fixes
+    * [YS has YAML Loaders for all languages](doc/bindings.md)  
+      Same Capabilities, Features, Bugs and Fixes
     * A Common & Consistent YAML Experience  
       (with or without using YS logic features)
 
