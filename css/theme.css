@@ -36,6 +36,7 @@ div.code code {
 }
 
 .external-link {
+  opacity: 0.75;
   width: 12px;
   padding-bottom: 5px;
   margin-left: -3px;
@@ -98,6 +99,6 @@ h1.empty {
 }
 
 .md-header__button.md-logo img, .md-header__button.md-logo svg {
-  height: 3rem;
+  height: 2rem;
   fill: #861f41;
 }

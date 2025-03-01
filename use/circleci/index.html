@@ -2932,8 +2932,34 @@ src_path: use/circleci.md
 
   <h1>YS and CircleCI</h1>
 
-<p>Here is an example of refactoring a CircleCI <code>config.yml</code> file to YS:
-https://github.com/BetterThanTomorrow/calva/blob/published/.circleci/README.md</p>
+<p><a href="https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva">Calva&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>
+is an integrated development environment for enjoyable and productive
+<a href="https://clojure.org">Clojure&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> and <a href="https://clojurescript.org">ClojureScript&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>
+programming in <a href="https://code.visualstudio.com">Visual Studio Code&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<p>Calva uses <a href="https://circleci.com">CircleCI&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> for continuous integration and
+deployment. CircleCI requires a <code>config.yml</code> file in the root of the repository
+to define the build and deployment steps.</p>
+<p>Calva's <code>config.yml</code> file had grown to be quite large and complex, but after
+<a href="https://github.com/BetterThanTomorrow/calva/blob/published/.circleci/README.md">refactoring it to use YS&nbsp;<img src="/images/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+it is now much more maintainable and easier to work with.</p>
 <p>What started out as one big <a href="https://github.com/ingydotnet/calva/blob/9483828c23d117cf8f3c5cfe2ec2bef7be3b51f6/.circleci/config.yml">636 line YAML file&nbsp;<img src="/images/external-link.svg"
      class="external-link"
      alt="External link">
@@ -2955,9 +2981,8 @@ a clear and specific purpose.</p>
 <p>As a bonus, linting was performed on the Bash scripts (now in their own files)
 and several small issues were found and fixed.</p>
 <hr />
-<p>This technique is a general strategy for refactoring large YAML files into
-smaller, more maintainable ones, regardless of whether or not the target system
-uses YS natively yet.</p>
+<p>This technique is a <a href="../cicd/#the-general-solution">general strategy for refactoring large YAML files</a> into smaller, more maintainable ones, regardless
+of whether or not the target system uses YS natively yet.</p>
 
 
 
