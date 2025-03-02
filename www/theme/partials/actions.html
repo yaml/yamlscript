@@ -1,7 +1,8 @@
+{#
 <!-- Uncomment section below to find available data -->
 <!-- pre>
 page: >>>{{ page.file_content_string }}<<<
-page.meta: >>>{{ page.meta | tojson(indent=2) }}<<<
+page.meta: >>>{{ page.meta }}<<<
 page.previous_page: >>>{{ page.previous_page }}<<<
 page.next_page: >>>{{ page.next_page }}<<<
 scheme: >>>{{ scheme }}<<<
@@ -13,6 +14,7 @@ url: {{ page.url }}
 edit_uri: {{ config.edit_uri }}
 src_path: {{ page.file.src_path }}
 </pre -->
+#}
 
 {% set path = page.file.src_path %}
 

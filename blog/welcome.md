@@ -1,6 +1,6 @@
 ---
 title: Welcome to the YS Blog
-# date: 2023-10-26
+date: 2023-10-26
 ---
 
 **Greetings!**

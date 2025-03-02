@@ -4,7 +4,7 @@ talk: 0
 ---
 
 You can use the `ys` command line tool to convert, query and transform YAML (or
-JSON since [JSON is YAML](json.md)) files much like you would with
+JSON since [JSON is YAML](../json.md)) files much like you would with
 [`jq`](https://stedolan.github.io/jq/) or
 [`yq`](https://mikefarah.gitbook.io/yq).
 
