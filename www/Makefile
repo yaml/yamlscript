@@ -16,7 +16,7 @@ MD_FILES := $(MD_FILES:../doc/%=src/doc/%)
 MD_FILES := $(MD_FILES:%.mdys=%.md)
 
 BLOG_FILES := $(shell find ../blog -name '*.md' | sort)
-BLOG_FILES := $(BLOG_FILES:../blog/%=src/blog/%)
+BLOG_FILES := $(BLOG_FILES:../blog/%=src/blog/posts/%)
 
 WATCHER := $(VENV) && watchmedo shell-command
 WATCH := \
@@ -41,10 +41,10 @@ WATCH := $(subst $(space),;,$(WATCH))
 
 DIRS := \
   src/doc \
-  src/blog \
-  src/blog/advent-2023 \
+  src/blog/posts \
 
 DEPS := \
+  build-bin-ys \
 	$(DIRS) \
   $(PYTHON_VENV) \
   $(CONFIG) \
@@ -54,7 +54,6 @@ DEPS := \
 
 
 default::
-	@printf '%s\n' $(MD_FILES)
 
 deps: line1 $(DEPS) line2
 
@@ -69,7 +68,8 @@ else ifeq (stage,$(website))
   YS_WWW_BRANCH := site
 endif
 
-build:: $(DIRS) $(DEPS)
+.PHONY: site
+build site:: $(DIRS) $(DEPS)
 	$(RM) -r site
 	git worktree add -f site
 	$(RM) -r site/*
@@ -85,7 +85,7 @@ deps-update: deps-update-notify deps
 deps-update-notify:
 	: *** Rebuilding dependencies ***
 
-dirs: src/doc src/blog src/blog/advent-2023
+dirs: $(DIRS)
 
 
 # XXX - See 'mkdocs gh-deploy' for a more standard way to do this
@@ -148,7 +148,7 @@ clean::
 	killall watchmedo || true
 	$(RM) src/index.md src/faq.md
 	$(RM) $(CONFIG) sample $T material
-	$(RM) -r site src/doc src/blog .cache
+	$(RM) -r site src/doc src/blog/posts .cache
 
 realclean:: clean
 	$(RM) -r $(PYTHON_VENV)
@@ -196,7 +196,7 @@ src/doc/%.md: ../doc/%.mdys ../doc/mdys.ys ../util/mdys
 	mdys $< > $T
 	[[ -s $T ]] && mv $T $@
 
-src/blog/%.md: ../blog/%.md
+src/blog/posts/%.md: ../blog/%.md
 	copy-md $< > $T
 	[[ -s $T ]] && mv $T $@
 

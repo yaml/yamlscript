@@ -1,7 +1,7 @@
 ---
 title: Standard Library
-talk: 0
 edit: doc/ys-std.mdys
+talk: 0
 ---
 
 YS has over 1000 functions that are always available to your YS programs without

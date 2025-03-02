@@ -11,9 +11,6 @@
 
 ### To Do
 #
-# * Use proper blog plugin
-# * Add RSS feed
-#
 # * Publish mdys as a mkdocs plugin
 # * Publish YS as a mkdocs plugin
 
@@ -46,7 +43,8 @@ edit_uri:: "$(Meta.devel.git)/edit/website"
 nav:
 - Using YS:: load('config/use.yaml')
 - Documentation:: load('config/doc.yaml')
-- Blog:: load('config/blog.yaml')
+- Blog:
+  - blog: blog/index.md
 - Press: press.md
 - Get Involved:: load('config/community.yaml')
 - FAQ: faq.md
@@ -71,10 +69,10 @@ extra:
   talk_uri:: "$(Meta.devel.git)/discussions"
   talk_new_id: 221
 
-strict: false
-
 watch:
 - theme
+
+strict: false
 
 validation:
   omitted_files: ignore
@@ -86,6 +84,18 @@ dev_addr: 0.0.0.0:8000
 
 plugins:
 - search
+- blog:
+    archive: true
+    blog_toc: true
+    categories_toc: true
+    categories_allowed:
+    - General
+    - Advent-2023
+    post_date_format: long
+    post_dir: blog/posts
+    post_url_date_format: yyyy-MM-dd
+    post_url_format: '{date}/{slug}'
+    pagination_per_page: 25
 - link-marker:
     icon_external_link: |
       <img src="/image/external-link.svg"
@@ -94,25 +104,22 @@ plugins:
 - open-in-new-tab
 - redirects:
     redirect_maps:: load('config/redirect.yaml')
+- rss:
+#   enabled: +!ENV [YS_WWW_LIVE, false]
+    categories:
+    - categories
+    date_from_meta:
+      as_creation: date
+    feeds_filenames:
+      rss_created: rss.xml
+    json_feed_enabled: false
+    length: 100
+    match_path: blog/posts/.*
+    pretty_print: true
 - social:
     enabled: +!ENV [YS_WWW_LIVE, false]
     cards_layout_options:
       background_color: '#335723'
-
-# - awesome-pages
-
-# - blog:
-#     post_dir: blog/posts
-#     post_date_format: full
-
-# - rss:
-#     enabled: +!ENV [YS_WWW_LIVE, false]
-#     match_path: blog/.*
-#     date_from_meta:
-#       as_creation: date
-#     categories:
-#     - categories
-#     - tags
 
 # See https://facelessuser.github.io/pymdown-extensions/
 markdown_extensions:
