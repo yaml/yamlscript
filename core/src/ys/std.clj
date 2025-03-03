@@ -461,10 +461,10 @@
 ;; See: `qr` function above
 
 (defn =-- [S R]
-  (re-find R S))
+  (re-find R (str S)))
 
 (defn !-- [S R]
-  (not (re-find R S)))
+  (not (=-- S R)))
 
 
 ;;------------------------------------------------------------------------------
