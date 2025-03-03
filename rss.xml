@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    
+    <title>YS — YAML Done Wisely</title>
+    <description>Program in YAML — Code is Data</description>
+    <link>https://yamlscript.org/</link>
+    <atom:link href="https://yamlscript.org/rss.xml" rel="self" type="application/rss+xml" />
+
+    
+    <managingEditor>Ingy döt Net</managingEditor>
+    <docs>https://github.com/yaml/yamlscript</docs>
+    <language>en</language>
+
+    
+    <pubDate>Mon, 03 Mar 2025 15:58:17 -0000</pubDate>
+    <lastBuildDate>Mon, 03 Mar 2025 15:58:17 -0000</lastBuildDate>
+    <ttl>1440</ttl>
+
+    
+    <generator>MkDocs RSS plugin - v1.17.1</generator>
+
+    
+    
+    <image>
+      <url>None</url>
+      <title>YS — YAML Done Wisely</title>
+      <link>https://yamlscript.org/</link>
+    </image>
+    
+
+    
+    
+    <item>
+      <title>The Kubernetes Effect</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;In my many years of creating Open Source software and talking about it at
+conferences, some of the most productive development times are often those
+leading up to the presentation.&lt;/p&gt;
+&lt;p&gt;In the last post, I mentioned that I was going to present a
+&lt;a href=&#34;https://yamlscript.org/kubeys24&#34;&gt;90 minute YS tutorial&lt;/a&gt; at
+&lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/&#34;&gt;KubeCon (November 15th in Salt Lake City)&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The conference was amazing and the YS tutorial was a huge success.
+I came away with the feeling that YAML and YS had found their community.
+&lt;strong&gt;KubeCon felt like YAMLCon&lt;/strong&gt;!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2024-11-29/the-kubernetes-effect/</link>
+      <pubDate>Fri, 29 Nov 2024 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2024-11-29/the-kubernetes-effect/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-11-29/the-kubernetes-effect.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>The Fall of YAMLScript!</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;h2&gt;(or Exciting YS News for Fall 2024!)&lt;/h2&gt;
+&lt;p&gt;Greetings!&lt;/p&gt;
+&lt;p&gt;It&#39;s been over 3 months since the last blog post here.&lt;/p&gt;
+&lt;p&gt;Just to be clear, the YS/YAMLScript project is alive and fantastic!&lt;/p&gt;
+&lt;p&gt;We&#39;ve just been busy as hell on 2 very big things: &lt;a href=&#34;https://exercism.org&#34;&gt;&lt;strong&gt;Exercism&lt;/strong&gt;&lt;/a&gt; and &lt;a href=&#34;https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/&#34;&gt;&lt;strong&gt;KubeCon&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To be successful in both of these endeavors, YS needed to be amazing both as a
+programming language (Exercism) and as a data language (KubeCon).&lt;/p&gt;
+&lt;p&gt;There&#39;s so much new stuff to talk about, and I promise to write about all of
+it after things get back to a normal pace.&lt;/p&gt;
+&lt;p&gt;Today let&#39;s talk about Exercism, KubeCon and the positive impacts they&#39;ve had
+on YS.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2024-10-05/the-fall-of-yamlscript/</link>
+      <pubDate>Sat, 05 Oct 2024 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2024-10-05/the-fall-of-yamlscript/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-10-05/the-fall-of-yamlscript.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Go Julia!</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Last week two new language bindings were added to the YS family:
+&lt;a href=&#34;https://github.com/yaml/yamlscript-go&#34;&gt;Go&lt;/a&gt; and
+&lt;a href=&#34;https://juliahub.com/ui/Packages/General/YAMLScript&#34;&gt;Julia&lt;/a&gt;.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2024-07-17/go-julia/</link>
+      <pubDate>Wed, 17 Jul 2024 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2024-07-17/go-julia/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-07-17/go-julia.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Dr. StrangeYAML or How I Learned to Stop Worrying and Love the LLM</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;!!! quote &#34;&#34;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Well now, what happened is, uh, one of our data scientists, uh, well, he
+went a little funny in the head.
+You know.
+Just a little funny.
+And uh, he went and did a silly thing.
+
+Well, I&#39;ll tell you what he did.
+He started chatting with computers... in YAML.
+
+Well, let me finish, Elon.
+
+Let me *finish*, Elon.
+
+Well, listen, how do you think *I* feel about it?
+&lt;/code&gt;&lt;/pre&gt;</description>
+      <link>https://yamlscript.org/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/</link>
+      <pubDate>Thu, 20 Jun 2024 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>YS Spring Update</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;It&#39;s been a while since I let you know what&#39;s been happening with YS.
+I&#39;ve been busy working on it every day this year and I have a lot to tell you
+about!&lt;/p&gt;
+&lt;h3&gt;YS Activity in 2024&lt;/h3&gt;
+&lt;p&gt;Let me start by telling you about some of the events that have happened in the
+YS world recently.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=GajOBwBcFyA&#34;&gt;Seajure Talk&lt;/a&gt; -
+  I gave a talk at the Seajure (Seattle Clojure) Meetup in March.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://thenewstack.io/with-yamlscript-yaml-becomes-a-proper-programming-language/&#34;&gt;YS Article&lt;/a&gt; -
+  The New Stack published an article about YS in March&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.therepl.net/episodes/52/&#34;&gt;YS Podcast&lt;/a&gt; -
+  I was interviewed on the &#34;The REPL&#34; by Daniel Compton in April.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Finally I&#39;m presenting a talk about &lt;a href=&#34;https://sched.co/1aBPY&#34;&gt;YS at the Open Source Summit North America&lt;/a&gt; this Thursday, April 18th.
+Super excited about that!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2024-04-16/ys-spring-update/</link>
+      <pubDate>Tue, 16 Apr 2024 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2024-04-16/ys-spring-update/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-04-16/ys-spring-update.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>YS Firsts</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;h3&gt;Remember Your First Time?&lt;/h3&gt;
+&lt;p&gt;Do you remember the first time you wrote a program in a new language?
+For YS, mine was yesterday!&lt;/p&gt;
+&lt;p&gt;This is my first post of 2024.
+I&#39;ve been working on YS non-stop since the last &lt;a href=&#34;2023-12-24.md&#34;&gt;YS Advent 2023&lt;/a&gt; post.
+Too busy to write a blog post, I guess.&lt;/p&gt;
+&lt;p&gt;Yesterday something awesome happened.&lt;/p&gt;
+&lt;p&gt;Putting out a YS release is a complicated process.
+It takes me about an hour to do it.
+Of course I plan to automate it fully but I just haven&#39;t had the tuits.&lt;/p&gt;
+&lt;p&gt;For the last several releases, I&#39;ve had a text file that listed all the steps
+so that I wouldn&#39;t forget anything.
+Yesterday I automated that list...&lt;/p&gt;
+&lt;p&gt;...you guessed it...&lt;/p&gt;
+&lt;p&gt;...in YS!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2024-03-14/ys-firsts/</link>
+      <pubDate>Thu, 14 Mar 2024 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2024-03-14/ys-firsts/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-03-14/ys-firsts.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Wrapped and Ready</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;The Elves have everything wrapped up.&lt;/p&gt;
+&lt;p&gt;Literally!&lt;/p&gt;
+&lt;p&gt;Tonight&#39;s the big night.&lt;/p&gt;
+&lt;p&gt;It&#39;s Time to Deliver!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-24/wrapped-and-ready/</link>
+      <pubDate>Sun, 24 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-24/wrapped-and-ready/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-24/wrapped-and-ready.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Perl to Rust</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;When Santa is doing his job in the Luxembourg area, I&#39;ve always wondered how he
+gets from Perl to Rust.&lt;/p&gt;
+&lt;p&gt;Maybe he takes &lt;a href=&#34;https://oylenshpeegul.gitlab.io/from-perl-to-rust/introduction.html&#34;&gt;this route&lt;/a&gt;!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-23/perl-to-rust/</link>
+      <pubDate>Sat, 23 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-23/perl-to-rust/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-23/perl-to-rust.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Flip Flops</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Can you imagine Santa walking around in flip flops?
+I&#39;ve never been up to the North Pole, but I&#39;m pretty sure there&#39;s no beaches.
+I always pictured Santa wearing moon boots around the workshop.&lt;/p&gt;
+&lt;p&gt;YS on the other hand, is all about flip flops!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-22/flip-flops/</link>
+      <pubDate>Fri, 22 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-22/flip-flops/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-22/flip-flops.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>YAML, Python and the Holy Graal</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Which has a greater airspeed velocity... an unladen swallow or Santa&#39;s sleigh?&lt;/p&gt;
+&lt;p&gt;Well, that depends... are we talking about an African or European swallow?&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;
+&lt;details&gt;&lt;summary&gt;&lt;strong style=&#34;color:red&#34;&gt;Huh?&lt;/strong&gt;&lt;/summary&gt;
+&amp;nbsp;
+&lt;iframe width=&#34;560&#34; height=&#34;315&#34;
+  src=&#34;https://www.youtube.com/embed/uio1J2PKzLI?si=QA1x920QfN1GlkRs&#34;
+  title=&#34;YouTube video player&#34;
+  frameborder=&#34;0&#34;
+  allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34;
+  allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/details&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-21/yaml-python-and-the-holy-graal/</link>
+      <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-21/yaml-python-and-the-holy-graal/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-21/yaml-python-and-the-holy-graal.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Godspeed</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;I wonder if Santa has a Hemi?
+Supercharged, Turbocharged?
+Maybe a Nitro Burning Funny Sleigh?
+Dude&#39;s got to get around the world in one night.
+Godspeed, my festive friend!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-20/godspeed/</link>
+      <pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-20/godspeed/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-20/godspeed.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Reindeer All The Way Down</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Santa is in charge of Christmas.
+He&#39;s the one who makes sure that all the children get presents.
+But who is in charge of getting Santa his presents?
+That&#39;s where the reindeer come in.
+They are the ones who make sure that Santa gets his presents.
+But who is in charge of getting the reindeer their presents?
+More reindeer!
+But who is in charge of getting the reindeer&#39;s reindeer their presents?
+More reindeer!
+It&#39;s reindeer all the way down.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-19/reindeer-all-the-way-down/</link>
+      <pubDate>Tue, 19 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-19/reindeer-all-the-way-down/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Santa&#39;s in d&#39;buggy</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;With one week to go, Santa&#39;s gotta get his sleigh in top shape.
+Can&#39;t have any breakdowns on the big night.
+His sleigh might look like a simple wooden buggy, but it&#39;s more temperamental
+and buggy than a 2023 Tesla!&lt;/p&gt;
+&lt;p&gt;But this is Santa we&#39;re talking about.
+He&#39;s done this a few times, so he knows how to get the bugs out.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-18/santas-in-dbuggy/</link>
+      <pubDate>Mon, 18 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-18/santas-in-dbuggy/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-18/santas-in-dbuggy.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Rosetta Code</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;How does Santa read all the signs in all the languages of the world?
+That&#39;s a lot of languages to know on top of all the other things he has to do.
+Luckily he has his trusty polyglot elf, Rosetta, at his side.
+Bet you didn&#39;t know that!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-17/rosetta-code/</link>
+      <pubDate>Sun, 17 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-17/rosetta-code/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-17/rosetta-code.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Let Lambda Come Over</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;We know the names of Santa&#39;s reindeer: Dasher, Dancer, Prancer, Vixen, Comet,
+Cupid, Donner, Blitzen and Rudolph.
+And his elves: Alabaster Snowball, Bushy Evergreen, Pepper Minstix, Shinny
+Upatree, Sugarplum Mary, Wunorse Openslae, and the head elf, Bernard.&lt;/p&gt;
+&lt;p&gt;But we don&#39;t know the names of Santa&#39;s lambda reindeer and elves.
+Why would we?
+They are anonymous!
+They&#39;re also the hardest working of the bunch.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-16/let-lambda-come-over/</link>
+      <pubDate>Sat, 16 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-16/let-lambda-come-over/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-16/let-lambda-come-over.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Naughty is Nice!</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;As the architect of a major world holiday, Santa Claus has hard design choices
+to make.
+What is Suki going to get this year?
+He keeps it simple with the standard Naughty-Or-Nice algorithm.&lt;/p&gt;
+&lt;p&gt;As architects of an aspiring new programming language, the YS folks have design
+choices to make as well!&lt;/p&gt;
+&lt;p&gt;Naughty-Or-Nice should not be discounted but what about Naughty-And-Nice?
+Naughty-Xor-Nice???&lt;/p&gt;
+&lt;p&gt;My personal favorite?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Naughty-&lt;em&gt;Is&lt;/em&gt;-Nice!!&lt;/strong&gt;&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-15/naughty-is-nice/</link>
+      <pubDate>Fri, 15 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-15/naughty-is-nice/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-15/naughty-is-nice.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Stocking Stuffers</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;It&#39;s always nice to get a little something extra in your stocking whilst waiting
+for the big guy to show up on the big day.&lt;/p&gt;
+&lt;p&gt;Learning eveything you need to know about YS in 24 days is a tall order.
+I still have a quite a bit to learn about it myself! :-)&lt;/p&gt;
+&lt;p&gt;It helps to learn the small stuff first.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-14/stocking-stuffers/</link>
+      <pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-14/stocking-stuffers/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-14/stocking-stuffers.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>History Lesson</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Santa is Legend.
+Legends have histories.
+The histories of Santa are many and varied, some going back to the 4th century
+AD.&lt;/p&gt;
+&lt;p&gt;The history of YS is much shorter, but it&#39;s still a history.
+Today I&#39;d like to tell you a little bit about it.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-13/history-lesson/</link>
+      <pubDate>Wed, 13 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-13/history-lesson/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-13/history-lesson.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Future Proof</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Santa has very little margin for error.
+He has to get everything just right all in one night.&lt;/p&gt;
+&lt;p&gt;YS is a work i...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-12/future-proof/</link>
+      <pubDate>Tue, 12 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-12/future-proof/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-12/future-proof.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>The YeS Express</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Santa&#39;s got a lot of ground to cover in a short amount of time.
+He doesn&#39;t have time to deal with confusing maps and directions.&lt;/p&gt;
+&lt;p&gt;Lisp has other-worldly powers of abstraction, but when it comes to reading
+syntax, most people prefer the familiarity of this world.&lt;/p&gt;
+&lt;p&gt;YS fully embraces all that Clojure has to offer, but syntax-wise it
+also offers a more familiar face.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-11/the-yes-express/</link>
+      <pubDate>Mon, 11 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-11/the-yes-express/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-11/the-yes-express.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>States and Ladders</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Santa is a busy guy.
+He has a lot of work to do.
+He has to make a list and check it twice.
+He has to find out who&#39;s naughty and nice.
+He has the monumental task of transforming wishes into happiness.&lt;/p&gt;
+&lt;p&gt;YS only needs to transform YS code into Clojure code.
+But it&#39;s a bit more involved than you might think.&lt;/p&gt;
+&lt;p&gt;To make things easier the YS compiler breaks the transformation into eight
+distinct States and seven distinct ~~Ladders~~ transformations.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-10/states-and-ladders/</link>
+      <pubDate>Sun, 10 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-10/states-and-ladders/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-10/states-and-ladders.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Coding with Style</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;What&#39;s the best thing about Rudolph&#39;s nose?
+Is it that lights the way for Santa&#39;s sleigh?
+I&#39;m calling BS on that.
+I&#39;d say it&#39;s the main thing that gives the whole &lt;strong&gt;Sanata Story some Serious
+Style!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Good programmers do more than just get their solutions right.
+They do the whole thing with style.
+That makes the program easier to read, understand and maintain.
+It also gives the code a certain je ne sais quoi.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-09/coding-with-style/</link>
+      <pubDate>Sat, 09 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-09/coding-with-style/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-09/coding-with-style.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Going to the Library</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Programming in YS is as easy as reading a book.
+The only thing you really need is some good books!
+For that let&#39;s go to the library.&lt;/p&gt;
+&lt;p&gt;By books of course I mean YS functions.
+And by library I mean the YS Standard Library!
+There you&#39;ll find all-time best sellers like &lt;code&gt;map&lt;/code&gt;, &lt;code&gt;filter&lt;/code&gt;, &lt;code&gt;reduce&lt;/code&gt; and
+&lt;code&gt;say&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;And Standard isn&#39;t the only Library in town...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-08/going-to-the-library/</link>
+      <pubDate>Fri, 08 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-08/going-to-the-library/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-08/going-to-the-library.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Sharpen Your Tools</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Wanna make some fun toys with YS?
+You&#39;ll need some sharp tools.
+You think those elves make all those toys with dull tools?&lt;/p&gt;
+&lt;p&gt;The CLI tool &lt;code&gt;ys&lt;/code&gt; is the main tool you&#39;ll use to work with YS.
+Today we&#39;ll learn about all the things you can do with it.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-07/sharpen-your-tools/</link>
+      <pubDate>Thu, 07 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-07/sharpen-your-tools/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-07/sharpen-your-tools.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Modes of Transportation</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;How do you get around?
+Some people walk, some ride bikes, some drive cars (or the cars drive them),
+some take trains, some in planes, so many ways, even some in sleighs.&lt;/p&gt;
+&lt;p&gt;In YS, data gets around via various modes of transportation...  3 modes to be
+exact.&lt;/p&gt;
+&lt;p&gt;Rememeber back on December 3rd when we talked about the 2 different states that
+a YS program can be in?
+In one state &lt;code&gt;say&lt;/code&gt; is a function, and in the other it&#39;s just a plain string.&lt;/p&gt;
+&lt;p&gt;We call these states &#34;modes&#34;, and there is actually three of them.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-06/modes-of-transportation/</link>
+      <pubDate>Wed, 06 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-06/modes-of-transportation/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-06/modes-of-transportation.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Unwrapping Gifts</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;It&#39;s certainly a relief now that I&#39;ve told you the big secret about YS.
+Now that you know that YS is really Clojure, I don&#39;t have to dance
+around the subject anymore.
+I didn&#39;t want to scare you away by going Full-Lisp on you from the start!&lt;/p&gt;
+&lt;p&gt;Now we can just get into it.
+We can write, run and load YS until the cows come home.&lt;/p&gt;
+&lt;p&gt;But wait... How do we do that?
+You don&#39;t even have YS installed yet!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-05/unwrapping-gifts/</link>
+      <pubDate>Tue, 05 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-05/unwrapping-gifts/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-05/unwrapping-gifts.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Santa&#39;s Big Secret</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;I&#39;ve got a little secret to tell you.
+I&#39;ve been hiding a little something from you.
+Even that&#39;s a lie.
+I&#39;ve actually been hiding something very very big something from you.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;h2&gt;*** YS is a Lisp! *****&lt;/h2&gt;
+&lt;/blockquote&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-04/santas-big-secret/</link>
+      <pubDate>Mon, 04 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-04/santas-big-secret/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-04/santas-big-secret.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Load em Up!</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;On the 3rd day of Advent, my YS code gave to me...&lt;br&gt;
+A sequence in a map tree!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Did you know that all JSON &lt;em&gt;is&lt;/em&gt; YAML?
+You should, because I told you that &lt;a href=&#34;2023-12-02.md&#34;&gt;yesterday&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;It&#39;s true.
+YAML is a superset of JSON.
+Both in terms of syntax and data model.&lt;/p&gt;
+&lt;p&gt;This means that any possible valid JSON input is also valid as a YAML input.
+A proper YAML loader and a JSON loader should produce the same data structure
+from the same JSON input.&lt;/p&gt;
+&lt;p&gt;!!! note&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema
+&lt;/code&gt;&lt;/pre&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-03/load-em-up/</link>
+      <pubDate>Sun, 03 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-03/load-em-up/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-03/load-em-up.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>Twas a Bit</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;!!! quote&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&#39;Twas a bit before Hanukkah, and all through the igloo,  
+not a creature was stirring, not even a frog.  
+The stockings were hung by the window with care,  
+In hopes that St. Krampus soon would be there.  
+The offspring were nestled all snug in their bunks,  
+While visions of spicy-cookies danced in their heads.  
+And cuz in their &#39;kerchief, and I in my bonnet,  
+Had just settled down for a long winter&#39;s snooze.  
+When out on the lawn there arose such a clatter,  
+I sprang from my bench to see what was the matter.  
+Away to the window, I flew like a jet,  
+Tore open the shutters and threw up the curtain.  
+The asteroid on the breast of the new-fallen frost,  
+Gave the lustre of mid-day to dirt below.  
+When what to my wondering eyes should materialize?  
+But a miniature car, and eight tiny elephants.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Well that was a bit weird.
+Let&#39;s try again.
+Don&#39;t worry, it&#39;s not that hard to write Winter holiday poetry when you have
+YS on your side!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-02/twas-a-bit/</link>
+      <pubDate>Sat, 02 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-02/twas-a-bit/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-02/twas-a-bit.png" type="image/png" length="0" />
+      
+    </item>
+    
+    <item>
+      <title>YS Advent 2023</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Advent-2023</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;h3&gt;Seasons Greetings, my YAML friends!&lt;/h3&gt;
+&lt;p&gt;What if I told you that you could write a &lt;strong&gt;program in YAML&lt;/strong&gt; that would
+generate a Christmas tree?&lt;/p&gt;
+&lt;p&gt;Well, you can! Here&#39;s how:&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-12-01/ys-advent-2023/</link>
+      <pubDate>Fri, 01 Dec 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-01/ys-advent-2023/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-01/ys-advent-2023.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Welcome to the YS Blog</title>
+      
+      
+      
+      
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;&lt;strong&gt;Greetings!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Welcome to the YS blog.&lt;/p&gt;
+&lt;p&gt;This is where we will introduce you to novel concepts about YS as th...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2023-10-26/welcome-to-the-ys-blog/</link>
+      <pubDate>Thu, 26 Oct 2023 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2023-10-26/welcome-to-the-ys-blog/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-10-26/welcome-to-the-ys-blog.png" type="image/png" length="None" />
+      
+    </item>
+    
+  </channel>
+</rss>

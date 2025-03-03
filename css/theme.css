@@ -102,3 +102,36 @@ h1.empty {
   height: 2rem;
   fill: #861f41;
 }
+
+.md-typeset .admonition.rss,
+.md-typeset details.rss {
+  border-color: rgb(43, 155, 70);
+}
+.md-typeset .rss > .admonition-title,
+.md-typeset .rss > summary {
+  background-color: rgba(43, 155, 70, 0.1);
+}
+.md-typeset .rss > .admonition-title::before,
+.md-typeset .rss > summary::before {
+  background-color: var(--md-primary-bg-color);
+  -webkit-mask-image: "/image/rss.png";
+          mask-image: "/image/rss.png";
+}
+
+:root {
+  --md-admonition-icon--pied-piper: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2m2.5 12A1.5 1.5 0 0 0 6 16.5 1.5 1.5 0 0 0 7.5 18 1.5 1.5 0 0 0 9 16.5 1.5 1.5 0 0 0 7.5 15M6 10v2a6 6 0 0 1 6 6h2a8 8 0 0 0-8-8m0-4v2a10 10 0 0 1 10 10h2A12 12 0 0 0 6 6"/></svg>')
+}
+.md-typeset .admonition.pied-piper,
+.md-typeset details.pied-piper {
+  border-color: rgb(43, 155, 70);
+}
+.md-typeset .pied-piper > .admonition-title,
+.md-typeset .pied-piper > summary {
+  background-color: rgba(43, 155, 70, 0.1);
+}
+.md-typeset .pied-piper > .admonition-title::before,
+.md-typeset .pied-piper > summary::before {
+  background-color: rgb(43, 155, 70);
+  -webkit-mask-image: var(--md-admonition-icon--pied-piper);
+          mask-image: var(--md-admonition-icon--pied-piper);
+}
