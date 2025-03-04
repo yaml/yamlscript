@@ -1,5 +1,7 @@
 - use/index.md
 
+- doc/query.md
+
 - DevOps:
   - doc/helmys.md
 
@@ -8,9 +10,15 @@
   - gha.md
   - circleci.md
 
-- doc/query.md
-
 # - Static Site Generators:
 #   - This site
 
 - hacks.md
+
+# - hacks/index.md:
+#   - yamllm.md
+#   - mdys.md
+#   - siteys.md
+#   - sbs.md
+#   - gist.md
+#   - gmail.md
