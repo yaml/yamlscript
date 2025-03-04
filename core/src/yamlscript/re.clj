@@ -75,7 +75,7 @@
                   )*
                 )
               "))
-(def xsym #"(?:\=\~|!~)")                  ; Special operator token
+(def xsym #"(?:\=\~\~?|!~\~?)")            ; Special operator token
 (def osym #"(?:[-+*/%<>!=~|&.]{1,3})")     ; Operator symbol token
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def sett #"(?:\\\{)")                     ; Set start token

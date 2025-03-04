@@ -15,7 +15,8 @@
    [clojure.string :as str]
    [flatland.ordered.map]
    [java-time.api :as jtime]
-   [yamlscript.common :as common :refer [atom? regex?]]
+   [yamlscript.common :as common :refer
+    [atom? re-find+ regex?]]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
@@ -461,10 +462,16 @@
 ;; See: `qr` function above
 
 (defn =-- [S R]
-  (re-find R (str S)))
+  (re-find+ R S))
 
 (defn !-- [S R]
   (not (=-- S R)))
+
+(defn =--- [S R]
+  (re-matches R (str S)))
+
+(defn !--- [S R]
+  (not (=--- S R)))
 
 
 ;;------------------------------------------------------------------------------
