@@ -74,6 +74,9 @@
             (util/die "YSPATH environment variable not set"))]
     (str/split yspath #":")))
 
+(defn re-find+ [R S]
+  (re-find R (str S)))
+
 (defn regex? [x]
   (= (type x) java.util.regex.Pattern))
 

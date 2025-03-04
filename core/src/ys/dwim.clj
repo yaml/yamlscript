@@ -4,13 +4,13 @@
 (ns ys.dwim
   (:require
    [clojure.string :refer [escape replace]]
-   [yamlscript.common :as common :refer [chop regex?]])
+   [yamlscript.common :as common :refer [chop re-find+ regex?]])
   (:refer-clojure :exclude [replace]))
 
 
 ;;------------------------------------------------------------------------------
 (defn- regex-to-fn [a b f]
-  (let [a (if (regex? a) #(re-find a %1) a)]
+  (let [a (if (regex? a) #(re-find+ a %1) a)]
     (f a b)))
 
 
