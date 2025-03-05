@@ -1650,6 +1650,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#regular-expression-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regular Expression Operators
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#other-operators" class="md-nav__link">
     <span class="md-ellipsis">
       Other Operators
@@ -2377,6 +2386,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#regular-expression-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Regular Expression Operators
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#other-operators" class="md-nav__link">
     <span class="md-ellipsis">
       Other Operators
@@ -2457,7 +2475,8 @@ polymorphic and do things according to the types of the operands.</p>
 <span class="o">(</span>def<span class="w"> </span>s<span class="w"> </span><span class="o">(</span>+<span class="w"> </span><span class="s2">&quot;foo&quot;</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="o">))</span>
 </code></pre></div>
 <p>See how the infix <code>+</code> operator compiles to the <code>add+</code> function?
-The <code>add+</code> function works on numbers, strings, sequences, and mappings!</p>
+The <code>add+</code> function works on numbers, strings, characters, sequences, mappings,
+sets and functions!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you absolutely need the Clojure <code>+</code> function for performance reasons,
@@ -2500,21 +2519,29 @@ everything else is "truey".</p>
 <li><code>&amp;&amp;&amp;</code> - Truey And</li>
 <li><code>|||</code> - Truey Or</li>
 </ul>
+<h2 id="regular-expression-operators">Regular Expression Operators<a class="headerlink" href="#regular-expression-operators" title="Permanent link">🔗</a></h2>
+<ul>
+<li><code>=~</code> - <code>a =~ b</code> calls <code>re-find(b a)</code>. Coerces <code>a</code> to a string.</li>
+<li><code>!~</code> - <code>not(a =~ b)</code></li>
+<li><code>=~~</code> - <code>a =~ b</code> calls <code>re-matches(b a)</code>. Coerces <code>a</code> to a string.</li>
+<li><code>!~~</code> - <code>not(a =~~ b)</code></li>
+</ul>
 <h2 id="other-operators">Other Operators<a class="headerlink" href="#other-operators" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>.</code> - Function Chaining -
-  <code>a.b.3.c(d).e(f)</code> -&gt; <code>(e (c (nth (get+ a 'b) 3) d) f)</code>.</li>
-<li><code>..</code> - Range - <code>1 .. 3</code> -&gt; <code>(1 2 3)</code>, <code>3 .. 1</code> -&gt; <code>(3 2 1)</code>.
-  Differs from Clojure's <a href="https://clojuredocs.org/clojure.core/range"><code>range</code>&nbsp;<img src="/image/external-link.svg"
+<li>
+<p><code>.</code> - Function Chaining Operator</p>
+<p><code>a.b.3.c(d).e(f)</code> compiles to:<br />
+<code>(e (c (nth (get+ a 'b) 3) d) f)</code>.</p>
+</li>
+<li>
+<p><code>..</code> - Range Operator</p>
+<p><code>1 .. 3</code> -&gt; <code>(1 2 3)</code>, <code>3 .. 1</code> -&gt; <code>(3 2 1)</code>.</p>
+<p>Differs from Clojure's <a href="https://clojuredocs.org/clojure.core/range"><code>range</code>&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>
-  function.</li>
-<li><code>=~</code> - Regex Find. Compiles to <a href="https://clojuredocs.org/clojure.core/re-find"><code>re-find</code>&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> in Clojure.
-  Returns what <code>re-find</code> returns.</li>
+function.</p>
+</li>
 </ul>
 
 

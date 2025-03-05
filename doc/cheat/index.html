@@ -1075,9 +1075,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
-  <a href="#dash-expression-escapes" class="md-nav__link">
+  <a href="#ys-expression-escapes" class="md-nav__link">
     <span class="md-ellipsis">
-      Dash ('-') expression escapes
+      YS expression escapes
     </span>
   </a>
   
@@ -2455,9 +2455,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
-  <a href="#dash-expression-escapes" class="md-nav__link">
+  <a href="#ys-expression-escapes" class="md-nav__link">
     <span class="md-ellipsis">
-      Dash ('-') expression escapes
+      YS expression escapes
     </span>
   </a>
   
@@ -2647,15 +2647,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="highlight"><pre><span></span><code>hello =: &#39;Oh hello&#39;
 a b c =: -[1 2 3]  # Destructuring assignment
 </code></pre></div>
-<h3 id="dash-expression-escapes">Dash ('-') expression escapes<a class="headerlink" href="#dash-expression-escapes" title="Permanent link">🔗</a></h3>
+<h3 id="ys-expression-escapes">YS expression escapes<a class="headerlink" href="#ys-expression-escapes" title="Permanent link">🔗</a></h3>
 <p>YS expressions need to be written as valid YAML scalars.
 When an expression starts with YAML syntax characters like <code>{</code>, <code>[</code>, <code>*</code>, <code>#</code>
 then its not a valid YAML scalar.
-Also expressions that have stuff after a quoted string (<code>''</code> <code>""</code>) are not valid YAML.
-You can turn text into a valid YAML plain scalar by prefixing it with a dash.
-The dash is removed when YS reads the scalar.</p>
+Also expressions that have stuff after a quoted string (<code>''</code> <code>""</code>) are not valid
+YAML.</p>
+<p>You can turn text into a valid YAML plain scalar by prefixing it with a dash
+(<code>-</code>) or a plus (<code>+</code>).
+The dash or plus is removed when YS reads the scalar.</p>
+<p>Note: the dash cannot have whitespace after it, but the plus can.</p>
 <div class="highlight"><pre><span></span><code>-[1 2 3]: .map(inc)  # =&gt; [2 3 4]
-=&gt;: -&#39;foo&#39; + &#39;bar&#39;   # =&gt; &#39;foobar&#39;
+=&gt;: +
+  &#39;foo&#39; + &#39;bar&#39;      # =&gt; &#39;foobar&#39;
 </code></pre></div>
 <h3 id="printing-text">Printing text<a class="headerlink" href="#printing-text" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>say: &#39;hello&#39;        # String
@@ -2668,6 +2672,8 @@ print: &#39;I have no newline&#39;
 warn: &#39;Prints to stderr (with trailing newline)&#39;
 </code></pre></div>
 <h3 id="define-a-function">Define a function<a class="headerlink" href="#define-a-function" title="Permanent link">🔗</a></h3>
+<p>YS functions, like Clojure functions, require a specific argument arity, and
+can be defined to be multi-arity.</p>
 <div class="highlight"><pre><span></span><code>defn greet(name):
   say: &quot;Hello, $name!&quot;
 
@@ -2678,6 +2684,11 @@ defn foo(bar *baz): # Variable number of arguments
 defn foo(*):        # Any number of arguments
 
 defn foo(_ x _):    # Ignored arguments
+
+defn foo:           # Multi-arity function
+  (): 0
+  (x): x
+  (x y): x + y
 </code></pre></div>
 <h3 id="call-a-function">Call a function<a class="headerlink" href="#call-a-function" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>greet()             # Scalar call variations
@@ -2690,9 +2701,9 @@ greet: &#39;Bob&#39;
 greet &#39;Bob&#39;:
 </code></pre></div>
 <h3 id="chain-calls">Chain calls<a class="headerlink" href="#chain-calls" title="Permanent link">🔗</a></h3>
-<div class="highlight"><pre><span></span><code>say: slurp(&quot;/usr/share/dict/words&quot;)
-     .lines():shuffle.take(3).join(&quot;.&quot;)
-# =&gt; specialty.mutation&#39;s.Kisangani
+<div class="highlight"><pre><span></span><code>say: slurp(&#39;/usr/share/dict/words&#39;)
+     .lines():shuffle.take(3).join(&#39; | &#39;)
+# =&gt; specialty | mutation&#39;s | Kisangani
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2701,9 +2712,13 @@ It must be be attached to something on the left.</p>
 </div>
 <h4 id="special-chain-operators">Special chain operators<a class="headerlink" href="#special-chain-operators" title="Permanent link">🔗</a></h4>
 <ul>
+<li><code>.@</code> - Short for <code>.deref()</code></li>
+<li><code>.$</code> - Short for <code>.last()</code></li>
 <li><code>.#</code> - Short for <code>.count()</code></li>
 <li><code>.?</code> - Short for <code>.truey?()</code></li>
 <li><code>.!</code> - Short for <code>.falsey?()</code></li>
+<li><code>.??</code> - Short for <code>.boolean()</code></li>
+<li><code>.!!</code> - Short for <code>.not()</code></li>
 <li><code>.++</code> - Short for <code>.inc()</code></li>
 <li><code>.--</code> - Short for <code>.dec()</code></li>
 <li><code>.&gt;&gt;&gt;</code> - Short for <code>.DBG()</code></li>
@@ -2739,14 +2754,13 @@ Use the `</p>
 <div class="highlight"><pre><span></span><code>say: |
   Dear $name,
 
-  I have 3 words for you: $(words().take(3 ).join(&quot;, &quot;)).
+  I have 3 words for you: $(words().take(3 ).join(&#39;, &#39;)).
 
-  Yours truly, $get(ENV &quot;USER&quot;)
+  Yours truly, $get(ENV &#39;USER&#39;)
 </code></pre></div>
 <h3 id="global-variables">Global variables<a class="headerlink" href="#global-variables" title="Permanent link">🔗</a></h3>
-<div class="highlight"><pre><span></span><code>- $                 # Runtime state mapping
-- $$                # Previous document value
-- $#                # Document evaluation count
+<div class="highlight"><pre><span></span><code>- _                 # Previous document value
+- +++               # Runtime state mapping
 - ARGV              # Command line arguments
 - ARGS              # Command line arguments parsed
 - CWD               # Current working directory
