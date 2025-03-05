@@ -543,17 +543,22 @@ Options:
 
 (defn get-opts [argv]
   (let [orig argv
+        file (first argv)
+        [filed argv] (if (and file
+                           (not (re-find #"^-." file))
+                           (fs/exists? file)
+                           (fs/regular-file? file))
+                       [file (conj (rest argv) "--" file)]
+                       [nil argv])
         [args argv] (split-with #(not= "--" %1) argv)
         [argv is--] (if (= "--" (first argv))
                       [(rest argv) true]
                       [argv false])
-        ;_ (WWW "args argv" args argv)
         options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
-        ;_ (WWW "args argv" args argv)
         args (concat args argv)
         opts (if-not (seq orig) (assoc opts :help true) opts)
         error (validate-opts opts)
@@ -586,7 +591,6 @@ Options:
         opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
         opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
 
-        ; _ (WWW "opts" opts "args "args)
         is-e (seq (:eval opts))
         [arg1 arg2] args
         [opts args] (if (and
@@ -610,11 +614,11 @@ Options:
                                    opts)]
                         [opts args])
                       [opts args])
-        ; _ (WWW "opts" opts "args" args)
         file (:file opts)
-        file (or file
-               (and (seq (:eval opts)) (not is-e) (not is--) "-"))
-        ; _ (WWW file)
+        file (cond
+               file file
+               (and (seq (:eval opts)) (not is-e) (not is--)) "-"
+               filed filed)
         [file args] (if file
                       [file args]
                       (if (and (not is--)
@@ -625,6 +629,7 @@ Options:
         file (or file
                (and (not (seq (:eval opts))) (:load opts) "-"))
         opts (if file (assoc opts :file file) opts)
+        args (if filed (rest args) args)
         args (vec args)]
     (when (env "YS_SHOW_OPTS")
       (println (yaml/generate-string{:opts opts :args args})))

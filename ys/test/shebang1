@@ -1,0 +1,4 @@
+#!/usr/bin/env ys-0
+
+defn main(*):
+  say: ARGV.0

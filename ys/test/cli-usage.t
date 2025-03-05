@@ -224,5 +224,7 @@ test::
         dislikes:
         - ham
         - zucchini
+- cmnd: test/shebang1 --version
+  want: --version
 
 done:
