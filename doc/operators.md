@@ -27,7 +27,8 @@ $ ys -c -e "s =: ('foo' + 'bar')" -e "s =: (+ 'foo' 'bar')"
 ```
 
 See how the infix `+` operator compiles to the `add+` function?
-The `add+` function works on numbers, strings, sequences, and mappings!
+The `add+` function works on numbers, strings, characters, sequences, mappings,
+sets and functions!
 
 !!! note
 
@@ -79,13 +80,24 @@ This concept applies to some operators.
 * `|||` - Truey Or
 
 
+## Regular Expression Operators
+
+* `=~` - `a =~ b` calls `re-find(b a)`. Coerces `a` to a string.
+* `!~` - `not(a =~ b)`
+* `=~~` - `a =~ b` calls `re-matches(b a)`. Coerces `a` to a string.
+* `!~~` - `not(a =~~ b)`
+
+
 ## Other Operators
 
-* `.` - Function Chaining -
-  `a.b.3.c(d).e(f)` -> `(e (c (nth (get+ a 'b) 3) d) f)`.
-* `..` - Range - `1 .. 3` -> `(1 2 3)`, `3 .. 1` -> `(3 2 1)`.
-  Differs from Clojure's [`range`](https://clojuredocs.org/clojure.core/range)
-  function.
-* `=~` - Regex Find. Compiles to [`re-find`](
-  https://clojuredocs.org/clojure.core/re-find) in Clojure.
-  Returns what `re-find` returns.
+* `.` - Function Chaining Operator
+
+    `a.b.3.c(d).e(f)` compiles to:  
+    `(e (c (nth (get+ a 'b) 3) d) f)`.
+
+* `..` - Range Operator
+
+    `1 .. 3` -> `(1 2 3)`, `3 .. 1` -> `(3 2 1)`.
+
+    Differs from Clojure's [`range`](https://clojuredocs.org/clojure.core/range)
+    function.
