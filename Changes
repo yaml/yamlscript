@@ -1,3 +1,14 @@
+- version: 0.1.94
+  date:    Tue 04 Mar 2025 09:32:22 PM PST
+  changes:
+  - sample: Add 2 new Rosetta Code YS examples
+  - core: Clarify error message for '=' invalid operator
+  - core: Add the === operator, compiles to clj ==
+  - std: Have =~ !~ cast target to string
+  - core: Support =~~ and !~~ operators for re-matches
+  - ys: Fix a bug with YS program arguments
+  - www: Use MM blog and rss plugins
+  - www: Site updates
 - version: 0.1.93
   date:    Thu 27 Feb 2025 04:09:55 PM EST
   changes:

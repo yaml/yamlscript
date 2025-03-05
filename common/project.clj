@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2025 Ingy dot Net
 
-(defproject yamlscript/docker "0.1.93"
+(defproject yamlscript/docker "0.1.94"
   :description "Program in YAML — Code is Data"
   :dependencies
   [#__
