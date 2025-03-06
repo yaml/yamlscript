@@ -335,8 +335,14 @@
      string? (str x y)
      map? (merge (to-map x) (to-map y))
      set? (set/union (to-set x) (to-set y))
-     vector? (vec (concat (to-vec x) (to-vec y)))
-     seqable? (concat (to-list x) (to-list y))
+     vector? (vec (concat (to-vec x)
+                (if (sequential? y)
+                  (to-list y)
+                  (list y))))
+     seqable? (concat (to-list x)
+                (if (sequential? y)
+                  (to-list y)
+                  (list y)))
      char? (if (number? y)
              (char (+ (int x) y))
              (str x y))
@@ -885,6 +891,9 @@
 ;;------------------------------------------------------------------------------
 (defn use-pod [pod-name version]
   (ys/load-pod pod-name version))
+
+#_(defn yspath
+  ([] (global/yspath)))
 
 
 ;;------------------------------------------------------------------------------
