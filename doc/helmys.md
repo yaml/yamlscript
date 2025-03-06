@@ -12,6 +12,19 @@ hide:
 ["post renderer"](https://helm.sh/docs/topics/charts/#post-rendering) that lets
 you write your Helm chart templates with YS.
 
+??? info "Click here for how to install `helmys` and `ys` quickly"
+
+    Run these commands to install `helmys` and `ys` in `~/.local/bin`:
+
+    ```console
+    git clone https://github.com/kubeys/helmys
+    make -C helmys install PREFIX=$HOME/.local
+    ```
+
+    Full details [here](
+    https://github.com/kubeys/helmys#installing-helmys-and-ys).
+
+
 YS can be used in combination with Helm's standard
 [Go template](https://pkg.go.dev/text/template) syntax or it can replace it
 entirely.
