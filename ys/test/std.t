@@ -110,6 +110,9 @@ test::
 - code: 1 + \\A
   want: 66
 
+- code: -[1 2 3] + "foo"
+  want:: -[1 2 3 "foo"]
+
 - code: sum(3 .. 9)
   want: 42
 
