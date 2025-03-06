@@ -149,8 +149,7 @@ h1.empty {
 }
 .md-typeset .rss > .admonition-title::before,
 .md-typeset .rss > summary::before {
-  fill: currentColor;
-  background-color: var(currentColor);
+  background-color: var(--md-primary-fg-color);
   -webkit-mask-image: var(--md-admonition-icon--rss);
           mask-image: var(--md-admonition-icon--rss);
 }
