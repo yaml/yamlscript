@@ -99,7 +99,7 @@ $ perl prog.pl
 You can install this module like any other Perl module:
 
 ```bash
-$ cpanm YAMLScript
+cpanm YAMLScript
 ```
 
 but you will need to have a system install of `libyamlscript.so`.
@@ -107,7 +107,7 @@ but you will need to have a system install of `libyamlscript.so`.
 One simple way to do that is with:
 
 ```bash
-$ curl https://yamlscript.org/install | bash
+curl https://yamlscript.org/install | bash
 ```
 
 Note: The above command will install the latest version of the YAMLScript

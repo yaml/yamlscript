@@ -1,0 +1,306 @@
+---
+title: YS Vocabulary
+talk: 0
+---
+
+YAML and YS have specific names for the various parts of the language.
+It is important to understand these terms to be able to better understand the
+documentation and how the language works.
+
+## YAML Vocabulary
+
+```mdys:vocab
+file: |
+  A YAML file is a text file that contains a YAML stream.
+  The file name often has a `.yaml`, `.yml`, or `.ys` extension, but this is not
+  required.
+
+stream: |
+  A YAML stream is a sequence of zero or more documents.
+  Each document is a complete YAML text.
+  The documents are separated by `---` or `...` lines.
+  The stream is the top-level structure of a YAML file.
+
+document: |
+  A YAML document is a single YAML text.
+  A document represents a single node; either a mapping, sequence or scalar.
+
+node: |
+  A YAML node is a single piece of data.
+  A node can be a mapping, sequence, or scalar.
+
+kind:
+  A generic word for mapping, sequence or scalar.
+  You would say "there are 3 kinds of nodes", not "there are 3 types of nodes".
+
+mapping: |
+  A YAML mapping is a collection of key/value pairs.
+  The key and the value can be any node.
+
+sequence: |
+  A YAML sequence is a sequential list of nodes.
+  The nodes are ordered and can be any node.
+
+collection: |
+  A YAML collection is either a mapping or a sequence.
+
+scalar: |
+  A YAML scalar is a single piece of data.
+  A scalar typically represents a string, number, boolean, or null, but it can
+  be any object that can be represented in YAML serialized to a string form.
+
+pair: |
+  A YAML pair is two consecutive nodes in a mapping.
+  The first node is the key and the second node is the value.
+
+key: |
+  The first node of a mapping pair.
+
+explicit key: |
+  In a block mapping pair, a key can use a leading `?` as an explicit key
+  indicator.
+  This is useful if you need a scalar key to be multi-line:
+
+    ```
+    ? a long
+      key string
+    : value
+    ```
+  same as:
+
+    ```
+    a long key string: value
+    ```
+
+  Note how the `: ` is placed at the start of the line before the value.
+  This is necessary when using the explicit key syntax.
+
+value: |
+  The second node of a mapping pair.
+
+tag: |
+  A YAML tag is an short string annotation attached to a =node that specifies
+  how that node should be processed.
+  Tags start with `!` followed by 0-n characters (excluding whitespace and
+  certain syntax characters).
+
+  Explicit tags are not often used in practice, but internally a YAML loader
+  implicitly assigns a tag to every node that doesn't have an explicit tag.
+
+anchor: |
+  A YAML anchor is a short string annotation attached to a =node that can be
+  used to reference (=alias) that node elsewhere in the =document.
+  Anchors start with `&` followed by 1-n characters (excluding whitespace and
+  certain syntax characters).
+
+property: |
+  A term used to mean either the tag or the anchor of a node.
+
+alias: |
+  A YAML alias is a short string annotation attached to a =node that references
+  another =node with the same anchor.
+
+block style: |
+  YAML collections can be written in either block style or flow style.
+  Block style uses indentation to indicate structure.
+  This is the most common style used in YAML files.
+  Any sub-node of a block collection can use either block or flow style.
+
+flow style: |
+  YAML collections can be written in either block style or flow style.
+  Flow style uses curly braces, square brackets, colons and commas to indicate
+  structure.
+  Flow style is very much like JSON and is actually a superset of JSON.
+  Sub-nodes of a flow collection must also use flow style.
+
+plain style scalar: |
+  A YAML scalar can be written in any or 5 styles within a block collection:
+  plain, single-quoted, double-quoted, literal, or folded.
+  In a flow collection, only the plain, single-quoted, and double-quoted styles
+  are allowed.
+
+  A plain style scalar is one without any quoting.
+  It can span multiple lines.
+  It can't:
+
+  * Start or end with whitespace
+  * Start a YAML syntax character: `[]{},"'&*#?!|>-%@`
+  * Contain the `: ` or ` #` character sequences
+  * Make use of YAML escape sequences
+
+single-quoted style scalar: |
+  A single-quoted style scalar is one enclosed in single quotes.
+  It can span multiple lines.
+  It uses the `''` sequence to represent a single quote within the scalar.
+
+double-quoted style scalar: |
+  A double-quoted style scalar is one enclosed in double quotes.
+  It can span multiple lines.
+  It can make use of `\` escape sequences to represent special characters.
+
+literal style scalar: |
+  A literal style scalar is one that uses the `|` character to indicate that
+  the scalar spans multiple lines.
+  The scalar is written on the next line and all subsequent lines that are
+  indented more than the first line are part of the scalar.
+
+  Literal scalars are very much like here-documents seen in Perl and shell
+  languages.
+  You can use them to represent almost any text, including code files and other
+  YAML files, simply by indenting them correctly.
+
+  Even Makefiles, which have lines that start with tabs (which are forbidden in
+  YAML indentation), can be represented in YAML literal scalars without changing
+  the content.
+
+folded style scalar: |
+  A folded style scalar is one that uses the `>` character to indicate that the
+  scalar spans multiple lines.
+  Folded scalars follow certain rules that "fold" newlines and whitespace into
+  single spaces.
+  The rules are complicated.
+  You can often get the desired results by just using plain style scalars
+  instead.
+
+loader: |
+  A YAML loader is a program that reads a YAML stream and converts it into a
+  native data structure that can be used by the program.
+  A loader is a stack of stages (aka transforms) that each convert their input
+  from one state to another.
+  The names of the transforms are: parser, composer, resolver and constructor.
+
+parser: |
+  People often user the term "parser" to refer to the entire loader, but the
+  parser is actually just one of the transforms in the loader.
+  In most implmentations, the parser and the lexer are combined into a single
+  transform that turns the input stream of characters into a stream of events.
+
+  It is by far the most complex transform in the loader, and is defined by 211
+  productions in the YAML 1.2 specification.
+
+event: |
+  An event is a data structure that represents a scalar value, an alias
+  reference, or the start or end of a stream, document, mapping, or sequence.
+  There are 10 types of events typically generated by the parser: STREAM-START,
+  STREAM-END, DOCUMENT-START, DOCUMENT-END, MAPPING-START, MAPPING-END,
+  SEQUENCE-START, SEQUENCE-END, SCALAR, and ALIAS.
+
+  The event structures contain certain attributes of the input that are needed
+  for further processing.
+  For instance START-* and SCALAR events contain the style, tag, and anchor
+  properties, and SCALAR events also contain the value.
+  All events contain the start and end positions of the input that they
+  represent.
+
+composer: |
+  The loader stage that transforms the stream of events into a tree of nodes.
+
+resolver: |
+  The loader stage that assigns tags to the nodes that didn't have an explicit
+  one.
+  Possibly normalizes the nodes in some way.
+
+constructor: |
+  The loader stage that converts the nodes into a native data structure that can
+  be used by the program.
+
+dumper: |
+  A YAML dumper is a program that takes a native data structure and converts it
+  into a YAML stream.
+  A dumper is a stack of stages (aka transforms) that each convert their input
+  from one state to another, in reverse order of the loader.
+```
+
+
+## YS Vocabulary
+
+```mdys:vocab
+mode: |
+  A YS mode is a set of rules that determine the semantics of a given YAML node
+  by YS.
+  Every YAML node in a stream has one of 3 modes:
+
+  * **bare** - Node follows the semantics of a normal YAML loader.
+    Sub-nodes will always be of bare mode as well.
+    That is, no code evaluation can ever take place.
+  * **code** - Node is meant to be compiled as code to be evaluated.
+    The `say: 'Hello'` mapping pair will print "Hello", because the unquoted key
+    `say` is a symbol bound to the `ys::std/say` function.
+    Any sub-node can be changed to data mode (or bare mode).
+  * **data** - Node is meant to be compiled as having data semantics.
+    This is similar to bare mode, except any sub-node can change modes to code
+    mode (or bare mode).
+
+mode tag: |
+  Unless a YAML/YS document starts with a mode tag, then it is assigned to
+  bare mode and treated as normal YAML.
+  These tags are used to indicate the mode of a node:
+
+  * `!YS-v0` - Start a document in code mode
+  * `!YS-v0:` - Start a document in data mode
+  * `!bare` - Make a node have bare mode semantics
+  * `!code` - Make a node have code mode semantics
+  * `!data` - Make a node have data mode semantics
+  * `!` - Toggle between code and data modes (or vice versa)
+
+  A `!YS-v0` or `!YS-v0:` mode tags must appear before any other mode tag is
+  used in a stream.
+  Each document in a stream must have mode tag or else it is considered bare
+  mode.
+
+expression:
+  An evaluatable piece of YS code.
+
+S-expression:
+  Lisp term for a parenthesized list of 1 or more forms where the first form is
+  a function and the rest of the forms are arguments.
+  Any of the forms may themselves be s-expressions.
+
+    ```
+    (println (* 6 7))  # => 42
+    ```
+
+  YS supports s-expressions, YeS-expressions, pair-expressions and dot-chain
+  expressions.
+
+YeS-expression:
+  A YS syntax where the function name comes before the opening parentheses and
+  infix operator expressions are allowed:
+
+    ```
+    println(6 * 7)
+    ```
+
+Pair expression:
+
+  A YS expression as a mapping pair where the function comes first on the LHS.
+  The argument forms can be on either side of the `: `.
+
+    ```
+    println: 6 * 7
+    ```
+
+Dot-chain expressions:
+
+  Functions can be applied to values `.fn-name()`:
+  These are the same:
+    ```
+    fn2(fn1(val1 val2))
+    val1.fn1(val2).fn2()
+    val1.fn1(val2):fn2
+    ```
+
+  The LHS of a dot function call generally becomes the first argument.
+  If there is only one argument then: `arg:fn1` is short for `arg.fn1()`.
+```
+
+```mdys:eval
+defn mdys-vocab(o):
+  reduce-kv _ "" o:
+    fn(text name body):
+      text +: |+
+        * **$name**
+
+        $(body.indent(4))
+
+```

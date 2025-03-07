@@ -65,24 +65,55 @@ defn generate-markdown(data):
       else: markdown
 
 defn format-mdys(text):
+  orig =: text
   type =: (text =~ /^```mdys:(\S+)/).1
   text .=: replace(/^```.*\n/ '')
   text =: text.replace(/```\n\z/ '')
   cond:
     type == 'eval':
       do:
-        eval: text
-        =>: ''
+        try:
+          eval: text
+          =>: ''
+          catch e:
+            error-fmt orig:
+              "Failed to eval $e"
+
     type.starts?(':'):
       do:
-        func =: value("mdys-$(type.subs(1))") ||
-          die("Can't find function 'mdys-$type'")
-        call func: text
+        func-name =: "mdys-$(type.subs(1))"
+        func =: func-name:value
+        if func:
+          try:
+            call func: text
+            catch e:
+              error-fmt orig:
+                "Failed in function $func-name:\n$e\n"
+          error-fmt orig:
+            "No function '$func-name' found"
     else:
-      data =: text:ys/compile:eval-string
-      func =: value("mdys-$type") ||
-        die("Can't find function 'mdys-$type'")
-      call func: data
+      data =:
+        try:
+          eval-string: text:ys/compile
+          catch e:
+            error-fmt orig:
+              "Failed to compile $e"
+      func-name =: "mdys-$type"
+      func =: func-name:value
+      if func:
+        try:
+          call func: data
+          catch e:
+            error-fmt orig:
+              "Failed in function $func-name:\n$e\n"
+        error-fmt orig:
+          "No function '$func-name' found"
+
+defn error-fmt(text msg): |
+  <pre><code>
+  ERROR: $msg for:
+  $text
+  </code></pre>
 
 defn get-path(file):
   if-not fs-abs?(file):
