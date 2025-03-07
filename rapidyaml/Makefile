@@ -21,7 +21,7 @@ default::
 x:
 	YS -ce 'foo: var'
 
-build:: $(RAPIDYAML_JNI_H) $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
+build:: $(RAPIDYAML_JNI_H) $(RAPIDYAML_SO) $(RAPIDYAML_LIB) $(RAPIDYAML_JAR)
 	@:
 
 jar: $(RAPIDYAML_JAR)

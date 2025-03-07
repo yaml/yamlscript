@@ -18,10 +18,9 @@ public class Rapidyaml
 
     public static String RAPIDYAML_VERSION = "0.8.0";
 
-    private native void ysparse_timing_set(boolean yes);
-    // TODO: rename these to ysparse_init() etc
     private native long ysparse_init();
     private native void ysparse_destroy(long ysparse);
+    private native void ysparse_timing_set(boolean yes);
     private native int ysparse_parse(long ysparse, String filename,
                                      byte[] ys, int ys_length,
                                      int[] evt, int evt_length);
