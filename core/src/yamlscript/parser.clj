@@ -32,19 +32,20 @@
 
 (declare parse-fn)
 
-(def TIMER (System/getenv "YS_TIMER"))
+(defn TIMER [] (System/getenv "YS_TIMER"))
 
 (def shebang-ys #"^#!.*/env ys-0(?:\.d+\.\d+)?\n")
 (def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
+
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
   (let [has-code-mode-shebang (or
                                 (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
-        events (if TIMER
-                 (time (parse-fn yaml-string))
-                 (parse-fn yaml-string))
+        events (if (TIMER)
+                 (time ((parse-fn) yaml-string))
+                 ((parse-fn) yaml-string))
         [first-event & rest-events] events
         first-event-tag (:! first-event)
         first-event (if (and has-code-mode-shebang
@@ -187,7 +188,7 @@
 (defn parse-rapidyaml [^String yaml-string]
   (rest
     (let [parser ^Rapidyaml (new Rapidyaml)
-          _ (when TIMER
+          _ (when (TIMER)
               (.timingEnabled parser true))
           buffer (.getBytes yaml-string StandardCharsets/UTF_8)
           masks (int-array 5)
@@ -238,7 +239,7 @@
 (defn parse-rapidyaml-buf [^String yaml-string]
   (rest
     (let [parser (new Rapidyaml)
-          _ (when TIMER
+          _ (when (TIMER)
               (.timingEnabled parser true))
           srcbytes (.getBytes yaml-string StandardCharsets/UTF_8)
           srcbuffer (ByteBuffer/allocateDirect (alength srcbytes))
@@ -288,16 +289,17 @@
               (recur i tag anchor events)))
           events)))))
 
-(def parse-fn (if-let [parser-name (System/getenv "YS_PARSER")]
-                (condp = parser-name
-                  "" parse-snakeyaml
-                  "snake" parse-snakeyaml
-                  "rapid" parse-rapidyaml
-                  "rapid-buf" parse-rapidyaml-buf
-                  "ryml" parse-rapidyaml
-                  "ryml-buf" parse-rapidyaml-buf
-                  (die "Unknown YS_PARSER value: " parser-name))
-                parse-snakeyaml))
+(defn parse-fn []
+  (if-let [parser-name (System/getenv "YS_PARSER")]
+    (condp = parser-name
+      "" parse-snakeyaml
+      "snake" parse-snakeyaml
+      "rapid" parse-rapidyaml
+      "rapid-buf" parse-rapidyaml-buf
+      "ryml" parse-rapidyaml
+      "ryml-buf" parse-rapidyaml-buf
+      (die "Unknown YS_PARSER value: " parser-name))
+    parse-snakeyaml))
 
 (comment
   )
