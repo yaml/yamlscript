@@ -167,6 +167,7 @@ GRAALVM_DOWNLOAD := $(YS_TMP)/$(GRAALVM_TAR)
 GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
 
 GRAALVM_O ?= 1
+# qbm is Quick Build Mode
 ifdef qbm
   GRAALVM_O := b
 endif
