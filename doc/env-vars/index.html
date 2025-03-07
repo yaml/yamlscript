@@ -12,13 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/binary/">
+        <link rel="canonical" href="https://yamlscript.org/doc/env-vars/">
       
       
-        <link rel="prev" href="../v0/">
+        <link rel="prev" href="../install/">
       
       
-        <link rel="next" href="../run-ys/">
+        <link rel="next" href="../loaders/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../feed_rss_created.xml">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Compiling YS to Binary - YS — YAML Done Wisely</title>
+        <title>YS Environment Vars - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +127,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Compiling YS to Binary - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YS Environment Vars - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/binary.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/env-vars.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +139,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/doc/binary/" >
+        <meta  property="og:url"  content="https://yamlscript.org/doc/env-vars/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Compiling YS to Binary - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YS Environment Vars - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/binary.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/env-vars.png" >
       
     
     
@@ -204,7 +204,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Compiling YS to Binary
+              YS Environment Vars
             
           </span>
           </a>
@@ -1080,8 +1080,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
+  
     
     
       
@@ -1099,13 +1101,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" checked>
         
           
           <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
@@ -1119,7 +1119,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_5">
             <span class="md-nav__icon md-icon"></span>
             Use YS
@@ -1172,10 +1172,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../env-vars/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1184,6 +1191,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+      
     </li>
   
 
@@ -1690,10 +1698,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
     
     
       
@@ -1709,11 +1715,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_8" >
         
           
           <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
@@ -1727,7 +1735,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_8">
             <span class="md-nav__icon md-icon"></span>
             More YS Topics
@@ -1759,17 +1767,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../binary/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1778,7 +1779,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
-      
     </li>
   
 
@@ -2356,14 +2356,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </a>
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/doc/binary.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/doc/env-vars.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/doc/binary.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/doc/env-vars.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2371,78 +2371,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Compiling YS to Binary</h1>
+  <h1>YS Environment Vars</h1>
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
-<p>You can compile any YS program that has a <code>main</code> function to a machine native
-binary executable.</p>
-<p>This is done using the <code>ys --compile --binary</code> command.</p>
-<p>For example, if you have a file named <code>hello.ys</code> with the following content:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
-
-<span class="l l-Scalar l-Scalar-Plain">defn main(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Hello,</span><span class="nv"> </span><span class="s">$name!&#39;</span>
-</code></pre></div>
-<p>You can run:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>--binary<span class="w"> </span>hello.ys
-*<span class="w"> </span>Compiling<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;hello&#39;</span><span class="w"> </span>executable
-*<span class="w"> </span>Setting<span class="w"> </span>up<span class="w"> </span>build<span class="w"> </span>env<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">&#39;/tmp/tmp.W0u4SGljdY&#39;</span>
-*<span class="w"> </span>This<span class="w"> </span>may<span class="w"> </span>take<span class="w"> </span>a<span class="w"> </span>few<span class="w"> </span>minutes...
-<span class="o">[</span><span class="m">1</span>/8<span class="o">]</span><span class="w"> </span>Initializing<span class="w">              </span><span class="o">(</span><span class="m">3</span>.1s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.24GB<span class="o">)</span>
-<span class="o">[</span><span class="m">2</span>/8<span class="o">]</span><span class="w"> </span>Performing<span class="w"> </span>analysis<span class="w">               </span><span class="o">(</span><span class="m">12</span>.2s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.64GB<span class="o">)</span>
-<span class="o">[</span><span class="m">3</span>/8<span class="o">]</span><span class="w"> </span>Building<span class="w"> </span>universe<span class="w">         </span><span class="o">(</span><span class="m">1</span>.8s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.45GB<span class="o">)</span>
-<span class="o">[</span><span class="m">4</span>/8<span class="o">]</span><span class="w"> </span>Parsing<span class="w"> </span>methods<span class="w">           </span><span class="o">(</span><span class="m">1</span>.6s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.46GB<span class="o">)</span>
-<span class="o">[</span><span class="m">5</span>/8<span class="o">]</span><span class="w"> </span>Inlining<span class="w"> </span>methods<span class="w">          </span><span class="o">(</span><span class="m">1</span>.4s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.63GB<span class="o">)</span>
-<span class="o">[</span><span class="m">6</span>/8<span class="o">]</span><span class="w"> </span>Compiling<span class="w"> </span>methods<span class="w">         </span><span class="o">(</span><span class="m">17</span>.7s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.43GB<span class="o">)</span>
-<span class="o">[</span><span class="m">7</span>/8<span class="o">]</span><span class="w"> </span>Laying<span class="w"> </span>out<span class="w"> </span>methods<span class="w">                </span><span class="o">(</span><span class="m">1</span>.0s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.49GB<span class="o">)</span>
-<span class="o">[</span><span class="m">8</span>/8<span class="o">]</span><span class="w"> </span>Creating<span class="w"> </span>image<span class="w">            </span><span class="o">(</span><span class="m">1</span>.7s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.54GB<span class="o">)</span>
-*<span class="w"> </span>Compiled<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;hello&#39;</span><span class="w"> </span>executable
-
-real<span class="w">    </span>0m48.929s
-user<span class="w">    </span>6m44.965s
-sys<span class="w">     </span>0m5.095s
-$<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span>hello
--rwxr-xr-x<span class="w"> </span><span class="m">1</span><span class="w"> </span>me<span class="w"> </span>me<span class="w"> </span>13M<span class="w"> </span>Sep<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">15</span>:04<span class="w"> </span>hello*
-</code></pre></div>
-<p>Note that the compilation takes some time and the resulting binary is quite
-large.</p>
-<p>Let's try it out:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>./hello
-Hello,<span class="w"> </span>world!
-
-real<span class="w">    </span>0m0.014s
-user<span class="w">    </span>0m0.002s
-sys<span class="w">     </span>0m0.013s
-$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>./hello<span class="w"> </span>Bob
-Hello,<span class="w"> </span>Bob!
-
-real<span class="w">    </span>0m0.014s
-user<span class="w">    </span>0m0.005s
-sys<span class="w">     </span>0m0.010s
-</code></pre></div>
-<p>Let's compare the 14ms runtime to using the <code>ys</code> interpreter with <code>-e</code>:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;defn main(name=&quot;world&quot;): say(&quot;Hello, $name!&quot;)&#39;</span>
-Hello,<span class="w"> </span>world!
-
-real<span class="w">    </span>0m0.034s
-user<span class="w">    </span>0m0.019s
-sys<span class="w">     </span>0m0.017s
-</code></pre></div>
-<p>The binary is about 2.5 times faster than the interpreter in this case.</p>
-<p>Note that we can even compile the one-liner if we want to:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>--binary<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;defn main(name=&quot;world&quot;): say(&quot;Hello, $name!&quot;)&#39;</span>
-...<span class="w"> </span><span class="nb">time</span><span class="w"> </span>passes<span class="w"> </span>...
-*<span class="w"> </span>Compiled<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;-e&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;./NO-NAME&#39;</span><span class="w"> </span>executable
-</code></pre></div>
-<p>Since there is no input file, the binary is named <code>NO-NAME</code>.</p>
-<p>Optionally, you can use the <code>--output=&lt;file-name&gt;</code> to specify the output file
-name.</p>
-<p>The options listed above have short names as well:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-cbo<span class="w"> </span>say-hi<span class="w"> </span>hello.ys
-*<span class="w"> </span>Compiling<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;say-hi&#39;</span><span class="w"> </span>executable
-...
-</code></pre></div>
+<p>YS has a number of environment variables that can be set to control its
+behavior.
+These variables each begin with <code>YS_</code> and are all uppercase with underscores
+separating words.</p>
+<ul>
+<li>
+<p><code>YSPATH</code> - A colon-separated list of directories to search for YS library
+  files loaded with the <code>use</code> function.
+  This is the only YS environment variable that doesn't start with <code>YS_</code>, but
+  there is an equivalent <code>YS_PATH</code> that can be used instead.</p>
+</li>
+<li>
+<p><code>YS_PATH</code> - An alternative to <code>YSPATH</code> that is used if <code>YSPATH</code> is not set.</p>
+</li>
+<li>
+<p><code>YS_PRINT=1</code> - Same as <code>-p</code> (<code>--print</code>) command line option.</p>
+</li>
+<li>
+<p><code>YS_STREAM=1</code> - Same as <code>-s</code> (<code>--stream</code>) command line option.</p>
+</li>
+<li>
+<p><code>YS_OUTPUT=&lt;file-name&gt;</code> - Same as <code>-o</code> (<code>--output=&lt;file-name&gt;</code>) command line
+  option.</p>
+</li>
+<li>
+<p><code>YS_FORMAT=&lt;yaml|json|edn|csv|tsv&gt;</code> - Same as <code>-t</code> ()</p>
+</li>
+<li>
+<p><code>YS_UNORDERED=1</code> - Same as <code>-u</code> (<code>--unordered</code>) command line option.</p>
+</li>
+<li>
+<p><code>YS_XTRACE=1</code> - Same as <code>-x</code> (<code>--xtrace</code>) command line option.</p>
+</li>
+<li>
+<p><code>YS_STACK_TRACE=1</code> - Same as <code>-S</code> (<code>--stack-trace</code>) command line option.</p>
+</li>
+<li>
+<p><code>YS_SHOW_OPTS=1</code> - Print all the option values.</p>
+</li>
+<li>
+<p><code>YS_SHOW_LEX=1</code> - Print the lexed tokens of each YS expression.</p>
+</li>
+<li>
+<p><code>YS_SHOW_INPUT=1</code> - Print the input YS expressions.</p>
+</li>
+</ul>
 
 
 
@@ -2477,7 +2455,7 @@ name.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../v0/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Understanding &#34;v0&#34;">
+          <a href="../install/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installing YS">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2487,20 +2465,20 @@ name.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Understanding "v0"
+                Installing YS
               </div>
             </div>
           </a>
         
         
           
-          <a href="../run-ys/" class="md-footer__link md-footer__link--next" aria-label="Next: Self Installation Scripts">
+          <a href="../loaders/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Loader Libraries">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Self Installation Scripts
+                YS Loader Libraries
               </div>
             </div>
             <div class="md-footer__button md-icon">

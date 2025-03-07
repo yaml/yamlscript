@@ -12,13 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/binary/">
+        <link rel="canonical" href="https://yamlscript.org/doc/vocab/">
       
       
-        <link rel="prev" href="../v0/">
+        <link rel="prev" href="../cheat/">
       
       
-        <link rel="next" href="../run-ys/">
+        <link rel="next" href="../clj-to-ys/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../feed_rss_created.xml">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Compiling YS to Binary - YS — YAML Done Wisely</title>
+        <title>YS Vocabulary - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +127,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Compiling YS to Binary - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YS Vocabulary - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/binary.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/vocab.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +139,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/doc/binary/" >
+        <meta  property="og:url"  content="https://yamlscript.org/doc/vocab/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Compiling YS to Binary - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YS Vocabulary - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/binary.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/vocab.png" >
       
     
     
@@ -168,6 +168,11 @@ f.parentNode.insertBefore(j,f);
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#yaml-vocabulary" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -204,7 +209,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Compiling YS to Binary
+              YS Vocabulary
             
           </span>
           </a>
@@ -892,8 +897,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
+  
     
     
       
@@ -915,13 +922,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
         
           
           <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
@@ -935,7 +940,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_4">
             <span class="md-nav__icon md-icon"></span>
             Learn YS
@@ -1030,10 +1035,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../vocab/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    YS Vocabulary
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1042,6 +1065,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#yaml-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      YAML Vocabulary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ys-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS Vocabulary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1690,10 +1749,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
     
     
       
@@ -1709,11 +1766,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_8" >
         
           
           <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
@@ -1727,7 +1786,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_8">
             <span class="md-nav__icon md-icon"></span>
             More YS Topics
@@ -1759,17 +1818,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../binary/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1778,7 +1830,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
-      
     </li>
   
 
@@ -2320,6 +2371,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#yaml-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      YAML Vocabulary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ys-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS Vocabulary
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2356,14 +2433,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </a>
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/doc/binary.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/doc/vocab.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/doc/binary.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/doc/vocab.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2371,78 +2448,248 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Compiling YS to Binary</h1>
+  <h1>YS Vocabulary</h1>
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
-<p>You can compile any YS program that has a <code>main</code> function to a machine native
-binary executable.</p>
-<p>This is done using the <code>ys --compile --binary</code> command.</p>
-<p>For example, if you have a file named <code>hello.ys</code> with the following content:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
-
-<span class="l l-Scalar l-Scalar-Plain">defn main(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Hello,</span><span class="nv"> </span><span class="s">$name!&#39;</span>
-</code></pre></div>
-<p>You can run:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>--binary<span class="w"> </span>hello.ys
-*<span class="w"> </span>Compiling<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;hello&#39;</span><span class="w"> </span>executable
-*<span class="w"> </span>Setting<span class="w"> </span>up<span class="w"> </span>build<span class="w"> </span>env<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">&#39;/tmp/tmp.W0u4SGljdY&#39;</span>
-*<span class="w"> </span>This<span class="w"> </span>may<span class="w"> </span>take<span class="w"> </span>a<span class="w"> </span>few<span class="w"> </span>minutes...
-<span class="o">[</span><span class="m">1</span>/8<span class="o">]</span><span class="w"> </span>Initializing<span class="w">              </span><span class="o">(</span><span class="m">3</span>.1s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.24GB<span class="o">)</span>
-<span class="o">[</span><span class="m">2</span>/8<span class="o">]</span><span class="w"> </span>Performing<span class="w"> </span>analysis<span class="w">               </span><span class="o">(</span><span class="m">12</span>.2s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.64GB<span class="o">)</span>
-<span class="o">[</span><span class="m">3</span>/8<span class="o">]</span><span class="w"> </span>Building<span class="w"> </span>universe<span class="w">         </span><span class="o">(</span><span class="m">1</span>.8s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.45GB<span class="o">)</span>
-<span class="o">[</span><span class="m">4</span>/8<span class="o">]</span><span class="w"> </span>Parsing<span class="w"> </span>methods<span class="w">           </span><span class="o">(</span><span class="m">1</span>.6s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.46GB<span class="o">)</span>
-<span class="o">[</span><span class="m">5</span>/8<span class="o">]</span><span class="w"> </span>Inlining<span class="w"> </span>methods<span class="w">          </span><span class="o">(</span><span class="m">1</span>.4s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.63GB<span class="o">)</span>
-<span class="o">[</span><span class="m">6</span>/8<span class="o">]</span><span class="w"> </span>Compiling<span class="w"> </span>methods<span class="w">         </span><span class="o">(</span><span class="m">17</span>.7s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.43GB<span class="o">)</span>
-<span class="o">[</span><span class="m">7</span>/8<span class="o">]</span><span class="w"> </span>Laying<span class="w"> </span>out<span class="w"> </span>methods<span class="w">                </span><span class="o">(</span><span class="m">1</span>.0s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.49GB<span class="o">)</span>
-<span class="o">[</span><span class="m">8</span>/8<span class="o">]</span><span class="w"> </span>Creating<span class="w"> </span>image<span class="w">            </span><span class="o">(</span><span class="m">1</span>.7s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.54GB<span class="o">)</span>
-*<span class="w"> </span>Compiled<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;hello&#39;</span><span class="w"> </span>executable
-
-real<span class="w">    </span>0m48.929s
-user<span class="w">    </span>6m44.965s
-sys<span class="w">     </span>0m5.095s
-$<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span>hello
--rwxr-xr-x<span class="w"> </span><span class="m">1</span><span class="w"> </span>me<span class="w"> </span>me<span class="w"> </span>13M<span class="w"> </span>Sep<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">15</span>:04<span class="w"> </span>hello*
-</code></pre></div>
-<p>Note that the compilation takes some time and the resulting binary is quite
-large.</p>
-<p>Let's try it out:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>./hello
-Hello,<span class="w"> </span>world!
-
-real<span class="w">    </span>0m0.014s
-user<span class="w">    </span>0m0.002s
-sys<span class="w">     </span>0m0.013s
-$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>./hello<span class="w"> </span>Bob
-Hello,<span class="w"> </span>Bob!
-
-real<span class="w">    </span>0m0.014s
-user<span class="w">    </span>0m0.005s
-sys<span class="w">     </span>0m0.010s
-</code></pre></div>
-<p>Let's compare the 14ms runtime to using the <code>ys</code> interpreter with <code>-e</code>:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;defn main(name=&quot;world&quot;): say(&quot;Hello, $name!&quot;)&#39;</span>
-Hello,<span class="w"> </span>world!
-
-real<span class="w">    </span>0m0.034s
-user<span class="w">    </span>0m0.019s
-sys<span class="w">     </span>0m0.017s
-</code></pre></div>
-<p>The binary is about 2.5 times faster than the interpreter in this case.</p>
-<p>Note that we can even compile the one-liner if we want to:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>--binary<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;defn main(name=&quot;world&quot;): say(&quot;Hello, $name!&quot;)&#39;</span>
-...<span class="w"> </span><span class="nb">time</span><span class="w"> </span>passes<span class="w"> </span>...
-*<span class="w"> </span>Compiled<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;-e&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;./NO-NAME&#39;</span><span class="w"> </span>executable
-</code></pre></div>
-<p>Since there is no input file, the binary is named <code>NO-NAME</code>.</p>
-<p>Optionally, you can use the <code>--output=&lt;file-name&gt;</code> to specify the output file
-name.</p>
-<p>The options listed above have short names as well:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-cbo<span class="w"> </span>say-hi<span class="w"> </span>hello.ys
-*<span class="w"> </span>Compiling<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;say-hi&#39;</span><span class="w"> </span>executable
-...
-</code></pre></div>
+<p>YAML and YS have specific names for the various parts of the language.
+It is important to understand these terms to be able to better understand the
+documentation and how the language works.</p>
+<h2 id="yaml-vocabulary">YAML Vocabulary<a class="headerlink" href="#yaml-vocabulary" title="Permanent link">🔗</a></h2>
+<ul>
+<li>
+<p><strong>file</strong></p>
+<p>A YAML file is a text file that contains a YAML stream.
+The file name often has a <code>.yaml</code>, <code>.yml</code>, or <code>.ys</code> extension, but this is not
+required.</p>
+</li>
+<li>
+<p><strong>stream</strong></p>
+<p>A YAML stream is a sequence of zero or more documents.
+Each document is a complete YAML text.
+The documents are separated by <code>---</code> or <code>...</code> lines.
+The stream is the top-level structure of a YAML file.</p>
+</li>
+<li>
+<p><strong>document</strong></p>
+<p>A YAML document is a single YAML text.
+A document represents a single node; either a mapping, sequence or scalar.</p>
+</li>
+<li>
+<p><strong>node</strong></p>
+<p>A YAML node is a single piece of data.
+A node can be a mapping, sequence, or scalar.</p>
+</li>
+<li>
+<p><strong>mapping</strong></p>
+<p>A YAML mapping is a collection of key/value pairs.
+The key and the value can be any node.</p>
+</li>
+<li>
+<p><strong>sequence</strong></p>
+<p>A YAML sequence is a sequential list of nodes.
+The nodes are ordered and can be any node.</p>
+</li>
+<li>
+<p><strong>collection</strong></p>
+<p>A YAML collection is either a mapping or a sequence.</p>
+</li>
+<li>
+<p><strong>scalar</strong></p>
+<p>A YAML scalar is a single piece of data.
+A scalar typically represents a string, number, boolean, or null, but it can
+be any object that can be represented in YAML serialized to a string form.</p>
+</li>
+<li>
+<p><strong>pair</strong></p>
+<p>A YAML pair is two consecutive nodes in a mapping.
+The first node is the key and the second node is the value.</p>
+</li>
+<li>
+<p><strong>tag</strong></p>
+<p>A YAML tag is an short string annotation attached to a =node that specifies
+how that node should be processed.
+Tags start with <code>!</code> followed by 0-n characters (excluding whitespace and
+certain syntax characters).</p>
+<p>Explicit tags are not often used in practice, but internally a YAML loader
+implicitly assigns a tag to every node that doesn't have an explicit tag.</p>
+</li>
+<li>
+<p><strong>anchor</strong></p>
+<p>A YAML anchor is a short string annotation attached to a =node that can be
+used to reference (=alias) that node elsewhere in the =document.
+Anchors start with <code>&amp;</code> followed by 1-n characters (excluding whitespace and
+certain syntax characters).</p>
+</li>
+<li>
+<p><strong>property</strong></p>
+<p>A term used to mean either the tag or the anchor of a node.</p>
+</li>
+<li>
+<p><strong>alias</strong></p>
+<p>A YAML alias is a short string annotation attached to a =node that references
+another =node with the same anchor.</p>
+</li>
+<li>
+<p><strong>block style</strong></p>
+<p>YAML collections can be written in either block style or flow style.
+Block style uses indentation to indicate structure.
+This is the most common style used in YAML files.
+Any sub-node of a block collection can use either block or flow style.</p>
+</li>
+<li>
+<p><strong>flow style</strong></p>
+<p>YAML collections can be written in either block style or flow style.
+Flow style uses curly braces, square brackets, colons and commas to indicate
+structure.
+Flow style is very much like JSON and is actually a superset of JSON.
+Sub-nodes of a flow collection must also use flow style.</p>
+</li>
+<li>
+<p><strong>plain style scalar</strong></p>
+<p>A YAML scalar can be written in any or 5 styles within a block collection:
+plain, single-quoted, double-quoted, literal, or folded.
+In a flow collection, only the plain, single-quoted, and double-quoted styles
+are allowed.</p>
+<p>A plain style scalar is one without any quoting.
+It can span multiple lines.
+It can't:</p>
+<ul>
+<li>Start or end with whitespace</li>
+<li>Start a YAML syntax character: <code>[]{},"'&amp;*#?!|&gt;-%@</code></li>
+<li>Contain the <code>:</code> or <code>#</code> character sequences</li>
+<li>Make use of YAML escape sequences</li>
+</ul>
+</li>
+<li>
+<p><strong>single-quoted style scalar</strong></p>
+<p>A single-quoted style scalar is one enclosed in single quotes.
+It can span multiple lines.
+It uses the <code>''</code> sequence to represent a single quote within the scalar.</p>
+</li>
+<li>
+<p><strong>double-quoted style scalar</strong></p>
+<p>A double-quoted style scalar is one enclosed in double quotes.
+It can span multiple lines.
+It can make use of <code>\</code> escape sequences to represent special characters.</p>
+</li>
+<li>
+<p><strong>literal style scalar</strong></p>
+<p>A literal style scalar is one that uses the <code>|</code> character to indicate that
+the scalar spans multiple lines.
+The scalar is written on the next line and all subsequent lines that are
+indented more than the first line are part of the scalar.</p>
+<p>Literal scalars are very much like here-documents seen in Perl and shell
+languages.
+You can use them to represent almost any text, including code files and other
+YAML files, simply by indenting them correctly.</p>
+<p>Even Makefiles, which have lines that start with tabs (which are forbidden in
+YAML indentation), can be represented in YAML literal scalars without changing
+the content.</p>
+</li>
+<li>
+<p><strong>folded style scalar</strong></p>
+<p>A folded style scalar is one that uses the <code>&gt;</code> character to indicate that the
+scalar spans multiple lines.
+Folded scalars follow certain rules that "fold" newlines and whitespace into
+single spaces.
+The rules are complicated.
+You can often get the desired results by just using plain style scalars
+instead.</p>
+</li>
+<li>
+<p><strong>loader</strong></p>
+<p>A YAML loader is a program that reads a YAML stream and converts it into a
+native data structure that can be used by the program.
+A loader is a stack of stages (aka transforms) that each convert their input
+from one state to another.
+The names of the transforms are: parser, composer, resolver and constructor.</p>
+</li>
+<li>
+<p><strong>parser</strong></p>
+<p>People often user the term "parser" to refer to the entire loader, but the
+parser is actually just one of the transforms in the loader.
+In most implmentations, the parser and the lexer are combined into a single
+transform that turns the input stream of characters into a stream of events.</p>
+<p>It is by far the most complex transform in the loader, and is defined by 211
+productions in the YAML 1.2 specification.</p>
+</li>
+<li>
+<p><strong>event</strong></p>
+<p>An event is a data structure that represents a scalar value, an alias
+reference, or the start or end of a stream, document, mapping, or sequence.
+There are 10 types of events typically generated by the parser: STREAM-START,
+STREAM-END, DOCUMENT-START, DOCUMENT-END, MAPPING-START, MAPPING-END,
+SEQUENCE-START, SEQUENCE-END, SCALAR, and ALIAS.</p>
+<p>The event structures contain certain attributes of the input that are needed
+for further processing.
+For instance START-* and SCALAR events contain the style, tag, and anchor
+properties, and SCALAR events also contain the value.
+All events contain the start and end positions of the input that they
+represent.</p>
+</li>
+<li>
+<p><strong>composer</strong></p>
+<p>The loader stage that transforms the stream of events into a tree of nodes.</p>
+</li>
+<li>
+<p><strong>resolver</strong></p>
+<p>The loader stage that assigns tags to the nodes that didn't have an explicit
+one.
+Possibly normalizes the nodes in some way.</p>
+</li>
+<li>
+<p><strong>constructor</strong></p>
+<p>The loader stage that converts the nodes into a native data structure that can
+be used by the program.</p>
+</li>
+<li>
+<p><strong>dumper</strong></p>
+<p>A YAML dumper is a program that takes a native data structure and converts it
+into a YAML stream.
+A dumper is a stack of stages (aka transforms) that each convert their input
+from one state to another, in reverse order of the loader.</p>
+</li>
+</ul>
+<h2 id="ys-vocabulary">YS Vocabulary<a class="headerlink" href="#ys-vocabulary" title="Permanent link">🔗</a></h2>
+<ul>
+<li>
+<p><strong>mode</strong></p>
+<p>A YS mode is a set of rules that determine the semantics of a given YAML node
+by YS.
+Every YAML node in a stream has one of 3 modes:</p>
+<ul>
+<li><strong>bare</strong> - Node follows the semantics of a normal YAML loader.
+  Sub-nodes will always be of bare mode as well.
+  That is, no code evaluation can ever take place.</li>
+<li><strong>code</strong> - Node is meant to be compiled as code to be evaluated.
+  The <code>say: 'Hello'</code> mapping pair will print "Hello", because the unquoted key
+  <code>say</code> is a symbol bound to the <code>ys::std/say</code> function.
+  Any sub-node can be changed to data mode (or bare mode).</li>
+<li><strong>data</strong> - Node is meant to be compiled as having data semantics.
+  This is similar to bare mode, except any sub-node can change modes to code
+  mode (or bare mode).</li>
+</ul>
+</li>
+<li>
+<p><strong>mode tag</strong></p>
+<p>Unless a YAML/YS document starts with a mode tag, then it is assigned to
+bare mode and treated as normal YAML.
+These tags are used to indicate the mode of a node:</p>
+<ul>
+<li><code>!YS-v0</code> - Start a document in code mode</li>
+<li><code>!YS-v0:</code> - Start a document in data mode</li>
+<li><code>!bare</code> - Make a node have bare mode semantics</li>
+<li><code>!code</code> - Make a node have code mode semantics</li>
+<li><code>!data</code> - Make a node have data mode semantics</li>
+<li><code>!</code> - Toggle between code and data modes (or vice versa)</li>
+</ul>
+<p>A <code>!YS-v0</code> or <code>!YS-v0:</code> mode tags must appear before any other mode tag is
+used in a stream.
+Each document in a stream must have mode tag or else it is considered bare
+mode.</p>
+</li>
+</ul>
 
 
 
@@ -2477,7 +2724,7 @@ name.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../v0/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Understanding &#34;v0&#34;">
+          <a href="../cheat/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Cheat Sheet">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2487,20 +2734,20 @@ name.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Understanding "v0"
+                YS Cheat Sheet
               </div>
             </div>
           </a>
         
         
           
-          <a href="../run-ys/" class="md-footer__link md-footer__link--next" aria-label="Next: Self Installation Scripts">
+          <a href="../clj-to-ys/" class="md-footer__link md-footer__link--next" aria-label="Next: From Clojure to YS">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Self Installation Scripts
+                From Clojure to YS
               </div>
             </div>
             <div class="md-footer__button md-icon">
