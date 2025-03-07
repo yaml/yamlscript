@@ -50,7 +50,7 @@ For `libyamlscript`, unless you use the default `PREFIX` you'll need to add
 If you just want to try out the `ys` command but not install it permanently, you
 can run this (in Bash and Zsh only):
 ```bash
-$ source <(curl https://yamlscript.org/try-ys)
+source <(curl https://yamlscript.org/try-ys)
 ```
 
 This will install the `ys` binary under `/tmp/` and add the directory to you
