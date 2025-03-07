@@ -37,8 +37,11 @@ public class Rapidyaml
 
     public Rapidyaml()
     {
+        System.out.printf("LD_LIBRARY_PATH = %s\n", System.getenv("LD_LIBRARY_PATH"));
+        System.out.printf("LD_DEBUG = %s\n", System.getenv("LD_DEBUG"));
         String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
-        System.loadLibrary(library_name);
+        System.load("/home/ingy/src/yamlscript/rapidyaml/native/librapidyaml.0.8.0.so");
+        // System.loadLibrary("/home/ingy/src/yamlscript/rapidyaml/native/librapidyaml.0.8.0.so");
         this.ysparse = this.ysparse_init();
         timingEnabled(false);
     }
