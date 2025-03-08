@@ -9,7 +9,7 @@ hide:
 
 [HelmYS](https://github.com/kubeys/helmys) is a
 [Kubernetes Helm](https://helm.sh/)
-["post renderer"](https://helm.sh/docs/topics/charts/#post-rendering) that lets
+["post renderer"](https://helm.sh/docs/topics/advanced/#post-rendering) that lets
 you write your Helm chart templates with YS.
 
 ??? info "Click here for how to install `helmys` and `ys` quickly"
