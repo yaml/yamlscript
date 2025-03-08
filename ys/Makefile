@@ -105,6 +105,9 @@ else
 $(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	$< uberjar
 endif
+	echo +++ $@
+	jar -uf $@ \
+	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
 
 $(RAPIDYAML_INSTALLED):
 	$(MAKE) -C $(RAPIDYAML) $@
