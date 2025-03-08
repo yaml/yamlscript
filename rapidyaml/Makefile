@@ -62,7 +62,6 @@ $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
 
 $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
 	$(JAR) -cvf $@ $<
-	jar -uf $@ librapidyaml.0.8.0.so # $(RAPIDYAML_SO)
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
 	@# this doesn't work:
