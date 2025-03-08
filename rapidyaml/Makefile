@@ -43,6 +43,7 @@ clean::
 
 realclean:: clean
 	$(MAKE) -C native $@
+	$(RM) -r $(HOME)/.m2/repository/org/rapidyaml/
 
 sysclean::
 	$(RM) -r $(MAVEN_REPOSITORY)/org/rapidyaml
@@ -61,7 +62,7 @@ $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
 
 $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
 	$(JAR) -cvf $@ $<
-	jar uf $@ $(RAPIDYAML_JNI_H) $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
+	jar -uf $@ librapidyaml.0.8.0.so # $(RAPIDYAML_SO)
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
 	@# this doesn't work:

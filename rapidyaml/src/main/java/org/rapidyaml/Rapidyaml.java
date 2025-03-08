@@ -1,5 +1,11 @@
 package org.rapidyaml;
 
+import java.net.URL;
+import java.security.CodeSource;
+
+import org.rapidyaml.NativeLibLoader;
+import java.io.IOException;
+
 import org.rapidyaml.YamlParseErrorException;
 import java.nio.charset.StandardCharsets;
 import java.nio.ByteBuffer;
@@ -35,15 +41,31 @@ public class Rapidyaml
     // CTOR/DTOR
     //------------------------
 
-    public Rapidyaml()
+    public Rapidyaml() throws IOException
     {
-        System.out.printf("LD_LIBRARY_PATH = %s\n", System.getenv("LD_LIBRARY_PATH"));
-        System.out.printf("LD_DEBUG = %s\n", System.getenv("LD_DEBUG"));
-        String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
-        System.load("/home/ingy/src/yamlscript/rapidyaml/native/librapidyaml.0.8.0.so");
-        // System.loadLibrary("/home/ingy/src/yamlscript/rapidyaml/native/librapidyaml.0.8.0.so");
+        printJarInfo();
+        //System.out.printf("LD_LIBRARY_PATH = %s\n", System.getenv("LD_LIBRARY_PATH"));
+        //System.out.printf("LD_DEBUG = %s\n", System.getenv("LD_DEBUG"));
+        //String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
+        //NativeLibLoader.loadLibraryFromJar(library_name);
+        NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
         this.ysparse = this.ysparse_init();
         timingEnabled(false);
+    }
+
+    public String printJarInfo() {
+        Class class_ = Rapidyaml.class;
+
+        System.out.printf("class name: >>>%s<<<\n", class_.getName());
+
+        URL location = class_.getResource(
+            '/' + class_.getName().replace('.', '/') + ".class");
+        System.out.printf("location: >>>%s<<<\n", location);
+
+        System.out.printf("jar: >>>%s<<<\n",
+            class_.getProtectionDomain().getCodeSource().getLocation());
+
+        return null;
     }
 
     // Likely bad idea to implement finalize:
@@ -109,7 +131,6 @@ public class Rapidyaml
         // !!! need to explicitly set the byte order to the native order
         return bb.order(ByteOrder.nativeOrder()).asIntBuffer();
     }
-
 
     //------------------------
     // TIME

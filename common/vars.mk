@@ -238,6 +238,7 @@ RAPIDYAML_DBG ?= 0
 RAPIDYAML_TIMED ?= 1
 RAPIDYAML_JAVA := \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Rapidyaml.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/NativeLibLoader.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Evt.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/YamlParseErrorException.java
 RAPIDYAML_JNI_H := $(ROOT)/rapidyaml/native/org_rapidyaml_Rapidyaml.h
