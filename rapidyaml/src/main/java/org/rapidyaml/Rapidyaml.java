@@ -7,6 +7,7 @@
    * https://github.com/Willena/sqlite-jdbc-crypt/issues/61
    * https://github.com/Willena/sqlite-jdbc-crypt/pull/62/files
    * https://github.com/oracle/graal/issues/4579
+   * https://github.com/Willena/sqlite-jdbc-crypt/blob/master/src/main/java/org/sqlite/SQLiteJDBCLoader.java
 
  * https://stackoverflow.com/questions/318239/how-do-i-set-environment-variables-from-java
  * https://github.com/oracle/graal/blob/graal-22.3.3/docs/reference-manual/native-image/Resources.md
@@ -57,14 +58,21 @@ public class Rapidyaml
     // CTOR/DTOR
     //------------------------
 
-    public Rapidyaml() throws IOException
+    public Rapidyaml() throws Exception, IOException
     {
         printJarInfo();
         //System.out.printf("LD_LIBRARY_PATH = %s\n", System.getenv("LD_LIBRARY_PATH"));
         //System.out.printf("LD_DEBUG = %s\n", System.getenv("LD_DEBUG"));
         //String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
         //NativeLibLoader.loadLibraryFromJar(library_name);
-        NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
+
+        // NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
+
+        NativeLibLoader.extractAndLoadLibraryFile(
+            "librapidyaml.0.8.0.so"
+        );
+
+
         this.ysparse = this.ysparse_init();
         timingEnabled(false);
     }
