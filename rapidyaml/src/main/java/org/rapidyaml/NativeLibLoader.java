@@ -13,8 +13,6 @@ public class NativeLibLoader {
     private NativeLibLoader() {}
 
     public static void loadLibraryFromJar(String path) throws IOException {
-        System.out.printf("1: >>>%s<<<\n", path);
-
 //       if (null == path || !path.startsWith("/")) {
 //           throw new IllegalArgumentException(
 //               "The path has to be absolute (start with '/').");
@@ -26,37 +24,35 @@ public class NativeLibLoader {
 
         if (tempdir == null) {
             tempdir = createTempDirectory("rapidyamllibloader");
-            tempdir.deleteOnExit();
+            // tempdir.deleteOnExit();
         }
-        System.out.printf("2: >>>%s<<<\n", tempdir);
 
 //       File temp = new File(tempdir, filename);
         File temp = new File(tempdir, path);
 
-        System.out.printf("3: >>>%s<<<\n", path);
         try (InputStream is = NativeLibLoader.class.getResourceAsStream(path)) {
+            System.out.printf("InputStream: >>>%s<<<\n", is);
             Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         catch (IOException e) {
-            temp.delete();
+            // temp.delete();
             throw e;
         }
         catch (NullPointerException e) {
-            temp.delete();
+            // temp.delete();
             throw new FileNotFoundException(
-                "File " + path + " was not found inside JAR.");
+                "File '" + path + "' was not found inside JAR.");
         }
-        System.out.printf("4: >>>%s<<<\n", path);
 
         try {
             System.load(temp.getAbsolutePath());
         }
         finally {
             if (isPosixCompliant()) {
-                temp.delete();
+                // temp.delete();
             }
             else {
-                temp.deleteOnExit();
+                // temp.deleteOnExit();
             }
         }
     }
