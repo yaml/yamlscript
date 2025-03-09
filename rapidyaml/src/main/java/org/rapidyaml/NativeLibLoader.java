@@ -33,6 +33,7 @@ public class NativeLibLoader {
         try (InputStream is = NativeLibLoader.class.getResourceAsStream(path)) {
             System.out.printf("InputStream: >>>%s<<<\n", is);
             Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            is.close();
         }
         catch (IOException e) {
             // temp.delete();
@@ -42,6 +43,8 @@ public class NativeLibLoader {
             // temp.delete();
             throw new FileNotFoundException(
                 "File '" + path + "' was not found inside JAR.");
+        }
+        finally {
         }
 
         try {

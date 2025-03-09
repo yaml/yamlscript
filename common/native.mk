@@ -4,6 +4,7 @@ NATIVE_OPTS := \
   --native-image-info \
   --no-fallback \
   --initialize-at-build-time \
+  --initialize-at-build-time=sun.instrument.InstrumentationImpl \
   --enable-preview \
   --enable-url-protocols=https \
   -march=compatibility \

@@ -13,6 +13,15 @@
     "allPublicMethods": true
   },
   {
+    "name": "java.lang.ClassLoader",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredFields": true,
+    "allPublicFields": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true
+  },
+  {
     "name": "java.lang.Exception",
     "allPublicConstructors": true,
     "allPublicFields": true,
@@ -31,77 +40,77 @@
     "allPublicMethods": true
   },
   {
-    "name":"clojure.lang.LineNumberingPushbackReader",
+    "name": "clojure.lang.LineNumberingPushbackReader",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.String",
+    "name": "java.lang.String",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.io.StringReader",
+    "name": "java.io.StringReader",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.io.StringWriter",
+    "name": "java.io.StringWriter",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.Double",
+    "name": "java.lang.Double",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.Integer",
+    "name": "java.lang.Integer",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.Number",
+    "name": "java.lang.Number",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.IllegalArgumentException",
+    "name": "java.lang.IllegalArgumentException",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.System",
+    "name": "java.lang.System",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.Math",
+    "name": "java.lang.Math",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
   {
-    "name":"java.lang.Thread",
+    "name": "java.lang.Thread",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
   },
-
   {
     "name": "java.lang.reflect.AccessibleObject",
-    "methods": [{"name":"canAccess"}]
+    "methods": [
+      {"name": "canAccess"}
+    ]
   },
-
   {
     "name": "clojure.lang.RT",
     "methods": [
@@ -110,6 +119,7 @@
       {"name": "aclone"}
     ]
   },
-
-  {"name": "[Ljava.lang.Double;"}
+  {
+    "name": "[Ljava.lang.Double;"
+  }
 ]
