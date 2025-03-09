@@ -1,3 +1,21 @@
+/*
+ * Links to figure out how to make loading shared libraries work with GraalVM:
+
+ * https://www.adamh.cz/blog/2012/12/how-to-load-native-jni-library-from-jar/
+   * https://github.com/adamheinrich/native-utils/blob/master/src/main/java/cz/adamh/utils/NativeUtils.java
+
+ * https://github.com/Willena/sqlite-jdbc-crypt/tree/master?tab=readme-ov-file#graalvm-native-image-support
+   * https://github.com/Willena/sqlite-jdbc-crypt/issues/61
+   * https://github.com/Willena/sqlite-jdbc-crypt/pull/62/files
+   * https://github.com/oracle/graal/issues/4579
+
+ * https://stackoverflow.com/questions/318239/how-do-i-set-environment-variables-from-java
+ * https://github.com/oracle/graal/blob/graal-22.3.3/docs/reference-manual/native-image/Resources.md
+ * https://stackoverflow.com/questions/1983839/determine-which-jar-file-a-class-is-from
+ * https://stackoverflow.com/questions/1429172/how-to-list-the-files-inside-a-jar-file
+ * https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#getSystemResources-java.lang.String-
+ * 
+ */
 package org.rapidyaml;
 
 import java.net.URL;
