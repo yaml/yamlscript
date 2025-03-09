@@ -1,5 +1,4 @@
-/*
- * Links to figure out how to make loading shared libraries work with GraalVM:
+/* Links to figure out how to make loading shared libraries work with GraalVM:
 
  * https://www.adamh.cz/blog/2012/12/how-to-load-native-jni-library-from-jar/
    * https://github.com/adamheinrich/native-utils/blob/master/src/main/java/cz/adamh/utils/NativeUtils.java
@@ -14,7 +13,6 @@
  * https://stackoverflow.com/questions/1983839/determine-which-jar-file-a-class-is-from
  * https://stackoverflow.com/questions/1429172/how-to-list-the-files-inside-a-jar-file
  * https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#getSystemResources-java.lang.String-
- * 
  */
 package org.rapidyaml;
 
