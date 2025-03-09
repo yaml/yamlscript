@@ -61,16 +61,16 @@ public class Rapidyaml
     public Rapidyaml() throws Exception, IOException
     {
         printJarInfo();
-        //System.out.printf("LD_LIBRARY_PATH = %s\n", System.getenv("LD_LIBRARY_PATH"));
-        //System.out.printf("LD_DEBUG = %s\n", System.getenv("LD_DEBUG"));
-        //String library_name = "rapidyaml"; // ." + RAPIDYAML_VERSION;
-        //NativeLibLoader.loadLibraryFromJar(library_name);
 
-        // NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
-
-        NativeLibLoader.extractAndLoadLibraryFile(
-            "librapidyaml.0.8.0.so"
-        );
+        if (System.getenv("YS_RAPIDYAML_MAVEN_TEST") != null) {
+            String library_name = "rapidyaml";
+            System.loadLibrary(library_name);
+        }
+        else {
+            //String library_name = "rapidyaml." + RAPIDYAML_VERSION;
+            //NativeLibLoader.loadLibraryFromJar(library_name);
+            NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
+        }
 
 
         this.ysparse = this.ysparse_init();

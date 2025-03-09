@@ -30,7 +30,7 @@ install:: $(RAPIDYAML_INSTALLED)
 
 test:: build $(JAVA_INSTALLED)
 	$(MAKE) -C native $@
-	$(MVN) $@
+	YS_RAPIDYAML_MAVEN_TEST=1 $(MVN) $@
 
 test-x: build $(JAVA_INSTALLED)
 	$(MAKE) -C native $@
@@ -58,10 +58,12 @@ $(RAPIDYAML_LIB): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
 
 $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
-	$(MVN) install
+	YS_RAPIDYAML_MAVEN_TEST=1 $(MVN) install
 
 $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
 	$(JAR) -cvf $@ $<
+	jar -uf $@ \
+	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
 	@# this doesn't work:
