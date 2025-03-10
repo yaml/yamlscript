@@ -12,13 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/">
+        <link rel="canonical" href="https://yamlscript.org/helmys/">
       
       
-        <link rel="prev" href="../doc/run-ys/">
+        <link rel="prev" href="../doc/query/">
       
       
-        <link rel="next" href="category/advent-2023/">
+        <link rel="next" href="../cicd/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../feed_rss_created.xml">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Index - YS — YAML Done Wisely</title>
+        <title>HelmYS - YS Helm Charts - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +127,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Index - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="HelmYS - YS Helm Charts - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/index.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/helmys.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +139,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/" >
+        <meta  property="og:url"  content="https://yamlscript.org/helmys/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Index - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="HelmYS - YS Helm Charts - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/index.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/helmys.png" >
       
     
     
@@ -170,7 +170,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#the-ys-blog" class="md-skip">
+        <a href="#template-file-comparisons" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +209,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Index
+              HelmYS - YS Helm Charts
             
           </span>
           </a>
@@ -316,10 +316,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../use/" class="md-tabs__link">
           
   
@@ -356,13 +358,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../blog/" class="md-tabs__link">
           
   
     
@@ -440,7 +440,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -477,6 +479,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
+    
+  
   
   
     
@@ -497,16 +501,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
         
           
           
@@ -522,13 +527,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
             
               
-              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
             Using YS
@@ -562,8 +567,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
+  
     
     
       
@@ -575,13 +582,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3" checked>
         
           
           <label class="md-nav__link" for="__nav_1_3" id="__nav_1_3_label" tabindex="0">
@@ -595,7 +600,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_1_3">
             <span class="md-nav__icon md-icon"></span>
             DevOps
@@ -606,10 +611,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../helmys/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    HelmYS - YS Helm Charts
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -618,6 +641,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#template-file-comparisons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Template File Comparisons
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1916,8 +1966,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
-    
-  
   
   
     
@@ -1934,22 +1982,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../blog/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1960,13 +2007,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Blog
@@ -2032,7 +2079,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="archive/2025/" class="md-nav__link">
+      <a href="../blog/archive/2025/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2055,7 +2102,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="archive/2024/" class="md-nav__link">
+      <a href="../blog/archive/2024/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2078,7 +2125,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="archive/2023/" class="md-nav__link">
+      <a href="../blog/archive/2023/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2155,7 +2202,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="category/advent-2023/" class="md-nav__link">
+      <a href="../blog/category/advent-2023/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2178,7 +2225,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="category/general/" class="md-nav__link">
+      <a href="../blog/category/general/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2430,7 +2477,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
             
               
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -2438,8 +2487,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-  
-    
   
   
     <label class="md-nav__title" for="__toc">
@@ -2449,225 +2496,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#yamlscript-is-ys" class="md-nav__link">
+  <a href="#template-file-comparisons" class="md-nav__link">
     <span class="md-ellipsis">
-      YAMLScript is YS!
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-kubernetes-effect" class="md-nav__link">
-    <span class="md-ellipsis">
-      The Kubernetes Effect
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-fall-of-yamlscript" class="md-nav__link">
-    <span class="md-ellipsis">
-      The Fall of YAMLScript!
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#go-julia" class="md-nav__link">
-    <span class="md-ellipsis">
-      Go Julia!
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dr. StrangeYAML or How I Learned to Stop Worrying and Love the LLM
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ys-spring-update" class="md-nav__link">
-    <span class="md-ellipsis">
-      YS Spring Update
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ys-firsts" class="md-nav__link">
-    <span class="md-ellipsis">
-      YS Firsts
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#wrapped-and-ready" class="md-nav__link">
-    <span class="md-ellipsis">
-      Wrapped and Ready
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#perl-to-rust" class="md-nav__link">
-    <span class="md-ellipsis">
-      Perl to Rust
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#flip-flops" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flip Flops
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#yaml-python-and-the-holy-graal" class="md-nav__link">
-    <span class="md-ellipsis">
-      YAML, Python and the Holy Graal
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#godspeed" class="md-nav__link">
-    <span class="md-ellipsis">
-      Godspeed
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reindeer-all-the-way-down" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reindeer All The Way Down
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#santas-in-dbuggy" class="md-nav__link">
-    <span class="md-ellipsis">
-      Santa's in d'buggy
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rosetta-code" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rosetta Code
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#let-lambda-come-over" class="md-nav__link">
-    <span class="md-ellipsis">
-      Let Lambda Come Over
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#naughty-is-nice" class="md-nav__link">
-    <span class="md-ellipsis">
-      Naughty is Nice!
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stocking-stuffers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Stocking Stuffers
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#history-lesson" class="md-nav__link">
-    <span class="md-ellipsis">
-      History Lesson
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#future-proof" class="md-nav__link">
-    <span class="md-ellipsis">
-      Future Proof
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-yes-express" class="md-nav__link">
-    <span class="md-ellipsis">
-      The YeS Express
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#states-and-ladders" class="md-nav__link">
-    <span class="md-ellipsis">
-      States and Ladders
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#coding-with-style" class="md-nav__link">
-    <span class="md-ellipsis">
-      Coding with Style
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#going-to-the-library" class="md-nav__link">
-    <span class="md-ellipsis">
-      Going to the Library
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sharpen-your-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sharpen Your Tools
+      Template File Comparisons
     </span>
   </a>
   
@@ -2682,1425 +2513,407 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
           
           
-  <div class="md-content" data-md-component="content">
-    <div class="md-content__inner">
-      <header class="md-typeset">
-        <div class="admonition rss inline end">
-<p class="admonition-title"><a href="/rss.xml" target="_blank">RSS Feed</a></p>
-</div>
-<h1 id="the-ys-blog">The YS Blog<a class="headerlink" href="#the-ys-blog" title="Permanent link">🔗</a></h1>
-      </header>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-03-10 00:00:00+00:00">March 10, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="yamlscript-is-ys"><a class="toclink" href="2025-03-10/yamlscript-is-ys/">YAMLScript is YS!</a></h2>
-<p>Greetings! And welcome back to <a href="https://yamlscript.org">YAMLScript</a> in 2025!</p>
-<p>Or as we now say, <em><strong>YS in '25!</strong></em>.</p>
-<p>It's been a minute since our last update, but we've continued to work every day
-on making YS the best it can be.</p>
-<p>Oh… What's <strong>"YS"</strong>, you say?</p>
-<p>Well, don't say "Y-S"…</p>
-<h3 id="say-wise"><a class="toclink" href="2025-03-10/yamlscript-is-ys/#say-wise">Say "Wise"!</a></h3>
-<hr />
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
 
-    
-      <nav class="md-post__action">
-        <a href="2025-03-10/yamlscript-is-ys/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2024-11-29 00:00:00+00:00">November 29, 2024</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              9 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="the-kubernetes-effect"><a class="toclink" href="2024-11-29/the-kubernetes-effect/">The Kubernetes Effect</a></h2>
-<p>In my many years of creating Open Source software and talking about it at
-conferences, some of the most productive development times are often those
-leading up to the presentation.</p>
-<p>In the last post, I mentioned that I was going to present a
-<a href="https://yamlscript.org/kubeys24">90 minute YS tutorial</a> at
-<a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/">KubeCon (November 15th in Salt Lake City)</a>.</p>
-<p>The conference was amazing and the YS tutorial was a huge success.
-I came away with the feeling that YAML and YS had found their community.
-<strong>KubeCon felt like YAMLCon</strong>!</p>
 
-    
-      <nav class="md-post__action">
-        <a href="2024-11-29/the-kubernetes-effect/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2024-10-05 00:00:00+00:00">October 5, 2024</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              6 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="the-fall-of-yamlscript"><a class="toclink" href="2024-10-05/the-fall-of-yamlscript/">The Fall of YAMLScript!</a></h2>
-<h3 id="or-exciting-ys-news-for-fall-2024"><a class="toclink" href="2024-10-05/the-fall-of-yamlscript/#or-exciting-ys-news-for-fall-2024">(or Exciting YS News for Fall 2024!)</a></h3>
-<p>Greetings!</p>
-<p>It's been over 3 months since the last blog post here.</p>
-<p>Just to be clear, the YS/YAMLScript project is alive and fantastic!</p>
-<p>We've just been busy as hell on 2 very big things: <a href="https://exercism.org"><strong>Exercism</strong></a> and <a href="https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/"><strong>KubeCon</strong></a>.</p>
-<p>To be successful in both of these endeavors, YS needed to be amazing both as a
-programming language (Exercism) and as a data language (KubeCon).</p>
-<p>There's so much new stuff to talk about, and I promise to write about all of
-it after things get back to a normal pace.</p>
-<p>Today let's talk about Exercism, KubeCon and the positive impacts they've had
-on YS.</p>
 
-    
-      <nav class="md-post__action">
-        <a href="2024-10-05/the-fall-of-yamlscript/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2024-07-17 00:00:00+00:00">July 17, 2024</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="go-julia"><a class="toclink" href="2024-07-17/go-julia/">Go Julia!</a></h2>
-<p>Last week two new language bindings were added to the YS family:
-<a href="https://github.com/yaml/yamlscript-go">Go</a> and
-<a href="https://juliahub.com/ui/Packages/General/YAMLScript">Julia</a>.</p>
 
-    
-      <nav class="md-post__action">
-        <a href="2024-07-17/go-julia/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2024-06-20 00:00:00+00:00">June 20, 2024</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              6 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm"><a class="toclink" href="2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/">Dr. StrangeYAML or How I Learned to Stop Worrying and Love the LLM</a></h2>
-<div class="admonition quote">
-<p>Well now, what happened is, uh, one of our data scientists, uh, well, he
-went a little funny in the head.
-You know.
-Just a little funny.
-And uh, he went and did a silly thing.</p>
-<p>Well, I'll tell you what he did.
-He started chatting with computers... in YAML.</p>
-<p>Well, let me finish, Elon.</p>
-<p>Let me <em>finish</em>, Elon.</p>
-<p>Well, listen, how do you think <em>I</em> feel about it?</p>
-</div>
 
-    
-      <nav class="md-post__action">
-        <a href="2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2024-04-16 00:00:00+00:00">April 16, 2024</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              8 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="ys-spring-update"><a class="toclink" href="2024-04-16/ys-spring-update/">YS Spring Update</a></h2>
-<p>It's been a while since I let you know what's been happening with YS.
-I've been busy working on it every day this year and I have a lot to tell you
-about!</p>
-<h4 id="ys-activity-in-2024"><a class="toclink" href="2024-04-16/ys-spring-update/#ys-activity-in-2024">YS Activity in 2024</a></h4>
-<p>Let me start by telling you about some of the events that have happened in the
-YS world recently.</p>
-<ul>
-<li><a href="https://www.youtube.com/watch?v=GajOBwBcFyA">Seajure Talk</a> -
-  I gave a talk at the Seajure (Seattle Clojure) Meetup in March.</li>
-<li><a href="https://thenewstack.io/with-yamlscript-yaml-becomes-a-proper-programming-language/">YS Article</a> -
-  The New Stack published an article about YS in March</li>
-<li><a href="https://www.therepl.net/episodes/52/">YS Podcast</a> -
-  I was interviewed on the "The REPL" by Daniel Compton in April.</li>
-</ul>
-<p>Finally I'm presenting a talk about <a href="https://sched.co/1aBPY">YS at the Open Source Summit North America</a> this Thursday, April 18th.
-Super excited about that!</p>
 
-    
-      <nav class="md-post__action">
-        <a href="2024-04-16/ys-spring-update/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2024-03-14 00:00:00+00:00">March 14, 2024</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/general/" class="md-meta__link">General</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="ys-firsts"><a class="toclink" href="2024-03-14/ys-firsts/">YS Firsts</a></h2>
-<h4 id="remember-your-first-time"><a class="toclink" href="2024-03-14/ys-firsts/#remember-your-first-time">Remember Your First Time?</a></h4>
-<p>Do you remember the first time you wrote a program in a new language?
-For YS, mine was yesterday!</p>
-<p>This is my first post of 2024.
-I've been working on YS non-stop since the last <a href="2023-12-24/wrapped-and-ready/">YS Advent 2023</a> post.
-Too busy to write a blog post, I guess.</p>
-<p>Yesterday something awesome happened.</p>
-<p>Putting out a YS release is a complicated process.
-It takes me about an hour to do it.
-Of course I plan to automate it fully but I just haven't had the tuits.</p>
-<p>For the last several releases, I've had a text file that listed all the steps
-so that I wouldn't forget anything.
-Yesterday I automated that list...</p>
-<p>...you guessed it...</p>
-<p>...in YS!</p>
+  
 
-    
-      <nav class="md-post__action">
-        <a href="2024-03-14/ys-firsts/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-24 00:00:00+00:00">December 24, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="wrapped-and-ready"><a class="toclink" href="2023-12-24/wrapped-and-ready/">Wrapped and Ready</a></h2>
-<p>The Elves have everything wrapped up.</p>
-<p>Literally!</p>
-<p>Tonight's the big night.</p>
-<p>It's Time to Deliver!</p>
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-24/wrapped-and-ready/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-23 00:00:00+00:00">December 23, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              5 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="perl-to-rust"><a class="toclink" href="2023-12-23/perl-to-rust/">Perl to Rust</a></h2>
-<p>When Santa is doing his job in the Luxembourg area, I've always wondered how he
-gets from Perl to Rust.</p>
-<p>Maybe he takes <a href="https://oylenshpeegul.gitlab.io/from-perl-to-rust/introduction.html">this route</a>!</p>
 
+  
     
-      <nav class="md-post__action">
-        <a href="2023-12-23/perl-to-rust/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-22 00:00:00+00:00">December 22, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="flip-flops"><a class="toclink" href="2023-12-22/flip-flops/">Flip Flops</a></h2>
-<p>Can you imagine Santa walking around in flip flops?
-I've never been up to the North Pole, but I'm pretty sure there's no beaches.
-I always pictured Santa wearing moon boots around the workshop.</p>
-<p>YS on the other hand, is all about flip flops!</p>
+  
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-22/flip-flops/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
+
+
+  
+    <a href="https://github.com/yaml/yamlscript/discussions/221"
+      title="Discuss this page"
+      class="md-content__button md-icon">
       
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.1 1 4.1 2.8 5.5 0 .6-.4 2.2-2.8 4.5 0 0 3.5 0 6.5-2.5 1.1.3 2.3.5 3.5.5 5.5 0 10-3.6 10-8s-4.5-8-10-8m1 12h-2v-2h2zm1.8-5c-.3.4-.7.6-1.1.8-.3.2-.4.3-.5.5-.2.2-.2.4-.2.7h-2c0-.5.1-.8.3-1.1.2-.2.6-.5 1.1-.8.3-.1.5-.3.6-.5s.2-.5.2-.7c0-.3-.1-.5-.3-.7s-.5-.3-.8-.3-.5.1-.7.2q-.3.15-.3.6h-2c.1-.7.4-1.3.9-1.7s1.2-.5 2.1-.5 1.7.2 2.2.6.8 1 .8 1.7q.15.6-.3 1.2"/></svg>
+    </a>
+  
+
+  <a href="https://github.com/yaml/yamlscript/edit/website/www/src/helmys.md"
+     title="Edit this page"
+     class="md-content__button md-icon">
     
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+  </a>
+
+  <a href="https://github.com/yaml/yamlscript/raw/website/www/src/helmys.md"
+     title="View source of this page"
+     class="md-content__button md-icon">
     
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-21 00:00:00+00:00">December 21, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="yaml-python-and-the-holy-graal"><a class="toclink" href="2023-12-21/yaml-python-and-the-holy-graal/">YAML, Python and the Holy Graal</a></h2>
-<p>Which has a greater airspeed velocity... an unladen swallow or Santa's sleigh?</p>
-<p>Well, that depends... are we talking about an African or European swallow?</p>
-<p>&nbsp;</p>
-<details><summary><strong style="color:red">Huh?</strong></summary>
-&nbsp;
-<iframe width="560" height="315"
-  src="https://www.youtube.com/embed/uio1J2PKzLI?si=QA1x920QfN1GlkRs"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowfullscreen></iframe>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+  </a>
+
+
+  <h1>HelmYS - YS Helm Charts</h1>
+
+<p><a href="https://github.com/kubeys/helmys">HelmYS&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> is a
+<a href="https://helm.sh/">Kubernetes Helm&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>
+<a href="https://helm.sh/docs/topics/advanced/#post-rendering">"post renderer"&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> that lets
+you write your Helm chart templates with YS.</p>
+<details class="info">
+<summary>Click here for how to install <code>helmys</code> and <code>ys</code> quickly</summary>
+<p>Run these commands to install <code>helmys</code> and <code>ys</code> in <code>~/.local/bin</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="go">git clone https://github.com/kubeys/helmys</span>
+<span class="go">make -C helmys install PREFIX=$HOME/.local</span>
+</code></pre></div>
+<p>Full details <a href="https://github.com/kubeys/helmys#installing-helmys-and-ys">here&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
 </details>
+<p>YS can be used in combination with Helm's standard
+<a href="https://pkg.go.dev/text/template">Go template&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> syntax or it can replace it
+entirely.</p>
+<p>When YS is used exclusively, the Helm chart templates are not only
+simpler and more concise, but they are also valid YAML files (just like the
+<code>Chart.yaml</code> and <code>values.yaml</code> files).
+That means they can be processed with any YAML tools, such as being validated
+with a YAML linter like <a href="https://www.yamllint.com/">yamllint&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<h2 id="template-file-comparisons">Template File Comparisons<a class="headerlink" href="#template-file-comparisons" title="Permanent link">🔗</a></h2>
+<p>This is a side by side comparison of the Helm chart template YAML files created
+by <code>helm create &lt;chart-name&gt;</code> and then converted to use YS.
+The left side is the YS version and the right side is the original Go
+template version.</p>
+<table>
 
+<tr><td>
+<div class="highlight"><span class="filename">ys-chart/templates/helpers.yaml</span><pre><span></span><code><span class="kt">!YS-v0</span>
+<span class="nt">defn trunc(s)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">take(63 s).str(*).replace(/-$/)</span>
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-21/yaml-python-and-the-holy-graal/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-20 00:00:00+00:00">December 20, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              5 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="godspeed"><a class="toclink" href="2023-12-20/godspeed/">Godspeed</a></h2>
-<p>I wonder if Santa has a Hemi?
-Supercharged, Turbocharged?
-Maybe a Nitro Burning Funny Sleigh?
-Dude's got to get around the world in one night.
-Godspeed, my festive friend!</p>
+<span class="c1"># Expand the name of the chart:</span>
+<span class="nt">chart-name =</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.nameOverride ||| Chart.name</span>
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-20/godspeed/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-19 00:00:00+00:00">December 19, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="reindeer-all-the-way-down"><a class="toclink" href="2023-12-19/reindeer-all-the-way-down/">Reindeer All The Way Down</a></h2>
-<p>Santa is in charge of Christmas.
-He's the one who makes sure that all the children get presents.
-But who is in charge of getting Santa his presents?
-That's where the reindeer come in.
-They are the ones who make sure that Santa gets his presents.
-But who is in charge of getting the reindeer their presents?
-More reindeer!
-But who is in charge of getting the reindeer's reindeer their presents?
-More reindeer!
-It's reindeer all the way down.</p>
+<span class="c1"># Create a default fully qualified app name.</span>
+<span class="nt">chart-fullname =</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">if Values.fullnameOverride.?</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.fullnameOverride</span>
+<span class="w">    </span><span class="nt">else</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.nameOverride ||| Chart.name</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">if name.has?(Release.Name)</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">trunc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">format &quot;%s-%s&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name name</span>
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-19/reindeer-all-the-way-down/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-18 00:00:00+00:00">December 18, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              6 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="santas-in-dbuggy"><a class="toclink" href="2023-12-18/santas-in-dbuggy/">Santa's in d'buggy</a></h2>
-<p>With one week to go, Santa's gotta get his sleigh in top shape.
-Can't have any breakdowns on the big night.
-His sleigh might look like a simple wooden buggy, but it's more temperamental
-and buggy than a 2023 Tesla!</p>
-<p>But this is Santa we're talking about.
-He's done this a few times, so he knows how to get the bugs out.</p>
+<span class="c1"># Selector labels:</span>
+<span class="nt">selectorLabels =:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.name</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/instance:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Name</span>
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-18/santas-in-dbuggy/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-17 00:00:00+00:00">December 17, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="rosetta-code"><a class="toclink" href="2023-12-17/rosetta-code/">Rosetta Code</a></h2>
-<p>How does Santa read all the signs in all the languages of the world?
-That's a lot of languages to know on top of all the other things he has to do.
-Luckily he has his trusty polyglot elf, Rosetta, at his side.
-Bet you didn't know that!</p>
+<span class="c1"># Chart labels:</span>
+<span class="nt">chart-labels =:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">helm.sh/chart:</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;$(Chart.name)-$(Chart.version)&quot;</span>
+<span class="w">  </span><span class="nt">:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/version:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.appVersion</span>
+<span class="w">  </span><span class="nt">app.kubernetes.io/managed-by:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Release.Service</span>
 
-    
-      <nav class="md-post__action">
-        <a href="2023-12-17/rosetta-code/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-16 00:00:00+00:00">December 16, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="let-lambda-come-over"><a class="toclink" href="2023-12-16/let-lambda-come-over/">Let Lambda Come Over</a></h2>
-<p>We know the names of Santa's reindeer: Dasher, Dancer, Prancer, Vixen, Comet,
-Cupid, Donner, Blitzen and Rudolph.
-And his elves: Alabaster Snowball, Bushy Evergreen, Pepper Minstix, Shinny
-Upatree, Sugarplum Mary, Wunorse Openslae, and the head elf, Bernard.</p>
-<p>But we don't know the names of Santa's lambda reindeer and elves.
-Why would we?
-They are anonymous!
-They're also the hardest working of the bunch.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-16/let-lambda-come-over/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-15 00:00:00+00:00">December 15, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              7 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="naughty-is-nice"><a class="toclink" href="2023-12-15/naughty-is-nice/">Naughty is Nice!</a></h2>
-<p>As the architect of a major world holiday, Santa Claus has hard design choices
-to make.
-What is Suki going to get this year?
-He keeps it simple with the standard Naughty-Or-Nice algorithm.</p>
-<p>As architects of an aspiring new programming language, the YS folks have design
-choices to make as well!</p>
-<p>Naughty-Or-Nice should not be discounted but what about Naughty-And-Nice?
-Naughty-Xor-Nice???</p>
-<p>My personal favorite?</p>
-<p><strong>Naughty-<em>Is</em>-Nice!!</strong></p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-15/naughty-is-nice/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-14 00:00:00+00:00">December 14, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              6 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="stocking-stuffers"><a class="toclink" href="2023-12-14/stocking-stuffers/">Stocking Stuffers</a></h2>
-<p>It's always nice to get a little something extra in your stocking whilst waiting
-for the big guy to show up on the big day.</p>
-<p>Learning eveything you need to know about YS in 24 days is a tall order.
-I still have a quite a bit to learn about it myself! :-)</p>
-<p>It helps to learn the small stuff first.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-14/stocking-stuffers/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-13 00:00:00+00:00">December 13, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              5 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="history-lesson"><a class="toclink" href="2023-12-13/history-lesson/">History Lesson</a></h2>
-<p>Santa is Legend.
-Legends have histories.
-The histories of Santa are many and varied, some going back to the 4th century
-AD.</p>
-<p>The history of YS is much shorter, but it's still a history.
-Today I'd like to tell you a little bit about it.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-13/history-lesson/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-12 00:00:00+00:00">December 12, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="future-proof"><a class="toclink" href="2023-12-12/future-proof/">Future Proof</a></h2>
-<p>Santa has very little margin for error.
-He has to get everything just right all in one night.</p>
-<p>YS is a work in progress, and will be for a long time.
-I'm trying to get it right, but I'm no Santa!
-In fact I'm quite sure I'll get some things wrong.
-That's just the nature of the beast when you're a programmer.</p>
-<p>Also, have you ever wondered why the magic YS starter tag has that <code>/v0</code> at the
-end?</p>
-<h4 id="welcome-to-day-12-of-the-ys-advent-calendar"><a class="toclink" href="2023-12-12/future-proof/#welcome-to-day-12-of-the-ys-advent-calendar">Welcome to Day 12 of the YS Advent Calendar!</a></h4>
-<p>Today we'll discuss how YS is designed to be future proof.</p>
-<p>I've been programming for quite a long time now.
-I've learned that no matter how good I think an idea it today, I'll almost
-certainly think of a better way to do it in the future.</p>
-<p>This means I'll almost certainly want to make big changes to YS long after it's
-in use in the real world.</p>
-<p>I also believe that it is really important for things like APIs and progamming
-languages to be stable and backwards compatible, basically forever.</p>
-<p>If I could always have the freedom to make big changes to YS, but never break
-backwards compatibility, then I could have my cake and eat it too.
-And I think I can!</p>
-<h4 id="the-ys-api-version"><a class="toclink" href="2023-12-12/future-proof/#the-ys-api-version">The YS API Version</a></h4>
-<p>I call <code>v0</code> the YS API version.
-YS v0 isn't done yet, but it should be in the next couple months.
-At that point I'll release it as a stable version of the API version <code>0</code>.</p>
-<p>So you've seen that to make a <code>.ys</code> file executable, you need to add a special
-starter tag to the top of the file:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span>
-<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello!&quot;</span>
+<span class="c1"># Create the name of the service account to use:</span>
+<span class="nt">serviceAccountName =</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Values.serviceAccount.name |||</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">if Values.serviceAccount.create</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">&#39;default&#39;</span>
 </code></pre></div>
-<p>Or you can write it with the shebang line:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-0</span>
-<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello!&quot;</span>
+</td><td>
+<div class="highlight"><span class="filename">go-chart/templates/_helpers.tpl</span><pre><span></span><code>{{/*
+Expand the name of the chart.
+*/}}
+{{- define &quot;go-chart.name&quot; -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to
+this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define &quot;go-chart.fullname&quot; -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- else }}
+{{- printf &quot;%s-%s&quot; .Release.Name $name | trunc 63 | trimSuffix &quot;-&quot; }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define &quot;go-chart.chart&quot; -}}
+{{- printf &quot;%s-%s&quot; .Chart.Name .Chart.Version | replace &quot;+&quot; &quot;_&quot; | trunc 63 |
+    trimSuffix &quot;-&quot; }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define &quot;go-chart.labels&quot; -}}
+helm.sh/chart: {{ include &quot;go-chart.chart&quot; . }}
+{{ include &quot;go-chart.selectorLabels&quot; . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define &quot;go-chart.selectorLabels&quot; -}}
+app.kubernetes.io/name: {{ include &quot;go-chart.name&quot; . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define &quot;go-chart.serviceAccountName&quot; -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include &quot;go-chart.fullname&quot; .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default &quot;default&quot; .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
 </code></pre></div>
-<p>Leaving off that <code>0</code> here will make things not work as you intended.</p>
-<p>You might also have noticed that when you install the <code>ys</code> binary CLI is is a
-symlink to <code>ys-0.1.26</code>.
-And there is another symlink called <code>ys-0</code> that points to <code>ys-0.1.26</code>.</p>
-<p>This is all by design.</p>
-<p>The leading <code>0</code> in <code>!YS-v0</code> and in <code>bin/ys-0</code> and also in <code>0.1.26</code> is
-the YS API version.</p>
-<p>When YS v0 is declared stable, there will never be changes that break backwards
-compatibility with the <code>v0</code> API version.</p>
-<p>That means you can write YS programs today, and they will continue to work
-forever, even if you upgrade to a new version of YS.</p>
-<h4 id="new-versions-of-ys"><a class="toclink" href="2023-12-12/future-proof/#new-versions-of-ys">New Versions of YS</a></h4>
-<p>At some point after YS v0 is released as stable, I'll start working on
-YS v1.</p>
-<p>I can make any changes I want in YS v1, even ones that break backwards
-compatibility with YS v0.
-That's because I set up the rules such that you need to declare the version when
-you write a YS program.</p>
-<h4 id="conclusion"><a class="toclink" href="2023-12-12/future-proof/#conclusion">Conclusion</a></h4>
-<p>This doesn't mean that I don't think extremely carefully about every change I
-make to YS.
-But it does mean that I don't have to worry about everything being perfect
-before I release stable v0.</p>
-<p>That's exciting as I strive to make YS a great language today and a better
-language in the future.</p>
-<p>I hope that also encorages you write more YS today, knowing that it will
-continue to work in the future.</p>
-<p>That wraps up Day 12.
-And that also means we're half way through the Advent Calendar.
-I hope you're enjoying it as much as I am, and I hope the best is yet to come!</p>
-<p>Tune in tomorrow for Day 13 of the YS Advent Calendar.</p>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-11 00:00:00+00:00">December 11, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
+</td></tr>
+
+<tr><td>
+<div class="highlight"><span class="filename">ys-chart/templates/deployment.yaml</span><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
+<span class="w">  </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:when-not Values.autoscaling.enabled.?:</span><span class="p p-Indicator">:</span>
+<span class="w">   </span><span class="nt">replicas:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.replicaCount</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.podAnnotations.?:</span><span class="p p-Indicator">:</span>
+<span class="w">       </span><span class="nt">annotations:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_</span>
+<span class="w">      </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.imagePullSecrets.?:</span><span class="p p-Indicator">:</span>
+<span class="w">       </span><span class="nt">imagePullSecrets:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_</span>
+<span class="w">      </span><span class="nt">serviceAccountName:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serviceAccountName</span>
+<span class="w">      </span><span class="nt">securityContext:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.podSecurityContext</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chart.name</span>
+<span class="w">        </span><span class="nt">securityContext:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.securityContext</span>
+<span class="w">        </span><span class="nt">image:</span><span class="p">:</span>
+<span class="w">          </span><span class="s">&quot;$(Values.image.repository):\</span>
+<span class="w">           </span><span class="s">$(Values.image.tag</span><span class="nv"> </span><span class="s">|||</span><span class="nv"> </span><span class="s">Chart.appVersion)&quot;</span>
+<span class="w">        </span><span class="nt">imagePullPolicy:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.image.pullPolicy</span>
+<span class="w">        </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">          </span><span class="nt">containerPort:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.port</span>
+<span class="w">          </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">        </span><span class="nt">livenessProbe:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.livenessProbe</span>
+<span class="w">        </span><span class="nt">readinessProbe:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.readinessProbe</span>
+<span class="w">        </span><span class="nt">resources:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.resources</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.volumeMounts.?:</span><span class="p p-Indicator">:</span>
+<span class="w">         </span><span class="nt">volumeMounts:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.volumes.?:</span><span class="p p-Indicator">:</span><span class="w">      </span><span class="p p-Indicator">{</span><span class="nv">volumes</span><span class="p p-Indicator">::</span><span class="w"> </span><span class="nv">_</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.nodeSelector.?:</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nv">nodeSelector</span><span class="p p-Indicator">::</span><span class="w"> </span><span class="nv">_</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.affinity.?:</span><span class="p p-Indicator">:</span><span class="w">     </span><span class="p p-Indicator">{</span><span class="nv">affinity</span><span class="p p-Indicator">::</span><span class="w"> </span><span class="nv">_</span><span class="p p-Indicator">}</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.tolerations.?:</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">{</span><span class="nv">tolerations</span><span class="p p-Indicator">::</span><span class="w"> </span><span class="nv">_</span><span class="p p-Indicator">}</span>
+</code></pre></div>
+</td><td>
+<div class="highlight"><span class="filename">go-chart/templates/deployment.yaml</span><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- if not .Values.autoscaling.enabled</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.replicaCount</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.selectorLabels&quot; . | nindent 6</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.podAnnotations</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.podLabels</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">    </span><span class="nt">spec</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.imagePullSecrets</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">imagePullSecrets</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">serviceAccountName</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.serviceAccountName&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml .Values.podSecurityContext | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">containers</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Chart.Name</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml .Values.securityContext | nindent 12</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">.Values.image.repository</span><span class="nv"> </span><span class="s">}}:{{</span><span class="nv"> </span><span class="s">.Values.image.tag</span><span class="nv"> </span><span class="s">|</span>
+<span class="w">                     </span><span class="s">default</span><span class="nv"> </span><span class="s">.Chart.AppVersion</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.image.pullPolicy</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">              </span><span class="nt">containerPort</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.port</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">              </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">          </span><span class="nt">livenessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml .Values.livenessProbe | nindent 12</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">readinessProbe</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml .Values.readinessProbe | nindent 12</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml .Values.resources | nindent 12</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.volumeMounts</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="nt">volumeMounts</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 12</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">          </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.volumes</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.nodeSelector</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">nodeSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.affinity</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">affinity</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.tolerations</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">tolerations</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 8</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+</td></tr>
+
+<tr><td>
+<div class="highlight"><span class="filename">ys-chart/templates/serviceaccount.yaml</span><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">:when Values.serviceAccount.create</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="w">  </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">serviceAccountName</span>
+<span class="w">    </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">:when+ Values.serviceAccount.annotations.?:</span><span class="p p-Indicator">:</span>
+<span class="w">     </span><span class="nt">annotations:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">_</span>
+<span class="w">  </span><span class="nt">automountServiceAccountToken:</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Values.serviceAccount.automount</span>
+</code></pre></div>
+</td><td>
+<div class="highlight"><span class="filename">go-chart/templates/serviceaccount.yaml</span><pre><span></span><code><span class="p p-Indicator">{{</span><span class="nv">- if .Values.serviceAccount.create -</span><span class="p p-Indicator">}}</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.serviceAccountName&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- with .Values.serviceAccount.annotations</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">annotations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- toYaml . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="nt">automountServiceAccountToken</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.serviceAccount.automount</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="p p-Indicator">{{</span><span class="nv">- end</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+</td></tr>
+
+<tr><td>
+<div class="highlight"><span class="filename">ys-chart/templates/service.yaml</span><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-fullname</span>
+<span class="w">  </span><span class="nt">labels:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chart-labels</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.type</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values.service.port</span>
+<span class="w">    </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">    </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">  </span><span class="nt">selector:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selectorLabels</span>
+</code></pre></div>
+</td><td>
+<div class="highlight"><span class="filename">go-chart/templates/service.yaml</span><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">include &quot;go-chart.fullname&quot; .</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.labels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.type</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">  </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{{</span><span class="w"> </span><span class="nv">.Values.service.port</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+<span class="w">      </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TCP</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">{{</span><span class="nv">- include &quot;go-chart.selectorLabels&quot; . | nindent 4</span><span class="w"> </span><span class="p p-Indicator">}}</span>
+</code></pre></div>
+</td></tr>
+
+</table>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+                
+              </article>
+            </div>
           
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="the-yes-express"><a class="toclink" href="2023-12-11/the-yes-express/">The YeS Express</a></h2>
-<p>Santa's got a lot of ground to cover in a short amount of time.
-He doesn't have time to deal with confusing maps and directions.</p>
-<p>Lisp has other-worldly powers of abstraction, but when it comes to reading
-syntax, most people prefer the familiarity of this world.</p>
-<p>YS fully embraces all that Clojure has to offer, but syntax-wise it
-also offers a more familiar face.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-11/the-yes-express/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-10 00:00:00+00:00">December 10, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              7 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="states-and-ladders"><a class="toclink" href="2023-12-10/states-and-ladders/">States and Ladders</a></h2>
-<p>Santa is a busy guy.
-He has a lot of work to do.
-He has to make a list and check it twice.
-He has to find out who's naughty and nice.
-He has the monumental task of transforming wishes into happiness.</p>
-<p>YS only needs to transform YS code into Clojure code.
-But it's a bit more involved than you might think.</p>
-<p>To make things easier the YS compiler breaks the transformation into eight
-distinct States and seven distinct ~~Ladders~~ transformations.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-10/states-and-ladders/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-09 00:00:00+00:00">December 9, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="coding-with-style"><a class="toclink" href="2023-12-09/coding-with-style/">Coding with Style</a></h2>
-<p>What's the best thing about Rudolph's nose?
-Is it that lights the way for Santa's sleigh?
-I'm calling BS on that.
-I'd say it's the main thing that gives the whole <strong>Sanata Story some Serious
-Style!</strong></p>
-<p>Good programmers do more than just get their solutions right.
-They do the whole thing with style.
-That makes the program easier to read, understand and maintain.
-It also gives the code a certain je ne sais quoi.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-09/coding-with-style/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-08 00:00:00+00:00">December 8, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="going-to-the-library"><a class="toclink" href="2023-12-08/going-to-the-library/">Going to the Library</a></h2>
-<p>Programming in YS is as easy as reading a book.
-The only thing you really need is some good books!
-For that let's go to the library.</p>
-<p>By books of course I mean YS functions.
-And by library I mean the YS Standard Library!
-There you'll find all-time best sellers like <code>map</code>, <code>filter</code>, <code>reduce</code> and
-<code>say</code>.</p>
-<p>And Standard isn't the only Library in town...</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-08/going-to-the-library/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-07 00:00:00+00:00">December 7, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="sharpen-your-tools"><a class="toclink" href="2023-12-07/sharpen-your-tools/">Sharpen Your Tools</a></h2>
-<p>Wanna make some fun toys with YS?
-You'll need some sharp tools.
-You think those elves make all those toys with dull tools?</p>
-<p>The CLI tool <code>ys</code> is the main tool you'll use to work with YS.
-Today we'll learn about all the things you can do with it.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-07/sharpen-your-tools/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-      
-        
-          
-
-
-
-<nav class="md-pagination">
-  <span class="md-pagination__current">1</span> <a class="md-pagination__link" href="page/2/">2</a>
-</nav>
-        
-      
-    </div>
-  </div>
-
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
@@ -4111,10 +2924,12 @@ Today we'll learn about all the things you can do with it.</p>
   
     
       
+        
+      
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../doc/run-ys/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Self Installation Scripts">
+          <a href="../doc/query/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Convert/Query/Transform">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -4124,20 +2939,20 @@ Today we'll learn about all the things you can do with it.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Self Installation Scripts
+                Convert/Query/Transform
               </div>
             </div>
           </a>
         
         
           
-          <a href="category/advent-2023/" class="md-footer__link md-footer__link--next" aria-label="Next: Advent-2023">
+          <a href="../cicd/" class="md-footer__link md-footer__link--next" aria-label="Next: YS for CI/CD">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Advent-2023
+                YS for CI/CD
               </div>
             </div>
             <div class="md-footer__button md-icon">
