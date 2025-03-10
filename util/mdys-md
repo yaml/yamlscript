@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+from=$1 to=$2
+
+temp=$(mktemp)
+trap 'rm -f $temp' exit
+
+mdys "$from" > "$temp"
+
+touch "$temp"
+
+[[ -s $temp ]] && mv "$temp" "$to"

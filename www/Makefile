@@ -183,22 +183,18 @@ $(CONFIG): mkdocs.ys ../Meta config/*
 	fi
 
 src/%.md: src/%.mdys src/mdys.ys ../util/mdys
-	mdys $< > $T
-	[[ -s $T ]] && mv $T $@
+	mdys-md $< $@
 
 src/mdys.ys:
 
 src/doc/%.md: ../doc/%.md
-	copy-md $< > $T
-	[[ -s $T ]] && mv $T $@
+	copy-md $< $@
 
 src/doc/%.md: ../doc/%.mdys ../doc/mdys.ys ../util/mdys
-	mdys $< > $T
-	[[ -s $T ]] && mv $T $@
+	mdys-md $< $@
 
 src/blog/posts/%.md: ../blog/%.md
-	copy-md $< > $T
-	[[ -s $T ]] && mv $T $@
+	copy-md $< $@
 
 $(DIRS):
 	mkdir -p $@
