@@ -4,9 +4,11 @@ NATIVE_OPTS := \
   --native-image-info \
   --no-fallback \
   --initialize-at-build-time \
+  --initialize-at-build-time=sun.instrument.InstrumentationImpl \
   --enable-preview \
   --enable-url-protocols=https \
   -march=compatibility \
+  -H:IncludeResources=".*librapidyaml\.0\.8\.0\.so" \
   -H:ReflectionConfigurationFiles=reflection.json \
   -H:+ReportExceptionStackTraces \
   -H:IncludeResources=SCI_VERSION \

@@ -55,7 +55,7 @@ install: build
 	  $(PREFIX)/bin/
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
-	@:
+	@$(MAKE) -s -C $(RAPIDYAML) $(RAPIDYAML_INSTALLED)
 
 test: test-unit
 
@@ -70,7 +70,7 @@ test-run: $(BPAN_LOCAL) build
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
 	$(error *** \
@@ -105,6 +105,8 @@ else
 $(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	$< uberjar
 endif
+	jar -uf $@ \
+	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
 
 Dockerfile:: $(COMMON) Makefile
 	cat \

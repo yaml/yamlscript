@@ -48,12 +48,15 @@ ifneq (,$(findstring linux,$(ostype)))
   GCC := gcc -std=gnu99 -fPIC -shared
   SO := so
   DY :=
+  DOTLIB := a
 else ifneq (,$(findstring darwin,$(ostype)))
   IS_MACOS := true
   GCC := gcc -dynamiclib
   SO := dylib
   DY := DY
+  DOTLIB := a
 else
+  DOTLIB := lib
   $(error Unsupported OSTYPE: $(ostype))
 endif
 
@@ -83,9 +86,8 @@ CURL := $(shell command -v curl)
 TIME := time -p
 
 LIBYAMLSCRIPT_DIR := $(ROOT)/libyamlscript/lib
-LIBRARY_PATH := $(LIBYAMLSCRIPT_DIR)
-export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
-export LD_LIBRARY_PATH := $(LIBRARY_PATH)
+LIBRARY_PATH := $(LIBYAMLSCRIPT_DIR):$(ROOT)/rapidyaml/native
+export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH):$(ROOT)/rapidyaml/native
 LIBYAMLSCRIPT_SO_NAME := $(LIBYAMLSCRIPT_DIR)/libyamlscript
 LIBYAMLSCRIPT_SO_FQNP := $(LIBYAMLSCRIPT_SO_NAME).$(SO).$(YS_VERSION)
 LIBYAMLSCRIPT_SO_BASE := $(LIBYAMLSCRIPT_DIR)/libyamlscript.$(SO)
@@ -165,6 +167,7 @@ GRAALVM_DOWNLOAD := $(YS_TMP)/$(GRAALVM_TAR)
 GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
 
 GRAALVM_O ?= 1
+# qbm is Quick Build Mode
 ifdef qbm
   GRAALVM_O := b
 endif
@@ -219,6 +222,41 @@ RELEASE_YS_TAR := $(RELEASE_YS_NAME).tar.xz
 
 RELEASE_LYS_NAME := libyamlscript-$(YS_VERSION)-$(GRAALVM_ARCH)
 RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
+
+
+#------------------------------------------------------------------------------
+# RapidYAML variables:
+#------------------------------------------------------------------------------
+RAPIDYAML := $(ROOT)/rapidyaml
+
+RAPIDYAML_VERSION := 0.8.0
+#RAPIDYAML_TAG ?= v$(RAPIDYAML_VERSION)
+RAPIDYAML_TAG ?= d3132a25ec21c65e27ff46ab8c3d61c72a321302
+RAPIDYAML_REPO := https://github.com/biojppm/rapidyaml
+RAPIDYAML_BUILD_TYPE ?= Release
+RAPIDYAML_DBG ?= 0
+RAPIDYAML_TIMED ?= 1
+RAPIDYAML_JAVA := \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Rapidyaml.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/NativeLibLoader.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Evt.java \
+  $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/YamlParseErrorException.java
+RAPIDYAML_JNI_H := $(ROOT)/rapidyaml/native/org_rapidyaml_Rapidyaml.h
+RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_LIB := $(ROOT)/rapidyaml/native/librapidyaml.$(DOTLIB)
+RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
+RAPIDYAML_INSTALLED_DIR := \
+  $(MAVEN_REPOSITORY)/org/rapidyaml/rapidyaml/$(RAPIDYAML_VERSION)
+RAPIDYAML_INSTALLED := \
+  $(RAPIDYAML_INSTALLED_DIR)/rapidyaml-$(RAPIDYAML_VERSION).jar
+
+
+#------------------------------------------------------------------------------
+# Programs
+#------------------------------------------------------------------------------
+
+GIT ?= git
+CMAKE ?= cmake
 
 
 #------------------------------------------------------------------------------
