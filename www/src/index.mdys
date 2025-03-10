@@ -65,7 +65,7 @@ Learn More About YS</a></div>
 
 - name: Plays Well with DevOps Tools
   body: |
-    * [HelmYS for Kubernetes Helm charts](doc/helmys.md)
+    * [HelmYS for Kubernetes Helm charts](helmys.md)
     * CI/CD, Docker, Ansible, etc.
     * Your existing YAML files are valid YS!
     * [Take them to the next level](
@@ -98,7 +98,7 @@ Learn More About YS</a></div>
     ```
 ```
 
-```mdys:eval
+```mdys:YS-CODE
 defn mdys-cards(o): |
   <div class="grid cards" markdown>
 

@@ -4,18 +4,6 @@ defn mdys-fmt-fns(o):
   str "\n":
     fmt-fns: o
 
-defn mdys-stdlib(o):
-  str "\n":
-    reduce-kv _ '' o:
-      fn(md head body):
-        md +:
-          str "## $head\n\n":
-            if body:map?:
-              fmt-fns: body
-              str:
-                fmt-fns(body.0)
-                "\n**See also**:\ <$(body.1)>\n\n"
-
 defn fmt-fns(body):
   reduce-kv _ '' body:
     fn(md fn-sig desc):

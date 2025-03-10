@@ -3,7 +3,7 @@
 - doc/query.md
 
 - DevOps:
-  - doc/helmys.md
+  - helmys.md
 
 - CI/CD:
   - cicd.md
@@ -13,7 +13,11 @@
 # - Static Site Generators:
 #   - This site
 
-- hacks.md
+- Hacks:
+  - hacks.md
+  - gist.md
+  - yamllm.md
+# - sbs.md
 
 # - hacks/index.md:
 #   - yamllm.md

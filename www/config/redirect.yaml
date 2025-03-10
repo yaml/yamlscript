@@ -1,3 +1,5 @@
+doc/helmys.md: helmys.md
+
 # Blog posts from old site:
 posts/2024-11-29.md: blog/posts/2024-11-29.md
 posts/2024-11-05.md: blog/posts/2024-11-05.md
