@@ -54,8 +54,8 @@ install: build
 	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) \
 	  $(PREFIX)/bin/
 
-jar: $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
-	@:
+jar: $(YAMLSCRIPT_CLI_JAR_PATH)
+	@$(MAKE) -s -C $(RAPIDYAML) $(RAPIDYAML_INSTALLED)
 
 test: test-unit
 
@@ -107,9 +107,6 @@ $(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CL
 endif
 	jar -uf $@ \
 	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
-
-$(RAPIDYAML_INSTALLED):
-	$(MAKE) -C $(RAPIDYAML) $@
 
 Dockerfile:: $(COMMON) Makefile
 	cat \
