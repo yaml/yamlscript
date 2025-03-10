@@ -1,9 +1,18 @@
-#!/usr/bin/env ys-0
+#!/usr/bin/env bash
 
-DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
+set -euo pipefail
 
-defn main(input-file):
-  print: input-file:read
-    .replace(
-      /^(---\n(?s:.*?)\n---\n)\n*/
-      "$1\n$DNE")
+from=$1 to=$2
+
+temp=$(mktemp)
+trap 'rm -f $temp' exit
+
+cp "$from" "$temp"
+
+DNE='<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->'
+
+perl -pi -e 's{^---\n\n}{---\n\n'"$DNE"'\n\n}m' "$temp"
+
+touch "$temp"
+
+mv "$temp" "$to"

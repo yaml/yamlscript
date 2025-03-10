@@ -42,18 +42,24 @@ a b c =: -[1 2 3]  # Destructuring assignment
 ```
 
 
-### Dash ('-') expression escapes
+### YS expression escapes
 
 YS expressions need to be written as valid YAML scalars.
 When an expression starts with YAML syntax characters like `{`, `[`, `*`, `#`
 then its not a valid YAML scalar.
-Also expressions that have stuff after a quoted string (`''` `""`) are not valid YAML.
-You can turn text into a valid YAML plain scalar by prefixing it with a dash.
-The dash is removed when YS reads the scalar.
+Also expressions that have stuff after a quoted string (`''` `""`) are not valid
+YAML.
+
+You can turn text into a valid YAML plain scalar by prefixing it with a dash
+(`-`) or a plus (`+`).
+The dash or plus is removed when YS reads the scalar.
+
+Note: the dash cannot have whitespace after it, but the plus can.
 
 ```
 -[1 2 3]: .map(inc)  # => [2 3 4]
-=>: -'foo' + 'bar'   # => 'foobar'
+=>: +
+  'foo' + 'bar'      # => 'foobar'
 ```
 
 ### Printing text
@@ -72,6 +78,9 @@ warn: 'Prints to stderr (with trailing newline)'
 
 ### Define a function
 
+YS functions, like Clojure functions, require a specific argument arity, and
+can be defined to be multi-arity.
+
 ```
 defn greet(name):
   say: "Hello, $name!"
@@ -83,6 +92,11 @@ defn foo(bar *baz): # Variable number of arguments
 defn foo(*):        # Any number of arguments
 
 defn foo(_ x _):    # Ignored arguments
+
+defn foo:           # Multi-arity function
+  (): 0
+  (x): x
+  (x y): x + y
 ```
 
 
@@ -103,9 +117,9 @@ greet 'Bob':
 ### Chain calls
 
 ```
-say: read("/usr/share/dict/words")
-     .lines():shuffle.take(3).join(".")
-# => specialty.mutation's.Kisangani
+say: read('/usr/share/dict/words')
+     .lines():shuffle.take(3).join(' | ')
+# => specialty | mutation's | Kisangani
 ```
 
 !!! note
@@ -116,9 +130,13 @@ say: read("/usr/share/dict/words")
 
 #### Special chain operators
 
+* `.@` - Short for `.deref()`
+* `.$` - Short for `.last()`
 * `.#` - Short for `.count()`
 * `.?` - Short for `.truey?()`
 * `.!` - Short for `.falsey?()`
+* `.??` - Short for `.boolean()`
+* `.!!` - Short for `.not()`
 * `.++` - Short for `.inc()`
 * `.--` - Short for `.dec()`
 * `.>>>` - Short for `.DBG()`
@@ -144,8 +162,6 @@ reduce _ 0 (1 2 3):
   fn(acc num): acc + num
 The `_` is a placeholder for the defined function argument.
 Use `_` when the function argument is too long to write in place.
-
-
 
 
 ### Conditional (if/else)
@@ -177,18 +193,17 @@ cond:
 say: |
   Dear $name,
 
-  I have 3 words for you: $(words().take(3 ).join(", ")).
+  I have 3 words for you: $(words().take(3 ).join(', ')).
 
-  Yours truly, $get(ENV "USER")
+  Yours truly, $get(ENV 'USER')
 ```
 
 
 ### Global variables
 
 ```
-- $                 # Runtime state mapping
-- $$                # Previous document value
-- $#                # Document evaluation count
+- _                 # Previous document value
+- +++               # Runtime state mapping
 - ARGV              # Command line arguments
 - ARGS              # Command line arguments parsed
 - CWD               # Current working directory

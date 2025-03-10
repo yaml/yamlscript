@@ -196,7 +196,7 @@ https://github.com/yaml/yamlscript/releases).
 To install a latest release for your machine platform, try:
 
 ```bash
-$ curl https://yamlscript.org/install | bash
+curl https://yamlscript.org/install | bash
 ```
 
 Make sure `~/.local/bin` is in your `PATH` environment variable.
@@ -265,8 +265,8 @@ install the latest shared library version.
 So for Python you would:
 
 ```bash
-$ pip install yamlscript
-$ ys --install
+pip install yamlscript
+ys --install
 ```
 
 The Perl installation process can automatically install the shared library, so

@@ -7,13 +7,15 @@
   - doc/examples.md
   - doc/modes.md
   - doc/cheat.md
+  - doc/vocab.md
   # - doc/4clojure.md
   - doc/clj-to-ys.md
 
 - Use YS:
   - doc/ys.md
-  - doc/loaders.md
   - doc/install.md
+  - doc/env-vars.md
+  - doc/loaders.md
 
 - YS Libraries:
   - doc/ys-std.md

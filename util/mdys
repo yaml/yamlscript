@@ -42,8 +42,8 @@ defn load-mdys(file):
     .interleave(fenced)
     .remove(empty?)
     .remove(mdys-section-regex('ignore'))
-  code =: all.filter(mdys-section-regex('eval'))
-  all =: all.remove(mdys-section-regex('eval'))
+  code =: all.filter(mdys-section-regex('YS-CODE'))
+  all =: all.remove(mdys-section-regex('YS-CODE'))
   concat: code all
 
 defn mdys-section-regex(type):
@@ -70,14 +70,14 @@ defn format-mdys(text):
   text .=: replace(/^```.*\n/ '')
   text =: text.replace(/```\n\z/ '')
   cond:
-    type == 'eval':
+    type == 'YS-CODE':
       do:
         try:
           eval: text
           =>: ''
           catch e:
             error-fmt orig:
-              "Failed to eval $e"
+              "Failed to eval YS-CODE $e"
 
     type.starts?(':'):
       do:
@@ -110,7 +110,7 @@ defn format-mdys(text):
           "No function '$func-name' found"
 
 defn error-fmt(text msg):
-  warn: "mdys error: $msg"
+  warn: "\nMDYS ERROR: $msg"
   str: |
     <pre><code>
     ERROR: $msg for:
