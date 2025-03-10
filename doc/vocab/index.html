@@ -756,6 +756,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_1_5" id="__nav_1_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Hacks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            Hacks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../hacks/" class="md-nav__link">
         
@@ -766,6 +814,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../yamllm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAMLLM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gist/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Gists
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2507,7 +2605,8 @@ A node can be a mapping, sequence, or scalar.</p>
 </li>
 <li>
 <p><strong>kind</strong></p>
-<p>A generic word for mapping, sequence or scalar. You would say "there are 3 kinds of nodes", not "there are 3 types of nodes".</p>
+<p>A generic word for mapping, sequence or scalar.
+You would say "there are 3 kinds of nodes", not "there are 3 types of nodes".</p>
 </li>
 <li>
 <p><strong>mapping</strong></p>
@@ -2704,87 +2803,83 @@ from one state to another, in reverse order of the loader.</p>
 </li>
 </ul>
 <h2 id="ys-vocabulary">YS Vocabulary<a class="headerlink" href="#ys-vocabulary" title="Permanent link">🔗</a></h2>
-<pre><code>
-ERROR: Failed in function mdys-vocab:
-java.lang.ClassCastException: java.lang.Character cannot be cast to java.util.Map$Entry
- for:
-```mdys:vocab
-mode: |
-  A YS mode is a set of rules that determine the semantics of a given YAML node
-  by YS.
-  Every YAML node in a stream has one of 3 modes:
-
-  * **bare** - Node follows the semantics of a normal YAML loader.
-    Sub-nodes will always be of bare mode as well.
-    That is, no code evaluation can ever take place.
-  * **code** - Node is meant to be compiled as code to be evaluated.
-    The `say: 'Hello'` mapping pair will print "Hello", because the unquoted key
-    `say` is a symbol bound to the `ys::std/say` function.
-    Any sub-node can be changed to data mode (or bare mode).
-  * **data** - Node is meant to be compiled as having data semantics.
-    This is similar to bare mode, except any sub-node can change modes to code
-    mode (or bare mode).
-
-mode tag: |
-  Unless a YAML/YS document starts with a mode tag, then it is assigned to
-  bare mode and treated as normal YAML.
-  These tags are used to indicate the mode of a node:
-
-  * `!YS-v0` - Start a document in code mode
-  * `!YS-v0:` - Start a document in data mode
-  * `!bare` - Make a node have bare mode semantics
-  * `!code` - Make a node have code mode semantics
-  * `!data` - Make a node have data mode semantics
-  * `!` - Toggle between code and data modes (or vice versa)
-
-  A `!YS-v0` or `!YS-v0:` mode tags must appear before any other mode tag is
-  used in a stream.
-  Each document in a stream must have mode tag or else it is considered bare
-  mode.
-
-expression:
-  An evaluatable piece of YS code.
-
-S-expression:
-  Lisp term for a parenthesized list of 1 or more forms where the first form is
-  a function and the rest of the forms are arguments.
-  Any of the forms may themselves be s-expressions.
-
-    <div class="highlight"><pre><span></span><code>(println (* 6 7))  # =&gt; 42
+<ul>
+<li>
+<p><strong>mode</strong></p>
+<p>A YS mode is a set of rules that determine the semantics of a given YAML node
+by YS.
+Every YAML node in a stream has one of 3 modes:</p>
+<ul>
+<li><strong>bare</strong> - Node follows the semantics of a normal YAML loader.
+  Sub-nodes will always be of bare mode as well.
+  That is, no code evaluation can ever take place.</li>
+<li><strong>code</strong> - Node is meant to be compiled as code to be evaluated.
+  The <code>say: 'Hello'</code> mapping pair will print "Hello", because the unquoted key
+  <code>say</code> is a symbol bound to the <code>ys::std/say</code> function.
+  Any sub-node can be changed to data mode (or bare mode).</li>
+<li><strong>data</strong> - Node is meant to be compiled as having data semantics.
+  This is similar to bare mode, except any sub-node can change modes to code
+  mode (or bare mode).</li>
+</ul>
+</li>
+<li>
+<p><strong>mode tag</strong></p>
+<p>Unless a YAML/YS document starts with a mode tag, then it is assigned to
+bare mode and treated as normal YAML.
+These tags are used to indicate the mode of a node:</p>
+<ul>
+<li><code>!YS-v0</code> - Start a document in code mode</li>
+<li><code>!YS-v0:</code> - Start a document in data mode</li>
+<li><code>!bare</code> - Make a node have bare mode semantics</li>
+<li><code>!code</code> - Make a node have code mode semantics</li>
+<li><code>!data</code> - Make a node have data mode semantics</li>
+<li><code>!</code> - Toggle between code and data modes (or vice versa)</li>
+</ul>
+<p>A <code>!YS-v0</code> or <code>!YS-v0:</code> mode tags must appear before any other mode tag is
+used in a stream.
+Each document in a stream must have mode tag or else it is considered bare
+mode.</p>
+</li>
+<li>
+<p><strong>expression</strong></p>
+<p>An evaluatable piece of YS code.</p>
+</li>
+<li>
+<p><strong>S-expression</strong></p>
+<p>Lisp term for a parenthesized list of 1 or more forms where the first form is
+a function and the rest of the forms are arguments.
+Any of the forms may themselves be s-expressions.</p>
+<div class="highlight"><pre><span></span><code>(println (* 6 7))  # =&gt; 42
 </code></pre></div>
-
-  YS supports s-expressions, YeS-expressions, pair-expressions and dot-chain
-  expressions.
-
-YeS-expression:
-  A YS syntax where the function name comes before the opening parentheses and
-  infix operator expressions are allowed:
-
-    <div class="highlight"><pre><span></span><code>println(6 * 7)
+<p>YS supports s-expressions, YeS-expressions, pair-expressions and dot-chain
+expressions.</p>
+</li>
+<li>
+<p><strong>YeS-expression</strong></p>
+<p>A YS syntax where the function name comes before the opening parentheses and
+infix operator expressions are allowed:</p>
+<div class="highlight"><pre><span></span><code>println(6 * 7)
 </code></pre></div>
-
-Pair expression:
-
-  A YS expression as a mapping pair where the function comes first on the LHS.
-  The argument forms can be on either side of the `: `.
-
-    <div class="highlight"><pre><span></span><code>println: 6 * 7
+</li>
+<li>
+<p><strong>Pair expression</strong></p>
+<p>A YS expression as a mapping pair where the function comes first on the LHS.
+The argument forms can be on either side of the <code>:</code>.</p>
+<div class="highlight"><pre><span></span><code>println: 6 * 7
 </code></pre></div>
-
-Dot-chain expressions:
-
-  Functions can be applied to values `.fn-name()`:
-  These are the same:
-    <div class="highlight"><pre><span></span><code>fn2(fn1(val1 val2))
+</li>
+<li>
+<p><strong>Dot-chain expressions</strong></p>
+<p>Functions can be applied to values <code>.fn-name()</code>:
+These are the same:
+  <div class="highlight"><pre><span></span><code>fn2(fn1(val1 val2))
 val1.fn1(val2).fn2()
 val1.fn1(val2):fn2
-</code></pre></div>
-
-  The LHS of a dot function call generally becomes the first argument.
-  If there is only one argument then: `arg:fn1` is short for `arg.fn1()`.
-```
-
-</code></pre>
+</code></pre></div></p>
+<p>The LHS of a dot function call generally becomes the first argument.
+If there is only one argument then: <code>arg:fn1</code> is short for <code>arg.fn1()</code>.</p>
+</li>
+</ul>
 
 
 
