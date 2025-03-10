@@ -2508,16 +2508,21 @@ https://gist.github.com/ingydotnet/aad4bb7c23b998d
 $<span class="w"> </span>find<span class="w"> </span>stuff<span class="w"> </span><span class="p">|</span><span class="w"> </span>gist<span class="w">   </span><span class="c1"># post stdin</span>
 https://gist.github.com/ingydotnet/ff38f66cbc0474e
 </code></pre></div></p>
+<p>To use this YS hack, you'll need to set the <code>GITHUB_API_TOKEN</code> environment
+variable to your <a href="https://github.com/settings/tokens/">GitHub API token&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
 <p>Here's the YS code:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-0</span>
 
 <span class="nt">api-url =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://api.github.com/gists&#39;</span>
 
 <span class="nt">defn main(*files)</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">files =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">files.?.if(files [&#39;/dev/stdin&#39;])</span>
+<span class="w">  </span><span class="nt">files =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">files.?.if(files [&#39;-&#39;])</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.mapv(\((_ == &#39;-&#39;).if(&#39;/dev/stdin&#39; _)))</span>
 
 <span class="w">  </span><span class="nt">api-key =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENV.GITHUB_API_TOKEN ||</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">sh(&#39;git hub config api-token&#39;).out.?:chomp ||</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">die(&#39;No GitHub API token found in GITHUB_API_TOKEN&#39;)</span>
 
 <span class="w">  </span><span class="nt">request =:</span><span class="p">:</span>
