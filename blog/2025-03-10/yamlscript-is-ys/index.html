@@ -12,27 +12,29 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/common/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-03-10/yamlscript-is-ys/">
+      
+      
+        <link rel="prev" href="../../2024-11-29/the-kubernetes-effect/">
       
       
       
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../feed_rss_updated.xml">
       
-        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../feed_rss_created.xml">
-        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../feed_rss_updated.xml">
-      
-      <link rel="icon" href="../../image/yamlscript-logo.svg">
+      <link rel="icon" href="../../../image/yamlscript-logo.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
     
     
       
-        <title>Common YS Functions - YS — YAML Done Wisely</title>
+        <title>YAMLScript is YS! - YS — YAML Done Wisely</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.a40c8224.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.a40c8224.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
   
@@ -92,9 +94,9 @@
       
     
     
-      <link rel="stylesheet" href="../../css/theme.css">
+      <link rel="stylesheet" href="../../../css/theme.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -123,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Common YS Functions - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YAMLScript is YS! - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/common.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-03-11.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -135,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/doc/common/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-03-10/yamlscript-is-ys/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Common YS Functions - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YAMLScript is YS! - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/common.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-03-11.png" >
       
     
     
@@ -165,6 +167,11 @@ f.parentNode.insertBefore(j,f);
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#say-wise" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -180,9 +187,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
+    <a href="../../.." title="YS — YAML Done Wisely" class="md-header__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../image/yamlscript-logo.svg" alt="logo">
+  <img src="../../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -200,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Common YS Functions
+              YAMLScript is YS!
             
           </span>
           </a>
@@ -311,7 +318,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../use/" class="md-tabs__link">
+        <a href="../../../use/" class="md-tabs__link">
           
   
     
@@ -331,7 +338,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../" class="md-tabs__link">
+        <a href="../../../doc/" class="md-tabs__link">
           
   
     
@@ -347,11 +354,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../blog/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
           
   
     
@@ -369,7 +378,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-tabs__item">
-      <a href="../../press/" class="md-tabs__link">
+      <a href="../../../press/" class="md-tabs__link">
         
   
     
@@ -388,7 +397,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       <li class="md-tabs__item">
-        <a href="../../community/" class="md-tabs__link">
+        <a href="../../../community/" class="md-tabs__link">
           
   
     
@@ -406,7 +415,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-tabs__item">
-      <a href="../../faq/" class="md-tabs__link">
+      <a href="../../../faq/" class="md-tabs__link">
         
   
     
@@ -429,7 +438,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -440,9 +451,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
+    <a href="../../.." title="YS — YAML Done Wisely" class="md-nav__button md-logo" aria-label="YS — YAML Done Wisely" data-md-component="logo">
       
-  <img src="../../image/yamlscript-logo.svg" alt="logo">
+  <img src="../../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
     YS — YAML Done Wisely
@@ -500,7 +511,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../use/" class="md-nav__link ">
+            <a href="../../../use/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -533,7 +544,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../query/" class="md-nav__link">
+      <a href="../../../doc/query/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -598,7 +609,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../helmys/" class="md-nav__link">
+      <a href="../../../doc/helmys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -675,7 +686,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../cicd/" class="md-nav__link">
+      <a href="../../../cicd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -696,7 +707,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../gha/" class="md-nav__link">
+      <a href="../../../gha/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -717,7 +728,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../circleci/" class="md-nav__link">
+      <a href="../../../circleci/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -746,7 +757,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../hacks/" class="md-nav__link">
+      <a href="../../../hacks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -811,7 +822,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../../doc/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -844,7 +855,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../intro/" class="md-nav__link">
+      <a href="../../../doc/intro/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -865,7 +876,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys4yaml/" class="md-nav__link">
+      <a href="../../../doc/ys4yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -940,7 +951,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../exercism/" class="md-nav__link">
+      <a href="../../../doc/exercism/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -961,7 +972,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
+      <a href="../../../doc/examples/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -982,7 +993,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../modes/" class="md-nav__link">
+      <a href="../../../doc/modes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1003,7 +1014,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../cheat/" class="md-nav__link">
+      <a href="../../../doc/cheat/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1024,7 +1035,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../vocab/" class="md-nav__link">
+      <a href="../../../doc/vocab/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1045,7 +1056,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../clj-to-ys/" class="md-nav__link">
+      <a href="../../../doc/clj-to-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1124,7 +1135,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys/" class="md-nav__link">
+      <a href="../../../doc/ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1145,7 +1156,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
+      <a href="../../../doc/install/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1166,7 +1177,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../env-vars/" class="md-nav__link">
+      <a href="../../../doc/env-vars/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1187,7 +1198,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../loaders/" class="md-nav__link">
+      <a href="../../../doc/loaders/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1274,7 +1285,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-std/" class="md-nav__link">
+      <a href="../../../doc/ys-std/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1295,7 +1306,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../core/" class="md-nav__link">
+      <a href="../../../doc/core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1316,7 +1327,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-ys/" class="md-nav__link">
+      <a href="../../../doc/ys-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1337,7 +1348,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-yaml/" class="md-nav__link">
+      <a href="../../../doc/ys-yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1358,7 +1369,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-json/" class="md-nav__link">
+      <a href="../../../doc/ys-json/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1379,7 +1390,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-csv/" class="md-nav__link">
+      <a href="../../../doc/ys-csv/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1400,7 +1411,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-clj/" class="md-nav__link">
+      <a href="../../../doc/ys-clj/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1421,7 +1432,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-taptest/" class="md-nav__link">
+      <a href="../../../doc/ys-taptest/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1508,7 +1519,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../yaml/" class="md-nav__link">
+      <a href="../../../doc/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1529,7 +1540,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../clojure/" class="md-nav__link">
+      <a href="../../../doc/clojure/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1550,7 +1561,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../yes/" class="md-nav__link">
+      <a href="../../../doc/yes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1571,7 +1582,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../modes/" class="md-nav__link">
+      <a href="../../../doc/modes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1592,7 +1603,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../control/" class="md-nav__link">
+      <a href="../../../doc/control/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1613,7 +1624,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../operators/" class="md-nav__link">
+      <a href="../../../doc/operators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1634,7 +1645,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../chain/" class="md-nav__link">
+      <a href="../../../doc/chain/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1655,7 +1666,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../ys-taptest/" class="md-nav__link">
+      <a href="../../../doc/ys-taptest/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1732,7 +1743,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../v0/" class="md-nav__link">
+      <a href="../../../doc/v0/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1753,7 +1764,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../binary/" class="md-nav__link">
+      <a href="../../../doc/binary/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1774,7 +1785,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../run-ys/" class="md-nav__link">
+      <a href="../../../doc/run-ys/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1807,6 +1818,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
   
   
+    
+  
   
   
     
@@ -1823,21 +1836,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
     
       
+        
+        
+      
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../blog/" class="md-nav__link ">
+            <a href="../../" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1848,13 +1862,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </a>
             
               
-              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Blog
@@ -1920,7 +1934,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/archive/2025/" class="md-nav__link">
+      <a href="../../archive/2025/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1943,7 +1957,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/archive/2024/" class="md-nav__link">
+      <a href="../../archive/2024/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1966,7 +1980,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/archive/2023/" class="md-nav__link">
+      <a href="../../archive/2023/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2043,7 +2057,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/category/advent-2023/" class="md-nav__link">
+      <a href="../../category/advent-2023/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2066,7 +2080,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../blog/category/general/" class="md-nav__link">
+      <a href="../../category/general/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2102,7 +2116,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../press/" class="md-nav__link">
+      <a href="../../../press/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2149,7 +2163,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../community/" class="md-nav__link ">
+            <a href="../../../community/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2182,7 +2196,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../social/" class="md-nav__link">
+      <a href="../../../social/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2228,7 +2242,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../contrib/" class="md-nav__link ">
+            <a href="../../../contrib/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -2261,7 +2275,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../contrib-website/" class="md-nav__link">
+      <a href="../../../contrib-website/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2297,7 +2311,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../../faq/" class="md-nav__link">
+      <a href="../../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2318,6 +2332,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -2328,6 +2344,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#say-wise" class="md-nav__link">
+    <span class="md-ellipsis">
+      Say "Wise"!
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#love-at-second-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      Love at Second Site
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#so-many-ys-bits-to-share" class="md-nav__link">
+    <span class="md-ellipsis">
+      So Many YS Bits to Share…
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2335,10 +2386,93 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
           
           
-            <div class="md-content" data-md-component="content">
-              <article class="md-content__inner md-typeset">
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
                 
-                  
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          <a href="https://github.com/ingydotnet">Ingy döt Net</a>
+                        
+                      </strong>
+                      <br>
+                      YAML / YS Creator
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2025-03-10 00:00:00+00:00" class="md-ellipsis">March 10, 2025</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../category/general/">General</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              2 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
 
 
 
@@ -2364,14 +2498,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </a>
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/doc/common.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/posts/2025-03-11.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/doc/common.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/posts/2025-03-11.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2379,10 +2513,89 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Common YS Functions</h1>
+  <h1>YAMLScript is YS!</h1>
 
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
+<p>Greetings! And welcome back to <a href="https://yamlscript.org">YAMLScript&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> in 2025!</p>
+<p>Or as we now say, <em><strong>YS in '25!</strong></em>.</p>
+<p>It's been a minute since our last update, but we've continued to work every day
+on making YS the best it can be.</p>
+<p>Oh… What's <strong>"YS"</strong>, you say?</p>
+<p>Well, don't say "Y-S"…</p>
+<h2 id="say-wise">Say "Wise"!<a class="headerlink" href="#say-wise" title="Permanent link">🔗</a></h2>
+<hr />
+<!-- more -->
+
+<p>Think of YS as the plural of "Y".</p>
+<p>The more Ys, the better!</p>
+<details class="question">
+<summary>Why didn't the owl ask Y? <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16c.56.84 1.31 1.53 2.2 2L12 20.2 9.8 18c.89-.47 1.65-1.16 2.2-2m5-4.8a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m-10 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m10-2.5a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m-10 0a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4M2.24 1c1.76 3.7.49 6.46-.69 9.2-.36.8-.55 1.63-.55 2.5a6 6 0 0 0 6 6c.21-.01.42-.02.63-.05l2.96 2.96L12 23l1.41-1.39 2.96-2.96c.21.03.42.04.63.05a6 6 0 0 0 6-6c0-.87-.19-1.7-.55-2.5C21.27 7.46 20 4.7 21.76 1c-2.64 2.06-6.4 3.69-9.76 3.7C8.64 4.69 4.88 3.06 2.24 1"/></svg></span></summary>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16c.56.84 1.31 1.53 2.2 2L12 20.2 9.8 18c.89-.47 1.65-1.16 2.2-2m5-4.8a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m-10 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m10-2.5a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m-10 0a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4M2.24 1c1.76 3.7.49 6.46-.69 9.2-.36.8-.55 1.63-.55 2.5a6 6 0 0 0 6 6c.21-.01.42-.02.63-.05l2.96 2.96L12 23l1.41-1.39 2.96-2.96c.21.03.42.04.63.05a6 6 0 0 0 6-6c0-.87-.19-1.7-.55-2.5C21.27 7.46 20 4.7 21.76 1c-2.64 2.06-6.4 3.69-9.76 3.7C8.64 4.69 4.88 3.06 2.24 1"/></svg></span> <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16c.56.84 1.31 1.53 2.2 2L12 20.2 9.8 18c.89-.47 1.65-1.16 2.2-2m5-4.8a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m-10 0a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m10-2.5a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m-10 0a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4M2.24 1c1.76 3.7.49 6.46-.69 9.2-.36.8-.55 1.63-.55 2.5a6 6 0 0 0 6 6c.21-.01.42-.02.63-.05l2.96 2.96L12 23l1.41-1.39 2.96-2.96c.21.03.42.04.63.05a6 6 0 0 0 6-6c0-.87-.19-1.7-.55-2.5C21.27 7.46 20 4.7 21.76 1c-2.64 2.06-6.4 3.69-9.76 3.7C8.64 4.69 4.88 3.06 2.24 1"/></svg></span> She was 2 YS!</p>
+</details>
+<p><strong>YS is the new nickname for YAMLScript.</strong> It's shorter, easier to write, and
+kinda fun to say.
+It's even more fun to add it to the start or end of a word. like "PennyYS"
+("Pennywise") or "YSAcre".</p>
+<p>We have quite a few little projects already that use YS and have it in their
+names.
+Here's a few of them:</p>
+<ul>
+<li><a href="../../../doc/helmys/">HelmYS</a> (<em>Helmwise</em>) -
+  A project to use YS for Kubernetes Helm charts templates.</li>
+<li>SchemaYS - A new schema language project for YAML created with YS.</li>
+<li><a href="https://github.com/yaml/yamlscript/blob/main/util/mdys">MarkdownYS&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> -
+  A Markdown preprocessor that uses inline YS and YAML to generate repetitive
+  content from data.
+  See the <a href="../../../doc/ys-std/">YS Standard Library doc</a>.</li>
+</ul>
+<p>We even have a short new domain name "getys.org" for YS downloads/installs:
+<div class="highlight"><pre><span></span><code>curl -s https://getys.org/ys | bash  # Install the latest YS
+</code></pre></div></p>
+<h2 id="love-at-second-site">Love at Second Site<a class="headerlink" href="#love-at-second-site" title="Permanent link">🔗</a></h2>
+<p>Check out our new <a href="https://yamlscript.org">yamlscript.org website&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>!</p>
+<p><a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> is so great.
+We love it!</p>
+<p>I honestly don't think there will ever be a better framework for making static
+websites.
+It's so feature rich and all the features actually work together.
+Almost every feature is confugured with a line or two of YAML.
+What could be better than that?</p>
+<p>We even added a few new YS features in places where we needed them, and there
+was very little work to do it.</p>
+<p>I'll write a full blog post about the new website soon, (the blog plugin makes
+it so easy to write and publish posts), but for now, here's a few highlights:</p>
+<ul>
+<li>Almost every page has a "View Source", "Edit this Page", or "Discuss this
+  Page" button at the top.
+  Including this one!
+  Try them out.</li>
+<li>All pages are written in Markdown or MarkdownYS, so it should be trivial for
+  you to contribute if you want to add, fix or discuss something.</li>
+<li>Everything on the site is part of the <a href="https://github.com/yaml/yamlscript/tree/website/www/">YS Open Source Mono-Repo&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> in the <code>www</code> directory
+  on the <code>website</code> branch.</li>
+</ul>
+<h2 id="so-many-ys-bits-to-share">So Many YS Bits to Share…<a class="headerlink" href="#so-many-ys-bits-to-share" title="Permanent link">🔗</a></h2>
+<p>I'm really looking forward to sharing all the new YS features with you.
+Now that we have the perfect platform for writing and publishing, I expect to
+be writing a whole lot more very soon.</p>
+<p>Until then, take care and be YS!</p>
+
 
 
 
@@ -2397,12 +2610,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
 
+  
 
 
-                
-              </article>
-            </div>
-          
+
+      
+    </article>
+  </div>
+
           
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
@@ -2411,6 +2626,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         <footer class="md-footer">
   
+    
+      
+        
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../2024-11-29/the-kubernetes-effect/" class="md-footer__link md-footer__link--prev" aria-label="Previous: The Kubernetes Effect">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                The Kubernetes Effect
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -2440,12 +2679,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "header.autohide", "navigation.expand", "navigation.footer", "navigation.indexes", "navigation.tabs"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.60a45f97.min.js"></script>
       
-        <script src="../../js/open_in_new_tab.js"></script>
+        <script src="../../../js/open_in_new_tab.js"></script>
       
     
   </body>

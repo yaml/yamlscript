@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 09 Mar 2025 04:50:48 -0000</pubDate>
-    <lastBuildDate>Sun, 09 Mar 2025 04:50:48 -0000</lastBuildDate>
+    <pubDate>Mon, 10 Mar 2025 05:50:17 -0000</pubDate>
+    <lastBuildDate>Mon, 10 Mar 2025 05:50:17 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,40 @@
     
 
     
+    
+    <item>
+      <title>YAMLScript is YS!</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;!-- DO NOT EDIT — THIS FILE WAS GENERATED --&gt;
+
+&lt;p&gt;Greetings! And welcome back to &lt;a href=&#34;https://yamlscript.org&#34;&gt;YAMLScript&lt;/a&gt; in 2025!&lt;/p&gt;
+&lt;p&gt;Or as we now say, &lt;em&gt;&lt;strong&gt;YS in &#39;25!&lt;/strong&gt;&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;It&#39;s been a minute since our last update, but we&#39;ve continued to work every day
+on making YS the best it can be.&lt;/p&gt;
+&lt;p&gt;Oh… What&#39;s &lt;strong&gt;&#34;YS&#34;&lt;/strong&gt;, you say?&lt;/p&gt;
+&lt;p&gt;Well, don&#39;t say &#34;Y-S&#34;…&lt;/p&gt;
+&lt;h2&gt;Say &#34;Wise&#34;!&lt;/h2&gt;
+&lt;hr&gt;</description>
+      <link>https://yamlscript.org/blog/2025-03-10/yamlscript-is-ys/</link>
+      <pubDate>Mon, 10 Mar 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-10/yamlscript-is-ys/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-10/yamlscript-is-ys.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>The Kubernetes Effect</title>
