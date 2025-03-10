@@ -25,7 +25,7 @@ WATCH := \
   blog/ \
   sample/ \
   util/mdys \
-  www/config.ys \
+  www/mkdocs.ys \
   www/config/ \
   www/src/mdys.ys \
   www/src/*.mdys \
@@ -163,7 +163,7 @@ $(PYTHON_VENV):
 # This hack is a workaround to preserve them.
 YS_YAML_TAG_HACK := perl -pe 's{: \+!}{: !}'
 
-$(CONFIG): config.ys ../Meta config/*
+$(CONFIG): mkdocs.ys ../Meta config/*
 	@( \
 	  set -euo pipefail; \
 	  echo "# DO NOT EDIT - GENERATED FROM '$<'"; \
