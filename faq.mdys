@@ -13,7 +13,7 @@ We like to say "wise" since its how you might pronounce the plural of "Y".  You
 can also say "why-ess" for "Y S" or the long name for YS: "YAMLScript" ("YAML
 (rhymes with camel) Script").
 
-YS has many side projects like [HelmYS](/doc/helmys) ("helm-wise") or
+YS has many side projects like [HelmYS](helmys.md) ("helm-wise") or
 [SchemaYS](#) ("schema-wise").
 ```
 
