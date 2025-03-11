@@ -98,7 +98,7 @@ Learn More About YS</a></div>
     ```
 ```
 
-```mdys:eval
+```mdys:YS-CODE
 defn mdys-cards(o): |
   <div class="grid cards" markdown>
 
