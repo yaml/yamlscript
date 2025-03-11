@@ -29,6 +29,11 @@ test := test/
 YS_BUILD_DEPS := \
   $(YAMLSCRIPT_CLI_BIN) \
   $(YAMLSCRIPT_CLI_BIN_BASH) \
+  $(COMMON/base.mk) \
+  $(COMMON/clojure.mk) \
+  $(COMMON/docker.mk) \
+  $(COMMON/native.mk) \
+  $(lastword $(MAKEFILE_LIST)) \
 
 ifeq (true,$(IS_LINUX))
 ifeq (true,$(IS_INTEL))
