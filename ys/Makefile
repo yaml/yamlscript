@@ -35,6 +35,7 @@ YS_BUILD_DEPS := \
   $(COMMON/native.mk) \
   $(lastword $(MAKEFILE_LIST)) \
 
+ifdef YS_NATIVE_BUILD_STATIC
 ifeq (true,$(IS_LINUX))
 ifeq (true,$(IS_INTEL))
 YS_BUILD_DEPS := $(MUSL_GCC) $(YS_BUILD_DEPS)
@@ -42,6 +43,7 @@ NATIVE_OPTS += \
   -H:CCompilerOption=-Wl,-z,stack-size=2097152 \
   --static \
   --libc=musl
+endif
 endif
 endif
 

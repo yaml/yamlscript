@@ -39,7 +39,10 @@ public class Rapidyaml
     // JNI
     //------------------------
 
+    public static String RAPIDYAML_NAME = "rapidyaml";
     public static String RAPIDYAML_VERSION = "0.8.0";
+    public static String RAPIDYAML_LIBNAME =
+        String.format("%s.%s", RAPIDYAML_NAME, RAPIDYAML_VERSION);
 
     private native long ysparse_init();
     private native void ysparse_destroy(long ysparse);
@@ -61,7 +64,11 @@ public class Rapidyaml
     public Rapidyaml() throws Exception, IOException
     {
         printJarInfo();
+        System.out.printf("RAPIDYAML_LIBNAME : >>>%s<<<\n", RAPIDYAML_LIBNAME);
 
+        System.loadLibrary(RAPIDYAML_LIBNAME);
+
+/*
         if (System.getenv("YS_RAPIDYAML_MAVEN_TEST") != null) {
             String library_name = "rapidyaml";
             System.loadLibrary(library_name);
@@ -69,8 +76,13 @@ public class Rapidyaml
         else {
             //String library_name = "rapidyaml." + RAPIDYAML_VERSION;
             //NativeLibLoader.loadLibraryFromJar(library_name);
-            NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
+
+            //System.out.printf("LOADING library from jar...\n");
+            //NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
+
+            System.loadLibrary(RAPIDYAML_LIBNAME);
         }
+*/
 
 
         this.ysparse = this.ysparse_init();

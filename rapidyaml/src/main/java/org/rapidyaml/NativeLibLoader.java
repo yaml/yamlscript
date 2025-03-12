@@ -32,22 +32,27 @@ public class NativeLibLoader {
      * -Dorg.sqlite.lib.path=.
      * -Dorg.sqlite.lib.name=sqlite_cryption_support.dll
      */
-//   private static boolean extractAndLoadLibraryFile(
-//           String libFolderForCurrentOS, String libraryFileName, String targetFolder)
-//           throws FileException {
-    public static boolean extractAndLoadLibraryFile(String libraryFileName) throws Exception {
+
+    public static boolean extractAndLoadLibraryFile(String libraryFileName)
+        throws Exception
+    {
         System.out.printf(">>> libraryFileName = %s\n", libraryFileName);
         String libFolderForCurrentOS = "";
         String targetFolder = "rapidyamllibloader";
         // String targetFolder = System.getProperty("java.io.tmpdir");
 
-        String nativeLibraryFilePath = libFolderForCurrentOS + "/" + libraryFileName;
+        String nativeLibraryFilePath =
+            libFolderForCurrentOS + "/" + libraryFileName;
         System.out.printf(">>> FOO nativeLibraryFilePath = %s\n", nativeLibraryFilePath);
-        // Include architecture name in temporary filename in order to avoid conflicts
-        // when multiple JVMs with different architectures running at the same time
+        // Include architecture name in temporary filename in order to avoid
+        // conflicts when multiple JVMs with different architectures running at
+        // the same time
         String uuid = UUID.randomUUID().toString();
-        String extractedLibFileName =
-            String.format("librapidyaml-%s-%s-%s", "0.8.0", uuid, libraryFileName);
+        String extractedLibFileName = String.format(
+            "librapidyaml-%s-%s-%s",
+            "0.8.0",
+            uuid,
+            libraryFileName);
         String extractedLckFileName = extractedLibFileName + LOCK_EXT;
 
         Path extractedLibFile = Paths.get(targetFolder, extractedLibFileName);
@@ -181,6 +186,12 @@ public class NativeLibLoader {
             tempdir = createTempDirectory("rapidyamllibloader");
             // tempdir.deleteOnExit();
         }
+
+        System.out.printf("TEMPDIR = %s\n", tempdir.getAbsolutePath());
+        System.out.printf("%s\n", System.getProperty("java.library.path"));
+        System.setProperty("java.library.path", tempdir.getAbsolutePath());
+        System.out.printf("%s\n", System.getProperty("java.library.path"));
+
 
 //       File temp = new File(tempdir, filename);
         File temp = new File(tempdir, path);
