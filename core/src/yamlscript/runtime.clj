@@ -27,6 +27,7 @@
    [ys.clj]
    [ys.csv]
    [ys.dwim]
+   [ys.ext]
    [ys.json]
    [ys.std]
    [ys.taptest]
@@ -123,6 +124,8 @@
   (sci/copy-ns babashka.process (sci/create-ns 'process)))
 (def set-namespace
   (sci/copy-ns clojure.set (sci/create-ns 'set)))
+(def ext-namespace
+  (sci/copy-ns ys.ext (sci/create-ns 'ys.ext)))
 (def std-namespace
   (sci/copy-ns ys.std (sci/create-ns 'std)))
 (def str-namespace
@@ -149,6 +152,7 @@
 
    'cli     cli-namespace  'ys.cli     cli-namespace
    'csv     csv-namespace  'ys.csv     csv-namespace
+   'ext     ext-namespace  'ys.ext     ext-namespace  'x ext-namespace
    'fs      fs-namespace   'ys.fs      fs-namespace
    'http    http-namespace 'ys.http    http-namespace
    'io      io-namespace   'ys.io      io-namespace
