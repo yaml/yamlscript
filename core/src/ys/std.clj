@@ -921,7 +921,10 @@
   value)
 
 (defmacro +++ [& xs]
-  `(~'+++* (do ~@xs)))
+  `(do
+     (intern '~'main '~'+value (+++* (do ~@xs)))
+     (~'in-ns '~'main)
+     ~'main/+value))
 
 (defn stream
   ([] @global/stream-values)
