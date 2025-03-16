@@ -75,7 +75,7 @@ should validate that the conversion is correct.
 One way to do this is by running:
 
 ```bash
-$ ys -pe 'ARGS.0:yaml/load-file == ARGS.1:yaml/load-file' -- \
+$ ys -pe 'ARGS.0:read:yaml/load == ARGS.1:read:yaml/load' -- \
     <(git show HEAD:pipeline.yaml) pipeline.yaml
 true
 ```
