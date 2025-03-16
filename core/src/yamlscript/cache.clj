@@ -8,24 +8,26 @@
    [clj-commons.digest :as digest])
   (:refer-clojure :exclude [get set]))
 
-(def ys-cache
+(defn ys-cache []
   (or (System/getenv "YS_CACHE")
     "/tmp/ys-cache"))
 
-(def ys-cache-dir
-  (do
-    (when (not (fs/exists? ys-cache))
+(defn ys-cache-dir []
+  (let [ys-cache (ys-cache)]
+    (when-not (fs/exists? ys-cache)
       (fs/create-dir ys-cache))
     ys-cache))
 
 (defn get [key]
   (let [sha1 (digest/sha1 key)
+        ys-cache-dir (ys-cache-dir)
         cache (str ys-cache-dir "/" sha1)]
     (when (fs/exists? cache)
       (slurp cache))))
 
 (defn set [key val]
   (let [sha1 (digest/sha1 key)
+        ys-cache-dir (ys-cache-dir)
         cache (str ys-cache-dir "/" sha1)]
     (spit cache val)
     val))
