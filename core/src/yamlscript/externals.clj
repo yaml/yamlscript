@@ -194,10 +194,10 @@
           {:ns ns}))
       (when-let [syms (:get args)]
         (let [syms (map str syms)
-              [rename only] (if (some #(re-find #"\." %1) syms)
-                              [(mapcat #(let [[o n] (str/split %1 #"\.")]
+              [rename only] (if (some #(re-find #"[:/]" %1) syms)
+                              [(mapcat #(let [[o n] (str/split %1 #"[:/]")]
                                           [o (or n o)]) syms)
-                               (map first (map #(str/split %1 #"\.") syms))]
+                               (map first (map #(str/split %1 #"[:/]") syms))]
                               [nil syms])
               code (str "(refer '" namespace-sym
                      " :only '[" (str/join " " only) "]"
