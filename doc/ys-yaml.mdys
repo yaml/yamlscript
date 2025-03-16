@@ -8,7 +8,7 @@ edit: doc/ys-yaml.mdys
 ```mdys:fmt-fns
 load(S): Load a YAML string to a native data structure.
 
-load-file(file): Load a YAML file to a native data structure.
+load-all(S): Load a YAML string into a list of document nodes.
 
 dump(X): Dump a native data structure to a YAML string.
 
