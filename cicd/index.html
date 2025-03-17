@@ -934,11 +934,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../gist/" class="md-nav__link">
+      <a href="../gist.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Gists
+    None
   </span>
   
 
@@ -955,11 +955,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
     <li class="md-nav__item">
-      <a href="../yamllm/" class="md-nav__link">
+      <a href="../yamllm.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    YAMLLM
+    None
   </span>
   
 
@@ -2723,7 +2723,7 @@ that's up to you.</p>
 <p>After converting your <code>pipeline.yaml</code> file to <code>pipeline.ys</code> the first time, you
 should validate that the conversion is correct.</p>
 <p>One way to do this is by running:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-pe<span class="w"> </span><span class="s1">&#39;ARGS.0:yaml/load-file == ARGS.1:yaml/load-file&#39;</span><span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-pe<span class="w"> </span><span class="s1">&#39;ARGS.0:read:yaml/load == ARGS.1:read:yaml/load&#39;</span><span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>&lt;<span class="o">(</span>git<span class="w"> </span>show<span class="w"> </span>HEAD:pipeline.yaml<span class="o">)</span><span class="w"> </span>pipeline.yaml
 <span class="nb">true</span>
 </code></pre></div>
@@ -2742,7 +2742,7 @@ but you need to make sure that the YAML files are always up to date.</p>
 end in <code>.ys</code> from the corresponding <code>.yaml</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">SHELL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>bash
 
-<span class="nv">YS_VERSION</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="m">0</span>.1.94
+<span class="nv">YS_VERSION</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="m">0</span>.1.95
 <span class="nv">YS</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>/tmp/bin/ys-<span class="k">$(</span>YS_VERSION<span class="k">)</span>
 <span class="nv">YS_FILES</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.ys&#39;</span><span class="k">)</span>
 <span class="nv">YAML_FILES</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>YS_FILES:.ys<span class="o">=</span>.yaml<span class="k">)</span>
