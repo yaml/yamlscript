@@ -13,7 +13,7 @@ defn main():
       regx =: qr(regx)
       each f file:
         f =: "$ROOT/$f"
-        text =: f:slurp
+        text =: f:read
         m =: re-matcher(regx text)
         if re-find(m):
           do:
@@ -22,7 +22,7 @@ defn main():
               if all:
                 str/replace
                 str/replace-first
-            spit f:
+            write f:
               replace:
                 text regx
                 str/re-quote-replacement("$m1$vers$m2")

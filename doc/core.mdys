@@ -247,7 +247,7 @@ YS Std:
 ```mdys:quick-ref
 print printf println pr prn
 print-str println-str pr-str prn-str
-newline flush slurp spit
+newline flush read write
 with-out-str with-open with-in-str
 ```
 

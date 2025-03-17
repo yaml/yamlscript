@@ -189,19 +189,19 @@ test::
 - cmnd:: "ys -Y '.0.name' $DIR/animals.json"
   want: Meowsy
 - cmnd: ys -Y '.0.name'
-  stdi:: slurp("$DIR/animals.json")
+  stdi:: read("$DIR/animals.json")
   want: Meowsy
 - cmnd: ys -Y '.0.name' -
-  stdi:: slurp("$DIR/animals.json")
+  stdi:: read("$DIR/animals.json")
   want: Meowsy
 - cmnd: ys -Y '.0.name' -
-  stdi:: slurp("$DIR/animals.json")
+  stdi:: read("$DIR/animals.json")
   want: Meowsy
 - cmnd: ys -Ye '.0.name' -
-  stdi:: slurp("$DIR/animals.json")
+  stdi:: read("$DIR/animals.json")
   want: Meowsy
 - cmnd: ys '.0' -
-  stdi:: slurp("$DIR/animals.json")
+  stdi:: read("$DIR/animals.json")
   want: |
     name: Meowsy
     species: cat
@@ -213,7 +213,7 @@ test::
       - ham
       - zucchini
 - cmnd: ys -Y
-  stdi:: slurp("$DIR/animals.json")
+  stdi:: read("$DIR/animals.json")
   have: |
     - name: Meowsy
       species: cat

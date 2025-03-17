@@ -126,6 +126,6 @@ defn test-ys(yaml):
 
 # Test YS loading with Java's SnakeYAML Engine:
 defn test-ys-yaml(yaml):
-  test yaml: "ys -e 'yaml/load: slurp(IN)'"
+  test yaml: "ys -e 'yaml/load: read(IN)'"
 
 # vim: lisp ft=yaml sw=2:

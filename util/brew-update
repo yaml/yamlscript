@@ -17,7 +17,7 @@ defn update-brew(version):
     when res.exit:N.?:
       die: "git clone of '$brew-url' failed\n$(res.err)"
 
-  text =: slurp('homebrew-yamlscript/template/ys.rb')
+  text =: read('homebrew-yamlscript/template/ys.rb')
           .replace('VERSION' version)
   text =:
     reduce-kv _ text releases:
@@ -26,17 +26,17 @@ defn update-brew(version):
         text: .replace(key sha256)
 
   say: "Updating homebrew-yamlscript/ys.rb"
-  spit 'homebrew-yamlscript/ys.rb':
+  write 'homebrew-yamlscript/ys.rb':
     text.replace('CLASS' 'Ys')
 
   vrsn =: version.replace('.')
   say: "Updating homebrew-yamlscript/ys@version.rb"
-  spit "homebrew-yamlscript/ys@$version.rb":
+  write "homebrew-yamlscript/ys@$version.rb":
     text.replace('CLASS' "YsAT$vrsn")
 
   say: "Updating homebrew-yamlscript/ReadMe.md"
-  spit "homebrew-yamlscript/ReadMe.md":
-    slurp("homebrew-yamlscript/template/ReadMe.md")
+  write "homebrew-yamlscript/ReadMe.md":
+    read("homebrew-yamlscript/template/ReadMe.md")
       .replace('VERSION' version)
 
   status =: sh('git -C homebrew-yamlscript status --short --ignored').out

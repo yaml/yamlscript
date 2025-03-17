@@ -34,7 +34,7 @@ defn process(input-file):
 
 fenced-re =: /(?sm)(?:^```mdys:\S+\n.*?\n```\n)/
 defn load-mdys(file):
-  text =: file:fs-abs:slurp
+  text =: file:fs-abs:read
   texts =: text.split(fenced-re)
   fenced =: text.re-seq(fenced-re) || []
   fenced =: fenced:V.conj('')

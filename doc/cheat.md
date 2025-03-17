@@ -103,7 +103,7 @@ greet 'Bob':
 ### Chain calls
 
 ```
-say: slurp("/usr/share/dict/words")
+say: read("/usr/share/dict/words")
      .lines():shuffle.take(3).join(".")
 # => specialty.mutation's.Kisangani
 ```
