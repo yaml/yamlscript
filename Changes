@@ -1,3 +1,12 @@
+- version: 0.1.95
+  date:    Sun 16 Mar 2025 10:02:35 PM PDT
+  changes:
+  - std: Support '[1 2 3] + 4'
+  - core: Fix a bug in ys::cache
+  - core: Allow both ':' and '/' for :get rename separator
+  - core: Reset ns to main for each doc in YS stream
+  - ys: Add ys::yaml/load-all and remove load-file
+  - core: Add a ys::ext for extra / external functions
 - version: 0.1.94
   date:    Tue 04 Mar 2025 09:32:22 PM PST
   changes:

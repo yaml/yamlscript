@@ -24,7 +24,7 @@
    [yamlscript.runtime :as runtime])
   (:refer-clojure))
 
-(def yamlscript-version "0.1.94")
+(def yamlscript-version "0.1.95")
 
 (def testing (atom false))
 

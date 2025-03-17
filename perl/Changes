@@ -1,5 +1,11 @@
 
 ---
+version: 0.1.95
+date:    Sun 16 Mar 2025 10:02:35 PM PDT
+changes:
+- libyamlscript 0.1.95
+
+---
 version: 0.1.94
 date:    Tue 04 Mar 2025 09:32:22 PM PST
 changes:
