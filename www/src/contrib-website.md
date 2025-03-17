@@ -59,7 +59,7 @@ The `make serve` command will install all the dependencies in the `./.venv/` and
 in `/tmp/yamlscript/` and then start a local webserver at
 <http://localhost:8000>.
 
-It will aslo start a watcher that will automatically rebuild the site when you
+It will also start a watcher that will automatically rebuild the site when you
 make changes to the source files.
 These  changes will be visible in your browser immediately.
 
