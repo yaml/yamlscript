@@ -3,7 +3,7 @@
 DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
 
 defn main(input-file):
-  print: input-file:slurp
+  print: input-file:read
     .replace(
       /^(---\n(?s:.*?)\n---\n)\n*/
       "$1\n$DNE")

@@ -95,14 +95,14 @@ defn step-3(ctx):
     changes =:
       make-changes-entry: ctx
 
-    spit 'release-changes.txt': changes
+    write 'release-changes.txt': changes
 
     prompt: "Press Enter to edit the 'Changes' file."
     editor =: ENV.EDITOR || 'vi'
     run: "$editor release-changes.txt"
     prompt: 'Press Enter to continue or Ctrl-C to abort.'
 
-    validate-yaml: slurp('release-changes.txt')
+    validate-yaml: read('release-changes.txt')
 
   when verbose:
     # Show git changes since last release:
@@ -120,7 +120,7 @@ defn step-4(ctx):
 
   # Update Changes if tests pass:
   when-not dryrun:
-    changes =: slurp('release-changes.txt')
+    changes =: read('release-changes.txt')
 
     file-prepend 'Changes': |
       - version: $(ctx.new)
@@ -128,11 +128,11 @@ defn step-4(ctx):
         changes:
       $(changes:str/trimr)
 
-    validate-yaml: slurp('Changes')
+    validate-yaml: read('Changes')
 
     changes =: changes.replace(/(?m)^  -/ '*')
 
-    spit 'release-changes.txt': changes
+    write 'release-changes.txt': changes
 
 
 #------------------------------------------------------------------------------
@@ -274,8 +274,8 @@ defn prompt(msg):
   trim: read-line()
 
 defn file-prepend(file text):
-  spit file:
-    str: text slurp(file)
+  write file:
+    str: text read(file)
 
 defn make-changes-entry(ctx):
   lines =:
