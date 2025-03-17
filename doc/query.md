@@ -53,6 +53,7 @@ Click on the examples below to see more details.
 
     ??? "`ys -J file.yaml   # Convert to JSON`"
         Use one of these Load options:
+
         * `-l`/`--load` Load input and print as compact JSON
         * `-J`/`--json` Print as formatted JSON
         * `-Y`/`--yaml` Print as YAML

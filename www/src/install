@@ -16,12 +16,12 @@ export VERSION
 main() (
   setup "$@"
 
-  if ! [[ ${BIN-} || ${LIB-} ]]; then
-    install ys
-    install libyamlscript
-  elif [[ ${BIN-} ]]; then
+  if [[ ${BIN-} ]]; then
     install ys
   elif [[ ${LIB-} ]]; then
+    install libyamlscript
+  else
+    install ys
     install libyamlscript
   fi
 )
@@ -43,22 +43,24 @@ install() (
     make -s --no-print-directory -C "$name"-* install
   )
 
-  if [[ $name == ys &&
+  if [[ ! ${QUIET-} &&
+        $name == ys &&
         $PATH != *"$PREFIX"/bin*
      ]]; then
-    echo
-    echo "  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***"
-    echo
-    echo "  You can add it by running:"
-    echo "    export PATH=$PREFIX/bin:\$PATH"
-    echo
-    echo "  Make it permanent by adding the above line to your shell profile."
-    echo
-    echo "  For full details: https://yamlscript.org/doc/install"
-    echo
+    echo "
+  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***
+
+  You can add it by running:
+    export PATH=$PREFIX/bin:\$PATH
+
+  Make it permanent by adding the above line to your shell profile.
+
+  For full details: https://yamlscript.org/doc/install
+"
   fi
 
-  if [[ $name == libyamlscript &&
+  if [[ ! ${QUIET-} &&
+        $name == libyamlscript &&
         $PREFIX != "$HOME/.local" &&
         $PREFIX != /usr/local &&
         ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
@@ -70,7 +72,8 @@ install() (
 )
 
 setup() {
-  vers=$VERSION
+
+  vers=${VERSION:-$DEFAULT_VERSION}
 
   if [[ ! ${PREFIX-} ]]; then
     if [[ $(id -u) == 0 ]]; then
@@ -86,7 +89,7 @@ setup() {
   elif [[ $OSTYPE == *linux* ]]; then
     os=linux
   else
-    die "Unknown OS type: $OSTYPE"
+    die "Unknown/unsupported OS type: '$OSTYPE'"
   fi
 
   if [[ $MACHTYPE == *x86_64* ]]; then
@@ -94,7 +97,7 @@ setup() {
   elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
     arch=aarch64
   else
-    die "Unknown machine type: $MACHTYPE"
+    die "Unknown machine/unsupported type: '$MACHTYPE'"
   fi
 
   url=https://github.com/yaml/yamlscript/releases/download/
