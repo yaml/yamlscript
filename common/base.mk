@@ -1,5 +1,5 @@
 ifneq (GNU,$(firstword $(shell $(MAKE) --version)))
-  $(error Error: 'make' must be 'GNU make)
+  $(error Error: 'make' must be 'GNU make')
 endif
 
 SHELL := bash
