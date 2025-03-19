@@ -892,9 +892,6 @@
 (defn use-pod [pod-name version]
   (ys/load-pod pod-name version))
 
-#_(defn yspath
-  ([] (global/yspath)))
-
 
 ;;------------------------------------------------------------------------------
 ;; HTTP functions
