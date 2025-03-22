@@ -242,7 +242,8 @@ RAPIDYAML_JAVA := \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/Evt.java \
   $(ROOT)/rapidyaml/src/main/java/org/rapidyaml/YamlParseErrorException.java
 RAPIDYAML_JNI_H := $(ROOT)/rapidyaml/native/org_rapidyaml_Rapidyaml.h
-RAPIDYAML_SO := $(ROOT)/rapidyaml/native/librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_SO_NAME := librapidyaml.$(RAPIDYAML_VERSION).$(SO)
+RAPIDYAML_SO := $(ROOT)/rapidyaml/native/$(RAPIDYAML_SO_NAME)
 RAPIDYAML_LIB := $(ROOT)/rapidyaml/native/librapidyaml.$(DOTLIB)
 RAPIDYAML_JAR := $(ROOT)/rapidyaml/target/rapidyaml-$(RAPIDYAML_VERSION).jar
 RAPIDYAML_INSTALLED_DIR := \

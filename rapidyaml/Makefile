@@ -11,20 +11,20 @@ RAPIDYAML_JAR_DEPS := \
   )
 
 RAPIDYAML_CLASS := $(RAPIDYAML_JAVA:.java=.class)
+RAPIDYAML_CLASSES := \
+  $(RAPIDYAML_CLASS:$(RAPIDYAML)/src/main/java/%=-C src/main/java %)
 
 
 #------------------------------------------------------------------------------
 default::
-	echo $(RAPIDYAML_SO)
-	echo $(RAPIDYAML_LIB)
-
-x:
-	YS -ce 'foo: var'
 
 build:: $(RAPIDYAML_JNI_H) $(RAPIDYAML_SO) $(RAPIDYAML_LIB) $(RAPIDYAML_JAR)
 	@:
 
 jar: $(RAPIDYAML_JAR)
+
+#jar-test: $(RAPIDYAML_JAR)
+#	java -jar $<
 
 install:: $(RAPIDYAML_INSTALLED)
 
@@ -54,6 +54,7 @@ jni: $(RAPIDYAML_JNI_H)
 #------------------------------------------------------------------------------
 $(RAPIDYAML_SO): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
+# XXX Probably don't need this:
 $(RAPIDYAML_LIB): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
 
@@ -61,10 +62,15 @@ $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR) $(JAVA_INSTALLED)
 	YS_RAPIDYAML_MAVEN_TEST=1 $(MVN) install
 	touch $@
 
-$(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
-	$(JAR) -cvf $@ $<
-	jar -uf $@ \
-	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
+# $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED)
+# 	$(JAR) -cvf $@ $<
+# 	jar -uf $@ \
+# 	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
+
+$(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(JAVA_INSTALLED) $(RAPIDYAML_SO)
+	$(JAR) -cf $@ $(RAPIDYAML_CLASSES)
+	$(JAR) -uf $@ -C $(RAPIDYAML)/native/ $(RAPIDYAML_SO_NAME)
+	$(JAR) -umf manifest.txt $@
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
 	@# this doesn't work:
