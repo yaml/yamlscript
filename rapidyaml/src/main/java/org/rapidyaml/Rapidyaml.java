@@ -1,13 +1,9 @@
 package org.rapidyaml;
 
-import java.net.URL;
-import java.security.CodeSource;
-
 import org.rapidyaml.NativeLibLoader;
+
 import java.io.IOException;
 
-import org.rapidyaml.YamlParseErrorException;
-import java.nio.charset.StandardCharsets;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ByteOrder;
@@ -15,15 +11,9 @@ import java.nio.ByteOrder;
 /**
  * Interface with the librapidyaml shared library
  */
-public class Rapidyaml
-{
-    public static String RAPIDYAML_NAME = "rapidyaml";
-    public static String RAPIDYAML_VERSION = "0.8.0";
-    public static String RAPIDYAML_LIBNAME =
-        String.format(
-            "%s.%s",
-            RAPIDYAML_NAME,
-            RAPIDYAML_VERSION);
+public class Rapidyaml {
+    public static String RAPIDYAML_NAME = "rapidyaml.0.8.0";
+    public static String RAPIDYAML_LIBNAME = "librapidyaml.0.8.0.so";
 
     private native long ysparse_init();
     private native void ysparse_destroy(long ysparse);
@@ -36,7 +26,6 @@ public class Rapidyaml
         long ysparse, String filename,
         ByteBuffer ys, int ys_length,
         IntBuffer evt, int evt_length);
-
     private final long ysparse;
 
 
@@ -56,7 +45,11 @@ public class Rapidyaml
     //------------------------
 
     public Rapidyaml() throws Exception, IOException {
-        System.loadLibrary(RAPIDYAML_LIBNAME);
+        if (System.getenv("YS_RAPIDYAML_MAVEN_TEST") != null)
+            System.loadLibrary(RAPIDYAML_LIBNAME);
+        else
+            NativeLibLoader.loadLibraryFromResource(RAPIDYAML_LIBNAME);
+
         this.ysparse = this.ysparse_init();
         timingEnabled(false);
     }
@@ -65,14 +58,14 @@ public class Rapidyaml
     //
     // https://stackoverflow.com/questions/158174/why-would-you-ever-implement-finalize
     //
-    protected void finalize() throws Throwable {
-        try {
-            this.ysparse_destroy(this.ysparse);
-        }
-        finally {
-            super.finalize();
-        }
-    }
+//    protected void finalize() throws Throwable {
+//        try {
+//            this.ysparse_destroy(this.ysparse);
+//        }
+//        finally {
+//            super.finalize();
+//        }
+//    }
 
 
     //------------------------
@@ -118,9 +111,8 @@ public class Rapidyaml
         int reqsize = ysparse_parse_buf(
             this.ysparse, filename,
             src, src.position(), evt, evt.capacity());
-        if (reqsize <= evt.capacity()) {
+        if (reqsize <= evt.capacity())
             evt.position(reqsize);
-        }
         timingStop("ysparseBuf", t, src.position());
         return reqsize;
     }
