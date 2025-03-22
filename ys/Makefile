@@ -29,7 +29,13 @@ test := test/
 YS_BUILD_DEPS := \
   $(YAMLSCRIPT_CLI_BIN) \
   $(YAMLSCRIPT_CLI_BIN_BASH) \
+  $(COMMON/base.mk) \
+  $(COMMON/clojure.mk) \
+  $(COMMON/docker.mk) \
+  $(COMMON/native.mk) \
+  $(lastword $(MAKEFILE_LIST)) \
 
+ifdef YS_NATIVE_BUILD_STATIC
 ifeq (true,$(IS_LINUX))
 ifeq (true,$(IS_INTEL))
 YS_BUILD_DEPS := $(MUSL_GCC) $(YS_BUILD_DEPS)
@@ -37,6 +43,7 @@ NATIVE_OPTS += \
   -H:CCompilerOption=-Wl,-z,stack-size=2097152 \
   --static \
   --libc=musl
+endif
 endif
 endif
 
@@ -55,7 +62,7 @@ install: build
 	  $(PREFIX)/bin/
 
 jar: $(YAMLSCRIPT_CLI_JAR_PATH)
-	@:
+	@$(MAKE) -s -C $(RAPIDYAML) $(RAPIDYAML_INSTALLED)
 
 test: test-unit
 
@@ -70,7 +77,7 @@ test-run: $(BPAN_LOCAL) build
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
+$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH) $(RAPIDYAML_INSTALLED)
 ifndef YS_BIN_DIR
 ifneq (true,$(LIBZ))
 	$(error *** \
@@ -105,6 +112,8 @@ else
 $(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
 	$< uberjar
 endif
+	jar -uf $@ \
+	  -C $(ROOT)/rapidyaml/native/ librapidyaml.0.8.0.so
 
 Dockerfile:: $(COMMON) Makefile
 	cat \
