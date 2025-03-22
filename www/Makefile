@@ -7,6 +7,8 @@ CONFIG := mkdocs.yml
 
 PYTHON-VENV := $(ROOT)/www/.venv
 VENV := source $(PYTHON-VENV)/bin/activate
+export VIRTUAL_ENV := $(PYTHON-VENV)
+export PATH := $(PYTHON-VENV)/bin:$(PATH)
 
 MD-FILES := $(shell find ../doc -name '*.md' | sort)
 MDYS-FILES := $(shell find ../doc src -name '*.mdys' | sort)
@@ -17,7 +19,7 @@ MD-FILES := $(MD-FILES:%.mdys=%.md)
 BLOG-FILES := $(shell find ../blog -name '*.md' | sort)
 BLOG-FILES := $(BLOG-FILES:../blog/%=src/blog/posts/%)
 
-WATCHER := $(VENV) && watchmedo shell-command
+WATCHER := watchmedo shell-command
 WATCH := \
   Meta \
   doc/ \
@@ -44,7 +46,7 @@ DIRS := \
 
 DEPS := \
   build-bin-ys \
-	$(DIRS) \
+  $(DIRS) \
   $(PYTHON-VENV) \
   $(CONFIG) \
   $(MD-FILES) \
@@ -74,10 +76,11 @@ build site:: $(DIRS) $(DEPS)
 	$(RM) -r site/*
 	$(VENV) && mkdocs build
 	echo $(YS-WWW-DOMAIN) > site/CNAME
+	mkdocs build
 	git -C site add -A
 
 serve: $(DIRS) $(DEPS) watch
-	$(VENV) && mkdocs serve
+	mkdocs serve
 
 deps-update: deps-update-notify deps
 
@@ -122,7 +125,7 @@ watch:
 	  &
 
 material: $(PYTHON-VENV)
-	ln -s $(PYTHON-VENV)/lib/python*/site-packages/material $@
+	ln -s $</lib/python*/site-packages/material $@
 
 override: material
 ifeq (,$(f))
@@ -140,8 +143,8 @@ ifeq (,$(m))
 	@echo 'm=<module> is not set'
 	@exit 1
 endif
-	$(VENV) && pip install $m
-	$(VENV) && pip freeze > requirements.txt
+	pip install $m
+	pip freeze > requirements.txt
 
 clean::
 	killall watchmedo || true
@@ -154,7 +157,7 @@ realclean:: clean
 
 $(PYTHON-VENV):
 	$(PYTHON) -m venv $@
-	$(VENV) && pip install -r requirements.txt
+	pip install -r requirements.txt
 
 # YS doesn't support !!python tags yet.
 # This hack is a workaround to preserve them.
@@ -201,6 +204,3 @@ sample:
 
 line1 line2:
 	@echo =======================================================================
-
-# yamlscript-1920x1080.png: src/image/yamlscript.svg
-# 	svgexport $< $@ 1920:1080 pad
