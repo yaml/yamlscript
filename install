@@ -5,23 +5,23 @@
   exit 1
 }
 
-[[ ${DEBUG-} == 1 ]] && set -x
+[[ ${YS_DEBUG-} == 1 ]] && set -x
 
 set -e -u -o pipefail
 
-LIBYAMLSCRIPT_VERSION=0.1.95
-VERSION=${VERSION:-$LIBYAMLSCRIPT_VERSION}
-export VERSION
+DEFAULT_VERSION=0.1.95
 
 main() (
   setup "$@"
 
-  if ! [[ ${BIN-} || ${LIB-} ]]; then
+  if [[ ${YS_TYPE-} == bin ]]; then
     install ys
+  elif [[ ${YS_TYPE-} == lib ]]; then
     install libyamlscript
-  elif [[ ${BIN-} ]]; then
+  elif [[ ${YS_TYPE-} ]]; then
+    die "Unsupported value YS_TYPE='$YS_TYPE'"
+  else
     install ys
-  elif [[ ${LIB-} ]]; then
     install libyamlscript
   fi
 )
@@ -43,22 +43,24 @@ install() (
     make -s --no-print-directory -C "$name"-* install
   )
 
-  if [[ $name == ys &&
+  if [[ ! ${YS_QUIET-} &&
+        $name == ys &&
         $PATH != *"$PREFIX"/bin*
      ]]; then
-    echo
-    echo "  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***"
-    echo
-    echo "  You can add it by running:"
-    echo "    export PATH=$PREFIX/bin:\$PATH"
-    echo
-    echo "  Make it permanent by adding the above line to your shell profile."
-    echo
-    echo "  For full details: https://yamlscript.org/doc/install"
-    echo
+    echo "
+  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***
+
+  You can add it by running:
+    export PATH=$PREFIX/bin:\$PATH
+
+  Make it permanent by adding the above line to your shell profile.
+
+  For full details: https://yamlscript.org/doc/install
+"
   fi
 
-  if [[ $name == libyamlscript &&
+  if [[ ! ${YS_QUIET-} &&
+        $name == libyamlscript &&
         $PREFIX != "$HOME/.local" &&
         $PREFIX != /usr/local &&
         ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
@@ -70,7 +72,16 @@ install() (
 )
 
 setup() {
-  vers=$VERSION
+  [[ ${VERSION-} =~ ^0\.1\.\d+$ ]] &&
+    die "YS: Please use YS_VERSION instead of VERSION"
+  [[ ${PREFIX-} ]] &&
+    die "YS: Please use YS_PREFIX instead of PREFIX"
+  [[ ${BIN-} ]] &&
+    die "YS: Please use YS_TYPE=bin instead of BIN=1"
+  [[ ${LIB-} ]] &&
+    die "YS: Please use YS_TYPE=lib instead of LIB=1"
+
+  vers=${YS_VERSION:-$DEFAULT_VERSION}
 
   if [[ ! ${PREFIX-} ]]; then
     if [[ $(id -u) == 0 ]]; then
@@ -86,7 +97,7 @@ setup() {
   elif [[ $OSTYPE == *linux* ]]; then
     os=linux
   else
-    die "Unknown OS type: $OSTYPE"
+    die "Unknown/unsupported OS type: '$OSTYPE'"
   fi
 
   if [[ $MACHTYPE == *x86_64* ]]; then
@@ -94,7 +105,7 @@ setup() {
   elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
     arch=aarch64
   else
-    die "Unknown machine type: $MACHTYPE"
+    die "Unknown machine/unsupported type: '$MACHTYPE'"
   fi
 
   url=https://github.com/yaml/yamlscript/releases/download/
