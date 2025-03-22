@@ -6,23 +6,16 @@ NATIVE_OPTS := \
   --initialize-at-build-time \
   --enable-preview \
   --enable-url-protocols=https \
+  --emit=build-report \
   -march=compatibility \
+  -H:IncludeResources=SCI_VERSION \
+  -H:IncludeResources='librapidyaml\.0\.8\.0\.so' \
   -H:ReflectionConfigurationFiles=reflection.json \
   -H:+ReportExceptionStackTraces \
-  -H:IncludeResources=SCI_VERSION \
   -H:Log=registerResource: \
   -J-Dclojure.spec.skip-macros=true \
   -J-Dclojure.compiler.direct-linking=true \
   -J-Xmx3g \
-
-ifdef YS_NATIVE_INCLUDE_LIBRAPIDYAML
-NATIVE_OPTS += \
-  -H:IncludeResources=".*librapidyaml\.0\.8\.0\.so"
-endif
-
-ifdef YS_NATIVE_BUILD_REPORT
-NATIVE_OPTS += --emit build-report
-endif
 
 export MUSL_HOME := $(YS_TMP)/musl
 export PATH := $(MUSL_HOME)/bin:$(PATH)

@@ -11,7 +11,7 @@ class NativeLibLoader {
     public static void loadLibraryFromResource(String libraryName)
         throws IOException
     {
-System.out.println("libraryName: " + libraryName);
+// System.out.println("libraryName: " + libraryName);
         ClassLoader classLoader =
             Thread.currentThread().getContextClassLoader();
 
@@ -23,12 +23,12 @@ System.out.println("libraryName: " + libraryName);
                 "Failed to load library resource '" +
                 libraryName + "' from NativeLibLoader");
 
-System.out.println("inputStream: " + inputStream);
+// System.out.println("inputStream: " + inputStream);
 
         File tempDir = createTempDir();
         // tempDir.deleteOnExit();
         File tempFile = new File(tempDir, libraryName);
-System.out.println("tempFile: " + tempFile);
+// System.out.println("tempFile: " + tempFile);
 
         Files.copy(
             inputStream,
@@ -44,7 +44,7 @@ System.out.println("tempFile: " + tempFile);
             // tempFile.delete();
         }
 
-System.out.println("Loaded library from temp file");
+// System.out.println("Loaded library from temp file");
     }
 
     private static File createTempDir() throws IOException {
