@@ -5,8 +5,8 @@ export ROOT
 
 CONFIG := mkdocs.yml
 
-PYTHON_VENV := $(ROOT)/www/.venv
-VENV := source $(PYTHON_VENV)/bin/activate
+export VIRTUAL_ENV := $(ROOT)/www/.venv
+export PATH := $(VIRTUAL_ENV)/bin:$(PATH)
 
 MD_FILES := $(shell find ../doc -name '*.md' | sort)
 MDYS_FILES := $(shell find ../doc src -name '*.mdys' | sort)
@@ -18,7 +18,7 @@ MD_FILES := $(MD_FILES:%.mdys=%.md)
 BLOG_FILES := $(shell find ../blog -name '*.md' | sort)
 BLOG_FILES := $(BLOG_FILES:../blog/%=src/blog/posts/%)
 
-WATCHER := $(VENV) && watchmedo shell-command
+WATCHER := watchmedo shell-command
 WATCH := \
   Meta \
   doc/ \
@@ -45,8 +45,8 @@ DIRS := \
 
 DEPS := \
   build-bin-ys \
-	$(DIRS) \
-  $(PYTHON_VENV) \
+  $(DIRS) \
+  $(VIRTUAL_ENV) \
   $(CONFIG) \
   $(MD_FILES) \
   $(BLOG_FILES) \
@@ -73,12 +73,12 @@ build site:: $(DIRS) $(DEPS)
 	$(RM) -r site
 	git worktree add -f site
 	$(RM) -r site/*
-	$(VENV) && mkdocs build
+	mkdocs build
 	echo $(YS_WWW_DOMAIN) > site/CNAME
 	git -C site add -A
 
 serve: $(DIRS) $(DEPS) watch
-	$(VENV) && mkdocs serve
+	mkdocs serve
 
 deps-update: deps-update-notify deps
 
@@ -122,8 +122,8 @@ watch:
 	  --drop \
 	  &
 
-material: $(PYTHON_VENV)
-	ln -s $(PYTHON_VENV)/lib/python*/site-packages/material $@
+material: $(VIRTUAL_ENV)
+	ln -s $</lib/python*/site-packages/material $@
 
 override: material
 ifeq (,$(f))
@@ -136,13 +136,13 @@ ifneq (,$(wildcard theme/partials/$f))
 endif
 	cp $</templates/partials/$f theme/partials/$f
 
-pip-install: $(PYTHON_VENV)
+pip-install: $(VIRTUAL_ENV)
 ifeq (,$(m))
 	@echo 'm=<module> is not set'
 	@exit 1
 endif
-	$(VENV) && pip install $m
-	$(VENV) && pip freeze > requirements.txt
+	pip install $m
+	pip freeze > requirements.txt
 
 clean::
 	killall watchmedo || true
@@ -151,13 +151,11 @@ clean::
 	$(RM) -r site src/doc src/blog/posts .cache
 
 realclean:: clean
-	$(RM) -r $(PYTHON_VENV)
+	$(RM) -r $(VIRTUAL_ENV)
 
-$(VENV_DIR): $(PYTHON_VENV)
-
-$(PYTHON_VENV):
+$(VIRTUAL_ENV):
 	$(PYTHON) -m venv $@
-	$(VENV) && pip install -r requirements.txt
+	pip install -r requirements.txt
 
 # YS doesn't support !!python tags yet.
 # This hack is a workaround to preserve them.
@@ -204,6 +202,3 @@ sample:
 
 line1 line2:
 	@echo =======================================================================
-
-# yamlscript-1920x1080.png: src/image/yamlscript.svg
-# 	svgexport $< $@ 1920:1080 pad
