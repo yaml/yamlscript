@@ -15,6 +15,7 @@
  * https://stackoverflow.com/questions/1429172/how-to-list-the-files-inside-a-jar-file
  * https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#getSystemResources-java.lang.String-
  */
+
 package org.rapidyaml;
 
 import java.net.URL;
@@ -42,7 +43,7 @@ public class Rapidyaml
     public static String RAPIDYAML_NAME = "rapidyaml";
     public static String RAPIDYAML_VERSION = "0.8.0";
     public static String RAPIDYAML_LIBNAME =
-        String.format("%s.%s", RAPIDYAML_NAME, RAPIDYAML_VERSION);
+        String.format("lib%s.%s.so", RAPIDYAML_NAME, RAPIDYAML_VERSION);
 
     private native long ysparse_init();
     private native void ysparse_destroy(long ysparse);
@@ -56,6 +57,11 @@ public class Rapidyaml
 
     private final long ysparse;
 
+    public static void main(String[] args) throws Exception, IOException {
+        (new Rapidyaml()).timingEnabled(true);
+        System.out.printf("It works!\n");
+    }
+
 
     //------------------------
     // CTOR/DTOR
@@ -63,45 +69,12 @@ public class Rapidyaml
 
     public Rapidyaml() throws Exception, IOException
     {
-        printJarInfo();
-        System.out.printf("RAPIDYAML_LIBNAME : >>>%s<<<\n", RAPIDYAML_LIBNAME);
-
-        System.loadLibrary(RAPIDYAML_LIBNAME);
-
-/*
-        if (System.getenv("YS_RAPIDYAML_MAVEN_TEST") != null) {
-            String library_name = "rapidyaml";
-            System.loadLibrary(library_name);
-        }
-        else {
-            //String library_name = "rapidyaml." + RAPIDYAML_VERSION;
-            //NativeLibLoader.loadLibraryFromJar(library_name);
-
-            //System.out.printf("LOADING library from jar...\n");
-            //NativeLibLoader.loadLibraryFromJar("/librapidyaml.0.8.0.so");
-
-            System.loadLibrary(RAPIDYAML_LIBNAME);
-        }
-*/
-
+// System.out.printf("LOADING library from jar...\n");
+        NativeLibLoader.loadLibraryFromResource(RAPIDYAML_LIBNAME);
+// System.out.printf("LOADED library from jar...\n");
 
         this.ysparse = this.ysparse_init();
         timingEnabled(false);
-    }
-
-    public String printJarInfo() {
-        Class class_ = Rapidyaml.class;
-
-        System.out.printf("class name: >>>%s<<<\n", class_.getName());
-
-        URL location = class_.getResource(
-            '/' + class_.getName().replace('.', '/') + ".class");
-        System.out.printf("location: >>>%s<<<\n", location);
-
-        System.out.printf("jar: >>>%s<<<\n",
-            class_.getProtectionDomain().getCodeSource().getLocation());
-
-        return null;
     }
 
     // Likely bad idea to implement finalize:

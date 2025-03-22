@@ -23,8 +23,8 @@ build:: $(RAPIDYAML_JNI_H) $(RAPIDYAML_SO) $(RAPIDYAML_LIB) $(RAPIDYAML_JAR)
 
 jar: $(RAPIDYAML_JAR)
 
-#jar-test: $(RAPIDYAML_JAR)
-#	java -jar $<
+jar-test: $(RAPIDYAML_JAR)
+	java -jar $<
 
 install:: $(RAPIDYAML_INSTALLED)
 

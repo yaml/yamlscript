@@ -1,6 +1,6 @@
 package org.rapidyaml;
 
-import org.rapidyaml.*;
+import org.rapidyaml.Rapidyaml;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
