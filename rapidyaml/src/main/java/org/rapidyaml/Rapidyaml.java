@@ -15,6 +15,7 @@
  * https://stackoverflow.com/questions/1429172/how-to-list-the-files-inside-a-jar-file
  * https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#getSystemResources-java.lang.String-
  */
+
 package org.rapidyaml;
 
 import java.net.URL;
@@ -55,6 +56,11 @@ public class Rapidyaml
                                          IntBuffer evt, int evt_length);
 
     private final long ysparse;
+
+    public static void main(String[] args) throws Exception, IOException {
+        (new Rapidyaml()).timingEnabled(true);
+        System.out.printf("It works!\n");
+    }
 
 
     //------------------------
