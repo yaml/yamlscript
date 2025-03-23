@@ -69,7 +69,23 @@ public class RapidyamlTest extends TestCase
         };
         testEvt_(ys, expected);
     }
- 
+
+    public void testUtf8_2()
+    {
+        String ys = "star: ★";
+        ExpectedEvent[] expected = {
+            mkev(Evt.BSTR),
+            mkev(Evt.BDOC),
+            mkev(Evt.VAL_|Evt.BMAP|Evt.BLCK),
+            mkev(Evt.KEY_|Evt.SCLR|Evt.PLAI, 0, 4, "star"),
+            mkev(Evt.VAL_|Evt.SCLR|Evt.PLAI, 6, 3, "★"),
+            mkev(Evt.EMAP),
+            mkev(Evt.EDOC),
+            mkev(Evt.ESTR),
+        };
+        testEvt_(ys, expected);
+    }
+
     public void testTaggedInt()
     {
         String ys = "- !!int 42";
@@ -85,7 +101,7 @@ public class RapidyamlTest extends TestCase
         };
         testEvt_(ys, expected);
     }
- 
+
     public void testTaggedSeq()
     {
         String ys = "- !!seq []";

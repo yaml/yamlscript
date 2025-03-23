@@ -46,7 +46,7 @@ public class Rapidyaml {
 
     public Rapidyaml() throws Exception, IOException {
         if (System.getenv("YS_RAPIDYAML_MAVEN_TEST") != null)
-            System.loadLibrary(RAPIDYAML_LIBNAME);
+            System.loadLibrary(RAPIDYAML_NAME);
         else
             NativeLibLoader.loadLibraryFromResource(RAPIDYAML_LIBNAME);
 
