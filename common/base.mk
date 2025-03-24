@@ -31,7 +31,7 @@ export YSLANG := $(SUBDIR)
 #------------------------------------------------------------------------------
 .SECONDEXPANSION:
 
-# .DELETE_ON_ERROR:
+.DELETE_ON_ERROR:
 
 .PHONY: test
 
