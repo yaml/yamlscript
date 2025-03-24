@@ -63,7 +63,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     file:
     - clojure/deps.edn
     - clojure/project.clj
-    - common/project.clj
     - core/project.clj
     - libyamlscript/deps.edn
     - libyamlscript/project.clj

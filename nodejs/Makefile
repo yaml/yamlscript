@@ -27,7 +27,7 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-test:: update $(LIBYAMLSCRIPT_SO_FQNP)
+test:: update $(LIBYS_SO_FQNP)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
 

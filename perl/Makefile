@@ -55,13 +55,3 @@ $(ALIEN_DIST_DIR):
 
 $(LOCAL_LIB):
 	cpanm -L $@ -n $(CPAN_DEPS)
-
-Dockerfile:: $(COMMON) Makefile
-	cat \
-	  $</docker-from-ubuntu.dockerfile \
-	  $</docker-apt-base.dockerfile \
-	  $</docker-useradd.dockerfile \
-	  $</docker-apt-perl.dockerfile \
-	  $</docker-deps-perl.dockerfile \
-	  $</docker-apt-dev.dockerfile \
-		> $@
