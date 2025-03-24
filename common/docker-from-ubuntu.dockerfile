@@ -1,6 +1,0 @@
-ARG UBUNTU_VERSION
-FROM ubuntu:$UBUNTU_VERSION
-ARG DOCKER_UID=1000
-ARG DOCKER_GID=1000
-ARG GRAALVM_TAR=graalvm-jdk-21_linux-x64_bin.tar.gz
-SHELL ["/bin/bash", "-c"]

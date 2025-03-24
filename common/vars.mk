@@ -27,6 +27,7 @@ export YAMLSCRIPT_ROOT ?= $(ROOT)
 
 export API_VERSION := 0
 export YS_VERSION := $(shell grep '^version:' $(ROOT)/Meta | cut -d' ' -f2)
+YAMLSCRIPT_VERSION := $(YS_VERSION)
 
 ifdef v
   export TEST_VERBOSE := 1
@@ -81,16 +82,6 @@ endif
 CURL := $(shell command -v curl)
 
 TIME := time -p
-
-LIBYAMLSCRIPT_DIR := $(ROOT)/libyamlscript/lib
-LIBRARY_PATH := $(LIBYAMLSCRIPT_DIR)
-export $(DY)LD_LIBRARY_PATH := $(LIBRARY_PATH)
-export LD_LIBRARY_PATH := $(LIBRARY_PATH)
-LIBYAMLSCRIPT_SO_NAME := $(LIBYAMLSCRIPT_DIR)/libyamlscript
-LIBYAMLSCRIPT_SO_FQNP := $(LIBYAMLSCRIPT_SO_NAME).$(SO).$(YS_VERSION)
-LIBYAMLSCRIPT_SO_BASE := $(LIBYAMLSCRIPT_DIR)/libyamlscript.$(SO)
-LIBYAMLSCRIPT_SO_APIP := $(LIBYAMLSCRIPT_SO_BASE).$(API_VERSION)
-LIBYAMLSCRIPT_SO_VERS := $(LIBYAMLSCRIPT_DIR)/libyamlscript.$(YS_VERSION).$(SO)
 
 ifeq (true,$(IS_ROOT))
   PREFIX ?= /usr/local
@@ -165,6 +156,7 @@ GRAALVM_DOWNLOAD := $(YS_TMP)/$(GRAALVM_TAR)
 GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
 
 GRAALVM_O ?= 1
+# qbm is Quick Build Mode
 ifdef qbm
   GRAALVM_O := b
 endif

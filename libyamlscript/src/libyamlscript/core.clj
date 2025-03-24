@@ -49,7 +49,7 @@
              :trace (get-in err [:trace])}}))
 
 (defn debug [& msg]
-  (when (System/getenv "LIBYAMLSCRIPT_DEBUG")
+  (when (System/getenv "YS_DEBUG")
     (binding [*out* *err*]
       (apply println msg))))
 

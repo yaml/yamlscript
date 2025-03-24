@@ -20,7 +20,7 @@ export YSLANG := $(SUBDIR)
 #------------------------------------------------------------------------------
 .SECONDEXPANSION:
 
-.DELETE_ON_ERROR:
+# .DELETE_ON_ERROR:
 
 .PHONY: test
 
@@ -40,10 +40,6 @@ chown::
 
 clean-all::
 	$(MAKE) -C $(ROOT) $@
-
-docker-build::
-
-docker-test::
 
 always:
 

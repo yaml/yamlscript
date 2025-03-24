@@ -1,54 +1,34 @@
 include ../common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
-include $(COMMON)/docker.mk
 include $(COMMON)/native.mk
-
-LIBYAMLSCRIPT_JAR_PATH := target/libyamlscript-$(YS_VERSION)-standalone.jar
-
-LYS_SOURCES := \
-  src/libyamlscript/core.clj \
-	src/libyamlscript/API.java \
-
-HEADERS := \
-  $(LIBYAMLSCRIPT_DIR)/graal_isolate.h \
-  $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h \
-
-BUILD_TARGETS := \
-  $(LIBYAMLSCRIPT_SO_FQNP) \
-  $(HEADERS) \
-
-# Avoid rebuild in ephemerally created Docker container.
-ifdef DOCKERENV
-ifneq (,$(wildcard $(LIBYAMLSCRIPT_SO_FQNP)))
-LIBYAMLSCRIPT_JAR_PATH :=
-endif
-endif
+include $(COMMON)/vars-core.mk
+include $(COMMON)/vars-libys.mk
 
 #------------------------------------------------------------------------------
-build:: $(BUILD_TARGETS)
+build:: $(LIBYS_DEPS)
 
-jar: $(LIBYAMLSCRIPT_JAR_PATH)
+# jar: $(LIBYS_JAR_PATH)
 
-install:: $(BUILD_TARGETS)
+install:: $(LIBYS_DEPS)
 	mkdir -p $(PREFIX)/include/
-	install -m 644 $(HEADERS) $(PREFIX)/include/
+	install -m 644 $(LIBYS_HEADERS) $(PREFIX)/include/
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/
-	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_BASE))
-	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_APIP))
-	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYAMLSCRIPT_SO_VERS))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS_SO_BASE))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS_SO_APIP))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS_SO_VERS))
 
 realclean::
 	$(RM) -r lib/
 	$(RM) src/libyamlscript/Core.class
 
-test:: $(LIBYAMLSCRIPT_SO_FQNP)
+test:: $(LIBYS_SO_FQNP)
 	ls -lh lib
 
-repl-deps:: $(LIBYAMLSCRIPT_JAR_PATH)
+repl-deps:: $(LIBYS_JAR_PATH)
 
-$(LIBYAMLSCRIPT_SO_FQNP): $(LIBYAMLSCRIPT_JAR_PATH)
+$(LIBYS_SO_FQNP): $(LIBYS_JAR_PATH)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
@@ -60,31 +40,17 @@ endif
 	\
 	  --shared \
 	  -jar $< \
-	  -o $(LIBYAMLSCRIPT_SO_NAME)
-	mv $(LIBYAMLSCRIPT_SO_BASE) $@
-	mv $(LIBYAMLSCRIPT_SO_NAME).h $(LIBYAMLSCRIPT_SO_NAME).$(YS_VERSION).h
-	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_APIP)
-	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_VERS)
-	ln -fs $(notdir $@) $(LIBYAMLSCRIPT_SO_BASE)
+	  -o $(LIBYS_SO_NAME)
+	mv $(LIBYS_SO_BASE) $@
+	mv $(LIBYS_SO_NAME).h $(LIBYS_SO_NAME).$(YAMLSCRIPT_VERSION).h
+	ln -fs $(notdir $@) $(LIBYS_SO_APIP)
+	ln -fs $(notdir $@) $(LIBYS_SO_VERS)
+	ln -fs $(notdir $@) $(LIBYS_SO_BASE)
+	touch $@
 
-ifeq (true,$(IS_ROOT))
-$(LIBYAMLSCRIPT_JAR_PATH):
-ifeq (true,$(IS_ROOT))
-	$(error *** YS 'make build' must be run as non-root user)
-endif
-else
-$(LIBYAMLSCRIPT_JAR_PATH): $(LEIN) $(JAVA_INSTALLED) $(YAMLSCRIPT_CORE_INSTALLED) $(LYS_SOURCES)
-	$< uberjar
-endif
+$(LIBYS_JAR_PATH): $(CORE_INSTALLED)
+	$(LEIN) uberjar
+	touch $@
 
-Dockerfile:: $(COMMON) Makefile
-	cat \
-	  $</docker-from-ubuntu.dockerfile \
-	  $</docker-apt-base.dockerfile \
-	  $</docker-useradd.dockerfile \
-	  $</docker-apt-clojure.dockerfile \
-	  $</docker-install-graalvm.dockerfile \
-	  $</docker-copy-project-deps.dockerfile \
-	  $</docker-deps-clojure.dockerfile \
-	  $</docker-apt-dev.dockerfile \
-	  > $@
+$(CORE_INSTALLED):
+	$(MAKE) -C $(CORE_DIR) $@

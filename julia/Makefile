@@ -11,7 +11,7 @@ build:: build-doc
 build-doc:: ReadMe.md
 
 ifdef JULIA
-test:: $(LIBYAMLSCRIPT_SO_FQNP) deps
+test:: $(LIBYS_SO_FQNP) deps
 	$(JULIA) --project=. test/runtests.jl
 
 deps::

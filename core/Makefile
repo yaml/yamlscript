@@ -1,26 +1,25 @@
 include ../common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
-include $(COMMON)/docker.mk
+include $(COMMON)/vars-core.mk
 
 export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------
 build::
 
-install test:: $(LEIN) build
-	$< $@
+test:: $(CORE_DEPS)
+	$(LEIN) $@
 
-Dockerfile:: $(COMMON) Makefile
-	cat \
-	  $</docker-from-ubuntu.dockerfile \
-	  $</docker-apt-base.dockerfile \
-	  $</docker-useradd.dockerfile \
-	  $</docker-apt-clojure.dockerfile \
-	  $</docker-copy-project-clj.dockerfile \
-	  $</docker-deps-clojure.dockerfile \
-	  $</docker-apt-dev.dockerfile \
-	  > $@
+install: $(CORE_INSTALLED)
+
+$(CORE_INSTALLED): $(CORE_DEPS)
+	$(LEIN) install
+	touch $@
+
+$(CORE_JAR): $(CORE_DEPS)
+	$(LEIN) uberjar
+	touch $@
 
 clean::
 	$(RM) pom.xml
