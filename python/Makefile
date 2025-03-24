@@ -2,11 +2,7 @@ include ../common/base.mk
 include $(COMMON)/binding.mk
 include $(COMMON)/python.mk
 
-ifdef DOCKERENV
-  PYTHON_VENV := $(YS_TMP)/venv
-else
-  PYTHON_VENV := $(ROOT)/python/.venv
-endif
+PYTHON_VENV := $(ROOT)/python/.venv
 
 ACTIVATE := source $(PYTHON_VENV)/bin/activate
 
@@ -33,7 +29,7 @@ test-pytest: $(PYTHON_VENV)
 	$(ACTIVATE) && \
 	  pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
-test-ffi: $(LIBYAMLSCRIPT_SO_FQNP)
+test-ffi: $(LIBYS_SO_FQNP)
 	$(ACTIVATE) && \
 	  $(PYTHON) \
 	    -c 'import yamlscript; \
@@ -94,17 +90,3 @@ MANIFEST.in:
 	    grep -B999 '## Features' | \
 	    head -n-2 \
 	> $@
-
-Dockerfile:: $(COMMON) Makefile
-	cat \
-	  $</docker-from-ubuntu.dockerfile \
-	  $</docker-apt-base.dockerfile \
-	  $</docker-useradd.dockerfile \
-	  $</docker-apt-python.dockerfile \
-	  $</docker-deps-python.dockerfile \
-	  $</docker-apt-clojure.dockerfile \
-	  $</docker-copy-project-deps.dockerfile \
-	  $</docker-deps-clojure.dockerfile \
-	  $</docker-install-graalvm.dockerfile \
-	  $</docker-apt-dev.dockerfile \
-	  > $@

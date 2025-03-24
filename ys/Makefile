@@ -1,25 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
-include $(COMMON)/docker.mk
 include $(COMMON)/native.mk
-
-YAMLSCRIPT_CLI_BIN := bin/ys-$(YS_VERSION)
-YAMLSCRIPT_CLI_SRC := \
-  src/yamlscript/cli.clj \
-
-YAMLSCRIPT_CLI_BIN_BASH := bin/ys-sh-$(YS_VERSION)
-YAMLSCRIPT_CLI_BIN_BASH_SRC := share/ys-0.bash
-
-YAMLSCRIPT_CLI_JAR_PATH := \
-  target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
-
-# Avoid rebuild in ephemerally created Docker container.
-ifdef DOCKERENV
-ifneq (,$(wildcard $(YAMLSCRIPT_CLI_BIN)))
-YAMLSCRIPT_CLI_JAR_PATH :=
-endif
-endif
+include $(COMMON)/vars-cli.mk
 
 BPAN_LOCAL := .bpan
 BPAN_REPO_URL := https://github.com/bpan-org/bpan
@@ -42,36 +25,42 @@ endif
 
 
 #------------------------------------------------------------------------------
-build:: $(YS_BUILD_DEPS)
+build:: $(CLI_DEPS)
 
-install: build
+install: $(CLI_DEPS)
 	mkdir -p $(PREFIX)/bin
-	install -m 755 $(YAMLSCRIPT_CLI_BIN) $(PREFIX)/bin/
-	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) \
-	  $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
-	ln -fs $(notdir $(YAMLSCRIPT_CLI_BIN)) \
-	  $(PREFIX)/$(YAMLSCRIPT_CLI_BIN:%-$(YS_VERSION)=%)
-	install -m 755 $(YAMLSCRIPT_CLI_BIN_BASH) \
+	install -m 755 $(CLI_BIN) $(PREFIX)/bin/
+	ln -fs $(notdir $(CLI_BIN)) \
+	  $(PREFIX)/$(CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $(CLI_BIN)) \
+	  $(PREFIX)/$(CLI_BIN:%-$(YS_VERSION)=%)
+	install -m 755 $(CLI_BIN_BASH) \
 	  $(PREFIX)/bin/
 
-jar: $(YAMLSCRIPT_CLI_JAR_PATH)
-	@:
+# jar: $(CLI_JAR)
 
-test: test-unit
+test: test-run
 
 test-all: test-unit test-run
 
-test-unit: $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED)
-	$< test $(lein-test)
+test-unit: $(CORE_INSTALLED)
+	$(LEIN) test $(lein-test)
 
-test-run: $(BPAN_LOCAL) build
+test-run: $(CLI_DEPS) $(BPAN_LOCAL)
 	prove $${TEST_VERBOSE:+'-v'} $(test)
+
+repl-deps:: $(CORE_INSTALLED)
+
+clean::
+	$(RM) -r .cpcache/
+
+realclean::
+	$(RM) -r bin lib $(BPAN_LOCAL)
 
 $(BPAN_LOCAL):
 	git clone --depth=1 $(BPAN_REPO_URL) $@
 
-$(YAMLSCRIPT_CLI_BIN): $(YAMLSCRIPT_CLI_JAR_PATH)
-ifndef YS_BIN_DIR
+$(CLI_BIN): $(CLI_JAR)
 ifneq (true,$(LIBZ))
 	$(error *** \
 	  The 'libz.$(SO)' library is required by native-image but not installed)
@@ -86,34 +75,19 @@ endif
 	  -o $@
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
-endif
+	touch $@
 
-$(YAMLSCRIPT_CLI_BIN_BASH): $(YAMLSCRIPT_CLI_BIN_BASH_SRC)
+$(CLI_BIN_BASH): $(CLI_BIN_BASH_SRC)
 	mkdir -p $(dir $@)
 	cp $< $@
 	chmod 755 $@
 
-clean::
-	$(RM) -r .cpcache/
+$(CLI_JAR): $(CLI_JAR_DEPS)
+	$(LEIN) uberjar
+	touch $@
 
-realclean::
-	$(RM) -r bin lib $(BPAN_LOCAL)
+$(CORE_INSTALLED):
+	$(MAKE) -C $(CORE_DIR) $@
 
-ifeq (true,$(IS_ROOT))
-$(YAMLSCRIPT_CLI_JAR_PATH):
-else
-$(YAMLSCRIPT_CLI_JAR_PATH): $(LEIN) $(YAMLSCRIPT_CORE_INSTALLED) $(YAMLSCRIPT_CLI_SRC)
-	$< uberjar
-endif
-
-Dockerfile:: $(COMMON) Makefile
-	cat \
-	  $</docker-from-ubuntu.dockerfile \
-	  $</docker-apt-base.dockerfile \
-	  $</docker-useradd.dockerfile \
-	  $</docker-apt-clojure.dockerfile \
-	  $</docker-install-graalvm.dockerfile \
-	  $</docker-copy-project-deps.dockerfile \
-	  $</docker-deps-clojure.dockerfile \
-	  $</docker-apt-dev.dockerfile \
-	  > $@
+$(CORE_JAR):
+	$(MAKE) -C $(CORE_DIR) $@

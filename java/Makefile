@@ -13,10 +13,10 @@ MVN_COMMANDS := \
 
 #------------------------------------------------------------------------------
 
-$(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP)
+$(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBYS_SO_FQNP)
 	mvn $@
 
-release: $(JAVA_INSTALLED) $(LIBYAMLSCRIPT_SO_FQNP) test package
+release: $(JAVA_INSTALLED) $(LIBYS_SO_FQNP) test package
 ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
 endif
