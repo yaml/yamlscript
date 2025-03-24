@@ -33,7 +33,7 @@ public final class API {
     }
 
     public static void debug(String s) {
-        if (System.getenv("LIBYAMLSCRIPT_DEBUG") != null) {
+        if (System.getenv("YS_DEBUG") != null) {
             System.err.println(s);
         }
     }
