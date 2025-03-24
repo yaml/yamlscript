@@ -1,6 +1,8 @@
+include $(COMMON)/vars-rapidyaml.mk
+
 CORE_DIR := $(ROOT)/core
 CORE_JAR := $(CORE_DIR)/target/core-$(YAMLSCRIPT_VERSION)-standalone.jar
-CORE_DEPS := $(LEIN)
+CORE_DEPS := $(LEIN) $(RAPIDYAML_INSTALLED)
 
 CORE_INSTALLED := \
   $(MAVEN_REPOSITORY)/yamlscript/core/$(YAMLSCRIPT_VERSION)

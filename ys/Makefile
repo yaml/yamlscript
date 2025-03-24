@@ -9,27 +9,6 @@ BPAN_REPO_URL := https://github.com/bpan-org/bpan
 
 test := test/
 
-YS_BUILD_DEPS := \
-  $(YAMLSCRIPT_CLI_BIN) \
-  $(YAMLSCRIPT_CLI_BIN_BASH) \
-  $(COMMON/base.mk) \
-  $(COMMON/clojure.mk) \
-  $(COMMON/docker.mk) \
-  $(COMMON/native.mk) \
-  $(lastword $(MAKEFILE_LIST)) \
-
-ifdef YS_NATIVE_BUILD_STATIC
-ifeq (true,$(IS_LINUX))
-ifeq (true,$(IS_INTEL))
-YS_BUILD_DEPS := $(MUSL_GCC) $(YS_BUILD_DEPS)
-NATIVE_OPTS += \
-  -H:CCompilerOption=-Wl,-z,stack-size=2097152 \
-  --static \
-  --libc=musl
-endif
-endif
-endif
-
 
 #------------------------------------------------------------------------------
 build:: $(CLI_DEPS)
@@ -44,12 +23,7 @@ install: $(CLI_DEPS)
 	install -m 755 $(CLI_BIN_BASH) \
 	  $(PREFIX)/bin/
 
-<<<<<<< HEAD
 # jar: $(CLI_JAR)
-=======
-jar: $(YAMLSCRIPT_CLI_JAR_PATH)
-	@$(MAKE) -s -C $(RAPIDYAML) $(RAPIDYAML_INSTALLED)
->>>>>>> a27837f5 (rapidyaml: Working with native-image)
 
 test: test-run
 
@@ -96,6 +70,8 @@ $(CLI_BIN_BASH): $(CLI_BIN_BASH_SRC)
 
 $(CLI_JAR): $(CLI_JAR_DEPS)
 	$(LEIN) uberjar
+	jar -uf $@ \
+	  -C $(RAPIDYAML_DIR)/native/ librapidyaml.0.8.0.so
 	touch $@
 
 $(CORE_INSTALLED):

@@ -2,6 +2,7 @@ include ../../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
 include $(COMMON)/python.mk
+include $(COMMON)/vars-rapidyaml.mk
 
 # TODO change to static library!
 # https://www.graalvm.org/latest/reference-manual/native-image/guides/build-static-executables/

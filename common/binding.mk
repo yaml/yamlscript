@@ -1,3 +1,4 @@
+include $(COMMON)/vars-rapidyaml.mk
 include $(COMMON)/vars-libys.mk
 
 test:: $(LIBYS_SO_FQNP)

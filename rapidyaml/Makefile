@@ -1,10 +1,11 @@
 include ../common/base.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/java.mk
+include $(COMMON)/vars-rapidyaml.mk
 
 RAPIDYAML_CLASS := $(RAPIDYAML_JAVA:.java=.class)
 RAPIDYAML_CLASSES := \
-  $(RAPIDYAML_CLASS:$(RAPIDYAML)/src/main/java/%=-C src/main/java %)
+  $(RAPIDYAML_CLASS:$(ROOT)/rapidyaml/src/main/java/%=-C src/main/java %)
 
 
 #------------------------------------------------------------------------------
@@ -18,15 +19,15 @@ jar: $(RAPIDYAML_JAR)
 jar-test: $(RAPIDYAML_JAR)
 	java -jar $<
 
-install:: $(RAPIDYAML_INSTALLED)
+# install:: $(RAPIDYAML_INSTALLED)
 
 test:: build $(JAVA_INSTALLED)
 	$(MAKE) -C native $@
-	YS_RAPIDYAML_MAVEN_TEST=1 $(MVN) $@
+	YS_TESTING=1 $(MVN) $@
 
 test-x: build $(JAVA_INSTALLED)
 	$(MAKE) -C native test
-	YS_RAPIDYAML_MAVEN_TEST=1 $(MVN) -X -e test
+	YS_TESTING=1 $(MVN) -X -e test
 
 clean::
 	$(RM) $(RAPIDYAML_CLASS) $(RAPIDYAML_SO) $(RAPIDYAML_LIB)
@@ -52,16 +53,16 @@ $(RAPIDYAML_LIB): $(RAPIDYAML_JNI_H)
 	$(MAKE) -C native $@
 
 $(RAPIDYAML_INSTALLED): $(RAPIDYAML_JAR)
-ifdef YS_MAVEN_TEST
-	YS_RAPIDYAML_MAVEN_TEST=1 $(MVN) install
-else
+ifdef YS_MAVEN_TEST_SKIP
 	$(MVN) install -Dmaven.test.skip
+else
+	YS_TESTING=1 $(MVN) install
 endif
 	touch $@
 
 $(RAPIDYAML_JAR): $(RAPIDYAML_CLASS) $(RAPIDYAML_SO)
 	$(JAR) -cf $@ $(RAPIDYAML_CLASSES)
-	$(JAR) -uf $@ -C $(RAPIDYAML)/native/ $(RAPIDYAML_SO_NAME)
+	$(JAR) -uf $@ -C $(ROOT)/rapidyaml/native/ $(RAPIDYAML_SO_NAME)
 	$(JAR) -umf manifest.txt $@
 
 $(RAPIDYAML_CLASS): $(RAPIDYAML_JAVA) $(JAVA_INSTALLED)
