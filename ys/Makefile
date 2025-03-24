@@ -9,10 +9,6 @@ BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
 test := test/
 
-# override PATH := $(ROOT)/ys/bin:$(PATH)
-# export PATH
-
-
 #------------------------------------------------------------------------------
 build:: $(CLI-DEPS)
 
@@ -73,6 +69,9 @@ $(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)
 
 $(CLI-JAR): $(LEIN) $(CLI-JAR-DEPS)
 	lein uberjar
+	jar -uf $@ \
+	  -C $(RAPIDYAML_DIR)/native/ librapidyaml.0.8.0.so
+	touch $@
 
 $(CORE-INSTALLED): $(CORE-JAR)
 	@$(MAKE) -C $(CORE-DIR) $@ > /dev/null 2>&1

@@ -1,3 +1,5 @@
+include $(COMMON)/vars-rapidyaml.mk
+
 CORE-DIR := $(ROOT)/core
 CORE-JAR := $(CORE-DIR)/target/core-$(YAMLSCRIPT_VERSION)-standalone.jar
 CORE-DEPS := $(shell find $(CORE-DIR)/src -name '*.clj')
