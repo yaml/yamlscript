@@ -2580,7 +2580,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              5 min read
+                              6 min read
                             
                           </span>
                         </div>
@@ -2765,6 +2765,37 @@ A function that ignores its arguments and returns nothing.</p>
 will install a YS binary under <code>/tmp</code> and use it to run that file.</p>
 <p>We also set the <code>YS_FORMAT</code> environment variable to <code>json</code>, which tells YS to
 <code>--load</code> the file starting in data mode.</p>
+<div class="admonition note">
+<p class="admonition-title">Update</p>
+<p>It seems that you can't source a process substitution in Bash 3.2 (the
+default <code>/bin/bash</code> on MacOS).
+Fortunately, this variation works on all the versions of Bash used on Linux
+and MacOS:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>/dev/stdin<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export YS_FORMAT=json&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>curl<span class="w"> </span><span class="s1">&#39;-s&#39;</span><span class="w"> </span><span class="s1">&#39;https://getys.org/run&#39;</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>:
+</code></pre></div>
+</div>
+<details>
+<summary>How can that be valid YS?</summary>
+<p>Again, this is both valid Bash and valid YS!
+Here's how YS compiles the <code>source</code> line to Clojure code:</p>
+<div class="highlight"><pre><span></span><code>$ ys -c -
+!YS-v0
+source /dev/stdin &lt;&lt;&lt;&quot;$(echo &#39;export YS_FORMAT=json&#39; &amp;&amp; curl &#39;-s&#39; &#39;https://getys.org/run&#39;)&quot; &quot;$@&quot;:
+
+(source
+#&quot;dev&quot;
+stdin
+&lt;&lt;&lt;
+(echo &quot;export YS_FORMAT=json&quot; &amp;&amp; curl &quot;-s&quot; &quot;https://getys.org/run&quot;)
+&quot;$@&quot;)
+</code></pre></div>
+<p>The YS <code>source</code> function ignores its arguments, but those arguments need to
+be valid YS code.
+Ironically here <code>/dev/stdin</code> compiles as the regex form <code>/dev/</code> followed by
+the symbol <code>stdin</code>!
+Also <code>&lt;&lt;&lt;</code> is valid syntax for a YS operator, but currently there is no
+operator called <code>&lt;&lt;&lt;</code> in YS.</p>
+</details>
 <h2 id="but-why">But Why?<a class="headerlink" href="#but-why" title="Permanent link">🔗</a></h2>
 <p>Ok, neat trick, but how is this useful in the real world?</p>
 <p>First off it's a great way to write a YS program for someone who might not have
