@@ -14,12 +14,10 @@ DEFAULT_VERSION=0.1.95
 main() (
   setup "$@"
 
-  if [[ ${TYPE-} == bin ]]; then
+  if [[ ${BIN-} ]]; then
     install ys
-  elif [[ ${TYPE-} == lib ]]; then
+  elif [[ ${LIB-} ]]; then
     install libyamlscript
-  elif [[ ${TYPE-} ]]; then
-    die "Unsupported value TYPE='$TYPE'"
   else
     install ys
     install libyamlscript
