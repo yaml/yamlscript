@@ -5,7 +5,7 @@
   exit 1
 }
 
-[[ ${YS_DEBUG-} == 1 ]] && set -x
+[[ ${DEBUG-} == 1 ]] && set -x
 
 set -e -u -o pipefail
 
@@ -14,12 +14,12 @@ DEFAULT_VERSION=0.1.95
 main() (
   setup "$@"
 
-  if [[ ${YS_TYPE-} == bin ]]; then
+  if [[ ${TYPE-} == bin ]]; then
     install ys
-  elif [[ ${YS_TYPE-} == lib ]]; then
+  elif [[ ${TYPE-} == lib ]]; then
     install libyamlscript
-  elif [[ ${YS_TYPE-} ]]; then
-    die "Unsupported value YS_TYPE='$YS_TYPE'"
+  elif [[ ${TYPE-} ]]; then
+    die "Unsupported value TYPE='$TYPE'"
   else
     install ys
     install libyamlscript
@@ -43,7 +43,7 @@ install() (
     make -s --no-print-directory -C "$name"-* install
   )
 
-  if [[ ! ${YS_QUIET-} &&
+  if [[ ! ${QUIET-} &&
         $name == ys &&
         $PATH != *"$PREFIX"/bin*
      ]]; then
@@ -59,7 +59,7 @@ install() (
 "
   fi
 
-  if [[ ! ${YS_QUIET-} &&
+  if [[ ! ${QUIET-} &&
         $name == libyamlscript &&
         $PREFIX != "$HOME/.local" &&
         $PREFIX != /usr/local &&
@@ -72,16 +72,8 @@ install() (
 )
 
 setup() {
-  [[ ${VERSION-} =~ ^0\.1\.\d+$ ]] &&
-    die "YS: Please use YS_VERSION instead of VERSION"
-  [[ ${PREFIX-} ]] &&
-    die "YS: Please use YS_PREFIX instead of PREFIX"
-  [[ ${BIN-} ]] &&
-    die "YS: Please use YS_TYPE=bin instead of BIN=1"
-  [[ ${LIB-} ]] &&
-    die "YS: Please use YS_TYPE=lib instead of LIB=1"
 
-  vers=${YS_VERSION:-$DEFAULT_VERSION}
+  vers=${VERSION:-$DEFAULT_VERSION}
 
   if [[ ! ${PREFIX-} ]]; then
     if [[ $(id -u) == 0 ]]; then
