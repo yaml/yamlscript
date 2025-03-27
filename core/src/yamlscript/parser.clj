@@ -201,9 +201,7 @@
           get-str (fn [i]
                     (let [off (aget masks (inc i))
                           len (aget masks (+ i 2))]
-                      (reduce
-                        (fn [slice i] (str slice (char (aget buffer i))))
-                        "" (range off (+ off len)))))]
+                      (String. buffer off len StandardCharsets/UTF_8)))]
 
       (loop [i 0, tag nil, anchor nil, events []]
         (if (< i needed)
@@ -253,11 +251,9 @@
           get-str (fn [i]
                     (let [off (.get masks ^Long (inc i))
                           len (.get masks ^Long (+ i 2))]
-                      ;; need string not bytes
-                      (reduce
-                        (fn [slice i] (str slice
-                                        (char (.get srcbuffer ^Long i))))
-                        "" (range off (+ off len)))))]
+                      (.toString
+                        (.decode StandardCharsets/UTF_8
+                          (.slice srcbuffer (int off) (int len))))))]
 
       (loop [i 0, tag nil, anchor nil, events []]
         (if (< i needed)
