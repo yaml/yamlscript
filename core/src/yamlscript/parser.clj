@@ -185,7 +185,7 @@
     Evt/FOLD :>
     nil))
 
-(defn parse-rapidyaml [^String yaml-string]
+(defn parse-rapidyaml-arr [^String yaml-string]
   (rest
     (let [parser ^Rapidyaml (new Rapidyaml)
           _ (when (TIMER)
@@ -253,6 +253,7 @@
           get-str (fn [i]
                     (let [off (.get masks ^Long (inc i))
                           len (.get masks ^Long (+ i 2))]
+                      ;; need string not bytes
                       (reduce
                         (fn [slice i] (str slice
                                         (char (.get srcbuffer ^Long i))))
@@ -289,15 +290,14 @@
               (recur i tag anchor events)))
           events)))))
 
+
 (defn parse-fn []
   (if-let [parser-name (System/getenv "YS_PARSER")]
     (condp = parser-name
       "" parse-snakeyaml
       "snake" parse-snakeyaml
-      "rapid" parse-rapidyaml
+      "rapid-arr" parse-rapidyaml-arr
       "rapid-buf" parse-rapidyaml-buf
-      "ryml" parse-rapidyaml
-      "ryml-buf" parse-rapidyaml-buf
       (die "Unknown YS_PARSER value: " parser-name))
     parse-snakeyaml))
 
