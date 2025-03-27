@@ -249,11 +249,11 @@
           masks (Rapidyaml/mkIntBuffer needed)
           _ (.parseYsToEvtBuf parser srcbuffer masks)
           get-str (fn [i]
-                    (let [off (.get masks ^Long (inc i))
-                          len (.get masks ^Long (+ i 2))]
+                    (let [off (.get masks ^int (inc i))
+                          len (.get masks ^int (+ i 2))]
                       (.toString
                         (.decode StandardCharsets/UTF_8
-                          (.slice srcbuffer (int off) (int len))))))]
+                          (.slice srcbuffer off len)))))]
 
       (loop [i 0, tag nil, anchor nil, events []]
         (if (< i needed)
