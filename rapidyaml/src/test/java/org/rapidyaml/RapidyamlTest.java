@@ -36,6 +36,54 @@ public class RapidyamlTest extends TestCase
         return new TestSuite(RapidyamlTest.class);
     }
 
+    public void testByteBuffer2Slice2Str()
+    {
+        String str = "0123456789𝄞✅★";
+        byte[] arr = str.getBytes(StandardCharsets.UTF_8);
+        ByteBuffer buf = ByteBuffer.allocateDirect(arr.length);
+        buf.put(arr);
+        assertEquals("012", StandardCharsets.UTF_8.decode(buf.slice(0, 3)).toString());
+        assertEquals("123", StandardCharsets.UTF_8.decode(buf.slice(1, 3)).toString());
+        assertEquals("234", StandardCharsets.UTF_8.decode(buf.slice(2, 3)).toString());
+        assertEquals("345", StandardCharsets.UTF_8.decode(buf.slice(3, 3)).toString());
+        assertEquals("456", StandardCharsets.UTF_8.decode(buf.slice(4, 3)).toString());
+        assertEquals("0123", StandardCharsets.UTF_8.decode(buf.slice(0, 4)).toString());
+        assertEquals("1234", StandardCharsets.UTF_8.decode(buf.slice(1, 4)).toString());
+        assertEquals("2345", StandardCharsets.UTF_8.decode(buf.slice(2, 4)).toString());
+        assertEquals("3456", StandardCharsets.UTF_8.decode(buf.slice(3, 4)).toString());
+        assertEquals("4567", StandardCharsets.UTF_8.decode(buf.slice(4, 4)).toString());
+        assertEquals("01234", StandardCharsets.UTF_8.decode(buf.slice(0, 5)).toString());
+        assertEquals("12345", StandardCharsets.UTF_8.decode(buf.slice(1, 5)).toString());
+        assertEquals("23456", StandardCharsets.UTF_8.decode(buf.slice(2, 5)).toString());
+        assertEquals("34567", StandardCharsets.UTF_8.decode(buf.slice(3, 5)).toString());
+        assertEquals("45678", StandardCharsets.UTF_8.decode(buf.slice(4, 5)).toString());
+        assertEquals("𝄞", StandardCharsets.UTF_8.decode(buf.slice(10, 4)).toString());
+        assertEquals("𝄞✅", StandardCharsets.UTF_8.decode(buf.slice(10, 7)).toString());
+        assertEquals("𝄞✅★", StandardCharsets.UTF_8.decode(buf.slice(10, 10)).toString());
+        assertEquals("✅", StandardCharsets.UTF_8.decode(buf.slice(14, 3)).toString());
+        assertEquals("✅★", StandardCharsets.UTF_8.decode(buf.slice(14, 6)).toString());
+        assert("012".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(0, 3))));
+        assert("123".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(1, 3))));
+        assert("234".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(2, 3))));
+        assert("345".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(3, 3))));
+        assert("456".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(4, 3))));
+        assert("0123".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(0, 4))));
+        assert("1234".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(1, 4))));
+        assert("2345".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(2, 4))));
+        assert("3456".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(3, 4))));
+        assert("4567".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(4, 4))));
+        assert("01234".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(0, 5))));
+        assert("12345".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(1, 5))));
+        assert("23456".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(2, 5))));
+        assert("34567".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(3, 5))));
+        assert("45678".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(4, 5))));
+        assert("𝄞".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(10, 4))));
+        assert("𝄞✅".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(10, 7))));
+        assert("𝄞✅★".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(10, 10))));
+        assert("✅".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(14, 3))));
+        assert("✅★".contentEquals(StandardCharsets.UTF_8.decode(buf.slice(14, 6))));
+    }
+
     public void testPass() { }
 
     public void testPlainMap()
