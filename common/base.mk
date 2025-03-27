@@ -41,10 +41,6 @@ chown::
 clean-all::
 	$(MAKE) -C $(ROOT) $@
 
-docker-build::
-
-docker-test::
-
 always:
 
 env::

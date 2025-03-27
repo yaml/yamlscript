@@ -45,7 +45,6 @@ LEIN_REPL_OPTIONS := \
 #------------------------------------------------------------------------------
 
 clean::
-	$(RM) Dockerfile
 	$(RM) -r .lein-*
 	$(RM) -r reports/ target/
 
@@ -128,7 +127,7 @@ ifdef PORT
   repl-port := :port $(PORT)
 endif
 
-.nrepl-pid: $(LEIN)
+.nrepl-pid: $(LEIN) repl-deps
 	( \
 	  $< $(LEIN_REPL_OPTIONS) repl :headless $(repl-port) & \
 	  echo $$! > $@ \

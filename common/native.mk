@@ -6,10 +6,12 @@ NATIVE_OPTS := \
   --initialize-at-build-time \
   --enable-preview \
   --enable-url-protocols=https \
+  --emit=build-report \
   -march=compatibility \
+  -H:IncludeResources=SCI_VERSION \
+  -H:IncludeResources='librapidyaml\.0\.8\.0\.so' \
   -H:ReflectionConfigurationFiles=reflection.json \
   -H:+ReportExceptionStackTraces \
-  -H:IncludeResources=SCI_VERSION \
   -H:Log=registerResource: \
   -J-Dclojure.spec.skip-macros=true \
   -J-Dclojure.compiler.direct-linking=true \

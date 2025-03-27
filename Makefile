@@ -22,12 +22,14 @@ BINDINGS := \
     rust \
 
 DIRS := \
+    rapidyaml \
     core \
     libyamlscript \
     $(BINDINGS) \
     ys \
 
 BUILD_DIRS := \
+    rapidyaml \
     libyamlscript \
     go \
     nodejs \
@@ -49,9 +51,6 @@ PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
 REALCLEAN := $(DIRS:%=realclean-%)
 DISTCLEAN := $(DIRS:%=distclean-%)
-DOCKER_BUILD := $(DIRS:%=docker-build-%)
-DOCKER_TEST := $(DIRS:%=docker-test-%)
-DOCKER_SHELL := $(DIRS:%=docker-shell-%)
 
 export HEAD := $(shell git rev-parse HEAD)
 
@@ -142,7 +141,7 @@ test: $(TEST)
 test-core:
 	$(MAKE) -C core test v=$v
 test-ys:
-	$(MAKE) -C ys test-all v=$v GRAALVM_O=b
+	$(MAKE) -C ys test v=$v GRAALVM_O=b
 test-%: %
 	$(MAKE) -C $< test v=$v GRAALVM_O=b
 test-unit:
@@ -262,7 +261,9 @@ bump: $(BUILD_BIN_YS)
 
 $(CLEAN):
 clean: $(CLEAN)
-	$(RM) -r libyamlscript/lib ys/bin $(MAVEN_REPOSITORY)/yamlscript
+	$(RM) -r $(MAVEN_REPOSITORY)/yamlscript
+	$(RM) -r $(MAVEN_REPOSITORY)/org/yamlscript
+	$(RM) -r libyamlscript/lib ys/bin
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) -r homebrew-yamlscript
@@ -289,24 +290,6 @@ distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/.cache .lsp/
 
-# XXX Limit removing ~/.m2 to ingy until we can get ~/.m2 to not be used
 sysclean: realclean
 	$(RM) -r $(YS_TMP)
 	$(RM) -r /tmp/yamlscript-* /tmp/ys-local
-ifeq (ingy,$(USER))
-	$(RM) -r $(HOME)/.m2
-endif
-
-$(DOCKER_BUILD):
-docker-build: $(DOCKER_BUILD)
-docker-build-%: %
-	$(MAKE) -C $< docker-build
-
-$(DOCKER_TEST):
-docker-test: $(DOCKER_TEST)
-docker-test-%: %
-	$(MAKE) -C $< docker-test v=$v
-
-$(DOCKER_SHELL):
-docker-shell-%: %
-	$(MAKE) -C $< docker-shell v=$v

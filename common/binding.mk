@@ -1,11 +1,10 @@
-include $(COMMON)/docker.mk
+include $(COMMON)/vars-rapidyaml.mk
+include $(COMMON)/vars-libys.mk
 
-test:: $(LIBYAMLSCRIPT_SO_FQNP)
+test:: $(LIBYS_SO_FQNP)
 
-$(LIBYAMLSCRIPT_SO_FQNP): | $(ROOT)/libyamlscript
+$(LIBYS_SO_FQNP): | $(ROOT)/libyamlscript
 	$(MAKE) -C $(ROOT)/libyamlscript build
-
-export PATH := $(BUILD_BIN):$(PATH)
 
 build-doc:: build-bin
 

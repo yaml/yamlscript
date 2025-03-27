@@ -146,7 +146,7 @@ Object {"bar": Object {"oh": String("Hello")}, "baz": String("Hello, World!"), "
 You can install this module like any other Rust module:
 
 ```bash
-$ cargo add yamlscript
+cargo add yamlscript
 ```
 
 but you will need to have a system install of `libyamlscript.so`.
@@ -154,7 +154,7 @@ but you will need to have a system install of `libyamlscript.so`.
 One simple way to do that is with:
 
 ```bash
-$ curl https://yamlscript.org/install | bash
+curl https://yamlscript.org/install | bash
 ```
 
 > Note: The above command will install the latest version of the YAMLScript
