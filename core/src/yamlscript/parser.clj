@@ -292,8 +292,9 @@
     (condp = parser-name
       "" parse-snakeyaml
       "snake" parse-snakeyaml
-      "rapid-arr" parse-rapidyaml-arr
+      "rapid" parse-rapidyaml-buf
       "rapid-buf" parse-rapidyaml-buf
+      "rapid-arr" parse-rapidyaml-arr
       (die "Unknown YS_PARSER value: " parser-name))
     parse-snakeyaml))
 
