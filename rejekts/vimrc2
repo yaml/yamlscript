@@ -1,0 +1,21 @@
+map q ;
+
+au BufRead,BufNewFile *.ys set filetype=yaml
+if getline(1) =~ '!yamlscript'
+  setfiletype yaml
+endif
+if getline(1) =~ '/usr/bin/env ys-0'
+  setfiletype yaml
+endif
+
+map qq :qa!<cr><cr><cr>
+map \c :set ft=clojure<cr>
+map \y :set ft=yaml<cr>
+map \m :set ft=markdown<cr>
+map \n :set number<cr>
+map \x :set ft=none<cr>
+
+colorscheme desert
+syntax enable
+hi Normal ctermbg=16 guibg=#000000
+hi LineNr ctermbg=16 guibg=#000000

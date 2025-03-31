@@ -1,0 +1,10 @@
+---
+- key1: val1
+- key2: val2
+
+--- !yamlscript/v0:
+config:
+  database::        # :: switches to code mode, merge is a function not a string
+    merge +++.0::   # :: switched back to data mode, key3 is a string
+      key3: val3
+

@@ -1,0 +1,21 @@
+!yamlscript/v0:
+
+::
+  use-pod: q(org::babashka/go-sqlite3) "0.2.3"
+  require pod::babashka::go-sqlite3: => sqlite
+
+  url =: "https://raw.githubusercontent.com/dominictarr/\
+          random-name/refs/heads/master/first-names.json"
+  names =: curl(url):json/load
+  defn name3(): names:shuffle.take(3)
+
+a key: a value
+home: ENV.HOME
+friends:: name3()
+enemies:: name3().zipmap(name3()):seq.map(joins)
+ship-to:
+  inv =: load('invoice.yaml')
+  address:: inv.ship-to.address
+number:: sqlite/query(':memory:' ["SELECT 41 + 1 AS sum"]).0.sum
+
+

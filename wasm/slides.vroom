@@ -1,0 +1,165 @@
+---- config
+title: YS meets Wasm
+indent: 5
+
+# auto_size: 1
+height: 25
+width: 87
+
+vim_opts: '-u NONE'
+skip: 0
+top: 2
+before: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+Ingy, YS and Wasm
+
+
+----
+== Ingy's Journey to YS - 2000-2009
+
+* 90's - Assembly Programmer for 8 years!
+* Late 90's - Switched to Perl
+  * Became enamored with Modules/CPAN
+  * 200+ CPAN pkgs. Also PyPI, RubyGems, etc
+* 2000
+  * Wrote Inline.pm - Perl + C + 25 others
+  * Open Source, OSCON, Meetups
+  * ActiveState: Perl, Python, Tcl, Ruby
+* 2001
+  * YAML was born
+  * OSCON, YAPC, OSDC regular speaker
+* 2009
+  * Coined "Acmeism" (polyglot modules)
+    * Ideas (Modules/Abstractions) w/o Borders
+  * YAML 1.2 spec released
+
+
+----
+== About Acmeism
+
+* Find a way to publish ideas everywhere, instantly
+  * "Ideas" == Modules
+
+* Find a language that compiles to shared libraries
+  * High level, not C / C++
+
+* Create tooling to publish everywhere
+  * https://github.com/ingydotnet/pst#readme
+
+* A fun pipe-dream :)
+
+
+----
+== Ingy's Journey to YS - 2010-2019
+
+* Stuck with YAML
+* Acmeist search for shared lib language
+* Pegex - Acmeist PEG
+* Published packages in many languages
+* Took over PyYAML and libyaml maintenance
+* 2016 - HPE / SchemaType
+* 2017+ - New YAML Core Team formed
+  * Ingy Tina Panto Eemeli Thom
+
+
+----
+== Ingy's Journey to YS - 2020-2025
+
+* 2021 - Pubished 1.2.2 YAML spec
+* Realized that S(pec)DD is not for YAML
+* 2022 Started Lingy - Clojure for Perl
+  * YAMLScript was an alternative syntax
+* July 2023 - TPRC Toronto
+* Learned about GraalVM + SCI
+  * Perfect Storm - All in for YS
+  * Gateway to realizing Acmeism
+* 2024 - No $job. Only YS.
+  * 5 YS conference presentations
+* 2025 - Focus on YS adoption
+  * Funding for YS
+
+
+----
+== Primary YS Use Cases
+
+* Best YAML loader for all languages
+  * Even for plain old YAML
+* Add clean code to YAML at any level
+* YAML Configs are YS
+* YS is 100% YAML
+* Work great for Dev and DevOps
+  * HelmYS, SchemaYS, MarkdownYS, TestYS
+
+
+----
+== Quick YS Demos
+
+$ yamllm 'Talk about Fermyon and Wasm'
+$ vim $( which yamllm ).ys
+
+$ ys fizzbuzz.ys 16
+$ vim fizzbuzz.ys
+$ ys -x fizzbuzz.ys 16
+
+* https://gist.github.com/ingydotnet/a65777d8b839ac520381b5d3f6418b2a
+  * (RC)
+* https://gist.github.com/ingydotnet/1a0be0de39c6114424d1062b463cc2bc
+  * (gist)
+
+
+----
+== Other Use Cases
+
+* YS capabilities and ambitions run deep
+  * Too much to unpack today
+
+* Excellent Scripting Language
+  * YS repo tooling uses YS
+
+* Compiles to binary
+* Great acmeist language
+  * Write a library in YS
+  * Compile to shared
+  * Auto bind to 42 languages
+  * make publish  # !!!
+
+* Sounds like Wasm!
+
+
+----
+== YS and Wasm
+
+* https://gist.github.com/ingydotnet/4f7aba3e7fd168624668d7f1dd50c370
+
+* wasmtime is structured much like YS
+  * Binary executable Linux/Mac/Windows
+  * Shared lib bound to other languages
+* YS should adopt WIT for Acmeist APIs
+  * Uses JSON now
+* YS should load .wasm modules
+  * Same as YS / Clojure modules
+  * From Git, Maven, Web, Local
+
+
+----
+== Discussion Topics
+
+* What are current Wasm pain points
+  * Can YS help?
+* Can Wasm be part of YS ecosystem
+  (YS loads Wasm modules)
+* Can YS be part of Wasm ecosystem
+  * Wasm loads YS compiled to shared
+  * or compiled to Wasm?
+* Can WIT target non-wasm modules?
+* Wasm Governance
+  * Mozilla, BytecodeAlliance, CNCF, Fermyon…
+* Wasm Tools and Implementations
+* How to foster YS adoption?
+  CNCF?
+* PTS - May 1st - Leipzig.de

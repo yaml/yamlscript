@@ -1,0 +1,8 @@
+
+!yamlscript/v0
+
+# Change S-Expressions to YeS-Expressions
+# We'll make this 1 line
+# Doesn't matter how many lines
+
+each([i range(1 11)] println(str(i ") Hello!")))

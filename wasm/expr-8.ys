@@ -1,0 +1,5 @@
+!yamlscript/v0
+
+# Print Hello 10 times:
+each i (1 .. 10):
+  say: "$i) Hello!"

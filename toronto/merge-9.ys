@@ -1,0 +1,9 @@
+---
+- key1: val1
+- key2: val2
+
+--- !yamlscript/v0:
+config:
+  database: !.merge(+++.$)
+    key3: val3
+

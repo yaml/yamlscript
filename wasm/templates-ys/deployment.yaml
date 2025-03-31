@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:: chart-fullname
+  labels:: common-labels()
+spec:
+  :when-not Values.autoscaling.enabled.?::
+   replicas:: Values.replicaCount
+  selector:
+    matchLabels:: selectorLabels()
+  template:
+    metadata:
+      :when+ Values.podAnnotations.?::
+       annotations:: _
+      labels:: common-labels()
+    spec:
+      :when+ Values.imagePullSecrets.?::
+       imagePullSecrets:: _
+      serviceAccountName:: serviceAccountName
+      securityContext:: Values.podSecurityContext
+      containers:
+      - name:: Chart.name
+        securityContext:: Values.securityContext
+        image:: "$(Values.image.repository):\
+                 $(Values.image.tag ||| Chart.appVersion)"
+        imagePullPolicy:: Values.image.pullPolicy
+        ports:
+        - name: http
+          containerPort:: Values.service.port
+          protocol: TCP
+        livenessProbe:: Values.livenessProbe
+        readinessProbe:: Values.readinessProbe
+        resources:: Values.resources
+        :when+ Values.volumeMounts.?:: {volumeMounts:: _}
+      :when+ Values.volumes.?::      {volumes:: _}
+      :when+ Values.nodeSelector.?:: {nodeSelector:: _}
+      :when+ Values.affinity.?::     {affinity:: _}
+      :when+ Values.tolerations.?::  {tolerations:: _}

@@ -1,0 +1,14 @@
+!yamlscript/v0
+
+# Turn the single scalar into a mapping
+# with a single pair
+
+each [i range(1 11)]: println(str(i ") Hello!"))
+
+# Equivalent YS forms:
+# (f a b c)
+# f(a b c)
+# f: a b c
+# f a: b c
+# f a b: c
+# f a b c:

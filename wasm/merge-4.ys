@@ -1,0 +1,13 @@
+# Or no anchors. The '+++' special variable contains everything.
+---
+- key1: val1
+- key2: val2
+
+# We can use . paths from the anchor.
+# Must be in code-mode.
+--- !yamlscript/v0/data
+config:
+  database:
+    <<:: -[+++.0.0 +++.$.1]  # .$ means .last()
+    key3: val3
+

@@ -1,0 +1,7 @@
+#!/usr/bin/env ys-0
+source <(curl '-s' 'https://yamlscript.org/run-ys') "$@" :
+
+defn main(input='Hello, World!'):
+  s =: set(\\A .. \\Z) + (\\a .. \\z)
+  say: cycle(s).drop(13 * 2)
+       .zipmap(s).escape(input)
