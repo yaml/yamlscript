@@ -1,0 +1,14 @@
+---
+defaults:
+- &map1
+  key1: val1
+- &map2
+  key2: val2
+
+config:
+  database:
+    <<:
+    - *map1
+    - *map2
+    key3: val3
+

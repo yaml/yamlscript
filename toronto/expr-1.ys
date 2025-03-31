@@ -1,0 +1,8 @@
+!yamlscript/v0
+
+# No changes except the !yamlscript/v0 for code mode
+# This YAML document is a single plain scalar!
+
+(doall
+ (for [i (range 1 11)]
+  (println (str i ") Hello!"))))

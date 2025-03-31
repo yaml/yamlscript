@@ -1,0 +1,22 @@
+!yamlscript/v0
+
+defn even-nums(start end):
+  initial-vec =: -[]
+  step =: 1
+  loop [current start, result initial-vec]:
+    # Make if use mapping pairs
+    # Make operators infix
+    (if (> current end)
+      result
+      (recur (+ current step),
+             (if (even? current)
+               (conj result current)
+               result)))
+
+defn main:
+  (): (main 1 100)
+  (y): (main 1 y)
+  # Use each instead of doall
+  (x y):
+    each [i (even-nums x y)]:
+             (println i)

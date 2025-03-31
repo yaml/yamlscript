@@ -1,0 +1,23 @@
+!YS v0:
+::
+  defn greet(name='World'): |
+    Hi, I'm $name,
+    Nice to meet you!
+vars =: load('vars.yaml')
+
+key: value
+name:: &name vars
+       .names.rand-nth()
+date:: "Today is
+        $(sh('date')
+        .out:chomp)"
+me =: ENV.USER
+user:: uc(me)
+:when (rand(10) ** 2) > 42::
+  maybe: this pair
+greeting 1:: greet()
+greeting 2:: lc(me):uc1:greet
+greeting 3::
+  greet: -'<' + *name + '>'
+
+

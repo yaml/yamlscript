@@ -1,0 +1,12 @@
+---
+- key1: val1
+- key2: val2
+
+# '!yamlscript/v0:' is short for
+# '!yamlscript/v0/data'
+--- !yamlscript/v0:
+config:
+  database:
+    <<:: +++.0
+    key3: val3
+

@@ -1,0 +1,215 @@
+---- config
+title: The YS way to YAML
+indent: 5
+
+# auto_size: 1
+height: 25
+width: 87
+
+vim_opts: '-u NONE'
+skip: 0
+top: 2
+before: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+
+The YS way to YAML
+
+Functional YAML for Everyone
+
+by Ingy döt Net
+
+Kubernetes Rejekts
+March 30, 2025
+London
+
+https://yamlscript.org/rejekts
+
+
+----
+== What if...
+
+* YAML files could include other YAML files?
+  * or JSON files? (All JSON is YAML, right?)
+  * or CSV/TSV/XML etc?
+  * or specific parts of those data files?
+
+* YAML files could include data from the web?
+  * or from a database?
+  * or load any data source from anywhere?
+
+----
+== What if YAML let you...
+
+* Assign and use variables?
+* Apply over 1000 standard functions?
+* Use loops and conditionals?
+* Interpolate vars and exprs in any string?
+* Define your own functions?
+* Access env vars and shell commands?
+
+* Use external libraries?
+* Easily publish your own libraries?
+* Write them in any language?
+  * Including Wasm?
+
+----
+== What if there was a YAML loader library...
+
+* Like pyyaml for Python...
+* In every programming language?
+  * That worked the same everywhere?
+  * Had the most features?
+  * Was the most configurable?
+  * Was the most secure?
+  * Correctly implemented the YAML 1.2 spec?
+
+* That Drop-In replaced your current YAML library?
+  * Had the same peculiarities of said YAML library?
+  * Broke none of your users' current config files?
+
+----
+== What if the YAML dev team made a new 1.3 spec?
+
+* And there was a fully working YAML 1.3 library...
+* In every programming language...
+* From day one!
+
+----
+== I'm Ingy döt Net
+
+* I created the YAML data language
+  * 2001-2009 with Clark & Oren (1.2 spec)
+
+* I lead the YAML maintenance team
+  * 2010-present
+  * Tina, Panto, Eemeli & Thom
+  * We are planning the next spec (1.3)
+
+* I've created the "YS" YAML Framework
+  * 2023-present
+
+
+----
+== Introducing YS — The New YAML Engine
+
+* Pronounced "wise" (the plural of Y!)
+* YS addresses YAML's problems and needs...
+  * For EVERYBODY, EVERYWHERE, ALL AT ONCE!!
+* Learn all about it at:
+  * https://yamlscript.org
+
+* Your current YAML will load with YS
+* Make it functional with a `!YS-v0` tag
+* All YS code exprs are 100% valid YAML
+* Fully control which YS capabilities you allow
+
+----
+== Using YS functionality in YAML
+
+$ vim file.yaml vars.yaml -O
+$ ys -Y file.yaml
+
+---- skip
+== YS Real World CI/CD Usage
+
+* Peter wrote Calva
+  * The VSCode Clojure IDE
+* Calva had a 700 line CircleCI file
+  * Now refactored to small maintainable files
+  * Generates the equivalent config.yml
+* Inline Bash code is now in .bash files
+  * Linted with shellcheck
+  * Found and fixed Bash previous bugs
+
+* ys -Y config.ys > config.yml
+
+* https://github.com/BetterThanTomorrow/calva/tree/published/.circleci
+
+----
+== HelmYS — Helm + YS
+
+* What if Helm chart templates used YS?
+  * Instead of Go template language...
+
+* https://yamlscript.org/helmys
+  * YS templates on LHS
+  * Go templates on RHS
+
+* Chart templates are now valid YAML
+  * Use tools like 'yamllint'
+
+* Available now in Helm 3 as post-renderer
+* Helm 4 as first class (H4) plugin
+* I attend the Helm 4 planning meetings
+* Come to our ContribFest session on Weds
+
+---- skip
+== ys is the YS CLI
+
+$ ys --help
+
+* The standard top-level namespace functions:
+  $ ys -e 'say: NS:ns-map:keys:sort:text'
+  $ ys -e 'say: NS:ns-map:count'
+
+* Install with:
+  $ curl -s https://getys.org/ys | bash
+
+----
+== YS Loader Libraries
+
+* https://yamlscript.org/doc/loaders
+
+* 10 Languages so far:
+  * Clojure
+  * Go
+  * Java
+  * Julia
+  * NodeJS
+  * Perl
+  * Python
+  * Raku
+  * Ruby
+  * Rust
+
+* New bindings are easy
+  * Simple shared library binding
+  * ~ 100 lines of code in any language
+
+----
+== YS is Complete Programming Language
+
+* Functional Programming
+* Transpiles to Clojure Lisp
+* But native binary; no JVM
+
+* Learn in Online:
+  * https://exercism.org/tracks
+
+$ vim 99-bottles-of-beer.ys
+$ ys 99-bottles-of-beer.ys 3
+
+$ gist 99-bottles-of-beer.ys
+$ vim $(which gist)
+
+----
+== Let's Talk About This
+
+* For 5 minutes of YS...
+  * I hope you have 100 questions!
+
+* I'd love to:
+  * Hear about your problems and goals
+  * Discuss if YS can help you
+
+* Find me this week
+* Or online:
+  * https://yamlscript.org/ingydotnet
+
+
+== https://yamlscript.org/rejekts

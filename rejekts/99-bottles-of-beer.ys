@@ -1,0 +1,23 @@
+!YS-v0
+
+defn main(number=99):
+  :: Print the verses to "99 Bottles of Beer"
+  each num (number .. 1):
+    say: |
+      $bottles(num) of beer on the wall,
+      $bottles(num) of beer.
+      Take one down, pass it around.
+      $bottles(num.--) of beer on the wall.
+
+defn bottles(n):
+  condp eq n:
+    0    :: No more bottles
+    1    :: 1 bottle
+    else :  "$n bottles"
+
+
+
+
+
+
+

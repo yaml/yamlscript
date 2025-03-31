@@ -1,0 +1,23 @@
+!yamlscript/v0
+
+defn main(number=99):
+  :: Print the verses to "99 Charts of YAML"
+  each num (number .. 1):
+    say: |
+      $charts(num) of YAML to install,
+      $charts(num) of YAML.
+      Don't feel overwhelmed, install one with helm.
+      $charts(num.--) of YAML to install.
+
+defn charts(n):
+  condp eq n:
+    0    : 'No more charts'
+    1    : '1 chart'
+    else : "$n charts"
+
+
+
+
+
+
+
