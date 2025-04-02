@@ -1,0 +1,12 @@
+name: yamlscript
+version: 0.1.95
+description: Program in YAML — Code is Data
+
+authors:
+- Josephine Pfeiffer <hi@josie.lol>
+- Ingy döt Net <ingy@ingy.net>
+
+crystal: '>= 1.0.0'
+
+license: MIT
+repository: https://github.com/yaml/yamlscript-crystal

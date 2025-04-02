@@ -3,6 +3,7 @@ include $(COMMON)/java.mk
 
 BINDINGS := \
     clojure \
+    crystal \
     go \
     java \
     julia \
