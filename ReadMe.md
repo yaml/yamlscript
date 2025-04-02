@@ -125,6 +125,7 @@ language, giving you a great and consistent YAML experience everywhere.
 At this early stage, YS has bindings for these programming languages:
 
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+* [Crystal](https://github.com/yaml/yamlscript/crystal)
 * [Go](https://github.com/yaml/yamlscript-go),
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
@@ -336,6 +337,7 @@ https://github.com/yaml/yamlscript/tree/main/Contributing.md) for more details.
 * [Delon R.Newman](https://github.com/delonnewman) - Clojure, Java, Ruby bindings
 * [Andrew Pam](https://github.com/xanni) - Go binding
 * [Kenta Murata](https://github.com/mrkn) - Julia binding
+* [Josephine Pfeiffer](https://github.com/pfeifferj) - Crystal binding
 
 
 ## Copyright and License

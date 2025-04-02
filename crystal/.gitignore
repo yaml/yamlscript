@@ -1,0 +1,16 @@
+/lib/
+/.shards/
+/docs/
+/spec/.env
+/.crystal/
+/bin/
+/samples/
+*.dwarf
+/shard.lock
+# Don't accidentally commit shared library files
+libyamlscript.so*
+# Shell scripts that are for development only
+run_example.sh
+# Logs and other temporary files
+*.log
+*.tmp
