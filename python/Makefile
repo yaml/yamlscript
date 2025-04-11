@@ -4,33 +4,27 @@ include $(COMMON)/python.mk
 
 PYTHON_VENV := $(ROOT)/python/.venv
 
-ACTIVATE := source $(PYTHON_VENV)/bin/activate
-
-VERSION := $(shell head -n1 setup.py | cut -d"'" -f2)
+VENV := source $(PYTHON_VENV)/bin/activate
 
 export PYTHONPATH := $(ROOT)/python/lib
 
 
 #------------------------------------------------------------------------------
 
-version:
-	@echo $(VERSION)
-
 build:: build-doc
 
 build-doc:: ReadMe.md
 
-.PHONY: test
 ifdef PYTHON
 test:: test-pytest test-ffi
 endif
 
 test-pytest: $(PYTHON_VENV)
-	$(ACTIVATE) && \
+	$(VENV) && \
 	  pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
 test-ffi: $(LIBYS_SO_FQNP)
-	$(ACTIVATE) && \
+	$(VENV) && \
 	  $(PYTHON) \
 	    -c 'import yamlscript; \
 	        print(yamlscript.YAMLScript().load("inc: 41"))' && \
@@ -48,7 +42,7 @@ pkg-test: venv
 
 dist: venv MANIFEST.in .long_description.md
 	( \
-	  $(ACTIVATE) && \
+	  $(VENV) && \
 	  $(PYTHON) setup.py sdist \
 	)
 
@@ -56,7 +50,7 @@ release: publish
 
 publish: dist
 	( \
-	  $(ACTIVATE) && \
+	  $(VENV) && \
 	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz \
 	)
 
@@ -74,7 +68,7 @@ venv: $(PYTHON_VENV)
 
 $(PYTHON_VENV):
 	$(PYTHON) -mvenv $@
-	$(ACTIVATE) && \
+	$(VENV) && \
 	  pip install \
 	    pytest \
 	    pyyaml \
