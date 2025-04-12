@@ -9,20 +9,6 @@ BPAN_REPO_URL := https://github.com/bpan-org/bpan
 
 test := test/
 
-YS_BUILD_DEPS := \
-  $(YAMLSCRIPT_CLI_BIN) \
-  $(YAMLSCRIPT_CLI_BIN_BASH) \
-
-ifeq (true,$(IS_LINUX))
-ifeq (true,$(IS_INTEL))
-YS_BUILD_DEPS := $(MUSL_GCC) $(YS_BUILD_DEPS)
-NATIVE_OPTS += \
-  -H:CCompilerOption=-Wl,-z,stack-size=2097152 \
-  --static \
-  --libc=musl
-endif
-endif
-
 
 #------------------------------------------------------------------------------
 build:: $(CLI_DEPS)

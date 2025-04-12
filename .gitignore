@@ -15,6 +15,7 @@
 /website/
 /work/
 /ys-*
+/.tmp/
 
 .calva/
 *.class

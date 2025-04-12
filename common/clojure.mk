@@ -85,16 +85,9 @@ ifeq (,$(CURL))
 endif
 	$(CURL) -L -o $@ $(MAVEN_URL)
 
-$(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD) | $(MAVEN_HOME)
-	(cd $(YS_TMP) && tar xzf $< )
+$(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD)
+	(cd $(YS_TMP) && tar xzf $<)
 	touch $@
-
-$(MAVEN_HOME):
-	mkdir -p $@
-
-$(MAVEN_SETTINGS): $(ROOT)/common/maven-settings.xml
-	mkdir -p $(dir $@)
-	cp $< $@
 
 
 # REPL/nREPL management targets
