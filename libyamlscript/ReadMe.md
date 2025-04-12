@@ -57,8 +57,8 @@ to work, so there is no need to install GraalVM yourself.
 If you already have GraalVM installed, that installation will not be used and
 will not be affected by the build process.
 
-The downloaded GraalVM tarball will be placed under `/tmp/` so you only need to
-download it once.
+The downloaded GraalVM tarball will be placed under `.git/tmp/` so it only gets
+downloaded once.
 Subsequent builds will use the cached GraalVM file.
 
 You should run `make clean` between builds to delete the old build artifacts.
