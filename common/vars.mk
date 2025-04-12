@@ -1,9 +1,21 @@
 export LANG := en_US.UTF-8
 
-YS_TMP ?= /tmp/yamlscript
+GIT-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
 
-ifeq (,$(wildcard $(YS_TMP)))
-  $(shell mkdir -p $(YS_TMP))
+ifndef YS_TMP
+ifneq (,$(GIT-DIR))
+  YS_TMP := $(shell cd -P $$(dirname $(GIT-DIR)) && pwd -P)/.git/tmp
+else
+  YS_TMP := $(ROOT)/.tmp
+endif
+endif
+
+export TMPDIR := $(YS_TMP)/tmp
+export TEMP := $(TMPDIR)
+export TMP := $(TMPDIR)
+
+ifeq (,$(wildcard $(TMPDIR)))
+  $(shell mkdir -p $(TMPDIR))
 endif
 
 BUILD_BIN := $(YS_TMP)/bin
@@ -166,40 +178,28 @@ endif
 # Set MAVEN variables:
 #------------------------------------------------------------------------------
 
-MAVEN_VER := 3.9.6
+MAVEN_VER := 3.9.9
 MAVEN_SRC := https://dlcdn.apache.org/maven/maven-3/$(MAVEN_VER)/binaries
-MAVEN_TAR := apache-maven-$(MAVEN_VER)-bin.tar.gz
+MAVEN_DIR := apache-maven-$(MAVEN_VER)
+MAVEN_TAR := $(MAVEN_DIR)-bin.tar.gz
+MAVEN_DIR := $(YS_TMP)/$(MAVEN_DIR)
 MAVEN_URL := $(MAVEN_SRC)/$(MAVEN_TAR)
-
-MAVEN_HOME := $(YS_TMP)/apache-maven-$(MAVEN_VER)
 MAVEN_DOWNLOAD := $(YS_TMP)/$(MAVEN_TAR)
-MAVEN_INSTALLED := $(MAVEN_HOME)/bin/mvn
+MAVEN_BIN := $(MAVEN_DIR)/bin
+MAVEN_INSTALLED := $(MAVEN_BIN)/mvn
+MAVEN_REPOSITORY := $(YS_TMP)/.m2/repository
 
-# XXX Not always working yet:
-# export M2_HOME := $(YS_TMP)/.m2
-export M2_HOME := $(HOME)/.m2
+export MAVEN_OPTS := -Duser.home=$(YS_TMP)
 
-MAVEN_REPOSITORY := $(M2_HOME)/repository
-MAVEN_SETTINGS := $(M2_HOME)/conf/settings.xml
-
-# XXX .m2 in tmp not working yet:
-# export MAVEN_OPTS := \
-#   -Duser.home=$(YS_TMP) \
-#   -Dmaven.repo.local=$(MAVEN_REPOSITORY) \
-export MAVEN_OPTS := \
-  -Duser.home=$(HOME) \
-  -Dmaven.repo.local=$(MAVEN_REPOSITORY) \
-
-export PATH := $(MAVEN_HOME)/bin:$(PATH)
-
+export LEIN_HOME := $(YS_TMP)/lein
 export LEIN_JVM_OPTS := \
   -XX:+TieredCompilation \
   -XX:TieredStopAtLevel=1 \
   $(MAVEN_OPTS)
 
-# XXX Can't use MAVEN_SETTINGS until /tmp/yamlscript/.m2 is working:
-# JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED) $(MAVEN_SETTINGS)
 JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED)
+
+export PATH := $(MAVEN_BIN):$(PATH)
 
 
 #------------------------------------------------------------------------------

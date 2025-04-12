@@ -183,8 +183,8 @@ By default, make targets are run in the current directory.
 
 * `make sysclean`
 
-  Works like `make realclean` but also removes files cached in `/tmp/` and
-  `~/.m2/` build artifacts.
+  Works like `make realclean` but also removes all the cached build
+  dependencies.
 
 
 ## Coding Guidelines

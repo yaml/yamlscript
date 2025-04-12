@@ -4,9 +4,9 @@ set -euo pipefail
 
 set -x
 
-cd $YAMLSCRIPT_ROOT
+cd "$YAMLSCRIPT_ROOT"
 
-ys_go_root=/tmp/yamlscript-go
+ys_go_root=.git/tmp/yamlscript-go
 ys_go_url=git@github.com:yaml/yamlscript-go
 
 rm -fr $ys_go_root

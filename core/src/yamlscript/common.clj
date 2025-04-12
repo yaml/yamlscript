@@ -57,7 +57,10 @@
   (-> ^String (get-cmd-path) io/file .getParent))
 
 (defn get-cmd-args []
-  (-> ^java.lang.ProcessHandle$Info (get-process-info) .arguments .get))
+  (-> ^java.lang.ProcessHandle$Info
+      (get-process-info)
+      .arguments
+      (.orElse (into-array String []))))
 
 (defn get-cmd-pid []
   (-> ^java.lang.ProcessHandle (get-process-handle) .pid))
