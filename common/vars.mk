@@ -131,7 +131,7 @@ endif
 ### For Orable GraalVM No-Fee #################################################
 ifndef GRAALVM_CE
 GRAALVM_SRC := https://download.oracle.com/graalvm
-GRAALVM_VER ?= 23
+GRAALVM_VER ?= 24
 GRAALVM_TAR := graalvm-jdk-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
 GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/latest/$(GRAALVM_TAR)
 GRAALVM_PATH ?= $(YS_TMP)/graalvm-oracle-$(GRAALVM_VER)
