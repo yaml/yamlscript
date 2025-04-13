@@ -1,12 +1,5 @@
-SHELL := bash
-
-ROOT := $(shell \
-    cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
-
-export ROOT
-
-include $(ROOT)/common/vars.mk
-include $(ROOT)/common/java.mk
+include common/base.mk
+include $(COMMON)/java.mk
 
 BINDINGS := \
     clojure \
@@ -98,10 +91,10 @@ endif
 
 default::
 
-env:
+env::
 	@env | sort | less -FRX
 
-chown:
+chown::
 	sudo chown -R $(USER):$(USER) .
 
 ys-files:
@@ -115,7 +108,7 @@ nrepl nrepl-stop nrepl+:
 	$(MAKE) -C core $@
 
 $(BUILD):
-build: $(BUILD)
+build:: $(BUILD)
 build-%: %
 	$(MAKE) -C $< build
 
@@ -258,7 +251,7 @@ bump: $(BUILD_BIN_YS)
 	$< $(ROOT)/util/version-bump
 
 $(CLEAN):
-clean: $(CLEAN)
+clean:: $(CLEAN)
 	$(RM) -r $(MAVEN_REPOSITORY)/yamlscript
 	$(RM) -r $(MAVEN_REPOSITORY)/org/yamlscript
 	$(RM) -r libyamlscript/lib ys/bin
@@ -270,10 +263,10 @@ clean-%: %
 	$(MAKE) -C $< clean
 
 ifdef d
-realclean:
+realclean::
 else
 $(REALCLEAN):
-realclean: clean $(REALCLEAN)
+realclean:: clean $(REALCLEAN)
 	$(MAKE) -C www $@
 	$(RM) release-*
 realclean-%: %
@@ -281,13 +274,13 @@ realclean-%: %
 endif
 
 $(DISTCLEAN):
-distclean: realclean $(DISTCLEAN)
+distclean:: realclean $(DISTCLEAN)
 	$(MAKE) -C www $@
 	$(RM) -r bin/ lib/ website/
 distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/.cache .lsp/
 
-sysclean: realclean
+sysclean:: realclean
 	$(RM) -r $(YS_TMP)
 	$(RM) -r /tmp/yamlscript-* /tmp/ys-local

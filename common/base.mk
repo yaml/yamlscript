@@ -1,6 +1,9 @@
 ifneq (GNU,$(firstword $(shell $(MAKE) --version)))
   $(error Error: 'make' must be 'GNU make')
 endif
+ifeq (,$(shell which bash))
+  $(error Error: 'bash' is required but not installed)
+endif
 
 SHELL := bash
 
