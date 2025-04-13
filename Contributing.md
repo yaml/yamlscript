@@ -55,11 +55,11 @@ Clojure is a great language for writing compilers and interpreters.
 It has a great ecosystem of libraries and tools.
 It also has a fabulous community of people who are willing to help others.
 
-> NOTE: Since YAMLScript compiles to Clojure, eventually YAMLScript will likely
-be written in YAMLScript.
+> NOTE: Since YAMLScript compiles to Clojure, eventually parts of YAMLScript
+> will likely be written in YAMLScript.
 
 All the code, documentation, website and other resources are hosted in this
-[single GitHub repository](https://github.com/yamls/yamlscript).
+[single GitHub repository](https://github.com/yaml/yamlscript).
 
 
 ## The YAMLScript Community
@@ -134,7 +134,7 @@ Here's what's in the non-binding directories:
 
 ## Makefiles
 
-We use GNU make extensively for task automation in this project.
+We use GNU `make` extensively for task automation in this project.
 Almost every directory has a `Makefile`.
 Common Makefile code is refactored into `common/*.mk` files.
 
@@ -231,3 +231,9 @@ This is a growing list of coding guidelines for contributing to YAMLScript.
   Our commit subject lines start with the primary subdirectory involved,
   followed by `: `, then a short subject phrase.
   The phrase should begin with a capital letter and not end with a period.
+
+  Also the commit subject line is added to the `Changes` change log file for
+  each release.
+  The `Changes` file is a valid YAML file.
+  Thus the subject line you write must not cause the `Changes` file to be
+  invalid YAML when it is added for a release.
