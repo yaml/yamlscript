@@ -16,7 +16,7 @@ endif
 LEIN := $(BUILD_BIN)/lein
 
 LEIN_URL := \
-  https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+  https://codeberg.org/leiningen/leiningen/raw/branch/stable/bin/lein
 
 LEIN_COMMANDS := \
   check \
