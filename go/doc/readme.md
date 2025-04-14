@@ -48,7 +48,7 @@ $ curl https://yamlscript.org/install | bash
 command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
 
-See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
+See <https://yamlscript.org/doc/install/> for more info.
 
 
 ### Environment Variables
@@ -61,11 +61,3 @@ export CGO_CFLAGS="-I $HOME/.local/include"
 export CGO_LDFLAGS="-L $HOME/.local/lib"
 export LD_LIBRARY_PATH="$HOME/.local/lib"
 ```
-
-
-## Go User Feedback
-
-This is a very early version of yamlscript-go.
-Your feedback is very welcome.
-Please open an issue on this repository or chat with us directly at
-<https://matrix.to/#/#chat-yamlscript:yaml.io>.

@@ -57,4 +57,4 @@ command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
 You may need to add this install directory to `LD_LIBRARY_PATH`.
 
-See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
+See <https://yamlscript.org/doc/install/> for more info.
