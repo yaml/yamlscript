@@ -76,4 +76,4 @@ curl https://yamlscript.org/install | bash
 command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 `~/.local/bin` and `~/.local/lib` respectively.
 
-See https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript for more info.
+See <https://yamlscript.org/doc/install/> for more info.

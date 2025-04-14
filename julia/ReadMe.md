@@ -17,15 +17,14 @@ names-url =:
   "https://raw.githubusercontent.com/dominictarr/\
    random-name/master/first-names.json"
 
-name-list =: &first-names json/load(curl(names-url))
+name-list =: names-url:curl:json/load
 
 # Data object with literal keys and generated values:
-name:: rand-nth(*first-names)
-aka:: name-list.rand-nth()
+name:: iname-list:shuffle:first
+aka:: name-list:rand-nth
 age:: &num 2 * 3 * 7
-color:: &hue qw(red green blue yellow)
-          .shuffle()
-          .first()
+color:: &hue
+  rand-nth: qw(red green blue yellow)
 title:: "$(*num) shades of $(*hue)."
 ```
 
@@ -74,12 +73,12 @@ CLI binary `ys` to run:
 $ ys --compile file.ys
 (let
  [names-url "https://raw.githubusercontent.com/dominictarr/random-name/master/first-names.json"
-  name-list (_& 'first-names (json/load (curl names-url)))]
+  name-list (json/load (curl names-url))]
  (%
-  "name" (rand-nth (_** 'first-names))
+  "name" (first (shuffle name-list))
   "aka" (rand-nth name-list)
   "age" (_& 'num (mul+ 2 3 7))
-  "color" (_& 'hue (first (shuffle (qw red green blue yellow))))
+  "color" (_& 'hue (rand-nth (qw red green blue yellow)))
   "title" (str (_** 'num) " shades of " (_** 'hue) ".")))
 ```
 
@@ -142,7 +141,7 @@ command line utility, `ys`, and the shared library, `libyamlscript.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
 You may need to add this install directory to `LD_LIBRARY_PATH`.
 
-See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
+See <https://yamlscript.org/doc/install/> for more info.
 
 ## See Also
 
