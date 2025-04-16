@@ -43,7 +43,8 @@
                   (util/die (str "Invalid key for set-vars: '" key "'")))
               key (symbol key)]
           (global/intern ns key v)))
-      nil m)))
+      nil m)
+    nil))
 
 (defmacro def-vars-from-map [ns m]
   `(let [[m# ns#] (if (~m "+")
