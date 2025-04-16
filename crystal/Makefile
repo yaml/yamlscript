@@ -2,57 +2,40 @@ include ../common/base.mk
 include $(COMMON)/binding.mk
 
 # Define crystal command
+ifneq (,$(shell command -v crystal))
 CRYSTAL ?= crystal
-
-ifdef DOCKERENV
-	CRYSTAL_BIN := $(YS_TMP)/crystal/bin
-else
-	CRYSTAL_BIN := $(ROOT)/crystal/bin
 endif
+
+BASE := $(ROOT)/crystal
 
 VERSION := $(shell grep 'VERSION =' src/yamlscript/version.cr | cut -d'"' -f2)
 YAMLSCRIPT_VERSION ?= 0.1.95
-YAMLSCRIPT_FNP ?= $(HOME)/.local/lib/libyamlscript.so.$(YAMLSCRIPT_VERSION)
-LIBYAMLSCRIPT_SO_FQNP ?= $(YAMLSCRIPT_FNP)
+LIBYS_SO_PATH := $(ROOT)/libyamlscript/lib/$(LIBYS_SO_FQNP)
+BUILD_DEPS := $(LIBYS_SO_PATH)
 
 #------------------------------------------------------------------------------
 
-version:
-	@echo $(VERSION)
+build:: build-doc
 
-# Build the library and documentation
-build:: build-doc build-lib
-	@echo "Crystal binding built successfully"
+build-doc:: ReadMe.md
 
-# Copy the library file to the local lib directory
-build-lib: $(LIBYAMLSCRIPT_SO_FQNP)
-	@mkdir -p lib
-	@echo "Copying $(LIBYAMLSCRIPT_SO_FQNP) to lib/"
-	@cp -fL $(LIBYAMLSCRIPT_SO_FQNP) lib/
-	@ln -sf libyamlscript.so.$(YAMLSCRIPT_VERSION) lib/libyamlscript.so
-
-.PHONY: test run-example
 ifdef CRYSTAL
-test:: test-wrapper
+test:: run-example test-crystal test-ffi
 endif
 
-run-example: build-lib
-	@CRYSTAL_LIBRARY_PATH="$(PWD)/lib" LD_LIBRARY_PATH="$(PWD)/lib:$(LD_LIBRARY_PATH)" $(CRYSTAL) run examples/simple.cr
+run-example: $(BUILD_DEPS)
+	$(CRYSTAL) run examples/simple.cr
 
-# Use wrapper script for tests
-test-wrapper:
-	@./test_wrapper.sh
+test-crystal: $(BUILD_DEPS)
+	$(CRYSTAL) spec
 
-test-crystal: build-lib
-	@CRYSTAL_LIBRARY_PATH="$(PWD)/lib" LD_LIBRARY_PATH="$(PWD)/lib:$(LD_LIBRARY_PATH)" $(CRYSTAL) spec
-
-test-ffi: build-lib
-	@echo "Running Crystal binding FFI test..."
-	@CRYSTAL_LIBRARY_PATH="$(PWD)/lib" LD_LIBRARY_PATH="$(PWD)/lib:$(LD_LIBRARY_PATH)" $(CRYSTAL) run test/ffi.cr
+test-ffi: $(BUILD_DEPS)
+	$(CRYSTAL) run test/ffi.cr
 
 clean::
 	$(RM) -r lib bin .crystal .shards shard.lock libyamlscript.so
-	@echo
 
-realclean::
-	@echo 
+$(LIBYS_SO_PATH):
+	$(MAKE) -C $(ROOT)/libyamlscript $(LIBYS_SO_FQNP)
+
+.PHONY: test
