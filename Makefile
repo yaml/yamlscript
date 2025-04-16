@@ -91,6 +91,11 @@ endif
 
 default::
 
+cursor:
+	@echo $(TMPDIR)
+	env | grep TMPDIR
+	$@ $(ROOT)
+
 env::
 	@env | sort | less -FRX
 

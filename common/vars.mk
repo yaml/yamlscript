@@ -10,12 +10,12 @@ else
 endif
 endif
 
-export TEMPDIR := $(YS_TMP)/tmp
-export TEMP := $(TEMPDIR)
-export TMP := $(TEMPDIR)
+export TMPDIR := $(YS_TMP)/tmp
+export TEMP := $(TMPDIR)
+export TMP := $(TMPDIR)
 
-ifeq (,$(wildcard $(TEMPDIR)))
-  $(shell mkdir -p $(TEMPDIR))
+ifeq (,$(wildcard $(TMPDIR)))
+  $(shell mkdir -p $(TMPDIR))
 endif
 
 BUILD_BIN := $(YS_TMP)/bin

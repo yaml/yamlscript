@@ -72,8 +72,8 @@ $(CLI_JAR): $(CLI_JAR_DEPS)
 	$(LEIN) uberjar
 	touch $@
 
-$(CORE_INSTALLED):
+$(CORE_INSTALLED): $(CORE_JAR)
 	$(MAKE) -C $(CORE_DIR) $@
 
-$(CORE_JAR):
+$(CORE_JAR): $(CORE_DEPS)
 	$(MAKE) -C $(CORE_DIR) $@

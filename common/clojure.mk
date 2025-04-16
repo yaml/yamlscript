@@ -16,7 +16,9 @@ endif
 LEIN := $(BUILD_BIN)/lein
 
 LEIN_URL := \
-  https://codeberg.org/leiningen/leiningen/raw/branch/stable/bin/lein
+  https://raw.githubusercontent.com/technomancy/leiningen/refs/heads/stable/bin/lein
+
+#  https://codeberg.org/leiningen/leiningen/raw/branch/stable/bin/lein
 
 LEIN_COMMANDS := \
   check \
@@ -35,7 +37,6 @@ endef
 
 LEIN_REPL_OPTIONS := \
   update-in :dependencies conj '[nrepl,"1.0.0"]' -- \
-  update-in :plugins conj '[cider/cider-nrepl,"0.28.5"]' -- \
   update-in '[:repl-options,:nrepl-middleware]' \
     conj '["cider.nrepl/cider-middleware"]' -- \
 
