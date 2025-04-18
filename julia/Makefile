@@ -21,6 +21,7 @@ release:
 ifndef YS_GH_TOKEN
 	$(error YS_GH_TOKEN not found)
 endif
+	$(call need-curl)
 	curl -L -X POST \
 	  -H "Accept: application/vnd.github+json" \
 	  -H "Authorization: Bearer $(YS_GH_TOKEN)" \

@@ -82,4 +82,5 @@ $(GO_INSTALLED): $(GO_TARBALL)
 	touch $@
 
 $(GO_TARBALL):
-	curl -sL -o $@ $(GO_URL)
+	$(call need-curl)
+	$(CURL) -o $@ $(GO_URL)

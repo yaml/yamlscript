@@ -44,5 +44,6 @@ distclean::
 	$(RM) -r node_modules $(NVM_DIR)
 
 $(NVM_DIR):
+	$(call need-curl)
 	mkdir -p $@
-	curl -o- $(NVM_INSTALLER_URL) | PROFILE=/dev/null bash
+	$(CURL) -o- $(NVM_INSTALLER_URL) | PROFILE=/dev/null bash

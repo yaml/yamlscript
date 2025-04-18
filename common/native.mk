@@ -48,13 +48,15 @@ $(MUSL_DIR): | $(YS_TMP)/$(MUSL_TAR)
 	(cd $(YS_TMP) && tar -xf $(YS_TMP)/$(MUSL_TAR))
 
 $(YS_TMP)/$(MUSL_TAR):
-	curl -o $(YS_TMP)/$(MUSL_TAR) $(MUSL_URL)
+	$(call need-curl)
+	$(CURL) -o $(YS_TMP)/$(MUSL_TAR) $(MUSL_URL)
 
 $(ZLIB_DIR): | $(YS_TMP)/$(ZLIB_TAR)
 	(cd $(YS_TMP) && tar -xf $(YS_TMP)/$(ZLIB_TAR))
 
 $(YS_TMP)/$(ZLIB_TAR):
-	curl -o $(YS_TMP)/$(ZLIB_TAR) $(ZLIB_URL)
+	$(call need-curl)
+	$(CURL) -o $(YS_TMP)/$(ZLIB_TAR) $(ZLIB_URL)
 
 muslclean::
 	$(RM) -r $(MUSL_HOME) $(MUSL_DIR) $(MUSL_TAR) $(ZLIB_DIR) $(ZLIB_TAR)
