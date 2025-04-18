@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+lang=crystal
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  (
+    cd "$repo_dir" || exit
+    rm -fr \
+      examples \
+      spec \
+      src \
+      test
+  )
+
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp ReadMe.md \
+      shard.yml \
+      "$repo_dir/"
+    cp -r \
+      examples \
+      spec \
+      src \
+      test \
+      "$repo_dir/"
+  )
+)
+
+main "$@"

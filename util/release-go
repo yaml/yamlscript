@@ -1,31 +1,24 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+lang=go
 
-set -x
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
 
-cd "$YAMLSCRIPT_ROOT"
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
 
-ys_go_root=.git/tmp/yamlscript-go
-ys_go_url=git@github.com:yaml/yamlscript-go
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      go.mod \
+      go.sum \
+      yamlscript.go \
+      "$repo_dir"
+  )
 
-rm -fr $ys_go_root
-git clone $ys_go_url $ys_go_root
-
-cp \
-  go/ReadMe.md \
-  go/go.mod \
-  go/go.sum \
-  go/yamlscript.go \
-  $ys_go_root
-
-perl -pi -e 's{yamlscript/go}{yamlscript-go}' \
-  $ys_go_root/go.mod
-
-(
-  cd $ys_go_root || exit
-  git commit -a -m "Release $YS_RELEASE_VERSION_NEW"
-  git push
-  git tag "v$YS_RELEASE_VERSION_NEW"
-  git push --tags
+  perl -pi -e 's{yamlscript/go}{yamlscript-go}' \
+    "$repo_dir/go.mod"
 )
+
+main "$@"

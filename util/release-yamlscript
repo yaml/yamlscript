@@ -19,6 +19,7 @@ steps =: 11
 bindings =::
 - java
 - clojure
+- crystal
 - go
 - julia
 - nodejs
@@ -237,7 +238,7 @@ defn step-10(ctx):
     try:
       run: "make -C $dir release"
       catch Exception e:
-        if (dir == 'clojure') || (dir == 'java'):
+        if dir.in?(qw(clojure java)):
           warn: "Failed to release $dir. Continuing."
           die: "Failed to release $dir. Exiting."
 
