@@ -39,6 +39,11 @@ LEIN_REPL_OPTIONS := \
   update-in '[:repl-options,:nrepl-middleware]' \
     conj '["cider.nrepl/cider-middleware"]' -- \
 
+# For lein to be quieter when YS_QUIET is set:
+ifdef YS_QUIET
+  export HTTP_CLIENT := curl -sfL -o
+endif
+
 
 #------------------------------------------------------------------------------
 # Common Clojure Targets
@@ -54,10 +59,8 @@ distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
 $(LEIN): $(JAVA_INSTALLED) | $(BUILD_BIN)
-ifeq (,$(CURL))
-	$(error *** 'curl' is required but not installed)
-endif
-	$(CURL) -L -o $@ $(LEIN_URL)
+	$(call need-curl)
+	$(CURL) -o $@ $(LEIN_URL)
 	chmod +x $@
 
 
@@ -80,10 +83,8 @@ $(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
 # Maven targets
 
 $(MAVEN_DOWNLOAD):
-ifeq (,$(CURL))
-	$(error *** 'curl' is required but not installed)
-endif
-	$(CURL) -L -o $@ $(MAVEN_URL)
+	$(call need-curl)
+	$(CURL) -o $@ $(MAVEN_URL)
 
 $(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD)
 	(cd $(YS_TMP) && tar xzf $<)

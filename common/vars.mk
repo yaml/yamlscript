@@ -92,6 +92,20 @@ endif
 endif
 
 CURL := $(shell command -v curl)
+ifdef CURL
+ifdef YS_QUIET
+  CURL := $(CURL) -sSL
+else
+  CURL := $(CURL) -SL
+endif
+endif
+
+define need-curl
+	@[[ "$(CURL)" ]] || { \
+	  echo "*** 'curl' is required but not installed"; \
+	  exit 1; \
+	}
+endef
 
 TIME := time -p
 
@@ -219,7 +233,8 @@ default::
 build-bin-ys: $(BUILD_BIN_YS)
 
 $(BUILD_BIN_YS):
-	curl -sSL $(YS_INSTALL_URL) | \
+	$(call need-curl)
+	$(CURL) $(YS_INSTALL_URL) | \
 	  PREFIX=$$(dirname $(BUILD_BIN)) \
 	  VERSION=$(BUILD_BIN_YS_VERSION) \
 	  BIN=1 bash

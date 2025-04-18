@@ -24,10 +24,8 @@ $(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
 	touch $@
 
 $(GRAALVM_DOWNLOAD):
-ifeq (,$(CURL))
-	$(error *** 'curl' is required but not installed)
-endif
-	$(CURL) -L -o $@ $(GRAALVM_URL)
+	$(call need-curl)
+	$(CURL) -o $@ $(GRAALVM_URL)
 
 $(YAMLSCRIPT_JAVA_INSTALLED): $(YAMLSCRIPT_JAVA_SRC)
 	$(MAKE) -C $(ROOT)/java install
