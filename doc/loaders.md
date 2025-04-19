@@ -17,6 +17,7 @@ language.
 The following loader libraries are currently available:
 
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+* [Crystal](https://github.com/yaml/yamlscript-crystal)
 * [Go](https://github.com/yaml/yamlscript-go)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
