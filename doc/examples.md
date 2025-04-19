@@ -42,7 +42,7 @@ This page contains a links to programs written in YS.
   * [util/release-yamlscript](
     https://github.com/yaml/yamlscript/blob/main/util/release-yamlscript)
     The utility that orchestrates the release of YS, including 12 binary builds
-    and `libyamlscript.so` bindings for 10 programming languages.
+    and `libyamlscript.so` bindings for 11 programming languages.
   * [util/brew-update](
     https://github.com/yaml/yamlscript/blob/main/util/brew-update)
     The utility that updates the Homebrew formula for YS.
