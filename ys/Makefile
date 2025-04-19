@@ -23,7 +23,7 @@ install: $(CLI_DEPS)
 	install -m 755 $(CLI_BIN_BASH) \
 	  $(PREFIX)/bin/
 
-# jar: $(CLI_JAR)
+jar: $(CLI_JAR)
 
 test: test-run
 
