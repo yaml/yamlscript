@@ -1,3 +1,22 @@
+- version: 0.1.96
+  date:    Fri Apr 18 05:02:04 PM PDT 2025
+  changes:
+  - doc: Update helmys.md
+  - www: Rename config.ys to mkdocs.ys
+  - make: Major Makefile refactoring
+  - release: Update the release notes template
+  - make: Fix typo in base.mk
+  - core: Fix '#!/usr/bin/env ys-0.1.96' shebang bug
+  - make: Small python/Makefile refactoring
+  - core: Update to JDK 24
+  - make: Use .git/tmp/ instead of /tmp/yamlscript/
+  - vscode: Set editor.rulers to 80
+  - make: Use new codeberg version of lein
+  - repo: Update Contributing.md file
+  - www: Fix a security issue reported by GitHub
+  - readme: Update the binding ReadMe.md files
+  - core: Return nil from ys/def-vars-from-map
+  - crystal: Add Crystal binding
 - version: 0.1.95
   date:    Sun 16 Mar 2025 10:02:35 PM PDT
   changes:
