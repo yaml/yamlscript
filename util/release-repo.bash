@@ -32,9 +32,9 @@ release() (
   cd "$repo_dir" || exit
   git add -A .
   git commit -m "Release $YS_RELEASE_VERSION_NEW"
-  # git push
+  git push
   git tag "v$YS_RELEASE_VERSION_NEW"
-  # git push --tags
+  git push --tags
 )
 
 true
