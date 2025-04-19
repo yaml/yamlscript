@@ -9,7 +9,7 @@
 
 set -e -u -o pipefail
 
-DEFAULT_VERSION=0.1.95
+DEFAULT_VERSION=0.1.96
 
 main() (
   setup "$@"
