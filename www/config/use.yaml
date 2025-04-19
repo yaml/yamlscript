@@ -13,11 +13,11 @@
 # - Static Site Generators:
 #   - This site
 
-- Hacks:
-  - hacks.md
-  - gist.md
-  - yamllm.md
-# - sbs.md
+# - Hacks:
+#   - hacks.md
+#   - gist.md
+#   - yamllm.md
+#   - sbs.md
 
 # - hacks/index.md:
 #   - yamllm.md
