@@ -2,11 +2,19 @@ export LANG := en_US.UTF-8
 
 GIT-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
 
+GIT-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
+GIT-DIR := $(shell [[ '$(GIT-DIR)' && '$(GIT-DIR)' == *.git && -d '$(GIT-DIR)' ]] && echo $(GIT-DIR))
+ifeq (,$(GIT-DIR))
+$(error Can't determine .git directory location)
+endif
+GIT-DIR := $(shell cd $(GIT-DIR) && pwd -P)
+GIT-EXT := $(GIT-DIR)/.ext
+
 ifndef YS_TMP
 ifneq (,$(GIT-DIR))
-  YS_TMP := $(shell cd -P $$(dirname $(GIT-DIR)) && pwd -P)/.git/tmp
+  YS_TMP := $(GIT-EXT)
 else
-  YS_TMP := $(ROOT)/.tmp
+  YS_TMP := $(ROOT)/.ext
 endif
 endif
 
