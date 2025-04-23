@@ -284,4 +284,3 @@ distclean-%: %
 
 sysclean:: realclean
 	$(RM) -r $(YS_TMP)
-	$(RM) -r /tmp/yamlscript-* /tmp/ys-local
