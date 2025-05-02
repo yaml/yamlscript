@@ -10,10 +10,6 @@ PERL_VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
 ALIEN_DIST_DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL_VERSION)
 ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
 
-ifneq (,$(shell command -v cpanm))
-	PERLOK := true
-endif
-
 CPAN_DEPS := \
     Test2::V0 \
     FFI::CheckLib \

@@ -6,20 +6,24 @@ use Cpanel::JSON::XS;
 
 alien_ok $CLASS;
 
-ffi_ok { symbols => [ 'graal_create_isolate', 'load_ys_to_json' ] },
+ffi_ok {symbols => ['graal_create_isolate', 'load_ys_to_json']},
     with_subtest {
         my ($ffi) = @_;
 
-
-        my $graal = $ffi->function( graal_create_isolate => [qw( opaque opaque* opaque* )] => 'int' )
-            ->( undef, \my $isolate, \my $thread);
+        my $graal = $ffi->function(
+	    'graal_create_isolate',
+            ['opaque', 'opaque*', 'opaque*'],
+            'int',
+        )->( undef, \my $isolate, \my $thread);
 
         is $graal, 0, 'Can create GraalVM isolate';
 
         my $load = $ffi->function(
-            load_ys_to_json => [qw( sint64 string )] => 'string' => sub {
-                my ( $xsub, $ys ) = @_;
-                decode_json $xsub->( $thread, $ys );
+            'load_ys_to_json',
+            ['sint64', 'string'] => 'string',
+            sub {
+                my ($xsub, $ys) = @_;
+                decode_json $xsub->($thread, $ys);
             },
         );
 
@@ -27,8 +31,13 @@ ffi_ok { symbols => [ 'graal_create_isolate', 'load_ys_to_json' ] },
 !YS-v0:
 foo:: 1 .. 10
 ...
-            { data => { foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] } },
+            {data => {foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}},
             'Can load YS to JSON';
+
+        $ffi->function(
+            'graal_tear_down_isolate',
+            ['opaque'] => 'int',
+        );
     };
 
 done_testing;
