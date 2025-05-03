@@ -4,6 +4,19 @@
 
 
 #define YAMLSCRIPT_VERSION_STR "0.1.95"
+#ifdef _WIN32
+    #ifdef YAMLSCRIPT_SHARED
+        #ifdef YAMLSCRIPT_EXPORTS
+            #define YAMLSCRIPT_EXPORT __declspec(dllexport)
+        #else
+            #define YAMLSCRIPT_EXPORT __declspec(dllimport)
+        #endif
+    #else
+        #define YAMLSCRIPT_EXPORT
+    #endif
+#else
+    #define YAMLSCRIPT_EXPORT
+#endif
 
 
 /// error code enumeration
@@ -18,46 +31,19 @@ typedef enum {
 } yamlscript_errcode;
 
 
-/// read-only buffer
-typedef struct {
-    const char * buf;
-    int size;
-} yamlscript_buffer_ro_t;
-
-
-/// read-write buffer
-typedef struct {
-    char *buf;
-    int size;
-} yamlscript_buffer_rw_t;
-
-
-/// an opaque handle to library data
-typedef void* yamlscript_lib;
-
-
-/** initialize the library */
-yamlscript_errcode
-yamlscript_init(yamlscript_lib* yslib);
-
-
-/** terminate the library */
-yamlscript_errcode
-yamlscript_terminate(const yamlscript_lib yslib);
-
-
 /** Convert YamlScript to JSON.
  *
  * @param yslib[IN] Library data obtained with @ref yamlscript_init()
  * @param ys[IN] Read-only input buffer containing YamlScript code
  * @param json[INOUT] Writeable output buffer where the JSON code is to be written
- * @param json_size[OUT] Number of characters written into the JSON buffer
+ * @param json_size[IN] Size of the output buffer
+ * @param json_size[OUT] Size required for the output buffer
  * @return error code, of type @ref yamlscript_errcode
  */
-yamlscript_errcode
-yamlscript_load_ys_to_json(const yamlscript_lib yslib,
-                           yamlscript_buffer_ro_t const* ys,
-                           yamlscript_buffer_rw_t const* json,
-                           int *json_size);
+YAMLSCRIPT_EXPORT yamlscript_errcode
+yamlscript_load_ys_to_json(const char *ys,
+                           char *json,
+                           int json_size,
+                           int *json_size_required);
 
 #endif // YAMLSCRIPT_C_H__
