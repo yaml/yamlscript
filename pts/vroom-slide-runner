@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+[[ ${SETX-} ]] && set -x
+
+file=$1
+lnum=$2
+line=$(sed "${lnum}q;d" "$file")
+
+line=$(
+  shopt -s extglob
+  printf '%s\n' "${line##+([[:space:]])}"
+)
+
+echo ">>$line<<" >/dev/tty
+line=${line#\* }
+
+clear
+lines=99
+max=25
+
+if [[ $line == https://* ]]; then
+  if [[ $OSTYPE == darwin* ]]; then
+    open "$line"
+  else
+    if [[ $line == *# ]]; then
+      chromium -incognito "${line%/}" &>/dev/null
+    else
+      xdg-open "$line" &>/dev/null
+    fi
+  fi
+
+elif [[ $line == \$\ * ]]; then
+  line=${line#\$\ }
+
+  if [[ $line == vim\ * ]]; then
+    line=${line/vim\ /vim --not-a-term -S vimrc2 +1 }
+    eval "$line"
+    exit
+  fi
+
+  clear
+  echo
+  echo # "+ $line"
+  echo
+  # sleep 0.3
+
+  if [[ $line == *helmys* ]]; then
+    export PATH=~/.local/bin:/usr/local/bin:/bin
+  fi
+
+  if [[ $line == *'--binary'* ]]; then
+    bash binary-build.sh
+    printf 'E\r'
+    read -r < /dev/tty
+  elif [[ $line =~ [\>\|] ]]; then
+    eval "$line"
+    printf 'E\r'
+    read -r < /dev/tty
+  else
+    text=$(eval "$line </dev/tty" 2>&1)
+    lines=$(wc -l <<<"$text")
+    echo "$text" | (
+      if [[ $lines -ge $(tput lines) ]]; then
+        less
+      else
+        cat
+        printf 'E\r'
+        read -r < /dev/tty
+      fi
+    )
+  fi
+fi

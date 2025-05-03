@@ -1,0 +1,233 @@
+---- config
+title: PerlYS — YS for Perl Programmers
+indent: 5
+
+# auto_size: 1
+height: 25
+width: 87
+
+vim_opts: '-u NONE'
+skip: 0
+top: 2
+before: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+
+PerlYS — YS for Perl Programmers
+
+by Ingy döt Net
+
+Perl Toolchain Summit
+May 3, 2025
+Leipzig
+
+
+----
+== YAMLScript is YS
+
+* Pronounced "wise"
+  * HelmYS, SchemaYS, MarkdownYS
+
+* https://yamlscript.org
+
+* Installation
+
+$ curl https://yamlscript.org/install | bash
+
+$ curl https://yamlscript.org/install | BIN=1 bash
+$ curl https://yamlscript.org/install | LIB=1 bash
+$ curl https://yamlscript.org/install | VERSION=0.1.95 bash
+
+
+----
+== About YS
+
+* YS is a complete FP programming language
+* A Lisp in disguise
+  * Transpiles to Clojure
+  * Evaluates in a Clojure runtime
+  * Standalone binary; No JVM
+* Perl/Python/Ruby/NodeJS speed
+
+* A YAML Loader module in 11 programming languages:
+  * Perl & Raku
+  * Go, Rust, Python, Ruby, NodeJS and others
+* All YAML files are valid YS
+
+* YS has a LOT of Perl in it!
+
+
+----
+== What Perl builtin function do you use the most?
+
++
+     _ _
+  __| (_) ___
+ / _` | |/ _ \
+| (_| | |  __/
+ \__,_|_|\___|
+
+
+----
+== YS is to `die` for
+
+* Lisp S-Expression
+  $ ys -e '(die "Tis a good day to die")'
+* YS YeS-Expression
+  $ ys -e 'die("Tis a good day to die")'
+* YS mapping pair expression
+  $ ys -e 'die: "Tis a good day to die"'
+* YS tag function call
+  $ ys -e 'do: !:die "Tis a good day to die"'
+* Multiline -e 1-liner. String function calls and interpolation.
+  $ ys -e 'f =: "die"' -e 'msg =: "Tis a good day to $f"' -e 'call f: msg'
+* YS dot chaining call
+  $ ys -e 'f =: "die"' -e 'msg =: "Tis a good day to $f"' -e 'do: f.call(msg)'
+* Environment variables
+  $ f=die msg="Tis a good day to $f" ys -e 'ENV.f.call(ENV.msg)'
+
+
+----
+== A YS Exercism
+
+* https://exercism.org/
+* https://exercism.org/tracks
+* https://exercism.org/tracks/yamlscript
+
+* Ingy is your Mentor
+
+* https://gist.github.com/ingydotnet/90ab729fad4c5518b38f98eda097021c
+
+
+----
+== Pig YS
+
+$ ys pig-latin.ys 'hello all you perl toolchain summit hackers'
+
+$ vim pig-latin.ys
+
+
+----
+== Interpolation
+
+$ vim invite
+
+$ ./invite 5
+
+
+----
+== ys::std Standard Library
+
+* YS has over 1000 builtin functions
+  * All of clojure.core + ys::std
+  * Many builtin libraries:
+    * http, yaml, json, csv/tsv, process (IPC) & more
+
+* https://clojuredocs.org/quickref
+* https://yamlscript.org/doc/ys-std
+
+* Perl inspired, including:
+  chomp, chop, join, split, index, grep, map, die, sleep
+  say, warn, slurp, qw, qr, -e -f, eq, ne, gt, le, etc
+  use, require, slice, uc, lc, uc1 (ucfirst), eval, sort
+  ==, !=, ||, &&, .., =~, !~
+
+
+----
+== YS Globals
+
+$ ys -e 'say: ENV:keys:sort'
+
+$ ys -e 'say: yaml/dump({:ARGV ARGV, :ARGS ARGS, :RUN RUN, :CWD CWD})' -- one 2 three
+
+
+----
+== YS Timeline
+
+* Syntax started as Clojure
+* Over Time
+  * Kept the good
+  * Replaced the annoying
+  * Very often with Perl
+
+* Commas are whitespace <3
+
+$ ys -e 'say: [1, 2, 3]'
+$ ys -e 'say:: [1, 2, 3]'
+$ ys -e 'say: + [1 2 3]'
+
+----
+== Using YAMLScript.pm
+
+$ vim file.pl file.yaml -O
+
+
+----
+## YS is needed for YAML 1.3
+
+* A new YAML 1.3 spec would never get implemented
+* Unless there was an implementation for every language
+* Available as soon as YAML 1.3 is released
+* This implementation would have all the latest features
+* It would work exactly like the same in every language
+* YAMLStar == YAML* == YS
+
+
+----
+## Debugging YS
+
+* INGY has 207 CPAN dists
+  * https://metacpan.org/author/INGY
+* 1 in every 100 is useful
+
+* https://metacpan.org/pod/Vroom
+* https://metacpan.org/pod/XXX
+
+$ ys -e 'XXX: sh("ls -l $(ENV.HOME)").out:lines.take(10)'
+
+$ bash -x -c 'for i in {1..10}; do echo $i; done'
+
+$ ys -x pig-latin.ys 'hello all you perl toolchain summit hackers'
+
+$ YS_XTRACE=1 ./invite 5
+
+
+----
+## The YS compiler is a YAML Loader
+
+$ ys -c pig-latin.ys
+
+* It loads YAML into an AST
+
+$ ys -cd pig-latin.ys
+
+
+----
+## YS Polyglot
+
+* You can run YS with bash
+
+$ vim script.ys
+$ ys script.ys
+$ bash script.ys
+
+$ rm -fr /tmp/yamlscript-run-ys
+$ bash script.ys
+
+
+----
+## Gist YS
+
+$ ./gist slides.vroom pig-latin.ys invite gist
+
+$ vim gist
+
+
+----
+== THE END
+
+== Questions

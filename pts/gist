@@ -1,0 +1,46 @@
+#!/usr/bin/env ys-0
+
+api-url =: 'https://api.github.com/gists'
+api-key =: ENV.GITHUB_API_TOKEN ||
+  die('No GitHub API token found in GITHUB_API_TOKEN')
+
+defn main(*files):
+  files =:
+    map _ (files || ['-']):
+      fn(file):
+        if file == '-': +
+          '/dev/stdin'
+          file
+
+  request =::
+    :headers:: +{:Authorization "token $api-key"}
+    :body: !:json/dump
+      files::
+        reduce _ {} files:
+          fn(hash file):
+            merge hash: +
+              {file:fs/file-name {:content file:read}}
+
+  response =: http/post(api-url request)
+
+  when-not 200 <= response.status <= 201:
+    die: "Gist request failed:\n\n$(response.body)"
+
+  say: json/load(response.body).html_url
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

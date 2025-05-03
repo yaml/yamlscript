@@ -1,0 +1,22 @@
+!YS-v0
+
+raw-url =:: https://raw.githubusercontent.com/dominictarr/random-name/refs/heads/master/first-names.json
+names =: raw-url:curl:json/load
+vars =: load('vars.yaml')
+maybe =: rand(2) > 1
+
+--- !YS-v0:
+a key: a value
+:when maybe::
+  MAYBE: THIS PAIR WILL BE INCLUDED
+5 names:: names:shuffle.take(5)
+letter:: |
+  $(names:rand-nth) wrote:
+
+  Dear $(ENV.USER:uc1),
+
+  My $(vars.color) shoe is size $(vars.size)!
+
+
+
+
