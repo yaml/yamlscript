@@ -158,8 +158,11 @@ map inc: (1 .. 3)
 reduce (fn [acc num] acc + num) 0: (1 .. 3)
 ```
 
+```
 reduce _ 0 (1 2 3):
   fn(acc num): acc + num
+```
+
 The `_` is a placeholder for the defined function argument.
 Use `_` when the function argument is too long to write in place.
 
