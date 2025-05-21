@@ -1,7 +1,8 @@
 version = '0.1.96'
 
-from setuptools import setup
 import pathlib
+
+from setuptools import setup
 
 root = pathlib.Path(__file__).parent.resolve()
 
@@ -21,6 +22,10 @@ setup(
 
   packages = ['yamlscript'],
   package_dir = {'': 'lib'},
+
+  package_data={
+    'yamlscript': ['libyamlscript.so.0.1.96'],
+  },
 
   python_requires = '>=3.6, <4',
   install_requires = [

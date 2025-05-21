@@ -40,10 +40,16 @@ pkg-test: venv
 	tar xzf dist/yamlscript-*.tar.gz
 	cat yamlscript-*/PKG-INFO
 
-dist: venv MANIFEST.in .long_description.md
+setuptools: venv
+	pip install setuptools
+
+injectlib:
+	cp $(LIBYS_SO_FQNP) ./lib/yamlscript/
+
+dist: setuptools injectlib MANIFEST.in .long_description.md
 	( \
 	  $(VENV) && \
-	  $(PYTHON) setup.py sdist \
+	  $(PYTHON) setup.py sdist bdist_wheel \
 	)
 
 release: publish
