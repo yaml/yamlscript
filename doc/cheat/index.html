@@ -2778,9 +2778,10 @@ It must be be attached to something on the left.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>reduce (fn [acc num] acc + num) 0: (1 .. 3)
 </code></pre></div>
-<p>reduce _ 0 (1 2 3):
+<div class="highlight"><pre><span></span><code>reduce _ 0 (1 2 3):
   fn(acc num): acc + num
-The <code>_</code> is a placeholder for the defined function argument.
+</code></pre></div>
+<p>The <code>_</code> is a placeholder for the defined function argument.
 Use <code>_</code> when the function argument is too long to write in place.</p>
 <h3 id="conditional-ifelse">Conditional (if/else)<a class="headerlink" href="#conditional-ifelse" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>if a &gt; 10:
