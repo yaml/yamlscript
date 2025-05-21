@@ -8,7 +8,7 @@ VENV := source $(PYTHON_VENV)/bin/activate
 
 export PYTHONPATH := $(ROOT)/python/lib
 
-
+#export LD_LIBRARY_PATH := NOTHING
 #------------------------------------------------------------------------------
 
 build:: build-doc

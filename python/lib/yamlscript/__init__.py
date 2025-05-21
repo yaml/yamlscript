@@ -18,9 +18,11 @@ object that the YAMLScript code evaluates to.
 # We currently only support binding to an exact version of libyamlscript.
 yamlscript_version = '0.1.96'
 
-import os, sys
 import ctypes
 import json
+import os
+import sys
+from pathlib import Path
 
 # Require Python 3.6 or greater:
 assert sys.version_info >= (3, 6), \
@@ -43,6 +45,12 @@ def find_libyamlscript_path():
   # eg 'libyamlscript.so.0.1.96'
   libyamlscript_name = \
     "libyamlscript.%s.%s" % (so, yamlscript_version)
+
+  # First check for shared library in bindings directory, in case of binary wheel distribution.
+  path = (Path(__file__).parent / libyamlscript_name).absolute()
+  if path.exists():
+    # from fmtr.tools import debug; debug.trace(is_debug=True)
+    return path.absolute()
 
   # Use LD_LIBRARY_PATH to find libyamlscript shared library, or default to
   # '/usr/local/lib' (where it is installed by default):
