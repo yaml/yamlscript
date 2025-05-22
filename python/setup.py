@@ -2,10 +2,9 @@ import pathlib
 
 from setuptools import setup
 
-from lib.yamlscript import yamlscript_version as version, get_libyamlscript_ext
+from lib.yamlscript import NAME, yamlscript_version as version, get_libyamlscript_name
 
-NAME = 'yamlscript'
-ext = get_libyamlscript_ext()
+libyamlscript_name = get_libyamlscript_name()
 root = pathlib.Path(__file__).parent.resolve()
 
 long_description = \
@@ -26,7 +25,7 @@ setup(
   package_dir = {'': 'lib'},
 
   package_data={
-    NAME: [f'lib{NAME}.{ext}.{version}'],
+    NAME: [libyamlscript_name],
   },
 
   python_requires = '>=3.6, <4',
