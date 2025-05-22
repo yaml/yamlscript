@@ -6,7 +6,7 @@ PYTHON_VENV := $(ROOT)/python/.venv
 
 VENV := source $(PYTHON_VENV)/bin/activate
 
-export PYTHONPATH := $(ROOT)/python/lib
+#export PYTHONPATH := $(ROOT)/python/lib
 
 #export LD_LIBRARY_PATH := NOTHING
 #------------------------------------------------------------------------------

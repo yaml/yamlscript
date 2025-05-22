@@ -1,9 +1,11 @@
-version = '0.1.96'
-
 import pathlib
 
 from setuptools import setup
 
+from lib.yamlscript import yamlscript_version as version, get_libyamlscript_ext
+
+NAME = 'yamlscript'
+ext = get_libyamlscript_ext()
 root = pathlib.Path(__file__).parent.resolve()
 
 long_description = \
@@ -11,7 +13,7 @@ long_description = \
   .read_text(encoding='utf-8')
 
 setup(
-  name = 'yamlscript',
+  name=NAME,
   version = version,
   description = 'Program in YAML — Code is Data',
   license = 'MIT',
@@ -20,11 +22,11 @@ setup(
   author = 'Ingy döt Net',
   author_email = 'ingy@ingy.net',
 
-  packages = ['yamlscript'],
+  packages=[NAME],
   package_dir = {'': 'lib'},
 
   package_data={
-    'yamlscript': ['libyamlscript.so.0.1.96'],
+    NAME: [f'lib{NAME}.{ext}.{version}'],
   },
 
   python_requires = '>=3.6, <4',

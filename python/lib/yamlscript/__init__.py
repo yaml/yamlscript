@@ -28,18 +28,23 @@ from pathlib import Path
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlscript'."
 
-# Find the libyamlscript shared library file path:
-def find_libyamlscript_path():
+
+def get_libyamlscript_ext():
   # We currently only support platforms that GraalVM supports.
   # And Windows is not yet implemented...
   # Confirm platform and determine file extension:
+
   if sys.platform == 'linux':
-    so = 'so'
+    return 'so'
   elif sys.platform == 'darwin':
-    so = 'dylib'
+    return 'dylib'
   else:
     raise Exception(
       "Unsupported platform '%s' for yamlscript." % sys.platform)
+
+# Find the libyamlscript shared library file path:
+def find_libyamlscript_path():
+  so = get_libyamlscript_ext()
 
   # We currently bind to an exact version of libyamlscript.
   # eg 'libyamlscript.so.0.1.96'
@@ -50,7 +55,7 @@ def find_libyamlscript_path():
   path = (Path(__file__).parent / libyamlscript_name).absolute()
   if path.exists():
     # from fmtr.tools import debug; debug.trace(is_debug=True)
-    return path.absolute()
+    return path
 
   # Use LD_LIBRARY_PATH to find libyamlscript shared library, or default to
   # '/usr/local/lib' (where it is installed by default):
@@ -77,7 +82,9 @@ See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
   return libyamlscript_path
 
 # Load libyamlscript shared library:
-libyamlscript = ctypes.CDLL(find_libyamlscript_path())
+path = find_libyamlscript_path()
+# print(f'Loading libyamlscript shared library: {path} ...',)
+libyamlscript = ctypes.CDLL(path)
 
 # Create binding to 'load_ys_to_json' function:
 load_ys_to_json = libyamlscript.load_ys_to_json
