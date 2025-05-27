@@ -6,9 +6,9 @@ PYTHON_VENV := $(ROOT)/python/.venv
 
 VENV := source $(PYTHON_VENV)/bin/activate
 
-#export PYTHONPATH := $(ROOT)/python/lib
+export PYTHONPATH := $(ROOT)/python/lib
 
-#export LD_LIBRARY_PATH := NOTHING
+
 #------------------------------------------------------------------------------
 
 build:: build-doc
@@ -40,24 +40,20 @@ pkg-test: venv
 	tar xzf dist/yamlscript-*.tar.gz
 	cat yamlscript-*/PKG-INFO
 
-setuptools: venv
-	pip install setuptools
 
-injectlib:
-	cp $(LIBYS_SO_FQNP) ./lib/yamlscript/
 
-dist: setuptools injectlib MANIFEST.in .long_description.md
-	( \
-	  $(VENV) && \
-	  $(PYTHON) setup.py sdist bdist_wheel \
-	)
+dist: venv MANIFEST.in .long_description.md
+	$(VENV) && \
+	$(PYTHON) setup.py sdist && \
+	cp $(LIBYS_SO_FQNP) ./lib/yamlscript/ && \
+	$(PYTHON) setup.py bdist_wheel
 
 release: publish
 
 publish: dist
 	( \
 	  $(VENV) && \
-	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz \
+	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz dist/yamlscript-*.whl \
 	)
 
 clean::
@@ -78,7 +74,8 @@ $(PYTHON_VENV):
 	  pip install \
 	    pytest \
 	    pyyaml \
-	    twine
+	    twine \
+	    setuptools
 
 MANIFEST.in:
 	echo 'include ReadMe.md' > $@
