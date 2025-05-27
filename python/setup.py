@@ -1,17 +1,35 @@
-import pathlib
+import sys
+from pathlib import Path
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
-from lib.yamlscript import NAME, yamlscript_version as version, get_libyamlscript_name
+version = '0.1.96'
 
-libyamlscript_name = get_libyamlscript_name()
-root = pathlib.Path(__file__).parent.resolve()
+NAME = 'yamlscript'
+PACKAGE_DIR = 'lib'
+EXTENSIONS = dict(linux='so', darwin='dylib')
 
+root = Path(__file__).parent.resolve()
 long_description = \
   (root / '.long_description.md') \
   .read_text(encoding='utf-8')
 
+
+def get_package_data():
+  """
+
+  Include the shared library in the package data if a) this is a supported platform, and b) the shared library exists.
+
+  """
+  so = EXTENSIONS.get(sys.platform)
+
+  if so:
+    filename = f"lib{NAME}.{so}.{version}"
+    lib_exists = (root / PACKAGE_DIR / NAME / filename).exists()
+    if lib_exists:
+      return {NAME: [filename]}
+  return {}
 
 class LibYAMLScriptExtensionBuilder(build_ext):
   """
@@ -31,6 +49,7 @@ class LibYAMLScriptExtensionBuilder(build_ext):
     """
     pass
 
+
 setup(
   name=NAME,
   version = version,
@@ -42,7 +61,9 @@ setup(
   author_email = 'ingy@ingy.net',
 
   packages=[NAME],
-  package_dir = {'': 'lib'},
+  package_dir={'': PACKAGE_DIR},
+
+  python_requires='>=3.6, <4',
 
   ext_modules=[
     Extension(name=NAME, sources=[])
@@ -51,9 +72,7 @@ setup(
     'build_ext': LibYAMLScriptExtensionBuilder,
   },
 
-  package_data={
-    NAME: [libyamlscript_name],
-  },
+  package_data=get_package_data(),
   install_requires = [
     'pyyaml',
   ],
