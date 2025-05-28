@@ -16,21 +16,25 @@ object that the YAMLScript code evaluates to.
 # This value is automatically updated by 'make bump'.
 # The version number is used to find the correct shared library file.
 # We currently only support binding to an exact version of libyamlscript.
+NAME = 'yamlscript'
 yamlscript_version = '0.1.96'
 
-import os, sys
 import ctypes
 import json
+import os
+import sys
+from pathlib import Path
 
 # Require Python 3.6 or greater:
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlscript'."
 
-# Find the libyamlscript shared library file path:
-def find_libyamlscript_path():
+
+def get_libyamlscript_name():
   # We currently only support platforms that GraalVM supports.
   # And Windows is not yet implemented...
   # Confirm platform and determine file extension:
+
   if sys.platform == 'linux':
     so = 'so'
   elif sys.platform == 'darwin':
@@ -43,6 +47,17 @@ def find_libyamlscript_path():
   # eg 'libyamlscript.so.0.1.96'
   libyamlscript_name = \
     "libyamlscript.%s.%s" % (so, yamlscript_version)
+
+  return libyamlscript_name
+
+# Find the libyamlscript shared library file path:
+def find_libyamlscript_path():
+  libyamlscript_name = get_libyamlscript_name()
+
+  # First check for shared library in bindings directory, in case of binary wheel distribution.
+  path = (Path(__file__).parent / libyamlscript_name).absolute()
+  if path.exists():
+    return str(path)
 
   # Use LD_LIBRARY_PATH to find libyamlscript shared library, or default to
   # '/usr/local/lib' (where it is installed by default):
@@ -69,7 +84,8 @@ See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
   return libyamlscript_path
 
 # Load libyamlscript shared library:
-libyamlscript = ctypes.CDLL(find_libyamlscript_path())
+libyamlscript_path = find_libyamlscript_path()
+libyamlscript = ctypes.CDLL(libyamlscript_path)
 
 # Create binding to 'load_ys_to_json' function:
 load_ys_to_json = libyamlscript.load_ys_to_json
@@ -138,3 +154,21 @@ class YAMLScript():
     rc = libyamlscript.graal_tear_down_isolate(self.isolatethread)
     if rc != 0:
       raise Exception("Failed to tear down isolate")
+
+
+def show_info():
+  """
+
+  Show YAMLScript package info for debugging purposes
+
+  """
+  from textwrap import dedent
+  info = f"""
+  {yamlscript_version=}
+  {sys.platform=}
+  {libyamlscript_path=}
+  {YAMLScript().load("inc: 41")=}
+  {YAMLScript().load("!YS-v0\ninc: 41")=}
+  """
+  info = dedent(info).strip()
+  print(info)
