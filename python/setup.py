@@ -9,27 +9,17 @@ version = '0.1.96'
 NAME = 'yamlscript'
 PACKAGE_DIR = 'lib'
 EXTENSIONS = dict(linux='so', darwin='dylib')
+so = EXTENSIONS.get(sys.platform)
+
+if not so:
+  raise RuntimeError(f"Unsupported platform: {sys.platform}. Should be one of {','.join(EXTENSIONS.keys())}.")
 
 root = Path(__file__).parent.resolve()
+filename = f"lib{NAME}.{so}.{version}"
+path_lib = root / PACKAGE_DIR / NAME / filename
 long_description = \
   (root / '.long_description.md') \
   .read_text(encoding='utf-8')
-
-
-def get_package_data():
-  """
-
-  Include the shared library in the package data if a) this is a supported platform, and b) the shared library exists.
-
-  """
-  so = EXTENSIONS.get(sys.platform)
-
-  if so:
-    filename = f"lib{NAME}.{so}.{version}"
-    lib_exists = (root / PACKAGE_DIR / NAME / filename).exists()
-    if lib_exists:
-      return {NAME: [filename]}
-  return {}
 
 class LibYAMLScriptExtensionBuilder(build_ext):
   """
@@ -50,6 +40,21 @@ class LibYAMLScriptExtensionBuilder(build_ext):
     pass
 
 
+if path_lib.exists():
+  # If the shared library exists, only then add the relevant extension builder.
+  # Otherwise keep the package generic.
+  extension_config = dict(
+    ext_modules=[
+      Extension(name=NAME, sources=[])
+    ],
+    cmdclass=dict(
+      build_ext=LibYAMLScriptExtensionBuilder,
+    ),
+    package_data={NAME: [filename]},
+  )
+else:
+  extension_config = dict()
+
 setup(
   name=NAME,
   version = version,
@@ -64,15 +69,6 @@ setup(
   package_dir={'': PACKAGE_DIR},
 
   python_requires='>=3.6, <4',
-
-  ext_modules=[
-    Extension(name=NAME, sources=[])
-  ],
-  cmdclass={
-    'build_ext': LibYAMLScriptExtensionBuilder,
-  },
-
-  package_data=get_package_data(),
   install_requires = [
     'pyyaml',
   ],
@@ -95,4 +91,6 @@ setup(
 
   long_description = long_description,
   long_description_content_type = 'text/markdown',
+
+  **extension_config,
 )
