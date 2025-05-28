@@ -92,5 +92,11 @@ setup(
   long_description = long_description,
   long_description_content_type = 'text/markdown',
 
+  entry_points=dict(
+    console_scripts=[
+      f'ys-py-show-info = {NAME}:show_info',
+    ],
+  ),
+
   **extension_config,
 )
