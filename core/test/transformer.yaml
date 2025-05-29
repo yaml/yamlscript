@@ -56,6 +56,17 @@
     (cond (= x 1) "one" (= x 2) "two" :else "other")
 
 
+- name: Allow => as else for cond
+  yamlscript: |
+    !yamlscript/v0
+    cond:
+      (a > b): c
+      (a < d): e
+      =>: f
+  clojure: |
+    (cond (> a b) c (< a d) e :else f)
+
+
 - name: Various require transformations
   yamlscript: |
     !yamlscript/v0

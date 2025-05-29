@@ -21,7 +21,8 @@
               _ (>= len 2)
               last-key-pos (- len 2)
               last-key (nth fmap last-key-pos)
-              _ (= 'else (:Sym last-key))
+              last-sym (:Sym last-key)
+              _ (or (= '=> last-sym) (= 'else last-sym))
               rhs (update-in rhs
                     [:fmap last-key-pos]
                     (fn [_] subst))]
