@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Wed, 21 May 2025 14:44:21 -0000</pubDate>
-    <lastBuildDate>Wed, 21 May 2025 14:44:21 -0000</lastBuildDate>
+    <pubDate>Sun, 01 Jun 2025 21:05:11 -0000</pubDate>
+    <lastBuildDate>Sun, 01 Jun 2025 21:05:11 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,33 @@
     
 
     
+    
+    <item>
+      <title>The Summer of YS</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>General</category>
+        
+      
+      <description>&lt;p&gt;Back in March I promised to start writing more often about all the ways that YS
+can help you out day-to-day with your YAML interactions.
+When I last posted h...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-01/the-summer-of-ys/</link>
+      <pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-01/the-summer-of-ys/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-01/the-summer-of-ys.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>Run a YAML File with Bash!</title>
@@ -573,7 +600,7 @@ They&#39;re also the hardest working of the bunch.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-16/let-lambda-come-over/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-16/let-lambda-come-over.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-16/let-lambda-come-over.png" type="image/png" length="0" />
       
     </item>
     
@@ -851,7 +878,7 @@ Today we&#39;ll learn about all the things you can do with it.&lt;/p&gt;</descri
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-07/sharpen-your-tools/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-07/sharpen-your-tools.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-07/sharpen-your-tools.png" type="image/png" length="None" />
       
     </item>
     

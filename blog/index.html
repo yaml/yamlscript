@@ -2328,6 +2328,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#the-summer-of-ys" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Summer of YS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#run-a-yaml-file-with-bash" class="md-nav__link">
     <span class="md-ellipsis">
       Run a YAML File with Bash!
@@ -2543,15 +2552,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#going-to-the-library" class="md-nav__link">
-    <span class="md-ellipsis">
-      Going to the Library
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2569,6 +2569,123 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <h1 id="the-ys-blog">The YS Blog<a class="headerlink" href="#the-ys-blog" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-06-01 00:00:00+00:00">June 1, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/general/" class="md-meta__link">General</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              3 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="the-summer-of-ys"><a class="toclink" href="2025-06-01/the-summer-of-ys/">The Summer of YS</a></h2>
+<p>Back in March I promised to start writing more often about all the ways that YS
+can help you out day-to-day with your YAML interactions.
+When I last posted here it was barely Spring and now Spring is turning into
+Summer.</p>
+<p>Seasonal turning points be damned, I think of Summer as June, July, and August.
+In other words...</p>
+<p><strong>It's Summer dammit!</strong></p>
+<p>Let's declare this Summer, <strong>The Summer of YS</strong>!</p>
+<h3 id="summertime-and-the-yamls-easy"><a class="toclink" href="2025-06-01/the-summer-of-ys/#summertime-and-the-yamls-easy">Summertime... and the YAML's Easy</a></h3>
+<p>Wanna learn 92 cool things about YAML and YS this Summer?
+That's one per day, for 3 months!</p>
+<p>I've attempted some crazy things in my days (with both success and failure), and
+this feels pretty crazy, but I'm gonna give it a shot.</p>
+<p>I'll post one (mostly short) blog post here each day until the end of August
+(mostly) about YAML and/or YS.</p>
+<h3 id="todays-handy-tip"><a class="toclink" href="2025-06-01/the-summer-of-ys/#todays-handy-tip">Today's Handy Tip</a></h3>
+<p>I'm not gonna just announce this fiasco and leave you hanging until tomorrow for
+your first tip.
+Let's get into it.</p>
+<hr />
+<p>I like to keep the lines of most of my text files (including the markdown of
+this very blog post) at 80 characters or less.
+You might have a different preference (I still love you) but that's how I roll.</p>
+<p>YAML is pretty good at letting you wrap long strings at places of your choosing.</p>
+<div class="highlight"><pre><span></span><code>phrase1: The quick brown fox jumped up and down
+  and all around while the lazy dog just lay
+  all day with nothing to say.
+phrase2:
+  The quick brown fox jumped up and down and all
+  around while the lazy dog just lay all day
+  with nothing to say.
+phrase3: &quot;The quick brown fox jumped up and down and all around while the lazy dog just lay all day with nothing to say.&quot;
+phrase4: &quot;\
+  The quick brown fox jumped up and down and all around
+  while the lazy dog just lay all day with nothing to say.&quot;
+phrase5: &gt;
+  The quick brown fox jumped up and down and all around
+  while the lazy dog just lay all day with nothing to say.
+</code></pre></div>
+<p>These values are all the same.
+They just use different YAML syntax to wrap the string.
+YAML generally wraps multiline strings, by collapsing a newline (and leading
+whitespace) into a single space.</p>
+<p>But what if you have a long string with no whitespace at all?
+This is a common problem when you have long URLs in your YAML files.</p>
+<p>There is a way to split these long strings in YAML, and it only works with
+double quoted scalars.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">naughty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin</span>
+<span class="nt">nice</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://gist.githubusercontent.com/\</span>
+<span class="w">       </span><span class="s">ingydotnet/\</span>
+<span class="w">       </span><span class="s">2e5a79b0b29e548a39a90dba10846042/\</span>
+<span class="w">       </span><span class="s">raw/\</span>
+<span class="w">       </span><span class="s">c05feff49521caf004b5656dcb0e94715a30fffd/\</span>
+<span class="w">       </span><span class="s">stdin&quot;</span>
+</code></pre></div>
+<p>Just use a backslash at the end of each line in a double quoted scalar and it
+will collapse without a space.</p>
+<p>Are these 2 values the same?</p>
+<p>I don't have a magic 8-ball, so let's use (<em>wise ole</em>) YS to find out!</p>
+<div class="highlight"><pre><span></span><code>$ ys -pe &#39;_.naughty == _.nice&#39; - &lt;&lt;&#39;...&#39;
+naughty: https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin
+nice: &quot;https://gist.githubusercontent.com/\
+       ingydotnet/\
+       2e5a79b0b29e548a39a90dba10846042/\
+       raw/\
+       c05feff49521caf004b5656dcb0e94715a30fffd/\
+       stdin&quot;
+...
+true
+</code></pre></div>
+<blockquote>
+<p>"It is decidedly so!"</p>
+</blockquote>
+<h3 id="see-you-tomorrow"><a class="toclink" href="2025-06-01/the-summer-of-ys/#see-you-tomorrow">See You Tomorrow!</a></h3>
+<p>One down, 91 to go!</p>
+<p>How hard can this be?</p>
+<p>Tomorrow I think I'll show you how to use variables in YAML.
+You always wanted to know, right?</p>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -3904,60 +4021,6 @@ It also gives the code a certain je ne sais quoi.</p>
     
       <nav class="md-post__action">
         <a href="2023-12-09/coding-with-style/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-08 00:00:00+00:00">December 8, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="going-to-the-library"><a class="toclink" href="2023-12-08/going-to-the-library/">Going to the Library</a></h2>
-<p>Programming in YS is as easy as reading a book.
-The only thing you really need is some good books!
-For that let's go to the library.</p>
-<p>By books of course I mean YS functions.
-And by library I mean the YS Standard Library!
-There you'll find all-time best sellers like <code>map</code>, <code>filter</code>, <code>reduce</code> and
-<code>say</code>.</p>
-<p>And Standard isn't the only Library in town...</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-08/going-to-the-library/">
           Continue reading
         </a>
       </nav>
