@@ -2539,26 +2539,26 @@ whitespace) into a single space.</p>
 This is a common problem when you have long URLs in your YAML files.</p>
 <p>There is a way to split these long strings in YAML, and it only works with
 double quoted scalars.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">naughty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin</span>
-<span class="nt">nice</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://gist.githubusercontent.com/\</span>
-<span class="w">       </span><span class="s">ingydotnet/\</span>
-<span class="w">       </span><span class="s">2e5a79b0b29e548a39a90dba10846042/\</span>
-<span class="w">       </span><span class="s">raw/\</span>
-<span class="w">       </span><span class="s">c05feff49521caf004b5656dcb0e94715a30fffd/\</span>
-<span class="w">       </span><span class="s">stdin&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nt">loong</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin</span>
+<span class="nt">short</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://gist.githubusercontent.com/\</span>
+<span class="w">        </span><span class="s">ingydotnet/\</span>
+<span class="w">        </span><span class="s">2e5a79b0b29e548a39a90dba10846042/\</span>
+<span class="w">        </span><span class="s">raw/\</span>
+<span class="w">        </span><span class="s">c05feff49521caf004b5656dcb0e94715a30fffd/\</span>
+<span class="w">        </span><span class="s">stdin&quot;</span>
 </code></pre></div>
 <p>Just use a backslash at the end of each line in a double quoted scalar and it
 will collapse without a space.</p>
-<p>Are these 2 values the same?</p>
-<p>I don't have a magic 8-ball, so let's use (<em>wise ole</em>) YS to find out!</p>
-<div class="highlight"><pre><span></span><code>$ ys -pe &#39;_.naughty == _.nice&#39; - &lt;&lt;&#39;...&#39;
-naughty: https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin
-nice: &quot;https://gist.githubusercontent.com/\
-       ingydotnet/\
-       2e5a79b0b29e548a39a90dba10846042/\
-       raw/\
-       c05feff49521caf004b5656dcb0e94715a30fffd/\
-       stdin&quot;
+<p>Are these 2 values exactly the same?</p>
+<p>I don't have a magic 8-ball, so let's use (<em>wise ol'</em>) YS to find out!</p>
+<div class="highlight"><pre><span></span><code>$ ys -pe &#39;_.short == _.loong&#39; - &lt;&lt;&#39;...&#39;
+loong: https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin
+short: &quot;https://gist.githubusercontent.com/\
+        ingydotnet/\
+        2e5a79b0b29e548a39a90dba10846042/\
+        raw/\
+        c05feff49521caf004b5656dcb0e94715a30fffd/\
+        stdin&quot;
 ...
 true
 </code></pre></div>
