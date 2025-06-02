@@ -91,6 +91,7 @@ plugins:
     categories_allowed:
     - General
     - Advent-2023
+    - Summer-of-YS
     post_date_format: long
     post_dir: blog/posts
     post_url_date_format: yyyy-MM-dd
