@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Mon, 02 Jun 2025 00:43:07 -0000</pubDate>
-    <lastBuildDate>Mon, 02 Jun 2025 00:43:07 -0000</lastBuildDate>
+    <pubDate>Mon, 02 Jun 2025 01:19:57 -0000</pubDate>
+    <lastBuildDate>Mon, 02 Jun 2025 01:19:57 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -45,8 +45,18 @@
       <category>Summer-of-YS</category>
         
       
-      <description>&lt;p&gt;Today starts a 3 month long, daily summertime journey into the intricacies of YAML and the wisdom of YS!
-Put on your favorite pair of coding sunglasses, grab...&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today starts a 3 month long, daily summertime journey into the intricacies of
+YAML and the wisdom of YS!
+Put on your favorite pair of coding sunglasses, grab a refreshing config drink,
+and let&#39;s get started!&lt;/p&gt;
+&lt;p&gt;Back in March I promised to start writing more often about all the ways that YS
+can help you out day-to-day with your YAML interactions.
+When I last posted here it was barely Spring and now Spring is turning into
+Summer.&lt;/p&gt;
+&lt;p&gt;Seasonal turning points be damned, I think of Summer as June, July, and August.
+In other words...&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;It&#39;s Summer dammit!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Let&#39;s declare this Summer, &lt;strong&gt;The Summer of YS&lt;/strong&gt;!&lt;/p&gt;</description>
       <link>https://yamlscript.org/blog/2025-06-01/the-summer-of-ys/</link>
       <pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>

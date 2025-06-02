@@ -2498,8 +2498,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </header>
   <div class="md-post__content md-typeset">
     <h2 id="the-summer-of-ys"><a class="toclink" href="../../2025-06-01/the-summer-of-ys/">The Summer of YS</a></h2>
-<p>Today starts a 3 month long, daily summertime journey into the intricacies of YAML and the wisdom of YS!
-Put on your favorite pair of coding sunglasses, grab a refreshing config drink, and let's get started!</p>
+<p>Today starts a 3 month long, daily summertime journey into the intricacies of
+YAML and the wisdom of YS!
+Put on your favorite pair of coding sunglasses, grab a refreshing config drink,
+and let's get started!</p>
 <p>Back in March I promised to start writing more often about all the ways that YS
 can help you out day-to-day with your YAML interactions.
 When I last posted here it was barely Spring and now Spring is turning into
@@ -2508,76 +2510,13 @@ Summer.</p>
 In other words...</p>
 <p><strong>It's Summer dammit!</strong></p>
 <p>Let's declare this Summer, <strong>The Summer of YS</strong>!</p>
-<h3 id="summertime-and-the-yamls-easy"><a class="toclink" href="../../2025-06-01/the-summer-of-ys/#summertime-and-the-yamls-easy">Summertime... and the YAML's Easy</a></h3>
-<p>Wanna learn 92 cool things about YAML and YS this Summer?
-That's one per day, for 3 months!</p>
-<p>I've attempted some crazy things in my days (with both success and failure), and
-this feels pretty crazy, but I'm gonna give it a shot.</p>
-<p>I'll post one (mostly short) blog post here each day until the end of August
-(mostly) about YAML and/or YS.</p>
-<h3 id="todays-handy-tip"><a class="toclink" href="../../2025-06-01/the-summer-of-ys/#todays-handy-tip">Today's Handy Tip</a></h3>
-<p>I'm not gonna just announce this fiasco and leave you hanging until tomorrow for
-your first tip.
-Let's get into it.</p>
-<hr />
-<p>I like to keep the lines of most of my text files (including the markdown of
-this very blog post) at 80 characters or less.
-You might have a different preference (I still love you) but that's how I roll.</p>
-<p>YAML is pretty good at letting you wrap long strings at places of your choosing.</p>
-<div class="highlight"><pre><span></span><code>phrase1: The quick brown fox jumped up and down
-  and all around while the lazy dog just lay
-  all day with nothing to say.
-phrase2:
-  The quick brown fox jumped up and down and all
-  around while the lazy dog just lay all day
-  with nothing to say.
-phrase3: &quot;The quick brown fox jumped up and down and all around while the lazy dog just lay all day with nothing to say.&quot;
-phrase4: &quot;\
-  The quick brown fox jumped up and down and all around
-  while the lazy dog just lay all day with nothing to say.&quot;
-phrase5: &gt;
-  The quick brown fox jumped up and down and all around
-  while the lazy dog just lay all day with nothing to say.
-</code></pre></div>
-<p>These values are all the same.
-They just use different YAML syntax to wrap the string.
-YAML generally wraps multiline strings, by collapsing a newline (and leading
-whitespace) into a single space.</p>
-<p>But what if you have a long string with no whitespace at all?
-This is a common problem when you have long URLs in your YAML files.</p>
-<p>There is a way to split these long strings in YAML, and it only works with
-double quoted scalars.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">loong</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin</span>
-<span class="nt">short</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://gist.githubusercontent.com/\</span>
-<span class="w">        </span><span class="s">ingydotnet/\</span>
-<span class="w">        </span><span class="s">2e5a79b0b29e548a39a90dba10846042/\</span>
-<span class="w">        </span><span class="s">raw/\</span>
-<span class="w">        </span><span class="s">c05feff49521caf004b5656dcb0e94715a30fffd/\</span>
-<span class="w">        </span><span class="s">stdin&quot;</span>
-</code></pre></div>
-<p>Just use a backslash at the end of each line in a double quoted scalar and it
-will collapse without a space.</p>
-<p>Are these 2 values exactly the same?</p>
-<p>I don't have a magic 8-ball, so let's use (<em>wise ol'</em>) YS to find out!</p>
-<div class="highlight"><pre><span></span><code>$ ys -pe &#39;_.short == _.loong&#39; - &lt;&lt;&#39;...&#39;
-loong: https://gist.githubusercontent.com/ingydotnet/2e5a79b0b29e548a39a90dba10846042/raw/c05feff49521caf004b5656dcb0e94715a30fffd/stdin
-short: &quot;https://gist.githubusercontent.com/\
-        ingydotnet/\
-        2e5a79b0b29e548a39a90dba10846042/\
-        raw/\
-        c05feff49521caf004b5656dcb0e94715a30fffd/\
-        stdin&quot;
-...
-true
-</code></pre></div>
-<blockquote>
-<p>"It is decidedly so!"</p>
-</blockquote>
-<h3 id="see-you-tomorrow"><a class="toclink" href="../../2025-06-01/the-summer-of-ys/#see-you-tomorrow">See You Tomorrow!</a></h3>
-<p>One down, 91 to go!</p>
-<p>How hard can this be?</p>
-<p>Tomorrow I think I'll show you how to use variables in YAML.
-You always wanted to know, right?</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../2025-06-01/the-summer-of-ys/">
+          Continue reading
+        </a>
+      </nav>
     
   </div>
 </article>
