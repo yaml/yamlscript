@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 01 Jun 2025 22:13:58 -0000</pubDate>
-    <lastBuildDate>Sun, 01 Jun 2025 22:13:58 -0000</lastBuildDate>
+    <pubDate>Mon, 02 Jun 2025 00:43:07 -0000</pubDate>
+    <lastBuildDate>Mon, 02 Jun 2025 00:43:07 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -42,12 +42,11 @@
       
       
         
-      <category>General</category>
+      <category>Summer-of-YS</category>
         
       
-      <description>&lt;p&gt;Back in March I promised to start writing more often about all the ways that YS
-can help you out day-to-day with your YAML interactions.
-When I last posted h...&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today starts a 3 month long, daily summertime journey into the intricacies of YAML and the wisdom of YS!
+Put on your favorite pair of coding sunglasses, grab...&lt;/p&gt;</description>
       <link>https://yamlscript.org/blog/2025-06-01/the-summer-of-ys/</link>
       <pubDate>Sun, 01 Jun 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
