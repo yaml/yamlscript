@@ -107,6 +107,9 @@ endif
 watchmedo-help:
 	$(WATCHER) --help | less
 
+# NOTE: Dont use '--wait' here. '--drop' prevents running too much.
+#
+# https://github.com/gorakhargosh/watchdog/issues/136#issuecomment-40088653
 watch:
 	: Starting watching: '$(WATCH)'
 	@cd .. && \
@@ -120,7 +123,6 @@ watch:
 	  --patterns='$(WATCH)' \
 	  --recursive \
 	  --timeout=2 \
-	  --wait \
 	  --drop \
 	  &
 
