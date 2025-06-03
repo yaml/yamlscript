@@ -673,6 +673,13 @@
     vector? "vec"
     (util/die "Can't determine type of '" (type x) "' value")))
 
+(defmacro to-vars
+  ([m] `(ys/+def-vars *ns* ~m))
+  ([m force]
+   (when (and force (not= force :force))
+     (util/die "to-vars() force argument must be :force"))
+  `(ys/+def-vars *ns* ~m ~force)))
+
 (defn to-vec [x]
   (condf x
     map? (reduce-kv (fn [acc k v] (conj acc k v)) [] x)

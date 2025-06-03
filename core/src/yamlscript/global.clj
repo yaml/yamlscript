@@ -5,7 +5,9 @@
   (:require
    [sci.core :as sci])
   (:refer-clojure :exclude [create-ns
-                            intern]))
+                            intern
+                            ns-name
+                            resolve]))
 
 #_(defn WWW [& xs]
   (println (apply str ">>> " xs) " <<<")
@@ -33,8 +35,14 @@
 (defn create-ns [ns]
   (sci/create-ns ns))
 
-(defn intern [ns vym val]
-  (sci/intern @sci-ctx ns vym val))
+(defn ns-name [ns]
+  (sci/ns-name ns))
+
+(defn resolve [sym]
+  (sci/resolve @sci-ctx sym))
+
+(defn intern [ns sym val]
+  (sci/intern @sci-ctx ns sym val))
 
 (defn set-underscore [v]
   (sci/alter-var-root _ (constantly v)))

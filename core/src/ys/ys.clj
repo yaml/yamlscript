@@ -21,30 +21,37 @@
 (defn compile [code]
   (yamlscript.compiler/compile code))
 
-(defn +def-vars [ns m]
-  (let [ns
-        (condf ns
-          #(= (type %1) clojure.lang.Namespace) ns
-          #(= (type %1) sci.lang.Namespace) ns
-          string? (global/create-ns (symbol ns))
-          symbol? (global/create-ns ns)
-          (util/die (str "Invalid namespace for set-vars: '" ns "'")))]
-    (reduce-kv
-      (fn [_ k v]
-        (let [key (condf k
-                    string? k
-                    keyword? (name k)
-                    symbol? (name k)
-                    (util/die (str "Invalid key for set-vars: '" k "'")))
-              key (if (> (count key) 1)
-                    (str/replace key #"_" "-")
-                    key)
-              _ (when-not (or (re-matches re/symw key) (=  key "_"))
-                  (util/die (str "Invalid key for set-vars: '" key "'")))
-              key (symbol key)]
-          (global/intern ns key v)))
-      nil m)
-    nil))
+(defn +def-vars
+  ([ns m]
+   (+def-vars ns m false))
+  ([ns m force]
+   (let [m (dissoc m "_" '_)
+         ns
+         (condf ns
+           #(= (type %1) clojure.lang.Namespace) ns
+           #(= (type %1) sci.lang.Namespace) ns
+           string? (global/create-ns (symbol ns))
+           symbol? (global/create-ns ns)
+           (util/die (str "Invalid namespace for set-vars: '" ns "'")))]
+     (reduce-kv
+       (fn [_ k v]
+         (let [key (condf k
+                     string? k
+                     keyword? (name k)
+                     symbol? (name k)
+                     (util/die (str "Invalid key for set-vars: '" k "'")))
+               key (str/replace key #"_" "-")
+               _ (when-not (re-matches re/symw key)
+                   (util/die (str "Invalid key for set-vars: '" key "'")))
+               key (symbol key)]
+           (when (and (not force)
+                   (global/resolve key))
+             (util/die
+               (str "Variable '" key
+                 "' already defined in namespace '" (global/ns-name ns) "'")))
+           (global/intern ns key v)))
+       nil m)
+     nil)))
 
 (defmacro def-vars-from-map [ns m]
   `(let [[m# ns#] (if (~m "+")
