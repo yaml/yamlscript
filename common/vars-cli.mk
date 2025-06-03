@@ -10,8 +10,11 @@ CLI_BIN_BASH_SRC := share/ys-0.bash
 CLI_JAR := \
   target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
-CLI_JAR_DEPS := \
-  $(LEIN) \
+ifeq (,$(wildcard $(LEIN)))
+CLI_JAR_DEPS := $(LEIN)
+endif
+
+CLI_JAR_DEPS += \
   $(CORE_INSTALLED) \
   $(CLI_SRC) \
 
