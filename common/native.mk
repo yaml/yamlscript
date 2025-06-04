@@ -1,5 +1,5 @@
-NATIVE_OPTS := \
-  -O$(GRAALVM_O) \
+NATIVE-OPTS := \
+  -O$(GRAALVM-O) \
   --verbose \
   --native-image-info \
   --no-fallback \
@@ -16,47 +16,48 @@ NATIVE_OPTS := \
   -J-Dclojure.compiler.direct-linking=true \
   -J-Xmx3g \
 
-export MUSL_HOME := $(YS_TMP)/musl
-export PATH := $(MUSL_HOME)/bin:$(PATH)
+MUSL-HOME := $(LOCAL-CACHE)/musl
+export MUSL_HOME := $(MUSL-HOME)
+export PATH := $(MUSL-HOME)/bin:$(PATH)
 
-MUSL_GCC := $(MUSL_HOME)/bin/musl-gcc
+MUSL-GCC := $(MUSL-HOME)/bin/musl-gcc
 
-MUSL_VERSION := 1.2.4
-MUSL_TAR := musl-$(MUSL_VERSION).tar.gz
-MUSL_DIR := $(YS_TMP)/musl-$(MUSL_VERSION)
-MUSL_URL := https://musl.libc.org/releases/$(MUSL_TAR)
+MUSL-VERSION := 1.2.4
+MUSL-TAR := musl-$(MUSL-VERSION).tar.gz
+MUSL-DIR := $(LOCAL-CACHE)/musl-$(MUSL-VERSION)
+MUSL-URL := https://musl.libc.org/releases/$(MUSL-TAR)
 
-ZLIB_VERSION := 1.2.13
-ZLIB_TAR := zlib-$(ZLIB_VERSION).tar.gz
-ZLIB_DIR := $(YS_TMP)/zlib-$(ZLIB_VERSION)
-ZLIB_URL := https://zlib.net/fossils/$(ZLIB_TAR)
+ZLIB-VERSION := 1.2.13
+ZLIB-TAR := zlib-$(ZLIB-VERSION).tar.gz
+ZLIB-DIR := $(LOCAL-CACHE)/zlib-$(ZLIB-VERSION)
+ZLIB-URL := https://zlib.net/fossils/$(ZLIB-TAR)
 
 #-------------------------------------------------------------------------------
-$(MUSL_GCC): | $(MUSL_HOME)
-	ln -s $@ $(MUSL_HOME)/bin/x86_64-linux-musl-gcc
+$(MUSL-GCC): | $(MUSL-HOME)
+	ln -s $@ $(MUSL-HOME)/bin/x86_64-linux-musl-gcc
 	musl-gcc --version
 
-$(MUSL_HOME): | $(MUSL_DIR) $(ZLIB_DIR)
-	(cd $(MUSL_DIR) && \
+$(MUSL-HOME): | $(MUSL-DIR) $(ZLIB-DIR)
+	(cd $(MUSL-DIR) && \
 	  ./configure --prefix=$@ --static && \
 	  make && make install)
-	(cd $(ZLIB_DIR) && \
+	(cd $(ZLIB-DIR) && \
 	  CC=musl-gcc ./configure --prefix=$@ --static && \
 	  make && make install)
 
-$(MUSL_DIR): | $(YS_TMP)/$(MUSL_TAR)
-	(cd $(YS_TMP) && tar -xf $(YS_TMP)/$(MUSL_TAR))
+$(MUSL-DIR): | $(LOCAL-CACHE)/$(MUSL-TAR)
+	(cd $(LOCAL-CACHE) && tar -xf $(LOCAL-CACHE)/$(MUSL-TAR))
 
-$(YS_TMP)/$(MUSL_TAR):
+$(LOCAL-CACHE)/$(MUSL-TAR):
 	$(call need-curl)
-	$(CURL) -o $(YS_TMP)/$(MUSL_TAR) $(MUSL_URL)
+	$(CURL) -o $(LOCAL-CACHE)/$(MUSL-TAR) $(MUSL-URL)
 
-$(ZLIB_DIR): | $(YS_TMP)/$(ZLIB_TAR)
-	(cd $(YS_TMP) && tar -xf $(YS_TMP)/$(ZLIB_TAR))
+$(ZLIB-DIR): | $(LOCAL-CACHE)/$(ZLIB-TAR)
+	(cd $(LOCAL-CACHE) && tar -xf $(LOCAL-CACHE)/$(ZLIB-TAR))
 
-$(YS_TMP)/$(ZLIB_TAR):
+$(LOCAL-CACHE)/$(ZLIB-TAR):
 	$(call need-curl)
-	$(CURL) -o $(YS_TMP)/$(ZLIB_TAR) $(ZLIB_URL)
+	$(CURL) -o $(LOCAL-CACHE)/$(ZLIB-TAR) $(ZLIB-URL)
 
 muslclean::
-	$(RM) -r $(MUSL_HOME) $(MUSL_DIR) $(MUSL_TAR) $(ZLIB_DIR) $(ZLIB_TAR)
+	$(RM) -r $(MUSL-HOME) $(MUSL-DIR) $(MUSL-TAR) $(ZLIB-DIR) $(ZLIB-TAR)

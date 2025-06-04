@@ -1,32 +1,32 @@
 include $(COMMON)/vars-core.mk
 
-CLI_BIN := bin/ys-$(YS_VERSION)
-CLI_SRC := \
+CLI-BIN := bin/ys-$(YS_VERSION)
+CLI-SRC := \
   src/yamlscript/cli.clj \
 
-CLI_BIN_BASH := bin/ys-sh-$(YS_VERSION)
-CLI_BIN_BASH_SRC := share/ys-0.bash
+CLI-BIN-BASH := bin/ys-sh-$(YS_VERSION)
+CLI-BIN-BASH-SRC := share/ys-0.bash
 
-CLI_JAR := \
+CLI-JAR := \
   target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
 ifeq (,$(wildcard $(LEIN)))
-CLI_JAR_DEPS := $(LEIN)
+CLI-JAR-DEPS := $(LEIN)
 endif
 
-CLI_JAR_DEPS += \
-  $(CORE_INSTALLED) \
-  $(CLI_SRC) \
+CLI-JAR-DEPS += \
+  $(CORE-INSTALLED) \
+  $(CLI-SRC) \
 
-CLI_DEPS := \
-  $(CLI_BIN) \
-  $(CLI_BIN_BASH) \
+CLI-DEPS := \
+  $(CLI-BIN) \
+  $(CLI-BIN-BASH) \
 
 ifdef YS_NATIVE_BUILD_STATIC
-ifeq (true,$(IS_LINUX))
-ifeq (true,$(IS_INTEL))
-CLI_DEPS := $(MUSL_GCC) $(CLI_DEPS)
-NATIVE_OPTS += \
+ifeq (true,$(IS-LINUX))
+ifeq (true,$(IS-INTEL))
+CLI-DEPS := $(MUSL-GCC) $(CLI-DEPS)
+NATIVE-OPTS += \
   -H:CCompilerOption=-Wl,-z,stack-size=2097152 \
   --static \
   --libc=musl

@@ -5,18 +5,17 @@ export ROOT
 
 CONFIG := mkdocs.yml
 
-PYTHON_VENV := $(ROOT)/www/.venv
-VENV := source $(PYTHON_VENV)/bin/activate
+PYTHON-VENV := $(ROOT)/www/.venv
+VENV := source $(PYTHON-VENV)/bin/activate
 
-MD_FILES := $(shell find ../doc -name '*.md' | sort)
-MDYS_FILES := $(shell find ../doc src -name '*.mdys' | sort)
-MDYSMD_FILES := $(MDYS_FILES:%.mdys=%.md)
-MD_FILES += $(MDYS_FILES)
-MD_FILES := $(MD_FILES:../doc/%=src/doc/%)
-MD_FILES := $(MD_FILES:%.mdys=%.md)
+MD-FILES := $(shell find ../doc -name '*.md' | sort)
+MDYS-FILES := $(shell find ../doc src -name '*.mdys' | sort)
+MD-FILES += $(MDYS-FILES)
+MD-FILES := $(MD-FILES:../doc/%=src/doc/%)
+MD-FILES := $(MD-FILES:%.mdys=%.md)
 
-BLOG_FILES := $(shell find ../blog -name '*.md' | sort)
-BLOG_FILES := $(BLOG_FILES:../blog/%=src/blog/posts/%)
+BLOG-FILES := $(shell find ../blog -name '*.md' | sort)
+BLOG-FILES := $(BLOG-FILES:../blog/%=src/blog/posts/%)
 
 WATCHER := $(VENV) && watchmedo shell-command
 WATCH := \
@@ -46,10 +45,10 @@ DIRS := \
 DEPS := \
   build-bin-ys \
 	$(DIRS) \
-  $(PYTHON_VENV) \
+  $(PYTHON-VENV) \
   $(CONFIG) \
-  $(MD_FILES) \
-  $(BLOG_FILES) \
+  $(MD-FILES) \
+  $(BLOG-FILES) \
   sample \
 
 
@@ -59,13 +58,13 @@ deps: line1 $(DEPS) line2
 
 ifeq (live,$(website))
   export YS_WWW_LIVE := true
-  YS_WWW_DOMAIN := yamlscript.org
-  YS_WWW_REMOTE := origin
-  YS_WWW_BRANCH ?= gh-pages
+  YS-WWW-DOMAIN := yamlscript.org
+  YS-WWW-REMOTE := origin
+  YS-WWW-BRANCH ?= gh-pages
 else ifeq (stage,$(website))
-  YS_WWW_DOMAIN := stage.yamlscript.org
-  YS_WWW_REMOTE := stage
-  YS_WWW_BRANCH := site
+  YS-WWW-DOMAIN := stage.yamlscript.org
+  YS-WWW-REMOTE := stage
+  YS-WWW-BRANCH := site
 endif
 
 .PHONY: site
@@ -74,7 +73,7 @@ build site:: $(DIRS) $(DEPS)
 	git worktree add -f site
 	$(RM) -r site/*
 	$(VENV) && mkdocs build
-	echo $(YS_WWW_DOMAIN) > site/CNAME
+	echo $(YS-WWW-DOMAIN) > site/CNAME
 	git -C site add -A
 
 serve: $(DIRS) $(DEPS) watch
@@ -90,15 +89,15 @@ dirs: $(DIRS)
 
 # XXX - See 'mkdocs gh-deploy' for a more standard way to do this
 # Options remote_branch and remote_name are used for gh-deploy
-ifeq (,$(YS_WWW_REMOTE))
+ifeq (,$(YS-WWW-REMOTE))
 publish:
 	$(error Use 'make publish website=<live|stage>' to publish)
 else
 publish: build
 	-git -C site commit -m "Publish $$(date)"
-	git -C site push $(YS_WWW_REMOTE) HEAD:$(YS_WWW_BRANCH) --force
+	git -C site push $(YS-WWW-REMOTE) HEAD:$(YS-WWW-BRANCH) --force
 	@echo
-	@echo "Published to https://$(YS_WWW_DOMAIN)"
+	@echo "Published to https://$(YS-WWW-DOMAIN)"
 	@echo
 endif
 
@@ -122,8 +121,8 @@ watch:
 	  --drop \
 	  &
 
-material: $(PYTHON_VENV)
-	ln -s $(PYTHON_VENV)/lib/python*/site-packages/material $@
+material: $(PYTHON-VENV)
+	ln -s $(PYTHON-VENV)/lib/python*/site-packages/material $@
 
 override: material
 ifeq (,$(f))
@@ -136,7 +135,7 @@ ifneq (,$(wildcard theme/partials/$f))
 endif
 	cp $</templates/partials/$f theme/partials/$f
 
-pip-install: $(PYTHON_VENV)
+pip-install: $(PYTHON-VENV)
 ifeq (,$(m))
 	@echo 'm=<module> is not set'
 	@exit 1
@@ -151,11 +150,9 @@ clean::
 	$(RM) -r site src/doc src/blog/posts .cache
 
 realclean:: clean
-	$(RM) -r $(PYTHON_VENV)
+	$(RM) -r $(PYTHON-VENV)
 
-$(VENV_DIR): $(PYTHON_VENV)
-
-$(PYTHON_VENV):
+$(PYTHON-VENV):
 	$(PYTHON) -m venv $@
 	$(VENV) && pip install -r requirements.txt
 

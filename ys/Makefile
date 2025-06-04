@@ -4,49 +4,49 @@ include $(COMMON)/clojure.mk
 include $(COMMON)/native.mk
 include $(COMMON)/vars-cli.mk
 
-BPAN_LOCAL := .bpan
-BPAN_REPO_URL := https://github.com/bpan-org/bpan
+BPAN-LOCAL := .bpan
+BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
 test := test/
 
 
 #------------------------------------------------------------------------------
-build:: $(CLI_DEPS)
+build:: $(CLI-DEPS)
 
-install: $(CLI_DEPS)
+install: $(CLI-DEPS)
 	mkdir -p $(PREFIX)/bin
-	install -m 755 $(CLI_BIN) $(PREFIX)/bin/
-	ln -fs $(notdir $(CLI_BIN)) \
-	  $(PREFIX)/$(CLI_BIN:%-$(YS_VERSION)=%-$(API_VERSION))
-	ln -fs $(notdir $(CLI_BIN)) \
-	  $(PREFIX)/$(CLI_BIN:%-$(YS_VERSION)=%)
-	install -m 755 $(CLI_BIN_BASH) \
+	install -m 755 $(CLI-BIN) $(PREFIX)/bin/
+	ln -fs $(notdir $(CLI-BIN)) \
+	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $(CLI-BIN)) \
+	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%)
+	install -m 755 $(CLI-BIN-BASH) \
 	  $(PREFIX)/bin/
 
-jar: $(CLI_JAR)
+jar: $(CLI-JAR)
 
 test: test-run
 
 test-all: test-unit test-run
 
-test-unit: $(CORE_INSTALLED)
-	$(LEIN) test $(lein-test)
+test-unit: $(LEIN) $(CORE-INSTALLED)
+	$< test $(lein-test)
 
-test-run: $(CLI_DEPS) $(BPAN_LOCAL)
+test-run: $(CLI-DEPS) $(BPAN-LOCAL)
 	prove $${TEST_VERBOSE:+'-v'} $(test)
 
-repl-deps:: $(CORE_INSTALLED)
+repl-deps:: $(CORE-INSTALLED)
 
 clean::
 	$(RM) -r .cpcache/
 
 realclean::
-	$(RM) -r bin lib $(BPAN_LOCAL)
+	$(RM) -r bin lib $(BPAN-LOCAL)
 
-$(BPAN_LOCAL):
-	git clone --depth=1 $(BPAN_REPO_URL) $@
+$(BPAN-LOCAL):
+	git clone --depth=1 $(BPAN-REPO-URL) $@
 
-$(CLI_BIN): $(CLI_JAR)
+$(CLI-BIN): $(CLI-JAR)
 ifneq (true,$(LIBZ))
 	$(error *** \
 	  The 'libz.$(SO)' library is required by native-image but not installed)
@@ -55,7 +55,7 @@ endif
 	$(TIME) \
 	native-image \
 	  -H:ConfigurationFileDirectories=config/ \
-	  $(NATIVE_OPTS) \
+	  $(NATIVE-OPTS) \
 	\
 	  -jar $< \
 	  -o $@
@@ -63,16 +63,16 @@ endif
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 	touch $@
 
-$(CLI_BIN_BASH): $(CLI_BIN_BASH_SRC)
+$(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)
 	mkdir -p $(dir $@)
 	cp $< $@
 	chmod 755 $@
 
-$(CLI_JAR): $(CLI_JAR_DEPS)
-	$(LEIN) uberjar
+$(CLI-JAR): $(LEIN) $(CLI-JAR-DEPS)
+	$< uberjar
 
-$(CORE_INSTALLED): $(CORE_JAR)
-	@$(MAKE) -C $(CORE_DIR) $@ > /dev/null 2>&1
+$(CORE-INSTALLED): $(CORE-JAR)
+	@$(MAKE) -C $(CORE-DIR) $@ > /dev/null 2>&1
 
-$(CORE_JAR):
-	@$(MAKE) -C $(CORE_DIR) >/dev/null 2>&1
+$(CORE-JAR):
+	@$(MAKE) -C $(CORE-DIR) >/dev/null 2>&1

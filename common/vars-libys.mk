@@ -1,33 +1,33 @@
-LIBYS_DIR := $(ROOT)/libyamlscript
-LIBYS_LIB := $(LIBYS_DIR)/lib
+LIBYS-DIR := $(ROOT)/libyamlscript
+LIBYS-LIB := $(LIBYS-DIR)/lib
 
-export LD_LIBRARY_PATH := $(LIBYS_LIB):$(LD_LIBRARY_PATH)
+export LD_LIBRARY_PATH := $(LIBYS-LIB):$(LD_LIBRARY_PATH)
 export $(DY)LD_LIBRARY_PATH := $(LD_LIBRARY_PATH)
 
-LIBYS_SO_NAME := $(LIBYS_LIB)/libyamlscript
-LIBYS_SO_FQNP := $(LIBYS_SO_NAME).$(SO).$(YAMLSCRIPT_VERSION)
-LIBYS_SO_BASE := $(LIBYS_LIB)/libyamlscript.$(SO)
-LIBYS_SO_APIP := $(LIBYS_SO_BASE).$(API_VERSION)
-LIBYS_SO_VERS := $(LIBYS_LIB)/libyamlscript.$(YAMLSCRIPT_VERSION).$(SO)
+LIBYS-SO-NAME := $(LIBYS-LIB)/libyamlscript
+LIBYS-SO-FQNP := $(LIBYS-SO-NAME).$(SO).$(YAMLSCRIPT_VERSION)
+LIBYS-SO-BASE := $(LIBYS-LIB)/libyamlscript.$(SO)
+LIBYS-SO-APIP := $(LIBYS-SO-BASE).$(API_VERSION)
+LIBYS-SO-VERS := $(LIBYS-LIB)/libyamlscript.$(YAMLSCRIPT_VERSION).$(SO)
 
-LIBYS_DEPS := \
-  $(LIBYS_SO_FQNP) \
+LIBYS-DEPS := \
+  $(LIBYS-SO-FQNP) \
 
-LIBYS_JAR := \
-  $(LIBYS_LIB)/target/libyamlscript-$(YAMLSCRIPT_VERSION)-standalone.jar
+LIBYS-JAR := \
+  $(LIBYS-LIB)/target/libyamlscript-$(YAMLSCRIPT_VERSION)-standalone.jar
 
-LIBYS_INSTALLED := \
-  $(MAVEN_REPOSITORY)/org/yamlscript/yamlscript/$(YAMLSCRIPT_VERSION)
-LIBYS_INSTALLED := \
-  $(LIBYS_INSTALLED)/yamlscript-$(YAMLSCRIPT_VERSION).jar
+LIBYS-INSTALLED := \
+  $(MAVEN-REPOSITORY)/org/yamlscript/yamlscript/$(YAMLSCRIPT_VERSION)
+LIBYS-INSTALLED := \
+  $(LIBYS-INSTALLED)/yamlscript-$(YAMLSCRIPT_VERSION).jar
 
-LIBYS_JAR_PATH := \
+LIBYS-JAR-PATH := \
   target/libyamlscript-$(YAMLSCRIPT_VERSION)-standalone.jar
 
-LIBYS_SOURCES := \
+LIBYS-SOURCES := \
   src/libyamlscript/core.clj \
   src/libyamlscript/API.java \
 
-LIBYS_HEADERS := \
-  $(LIBYS_LIB)/graal_isolate.h \
-  $(LIBYS_SO_NAME).$(YAMLSCRIPT_VERSION).h \
+LIBYS-HEADERS := \
+  $(LIBYS-LIB)/graal_isolate.h \
+  $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h \

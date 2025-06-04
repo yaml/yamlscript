@@ -6,35 +6,35 @@ include $(COMMON)/binding.mk
 # Go vars:
 #------------------------------------------------------------------------------
 
-GO_VER := 1.22.4
+GO-VER := 1.22.4
 
-ifdef IS_LINUX
-  ifdef IS_INTEL
-    GO_ARCH := linux-amd64
-  else ifdef IS_ARM
-    GO_ARCH := linux-arm64
+ifdef IS-LINUX
+  ifdef IS-INTEL
+    GO-ARCH := linux-amd64
+  else ifdef IS-ARM
+    GO-ARCH := linux-arm64
   endif
-else ifdef IS_MACOS
-  ifdef IS_INTEL
-    GO_ARCH := darwin-amd64
-  else ifdef IS_ARM
-    GO_ARCH := darwin-arm64
+else ifdef IS-MACOS
+  ifdef IS-INTEL
+    GO-ARCH := darwin-amd64
+  else ifdef IS-ARM
+    GO-ARCH := darwin-arm64
   endif
 endif
 
-GO_DIR := go$(GO_VER)
-GO_TAR := $(GO_DIR).$(GO_ARCH).tar.gz
-GO_TARBALL := $(YS_TMP)/$(GO_TAR)
-GO_URL := https://go.dev/dl/$(GO_TAR)
-GO_ROOT := $(YS_TMP)/go$(GO_VER)
-GO_BIN := $(GO_ROOT)/bin
-GO_INSTALLED := $(GO_BIN)/go
+GO-DIR := go$(GO-VER)
+GO-TAR := $(GO-DIR).$(GO-ARCH).tar.gz
+GO-TARBALL := $(LOCAL-CACHE)/$(GO-TAR)
+GO-URL := https://go.dev/dl/$(GO-TAR)
+GO-ROOT := $(LOCAL-CACHE)/go$(GO-VER)
+GO-BIN := $(GO-ROOT)/bin
+GO-INSTALLED := $(GO-BIN)/go
 
 export CGO_CFLAGS := -I $(ROOT)/libyamlscript/lib
 export CGO_LDFLAGS := -L $(ROOT)/libyamlscript/lib
 
 unexport GOROOT GOPATH GOBIN GOMODCACHE
-export GOROOT := $(GO_ROOT)
+export GOROOT := $(GO-ROOT)
 export GOPATH := $(ROOT)/go/go
 export GOBIN := $(GOROOT)/bin
 
@@ -42,7 +42,7 @@ export PATH := $(GOBIN):$(PATH)
 
 
 #------------------------------------------------------------------------------
-build:: build-doc $(LIBYS_SO_FQNP) $(GO_INSTALLED)
+build:: build-doc $(LIBYS-SO-FQNP) $(GO-INSTALLED)
 
 build-doc:: ReadMe.md
 
@@ -59,7 +59,7 @@ clean::
 	$(RM) -r $(GOPATH)
 
 sysclean:: clean
-	$(RM) -r $(YS_TMP)/go*
+	$(RM) -r $(LOCAL-CACHE)/go*
 
 
 #------------------------------------------------------------------------------
@@ -70,17 +70,16 @@ pseudo-version:
 	   --date=format-local:%Y%m%d%H%M%S \
 	   --format=v0.0.0-%cd-%h
 
-print-goroot: $(GO_INSTALLED)
+print-goroot: $(GO-INSTALLED)
 	@echo $(GOROOT)
 
 
 #------------------------------------------------------------------------------
-$(GO_INSTALLED): $(GO_TARBALL)
-	mkdir -p $(YS_TMP)
-	tar xf $< -C $(YS_TMP)
-	mv $(YS_TMP)/go $(YS_TMP)/$(GO_DIR)
+$(GO-INSTALLED): $(GO-TARBALL)
+	tar xf $< -C $(LOCAL-CACHE)
+	mv $(LOCAL-CACHE)/go $(LOCAL-CACHE)/$(GO-DIR)
 	touch $@
 
-$(GO_TARBALL):
+$(GO-TARBALL):
 	$(call need-curl)
-	$(CURL) -o $@ $(GO_URL)
+	$(CURL) -o $@ $(GO-URL)

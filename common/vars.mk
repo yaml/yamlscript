@@ -1,47 +1,38 @@
 export LANG := en_US.UTF-8
 
-GIT-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
-
-GIT-DIR := $(shell git rev-parse --git-common-dir 2>/dev/null)
-GIT-DIR := $(shell [[ '$(GIT-DIR)' && '$(GIT-DIR)' == *.git && -d '$(GIT-DIR)' ]] && echo $(GIT-DIR))
+GIT-DIR := $(shell git rev-parse --git-common-dir)
 ifeq (,$(GIT-DIR))
-$(error Can't determine .git directory location)
+  $(error Can't determine .git directory location)
 endif
 GIT-DIR := $(shell cd $(GIT-DIR) && pwd -P)
-GIT-EXT := $(GIT-DIR)/.ext
 
-ifndef YS_TMP
-ifneq (,$(GIT-DIR))
-  YS_TMP := $(GIT-EXT)
-else
-  YS_TMP := $(ROOT)/.ext
-endif
-endif
+LOCAL-ROOT := $(GIT-DIR)/.local
+LOCAL-BIN := $(LOCAL-ROOT)/bin
+LOCAL-CACHE := $(LOCAL-ROOT)/cache
+LOCAL-HOME := $(LOCAL-ROOT)/home
+LOCAL-TMP := $(LOCAL-ROOT)/tmp
+_ := $(shell mkdir -p $(LOCAL-BIN) $(LOCAL-CACHE) $(LOCAL-HOME) $(LOCAL-TMP))
 
-export TMPDIR := $(YS_TMP)/tmp
+export TMPDIR := $(LOCAL-TMP)
 export TEMP := $(TMPDIR)
 export TMP := $(TMPDIR)
 
-ifeq (,$(wildcard $(TMPDIR)))
-  $(shell mkdir -p $(TMPDIR))
-endif
+BUILD-BIN := $(LOCAL-BIN)
 
-BUILD_BIN := $(YS_TMP)/bin
+BUILD-BIN-YS-VERSION := 0.1.93
 
-BUILD_BIN_YS_VERSION := 0.1.93
+BUILD-BIN-YS := $(BUILD-BIN)/ys-$(BUILD-BIN-YS-VERSION)
 
-BUILD_BIN_YS := $(BUILD_BIN)/ys-$(BUILD_BIN_YS_VERSION)
+YS-REPO-URL := https://github.com/yaml/yamlscript
+YS-GH-API-URL := https://api.github.com/repos/yaml/yamlscript
 
-YS_REPO_URL := https://github.com/yaml/yamlscript
-YS_GH_API_URL := https://api.github.com/repos/yaml/yamlscript
-
-YS_INSTALL_URL := https://yamlscript.org/install
+YS-INSTALL-URL := https://yamlscript.org/install
 
 COMMON := $(ROOT)/common
 
 unexport YS_FORMATTER
 
-export PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(BUILD_BIN):$(PATH)
+export PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(BUILD-BIN):$(PATH)
 
 export YAMLSCRIPT_ROOT ?= $(ROOT)
 
@@ -57,20 +48,20 @@ ostype := $(shell /bin/bash -c 'echo $$OSTYPE')
 machtype := $(shell /bin/bash -c 'echo $$MACHTYPE')
 
 ifneq (,$(findstring x86_64,$(machtype)))
-  IS_INTEL := true
+  IS-INTEL := true
 else ifneq (,$(findstring arm64,$(machtype)))
-  IS_ARM := true
+  IS-ARM := true
 else ifneq (,$(findstring aarch64,$(machtype)))
-  IS_ARM := true
+  IS-ARM := true
 endif
 
 ifneq (,$(findstring linux,$(ostype)))
-  IS_LINUX := true
+  IS-LINUX := true
   GCC := gcc -std=gnu99 -fPIC -shared
   SO := so
   DY :=
 else ifneq (,$(findstring darwin,$(ostype)))
-  IS_MACOS := true
+  IS-MACOS := true
   GCC := gcc -dynamiclib
   SO := dylib
   DY := DY
@@ -78,15 +69,15 @@ else
   $(error Unsupported OSTYPE: $(ostype))
 endif
 
-IS_ROOT ?= undefined
-ifneq (false,$(IS_ROOT))
+IS-ROOT ?= undefined
+ifneq (false,$(IS-ROOT))
 ifeq (0,$(shell id -u))
-  IS_ROOT := true
+  IS-ROOT := true
 endif
 endif
 
 LIBZ := false
-ifeq (true,$(IS_MACOS))
+ifeq (true,$(IS-MACOS))
   LIBZ := true
 else
 # Fix https://github.com/yaml/yamlscript/issues/210
@@ -117,7 +108,7 @@ endef
 
 TIME := time -p
 
-ifeq (true,$(IS_ROOT))
+ifeq (true,$(IS-ROOT))
   PREFIX ?= /usr/local
 else
   PREFIX ?= $(HOME)/.local
@@ -127,27 +118,27 @@ endif
 #------------------------------------------------------------------------------
 # Set machine specific variables:
 #------------------------------------------------------------------------------
-ifeq (true,$(IS_LINUX))
-  GRAALVM_SUBDIR :=
+ifeq (true,$(IS-LINUX))
+  GRAALVM-SUBDIR :=
 
-  ifeq (true,$(IS_INTEL))
-    GRAALVM_ARCH := linux-x64
+  ifeq (true,$(IS-INTEL))
+    GRAALVM-ARCH := linux-x64
 
-  else ifeq (true,$(IS_ARM))
-    GRAALVM_ARCH := linux-aarch64
+  else ifeq (true,$(IS-ARM))
+    GRAALVM-ARCH := linux-aarch64
 
   else
     $(error Unsupported Linux MACHTYPE: $(machtype))
   endif
 
-else ifeq (true,$(IS_MACOS))
-  GRAALVM_SUBDIR := /Contents/Home
+else ifeq (true,$(IS-MACOS))
+  GRAALVM-SUBDIR := /Contents/Home
 
-  ifeq (true,$(IS_ARM))
-    GRAALVM_ARCH := macos-aarch64
+  ifeq (true,$(IS-ARM))
+    GRAALVM-ARCH := macos-aarch64
 
-  else ifeq (true,$(IS_INTEL))
-    GRAALVM_ARCH := macos-x64
+  else ifeq (true,$(IS-INTEL))
+    GRAALVM-ARCH := macos-x64
 
   else
     $(error Unsupported MacOS MACHTYPE: $(machtype))
@@ -163,36 +154,36 @@ endif
 #------------------------------------------------------------------------------
 
 ### For Orable GraalVM No-Fee #################################################
-ifndef GRAALVM_CE
-GRAALVM_SRC := https://download.oracle.com/graalvm
-GRAALVM_VER ?= 24
-GRAALVM_TAR := graalvm-jdk-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
-GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/latest/$(GRAALVM_TAR)
-GRAALVM_PATH ?= $(YS_TMP)/graalvm-oracle-$(GRAALVM_VER)
+ifndef GRAALVM-CE
+GRAALVM-SRC := https://download.oracle.com/graalvm
+GRAALVM-VER ?= 24
+GRAALVM-TAR := graalvm-jdk-$(GRAALVM-VER)_$(GRAALVM-ARCH)_bin.tar.gz
+GRAALVM-URL := $(GRAALVM-SRC)/$(GRAALVM-VER)/latest/$(GRAALVM-TAR)
+GRAALVM-PATH ?= $(LOCAL-CACHE)/graalvm-oracle-$(GRAALVM-VER)
 
 ### For GraalVM CE (Community Edition) ########################################
 else
-GRAALVM_SRC := https://github.com/graalvm/graalvm-ce-builds/releases/download
-GRAALVM_VER ?= 21
-  ifeq (21,$(GRAALVM_VER))
-    override GRAALVM_VER := jdk-21.0.0
+GRAALVM-SRC := https://github.com/graalvm/graalvm-ce-builds/releases/download
+GRAALVM-VER ?= 21
+  ifeq (21,$(GRAALVM-VER))
+    override GRAALVM-VER := jdk-21.0.0
   endif
-  ifeq (17,$(GRAALVM_VER))
-    override GRAALVM_VER := jdk-17.0.8
+  ifeq (17,$(GRAALVM-VER))
+    override GRAALVM-VER := jdk-17.0.8
   endif
-GRAALVM_TAR := graalvm-community-$(GRAALVM_VER)_$(GRAALVM_ARCH)_bin.tar.gz
-GRAALVM_URL := $(GRAALVM_SRC)/$(GRAALVM_VER)/$(GRAALVM_TAR)
-GRAALVM_PATH ?= $(YS_TMP)/graalvm-ce-$(GRAALVM_VER)
+GRAALVM-TAR := graalvm-community-$(GRAALVM-VER)_$(GRAALVM-ARCH)_bin.tar.gz
+GRAALVM-URL := $(GRAALVM-SRC)/$(GRAALVM-VER)/$(GRAALVM-TAR)
+GRAALVM-PATH ?= $(LOCAL-CACHE)/graalvm-ce-$(GRAALVM-VER)
 endif
 
-GRAALVM_HOME := $(GRAALVM_PATH)$(GRAALVM_SUBDIR)
-GRAALVM_DOWNLOAD := $(YS_TMP)/$(GRAALVM_TAR)
-GRAALVM_INSTALLED := $(GRAALVM_HOME)/release
+GRAALVM-HOME := $(GRAALVM-PATH)$(GRAALVM-SUBDIR)
+GRAALVM-DOWNLOAD := $(LOCAL-CACHE)/$(GRAALVM-TAR)
+GRAALVM-INSTALLED := $(GRAALVM-HOME)/release
 
-GRAALVM_O ?= 1
+GRAALVM-O ?= 1
 # qbm is Quick Build Mode
 ifdef qbm
-  GRAALVM_O := b
+  GRAALVM-O := b
 endif
 
 
@@ -200,52 +191,53 @@ endif
 # Set MAVEN variables:
 #------------------------------------------------------------------------------
 
-MAVEN_VER := 3.9.9
-MAVEN_SRC := https://dlcdn.apache.org/maven/maven-3/$(MAVEN_VER)/binaries
-MAVEN_DIR := apache-maven-$(MAVEN_VER)
-MAVEN_TAR := $(MAVEN_DIR)-bin.tar.gz
-MAVEN_DIR := $(YS_TMP)/$(MAVEN_DIR)
-MAVEN_URL := $(MAVEN_SRC)/$(MAVEN_TAR)
-MAVEN_DOWNLOAD := $(YS_TMP)/$(MAVEN_TAR)
-MAVEN_BIN := $(MAVEN_DIR)/bin
-MAVEN_INSTALLED := $(MAVEN_BIN)/mvn
-MAVEN_REPOSITORY := $(YS_TMP)/.m2/repository
+MAVEN-VER := 3.9.9
+MAVEN-SRC := https://dlcdn.apache.org/maven/maven-3/$(MAVEN-VER)/binaries
+MAVEN-DIR := apache-maven-$(MAVEN-VER)
+MAVEN-TAR := $(MAVEN-DIR)-bin.tar.gz
+MAVEN-DIR := $(LOCAL-CACHE)/$(MAVEN-DIR)
+MAVEN-URL := $(MAVEN-SRC)/$(MAVEN-TAR)
+MAVEN-DOWNLOAD := $(LOCAL-CACHE)/$(MAVEN-TAR)
+MAVEN-BIN := $(MAVEN-DIR)/bin
+MAVEN-INSTALLED := $(MAVEN-BIN)/mvn
+MAVEN-REPOSITORY := $(LOCAL-HOME)/.m2/repository
 
-export MAVEN_OPTS := -Duser.home=$(YS_TMP)
+MAVEN-OPTS := -Duser.home=$(LOCAL-HOME)
+export MAVEN_OPTS := $(MAVEN-OPTS)
 
-export LEIN_HOME := $(YS_TMP)/lein
+export LEIN_HOME := $(LOCAL-HOME)/lein
 export LEIN_JVM_OPTS := \
   -XX:+TieredCompilation \
   -XX:TieredStopAtLevel=1 \
-  $(MAVEN_OPTS)
+  $(MAVEN-OPTS)
 
-JAVA_INSTALLED := $(GRAALVM_INSTALLED) $(MAVEN_INSTALLED)
+JAVA-INSTALLED := $(GRAALVM-INSTALLED) $(MAVEN-INSTALLED)
 
-export PATH := $(MAVEN_BIN):$(PATH)
+export PATH := $(MAVEN-BIN):$(PATH)
 
 
 #------------------------------------------------------------------------------
 # Set release asset variables:
 #------------------------------------------------------------------------------
 
-RELEASE_YS_NAME := ys-$(YS_VERSION)-$(GRAALVM_ARCH)
-RELEASE_YS_TAR := $(RELEASE_YS_NAME).tar.xz
+RELEASE-YS-NAME := ys-$(YS_VERSION)-$(GRAALVM-ARCH)
+RELEASE-YS-TAR := $(RELEASE-YS-NAME).tar.xz
 
-RELEASE_LYS_NAME := libyamlscript-$(YS_VERSION)-$(GRAALVM_ARCH)
-RELEASE_LYS_TAR := $(RELEASE_LYS_NAME).tar.xz
+RELEASE-LYS-NAME := libyamlscript-$(YS_VERSION)-$(GRAALVM-ARCH)
+RELEASE-LYS-TAR := $(RELEASE-LYS-NAME).tar.xz
 
 
 #------------------------------------------------------------------------------
 default::
 
-build-bin-ys: $(BUILD_BIN_YS)
+build-bin-ys: $(BUILD-BIN-YS)
 
-$(BUILD_BIN_YS):
+$(BUILD-BIN-YS):
 	$(call need-curl)
-	$(CURL) $(YS_INSTALL_URL) | \
-	  PREFIX=$$(dirname $(BUILD_BIN)) \
-	  VERSION=$(BUILD_BIN_YS_VERSION) \
+	$(CURL) $(YS-INSTALL-URL) | \
+	  PREFIX=$$(dirname $(BUILD-BIN)) \
+	  VERSION=$(BUILD-BIN-YS-VERSION) \
 	  BIN=1 bash
 
-$(BUILD_BIN):
+$(BUILD-BIN):
 	mkdir -p $@

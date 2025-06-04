@@ -6,29 +6,29 @@ include $(COMMON)/vars-core.mk
 include $(COMMON)/vars-libys.mk
 
 #------------------------------------------------------------------------------
-build:: $(LIBYS_DEPS)
+build:: $(LIBYS-DEPS)
 
-# jar: $(LIBYS_JAR_PATH)
+# jar: $(LIBYS-JAR-PATH)
 
-install:: $(LIBYS_DEPS)
+install:: $(LIBYS-DEPS)
 	mkdir -p $(PREFIX)/include/
-	install -m 644 $(LIBYS_HEADERS) $(PREFIX)/include/
+	install -m 644 $(LIBYS-HEADERS) $(PREFIX)/include/
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/
-	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS_SO_BASE))
-	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS_SO_APIP))
-	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS_SO_VERS))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-BASE))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-APIP))
+	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-VERS))
 
 realclean::
 	$(RM) -r lib/
 	$(RM) src/libyamlscript/Core.class
 
-test:: $(LIBYS_SO_FQNP)
+test:: $(LIBYS-SO-FQNP)
 	ls -lh lib
 
-repl-deps:: $(LIBYS_JAR_PATH)
+repl-deps:: $(LIBYS-JAR-PATH)
 
-$(LIBYS_SO_FQNP): $(LIBYS_JAR_PATH)
+$(LIBYS-SO-FQNP): $(LIBYS-JAR-PATH)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif
@@ -36,21 +36,21 @@ endif
 	# The next command may take a long time (a minute or so)
 	$(TIME) \
 	native-image \
-	  $(NATIVE_OPTS) \
+	  $(NATIVE-OPTS) \
 	\
 	  --shared \
 	  -jar $< \
-	  -o $(LIBYS_SO_NAME)
-	mv $(LIBYS_SO_BASE) $@
-	mv $(LIBYS_SO_NAME).h $(LIBYS_SO_NAME).$(YAMLSCRIPT_VERSION).h
-	ln -fs $(notdir $@) $(LIBYS_SO_APIP)
-	ln -fs $(notdir $@) $(LIBYS_SO_VERS)
-	ln -fs $(notdir $@) $(LIBYS_SO_BASE)
+	  -o $(LIBYS-SO-NAME)
+	mv $(LIBYS-SO-BASE) $@
+	mv $(LIBYS-SO-NAME).h $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h
+	ln -fs $(notdir $@) $(LIBYS-SO-APIP)
+	ln -fs $(notdir $@) $(LIBYS-SO-VERS)
+	ln -fs $(notdir $@) $(LIBYS-SO-BASE)
 	touch $@
 
-$(LIBYS_JAR_PATH): $(CORE_INSTALLED)
+$(LIBYS-JAR-PATH): $(CORE-INSTALLED)
 	$(LEIN) uberjar
 	touch $@
 
-$(CORE_INSTALLED):
-	$(MAKE) -C $(CORE_DIR) $@
+$(CORE-INSTALLED):
+	$(MAKE) -C $(CORE-DIR) $@

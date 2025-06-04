@@ -49,7 +49,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ruby/lib/yamlscript/version.rb
     - rust/src/lib.rs
     - util/ysj
-    - www/src/index.mdys
     - www/src/install
     - www/src/run-ys
     - www/src/cicd.md

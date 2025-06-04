@@ -1,4 +1,4 @@
-ZILD_COMMANDS := \
+ZILD-COMMANDS := \
     cpan \
     cpanshell \
     dist \

@@ -2,10 +2,10 @@
 # Set Clojure specific variables:
 #------------------------------------------------------------------------------
 
-YAMLSCRIPT_CORE_INSTALLED := \
-  $(MAVEN_REPOSITORY)/yamlscript/core/maven-metadata-local.xml
+YAMLSCRIPT-CORE-INSTALLED := \
+  $(MAVEN-REPOSITORY)/yamlscript/core/maven-metadata-local.xml
 
-YAMLSCRIPT_CORE_SRC := \
+YAMLSCRIPT-CORE-SRC := \
   $(ROOT)/core/src/yamlscript/*.clj \
   $(ROOT)/core/src/ys/*.clj \
 
@@ -13,12 +13,12 @@ ifdef w
   export WARN_ON_REFLECTION := 1
 endif
 
-LEIN := $(BUILD_BIN)/lein
+LEIN := $(BUILD-BIN)/lein
 
-LEIN_URL := \
+LEIN-URL := \
   https://codeberg.org/leiningen/leiningen/raw/branch/stable/bin/lein
 
-LEIN_COMMANDS := \
+LEIN-COMMANDS := \
   check \
   classpath \
   compile \
@@ -33,7 +33,7 @@ define HUMANE_TEST_INIT
   (require 'yamlscript.test-runner))
 endef
 
-LEIN_REPL_OPTIONS := \
+LEIN-REPL-OPTIONS := \
   update-in :dependencies conj '[nrepl,"1.0.0"]' -- \
   update-in :plugins conj '[cider/cider-nrepl,"0.28.5"]' -- \
   update-in '[:repl-options,:nrepl-middleware]' \
@@ -58,14 +58,14 @@ realclean:: clean
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
-$(LEIN): $(JAVA_INSTALLED) | $(BUILD_BIN)
+$(LEIN): $(JAVA-INSTALLED) | $(BUILD-BIN)
 	$(call need-curl)
-	$(CURL) -o $@ $(LEIN_URL)
+	$(CURL) -o $@ $(LEIN-URL)
 	chmod +x $@
 
 
 # Leiningen targets
-$(LEIN_COMMANDS):: $(LEIN)
+$(LEIN-COMMANDS):: $(LEIN)
 	$< $@
 
 deps-graph:: $(LEIN)
@@ -74,20 +74,20 @@ deps-graph:: $(LEIN)
 
 # Build/GraalVM targets
 force:
-	$(RM) $(YAMLSCRIPT_CORE_INSTALLED)
+	$(RM) $(YAMLSCRIPT-CORE-INSTALLED)
 
-$(YAMLSCRIPT_CORE_INSTALLED): $(YAMLSCRIPT_CORE_SRC)
+$(YAMLSCRIPT-CORE-INSTALLED): $(YAMLSCRIPT-CORE-SRC)
 	$(MAKE) -C $(ROOT)/core install
 
 
 # Maven targets
 
-$(MAVEN_DOWNLOAD):
+$(MAVEN-DOWNLOAD):
 	$(call need-curl)
-	$(CURL) -o $@ $(MAVEN_URL)
+	$(CURL) -o $@ $(MAVEN-URL)
 
-$(MAVEN_INSTALLED): $(MAVEN_DOWNLOAD)
-	(cd $(YS_TMP) && tar xzf $<)
+$(MAVEN-INSTALLED): $(MAVEN-DOWNLOAD)
+	(cd $(LOCAL-CACHE) && tar xzf $<)
 	touch $@
 
 
@@ -123,7 +123,7 @@ endif
 
 .nrepl-pid: $(LEIN) repl-deps
 	( \
-	  $< $(LEIN_REPL_OPTIONS) repl :headless $(repl-port) & \
+	  $< $(LEIN-REPL-OPTIONS) repl :headless $(repl-port) & \
 	  echo $$! > $@ \
 	)
 	@( \

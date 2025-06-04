@@ -1,8 +1,8 @@
 include $(COMMON)/vars-libys.mk
 
-test:: $(LIBYS_SO_FQNP)
+test:: $(LIBYS-SO-FQNP)
 
-$(LIBYS_SO_FQNP): | $(ROOT)/libyamlscript
+$(LIBYS-SO-FQNP): | $(ROOT)/libyamlscript
 	$(MAKE) -C $(ROOT)/libyamlscript build
 
 build-doc:: build-bin

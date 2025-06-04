@@ -2,9 +2,9 @@ include ../common/base.mk
 include $(COMMON)/binding.mk
 include $(COMMON)/python.mk
 
-PYTHON_VENV := $(ROOT)/python/.venv
+PYTHON-VENV := $(ROOT)/python/.venv
 
-VENV := source $(PYTHON_VENV)/bin/activate
+VENV := source $(PYTHON-VENV)/bin/activate
 
 export PYTHONPATH := $(ROOT)/python/lib
 
@@ -19,11 +19,11 @@ ifdef PYTHON
 test:: test-pytest test-ffi
 endif
 
-test-pytest: $(PYTHON_VENV)
+test-pytest: $(PYTHON-VENV)
 	$(VENV) && \
 	  pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
-test-ffi: $(LIBYS_SO_FQNP)
+test-ffi: $(LIBYS-SO-FQNP)
 	$(VENV) && \
 	  $(PYTHON) \
 	    -c 'import yamlscript; \
@@ -62,11 +62,11 @@ clean::
 	@echo
 
 realclean::
-	$(RM) -r $(PYTHON_VENV)
+	$(RM) -r $(PYTHON-VENV)
 
-venv: $(PYTHON_VENV)
+venv: $(PYTHON-VENV)
 
-$(PYTHON_VENV):
+$(PYTHON-VENV):
 	$(PYTHON) -mvenv $@
 	$(VENV) && \
 	  pip install \
