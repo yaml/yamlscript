@@ -2,9 +2,9 @@ include ../common/base.mk
 include $(COMMON)/binding.mk
 include $(COMMON)/java.mk
 
-YAMLSCRIPT_JAVA_JAR := target/yamlscript-0.1.96.jar
+YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.1.96.jar
 
-MVN_COMMANDS := \
+MVN-COMMANDS := \
   compile \
   install \
   package \
@@ -13,16 +13,16 @@ MVN_COMMANDS := \
 
 #------------------------------------------------------------------------------
 
-$(MVN_COMMANDS):: $(JAVA_INSTALLED) $(LIBYS_SO_FQNP)
+$(MVN-COMMANDS):: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
 	mvn $@
 
-release: $(JAVA_INSTALLED) $(LIBYS_SO_FQNP) test package
+release: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP) test package
 ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
 endif
 	mvn deploy:deploy-file \
 	    -s ~/.mvn-user-settings.xml \
-	    -Dfile=$(YAMLSCRIPT_JAVA_JAR) \
+	    -Dfile=$(YAMLSCRIPT-JAVA-JAR) \
 	    -DpomFile=pom.xml \
 	    -DrepositoryId=clojars \
 	    -Durl=https://clojars.org/repo/

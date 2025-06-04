@@ -21,7 +21,7 @@ DIRS := \
     $(BINDINGS) \
     ys \
 
-BUILD_DIRS := \
+BUILD-DIRS := \
     libyamlscript \
     go \
     nodejs \
@@ -30,15 +30,15 @@ BUILD_DIRS := \
     rust \
     ys \
 
-INSTALL_DIRS := \
+INSTALL-DIRS := \
     libyamlscript \
     ys \
 
-BUILD := $(BUILD_DIRS:%=build-%)
-BUILD_DOC := $(BINDINGS:%=build-doc-%)
-INSTALL := $(INSTALL_DIRS:%=install-%)
+BUILD := $(BUILD-DIRS:%=build-%)
+BUILD-DOC := $(BINDINGS:%=build-doc-%)
+INSTALL := $(INSTALL-DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
-TEST_BINDINGS := $(BINDINGS:%=test-%)
+TEST-BINDINGS := $(BINDINGS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
 REALCLEAN := $(DIRS:%=realclean-%)
@@ -46,28 +46,28 @@ DISTCLEAN := $(DIRS:%=distclean-%)
 
 export HEAD := $(shell git rev-parse HEAD)
 
-LYS_JAR_RELEASE := libyamlscript-$(YS_VERSION)-standalone.jar
-YS_JAR_RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
-LYS_JAR_PATH := libyamlscript/target/libyamlscript-$(YS_VERSION)-standalone.jar
-YS_JAR_PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
+LYS-JAR-RELEASE := libyamlscript-$(YS_VERSION)-standalone.jar
+YS-JAR-RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
+LYS-JAR-PATH := libyamlscript/target/libyamlscript-$(YS_VERSION)-standalone.jar
+YS-JAR-PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
-YS_RELEASE := $(RELEASE_YS_NAME).tar.xz
-LYS_RELEASE := $(RELEASE_LYS_NAME).tar.xz
+YS-RELEASE := $(RELEASE-YS-NAME).tar.xz
+LYS-RELEASE := $(RELEASE-LYS-NAME).tar.xz
 
-JAR_ASSETS := \
-    $(LYS_JAR_RELEASE) \
-    $(YS_JAR_RELEASE) \
+JAR-ASSETS := \
+    $(LYS-JAR-RELEASE) \
+    $(YS-JAR-RELEASE) \
 
 ifndef JAR_ONLY
-RELEASE_ASSETS := \
-    $(LYS_RELEASE) \
-    $(YS_RELEASE)
+RELEASE-ASSETS := \
+    $(LYS-RELEASE) \
+    $(YS-RELEASE)
 endif
 
-RELEASE_ASSETS += \
-    $(JAR_ASSETS) \
+RELEASE-ASSETS += \
+    $(JAR-ASSETS) \
 
-RELEASE_LOG := release-$n.log
+RELEASE-LOG := release-$n.log
 
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
@@ -115,8 +115,8 @@ build-%: %
 
 force:
 
-$(BUILD_DOC):
-build-doc: force $(BUILD_DOC)
+$(BUILD-DOC):
+build-doc: force $(BUILD-DOC)
 	@:
 build-doc-%: %
 	$(MAKE) -C $< build-doc
@@ -133,13 +133,13 @@ test: $(TEST)
 test-core:
 	$(MAKE) -C core test v=$v
 test-ys:
-	$(MAKE) -C ys test v=$v GRAALVM_O=b
+	$(MAKE) -C ys test v=$v GRAALVM-O=b
 test-%: %
-	$(MAKE) -C $< test v=$v GRAALVM_O=b
+	$(MAKE) -C $< test v=$v GRAALVM-O=b
 test-unit:
 	$(MAKE) -C core test v=$v
 	$(MAKE) -C ys test v=$v
-test-bindings: $(TEST_BINDINGS)
+test-bindings: $(TEST-BINDINGS)
 
 serve publish:
 	$(MAKE) -C www $@
@@ -161,7 +161,7 @@ ifndef YS_GH_USER
 	$(error YS release requires YS_GH_USER to be set)
 endif
 ifndef d
-ifndef RELEASE_ID
+ifndef RELEASE-ID
 ifndef YS_RELEASE_VERSION_OLD
 	$(error 'make release' needs the 'o' variable set to the old version)
 endif
@@ -186,7 +186,7 @@ ifndef d
 	)
 endif
 
-release-yamlscript: $(BUILD_BIN_YS)
+release-yamlscript: $(BUILD-BIN-YS)
 ifneq (main, $(shell git rev-parse --abbrev-ref HEAD))
 	$(error You must be on the 'main' branch to release)
 endif
@@ -195,66 +195,66 @@ endif
 	@[[ $$YS_GH_TOKEN ]] || { \
 	  echo 'Please export YS_GH_TOKEN'; exit 1; }
 	(time $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
-	  tee -a $(RELEASE_LOG)
+	  tee -a $(RELEASE-LOG)
 
-release-assets: $(RELEASE_ASSETS)
+release-assets: $(RELEASE-ASSETS)
 	release-assets $^
 
 release-build: release-build-ys release-build-libyamlscript
 
-release-build-ys: $(YS_RELEASE)
+release-build-ys: $(YS-RELEASE)
 
-release-build-libyamlscript: $(LYS_RELEASE)
+release-build-libyamlscript: $(LYS-RELEASE)
 
-jars: $(JAR_ASSETS)
+jars: $(JAR-ASSETS)
 
-$(YS_RELEASE): $(RELEASE_YS_NAME)
+$(YS-RELEASE): $(RELEASE-YS-NAME)
 	mkdir -p $<
 	cp -pPR ys/bin/ys* $</
 	cp common/install.mk $</Makefile
-ifeq (true,$(IS_MACOS))
+ifeq (true,$(IS-MACOS))
 	$(TIME) tar -J -cf $@ $<
 else
 	$(TIME) tar -I'xz -0' -cf $@ $<
 endif
 
-$(LYS_RELEASE): $(RELEASE_LYS_NAME)
+$(LYS-RELEASE): $(RELEASE-LYS-NAME)
 	mkdir -p $<
 	cp -pPR libyamlscript/lib/libyamlscript.$(SO)* $</
 	cp common/install.mk $</Makefile
-ifeq (true,$(IS_MACOS))
+ifeq (true,$(IS-MACOS))
 	$(TIME) tar -J -cf $@ $<
 else
 	$(TIME) tar -I'xz -0' -cf $@ $<
 endif
 
-$(RELEASE_YS_NAME): build-ys
+$(RELEASE-YS-NAME): build-ys
 
-$(RELEASE_LYS_NAME): build-libyamlscript
+$(RELEASE-LYS-NAME): build-libyamlscript
 
-$(LYS_JAR_RELEASE): $(LYS_JAR_PATH)
+$(LYS-JAR-RELEASE): $(LYS-JAR-PATH)
 	cp $< $@
 
-$(YS_JAR_RELEASE): $(YS_JAR_PATH)
+$(YS-JAR-RELEASE): $(YS-JAR-PATH)
 	cp $< $@
 
-$(LYS_JAR_PATH):
+$(LYS-JAR-PATH):
 	$(MAKE) -C libyamlscript jar
 
-$(YS_JAR_PATH):
+$(YS-JAR-PATH):
 	$(MAKE) -C ys jar
 
 delete-tag:
 	-git tag --delete $(YS_VERSION)
 	-git push --delete origin $(YS_VERSION)
 
-bump: $(BUILD_BIN_YS)
+bump: $(BUILD-BIN-YS)
 	$< $(ROOT)/util/version-bump
 
 $(CLEAN):
 clean:: $(CLEAN)
-	$(RM) -r $(MAVEN_REPOSITORY)/yamlscript
-	$(RM) -r $(MAVEN_REPOSITORY)/org/yamlscript
+	$(RM) -r $(MAVEN-REPOSITORY)/yamlscript
+	$(RM) -r $(MAVEN-REPOSITORY)/org/yamlscript
 	$(RM) -r libyamlscript/lib ys/bin
 	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
@@ -283,4 +283,4 @@ distclean-%: %
 	$(RM) -r .calva/ .clj-kondo/.cache .lsp/
 
 sysclean:: realclean
-	$(RM) -r $(YS_TMP)
+	$(RM) -r $(LOCAL-ROOT)

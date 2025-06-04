@@ -41,13 +41,13 @@ The build system supports using both:
 Just run one of the following commands:
 
 ```
-$ make build                            # Oracle GraalVM jdk-21.0.0
+$ make build                              # Oracle GraalVM jdk-21.0.0
 
-$ make build GRAALVM_VER=17             # Oracle GraalVM jdk-17.0.8
+$ make build GRAALVM-VER=17               # Oracle GraalVM jdk-17.0.8
 
-$ make build GRAALVM_CE=1               # GraalVM CE jdk-21.0.0
+$ make build GRAALVM-CE=1                 # GraalVM CE jdk-21.0.0
 
-$ make build GRAALVM_CE=1 GRAAL_VER=17  # GraalVM CE jdk-17.0.8
+$ make build GRAALVM-CE=1 GRAALVM-VER=17  # GraalVM CE jdk-17.0.8
 ```
 
 The Makefile system will download and the appropriate GraalVM version according

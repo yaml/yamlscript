@@ -29,4 +29,4 @@ defn main():
             say: "Bumped '$f'"
           warn: -['No Match!!' f regx]
 
-  shell {:dir 'rust'}: 'cargo update'
+  shell: 'make -C rust update'

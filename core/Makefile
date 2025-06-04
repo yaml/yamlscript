@@ -8,18 +8,17 @@ export PATH := $(ROOT)/core/bin:$(PATH)
 #------------------------------------------------------------------------------
 build::
 
-test:: $(CORE_DEPS)
-	$(LEIN) $@
+test:: $(LEIN) $(CORE-DEPS)
+	$< $@
 
-install: $(CORE_INSTALLED)
+install: $(CORE-INSTALLED)
 
-$(CORE_INSTALLED): $(CORE_DEPS)
-	$(LEIN) install
+$(CORE-INSTALLED): $(LEIN) $(CORE-DEPS)
+	$< install
 	touch $@
 
-$(CORE_JAR): $(CORE_DEPS)
-	$(LEIN) uberjar
-	touch $@
+$(CORE-JAR): $(LEIN) $(CORE-DEPS)
+	$< uberjar
 
 clean::
 	$(RM) pom.xml

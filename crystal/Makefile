@@ -8,8 +8,8 @@ endif
 
 BASE := $(ROOT)/crystal
 
-LIBYS_SO_PATH := $(ROOT)/libyamlscript/lib/$(LIBYS_SO_FQNP)
-BUILD_DEPS := $(LIBYS_SO_PATH)
+LIBYS-SO-PATH := $(ROOT)/libyamlscript/lib/$(LIBYS-SO-FQNP)
+BUILD-DEPS := $(LIBYS-SO-PATH)
 
 #------------------------------------------------------------------------------
 
@@ -21,13 +21,13 @@ ifdef CRYSTAL
 test:: test-example test-crystal test-ffi
 endif
 
-test-example: $(BUILD_DEPS)
+test-example: $(BUILD-DEPS)
 	$(CRYSTAL) run examples/simple.cr
 
-test-crystal: $(BUILD_DEPS)
+test-crystal: $(BUILD-DEPS)
 	$(CRYSTAL) spec
 
-test-ffi: $(BUILD_DEPS)
+test-ffi: $(BUILD-DEPS)
 	$(CRYSTAL) run test/ffi.cr
 
 release:
@@ -36,5 +36,5 @@ release:
 clean::
 	$(RM) -r lib bin .crystal .shards shard.lock libyamlscript.so
 
-$(LIBYS_SO_PATH):
-	$(MAKE) -C $(ROOT)/libyamlscript $(LIBYS_SO_FQNP)
+$(LIBYS-SO-PATH):
+	$(MAKE) -C $(ROOT)/libyamlscript $(LIBYS-SO-FQNP)

@@ -3,7 +3,7 @@ include $(COMMON)/binding.mk
 
 JULIA := $(shell command -v julia)
 
-HEAD_COMMIT := $(shell git rev-parse HEAD)
+HEAD-COMMIT := $(shell git rev-parse HEAD)
 
 #------------------------------------------------------------------------------
 build:: build-doc
@@ -11,7 +11,7 @@ build:: build-doc
 build-doc:: ReadMe.md
 
 ifdef JULIA
-test:: $(LIBYS_SO_FQNP) deps
+test:: $(LIBYS-SO-FQNP) deps
 	$(JULIA) --project=. test/runtests.jl
 
 deps::
@@ -26,7 +26,7 @@ endif
 	  -H "Accept: application/vnd.github+json" \
 	  -H "Authorization: Bearer $(YS_GH_TOKEN)" \
 	  -H "X-GitHub-Api-Version: 2022-11-28" \
-	  $(YS_GH_API_URL)/commits/$(HEAD_COMMIT)/comments \
+	  $(YS-GH-API-URL)/commits/$(HEAD-COMMIT)/comments \
 	  -d '{"body":"@JuliaRegistrator register subdir=julia\n"}'
 
 repl:

@@ -16,6 +16,7 @@
 /work/
 /ys-*
 /.tmp/
+/.local/
 
 .calva/
 *.class

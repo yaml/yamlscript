@@ -2,30 +2,31 @@
 # Set Java specific variables:
 #------------------------------------------------------------------------------
 
-export JAVA_HOME := $(GRAALVM_HOME)
-export PATH := $(JAVA_HOME)/bin:$(PATH)
+JAVA-HOME := $(GRAALVM-HOME)
+export JAVA_HOME := $(JAVA-HOME)
+export PATH := $(JAVA-HOME)/bin:$(PATH)
 
-YAMLSCRIPT_JAVA_INSTALLED := \
-  $(MAVEN_REPOSITORY)/org/yamlscript/yamlscript/maven-metadata-local.xml
+YAMLSCRIPT-JAVA-INSTALLED := \
+  $(MAVEN-REPOSITORY)/org/yamlscript/yamlscript/maven-metadata-local.xml
 
-YAMLSCRIPT_JAVA_SRC := \
+YAMLSCRIPT-JAVA-SRC := \
   $(ROOT)/java/src/main/java/org/yamlscript/yamlscript/*.java \
 
 
 #------------------------------------------------------------------------------
 java-home:
-	@echo $(JAVA_HOME)
+	@echo $(JAVA-HOME)
 
-$(GRAALVM_HOME): $(GRAALVM_INSTALLED)
+$(GRAALVM-HOME): $(GRAALVM-INSTALLED)
 
-$(GRAALVM_INSTALLED): $(GRAALVM_DOWNLOAD)
+$(GRAALVM-INSTALLED): $(GRAALVM-DOWNLOAD)
 	tar xzf $<
-	mv graalvm-* $(GRAALVM_PATH)
+	mv graalvm-* $(GRAALVM-PATH)
 	touch $@
 
-$(GRAALVM_DOWNLOAD):
+$(GRAALVM-DOWNLOAD):
 	$(call need-curl)
-	$(CURL) -o $@ $(GRAALVM_URL)
+	$(CURL) -o $@ $(GRAALVM-URL)
 
-$(YAMLSCRIPT_JAVA_INSTALLED): $(YAMLSCRIPT_JAVA_SRC)
+$(YAMLSCRIPT-JAVA-INSTALLED): $(YAMLSCRIPT-JAVA-SRC)
 	$(MAKE) -C $(ROOT)/java install

@@ -6,27 +6,27 @@ test ?= test/
 
 export PATH := $(ROOT)/perl/bin:$(PATH)
 
-PERL_VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
-ALIEN_DIST_DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL_VERSION)
-ALIEN_BLIB_LIB := $(ALIEN_DIST_DIR)/blib/lib
+PERL-VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
+ALIEN-DIST-DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL-VERSION)
+ALIEN-BLIB-LIB := $(ALIEN-DIST-DIR)/blib/lib
 
-CPAN_DEPS := \
-    Test2::V0 \
+CPAN-DEPS := \
+    Cpanel::JSON::XS \
     FFI::CheckLib \
     FFI::Platypus \
-    Cpanel::JSON::XS \
+    Test2::V0 \
 
-LOCAL_LIB := local
+LOCAL-LIB := local
 
-export PERL5LIB := $(LOCAL_LIB)/lib/perl5
+export PERL5LIB := $(LOCAL-LIB)/lib/perl5
 
 #------------------------------------------------------------------------------
 
 ifdef PERLOK
-test:: $(LOCAL_LIB)
+test:: $(LOCAL-LIB)
 	prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
-test-alien: $(ALIEN_BLIB_LIB)
+test-alien: $(ALIEN-BLIB-LIB)
 	LD_LIBRARY_PATH= \
 	    DYLD_LIBRARY_PATH= \
 	    prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
@@ -36,9 +36,9 @@ clean::
 	$(RM) -r cpan YAMLScript-*
 
 realclean::
-	$(RM) -r $(LOCAL_LIB)
+	$(RM) -r $(LOCAL-LIB)
 
-$(ALIEN_BLIB_LIB): $(ALIEN_DIST_DIR)
+$(ALIEN-BLIB-LIB): $(ALIEN-DIST-DIR)
 	( \
 	    cd $< && \
 	    perl Makefile.PL && \
@@ -46,8 +46,8 @@ $(ALIEN_BLIB_LIB): $(ALIEN_DIST_DIR)
 	)
 	touch $@
 
-$(ALIEN_DIST_DIR):
+$(ALIEN-DIST-DIR):
 	$(MAKE) -C $(ROOT)/perl-alien distdir
 
-$(LOCAL_LIB):
-	cpanm -L $@ -n $(CPAN_DEPS)
+$(LOCAL-LIB):
+	cpanm -L $@ -n $(CPAN-DEPS)

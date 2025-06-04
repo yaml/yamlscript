@@ -3,12 +3,13 @@ include $(COMMON)/binding.mk
 
 RUBY := $(shell command -v bundle)
 
-RAKE_CMDS := \
+RAKE-CMDS := \
     build \
     release \
     test \
 
-export GEM_HOME=gem
+GEM-HOME := gem
+export GEM_HOME := $(GEM-HOME)
 
 
 #------------------------------------------------------------------------------
@@ -21,10 +22,10 @@ ifdef RUBY
 update:
 	bundle install
 
-$(RAKE_CMDS):: $(GEM_HOME)
+$(RAKE-CMDS):: $(GEM-HOME)
 	bundle exec rake $@
 
-$(GEM_HOME):
+$(GEM-HOME):
 	gem install minitest -v 5.20.0
 	bundle install
 endif
@@ -34,4 +35,4 @@ clean::
 	$(RM) -r pkg
 
 realclean::
-	$(RM) -r $(GEM_HOME)
+	$(RM) -r $(GEM-HOME)
