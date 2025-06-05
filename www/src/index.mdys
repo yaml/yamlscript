@@ -94,8 +94,9 @@ Learn More About YS</a></div>
     curl -s https://getys.org/ys | bash
     # Adjust PATH if asked to.
     ys --help
-    ys -e 'say: "Hello, World!"'
+    ys -e 'say: "Hello, World. I am $(ENV.USER)."'
     ```
+    [:octicons-arrow-right-24: Installing YS](doc/install.md)
 ```
 
 ```mdys:YS-CODE
