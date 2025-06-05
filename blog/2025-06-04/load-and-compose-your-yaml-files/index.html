@@ -2512,8 +2512,8 @@ data (and code too, since Code is Data™!) from external sources.</p>
 <li>YAML files (YAML is YS)</li>
 <li>JSON files (JSON is YAML)</li>
 </ul>
-<p>You can also load things from CSV/TSV files, databases, APIs, and the web, but
-those are topics for another day.</p>
+<p>You can also load things from CSV/TSV files, shell commands, databases, APIs,
+environment variables, and the web, but those are topics for another day.</p>
 <!-- more -->
 
 <h2 id="loading-yaml-files">Loading YAML Files<a class="headerlink" href="#loading-yaml-files" title="Permanent link">🔗</a></h2>
@@ -2535,11 +2535,11 @@ And since JSON is YAML, you can also load JSON files with <code>load</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># shoe3.ys</span>
 <span class="nt">!YS-v0</span><span class="p">:</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sandal</span>
-<span class="nt">size:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 * 4</span>
+<span class="nt">size:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 * 2 * 2</span>
 </code></pre></div>
 <p>I got a little cheeky on that third shoe.
 I used a YS expression to calculate the size!
-That's just to show that the YS evaluates on load.</p>
+That's just to show that YS expressions evaluate on load.</p>
 <p>Let's load them all together.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># shoes.yaml</span>
 <span class="nt">!YS-v0</span><span class="p">:</span>
@@ -2560,15 +2560,15 @@ use it, so we need to use <code>!</code> instead.</p>
 -<span class="w"> </span>name:<span class="w"> </span>sandal
 <span class="w">  </span>size:<span class="w"> </span><span class="m">8</span>
 </code></pre></div>
-<p>It works, but we don't have the defaults in there.
-We could make a defaults file like this:</p>
+<p>It works, but we don't have the defaults in there.</p>
+<p>We'll make a defaults file like this:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># defaults.yaml</span>
 <span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span>
 </code></pre></div>
-<p>And we could add it to the YAML and YS files, but it will never work in the JSON
-file.</p>
-<p>Fortunately, YS is a functional language, with 100s of functions.
+<p>Now we could use the merge key (<code>&lt;&lt;</code>) to add it to the YAML and YS files,
+but that would never work in a JSON file.</p>
+<p>Fortunately, YS is a functional language with 100s of functions.
 Surely it has a <code>merge</code> function!</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># shoes.yaml</span>
 <span class="nt">!YS-v0</span><span class="p">:</span>
@@ -2626,8 +2626,8 @@ I've stolen many of those shiniest gems for YS.</p>
 <span class="w">  </span>name:<span class="w"> </span>sandal
 </code></pre></div>
 <hr />
-<p>That's a lot to unpack, but the surf's up! <img alt="🏄" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f3c4.svg" title=":surfer:" /></p>
-<p>See you next tomorrow!</p>
+<p>That's a lot of new YS syntax to unpack, but the surf's up! <img alt="🏄" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f3c4.svg" title=":surfer:" /></p>
+<p>See you again tomorrow!</p>
 
 
 
