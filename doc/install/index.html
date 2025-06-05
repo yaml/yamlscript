@@ -170,7 +170,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#quick-install-of-ys-and-libyamlscript" class="md-skip">
+        <a href="#install-ys-with-homebrew" class="md-skip">
           Skip to content
         </a>
       
@@ -1178,15 +1178,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-install-of-ys-and-libyamlscript" class="md-nav__link">
+  <a href="#install-ys-with-homebrew" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Install of ys and libyamlscript
+      Install ys with Homebrew
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install ys with Homebrew">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-install-script-for-ys-and-libyamlscript" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Install Script for ys and libyamlscript
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#download-and-install" class="md-nav__link">
     <span class="md-ellipsis">
       Download and Install
@@ -1194,8 +1204,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#build-a-release-from-source" class="md-nav__link">
     <span class="md-ellipsis">
       Build a Release from Source
@@ -1203,13 +1213,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#install-a-ys-loader-library" class="md-nav__link">
     <span class="md-ellipsis">
       Install a YS Loader Library
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2423,15 +2438,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#quick-install-of-ys-and-libyamlscript" class="md-nav__link">
+  <a href="#install-ys-with-homebrew" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Install of ys and libyamlscript
+      Install ys with Homebrew
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install ys with Homebrew">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-install-script-for-ys-and-libyamlscript" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Install Script for ys and libyamlscript
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#download-and-install" class="md-nav__link">
     <span class="md-ellipsis">
       Download and Install
@@ -2439,8 +2464,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#build-a-release-from-source" class="md-nav__link">
     <span class="md-ellipsis">
       Build a Release from Source
@@ -2448,13 +2473,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#install-a-ys-loader-library" class="md-nav__link">
     <span class="md-ellipsis">
       Install a YS Loader Library
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2521,7 +2551,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <li>A <a href="../bindings/#currently-available-libraries">YS loader library</a> for your
    particular programming language, like Python, Rust, NodeJS, etc.</li>
 </ol>
-<h3 id="quick-install-of-ys-and-libyamlscript">Quick Install of <code>ys</code> and <code>libyamlscript</code><a class="headerlink" href="#quick-install-of-ys-and-libyamlscript" title="Permanent link">🔗</a></h3>
+<h2 id="install-ys-with-homebrew">Install <code>ys</code> with Homebrew<a class="headerlink" href="#install-ys-with-homebrew" title="Permanent link">🔗</a></h2>
+<p>You can install <code>ys</code> on macOS or Linux with Homebrew.</p>
+<p>Just run these commands:</p>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>tap<span class="w"> </span>yaml/yamlscript
+brew<span class="w"> </span>install<span class="w"> </span>ys
+</code></pre></div>
+<p>Homebrew support for installing <code>libyamlscript</code> is coming soon.</p>
+<h3 id="quick-install-script-for-ys-and-libyamlscript">Quick Install Script for <code>ys</code> and <code>libyamlscript</code><a class="headerlink" href="#quick-install-script-for-ys-and-libyamlscript" title="Permanent link">🔗</a></h3>
 <p>You can install both <code>ys</code> and <code>libyamlscript</code> with a single CLI command, where:</p>
 <ul>
 <li><code>VERSION</code> defaults to the latest YS version.</li>
@@ -2532,13 +2569,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>Examples:
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 $<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.1.96<span class="w"> </span>bash
-$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.1.96<span class="w"> </span><span class="nv">LIB</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash
+$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.1.96<span class="w"> </span><span class="nv">BIN</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash<span class="w">  </span><span class="c1"># ys</span>
+$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.1.96<span class="w"> </span><span class="nv">LIB</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash<span class="w">  </span><span class="c1"># libyamlscript</span>
 $<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">PREFIX</span><span class="o">=</span>/tmp/yamlscript<span class="w"> </span>bash
 </code></pre></div></p>
 <p>For the <code>ys</code> command you'll need to have <code>PREFIX/bin</code> in your <code>PATH</code>, but the
 install script will tell you that.</p>
 <p>For <code>libyamlscript</code>, unless you use the default <code>PREFIX</code> you'll need to add
-<code>PREFIX/lib</code> to <code>LD_LIBRARY_PATH</code> and export that variable.</p>
+<code>PREFIX/lib</code> to your <code>LD_LIBRARY_PATH</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">An even shorter command to install <code>ys</code></p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>https://getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
