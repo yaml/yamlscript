@@ -12,7 +12,21 @@ YS has 3 main things you might want to install:
    particular programming language, like Python, Rust, NodeJS, etc.
 
 
-### Quick Install of `ys` and `libyamlscript`
+## Install `ys` with Homebrew
+
+You can install `ys` on macOS or Linux with Homebrew.
+
+Just run these commands:
+
+```bash
+brew tap yaml/yamlscript
+brew install ys
+```
+
+Homebrew support for installing `libyamlscript` is coming soon.
+
+
+### Quick Install Script for `ys` and `libyamlscript`
 
 You can install both `ys` and `libyamlscript` with a single CLI command, where:
 
@@ -33,7 +47,7 @@ For the `ys` command you'll need to have `PREFIX/bin` in your `PATH`, but the
 install script will tell you that.
 
 For `libyamlscript`, unless you use the default `PREFIX` you'll need to add
-`PREFIX/lib` to `LD_LIBRARY_PATH` and export that variable.
+`PREFIX/lib` to your `LD_LIBRARY_PATH`.
 
 !!! note "An even shorter command to install `ys`"
 
