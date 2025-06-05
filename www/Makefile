@@ -58,9 +58,9 @@ default::
 
 deps: line1 $(DEPS) line2
 
+YS-WWW-DOMAIN := yamlscript.org
 ifeq (live,$(website))
   export YS_WWW_LIVE := true
-  YS-WWW-DOMAIN := yamlscript.org
   YS-WWW-REMOTE := origin
   YS-WWW-BRANCH ?= gh-pages
 else ifeq (stage,$(website))
@@ -76,7 +76,6 @@ build site:: $(DIRS) $(DEPS)
 	$(RM) -r site/*
 	$(VENV) && mkdocs build
 	echo $(YS-WWW-DOMAIN) > site/CNAME
-	mkdocs build
 	git -C site add -A
 
 serve: $(DIRS) $(DEPS) watch
