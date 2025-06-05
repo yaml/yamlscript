@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-06-04/load-and-compose-your-yaml-files/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-06-05/ys-curling-up-north/">
       
       
-        <link rel="prev" href="../../2025-06-03/ys-yaml-documents/">
+        <link rel="prev" href="../../2025-06-04/load-and-compose-your-yaml-files/">
       
-      
-        <link rel="next" href="../../2025-06-05/ys-curling-up-north/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../feed_rss_created.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>Load and Compose your YAML Files - YS — YAML Done Wisely</title>
+        <title>YS Curling (up North) - YS — YAML Done Wisely</title>
       
     
     
@@ -144,7 +142,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#loading-yaml-files" class="md-skip">
+        <a href="#curling-web-data-in-ys" class="md-skip">
           Skip to content
         </a>
       
@@ -183,7 +181,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Load and Compose your YAML Files
+              YS Curling (up North)
             
           </span>
           </a>
@@ -2329,18 +2327,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#loading-yaml-files" class="md-nav__link">
+  <a href="#curling-web-data-in-ys" class="md-nav__link">
     <span class="md-ellipsis">
-      Loading YAML Files
+      Curling Web Data in YS
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#theres-more-than-one-way-to-do-it" class="md-nav__link">
+  <a href="#put-your-shoes-on" class="md-nav__link">
     <span class="md-ellipsis">
-      There's More Than One Way To Do It
+      Put Your Shoes on!
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#programming-with-ys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programming with YS
     </span>
   </a>
   
@@ -2402,7 +2409,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-06-04 00:00:00+00:00" class="md-ellipsis">June 4, 2025</time>
+                        <time datetime="2025-06-05 00:00:00+00:00" class="md-ellipsis">June 5, 2025</time>
                       </div>
                     </li>
                     
@@ -2456,14 +2463,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-06-04.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-06-05.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-06-04.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-06-05.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2471,139 +2478,111 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Load and Compose your YAML Files</h1>
+  <h1>YS Curling (up North)</h1>
 
-<p>Probably the biggest problem people have with YAML is that everything has to be
-in one file.
-Things start off nice and clean, but as requirements grow, so do your files!</p>
-<p>What if you could compose your YAML documents like you compose your code?
-Lots of small, single-purpose, possibly reusable files that you can load and
-compose together into the thing you need?</p>
-<p>That's what YS is all about.
-As you know, YS is a functional language, and it has quite a few ways to load
-data (and code too, since Code is Data™!) from external sources.</p>
-<p>Today we'll be looking at how to load things from disk files, including:</p>
-<ul>
-<li>Other YS files</li>
-<li>YAML files (YAML is YS)</li>
-<li>JSON files (JSON is YAML)</li>
-</ul>
-<p>You can also load things from CSV/TSV files, shell commands, databases, APIs,
-environment variables, and the web, but those are topics for another day.</p>
+<p>Ever been to Manitoba?
+I went there once when my flight from Seattle to Toronto diverted to Winnipeg
+because the plane's toilets stopped working!
+That's when I learned about the <a href="https://www.winnipeg.ca/tourism/attractions/worlds-largest-curling-rock">World's Largest Curling Rock&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Toronto DevOps Meetup</p>
+<p>Speaking of Toronto, I'll be giving a talk called <a href="https://www.meetup.com/toronto-enterprise-devops-user-group/events/307801910/">"The YS way to YAML"&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>
+at the Toronto DevOps Meetup on June 12th.
+That's one week from today!</p>
+<p>If you're in town I hope to see you there!</p>
+</div>
+<p>Today we'll be doing a little curling with YS.</p>
 <!-- more -->
 
-<h2 id="loading-yaml-files">Loading YAML Files<a class="headerlink" href="#loading-yaml-files" title="Permanent link">🔗</a></h2>
-<p>YS has a standard library function called <code>load</code> that can load YS files.</p>
-<p>Since YAML is YS, you can load YAML files with <code>load</code>.
-And since JSON is YAML, you can also load JSON files with <code>load</code>.</p>
-<p>Let's try on some new shoes!</p>
-<p>We'll put each shoe in its own file.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># shoe1.yaml</span>
-<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sneaker</span>
-<span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">red</span>
+<h2 id="curling-web-data-in-ys">Curling Web Data in YS<a class="headerlink" href="#curling-web-data-in-ys" title="Permanent link">🔗</a></h2>
+<p><a href="/blog/2025-06-04/load-and-compose-your-yaml-files/">Yesterday</a> we learned how
+load data from other files.</p>
+<p>Today we'll go a bit further on that and also learn how to load data from the
+web.</p>
+<p>We have some nice shoes but we don't have anyone to wear them.
+We can fix that.
+I know of a big list of people who would love to try them on, and the list is
+<a href="https://github.com/dominictarr/random-name/raw/master/first-names.json">a JSON array on the web&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>!</p>
+<p>Let's use YS to play around with that list.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">url =:</span>
+<span class="s1">  &quot;https://github.com/dominictarr/random-name/raw/master/first-names.json&quot;</span>
+<span class="s1">json =: curl(url)</span>
+<span class="s1">list =: json/load(json)</span>
+<span class="s1">people =:</span>
+<span class="s1">  take 3: list</span>
+<span class="s1">say: count(list)</span>
+<span class="s1">say: people</span>
+<span class="s1">&#39;</span>
+<span class="m">4946</span>
+<span class="o">(</span>Aaren<span class="w"> </span>Aarika<span class="w"> </span>Abagael<span class="o">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="err">shoe</span><span class="mf">2.</span><span class="err">jso</span><span class="kc">n</span>
-<span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;boot&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;black&quot;</span>
-<span class="p">}</span>
+<p>It looks like the "curling" function is called <code>curl</code> and it's built in.
+There's also a JSON loading built-in and a few other handy functions like <code>take</code>
+and <code>count</code>.</p>
+<p>4946 is a lot of people!
+But why limit ourselves to the first 3?
+A random selection of 3 is a lot more fun!</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">url =:</span>
+<span class="s1">  &quot;https://github.com/dominictarr/random-name/raw/master/first-names.json&quot;</span>
+<span class="s1">json =: curl(url)</span>
+<span class="s1">list =: json/load(json)</span>
+<span class="s1">people =: list.shuffle().take(3)</span>
+<span class="s1">say: people</span>
+<span class="s1">&#39;</span>
+<span class="o">(</span>Johnna<span class="w"> </span>Korrie<span class="w"> </span>Elayne<span class="o">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># shoe3.ys</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
-<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sandal</span>
-<span class="nt">size:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 * 2 * 2</span>
+<p>I like that better.</p>
+<p>Did you notice the new function chaining syntax in <code>list.shuffle().take(3)</code>?
+We'll get into that a lot more later on, but let's have a little fun with it
+right now.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;ARGS.0.curl().json/load().shuffle().take(3).say()&#39;</span><span class="w"> </span><span class="se">\</span>
+--<span class="w"> </span>https://github.com/dominictarr/random-name/raw/master/first-names.json
+<span class="o">(</span>Madlen<span class="w"> </span>Joete<span class="w"> </span>Daveta<span class="o">)</span>
 </code></pre></div>
-<p>I got a little cheeky on that third shoe.
-I used a YS expression to calculate the size!
-That's just to show that YS expressions evaluate on load.</p>
-<p>Let's load them all together.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># shoes.yaml</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe1.yaml&#39;)</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe2.json&#39;)</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe3.ys&#39;)</span>
-</code></pre></div>
-<p>Notice the <code>!</code> there?
-Remember the <code>::</code> mode switcher?</p>
-<p>Well <code>::</code> is just a nice shorthand for <code>!</code>.
-It works great with mapping pairs, but for sequence entries, there's no way to
-use it, so we need to use <code>!</code> instead.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>shoes.yaml
--<span class="w"> </span>name:<span class="w"> </span>sneaker
-<span class="w">  </span>color:<span class="w"> </span>red
--<span class="w"> </span>name:<span class="w"> </span>boot
-<span class="w">  </span>color:<span class="w"> </span>black
--<span class="w"> </span>name:<span class="w"> </span>sandal
-<span class="w">  </span>size:<span class="w"> </span><span class="m">8</span>
-</code></pre></div>
-<p>It works, but we don't have the defaults in there.</p>
-<p>We'll make a defaults file like this:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># defaults.yaml</span>
-<span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span>
-</code></pre></div>
-<p>Now we could use the merge key (<code>&lt;&lt;</code>) to add it to the YAML and YS files,
-but that would never work in a JSON file.</p>
-<p>Fortunately, YS is a functional language with 100s of functions.
-Surely it has a <code>merge</code> function!</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># shoes.yaml</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(load(&#39;defaults.yaml&#39;), load(&#39;shoe1.yaml&#39;))</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(load(&#39;defaults.yaml&#39;), load(&#39;shoe2.json&#39;))</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(load(&#39;defaults.yaml&#39;), load(&#39;shoe3.ys&#39;))</span>
-</code></pre></div>
-<p>And then:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>shoes.yaml<span class="w"> </span>
--<span class="w"> </span>size:<span class="w"> </span><span class="m">10</span>
-<span class="w">  </span>color:<span class="w"> </span>red
-<span class="w">  </span>name:<span class="w"> </span>sneaker
--<span class="w"> </span>size:<span class="w"> </span><span class="m">10</span>
-<span class="w">  </span>color:<span class="w"> </span>black
-<span class="w">  </span>name:<span class="w"> </span>boot
--<span class="w"> </span>size:<span class="w"> </span><span class="m">8</span>
-<span class="w">  </span>color:<span class="w"> </span>blue
-<span class="w">  </span>name:<span class="w"> </span>sandal
-</code></pre></div>
-<p>There we go!</p>
-<h2 id="theres-more-than-one-way-to-do-it">There's More Than One Way To Do It<a class="headerlink" href="#theres-more-than-one-way-to-do-it" title="Permanent link">🔗</a></h2>
-<p>I was raised by Perl wolves! (well, Monks in wolf's clothing)</p>
-<p>As we progress through the Summer of YS, you'll notice Perlisms showing up here
-and there.
-For all its warts, Perl is has a lot of gems.
-Maybe that's what Matz was thinking when he created Ruby and based so much of it
-on Perl?
-I've stolen many of those shiniest gems for YS.</p>
-<p>Anyway, in YS… TMTOWTDI!</p>
-<hr />
-<p>Let's rearrange our new shoes a bit:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span>
-<span class="nt">defaults =</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;defaults.yaml&#39;</span>
+<p>That's pretty cool.
+We did everything in a single (chained) expression.
+Chaining functions together is one of the most powerful features of YS.</p>
+<h2 id="put-your-shoes-on">Put Your Shoes on!<a class="headerlink" href="#put-your-shoes-on" title="Permanent link">🔗</a></h2>
+<p>We have a list of people and a list of shoes.
+Let's pair them up!</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">url =:</span>
+<span class="s1">  &quot;https://github.com/dominictarr/random-name/raw/master/first-names.json&quot;</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults.merge(load(&#39;shoe1.yaml&#39;))</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span>
-<span class="w">  </span><span class="nt">merge defaults</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;shoe2.json&#39;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!:merge*</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe3.ys&#39;)</span>
+<span class="s1">people =: url.curl().json/load().shuffle().take(3)</span>
+<span class="s1">shoes =: read(&quot;shoes.yaml&quot;).yaml/load()</span>
+
+<span class="s1">say: str(people.0, &quot; wears size &quot;, shoes.0.size, &quot; &quot;, join([shoes.0.name, &quot;s&quot;]))</span>
+<span class="s1">say: str(people.1, &quot; wears size &quot;, shoes.1.size, &quot; &quot;, join([shoes.1.name, &quot;s&quot;]))</span>
+<span class="s1">say: str(people.2, &quot; wears size &quot;, shoes.2.size, &quot; &quot;, join([shoes.2.name, &quot;s&quot;]))</span>
+<span class="s1">&#39;</span>
+Shanon<span class="w"> </span>wears<span class="w"> </span>size<span class="w"> </span><span class="m">10</span><span class="w"> </span>sneakers
+Henrie<span class="w"> </span>wears<span class="w"> </span>size<span class="w"> </span><span class="m">10</span><span class="w"> </span>boots
+Sybil<span class="w"> </span>wears<span class="w"> </span>size<span class="w"> </span><span class="m">8</span><span class="w"> </span>sandals
 </code></pre></div>
-<p>And we get:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>shoes.yaml<span class="w"> </span>
--<span class="w"> </span>size:<span class="w"> </span><span class="m">10</span>
-<span class="w">  </span>color:<span class="w"> </span>red
-<span class="w">  </span>name:<span class="w"> </span>sneaker
--<span class="w"> </span>size:<span class="w"> </span><span class="m">10</span>
-<span class="w">  </span>color:<span class="w"> </span>black
-<span class="w">  </span>name:<span class="w"> </span>boot
--<span class="w"> </span>size:<span class="w"> </span><span class="m">8</span>
-<span class="w">  </span>color:<span class="w"> </span>blue
-<span class="w">  </span>name:<span class="w"> </span>sandal
-</code></pre></div>
-<hr />
-<p>That's a lot of new YS syntax to unpack, but the surf's up! <img alt="🏄" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f3c4.svg" title=":surfer:" /></p>
-<p>See you again tomorrow!</p>
+<p>Looking good!</p>
+<p>Notice that instead of using <code>load</code> on <code>shoes.yaml</code> we used <code>read</code> and
+<code>yaml/load</code>.
+TMTOWTDI strikes again!</p>
+<h2 id="programming-with-ys">Programming with YS<a class="headerlink" href="#programming-with-ys" title="Permanent link">🔗</a></h2>
+<p>So far we've been using YS to enhance YAML files.
+But can we use YS to write programs?</p>
+<p>Well, we just did exactly that!</p>
+<p>I wasn't expecting to show you that today, but that's just how it worked out.
+And we did all of it using YS <code>-e</code> one liners.</p>
+<p>That last program is just begging to use loops and string formatting, right?</p>
+<p>We'll get there, but for now let's get out in the sun and do some curling!</p>
 
 
 
@@ -2622,60 +2601,6 @@ I've stolen many of those shiniest gems for YS.</p>
   
 
 
-
-  <h2 id="__comments">Comments</h2>
-  <!-- Insert generated snippet here -->
-  <script src="https://giscus.app/client.js"
-    data-repo="yaml/yamlscript"
-    data-repo-id="R_kgDOHmgdIg"
-    data-category="Blog Post Discussions"
-    data-category-id="DIC_kwDOHmgdIs4Cq6mr"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="preferred_color_scheme"
-    data-lang="en"
-    crossorigin="anonymous"
-    async>
-  </script>
-
-  <!-- Synchronize Giscus theme with palette -->
-  <script>
-    var giscus = document.querySelector("script[src*=giscus]")
-
-    // Set palette on initial load
-    var palette = __md_get("__palette")
-    if (palette && typeof palette.color === "object") {
-      var theme = palette.color.scheme === "slate"
-        ? "transparent_dark"
-        : "light"
-
-      // Instruct Giscus to set theme
-      giscus.setAttribute("data-theme", theme) 
-    }
-
-    // Register event handlers after documented loaded
-    document.addEventListener("DOMContentLoaded", function() {
-      var ref = document.querySelector("[data-md-component=palette]")
-      ref.addEventListener("change", function() {
-        var palette = __md_get("__palette")
-        if (palette && typeof palette.color === "object") {
-          var theme = palette.color.scheme === "slate"
-            ? "transparent_dark"
-            : "light"
-
-          // Instruct Giscus to change theme
-          var frame = document.querySelector(".giscus-frame")
-          frame.contentWindow.postMessage(
-            { giscus: { setConfig: { theme } } },
-            "https://giscus.app"
-          )
-        }
-      })
-    })
-  </script>
 
       
     </article>
@@ -2696,7 +2621,7 @@ I've stolen many of those shiniest gems for YS.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-06-03/ys-yaml-documents/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS YAML Documents">
+          <a href="../../2025-06-04/load-and-compose-your-yaml-files/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Load and Compose your YAML Files">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2706,27 +2631,11 @@ I've stolen many of those shiniest gems for YS.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                YS YAML Documents
+                Load and Compose your YAML Files
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../2025-06-05/ys-curling-up-north/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Curling (up North)">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                YS Curling (up North)
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     

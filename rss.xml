@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 05 Jun 2025 02:29:17 -0000</pubDate>
-    <lastBuildDate>Thu, 05 Jun 2025 02:29:17 -0000</lastBuildDate>
+    <pubDate>Thu, 05 Jun 2025 02:30:22 -0000</pubDate>
+    <lastBuildDate>Thu, 05 Jun 2025 02:30:22 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,41 @@
     
 
     
+    
+    <item>
+      <title>YS Curling (up North)</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Ever been to Manitoba?
+I went there once when my flight from Seattle to Toronto diverted to Winnipeg
+because the plane&#39;s toilets stopped working!
+That&#39;s when I learned about the &lt;a href=&#34;https://www.winnipeg.ca/tourism/attractions/worlds-largest-curling-rock&#34;&gt;World&#39;s Largest Curling Rock&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;!!! note &#34;Toronto DevOps Meetup&#34;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Speaking of Toronto, I&#39;ll be giving a talk called [&#34;The YS way to YAML&#34;](
+https://www.meetup.com/toronto-enterprise-devops-user-group/events/307801910/)
+at the Toronto DevOps Meetup on June 12th.
+That&#39;s one week from today!
+
+If you&#39;re in town I hope to see you there!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Today we&#39;ll be doing a little curling with YS.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-05/ys-curling-up-north/</link>
+      <pubDate>Thu, 05 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-05/ys-curling-up-north/</guid>
+      
+    </item>
     
     <item>
       <title>Load and Compose your YAML Files</title>
