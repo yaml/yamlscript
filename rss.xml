@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 06 Jun 2025 17:50:31 -0000</pubDate>
-    <lastBuildDate>Fri, 06 Jun 2025 17:50:31 -0000</lastBuildDate>
+    <pubDate>Fri, 06 Jun 2025 17:51:00 -0000</pubDate>
+    <lastBuildDate>Fri, 06 Jun 2025 17:51:00 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,43 @@
     
 
     
+    
+    <item>
+      <title>Loops and Strings</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Yesterday I left you with a program that really needed to &#34;YS up&#34;!&lt;/p&gt;
+&lt;p&gt;```bash
+$ ys -e &#39;
+url =:
+  &#34;https://github.com/dominictarr/random-name/raw/master/first-names.json&#34;&lt;/p&gt;
+&lt;p&gt;people =: url.curl().json/load().shuffle().take(3)
+shoes =: read(&#34;shoes.yaml&#34;).yaml/load()&lt;/p&gt;
+&lt;p&gt;say: str(people.0, &#34; wears size &#34;, shoes.0.size, &#34; &#34;, join([shoes.0.name, &#34;s&#34;]))
+say: str(people.1, &#34; wears size &#34;, shoes.1.size, &#34; &#34;, join([shoes.1.name, &#34;s&#34;]))
+say: str(people.2, &#34; wears size &#34;, shoes.2.size, &#34; &#34;, join([shoes.2.name, &#34;s&#34;]))
+&#39;
+```&lt;/p&gt;
+&lt;p&gt;Let&#39;s make this awesome!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-06/loops-and-strings/</link>
+      <pubDate>Fri, 06 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-06/loops-and-strings/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-06/loops-and-strings.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>YS Curling (up North)</title>
@@ -63,6 +100,8 @@ If you&#39;re in town I hope to see you there!
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-05/ys-curling-up-north/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-05/ys-curling-up-north.png" type="image/png" length="None" />
       
     </item>
     
@@ -103,6 +142,8 @@ environment variables, and the web, but those are topics for another day.&lt;/p&
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-04/load-and-compose-your-yaml-files/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-04/load-and-compose-your-yaml-files.png" type="image/png" length="None" />
+      
     </item>
     
     <item>
@@ -136,6 +177,8 @@ example.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-03/ys-yaml-documents/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-03/ys-yaml-documents.png" type="image/png" length="None" />
+      
     </item>
     
     <item>
@@ -167,6 +210,8 @@ nicer to use.&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-02/yaml-variables/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-02/yaml-variables.png" type="image/png" length="None" />
       
     </item>
     
@@ -202,6 +247,8 @@ In other words...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-01/the-summer-of-ys/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-01/the-summer-of-ys.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -227,6 +274,8 @@ In other words...&lt;/p&gt;
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-24/run-a-yaml-file-with-bash/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="0" />
       
     </item>
     
@@ -258,6 +307,8 @@ make YS the best it can be.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-10/yamlscript-is-ys/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-10/yamlscript-is-ys.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -288,6 +339,8 @@ I came away with the feeling that YAML and YS had found their community.
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-11-29/the-kubernetes-effect/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-11-29/the-kubernetes-effect.png" type="image/png" length="0" />
       
     </item>
     
@@ -322,6 +375,8 @@ on YS.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-10-05/the-fall-of-yamlscript/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-10-05/the-fall-of-yamlscript.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -346,6 +401,8 @@ on YS.&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-07-17/go-julia/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-07-17/go-julia.png" type="image/png" length="0" />
       
     </item>
     
@@ -385,6 +442,8 @@ Well, listen, how do you think *I* feel about it?
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm.png" type="image/png" length="None" />
+      
     </item>
     
     <item>
@@ -423,6 +482,8 @@ Super excited about that!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-04-16/ys-spring-update/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-04-16/ys-spring-update.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -460,6 +521,8 @@ Yesterday I automated that list...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-03-14/ys-firsts/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-03-14/ys-firsts.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -486,6 +549,8 @@ Yesterday I automated that list...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-24/wrapped-and-ready/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-24/wrapped-and-ready.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -510,6 +575,8 @@ gets from Perl to Rust.&lt;/p&gt;
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-23/perl-to-rust/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-23/perl-to-rust.png" type="image/png" length="0" />
       
     </item>
     
@@ -536,6 +603,8 @@ I always pictured Santa wearing moon boots around the workshop.&lt;/p&gt;
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-22/flip-flops/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-22/flip-flops.png" type="image/png" length="0" />
       
     </item>
     
@@ -571,6 +640,8 @@ I always pictured Santa wearing moon boots around the workshop.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-21/yaml-python-and-the-holy-graal/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-21/yaml-python-and-the-holy-graal.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -597,6 +668,8 @@ Godspeed, my festive friend!&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-20/godspeed/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-20/godspeed.png" type="image/png" length="0" />
       
     </item>
     
@@ -630,6 +703,8 @@ It&#39;s reindeer all the way down.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-19/reindeer-all-the-way-down/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -658,6 +733,8 @@ He&#39;s done this a few times, so he knows how to get the bugs out.&lt;/p&gt;</
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-18/santas-in-dbuggy/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-18/santas-in-dbuggy.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -683,6 +760,8 @@ Bet you didn&#39;t know that!&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-17/rosetta-code/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-17/rosetta-code.png" type="image/png" length="0" />
       
     </item>
     
@@ -713,6 +792,8 @@ They&#39;re also the hardest working of the bunch.&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-16/let-lambda-come-over/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-16/let-lambda-come-over.png" type="image/png" length="None" />
       
     </item>
     
@@ -746,6 +827,8 @@ Naughty-Xor-Nice???&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-15/naughty-is-nice/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-15/naughty-is-nice.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -772,6 +855,8 @@ I still have a quite a bit to learn about it myself! :-)&lt;/p&gt;
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-14/stocking-stuffers/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-14/stocking-stuffers.png" type="image/png" length="0" />
       
     </item>
     
@@ -801,6 +886,8 @@ Today I&#39;d like to tell you a little bit about it.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-13/history-lesson/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-13/history-lesson.png" type="image/png" length="None" />
+      
     </item>
     
     <item>
@@ -826,6 +913,8 @@ I&#39;m try...&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-12/future-proof/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-12/future-proof.png" type="image/png" length="0" />
       
     </item>
     
@@ -854,6 +943,8 @@ also offers a more familiar face.&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-11/the-yes-express/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-11/the-yes-express.png" type="image/png" length="0" />
       
     </item>
     
@@ -886,6 +977,8 @@ distinct States and seven distinct ~~Ladders~~ transformations.&lt;/p&gt;</descr
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-10/states-and-ladders/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-10/states-and-ladders.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -917,6 +1010,8 @@ It also gives the code a certain je ne sais quoi.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-09/coding-with-style/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-09/coding-with-style.png" type="image/png" length="None" />
+      
     </item>
     
     <item>
@@ -947,6 +1042,8 @@ There you&#39;ll find all-time best sellers like &lt;code&gt;map&lt;/code&gt;, &
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-08/going-to-the-library/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-08/going-to-the-library.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -973,6 +1070,8 @@ Today we&#39;ll learn about all the things you can do with it.&lt;/p&gt;</descri
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-07/sharpen-your-tools/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-07/sharpen-your-tools.png" type="image/png" length="0" />
       
     </item>
     
@@ -1005,6 +1104,8 @@ In one state &lt;code&gt;say&lt;/code&gt; is a function, and in the other it&#39
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-06/modes-of-transportation/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-06/modes-of-transportation.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -1035,6 +1136,8 @@ You don&#39;t even have YS installed yet!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-05/unwrapping-gifts/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-05/unwrapping-gifts.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -1063,6 +1166,8 @@ I&#39;ve actually been hiding something very very big something from you.&lt;/p&
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-04/santas-big-secret/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-04/santas-big-secret.png" type="image/png" length="0" />
       
     </item>
     
@@ -1100,6 +1205,8 @@ from the same JSON input.&lt;/p&gt;
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-03/load-em-up/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-03/load-em-up.png" type="image/png" length="0" />
       
     </item>
     
@@ -1145,6 +1252,8 @@ YS on your side!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-02/twas-a-bit/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-02/twas-a-bit.png" type="image/png" length="0" />
+      
     </item>
     
     <item>
@@ -1171,6 +1280,8 @@ generate a Christmas tree?&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-01/ys-advent-2023/</guid>
       
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-01/ys-advent-2023.png" type="image/png" length="None" />
+      
     </item>
     
     <item>
@@ -1190,6 +1301,8 @@ evolves.&lt;/p&gt;</description>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-10-26/welcome-to-the-ys-blog/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-10-26/welcome-to-the-ys-blog.png" type="image/png" length="None" />
       
     </item>
     
