@@ -2327,15 +2327,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#loops-and-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      Loops and Strings
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ys-curling-up-north" class="md-nav__link">
     <span class="md-ellipsis">
       YS Curling (up North)
@@ -2551,6 +2542,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#history-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      History Lesson
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2568,66 +2568,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <h1 id="the-ys-blog">The YS Blog<a class="headerlink" href="#the-ys-blog" title="Permanent link">🔗</a></h1>
       </header>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-06-06 00:00:00+00:00">June 6, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="loops-and-strings"><a class="toclink" href="2025-06-06/loops-and-strings/">Loops and Strings</a></h2>
-<p>Yesterday I left you with a program that really needed to "YS up"!</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">url =:</span>
-<span class="s1">  &quot;https://github.com/dominictarr/random-name/raw/master/first-names.json&quot;</span>
-
-<span class="s1">people =: url.curl().json/load().shuffle().take(3)</span>
-<span class="s1">shoes =: read(&quot;shoes.yaml&quot;).yaml/load()</span>
-
-<span class="s1">say: str(people.0, &quot; wears size &quot;, shoes.0.size, &quot; &quot;, join([shoes.0.name, &quot;s&quot;]))</span>
-<span class="s1">say: str(people.1, &quot; wears size &quot;, shoes.1.size, &quot; &quot;, join([shoes.1.name, &quot;s&quot;]))</span>
-<span class="s1">say: str(people.2, &quot; wears size &quot;, shoes.2.size, &quot; &quot;, join([shoes.2.name, &quot;s&quot;]))</span>
-<span class="s1">&#39;</span>
-</code></pre></div>
-<p>Let's make this awesome!</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2025-06-06/loops-and-strings/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -3938,6 +3878,58 @@ I still have a quite a bit to learn about it myself! :-)</p>
     
       <nav class="md-post__action">
         <a href="2023-12-14/stocking-stuffers/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2023-12-13 00:00:00+00:00">December 13, 2023</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              5 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="history-lesson"><a class="toclink" href="2023-12-13/history-lesson/">History Lesson</a></h2>
+<p>Santa is Legend.
+Legends have histories.
+The histories of Santa are many and varied, some going back to the 4th century
+AD.</p>
+<p>The history of YS is much shorter, but it's still a history.
+Today I'd like to tell you a little bit about it.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="2023-12-13/history-lesson/">
           Continue reading
         </a>
       </nav>
