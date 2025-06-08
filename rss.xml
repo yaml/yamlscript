@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sat, 07 Jun 2025 19:55:04 -0000</pubDate>
-    <lastBuildDate>Sat, 07 Jun 2025 19:55:04 -0000</lastBuildDate>
+    <pubDate>Sun, 08 Jun 2025 19:39:42 -0000</pubDate>
+    <lastBuildDate>Sun, 08 Jun 2025 19:39:42 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,34 @@
     
 
     
+    
+    <item>
+      <title>In The Beginning</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;How did YAML get started in the first place?&lt;/p&gt;
+&lt;p&gt;Today&#39;s Sunday post is about YAML, not YS.&lt;/p&gt;
+&lt;p&gt;But since YS is YAML, I think that&#39;s OK.&lt;/p&gt;
+&lt;p&gt;This is the story of how the &lt;a href=&#34;https://en.wikipedia.org/wiki/YAML&#34;&gt;YAML data language&lt;/a&gt; got its start as far back as &lt;a href=&#34;https://www.youtube.com/watch?v=rblt2EtFfC4&#34;&gt;1999&lt;/a&gt;.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-08/in-the-beginning/</link>
+      <pubDate>Sun, 08 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-08/in-the-beginning/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-08/in-the-beginning.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>TMTOWTDI for YS Expressions</title>
