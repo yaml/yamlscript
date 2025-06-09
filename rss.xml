@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 08 Jun 2025 21:59:50 -0000</pubDate>
-    <lastBuildDate>Sun, 08 Jun 2025 21:59:50 -0000</lastBuildDate>
+    <pubDate>Mon, 09 Jun 2025 21:13:23 -0000</pubDate>
+    <lastBuildDate>Mon, 09 Jun 2025 21:13:23 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,35 @@
     
 
     
+    
+    <item>
+      <title>Functionally Speaking</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;YS is a functional programming language.&lt;/p&gt;
+&lt;p&gt;Therefore we should be able to write functions in YS.&lt;/p&gt;
+&lt;p&gt;This week I want to do a mini-series of blog posts about using and writing
+functions in YS.&lt;/p&gt;
+&lt;p&gt;Let&#39;s get started!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-09/functionally-speaking/</link>
+      <pubDate>Mon, 09 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-09/functionally-speaking/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-09/functionally-speaking.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>In The Beginning</title>
