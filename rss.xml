@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Mon, 09 Jun 2025 21:13:23 -0000</pubDate>
-    <lastBuildDate>Mon, 09 Jun 2025 21:13:23 -0000</lastBuildDate>
+    <pubDate>Tue, 10 Jun 2025 20:25:41 -0000</pubDate>
+    <lastBuildDate>Tue, 10 Jun 2025 20:25:41 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,33 @@
     
 
     
+    
+    <item>
+      <title>Where the Funcs Have No Name</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Any self-respecting functional language has a way to create anonymous functions.&lt;/p&gt;
+&lt;p&gt;In YS there are more than one!&lt;/p&gt;
+&lt;p&gt;Today we&#39;ll talk about nameless functions, why they are useful, and how to create and call them.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-10/where-the-funcs-have-no-name/</link>
+      <pubDate>Tue, 10 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-10/where-the-funcs-have-no-name/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-10/where-the-funcs-have-no-name.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>Functionally Speaking</title>
@@ -56,7 +83,7 @@ functions in YS.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-09/functionally-speaking/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-09/functionally-speaking.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-09/functionally-speaking.png" type="image/png" length="44906" />
       
     </item>
     
