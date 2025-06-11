@@ -110,7 +110,6 @@
                               # Symbols and operators
       $ksym |                   # Colon chain calls
       $quot |                   # Quote token
-      $spec |                   # Special token
       $char |                   # Character token
       $keyw |                   # Keyword token
       $psym |                   # Symbol followed by paren
@@ -128,6 +127,7 @@
       $narg |                   # Numbered argument token
       $dotn |                   # Dot operator followed by number
       $dots |                   # Dot operator word with _ allowed
+      $spec |                   # Special token
       $dotx |                   # Special dot operators  # 22
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token

@@ -303,6 +303,14 @@
 (defn construct-stream-alias [node]
   (Lst [(Sym '_**) (Qts (:Ali node))]))
 
+(defn construct-interop-call [node]
+  (if-lets [sym (get-in node [:Lst 0])
+            name (str (:Sym sym))
+            _ (str/starts-with? name "~")
+            method (Sym (str "." (subs name 1)))]
+    (->> node vals first rest (cons method) vec Lst)
+    node))
+
 (defn construct-node
   ([node ctx]
    (when (vector? ctx) (die "ctx is a vector"))
@@ -329,7 +337,8 @@
                 node)
          node (if tag
                 (construct-tag-call node tag)
-                node)]
+                node)
+         node (construct-interop-call node)]
      (maybe-trace node)))
   ([node]
    (maybe-trace (construct-node node {:lvl 0 :defn false}))))

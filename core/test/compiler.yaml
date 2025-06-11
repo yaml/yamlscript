@@ -955,10 +955,8 @@
   yamlscript: |
     !yamlscript/v0
     =>: +@foo
-    =>: ~foo
   clojure: |
     @foo
-    ~foo
 
 
 - name: Allowable symbols
@@ -1644,3 +1642,15 @@
       _ a _ b _ *c =: 1 .. 10
   clojure: |
     (defn foo [] (let [[_ a _ b _ & c] (rng 1 10)]))
+
+
+- name: Java interop method call with tilde
+  yamlscript: |
+    !YS-v0
+    =>: ~foo(123)
+    =>: foo.~bar(baz)
+    =>: ~foo(123).~bar(baz):~baz
+  clojure: |
+    (.foo 123)
+    (.bar foo baz)
+    (.baz (.bar (.foo 123) baz))

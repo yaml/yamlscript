@@ -47,7 +47,8 @@
               \#\!.*\n? |                    # hashbang line
               [\s,]+    |                    # whitespace, commas,
             )")
-(def spec #"(?:~@|[~@`^])")                ; Special token
+#_(def spec #"(?:~@|[~@`^])")                ; Special token
+(def spec #"(?:\@)")                       ; Special token
 (def quot #"(?:\\')")                      ; Quote token
 (def dotx #"(?x)                           # Dot special operator
             (?:\.
@@ -75,8 +76,22 @@
                   )*
                 )
               "))
-(def xsym #"(?:\=\~\~?|!~\~?)")            ; Special operator token
-(def osym #"(?:[-+*/%<>!=~|&.]{1,3})")     ; Operator symbol token
+
+(def xsym #"(?:[=!]~~?)")                  ; Special operator token
+
+;; Operator symbol token
+(def osym #"(?x)
+            (?:
+              => |
+              [-+*/<>] |
+              \*\* |
+              [=<>!]= |
+              \%{1,2} |
+              [&|]{2,3} |
+              [=!]~~? |
+              \.{1,3}
+            )")
+
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def sett #"(?:\\\{)")                     ; Set start token
 (def narg #"(?:%\d+)")                     ; Numbered argument token
@@ -107,7 +122,9 @@
 (def vsym (re #"(?:\$$symw|\$(?=\.))"))    ; Variable lookup symbol
 (def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
 (def keyw (re #"(?:\:$symw)"))             ; Keyword token
-(def dots (re #"(?:(?:\.$ukey)$tend)"))    ; Dot operator word with _ allowed
+(def jsym #"(?:~\w+)")                     ; Java interop symbol
+                                           ; Dot operator word with _ allowed
+(def dots (re #"(?:(?:\.(?:$jsym|$ukey))$tend)"))
                                            ; Clojure symbol
 (def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
 (def ysym (re #"(?:$symw[+?!]?|_)"))       ; YS symbol token
@@ -116,7 +133,7 @@
 (def dsym (re #"(?:$symw=)"))              ; YS symbol with default
 (def nspc (re #"(?:$symw(?:\:\:$symw)+)")) ; Namespace symbol
 (def fsym (re #"(?:(?:$nspc|$symw)/$ysym)"))  ; Fully qualified symbol
-(def psym (re #"(?:(?:$fsym|$ysym)\()"))   ; Symbol followed by paren
+(def psym (re #"(?:(?:$fsym|$ysym|$jsym)\()"))   ; Symbol followed by paren
                                            ; Colon calls
 (def ksym (re #"(?x)
                 (?:
@@ -144,14 +161,35 @@
                         $nspc |
                         $symw
                       ) /
+                    )?
+                    (?:
+                      $jsym |
+                      $symw [+?!]?
                     )
-                    ?$symw [+?!]?
                   )+
                 )"))
 
-(def eqop (re #"(?:\|\|\|?|[-+*/.]|\*\*)"))
-                                           ; Pair key for def/let call
-(def defk (re #"(?:((?:\[.*\]|\{.*\}|$symw|_).*?) +($eqop?)=)"))
+;; Pair key for def/let call
+(def defk (re #"(?x)
+                (?:
+                  (
+                    (?:
+                      \[.*\] |
+                      \{.*\} |
+                      $symw  |
+                      _
+                    )
+                    .*?
+                  )
+                  \ +
+                  ((?:
+                    \|\|\|? |
+                    [-+*/.] |
+                    \*\*
+                  )?)
+                  =
+                )"))  ;;"
+
 (def dfnk (re #"(?:^(defn-?) +($ysym)(?:\((.*)\))?$)")) ; Pair key for defn call
 (def afnk (re #"(?:^(fn)( +$ysym)?(?:\((.*)\))?$)"))    ; Pair key for a fn call
 

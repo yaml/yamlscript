@@ -72,6 +72,12 @@
     "allPublicMethods": true
   },
   {
+    "name": "java.lang.Float",
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true
+  },
+  {
     "name": "java.lang.IllegalArgumentException",
     "allPublicConstructors": true,
     "allPublicFields": true,
@@ -79,6 +85,12 @@
   },
   {
     "name": "java.lang.Integer",
+    "allPublicConstructors": true,
+    "allPublicFields": true,
+    "allPublicMethods": true
+  },
+  {
+    "name": "java.lang.Long",
     "allPublicConstructors": true,
     "allPublicFields": true,
     "allPublicMethods": true
