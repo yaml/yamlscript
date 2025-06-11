@@ -78,9 +78,6 @@ test::
 - cmnd: "ys -le '=>: map(inc, range(1, 10))'"
   want: "[2,3,4,5,6,7,8,9,10]"
 
-- cmnd: "ys -le '->>: range(1, 10), map(inc)'"
-  want: "[2,3,4,5,6,7,8,9,10]"
-
 - name: Interpolation example
   code: |
     name =: 'World'

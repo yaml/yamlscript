@@ -17,6 +17,7 @@
    [java-time.api :as jtime]
    [yamlscript.common :as common :refer
     [atom? re-find+ regex?]]
+   [yamlscript.externals :as ext]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
    [ys.ys :as ys])
@@ -904,10 +905,14 @@
 ;; HTTP functions
 ;;------------------------------------------------------------------------------
 
+(defn get-url [url]
+  (ext/convert-url url))
+
+(defn load-url [url]
+  (ext/load-url nil url))
+
 (defn curl [url]
-  (let [url (if (re-find #":" url)
-              url
-              (str "https://" url))
+  (let [url (get-url url)
         resp (http/get url)]
     (if-let [body (:body resp)]
       (str body)

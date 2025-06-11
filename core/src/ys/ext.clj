@@ -8,12 +8,6 @@
    [yamlscript.util :as util]
    [ys.yaml :as yaml]))
 
-(defn github-raw-url [spec]
-  (let [[owner repo ref & path] (str/split spec #"/")]
-    (format
-      "https://raw.githubusercontent.com/%s/%s/refs/heads/%s/%s"
-      owner repo ref (str/join "/" path))))
-
 (defn yq [data cmd]
   (let [yaml (yaml/dump data)
         res (process/sh {:in yaml}

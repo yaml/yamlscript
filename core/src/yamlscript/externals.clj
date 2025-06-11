@@ -101,22 +101,35 @@
   (die ":git not implemented yet"))
 
 (defn github-raw-url [url]
-  (let [url (subs url 7)
-        parts (str/split url #"/")
-        _ (when (< (count parts) 4)
-            (die (str "Invalid github url: " url)))
-        [user repo ref & path] parts
-        ref (if (re-matches #"[0-9a-f]{40}" ref)
-              ref (str "refs/heads/" ref))]
-     (str "https://raw.githubusercontent.com/"
-          (str/join "/" (concat [user repo ref] path)))))
+  (let [[path ref] (str/split url #"\@")
+        ref (or ref "HEAD")
+        [user repo path] (str/split path #"/" 3)
+        _ (when-not (and user repo path)
+            (die (str "Invalid github url: " url)))]
+    (str/join "/" ["https://raw.githubusercontent.com"
+                   user repo ref path])))
+
+(defn github-gist-url [url]
+  (let [url (str/replace url #"/raw/?" "/")
+        [path ref] (str/split url #"\@")
+        [user gist-id path] (str/split path #"/" 3)
+        _ (when-not (and user gist-id)
+            (die (str "Invalid github gist url: " url)))]
+    (str/join "/" (remove nil? ["https://gist.githubusercontent.com"
+                                user gist-id "raw" ref path]))))
+
+(defn convert-url [url]
+  (cond
+    (re-find #"^https?://" url) url
+    (str/starts-with? url "gist:") (github-gist-url (subs url 5))
+    (str/starts-with? url "github:") (github-raw-url (subs url 7))
+    (str/starts-with? url "https:") url
+    (str/starts-with? url "http:") url
+    (not (str/includes? url ":")) (str "https://" url)
+    :else (die (str "Invalid url for ':url': " url))))
 
 (defn load-url [_ url]
-  (let [url (cond
-              (str/starts-with? url "github:") (github-raw-url url)
-              (str/starts-with? url "http") url
-              :else (die (str "Invalid url for ':url': " url)))]
-    (-> url cache/curl load-code-ys-or-clj)))
+  (-> url convert-url cache/curl load-code-ys-or-clj))
 
 (defn parse-args [args]
   (let [nargs (count args)]
@@ -150,8 +163,7 @@
                            (assoc-in parsed
                              [:from (first (keys (:from parsed)))] v)
                            (if (vector? (get parsed key))
-                             (update parsed key conj v)
-                             (assoc parsed key v)))
+                             (update parsed key conj v) (assoc parsed key v)))
                          (die (str "Invalid arg for 'use': " arg))))
               key (cond
                     (= arg :all) nil
