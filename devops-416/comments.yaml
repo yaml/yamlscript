@@ -1,0 +1,22 @@
+!YS-v0:
+
+# Comment
+
+key1: a value          # Comment
+
+key2:: ENV.USER        \"Comment"
+       .reverse()
+
+key3: [1, 2, 3]
+
+key4:: + [4 5, 6]
+
+key5:: + {:a 1, :b 2,  \"Comment"
+          :c 3}
+
+
+
+
+
+
+

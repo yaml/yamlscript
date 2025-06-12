@@ -1,0 +1,22 @@
+!YS-v0:
+vars =:
+  load:
+    case ENV.ENVIRONMENT:
+      'dev': 'dev-vars.yaml'
+      'test': 'test-vars.yaml'
+      'staging': 'staging-vars.yaml'
+      'prod': 'prod-vars.yaml'
+      else:
+        die: "The 'ENVIRONMENT' variable must be one of
+              'dev', 'test', 'staging', or 'prod'"
+
+# Or just:
+vars =: load("$(ENV.ENVIRONMENT)-vars.yaml")
+
+database:
+  host:: vars.db-host
+  port:: vars.db-port
+  user:: vars.db-user
+  password:: vars.db-password
+
+

@@ -1,0 +1,940 @@
+---- config
+title: The YS Way to YAML
+indent: 5
+
+# auto_size: 1
+height: 25
+width: 87
+
+vim_opts: '-u NONE'
+skip: 0
+top: 2
+before: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+
+The YS ("wise") Way to YAML
+
+by Ingy döt Net
+
+Toronto Enterprise DevOps User Group
+June 12, 2025
+Toronto
+
+
+----
+== Any Questions?
+
+
+----
+== Any Questions?
+
+* Lots to cover tonight
+
+* But feel free to ask as we go
+
+* Hopefully Q/A at the end too
+
+* I can stick around all night
+  * Drinks at Chef's Hall after the meetup?
+
+* I'm almost always available online
+  * https://yamlscript.org/ingydotnet
+
+
+----
+== How Many People Use...
+
+* Go
+* Java
+* Rust
+* Python
+* JavaScript
+* Ruby
+* PHP
+* Perl
+* YAML
+
+* Kubernetes, Helm, Kustomize
+* Terraform, Pulumi, AWS CDK, Dagger
+* Cue, Pkl, yq, others
+* A YAML Loader like PyYAML, go-yaml, SnakeYAML, etc
+
+
+----
+== What if...
+
+* YAML files could include other YAML files?
+  * or JSON files? (All JSON is YAML, right?)
+  * or CSV/TSV/XML etc?
+  * or specific parts of those data files?
+
+* YAML files could include data from the web?
+  * or from a database?
+  * or load any data source from anywhere?
+
+
+----
+== What if YAML let you...
+
+* Assign and use variables?
+* Apply over 1000 standard functions?
+* Use loops and conditionals?
+* Interpolate vars and exprs in any string?
+* Define your own functions?
+* Access env vars and shell commands?
+
+* Use external libraries?
+* Easily publish your own libraries?
+* Write them in any language?
+  * Including Wasm?
+
+
+----
+== What if there was a YAML loader library...
+
+* Like PyYaml for Python...
+* In every programming language?
+  * That worked the same everywhere?
+  * Had the most features?
+  * Was the most configurable?
+  * Was the most secure?
+  * Correctly implemented the YAML 1.2 spec?
+
+* That Drop-In replaced your current YAML library?
+  * Had the same peculiarities of said YAML library?
+  * Broke none of your users' current config files?
+
+
+----
+== Introducing YS — The New YAML Engine
+
+* Pronounced "wise" (the plural of Y!)
+  * HelmYS, SchemaYS, MarkdownYS, etc
+* YS addresses YAML's problems and needs...
+  * For EVERYBODY, EVERYWHERE, ALL AT ONCE!!
+* Learn all about it at:
+  * https://yamlscript.org
+
+* YAML is now Completely Programmable!
+  * A complete, functional programming language
+
+* Your YAML files are already valid YS
+  * All YS code is 100% valid YAML
+
+* Use YS anywhere in your existing YAML files
+  * Dynamic, conditional, functional data files
+
+* YS YAML loaders for all languages
+  * Go, Rust, Java, Python, Ruby, NodeJS, etc
+
+
+----
+== Summer of YS
+
+* My new Summer blog series about YS
+
+* https://yamlscript.org/blog/category/summer-of-ys/
+
+  ★ ★ ★ ★ ★
+
+* Every day in June, July and August 2025!
+
+* 92 days of YS posts (including today!)
+  * https://yamlscript.org/blog/2025-06-12/using-environment-variables/
+
+* How many people have tried YS?
+
+
+----
+== What can a Programming Language Do?
+
+* Read/Write stdio and files
+* Define and use variables
+* Use loops and conditionals
+* Define and use functions
+* Math, string and collection operations
+* Access environment variables
+* Execute shell commands
+* Load and use libraries
+* Interact with databases and APIs
+* Process data from various formats
+* Access to standard libraries
+* Provide an ecosystem of libraries
+
+* YS does everything a programming language should!
+
+
+----
+== Ingy döt Net
+
+* Invented the YAML data language
+  * w/ Clark and Oren; 2001 - 2009
+  * YAML 1.0, 1.1, 1.2 specs
+* Primary Maintainer of YAML
+  * w/ Tina, Panto, Eemeli, Thom; 2015 - 2025
+  * YAML 1.3 spec
+* Invented YS / YAMLScript
+  * w/ vendethiel and others; 2023 - 2025
+* Open Source module author
+  * CPAN, NPM, PyPI, RubyGems, etc
+* Open Source speaker since 2001
+  * OSCON, OSDC, KubeCon, YAPC
+* Maintainer of YAML Loader libraries
+  * PyYAML, libyaml, go-yaml
+
+* Live in Seattle, Toronto, Chicago
+
+
+----
+== Using YS in YAML
+
+$ vim file.yaml vars.yaml -O
+$ ys -Y file.yaml
+
+
+----
+== 25 Years of YAML
+
+* https://yamlscript.org/blog/2025-06-08/in-the-beginning/
+* 2001 - Clark & Oren (SML) meet Ingy (Data::Denter)
+* 2002 - Email & YAPC St Louis
+* 2003 - Ruby 1.8.0 ships YAML in core
+* 2004 - YAML 1.0 spec released
+* 2005 - YAML 1.1 spec released
+* 2006 - JSON arrives
+* 2007 - JSON is (almost) a subset of YAML
+* 2008 - YAML O'Reilly book planned
+* 2009 - YAML 1.2 spec
+* 2010 - JSON is truly a subset of YAML
+* 2015 - Ingy meets Tina
+* 2016 - Ingy meets Panto
+* 2017 - Ingy meets Eemeli
+* 2020 - Ingy meets Thom
+* 2021 - YAML 1.2.2 spec released
+* 2023 - Ingy creates YS
+* 2024 - Ingy works on YS, KubeCon SLC
+* 2025 - Summer of YS, Toronto DevOps Meetup!!
+
+
+----
+== YS Baby Steps
+
+$ vim baby1.ys
+$ ys baby1.ys
+$ ys -l baby1.ys
+$ ys -l baby1.ys | jq .
+$ ys -Y baby1.ys
+$ ys -l baby1.ys | jq . | ys -Y
+$ ys -J baby1.ys
+$ ys --to=tsv baby1.ys
+
+$ vim baby2.ys
+$ ys -Y baby2.ys
+$ FOO=1 ys -Y baby2.ys
+
+
+----
+== A YS Pig
+
+* Let's look at an actual program written in YS
+
+$ ys pig-latin.ys 'how did toronto become so ys'
+
+$ vim pig-latin.ys
+
+* https://gist.github.com/ingydotnet/90ab729fad4c5518b38f98eda097021c
+
+
+----
+== A YS Exercism
+
+Learn YS and 75 other languages online for free!
+
+* https://exercism.org/
+* https://exercism.org/tracks
+* https://exercism.org/tracks/yamlscript
+
+* Ingy is your YS Mentor
+
+
+----
+== Who Knows of Rosetta Code?
+
+* https://rosettacode.org/
+
+* Rosetta Code is a wiki comparing solutions to:
+  * 1300+ Tasks
+  * 950+ Languages
+  * Since 2007
+
+* YAMLScript has some programs there
+* https://rosettacode.org/wiki/Category:YAMLScript
+
+* You can `git clone` all the code!
+* https://github.com/acmeism/RosettaCodeData
+
+
+----
+== Installing YS
+
+$ brew install yaml/yamlscript/ys
+
+$ curl -L getys.org/ys | bash
+
+$ curl https://yamlscript.org/install | bash
+
+$ git clone https://github.com/yaml/yamlscript
+$ make -C yamlscript install-ys
+
+* https://yamlscript.org/doc/install
+
+$ ys --version
+$ ys --help
+
+
+----
+== Basic YS Syntax
+
+* YS Modes
+* Variables
+* Comments and Whitespace
+* Strings and Interpolation
+* Functions
+* Expressions
+* Operators
+* Conditionals
+* Loops
+
+
+----
+== Turn on the !YS
+
+* Without a starting `!YS-v0` tag
+  * YAML is in "bare" mode
+  * No YS code features are available
+
+* With a starting `!YS-v0` tag
+  * YAML is in "code" mode
+  * YS code features are available and starts enabled
+
+* With a starting `!YS-v0:` tag
+  * YAML is in "data" mode
+  * YS code features are available, but starts disabled
+
+
+
+----
+== YS Syntax Modes
+
+Consider this YS code:
+
+$ vim modes1.ys
+$ ys modes1.ys
+$ ys -l modes1.ys
+$ ys -c modes1.ys
+
+
+----
+== Mode switching tags:
+
+* `!`     - Toggle code and data modes
+* `::`    - Sugar for `: !` in mapping pairs
+
+$ vim modes2.ys
+$ ys -Y modes2.ys
+$ ys -c modes2.ys
+
+
+----
+== Variables
+
+* Variables are simple.
+
+* Set them like this:
+x =: 7
+
+* Use them like this:
+say: 6 * x              # => 42
+
+* Destructuring assignment works too:
+$ vim destructing.ys
+$ ys destructing.ys
+
+
+----
+== Comments and Whitespace
+
+* Comments use YAML's `#` syntax
+
+* Also `\"..."` for inline comments in code mode
+
+* Commas are Whitespace!!
+  * In code mode. I rarely use them.
+
+* Commas and WS are significant in data mode
+  * It's YAML afterall
+
+$ vim comments.yaml
+$ ys -Y comments.yaml
+
+
+----
+== Functions
+
+# 'defn' defined functions:
+defn add(x y):
+  =>: x + y
+
+defn add(x y): x + y
+
+# Anonymous functions:
+add =:
+  fn(x y):
+    x + y
+
+add =: \(%1 + %2)
+
+$ ys -pe 'mul: 6 7'
+$ ys -pe '\(%1 * %2): 6 7'
+
+
+----
+== Expressions
+
+* YS is really a Lisp
+
+$ ys -ce '(mul 6 7)'
+$ ys -ce 'mul(6 7)'
+$ ys -ce '6 * 7'
+$ ys -ce 'mul: 6 7'
+$ ys -ce 'mul 6: 7'
+$ ys -ce 'mul 6 7:'
+$ ys -ce '6.mul(7)'
+$ ys -ce '7.mul(6 _)'
+$ ys -md -ce 'key: !:mul*: + [6 7]'
+
+$ vim fn-tag.yaml
+$ ys -Y fn-tag.yaml
+
+
+----
+== Chained Expressions
+
+$ ys -pe '(1 .. 100).filter(odd?).map(sqr).sum().digits().reverse().join().N()'
+
+$ ys -pe '(1 .. 100).filter(odd?).map(sqr):sum:digits:reverse:join:N'
+
+
+----
+== YS Operators
+
+* https://yamlscript.org/doc/operators/
+
+* YS Operators are Polymorphic
+$ ys -e 'say: 1 + 2'
+$ ys -e 'say: "one" + "two"'
+$ ys -e 'say: + "one" + "two"'
+$ ys -e 'say: + "one" * 2'
+$ ys -e 'say: + [1 1 1] + [2 2 2]'
+$ ys -e 'say: + [1 1 1] * 2'
+$ ys -e 'say: + {"one" 1} + {"two" 2}'
+$ ys -e 'say: S("Aaron".0 + 1) + "Aaron".subs(1)'
+$ ys -e 'say: (mul + (inc + inc)).call(8 5)'
+
+* Lisp operators are not polymorphic
+$ ys -e 'say: (+ 1 2)'
+$ ys -e 'say: (+ "one" "two")'
+
+
+----
+== YS Conditionals
+
+* Use `if` and `when` for conditionals
+* `when` has no else clause
+
+$ ys -e 'say: rand(100).>.gt(50).if("Big" "Small")'
+
+$ vim conditionals.ys
+$ ys conditionals.ys 13
+$ ys conditionals.ys 86
+$ ys conditionals.ys 500
+$ ys conditionals.ys -32
+
+
+----
+== YS has many kinds of Loops
+
+* `for`, `each`, `map`, `mapv`, `reduce`, `loop`
+* Only `loop` can exit early
+
+$ vim loops.ys
+$ ys -Y loops.ys
+
+
+----
+== Using Environment Variables
+
+$ vim config.yaml
+$ vim dev-vars.yaml
+
+$ ys -Y config.yaml
+$ ENVIRONMENT=dev ys -Y config.yaml
+
+
+----
+== Reading and Writing Files
+
+$ ys -e 'write "/tmp/hello.txt": "Hello\nWorld\n"'
+
+$ ys -e 'say: read("/tmp/hello.txt")'
+
+$ ys -e 'shell: "ls -l /tmp/hello.txt"'
+
+
+----
+== Fetching Web Data
+
+* A JSON list of Animal Names
+* https://gist.github.com/borlaym/585e2e09dd6abd9b0d0a
+
+* YS has a builtin `curl` function
+
+$ ys -Ye 'curl("gist:borlaym/585e2e09dd6abd9b0d0a"):json/load:shuffle.take(5)'
+
+* Also a general purpose `http` library
+
+* Today's slide deck:
+$ gist slides.vroom
+
+$ vim $(which gist)
+$ gist $(which gist)
+$ ys -e 'say: curl("gist:ingydotnet/???")'
+
+
+----
+== Using Modules
+
+* Let's update our config.yaml file to use a module
+
+$ vim config.yaml
+$ vim config2.yaml loader.ys -O
+$ ENVIRONMENT=dev ys -Y config2.yaml
+
+
+----
+== Publishing Modules
+
+* Let's publish our loader.ys module!
+
+$ gist loader.ys
+
+$ vim config3.yaml
+$ ENVIRONMENT=dev ys -Y config3.yaml
+
+$ vim config4.yaml
+$ ENVIRONMENT=dev ys -Y config4.yaml
+
+
+----
+== Multiple Documents
+
+* YAML supports multiple documents in a single file
+
+* YS can put this feature to good use
+
+$ vim config5.yaml
+$ ys -Y config5.yaml
+$ ENVIRONMENT=test ys -Y config5.yaml
+
+* YS loads the final document by default
+* Use others for setup
+
+
+----
+== Run YS with Shebang and with Bash
+
+* You can "run" a YAML file!
+  * Add a shebang line to `ys-0`
+  * Make it executable
+
+$ vim config6.yaml
+$ chmod +x config6.yaml
+$ ENVIRONMENT=dev ./config6.yaml
+
+* YS can also be run with Bash
+  * The YS `source` function is valid Bash & YS!
+
+$ vim config7.yaml
+$ chmod +x config7.yaml
+$ ENVIRONMENT=dev bash config7.yaml
+$ ENVIRONMENT=dev ys config7.yaml
+$ ENVIRONMENT=dev ./config7.yaml
+
+$ rm -fr /tmp/yamlscript-run-ys/
+
+
+----
+== Debugging YS
+
+* Bash has a -x flag for debugging
+  * It prints each command before executing it
+
+$ bash -x -c 'for i in {1..5}; do echo "$i) Hi"; done'
+
+* YS has one too!
+
+$ ys -x pig-latin.ys 'hello all you perl toolchain summit hackers'
+
+* Let's see how it works
+
+$ ys -cx pig-latin.ys
+
+
+----
+== YAML Anchors and Aliases are YS Functions
+
+* Let's use -x to see how anchors and aliases work
+
+$ vim config5.yaml
+$ ENVIRONMENT=test ys -x -Y config5.yaml
+
+* YS lets you use chain expressions with aliases
+
+$ vim alias.yaml
+$ ys alias.yaml
+
+
+----
+== Running Shell Commands
+
+* YS has a `shell` function to run shell commands
+  * Writes output to STDOUT
+
+* There is also a `sh` function
+  * Returns an object with:
+  * `out` - STDOUT output
+  * `err` - STDERR output
+  * `exit` - exit code
+
+$ ys -e 'say: sh("ls -l").out'
+$ ys -e 'say: sh("ls -l"):yaml/dump'
+
+
+----
+== YS Global Variables
+
+$ ys -pe ENV      # Environment variables map
+$ ys -pe RUN      # Runtime variables map
+$ ys -pe VERSION  # YS version string
+$ ys -pe ARGV     # Command line arguments list
+$ ys -pe ARGS     # Processed command line arguments list
+$ ys -pe ARGV -- one 2 3.1415
+$ ys -pe ARGS -- one 2 3.1415
+$ ys -pe CWD      # Current working directory
+$ ys -pe FILE     # Current file being processed
+$ ys -pe DIR      # Directory of the current file
+$ ys -pe INC      # Module load path directory list
+$ ys -pe IN       # STDIN file handle
+$ ys -pe OUT      # STDOUT file handle
+$ ys -pe ERR      # STDERR file handle
+
+
+----
+== YS Loaders for All Languages
+
+* YS can provide a YAML loader for any language
+  * Requires FFI and JSON support
+
+* So far we have loaders for 11 languages:
+  * Clojure
+  * Crystal
+  * Go
+  * Java
+  * Julia
+  * NodeJS
+  * Perl
+  * Python
+  * Raku
+  * Ruby
+  * Rust
+
+* https://yamlscript.org/doc/bindings/#currently-available-libraries
+
+
+----
+== YS Symbols
+
+* In YS you don't need to worry about symbols being special
+  * Use any symbol in any scope
+
+* Let's use `if` as a variable...
+
+$ ys -e 'if =: 7 * 6' -e 'say: if'
+
+
+----
+== YS is a Lisp
+
+* Compiles to Clojure
+* Then evaluates the Clojure code with:
+  * Small Clojure Interpreter (SCI)
+
+* Clojure is a Lisp that runs on the JVM
+* ys is a standalone native binary
+  * No JVM required
+  * Uses GraalVM's `native-image` compiler
+
+
+----
+== YS/Java Interop
+
+* YS can call Java code directly
+* All the core Java classes are available
+
+* https://docs.oracle.com/javase/8/docs/api/java/lang/Long.html#byteValue--
+
+$ ys -pe 'Long.new(298).~byteValue()'
+
+
+----
+== Compiling YAMLScript programs to binary executables
+
+* You can compile YAMLScript programs to standalone binaries
+* Even config files can be compiled to binaries!
+
+* ys --binary program.ys
+* Must have a main function
+* Compilation is done with GraalVM's native-image
+
+* The resulting binary is standalone
+* Compilation is slow, but the binary is fast
+* The minimum binary size is ~13MB
+
+
+----
+== The YS compiler is an actual YAML Loader
+
+* Like PyYAML, go-yaml, SnakeYAML, etc
+
+* https://yaml.org/spec/1.2.2/#31-processes
+
+$ ys -ce 'say: "Hello $(ENV.USER)"'
+
+$ ys -cde 'say: "Hello $(ENV.USER)"'
+
+
+----
+== Introducing HelmYS
+
+* HelmYS is a new project that lets you use YAMLScript in Helm templates
+
+* You can use YAMLScript in Helm charts today!
+
+* You can mix YS with Go template syntax or use YS exclusively
+  * YS "templating" is cleaner than Go templates
+  * YS is more powerful than Go templates / Sprig
+
+* If you use YS exclusively, your templates are valid YAML
+  * You can use YAML tools like `yamllint` on them
+
+* Here's a side by side comparison of YS and Go in a Helm chart
+* https://yamlscript.org/helmys
+
+
+----
+== YAMLLM
+
+* On the topic of AI and Smarter DevOps…
+
+$ yamllm 'Will YAMLScript take over the DevOps world?'
+
+* YAMLLM is written in YS and offers CLI access to nearly 20 LLMs
+
+* https://github.com/yaml/yamllm/blob/main/bin/yamllm
+
+
+----
+== Replacing YAML with Programming Languages
+
+There are several platforms that use programming languages to define
+infrastructure as code, which can be seen as a replacement for YAML.
+
+* Pulumi - TypeScript, Python, Go, .NET (C#), Java, YAML
+* Terraform - TypeScript, Python, Java, C#, Go
+* AWS CDK - TypeScript, Python, Java, C#
+
+YS could easily be added to these languages.
+
+It has the advantage of being both YAML and a programming language!
+
+
+----
+== Use YS today for any DevOps config
+
+* YS wants to be used by all DevOps tools
+* But currently it is not
+
+* You can use YS today in your DevOps configs
+
+* Put a config.ys file next to your config.yml file
+* Use the `ys` command to generate the config.yml file
+
+
+----
+== A CircleCI config.yml Conversion
+
+* Calva is a very popular Clojure IDE for VS Code
+
+* It had a large CircleCI config.yml file
+  * 636 lines of repetitive, hard to maintain YAML
+  * With 9 embedded (unlintable) Bash scripts YAML strings
+
+* I refactored it to use YS
+  * Now it has 9 small maintainable YS files
+    * Generates the equivalent config.yml
+    * Inline Bash code is now in .bash files
+      * Linted with shellcheck
+      * Found and fixed several Bash bugs
+
+
+* https://github.com/BetterThanTomorrow/calva/tree/9483828c2/.circleci
+
+* https://github.com/BetterThanTomorrow/calva/tree/published/.circleci
+
+
+----
+== A GitHub Actions Conversion
+
+* RapidYAML is the world's fastest and most correct YAML parser
+  * by Joao Paulo Magalhaes
+  * Written in C++
+* It uses YS to generate its GitHub Actions workflow files
+
+* https://github.com/biojppm/rapidyaml/tree/master/.github/workflows
+
+
+----
+== The YS Standard Library
+
+* https://yamlscript.org/doc/ys-std
+
+
+----
+== MarkdownYS
+
+* https://yamlscript.org/doc/ys-std
+
+
+----
+== Ever wanted to invent a new programming language?
+
+Join me in creating YS!
+
+* YS already works
+* But there's so much more to do
+
+* YS has serious potential
+  * It can be the next big thing in DevOps
+  * And everywhere that YAML is used
+
+* YS is a versioned language. v0 v1 v2 ...
+  * v0 is already stable
+  * v1 starts now
+  * v2 starts in in the Fall
+
+
+----
+== YS Adoption has Been Slow
+
+* YS solves all of YAML's problems
+  * For everybody!
+* Getting the world to learn new things is hard
+
+* You really can help!
+* My main purpose tonight is to get you all involved!
+
+
+----
+== Helping Out with YS
+
+* YS is Open Source
+* Ingy is very collaborative!
+
+* Start using YS in your YAML files
+* Let me know what sucks
+* We can build it together!
+
+* Find me online any time
+  * https://yamlscript.org/ingydotnet/
+
+
+----
+== The go-yaml Project
+
+* Port of libyaml to Go
+* libyaml was a port of PyYAML to C
+* All under https://github.com/yaml org
+
+* We can maintain them in parallel
+
+
+----
+== Sponsoring YAML and YS
+
+* Ask your employer to sponsor YAML and YS
+* Hire Ingy
+* I've spent all of 2024 and 2025 working on YS
+  * Living on savings
+* Looking for a full-time or contract work
+  * Can be in Toronto
+
+----
+== Using AI to write YS
+
+* Let's publish a new rot13 module
+
+* Prompt:
+  * write a rot13.clj file with an encode and decode function
+* mv rot13.{clj,ys}
+
+
+----
+== Using YS in Python
+
+* https://github.com/yaml/yamlscript/tree/main/python#python-usage
+
+
+----
+== The YS Road Map
+
+* https://github.com/orgs/yaml/projects/6/views/1
+
+* Windows support
+* Wasm support
+* LSP server for YS
+* External libraries - PkgYS
+* Maven dependencies
+
+
+----
+== Q & A
+
+* https://yamlscript.org/press/#talks
+
+
+----
+== The End
+
+== Questions?
+
+
+* Slides from tonight:
+* https://yamlscript.org/talk/20250213
+
+* Contact Me!
+* https://yamlscript.org/ingydotnet/

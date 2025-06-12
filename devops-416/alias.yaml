@@ -1,0 +1,26 @@
+!YS-v0
+# This is some copilot generated data:
+--- &data
+- name: "alias"
+  description: "Alias for a command or a set of commands"
+  type: "object"
+  properties:
+    alias:
+      type: "string"
+      description: "The alias name"
+    command:
+      type: "string"
+      description: "The command associated with the alias"
+  required: [alias, command]
+
+--- !code
+say: |
+  The properties command is:
+
+    "$(*data.0.properties.command.description)"
+
+
+
+
+
+...
