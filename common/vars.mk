@@ -191,7 +191,7 @@ endif
 # Set MAVEN variables:
 #------------------------------------------------------------------------------
 
-MAVEN-VER := 3.9.9
+MAVEN-VER := 3.9.10
 MAVEN-SRC := https://dlcdn.apache.org/maven/maven-3/$(MAVEN-VER)/binaries
 MAVEN-DIR := apache-maven-$(MAVEN-VER)
 MAVEN-TAR := $(MAVEN-DIR)-bin.tar.gz
