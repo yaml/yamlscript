@@ -17,7 +17,6 @@ RUSTUP := $(CARGO-BIN)/rustup
 CARGO-CMDS := \
   build \
   check \
-  clean \
   clippy \
   fmt \
   install \
@@ -37,6 +36,9 @@ $(CARGO-CMDS):: $(CARGO)
 	cargo $@
 
 release: publish
+
+clean::
+	$(RM) -r target
 
 distclean::
 	$(RM) -r $(CARGO-HOME) $(RUSTUP-HOME)
