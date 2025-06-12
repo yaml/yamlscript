@@ -14,5 +14,5 @@ $ curl https://getys.org/ys | bash
 See [Installing YS](https://yamlscript.org/doc/install/) for more detailed information about installing YS things.
 
 
-## Changes in YS version 0.1.96
+## Changes in YS version 0.1.97
 

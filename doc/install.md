@@ -24,8 +24,8 @@ You can install both `ys` and `libyamlscript` with a single CLI command, where:
 Examples:
 ```bash
 $ curl https://yamlscript.org/install | bash
-$ curl https://yamlscript.org/install | VERSION=0.1.96 bash
-$ curl https://yamlscript.org/install | VERSION=0.1.96 LIB=1 bash
+$ curl https://yamlscript.org/install | VERSION=0.1.97 bash
+$ curl https://yamlscript.org/install | VERSION=0.1.97 LIB=1 bash
 $ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
 ```
 

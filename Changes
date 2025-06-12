@@ -1,3 +1,14 @@
+- version: 0.1.97
+  date:    Wed Jun 11 10:56:55 PM EDT 2025
+  changes:
+  - make: Use .git/.ext as "tmp" directory
+  - perl-alien: Fix spurious failures on cpantesters
+  - doc: Add missing codeblock
+  - core: Add std/to-vars
+  - make: Makefile variables refactoring
+  - core: Support host interop with foo.~bar(baz)
+  - std: Support get-url and load-url
+  - make: Update Maven version to 3.9.10
 - version: 0.1.96
   date:    Fri Apr 18 05:02:04 PM PDT 2025
   changes:
