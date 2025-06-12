@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 12 Jun 2025 03:48:47 -0000</pubDate>
-    <lastBuildDate>Thu, 12 Jun 2025 03:48:47 -0000</lastBuildDate>
+    <pubDate>Thu, 12 Jun 2025 13:33:45 -0000</pubDate>
+    <lastBuildDate>Thu, 12 Jun 2025 13:33:45 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,33 @@
     
 
     
+    
+    <item>
+      <title>Using Environment Variables</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Tonight I&#39;m giving a talk about YS and YAML to the &lt;a href=&#34;https://www.meetup.com/toronto-enterprise-devops-user-group/events/307801910/&#34;&gt;Toronto DevOps Meetup&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What could be more important to a developer than environment variables?!&lt;/p&gt;
+&lt;p&gt;Let me show you how to use environment variables in YS and in your YAML files.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-12/using-environment-variables/</link>
+      <pubDate>Thu, 12 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-12/using-environment-variables/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-12/using-environment-variables.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>YS Multi Functions</title>
@@ -84,7 +111,7 @@ It dispatches on the number of arguments.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-10/where-the-funcs-have-no-name/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-10/where-the-funcs-have-no-name.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-10/where-the-funcs-have-no-name.png" type="image/png" length="None" />
       
     </item>
     
@@ -270,7 +297,7 @@ If you&#39;re in town I hope to see you there!
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-05/ys-curling-up-north/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-05/ys-curling-up-north.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-05/ys-curling-up-north.png" type="image/png" length="None" />
       
     </item>
     
@@ -311,7 +338,7 @@ environment variables, and the web, but those are topics for another day.&lt;/p&
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-04/load-and-compose-your-yaml-files/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-04/load-and-compose-your-yaml-files.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-04/load-and-compose-your-yaml-files.png" type="image/png" length="0" />
       
     </item>
     
@@ -651,7 +678,7 @@ Super excited about that!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-04-16/ys-spring-update/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-04-16/ys-spring-update.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-04-16/ys-spring-update.png" type="image/png" length="None" />
       
     </item>
     
@@ -872,7 +899,7 @@ It&#39;s reindeer all the way down.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-19/reindeer-all-the-way-down/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="None" />
       
     </item>
     
@@ -1211,7 +1238,7 @@ There you&#39;ll find all-time best sellers like &lt;code&gt;map&lt;/code&gt;, &
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-08/going-to-the-library/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-08/going-to-the-library.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-08/going-to-the-library.png" type="image/png" length="None" />
       
     </item>
     
