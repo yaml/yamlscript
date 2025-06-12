@@ -14,6 +14,6 @@ ifneq (,$(shell command -v cpanm))
 endif
 
 ifneq (,$(shell command -v zild))
-$(ZILD_COMMANDS)::
+$(ZILD-COMMANDS)::
 	zild $@
 endif
