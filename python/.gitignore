@@ -1,8 +1,0 @@
-/.venv/
-/.eggs/
-__pycache__/
-/libyamlscript.so
-/.long_description.md
-/MANIFEST.in
-/dist/
-/lib/yamlscript.egg-info/

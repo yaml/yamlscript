@@ -1,7 +1,0 @@
-# grocery.yaml
-!YS-v0:
-
-:::
-- bread
-- fruits: ! load('fruits.yaml')
-- milk

@@ -1,7 +1,0 @@
-!YS-v0
-
-defn main(n=10):
-  say: "$n! -> $factorial(n)"
-
-defn factorial(x):
-  2 .. x: .mul(*)

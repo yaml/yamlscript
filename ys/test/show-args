@@ -1,6 +1,0 @@
-#!/usr/bin/env ys-0
-
-defn main(*args):
-  say:
-    pr-str: ARGV
-    pr-str: args

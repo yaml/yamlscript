@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-
-set -x
-
-cp alienfile cpan

@@ -1,5 +1,0 @@
-!YS-v0
-
-defn rot13(input):
-  s =: set((\\A .. \\Z) + (\\a .. \\z))
-  cycle(s): .drop(13 * 2).zipmap(s).escape(input)

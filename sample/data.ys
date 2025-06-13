@@ -1,4 +1,0 @@
-!YS-v0:
-
-foods:: load('./food.yaml')
-numbers:: 6 .. 9

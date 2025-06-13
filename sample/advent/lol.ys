@@ -1,8 +1,0 @@
-!YS-v0
-
-count =: atom(0)
-counter =: \(swap! count inc)
-
-say: counter()
-say: counter()
-say: counter()
