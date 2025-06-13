@@ -33,8 +33,7 @@ hide:
 * [Seajure March 2024 - YAMLScript](
   https://www.youtube.com/watch?v=GajOBwBcFyA)
 
-<!--
 ## Meetups
 
+* [Toronto Enterprise DevOps 2025-06-12](https://github.com/yaml/yamlscript/tree/talk/devops-416/)
 * [Toronto Smarter DevOps 2025-02-13](https://yamlscript.org/talk/20250213/)
--->
