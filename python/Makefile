@@ -40,18 +40,20 @@ pkg-test: venv
 	tar xzf dist/yamlscript-*.tar.gz
 	cat yamlscript-*/PKG-INFO
 
+
+
 dist: venv MANIFEST.in .long_description.md
-	( \
-	  $(VENV) && \
-	  $(PYTHON) setup.py sdist \
-	)
+	$(VENV) && \
+	$(PYTHON) setup.py sdist && \
+	cp $(LIBYS_SO_FQNP) ./lib/yamlscript/ && \
+	$(PYTHON) setup.py bdist_wheel
 
 release: publish
 
 publish: dist
 	( \
 	  $(VENV) && \
-	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz \
+	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz dist/yamlscript-*.whl \
 	)
 
 clean::
@@ -72,7 +74,8 @@ $(PYTHON-VENV):
 	  pip install \
 	    pytest \
 	    pyyaml \
-	    twine
+	    twine \
+	    setuptools
 
 MANIFEST.in:
 	echo 'include ReadMe.md' > $@
