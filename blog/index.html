@@ -2353,6 +2353,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#if-you-have-to-ask" class="md-nav__link">
+    <span class="md-ellipsis">
+      if - You Have to Ask!
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ys-global-variables" class="md-nav__link">
     <span class="md-ellipsis">
       YS Global Variables
@@ -2568,15 +2577,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#yaml-python-and-the-holy-graal" class="md-nav__link">
-    <span class="md-ellipsis">
-      YAML, Python and the Holy Graal
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2594,6 +2594,101 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <h1 id="the-ys-blog">The YS Blog<a class="headerlink" href="#the-ys-blog" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-06-14 00:00:00+00:00">June 14, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="if-you-have-to-ask"><a class="toclink" href="2025-06-14/if---you-have-to-ask/">if - You Have to Ask!</a></h2>
+<p>Today we're going to look at the <code>if</code> command.</p>
+<p>In a functional language, <code>if</code> statements are a bit different.</p>
+<p>They'll, well, um... Functions.</p>
+<p>So what's the big deal?</p>
+<!--more-->
+
+<h3 id="functions-have-their-own-scope"><a class="toclink" href="2025-06-14/if---you-have-to-ask/#functions-have-their-own-scope">Functions have their own scope</a></h3>
+<p>So if <code>if</code> is a function then you can't use it to set state outside of its
+scope.
+Let me show you what I mean.</p>
+<p>Consider this normal Python code:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">x = 500</span>
+<span class="s1">if x &gt; 100:</span>
+<span class="s1">  size = &quot;big&quot;</span>
+<span class="s1">else:</span>
+<span class="s1">  size = &quot;small&quot;</span>
+<span class="s1">print(size)</span>
+<span class="s1">&#39;</span>
+big
+</code></pre></div>
+<p>This will set <code>size</code> to <code>"big"</code> and then print it.</p>
+<p>Let's try the same thing in YS:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">x =: 500</span>
+<span class="s1">if x &gt; 100:</span>
+<span class="s1">  size =: &quot;big&quot;</span>
+<span class="s1">  size =: &quot;small&quot;</span>
+<span class="s1">say: size</span>
+<span class="s1">&#39;</span>
+Error:<span class="w"> </span>Could<span class="w"> </span>not<span class="w"> </span>resolve<span class="w"> </span>symbol:<span class="w"> </span>size
+</code></pre></div>
+<p>Since <code>if</code> is a function, size  is a local variable inside it's scope.</p>
+<p>Well that's a bummer.</p>
+<p>How are we supposed to get simple stuff done with YS?</p>
+<p>It's simple once you've seen it:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">x =: 500</span>
+<span class="s1">size =:</span>
+<span class="s1">  if x &gt; 100:</span>
+<span class="s1">    then: &quot;big&quot;</span>
+<span class="s1">    else: &quot;small&quot;</span>
+<span class="s1">say: size</span>
+<span class="s1">&#39;</span>
+big
+</code></pre></div>
+<p>We just need to make <code>if</code> return what we want and then assign it to a variable
+in the scope that we want it in.</p>
+<h3 id="but-why-then-and-else"><a class="toclink" href="2025-06-14/if---you-have-to-ask/#but-why-then-and-else">But why <code>then</code> and <code>else</code>?</a></h3>
+<p>We didn't have them in the first example.
+Why did we need them in the second example?</p>
+<p>Well actually we didn't need them.</p>
+<p>But if I'm honest, right now I'm out in the woods (with wifi!) with friends who
+would rather have me hanging out doing Summer stuff than telling you about YS.</p>
+<p>So we'll save that for later...</p>
+<p>Maybe tomorrow!</p>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -3912,65 +4007,6 @@ I always pictured Santa wearing moon boots around the workshop.</p>
     
       <nav class="md-post__action">
         <a href="2023-12-22/flip-flops/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-21 00:00:00+00:00">December 21, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="yaml-python-and-the-holy-graal"><a class="toclink" href="2023-12-21/yaml-python-and-the-holy-graal/">YAML, Python and the Holy Graal</a></h2>
-<p>Which has a greater airspeed velocity... an unladen swallow or Santa's sleigh?</p>
-<p>Well, that depends... are we talking about an African or European swallow?</p>
-<p>&nbsp;</p>
-<details><summary><strong style="color:red">Huh?</strong></summary>
-&nbsp;
-<iframe width="560" height="315"
-  src="https://www.youtube.com/embed/uio1J2PKzLI?si=QA1x920QfN1GlkRs"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowfullscreen></iframe>
-</details>
-
-
-    
-      <nav class="md-post__action">
-        <a href="2023-12-21/yaml-python-and-the-holy-graal/">
           Continue reading
         </a>
       </nav>
