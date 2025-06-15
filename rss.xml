@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sat, 14 Jun 2025 18:15:32 -0000</pubDate>
-    <lastBuildDate>Sat, 14 Jun 2025 18:15:32 -0000</lastBuildDate>
+    <pubDate>Sun, 15 Jun 2025 16:29:38 -0000</pubDate>
+    <lastBuildDate>Sun, 15 Jun 2025 16:29:38 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,34 @@
     
 
     
+    
+    <item>
+      <title>if - You Are Special</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Yesterday I told you that &lt;code&gt;if&lt;/code&gt; is a function.&lt;/p&gt;
+&lt;p&gt;I lied.&lt;/p&gt;
+&lt;p&gt;In reality, &lt;code&gt;if&lt;/code&gt; is a &#34;special form&#34;.&lt;/p&gt;
+&lt;p&gt;I&#39;ll explain special forms in a minute, but let&#39;s just say tha...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-06-15/if---you-are-special/</link>
+      <pubDate>Sun, 15 Jun 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-15/if---you-are-special/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-15/if---you-are-special.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>if - You Have to Ask!</title>
@@ -55,7 +83,7 @@
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-14/if---you-have-to-ask/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-14/if---you-have-to-ask.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-14/if---you-have-to-ask.png" type="image/png" length="40856" />
       
     </item>
     

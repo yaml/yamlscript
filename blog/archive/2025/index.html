@@ -1959,6 +1959,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#if-you-are-special" class="md-nav__link">
+    <span class="md-ellipsis">
+      if - You Are Special
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#if-you-have-to-ask" class="md-nav__link">
     <span class="md-ellipsis">
       if - You Have to Ask!
@@ -2539,6 +2548,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#if-you-are-special" class="md-nav__link">
+    <span class="md-ellipsis">
+      if - You Are Special
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#if-you-have-to-ask" class="md-nav__link">
     <span class="md-ellipsis">
       if - You Have to Ask!
@@ -2696,6 +2714,112 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <header class="md-typeset">
         <h1 id="2025">2025<a class="headerlink" href="#2025" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-06-15 00:00:00+00:00">June 15, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="if-you-are-special"><a class="toclink" href="../../2025-06-15/if---you-are-special/">if - You Are Special</a></h2>
+<p>Yesterday I told you that <code>if</code> is a function.</p>
+<p>I lied.</p>
+<p>In reality, <code>if</code> is a "special form".</p>
+<p>I'll explain special forms in a minute, but let's just say that they're
+"special"!</p>
+<!--more-->
+
+<h3 id="functions-calls-evaluate-their-arguments"><a class="toclink" href="../../2025-06-15/if---you-are-special/#functions-calls-evaluate-their-arguments">Functions calls evaluate their arguments</a></h3>
+<p>Consider this code:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">x =:</span>
+<span class="s1">  DBG:</span>
+<span class="s1">    add:</span>
+<span class="s1">      sqr(4):DBG</span>
+<span class="s1">      sqr(5):DBG</span>
+<span class="s1">say: x</span>
+<span class="s1">&#39;</span>
+&gt;&gt;&gt;16<span class="o">&lt;&lt;&lt;</span>
+&gt;&gt;&gt;25<span class="o">&lt;&lt;&lt;</span>
+&gt;&gt;&gt;41<span class="o">&lt;&lt;&lt;</span>
+<span class="m">41</span>
+</code></pre></div>
+<p><code>DBG</code> is a function that prints its arguments and then returns the value of the
+last one.</p>
+<p>We can see clearly that <code>sqr(4)</code> and <code>sqr(5)</code> are evaluated first, and then
+<code>add</code> is called with the results.</p>
+<p>Let's try the same thing with <code>if</code>:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">x =:</span>
+<span class="s1">  DBG:</span>
+<span class="s1">    if (rand(2):DBG &gt; 1):DBG:</span>
+<span class="s1">      sqr(4):DBG</span>
+<span class="s1">      sqr(5):DBG</span>
+<span class="s1">say: x</span>
+<span class="s1">&#39;</span>
+&gt;&gt;&gt;1.288428806185308<span class="o">&lt;&lt;&lt;</span>
+&gt;&gt;&gt;true<span class="o">&lt;&lt;&lt;</span>
+&gt;&gt;&gt;16<span class="o">&lt;&lt;&lt;</span>
+&gt;&gt;&gt;16<span class="o">&lt;&lt;&lt;</span>
+<span class="m">16</span>
+</code></pre></div>
+<p>It looks like <code>sqr(5)</code> was never evaluated.</p>
+<p>That's exactly how you want an <code>if</code> expression to work.</p>
+<p>An <code>if</code> expression is a function that takes three arguments:</p>
+<ul>
+<li>A "condition clause"</li>
+<li>A "then clause"</li>
+<li>An "else clause"</li>
+</ul>
+<p>Based on the truthiness of the condition clause, only one of the other two
+clauses is evaluated.</p>
+<p>This is true in practically any programming language.</p>
+<h3 id="about-special-forms"><a class="toclink" href="../../2025-06-15/if---you-are-special/#about-special-forms">About Special Forms</a></h3>
+<p>Most Lisp languages have special forms.</p>
+<p>Special forms "look" like functions in that they use parentheses containing the
+form name and any arguments.
+But they are built into the language to behave differently.</p>
+<p>YS has about a dozen special forms, and we've already been using them in this
+series.
+For example <code>x =: y</code> compiles into a Lisp <code>def</code> or <code>let</code> form (depending on
+the context) which are both special forms.</p>
+<h3 id="fuggedaboudif"><a class="toclink" href="../../2025-06-15/if---you-are-special/#fuggedaboudif">Fuggedaboud<code>if</code>!</a></h3>
+<p>Now that you know about special forms, you can forget about them.</p>
+<p>In YS, everything's a function.
+A few of them are special.
+They all try to do the right thing.</p>
+<p>Enjoy the rest of your weekend!</p>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
