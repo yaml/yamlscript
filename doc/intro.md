@@ -9,7 +9,7 @@ YS embeds cleanly into existing YAML files and adds new capabilities such as:
 
 * Getting data from other YAML files
 * Assigning variables
-* Referencing other parts of YAML (without anchorsi/aliases)
+* Referencing other parts of YAML (without anchors/aliases)
 * Interpolating variables and function calls into strings
 * Transforming data structures
 * Defining and calling functions
