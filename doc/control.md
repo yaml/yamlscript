@@ -21,7 +21,7 @@ This document will cover:
 
 !!! note
 
-    Some of the things that are called "functions" in in this document are
+    Some of the things that are called "functions" in this document are
     actually "macros" or "special forms" in Clojure.
     The distinction is not particularly important here, but worth mentioning.
 
