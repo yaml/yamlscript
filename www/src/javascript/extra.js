@@ -23,4 +23,10 @@ document$.subscribe(function () {
       }
     });
   });
+
+  // make interactive elements in the sidebar focusable
+  const selectors = ["nav .md-nav__title", "nav .md-nav__link"];
+  Array.from(document.querySelectorAll(selectors.join(","))).forEach((el) => {
+    el.setAttribute("tabindex", 0);
+  });
 });
