@@ -60,6 +60,8 @@ theme:: load('config/theme.yaml')
 # https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
 extra_css:
 - css/theme.css
+extra_javascript:
+- javascript/extra.js
 
 # See theme/main.html for Google Tag Manager setup code
 extra:

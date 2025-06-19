@@ -153,3 +153,48 @@ h1.empty {
   -webkit-mask-image: var(--md-admonition-icon--rss);
           mask-image: var(--md-admonition-icon--rss);
 }
+
+
+/* when sidebar is not open, hide it to make it unfocusable */
+.md-toggle[data-md-toggle='drawer']:not(:checked)
+  ~ .md-container
+  .md-nav[data-md-level='0'],
+/* when the nested menus in the sidebar are not open, hide them
+   to make them unfocusable */
+.md-container
+  .md-nav[data-md-level='0']
+  input.md-toggle[type='checkbox']:not(:checked)
+  ~ nav {
+  visibility: hidden;
+}
+
+/* when a nested menu is open in the sidebar, hide the sidebar content 
+   to make it unfocusable */
+.md-toggle[data-md-toggle='drawer']:checked
+  ~ .md-container
+  .md-nav[data-md-level='0']:has(input:checked)
+  > ul
+  > li
+  > .md-nav__link,
+.md-toggle[data-md-toggle='drawer']:checked
+  ~ .md-container
+  .md-nav[data-md-level='0']:has(input:checked)
+  > *
+  > a,
+/* when a nested menu is open in the nested menus, hide its content
+   to make it unfocusable */
+.md-container
+  .md-nav[data-md-level='0']
+  input.md-toggle[type='checkbox']:checked
+  ~ nav:has(input:checked)
+  > ul
+  > li
+  > .md-nav__link,
+.md-container
+  .md-nav[data-md-level='0']
+  input.md-toggle[type='checkbox']:checked
+  ~ nav:has(input:checked)
+  > *
+  > a {
+  visibility: hidden;
+}
