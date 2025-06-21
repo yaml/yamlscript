@@ -24,6 +24,17 @@ document$.subscribe(function () {
     });
   });
 
+  // close the sidebar when ESC key is pressed
+  document.addEventListener("keydown", (e) => {
+    const isEscape = e.key === "Escape" || e.key === "Esc";
+    if (!isEscape || !sidebarControl.checked) {
+      return;
+    }
+
+    document.querySelector(".md-overlay[for='__drawer']").click();
+    document.querySelector(".md-header__button[for='__drawer']").focus();
+  });
+
   // make interactive elements in the sidebar focusable
   const selectors = ["nav .md-nav__title", "nav .md-nav__link"];
   Array.from(document.querySelectorAll(selectors.join(","))).forEach((el) => {
