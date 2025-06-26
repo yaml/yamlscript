@@ -2,10 +2,19 @@ document$.subscribe(function () {
   const sidebarControl = document.querySelector(
     ".md-toggle[data-md-toggle='drawer']"
   );
+  const sidebarToggleButton = document.querySelector(
+    ".md-header__button[for='__drawer']"
+  );
+
+  // make interactive elements in the sidebar focusable
+  const selectors = ["nav .md-nav__title", "nav .md-nav__link"];
+  Array.from(document.querySelectorAll(selectors.join(","))).forEach((el) => {
+    el.setAttribute("tabindex", 0);
+  });
 
   // Disable interaction with header, content, and footer when the sidebar
   // drawer is open.
-  sidebarControl.addEventListener("change", (e) => {
+  const onSidebarToggled = (e) => {
     const selectors = [
       "header",
       ".md-content",
@@ -22,22 +31,34 @@ document$.subscribe(function () {
         }
       }
     });
-  });
+  };
 
   // close the sidebar when ESC key is pressed
-  document.addEventListener("keydown", (e) => {
+  const onEscPressed = (e) => {
     const isEscape = e.key === "Escape" || e.key === "Esc";
     if (!isEscape || !sidebarControl.checked) {
       return;
     }
 
     document.querySelector(".md-overlay[for='__drawer']").click();
-    document.querySelector(".md-header__button[for='__drawer']").focus();
-  });
+    sidebarToggleButton.focus();
+  };
 
-  // make interactive elements in the sidebar focusable
-  const selectors = ["nav .md-nav__title", "nav .md-nav__link"];
-  Array.from(document.querySelectorAll(selectors.join(","))).forEach((el) => {
-    el.setAttribute("tabindex", 0);
+  // toggle event listeners for sidebar based on its visibility
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.body.classList.add('tablet');
+
+        sidebarControl.addEventListener("change", onSidebarToggled);
+        document.addEventListener("keydown", onEscPressed);
+      } else {
+        document.body.classList.remove('tablet');
+
+        sidebarControl.removeEventListener("change", onSidebarToggled);
+        document.removeEventListener("keydown", onEscPressed);
+      }
+    });
   });
+  observer.observe(sidebarToggleButton);
 });
