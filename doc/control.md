@@ -98,7 +98,7 @@ Some expression contexts allow multiple expressions to be grouped together and
 some only allow a single expression.
 
 You can group multiple expressions together with a `do` function call when you
-need to to do multiple things in a context that only allows a single expression.
+need to do multiple things in a context that only allows a single expression.
 
 ```yaml
 if a > b:
