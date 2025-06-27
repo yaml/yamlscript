@@ -18,7 +18,7 @@ names-url =:
 name-list =: names-url:curl:json/load
 
 # Data object with literal keys and generated values:
-name:: iname-list:shuffle:first
+name:: name-list:shuffle:first
 aka:: name-list:rand-nth
 age:: &num 2 * 3 * 7
 color:: &hue

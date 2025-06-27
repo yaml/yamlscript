@@ -20,7 +20,7 @@ Expect this document to grow and evolve over time.
 Please read the [YAMLScript project code of conduct](
 https://github.com/yaml/yamlscript/#coc-ov-file) document.
 
-The YAMLScript project is about making something valuable to to a wide audience
+The YAMLScript project is about making something valuable to a wide audience
 of communities.
 
 Bring your best ideas and expect others to do the same.
