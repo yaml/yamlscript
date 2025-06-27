@@ -197,6 +197,17 @@ This is a growing list of coding guidelines for contributing to YAMLScript.
   If you're not sure how to do something, look at how it's done in the existing
   code.
 
+* Do not edit files that begin with:
+  ```
+  <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
+  ```
+  This includes the `ReadMe.md` in the language binding directories.
+
+* Take care not to leave spaces or tabs at the end of a line unless it is
+  meaningful.
+  One example of meaningful trailing whitespace is 2 spaces at the end of a
+  markdown sentence is used to create a hard break.
+
 * 80 character line length limit
 
   We try to keep the line length to 80 characters or less.
@@ -237,3 +248,5 @@ This is a growing list of coding guidelines for contributing to YAMLScript.
   The `Changes` file is a valid YAML file.
   Thus the subject line you write must not cause the `Changes` file to be
   invalid YAML when it is added for a release.
+
+  The subject line length should not be longer than 75 characters.

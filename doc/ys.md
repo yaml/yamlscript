@@ -98,14 +98,14 @@ We can "load" the YAML/YS file with the `ys` command and it will print the
 result as JSON:
 
 ```bash
-$ ys -l some.yaml 
+$ ys -l some.yaml
 {"num":123,"greet":"Bonjour, World!","eat":"apple","drink":"Bar, Bar, Bar!!!"}
 ```
 
 We can also format the output as YAML:
 
 ```bash
- ys -lY some.yaml 
+ ys -lY some.yaml
 num: 123
 greet: Ciao, World!
 eat: cherry
@@ -174,7 +174,7 @@ $ ys -c program.ys
 You can compile the program to a native binary executable:
 
 ```text
-$ time ys -b program.ys 
+$ time ys -b program.ys
 * Compiling YS 'program.ys' to 'program' executable
 * Setting up build env in '/tmp/tmp.xU8K3OPymt'
 * This may take a few minutes...
