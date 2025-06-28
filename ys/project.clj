@@ -18,13 +18,13 @@
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]
-   [org.clojure/core.async "1.6.681"]
+   #_[org.clojure/core.async "1.6.681"]
    [org.clojure/data.csv "1.1.0"]
    [org.clojure/data.json "2.4.0"]
    [org.clojure/tools.cli "1.0.219"]
    [org.babashka/sci "0.8.41"]
    [babashka/fs "0.5.26"]
-   [babashka/process "0.5.21"]
+   [babashka/process "0.6.23"]
    [clj-commons/clj-yaml "1.0.27"]
    [yamlscript/core "0.1.97"]]
 
