@@ -4,9 +4,9 @@ GIT-DIR := $(shell git rev-parse --git-common-dir)
 ifeq (,$(GIT-DIR))
   $(error Can't determine .git directory location)
 endif
-GIT-DIR := $(shell cd $(GIT-DIR) && pwd -P)
+GIT-DIR := $(shell cd $(GIT-DIR)/.. && pwd -P)
 
-LOCAL-ROOT := $(GIT-DIR)/.local
+LOCAL-ROOT := $(GIT-DIR)/.cache
 LOCAL-BIN := $(LOCAL-ROOT)/bin
 LOCAL-CACHE := $(LOCAL-ROOT)/cache
 LOCAL-HOME := $(LOCAL-ROOT)/home

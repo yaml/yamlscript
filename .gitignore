@@ -4,6 +4,7 @@
 *.md.tmp
 /*.yaml
 /*.ys
+/.cache/
 /bin/
 /homebrew-yamlscript/
 /issue-*
