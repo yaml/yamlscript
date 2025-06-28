@@ -5,8 +5,6 @@
 
 (ns ys.std
   (:require
-   [babashka.fs :as fs]
-   [babashka.http-client :as http]
    [babashka.process :as process]
    [clojure.data :as data]
    [clojure.math :as math]
@@ -20,6 +18,7 @@
    [yamlscript.externals :as ext]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
+   [ys.http :as http]
    [ys.ys :as ys])
   (:import java.security.MessageDigest
            java.util.Base64)

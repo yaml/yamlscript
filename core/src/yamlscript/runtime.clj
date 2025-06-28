@@ -3,11 +3,8 @@
 
 (ns yamlscript.runtime
   (:require
-   ; [babashka.deps]
-   [babashka.http-client]
    [babashka.pods]
    [babashka.pods.sci]
-   [babashka.process]
    [clojure.java.io :as io]
    [clojure.math]
    [clojure.pprint]
@@ -28,6 +25,7 @@
    [ys.dwim]
    [ys.ext]
    [ys.fs]
+   [ys.http]
    [ys.json]
    [ys.std]
    [ys.taptest]
@@ -113,15 +111,13 @@
 (def java-time-namespace
   (sci/copy-ns java-time.api (sci/create-ns 'java-time.api)))
 (def http-namespace
-  (sci/copy-ns babashka.http-client (sci/create-ns 'http)))
+  (sci/copy-ns ys.http (sci/create-ns 'http)))
 (def io-namespace
   (sci/copy-ns clojure.java.io (sci/create-ns 'io)))
 (def json-namespace
   (sci/copy-ns ys.json (sci/create-ns 'json)))
 (def math-namespace
   (sci/copy-ns clojure.math (sci/create-ns 'math)))
-(def process-nspace
-  (sci/copy-ns babashka.process (sci/create-ns 'process)))
 (def set-namespace
   (sci/copy-ns clojure.set (sci/create-ns 'set)))
 (def ext-namespace
@@ -159,7 +155,6 @@
    'json    json-namespace 'ys.json    json-namespace
    'math    math-namespace 'ys.math    math-namespace
    'pods    pods-namespace 'ys.pods    pods-namespace
-   'process process-nspace 'ys.process process-nspace
    'set     set-namespace  'ys.set     set-namespace
    'str     str-namespace  'ys.str     str-namespace
    'walk    walk-namespace 'ys.walk    walk-namespace
