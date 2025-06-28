@@ -28,7 +28,7 @@ test:: $(LIBYS-SO-FQNP)
 
 repl-deps:: $(LIBYS-JAR-PATH)
 
-$(LIBYS-SO-FQNP): $(LIBYS-JAR-PATH)
+$(LIBYS-SO-FQNP): $(LIBYS-JAR-PATH) $(REFLECTION-JSON)
 ifneq (true,$(LIBZ))
 	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
 endif

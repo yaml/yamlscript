@@ -1,3 +1,5 @@
+REFLECTION-JSON := $(LOCAL-TMP)/reflection.json
+
 NATIVE-OPTS := \
   -O$(GRAALVM-O) \
   --verbose \
@@ -9,7 +11,7 @@ NATIVE-OPTS := \
   --emit=build-report \
   -march=compatibility \
   -H:IncludeResources=SCI_VERSION \
-  -H:ReflectionConfigurationFiles=reflection.json \
+  -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
   -H:+ReportExceptionStackTraces \
   -H:Log=registerResource: \
   -J-Dclojure.spec.skip-macros=true \
@@ -31,6 +33,7 @@ ZLIB-VERSION := 1.2.13
 ZLIB-TAR := zlib-$(ZLIB-VERSION).tar.gz
 ZLIB-DIR := $(LOCAL-CACHE)/zlib-$(ZLIB-VERSION)
 ZLIB-URL := https://zlib.net/fossils/$(ZLIB-TAR)
+
 
 #-------------------------------------------------------------------------------
 $(MUSL-GCC): | $(MUSL-HOME)
@@ -61,3 +64,6 @@ $(LOCAL-CACHE)/$(ZLIB-TAR):
 
 muslclean::
 	$(RM) -r $(MUSL-HOME) $(MUSL-DIR) $(MUSL-TAR) $(ZLIB-DIR) $(ZLIB-TAR)
+
+$(REFLECTION-JSON): $(COMMON)/reflection.ys $(BUILD-BIN-YS)
+	ys -J $< > $@

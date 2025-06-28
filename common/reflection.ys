@@ -1,0 +1,49 @@
+classes:
+- clojure.lang.Delay
+- clojure.lang.ExceptionInfo
+- clojure.lang.LineNumberingPushbackReader
+- clojure.lang.PersistentArrayMap
+- clojure.lang.PersistentHashSet
+- clojure.lang.PersistentVector
+- java.io.StringReader
+- java.io.StringWriter
+- java.lang.AssertionError
+- java.lang.Boolean
+- java.lang.Byte
+- java.lang.Class
+- java.lang.ClassLoader
+- java.lang.Double
+- java.lang.Exception
+- java.lang.Float
+- java.lang.IllegalArgumentException
+- java.lang.Integer
+- java.lang.Long
+- java.lang.Math
+- java.lang.Number
+- java.lang.String
+- java.lang.System
+- java.lang.Thread
+
+--- !YS-v0:
+
+defaults =::
+  allPublicConstructors: true
+  allPublicFields: true
+  allPublicMethods: true
+
+:::
+- ::
+    _.classes
+    .map(\(merge({:name _} defaults)))
+
+- name: clojure.lang.RT
+  methods:
+  - name: aget
+  - name: aset
+  - name: aclone
+
+- name: java.lang.reflect.AccessibleObject
+  methods:
+  - name: canAccess
+
+- name: '[Ljava.lang.Double;'

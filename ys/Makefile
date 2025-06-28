@@ -46,7 +46,7 @@ realclean::
 $(BPAN-LOCAL):
 	git clone --depth=1 $(BPAN-REPO-URL) $@
 
-$(CLI-BIN): $(CLI-JAR)
+$(CLI-BIN): $(CLI-JAR) $(REFLECTION-JSON)
 ifneq (true,$(LIBZ))
 	$(error *** \
 	  The 'libz.$(SO)' library is required by native-image but not installed)

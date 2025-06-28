@@ -11,7 +11,7 @@ defn main(version):
 defn update-brew(version):
   releases =: releases(version)
 
-  when-not fs-e('homebrew-yamlscript'):
+  when-not fs/e('homebrew-yamlscript'):
     say: "Cloning $brew-url"
     res =: sh("git clone $brew-url")
     when res.exit:N.?:
@@ -48,7 +48,7 @@ defn download-releases(version):
   releases =: releases(version)
   reduce-kv _ nil releases:
     fn(_ _ file):
-      when-not fs-e(file):
+      when-not fs/e(file):
         say: "Downloading $file"
         url =: "$releases-url/download/$version/$file"
         res =: sh("wget -q $url")
