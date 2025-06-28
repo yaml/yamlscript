@@ -4,6 +4,8 @@ edit: doc/ys-std.mdys
 talk: 0
 ---
 
+# `ys::std` — The YS Standard Library
+
 YS has over 1000 functions that are always available to your YS programs without
 needing to explicitly import (`use`) any libraries.
 Over 800 of these can be used without a namespace prefix like `str/` or `math/`.
@@ -266,29 +268,8 @@ Alternate truth functions:
   or?(X X+) X: Return first truey value or nil
   and?(X X+) X: Return last truey value or nil
 
-File system functions:
-- fs-d(Path) B: True if path is a directory
-  fs-e(Path) B: True if path exists
-  fs-f(Path) B: True if path is a regular file
-  fs-l(Path) B: True if path is a symbolic link
-  fs-r(Path) B: True if path is readable
-  fs-s(Path) B: True if path is not empty
-  fs-w(Path) B: True if path is writable
-  fs-x(Path) B: True if path is executable
-  fs-z(Path) B: True if path is empty
-  fs-abs(Path) Path: Get the absolute path
-  fs-abs?(Path) B: True if path is absolute
-  fs-basename(Path Ext?) B: Get the file name of a path, without extension
-  fs-dirname(Path) Dir: Get the directory name of a path
-  fs-filename(Path) File: Get the file name of a path
-  fs-glob(Path) [Path]: Glob a path
-  fs-ls(dir) [File]: List a directory
-  fs-mtime(file) Int: Get the modification time of a file
-  fs-rel(Path) Path: Get the relative path
-  fs-rel?(Path) B: True if path is relative
-  fs-which(name) B: Find the path of an executable
-
-- https://github.com/babashka/fs/blob/master/API.md
+File system functions: |
+  See [FS Library](ys-fs.md)
 
 Date/Time functions:
   now() Instant: Returns `java.time.Instant` object
@@ -346,9 +327,12 @@ defn mdys-stdlib(o):
       fn(md head body):
         md +:
           str "## $head\n\n":
-            if body:map?:
-              fmt-fns: body
-              str:
-                fmt-fns(body.0)
-                "\n**See also**:\ <$(body.1)>\n\n"
+            cond:
+              body:map?:
+                fmt-fns: body
+              body:string?: body
+              else:
+                str:
+                  fmt-fns(body.0)
+                  "\n**See also**:\ <$(body.1)>\n\n"
 ```

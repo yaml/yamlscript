@@ -310,27 +310,27 @@ test::
 #-------------------------------------------------------------------------------
 - note: File system functions
 
-- code: 'fs-d: CWD'
-- code: 'fs-e: CWD'
-- code: 'fs-f: "$base/test/std.t"'
-- code: 'fs-l: "$base/test/a-symlink"'
-- code: 'fs-r: CWD'
-- code: 'fs-s: CWD'
-- code: 'fs-w: CWD'
-- code: 'fs-x: CWD'
-- code: 'fs-z: "$base/test/empty-file"'
+- code: 'fs/d: CWD'
+- code: 'fs/e: CWD'
+- code: 'fs/f: "$base/test/std.t"'
+- code: 'fs/l: "$base/test/a-symlink"'
+- code: 'fs/r: CWD'
+- code: 'fs/s: CWD'
+- code: 'fs/w: CWD'
+- code: 'fs/x: CWD'
+- code: 'fs/z: "$base/test/empty-file"'
 
-- code: fs/cwd().str()
+- code: fs/cwd()
   want:: CWD
-- code: 'fs-which: "ys"'
+- code: 'fs/which: "ys"'
   like: /ys$
-- code: fs-mtime(CWD).str()
+- code: fs/mtime(CWD).str()
   like: ^\d{13}$
-- code: 'fs-basename: "$base/test/std.t"'
+- code: 'fs/basename: "$base/test/std.t"'
   want: std.t
-- code: fs-basename('$base/test/std.t' 't')
+- code: fs/filename('$base/test/std.t' 't')
   want: std
-- code: fs-basename('$base/test/std.t' '*')
+- code: fs/filename('$base/test/std.t' '*')
   want: std
 
 

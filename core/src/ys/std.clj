@@ -746,60 +746,6 @@
 
 
 ;;------------------------------------------------------------------------------
-;; File system functions
-;;------------------------------------------------------------------------------
-(intern 'ys.std 'fs-d fs/directory?)
-(intern 'ys.std 'fs-e fs/exists?)
-(intern 'ys.std 'fs-f fs/regular-file?)
-(intern 'ys.std 'fs-l fs/sym-link?)
-(intern 'ys.std 'fs-r fs/readable?)
-(defn            fs-s [path] (not= 0 (fs/size path)))
-(intern 'ys.std 'fs-w fs/writable?)
-(intern 'ys.std 'fs-x fs/executable?)
-(defn            fs-z [path] (= 0 (fs/size path)))
-
-(defn fs-abs
-  ([path] (str (fs/canonicalize path)))
-  ([path file] (str (fs/canonicalize (fs/file path file)))))
-
-(intern 'ys.std 'fs-abs? fs/absolute?)
-
-(defn fs-dirname [path]
-  (str (fs/parent (fs/canonicalize path))))
-
-(defn fs-filename [path]
-  (str (fs/file-name (fs/canonicalize path))))
-
-(defn fs-basename
-  ([path] (fs-filename path))
-  ([path ext]
-   (if (= ext "*")
-     (str/replace (fs-basename path) #"(\w)\.\w{1,16}$" "$1")
-     (fs/strip-ext (fs-basename path) {:ext ext}))))
-
-(defn fs-glob
-  ([path] (fs-glob "." path))
-  ([dir path] (map str (fs/glob dir path))))
-
-(defn fs-ls
-  ([] (fs-ls ""))
-  ([dir] (map str (fs/list-dir dir))))
-
-(defn fs-mtime [file]
-  (fs/file-time->millis
-    (fs/last-modified-time file)))
-
-(defn fs-rel
-  ([path] (str (fs/relativize (fs/cwd) path)))
-  ([dir path] (str (fs/relativize dir path))))
-
-(intern 'ys.std 'fs-rel? fs/relative?)
-
-(defn fs-which [name]
-  (when-let [path (fs/which name)] (str path)))
-
-
-;;------------------------------------------------------------------------------
 ;; Date/Time functions
 ;;------------------------------------------------------------------------------
 (defn now
@@ -809,6 +755,8 @@
          :zoned (jtime/zoned-date-time)
          :utc (jtime/instant)
          (util/die "Unknown time format: '" f "'"))))
+
+(defn instant [x] (jtime/instant x))
 
 
 ;;------------------------------------------------------------------------------

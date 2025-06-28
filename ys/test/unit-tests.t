@@ -2,7 +2,7 @@
 
 require ys::taptest: test done
 
-AV =: fs-abs("$DIR/../../sample/advent")
+AV =: fs/abs("$DIR/../../sample/advent")
 
 hash =::
   foo: one

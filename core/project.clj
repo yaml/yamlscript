@@ -24,7 +24,7 @@
    [org.flatland/ordered "1.15.11"]
    [org.snakeyaml/snakeyaml-engine "2.7"]
    [babashka/babashka.pods "0.2.0"]
-   [babashka/fs "0.5.20"]
+   [babashka/fs "0.5.26"]
    [babashka/process "0.5.21"]
    [org.clj-commons/digest "1.4.100"]
    [org.babashka/http-client "0.3.11"]

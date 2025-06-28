@@ -1,0 +1,78 @@
+---
+title: File System Library
+edit: doc/ys-fs.mdys
+talk: 0
+---
+
+# `ys::fs` — The YS File System Library
+
+Many of these functions can take a single argument or a list of arguments,
+or a single list of arguments.
+They will return their results in the same format.
+
+
+```mdys:stdlib
+File System Queries:
+  abs?(Path) Bool: Path is absolute
+  dir?(Path) Bool: Path is a directory
+  empty?(Path) Bool: Path is empty (file or directory)
+  exec?(Path) Bool: Path is executable
+  exists?(Path) Bool: Path exists
+  file?(Path) Bool: Path is a regular file
+  link?(Path) Bool: Path is a symbolic link
+  read?(Path) Bool: Path is readable
+  rel?(Path) Bool: Path is relative
+  size?(Path) Bool: File is not empty
+  write?(Path) Bool: Path is writable
+
+Short Form Query Functions:
+  d(Path) Bool: Path is a directory
+  e(Path) Bool: Path exists
+  f(Path) Bool: Path is a regular file
+  l(Path) Bool: Path is a symbolic link
+  r(Path) Bool: Path is readable
+  s(Path) Bool: Path is not empty
+  w(Path) Bool: Path is writable
+  x(Path) Bool: Path is executable
+  z(Path) Bool: Path is empty (file or directory)
+
+File System Getters:
+  abs(Path) Path: Get the absolute path
+  basename(Path Ext?) File: Get the file name of a path, without extension
+  ctime(Path) Int: Get the creation time of a file
+  dirname(Path) Dir: Get the directory name of a path
+  filename(Path) File: Get the file name of a path
+  glob(Path) [Path]: Glob a path
+  ls(dir) [File]: List a directory
+  mtime(Path) Int: Get the modification time of a file
+  path(Path) Path: Get the canonical path
+  readlink(Path) Path: Get the path of a symbolic link
+  rel(Path) Path: Get the relative path
+  which(name) Path: Find the path of an executable
+
+File System Mutators:
+  cp(Path Path): Copy a file
+  cp-r(Path Path): Copy a directory
+  mkdir(Path) Dir: Create a directory
+  mkdir-p(Path) Dir: Create a directory and all parent directories
+  mv(Path Path): Move a file
+  rm(Path) Path: Remove a file
+  rm-r(Path) Path: Remove a directory and all files in it
+  rmdir(Path) Path: Remove a directory
+  touch(Path) Path: Create a file if it doesn't exist, or update its
+    modification time
+```
+
+```mdys:YS-CODE
+defn mdys-stdlib(o):
+  str "\n":
+    reduce-kv _ '' o:
+      fn(md head body):
+        md +:
+          str "## $head\n\n":
+            if body:map?:
+              fmt-fns: body
+              str:
+                fmt-fns(body.0)
+                "\n**See also**:\ <$(body.1)>\n\n"
+```

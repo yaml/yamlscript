@@ -6,6 +6,7 @@
   org.clojure/data.json {:mvn/version "2.4.0"},
   org.clojure/tools.cli {:mvn/version "1.0.219"},
   org.babashka/sci {:mvn/version "0.8.41"},
+  babashka/fs {:mvn/version "0.5.26"},
   babashka/process {:mvn/version "0.5.21"},
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
   yamlscript/core {:mvn/version "0.1.97"}},

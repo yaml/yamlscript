@@ -4,7 +4,6 @@
 (ns yamlscript.runtime
   (:require
    ; [babashka.deps]
-   [babashka.fs]
    [babashka.http-client]
    [babashka.pods]
    [babashka.pods.sci]
@@ -28,6 +27,7 @@
    [ys.csv]
    [ys.dwim]
    [ys.ext]
+   [ys.fs]
    [ys.json]
    [ys.std]
    [ys.taptest]
@@ -109,7 +109,7 @@
 (def debug-namespace
   (sci/copy-ns yamlscript.debug (sci/create-ns 'yamlscript.debug)))
 (def fs-namespace
-  (sci/copy-ns babashka.fs (sci/create-ns 'fs)))
+  (sci/copy-ns ys.fs (sci/create-ns 'fs)))
 (def java-time-namespace
   (sci/copy-ns java-time.api (sci/create-ns 'java-time.api)))
 (def http-namespace
@@ -272,7 +272,7 @@
                   args))
          ARGV args
          RUN (get-runtime-info)
-         CWD (str (babashka.fs/cwd))
+         CWD (str (ys.fs/cwd))
          DIR (common/dirname file)
          global/ENV (into {} (System/getenv))
          global/FILE file

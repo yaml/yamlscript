@@ -23,6 +23,7 @@
    [org.clojure/data.json "2.4.0"]
    [org.clojure/tools.cli "1.0.219"]
    [org.babashka/sci "0.8.41"]
+   [babashka/fs "0.5.26"]
    [babashka/process "0.5.21"]
    [clj-commons/clj-yaml "1.0.27"]
    [yamlscript/core "0.1.97"]]

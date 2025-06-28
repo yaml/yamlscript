@@ -71,26 +71,24 @@ defn format-mdys(text):
   text =: text.replace(/```\n\z/ '')
   cond:
     type == 'YS-CODE':
-      do:
-        try:
-          eval: text
-          =>: ''
-          catch e:
-            error-fmt orig:
-              "Failed to eval YS-CODE $e"
+      try:
+        eval: text
+        =>: ''
+        catch e:
+          error-fmt orig:
+            "Failed to eval YS-CODE $e"
 
     type.starts?(':'):
-      do:
-        func-name =: "mdys-$(type.subs(1))"
-        func =: func-name:value
-        if func:
-          try:
-            call func: text
-            catch e:
-              error-fmt orig:
-                "Failed in function $func-name:\n$e\n"
-          error-fmt orig:
-            "No function '$func-name' found"
+      func-name =: "mdys-$(type.subs(1))"
+      func =: func-name:value
+      if func:
+        try:
+          call func: text
+          catch e:
+            error-fmt orig:
+              "Failed in function $func-name:\n$e\n"
+        error-fmt orig:
+          "No function '$func-name' found"
     else:
       data =:
         try:
