@@ -836,6 +836,10 @@
     (str/trim-newline
       (:out ret))))
 
+(defn bash [& xs]
+  (let [cmd (str/join " " xs)]
+    (sh "bash -c" cmd)))
+
 (defn bash-out [& xs]
   (let [cmd (str/join " " xs)]
     (sh-out "bash -c" cmd)))
