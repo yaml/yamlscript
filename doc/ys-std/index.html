@@ -170,7 +170,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#string-functions" class="md-skip">
+        <a href="#ysstd-the-ys-standard-library" class="md-skip">
           Skip to content
         </a>
       
@@ -194,7 +194,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <img src="../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer" tabindex="0">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </label>
@@ -1227,6 +1227,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
     
     
       
@@ -1271,6 +1273,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
@@ -1298,6 +1302,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">
@@ -1552,6 +1558,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     Clojure Core Essentials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-fs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File System Library
   </span>
   
 
@@ -2604,6 +2631,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2889,10 +2918,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Standard Library</h1>
-
 <!-- DO NOT EDIT — THIS FILE WAS GENERATED -->
 
+<h1 id="ysstd-the-ys-standard-library"><code>ys::std</code> — The YS Standard Library<a class="headerlink" href="#ysstd-the-ys-standard-library" title="Permanent link">🔗</a></h1>
 <p>YS has over 1000 functions that are always available to your YS programs without
 needing to explicitly import (<code>use</code>) any libraries.
 Over 800 of these can be used without a namespace prefix like <code>str/</code> or <code>math/</code>.</p>
@@ -3389,32 +3417,7 @@ Markdown documents.
 <li><code>and?(X X+) → X</code> — Return last truey value or nil</li>
 </ul>
 <h2 id="file-system-functions">File system functions<a class="headerlink" href="#file-system-functions" title="Permanent link">🔗</a></h2>
-<ul>
-<li><code>fs-d(Path) → B</code> — True if path is a directory</li>
-<li><code>fs-e(Path) → B</code> — True if path exists</li>
-<li><code>fs-f(Path) → B</code> — True if path is a regular file</li>
-<li><code>fs-l(Path) → B</code> — True if path is a symbolic link</li>
-<li><code>fs-r(Path) → B</code> — True if path is readable</li>
-<li><code>fs-s(Path) → B</code> — True if path is not empty</li>
-<li><code>fs-w(Path) → B</code> — True if path is writable</li>
-<li><code>fs-x(Path) → B</code> — True if path is executable</li>
-<li><code>fs-z(Path) → B</code> — True if path is empty</li>
-<li><code>fs-abs(Path) → Path</code> — Get the absolute path</li>
-<li><code>fs-abs?(Path) → B</code> — True if path is absolute</li>
-<li><code>fs-basename(Path Ext?) → B</code> — Get the file name of a path, without extension</li>
-<li><code>fs-dirname(Path) → Dir</code> — Get the directory name of a path</li>
-<li><code>fs-filename(Path) → File</code> — Get the file name of a path</li>
-<li><code>fs-glob(Path) → [Path]</code> — Glob a path</li>
-<li><code>fs-ls(dir) → [File]</code> — List a directory</li>
-<li><code>fs-mtime(file) → Int</code> — Get the modification time of a file</li>
-<li><code>fs-rel(Path) → Path</code> — Get the relative path</li>
-<li><code>fs-rel?(Path) → B</code> — True if path is relative</li>
-<li><code>fs-which(name) → B</code> — Find the path of an executable</li>
-</ul>
-<p><strong>See also</strong>: <a href="https://github.com/babashka/fs/blob/master/API.md">https://github.com/babashka/fs/blob/master/API.md&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a></p>
+<p>See <a href="../ys-fs/">FS Library</a></p>
 <h2 id="datetime-functions">Date/Time functions<a class="headerlink" href="#datetime-functions" title="Permanent link">🔗</a></h2>
 <ul>
 <li><code>now() → Instant</code> — Returns <code>java.time.Instant</code> object</li>
@@ -3592,6 +3595,8 @@ Markdown documents.
     
     
       <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../javascript/extra.js"></script>
       
         <script src="../../js/open_in_new_tab.js"></script>
       

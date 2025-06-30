@@ -194,7 +194,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <img src="../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer" tabindex="0">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </label>
@@ -1225,6 +1225,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
     
     
       
@@ -1291,6 +1293,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     Clojure Core Essentials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-fs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File System Library
   </span>
   
 
@@ -2630,7 +2653,7 @@ keep in mind that it's functional and get familiar with how the flow works.</p>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Some of the things that are called "functions" in in this document are
+<p>Some of the things that are called "functions" in this document are
 actually "macros" or "special forms" in Clojure.
 The distinction is not particularly important here, but worth mentioning.</p>
 </div>
@@ -2684,7 +2707,7 @@ mangling for <code>count</code>.</p>
 <p>Some expression contexts allow multiple expressions to be grouped together and
 some only allow a single expression.</p>
 <p>You can group multiple expressions together with a <code>do</code> function call when you
-need to to do multiple things in a context that only allows a single expression.</p>
+need to do multiple things in a context that only allows a single expression.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">if a &gt; b</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">do</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;a</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">greater</span><span class="nv"> </span><span class="s">than</span><span class="nv"> </span><span class="s">b&#39;</span>
@@ -2901,6 +2924,8 @@ against.</p>
     
     
       <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../javascript/extra.js"></script>
       
         <script src="../../js/open_in_new_tab.js"></script>
       

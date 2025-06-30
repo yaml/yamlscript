@@ -189,7 +189,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <img src="../../image/yamlscript-logo.svg" alt="logo">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer">
+    <label class="md-header__button md-icon" for="__drawer" tabindex="0">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
     </label>
@@ -1228,6 +1228,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
     
     
       
@@ -1294,6 +1296,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     Clojure Core Essentials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-fs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File System Library
   </span>
   
 
@@ -2482,11 +2505,11 @@ YAML file and also do some simple calculations:</p>
 </code></pre></div>
 <p>We can "load" the YAML/YS file with the <code>ys</code> command and it will print the
 result as JSON:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-l<span class="w"> </span>some.yaml<span class="w"> </span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-l<span class="w"> </span>some.yaml
 <span class="o">{</span><span class="s2">&quot;num&quot;</span>:123,<span class="s2">&quot;greet&quot;</span>:<span class="s2">&quot;Bonjour, World!&quot;</span>,<span class="s2">&quot;eat&quot;</span>:<span class="s2">&quot;apple&quot;</span>,<span class="s2">&quot;drink&quot;</span>:<span class="s2">&quot;Bar, Bar, Bar!!!&quot;</span><span class="o">}</span>
 </code></pre></div>
 <p>We can also format the output as YAML:</p>
-<div class="highlight"><pre><span></span><code><span class="w"> </span>ys<span class="w"> </span>-lY<span class="w"> </span>some.yaml<span class="w"> </span>
+<div class="highlight"><pre><span></span><code><span class="w"> </span>ys<span class="w"> </span>-lY<span class="w"> </span>some.yaml
 num:<span class="w"> </span><span class="m">123</span>
 greet:<span class="w"> </span>Ciao,<span class="w"> </span>World!
 eat:<span class="w"> </span>cherry
@@ -2535,7 +2558,7 @@ sys<span class="w"> </span>0m0.007s
 </code></pre></div>
 <hr />
 <p>You can compile the program to a native binary executable:</p>
-<div class="highlight"><pre><span></span><code>$ time ys -b program.ys 
+<div class="highlight"><pre><span></span><code>$ time ys -b program.ys
 * Compiling YS &#39;program.ys&#39; to &#39;program&#39; executable
 * Setting up build env in &#39;/tmp/tmp.xU8K3OPymt&#39;
 * This may take a few minutes...
@@ -2806,6 +2829,8 @@ the compilation takes quite a long time.</p>
     
     
       <script src="../../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+        <script src="../../javascript/extra.js"></script>
       
         <script src="../../js/open_in_new_tab.js"></script>
       
