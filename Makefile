@@ -151,6 +151,7 @@ release: release-check realclean release-pull release-yamlscript
 endif
 
 release-check:
+ifndef YS_RELEASE_NO_CHECK
 ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
 	$(error Must be on branch 'main' to release)
 endif
@@ -173,6 +174,7 @@ ifeq (,$(shell which yarn))
 endif
 endif
 endif
+endif
 
 release-pull:
 ifndef d
@@ -187,6 +189,7 @@ ifndef d
 endif
 
 release-yamlscript: $(BUILD-BIN-YS)
+ifndef YS_RELEASE_NO_CHECK
 ifneq (main, $(shell git rev-parse --abbrev-ref HEAD))
 	$(error You must be on the 'main' branch to release)
 endif
@@ -194,6 +197,7 @@ endif
 	  echo 'Please export YS_GH_USER'; exit 1; }
 	@[[ $$YS_GH_TOKEN ]] || { \
 	  echo 'Please export YS_GH_TOKEN'; exit 1; }
+endif
 	(time $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
