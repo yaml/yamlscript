@@ -94,7 +94,7 @@
 
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def sett #"(?:\\\{)")                     ; Set start token
-(def narg #"(?:%\d+)")                     ; Numbered argument token
+(def narg #"(?:[_%]\d+)")                  ; Numbered argument token
 (def regx #"(?x)(?:                        # Regular expression
             / (?=\S)                         # opening slash
             (?:
