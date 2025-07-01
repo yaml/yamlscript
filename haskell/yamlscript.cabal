@@ -1,0 +1,65 @@
+cabal-version:       2.2
+
+name:                yamlscript
+version:             0.1.0.0
+synopsis:            Short description of your package
+homepage:            https://github.com/yaml/yamlscript#readme
+license:             BSD-3-Clause
+license-file:        LICENSE
+author:              Ingy dot Net
+maintainer:          ingy@ingy.net
+copyright:           2024 Ingy dot Net
+category:            Lib
+build-type:          Simple
+extra-source-files:  README.md
+                     CHANGELOG.md
+
+-- To avoid duplicated efforts in documentation and dealing with the
+-- complications of embedding Haddock markup inside cabal files, it is
+-- common to point users to the README.md file.
+description:         Please see the README on Github at <https://github.com/vendethiel/yamlscript#readme>
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     YAMLScript
+  build-depends:       base >= 4.7 && < 5
+                     , text >= 2.0
+                     , aeson >= 2.1
+  default-language:    Haskell2010
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Widentities
+                       -Wincomplete-record-updates
+                       -Wincomplete-uni-patterns
+                       -Wmissing-export-lists
+                       -Wmissing-home-modules
+                       -Wpartial-fields
+                       -Wredundant-constraints
+                       -g3
+  extra-libraries: yamlscript
+  extra-lib-dirs: /Users/vendethiel/dev/clojure/yamlscript/haskell
+
+test-suite yamlscript-test
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:       base
+                     , yamlscript
+                     , hspec
+  default-language:    Haskell2010
+  ghc-options:         -Wall
+                       -Wcompat
+                       -Widentities
+                       -Wincomplete-record-updates
+                       -Wincomplete-uni-patterns
+                       -Wmissing-export-lists
+                       -Wmissing-home-modules
+                       -Wpartial-fields
+                       -Wredundant-constraints
+                       -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+
+source-repository head
+  type:     git
+  location: https://github.com/yaml/yamlscript
