@@ -9,17 +9,17 @@ require 'json'
 
 require_relative 'yamlscript/version'
 
-# Ruby binding for the libyamlscript shared library.
+# Ruby binding for the libys shared library.
 class YAMLScript
   Error = Class.new(StandardError)
 
   # This value is automatically updated by 'make bump'.
   # The version number is used to find the correct shared library file.
-  # We currently only support binding to an exact version of libyamlscript.
+  # We currently only support binding to an exact version of libys.
   YAMLSCRIPT_VERSION = '0.1.97'
 
   # A low-level interface to the native library
-  module LibYAMLScript
+  module LibYS
     extend Fiddle::Importer
 
     def self.extension
@@ -33,8 +33,8 @@ class YAMLScript
       end
     end
 
-    def self.libyamlscript_name
-      "libyamlscript.#{extension}.#{YAMLSCRIPT_VERSION}"
+    def self.libys_name
+      "libys.#{extension}.#{YAMLSCRIPT_VERSION}"
     end
 
     # Returns an array of library paths extracted from the LD_LIBRARY_PATH
@@ -48,9 +48,9 @@ class YAMLScript
       paths << ENV.fetch('HOME', '') + '/.local/lib'
     end
 
-    # Find the libyamlscript shared library file path
-    def self.find_libyamlscript_path
-      name = libyamlscript_name
+    # Find the libys shared library file path
+    def self.find_libys_path
+      name = libys_name
       path = ld_library_paths.map {
         |dir| File.join(dir, name) }.detect { |file| File.exist?(file)
       }
@@ -66,7 +66,7 @@ ERROR
       path
     end
 
-    dlload find_libyamlscript_path
+    dlload find_libys_path
 
     extern \
       'int graal_create_isolate(void* params, void** isolate, void** thread)'
@@ -74,7 +74,7 @@ ERROR
     extern 'char* load_ys_to_json(void* thread, char* yamlscript)'
   end
 
-  # Interface with the libyamlscript shared library.
+  # Interface with the libys shared library.
   #
   # @example
   #   require 'yamlscript'
@@ -100,18 +100,18 @@ ERROR
     # Create a new GraalVM isolate thread for each call to load()
     thread = Fiddle::Pointer.malloc(Fiddle::SIZEOF_VOIDP)
     raise Error, "Failed to create isolate" unless \
-      LibYAMLScript.graal_create_isolate(nil, @isolate.ref, thread.ref).zero?
+      LibYS.graal_create_isolate(nil, @isolate.ref, thread.ref).zero?
 
-    # Call 'load_ys_to_json' function in libyamlscript shared library
-    json_data = LibYAMLScript.load_ys_to_json(thread, ys_code)
+    # Call 'load_ys_to_json' function in libys shared library
+    json_data = LibYS.load_ys_to_json(thread, ys_code)
     resp = JSON.parse(json_data.to_s)
 
     raise Error, "Failed to tear down isolate" unless \
-      LibYAMLScript.graal_tear_down_isolate(thread).zero?
+      LibYS.graal_tear_down_isolate(thread).zero?
     raise Error, @error['cause'] if @error = resp['error']
 
     data = resp.fetch('data') do
-      raise Error, "Unexpected response from 'libyamlscript'"
+      raise Error, "Unexpected response from 'libys'"
     end
 
     data

@@ -17,12 +17,12 @@ BINDINGS := \
 
 DIRS := \
     core \
-    libyamlscript \
+    libys \
     $(BINDINGS) \
     ys \
 
 BUILD-DIRS := \
-    libyamlscript \
+    libys \
     go \
     nodejs \
     python \
@@ -31,7 +31,7 @@ BUILD-DIRS := \
     ys \
 
 INSTALL-DIRS := \
-    libyamlscript \
+    libys \
     ys \
 
 BUILD := $(BUILD-DIRS:%=build-%)
@@ -46,9 +46,9 @@ DISTCLEAN := $(DIRS:%=distclean-%)
 
 export HEAD := $(shell git rev-parse HEAD)
 
-LYS-JAR-RELEASE := libyamlscript-$(YS_VERSION)-standalone.jar
+LYS-JAR-RELEASE := libys-$(YS_VERSION)-standalone.jar
 YS-JAR-RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
-LYS-JAR-PATH := libyamlscript/target/libyamlscript-$(YS_VERSION)-standalone.jar
+LYS-JAR-PATH := libys/target/libys-$(YS_VERSION)-standalone.jar
 YS-JAR-PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
 YS-RELEASE := $(RELEASE-YS-NAME).tar.xz
@@ -204,11 +204,11 @@ endif
 release-assets: $(RELEASE-ASSETS)
 	release-assets $^
 
-release-build: release-build-ys release-build-libyamlscript
+release-build: release-build-ys release-build-libys
 
 release-build-ys: $(YS-RELEASE)
 
-release-build-libyamlscript: $(LYS-RELEASE)
+release-build-libys: $(LYS-RELEASE)
 
 jars: $(JAR-ASSETS)
 
@@ -224,7 +224,7 @@ endif
 
 $(LYS-RELEASE): $(RELEASE-LYS-NAME)
 	mkdir -p $<
-	cp -pPR libyamlscript/lib/libyamlscript.$(SO)* $</
+	cp -pPR libys/lib/libys.$(SO)* $</
 	cp common/install.mk $</Makefile
 ifeq (true,$(IS-MACOS))
 	$(TIME) tar -J -cf $@ $<
@@ -234,7 +234,7 @@ endif
 
 $(RELEASE-YS-NAME): build-ys
 
-$(RELEASE-LYS-NAME): build-libyamlscript
+$(RELEASE-LYS-NAME): build-libys
 
 $(LYS-JAR-RELEASE): $(LYS-JAR-PATH)
 	cp $< $@
@@ -243,7 +243,7 @@ $(YS-JAR-RELEASE): $(YS-JAR-PATH)
 	cp $< $@
 
 $(LYS-JAR-PATH):
-	$(MAKE) -C libyamlscript jar
+	$(MAKE) -C libys jar
 
 $(YS-JAR-PATH):
 	$(MAKE) -C ys jar
@@ -259,8 +259,8 @@ $(CLEAN):
 clean:: $(CLEAN)
 	$(RM) -r $(MAVEN-REPOSITORY)/yamlscript
 	$(RM) -r $(MAVEN-REPOSITORY)/org/yamlscript
-	$(RM) -r libyamlscript/lib ys/bin
-	$(RM) -r libyamlscript-0* ys-0* yamlscript.cli-*.jar
+	$(RM) -r libys/lib ys/bin
+	$(RM) -r libys-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) -r homebrew-yamlscript
 	$(RM) NO-NAME release*.log

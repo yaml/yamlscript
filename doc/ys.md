@@ -51,8 +51,8 @@ Options:
   -S, --stack-trace        Print full stack trace for errors
   -x, --xtrace             Print each expression before evaluation
 
-      --install            Install the libyamlscript shared library
-      --upgrade            Upgrade both ys and libyamlscript
+      --install            Install the libys shared library
+      --upgrade            Upgrade both ys and libys
 
       --version            Print version and exit
   -h, --help               Print this help and exit

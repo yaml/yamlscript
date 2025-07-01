@@ -1,9 +1,9 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; This library compiles into the `libyamlscript.so` shared library.
+;; This library compiles into the `libys.so` shared library.
 
-(ns libyamlscript.core
+(ns libys.core
   (:require
    [clojure.data.json :as json]
    [sci.core :as sci]
@@ -19,7 +19,7 @@
   "Convert a YS code string to Clojure, eval the Clojure code with SCI, encode
   the resulting value as JSON and return the JSON string."
   [^String ys-str]
-  (debug "CLJ libyamlscript load - input string:" ys-str)
+  (debug "CLJ libys load - input string:" ys-str)
   (let [resp (sci/binding [sci/out *out*]
                (try
                  (->> ys-str
@@ -32,7 +32,7 @@
                    (-> e
                      error-map
                      json-write-str))))]
-    (debug "CLJ libyamlscript load - response string:" resp)
+    (debug "CLJ libys load - response string:" resp)
     resp))
 
 (defn json-write-str [data]

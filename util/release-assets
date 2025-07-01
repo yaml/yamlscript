@@ -82,12 +82,12 @@ setup() {
   [[ $YS_GH_USER && $YS_GH_TOKEN ]] ||
     die "Error: YS_GH_USER and YS_GH_TOKEN must be set in the environment."
 
-  if [[ $RELEASE_TAR_FILE == libyamlscript-* ]]; then
-    VERSION=${RELEASE_TAR_FILE#libyamlscript-}
+  if [[ $RELEASE_TAR_FILE == libys-* ]]; then
+    VERSION=${RELEASE_TAR_FILE#libys-}
   elif [[ $RELEASE_TAR_FILE == ys-* ]]; then
     VERSION=${RELEASE_TAR_FILE#ys-}
   else
-    die "Error: Release file must be named libyamlscript-* or ys-*"
+    die "Error: Release file must be named libys-* or ys-*"
   fi
   VERSION=${VERSION%%-*}
 

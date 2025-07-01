@@ -62,10 +62,10 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - name: Build and Install libyamlscript
+      - name: Build and Install libys
         run: |
-          make build-libyamlscript
-          make install-libyamlscript
+          make build-libys
+          make install-libys
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           echo "LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "DYLD_LIBRARY_PATH=$HOME/.local/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV

@@ -10,7 +10,7 @@ constant YAMLSCRIPT_VERSION = v0.1.97;
 
 sub resolve-lib {
   state $ = do {
-    my $libname = "libyamlscript{get-vars('')<SO>}.{YAMLSCRIPT_VERSION.Str}";
+    my $libname = "libys{get-vars('')<SO>}.{YAMLSCRIPT_VERSION.Str}";
     my $path = [|(%*ENV<LD_LIBRARY_PATH>//'').split(':', :ignore-empty),
      '/usr/local/lib',
      %*ENV<HOME> ~ '/.local/lib',
@@ -59,7 +59,7 @@ method load(Str $program) {
     load_ys_to_json($!isolate-thread, $program);
   die %data-json<error><cause>
     if %data-json<error>:exists;
-  die "Unexpected response from 'libyamlscript'"
+  die "Unexpected response from 'libys'"
     unless %data-json<data>:exists;
   %data-json<data>;
 }

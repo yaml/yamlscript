@@ -152,7 +152,7 @@ defn step-5(ctx):
       version: $(ctx.new)
       date:    $(ctx.date-time)
       changes:
-      - libyamlscript $(ctx.new)
+      - libys $(ctx.new)
 
     validate-yaml: perl-entry
 
@@ -168,7 +168,7 @@ defn step-5(ctx):
     ruby-entry =: |+
       ## [$(ctx.new)] - $(ctx.date)
 
-      - libyamlscript $(ctx.new)
+      - libys $(ctx.new)
 
     file-prepend 'ruby/ChangeLog.md': ruby-entry
 

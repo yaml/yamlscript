@@ -8,7 +8,7 @@ endif
 
 BASE := $(ROOT)/crystal
 
-LIBYS-SO-PATH := $(ROOT)/libyamlscript/lib/$(LIBYS-SO-FQNP)
+LIBYS-SO-PATH := $(ROOT)/libys/lib/$(LIBYS-SO-FQNP)
 BUILD-DEPS := $(LIBYS-SO-PATH)
 
 #------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ release:
 	$(ROOT)/util/release-crystal
 
 clean::
-	$(RM) -r lib bin .crystal .shards shard.lock libyamlscript.so
+	$(RM) -r lib bin .crystal .shards shard.lock libys.so
 
 $(LIBYS-SO-PATH):
-	$(MAKE) -C $(ROOT)/libyamlscript $(LIBYS-SO-FQNP)
+	$(MAKE) -C $(ROOT)/libys $(LIBYS-SO-FQNP)

@@ -8,7 +8,7 @@ import com.sun.jna.Platform;
 
 import java.io.File;
 
-public class LibYAMLScript {
+public class LibYS {
     public static String extension()
     {
         return Platform.isMac() ? "dylib" : "so";
@@ -21,7 +21,7 @@ public class LibYAMLScript {
 
     public static String filename()
     {
-        return "libyamlscript." + extension() + '.' +
+        return "libys." + extension() + '.' +
                YAMLScript.YAMLSCRIPT_VERSION;
     }
 
@@ -60,19 +60,19 @@ public class LibYAMLScript {
         );
     }
 
-    public static ILibYAMLScript load(String path)
+    public static ILibYS load(String path)
     {
-        return Native.load(path, ILibYAMLScript.class);
+        return Native.load(path, ILibYS.class);
     }
 
-    public static ILibYAMLScript load()
+    public static ILibYS load()
     {
         return load(path());
     }
 
-    private static ILibYAMLScript INSTANCE = null;
+    private static ILibYS INSTANCE = null;
 
-    public static ILibYAMLScript library()
+    public static ILibYS library()
     {
         if (INSTANCE == null) INSTANCE = load();
 

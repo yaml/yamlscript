@@ -1,9 +1,9 @@
-module libyamlscript
+module libys
 
 import Base.Libc: Libdl
 
 const YAMLSCRIPT_VERSION = "0.1.97"
-const libyamlscript_name = "libyamlscript.$(Libdl.dlext).$(YAMLSCRIPT_VERSION)"
+const libys_name = "libys.$(Libdl.dlext).$(YAMLSCRIPT_VERSION)"
 const libhandle = Ref{Ptr{Cvoid}}()
 const graal_create_isolate_fptr = Ref{Ptr{Cvoid}}()
 const graal_tear_down_isolate_fptr = Ref{Ptr{Cvoid}}()
@@ -32,9 +32,9 @@ See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"""
 end
 
 function init()
-    libpath = Libdl.find_library(libyamlscript_name)
+    libpath = Libdl.find_library(libys_name)
     if libpath == ""
-        _library_not_found_error(libyamlscript_name)
+        _library_not_found_error(libys_name)
     end
 
     libhandle[] = Libdl.dlopen(libpath, Libdl.RTLD_LAZY | Libdl.RTLD_LOCAL)
@@ -43,4 +43,4 @@ function init()
     load_ys_to_json_fptr[] = Libdl.dlsym(libhandle[], :load_ys_to_json)
 end
 
-end  # module libyamlscript
+end  # module libys

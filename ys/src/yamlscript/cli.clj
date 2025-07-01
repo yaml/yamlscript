@@ -147,9 +147,9 @@
     "Print each expression before evaluation"]
 
    [nil "--install"
-    "Install the libyamlscript shared library"]
+    "Install the libys shared library"]
    [nil "--upgrade"
-    "Upgrade both ys and libyamlscript"]
+    "Upgrade both ys and libys"]
 
    [nil "--version"
     "Print version and exit"]

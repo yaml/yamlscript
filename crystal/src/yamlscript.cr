@@ -2,17 +2,17 @@ require "json"
 
 require "./yamlscript/version"
 
-# Crystal binding for the libyamlscript shared library.
+# Crystal binding for the libys shared library.
 class YAMLScript
   class Error < Exception; end
 
   # This value is automatically updated by 'make bump'.
   # The version number is used to find the correct shared library file.
-  # We currently only support binding to an exact version of libyamlscript.
+  # We currently only support binding to an exact version of libys.
   YAMLSCRIPT_VERSION = "0.1.97"
 
   # A low-level interface to the native library
-  module LibYAMLScript
+  module LibYS
     def self.extension
       {% if flag?(:darwin) %}
         "dylib"
@@ -23,8 +23,8 @@ class YAMLScript
       {% end %}
     end
 
-    def self.libyamlscript_name
-      "libyamlscript.#{extension}.#{YAMLScript::YAMLSCRIPT_VERSION}"
+    def self.libys_name
+      "libys.#{extension}.#{YAMLScript::YAMLSCRIPT_VERSION}"
     end
 
     # Returns an array of library paths extracted from the LD_LIBRARY_PATH
@@ -49,9 +49,9 @@ class YAMLScript
       paths
     end
 
-    # Find the libyamlscript shared library file path
-    def self.find_libyamlscript_path
-      name = libyamlscript_name
+    # Find the libys shared library file path
+    def self.find_libys_path
+      name = libys_name
       path = ld_library_paths.find do |dir|
         next if dir.empty?
         file = File.join(dir, name)
@@ -72,12 +72,12 @@ ERROR
     end
 
     # IMPORTANT: For Crystal FFI to work with the YAMLScript library:
-    # 1. Make sure libyamlscript.so is in a standard library location or in
+    # 1. Make sure libys.so is in a standard library location or in
     # LD_LIBRARY_PATH
     # 2. When running your program, use: LD_LIBRARY_PATH=$HOME/.local/lib
     # crystal run your_program.cr
     # See README.md for detailed instructions.
-    @[Link("yamlscript")]
+    @[Link("ys")]
     lib Lib
       fun graal_create_isolate(
         params : Void*,
@@ -92,7 +92,7 @@ ERROR
     end
   end
 
-  # Interface with the libyamlscript shared library.
+  # Interface with the libys shared library.
   #
   # Example:
   #   ```
@@ -126,18 +126,18 @@ ERROR
     isolate_ptr = pointerof(@isolate)
     thread_ptr = pointerof(@thread)
 
-    if LibYAMLScript::Lib.graal_create_isolate(
+    if LibYS::Lib.graal_create_isolate(
       nil, isolate_ptr, thread_ptr
     ) != 0
       raise Error.new("Failed to create isolate")
     end
 
-    # Call 'load_ys_to_json' function in libyamlscript shared library
-    json_ptr = LibYAMLScript::Lib.load_ys_to_json(@thread, ys_code.to_unsafe)
+    # Call 'load_ys_to_json' function in libys shared library
+    json_ptr = LibYS::Lib.load_ys_to_json(@thread, ys_code.to_unsafe)
     json_data = String.new(json_ptr)
     resp = JSON.parse(json_data).as_h
 
-    if LibYAMLScript::Lib.graal_tear_down_isolate(@thread) != 0
+    if LibYS::Lib.graal_tear_down_isolate(@thread) != 0
       raise Error.new("Failed to tear down isolate")
     end
 
@@ -147,7 +147,7 @@ ERROR
     end
 
     unless data = resp["data"]?
-      raise Error.new("Unexpected response from 'libyamlscript'")
+      raise Error.new("Unexpected response from 'libys'")
     end
 
     data

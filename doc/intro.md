@@ -38,5 +38,5 @@ https://clojuredocs.org/) is available for you to use.
 Even though Clojure is a Lisp, YS code looks a lot more like Python, Ruby, Perl
 or JavaScript.
 And even though Clojure is a JVM (Java) language, YS doesn't use the JVM at all.
-YS is a fast standalone native binary, as is the `libyamlscript` shared library
+YS is a fast standalone native binary, as is the `libys` shared library
 that it is used by all [YS loader libraries](loaders.md).

@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2025 Ingy dot Net
 
-(defproject yamlscript/libyamlscript "0.1.97"
+(defproject yamlscript/libys "0.1.97"
   :description "Shared Library for YS"
 
   :url "https://yamlscript.org"
@@ -32,8 +32,8 @@
 
   :profiles
   {:uberjar
-   {:aot [libyamlscript.core]
-    :main libyamlscript.core
+   {:aot [libys.core]
+    :main libys.core
     :global-vars
     {*assert* false
      *warn-on-reflection* true}
@@ -43,6 +43,6 @@
 
   :repositories [["public-github" {:url "git://github.com"}]]
 
-  :repl-options {:init-ns libyamlscript.core}
+  :repl-options {:init-ns libys.core}
 
   :global-vars {*warn-on-reflection* true})

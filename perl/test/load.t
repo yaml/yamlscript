@@ -12,7 +12,7 @@ is CLASS->new->load($program),
     'Returns data';
 
 # like dies { CLASS->new->load("mapping\nerror::") },
-#     qr/libyamlscript: mapping values are not allowed/,
-#     'Dies with libyamlscript error';
+#     qr/libys: mapping values are not allowed/,
+#     'Dies with libys error';
 
 done_testing;

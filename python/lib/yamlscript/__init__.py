@@ -2,10 +2,10 @@
 # This code is licensed under MIT license (See License for details)
 
 """
-Python binding/API for the libyamlscript shared library.
+Python binding/API for the libys shared library.
 
 This module can be considered the reference implementation for YAMLScript
-FFI bindings to libyamlscript.
+FFI bindings to libys.
 
 The current user facing API consists of a single class, `YAMLScript`, which
 has a single method: `.load(string)`.
@@ -15,7 +15,7 @@ object that the YAMLScript code evaluates to.
 
 # This value is automatically updated by 'make bump'.
 # The version number is used to find the correct shared library file.
-# We currently only support binding to an exact version of libyamlscript.
+# We currently only support binding to an exact version of libys.
 yamlscript_version = '0.1.97'
 
 import os, sys
@@ -26,8 +26,8 @@ import json
 assert sys.version_info >= (3, 6), \
   "Python 3.6 or greater required for 'yamlscript'."
 
-# Find the libyamlscript shared library file path:
-def find_libyamlscript_path():
+# Find the libys shared library file path:
+def find_libys_path():
   # We currently only support platforms that GraalVM supports.
   # And Windows is not yet implemented...
   # Confirm platform and determine file extension:
@@ -39,47 +39,47 @@ def find_libyamlscript_path():
     raise Exception(
       "Unsupported platform '%s' for yamlscript." % sys.platform)
 
-  # We currently bind to an exact version of libyamlscript.
-  # eg 'libyamlscript.so.0.1.97'
-  libyamlscript_name = \
-    "libyamlscript.%s.%s" % (so, yamlscript_version)
+  # We currently bind to an exact version of libys.
+  # eg 'libys.so.0.1.97'
+  libys_name = \
+    "libys.%s.%s" % (so, yamlscript_version)
 
-  # Use LD_LIBRARY_PATH to find libyamlscript shared library, or default to
+  # Use LD_LIBRARY_PATH to find libys shared library, or default to
   # '/usr/local/lib' (where it is installed by default):
   ld_library_path = os.environ.get('LD_LIBRARY_PATH')
   ld_library_paths = ld_library_path.split(':') if ld_library_path else []
   ld_library_paths.append('/usr/local/lib')
   ld_library_paths.append(os.environ.get('HOME') + '/.local/lib')
 
-  libyamlscript_path = None
+  libys_path = None
   for path in ld_library_paths:
-    path = path + '/' + libyamlscript_name
+    path = path + '/' + libys_name
     if os.path.isfile(path):
-      libyamlscript_path = path
+      libys_path = path
       break
 
-  if not libyamlscript_path:
+  if not libys_path:
     raise Exception(
       """\
 Shared library file '%s' not found
 Try: curl https://yamlscript.org/install | VERSION=%s LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
-""" % (libyamlscript_name, yamlscript_version))
+""" % (libys_name, yamlscript_version))
 
-  return libyamlscript_path
+  return libys_path
 
-# Load libyamlscript shared library:
-libyamlscript = ctypes.CDLL(find_libyamlscript_path())
+# Load libys shared library:
+libys = ctypes.CDLL(find_libys_path())
 
 # Create binding to 'load_ys_to_json' function:
-load_ys_to_json = libyamlscript.load_ys_to_json
+load_ys_to_json = libys.load_ys_to_json
 load_ys_to_json.restype = ctypes.c_char_p
 
 
 # The YAMLScript class is the main user facing API for this module.
 class YAMLScript():
   """
-  Interface with the libyamlscript shared library.
+  Interface with the libys shared library.
 
   Usage:
     import yamlscript
@@ -96,7 +96,7 @@ class YAMLScript():
     self.isolatethread = ctypes.c_void_p()
 
     # Create a new GraalVM isolate:
-    rc = libyamlscript.graal_create_isolate(
+    rc = libys.graal_create_isolate(
       None,
       None,
       ctypes.byref(self.isolatethread),
@@ -110,7 +110,7 @@ class YAMLScript():
     # Reset any previous error:
     self.error = None
 
-    # Call 'load_ys_to_json' function in libyamlscript shared library:
+    # Call 'load_ys_to_json' function in libys shared library:
     data_json = load_ys_to_json(
       self.isolatethread,
       ctypes.c_char_p(bytes(input, "utf8")),
@@ -119,14 +119,14 @@ class YAMLScript():
     # Decode the JSON response:
     resp = json.loads(data_json)
 
-    # Check for libyamlscript error in JSON response:
+    # Check for libys error in JSON response:
     self.error = resp.get('error')
     if self.error:
       raise Exception(self.error['cause'])
 
     # Get the response object from evaluating the YAMLScript string:
     if not 'data' in resp:
-      raise Exception("Unexpected response from 'libyamlscript'")
+      raise Exception("Unexpected response from 'libys'")
     data = resp.get('data')
 
     # Return the response object:
@@ -135,6 +135,6 @@ class YAMLScript():
   # YAMLScript instance destructor:
   def __del__(self):
     # Tear down the isolate thread to free resources:
-    rc = libyamlscript.graal_tear_down_isolate(self.isolatethread)
+    rc = libys.graal_tear_down_isolate(self.isolatethread)
     if rc != 0:
       raise Exception("Failed to tear down isolate")

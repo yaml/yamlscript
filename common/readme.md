@@ -61,7 +61,7 @@ This makes YS a complete functional programming language right out of the box.
 
 Even though YS compiles to Clojure, and Clojure compiles to Java, there is no
 dependency on Java or the JVM.
-YS is compiled to a native shared library (`libyamlscript.so`) that can be used
+YS is compiled to a native shared library (`libys.so`) that can be used
 by any programming language that can load shared libraries.
 
 To see the Clojure code that YS compiles to, you can use the YS

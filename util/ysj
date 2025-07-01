@@ -3,13 +3,13 @@
 set -euo pipefail
 
 (
-  libyamlscript_version=0.1.97
+  libys_version=0.1.97
   root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
   JAVA_HOME=$(make -C "$root/core" env | grep ^JAVA_HOME= | cut -d= -f2)
   export JAVA_HOME
   export PATH=$JAVA_HOME/bin:$PATH
   root_ys=$root/ys
-  jar=yamlscript.cli-$libyamlscript_version-SNAPSHOT-standalone.jar
+  jar=yamlscript.cli-$libys_version-SNAPSHOT-standalone.jar
   make --no-print-directory -C "$root_ys" jar
   java -jar "$root_ys/target/uberjar/$jar" "$@"
 )

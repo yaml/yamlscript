@@ -3,7 +3,7 @@
 cat <<...
 
 --------------------------------------------------------------------------------
-ERROR: 'install-libyamlscript' has been renamed to 'install'.
+ERROR: 'install-libys' has been renamed to 'install'.
 
 Use:
 

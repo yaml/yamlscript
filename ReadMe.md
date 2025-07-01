@@ -81,8 +81,8 @@ It has these main modes of operation:
 * `ys --compile <file>` - Compile a YS program to Clojure
 * `ys --binary <file>` - Compile YS to a native binary executable
 * `ys --eval '<expr>'` - Evaluate a YS expression string
-* `ys --install` - Install the latest libyamlscript shared library
-* `ys --upgrade` - Upgrade ys and libyamlscript
+* `ys --install` - Install the latest libys shared library
+* `ys --upgrade` - Upgrade ys and libys
 * `ys --help` - Show the `ys` command help
 
 You can also use YS as a library in your own programming language.
@@ -109,9 +109,8 @@ YS is supported on these architectures:
 * Intel/AMD (`x86_64`)
 * ARM (`aarch64`)
 
-For now other systems cannot be supported because `ys` and `libyamlscript` are
-compiled by GraalVM's `native-image` tool, which only supports the above
-systems.
+For now other systems cannot be supported because `ys` and `libys` are compiled
+by GraalVM's `native-image` tool, which only supports the above systems.
 
 
 ### Supported Programming Language Bindings
@@ -184,7 +183,7 @@ Try it out!
 
 ## Installing YS
 
-You can install the YS `ys` interpreter and/or its `libyamlscript.so` shared
+You can install the YS `ys` interpreter and/or its `libys.so` shared
 library from pre-built binaries or building from source.
 Both are very easy to do.
 
@@ -207,7 +206,7 @@ You can use the following environment variables to control the installation:
 * `PREFIX=...` - The directory to install to. Default: `~/.local`
 * `VERSION=...` - The YS version to install. Default: `0.1.97`
 * `BIN=1` - Only install the `PREFIX/bin/ys` command line tool.
-* `LIB=1` - Only install the `PREFIX/lib/libyamlscript` shared library.
+* `LIB=1` - Only install the `PREFIX/lib/libys` shared library.
 * `DEBUG=1` - Print the Bash commands that are being run.
 
 Once you have installed the `ys` command you can upgrade to a bin binary
@@ -224,8 +223,8 @@ build process has very few dependencies:
 * `git`
 * `make`
 
-To install the `ys` command line tool, and `libyamlscript` shared library,
-run these commands:
+To install the `ys` command line tool, and `libys` shared library, run these
+commands:
 
 ```bash
 git clone https://github.com/yaml/yamlscript
@@ -236,8 +235,8 @@ make install
 
 That's it!
 
-The `make install` command will install `ys` and `libyamlscript` to
-`~/.local/bin` and `~/.local/lib` respectively, by default.
+The `make install` command will install `ys` and `libys` to `~/.local/bin` and
+`~/.local/lib` respectively, by default.
 If run as root they will default to `/usr/local/bin` and `/usr/local/lib`.
 
 To install to a different location, run `make install PREFIX=/some/path`.
@@ -252,8 +251,8 @@ To install to a different location, run `make install PREFIX=/some/path`.
 
 ### Installing a YS Binding for a Programming Language
 
-YS ships its language binding libraries and the `libyamlscript.so` shared
-library separately.
+YS ships its language binding libraries and the `libys.so` shared library
+separately.
 
 Currently, each binding release version requires an exact version of the shared
 library, or it will not work.

@@ -1,4 +1,4 @@
-//! Rust binding/API for the libyamlscript shared library.
+//! Rust binding/API for the libys shared library.
 //!
 //! # Loading a YAMLScript file
 //! The [`YAMLScript::load`] function is the main entrypoint of the library.
@@ -64,20 +64,20 @@ mod error;
 pub use error::Error;
 use serde::Deserialize;
 
-use crate::error::LibYAMLScriptError;
+use crate::error::LibYSError;
 
 /// The name of the YAMLScript library to load.
-const LIBYAMLSCRIPT_BASENAME: &str = "libyamlscript";
+const LIBYS_BASENAME: &str = "libys";
 
 /// The version of the yamlscript library this bindings works with.
-const LIBYAMLSCRIPT_VERSION: &str = "0.1.97";
+const LIBYS_VERSION: &str = "0.1.97";
 
 /// The extension of the YAMLScript library. On Linux, it's a `.so` file.
 #[cfg(target_os = "linux")]
-const LIBYAMLSCRIPT_EXTENSION: &str = "so";
+const LIBYS_EXTENSION: &str = "so";
 /// The extension of the YAMLScript library. On MacOS, it's a `.dylib` file.
 #[cfg(target_os = "macos")]
-const LIBYAMLSCRIPT_EXTENSION: &str = "dylib";
+const LIBYS_EXTENSION: &str = "dylib";
 // This should be the extension of the library file, but the platform is unsupported.
 #[cfg(not(any(target_os = "linux", target_os = "macos")))]
 compile_error!(
@@ -85,7 +85,7 @@ compile_error!(
     std::env::consts::OS
 );
 
-/// A wrapper around libyamlscript.
+/// A wrapper around libys.
 pub struct YAMLScript {
     /// A handle to the opened dynamic library.
     _handle: Library,
@@ -97,7 +97,7 @@ pub struct YAMLScript {
     _create_isolate_fn: CreateIsolateFn,
     /// Pointer to the function in GraalVM to free an isolate thread.
     tear_down_isolate_fn: TearDownIsolateFn,
-    /// Pointer to the `load_ys_to_json` function in libyamlscript.
+    /// Pointer to the `load_ys_to_json` function in libys.
     load_ys_to_json_fn: LoadYsToJsonFn,
 }
 
@@ -235,7 +235,7 @@ impl YAMLScript {
         for path in library_path.split(':').chain(additional_paths.into_iter()) {
             // Try to open the library, if it exists.
             let path = Path::new(path).join(format!(
-                "{LIBYAMLSCRIPT_BASENAME}.{LIBYAMLSCRIPT_EXTENSION}.{LIBYAMLSCRIPT_VERSION}"
+                "{LIBYS_BASENAME}.{LIBYS_EXTENSION}.{LIBYS_VERSION}"
             ));
             if !path.is_file() {
                 continue;
@@ -244,7 +244,7 @@ impl YAMLScript {
 
             // Store the error that happened if we haven't encountered one.
             // The error we store always happened while trying to open an existing
-            // `libyamlscript.so` file.
+            // `libys.so` file.
             // It should be helpful.
             match library {
                 Ok(x) => return Ok(x),
@@ -288,13 +288,13 @@ impl Drop for YAMLScript {
 /// ```json
 /// {
 ///   "error": {
-///     // An error object (see [`LibYAMLScriptError`]).
+///     // An error object (see [`LibYSError`]).
 ///   }
 /// }
 /// ```
 ///
 /// Upon success, we can directly deserialize the `data` object into the target type.
-/// Upon error, we deserialize the error as [`LibYAMLScriptError`] so that it can be inspected.
+/// Upon error, we deserialize the error as [`LibYSError`] so that it can be inspected.
 /// We however do not provide any inspection helpers.
 #[derive(Deserialize)]
 enum YsResponse<T> {
@@ -303,5 +303,5 @@ enum YsResponse<T> {
     Data(T),
     /// An error object.
     #[serde(rename = "error")]
-    Error(LibYAMLScriptError),
+    Error(LibYSError),
 }

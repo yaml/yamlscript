@@ -8,21 +8,20 @@ pub enum Error {
     NotFound,
     /// An error while loading the library.
     ///
-    /// This error is unrecoverable and any further attempt to call any libyamlscript function will
-    /// fail.
+    /// This error is unrecoverable and any further attempt to call any libys function will fail.
     Load(dlopen::Error),
     /// An error with GraalVM.
     GraalVM(i32),
-    /// An error in the FFI while calling a libyamlscript function.
+    /// An error in the FFI while calling a libys function.
     Ffi(String),
-    /// An error from the libyamlscript library.
+    /// An error from the libys library.
     ///
     /// This variant is used when we have successfully resolved the function we want to call in
-    /// `libyamlscript.so`, but the engine returned an error, that we successfully parsed.
-    YAMLScript(LibYAMLScriptError),
+    /// `libys.so`, but the engine returned an error, that we successfully parsed.
+    YAMLScript(LibYSError),
     /// An error with serde_json while deserializing.
     Serde(serde_json::Error),
-    /// An error while decoding strings returned from libyamlscript.
+    /// An error while decoding strings returned from libys.
     Utf8(Utf8Error),
 }
 
@@ -31,10 +30,10 @@ impl Debug for Error {
         match self {
             Self::NotFound => write!(
                 f,
-                "Shared library file 'libyamlscript.so.{0}' not found
+                "Shared library file 'libys.so.{0}' not found
 Try: curl https://yamlscript.org/install | VERSION={0} LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript",
-                &super::LIBYAMLSCRIPT_VERSION
+                &super::LIBYS_VERSION
             ),
             Error::Load(e) => write!(f, "Error::Load({e:?})"),
             Error::GraalVM(e) => write!(f, "Error::GraalVM({e:?})"),
@@ -46,16 +45,16 @@ See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript",
     }
 }
 
-/// An error from libyamlscript.
+/// An error from libys.
 ///
-/// This gets returned from libyamlscript functions that were successfully called but the engine
-/// returned an error.
+/// This gets returned from libys functions that were successfully called but the engine returned
+/// an error.
 #[allow(clippy::module_name_repetitions)]
 #[derive(Deserialize, Debug)]
-pub struct LibYAMLScriptError {
+pub struct LibYSError {
     /// The error message.
     pub cause: String,
-    /// The stack trace within libyamlscript.
+    /// The stack trace within libys.
     pub trace: Vec<(String, String, Option<String>, i64)>,
     /// The internal type of the error.
     #[serde(rename = "type")]

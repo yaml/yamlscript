@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * Interface with the shared libyamlscript library
+ * Interface with the shared libys library
  *
  */
 public class YAMLScript
@@ -70,23 +70,23 @@ public class YAMLScript
         return new YAMLScript().evaluate(code);
     }
 
-    private final ILibYAMLScript libyamlscript;
+    private final ILibYS libys;
     private final PointerByReference isolateRef;
 
     public YAMLScript()
     {
-        this.libyamlscript = LibYAMLScript.library();
+        this.libys = LibYS.library();
         this.isolateRef = new PointerByReference();
     }
 
     public String getRAWResult(String ysCode) throws RuntimeException
     {
         PointerByReference threadRef = new PointerByReference();
-        libyamlscript.graal_create_isolate(null, isolateRef, threadRef);
+        libys.graal_create_isolate(null, isolateRef, threadRef);
 
-        String jsonData = libyamlscript.load_ys_to_json(threadRef.getValue(), ysCode);
+        String jsonData = libys.load_ys_to_json(threadRef.getValue(), ysCode);
 
-        int result = libyamlscript.graal_tear_down_isolate(threadRef.getValue());
+        int result = libys.graal_tear_down_isolate(threadRef.getValue());
         if (result != 0) throw new RuntimeException("Failed to tear down isolate");
 
         return jsonData;

@@ -8,7 +8,7 @@
 *.dwarf
 /shard.lock
 # Don't accidentally commit shared library files
-libyamlscript.so*
+libys.so*
 # Shell scripts that are for development only
 run_example.sh
 # Logs and other temporary files

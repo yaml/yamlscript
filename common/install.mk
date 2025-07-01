@@ -6,7 +6,7 @@ ROOT := $(shell \
 YAMLSCRIPT_VERSION := 0.1.97
 
 YS := $(wildcard ys)
-LIBYAMLSCRIPT := $(firstword $(wildcard libyamlscript.*))
+LIBYS := $(firstword $(wildcard libys.*))
 
 PREFIX ?= /usr/local
 
@@ -16,10 +16,10 @@ ifneq (,$(YS))
 	cp -pP ys* $(PREFIX)/bin/
 	@echo 'Installed $(PREFIX)/bin/$(YS)' \
 		'- version $(YAMLSCRIPT_VERSION)'
-else ifneq (,$(LIBYAMLSCRIPT))
+else ifneq (,$(LIBYS))
 	mkdir -p $(PREFIX)/lib
-	cp -pP libyamlscript* $(PREFIX)/lib/
-	@echo 'Installed $(PREFIX)/lib/$(LIBYAMLSCRIPT)' \
+	cp -pP libys* $(PREFIX)/lib/
+	@echo 'Installed $(PREFIX)/lib/$(LIBYS)' \
 		'- version $(YAMLSCRIPT_VERSION)'
 else
 	$(error Weird! Nothing to install in this directory.)

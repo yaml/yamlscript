@@ -64,7 +64,7 @@ This is thanks to the [GraalVM](https://www.graalvm.org/) project's
 which can compile anything compiled to jar files into a standalone native binary
 executable or shared library.
 
-This is how the `ys` binary and the `libyamlscript.so` shared library are
+This is how the `ys` binary and the `libys.so` shared library are
 created.
 
 !!! note

@@ -1,4 +1,4 @@
-yamlscript/libyamlscript
+yamlscript/libys
 ========================
 
 Build the YS compiler into a shared library

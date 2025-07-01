@@ -1,7 +1,7 @@
 package yamlscript
 
-// #cgo LDFLAGS: -lyamlscript.0.1.97
-// #include <libyamlscript.0.1.97.h>
+// #cgo LDFLAGS: -lys.0.1.97
+// #include <libys.0.1.97.h>
 // #include <stdlib.h>
 import "C"
 import (
@@ -36,7 +36,7 @@ func init() {
 func Load(input string) (data any, err error) {
 	cs := C.CString(input)
 
-	// Call 'load_ys_to_json' function in libyamlscript shared library:
+	// Call 'load_ys_to_json' function in libys shared library:
 	data_json := C.GoString(C.load_ys_to_json(C.longlong(uintptr(isolatethread)), cs))
 	C.free(unsafe.Pointer(cs))
 
@@ -47,7 +47,7 @@ func Load(input string) (data any, err error) {
 		return
 	}
 
-	// Check for libyamlscript error in JSON response:
+	// Check for libys error in JSON response:
 	if error_json, ok := resp["error"]; ok {
 		err = errors.New(error_json.(map[string]any)["cause"].(string))
 		return
@@ -56,7 +56,7 @@ func Load(input string) (data any, err error) {
 	// Get the response object from evaluating the YAMLScript string:
 	var ok bool
 	if data, ok = resp["data"]; !ok {
-		err = errors.New("unexpected response from 'libyamlscript'")
+		err = errors.New("unexpected response from 'libys'")
 	}
 
 	return

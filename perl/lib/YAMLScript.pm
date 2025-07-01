@@ -12,20 +12,20 @@ use Cpanel::JSON::XS ();
 
 our $VERSION = '0.1.97';
 
-our $libyamlscript_version = $VERSION;
+our $libys_version = $VERSION;
 
 
 #------------------------------------------------------------------------------
-# libyamlscript FFI setup:
+# libys FFI setup:
 #------------------------------------------------------------------------------
 
-# Find the proper libyamlscript version:
-my $libyamlscript = find_libyamlscript();
+# Find the proper libys version:
+my $libys = find_libys();
 
 # Set up FFI functions:
 my $ffi = FFI::Platypus->new(
     api => 2,
-    lib => $libyamlscript,
+    lib => $libys,
 );
 
 my $graal_create_isolate = $ffi->function(
@@ -66,7 +66,7 @@ sub DESTROY {
 #------------------------------------------------------------------------------
 sub load;
 # "load" method wrapper for FFI.
-# It calls the libyamlscript load_ys_to_json function.
+# It calls the libys load_ys_to_json function.
 $ffi->attach(
     [load_ys_to_json => 'load'] =>
     ['sint64', 'string'] => 'string' =>
@@ -81,21 +81,21 @@ $ffi->attach(
         return $resp->{data} if exists $resp->{data};
 
         if ($self->{error} = $resp->{error}) {
-            die "libyamlscript: $self->{error}{cause}";
+            die "libys: $self->{error}{cause}";
         }
 
-        die "Unexpected response from 'libyamlscript'";
+        die "Unexpected response from 'libys'";
     },
 );
 
 #------------------------------------------------------------------------------
 # Helper functions:
 #------------------------------------------------------------------------------
-# Look for the local libyamlscript first, then look for the Alien version:
-sub find_libyamlscript {
-    my $vers = $libyamlscript_version;
+# Look for the local libys first, then look for the Alien version:
+sub find_libys {
+    my $vers = $libys_version;
     my $so = $^O eq 'darwin' ? 'dylib' : 'so';
-    my $name = "libyamlscript.$so.$vers";
+    my $name = "libys.$so.$vers";
     my @paths;
     if (my $path = $ENV{LD_LIBRARY_PATH}) {
         @paths = split /:/, $path;
