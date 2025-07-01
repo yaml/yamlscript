@@ -52,7 +52,7 @@ Currently there are working libraries for:
 * [Rust](https://crates.io/crates/yamlscript)
 
 Install these libraries like you would any other library for your language.
-You must also install the matching version of the `libyamlscript.so` shared
+You must also install the matching version of the `libys.so` shared
 library.
 See [Installing YS](install.md) for more info.
 

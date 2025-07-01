@@ -21,7 +21,7 @@ install:: $(LIBYS-DEPS)
 
 realclean::
 	$(RM) -r lib/
-	$(RM) src/libyamlscript/Core.class
+	$(RM) src/libys/Core.class
 
 test:: $(LIBYS-SO-FQNP)
 	ls -lh lib

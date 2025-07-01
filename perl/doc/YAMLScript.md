@@ -43,8 +43,8 @@ the box.
 
 Even though YAMLScript compiles to Clojure, and Clojure compiles to Java, there
 is no dependency on Java or the JVM.
-YAMLScript is compiled to a native shared library (`libyamlscript.so`) that can
-be used by any programming language that can load shared libraries.
+YAMLScript is compiled to a native shared library (`libys.so`) that can be used
+by any programming language that can load shared libraries.
 
 To see the Clojure code that YAMLScript compiles to, you can use the YAMLScript
 command line utility, `ys`, to run:
@@ -102,7 +102,7 @@ You can install this module like any other Perl module:
 cpanm YAMLScript
 ```
 
-but you will need to have a system install of `libyamlscript.so`.
+but you will need to have a system install of `libys.so`.
 
 One simple way to do that is with:
 
@@ -111,7 +111,7 @@ curl https://yamlscript.org/install | bash
 ```
 
 Note: The above command will install the latest version of the YAMLScript
-command line utility, `ys`, and the shared library, `libyamlscript.so`, into
+command line utility, `ys`, and the shared library, `libys.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
 
 See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.

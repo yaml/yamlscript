@@ -30,8 +30,8 @@ GO-ROOT := $(LOCAL-CACHE)/go$(GO-VER)
 GO-BIN := $(GO-ROOT)/bin
 GO-INSTALLED := $(GO-BIN)/go
 
-export CGO_CFLAGS := -I $(ROOT)/libyamlscript/lib
-export CGO_LDFLAGS := -L $(ROOT)/libyamlscript/lib
+export CGO_CFLAGS := -I $(ROOT)/libys/lib
+export CGO_LDFLAGS := -L $(ROOT)/libys/lib
 
 unexport GOROOT GOPATH GOBIN GOMODCACHE
 export GOROOT := $(GO-ROOT)

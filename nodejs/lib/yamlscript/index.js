@@ -7,7 +7,7 @@ const fs = require('fs');
 const os = require('os');
 
 function defineForeignFunctionInterface() {
-  let libPath = findLibyamlscriptPath();
+  let libPath = findLibysPath();
 
   return ffi.Library(libPath, {
     'graal_create_isolate': ['int', ['pointer', 'pointer', 'pointer']],
@@ -18,14 +18,14 @@ function defineForeignFunctionInterface() {
 
 class YAMLScript {
   constructor(config = {}) {
-    this.libyamlscript = defineForeignFunctionInterface();
+    this.libys = defineForeignFunctionInterface();
     this.isolatethread = ref.NULL_POINTER;
 
 //    console.log(
 //      "JS constructor - Isolate thread pointer before graal_create_isolate:",
 //      this.isolatethread.deref());
 
-    let rc = this.libyamlscript.graal_create_isolate(
+    let rc = this.libys.graal_create_isolate(
       null,
       null,
       this.isolatethread,
@@ -46,7 +46,7 @@ class YAMLScript {
 //    console.log('JS load - input:', input);
 //    console.log('JS load - isolatethread:', this.isolatethread.deref());
 
-    let dataJson = this.libyamlscript.load_ys_to_json(
+    let dataJson = this.libys.load_ys_to_json(
       this.isolatethread.deref(),
       input,
     );
@@ -62,14 +62,14 @@ class YAMLScript {
     }
 
     if (!('data' in resp)) {
-      throw new Error("Unexpected response from 'libyamlscript'");
+      throw new Error("Unexpected response from 'libys'");
     }
 
     return resp.data;
   }
 
   close() {
-    let ret = this.libyamlscript.graal_tear_down_isolate(
+    let ret = this.libys.graal_tear_down_isolate(
       this.isolatethread.deref(),
     );
 
@@ -79,12 +79,12 @@ class YAMLScript {
   }
 }
 
-// Helper function to find the libyamlscript shared library path
-function findLibyamlscriptPath() {
+// Helper function to find the libys shared library path
+function findLibysPath() {
   let soExtension = os.platform() === 'linux' ? 'so' : 'dylib';
-  let libyamlscriptName = `libyamlscript.${soExtension}.${yamlscriptVersion}`;
+  let libysName = `libys.${soExtension}.${yamlscriptVersion}`;
 
-//  console.log('JS - libyamlscriptName:', libyamlscriptName);
+//  console.log('JS - libysName:', libysName);
 
   let searchPaths = process.env.LD_LIBRARY_PATH
     ? process.env.LD_LIBRARY_PATH.split(':')
@@ -92,17 +92,17 @@ function findLibyamlscriptPath() {
   searchPaths.push('/usr/local/lib', path.join(os.homedir(), '.local', 'lib'));
 
   for (let p of searchPaths) {
-    let fullPath = path.join(p, libyamlscriptName);
+    let fullPath = path.join(p, libysName);
     if (fs.existsSync(fullPath)) {
 
-//      console.log('JS - libyamlscript full path:', fullPath);
+//      console.log('JS - libys full path:', fullPath);
 
       return fullPath;
     }
   }
 
   throw new Error(
-`Shared library file '${libyamlscriptName}' not found
+`Shared library file '${libysName}' not found
 Try: curl https://yamlscript.org/install | VERSION=${yamlscriptVersion} LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript`);
 }

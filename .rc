@@ -8,7 +8,7 @@ YAMLSCRIPT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd -P)
 [[ :$LD_LIBRARY_PATH: == *:"$YAMLSCRIPT_ROOT/install/lib":* ]] ||
   LD_LIBRARY_PATH=$YAMLSCRIPT_ROOT/install/lib:$PATH
 
-# XXX This goes away after perl binding to libyamlscript is implemented.
+# XXX This goes away after perl binding to libys is implemented.
 [[ :$PATH: == *:"$YAMLSCRIPT_ROOT/perl/bin":* ]] ||
   PATH=$YAMLSCRIPT_ROOT/perl/bin:$PATH
 

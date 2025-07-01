@@ -98,7 +98,7 @@ its concise, powerful syntax.
 YS offers you these powers but without the need for Lisp syntax or a JVM.
 
 YS is compiled to the `ys` standalone native binary executable, and to the
-`libyamlscript` shared library, for [common operating systems / architectures](
+`libys` shared library, for [common operating systems / architectures](
 https://github.com/yaml/yamlscript/releases/).
 
 This shared library can be bound to almost all modern  programming languages as

@@ -38,7 +38,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - go/yamlscript.go
     - java/Makefile
     - java/src/main/java/org/yamlscript/yamlscript/YAMLScript.java
-    - julia/src/libyamlscript.jl
+    - julia/src/libys.jl
     - nodejs/lib/yamlscript/index.js
     - perl-alien/alienfile
     - perl-alien/lib/Alien/YAMLScript.pm
@@ -66,20 +66,21 @@ vo =: v-old.str/replace(/\./ '\\.')
     - clojure/deps.edn
     - clojure/project.clj
     - core/project.clj
-    - libyamlscript/deps.edn
-    - libyamlscript/project.clj
+    - libys/deps.edn
+    - libys/project.clj
     - ys/deps.edn
     - ys/project.clj
     - ys/share/ys-0.bash
 
   - regx:: "(yamlscript\/core.*)${vp}(.*)"
     file:
-    - libyamlscript/project.clj
+    - libys/project.clj
     - ys/project.clj
 
   - regx:: "(YS.*)${vp}(.*)"
     file:
     - blog/2023-12-05.md
+    - blog/2025-06-21.md
 
   - regx:: "(yamlscript\/yamlscript.*)${vp}(.*)"
     file:

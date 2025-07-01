@@ -1,7 +1,7 @@
 // Copyright 2023-2025 Ingy dot Net
 // This code is licensed under MIT license (See License for details)
 
-package libyamlscript;
+package libys;
 
 import org.graalvm.nativeimage.c.function.CEntryPoint;
 import org.graalvm.nativeimage.c.type.CCharPointer;
@@ -20,7 +20,7 @@ public final class API {
 
         debug("API - java input string: " + ys);
 
-        String json = libyamlscript.core.loadYsToJson(ys);
+        String json = libys.core.loadYsToJson(ys);
 
         debug("API - java response string: " + json);
 

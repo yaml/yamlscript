@@ -15,7 +15,7 @@
       error (throw (Exception. (error "cause")))
       data data
       :else (throw
-              (Exception. "Unexpected response from 'libyamlscript'")))))
+              (Exception. "Unexpected response from 'libys'")))))
 
 (comment
   )

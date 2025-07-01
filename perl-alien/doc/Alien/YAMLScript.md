@@ -1,7 +1,7 @@
 Alien::YAMLScript
 =================
 
-Find or install libyamlscript
+Find or install libys
 
 
 ## Synopsis
@@ -25,8 +25,7 @@ Expect things to change.
 ## Description
 
 This [Alien](https://metacpan.org/pod/Alien) module provides access to the
-libyamlscript shared library. You are unlikely to need to use this module
-directly.
+libys shared library. You are unlikely to need to use this module directly.
 See [YAMLScript](https://metacpan.org/pod/YAMLScript) for a more likely
 entrypoint.
 

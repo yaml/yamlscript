@@ -36,7 +36,7 @@ You can install this module like any other Go module:
 $ go get github.com/yaml/yamlscript-go@v0.1.97
 ```
 
-but you will need to have a system install of `libyamlscript.so`.
+but you will need to have a system install of `libys.so`.
 
 One simple way to do that is with:
 
@@ -45,7 +45,7 @@ $ curl https://yamlscript.org/install | bash
 ```
 
 > Note: The above command will install the latest version of the YAMLScript
-command line utility, `ys`, and the shared library, `libyamlscript.so`, into
+command line utility, `ys`, and the shared library, `libys.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
 
 See <https://yamlscript.org/doc/install/> for more info.

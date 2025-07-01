@@ -187,7 +187,7 @@ executable file.
 This means that <u>No Java or JVM</u> installation is required to use YS, and
 startup/execution speed is very fast.
 
-YS also produces the `libyamlscript.so` shared library.
+YS also produces the `libys.so` shared library.
 It has [binding modules for 10 programming languages](doc/bindings.md) including
 Go, JavaScript, Python and Rust, with many more on the way.
 These modules can be used in your programs to load normal YAML files as well as

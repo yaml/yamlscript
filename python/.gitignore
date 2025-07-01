@@ -1,7 +1,7 @@
 /.venv/
 /.eggs/
 __pycache__/
-/libyamlscript.so
+/libys.so
 /.long_description.md
 /MANIFEST.in
 /dist/

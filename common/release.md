@@ -1,5 +1,5 @@
 <!-- NOTE: Leave these long lines alone. Don't wrap. -->
-[YS](https://yamlscript.org) publishes binary releases for the `ys` command line tool and for the `libyamlscript` shared library.
+[YS](https://yamlscript.org) publishes binary releases for the `ys` command line tool and for the `libys` shared library.
 The following architectures are currently supported:
 
 * Linux / Intel and ARM

@@ -44,7 +44,7 @@ You can install this package like any other Julia package:
 $ julia --project=. -e 'using Pkg; Pkg.add("YAMLScript")'
 ```
 
-but you will need to have a system install of `libyamlscript.so`.
+but you will need to have a system install of `libys.so`.
 
 One simple way to do that is with:
 
@@ -53,7 +53,7 @@ $ curl https://yamlscript.org/install | bash
 ```
 
 > Note: The above command will install the latest version of the YAMLScript
-command line utility, `ys`, and the shared library, `libyamlscript.so`, into
+command line utility, `ys`, and the shared library, `libys.so`, into
 `~/local/bin` and `~/.local/lib` respectively.
 You may need to add this install directory to `LD_LIBRARY_PATH`.
 

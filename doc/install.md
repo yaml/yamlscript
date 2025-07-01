@@ -6,7 +6,7 @@ talk: 0
 YS has 3 main things you might want to install:
 
 1. The `ys` compiler, loader and runner command.
-2. The `libyamlscript.so` shared library needed by a YS loader library for your
+2. The `libys.so` shared library needed by a YS loader library for your
    particular programming language.
 3. A [YS loader library](bindings.md#currently-available-libraries) for your
    particular programming language, like Python, Rust, NodeJS, etc.
@@ -23,12 +23,12 @@ brew tap yaml/yamlscript
 brew install ys
 ```
 
-Homebrew support for installing `libyamlscript` is coming soon.
+Homebrew support for installing `libys` is coming soon.
 
 
-### Quick Install Script for `ys` and `libyamlscript`
+### Quick Install Script for `ys` and `libys`
 
-You can install both `ys` and `libyamlscript` with a single CLI command, where:
+You can install both `ys` and `libys` with a single CLI command, where:
 
 * `VERSION` defaults to the latest YS version.
 * `PREFIX` defaults to `$HOME/.local`.
@@ -46,7 +46,7 @@ $ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
 For the `ys` command you'll need to have `PREFIX/bin` in your `PATH`, but the
 install script will tell you that.
 
-For `libyamlscript`, unless you use the default `PREFIX` you'll need to add
+For `libys`, unless you use the default `PREFIX` you'll need to add
 `PREFIX/lib` to your `LD_LIBRARY_PATH`.
 
 !!! note "An even shorter command to install `ys`"
@@ -88,7 +88,7 @@ All the binary pre-built release files are
 
 ### Build a Release from Source
 
-You can also easily build and install `ys` and `libyamlscript` from source:
+You can also easily build and install `ys` and `libys` from source:
 
 * Download the "Source code" release file.
 * Expand the file with `$ tar xf <release-file>`.
@@ -125,12 +125,12 @@ languages:
 
 Install the library you want using the normal library installer for your
 language.
-Then install the matching version of the `libyamlscript` shared library as
+Then install the matching version of the `libys` shared library as
 described above.
 
 !!! note
 
     Currently when you install a YS loader library for your
-    particular programming language you must also install the `libyamlscript`
+    particular programming language you must also install the `libys`
     shared library of the **exact same version**.
     Fortunately this is simple.

@@ -1,6 +1,6 @@
 use alienfile;
 
-my $libyamlscript_version = '0.1.97';
+my $libys_version = '0.1.97';
 
 # Always use a share install
 # We cannot use a system install, because we need to know exactly
@@ -18,7 +18,7 @@ share {
         github_user  => 'yaml',
         github_repo  => 'yamlscript',
         asset        => 1,
-        asset_name   => qr/^libyamlscript-\Q$libyamlscript_version\E-$os-$arch/,
+        asset_name   => qr/^libys-\Q$libys_version\E-$os-$arch/,
         asset_format => 'tar.xz',
     );
 

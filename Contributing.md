@@ -95,10 +95,9 @@ Here's what's in the non-binding directories:
   This is where the YAMLScript compiler and runtime code live.
   It is the primary directory involved in creating the language.
 
-* `libyamlscript/`
+* `libys/`
 
-  This directory is responsible for building the `libyamlscript.so` shared
-  library.
+  This directory is responsible for building the `libys.so` shared library.
   The shared library is what all the language binding modules bind to.
 
 * `sample/`

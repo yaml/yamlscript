@@ -8,7 +8,7 @@
 # commands.
 #
 # This script only assumes you have bash, python3 and curl
-# It installs a local libyamlscript.so library and yamlscript.py module.
+# It installs a local libys.so library and yamlscript.py module.
 
 [[ $RERUN ]] || { RERUN=1 bash "$0" 2>&1 | tee "$0.txt"; exit; }
 

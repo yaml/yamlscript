@@ -83,7 +83,7 @@ These rules should be compatible with semver rules.
 * `<prefix>/bin/ys` (symlink)
 * `<prefix>/bin/ys-0` (symlink)
 * `<prefix>/bin/ys-0.1.97`
-* `<prefix>/lib/libyamlscript.so-0.1.97`
+* `<prefix>/lib/libys.so-0.1.97`
 
 
 ### New v1 naming
@@ -92,7 +92,7 @@ These rules should be compatible with semver rules.
 * `<prefix>/bin/ys1` (symlink)
 * `<prefix>/bin/ys-v1` (symlink)
 * `<prefix>/bin/ys-1.2.3`
-* `<prefix>/lib/libyamlscript.so-1`
+* `<prefix>/lib/libys.so-1`
 
 When v1 is final stable, we just need to match the major version.
 
@@ -123,7 +123,7 @@ This scheme is compatible with semver and ever increasing versions.
 * `<prefix>/bin/ys2a` (symlink)
 * `<prefix>/bin/ys-2a` (symlink)
 * `<prefix>/bin/ys-2.0.0-alpha.0.1`
-* `<prefix>/lib/libyamlscript.so-2.0.0-alpha.0.1`
+* `<prefix>/lib/libys.so-2.0.0-alpha.0.1`
 
 
 ### v2 shebangs
