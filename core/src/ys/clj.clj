@@ -8,10 +8,14 @@
 (ns ys.clj
   (:refer-clojure :only [intern]))
 
+(intern 'ys.clj 'atom      clojure.core/atom)
 (intern 'ys.clj 'compile   clojure.core/compile)
 (intern 'ys.clj 'eval      clojure.core/eval)
 (intern 'ys.clj 'load      clojure.core/load)
 (intern 'ys.clj 'load-file clojure.core/load-file)
 (intern 'ys.clj 'print     clojure.core/print)
 (intern 'ys.clj 'read      clojure.core/read)
+(intern 'ys.clj 'replace   clojure.core/replace)
+(intern 'ys.clj 'reverse   clojure.core/reverse)
+(intern 'ys.clj 'set       clojure.core/set)
 (intern 'ys.clj 'use       clojure.core/use)

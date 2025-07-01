@@ -27,8 +27,8 @@
                             eval
                             print
                             read
-                            reverse
                             replace
+                            reverse
                             set]))
 
 
