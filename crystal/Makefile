@@ -11,6 +11,11 @@ BASE := $(ROOT)/crystal
 LIBYS-SO-PATH := $(ROOT)/libys/lib/$(LIBYS-SO-FQNP)
 BUILD-DEPS := $(LIBYS-SO-PATH)
 
+# Set library path for Crystal compiler
+CRYSTAL-ENV := \
+  LIBRARY_PATH=$(ROOT)/libys/lib \
+  LD_LIBRARY_PATH=$(ROOT)/libys/lib \
+
 #------------------------------------------------------------------------------
 
 build:: build-doc
@@ -22,13 +27,13 @@ test:: test-example test-crystal test-ffi
 endif
 
 test-example: $(BUILD-DEPS)
-	$(CRYSTAL) run examples/simple.cr
+	$(CRYSTAL-ENV) $(CRYSTAL) run examples/simple.cr
 
 test-crystal: $(BUILD-DEPS)
-	$(CRYSTAL) spec
+	$(CRYSTAL-ENV) $(CRYSTAL) spec
 
 test-ffi: $(BUILD-DEPS)
-	$(CRYSTAL) run test/ffi.cr
+	$(CRYSTAL-ENV) $(CRYSTAL) run test/ffi.cr
 
 release:
 	$(ROOT)/util/release-crystal
