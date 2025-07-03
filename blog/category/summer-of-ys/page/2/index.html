@@ -2151,6 +2151,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#tmtowtdi-for-ys-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      TMTOWTDI for YS Expressions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#loops-and-strings" class="md-nav__link">
     <span class="md-ellipsis">
       Loops and Strings
@@ -2470,6 +2479,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#tmtowtdi-for-ys-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      TMTOWTDI for YS Expressions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#loops-and-strings" class="md-nav__link">
     <span class="md-ellipsis">
       Loops and Strings
@@ -2537,6 +2555,71 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <header class="md-typeset">
         <h1 id="summer-of-ys">Summer-of-YS<a class="headerlink" href="#summer-of-ys" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-06-07 00:00:00+00:00">June 7, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              3 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="tmtowtdi-for-ys-expressions"><a class="toclink" href="../../../../2025-06-07/tmtowtdi-for-ys-expressions/">TMTOWTDI for YS Expressions</a></h2>
+<p>Like I said before, in YS, There's More Than One Way To Do It.</p>
+<p>This is especially true for YS expressions.</p>
+<p>Later on you'll learn that YS is a Lisp in disguise.
+In Lisp, an expression is a list consisting of a function and its arguments
+inside a set of parentheses.</p>
+<p>Consider this Python code:</p>
+<div class="highlight"><pre><span></span><code><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;World&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello, &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>In a Lisp, this would be written as:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nv">def</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="s">&quot;World&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">println</span><span class="w"> </span><span class="p">(</span><span class="nv">str</span><span class="w"> </span><span class="s">&quot;Hello, &quot;</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="s">&quot;!&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>In YS, this <em>could</em> be written as:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;World&#39;</span>
+<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str(&#39;Hello, &#39; name &#39;!&#39;)</span>
+</code></pre></div>
+<p>I say <em>could</em> because... TMTOWTDI!</p>
+<p>Today I'm going to show you many of the ways to DO IT in YS.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../../../2025-06-07/tmtowtdi-for-ys-expressions/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">

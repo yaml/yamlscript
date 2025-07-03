@@ -2680,11 +2680,11 @@ every language that has a need for it.</p>
 <p>With YS, you do the same:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>yamlscript
 </code></pre></div>
-<p>But you also need to install the <code>libyamlscript</code> shared library.</p>
+<p>But you also need to install the <code>libys</code> shared library.</p>
 <p>You can do that with:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </code></pre></div>
-<p>That will install the latest version of <code>libyamlscript</code> for your platform in
+<p>That will install the latest version of <code>libys</code> for your platform in
 <code>/usr/local/lib</code>.
 You'll need to have root access to do this.</p>
 <p>If you want to install it somewhere else, you can set the <code>PREFIX</code> option:</p>
@@ -2695,7 +2695,7 @@ to it:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>~/ys/lib
 </code></pre></div>
 <p>Eventually we may package the yamlscript.py module with wheels (binary assets)
-for libyamlscript, but for now you'll need to install it yourself.</p>
+for libys, but for now you'll need to install it yourself.</p>
 <p>If you're a polyglot like me, at least you only have to install it once. :- )</p>
 <h3 id="the-holy-graal">The Holy Graal<a class="headerlink" href="#the-holy-graal" title="Permanent link">🔗</a></h3>
 <p>This magic is all possible because of the <a href="https://www.graalvm.org/">GraalVM&nbsp;<img src="/image/external-link.svg"
@@ -2705,7 +2705,7 @@ for libyamlscript, but for now you'll need to install it yourself.</p>
 project.
 Not only does GraalVM's <code>native-image</code> tool compile to binary executables, it
 also can compile to shared libraries.</p>
-<p>YS generates and publishes the <code>libyamlscript</code> shared library and then offers
+<p>YS generates and publishes the <code>libys</code> shared library and then offers
 binding modules for it in many languages.</p>
 <hr />
 <p>I hope you are starting to see the power of YS.

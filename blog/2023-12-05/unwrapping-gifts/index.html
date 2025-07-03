@@ -2559,7 +2559,7 @@ You don't even have YS installed yet!</p>
      alt="External link">
 </a>.
 What a coincidence!</p>
-<p>At he moment there are only releases published for Linux x86_64 and macOS
+<p>At he moment there are only releases published for Linux <code>x86_64</code> and macOS
 aarch64.
 If you happen to be running on one of those platforms, you can run the following
 command to install the YS CLI, <code>ys</code>:</p>
@@ -2580,7 +2580,7 @@ it as root in which case it defautlls to <code>/usr/local/bin</code>.</p>
 </code></pre></div>
 <p>Wherever you install it, make sure that the <code>$PREFIX/bin</code> directory is in your
 <code>PATH</code> environment variable.</p>
-<p>YS also provides a release for <code>libyamlscript.so</code>, the YS shared library.
+<p>YS also provides a release for <code>libys.so</code>, the YS shared library.
 You can install it like above but with (some variation of):</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </code></pre></div>
@@ -2600,7 +2600,7 @@ $<span class="w"> </span>make<span class="w"> </span>install
 or
 $<span class="w"> </span>make<span class="w"> </span>install<span class="w"> </span><span class="nv">PREFIX</span><span class="o">=</span>...
 </code></pre></div>
-<p>The <code>make install</code> command will install both <code>ys</code> and <code>libyamlscript.so</code> into
+<p>The <code>make install</code> command will install both <code>ys</code> and <code>libys.so</code> into
 <code>$PREFIX/bin</code> and <code>$PREFIX/lib</code> respectively.</p>
 <p>YS has a pretty sophisticated build system, built around GNU Make.
 Even though the build uses Java, Clojure and GraalVM, you don't need to install
@@ -2646,8 +2646,8 @@ Options:
   -S, --stack-trace        Print full stack trace for errors
   -x, --xtrace             Print each expression before evaluation
 
-      --install            Install the libyamlscript shared library
-      --upgrade            Upgrade both ys and libyamlscript
+      --install            Install the libys shared library
+      --upgrade            Upgrade both ys and libys
 
       --version            Print version and exit
   -h, --help               Print this help and exit

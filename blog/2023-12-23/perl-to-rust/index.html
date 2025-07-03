@@ -2679,7 +2679,7 @@ YS program as a string and returns the result as a Perl data structure.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>cpanm<span class="w"> </span>YAMLScript
 </code></pre></div>
 <p>Also like the Python binding, the Perl module (and all the other bindings)
-currently requires that you install <code>libyamlscript.so</code> yourself.</p>
+currently requires that you install <code>libys.so</code> yourself.</p>
 <p>You can do this easily with:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </code></pre></div>
@@ -2723,8 +2723,8 @@ The <code>load</code> function is returning a JSON string, but it should be retu
 Rust data structure for whatever was under the <code>"data"</code> JSON key.
 I'm sure @ethiraric will fix it soon!!!</p>
 <p>It's actually fortunate that the Rust binding is not working yet, because it
-shows us <em>how</em> libyamlscript actually works.</p>
-<p>The libyamlscript library currently has a single function that takes a
+shows us <em>how</em> libys actually works.</p>
+<p>The libys library currently has a single function that takes a
 YS string and returns a JSON string.
 Internally it compiles the YS to Clojure and evaluates the code using
 SCI.

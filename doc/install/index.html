@@ -1188,9 +1188,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-install-script-for-ys-and-libyamlscript" class="md-nav__link">
+  <a href="#quick-install-script-for-ys-and-libys" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Install Script for ys and libyamlscript
+      Quick Install Script for ys and libys
     </span>
   </a>
   
@@ -2471,9 +2471,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-install-script-for-ys-and-libyamlscript" class="md-nav__link">
+  <a href="#quick-install-script-for-ys-and-libys" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Install Script for ys and libyamlscript
+      Quick Install Script for ys and libys
     </span>
   </a>
   
@@ -2569,7 +2569,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>YS has 3 main things you might want to install:</p>
 <ol>
 <li>The <code>ys</code> compiler, loader and runner command.</li>
-<li>The <code>libyamlscript.so</code> shared library needed by a YS loader library for your
+<li>The <code>libys.so</code> shared library needed by a YS loader library for your
    particular programming language.</li>
 <li>A <a href="../bindings/#currently-available-libraries">YS loader library</a> for your
    particular programming language, like Python, Rust, NodeJS, etc.</li>
@@ -2580,9 +2580,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="highlight"><pre><span></span><code>brew<span class="w"> </span>tap<span class="w"> </span>yaml/yamlscript
 brew<span class="w"> </span>install<span class="w"> </span>ys
 </code></pre></div>
-<p>Homebrew support for installing <code>libyamlscript</code> is coming soon.</p>
-<h3 id="quick-install-script-for-ys-and-libyamlscript">Quick Install Script for <code>ys</code> and <code>libyamlscript</code><a class="headerlink" href="#quick-install-script-for-ys-and-libyamlscript" title="Permanent link">🔗</a></h3>
-<p>You can install both <code>ys</code> and <code>libyamlscript</code> with a single CLI command, where:</p>
+<p>Homebrew support for installing <code>libys</code> is coming soon.</p>
+<h3 id="quick-install-script-for-ys-and-libys">Quick Install Script for <code>ys</code> and <code>libys</code><a class="headerlink" href="#quick-install-script-for-ys-and-libys" title="Permanent link">🔗</a></h3>
+<p>You can install both <code>ys</code> and <code>libys</code> with a single CLI command, where:</p>
 <ul>
 <li><code>VERSION</code> defaults to the latest YS version.</li>
 <li><code>PREFIX</code> defaults to <code>$HOME/.local</code>.</li>
@@ -2597,7 +2597,7 @@ $<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/inst
 </code></pre></div></p>
 <p>For the <code>ys</code> command you'll need to have <code>PREFIX/bin</code> in your <code>PATH</code>, but the
 install script will tell you that.</p>
-<p>For <code>libyamlscript</code>, unless you use the default <code>PREFIX</code> you'll need to add
+<p>For <code>libys</code>, unless you use the default <code>PREFIX</code> you'll need to add
 <code>PREFIX/lib</code> to your <code>LD_LIBRARY_PATH</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">An even shorter command to install <code>ys</code></p>
@@ -2633,7 +2633,7 @@ in.
 <li>Or just copy the binary file to the place where you want it.</li>
 </ul>
 <h3 id="build-a-release-from-source">Build a Release from Source<a class="headerlink" href="#build-a-release-from-source" title="Permanent link">🔗</a></h3>
-<p>You can also easily build and install <code>ys</code> and <code>libyamlscript</code> from source:</p>
+<p>You can also easily build and install <code>ys</code> and <code>libys</code> from source:</p>
 <ul>
 <li>Download the "Source code" release file.</li>
 <li>Expand the file with <code>$ tar xf &lt;release-file&gt;</code>.</li>
@@ -2699,12 +2699,12 @@ languages:</p>
 </ul>
 <p>Install the library you want using the normal library installer for your
 language.
-Then install the matching version of the <code>libyamlscript</code> shared library as
+Then install the matching version of the <code>libys</code> shared library as
 described above.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Currently when you install a YS loader library for your
-particular programming language you must also install the <code>libyamlscript</code>
+particular programming language you must also install the <code>libys</code>
 shared library of the <strong>exact same version</strong>.
 Fortunately this is simple.</p>
 </div>
