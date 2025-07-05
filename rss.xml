@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 03 Jul 2025 21:14:16 -0000</pubDate>
-    <lastBuildDate>Thu, 03 Jul 2025 21:14:16 -0000</lastBuildDate>
+    <pubDate>Sat, 05 Jul 2025 03:29:45 -0000</pubDate>
+    <lastBuildDate>Sat, 05 Jul 2025 03:29:45 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,33 @@
     
 
     
+    
+    <item>
+      <title>Exercism Comparisons</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;&lt;a href=&#34;2025-06-27.md&#34;&gt;Last week&lt;/a&gt; I told you about &lt;a href=&#34;https://rosettacode.org/wiki/Category:YAMLScript&#34;&gt;YS on Rosetta Code&lt;/a&gt; and &lt;a href=&#34;2025-07-03.md&#34;&gt;yesterday&lt;/a&gt; I told you about &lt;a href=&#34;https://exercism.org/tracks/yamlscript&#34;&gt;YS on Exercism&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Today I&#39;m going to show you how to compare solutions to the same Rosetta Code
+task using all the Exercism languages!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-04/exercism-comparisons/</link>
+      <pubDate>Fri, 04 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-04/exercism-comparisons/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-04/exercism-comparisons.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>YS Exercism</title>
@@ -57,7 +84,7 @@ tracks for over 75 languages!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-03/ys-exercism/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-03/ys-exercism.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-03/ys-exercism.png" type="image/png" length="38346" />
       
     </item>
     
