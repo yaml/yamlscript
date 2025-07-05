@@ -58,7 +58,7 @@ clean::
 	  chmod -R u+w $(GOPATH)
 	$(RM) -r $(GOPATH)
 
-sysclean:: clean
+distclean:: clean
 	$(RM) -r $(LOCAL-CACHE)/go*
 
 

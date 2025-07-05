@@ -287,4 +287,4 @@ distclean-%: %
 	$(RM) -r .calva/ .clj-kondo/.cache .lsp/
 
 sysclean:: realclean
-	$(RM) -r $(LOCAL-ROOT)
+	$(RM) -r $(ROOT)/.cache/
