@@ -77,7 +77,7 @@ setup() {
   YS_GH_REPO=yamlscript
   YS_GH_USER=${YS_GH_USER-}
   YS_GH_TOKEN=${YS_GH_TOKEN-}
-  YS_GH_TARGET=main
+  YS_GH_TARGET=v0
 
   [[ $YS_GH_USER && $YS_GH_TOKEN ]] ||
     die "Error: YS_GH_USER and YS_GH_TOKEN must be set in the environment."
