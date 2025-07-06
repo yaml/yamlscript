@@ -2498,7 +2498,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              3 min read
+                              4 min read
                             
                           </span>
                         </div>
@@ -2584,7 +2584,7 @@ A common case for this is the <code>reduce</code> function.</p>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">conj(primes number)</span>
 </code></pre></div>
 <p>Let's run it:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>primes.ys<span class="w"> </span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>primes.ys
 <span class="o">[</span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">13</span><span class="w"> </span><span class="m">17</span><span class="w"> </span><span class="m">19</span><span class="w"> </span><span class="m">23</span><span class="w"> </span><span class="m">29</span><span class="w"> </span><span class="m">31</span><span class="w"> </span><span class="m">37</span><span class="w"> </span><span class="m">41</span><span class="w"> </span><span class="m">43</span><span class="w"> </span><span class="m">47</span><span class="w"> </span><span class="m">53</span><span class="w"> </span><span class="m">59</span><span class="w"> </span><span class="m">61</span><span class="w"> </span><span class="m">67</span><span class="w"> </span><span class="m">71</span><span class="w"> </span><span class="m">73</span><span class="w"> </span><span class="m">79</span><span class="w"> </span><span class="m">83</span><span class="w"> </span><span class="m">89</span><span class="w"> </span><span class="m">97</span><span class="o">]</span>
 </code></pre></div>
 <p>The <code>reduce</code> function takes 3 arguments:</p>
@@ -2660,11 +2660,17 @@ blueblueblueblueblueblueblueblueblueblue
 </code></pre></div>
 <p>You can use this for one liners that take a file and also a <code>-e</code> expression
 argument:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: rand-nth(_)&#39;</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://gist.github.com/gsscoder/e0e905fbef23376aabfa695d85d8ef5c/raw<span class="o">)</span>
-Lawrence
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-sL<span class="w"> </span>https://gist.github.com/gsscoder/e0e905fbef23376aabfa695d85d8ef5c/raw<span class="w"> </span><span class="p">|</span>
+ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: rand-nth(_)&#39;</span><span class="w"> </span>-
+Finnegan
 </code></pre></div>
-<p>The <code>-e</code> expression is always evaluated after the file is evaluated, so <code>_</code>
-is the value of the evaluated file.</p>
+<p><a href="https://gist.github.com/gsscoder/e0e905fbef23376aabfa695d85d8ef5c">https://gist.github.com/gsscoder/e0e905fbef23376aabfa695d85d8ef5c&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> is a JSON
+(aka YAML) file with a sequence of first names; posted as a GitHub Gist.</p>
+<p>Since YS always evaluates the <code>-e</code> expression after the file (<code>-</code> for stdin
+here) is evaluated, <code>_</code> is the value of the evaluated file.</p>
 <hr />
 <p>I hope I remembered all of the places you can use <code>_</code> in YS.</p>
 <p>It's quite possible that YS will have more places to use <code>_</code> in the future.</p>
