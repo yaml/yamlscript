@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 06 Jul 2025 20:24:59 -0000</pubDate>
-    <lastBuildDate>Sun, 06 Jul 2025 20:24:59 -0000</lastBuildDate>
+    <pubDate>Sun, 06 Jul 2025 21:44:28 -0000</pubDate>
+    <lastBuildDate>Sun, 06 Jul 2025 21:44:28 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,36 @@
     
 
     
+    
+    <item>
+      <title>YS Regular Expressions</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;All modern programming languages have regular expressions.&lt;/p&gt;
+&lt;p&gt;YS has them too.&lt;/p&gt;
+&lt;p&gt;Perl was the first modern language to include them as a built-in feature.&lt;/p&gt;
+&lt;p&gt;YS regexes borrow quite a bit from Perl&#39;s, but also behave as functions that
+return matching results (unlike Perl, and more like all the others).&lt;/p&gt;
+&lt;p&gt;Let&#39;s take a look...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-06/ys-regular-expressions/</link>
+      <pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-06/ys-regular-expressions/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-06/ys-regular-expressions.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>The Special Little Symbol</title>
@@ -1044,7 +1074,7 @@ environment variables, and the web, but those are topics for another day.&lt;/p&
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-04/load-and-compose-your-yaml-files/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-04/load-and-compose-your-yaml-files.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-04/load-and-compose-your-yaml-files.png" type="image/png" length="0" />
       
     </item>
     
@@ -1177,7 +1207,7 @@ In other words...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-24/run-a-yaml-file-with-bash/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="0" />
       
     </item>
     
