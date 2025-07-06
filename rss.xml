@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sat, 05 Jul 2025 05:03:50 -0000</pubDate>
-    <lastBuildDate>Sat, 05 Jul 2025 05:03:50 -0000</lastBuildDate>
+    <pubDate>Sun, 06 Jul 2025 03:30:32 -0000</pubDate>
+    <lastBuildDate>Sun, 06 Jul 2025 03:30:32 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,44 @@
     
 
     
+    
+    <item>
+      <title>The Special Little Symbol</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Yesterday I showed you a FizzBuzz solution in YS.
+Here it is again:&lt;/p&gt;
+&lt;p&gt;```yaml
+!YS-v0&lt;/p&gt;
+&lt;p&gt;defn main(n=100):
+  each x (1 .. n): !:say
+    or? _ x:
+      str ((x % 3).! &amp;amp;&amp;amp;&amp;amp; &#39;Fizz&#39;):
+          ((x % 5).! &amp;amp;&amp;amp;&amp;amp; &#39;Buzz&#39;)
+```&lt;/p&gt;
+&lt;p&gt;See that &lt;code&gt;_&lt;/code&gt; sitting there in the middle all by itself?&lt;/p&gt;
+&lt;p&gt;What&#39;s that all about?&lt;/p&gt;
+&lt;p&gt;Well &lt;code&gt;_&lt;/code&gt; is a special symbol in YS, and it means different things in different
+contexts.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-05/the-special-little-symbol/</link>
+      <pubDate>Sat, 05 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-05/the-special-little-symbol/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-05/the-special-little-symbol.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>Exercism Comparisons</title>
@@ -779,7 +817,7 @@ It dispatches on the number of arguments.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-10/where-the-funcs-have-no-name/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-10/where-the-funcs-have-no-name.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-10/where-the-funcs-have-no-name.png" type="image/png" length="None" />
       
     </item>
     
