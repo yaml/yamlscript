@@ -18,6 +18,7 @@
    [yamlscript.externals :as ext]
    [yamlscript.global :as global]
    [yamlscript.util :as util]
+   [ys.fs :as fs]
    [ys.http :as http]
    [ys.ys :as ys])
   (:import java.security.MessageDigest
@@ -742,6 +743,31 @@
    `(and (truey? ~x) (and? ~@xs))))
 
 (defmacro &&& [x & xs] `(and? ~x ~@xs))
+
+
+;;------------------------------------------------------------------------------
+;; File system functions
+;;------------------------------------------------------------------------------
+(intern 'ys.std 'fs-d fs/d)
+(intern 'ys.std 'fs-e fs/e)
+(intern 'ys.std 'fs-f fs/f)
+(intern 'ys.std 'fs-l fs/l)
+(intern 'ys.std 'fs-r fs/r)
+(intern 'ys.std 'fs-s fs/s)
+(intern 'ys.std 'fs-w fs/w)
+(intern 'ys.std 'fs-x fs/x)
+(intern 'ys.std 'fs-z fs/z)
+(intern 'ys.std 'fs-abs fs/abs)
+(intern 'ys.std 'fs-abs? fs/abs?)
+(intern 'ys.std 'fs-dirname fs/dirname)
+(intern 'ys.std 'fs-filename fs/filename)
+(intern 'ys.std 'fs-basename fs/basename)
+(intern 'ys.std 'fs-glob fs/glob)
+(intern 'ys.std 'fs-ls fs/ls)
+(intern 'ys.std 'fs-mtime fs/mtime)
+(intern 'ys.std 'fs-rel fs/rel)
+(intern 'ys.std 'fs-rel? fs/rel?)
+(intern 'ys.std 'fs-which fs/which)
 
 
 ;;------------------------------------------------------------------------------
