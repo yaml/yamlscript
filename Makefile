@@ -144,8 +144,8 @@ test-bindings: $(TEST-BINDINGS)
 serve publish:
 	$(MAKE) -C www $@
 
-ifneq (,$(or $s,$(YS_RELEASE_NO_CHECK)))
-release: release-check _release-yamlscript
+ifneq (,$(or $s,$(YS_RELEASE_ID),$(YS_RELEASE_NO_CHECK)))
+release: _release-yamlscript
 else
 release: release-check realclean release-pull _release-yamlscript
 endif

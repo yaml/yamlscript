@@ -44,14 +44,14 @@ last-step =: (ENV.YS_RELEASE_LAST_STEP || steps):N
 
 defn main(old-version=0 new-version=0 start=1):
   ctx =:
-    if dryrun || ENV.RELEASE_ID:
+    if dryrun || ENV.YS_RELEASE_ID:
       then: -{}
       else:
         check-args: old-version new-version start
 
   say: "\nReleasing YS v$new-version at $(ctx.date-time)\n"
 
-  if ENV.RELEASE_ID:
+  if ENV.YS_RELEASE_ID:
     step-9: ctx
     each i (1 .. steps):
       when (i >= start) && (i <= last-step):
@@ -221,7 +221,7 @@ defn step-9(ctx):
 
   run:: make install
 
-  when-not dryrun || ENV.RELEASE_ID:
+  when-not dryrun || ENV.YS_RELEASE_ID:
     shell {:out "release-id.txt"}: "grep '^Release id:' release-$(ctx.new).log"
     run:: cat release-id.txt
 

@@ -6,7 +6,7 @@ set -euo pipefail
 
 main() (
   setup "$@"
-  [[ ${RELEASE_ID-} ]] || git-tag
+  [[ ${YS_RELEASE_ID-} ]] || git-tag
   [[ $id ]] || release
   update "$@"
 )
@@ -15,7 +15,7 @@ update() (
   for RELEASE_TAR_PATH; do
     RELEASE_TAR_FILE=$(basename "$RELEASE_TAR_PATH")
     if [[ $RELEASE_TAR_FILE == *.jar ]]; then
-      if [[ ${RELEASE_ID-} && -z ${REDO-} ]]; then
+      if [[ ${YS_RELEASE_ID-} && -z ${REDO-} ]]; then
         continue
       fi
     else
@@ -94,7 +94,7 @@ setup() {
   YS_GH_API_PATH=repos/$YS_GH_REPO_USER/$YS_GH_REPO/releases
   YS_GH_API_URL=https://api.github.com/$YS_GH_API_PATH
 
-  id=${RELEASE_ID-}
+  id=${YS_RELEASE_ID-}
 }
 
 api-new-release() {
