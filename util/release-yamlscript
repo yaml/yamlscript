@@ -261,7 +261,7 @@ defn step-11(ctx):
 
   run: 'rm -fr website'
   run: 'git worktree add -f website'
-  run: 'git -C website rebase main'
+  run: 'git -C website rebase v0'
   run: 'make -C website/www realclean publish website=live'
 
 
