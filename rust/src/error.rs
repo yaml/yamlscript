@@ -10,7 +10,7 @@ pub enum Error {
     ///
     /// This error is unrecoverable and any further attempt to call any libys function will fail.
     Load(dlopen::Error),
-    /// An error with GraalVM.
+    /// An error with `GraalVM`.
     GraalVM(i32),
     /// An error in the FFI while calling a libys function.
     Ffi(String),
@@ -19,7 +19,7 @@ pub enum Error {
     /// This variant is used when we have successfully resolved the function we want to call in
     /// `libys.so`, but the engine returned an error, that we successfully parsed.
     YAMLScript(LibYSError),
-    /// An error with serde_json while deserializing.
+    /// An error with `serde_json` while deserializing.
     Serde(serde_json::Error),
     /// An error while decoding strings returned from libys.
     Utf8(Utf8Error),

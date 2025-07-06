@@ -1,8 +1,8 @@
 //! Rust binding/API for the libys shared library.
 //!
-//! # Loading a YAMLScript file
+//! # Loading a `YAMLScript` file
 //! The [`YAMLScript::load`] function is the main entrypoint of the library.
-//! It allows loading YAMLScript and returns a JSON object.
+//! It allows loading `YAMLScript` and returns a JSON object.
 //! `serde_json` is used to deserialize the JSON.
 //! One can either use `serde_json::Value` as a return type or a custom `serde::Deserialize`able
 //! type.
@@ -66,16 +66,16 @@ use serde::Deserialize;
 
 use crate::error::LibYSError;
 
-/// The name of the YAMLScript library to load.
+/// The name of the `YAMLScript` library to load.
 const LIBYS_BASENAME: &str = "libys";
 
 /// The version of the yamlscript library this bindings works with.
 const LIBYS_VERSION: &str = "0.1.97";
 
-/// The extension of the YAMLScript library. On Linux, it's a `.so` file.
+/// The extension of the `YAMLScript` library. On Linux, it's a `.so` file.
 #[cfg(target_os = "linux")]
 const LIBYS_EXTENSION: &str = "so";
-/// The extension of the YAMLScript library. On MacOS, it's a `.dylib` file.
+/// The extension of the `YAMLScript` library. On MacOS, it's a `.dylib` file.
 #[cfg(target_os = "macos")]
 const LIBYS_EXTENSION: &str = "dylib";
 // This should be the extension of the library file, but the platform is unsupported.
@@ -89,13 +89,13 @@ compile_error!(
 pub struct YAMLScript {
     /// A handle to the opened dynamic library.
     _handle: Library,
-    /// A GraalVM isolate.
+    /// A `GraalVM` isolate.
     _isolate: *mut void,
-    /// A GraalVM isolate thread.
+    /// A `GraalVM` isolate thread.
     isolate_thread: *mut void,
-    /// Pointer to the function in GraalVM to create the isolate and its thread.
+    /// Pointer to the function in `GraalVM` to create the isolate and its thread.
     _create_isolate_fn: CreateIsolateFn,
-    /// Pointer to the function in GraalVM to free an isolate thread.
+    /// Pointer to the function in `GraalVM` to free an isolate thread.
     tear_down_isolate_fn: TearDownIsolateFn,
     /// Pointer to the `load_ys_to_json` function in libys.
     load_ys_to_json_fn: LoadYsToJsonFn,
@@ -109,7 +109,7 @@ type TearDownIsolateFn = unsafe extern "C" fn(*mut void) -> c_int;
 type LoadYsToJsonFn = unsafe extern "C" fn(*mut void, *const u8) -> *mut i8;
 
 impl YAMLScript {
-    /// Create a new instance of a YAMLScript loader.
+    /// Create a new instance of a `YAMLScript` loader.
     ///
     /// # Errors
     /// This function may return an error if we fail to open the library
@@ -160,7 +160,13 @@ impl YAMLScript {
         let load_ys_to_json_fn: LoadYsToJsonFn =
             unsafe { std::mem::transmute(*load_ys_to_json_fn) };
 
-        let x = unsafe { (create_isolate_fn)(std::ptr::null_mut(), &isolate, &isolate_thread) };
+        let x = unsafe {
+            (create_isolate_fn)(
+                std::ptr::null_mut(),
+                &raw const isolate,
+                &raw const isolate_thread,
+            )
+        };
         if x != 0 {
             return Err(Error::GraalVM(x));
         }
@@ -175,11 +181,11 @@ impl YAMLScript {
         })
     }
 
-    /// Load a YAMLScript string, returning the result deserialized.
+    /// Load a `YAMLScript` string, returning the result deserialized.
     ///
     /// # Errors
     /// This function returns an error if the input string is invalid (contains a nil-byte) or if
-    /// the YAMLScript engine has returned an error.
+    /// the `YAMLScript` engine has returned an error.
     pub fn load<T>(&self, ys: &str) -> Result<T, Error>
     where
         T: serde::de::DeserializeOwned,
@@ -197,7 +203,7 @@ impl YAMLScript {
         }
     }
 
-    /// Load a YAMLScript string, returning the raw buffer from the library.
+    /// Load a `YAMLScript` string, returning the raw buffer from the library.
     ///
     /// # Errors
     /// This function returns an error if the input string is invalid (contains a nil-byte).
