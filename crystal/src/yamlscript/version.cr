@@ -1,3 +1,3 @@
 class YAMLScript
-  VERSION = "0.1.97"
+  VERSION = "0.2.1"
 end

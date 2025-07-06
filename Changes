@@ -1,3 +1,26 @@
+- version: 0.2.1
+  date:    Sun Jul  6 12:05:46 PM PDT 2025
+  changes:
+  - make: Fix bug in Perl Makefile
+  - doc: Update Contributing.md to reference generated files
+  - doc: Version v1 planning
+  - doc: Fix typos in documentation
+  - security: Apply Python requirements dependabot asks
+  - core: Expose ys.fs in place of babashka.fs
+  - core: Build reflection.json from reflection.ys
+  - core: Update Clojure deps
+  - core: Add ys.http to replace babashka.http-client
+  - std: Add 'bash' function
+  - core: Allow _1 _ 2 _3 for %1 %2 %3 in lambdas
+  - core: Allow => as a default case for 'cond'
+  - code: Add a few functions to ys::clj
+  - libys: Change libyamlscript to libys
+  - crystal: Fix library path for reproducible test builds
+  - www: Fix RSS link in HTML
+  - make: Integrate the Makes system into our Makefiles
+  - rust: Fix clippy warnings
+  - std: Support std/fs-* fs functions in v0
+  - make: Switch release branch from main to v0
 - version: 0.1.97
   date:    Wed Jun 11 10:56:55 PM EDT 2025
   changes:
