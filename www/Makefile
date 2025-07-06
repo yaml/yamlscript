@@ -1,14 +1,12 @@
 include ../common/base.mk
-include $(COMMON)/python.mk
-
-export ROOT
+PYTHON-VENV := $(ROOT)/www/.venv
+include $(MAKES)/python.mk
+SHELL-DEPS := $(PYTHON-VENV)
+SHELL-NAME := makes+venv
+include $(MAKES)/shell.mk
+PYTHON-VENV-SETUP := pip install -r requirements.txt
 
 CONFIG := mkdocs.yml
-
-PYTHON-VENV := $(ROOT)/www/.venv
-VENV := source $(PYTHON-VENV)/bin/activate
-export VIRTUAL_ENV := $(PYTHON-VENV)
-export PATH := $(PYTHON-VENV)/bin:$(PATH)
 
 MD-FILES := $(shell find ../doc -name '*.md' | sort)
 MDYS-FILES := $(shell find ../doc src -name '*.mdys' | sort)
@@ -74,7 +72,7 @@ build site:: $(DIRS) $(DEPS)
 	$(RM) -r site
 	git worktree add -f site
 	$(RM) -r site/*
-	$(VENV) && mkdocs build
+	mkdocs build
 	echo $(YS-WWW-DOMAIN) > site/CNAME
 	git -C site add -A
 
@@ -155,10 +153,6 @@ clean::
 
 realclean:: clean
 	$(RM) -r $(PYTHON-VENV)
-
-$(PYTHON-VENV):
-	$(PYTHON) -m venv $@
-	pip install -r requirements.txt
 
 # YS doesn't support !!python tags yet.
 # This hack is a workaround to preserve them.
