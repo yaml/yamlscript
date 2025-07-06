@@ -144,22 +144,23 @@ test-bindings: $(TEST-BINDINGS)
 serve publish:
 	$(MAKE) -C www $@
 
-ifdef s
-release: release-check release-yamlscript
+ifneq (or $s,$(YS_RELEASE_NO_CHECK))
+release: release-check _release-yamlscript
 else
-release: release-check realclean release-pull release-yamlscript
+release: release-check realclean release-pull _release-yamlscript
 endif
 
 release-check:
 ifndef YS_RELEASE_NO_CHECK
-ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
-	$(error Must be on branch 'main' to release)
+ifneq (v0,$(shell git rev-parse --abbrev-ref HEAD))
+	$(error Must be on branch 'v0' to release)
 endif
 ifndef YS_GH_TOKEN
 	$(error YS release requires YS_GH_TOKEN to be set)
 endif
 ifndef YS_GH_USER
 	$(error YS release requires YS_GH_USER to be set)
+endif
 endif
 ifndef d
 ifndef RELEASE-ID
@@ -171,7 +172,6 @@ ifndef YS_RELEASE_VERSION_NEW
 endif
 ifeq (,$(shell which yarn))
 	$(error 'make release' needs 'yarn' installed)
-endif
 endif
 endif
 endif
@@ -188,16 +188,7 @@ ifndef d
 	)
 endif
 
-release-yamlscript: $(YS)
-ifndef YS_RELEASE_NO_CHECK
-ifneq (main, $(shell git rev-parse --abbrev-ref HEAD))
-	$(error You must be on the 'main' branch to release)
-endif
-	@[[ $$YS_GH_USER ]] || { \
-	  echo 'Please export YS_GH_USER'; exit 1; }
-	@[[ $$YS_GH_TOKEN ]] || { \
-	  echo 'Please export YS_GH_TOKEN'; exit 1; }
-endif
+_release-yamlscript: $(YS)
 	(time $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
@@ -288,3 +279,4 @@ distclean-%: %
 
 sysclean:: realclean
 	$(RM) -r $(ROOT)/.cache/
+	$(RM) -r $(ROOT)/.clj-kondo/.cache/
