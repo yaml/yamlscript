@@ -1,7 +1,7 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-
-JULIA := $(shell command -v julia)
+include $(MAKES)/julia.mk
+include $(MAKES)/shell.mk
 
 HEAD-COMMIT := $(shell git rev-parse HEAD)
 
@@ -10,12 +10,11 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-ifdef JULIA
-test:: $(LIBYS-SO-FQNP) deps
-	$(JULIA) --project=. test/runtests.jl
+test:: $(LIBYS-SO-FQNP) deps $(JULIA)
+	julia --project=. test/runtests.jl
 
-deps::
-	$(JULIA) --project=. -e 'using Pkg; Pkg.add("JSON")'
+deps:: $(JULIA)
+	julia --project=. -e 'using Pkg; Pkg.add("JSON")'
 
 release:
 ifndef YS_GH_TOKEN
@@ -29,9 +28,8 @@ endif
 	  $(YS-GH-API-URL)/commits/$(HEAD-COMMIT)/comments \
 	  -d '{"body":"@JuliaRegistrator register subdir=julia\n"}'
 
-repl:
-	$(JULIA) --project=.
-endif
+repl: $(JULIA)
+	julia --project=.
 
 clean::
 	$(RM) Manifest.toml

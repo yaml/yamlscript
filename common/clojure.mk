@@ -1,6 +1,6 @@
-#------------------------------------------------------------------------------
-# Set Clojure specific variables:
-#------------------------------------------------------------------------------
+include $(MAKES)/clojure.mk
+include $(MAKES)/lein.mk
+include $(MAKES)/ys.mk
 
 YAMLSCRIPT-CORE-INSTALLED := \
   $(MAVEN-REPOSITORY)/yamlscript/core/maven-metadata-local.xml
@@ -12,11 +12,6 @@ YAMLSCRIPT-CORE-SRC := \
 ifdef w
   export WARN_ON_REFLECTION := 1
 endif
-
-LEIN := $(BUILD-BIN)/lein
-
-LEIN-URL := \
-  https://codeberg.org/leiningen/leiningen/raw/branch/stable/bin/lein
 
 LEIN-COMMANDS := \
   check \
@@ -58,18 +53,14 @@ realclean:: clean
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
-$(LEIN): $(JAVA-INSTALLED) | $(BUILD-BIN)
-	$(call need-curl)
-	$(CURL) -o $@ $(LEIN-URL)
-	chmod +x $@
-
+$(LEIN):: | $(YS)
 
 # Leiningen targets
 $(LEIN-COMMANDS):: $(LEIN)
-	$< $@
+	lein $@
 
 deps-graph:: $(LEIN)
-	$< deps :tree
+	lein deps :tree
 
 
 # Build/GraalVM targets
@@ -80,22 +71,11 @@ $(YAMLSCRIPT-CORE-INSTALLED): $(YAMLSCRIPT-CORE-SRC)
 	$(MAKE) -C $(ROOT)/core install
 
 
-# Maven targets
-
-$(MAVEN-DOWNLOAD):
-	$(call need-curl)
-	$(CURL) -o $@ $(MAVEN-URL)
-
-$(MAVEN-INSTALLED): $(MAVEN-DOWNLOAD)
-	(cd $(LOCAL-CACHE) && tar xzf $<)
-	touch $@
-
-
 # REPL/nREPL management targets
 repl:: $(LEIN) repl-deps
 ifneq (,$(wildcard .nrepl-pid))
 	@echo "Connecting to nREPL server on port $$(< .nrepl-port)"
-	$< repl :connect
+	lein repl :connect
 endif
 
 repl-deps::
@@ -123,7 +103,7 @@ endif
 
 .nrepl-pid: $(LEIN) repl-deps
 	( \
-	  $< $(LEIN-REPL-OPTIONS) repl :headless $(repl-port) & \
+	  lein $(LEIN-REPL-OPTIONS) repl :headless $(repl-port) & \
 	  echo $$! > $@ \
 	)
 	@( \

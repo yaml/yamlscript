@@ -9,16 +9,16 @@ export PATH := $(ROOT)/core/bin:$(PATH)
 build::
 
 test:: $(LEIN) $(CORE-DEPS)
-	$< $@
+	lein $@
 
 install: $(CORE-INSTALLED)
 
 $(CORE-INSTALLED): $(LEIN) $(CORE-DEPS)
-	$< install
+	lein install
 	touch $@
 
 $(CORE-JAR): $(LEIN) $(CORE-DEPS)
-	$< uberjar
+	lein uberjar
 
 clean::
 	$(RM) pom.xml

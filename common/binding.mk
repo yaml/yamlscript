@@ -2,13 +2,10 @@ include $(COMMON)/vars-libys.mk
 
 test:: $(LIBYS-SO-FQNP)
 
-$(LIBYS-SO-FQNP): | $(ROOT)/libys
+$(LIBYS-SO-FQNP):
 	$(MAKE) -C $(ROOT)/libys build
 
-build-doc:: build-bin
-
-build-bin:
-	$(MAKE) -C $(ROOT) build-bin-ys
+build-doc:: $(YS)
 
 clean::
 	$(RM) *.tmp

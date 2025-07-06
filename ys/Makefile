@@ -9,6 +9,9 @@ BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
 test := test/
 
+# override PATH := $(ROOT)/ys/bin:$(PATH)
+# export PATH
+
 
 #------------------------------------------------------------------------------
 build:: $(CLI-DEPS)
@@ -30,7 +33,7 @@ test: test-run
 test-all: test-unit test-run
 
 test-unit: $(LEIN) $(CORE-INSTALLED)
-	$< test $(lein-test)
+	lein test $(lein-test)
 
 test-run: $(CLI-DEPS) $(BPAN-LOCAL)
 	prove $${TEST_VERBOSE:+'-v'} $(test)
@@ -69,7 +72,7 @@ $(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)
 	chmod 755 $@
 
 $(CLI-JAR): $(LEIN) $(CLI-JAR-DEPS)
-	$< uberjar
+	lein uberjar
 
 $(CORE-INSTALLED): $(CORE-JAR)
 	@$(MAKE) -C $(CORE-DIR) $@ > /dev/null 2>&1

@@ -65,5 +65,5 @@ $(LOCAL-CACHE)/$(ZLIB-TAR):
 muslclean::
 	$(RM) -r $(MUSL-HOME) $(MUSL-DIR) $(MUSL-TAR) $(ZLIB-DIR) $(ZLIB-TAR)
 
-$(REFLECTION-JSON): $(COMMON)/reflection.ys $(BUILD-BIN-YS)
+$(REFLECTION-JSON): $(COMMON)/reflection.ys $(YS)
 	ys -J $< > $@

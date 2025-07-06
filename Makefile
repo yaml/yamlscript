@@ -188,7 +188,7 @@ ifndef d
 	)
 endif
 
-release-yamlscript: $(BUILD-BIN-YS)
+release-yamlscript: $(YS)
 ifndef YS_RELEASE_NO_CHECK
 ifneq (main, $(shell git rev-parse --abbrev-ref HEAD))
 	$(error You must be on the 'main' branch to release)
@@ -252,7 +252,7 @@ delete-tag:
 	-git tag --delete $(YS_VERSION)
 	-git push --delete origin $(YS_VERSION)
 
-bump: $(BUILD-BIN-YS)
+bump: $(YS)
 	$< $(ROOT)/util/version-bump
 
 $(CLEAN):

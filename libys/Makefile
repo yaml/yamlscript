@@ -24,7 +24,6 @@ realclean::
 	$(RM) src/libys/Core.class
 
 test:: $(LIBYS-SO-FQNP)
-	ls -lh lib
 
 repl-deps:: $(LIBYS-JAR-PATH)
 
@@ -49,7 +48,7 @@ endif
 	touch $@
 
 $(LIBYS-JAR-PATH): $(CORE-INSTALLED)
-	$(LEIN) uberjar
+	lein uberjar
 	touch $@
 
 $(CORE-INSTALLED):

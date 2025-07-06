@@ -45,7 +45,7 @@ DIRS := \
   src/blog/posts \
 
 DEPS := \
-  build-bin-ys \
+  $(YS) \
   $(DIRS) \
   $(PYTHON-VENV) \
   $(CONFIG) \
