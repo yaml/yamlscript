@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="YAMLScript">
+    <description>YAMLScript PHP Coding Standards</description>
+
+    <!-- Scan these directories -->
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- Use PSR-12 as the base -->
+    <rule ref="PSR12"/>
+
+    <!-- Show progress -->
+    <arg value="p"/>
+    <arg name="colors"/>
+
+    <!-- Show sniff codes in all reports -->
+    <arg value="s"/>
+
+    <!-- Use tabs -->
+    <arg name="tab-width" value="4"/>
+
+    <!-- Files must end with a newline character -->
+    <rule ref="Generic.Files.EndFileNewline"/>
+
+    <!-- Remove trailing whitespace -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+</ruleset>

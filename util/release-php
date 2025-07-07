@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+lang=php
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  rm -fr "$repo_dir"/*
+
+  cp "$root/License" "$repo_dir/LICENSE"
+  cp "$from_dir/ReadMe.md" "$repo_dir/README.md"
+  # cp "$from_dir/ChangeLog.md" "$repo_dir/CHANGELOG.md"
+  cp "$from_dir/phpcs.xml" "$repo_dir/phpcs.xml"
+  cp "$from_dir/phpunit.xml.dist" "$repo_dir/phpunit.xml.dist"
+
+  cp -r "$from_dir/src" "$repo_dir/src"
+  cp -r "$from_dir/tests" "$repo_dir/tests"
+
+  ys -J "$from_dir/composer.yaml" > "$repo_dir/composer.json"
+
+  echo '/vendor/' >> "$repo_dir/.gitignore"
+  echo 'composer.lock' >> "$repo_dir/.gitignore"
+  echo '/.phpunit.result.cache' >> "$repo_dir/.gitignore"
+)
+
+test() (
+  cd "$repo_dir" || exit
+  composer install
+  composer test
+)
+
+main "$@"

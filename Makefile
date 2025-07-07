@@ -10,6 +10,7 @@ BINDINGS := \
     nodejs \
     perl \
     perl-alien \
+    php \
     python \
     raku \
     ruby \

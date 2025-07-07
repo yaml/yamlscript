@@ -46,6 +46,7 @@ Currently there are working libraries for:
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
+* [PHP](https://packagist.org/packages/yaml/yamlscript)
 * [Python](https://pypi.org/project/yamlscript/)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/search?query=yamlscript)

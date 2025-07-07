@@ -4,6 +4,7 @@ include $(MAKES)/maven.mk
 YS-VERSION := 0.1.97
 include $(MAKES)/ys.mk
 
+export YS_TMPDIR := $(LOCAL-TMP)
 export TMPDIR := $(LOCAL-TMP)
 export TEMP := $(TMPDIR)
 export TMP := $(TMPDIR)
@@ -17,8 +18,7 @@ COMMON := $(ROOT)/common
 
 unexport YS_FORMATTER
 
-override PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(PATH)
-export PATH
+override PATH := $(ROOT)/util:$(ROOT)/ys/bin:$(LOCAL-BIN):$(PATH)
 
 export YAMLSCRIPT_ROOT ?= $(ROOT)
 

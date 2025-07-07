@@ -118,6 +118,7 @@ languages:
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)
+* [PHP](https://packagist.org/packages/yaml/yamlscript)
 * [Python](https://pypi.org/project/yamlscript/)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/gems/yamlscript)

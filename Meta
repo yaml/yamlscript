@@ -10,12 +10,14 @@ author:
   email: ingy@ingy.net
   github: ingydotnet
   twitter: ingydotnet
-  freenode: ingy
+  libera: ingy
   homepage: http://ingy.net
 
 devel:
   git: https://github.com/yaml/yamlscript
   bug: https://github.com/yaml/yamlscript/issues
   irc: irc.libera.chat#yamlscript
+  matrix: https://matrix.to/#/#chat-yamlscript:yaml.io
+  slack: https://clojurians.slack.com/archives/C05HQFMTURF
 
 branch: main

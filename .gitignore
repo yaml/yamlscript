@@ -5,6 +5,7 @@
 /*.yaml
 /*.ys
 /.cache/
+/.cursor/
 /bin/
 /homebrew-yamlscript/
 /issue-*
