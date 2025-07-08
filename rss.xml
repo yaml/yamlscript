@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 06 Jul 2025 21:44:28 -0000</pubDate>
-    <lastBuildDate>Sun, 06 Jul 2025 21:44:28 -0000</lastBuildDate>
+    <pubDate>Tue, 08 Jul 2025 04:40:23 -0000</pubDate>
+    <lastBuildDate>Tue, 08 Jul 2025 04:40:23 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,36 @@
     
 
     
+    
+    <item>
+      <title>YS External Modules</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Reusing code is the cornerstone of good programming.&lt;/p&gt;
+&lt;p&gt;If you see duplicate logic, refactor it into a function.&lt;/p&gt;
+&lt;p&gt;If you see a function that&#39;s used in multiple places, move it to a module.&lt;/p&gt;
+&lt;p&gt;If you need the module in multiple repos, publish it online.&lt;/p&gt;
+&lt;p&gt;Today let&#39;s see how we&#39;d go about refactoring a YS program&#39;s useful functions
+into an external module for reuse by anyone.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-07/ys-external-modules/</link>
+      <pubDate>Mon, 07 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-07/ys-external-modules/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-07/ys-external-modules.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>YS Regular Expressions</title>
@@ -181,7 +211,7 @@ Clojure code is interoperable with Java code.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-02/ys--java-interoperability/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-02/ys--java-interoperability.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-02/ys--java-interoperability.png" type="image/png" length="None" />
       
     </item>
     
@@ -1374,7 +1404,7 @@ Well, listen, how do you think *I* feel about it?
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm.png" type="image/png" length="0" />
       
     </item>
     
