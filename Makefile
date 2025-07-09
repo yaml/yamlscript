@@ -4,6 +4,7 @@ include $(COMMON)/java.mk
 BINDINGS := \
     clojure \
     crystal \
+    csharp \
     go \
     java \
     julia \

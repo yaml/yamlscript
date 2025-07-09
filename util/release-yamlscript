@@ -20,6 +20,7 @@ bindings =::
 - java
 - clojure
 - crystal
+- csharp
 - go
 - julia
 - nodejs
