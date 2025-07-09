@@ -2367,7 +2367,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li class="md-nav__item">
   <a href="#rules-for-version-usage" class="md-nav__link">
     <span class="md-ellipsis">
-      Rules for version usage
+      Rules for Version Usage
     </span>
   </a>
   
@@ -2376,17 +2376,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li class="md-nav__item">
   <a href="#rules-for-new-version-development" class="md-nav__link">
     <span class="md-ellipsis">
-      Rules for new version development
+      Rules for New Version Development
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Rules for new version development">
+    <nav class="md-nav" aria-label="Rules for New Version Development">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#current-v0-binary-naming" class="md-nav__link">
     <span class="md-ellipsis">
-      Current v0 binary naming
+      Current v0 Binary Naming
     </span>
   </a>
   
@@ -2395,7 +2395,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li class="md-nav__item">
   <a href="#new-v1-naming" class="md-nav__link">
     <span class="md-ellipsis">
-      New v1 naming
+      New v1 Naming
     </span>
   </a>
   
@@ -2404,7 +2404,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li class="md-nav__item">
   <a href="#new-v2-naming" class="md-nav__link">
     <span class="md-ellipsis">
-      New v2 naming
+      New v2 Naming
     </span>
   </a>
   
@@ -2413,7 +2413,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li class="md-nav__item">
   <a href="#new-v2-binary-naming" class="md-nav__link">
     <span class="md-ellipsis">
-      New v2 binary naming
+      New v2 Binary Naming
     </span>
   </a>
   
@@ -2422,7 +2422,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li class="md-nav__item">
   <a href="#v2-shebangs" class="md-nav__link">
     <span class="md-ellipsis">
-      v2 shebangs
+      v2 Shebangs
     </span>
   </a>
   
@@ -2485,11 +2485,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>Major compatibility breaking changes are allowed between major versions.</p>
 <p>All programs and data files that use YS code expressions must declare the major
 version of YS they use.</p>
-<p>The current major version is <code>0</code> and that means that the language is still
-under development.
+<p>The current major version is <code>0</code>, which means that the language is still under
+development.
 That said, the language has been fairly stable for a while now.</p>
 <p>Very soon we will declare v0 stable and start working on v1.
-Soon after that v1 will be declared stable and we'll start working on v2.
+Soon after that, v1 will be declared stable and we'll start working on v2.
 The v1 "development" period is just a practice run for switching major versions.
 v1 stable should be nearly identical to v0 stable.</p>
 <p>In fact, we plan to deprecate v0 after v1 is stable.
@@ -2498,41 +2498,41 @@ After a couple months of v0 deprecation, use of v0 will be disallowed.</p>
 <p>The stable v2 runtime will support both v1 and v2 programs and libraries.</p>
 <p>See <a href="../v1-planning/">YS v1 Planning</a> for a description of the changes we need to
 make to release YS v0 as a stable YS v1, and then start working on YS v2.</p>
-<h2 id="rules-for-version-usage">Rules for version usage<a class="headerlink" href="#rules-for-version-usage" title="Permanent link">🔗</a></h2>
+<h2 id="rules-for-version-usage">Rules for Version Usage<a class="headerlink" href="#rules-for-version-usage" title="Permanent link">🔗</a></h2>
 <p>YS programs must declare their major version.</p>
 <p>They usually do this with a stream tag like <code>!YS/v1</code>.</p>
-<p>They can also use a shebang line to declare the version.</p>
+<p>They can also use a shebang line to declare the version:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-1</span>
 </code></pre></div>
 <p>You need the <code>-1</code> part or <code>!YS/v1</code> won't be added.
-You could, of course, do this:</p>
+Alternatively, you could do this:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys</span>
 <span class="kt">!YS/v1</span>
 </code></pre></div>
 <div class="admonition note">
-<p class="admonition-title">-e versioning</p>
+<p class="admonition-title">-e Versioning</p>
 <p>When using the <code>-e</code> flag, the expression is assumed to be code mode and an
 explicit <code>!YS/v1</code> tag is not needed.
 This is for simplicity of 1-liners.</p>
 <p>The version is determined by the major version of the <code>ys</code> binary being
 used.</p>
 </div>
-<h2 id="rules-for-new-version-development">Rules for new version development<a class="headerlink" href="#rules-for-new-version-development" title="Permanent link">🔗</a></h2>
+<h2 id="rules-for-new-version-development">Rules for New Version Development<a class="headerlink" href="#rules-for-new-version-development" title="Permanent link">🔗</a></h2>
 <p>Work on v2 might last a year.
 During that time, we will be putting out new v1 releases.</p>
 <p>We will also be putting out new v2 alpha releases on a regular basis.</p>
 <p>We want to let people start using v2 as soon as possible.</p>
-<p>This requires that we have a v2 versioning scheme in place, and that we have
-syntax rules to use v2.</p>
+<p>This requires that we have a v2 versioning scheme in place and syntax rules for
+using v2.</p>
 <p>These rules should be compatible with semver rules.</p>
-<h3 id="current-v0-binary-naming">Current v0 binary naming<a class="headerlink" href="#current-v0-binary-naming" title="Permanent link">🔗</a></h3>
+<h3 id="current-v0-binary-naming">Current v0 Binary Naming<a class="headerlink" href="#current-v0-binary-naming" title="Permanent link">🔗</a></h3>
 <ul>
 <li><code>&lt;prefix&gt;/bin/ys</code> (symlink)</li>
 <li><code>&lt;prefix&gt;/bin/ys-0</code> (symlink)</li>
 <li><code>&lt;prefix&gt;/bin/ys-0.1.97</code></li>
 <li><code>&lt;prefix&gt;/lib/libys.so-0.1.97</code></li>
 </ul>
-<h3 id="new-v1-naming">New v1 naming<a class="headerlink" href="#new-v1-naming" title="Permanent link">🔗</a></h3>
+<h3 id="new-v1-naming">New v1 Naming<a class="headerlink" href="#new-v1-naming" title="Permanent link">🔗</a></h3>
 <ul>
 <li><code>&lt;prefix&gt;/bin/ys</code> (symlink)</li>
 <li><code>&lt;prefix&gt;/bin/ys1</code> (symlink)</li>
@@ -2541,30 +2541,30 @@ syntax rules to use v2.</p>
 <li><code>&lt;prefix&gt;/lib/libys.so-1</code></li>
 </ul>
 <p>When v1 is final stable, we just need to match the major version.</p>
-<h3 id="new-v2-naming">New v2 naming<a class="headerlink" href="#new-v2-naming" title="Permanent link">🔗</a></h3>
-<p>For the time where v1 is final stable and v2 is in development.</p>
-<p>During development the version will always start with <code>2.0.0</code>.
+<h3 id="new-v2-naming">New v2 Naming<a class="headerlink" href="#new-v2-naming" title="Permanent link">🔗</a></h3>
+<p>For the time where v1 is final stable and v2 is in development:</p>
+<p>During development, the version will always start with <code>2.0.0</code>.
 Then we'll have a <code>-alpha</code> suffix followed by a minor and patch version.</p>
-<p>When alpha-minor is zero then any change can happen.
+<p>When alpha-minor is zero, then any change can happen.
 This is like a normal major version of <code>0</code>.</p>
 <p>So we start at <code>2.0.0-alpha.0.1</code>.
-This is kinda like a <code>2.0.1</code> version that is alpha (mentally removing the
+This is similar to a <code>2.0.1</code> version that is alpha (mentally removing the
 <code>.0.0-alpha.</code> part).
-When we go to <code>2.0.0-alpha.1.1</code> we've made come to a point where things are
+When we go to <code>2.0.0-alpha.1.1</code>, we've come to a point where things are
 stabilizing and we want to indicate a breaking change by bumping the alpha-minor
 number.</p>
-<p>This scheme is compatible with semver and ever increasing versions.</p>
-<h3 id="new-v2-binary-naming">New v2 binary naming<a class="headerlink" href="#new-v2-binary-naming" title="Permanent link">🔗</a></h3>
+<p>This scheme is compatible with semver and ensures ever-increasing versions.</p>
+<h3 id="new-v2-binary-naming">New v2 Binary Naming<a class="headerlink" href="#new-v2-binary-naming" title="Permanent link">🔗</a></h3>
 <ul>
 <li><code>&lt;prefix&gt;/bin/ys</code> (symlink)</li>
-<li><code>&lt;prefix&gt;/bin/ys2a</code> (symlink)</li>
-<li><code>&lt;prefix&gt;/bin/ys-2a</code> (symlink)</li>
+<li><code>&lt;prefix&gt;/bin/ys2-a</code> (symlink)</li>
+<li><code>&lt;prefix&gt;/bin/ys-v2-a</code> (symlink)</li>
 <li><code>&lt;prefix&gt;/bin/ys-2.0.0-alpha.0.1</code></li>
 <li><code>&lt;prefix&gt;/lib/libys.so-2.0.0-alpha.0.1</code></li>
 </ul>
-<h3 id="v2-shebangs">v2 shebangs<a class="headerlink" href="#v2-shebangs" title="Permanent link">🔗</a></h3>
-<p>To use a shebang for v2 while it is still in development, we can:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-2a</span>
+<h3 id="v2-shebangs">v2 Shebangs<a class="headerlink" href="#v2-shebangs" title="Permanent link">🔗</a></h3>
+<p>To use a shebang for v2 while it is still in development:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-2-a</span>
 </code></pre></div>
 
 
