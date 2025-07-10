@@ -9,13 +9,13 @@ Add Logic to Your YAML Files
 ## Synopsis
 
 Load `file.yaml` with YS:
+
 ```yaml
 !YS-v0:
 
 # Get data from external sources:
 names-url =:
-  "https://raw.githubusercontent.com/dominictarr/\
-   random-name/master/first-names.json"
+  'github:dominictarr/random-name/first-names.json'
 
 name-list =: names-url:curl:json/load
 
