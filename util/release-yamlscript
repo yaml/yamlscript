@@ -23,6 +23,7 @@ bindings =::
 - csharp
 - go
 - julia
+- lua
 - nodejs
 - perl
 - perl-alien

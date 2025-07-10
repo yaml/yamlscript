@@ -12,7 +12,7 @@ main() (
   clone
   update
   test
-  release
+  release || true
 )
 
 git() (

@@ -45,6 +45,7 @@ Currently there are working libraries for:
 * [Go](https://github.com/yaml/yamlscript-go)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
+* [Lua](https://luarocks.org/modules/ingy/yamlscript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
 * [PHP](https://packagist.org/packages/yaml/yamlscript)

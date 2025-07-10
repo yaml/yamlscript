@@ -117,6 +117,7 @@ languages:
 * [Go](https://github.com/yaml/yamlscript-go)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
+* [Lua](https://luarocks.org/modules/ingy/yamlscript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)
 * [PHP](https://packagist.org/packages/yaml/yamlscript)

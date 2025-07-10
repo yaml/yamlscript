@@ -8,6 +8,7 @@ BINDINGS := \
     go \
     java \
     julia \
+    lua \
     nodejs \
     perl \
     perl-alien \

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+lang=lua
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  rm -fr "$repo_dir"/*
+
+  cp "$root/License" "$repo_dir/LICENSE"
+  cp "$from_dir/ReadMe.md" "$repo_dir/README.md"
+  cp "$from_dir/example.lua" \
+     "$repo_dir/"
+  cp -r \
+    "$from_dir/lib" \
+    "$from_dir/test" \
+    "$repo_dir/"
+)
+
+test() (
+  cd "$repo_dir" || exit
+  lua test/test_basic.lua
+)
+
+main "$@"
