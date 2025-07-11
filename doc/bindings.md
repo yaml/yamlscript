@@ -43,6 +43,7 @@ Currently there are working libraries for:
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
 * [Crystal](https://shardbox.org/shards/yamlscript)
 * [Go](https://github.com/yaml/yamlscript-go)
+* [Haskell](https://hackage.haskell.org/package/yamlscript)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
 * [Lua](https://luarocks.org/modules/ingy/yamlscript)
