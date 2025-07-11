@@ -6,6 +6,7 @@ BINDINGS := \
     crystal \
     csharp \
     go \
+    haskell \
     java \
     julia \
     lua \
@@ -27,6 +28,7 @@ DIRS := \
 BUILD-DIRS := \
     libys \
     go \
+    haskell \
     nodejs \
     python \
     ruby \

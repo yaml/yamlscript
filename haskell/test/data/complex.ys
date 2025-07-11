@@ -1,0 +1,8 @@
+!YS-v0:
+
+name =: "World"
+numbers =: [1, 2, 3, 4, 5]
+
+greeting:: "Hello, $name!"
+sum:: numbers:sum
+average:: numbers:sum / numbers:count
