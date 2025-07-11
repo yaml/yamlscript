@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 10 Jul 2025 03:02:23 -0000</pubDate>
-    <lastBuildDate>Thu, 10 Jul 2025 03:02:23 -0000</lastBuildDate>
+    <pubDate>Fri, 11 Jul 2025 00:43:35 -0000</pubDate>
+    <lastBuildDate>Fri, 11 Jul 2025 00:43:35 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,42 @@
     
 
     
+    
+    <item>
+      <title>Building YS</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Try running these commands on Linux or Mac:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bash
+git clone https://github.com/yaml/yamlscript
+cd yamlscript
+make install&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Chances are that everything will just work.
+You&#39;ll have new builds of &lt;code&gt;~/.local/ys&lt;/code&gt; and &lt;code&gt;~/.local/lib/libys.so&lt;/code&gt; (&lt;code&gt;.dylib&lt;/code&gt; on
+a Mac).&lt;/p&gt;
+&lt;p&gt;YS actually has a lot of heavy dependencies like Clojure, Java, Maven, GraalVM,
+etc.&lt;/p&gt;
+&lt;p&gt;So how does it just work?&lt;/p&gt;
+&lt;p&gt;Today I&#39;ll tell you!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-10/building-ys/</link>
+      <pubDate>Thu, 10 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-10/building-ys/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-10/building-ys.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>Fun with Function Tags</title>
@@ -211,7 +247,7 @@ task using all the Exercism languages!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-04/exercism-comparisons/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-04/exercism-comparisons.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-04/exercism-comparisons.png" type="image/png" length="0" />
       
     </item>
     
@@ -1048,7 +1084,7 @@ say: str(&#39;Hello, &#39; name &#39;!&#39;)&lt;/code&gt;&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-07/tmtowtdi-for-ys-expressions/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-07/tmtowtdi-for-ys-expressions.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-07/tmtowtdi-for-ys-expressions.png" type="image/png" length="None" />
       
     </item>
     
@@ -1724,7 +1760,7 @@ It&#39;s reindeer all the way down.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-19/reindeer-all-the-way-down/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="0" />
       
     </item>
     
