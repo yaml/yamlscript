@@ -1,0 +1,76 @@
+# Generate yamlscript.cabal dynamically
+
+--- !YS-v0
+meta =: load('../Meta')
+to-vars: meta.dissoc('name')
+
+say: |
+    cabal-version:      3.0
+    name:               $(meta.name:lc)
+    version:            $version.0
+    synopsis:           Haskell bindings for YAMLScript
+    description:        Haskell bindings for YAMLScript, a functional
+                        programming language with YAML syntax.
+                        .
+                        YAMLScript allows you to add logic to your YAML files
+                        while maintaining compatibility with standard YAML.
+    license:            $(license:uc)
+    license-file:       License
+    author:             $(author.name) <$(author.email)>
+    maintainer:         $(author.name) <$(author.email)>
+    category:           Data, Text, YAML
+    homepage:           https://yamlscript.org
+    bug-reports:        https://github.com/yaml/yamlscript/issues
+    tested-with:        GHC==9.4.7, GHC==9.6.3, GHC==9.8.1, GHC==9.12.1
+
+    library
+        exposed-modules:    YAMLScript
+        other-modules:      YAMLScript.FFI
+        build-depends:      base >=4.17.0.0 && <5,
+                            bytestring ^>=0.11.0.0,
+                            text >=2.0.0.0 && <3,
+                            aeson >=2.0.0.0 && <3,
+                            unix >=2.7.0.0 && <3
+        hs-source-dirs:     lib
+        default-language:   Haskell2010
+        default-extensions: ForeignFunctionInterface
+        ghc-options:        -Wall -Wcompat -Widentities
+                            -Wincomplete-record-updates
+                            -Wincomplete-uni-patterns
+                            -Wmissing-export-lists
+                            -Wmissing-home-modules
+                            -Wpartial-fields
+                            -Wredundant-constraints
+        -- XXX Not sure what to do here. cabal doesn't like relative paths.
+        -- Currently the Makefile copies the ../libys/lib to /tmp/libys/lib
+        -- Feels like there should be a better way to do this.
+        include-dirs:       /tmp/libys/lib
+        extra-libraries:    ys
+        extra-lib-dirs:     /tmp/libys/lib
+
+    executable yamlscript-test
+        main-is:            Main.hs
+        build-depends:      base >=4.17.0.0 && <5,
+                            yamlscript,
+                            text >=2.0.0.0 && <3,
+                            aeson >=2.0.0.0 && <3,
+                            aeson-pretty >=0.8.0.0 && <1,
+                            bytestring ^>=0.11.0.0
+        hs-source-dirs:     test
+        default-language:   Haskell2010
+        ghc-options:        -Wall
+
+    test-suite yamlscript-tests
+        type:               exitcode-stdio-1.0
+        main-is:            Test.hs
+        other-modules:      YAMLScript.Tests
+        build-depends:      base >=4.17.0.0 && <5,
+                            yamlscript,
+                            hspec >=2.8.0.0 && <3,
+                            aeson >=2.0.0.0 && <3,
+                            text >=2.0.0.0 && <3,
+                            unix >=2.7.0.0 && <3,
+                            vector >=0.13.0.0 && <1
+        hs-source-dirs:     test
+        default-language:   Haskell2010
+        ghc-options:        -Wall
