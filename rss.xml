@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sat, 12 Jul 2025 02:38:40 -0000</pubDate>
-    <lastBuildDate>Sat, 12 Jul 2025 02:38:40 -0000</lastBuildDate>
+    <pubDate>Sat, 12 Jul 2025 15:45:36 -0000</pubDate>
+    <lastBuildDate>Sat, 12 Jul 2025 15:45:36 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -53,7 +53,18 @@ Every modern language has a YAML loader.
 Most have many.&lt;/p&gt;
 &lt;p&gt;YS is the first YAML loader that was made for every programming language.&lt;/p&gt;
 &lt;p&gt;Well that&#39;s the goal anyway.&lt;/p&gt;
-&lt;p&gt;For the past year it&#39;s only had loaders for 11 languages.&lt;/p&gt;
+&lt;p&gt;For the past year it&#39;s only had loaders for 11 languages:
+&lt;a href=&#34;https://clojars.org/org.yamlscript/clj-yamlscript&#34;&gt;Clojure&lt;/a&gt;,
+&lt;a href=&#34;https://shardbox.org/shards/yamlscript&#34;&gt;Crystal&lt;/a&gt;,
+&lt;a href=&#34;https://github.com/yaml/yamlscript-go&#34;&gt;Go&lt;/a&gt;,
+&lt;a href=&#34;https://clojars.org/org.yamlscript/yamlscript&#34;&gt;Java&lt;/a&gt;,
+&lt;a href=&#34;https://juliahub.com/ui/Packages/General/YAMLScript&#34;&gt;Julia&lt;/a&gt;,
+&lt;a href=&#34;https://www.npmjs.com/package/@yaml/yamlscript&#34;&gt;NodeJS&lt;/a&gt;,
+&lt;a href=&#34;https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod&#34;&gt;Perl&lt;/a&gt;,
+&lt;a href=&#34;https://pypi.org/project/yamlscript/&#34;&gt;Python&lt;/a&gt;,
+&lt;a href=&#34;https://raku.land/zef:ingy/YAMLScript&#34;&gt;Raku&lt;/a&gt;,
+&lt;a href=&#34;https://rubygems.org/search?query=yamlscript&#34;&gt;Ruby&lt;/a&gt;, and
+&lt;a href=&#34;https://crates.io/crates/yamlscript&#34;&gt;Rust&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Until this week, that is...&lt;/p&gt;</description>
       <link>https://yamlscript.org/blog/2025-07-11/yaml-get-ys-in-php-c-lua--haskell/</link>
       <pubDate>Fri, 11 Jul 2025 00:00:00 +0000</pubDate>
@@ -1366,7 +1377,7 @@ In other words...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-24/run-a-yaml-file-with-bash/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="0" />
       
     </item>
     

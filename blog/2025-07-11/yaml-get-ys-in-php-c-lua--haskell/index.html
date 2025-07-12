@@ -2471,7 +2471,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              1 min read
+                              2 min read
                             
                           </span>
                         </div>
@@ -2528,7 +2528,51 @@ Every modern language has a YAML loader.
 Most have many.</p>
 <p>YS is the first YAML loader that was made for every programming language.</p>
 <p>Well that's the goal anyway.</p>
-<p>For the past year it's only had loaders for 11 languages.</p>
+<p>For the past year it's only had loaders for 11 languages:
+<a href="https://clojars.org/org.yamlscript/clj-yamlscript">Clojure&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://shardbox.org/shards/yamlscript">Crystal&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://github.com/yaml/yamlscript-go">Go&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://clojars.org/org.yamlscript/yamlscript">Java&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://juliahub.com/ui/Packages/General/YAMLScript">Julia&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://www.npmjs.com/package/@yaml/yamlscript">NodeJS&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod">Perl&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://pypi.org/project/yamlscript/">Python&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://raku.land/zef:ingy/YAMLScript">Raku&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>,
+<a href="https://rubygems.org/search?query=yamlscript">Ruby&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>, and
+<a href="https://crates.io/crates/yamlscript">Rust&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
 <p>Until this week, that is...</p>
 <!-- more -->
 
@@ -2551,9 +2595,9 @@ Most have many.</p>
      alt="External link">
 </a></li>
 </ul>
-<p>These language bindings are fairly simple.</p>
+<p>The YS language bindings are fairly simple.</p>
 <p>They are each an FFI binding to the <code>libys</code> shared library.</p>
-<p>Codewise they are only 1-200 lines of code in any given language.</p>
+<p>Codewise they are only ~100-200 lines of code in any given language.</p>
 <p>In the past the YS team would find a person who was proficient in a language to
 write the binding.</p>
 <p>This week we decided to try a little AI.</p>
