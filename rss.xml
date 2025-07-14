@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 13 Jul 2025 19:27:52 -0000</pubDate>
-    <lastBuildDate>Sun, 13 Jul 2025 19:27:52 -0000</lastBuildDate>
+    <pubDate>Mon, 14 Jul 2025 01:37:02 -0000</pubDate>
+    <lastBuildDate>Mon, 14 Jul 2025 01:37:02 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,34 @@
     
 
     
+    
+    <item>
+      <title>YS Testing Part 2</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;&lt;a href=&#34;2025-07-12.md&#34;&gt;Yesterday&lt;/a&gt; we talked about writing tests in YS.&lt;/p&gt;
+&lt;p&gt;We also introduced the &lt;code&gt;ys::taptest&lt;/code&gt; library, but we didn&#39;t really cover how it
+works.&lt;/p&gt;
+&lt;p&gt;Let&#39;s take a closer look...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-13/ys-testing-part-2/</link>
+      <pubDate>Sun, 13 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-13/ys-testing-part-2/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-13/ys-testing-part-2.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>YS Testing</title>
@@ -1839,7 +1867,7 @@ It&#39;s reindeer all the way down.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-19/reindeer-all-the-way-down/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-19/reindeer-all-the-way-down.png" type="image/png" length="0" />
       
     </item>
     

@@ -18,6 +18,8 @@
         <link rel="prev" href="../../2025-07-11/yaml-gets-ys-in-php-c-lua--haskell/">
       
       
+        <link rel="next" href="../../2025-07-13/ys-testing-part-2/">
+      
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
         <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="/rss.xml">
@@ -2471,7 +2473,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              2 min read
+                              3 min read
                             
                           </span>
                         </div>
@@ -2579,7 +2581,9 @@ $
 <h2 id="the-ystaptest-module">The <code>ys::taptest</code> Module<a class="headerlink" href="#the-ystaptest-module" title="Permanent link">🔗</a></h2>
 <p>Writing inline tests can be useful once in a while, but it's not the best way to
 write tests for a real project.</p>
-<p>Let's morph that example into something more like a real project.</p>
+<p>Let's morph that example into something more like a real project.
+We'll slice up our example into an executable program, a rot-13 library, and a
+test file.</p>
 <p>Program file <code>rot-13</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-0</span>
 
@@ -2612,6 +2616,8 @@ write tests for a real project.</p>
 <span class="w">  </span><span class="nt">want</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello, world!</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rot-13(&#39;I like pie&#39;)</span>
 <span class="w">  </span><span class="nt">want</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V yvxr cvr</span>
+
+<span class="nt">done</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 </code></pre></div>
 <p>This code is much cleaner.
 We don't have to write testing logic because the YS builtin <code>ys::taptest</code> module
@@ -2744,6 +2750,22 @@ is likely on your system.</p>
             </div>
           </a>
         
+        
+          
+          <a href="../../2025-07-13/ys-testing-part-2/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Testing Part 2">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                YS Testing Part 2
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
         
       </nav>
     
