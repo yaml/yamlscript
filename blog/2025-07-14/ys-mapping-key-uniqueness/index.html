@@ -2594,13 +2594,7 @@ adds a tag to every node that doesn't have one that was specified explicitly.</p
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!!bool</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
 </code></pre></div>
 <p>Let's test it by loading it with YS:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>-
----<span class="w"> </span>!!map
-!!str<span class="w"> </span><span class="s1">&#39;foo&#39;</span>:<span class="w"> </span>!!str<span class="w"> </span><span class="s1">&#39;one&#39;</span>
-!!str<span class="w"> </span><span class="s1">&#39;bar&#39;</span>:<span class="w"> </span>!!seq
--<span class="w"> </span>!!int<span class="w"> </span><span class="s1">&#39;2&#39;</span>
--<span class="w"> </span>!!float<span class="w"> </span><span class="s1">&#39;3.14159&#39;</span>
--<span class="w"> </span>!!bool<span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>file.yaml
 <span class="o">{</span><span class="s2">&quot;foo&quot;</span>:<span class="s2">&quot;one&quot;</span>,<span class="w"> </span><span class="s2">&quot;bar&quot;</span>:<span class="o">[</span><span class="m">2</span>,<span class="w"> </span><span class="m">3</span>.14159,<span class="w"> </span>true<span class="o">]}</span>
 </code></pre></div>
 <p>You would never write YAML that way, but inside a YAML loader, that's what
@@ -2616,13 +2610,7 @@ loader module for Perl called <a href="https://metacpan.org/pod/YAML::PP">YAML::
 </a>.
 When you install it, it also installs a CLI called <code>yamlpp-load-dump</code>.</p>
 <p>Let's try it:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>yamlpp-load-dump
----<span class="w"> </span>!!map
-!!str<span class="w"> </span><span class="s1">&#39;foo&#39;</span>:<span class="w"> </span>!!str<span class="w"> </span><span class="s1">&#39;one&#39;</span>
-!!str<span class="w"> </span><span class="s1">&#39;bar&#39;</span>:<span class="w"> </span>!!seq
--<span class="w"> </span>!!int<span class="w"> </span><span class="s1">&#39;2&#39;</span>
--<span class="w"> </span>!!float<span class="w"> </span><span class="s1">&#39;3.14159&#39;</span>
--<span class="w"> </span>!!bool<span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>yamlpp-load-dump<span class="w"> </span>file.yaml
 ---
 <span class="s1">&#39;foo&#39;</span>:<span class="w"> </span><span class="s1">&#39;one&#39;</span>
 <span class="s1">&#39;bar&#39;</span>:
