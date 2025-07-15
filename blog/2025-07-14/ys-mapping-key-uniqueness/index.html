@@ -2582,7 +2582,7 @@ adds a tag to every node that doesn't have one that was specified explicitly.</p
 <div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">one</span>
 <span class="nt">bar</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.1415</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.14159</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <p>This is the same as this explicitly tagged YAML:</p>
@@ -2605,16 +2605,16 @@ adds a tag to every node that doesn't have one that was specified explicitly.</p
 </code></pre></div>
 <p>You would never write YAML that way, but inside a YAML loader, that's what
 happens.</p>
-<p>Let's try it with a different YAML loader.
-My colleague <a href="https://github.com/perlpunk">Tina&nbsp;<img src="/image/external-link.svg"
+<p>Let's try it with a different YAML loader.</p>
+<p>My YAML core team colleague <a href="https://github.com/perlpunk">Tina&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
-</a> wrote a YAML loader called
-<a href="https://github.com/perlpunk/YAML-PP-p5">YAML::PP&nbsp;<img src="/image/external-link.svg"
+</a> wrote a YAML
+loader module for Perl called <a href="https://metacpan.org/pod/YAML::PP">YAML::PP&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>.
-It installs a CLI called <code>yamlpp-load-dump</code>.</p>
+When you install it, it also installs a CLI called <code>yamlpp-load-dump</code>.</p>
 <p>Let's try it:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>yamlpp-load-dump
 ---<span class="w"> </span>!!map
@@ -2630,6 +2630,7 @@ It installs a CLI called <code>yamlpp-load-dump</code>.</p>
 -<span class="w"> </span><span class="m">3</span>.14159
 -<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
+<p>Bingo!</p>
 <h2 id="why-is-the-ys-program-valid-yaml">Why is the YS program valid YAML?<a class="headerlink" href="#why-is-the-ys-program-valid-yaml" title="Permanent link">🔗</a></h2>
 <p>Here it is again:</p>
 <div class="highlight"><pre><span></span><code>!YS-v0
@@ -2660,7 +2661,7 @@ Here<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>m
 appears to be a mapping with duplicate keys.</p>
 <p>We need to see what implicit tags were assigned to the nodes, during the YS
 compilation (loading) process.</p>
-<p>Luckily, that's trivial to do with the <code>ys</code> <code>-d</code> or <code>-D</code> flags.</p>
+<p>Luckily, that's easy to do with the <code>ys</code> <code>-d</code> or <code>-D</code> flags.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-cU<span class="w"> </span>-Dbuild<span class="w"> </span>program.ys
 ***<span class="w"> </span>build<span class="w">     </span>***<span class="w"> </span><span class="m">0</span>.199973<span class="w"> </span>ms
 
