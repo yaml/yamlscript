@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/page/4/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/">
       
       
-        <link rel="prev" href="../../../doc/run-ys/">
+        <link rel="prev" href="../../2025-07-13/ys-testing-part-2/">
       
-      
-        <link rel="next" href="../../category/advent-2023/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>Index - YS — YAML Done Wisely</title>
+        <title>YS Mapping Key Uniqueness - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Index - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YS Mapping Key Uniqueness - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/page/4/index.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-14.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/page/4/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Index - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YS Mapping Key Uniqueness - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/page/4/index.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-14.png" >
       
     
     
@@ -170,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#index" class="md-skip">
+        <a href="#yamls-implicit-tagging" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Index
+              YS Mapping Key Uniqueness
             
           </span>
           </a>
@@ -440,7 +438,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -2357,6 +2357,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -2366,8 +2368,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2376,18 +2376,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ys-advent-2023" class="md-nav__link">
+  <a href="#yamls-implicit-tagging" class="md-nav__link">
     <span class="md-ellipsis">
-      YS Advent 2023
+      YAML's Implicit Tagging
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#welcome-to-the-ys-blog" class="md-nav__link">
+  <a href="#explicit-tagging" class="md-nav__link">
     <span class="md-ellipsis">
-      Welcome to the YS Blog
+      Explicit Tagging
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-is-the-ys-program-valid-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why is the YS program valid YAML?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duplicate-keys-in-real-world-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Duplicate Keys in Real World YAML
     </span>
   </a>
   
@@ -2402,104 +2420,366 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
           
           
-  <div class="md-content" data-md-component="content">
-    <div class="md-content__inner">
-      <header class="md-typeset">
-        <h1 id="index">Index<a class="headerlink" href="#index" title="Permanent link">🔗</a></h1>
-      </header>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-01 00:00:00+00:00">December 1, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
             
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          <a href="https://github.com/ingydotnet">Ingy döt Net</a>
+                        
+                      </strong>
+                      <br>
+                      YAML / YS Creator
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2025-07-14 00:00:00+00:00" class="md-ellipsis">July 14, 2025</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../category/summer-of-ys/">Summer-of-YS</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              4 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
           
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
+        </div>
+      </div>
     </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="ys-advent-2023"><a class="toclink" href="../../2023-12-01/ys-advent-2023/">YS Advent 2023</a></h2>
-<h4 id="seasons-greetings-my-yaml-friends"><a class="toclink" href="../../2023-12-01/ys-advent-2023/#seasons-greetings-my-yaml-friends">Seasons Greetings, my YAML friends!</a></h4>
-<p>What if I told you that you could write a <strong>program in YAML</strong> that would
-generate a Christmas tree?</p>
-<p>Well, you can! Here's how:</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-01/ys-advent-2023/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-10-26 00:00:00+00:00">October 26, 2023</time></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="welcome-to-the-ys-blog"><a class="toclink" href="../../2023-10-26/welcome-to-the-ys-blog/">Welcome to the YS Blog</a></h2>
-<p><strong>Greetings!</strong></p>
-<p>Welcome to the YS blog.</p>
-<p>This is where we will introduce you to novel concepts about YS as the language
-evolves.</p>
-    
-  </div>
-</article>
-      
+    <article class="md-content__inner md-typeset">
       
         
-          
 
 
 
-<nav class="md-pagination">
-  <a class="md-pagination__link" href="../../">1</a> <a class="md-pagination__link" href="../2/">2</a> <a class="md-pagination__link" href="../3/">3</a> <span class="md-pagination__current">4</span>
-</nav>
-        
+
+
+
+  
+
+
+
+
+
+  
+
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-14.md"
+     title="Edit this page"
+     class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+  </a>
+
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-14.md"
+     title="View source of this page"
+     class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+  </a>
+
+
+  <h1>YS Mapping Key Uniqueness</h1>
+
+<p>I've said it before, but YS code is 100% valid YAML.</p>
+<p>Here's a YS program:</p>
+<div class="highlight"><pre><span></span><code>!YS-v0
+say: &#39;You say Goodbye&#39;
+say: &#39;I say Hello&#39;
+</code></pre></div>
+<p>YAML says that mapping keys must be unique.</p>
+<p>That program seems to be a YAML mapping with two keys that are the same.</p>
+<p>How can this be valid YAML?</p>
+<!-- more -->
+
+<h2 id="yamls-implicit-tagging">YAML's Implicit Tagging<a class="headerlink" href="#yamls-implicit-tagging" title="Permanent link">🔗</a></h2>
+<p>I'm pretty sure you know what YAML tags are by now.</p>
+<p>They're the annotation syntax that looks like: <code>!foo</code> or <code>!bar/baz</code>.
+Words prefixed with a <code>!</code>.</p>
+<p>In YAML, you can put a tag on any node in the document.
+Here's an example:</p>
+<div class="highlight"><pre><span></span><code>--- !tag1
+!tag2 foo: !tag3 bar
+!tag4 bar:
+- !tag5 baz
+- !tag6 [!tag7 aaa, !tag8 bbb]
+</code></pre></div>
+<p>In real world YAML, you almost never see tags.
+Even in YS, except for <code>!YS-v0</code> and <code>!</code>, you almost never see tags.</p>
+<p>Here's the other YS tags I've shown you so far:</p>
+<ul>
+<li><code>!code</code></li>
+<li><code>!data</code></li>
+<li><code>!bare</code></li>
+<li><code>!clj</code></li>
+</ul>
+<p>I also showed you function calling tags like <code>!:merge</code> and <code>!:reverse</code>.</p>
+<p>It seems like tags aren't used much in YAML or YS.</p>
+<p>That's not the case!!</p>
+<p>YAML has the concept of implicit tagging.
+When a YAML loader (the YS compiler is a YAML loader) loads a YAML stream, it
+adds a tag to every node that doesn't have one that was specified explicitly.</p>
+<p>All YAML loaders work this way.</p>
+<h2 id="explicit-tagging">Explicit Tagging<a class="headerlink" href="#explicit-tagging" title="Permanent link">🔗</a></h2>
+<p>Consider this plain YAML:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">one</span>
+<span class="nt">bar</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.1415</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>This is the same as this explicitly tagged YAML:</p>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!!map</span>
+<span class="kt">!!str</span><span class="w"> </span><span class="s">&#39;foo&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="kt">!!str</span><span class="w"> </span><span class="s">&#39;one&#39;</span>
+<span class="kt">!!str</span><span class="w"> </span><span class="s">&#39;bar&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="kt">!!seq</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!!int</span><span class="w"> </span><span class="s">&#39;2&#39;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!!float</span><span class="w"> </span><span class="s">&#39;3.14159&#39;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!!bool</span><span class="w"> </span><span class="s">&#39;true&#39;</span>
+</code></pre></div>
+<p>Let's test it by loading it with YS:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-J<span class="w"> </span>-
+---<span class="w"> </span>!!map
+!!str<span class="w"> </span><span class="s1">&#39;foo&#39;</span>:<span class="w"> </span>!!str<span class="w"> </span><span class="s1">&#39;one&#39;</span>
+!!str<span class="w"> </span><span class="s1">&#39;bar&#39;</span>:<span class="w"> </span>!!seq
+-<span class="w"> </span>!!int<span class="w"> </span><span class="s1">&#39;2&#39;</span>
+-<span class="w"> </span>!!float<span class="w"> </span><span class="s1">&#39;3.14159&#39;</span>
+-<span class="w"> </span>!!bool<span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<span class="o">{</span><span class="s2">&quot;foo&quot;</span>:<span class="s2">&quot;one&quot;</span>,<span class="w"> </span><span class="s2">&quot;bar&quot;</span>:<span class="o">[</span><span class="m">2</span>,<span class="w"> </span><span class="m">3</span>.14159,<span class="w"> </span>true<span class="o">]}</span>
+</code></pre></div>
+<p>You would never write YAML that way, but inside a YAML loader, that's what
+happens.</p>
+<p>Let's try it with a different YAML loader.
+My colleague <a href="https://github.com/perlpunk">Tina&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> wrote a YAML loader called
+<a href="https://github.com/perlpunk/YAML-PP-p5">YAML::PP&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.
+It installs a CLI called <code>yamlpp-load-dump</code>.</p>
+<p>Let's try it:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>yamlpp-load-dump
+---<span class="w"> </span>!!map
+!!str<span class="w"> </span><span class="s1">&#39;foo&#39;</span>:<span class="w"> </span>!!str<span class="w"> </span><span class="s1">&#39;one&#39;</span>
+!!str<span class="w"> </span><span class="s1">&#39;bar&#39;</span>:<span class="w"> </span>!!seq
+-<span class="w"> </span>!!int<span class="w"> </span><span class="s1">&#39;2&#39;</span>
+-<span class="w"> </span>!!float<span class="w"> </span><span class="s1">&#39;3.14159&#39;</span>
+-<span class="w"> </span>!!bool<span class="w"> </span><span class="s1">&#39;true&#39;</span>
+---
+<span class="s1">&#39;foo&#39;</span>:<span class="w"> </span><span class="s1">&#39;one&#39;</span>
+<span class="s1">&#39;bar&#39;</span>:
+-<span class="w"> </span><span class="m">2</span>
+-<span class="w"> </span><span class="m">3</span>.14159
+-<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
+<h2 id="why-is-the-ys-program-valid-yaml">Why is the YS program valid YAML?<a class="headerlink" href="#why-is-the-ys-program-valid-yaml" title="Permanent link">🔗</a></h2>
+<p>Here it is again:</p>
+<div class="highlight"><pre><span></span><code>!YS-v0
+say: &#39;You say Goodbye&#39;
+say: &#39;I say Hello&#39;
+</code></pre></div>
+<p>In short, we've tagged the top level mapping with <code>!YS-v0</code>.</p>
+<p>YAML's unique key constraint applies to nodes tagged with <code>!!map</code> which tells
+the loader to turn this node into "an unordered association of unique keys to
+values".</p>
+<p>The YS compiler is loading this YAML into a YS AST which is something very
+different than a plain mapping data structure.</p>
+<p>Let's look at something a bit more complex:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<span class="nt">mapping =:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
+
+<span class="nt">defn main(*args)</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Here</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">merged</span><span class="nv"> </span><span class="s">mapping:&quot;</span>
+<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(mapping hash-map(args*))</span>
+</code></pre></div>
+<p>Let's run it like so:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-U<span class="w"> </span>program.ys<span class="w"> </span>aaa<span class="w"> </span>bbb<span class="w"> </span>ccc<span class="w"> </span>ddd
+Here<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>merged<span class="w"> </span>mapping:
+<span class="o">{</span>foo<span class="w"> </span>bar,<span class="w"> </span>ccc<span class="w"> </span>ddd,<span class="w"> </span>aaa<span class="w"> </span>bbb<span class="o">}</span>
+</code></pre></div>
+<p>We have the same deal here, except there's no explicit tag on the node that
+appears to be a mapping with duplicate keys.</p>
+<p>We need to see what implicit tags were assigned to the nodes, during the YS
+compilation (loading) process.</p>
+<p>Luckily, that's trivial to do with the <code>ys</code> <code>-d</code> or <code>-D</code> flags.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-cU<span class="w"> </span>-Dbuild<span class="w"> </span>program.ys
+***<span class="w"> </span>build<span class="w">     </span>***<span class="w"> </span><span class="m">0</span>.199973<span class="w"> </span>ms
+
+<span class="o">{</span>:xmap
+<span class="w"> </span><span class="o">[[{</span>:Sym<span class="w"> </span>def<span class="o">}</span><span class="w"> </span><span class="o">{</span>:Sym<span class="w"> </span>mapping<span class="o">}]</span>
+<span class="w">  </span><span class="o">{</span>:Map<span class="w"> </span><span class="o">[{</span>:Str<span class="w"> </span><span class="s2">&quot;foo&quot;</span><span class="o">}</span><span class="w"> </span><span class="o">{</span>:Str<span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="o">}]}</span>
+<span class="w">  </span><span class="o">[{</span>:Sym<span class="w"> </span>defn<span class="o">}</span><span class="w"> </span><span class="o">{</span>:Sym<span class="w"> </span>main<span class="o">}</span><span class="w"> </span>nil<span class="w"> </span><span class="o">{</span>:Vec<span class="w"> </span><span class="o">[{</span>:Sym<span class="w"> </span><span class="p">&amp;</span><span class="o">}</span><span class="w"> </span><span class="o">{</span>:Sym<span class="w"> </span>args<span class="o">}]}]</span>
+<span class="w">  </span><span class="o">{</span>:xmap
+<span class="w">   </span><span class="o">[{</span>:Sym<span class="w"> </span>say<span class="o">}</span>
+<span class="w">    </span><span class="o">{</span>:Str<span class="w"> </span><span class="s2">&quot;Here is a merged mapping:&quot;</span><span class="o">}</span>
+<span class="w">    </span><span class="o">{</span>:Sym<span class="w"> </span>say<span class="o">}</span>
+<span class="w">    </span><span class="o">{</span>:Lst
+<span class="w">     </span><span class="o">[{</span>:Sym<span class="w"> </span>merge<span class="o">}</span>
+<span class="w">      </span><span class="o">{</span>:Sym<span class="w"> </span>mapping<span class="o">}</span>
+<span class="w">      </span><span class="o">{</span>:Lst<span class="w"> </span><span class="o">[{</span>:Sym<span class="w"> </span>hash-map<span class="o">}</span><span class="w"> </span><span class="o">{</span>:Sym<span class="w"> </span>args*<span class="o">}]}]}]}]}</span>
+
+<span class="o">(</span>def<span class="w"> </span>mapping<span class="w"> </span><span class="o">{</span><span class="s2">&quot;foo&quot;</span><span class="w"> </span><span class="s2">&quot;bar&quot;</span><span class="o">})</span>
+<span class="o">(</span>defn
+<span class="w"> </span>main
+<span class="w"> </span><span class="o">[</span><span class="p">&amp;</span><span class="w"> </span>args<span class="o">]</span>
+<span class="w"> </span><span class="o">(</span>say<span class="w"> </span><span class="s2">&quot;Here is a merged mapping:&quot;</span><span class="o">)</span>
+<span class="w"> </span><span class="o">(</span>say<span class="w"> </span><span class="o">(</span>merge<span class="w"> </span>mapping<span class="w"> </span><span class="o">(</span>apply<span class="w"> </span>hash-map<span class="w"> </span>args<span class="o">))))</span>
+<span class="o">(</span>apply<span class="w"> </span>main<span class="w"> </span>ARGS<span class="o">)</span>
+</code></pre></div>
+<p>This shows us the data structure created by the <code>build</code> phase of the YS compiler
+stack, and then shows us the final Clojure code result.
+Use <code>-d</code> to see all 7 stages!</p>
+<p>The important thing is that we defined an actual data mapping <code>{foo: bar}</code> and
+that got tagged with <code>:Map</code> which means <code>!!map</code> internally in YS.
+The mapping with the 2 <code>say</code> keys got tagged with <code>:xmap</code> which tells the
+compiler that this is a code AST node.</p>
+<h2 id="duplicate-keys-in-real-world-yaml">Duplicate Keys in Real World YAML<a class="headerlink" href="#duplicate-keys-in-real-world-yaml" title="Permanent link">🔗</a></h2>
+<p>Even though YAML doesn't allow loading to mappings with duplicate keys, not all
+YAML loaders will throw an error.</p>
+<p>Often they will just use the last pair.
+Sometimes they use the first pair.
+Sometimes they will throw an error.
+Some of them let you configure the behavior.</p>
+<p>I think that makes sense.
+It's practical to support different behaviors for duplicate keys in YAML.</p>
+<p>Currently YS will use the last pair specified in the YAML (as long as it's in
+data mode or bare mode, of course).</p>
+<p>This was a fairly deep post, but I hope I explained things well enough.</p>
+<p>If you have any questions, please ask in the comments below!!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+  <h2 id="__comments">Comments</h2>
+  <!-- Insert generated snippet here -->
+  <script src="https://giscus.app/client.js"
+    data-repo="yaml/yamlscript"
+    data-repo-id="R_kgDOHmgdIg"
+    data-category="Blog Post Discussions"
+    data-category-id="DIC_kwDOHmgdIs4Cq6mr"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    // Set palette on initial load
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate"
+        ? "transparent_dark"
+        : "light"
+
+      // Instruct Giscus to set theme
+      giscus.setAttribute("data-theme", theme) 
+    }
+
+    // Register event handlers after documented loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate"
+            ? "transparent_dark"
+            : "light"
+
+          // Instruct Giscus to change theme
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
       
-    </div>
+    </article>
   </div>
 
           
@@ -2512,10 +2792,12 @@ evolves.</p>
   
     
       
+        
+      
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../../doc/run-ys/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Self Installation Scripts">
+          <a href="../../2025-07-13/ys-testing-part-2/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Testing Part 2">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2525,27 +2807,11 @@ evolves.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Self Installation Scripts
+                YS Testing Part 2
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../category/advent-2023/" class="md-footer__link md-footer__link--next" aria-label="Next: Advent-2023">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Advent-2023
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     

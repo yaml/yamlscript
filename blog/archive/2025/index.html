@@ -1982,6 +1982,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ys-mapping-key-uniqueness" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS Mapping Key Uniqueness
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ys-testing-part-2" class="md-nav__link">
     <span class="md-ellipsis">
       YS Testing Part 2
@@ -2192,15 +2201,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#whens-and-lets" class="md-nav__link">
     <span class="md-ellipsis">
       whens and lets
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#more-fancier-ys-conditionals" class="md-nav__link">
-    <span class="md-ellipsis">
-      More Fancier YS Conditionals
     </span>
   </a>
   
@@ -2643,6 +2643,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ys-mapping-key-uniqueness" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS Mapping Key Uniqueness
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ys-testing-part-2" class="md-nav__link">
     <span class="md-ellipsis">
       YS Testing Part 2
@@ -2858,15 +2867,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#more-fancier-ys-conditionals" class="md-nav__link">
-    <span class="md-ellipsis">
-      More Fancier YS Conditionals
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2881,6 +2881,61 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <header class="md-typeset">
         <h1 id="2025">2025<a class="headerlink" href="#2025" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-07-14 00:00:00+00:00">July 14, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              4 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="ys-mapping-key-uniqueness"><a class="toclink" href="../../2025-07-14/ys-mapping-key-uniqueness/">YS Mapping Key Uniqueness</a></h2>
+<p>I've said it before, but YS code is 100% valid YAML.</p>
+<p>Here's a YS program:</p>
+<div class="highlight"><pre><span></span><code>!YS-v0
+say: &#39;You say Goodbye&#39;
+say: &#39;I say Hello&#39;
+</code></pre></div>
+<p>YAML says that mapping keys must be unique.</p>
+<p>That program seems to be a YAML mapping with two keys that are the same.</p>
+<p>How can this be valid YAML?</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../2025-07-14/ys-mapping-key-uniqueness/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -4227,55 +4282,6 @@ CLI.</p>
     
       <nav class="md-post__action">
         <a href="../../2025-06-20/whens-and-lets/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-06-19 00:00:00+00:00">June 19, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="more-fancier-ys-conditionals"><a class="toclink" href="../../2025-06-19/more-fancier-ys-conditionals/">More Fancier YS Conditionals</a></h2>
-<p>Yesterday we looked at the <code>cond</code> and <code>case</code> functions.</p>
-<p>The <code>cond</code> function has a couple cousins: <code>condp</code> and <code>condf</code>.</p>
-<p>Let's take a look at them.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2025-06-19/more-fancier-ys-conditionals/">
           Continue reading
         </a>
       </nav>
