@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Tue, 15 Jul 2025 03:00:34 -0000</pubDate>
-    <lastBuildDate>Tue, 15 Jul 2025 03:00:34 -0000</lastBuildDate>
+    <pubDate>Wed, 16 Jul 2025 02:30:12 -0000</pubDate>
+    <lastBuildDate>Wed, 16 Jul 2025 02:30:12 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -60,6 +60,45 @@ say: &#39;I say Hello&#39;&lt;/code&gt;&lt;/p&gt;
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/</guid>
       
       <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-14/ys-mapping-key-uniqueness.png" type="image/png" length="49160" />
+      
+    </item>
+    
+    <item>
+      <title>YS Currying in YAML Configs</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;In functional programming, currying is a technique where a function that takes
+multiple arguments is called with fewer arguments than it takes and returns a
+function that takes the remaining arguments.&lt;/p&gt;
+&lt;p&gt;In Clojure and YS, the &lt;code&gt;partial&lt;/code&gt; function is used to create a curried function.&lt;/p&gt;
+&lt;p&gt;Here&#39;s an example:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bash
+$ ys -e &#39;
+multiply-by-6 =: partial(mul 6)
+multiply-by-7 =: mul.partial(7)
+say: multiply-by-6(7)
+say: multiply-by-7(6) 
+&#39;
+42
+42&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;That&#39;s neat but how is it useful in YAML configs?&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-14/ys-currying-in-yaml-configs/</link>
+      <pubDate>Mon, 14 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-14/ys-currying-in-yaml-configs/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-14/ys-currying-in-yaml-configs.png" type="image/png" length="0" />
       
     </item>
     

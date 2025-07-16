@@ -12,13 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-13/ys-testing-part-2/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-14/ys-currying-in-yaml-configs/">
       
       
-        <link rel="prev" href="../../2025-07-12/ys-testing/">
+        <link rel="prev" href="../../2025-07-13/ys-testing-part-2/">
       
       
-        <link rel="next" href="../../2025-07-14/ys-currying-in-yaml-configs/">
+        <link rel="next" href="../ys-mapping-key-uniqueness/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +29,7 @@
     
     
       
-        <title>YS Testing Part 2 - YS — YAML Done Wisely</title>
+        <title>YS Currying in YAML Configs - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +127,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="YS Testing Part 2 - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YS Currying in YAML Configs - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-13.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-15.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +139,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-13/ys-testing-part-2/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-14/ys-currying-in-yaml-configs/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="YS Testing Part 2 - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YS Currying in YAML Configs - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-13.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-15.png" >
       
     
     
@@ -170,7 +170,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#the-ystaptest-library" class="md-skip">
+        <a href="#curried-merges" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +209,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              YS Testing Part 2
+              YS Currying in YAML Configs
             
           </span>
           </a>
@@ -2378,27 +2378,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-ystaptest-library" class="md-nav__link">
+  <a href="#curried-merges" class="md-nav__link">
     <span class="md-ellipsis">
-      The ys::taptest Library
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-a-test-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      How a test works
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#other-test-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      Other test keys
+      Curried merges
     </span>
   </a>
   
@@ -2460,7 +2442,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-13 00:00:00+00:00" class="md-ellipsis">July 13, 2025</time>
+                        <time datetime="2025-07-14 00:00:00+00:00" class="md-ellipsis">July 14, 2025</time>
                       </div>
                     </li>
                     
@@ -2482,7 +2464,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              3 min read
+                              2 min read
                             
                           </span>
                         </div>
@@ -2514,14 +2496,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-13.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-14.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-13.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-14.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2529,85 +2511,128 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>YS Testing Part 2</h1>
+  <h1>YS Currying in YAML Configs</h1>
 
-<p><a href="../../2025-07-12/ys-testing/">Yesterday</a> we talked about writing tests in YS.</p>
-<p>We also introduced the <code>ys::taptest</code> library, but we didn't really cover how it
-works.</p>
-<p>Let's take a closer look...</p>
+<p>In functional programming, currying is a technique where a function that takes
+multiple arguments is called with fewer arguments than it takes and returns a
+function that takes the remaining arguments.</p>
+<p>In Clojure and YS, the <code>partial</code> function is used to create a curried function.</p>
+<p>Here's an example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">multiply-by-6 =: partial(mul 6)</span>
+<span class="s1">multiply-by-7 =: mul.partial(7)</span>
+<span class="s1">say: multiply-by-6(7)</span>
+<span class="s1">say: multiply-by-7(6) </span>
+<span class="s1">&#39;</span>
+<span class="m">42</span>
+<span class="m">42</span>
+</code></pre></div>
+<p>That's neat but how is it useful in YAML configs?</p>
 <!-- more -->
 
-<h2 id="the-ystaptest-library">The <code>ys::taptest</code> Library<a class="headerlink" href="#the-ystaptest-library" title="Permanent link">🔗</a></h2>
-<p>The <code>ys::taptest</code> library is a tool for writing tests in YS.</p>
-<p>It implements the <a href="https://testanything.org/">TAP&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> protocol, which started as a
-test framework for Perl, but has since been adopted by many other languages.
-We use Perl's <code>prove</code> test runner/harness to run our tests.</p>
-<p>One very cool thing about <code>prove</code> is that it honors the shebang line of the test
-file that it is running.
-This means that it can be used to run tests for any language as long as the test
-files are outputting TAP.</p>
-<p>Looking at our test file from yesterday:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">#!/usr/bin/env ys-0</span>
-
-<span class="nt">use rot-13</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:all</span>
-<span class="nt">use ys::taptest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:all</span>
-
-<span class="nt">test:</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rot-13(&#39;Hello, world!&#39;)</span>
-<span class="w">  </span><span class="nt">want</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Uryyb, jbeyq!</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rot-13(&#39;Uryyb, jbeyq!&#39;)</span>
-<span class="w">  </span><span class="nt">want</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello, world!</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rot-13(&#39;I like pie&#39;)</span>
-<span class="w">  </span><span class="nt">want</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">V yvxr cvr</span>
-
-<span class="nt">done</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<h2 id="curried-merges">Curried <code>merge</code>s<a class="headerlink" href="#curried-merges" title="Permanent link">🔗</a></h2>
+<p>Imagine you have a big YAML config with a lot of mappings that often have the
+same data or almost the same data.</p>
+<p>It would be nice if there was a simple way to use defaults, and just specify
+the overrides.</p>
+<p>Here's part of an example YAML config I just found on the internet:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># From https://circleci.com/docs/sample-config/</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
 </code></pre></div>
-<p>We start with a YS shebang line, which tells <code>prove</code> to run our tests with YS.</p>
-<p>Then we load the library we want to test (the <code>rot-13</code> library) and the
-<code>ys::taptest</code> library.</p>
-<p>In both cases we use the <code>:all</code> flag that tells <code>use</code> to export all the
-library's public functions.
-For <code>rot-13</code> we export the <code>rot-13</code> function and for <code>ys::taptest</code> we export the
-<code>test</code> and <code>done</code> functions.</p>
-<p>The <code>test</code> function takes a sequence of tests (which are just data) and
-evaluates each test in turn, outputting the results as TAP to <code>stdout</code>.</p>
-<p>The <code>done</code> function tells the harness that we're done running all the tests for
-this test file.
-This is important because if we have 20 tests and the first 10 pass and then
-the program crashes, <code>prove</code> will know that we didn't run all the tests.
-The <code>done</code> function takes an optional number that needs to be the number of
-tests we expected to run.</p>
-<h2 id="how-a-test-works">How a test works<a class="headerlink" href="#how-a-test-works" title="Permanent link">🔗</a></h2>
-<p>Each test in the sequence is a map that must contain certain keys.</p>
-<p>A test can have a <code>name</code> key that is used to identify the test.
-It's a string and it will be printed for that test in the TAP output.
-To see all the test names, you can run <code>prove</code> with the <code>-v</code> flag.
-If you don't provide a <code>name</code> key, the test will be identified by the code that
-is being tested.</p>
-<p>Next a test must have either a <code>code</code> key or a <code>cmnd</code> key.
-A <code>code</code> key is a string that is YS code that will be evaluated.
-A <code>cmnd</code> key is a string that is a shell command that will be run.</p>
-<p>Then a test can have a <code>want</code> key that is a string that is the expected result
-of the test.
-For <code>code</code> tests, the <code>want</code> value is the expected stringified result of the
-evaluated code.
-For <code>cmnd</code> tests, the <code>want</code> value is the expected stdout of the command.</p>
-<p>Want can also be the expected error message of the test.
-In that case, the test needs to define a pair of <code>what: error</code>.
-By doing that, the test is declaring that it expects an error to be thrown.</p>
-<p>The <code>want</code> value implies an exact match.
-Instead of <code>want</code>, you can use <code>like: &lt;regex&gt;</code> to match the result, or you can
-use <code>have: &lt;substring&gt;</code> to supply a substring that must be present in the
-result.</p>
-<h2 id="other-test-keys">Other test keys<a class="headerlink" href="#other-test-keys" title="Permanent link">🔗</a></h2>
-<p>Sometimes you just want to concentrate on a single test.
-For that you can specify a <code>ONLY: true</code> pair.</p>
-<p>Similarly, if you want to skip a test for now, you can specify a <code>SKIP: true</code>
-pair.</p>
-<p>See the <a href="/doc/ys-taptest">ys::taptest documentation</a> for more details.</p>
+<p>Let's refactor this with YS:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+
+<span class="nt">defaults =:</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">docker</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
+
+<span class="nn">---</span><span class="w"> </span><span class="kt">!data</span>
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build:</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">merge defaults.docker:</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
+<span class="w">  </span><span class="nt">test:</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">merge defaults.docker:</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
+</code></pre></div>
+<p>Let's load this with <code>ys</code>:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>config.yaml
+jobs:
+<span class="w">  </span>build:
+<span class="w">    </span>docker:
+<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
+<span class="w">    </span>steps:
+<span class="w">    </span>-<span class="w"> </span>checkout
+<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the build job&quot;</span>
+<span class="w">  </span>test:
+<span class="w">    </span>docker:
+<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
+<span class="w">    </span>steps:
+<span class="w">    </span>-<span class="w"> </span>checkout
+<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the test job&quot;</span>
+</code></pre></div>
+<p>It works, but it's not very nice looking...</p>
+<p>Yet!</p>
+<p>Let's put the defaults in a separate file, and curry the defaults into the
+<code>merge</code> function.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># defaults.yaml</span>
+<span class="nt">docker</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">docker</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">defaults =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;defaults.yaml&#39;)</span>
+<span class="nt">docker-defaults =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge.partial(defaults.docker)</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="kt">!:docker-defaults</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="kt">!:docker-defaults</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
+</code></pre></div>
+<p>And load:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>config.yaml
+jobs:
+<span class="w">  </span>build:
+<span class="w">    </span>docker:
+<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
+<span class="w">    </span>steps:
+<span class="w">    </span>-<span class="w"> </span>checkout
+<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the build job&quot;</span>
+<span class="w">  </span>test:
+<span class="w">    </span>docker:
+<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
+<span class="w">    </span>steps:
+<span class="w">    </span>-<span class="w"> </span>checkout
+<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the test job&quot;</span>
+</code></pre></div>
+<p>It works, and it's a lot cleaner this time.</p>
+<p>We used tag function calls to our curried <code>merge</code> function.</p>
+<p>If this was a real world config, it would have been much bigger.
+We could have put lots of defaults in the <code>defaults.yaml</code> file.
+Then we could make functions to apply the defaults wherever we wanted to.</p>
+<p>I hope you can see how powerful a refactoring strategy like this can be!</p>
 
 
 
@@ -2700,7 +2725,7 @@ pair.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-12/ys-testing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Testing">
+          <a href="../../2025-07-13/ys-testing-part-2/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Testing Part 2">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2710,20 +2735,20 @@ pair.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                YS Testing
+                YS Testing Part 2
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../2025-07-14/ys-currying-in-yaml-configs/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Currying in YAML Configs">
+          <a href="../ys-mapping-key-uniqueness/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Mapping Key Uniqueness">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                YS Currying in YAML Configs
+                YS Mapping Key Uniqueness
               </div>
             </div>
             <div class="md-footer__button md-icon">
