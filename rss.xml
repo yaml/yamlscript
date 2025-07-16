@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Wed, 16 Jul 2025 02:30:12 -0000</pubDate>
-    <lastBuildDate>Wed, 16 Jul 2025 02:30:12 -0000</lastBuildDate>
+    <pubDate>Wed, 16 Jul 2025 02:31:38 -0000</pubDate>
+    <lastBuildDate>Wed, 16 Jul 2025 02:31:38 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,38 +30,6 @@
     
 
     
-    
-    <item>
-      <title>YS Mapping Key Uniqueness</title>
-      
-      
-        
-      <author>Ingy döt Net</author>
-        
-      
-      
-      
-        
-      <category>Summer-of-YS</category>
-        
-      
-      <description>&lt;p&gt;I&#39;ve said it before, but YS code is 100% valid YAML.&lt;/p&gt;
-&lt;p&gt;Here&#39;s a YS program:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;!YS-v0
-say: &#39;You say Goodbye&#39;
-say: &#39;I say Hello&#39;&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;YAML says that mapping keys must be unique.&lt;/p&gt;
-&lt;p&gt;That program seems to be a YAML mapping with two keys that are the same.&lt;/p&gt;
-&lt;p&gt;How can this be valid YAML?&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/</link>
-      <pubDate>Mon, 14 Jul 2025 00:00:00 +0000</pubDate>
-      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
-      
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/</guid>
-      
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-14/ys-mapping-key-uniqueness.png" type="image/png" length="49160" />
-      
-    </item>
     
     <item>
       <title>YS Currying in YAML Configs</title>
@@ -92,13 +60,45 @@ say: multiply-by-7(6)
 42
 42&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;That&#39;s neat but how is it useful in YAML configs?&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-14/ys-currying-in-yaml-configs/</link>
+      <link>https://yamlscript.org/blog/2025-07-15/ys-currying-in-yaml-configs/</link>
+      <pubDate>Tue, 15 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-15/ys-currying-in-yaml-configs/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-15/ys-currying-in-yaml-configs.png" type="image/png" length="50834" />
+      
+    </item>
+    
+    <item>
+      <title>YS Mapping Key Uniqueness</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;I&#39;ve said it before, but YS code is 100% valid YAML.&lt;/p&gt;
+&lt;p&gt;Here&#39;s a YS program:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;!YS-v0
+say: &#39;You say Goodbye&#39;
+say: &#39;I say Hello&#39;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;YAML says that mapping keys must be unique.&lt;/p&gt;
+&lt;p&gt;That program seems to be a YAML mapping with two keys that are the same.&lt;/p&gt;
+&lt;p&gt;How can this be valid YAML?&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/</link>
       <pubDate>Mon, 14 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-14/ys-currying-in-yaml-configs/</guid>
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-14/ys-mapping-key-uniqueness/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-14/ys-currying-in-yaml-configs.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-14/ys-mapping-key-uniqueness.png" type="image/png" length="49160" />
       
     </item>
     

@@ -2376,18 +2376,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ys-mapping-key-uniqueness" class="md-nav__link">
+  <a href="#ys-currying-in-yaml-configs" class="md-nav__link">
     <span class="md-ellipsis">
-      YS Mapping Key Uniqueness
+      YS Currying in YAML Configs
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ys-currying-in-yaml-configs" class="md-nav__link">
+  <a href="#ys-mapping-key-uniqueness" class="md-nav__link">
     <span class="md-ellipsis">
-      YS Currying in YAML Configs
+      YS Mapping Key Uniqueness
     </span>
   </a>
   
@@ -2632,6 +2632,67 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="md-post__meta md-meta">
       <ul class="md-meta__list">
         <li class="md-meta__item">
+          <time datetime="2025-07-15 00:00:00+00:00">July 15, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="ys-currying-in-yaml-configs"><a class="toclink" href="2025-07-15/ys-currying-in-yaml-configs/">YS Currying in YAML Configs</a></h2>
+<p>In functional programming, currying is a technique where a function that takes
+multiple arguments is called with fewer arguments than it takes and returns a
+function that takes the remaining arguments.</p>
+<p>In Clojure and YS, the <code>partial</code> function is used to create a curried function.</p>
+<p>Here's an example:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">multiply-by-6 =: partial(mul 6)</span>
+<span class="s1">multiply-by-7 =: mul.partial(7)</span>
+<span class="s1">say: multiply-by-6(7)</span>
+<span class="s1">say: multiply-by-7(6) </span>
+<span class="s1">&#39;</span>
+<span class="m">42</span>
+<span class="m">42</span>
+</code></pre></div>
+<p>That's neat but how is it useful in YAML configs?</p>
+
+    
+      <nav class="md-post__action">
+        <a href="2025-07-15/ys-currying-in-yaml-configs/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
           <time datetime="2025-07-14 00:00:00+00:00">July 14, 2025</time></li>
         
           <li class="md-meta__item">
@@ -2666,67 +2727,6 @@ say: &#39;I say Hello&#39;
     
       <nav class="md-post__action">
         <a href="2025-07-14/ys-mapping-key-uniqueness/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-07-14 00:00:00+00:00">July 14, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="ys-currying-in-yaml-configs"><a class="toclink" href="2025-07-14/ys-currying-in-yaml-configs/">YS Currying in YAML Configs</a></h2>
-<p>In functional programming, currying is a technique where a function that takes
-multiple arguments is called with fewer arguments than it takes and returns a
-function that takes the remaining arguments.</p>
-<p>In Clojure and YS, the <code>partial</code> function is used to create a curried function.</p>
-<p>Here's an example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">multiply-by-6 =: partial(mul 6)</span>
-<span class="s1">multiply-by-7 =: mul.partial(7)</span>
-<span class="s1">say: multiply-by-6(7)</span>
-<span class="s1">say: multiply-by-7(6) </span>
-<span class="s1">&#39;</span>
-<span class="m">42</span>
-<span class="m">42</span>
-</code></pre></div>
-<p>That's neat but how is it useful in YAML configs?</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2025-07-14/ys-currying-in-yaml-configs/">
           Continue reading
         </a>
       </nav>
