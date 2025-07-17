@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Wed, 16 Jul 2025 02:33:24 -0000</pubDate>
-    <lastBuildDate>Wed, 16 Jul 2025 02:33:24 -0000</lastBuildDate>
+    <pubDate>Thu, 17 Jul 2025 03:10:56 -0000</pubDate>
+    <lastBuildDate>Thu, 17 Jul 2025 03:10:56 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,38 @@
     
 
     
+    
+    <item>
+      <title>Making YS be Valid YAML</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;I&#39;ll say it again.
+All YS syntax is 100% YAML.  The YS compiler uses a third party YAML parser so
+there is no way that YS code cannot be YAML.&lt;/p&gt;
+&lt;p&gt;YS code also uses a lot of Clojure syntax.
+This makes sense since the code gets compiled to Clojure in the end.&lt;/p&gt;
+&lt;p&gt;Some Clojure code looks a lot like YAML but with subtle differences.&lt;/p&gt;
+&lt;p&gt;Today we&#39;ll talk about the little gotchas that can trip you up when you&#39;re
+writing YS code, and how to work around them.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-16/making-ys-be-valid-yaml/</link>
+      <pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-16/making-ys-be-valid-yaml/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-16/making-ys-be-valid-yaml.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>YS Currying in YAML Configs</title>
@@ -55,7 +87,7 @@ $ ys -e &#39;
 multiply-by-6 =: partial(mul 6)
 multiply-by-7 =: mul.partial(7)
 say: multiply-by-6(7)
-say: multiply-by-7(6) 
+say: multiply-by-7(6)
 &#39;
 42
 42&lt;/code&gt;&lt;/p&gt;

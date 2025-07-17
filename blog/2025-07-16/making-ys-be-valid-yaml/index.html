@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-15/ys-currying-in-yaml-configs/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-16/making-ys-be-valid-yaml/">
       
       
-        <link rel="prev" href="../../2025-07-14/ys-mapping-key-uniqueness/">
+        <link rel="prev" href="../../2025-07-15/ys-currying-in-yaml-configs/">
       
-      
-        <link rel="next" href="../../2025-07-16/making-ys-be-valid-yaml/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>YS Currying in YAML Configs - YS — YAML Done Wisely</title>
+        <title>Making YS be Valid YAML - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="YS Currying in YAML Configs - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Making YS be Valid YAML - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-15.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-16.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-15/ys-currying-in-yaml-configs/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-16/making-ys-be-valid-yaml/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="YS Currying in YAML Configs - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Making YS be Valid YAML - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-15.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-16.png" >
       
     
     
@@ -170,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#curried-merge" class="md-skip">
+        <a href="#ys-escaping" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              YS Currying in YAML Configs
+              Making YS be Valid YAML
             
           </span>
           </a>
@@ -2378,9 +2376,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#curried-merge" class="md-nav__link">
+  <a href="#ys-escaping" class="md-nav__link">
     <span class="md-ellipsis">
-      Curried merge
+      YS + escaping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#map-and-vector-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Map and Vector Literals
     </span>
   </a>
   
@@ -2442,7 +2449,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-15 00:00:00+00:00" class="md-ellipsis">July 15, 2025</time>
+                        <time datetime="2025-07-16 00:00:00+00:00" class="md-ellipsis">July 16, 2025</time>
                       </div>
                     </li>
                     
@@ -2464,7 +2471,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              2 min read
+                              3 min read
                             
                           </span>
                         </div>
@@ -2496,14 +2503,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-15.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-16.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-15.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-16.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2511,128 +2518,100 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>YS Currying in YAML Configs</h1>
+  <h1>Making YS be Valid YAML</h1>
 
-<p>In functional programming, currying is a technique where a function that takes
-multiple arguments is called with fewer arguments than it takes and returns a
-function that takes the remaining arguments.</p>
-<p>In Clojure and YS, the <code>partial</code> function is used to create a curried function.</p>
-<p>Here's an example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">multiply-by-6 =: partial(mul 6)</span>
-<span class="s1">multiply-by-7 =: mul.partial(7)</span>
-<span class="s1">say: multiply-by-6(7)</span>
-<span class="s1">say: multiply-by-7(6)</span>
-<span class="s1">&#39;</span>
-<span class="m">42</span>
-<span class="m">42</span>
-</code></pre></div>
-<p>That's neat but how is it useful in YAML configs?</p>
+<p>I'll say it again.
+All YS syntax is 100% YAML.  The YS compiler uses a third party YAML parser so
+there is no way that YS code cannot be YAML.</p>
+<p>YS code also uses a lot of Clojure syntax.
+This makes sense since the code gets compiled to Clojure in the end.</p>
+<p>Some Clojure code looks a lot like YAML but with subtle differences.</p>
+<p>Today we'll talk about the little gotchas that can trip you up when you're
+writing YS code, and how to work around them.</p>
 <!-- more -->
 
-<h2 id="curried-merge">Curried <code>merge</code><a class="headerlink" href="#curried-merge" title="Permanent link">🔗</a></h2>
-<p>Imagine you have a big YAML config with a lot of mappings that often have the
-same data or almost the same data.</p>
-<p>It would be nice if there was a simple way to use defaults, and just specify
-the overrides.</p>
-<p>Here's part of an example YAML config I just found on the internet:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># From https://circleci.com/docs/sample-config/</span>
-<span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">build</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
-<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
+<h2 id="ys-escaping">YS <code>+</code> escaping<a class="headerlink" href="#ys-escaping" title="Permanent link">🔗</a></h2>
+<p>The <code>*</code> operator is polymorphic.
+If you "multiply" a string by a number, it will repeat the string that many
+times.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;X&quot; * 3&#39;</span>
+Compile<span class="w"> </span>error:<span class="w"> </span><span class="k">while</span><span class="w"> </span>scanning<span class="w"> </span>an<span class="w"> </span><span class="nb">alias</span>
+<span class="w"> </span><span class="k">in</span><span class="w"> </span>reader,<span class="w"> </span>line<span class="w"> </span><span class="m">2</span>,<span class="w"> </span>column<span class="w"> </span><span class="m">10</span>:
+<span class="w">    </span>say:<span class="w"> </span><span class="s2">&quot;X&quot;</span><span class="w"> </span>*<span class="w"> </span><span class="m">3</span>
+<span class="w">             </span>^
 </code></pre></div>
-<p>Let's refactor this with YS:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
-
-<span class="nt">defaults =:</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">docker</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">docker</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
-
-<span class="nn">---</span><span class="w"> </span><span class="kt">!data</span>
-<span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">build:</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">merge defaults.docker:</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
-<span class="w">  </span><span class="nt">test:</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">merge defaults.docker:</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
+<p>That didn't go as expected.
+What happened?</p>
+<p>Well, that is simply not valid YAML.
+You can't have extra text after the end of a quoted string (except for
+comments).</p>
+<p>We want the value of the key <code>say</code> to be a YS expression, which means that it
+needs to be a YAML plain scalar.</p>
+<p>Plain scalars can't start with a YAML syntax character like <code>#%[{'"!&amp;*|&gt;</code>.</p>
+<p>One way to get around this particular case is to use parens.
+Plain scalars can start with a paren.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: (&quot;X&quot; * 3)&#39;</span>
+XXX
 </code></pre></div>
-<p>Let's load this with <code>ys</code>:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>config.yaml
-jobs:
-<span class="w">  </span>build:
-<span class="w">    </span>docker:
-<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
-<span class="w">    </span>steps:
-<span class="w">    </span>-<span class="w"> </span>checkout
-<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the build job&quot;</span>
-<span class="w">  </span>test:
-<span class="w">    </span>docker:
-<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
-<span class="w">    </span>steps:
-<span class="w">    </span>-<span class="w"> </span>checkout
-<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the test job&quot;</span>
+<p>A more general way is to use the <code>+</code> YS escape character.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: +&quot;X&quot; * 3&#39;</span>
+XXX
 </code></pre></div>
-<p>It works, but it's not very nice looking...</p>
-<p>Yet!</p>
-<p>Let's put the defaults in a separate file, and curry the defaults into the
-<code>merge</code> function.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># defaults.yaml</span>
-<span class="nt">docker</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">docker</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
+<p>The <code>+</code> makes the value be a valid YAML plain scalar.
+YS will then ignore a <code>+</code> that precedes a YAML syntax character.</p>
+<p>You can have whitespace after the <code>+</code>, so this is valid:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
+<span class="s1">say: +</span>
+<span class="s1">  &quot;X&quot; * 3&#39;</span>
+XXX
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
-<span class="nt">defaults =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;defaults.yaml&#39;)</span>
-<span class="nt">docker-defaults =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge.partial(defaults.docker)</span>
-
-<span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="kt">!:docker-defaults</span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
-<span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="kt">!:docker-defaults</span>
-<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
+<h2 id="map-and-vector-literals">Map and Vector Literals<a class="headerlink" href="#map-and-vector-literals" title="Permanent link">🔗</a></h2>
+<p>How about this?</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;: {a: 1, b: 2}&#39;</span>
+Compile<span class="w"> </span>error:<span class="w"> </span>Flow<span class="w"> </span>mappings<span class="w"> </span>not<span class="w"> </span>allowed<span class="w"> </span><span class="k">in</span><span class="w"> </span>code<span class="w"> </span>mode
 </code></pre></div>
-<p>And load:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>config.yaml
-jobs:
-<span class="w">  </span>build:
-<span class="w">    </span>docker:
-<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
-<span class="w">    </span>steps:
-<span class="w">    </span>-<span class="w"> </span>checkout
-<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the build job&quot;</span>
-<span class="w">  </span>test:
-<span class="w">    </span>docker:
-<span class="w">    </span>-<span class="w"> </span>image:<span class="w"> </span>cimg/base:2023.03
-<span class="w">    </span>steps:
-<span class="w">    </span>-<span class="w"> </span>checkout
-<span class="w">    </span>-<span class="w"> </span>run:<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;this is the test job&quot;</span>
+<p>The <code>-mc</code> flag tells YS to start in code mode.
+This is the default for <code>-e</code> but we use it here to make it clear.</p>
+<p>YS does not allow YAML flow mappings or flow sequences in code mode.</p>
+<p>We can use the <code>+</code> escape character to get around this:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;: +{a: 1, b: 2}&#39;</span>
+Compile<span class="w"> </span>error:<span class="w"> </span>mapping<span class="w"> </span>values<span class="w"> </span>are<span class="w"> </span>not<span class="w"> </span>allowed<span class="w"> </span>here
+<span class="w"> </span><span class="k">in</span><span class="w"> </span>reader,<span class="w"> </span>line<span class="w"> </span><span class="m">2</span>,<span class="w"> </span>column<span class="w"> </span><span class="m">8</span>:
+<span class="w">    </span>say:<span class="w"> </span>+<span class="o">{</span>a:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span>b:<span class="w"> </span><span class="m">2</span><span class="o">}</span>
 </code></pre></div>
-<p>It works, and it's a lot cleaner this time.</p>
-<p>We used tag function calls to our curried <code>merge</code> function.</p>
-<p>If this was a real world config, it would have been much bigger.
-We could have put lots of defaults in the <code>defaults.yaml</code> file.
-Then we could make functions to apply the defaults wherever we wanted to.</p>
-<p>I hope you can see how powerful a refactoring strategy like this can be!</p>
+<p>Oops!
+What happened now?</p>
+<p>Well, the <code>+</code> makes this a YAML plain scalar, but YAML plain scalars can't have
+<code>:</code> in them.</p>
+<p>Also this is not the correct way to express a map literal in YS or Clojure.
+It's close, but:</p>
+<ul>
+<li>No <code>:</code> is used</li>
+<li>Strings need to be quoted</li>
+<li>Commas are optional whitespace</li>
+</ul>
+<p>Let's try again:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;: +{&quot;a&quot; 1, &quot;b&quot; 2}&#39;</span>
+a:<span class="w"> </span><span class="m">1</span>
+b:<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>There we go.</p>
+<p>We could also have switched to data mode for the value, which has to allow YAML
+flow mappings and sequences.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;:: {a: 1, b: 2}&#39;</span>
+a:<span class="w"> </span><span class="m">1</span>
+b:<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>Sometimes normal YAML syntax (via data mode) is the best way to go.</p>
+<p>We could even use a YAML block mapping here instead:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;::</span>
+<span class="s1">  a: 1</span>
+<span class="s1">  b: 2&#39;</span>
+a:<span class="w"> </span><span class="m">1</span>
+b:<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>There are more gotchas to talk about, but I'll save them for another time.</p>
+<p>If you come across gotchas of your own, please share them in the comments!</p>
 
 
 
@@ -2725,7 +2704,7 @@ Then we could make functions to apply the defaults wherever we wanted to.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-14/ys-mapping-key-uniqueness/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Mapping Key Uniqueness">
+          <a href="../../2025-07-15/ys-currying-in-yaml-configs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Currying in YAML Configs">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2735,27 +2714,11 @@ Then we could make functions to apply the defaults wherever we wanted to.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                YS Mapping Key Uniqueness
+                YS Currying in YAML Configs
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../2025-07-16/making-ys-be-valid-yaml/" class="md-footer__link md-footer__link--next" aria-label="Next: Making YS be Valid YAML">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Making YS be Valid YAML
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     

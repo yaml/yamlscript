@@ -2153,6 +2153,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#making-ys-be-valid-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Making YS be Valid YAML
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ys-currying-in-yaml-configs" class="md-nav__link">
     <span class="md-ellipsis">
       YS Currying in YAML Configs
@@ -2363,15 +2372,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#the-gist-of-ys" class="md-nav__link">
     <span class="md-ellipsis">
       The gist of YS
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-ys-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      The ys Command
     </span>
   </a>
   
@@ -2643,6 +2643,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#making-ys-be-valid-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Making YS be Valid YAML
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ys-currying-in-yaml-configs" class="md-nav__link">
     <span class="md-ellipsis">
       YS Currying in YAML Configs
@@ -2858,15 +2867,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#the-ys-command" class="md-nav__link">
-    <span class="md-ellipsis">
-      The ys Command
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2881,6 +2881,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <header class="md-typeset">
         <h1 id="summer-of-ys">Summer-of-YS<a class="headerlink" href="#summer-of-ys" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-07-16 00:00:00+00:00">July 16, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              3 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="making-ys-be-valid-yaml"><a class="toclink" href="../../2025-07-16/making-ys-be-valid-yaml/">Making YS be Valid YAML</a></h2>
+<p>I'll say it again.
+All YS syntax is 100% YAML.  The YS compiler uses a third party YAML parser so
+there is no way that YS code cannot be YAML.</p>
+<p>YS code also uses a lot of Clojure syntax.
+This makes sense since the code gets compiled to Clojure in the end.</p>
+<p>Some Clojure code looks a lot like YAML but with subtle differences.</p>
+<p>Today we'll talk about the little gotchas that can trip you up when you're
+writing YS code, and how to work around them.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../2025-07-16/making-ys-be-valid-yaml/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -2926,7 +2980,7 @@ function that takes the remaining arguments.</p>
 <span class="s1">multiply-by-6 =: partial(mul 6)</span>
 <span class="s1">multiply-by-7 =: mul.partial(7)</span>
 <span class="s1">say: multiply-by-6(7)</span>
-<span class="s1">say: multiply-by-7(6) </span>
+<span class="s1">say: multiply-by-7(6)</span>
 <span class="s1">&#39;</span>
 <span class="m">42</span>
 <span class="m">42</span>
@@ -4233,67 +4287,6 @@ They are one of the best ways to share text files with others.</p>
     
       <nav class="md-post__action">
         <a href="../../2025-06-22/the-gist-of-ys/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-06-21 00:00:00+00:00">June 21, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="./" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="the-ys-command"><a class="toclink" href="../../2025-06-21/the-ys-command/">The <code>ys</code> Command</a></h2>
-<p>There are different ways to use YS but the most common is to use it via the YS
-command-line tool: <code>ys</code>; a very versatile tool indeed.</p>
-<p>There's a lot you can do with <code>ys</code> including using it like you would use <code>jq</code> or
-<code>yq</code> one-liners:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>jq<span class="w"> </span>.bar<span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;foo&quot;: 123, &quot;bar&quot;: 456, &quot;baz&quot;: 789}&#39;</span><span class="o">)</span>
-<span class="m">456</span>
-$<span class="w"> </span>yq<span class="w"> </span>.bar<span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;foo: 123\nbar: 456\nbaz: 789&#39;</span><span class="o">)</span>
-<span class="m">456</span>
-$<span class="w"> </span>ys<span class="w"> </span>.bar<span class="w"> </span>&lt;<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;foo: 123\nbar: 456\nbaz: 789&#39;</span><span class="o">)</span>
-<span class="m">456</span>
-</code></pre></div>
-<p>Each of these tools have their own advantages and we'll be diving deep into
-those waters soon enough.</p>
-<p>Today let's just start by exploring the basic things you can do with the <code>ys</code>
-CLI.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2025-06-21/the-ys-command/">
           Continue reading
         </a>
       </nav>
