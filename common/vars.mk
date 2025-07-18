@@ -1,7 +1,8 @@
 include $(MAKES)/graalvm.mk
 include $(MAKES)/maven.mk
-# This is the previously released `ys` version suitable for internal tasks:
-YS-VERSION := 0.1.97
+
+# This is a previously released `ys` version suitable for internal tasks:
+YS-VERSION := 0.2.1
 include $(MAKES)/ys.mk
 
 export YS_TMPDIR := $(LOCAL-TMP)
