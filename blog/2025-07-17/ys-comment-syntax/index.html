@@ -2530,15 +2530,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>Yes. YAML comments are valid in YS code.</p>
 <p>There's no way they couldn't be.
 (Not without breaking the laws of YAML Physics!)</p>
-<p>Comments in YAML use from <code>#</code> to the end of the line.</p>
+<p>Comments in YAML start with <code>#</code> and continue to the end of the line.</p>
 <p>Clojure comments use <code>;</code> to the end of the line.</p>
 <p>For a while, YS also supported <code>;</code> as a comment character.
 Only in code mode, of course.</p>
 <h2 id="yaml-and-multi-line-scalars">YAML and Multi-line Scalars<a class="headerlink" href="#yaml-and-multi-line-scalars" title="Permanent link">🔗</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nt">One</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thing I don&#39;t see enough of in people&#39;s YAML is splitting long strings into multiple lines.</span>
 </code></pre></div>
-<p>In YAML… plain, folded and quoted scalars, you can split a line anywhere you
-want.</p>
+<p>In YAML, with plain, folded and quoted scalars, you can split a line anywhere
+you want.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">One</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thing I don&#39;t see enough</span>
 <span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">of in people&#39;s YAML is</span>
 <span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">splitting long strings</span>
@@ -2549,7 +2549,7 @@ want.</p>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">thing I don&#39;t see enough of in people&#39;s YAML is</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">splitting long strings into multiple lines.</span>
 </code></pre></div>
-<p>But one thing can't do is put comments in the middle of a multi-line scalar.</p>
+<p>But one thing you can't do is put comments in the middle of a multi-line scalar.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">say</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">One thing I rarely see enough of in YAML files</span><span class="w">  </span><span class="c1"># LINE 1</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">is splitting long strings into multiple lines.</span>
@@ -2561,7 +2561,7 @@ want.</p>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">read-line()</span><span class="w">   </span><span class="c1"># Read line from stdin</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.words()</span><span class="w">    </span><span class="c1"># Split into words</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.reverse()</span><span class="w">  </span><span class="c1"># Reverse the words</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">join(&quot; &quot;)</span><span class="w">   </span><span class="c1"># Join the words with a space&#39;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.joins()</span><span class="w">    </span><span class="c1"># Join the words with a space&#39;</span>
 <span class="nt">Compile error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">while parsing a block mapping</span>
 <span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">in reader, line 2, column 1</span><span class="p p-Indicator">:</span>
 <span class="w">    </span><span class="nt">say</span><span class="p">:</span>
