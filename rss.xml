@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 18 Jul 2025 15:37:41 -0000</pubDate>
-    <lastBuildDate>Fri, 18 Jul 2025 15:37:41 -0000</lastBuildDate>
+    <pubDate>Fri, 18 Jul 2025 15:41:37 -0000</pubDate>
+    <lastBuildDate>Fri, 18 Jul 2025 15:41:37 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -2208,7 +2208,11 @@ Today I&#39;d like to tell you a little bit about it.&lt;/p&gt;</description>
       <description>&lt;p&gt;Santa has very little margin for error.
 He has to get everything just right all in one night.&lt;/p&gt;
 &lt;p&gt;YS is a work in progress, and will be for a long time.
-I&#39;m try...&lt;/p&gt;</description>
+I&#39;m trying to get it right, but I&#39;m no Santa!
+In fact I&#39;m quite sure I&#39;ll get some things wrong.
+That&#39;s just the nature of the beast when you&#39;re a programmer.&lt;/p&gt;
+&lt;p&gt;Also, have you ever wondered why the magic YS starter tag has that &lt;code&gt;/v0&lt;/code&gt; at the
+end?&lt;/p&gt;</description>
       <link>https://yamlscript.org/blog/2023-12-12/future-proof/</link>
       <pubDate>Tue, 12 Dec 2023 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
