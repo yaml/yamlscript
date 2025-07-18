@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 18 Jul 2025 15:36:45 -0000</pubDate>
-    <lastBuildDate>Fri, 18 Jul 2025 15:36:45 -0000</lastBuildDate>
+    <pubDate>Fri, 18 Jul 2025 15:37:41 -0000</pubDate>
+    <lastBuildDate>Fri, 18 Jul 2025 15:37:41 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -353,7 +353,13 @@ people:
       
       <description>&lt;p&gt;The current version of YS as of today is &lt;code&gt;0.2.1&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;I&#39;m sure you&#39;ve noticed the &lt;code&gt;v0&lt;/code&gt; part of the &lt;code&gt;!YS-v0&lt;/code&gt; tag by now.&lt;/p&gt;
-&lt;p&gt;YS intends to be a &#34;versioned programmi...&lt;/p&gt;</description>
+&lt;p&gt;YS intends to be a &#34;versioned programming language&#34;, where &lt;code&gt;v2&lt;/code&gt; can behave
+very differently from &lt;code&gt;v1&lt;/code&gt; while still being able to use &lt;code&gt;v1&lt;/code&gt; libraries and
+such.&lt;/p&gt;
+&lt;p&gt;Today I&#39;ll tell you a bit more about the versioning and how things are expected
+to work.&lt;/p&gt;
+&lt;p&gt;Remember, we are still officially at &lt;code&gt;v0&lt;/code&gt; so even the rules of how versioning
+works are not yet set in stone!&lt;/p&gt;</description>
       <link>https://yamlscript.org/blog/2025-07-08/about-the-v0/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
