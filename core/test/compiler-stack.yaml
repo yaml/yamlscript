@@ -1551,3 +1551,12 @@
   yamlscript: |
     !YS v0:
   clojure: |
+
+
+- name: Octal and hex literals not loading correctly
+  yamlscript: |
+    !YS-v0:
+    - 0o12
+    - 0x12
+  build: |
+    {:Vec [{:Int 10} {:Int 18}]}
