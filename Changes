@@ -1,3 +1,14 @@
+- version: 0.2.2
+  date:    Fri Jul 18 11:18:19 AM PDT 2025
+  changes:
+  - util: Update release-yamlscript for v0
+  - readme: Improve common ReadMe example
+  - php: Add PHP binding
+  - csharp: Add new C# binding
+  - doc: Update binding ReadMe.md files
+  - lua: Add Lua binding
+  - haskell: Add Haskell binding
+  - core: Support hex and octal integers in data mode
 - version: 0.2.1
   date:    Sun Jul  6 12:05:46 PM PDT 2025
   changes:

@@ -3,7 +3,7 @@ include $(COMMON)/binding.mk
 include $(COMMON)/java.mk
 include $(MAKES)/shell.mk
 
-YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.2.1.jar
+YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.2.2.jar
 
 MVN-COMMANDS := \
   compile \

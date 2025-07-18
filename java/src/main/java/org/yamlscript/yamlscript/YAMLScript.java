@@ -13,7 +13,7 @@ import java.math.BigInteger;
  */
 public class YAMLScript
 {
-    public static String YAMLSCRIPT_VERSION = "0.2.1";
+    public static String YAMLSCRIPT_VERSION = "0.2.2";
 
     public static Object load(String ysCode)
     {

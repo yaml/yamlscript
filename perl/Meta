@@ -3,7 +3,7 @@
 base: ../Meta
 
 name: YAMLScript
-version: 0.2.1
+version: 0.2.2
 
 language: perl
 
@@ -12,7 +12,7 @@ author:
 
 requires:
   perl: 5.16.0
-  Alien::YAMLScript: 0.2.1
+  Alien::YAMLScript: 0.2.2
   FFI::CheckLib: 0.31
   FFI::Platypus: 2.08
   Cpanel::JSON::XS: 4.37
