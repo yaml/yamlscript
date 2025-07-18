@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-16/making-ys-be-valid-yaml/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-17/ys-comment-syntax/">
       
       
-        <link rel="prev" href="../../2025-07-15/ys-currying-in-yaml-configs/">
+        <link rel="prev" href="../../2025-07-16/making-ys-be-valid-yaml/">
       
-      
-        <link rel="next" href="../../2025-07-17/ys-comment-syntax/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>Making YS be Valid YAML - YS — YAML Done Wisely</title>
+        <title>YS Comment Syntax - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Making YS be Valid YAML - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YS Comment Syntax - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-16.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-17.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-16/making-ys-be-valid-yaml/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-17/ys-comment-syntax/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Making YS be Valid YAML - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YS Comment Syntax - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-16.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-17.png" >
       
     
     
@@ -170,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#ys-escaping" class="md-skip">
+        <a href="#yaml-comments" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Making YS be Valid YAML
+              YS Comment Syntax
             
           </span>
           </a>
@@ -2378,18 +2376,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ys-escaping" class="md-nav__link">
+  <a href="#yaml-comments" class="md-nav__link">
     <span class="md-ellipsis">
-      YS + escaping
+      YAML Comments
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#map-and-vector-literals" class="md-nav__link">
+  <a href="#yaml-and-multi-line-scalars" class="md-nav__link">
     <span class="md-ellipsis">
-      Map and Vector Literals
+      YAML and Multi-line Scalars
     </span>
   </a>
   
@@ -2451,7 +2449,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-16 00:00:00+00:00" class="md-ellipsis">July 16, 2025</time>
+                        <time datetime="2025-07-17 00:00:00+00:00" class="md-ellipsis">July 17, 2025</time>
                       </div>
                     </li>
                     
@@ -2473,7 +2471,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              3 min read
+                              2 min read
                             
                           </span>
                         </div>
@@ -2505,14 +2503,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-16.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-17.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-16.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-17.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2520,100 +2518,71 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Making YS be Valid YAML</h1>
+  <h1>YS Comment Syntax</h1>
 
-<p>I'll say it again.
-All YS syntax is 100% YAML.  The YS compiler uses a third party YAML parser so
-there is no way that YS code cannot be YAML.</p>
-<p>YS code also uses a lot of Clojure syntax.
-This makes sense since the code gets compiled to Clojure in the end.</p>
-<p>Some Clojure code looks a lot like YAML but with subtle differences.</p>
-<p>Today we'll talk about the little gotchas that can trip you up when you're
-writing YS code, and how to work around them.</p>
+<p>What is the syntax for comments in YS?</p>
+<p>Well that's simple.</p>
+<p>YS code is YAML, so the comment syntax is the same as YAML.</p>
+<p>Well, there's a little bit more to it than that.</p>
 <!-- more -->
 
-<h2 id="ys-escaping">YS <code>+</code> escaping<a class="headerlink" href="#ys-escaping" title="Permanent link">🔗</a></h2>
-<p>The <code>*</code> operator is polymorphic.
-If you "multiply" a string by a number, it will repeat the string that many
-times.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;X&quot; * 3&#39;</span>
-Compile<span class="w"> </span>error:<span class="w"> </span><span class="k">while</span><span class="w"> </span>scanning<span class="w"> </span>an<span class="w"> </span><span class="nb">alias</span>
-<span class="w"> </span><span class="k">in</span><span class="w"> </span>reader,<span class="w"> </span>line<span class="w"> </span><span class="m">2</span>,<span class="w"> </span>column<span class="w"> </span><span class="m">10</span>:
-<span class="w">    </span>say:<span class="w"> </span><span class="s2">&quot;X&quot;</span><span class="w"> </span>*<span class="w"> </span><span class="m">3</span>
-<span class="w">             </span>^
+<h2 id="yaml-comments">YAML Comments<a class="headerlink" href="#yaml-comments" title="Permanent link">🔗</a></h2>
+<p>Yes. YAML comments are valid in YS code.</p>
+<p>There's no way they couldn't be.
+(Not without breaking the laws of YAML Physics!)</p>
+<p>Comments in YAML use from <code>#</code> to the end of the line.</p>
+<p>Clojure comments use <code>;</code> to the end of the line.</p>
+<p>For a while, YS also supported <code>;</code> as a comment character.
+Only in code mode, of course.</p>
+<h2 id="yaml-and-multi-line-scalars">YAML and Multi-line Scalars<a class="headerlink" href="#yaml-and-multi-line-scalars" title="Permanent link">🔗</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">One</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thing I don&#39;t see enough of in people&#39;s YAML is splitting long strings into multiple lines.</span>
 </code></pre></div>
-<p>That didn't go as expected.
-What happened?</p>
-<p>Well, that is simply not valid YAML.
-You can't have extra text after the end of a quoted string (except for
-comments).</p>
-<p>We want the value of the key <code>say</code> to be a YS expression, which means that it
-needs to be a YAML plain (unquoted) scalar.</p>
-<p>Plain scalars can't start with a YAML syntax character like <code>#%[{'"!&amp;*|&gt;</code>.</p>
-<p>One way to get around this particular case is to use parens.
-Plain scalars can start with a paren.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: (&quot;X&quot; * 3)&#39;</span>
-XXX
+<p>In YAML… plain, folded and quoted scalars, you can split a line anywhere you
+want.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">One</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">thing I don&#39;t see enough</span>
+<span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">of in people&#39;s YAML is</span>
+<span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">splitting long strings</span>
+<span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">into multiple lines.</span>
 </code></pre></div>
-<p>A more general way is to use the <code>+</code> YS escape character.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: +&quot;X&quot; * 3&#39;</span>
-XXX
+<p>You can even start the scalar on a new line.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">One</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">thing I don&#39;t see enough of in people&#39;s YAML is</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">splitting long strings into multiple lines.</span>
 </code></pre></div>
-<p>The <code>+</code> makes the value be a valid YAML plain scalar.
-YS will then ignore a <code>+</code> that precedes a YAML syntax character.</p>
-<p>You can have whitespace after the <code>+</code>, so this is valid:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">say: +</span>
-<span class="s1">  &quot;X&quot; * 3&#39;</span>
-XXX
+<p>But one thing can't do is put comments in the middle of a multi-line scalar.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">say</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">One thing I rarely see enough of in YAML files</span><span class="w">  </span><span class="c1"># LINE 1</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">is splitting long strings into multiple lines.</span>
 </code></pre></div>
-<h2 id="map-and-vector-literals">Map and Vector Literals<a class="headerlink" href="#map-and-vector-literals" title="Permanent link">🔗</a></h2>
-<p>How about this?</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;: {a: 1, b: 2}&#39;</span>
-Compile<span class="w"> </span>error:<span class="w"> </span>Flow<span class="w"> </span>mappings<span class="w"> </span>not<span class="w"> </span>allowed<span class="w"> </span><span class="k">in</span><span class="w"> </span>code<span class="w"> </span>mode
+<p>That's an error.</p>
+<p>You actually don't need to put comments in multi-line scalars much in YAML...</p>
+<p>But in YS the need comes up more often.</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">$ ys -e &#39;say</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">read-line()</span><span class="w">   </span><span class="c1"># Read line from stdin</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.words()</span><span class="w">    </span><span class="c1"># Split into words</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.reverse()</span><span class="w">  </span><span class="c1"># Reverse the words</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">join(&quot; &quot;)</span><span class="w">   </span><span class="c1"># Join the words with a space&#39;</span>
+<span class="nt">Compile error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">while parsing a block mapping</span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">in reader, line 2, column 1</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="nt">say</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">^</span>
+<span class="l l-Scalar l-Scalar-Plain">expected &lt;block end&gt;, but found &#39;&lt;scalar&gt;&#39;</span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">in reader, line 4, column 5</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">.words()</span><span class="w">    </span><span class="c1"># Split into words</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">^</span>
 </code></pre></div>
-<p>The <code>-mc</code> flag tells YS to start in code mode.
-This is the default for <code>-e</code> but we use it here to make it clear.</p>
-<p>YS does not allow YAML flow mappings or flow sequences in code mode.</p>
-<p>We can use the <code>+</code> escape character to get around this:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;: +{a: 1, b: 2}&#39;</span>
-Compile<span class="w"> </span>error:<span class="w"> </span>mapping<span class="w"> </span>values<span class="w"> </span>are<span class="w"> </span>not<span class="w"> </span>allowed<span class="w"> </span>here
-<span class="w"> </span><span class="k">in</span><span class="w"> </span>reader,<span class="w"> </span>line<span class="w"> </span><span class="m">2</span>,<span class="w"> </span>column<span class="w"> </span><span class="m">8</span>:
-<span class="w">    </span><span class="o">=</span>&gt;:<span class="w"> </span>+<span class="o">{</span>a:<span class="w"> </span><span class="m">1</span>,<span class="w"> </span>b:<span class="w"> </span><span class="m">2</span><span class="o">}</span>
+<p>Those comments would be nice, but they're not valid YAML.</p>
+<p>Luckily YS has a solution for this.
+It has a special comment syntax (only in code mode).</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">$ ys -e &#39;say</span><span class="p p-Indicator">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">read-line()   \&quot;Read line from stdin&quot;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.words()    \&quot;Split into words&quot;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.reverse()  \&quot;Reverse the words&quot;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.joins()    \&quot;Join the words with a space&quot;&#39;</span>
+<span class="l l-Scalar l-Scalar-Plain">YS is YAML</span>
+<span class="l l-Scalar l-Scalar-Plain">YAML is YS</span>
 </code></pre></div>
-<p>Oops!
-What happened now?</p>
-<p>Well, the <code>+</code> makes this a YAML plain scalar, but YAML plain scalars can't have
-<code>:</code> in them.</p>
-<p>Also this is not the correct way to express a map literal in YS or Clojure.
-It's close, but:</p>
-<ul>
-<li>No <code>:</code> is used</li>
-<li>Strings need to be quoted</li>
-<li>Commas are optional whitespace</li>
-</ul>
-<p>Let's try again:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;: +{&quot;a&quot; 1, &quot;b&quot; 2}&#39;</span>
-a:<span class="w"> </span><span class="m">1</span>
-b:<span class="w"> </span><span class="m">2</span>
-</code></pre></div>
-<p>There we go.</p>
-<p>We could also have switched to data mode for the value, which has to allow YAML
-flow mappings and sequences.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;:: {a: 1, b: 2}&#39;</span>
-a:<span class="w"> </span><span class="m">1</span>
-b:<span class="w"> </span><span class="m">2</span>
-</code></pre></div>
-<p>Sometimes normal YAML syntax (via data mode) is the best way to go.</p>
-<p>We could even use a YAML block mapping here instead:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-mc<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;=&gt;::</span>
-<span class="s1">  a: 1</span>
-<span class="s1">  b: 2&#39;</span>
-a:<span class="w"> </span><span class="m">1</span>
-b:<span class="w"> </span><span class="m">2</span>
-</code></pre></div>
-<p>There are more gotchas to talk about, but I'll save them for another time.</p>
-<p>If you come across gotchas of your own, please share them in the comments!</p>
+<p>Couldn't have said it better myself!</p>
 
 
 
@@ -2706,7 +2675,7 @@ b:<span class="w"> </span><span class="m">2</span>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-15/ys-currying-in-yaml-configs/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Currying in YAML Configs">
+          <a href="../../2025-07-16/making-ys-be-valid-yaml/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Making YS be Valid YAML">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2716,27 +2685,11 @@ b:<span class="w"> </span><span class="m">2</span>
                 Previous
               </span>
               <div class="md-ellipsis">
-                YS Currying in YAML Configs
+                Making YS be Valid YAML
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../2025-07-17/ys-comment-syntax/" class="md-footer__link md-footer__link--next" aria-label="Next: YS Comment Syntax">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                YS Comment Syntax
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     

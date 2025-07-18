@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 17 Jul 2025 03:18:14 -0000</pubDate>
-    <lastBuildDate>Thu, 17 Jul 2025 03:18:14 -0000</lastBuildDate>
+    <pubDate>Fri, 18 Jul 2025 04:26:08 -0000</pubDate>
+    <lastBuildDate>Fri, 18 Jul 2025 04:26:08 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,34 @@
     
 
     
+    
+    <item>
+      <title>YS Comment Syntax</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;What is the syntax for comments in YS?&lt;/p&gt;
+&lt;p&gt;Well that&#39;s simple.&lt;/p&gt;
+&lt;p&gt;YS code is YAML, so the comment syntax is the same as YAML.&lt;/p&gt;
+&lt;p&gt;Well, there&#39;s a little bit more to it than that.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-17/ys-comment-syntax/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-17/ys-comment-syntax/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-17/ys-comment-syntax.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>Making YS be Valid YAML</title>
