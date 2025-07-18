@@ -1,4 +1,5 @@
 /bin/
+/nupkg/
 /obj/
 /test/bin/
 /test/obj/
