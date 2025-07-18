@@ -7,7 +7,7 @@ v-old =: ENV.YS_RELEASE_VERSION_OLD ||
 v-new =: ENV.YS_RELEASE_VERSION_NEW ||
   die("'YS_RELEASE_VERSION_NEW' env var not defined")
 
-vp =: '0\.1\.[0-9]+'
+vp =: '0\.[12]\.[0-9]+'
 vo =: v-old.str/replace(/\./ '\\.')
 
 
@@ -30,6 +30,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - crystal/shard.yml
     - crystal/src/yamlscript/version.cr
     - crystal/src/yamlscript.cr
+    - csharp/YAMLScript.csproj
     - doc/install.md
     - doc/run-ys.md
     - doc/ys.md
@@ -95,8 +96,13 @@ vo =: v-old.str/replace(/\./ '\\.')
     - nodejs/package.json
     - java/pom.xml
     - julia/Project.toml
+    - lua/lib/yamlscript.lua
     - perl/Meta
     - perl-alien/Meta
     - python/setup.py
     - raku/META6.json
     - rust/Cargo.toml
+
+  - regx:: "(libys\\.)${vp}(\\.h)"
+    file:
+    - haskell/lib/YAMLScript/FFI.hs
