@@ -2384,6 +2384,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#the-ys-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      The YS Code
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2595,45 +2604,40 @@ convert to YS:</p>
 <span class="w">           </span><span class="p">(</span><span class="nb">nth </span><span class="s">&quot; ╵╷│╴┘┐┤╶└┌├─┴┬┼&quot;</span><span class="w"> </span><span class="p">(</span><span class="nf">get-in</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="p">[</span><span class="nv">y</span><span class="w"> </span><span class="nv">x</span><span class="p">]</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
 <span class="w">         </span><span class="p">(</span><span class="nb">apply </span><span class="nv">str</span><span class="p">)</span>
 <span class="w">         </span><span class="p">(</span><span class="nf">println</span><span class="p">))))</span>
+</code></pre></div>
+<h2 id="the-ys-code">The YS Code<a class="headerlink" href="#the-ys-code" title="Permanent link">🔗</a></h2>
+<p>I won't go through this step by step this time.</p>
+<p>Here's the YS code:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
 
+<span class="nt">defn main(steps=511)</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">data [minx maxx miny maxy] =</span><span class="p p-Indicator">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">loop i 0 [x y], [0 0], data {}, [minx maxx miny maxy] [0 0 0 0]</span><span class="p p-Indicator">:</span>
+<span class="w">      </span><span class="nt">dir =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i-to-dir(i)</span>
+<span class="w">      </span><span class="nt">nx ny =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[(x + condp(== dir 0 1 2 -1 0))</span>
+<span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">(y + condp(== dir 1 1 3 -1 0))]</span>
+<span class="w">      </span><span class="nt">ob ib =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nth([[8 4][2 1][4 8][1 2]] dir)</span>
+<span class="w">      </span><span class="nt">data =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update-in(data [y x] safe-bit-or ob)</span>
+<span class="w">             </span><span class="l l-Scalar l-Scalar-Plain">.update-in([ny nx] safe-bit-or ib)</span>
+<span class="w">      </span><span class="nt">bbox =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[min(minx nx) max(maxx nx)</span>
+<span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">min(miny ny) max(maxy ny)]</span>
+<span class="w">      </span><span class="nt">if i &lt; steps</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">recur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i.++ [nx ny] data bbox</span>
+<span class="w">        </span><span class="nt">vector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data bbox</span>
 
-<span class="o">##</span><span class="w"> </span><span class="nv">The</span><span class="w"> </span><span class="nv">YS</span><span class="w"> </span><span class="nv">Code</span>
+<span class="w">  </span><span class="nt">doseq y (range miny maxy.++)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">chars =</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">for x (range minx maxx.++)</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">nth(&quot; ╵╷│╴┘┐┤╶└┌├─┴┬┼&quot; get-in(data [y x] 0))</span>
+<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str(chars*)</span>
 
-<span class="nv">I</span><span class="w"> </span><span class="nv">won</span><span class="ss">&#39;t</span><span class="w"> </span><span class="nv">go</span><span class="w"> </span><span class="nv">through</span><span class="w"> </span><span class="nv">this</span><span class="w"> </span><span class="nv">step</span><span class="w"> </span><span class="nv">by</span><span class="w"> </span><span class="nv">step</span><span class="w"> </span><span class="nv">this</span><span class="w"> </span><span class="nv">time.</span>
+<span class="nt">defn i-to-dir(n)</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">n.bit-xor(bit-shift-right(n 1)):Long/bitCount % 4</span>
 
-<span class="nv">Here</span><span class="ss">&#39;s</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">YS</span><span class="w"> </span><span class="nv">code</span><span class="err">:</span>
-
-<span class="o">```</span><span class="nv">yaml</span>
-<span class="nv">!YS-v0</span>
-
-<span class="kd">defn </span><span class="nv">main</span><span class="p">(</span><span class="nf">steps=511</span><span class="p">)</span><span class="err">:</span>
-<span class="w">  </span><span class="nv">data</span><span class="w"> </span><span class="p">[</span><span class="nv">minx</span><span class="w"> </span><span class="nv">maxx</span><span class="w"> </span><span class="nv">miny</span><span class="w"> </span><span class="nv">maxy</span><span class="p">]</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span>
-<span class="w">    </span><span class="k">loop </span><span class="nv">i</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">[</span><span class="nv">x</span><span class="w"> </span><span class="nv">y</span><span class="p">]</span>,<span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span>,<span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="p">{}</span>,<span class="w"> </span><span class="p">[</span><span class="nv">minx</span><span class="w"> </span><span class="nv">maxx</span><span class="w"> </span><span class="nv">miny</span><span class="w"> </span><span class="nv">maxy</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="err">:</span>
-<span class="w">      </span><span class="nv">dir</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span><span class="w"> </span><span class="nv">i-to-dir</span><span class="p">(</span><span class="nf">i</span><span class="p">)</span>
-<span class="w">      </span><span class="nv">nx</span><span class="w"> </span><span class="nv">ny</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span><span class="w"> </span><span class="nv">+</span>
-<span class="w">        </span><span class="p">[(</span><span class="nf">x</span><span class="w"> </span><span class="nb">+ </span><span class="nv">condp</span><span class="p">(</span><span class="nb">== </span><span class="nv">dir</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
-<span class="w">         </span><span class="p">(</span><span class="nf">y</span><span class="w"> </span><span class="nb">+ </span><span class="nv">condp</span><span class="p">(</span><span class="nb">== </span><span class="nv">dir</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">0</span><span class="p">))]</span>
-<span class="w">      </span><span class="nv">ob</span><span class="w"> </span><span class="nv">ib</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span><span class="w"> </span><span class="nv">nth</span><span class="p">([[</span><span class="mi">8</span><span class="w"> </span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">][</span><span class="mi">4</span><span class="w"> </span><span class="mi">8</span><span class="p">][</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">]]</span><span class="w"> </span><span class="nv">dir</span><span class="p">)</span>
-<span class="w">      </span><span class="nv">data</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span><span class="w"> </span><span class="nv">update-in</span><span class="p">(</span><span class="nf">data</span><span class="w"> </span><span class="p">[</span><span class="nv">y</span><span class="w"> </span><span class="nv">x</span><span class="p">]</span><span class="w"> </span><span class="nv">safe-bit-or</span><span class="w"> </span><span class="nv">ob</span><span class="p">)</span>
-<span class="w">             </span><span class="nv">.update-in</span><span class="p">([</span><span class="nv">ny</span><span class="w"> </span><span class="nv">nx</span><span class="p">]</span><span class="w"> </span><span class="nv">safe-bit-or</span><span class="w"> </span><span class="nv">ib</span><span class="p">)</span>
-<span class="w">      </span><span class="nv">bbox</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span><span class="w"> </span><span class="nv">+</span>
-<span class="w">        </span><span class="p">[</span><span class="nv">min</span><span class="p">(</span><span class="nf">minx</span><span class="w"> </span><span class="nv">nx</span><span class="p">)</span><span class="w"> </span><span class="nv">max</span><span class="p">(</span><span class="nf">maxx</span><span class="w"> </span><span class="nv">nx</span><span class="p">)</span>
-<span class="w">         </span><span class="nv">min</span><span class="p">(</span><span class="nf">miny</span><span class="w"> </span><span class="nv">ny</span><span class="p">)</span><span class="w"> </span><span class="nv">max</span><span class="p">(</span><span class="nf">maxy</span><span class="w"> </span><span class="nv">ny</span><span class="p">)]</span>
-<span class="w">      </span><span class="k">if </span><span class="nv">i</span><span class="w"> </span><span class="nb">&lt; </span><span class="nv">steps</span><span class="err">:</span>
-<span class="w">        </span><span class="nv">recur</span><span class="err">:</span><span class="w"> </span><span class="nv">i.++</span><span class="w"> </span><span class="p">[</span><span class="nv">nx</span><span class="w"> </span><span class="nv">ny</span><span class="p">]</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="nv">bbox</span>
-<span class="w">        </span><span class="nv">vector</span><span class="err">:</span><span class="w"> </span><span class="nv">data</span><span class="w"> </span><span class="nv">bbox</span>
-
-<span class="w">  </span><span class="nb">doseq </span><span class="nv">y</span><span class="w"> </span><span class="p">(</span><span class="nb">range </span><span class="nv">miny</span><span class="w"> </span><span class="nv">maxy.++</span><span class="p">)</span><span class="err">:</span>
-<span class="w">    </span><span class="nv">chars</span><span class="w"> </span><span class="nv">=</span><span class="err">:</span>
-<span class="w">      </span><span class="nb">for </span><span class="nv">x</span><span class="w"> </span><span class="p">(</span><span class="nb">range </span><span class="nv">minx</span><span class="w"> </span><span class="nv">maxx.++</span><span class="p">)</span><span class="err">:</span>
-<span class="w">        </span><span class="nv">nth</span><span class="p">(</span><span class="s">&quot; ╵╷│╴┘┐┤╶└┌├─┴┬┼&quot;</span><span class="w"> </span><span class="nv">get-in</span><span class="p">(</span><span class="nf">data</span><span class="w"> </span><span class="p">[</span><span class="nv">y</span><span class="w"> </span><span class="nv">x</span><span class="p">]</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
-<span class="w">    </span><span class="nv">say</span><span class="err">:</span><span class="w"> </span><span class="nv">str</span><span class="p">(</span><span class="nf">chars*</span><span class="p">)</span>
-
-<span class="kd">defn </span><span class="nv">i-to-dir</span><span class="p">(</span><span class="nf">n</span><span class="p">)</span><span class="err">:</span>
-<span class="w">  </span><span class="nv">n.bit-xor</span><span class="p">(</span><span class="nf">bit-shift-right</span><span class="p">(</span><span class="nf">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="ss">:Long/bitCount</span><span class="w"> </span><span class="nv">%</span><span class="w"> </span><span class="mi">4</span>
-
-<span class="kd">defn </span><span class="nv">safe-bit-or</span><span class="p">(</span><span class="nf">v</span><span class="w"> </span><span class="nv">bit</span><span class="p">)</span><span class="err">:</span>
-<span class="w">  </span><span class="p">(</span><span class="nf">v</span><span class="w"> </span><span class="nv">||</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="nv">.bit-or</span><span class="p">(</span><span class="nf">bit</span><span class="p">)</span>
+<span class="nt">defn safe-bit-or(v bit)</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">(v || 0).bit-or(bit)</span>
 </code></pre></div>
 <p>Let's run it:</p>
 <div class="highlight"><pre><span></span><code>$ ys dragon-curve.ys
