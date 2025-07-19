@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 18 Jul 2025 19:05:46 -0000</pubDate>
-    <lastBuildDate>Fri, 18 Jul 2025 19:05:46 -0000</lastBuildDate>
+    <pubDate>Sat, 19 Jul 2025 04:24:55 -0000</pubDate>
+    <lastBuildDate>Sat, 19 Jul 2025 04:24:55 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,33 @@
     
 
     
+    
+    <item>
+      <title>Fun FridaYS — Dragon Curve</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;On &lt;a href=&#34;2025-06-27.md&#34;&gt;Friday June 27th&lt;/a&gt; we found a task on &lt;a href=&#34;https://rosettacode.org/wiki/Category:Programming_Tasks&#34;&gt;Rosetta Code&lt;/a&gt; and converted the
+&lt;a href=&#34;https://clojure.org&#34;&gt;Clojure&lt;/a&gt; solution to YS.&lt;/p&gt;
+&lt;p&gt;Let&#39;s do that again today.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-18/fun-fridays--dragon-curve/</link>
+      <pubDate>Fri, 18 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-18/fun-fridays--dragon-curve/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-18/fun-fridays--dragon-curve.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>YS Comment Syntax</title>
