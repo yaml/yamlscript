@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sat, 19 Jul 2025 17:31:35 -0000</pubDate>
-    <lastBuildDate>Sat, 19 Jul 2025 17:31:35 -0000</lastBuildDate>
+    <pubDate>Sat, 19 Jul 2025 20:48:26 -0000</pubDate>
+    <lastBuildDate>Sat, 19 Jul 2025 20:48:26 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,41 @@
     
 
     
+    
+    <item>
+      <title>YAML Explicit Keys and YS</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Did you know that in YAML you can write:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;yaml
+? foo
+: bar&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;instead of:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;yaml
+foo: bar&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;?&lt;/code&gt; is called an explicit key indicator.&lt;/p&gt;
+&lt;p&gt;But why would you want to use it?&lt;/p&gt;
+&lt;p&gt;It&#39;s not often useful in YAML config files, but it is actually useful in YS
+code.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-19/yaml-explicit-keys-and-ys/</link>
+      <pubDate>Sat, 19 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-19/yaml-explicit-keys-and-ys/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-19/yaml-explicit-keys-and-ys.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>Fun FridaYS — Dragon Curve</title>

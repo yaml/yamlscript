@@ -2376,6 +2376,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#yaml-explicit-keys-and-ys" class="md-nav__link">
+    <span class="md-ellipsis">
+      YAML Explicit Keys and YS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#fun-fridays-dragon-curve" class="md-nav__link">
     <span class="md-ellipsis">
       Fun FridaYS — Dragon Curve
@@ -2591,15 +2600,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#how-does-ys-work" class="md-nav__link">
-    <span class="md-ellipsis">
-      How Does YS Work?
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2617,6 +2617,63 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <h1 id="the-ys-blog">The YS Blog<a class="headerlink" href="#the-ys-blog" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-07-19 00:00:00+00:00">July 19, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="yaml-explicit-keys-and-ys"><a class="toclink" href="2025-07-19/yaml-explicit-keys-and-ys/">YAML Explicit Keys and YS</a></h2>
+<p>Did you know that in YAML you can write:</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">?</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+<span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
+</code></pre></div>
+<p>instead of:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
+</code></pre></div>
+<p>The <code>?</code> is called an explicit key indicator.</p>
+<p>But why would you want to use it?</p>
+<p>It's not often useful in YAML config files, but it is actually useful in YS
+code.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="2025-07-19/yaml-explicit-keys-and-ys/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -3898,68 +3955,6 @@ And then call them on your data?</p>
     
       <nav class="md-post__action">
         <a href="2025-06-25/ai--clojure-functions-in-yaml/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-06-24 00:00:00+00:00">June 24, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="how-does-ys-work"><a class="toclink" href="2025-06-24/how-does-ys-work/">How Does YS Work?</a></h2>
-<p>What if I told you that...</p>
-<ul>
-<li>YS is made out of Java</li>
-<li>YS uses no JVM</li>
-<li>YS is a binary Executable</li>
-<li>YS is also a Shared Library</li>
-<li>YS is actually a Lisp</li>
-<li>YS can use S-Expressions</li>
-<li>YS prefers YeS-Expressions</li>
-<li>YS can use modules written in:<ul>
-<li>YS</li>
-<li>Any other language</li>
-</ul>
-</li>
-</ul>
-<p>Make sense?</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2025-06-24/how-does-ys-work/">
           Continue reading
         </a>
       </nav>
