@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sat, 19 Jul 2025 20:56:10 -0000</pubDate>
-    <lastBuildDate>Sat, 19 Jul 2025 20:56:10 -0000</lastBuildDate>
+    <pubDate>Mon, 21 Jul 2025 00:24:08 -0000</pubDate>
+    <lastBuildDate>Mon, 21 Jul 2025 00:24:08 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,36 @@
     
 
     
+    
+    <item>
+      <title>YAML Best Practices</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;YAML has a &lt;a href=&#34;https://yaml.org/spec/1.2.2/ext/team/&#34;&gt;Core Development Team&lt;/a&gt; of
+five people that I am a member of.&lt;/p&gt;
+&lt;p&gt;In May 2024, 4 of us met in Berlin.
+One of the things we did was to write a list of best practices for YAML.
+We came up with a list of 40 or so things that we all agreed on.&lt;/p&gt;
+&lt;p&gt;Today I&#39;ll share some of those with you.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-20/yaml-best-practices/</link>
+      <pubDate>Sun, 20 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-20/yaml-best-practices/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-20/yaml-best-practices.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>YAML Explicit Keys and YS</title>

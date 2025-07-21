@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/page/4/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-20/yaml-best-practices/">
       
       
-        <link rel="prev" href="../../../doc/run-ys/">
+        <link rel="prev" href="../../2025-07-19/yaml-explicit-keys-and-ys/">
       
-      
-        <link rel="next" href="../../category/advent-2023/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>Index - YS — YAML Done Wisely</title>
+        <title>YAML Best Practices - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Index - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="YAML Best Practices - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/page/4/index.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-20.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/page/4/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-20/yaml-best-practices/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Index - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="YAML Best Practices - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/page/4/index.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-20.png" >
       
     
     
@@ -170,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#index" class="md-skip">
+        <a href="#dont-quote-strings-that-dont-need-to-be-quoted" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Index
+              YAML Best Practices
             
           </span>
           </a>
@@ -440,7 +438,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -2357,6 +2357,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -2366,8 +2368,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2376,72 +2376,63 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sharpen-your-tools" class="md-nav__link">
+  <a href="#dont-quote-strings-that-dont-need-to-be-quoted" class="md-nav__link">
     <span class="md-ellipsis">
-      Sharpen Your Tools
+      Don't quote strings that don't need to be quoted
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#modes-of-transportation" class="md-nav__link">
+  <a href="#prefer-single-quotes-over-double-quotes" class="md-nav__link">
     <span class="md-ellipsis">
-      Modes of Transportation
+      Prefer single quotes over double quotes
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#unwrapping-gifts" class="md-nav__link">
+  <a href="#use-jsons-true-false-and-null" class="md-nav__link">
     <span class="md-ellipsis">
-      Unwrapping Gifts
+      Use JSON's true, false and null
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#santas-big-secret" class="md-nav__link">
+  <a href="#non-empty-yaml-files-should-end-with-a-newline" class="md-nav__link">
     <span class="md-ellipsis">
-      Santa's Big Secret
+      Non-empty YAML files should end with a newline
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#load-em-up" class="md-nav__link">
+  <a href="#dont-block-sequences-in-mappings" class="md-nav__link">
     <span class="md-ellipsis">
-      Load em Up!
+      Don't block sequences in mappings
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#twas-a-bit" class="md-nav__link">
+  <a href="#use-yaml-file-extensions" class="md-nav__link">
     <span class="md-ellipsis">
-      Twas a Bit
+      Use .yaml file extensions
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#ys-advent-2023" class="md-nav__link">
+  <a href="#50-posts" class="md-nav__link">
     <span class="md-ellipsis">
-      YS Advent 2023
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#welcome-to-the-ys-blog" class="md-nav__link">
-    <span class="md-ellipsis">
-      Welcome to the YS Blog
+      50 Posts!
     </span>
   </a>
   
@@ -2456,448 +2447,280 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             
           
           
-  <div class="md-content" data-md-component="content">
-    <div class="md-content__inner">
-      <header class="md-typeset">
-        <h1 id="index">Index<a class="headerlink" href="#index" title="Permanent link">🔗</a></h1>
-      </header>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-07 00:00:00+00:00">December 7, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
             
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          <a href="https://github.com/ingydotnet">Ingy döt Net</a>
+                        
+                      </strong>
+                      <br>
+                      YAML / YS Creator
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2025-07-20 00:00:00+00:00" class="md-ellipsis">July 20, 2025</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../category/summer-of-ys/">Summer-of-YS</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              3 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
           
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
+        </div>
+      </div>
     </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="sharpen-your-tools"><a class="toclink" href="../../2023-12-07/sharpen-your-tools/">Sharpen Your Tools</a></h2>
-<p>Wanna make some fun toys with YS?
-You'll need some sharp tools.
-You think those elves make all those toys with dull tools?</p>
-<p>The CLI tool <code>ys</code> is the main tool you'll use to work with YS.
-Today we'll learn about all the things you can do with it.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-07/sharpen-your-tools/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-06 00:00:00+00:00">December 6, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="modes-of-transportation"><a class="toclink" href="../../2023-12-06/modes-of-transportation/">Modes of Transportation</a></h2>
-<p>How do you get around?
-Some people walk, some ride bikes, some drive cars (or the cars drive them),
-some take trains, some in planes, so many ways, even some in sleighs.</p>
-<p>In YS, data gets around via various modes of transportation...  3 modes to be
-exact.</p>
-<p>Rememeber back on December 3rd when we talked about the 2 different states that
-a YS program can be in?
-In one state <code>say</code> is a function, and in the other it's just a plain string.</p>
-<p>We call these states "modes", and there is actually three of them.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-06/modes-of-transportation/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-05 00:00:00+00:00">December 5, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="unwrapping-gifts"><a class="toclink" href="../../2023-12-05/unwrapping-gifts/">Unwrapping Gifts</a></h2>
-<p>It's certainly a relief now that I've told you the big secret about YS.
-Now that you know that YS is really Clojure, I don't have to dance
-around the subject anymore.
-I didn't want to scare you away by going Full-Lisp on you from the start!</p>
-<p>Now we can just get into it.
-We can write, run and load YS until the cows come home.</p>
-<p>But wait... How do we do that?
-You don't even have YS installed yet!</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-05/unwrapping-gifts/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-04 00:00:00+00:00">December 4, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              6 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="santas-big-secret"><a class="toclink" href="../../2023-12-04/santas-big-secret/">Santa's Big Secret</a></h2>
-<p>I've got a little secret to tell you.
-I've been hiding a little something from you.
-Even that's a lie.
-I've actually been hiding something very very big something from you.</p>
-<blockquote>
-<h3 id="ys-is-a-lisp"><a class="toclink" href="../../2023-12-04/santas-big-secret/#ys-is-a-lisp">*** YS is a Lisp! *****</a></h3>
-</blockquote>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-04/santas-big-secret/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-03 00:00:00+00:00">December 3, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              6 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="load-em-up"><a class="toclink" href="../../2023-12-03/load-em-up/">Load em Up!</a></h2>
-<blockquote>
-<p>On the 3rd day of Advent, my YS code gave to me...<br />
-A sequence in a map tree!</p>
-</blockquote>
-<p>Did you know that all JSON <em>is</em> YAML?
-You should, because I told you that <a href="../../2023-12-02/twas-a-bit/">yesterday</a>!</p>
-<p>It's true.
-YAML is a superset of JSON.
-Both in terms of syntax and data model.</p>
-<p>This means that any possible valid JSON input is also valid as a YAML input.
-A proper YAML loader and a JSON loader should produce the same data structure
-from the same JSON input.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Assuming a YAML 1.2 loader using the YAML 1.2 JSON Schema</p>
-</div>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-03/load-em-up/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-02 00:00:00+00:00">December 2, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              8 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="twas-a-bit"><a class="toclink" href="../../2023-12-02/twas-a-bit/">Twas a Bit</a></h2>
-<div class="admonition quote">
-<p class="admonition-title">Quote</p>
-<p>'Twas a bit before Hanukkah, and all through the igloo,<br />
-not a creature was stirring, not even a frog.<br />
-The stockings were hung by the window with care,<br />
-In hopes that St. Krampus soon would be there.<br />
-The offspring were nestled all snug in their bunks,<br />
-While visions of spicy-cookies danced in their heads.<br />
-And cuz in their 'kerchief, and I in my bonnet,<br />
-Had just settled down for a long winter's snooze.<br />
-When out on the lawn there arose such a clatter,<br />
-I sprang from my bench to see what was the matter.<br />
-Away to the window, I flew like a jet,<br />
-Tore open the shutters and threw up the curtain.<br />
-The asteroid on the breast of the new-fallen frost,<br />
-Gave the lustre of mid-day to dirt below.<br />
-When what to my wondering eyes should materialize?<br />
-But a miniature car, and eight tiny elephants.</p>
-</div>
-<p>Well that was a bit weird.
-Let's try again.
-Don't worry, it's not that hard to write Winter holiday poetry when you have
-YS on your side!</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-02/twas-a-bit/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-12-01 00:00:00+00:00">December 1, 2023</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../category/advent-2023/" class="md-meta__link">Advent-2023</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="ys-advent-2023"><a class="toclink" href="../../2023-12-01/ys-advent-2023/">YS Advent 2023</a></h2>
-<h4 id="seasons-greetings-my-yaml-friends"><a class="toclink" href="../../2023-12-01/ys-advent-2023/#seasons-greetings-my-yaml-friends">Seasons Greetings, my YAML friends!</a></h4>
-<p>What if I told you that you could write a <strong>program in YAML</strong> that would
-generate a Christmas tree?</p>
-<p>Well, you can! Here's how:</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2023-12-01/ys-advent-2023/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2023-10-26 00:00:00+00:00">October 26, 2023</time></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="welcome-to-the-ys-blog"><a class="toclink" href="../../2023-10-26/welcome-to-the-ys-blog/">Welcome to the YS Blog</a></h2>
-<p><strong>Greetings!</strong></p>
-<p>Welcome to the YS blog.</p>
-<p>This is where we will introduce you to novel concepts about YS as the language
-evolves.</p>
-    
-  </div>
-</article>
-      
+    <article class="md-content__inner md-typeset">
       
         
-          
 
 
 
-<nav class="md-pagination">
-  <a class="md-pagination__link" href="../../">1</a> <a class="md-pagination__link" href="../2/">2</a> <a class="md-pagination__link" href="../3/">3</a> <span class="md-pagination__current">4</span>
-</nav>
-        
+
+
+
+  
+
+
+
+
+
+  
+
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-20.md"
+     title="Edit this page"
+     class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+  </a>
+
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-20.md"
+     title="View source of this page"
+     class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+  </a>
+
+
+  <h1>YAML Best Practices</h1>
+
+<p>YAML has a <a href="https://yaml.org/spec/1.2.2/ext/team/">Core Development Team&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> of
+five people that I am a member of.</p>
+<p>In May 2024, 4 of us met in Berlin.
+One of the things we did was to write a list of best practices for YAML.
+We came up with a list of 40 or so things that we all agreed on.</p>
+<p>Today I'll share some of those with you.</p>
+<!-- more -->
+
+<h2 id="dont-quote-strings-that-dont-need-to-be-quoted">Don't quote strings that don't need to be quoted<a class="headerlink" href="#dont-quote-strings-that-dont-need-to-be-quoted" title="Permanent link">🔗</a></h2>
+<p>One of the main points of YAML was to create a format that consisted of more
+data and less syntax.</p>
+<p>People tend to quote strings that contain anything they are not sure about,
+instead of learning the rules for when to quote and when to not quote.</p>
+<p>Scalar values without quotes are called "plain scalars".</p>
+<p>The basic rules for plain scalars are pretty simple:</p>
+<ul>
+<li>They can't start with these characters: <code>!</code>, <code>@</code>, <code>#</code>, <code>%</code>, <code>&amp;</code>, <code>*</code>, <code>|</code>,
+  <code>&gt;</code>, <code>,</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>&gt;</code>, <code>?</code>, <code>'</code>, <code>"</code>, a backtick or whitespace</li>
+<li>They can't contain <code>:</code> or <code>#</code> combinations</li>
+<li>They can't end with whitespace</li>
+</ul>
+<p>That's pretty much it.</p>
+<p>If you're not sure, don't quote it!</p>
+<h2 id="prefer-single-quotes-over-double-quotes">Prefer single quotes over double quotes<a class="headerlink" href="#prefer-single-quotes-over-double-quotes" title="Permanent link">🔗</a></h2>
+<p>For some reason, people tend to use double quotes for strings much more than
+single quotes.</p>
+<p>Single and double quoted strings have different semantics in YAML.</p>
+<p>Double quoted strings provide a way to escape characters.</p>
+<p>Single quoted strings only provide a way to escape a single quote (use 2 single
+quotes to escape a single quote).</p>
+<p>Only use double quotes if you need to escape something.</p>
+<p>Note: In YS (code mode) double quoted strings also provide a way to interpolate
+variables.</p>
+<h2 id="use-jsons-true-false-and-null">Use JSON's <code>true</code>, <code>false</code> and <code>null</code><a class="headerlink" href="#use-jsons-true-false-and-null" title="Permanent link">🔗</a></h2>
+<p>The YAML 1.2 core schema lets you use <code>TRUE</code> and <code>True</code> variants of <code>true</code>.
+Same for <code>false</code> and <code>null</code>.</p>
+<p>Stick to the JSON standard of <code>true</code>, <code>false</code> and <code>null</code>.</p>
+<p>For null values in mappings you can also use the empty string (nothing) to
+represent <code>null</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">a null value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="nt">also null</span><span class="p">:</span>
+<span class="l l-Scalar l-Scalar-Plain">don&#39;t use</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NULL</span>
+</code></pre></div>
+<p>That can be useful in YS too.
+Print a blank line with:</p>
+<div class="highlight"><pre><span></span><code>say: &#39;one&#39;
+say:        # blank line
+say: &#39;two&#39;
+</code></pre></div>
+<h2 id="non-empty-yaml-files-should-end-with-a-newline">Non-empty YAML files should end with a newline<a class="headerlink" href="#non-empty-yaml-files-should-end-with-a-newline" title="Permanent link">🔗</a></h2>
+<p>There are some edge cases where different YAML parsers will disagree on the
+meaning of a YAML file when it doesn't end with a newline.</p>
+<p>It's best to end your YAML files with a newline.
+Most editors can be configured to add a newline at the end of the file.</p>
+<p>Do it.</p>
+<h2 id="dont-block-sequences-in-mappings">Don't block sequences in mappings<a class="headerlink" href="#dont-block-sequences-in-mappings" title="Permanent link">🔗</a></h2>
+<p>This one is a bit controversial.</p>
+<p>When you have a sequence in a mapping, the <code>-</code> essentially counts as
+indentation.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">a mapping</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a sequence</span>
+</code></pre></div>
+<p>Many people will indent it like this:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">a mapping</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a sequence</span>
+</code></pre></div>
+<p>You won't be arrested by the YAML police for doing this, but the core team
+prefers the former style.</p>
+<h2 id="use-yaml-file-extensions">Use <code>.yaml</code> file extensions<a class="headerlink" href="#use-yaml-file-extensions" title="Permanent link">🔗</a></h2>
+<p>We always wished that people would use the <code>.yaml</code> file extension for YAML
+files.
+At some point people started using <code>.yml</code> extensions and we didn't yell about
+it.</p>
+<p>We know that ship has sailed, but we still prefer <code>.yaml</code> over <code>.yml</code> if you
+are starting something new and have the choice.</p>
+<h2 id="50-posts">50 Posts!<a class="headerlink" href="#50-posts" title="Permanent link">🔗</a></h2>
+<p>If you haven't noticed the Summer of YS blog series is over half way done!</p>
+<p>Today is the 50th post in the series!!!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+  <h2 id="__comments">Comments</h2>
+  <!-- Insert generated snippet here -->
+  <script src="https://giscus.app/client.js"
+    data-repo="yaml/yamlscript"
+    data-repo-id="R_kgDOHmgdIg"
+    data-category="Blog Post Discussions"
+    data-category-id="DIC_kwDOHmgdIs4Cq6mr"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    // Set palette on initial load
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate"
+        ? "transparent_dark"
+        : "light"
+
+      // Instruct Giscus to set theme
+      giscus.setAttribute("data-theme", theme) 
+    }
+
+    // Register event handlers after documented loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate"
+            ? "transparent_dark"
+            : "light"
+
+          // Instruct Giscus to change theme
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
       
-    </div>
+    </article>
   </div>
 
           
@@ -2910,10 +2733,12 @@ evolves.</p>
   
     
       
+        
+      
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../../doc/run-ys/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Self Installation Scripts">
+          <a href="../../2025-07-19/yaml-explicit-keys-and-ys/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YAML Explicit Keys and YS">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2923,27 +2748,11 @@ evolves.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Self Installation Scripts
+                YAML Explicit Keys and YS
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../category/advent-2023/" class="md-footer__link md-footer__link--next" aria-label="Next: Advent-2023">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Advent-2023
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     
