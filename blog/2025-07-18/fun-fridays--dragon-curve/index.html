@@ -2619,21 +2619,20 @@ convert to YS:</p>
 <span class="w">      </span><span class="nt">nx ny =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[(x + condp(== dir 0 1 2 -1 0))</span>
 <span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">(y + condp(== dir 1 1 3 -1 0))]</span>
-<span class="w">      </span><span class="nt">ob ib =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nth([[8 4][2 1][4 8][1 2]] dir)</span>
+<span class="w">      </span><span class="nt">ob ib =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dir.nth([[8 4][2 1][4 8][1 2]])</span>
 <span class="w">      </span><span class="nt">data =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">update-in(data [y x] safe-bit-or ob)</span>
 <span class="w">             </span><span class="l l-Scalar l-Scalar-Plain">.update-in([ny nx] safe-bit-or ib)</span>
 <span class="w">      </span><span class="nt">bbox =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">[min(minx nx) max(maxx nx)</span>
 <span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">min(miny ny) max(maxy ny)]</span>
 <span class="w">      </span><span class="nt">if i &lt; steps</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">recur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i.++ [nx ny] data bbox</span>
+<span class="w">        </span><span class="nt">recur</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i.++, [nx ny], data, bbox</span>
 <span class="w">        </span><span class="nt">vector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data bbox</span>
 
-<span class="w">  </span><span class="nt">doseq y (range miny maxy.++)</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">chars =</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">for x (range minx maxx.++)</span><span class="p">:</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">nth(&quot; ╵╷│╴┘┐┤╶└┌├─┴┬┼&quot; get-in(data [y x] 0))</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str(chars*)</span>
+<span class="w">  </span><span class="nt">each y (miny .. maxy)</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="kt">!:join</span>
+<span class="w">      </span><span class="nt">each x (minx .. maxx)</span><span class="p">:</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">get-in(data [y x] 0).nth(&quot; ╵╷│╴┘┐┤╶└┌├─┴┬┼&quot;)</span>
 
 <span class="nt">defn i-to-dir(n)</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">n.bit-xor(bit-shift-right(n 1)):Long/bitCount % 4</span>
