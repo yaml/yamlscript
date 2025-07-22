@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Mon, 21 Jul 2025 00:24:08 -0000</pubDate>
-    <lastBuildDate>Mon, 21 Jul 2025 00:24:08 -0000</lastBuildDate>
+    <pubDate>Tue, 22 Jul 2025 04:33:08 -0000</pubDate>
+    <lastBuildDate>Tue, 22 Jul 2025 04:33:08 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,35 @@
     
 
     
+    
+    <item>
+      <title>Calling Shell Commands from YAML</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Wouldn&#39;t it be handy to get data from shell commands in YAML?&lt;/p&gt;
+&lt;p&gt;Well you can, and it&#39;s really easy.&lt;/p&gt;
+&lt;p&gt;YS has a bunch of functions in its Standard Library for calling shell commands,
+and passing data to and from them.&lt;/p&gt;
+&lt;p&gt;Let&#39;s take a look...&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-21/calling-shell-commands-from-yaml/</link>
+      <pubDate>Mon, 21 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-21/calling-shell-commands-from-yaml/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-21/calling-shell-commands-from-yaml.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>YAML Best Practices</title>
@@ -57,7 +86,7 @@ We came up with a list of 40 or so things that we all agreed on.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-20/yaml-best-practices/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-20/yaml-best-practices.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-20/yaml-best-practices.png" type="image/png" length="44886" />
       
     </item>
     

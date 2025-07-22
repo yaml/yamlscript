@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-20/yaml-best-practices/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-21/calling-shell-commands-from-yaml/">
       
       
-        <link rel="prev" href="../../2025-07-19/yaml-explicit-keys-and-ys/">
+        <link rel="prev" href="../../2025-07-20/yaml-best-practices/">
       
-      
-        <link rel="next" href="../../2025-07-21/calling-shell-commands-from-yaml/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>YAML Best Practices - YS — YAML Done Wisely</title>
+        <title>Calling Shell Commands from YAML - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="YAML Best Practices - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Calling Shell Commands from YAML - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-20.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-21.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-20/yaml-best-practices/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-21/calling-shell-commands-from-yaml/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="YAML Best Practices - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Calling Shell Commands from YAML - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-20.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-21.png" >
       
     
     
@@ -170,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#dont-quote-strings-that-dont-need-to-be-quoted" class="md-skip">
+        <a href="#the-shell-function" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              YAML Best Practices
+              Calling Shell Commands from YAML
             
           </span>
           </a>
@@ -2378,63 +2376,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#dont-quote-strings-that-dont-need-to-be-quoted" class="md-nav__link">
+  <a href="#the-shell-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Don't quote strings that don't need to be quoted
+      The shell function
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#prefer-single-quotes-over-double-quotes" class="md-nav__link">
+  <a href="#the-sh-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Prefer single quotes over double quotes
+      The sh function
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#use-jsons-true-false-and-null" class="md-nav__link">
+  <a href="#the-sh-out-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Use JSON's true, false and null
+      The sh-out function
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#non-empty-yaml-files-should-end-with-a-newline" class="md-nav__link">
+  <a href="#the-bash-function" class="md-nav__link">
     <span class="md-ellipsis">
-      Non-empty YAML files should end with a newline
+      The bash function
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#dont-block-sequences-in-mappings" class="md-nav__link">
+  <a href="#the-shells-the-limit" class="md-nav__link">
     <span class="md-ellipsis">
-      Don't block sequences in mappings
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use-yaml-file-extensions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Use .yaml file extensions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#50-posts" class="md-nav__link">
-    <span class="md-ellipsis">
-      50 Posts!
+      The Shell's the Limit
     </span>
   </a>
   
@@ -2496,7 +2476,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-20 00:00:00+00:00" class="md-ellipsis">July 20, 2025</time>
+                        <time datetime="2025-07-21 00:00:00+00:00" class="md-ellipsis">July 21, 2025</time>
                       </div>
                     </li>
                     
@@ -2518,7 +2498,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              3 min read
+                              2 min read
                             
                           </span>
                         </div>
@@ -2550,14 +2530,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-20.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-21.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-20.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-21.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2565,89 +2545,111 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>YAML Best Practices</h1>
+  <h1>Calling Shell Commands from YAML</h1>
 
-<p>YAML has a <a href="https://yaml.org/spec/1.2.2/ext/team/">Core Development Team&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> of
-five people that I am a member of.</p>
-<p>In May 2024, 4 of us met in Berlin.
-One of the things we did was to write a list of best practices for YAML.
-We came up with a list of 40 or so things that we all agreed on.</p>
-<p>Today I'll share some of those with you.</p>
+<p>Wouldn't it be handy to get data from shell commands in YAML?</p>
+<p>Well you can, and it's really easy.</p>
+<p>YS has a bunch of functions in its Standard Library for calling shell commands,
+and passing data to and from them.</p>
+<p>Let's take a look...</p>
 <!-- more -->
 
-<h2 id="dont-quote-strings-that-dont-need-to-be-quoted">Don't quote strings that don't need to be quoted<a class="headerlink" href="#dont-quote-strings-that-dont-need-to-be-quoted" title="Permanent link">🔗</a></h2>
-<p>One of the main points of YAML was to create a format that consisted of more
-data and less syntax.</p>
-<p>People tend to quote strings that contain anything they are not sure about,
-instead of learning the rules for when to quote and when to not quote.</p>
-<p>Scalar values without quotes are called "plain scalars".</p>
-<p>The basic rules for plain scalars are pretty simple:</p>
-<ul>
-<li>They can't start with these characters: <code>!</code>, <code>@</code>, <code>#</code>, <code>%</code>, <code>&amp;</code>, <code>*</code>, <code>|</code>,
-  <code>&gt;</code>, <code>,</code>, <code>{</code>, <code>}</code>, <code>[</code>, <code>]</code>, <code>&gt;</code>, <code>?</code>, <code>'</code>, <code>"</code>, a backtick or whitespace</li>
-<li>They can't contain <code>:</code> or <code>#</code> combinations</li>
-<li>They can't end with whitespace</li>
-</ul>
-<p>That's pretty much it.</p>
-<p>If you're not sure, don't quote it!</p>
-<h2 id="prefer-single-quotes-over-double-quotes">Prefer single quotes over double quotes<a class="headerlink" href="#prefer-single-quotes-over-double-quotes" title="Permanent link">🔗</a></h2>
-<p>For some reason, people tend to use double quotes for strings much more than
-single quotes.</p>
-<p>Single and double quoted strings have different semantics in YAML.</p>
-<p>Double quoted strings provide a way to escape characters.</p>
-<p>Single quoted strings only provide a way to escape a single quote (use 2 single
-quotes to escape a single quote).</p>
-<p>Only use double quotes if you need to escape something.</p>
-<p>Note: In YS (code mode) double quoted strings also provide a way to interpolate
-variables.</p>
-<h2 id="use-jsons-true-false-and-null">Use JSON's <code>true</code>, <code>false</code> and <code>null</code><a class="headerlink" href="#use-jsons-true-false-and-null" title="Permanent link">🔗</a></h2>
-<p>The YAML 1.2 core schema lets you use <code>TRUE</code> and <code>True</code> variants of <code>true</code>.
-Same for <code>false</code> and <code>null</code>.</p>
-<p>Stick to the JSON standard of <code>true</code>, <code>false</code> and <code>null</code>.</p>
-<p>For null values in mappings you can also use the empty string (nothing) to
-represent <code>null</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">a null value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
-<span class="nt">also null</span><span class="p">:</span>
-<span class="l l-Scalar l-Scalar-Plain">don&#39;t use</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NULL</span>
+<h2 id="the-shell-function">The <code>shell</code> function<a class="headerlink" href="#the-shell-function" title="Permanent link">🔗</a></h2>
+<p>When you just want to run a shell command and let its outputs print to the
+terminal, you can use the <code>shell</code> function.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+shell:<span class="w"> </span><span class="s1">&#39;fortune&#39;</span>
+...
+You<span class="w"> </span>have<span class="w"> </span>taken<span class="w"> </span>yourself<span class="w"> </span>too<span class="w"> </span>seriously.
 </code></pre></div>
-<p>That can be useful in YS too.
-Print a blank line with:</p>
-<div class="highlight"><pre><span></span><code>say: &#39;one&#39;
-say:        # blank line
-say: &#39;two&#39;
+<p>This is the same as running <code>fortune</code> in from the command line.</p>
+<p>You can also pass data to the shell command.
+Let's try the <code>tac</code> command, which reverses the lines of a file.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+shell<span class="w"> </span><span class="o">{</span>:in<span class="w"> </span><span class="s2">&quot;foo\nbar\nbaz\n&quot;</span><span class="o">}</span>:<span class="w"> </span><span class="s1">&#39;tac&#39;</span>
+...
+baz
+bar
+foo
 </code></pre></div>
-<h2 id="non-empty-yaml-files-should-end-with-a-newline">Non-empty YAML files should end with a newline<a class="headerlink" href="#non-empty-yaml-files-should-end-with-a-newline" title="Permanent link">🔗</a></h2>
-<p>There are some edge cases where different YAML parsers will disagree on the
-meaning of a YAML file when it doesn't end with a newline.</p>
-<p>It's best to end your YAML files with a newline.
-Most editors can be configured to add a newline at the end of the file.</p>
-<p>Do it.</p>
-<h2 id="dont-block-sequences-in-mappings">Don't block sequences in mappings<a class="headerlink" href="#dont-block-sequences-in-mappings" title="Permanent link">🔗</a></h2>
-<p>This one is a bit controversial.</p>
-<p>When you have a sequence in a mapping, the <code>-</code> essentially counts as
-indentation.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">a mapping</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a sequence</span>
+<h2 id="the-sh-function">The <code>sh</code> function<a class="headerlink" href="#the-sh-function" title="Permanent link">🔗</a></h2>
+<p>The <code>sh</code> function doesn't print the output to the terminal.
+It returns a mapping that contains a bunch of fields like the exit code, stdout,
+stderr, and more.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+<span class="nv">result</span><span class="w"> </span><span class="o">=</span>:
+<span class="w">  </span>sh:<span class="w"> </span><span class="s1">&#39;echo &quot;Hello, World!&quot;&#39;</span>
+say:<span class="w"> </span>result.out
+...
+Hello,<span class="w"> </span>World!
 </code></pre></div>
-<p>Many people will indent it like this:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">a mapping</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a sequence</span>
+<p>Let's look at the entire result object:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+<span class="nv">result</span><span class="w"> </span><span class="o">=</span>:
+<span class="w">  </span>sh:<span class="w"> </span><span class="s1">&#39;echo &quot;Hello, World!&quot;&#39;</span>
+say:<span class="w"> </span>result
+...
+<span class="o">{</span>:proc<span class="w"> </span><span class="c1">#object[java.lang.ProcessImpl 0x512d4b90 Process[pid=1364706, exitValue=0]], :exit 0, :in #object[java.lang.ProcessImpl$ProcessPipeOutputStream 0x22ebcf7e java.lang.ProcessImpl$ProcessPipeOutputStream@22ebcf7e], :out Hello, World!</span>
+,<span class="w"> </span>:err<span class="w"> </span>,<span class="w"> </span>:prev<span class="w"> </span>nil,<span class="w"> </span>:cmd<span class="w"> </span><span class="o">[</span><span class="nb">echo</span><span class="w"> </span>Hello,<span class="w"> </span>World!<span class="o">]}</span>
 </code></pre></div>
-<p>You won't be arrested by the YAML police for doing this, but the core team
-prefers the former style.</p>
-<h2 id="use-yaml-file-extensions">Use <code>.yaml</code> file extensions<a class="headerlink" href="#use-yaml-file-extensions" title="Permanent link">🔗</a></h2>
-<p>We always wished that people would use the <code>.yaml</code> file extension for YAML
-files.
-At some point people started using <code>.yml</code> extensions and we didn't yell about
-it.</p>
-<p>We know that ship has sailed, but we still prefer <code>.yaml</code> over <code>.yml</code> if you
-are starting something new and have the choice.</p>
-<h2 id="50-posts">50 Posts!<a class="headerlink" href="#50-posts" title="Permanent link">🔗</a></h2>
-<p>If you haven't noticed the Summer of YS blog series is over half way done!</p>
-<p>Today is the 50th post in the series!!!</p>
+<p>That's kind of ugly and hard to read.</p>
+<p>Let's use the <code>yaml/dump</code> function to pretty print it:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+<span class="nv">result</span><span class="w"> </span><span class="o">=</span>:
+<span class="w">  </span>sh:<span class="w"> </span><span class="s1">&#39;echo &quot;Hello, World!&quot;&#39;</span>
+say:<span class="w"> </span>result:yaml/dump
+...
+proc:<span class="w"> </span>!!java.lang.ProcessImpl<span class="w"> </span><span class="o">{}</span>
+exit:<span class="w"> </span><span class="m">0</span>
+<span class="k">in</span>:<span class="w"> </span>!!java.lang.ProcessImpl<span class="nv">$ProcessPipeOutputStream</span><span class="w"> </span><span class="o">{}</span>
+out:<span class="w"> </span><span class="p">|</span>
+<span class="w">  </span>Hello,<span class="w"> </span>World!
+err:<span class="w"> </span><span class="s1">&#39;&#39;</span>
+prev:<span class="w"> </span>null
+cmd:
+-<span class="w"> </span><span class="nb">echo</span>
+-<span class="w"> </span>Hello,<span class="w"> </span>World!
+</code></pre></div>
+<p>Much better!</p>
+<p>You can also pass data to the <code>sh</code> function just like the <code>shell</code> function.</p>
+<h2 id="the-sh-out-function">The <code>sh-out</code> function<a class="headerlink" href="#the-sh-out-function" title="Permanent link">🔗</a></h2>
+<p>The <code>sh-out</code> function is like the <code>sh</code> function, but it returns the output as a
+string.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+say:
+<span class="w">  </span>sh-out:<span class="w"> </span><span class="s1">&#39;echo &quot;Hello, World!&quot;&#39;</span>
+...
+Hello,<span class="w"> </span>World!
+</code></pre></div>
+<p>This handy shortcut is often just what the doctor ordered.</p>
+<h2 id="the-bash-function">The <code>bash</code> function<a class="headerlink" href="#the-bash-function" title="Permanent link">🔗</a></h2>
+<p>You can only run simple shell commands with the <code>shell</code> and <code>sh</code> functions.</p>
+<p>In other words, you can't do things like pipes and redirects.</p>
+<p>Of course you can also put any complicated shell command inside:</p>
+<div class="highlight"><pre><span></span><code>bash -c &#39;complicated | shell &gt; command&#39;
+</code></pre></div>
+<p>The <code>bash</code> function basically does this for you in YS code.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-<span class="w"> </span>&lt;&lt;<span class="s1">&#39;...&#39;</span>
+!YS-v0
+say:
+<span class="w">  </span>get<span class="w"> </span>_<span class="w"> </span>:out:
+<span class="w">    </span>bash:<span class="w"> </span><span class="s1">&#39;fortune | tr a-z A-Z &gt; /tmp/fortune.txt &amp;&amp;</span>
+<span class="s1">           ls -l /tmp/fortune.txt &amp;&amp; cat /tmp/fortune.txt&#39;</span>
+...
+-rw-r--r--<span class="w"> </span><span class="m">1</span><span class="w"> </span>ingy<span class="w"> </span>ingy<span class="w"> </span><span class="m">46</span><span class="w"> </span>Jul<span class="w"> </span><span class="m">21</span><span class="w"> </span><span class="m">21</span>:27<span class="w"> </span>/tmp/fortune.txt
+LOOK<span class="w"> </span>AFAR<span class="w"> </span>AND<span class="w"> </span>SEE<span class="w"> </span>THE<span class="w"> </span>END<span class="w"> </span>FROM<span class="w"> </span>THE<span class="w"> </span>BEGINNING.
+</code></pre></div>
+<h2 id="the-shells-the-limit">The Shell's the Limit<a class="headerlink" href="#the-shells-the-limit" title="Permanent link">🔗</a></h2>
+<p>As you can imagine, there's no limit to what you can do with shell commands in
+YAML using YS.</p>
+<p>Don't worry.
+Later we'll explore ways to actually limit capabilities in YS if you need to.</p>
 
 
 
@@ -2740,7 +2742,7 @@ are starting something new and have the choice.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-19/yaml-explicit-keys-and-ys/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YAML Explicit Keys and YS">
+          <a href="../../2025-07-20/yaml-best-practices/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YAML Best Practices">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2750,27 +2752,11 @@ are starting something new and have the choice.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                YAML Explicit Keys and YS
+                YAML Best Practices
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../2025-07-21/calling-shell-commands-from-yaml/" class="md-footer__link md-footer__link--next" aria-label="Next: Calling Shell Commands from YAML">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Calling Shell Commands from YAML
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     
