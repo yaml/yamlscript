@@ -2607,27 +2607,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      class="external-link"
      alt="External link">
 </a> YAML framework
-for Go, and am working with Mike to help it fix certain issues in <code>yq</code>.</p>
-<p>It looks like a promising future for both <code>go-yaml</code> and <code>yq</code>.</p>
-<p>It turns out that YS has a lot of crossovers with <code>yq</code>.</p>
+for Go, and am working with Mike to help it fix certain issues in yq.</p>
+<p>It looks like a promising future for both go-yaml and yq.</p>
+<p>It turns out that YS has a lot of crossovers with yq.</p>
 <p>Let's take a closer look at how they compare.</p>
 <!-- more -->
 
 <h2 id="what-is-yq">What is yq?<a class="headerlink" href="#what-is-yq" title="Permanent link">🔗</a></h2>
 <p>yq is a command-line tool for querying and manipulating YAML (and other) data.</p>
-<p>It is meant to work much like <a href="https://stedolan.github.io/jq/"><code>jq</code>&nbsp;<img src="/image/external-link.svg"
+<p>It is meant to work much like <a href="https://stedolan.github.io/jq/">jq&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a> for JSON.</p>
-<p>I've used <code>yq</code> a lot, and it's a great tool.
-It can do a few things that <code>ys</code> can't do.
+<p>I've used yq a lot, and it's a great tool.
+It can do a few things that YS can't do.
 (At least, not yet!)</p>
 <h2 id="quick-usage-guide">Quick Usage Guide<a class="headerlink" href="#quick-usage-guide" title="Permanent link">🔗</a></h2>
 <p>Let's look at the examples in <a href="https://github.com/mikefarah/yq?tab=readme-ov-file#quick-usage-guide">yq's Quick Usage Guide&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a> and
-compare them to <code>ys</code>.</p>
+compare them to YS.</p>
 <p>Let's imagine we have the following <code>file.yaml</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">a</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">b</span><span class="p">:</span>
@@ -2638,7 +2638,7 @@ compare them to <code>ys</code>.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>yq<span class="w"> </span><span class="s1">&#39;.a.b[0].c&#39;</span><span class="w"> </span>file.yaml
 hello
 </code></pre></div>
-<p>ys:</p>
+<p>YS:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span><span class="s1">&#39;.a.b.0.c&#39;</span><span class="w"> </span>file.yaml
 hello
 </code></pre></div>
@@ -2647,7 +2647,7 @@ hello
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>yq<span class="w"> </span><span class="s1">&#39;.a.b[0].c&#39;</span><span class="w"> </span>&lt;<span class="w"> </span>file.yaml
 hello
 </code></pre></div>
-<p>ys:</p>
+<p>YS:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span><span class="s1">&#39;.a.b.0.c&#39;</span><span class="w"> </span>&lt;<span class="w"> </span>file.yaml
 hello
 </code></pre></div>
@@ -2663,8 +2663,8 @@ a:
 <p>Well, the <code>- c:</code> line got re-indented, but the comment is still there.</p>
 <p>ys can't preserve comments but it can update the value.
 Not as nicely though.</p>
-<p>ys:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;.assoc-in([&quot;a&quot; &quot;b&quot; 0 &quot;c&quot;] &quot;cool&quot;)&#39;</span><span class="w"> </span>file.yaml<span class="w"> </span>
+<p>YS:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;.assoc-in([&quot;a&quot; &quot;b&quot; 0 &quot;c&quot;] &quot;cool&quot;)&#39;</span><span class="w"> </span>file.yaml
 a:
 <span class="w">  </span>b:
 <span class="w">  </span>-<span class="w"> </span>c:<span class="w"> </span>cool
@@ -2676,8 +2676,8 @@ a:
 <span class="w">  </span>b:
 <span class="w">    </span>-<span class="w"> </span>c:<span class="w"> </span>ingy<span class="w"> </span><span class="c1"># A greeting</span>
 </code></pre></div>
-<p>ys:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;.assoc-in([&quot;a&quot; &quot;b&quot; 0 &quot;c&quot;] ENV.USER)&#39;</span><span class="w"> </span>file.yaml<span class="w"> </span>
+<p>YS:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;.assoc-in([&quot;a&quot; &quot;b&quot; 0 &quot;c&quot;] ENV.USER)&#39;</span><span class="w"> </span>file.yaml
 a:
 <span class="w">  </span>b:
 <span class="w">  </span>-<span class="w"> </span>c:<span class="w"> </span>ingy
@@ -2697,7 +2697,7 @@ x:
 <span class="w">  </span>y:
 <span class="w">    </span>z:<span class="w"> </span>foobar<span class="w"> </span><span class="c1"># A comment</span>
 </code></pre></div>
-<p>ys:</p>
+<p>YS:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;load(&quot;file.yaml&quot;) + load(&quot;file2.yaml&quot;)&#39;</span>
 a:
 <span class="w">  </span>b:
@@ -2718,8 +2718,8 @@ x:
 a:<span class="w"> </span>b
 c:<span class="w"> </span>d
 </code></pre></div>
-<p>ys:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>file.json<span class="w"> </span>
+<p>YS:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>file.json
 a:<span class="w"> </span>b
 c:<span class="w"> </span>d
 </code></pre></div>

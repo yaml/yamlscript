@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Wed, 23 Jul 2025 04:47:20 -0000</pubDate>
-    <lastBuildDate>Wed, 23 Jul 2025 04:47:20 -0000</lastBuildDate>
+    <pubDate>Wed, 23 Jul 2025 04:51:06 -0000</pubDate>
+    <lastBuildDate>Wed, 23 Jul 2025 04:51:06 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -48,9 +48,9 @@
       <description>&lt;p&gt;Today I met &lt;a href=&#34;https://github.com/mikefarah&#34;&gt;Mike Farah&lt;/a&gt;, the creator of
 &lt;a href=&#34;https://github.com/mikefarah/yq&#34;&gt;yq&lt;/a&gt;!&lt;/p&gt;
 &lt;p&gt;I help maintain the &lt;a href=&#34;https://github.com/yaml/go-yaml&#34;&gt;go-yaml&lt;/a&gt; YAML framework
-for Go, and am working with Mike to help it fix certain issues in &lt;code&gt;yq&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;It looks like a promising future for both &lt;code&gt;go-yaml&lt;/code&gt; and &lt;code&gt;yq&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;It turns out that YS has a lot of crossovers with &lt;code&gt;yq&lt;/code&gt;.&lt;/p&gt;
+for Go, and am working with Mike to help it fix certain issues in yq.&lt;/p&gt;
+&lt;p&gt;It looks like a promising future for both go-yaml and yq.&lt;/p&gt;
+&lt;p&gt;It turns out that YS has a lot of crossovers with yq.&lt;/p&gt;
 &lt;p&gt;Let&#39;s take a closer look at how they compare.&lt;/p&gt;</description>
       <link>https://yamlscript.org/blog/2025-07-22/ys-and-yq/</link>
       <pubDate>Tue, 22 Jul 2025 00:00:00 +0000</pubDate>
@@ -58,7 +58,7 @@ for Go, and am working with Mike to help it fix certain issues in &lt;code&gt;yq
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-22/ys-and-yq/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-22/ys-and-yq.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-22/ys-and-yq.png" type="image/png" length="34352" />
       
     </item>
     
