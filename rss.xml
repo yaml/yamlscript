@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Wed, 23 Jul 2025 18:58:03 -0000</pubDate>
-    <lastBuildDate>Wed, 23 Jul 2025 18:58:03 -0000</lastBuildDate>
+    <pubDate>Thu, 24 Jul 2025 02:50:58 -0000</pubDate>
+    <lastBuildDate>Thu, 24 Jul 2025 02:50:58 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,36 @@
     
 
     
+    
+    <item>
+      <title>YS Streaming Mode</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;We&#39;ve seen before that YS can work with YAML files that contain multiple
+documents.
+&#34;Document&#34; is the YAML term for a single top level node (object).&lt;/p&gt;
+&lt;p&gt;YS returns the last document in the file by default.&lt;/p&gt;
+&lt;p&gt;YS can also load all the documents in the file.&lt;/p&gt;
+&lt;p&gt;This is called streaming mode, and we&#39;ll learn more about it today.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-23/ys-streaming-mode/</link>
+      <pubDate>Wed, 23 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-23/ys-streaming-mode/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-23/ys-streaming-mode.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>ys and yq</title>
