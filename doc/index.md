@@ -3,18 +3,18 @@ title: Welcome to the YS Documentation
 talk: 0
 ---
 
-YS is a still a fairly new language, and this documentation is a work in
+YS is still a fairly new language, and this documentation is a work in
 progress.
 
 While we hope that you find the information you came looking for here, we know
 that there are still many gaps in the documentation.
 
-The good news is **"You Can Help!"**.
+The good news: **You Can Help.**
 
 Writing great documentation is a team effort, and we are trying to make it as
 easy as possible for you to contribute.
 
-Almost every page on this site (including this one!!) has an **"Edit this
+Almost every page on this site (including this one!) has an **"Edit this
 page"** button at the top:
 
 ![Edit this page image](
