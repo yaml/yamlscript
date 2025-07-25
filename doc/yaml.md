@@ -9,7 +9,7 @@ data.
 
 Modern programmers generally have a decent understanding of YAML basics as it
 ends up in many places in the tech world.
-That said, there are many lesser well-known YAML concepts and features and
+That said, there are many lesser-known YAML concepts and features, and
 YS makes use of most of them.
 
 Remember, all valid YS is required to be valid YAML syntax.
@@ -155,21 +155,21 @@ plain:
 - I can also span multiple lines
   where whitespace beteween lines
   folds to a single space
-single quoted:
-- 'I''m single quoted'
+single-quoted:
+- 'I''m single-quoted'
 - 'I have one thing that is escapable,
   the single quote itself '' which
   is escaped by doubling it'
-- 'Multiline single quoted scalars
-  fold the same way as plain'
-double quoted:
-- "I'm double quoted"
+- 'Multiline single-quoted scalars
+  fold the same way as plain ones'
+double-quoted:
+- "I'm double-quoted"
 - "I'm the only style capable of encoding
-  any possible string value"
-- "I have lots of escapes like \n and \t
-  and also \" and \\"
-- "Multiline double quoted scalars
-  fold the same way as plain"
+  all possible string values"
+- "I have lots of escape sequences, like \n and \t
+  as well as \" and \\"
+- "Multiline double-quoted scalars
+  fold the same way as plain ones do"
 literal: |
   I'm like a heredoc in Shell or Perl.
 
@@ -177,7 +177,7 @@ literal: |
   Newlines are preserved as you would expect
   from a heredoc.
 folded: >
-  Folded scalars pretty much fold like
+  Folded scalars fold pretty much like
   the others, but you can use them without
   worry of ` #` or `: ` being special.
 
@@ -185,8 +185,8 @@ folded: >
 
 In YS code mode:
 - plain: Used for code expressions
-- single quoted: Used for character strings
-- double quoted: Used for strings with interpolation support
+- single-quoted: Used for character strings
+- double-quoted: Used for strings with interpolation support
 - literal: Used for template strings including interpolation
 - folded: Not allowed in code mode
 
@@ -198,9 +198,9 @@ In YS code mode:
 
 
 # Here we start a second document in the stream.
-# This one is a top level sequence and it has an anchor and a tag:
+# This one is a top-level sequence and it has an anchor and a tag:
 # The `---` indicator is required and you can also use the line to specify the
-# anchor and tag for the top level node.
+# anchor and tag for the top-level node.
 
 --- &my-seq-1 !a-tag
 
@@ -244,8 +244,7 @@ In YS code mode:
 # like JSON.
 # YAML uses curly braces for mappings and square brackets for sequences.
 # These are called "flow style" for "collections".
-# The normal indented style we've been using is called "block style" by
-# comparison.
+# By comparison, the normal indented style we've been using is called "block style". 
 # Note: A YAML "collection" is the generic term for a node that is either a
 # mapping or a sequence.
 
@@ -259,7 +258,7 @@ key 2: [red, blue,
 empty mapping: {}
 empty sequence: []
 
-# There is actually no way to write empty collections in block style.
+# Note, there is no way to write empty collections in block style.
 ```
 
 
@@ -269,7 +268,7 @@ Here's a few YAML syntax variants that you won't see very often.
 Some of these are used in YS, so it's good to know about them.
 
 ```
-# YAML has a top level "directive" syntax.
+# YAML has a top-level "directive" syntax.
 # There are only 2 directives defined by the YAML 1.2 specification:
 # This is the first one, the "YAML directive".
 # It simply specifies the version of the YAML specification in play.
