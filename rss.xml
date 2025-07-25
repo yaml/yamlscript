@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 25 Jul 2025 19:12:36 -0000</pubDate>
-    <lastBuildDate>Fri, 25 Jul 2025 19:12:36 -0000</lastBuildDate>
+    <pubDate>Fri, 25 Jul 2025 21:02:18 -0000</pubDate>
+    <lastBuildDate>Fri, 25 Jul 2025 21:02:18 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,41 @@
     
 
     
+    
+    <item>
+      <title>YS on the Go</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;&lt;a href=&#34;2025-07-24.md#whats-the-problem-with-graalvm&#34;&gt;Yesterday&lt;/a&gt; I hinted at the idea
+of YS hosted on Go.&lt;/p&gt;
+&lt;p&gt;This doesn&#39;t mean that YS would be rewritten in Go or that it wouldn&#39;t compile
+to Clojure.
+The Lisp is still essential to YS.&lt;/p&gt;
+&lt;p&gt;Where I was going was the possibility of creating a Clojure hosted on Go, which
+I&#39;ve been thinking about for a while.&lt;/p&gt;
+&lt;p&gt;Go is the backbone of technologies like Kubernetes, where YS wants to provide
+a more powerful YAML experience.&lt;/p&gt;
+&lt;p&gt;As I was getting ready for bed, the word &#34;Glojure&#34; popped into my head.&lt;/p&gt;
+&lt;p&gt;What a perfect name for a Go hosted Clojure!&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</link>
+      <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/ys-on-the-go.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>Why YS Chose Clojure</title>
