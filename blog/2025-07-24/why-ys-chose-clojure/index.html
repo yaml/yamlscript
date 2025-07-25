@@ -2574,10 +2574,11 @@ That's about it.</p>
 <p>Something like that.</p>
 <h2 id="how-to-make-a-lisp">How to Make A Lisp<a class="headerlink" href="#how-to-make-a-lisp" title="Permanent link">🔗</a></h2>
 <p>I said "I didn't know how to <em>make</em> a Lisp" on purpose.</p>
-<p>In early 2023 I googled "how to make a Lisp" and found <a href="https://github.com/kanaka/mal">this amazing project&nbsp;<img src="/image/external-link.svg"
+<p>In early 2023 I googled "how to make a Lisp" and found this amazing project
+called <a href="https://github.com/kanaka/mal">mal&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
-</a>.
+</a> (Make A Lisp).
 It's a complete 11 step tutorial on how to implement a rudimentary Lisp in any
 language you want to.
 Each of the 11 steps has a test suite that you need to get to pass before moving
@@ -2585,8 +2586,8 @@ on to the next step.
 Last I counted, there were over 100 implementations in over 75 languages!</p>
 <p>It took me 2 weeks to implement a Lisp in Perl.
 The "mal" Lisp is Clojure inspired.
-The final step is to use your mal to run a mal implementation written in mal and
-have it pass all the tests!
+The final step is to use your mal to run (self-host) a mal implementation
+written in mal and have it pass all the tests!
 It still blows my mind a bit to think about it.</p>
 <p>When I was done, I decided to see what the mal Lisp would look like in YAML.
 It looked awful!
@@ -2595,8 +2596,8 @@ Soon I was pretty sure that YS could be a language that I would actually like
 programming in.</p>
 <p>That said, it would still be a lot of work.</p>
 <h2 id="the-holy-graalvm">The Holy Graal(VM)<a class="headerlink" href="#the-holy-graalvm" title="Permanent link">🔗</a></h2>
-<p>I decided not to stop working on my Perl Lisp, and to see how far I could get
-with making a Clojure hosted on Perl.
+<p>I decided not to stop working on my Perl mal/Clojure Lisp, and to see how far I
+could get with making a Clojure hosted on Perl.
 I called the project Lingy.</p>
 <p>I was attending a Perl conference in Toronto in July 2023 and decided to give
 a talk called "Lingy and YAMLScript".</p>
@@ -2619,7 +2620,8 @@ I had a usable language by the end of 2023.</p>
 that point on.
 I've been working on YS ever since.</p>
 <p>Of course, programming languages are never finished, and there's more to do than
-ever to have all the YS tooling and ecosystem that I want.</p>
+ever to have all the YS tooling and ecosystem in place for the best possible YS
+user experience.</p>
 <h2 id="shared-libraries">Shared Libraries<a class="headerlink" href="#shared-libraries" title="Permanent link">🔗</a></h2>
 <p>Maybe more important than GraalVM compiling YS to a native executable is its
 ability to also compile YS to a shared library: <code>libys.so</code>.</p>
@@ -2627,14 +2629,14 @@ ability to also compile YS to a shared library: <code>libys.so</code>.</p>
 programming language.
 In fact, without the shared library realization, I probably wouldn't have
 started working on YS in earnest.</p>
-<p>I think I had 5 or 6 YAML loaders by the end of 2023.
+<p>I think we had 5 or 6 YAML loaders by the end of 2023.
 Today we have 15.
 The goal has always been (at least) 42!</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>I literally have a list of 45 FFI capable programming languages that also
 have library registries.
-So I know I can do this.</p>
+So I know we can do this.</p>
 </div>
 <p>The amount of code for a typical libys binding is about 100-200 lines of code.
 It involves FFI stuff, but with the help of LLMs these days, it only takes me a
