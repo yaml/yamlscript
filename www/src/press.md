@@ -14,6 +14,8 @@ hide:
 
 ## PodCasts
 
+* [Fork Around And Find Out — June 18, 2025](
+  https://www.fafo.fm/creating-yaml-with-ingy-dot-net/)
 * [Dead Code — February 11, 2025](
   https://shows.acast.com/dead-code/episodes/yet-another-podcast-episode-with-ingy-dot-net)
 * [The REPL — April 15, 2024](https://www.therepl.net/episodes/52/)
@@ -22,6 +24,8 @@ hide:
 
 ## Presentation Videos
 
+* [Lighting Talks Cloud Native Rejekts Europe 2025 in London](
+  https://youtu.be/AY8ON_5abm4?si=eqckwzWtCcqcnalo&t=2263)
 * [Tutorial: Simplify and Optimize Your YAML with YAMLScript](
   https://www.youtube.com/watch?v=Cdi3Q4Wrt48) --
   Ingy's tutorial at KubeCon 2024 in Salt Lake City
