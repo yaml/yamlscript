@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 24 Jul 2025 21:54:00 -0000</pubDate>
-    <lastBuildDate>Thu, 24 Jul 2025 21:54:00 -0000</lastBuildDate>
+    <pubDate>Fri, 25 Jul 2025 04:34:35 -0000</pubDate>
+    <lastBuildDate>Fri, 25 Jul 2025 04:34:35 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,36 @@
     
 
     
+    
+    <item>
+      <title>Why YS Chose Clojure</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;So YS compiles to Clojure.&lt;/p&gt;
+&lt;p&gt;It also has a Clojure runtime and access to the Clojure ecosystem.&lt;/p&gt;
+&lt;p&gt;It&#39;s also written in Clojure. (It didn&#39;t have to be. The compiler could have
+been written in any language.)&lt;/p&gt;
+&lt;p&gt;Why Clojure?&lt;/p&gt;
+&lt;p&gt;I&#39;ll explore that topic today.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-24/why-ys-chose-clojure/</link>
+      <pubDate>Thu, 24 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-24/why-ys-chose-clojure/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-24/why-ys-chose-clojure.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>YS Streaming Mode</title>

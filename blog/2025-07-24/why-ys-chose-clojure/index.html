@@ -12,13 +12,11 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-23/ys-streaming-mode/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-24/why-ys-chose-clojure/">
       
       
-        <link rel="prev" href="../../2025-07-22/ys-and-yq/">
+        <link rel="prev" href="../../2025-07-23/ys-streaming-mode/">
       
-      
-        <link rel="next" href="../../2025-07-24/why-ys-chose-clojure/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +27,7 @@
     
     
       
-        <title>YS Streaming Mode - YS — YAML Done Wisely</title>
+        <title>Why YS Chose Clojure - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +125,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="YS Streaming Mode - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Why YS Chose Clojure - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-23.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-24.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +137,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-23/ys-streaming-mode/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-24/why-ys-chose-clojure/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="YS Streaming Mode - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Why YS Chose Clojure - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-23.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/blog/posts/2025-07-24.png" >
       
     
     
@@ -170,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#multiple-documents" class="md-skip">
+        <a href="#do-i-have-a-lisp" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              YS Streaming Mode
+              Why YS Chose Clojure
             
           </span>
           </a>
@@ -2355,18 +2353,72 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#multiple-documents" class="md-nav__link">
+  <a href="#do-i-have-a-lisp" class="md-nav__link">
     <span class="md-ellipsis">
-      Multiple Documents
+      Do I have a Lisp?
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-stream-function-and-the-_-variable" class="md-nav__link">
+  <a href="#how-to-make-a-lisp" class="md-nav__link">
     <span class="md-ellipsis">
-      The stream function and the _ variable
+      How to Make A Lisp
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-holy-graalvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Holy Graal(VM)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-libraries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Shared Libraries
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-good-about-clojure" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's Good About Clojure?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-the-problem-with-clojure" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's the Problem with Clojure?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-the-problem-with-graalvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      What's the Problem with GraalVM?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
     </span>
   </a>
   
@@ -2428,7 +2480,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-23 00:00:00+00:00" class="md-ellipsis">July 23, 2025</time>
+                        <time datetime="2025-07-24 00:00:00+00:00" class="md-ellipsis">July 24, 2025</time>
                       </div>
                     </li>
                     
@@ -2450,7 +2502,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              2 min read
+                              5 min read
                             
                           </span>
                         </div>
@@ -2482,14 +2534,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-23.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-24.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-23.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-24.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2497,134 +2549,158 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>YS Streaming Mode</h1>
+  <h1>Why YS Chose Clojure</h1>
 
-<p>We've seen before that YS can work with YAML files that contain multiple
-documents.
-"Document" is the YAML term for a single top level node (object).</p>
-<p>YS returns the last document in the file by default.</p>
-<p>YS can also load all the documents in the file.</p>
-<p>This is called streaming mode, and we'll learn more about it today.</p>
+<p>So YS compiles to Clojure.</p>
+<p>It also has a Clojure runtime and access to the Clojure ecosystem.</p>
+<p>It's also written in Clojure. (It didn't have to be. The compiler could have
+been written in any language.)</p>
+<p>Why Clojure?</p>
+<p>I'll explore that topic today.</p>
 <!-- more -->
 
-<h2 id="multiple-documents">Multiple Documents<a class="headerlink" href="#multiple-documents" title="Permanent link">🔗</a></h2>
-<p>Like I said, YS returns the last document in the file by default:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
-<span class="s1">---</span>
-<span class="s1">foo: 111</span>
-<span class="s1">---</span>
-<span class="s1">bar: 222</span>
-<span class="s1">&#39;</span>
-bar:<span class="w"> </span><span class="m">222</span>
+<h2 id="do-i-have-a-lisp">Do I have a Lisp?<a class="headerlink" href="#do-i-have-a-lisp" title="Permanent link">🔗</a></h2>
+<p>I thought of YS as a concept in mid 2022, but didn't go far with it.
+One thing that I kind of decided (and maybe years earlier) was it should be a
+Lisp.
+A Lisp in the sense that Lisp is code as data.
+Since YAML is a data language, it felt like code in YAML was code as data, which
+pretty much is the definition of Lisp.</p>
+<p>But...</p>
+<p>I didn't really know what a Lisp was or how to make one.
+I knew that a Lisp expression was parens around a function and arguments.
+That's about it.</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="nb">print</span><span class="w"> </span><span class="p">(</span><span class="nv">join</span><span class="w"> </span><span class="s">&quot;2 + 2 = &quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
 </code></pre></div>
-<p>This makes sense, because the other documents could be data sets, code
-definitions or YS modules that get used by the last document to produce its
-desired value:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
-<span class="s1">!YS-v0</span>
-<span class="s1">--- !code</span>
-<span class="s1">foo =: 111</span>
-<span class="s1">--- !data</span>
-<span class="s1">bar:: foo</span>
-<span class="s1">&#39;</span>
-bar:<span class="w"> </span><span class="m">111</span>
-</code></pre></div>
-<p>But what if we want to load multiple documents?</p>
-<p>We can do that by using the <code>-s</code> flag:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-s<span class="w"> </span>-Y<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
-<span class="s1">---</span>
-<span class="s1">foo: 111</span>
-<span class="s1">---</span>
-<span class="s1">bar: 222</span>
-<span class="s1">&#39;</span>
----
-foo:<span class="w"> </span><span class="m">111</span>
----
-bar:<span class="w"> </span><span class="m">222</span>
-</code></pre></div>
-<p>What happens if some of the documents are code mode and others are data mode?</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-s<span class="w"> </span>-Y<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
-<span class="s1">!YS-v0</span>
-<span class="s1">---</span>
-<span class="s1">foo: bar</span>
-<span class="s1">--- !code</span>
-<span class="s1">foo =: 111</span>
-<span class="s1">--- !data</span>
-<span class="s1">foo:: foo</span>
-<span class="s1">--- !code</span>
-<span class="s1">say: &quot;Hello, $foo!&quot;</span>
-<span class="s1">--- !code</span>
-<span class="s1">(1 .. 3) + (10 .. 12)</span>
-<span class="s1">--- !data</span>
-<span class="s1">bar:: foo</span>
-<span class="s1">&#39;</span>
-Hello,<span class="w"> </span><span class="m">111</span>!
----
-foo:<span class="w"> </span>bar
----
-foo:<span class="w"> </span><span class="m">111</span>
----
--<span class="w"> </span><span class="m">1</span>
--<span class="w"> </span><span class="m">2</span>
--<span class="w"> </span><span class="m">3</span>
--<span class="w"> </span><span class="m">10</span>
--<span class="w"> </span><span class="m">11</span>
--<span class="w"> </span><span class="m">12</span>
----
-bar:<span class="w"> </span><span class="m">111</span>
-</code></pre></div>
-<p>If you count carefully, you'll see that there are 7 documents in the input, but
-only 4 documents in the output.</p>
-<p>YS will only return the documents whose value is representable as JSON and only
-if the value is not <code>nil</code>.</p>
-<p>In one of the documents, we just printed a line with <code>say</code>.
-Let's see what the return value of <code>say</code> is:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-pe<span class="w"> </span><span class="s1">&#39;say: &quot;Hello&quot;&#39;</span>
-Hello
-nil
-</code></pre></div>
-<p>It looks like <code>say</code> returns <code>nil</code>.
-That means the value of that document is <code>nil</code>.
-Since the value of that document is <code>nil</code>, YS will not load it.</p>
-<p>What about the variable assignment?</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-pe<span class="w"> </span><span class="s1">&#39;foo =: 123&#39;</span>
-<span class="c1">#&lt;Var@21b42ece: 123&gt;</span>
-</code></pre></div>
-<p>That returned a Clojure var object.
-Since this is not something that can be represented as JSON, YS will not
-load it.</p>
-<h2 id="the-stream-function-and-the-_-variable">The <code>stream</code> function and the <code>_</code> variable<a class="headerlink" href="#the-stream-function-and-the-_-variable" title="Permanent link">🔗</a></h2>
-<p>As YS evaluates a YAML file, it keeps track of the values of each document.
-Any document can access the values of the previous documents.</p>
-<p>The <code>stream</code> function returns a list of the values of the previous documents.</p>
-<p>The <code>_</code> variable contains the value of the previous document.
-It's short for <code>stream():last</code> or <code>stream.$</code>.</p>
-<p>Consider this example:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">!YS-v0</span>
-<span class="s1">---</span>
-<span class="s1">foo: 111</span>
-<span class="s1">bar: 222</span>
-<span class="s1">--- !code</span>
-<span class="s1">merge stream().$::</span>
-<span class="s1">  baz: 333</span>
-<span class="s1">--- !data</span>
-<span class="s1">number:: _.foo * _.bar * _.baz</span>
-<span class="s1">--- !code</span>
-<span class="s1">say: stream():yaml/dump&#39;</span>
--<span class="w"> </span>foo:<span class="w"> </span><span class="m">111</span>
-<span class="w">  </span>bar:<span class="w"> </span><span class="m">222</span>
--<span class="w"> </span>foo:<span class="w"> </span><span class="m">111</span>
-<span class="w">  </span>bar:<span class="w"> </span><span class="m">222</span>
-<span class="w">  </span>baz:<span class="w"> </span><span class="m">333</span>
--<span class="w"> </span>number:<span class="w"> </span><span class="m">8205786</span>
-</code></pre></div>
-<p>In the final document, we print the values of the previous 3 documents in YAML.</p>
-<p>The second to last document calculates the product of the values from the
-previous document, whose value is the result of a merge using the document
-before that.</p>
-<p>If you study that example carefully, you'll see how to use the <code>stream</code> function
-and the <code>_</code> variable.</p>
+<p>Something like that.</p>
+<h2 id="how-to-make-a-lisp">How to Make A Lisp<a class="headerlink" href="#how-to-make-a-lisp" title="Permanent link">🔗</a></h2>
+<p>I said "I didn't know how to make a Lisp" on purpose.</p>
+<p>In early 2023 I googled "how to make a Lisp" and found <a href="https://github.com/kanaka/mal">this amazing project&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.
+It's a complete 11 step tutorial on how to implement a rudimentary Lisp in any
+language you want to.
+Each of the 11 steps has a test suite that you need to get to pass before moving
+on to the next step.
+Last I counted, there were over 100 implementations in over 75 languages!</p>
+<p>It took me 2 weeks to implement a Lisp in Perl.
+The "mal" Lisp is Clojure inspired.
+The final step is to use your mal to run a mal implementation written in mal and
+have it pass all the tests!
+It still blows my mind a bit to think about it.</p>
+<p>When I was done, I decided to see what the mal Lisp would look like in YAML.
+It looked awful!
+But I kept playing with it and it kept getting better.
+Soon I was pretty sure that YS could be a language that I would actually like
+programming in.</p>
+<p>That said, it would still be a lot of work.</p>
+<h2 id="the-holy-graalvm">The Holy Graal(VM)<a class="headerlink" href="#the-holy-graalvm" title="Permanent link">🔗</a></h2>
+<p>I decided not to stop working on my Perl Lisp, and to see how far I could get
+with making a Clojure hosted on Perl.
+I called the project Lingy.</p>
+<p>I was attending a Perl conference in Toronto in July 2023 and decided to give
+a talk called "Lingy and YAMLScript".</p>
+<p>Somehow this talk got noticed by the Clojure community and I was invited to join
+their Slack.
+I met the right people and soon learned about <a href="https://www.graalvm.org/">GraalVM&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> and <a href="https://github.com/babashka/sci">SCI&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<p>SCI is a Clojure runtime and GraalVM's <code>native-image</code> tool can be used to
+compile jar files (what Clojure compiles to) to native executables.
+With these 2 things I realized that I could make YS be a real language in a
+matter of months, rather than years.
+To a large degree, I was right.
+I had a usable language by the end of 2023.</p>
+<p>When I realized that I could make YS a real language, I was fully committed from
+that point on.
+I've been working on YS ever since.</p>
+<p>Of course, programming languages are never finished, and there's more to do than
+ever to have all the YS tooling and ecosystem that I want.</p>
+<h2 id="shared-libraries">Shared Libraries<a class="headerlink" href="#shared-libraries" title="Permanent link">🔗</a></h2>
+<p>Maybe more important than GraalVM compiling YS to a native executable is its
+ability to also compile YS to a shared library: <code>libys.so</code>.</p>
+<p>With that, I knew I could make a YS capable YAML loader for almost every common
+programming language.
+In fact, without the shared library realization, I probably wouldn't have
+started working on YS in earnest.</p>
+<p>I think I had 5 or 6 YAML loaders by the end of 2023.
+Today we have 15.
+The goal has always been (at least) 42!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>I literally have a list of 45 FFI capable programming languages that also
+have library registries.
+So I know I can do this.</p>
+</div>
+<p>The amount of code for a typical libys binding is about 100-200 lines of code.
+It involves FFI stuff, but with the help of LLMs these days, it only takes me a
+day or two to release a new language binding.</p>
+<p>More often than not, learning how to use a new publishing registry is the hard
+part.</p>
+<h2 id="whats-good-about-clojure">What's Good About Clojure?<a class="headerlink" href="#whats-good-about-clojure" title="Permanent link">🔗</a></h2>
+<p>Probably the best things about Clojure is that it has a great core library and
+a great ecosystem.</p>
+<p>If you want to make a new programming language these days, you really need to be
+building on the ecosystems of giants.</p>
+<p>Clojure itself was built on top of Java; one of the biggest giants of the
+programming language world.
+From all I've read, that was very much on purpose.</p>
+<p>Building YS on top of Clojure started with the promise that it would have a
+giant, Rich and robust ecosystem from the start.</p>
+<p>One other awesome thing about Clojure is its commitment to not breaking code.
+It's ridiculously backwards compatible.
+I've yet to encounter a single bug introduced by a new version of Clojure (or
+Java for that matter).</p>
+<h2 id="whats-the-problem-with-clojure">What's the Problem with Clojure?<a class="headerlink" href="#whats-the-problem-with-clojure" title="Permanent link">🔗</a></h2>
+<p>From a YS perspective, the biggest problem with Clojure is that people assume
+it needs a JVM or Java knowledge to use it well.
+That's just not true.</p>
+<p>The <code>ys</code> command line interpreter is just a single standard binary executable.</p>
+<p>You don't even need to know Clojure to be able to get value from YS.
+On the other hand, to be a great YS programmer, you do need to know quite a bit
+about it.</p>
+<p>I'll say personally that I think Clojure is a great language to learn.
+Especially if you don't already know a Lisp.
+Learning Lisp should be a requirement for anyone who wants to be a well rounded
+programmer, and Clojure is a great modern Lisp.</p>
+<h2 id="whats-the-problem-with-graalvm">What's the Problem with GraalVM?<a class="headerlink" href="#whats-the-problem-with-graalvm" title="Permanent link">🔗</a></h2>
+<p>Maybe my biggest current misgivings around YS and Clojure is that the GraalVM
+compiler:</p>
+<ul>
+<li>Is very slow to compile (over a minute)</li>
+<li>Only supports Windows, Linux and macOS</li>
+<li>Creates large binaries</li>
+</ul>
+<p>These aren't deal breakers, but they keep me thinking about other options.</p>
+<p>One option that I haven't done much with yet is simply using the JVM.
+Once a JVM is started, it's very fast.
+Faster than the native compilations.
+The native compilations just start very fast.
+Alas, the JVM solution doesn't really fit the shared library binding model.</p>
+<p>Another option is to explore Clojure hosted by other languages.
+ClojureScript is a great example of this.
+It runs on the web and NodeJS.</p>
+<p>I'm even more interested in exploring Clojure hosted on Go or Rust.
+There are a few projects out there already playing with this.</p>
+<p>There's also the promise of being able to compile Clojure to WebAssembly.
+It's gonna be ready any day now.
+Or so I've been told.
+(More than once. ;)</p>
+<p>I hope so, because I think it would be a very big deal for YS.</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">🔗</a></h2>
+<p>I'm quite happy with the choice of Clojure for YS.
+I think it's a sound foundation.
+It's like a Lego set that you can use out of the box and also build new domain
+specific Lego sets with.</p>
+<p>It also has the potential to reach beyond the JVM and NodeJS to new exciting
+platforms.</p>
+<p>YS lets you use it from in common, every day places that it probably wouldn't
+have gotten to otherwise.</p>
 
 
 
@@ -2717,7 +2793,7 @@ and the <code>_</code> variable.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-22/ys-and-yq/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ys and yq">
+          <a href="../../2025-07-23/ys-streaming-mode/" class="md-footer__link md-footer__link--prev" aria-label="Previous: YS Streaming Mode">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2727,27 +2803,11 @@ and the <code>_</code> variable.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                ys and yq
+                YS Streaming Mode
               </div>
             </div>
           </a>
         
-        
-          
-          <a href="../../2025-07-24/why-ys-chose-clojure/" class="md-footer__link md-footer__link--next" aria-label="Next: Why YS Chose Clojure">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Why YS Chose Clojure
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
         
       </nav>
     
