@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 25 Jul 2025 21:02:18 -0000</pubDate>
-    <lastBuildDate>Fri, 25 Jul 2025 21:02:18 -0000</lastBuildDate>
+    <pubDate>Sun, 27 Jul 2025 01:39:27 -0000</pubDate>
+    <lastBuildDate>Sun, 27 Jul 2025 01:39:27 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -32,7 +32,42 @@
     
     
     <item>
-      <title>YS on the Go</title>
+      <title>The YS Core YAML Schema</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;The term &#34;YAML Schema&#34; is a bit of unfortunate history.&lt;/p&gt;
+&lt;p&gt;It&#39;s not the YAML version of a JSON Schema.&lt;/p&gt;
+&lt;p&gt;In my opinion it needs to be renamed because it&#39;s not a schema in the typical
+sense of the word.
+The term has been part of the YAML spec since the beginning.
+Let&#39;s use the term &#34;YAML-Schema&#34; instead of &#34;YAML Schema&#34; to be clear that this
+is not a typical schema applied to a YAML file.&lt;/p&gt;
+&lt;p&gt;Typically a schema is a set of rules that are used to validate data.&lt;/p&gt;
+&lt;p&gt;A YAML-Schema is a set of rules about how untagged nodes are implicitly tagged
+during the loading process.&lt;/p&gt;
+&lt;p&gt;Allow me to explain.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/</link>
+      <pubDate>Sat, 26 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>The YS Core YAML Schema</title>
       
       
         
@@ -56,13 +91,13 @@ I&#39;ve been thinking about for a while.&lt;/p&gt;
 a more powerful YAML experience.&lt;/p&gt;
 &lt;p&gt;As I was getting ready for bed, the word &#34;Glojure&#34; popped into my head.&lt;/p&gt;
 &lt;p&gt;What a perfect name for a Go hosted Clojure!&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</link>
+      <link>https://yamlscript.org/blog/2025-07-25/the-ys-core-yaml-schema/</link>
       <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</guid>
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-25/the-ys-core-yaml-schema/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/ys-on-the-go.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/the-ys-core-yaml-schema.png" type="image/png" length="48104" />
       
     </item>
     

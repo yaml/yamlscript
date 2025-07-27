@@ -12,10 +12,10 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-25/ys-on-the-go/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/">
       
       
-        <link rel="prev" href="../../2025-07-24/why-ys-chose-clojure/">
+        <link rel="prev" href="../../2025-07-25/the-ys-core-yaml-schema/">
       
       
       
@@ -27,7 +27,7 @@
     
     
       
-        <title>YS on the Go - YS — YAML Done Wisely</title>
+        <title>The YS Core YAML Schema - YS — YAML Done Wisely</title>
       
     
     
@@ -125,7 +125,7 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="YS on the Go - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="The YS Core YAML Schema - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
@@ -137,11 +137,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-25/ys-on-the-go/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="YS on the Go - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="The YS Core YAML Schema - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
@@ -168,7 +168,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#glojure" class="md-skip">
+        <a href="#yaml-implicit-tagging" class="md-skip">
           Skip to content
         </a>
       
@@ -207,7 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              YS on the Go
+              The YS Core YAML Schema
             
           </span>
           </a>
@@ -2353,36 +2353,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#glojure" class="md-nav__link">
+  <a href="#yaml-implicit-tagging" class="md-nav__link">
     <span class="md-ellipsis">
-      Glojure
+      YAML Implicit Tagging
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#glojure-basics" class="md-nav__link">
+  <a href="#the-ys-core-yaml-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      Glojure Basics
+      The YS Core YAML Schema
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-ys-works-with-glojure" class="md-nav__link">
+  <a href="#using-other-yaml-schemas" class="md-nav__link">
     <span class="md-ellipsis">
-      How YS Works with Glojure
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#conclusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      Conclusion
+      Using Other YAML-Schemas
     </span>
   </a>
   
@@ -2444,7 +2435,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-07-25 00:00:00+00:00" class="md-ellipsis">July 25, 2025</time>
+                        <time datetime="2025-07-26 00:00:00+00:00" class="md-ellipsis">July 26, 2025</time>
                       </div>
                     </li>
                     
@@ -2466,7 +2457,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              5 min read
+                              2 min read
                             
                           </span>
                         </div>
@@ -2498,14 +2489,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-25.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/blog/2025-07-26.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-25.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/blog/2025-07-26.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2513,262 +2504,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>YS on the Go</h1>
+  <h1>The YS Core YAML Schema</h1>
 
-<p><a href="../../2025-07-24/why-ys-chose-clojure/#whats-the-problem-with-graalvm">Yesterday</a> I hinted at the idea
-of YS hosted on Go.</p>
-<p>This doesn't mean that YS would be rewritten in Go or that it wouldn't compile
-to Clojure.
-The Lisp is still essential to YS.</p>
-<p>Where I was going was the possibility of creating a Clojure hosted on Go, which
-I've been thinking about for a while.</p>
-<p>Go is the backbone of technologies like Kubernetes, where YS wants to provide
-a more powerful YAML experience.</p>
-<p>As I was getting ready for bed, the word "Glojure" popped into my head.</p>
-<p>What a perfect name for a Go hosted Clojure!</p>
+<p>The term "YAML Schema" is a bit of unfortunate history.</p>
+<p>It's not the YAML version of a JSON Schema.</p>
+<p>In my opinion it needs to be renamed because it's not a schema in the typical
+sense of the word.
+The term has been part of the YAML spec since the beginning.
+Let's use the term "YAML-Schema" instead of "YAML Schema" to be clear that this
+is not a typical schema applied to a YAML file.</p>
+<p>Typically a schema is a set of rules that are used to validate data.</p>
+<p>A YAML-Schema is a set of rules about how untagged nodes are implicitly tagged
+during the loading process.</p>
+<p>Allow me to explain.</p>
 <!-- more -->
 
-<h2 id="glojure">Glojure<a class="headerlink" href="#glojure" title="Permanent link">🔗</a></h2>
-<p>I had to see if someone had already thought of this.</p>
-<p>A quick search revealed that there were actually 2 projects on GitHub called
-Glojure!</p>
-<p><a href="https://github.com/glojurelang/glojure">One of them&nbsp;<img src="/image/external-link.svg"
+<h2 id="yaml-implicit-tagging">YAML Implicit Tagging<a class="headerlink" href="#yaml-implicit-tagging" title="Permanent link">🔗</a></h2>
+<p>We've covered this before, but when YAML is loaded, every node without a tag is
+assigned one based on "how it looks".</p>
+<p>By default, mappings, sequences and not-unquoted-scalars are assigned the tags
+<code>!!map</code>, <code>!!seq</code>, and <code>!!str</code> respectively.</p>
+<p>In a typical loader, every tag must have been configured to identify a
+constructor function.
+The constructor phase is the final phase of the loading process.
+It creates the value that the program doing the loading will see.</p>
+<p>So what's left?</p>
+<p>It's the plain (unquoted) scalar nodes.</p>
+<p>In JSON, the allowed unquoted scalars are: <code>true</code>, <code>false</code>, <code>null</code> and scalars
+that look like numbers.</p>
+<p>A YAML-Schema defines the patterns that unquoted scalars must match, and the
+associated tag they will be assigned.</p>
+<h2 id="the-ys-core-yaml-schema">The YS Core YAML Schema<a class="headerlink" href="#the-ys-core-yaml-schema" title="Permanent link">🔗</a></h2>
+<p>YS tries to stick close to the YAML 1.2 spec's <a href="https://yaml.org/spec/1.2.2/#103-core-schema">Core Schema&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
-</a> looked quite promising, so
-I decided to take a look at it after I had slept.</p>
-<p>This morning I was able to get a <strong>YS program running on Glojure</strong>!</p>
-<p>Let's take a look at it in action, and then I'll explain how it works (and also
-how it doesn't).</p>
-<p>The program is a YS implementation of the famous <a href="https://rosettacode.org/wiki/FizzBuzz#YAMLScript">fizzbuzz&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> algorithm.</p>
-<p>In this example we'll just print the first 16 numbers instead of the normal 100.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-ce<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">say =: println</span>
-<span class="s1">defn rng(a b): range(a b:inc)</span>
-<span class="s1">defn or?(a b): a:empty?.if(b a)</span>
+</a>.
+This is supposed to be what most YAML Loaders should use by default.
+Therefore it should be the most compatible with other YAML Loaders.</p>
+<p>I'll show the different schema tags as actual <code>ys</code> commands:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># !!null</span>
+$<span class="w"> </span>ys<span class="w"> </span>-p<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;&quot;!!null&quot;: [null, Null, NULL, ~]&#39;</span>
+<span class="o">{</span><span class="s2">&quot;!!null&quot;</span><span class="w"> </span><span class="o">[</span>nil<span class="w"> </span>nil<span class="w"> </span>nil<span class="w"> </span>nil<span class="o">]}</span>
 
-<span class="s1">doseq x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>glj
-<span class="c1">#&#39;user/say</span>
-<span class="c1">#&#39;user/rng</span>
-<span class="c1">#&#39;user/or?</span>
-<span class="m">1</span>
-<span class="m">2</span>
-Fizz
-<span class="m">4</span>
-Buzz
-Fizz
-<span class="m">7</span>
-<span class="m">8</span>
-Fizz
-Buzz
-<span class="m">11</span>
-Fizz
-<span class="m">13</span>
-<span class="m">14</span>
-FizzBuzz
-<span class="m">16</span>
-nil
-</code></pre></div>
-<p>It works!</p>
-<p>Right?</p>
-<h2 id="glojure-basics">Glojure Basics<a class="headerlink" href="#glojure-basics" title="Permanent link">🔗</a></h2>
-<p>If you have a recent version of Go installed, <code>glj</code> (the Glojure binary) is
-easy to install and run:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>go<span class="w"> </span>install<span class="w"> </span>github.com/glojurelang/glojure/cmd/glj@latest
-$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;(println &quot;Hello, World!&quot;)&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>glj
-Hello,<span class="w"> </span>World!
-nil
-</code></pre></div>
-<p>The <code>nil</code> was unexpected in this context.
-The Clojure command <code>clj</code> does this:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clj<span class="w"> </span>-M<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;(println &quot;Hello, World!&quot;)&#39;</span>
-Hello,<span class="w"> </span>World!
-</code></pre></div>
-<p>But those are not quite the same.
-Glojure doesn't support the <code>-e</code> flag currently.</p>
-<p>I feel like <code>glj</code> is starting a REPL session, and then evaluating the code.
-In that case, printing <code>nil</code> is expected.</p>
-<p>I'm not fully up to speed on how Glojure works, but it doesn't matter for what
-I'm showing you today.</p>
-<p>A more fair comparison would be:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>glj<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;(println &quot;Hello, World!&quot;)&#39;</span>
-Hello,<span class="w"> </span>World!
-nil
-$<span class="w"> </span>clj<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;(println &quot;Hello, World!&quot;)&#39;</span>
-Clojure<span class="w"> </span><span class="m">1</span>.12.1
-<span class="nv">user</span><span class="o">=</span>&gt;<span class="w"> </span>Hello,<span class="w"> </span>World!
-nil
-<span class="nv">user</span><span class="o">=</span>&gt;
-$
-</code></pre></div>
-<p>So yep, they are both starting a REPL session, evaluating the code (which prints
-<code>Hello, World!</code> and returns <code>nil</code> (which the REPL correctly shows)), and then
-exiting.</p>
-<h2 id="how-ys-works-with-glojure">How YS Works with Glojure<a class="headerlink" href="#how-ys-works-with-glojure" title="Permanent link">🔗</a></h2>
-<p>With normal YS you'd do this:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">each x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span>
-<span class="m">1</span>
-<span class="m">2</span>
-Fizz
-<span class="m">4</span>
-Buzz
-Fizz
-<span class="m">7</span>
-<span class="m">8</span>
-Fizz
-Buzz
-<span class="m">11</span>
-Fizz
-<span class="m">13</span>
-<span class="m">14</span>
-FizzBuzz
-<span class="m">16</span>
-</code></pre></div>
-<p>The <code>ys -c</code> flag compiles the YS code to Clojure, so let's pipe it to <code>glj</code>:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">each x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>glj
-unable<span class="w"> </span>to<span class="w"> </span>resolve<span class="w"> </span>symbol:<span class="w"> </span>each
-</code></pre></div>
-<p>Well, Clojure (thus Glojure) doesn't have a <code>each</code> function.
-True.
-<code>each</code> is part of the <code>ys::std</code> library.</p>
-<p>It's really just an alternate form for <code>doseq</code>.
-Let's try it with <code>doseq</code>:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">doseq x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>glj
-unable<span class="w"> </span>to<span class="w"> </span>resolve<span class="w"> </span>symbol:<span class="w"> </span>rng
-</code></pre></div>
-<p>Hmmm, <code>rng</code> isn't even used.</p>
-<p>It's time to look at the Clojure code that <code>ys -c</code> generates:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">doseq x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span>
-<span class="o">(</span>doseq
-<span class="w"> </span><span class="o">[</span>x<span class="w"> </span><span class="o">(</span>rng<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">16</span><span class="o">)]</span>
-<span class="w"> </span><span class="o">(</span>say
-<span class="w">  </span><span class="o">(</span>or?
-<span class="w">   </span><span class="o">(</span>str
-<span class="w">    </span><span class="o">(</span>when<span class="w"> </span><span class="o">(</span>zero?<span class="w"> </span><span class="o">(</span>rem<span class="w"> </span>x<span class="w"> </span><span class="m">3</span><span class="o">))</span><span class="w"> </span><span class="s2">&quot;Fizz&quot;</span><span class="o">)</span>
-<span class="w">    </span><span class="o">(</span>when<span class="w"> </span><span class="o">(</span>zero?<span class="w"> </span><span class="o">(</span>rem<span class="w"> </span>x<span class="w"> </span><span class="m">5</span><span class="o">))</span><span class="w"> </span><span class="s2">&quot;Buzz&quot;</span><span class="o">))</span>
-<span class="w">   </span>x<span class="o">)))</span>
-</code></pre></div>
-<p>OK! There's <code>rng</code>. It looks like <code>..</code> compiles to <code>rng</code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The <code>ys::std/rng</code> is an alternate form for the standard Clojure <code>range</code>
-function.
-It includes the upper bound, which is often what you want.</p>
-</div>
-<p>There's also <code>or?</code> and <code>say</code>.
-Those aren't in Clojure/Glojure either.</p>
-<p>It looks like we need a way to include the <code>ys::std</code> library in the Glojure
-runtime environment.</p>
-<p>Well that's gonna take some thought and effort.</p>
-<p>But we only need 4 missing functions for this example: <code>each</code>, <code>rng</code>, <code>or?</code>
-and <code>say</code>.</p>
-<p>Let's see if we can just define them quickly in our YS 1-liner:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-ce<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">each =: doseq</span>
-<span class="s1">defn rng(a b): range(a b:inc)</span>
-<span class="s1">defn or?(a b): a:empty?.if(b a)</span>
-<span class="s1">say =: println</span>
+<span class="c1"># !!bool</span>
+$<span class="w"> </span>ys<span class="w"> </span>-p<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;&quot;!!bool&quot;: [true, True, TRUE, false, False, FALSE]&#39;</span>
+<span class="o">{</span><span class="s2">&quot;!!bool&quot;</span><span class="w"> </span><span class="o">[</span><span class="nb">true</span><span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="nb">false</span><span class="w"> </span><span class="nb">false</span><span class="w"> </span>false<span class="o">]}</span>
 
-<span class="s1">each x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>glj
-can<span class="s1">&#39;t take value of a macro: #&#39;</span>glojure.core/doseq
-<span class="c1">#&#39;user/rng</span>
-<span class="c1">#&#39;user/or?</span>
-<span class="c1">#&#39;user/say</span>
-unable<span class="w"> </span>to<span class="w"> </span>resolve<span class="w"> </span>symbol:<span class="w"> </span>x
-</code></pre></div>
-<p>It doesn't like us renaming <code>doseq</code> to <code>each</code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>I tried for quite a while to get this to work.
-That part's not in the cards for today.
-We'll just use <code>doseq</code> for now.</p>
-</div>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-ce<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">defn rng(a b): range(a b:inc)</span>
-<span class="s1">defn or?(a b): a:empty?.if(b a)</span>
-<span class="s1">say =: println</span>
+<span class="c1"># !!int</span>
+$<span class="w"> </span>ys<span class="w"> </span>-p<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;&quot;!!int&quot;: [-42, -0, 0, 42, 0x123, 0o123]&#39;</span>
+<span class="o">{</span><span class="s2">&quot;!!int&quot;</span><span class="w"> </span><span class="o">[</span>-42<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">42</span><span class="w"> </span><span class="m">291</span><span class="w"> </span><span class="m">83</span><span class="o">]}</span>
 
-<span class="s1">doseq x (1 .. 16): !:say</span>
-<span class="s1">  or?:</span>
-<span class="s1">    str:</span>
-<span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
-<span class="s1">      zero?(x % 5).when(&quot;Buzz&quot;)</span>
-<span class="s1">    =&gt;: x</span>
-<span class="s1">&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>glj
-<span class="c1">#&#39;user/say</span>
-<span class="c1">#&#39;user/rng</span>
-<span class="c1">#&#39;user/or?</span>
-<span class="m">1</span>
-<span class="m">2</span>
-Fizz
-<span class="m">4</span>
-Buzz
-Fizz
-<span class="m">7</span>
-<span class="m">8</span>
-Fizz
-Buzz
-<span class="m">11</span>
-Fizz
-<span class="m">13</span>
-<span class="m">14</span>
-FizzBuzz
-<span class="m">16</span>
-nil
+<span class="c1"># !!float</span>
+$<span class="w"> </span>ys<span class="w"> </span>-p<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;&quot;!!float&quot;: [.123, 1.23, 1.2e3, -1.2e-3, 0.0, -0.0]&#39;</span>
+<span class="o">{</span><span class="s2">&quot;!!float&quot;</span><span class="w"> </span><span class="o">[</span><span class="m">0</span>.123<span class="w"> </span><span class="m">1</span>.23<span class="w"> </span><span class="m">1200</span>.0<span class="w"> </span>-0.0012<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span>-0.0<span class="o">]}</span>
+
+<span class="c1"># Unsupported from YAML 1.2 Core Schema spec</span>
+$<span class="w"> </span>ys<span class="w"> </span>-p<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;&quot;!!float&quot;: [.inf, .Inf, .INF, -.inf, -.Inf, -.INF, .nan, .Nan, .NAN]&#39;</span>
+Compile<span class="w"> </span>error:<span class="w"> </span>Inf<span class="w"> </span>and<span class="w"> </span>NaN<span class="w"> </span>not<span class="w"> </span>supported<span class="w"> </span><span class="k">in</span><span class="w"> </span>YS
+
+<span class="c1"># !!str for everything else</span>
+$<span class="w"> </span>ys<span class="w"> </span>-p<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;&quot;!!str&quot;: [NulL, FaLsE, 42 + 1, 1.2.3]&#39;</span>
+<span class="o">{</span><span class="s2">&quot;!!str&quot;</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;NulL&quot;</span><span class="w"> </span><span class="s2">&quot;FaLsE&quot;</span><span class="w"> </span><span class="s2">&quot;42 + 1&quot;</span><span class="w"> </span><span class="s2">&quot;1.2.3&quot;</span><span class="o">]}</span>
 </code></pre></div>
-<p>It works!</p>
-<p>Just like it did at the start of the blog post. <img alt="😄" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f604.svg" title=":smile:" /></p>
-<p>We know why it prints <code>nil</code> at the end.
-The first 3 lines (<code>#'user/say</code> etc) are just the return values of the functions
-we defined.</p>
-<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">🔗</a></h2>
-<p>I'm impressed with how well Glojure works even though it's still in its early
-days.</p>
-<p>It feels very promising and I'm definitely going to push harder on getting it to
-be a runtime option for YS!</p>
+<h2 id="using-other-yaml-schemas">Using Other YAML-Schemas<a class="headerlink" href="#using-other-yaml-schemas" title="Permanent link">🔗</a></h2>
+<p>The above is the default YAML-Schema for YS.</p>
+<p>YAML was always meant to allow you to define your own YAML-Schema.</p>
+<p>Some implementations of YAML let you choose from a few different YAML-Schemas.</p>
+<p>But really you should be able to trivially define your own YAML-Schema for any
+YAML file you want to load.</p>
+<p>YAML never really lived up to this promise.</p>
+<p>YS does not yet support this, but it's on the roadmap.</p>
+<p>Stay tuned. Stay YS!</p>
 
 
 
@@ -2861,7 +2667,7 @@ be a runtime option for YS!</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-24/why-ys-chose-clojure/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Why YS Chose Clojure">
+          <a href="../../2025-07-25/the-ys-core-yaml-schema/" class="md-footer__link md-footer__link--prev" aria-label="Previous: The YS Core YAML Schema">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2871,7 +2677,7 @@ be a runtime option for YS!</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Why YS Chose Clojure
+                The YS Core YAML Schema
               </div>
             </div>
           </a>
