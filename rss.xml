@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 27 Jul 2025 01:39:27 -0000</pubDate>
-    <lastBuildDate>Sun, 27 Jul 2025 01:39:27 -0000</lastBuildDate>
+    <pubDate>Sun, 27 Jul 2025 01:40:57 -0000</pubDate>
+    <lastBuildDate>Sun, 27 Jul 2025 01:40:57 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -49,8 +49,8 @@
 &lt;p&gt;It&#39;s not the YAML version of a JSON Schema.&lt;/p&gt;
 &lt;p&gt;In my opinion it needs to be renamed because it&#39;s not a schema in the typical
 sense of the word.
-The term has been part of the YAML spec since the beginning.
-Let&#39;s use the term &#34;YAML-Schema&#34; instead of &#34;YAML Schema&#34; to be clear that this
+The term has been part of the YAML spec since the beginning.&lt;/p&gt;
+&lt;p&gt;Let&#39;s use the term &#34;YAML-Schema&#34; instead of &#34;YAML Schema&#34; to be clear that this
 is not a typical schema applied to a YAML file.&lt;/p&gt;
 &lt;p&gt;Typically a schema is a set of rules that are used to validate data.&lt;/p&gt;
 &lt;p&gt;A YAML-Schema is a set of rules about how untagged nodes are implicitly tagged
@@ -62,7 +62,7 @@ during the loading process.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="48104" />
       
     </item>
     
