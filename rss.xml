@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 27 Jul 2025 01:42:44 -0000</pubDate>
-    <lastBuildDate>Sun, 27 Jul 2025 01:42:44 -0000</lastBuildDate>
+    <pubDate>Sun, 27 Jul 2025 03:36:08 -0000</pubDate>
+    <lastBuildDate>Sun, 27 Jul 2025 03:36:08 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -62,12 +62,12 @@ during the loading process.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="49538" />
       
     </item>
     
     <item>
-      <title>The YS Core YAML Schema</title>
+      <title>YS on the Go</title>
       
       
         
@@ -91,13 +91,13 @@ I&#39;ve been thinking about for a while.&lt;/p&gt;
 a more powerful YAML experience.&lt;/p&gt;
 &lt;p&gt;As I was getting ready for bed, the word &#34;Glojure&#34; popped into my head.&lt;/p&gt;
 &lt;p&gt;What a perfect name for a Go hosted Clojure!&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-25/the-ys-core-yaml-schema/</link>
+      <link>https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</link>
       <pubDate>Fri, 25 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-25/the-ys-core-yaml-schema/</guid>
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/the-ys-core-yaml-schema.png" type="image/png" length="48104" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/ys-on-the-go.png" type="image/png" length="36860" />
       
     </item>
     
