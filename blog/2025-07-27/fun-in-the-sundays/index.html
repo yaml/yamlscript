@@ -2614,10 +2614,15 @@ a
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.map(second)</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.map(partial(get s))</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.str(*)</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.call(\(vector(s _ s.score(_))) _)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.call(\([s _ s.score(_)]) _)</span>
+
+<span class="nt">defn score(before after)</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">map(== before after)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.filter(true?).#</span>
 
 <span class="nt">defn group-indices(s)</span><span class="p">:</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">frequency(s):vals</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">map-indexed(vector s)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.merge-vecs({}):vals</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.sort-by(count _):reverse</span>
 
 <span class="nt">defn cycles(coll)</span><span class="p">:</span>
@@ -2625,28 +2630,18 @@ a
 <span class="w">  </span><span class="nt">cycle =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">range(n):cycle</span>
 <span class="w">  </span><span class="nt">coll =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">concat(coll*)</span>
 <span class="w">  </span><span class="nt">map(vector coll cycle)</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.merge-vecs([] _)</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.merge-vecs([])</span>
 
 <span class="nt">defn rotate(n coll)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">c =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coll.#</span>
 <span class="w">  </span><span class="nt">n =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(c + n) % c</span>
 <span class="w">  </span><span class="nt">concat coll.drop(n)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">coll.take(n)</span>
 
-<span class="nt">defn score(before after)</span><span class="p">:</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">map(== before after)</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.filter(true?).#</span>
-
-<span class="nt">defn frequency(coll)</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">:</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Returns</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">collection</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">indices</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">distinct</span><span class="nv"> </span><span class="s">items&#39;</span>
-<span class="w">  </span><span class="nt">map-indexed(vector coll)</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">.merge-vecs({} _)</span>
-
-<span class="nt">defn merge-vecs(init vecs)</span><span class="p">:</span>
+<span class="nt">defn merge-vecs(vecs init)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">reduce _ init vecs</span><span class="p">:</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">fn(counts [index x])</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="nt">assoc counts x</span><span class="p">:</span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">counts.get(x [])</span>
-<span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">.conj(index)</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">counts.$x.or([]).conj(index)</span>
 </code></pre></div>
 <p>and run it:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>best-shuffle.ys<span class="w"> </span><span class="s1">&#39;[&quot;abracadabra&quot; &quot;seesaw&quot; &quot;elk&quot; &quot;grrrrrr&quot; &quot;up&quot; &quot;a&quot;]&#39;</span>
