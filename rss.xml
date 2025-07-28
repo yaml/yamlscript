@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Sun, 27 Jul 2025 03:36:08 -0000</pubDate>
-    <lastBuildDate>Sun, 27 Jul 2025 03:36:08 -0000</lastBuildDate>
+    <pubDate>Mon, 28 Jul 2025 06:21:42 -0000</pubDate>
+    <lastBuildDate>Mon, 28 Jul 2025 06:21:42 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,41 @@
     
 
     
+    
+    <item>
+      <title>Fun in the SundaYS</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Let&#39;s do a Fun FridaYS post on Sunday.&lt;/p&gt;
+&lt;p&gt;I wrote the YS one liner to open 40 random Rosetta Code tasks written in
+Clojure.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bash
+$ cd RosettaCodeData
+$ vim $(ys -e &#39;sh-out(&#34;find Lang/Clojure&#34;):lines:shuffle
+               .mapv(fn([d] sh-out(&#34;ls $d&#34;):lines
+               .mapv(fn([f] say(&#34;$d/$f&#34;)))))&#39; |
+        grep -v &#39;\-[0-9]&#39; | 
+        head -40)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Pretty cool, right?&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</link>
+      <pubDate>Sun, 27 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-sundays.png" type="image/png" length="0" />
+      
+    </item>
     
     <item>
       <title>The YS Core YAML-Schema</title>
