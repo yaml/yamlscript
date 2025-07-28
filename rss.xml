@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Mon, 28 Jul 2025 06:21:42 -0000</pubDate>
-    <lastBuildDate>Mon, 28 Jul 2025 06:21:42 -0000</lastBuildDate>
+    <pubDate>Mon, 28 Jul 2025 14:39:42 -0000</pubDate>
+    <lastBuildDate>Mon, 28 Jul 2025 14:39:42 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -62,7 +62,7 @@ $ vim $(ys -e &#39;sh-out(&#34;find Lang/Clojure&#34;):lines:shuffle
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-sundays.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-sundays.png" type="image/png" length="37319" />
       
     </item>
     
