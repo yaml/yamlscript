@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Mon, 28 Jul 2025 16:24:37 -0000</pubDate>
-    <lastBuildDate>Mon, 28 Jul 2025 16:24:37 -0000</lastBuildDate>
+    <pubDate>Tue, 29 Jul 2025 05:35:03 -0000</pubDate>
+    <lastBuildDate>Tue, 29 Jul 2025 05:35:03 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -32,7 +32,40 @@
     
     
     <item>
-      <title>Fun in the SundaYS</title>
+      <title>YS on jank, bb and ys</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;Last &lt;a href=&#34;2025-07-25.md&#34;&gt;Friday&lt;/a&gt; we got a YS program running on Go using Glojure.&lt;/p&gt;
+&lt;p&gt;Today we&#39;ll show how to run it on 3 other Clojure platforms:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jank-lang/jank&#34;&gt;jank&lt;/a&gt; - Clojure hosted by C++ on LLVM&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://babashka.org&#34;&gt;bb&lt;/a&gt; - Clojure using
+   &lt;a href=&#34;https://github.com/babashka/sci&#34;&gt;SCI&lt;/a&gt; and &lt;a href=&#34;https://graalvm.org&#34;&gt;GraalVM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://yamlscript.org&#34;&gt;ys&lt;/a&gt; - YS can run Clojure from a YS
+   &lt;code&gt;ys -c&lt;/code&gt; compile command&lt;/li&gt;
+&lt;/ol&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-28/ys-on-jank-bb-and-ys/</link>
+      <pubDate>Mon, 28 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-28/ys-on-jank-bb-and-ys/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-28/ys-on-jank-bb-and-ys.png" type="image/png" length="None" />
+      
+    </item>
+    
+    <item>
+      <title>Fun in the FridaYS</title>
       
       
         
@@ -56,13 +89,13 @@ $ vim $(ys -e &#39;sh-out(&#34;find Lang/Clojure&#34;):lines:shuffle
         grep -v &#39;\-[0-9]&#39; | 
         head -40)&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Pretty cool, right?&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</link>
+      <link>https://yamlscript.org/blog/2025-07-27/fun-in-the-fridays/</link>
       <pubDate>Sun, 27 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</guid>
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-27/fun-in-the-fridays/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-sundays.png" type="image/png" length="37319" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-fridays.png" type="image/png" length="None" />
       
     </item>
     
