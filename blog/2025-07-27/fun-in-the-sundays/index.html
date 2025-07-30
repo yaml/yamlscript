@@ -12,7 +12,7 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-27/fun-in-the-fridays/">
+        <link rel="canonical" href="https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/">
       
       
         <link rel="prev" href="../../2025-07-26/the-ys-core-yaml-schema/">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Fun in the FridaYS - YS — YAML Done Wisely</title>
+        <title>Fun in the SundaYS - YS — YAML Done Wisely</title>
       
     
     
@@ -127,7 +127,7 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Fun in the FridaYS - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Fun in the SundaYS - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
@@ -139,11 +139,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-27/fun-in-the-fridays/" >
+        <meta  property="og:url"  content="https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Fun in the FridaYS - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Fun in the SundaYS - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
@@ -209,7 +209,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Fun in the FridaYS
+              Fun in the SundaYS
             
           </span>
           </a>
@@ -2506,7 +2506,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Fun in the FridaYS</h1>
+  <h1>Fun in the SundaYS</h1>
 
 <p>Let's do a Fun FridaYS post on Sunday.</p>
 <p>I wrote the YS one liner to open 40 random Rosetta Code tasks written in
@@ -2515,7 +2515,7 @@ Clojure.</p>
 $<span class="w"> </span>vim<span class="w"> </span><span class="k">$(</span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;sh-out(&quot;find Lang/Clojure&quot;):lines:shuffle</span>
 <span class="s1">               .mapv(fn([d] sh-out(&quot;ls $d&quot;):lines</span>
 <span class="s1">               .mapv(fn([f] say(&quot;$d/$f&quot;)))))&#39;</span><span class="w"> </span><span class="p">|</span>
-<span class="w">        </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;\-[0-9]&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>
+<span class="w">        </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;\-[0-9]&#39;</span><span class="w"> </span><span class="p">|</span>
 <span class="w">        </span>head<span class="w"> </span>-40<span class="k">)</span>
 </code></pre></div>
 <p>Pretty cool, right?</p>
@@ -2596,7 +2596,7 @@ a
 <span class="w">  </span><span class="nv">println</span><span class="p">)</span>
 </code></pre></div>
 <p>Run it:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clj<span class="w"> </span>-M<span class="w"> </span>best-shuffle.clj<span class="w"> </span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clj<span class="w"> </span>-M<span class="w"> </span>best-shuffle.clj
 <span class="o">[[</span>abracadabra<span class="w"> </span>racrababaad<span class="w"> </span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>seesaw<span class="w"> </span>wssaee<span class="w"> </span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>elk<span class="w"> </span>kel<span class="w"> </span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>grrrrrr<span class="w"> </span>rgrrrrr<span class="w"> </span><span class="m">5</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>up<span class="w"> </span>pu<span class="w"> </span><span class="m">0</span><span class="o">]</span><span class="w"> </span><span class="o">[</span>a<span class="w"> </span>a<span class="w"> </span><span class="m">1</span><span class="o">]]</span>
 </code></pre></div>
 <h2 id="ported-to-ys">Ported to YS<a class="headerlink" href="#ported-to-ys" title="Permanent link">🔗</a></h2>

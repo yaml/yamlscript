@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Tue, 29 Jul 2025 05:35:03 -0000</pubDate>
-    <lastBuildDate>Tue, 29 Jul 2025 05:35:03 -0000</lastBuildDate>
+    <pubDate>Wed, 30 Jul 2025 04:20:48 -0000</pubDate>
+    <lastBuildDate>Wed, 30 Jul 2025 04:20:48 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -60,12 +60,12 @@
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-28/ys-on-jank-bb-and-ys/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-28/ys-on-jank-bb-and-ys.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-28/ys-on-jank-bb-and-ys.png" type="image/png" length="42094" />
       
     </item>
     
     <item>
-      <title>Fun in the FridaYS</title>
+      <title>Fun in the SundaYS</title>
       
       
         
@@ -86,16 +86,16 @@ $ cd RosettaCodeData
 $ vim $(ys -e &#39;sh-out(&#34;find Lang/Clojure&#34;):lines:shuffle
                .mapv(fn([d] sh-out(&#34;ls $d&#34;):lines
                .mapv(fn([f] say(&#34;$d/$f&#34;)))))&#39; |
-        grep -v &#39;\-[0-9]&#39; | 
+        grep -v &#39;\-[0-9]&#39; |
         head -40)&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;Pretty cool, right?&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-27/fun-in-the-fridays/</link>
+      <link>https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</link>
       <pubDate>Sun, 27 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-27/fun-in-the-fridays/</guid>
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-27/fun-in-the-sundays/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-fridays.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-27/fun-in-the-sundays.png" type="image/png" length="37319" />
       
     </item>
     
