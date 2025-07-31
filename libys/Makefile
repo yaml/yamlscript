@@ -5,6 +5,8 @@ include $(COMMON)/native.mk
 include $(COMMON)/vars-core.mk
 include $(COMMON)/vars-libys.mk
 
+include $(MAKES)/shell.mk
+
 #------------------------------------------------------------------------------
 build:: $(LIBYS-DEPS)
 

@@ -1,9 +1,11 @@
 include ../common/base.mk
 PYTHON-VENV := $(ROOT)/www/.venv
+
 include $(MAKES)/python.mk
 SHELL-DEPS := $(PYTHON-VENV)
 SHELL-NAME := makes+venv
 include $(MAKES)/shell.mk
+
 PYTHON-VENV-SETUP := pip install -r requirements.txt
 
 CONFIG := mkdocs.yml

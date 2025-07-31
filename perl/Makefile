@@ -1,6 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-include $(COMMON)/zild.mk
+
+include $(MAKES)/zild.mk
+include $(MAKES)/shell.mk
 
 test ?= test/
 

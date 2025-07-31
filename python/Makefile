@@ -1,6 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-include $(COMMON)/python.mk
+
+include $(MAKES)/python.mk
+include $(MAKES)/shell.mk
 
 PYTHON-VENV := $(ROOT)/python/.venv
 

@@ -1,5 +1,7 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
+
+# include $(MAKES)/php.mk  # TODO
 include $(MAKES)/shell.mk
 
 PHP := $(shell command -v php)

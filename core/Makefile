@@ -3,6 +3,8 @@ include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/vars-core.mk
 
+include $(MAKES)/shell.mk
+
 export PATH := $(ROOT)/core/bin:$(PATH)
 
 #------------------------------------------------------------------------------

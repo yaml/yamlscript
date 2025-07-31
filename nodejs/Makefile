@@ -1,6 +1,9 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+include $(MAKES)/node.mk
+include $(MAKES)/shell.mk
+
 NODE := $(shell command -v node)
 
 NODE-ROOT := $(ROOT)/nodejs

@@ -1,6 +1,9 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+# include $(MAKES)/ruby.mk  # TODO
+include $(MAKES)/shell.mk
+
 RUBY := $(shell command -v bundle)
 
 RAKE-CMDS := \

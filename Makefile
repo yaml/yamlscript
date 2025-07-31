@@ -1,5 +1,6 @@
 include common/base.mk
 include $(COMMON)/java.mk
+include $(MAKES)/shell.mk
 
 BINDINGS := \
     clojure \

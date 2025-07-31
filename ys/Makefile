@@ -4,6 +4,8 @@ include $(COMMON)/clojure.mk
 include $(COMMON)/native.mk
 include $(COMMON)/vars-cli.mk
 
+include $(MAKES)/shell.mk
+
 BPAN-LOCAL := .bpan
 BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
