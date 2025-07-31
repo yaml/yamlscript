@@ -105,6 +105,7 @@
 (dwim 23.2 regex?  replace)
 (dwim 2.2 seqable? some)
 (dwim 2.2 seqable? sort)
+(dwim 2.2 seqable? sort-by)
 (dwim 2.2 seqable? split-at)
 (dwim 2.2 seqable? split-with)
 (dwim 2.2 seqable? take)
