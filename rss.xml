@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Wed, 30 Jul 2025 05:05:02 -0000</pubDate>
-    <lastBuildDate>Wed, 30 Jul 2025 05:05:02 -0000</lastBuildDate>
+    <pubDate>Thu, 31 Jul 2025 03:47:24 -0000</pubDate>
+    <lastBuildDate>Thu, 31 Jul 2025 03:47:24 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -30,6 +30,36 @@
     
 
     
+    
+    <item>
+      <title>Sometimes it&#39;s hard to be lazy</title>
+      
+      
+        
+      <author>Ingy döt Net</author>
+        
+      
+      
+      
+        
+      <category>Summer-of-YS</category>
+        
+      
+      <description>&lt;p&gt;YS (being Clojure) is a functional language with immutable data structures
+and lazy evaluation.&lt;/p&gt;
+&lt;p&gt;Laziness is cool because you can do complicated operations on large (even
+infinite) sequences without having to load everything into memory.&lt;/p&gt;
+&lt;p&gt;But laziness can be very confusing when you&#39;re not used to it or you don&#39;t
+expect it.&lt;/p&gt;</description>
+      <link>https://yamlscript.org/blog/2025-07-30/sometimes-its-hard-to-be-lazy/</link>
+      <pubDate>Wed, 30 Jul 2025 00:00:00 +0000</pubDate>
+      <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
+      
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-30/sometimes-its-hard-to-be-lazy/</guid>
+      
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-30/sometimes-its-hard-to-be-lazy.png" type="image/png" length="None" />
+      
+    </item>
     
     <item>
       <title>Is JSON really a subset of YAML?</title>
@@ -56,7 +86,7 @@ this.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-29/is-json-really-a-subset-of-yaml/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-29/is-json-really-a-subset-of-yaml.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-29/is-json-really-a-subset-of-yaml.png" type="image/png" length="53544" />
       
     </item>
     

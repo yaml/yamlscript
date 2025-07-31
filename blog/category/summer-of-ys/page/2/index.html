@@ -2151,6 +2151,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#the-special-little-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Special Little Symbol
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercism-comparisons" class="md-nav__link">
     <span class="md-ellipsis">
       Exercism Comparisons
@@ -2361,15 +2370,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#ys-multi-functions" class="md-nav__link">
     <span class="md-ellipsis">
       YS Multi Functions
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-the-funcs-have-no-name" class="md-nav__link">
-    <span class="md-ellipsis">
-      Where the Funcs Have No Name
     </span>
   </a>
   
@@ -2618,6 +2618,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#the-special-little-symbol" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Special Little Symbol
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercism-comparisons" class="md-nav__link">
     <span class="md-ellipsis">
       Exercism Comparisons
@@ -2833,15 +2842,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#where-the-funcs-have-no-name" class="md-nav__link">
-    <span class="md-ellipsis">
-      Where the Funcs Have No Name
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2856,6 +2856,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <header class="md-typeset">
         <h1 id="summer-of-ys">Summer-of-YS<a class="headerlink" href="#summer-of-ys" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-07-05 00:00:00+00:00">July 5, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../" class="md-meta__link">Summer-of-YS</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              4 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="the-special-little-symbol"><a class="toclink" href="../../../../2025-07-05/the-special-little-symbol/">The Special Little Symbol</a></h2>
+<p>Yesterday I showed you a FizzBuzz solution in YS.
+Here it is again:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+
+<span class="nt">defn main(n=100)</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">each x (1 .. n)</span><span class="p">:</span><span class="w"> </span><span class="kt">!:say</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">or? _ x</span><span class="p p-Indicator">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">str ((x % 3).! &amp;&amp;&amp; &#39;Fizz&#39;)</span><span class="p p-Indicator">:</span>
+<span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">((x % 5).! &amp;&amp;&amp; &#39;Buzz&#39;)</span>
+</code></pre></div>
+<p>See that <code>_</code> sitting there in the middle all by itself?</p>
+<p>What's that all about?</p>
+<p>Well <code>_</code> is a special symbol in YS, and it means different things in different
+contexts.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../../../2025-07-05/the-special-little-symbol/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -4104,55 +4164,6 @@ It dispatches on the number of arguments.</p>
     
       <nav class="md-post__action">
         <a href="../../../../2025-06-11/ys-multi-functions/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-06-10 00:00:00+00:00">June 10, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="where-the-funcs-have-no-name"><a class="toclink" href="../../../../2025-06-10/where-the-funcs-have-no-name/">Where the Funcs Have No Name</a></h2>
-<p>Any self-respecting functional language has a way to create anonymous functions.</p>
-<p>In YS there are more than one!</p>
-<p>Today we'll talk about nameless functions, why they are useful, and how to create and call them.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2025-06-10/where-the-funcs-have-no-name/">
           Continue reading
         </a>
       </nav>
