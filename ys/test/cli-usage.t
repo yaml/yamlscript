@@ -171,6 +171,58 @@ test::
     +7 >>> str(3, ") Hello #", 3)
     +8 >>> say("3) Hello #3")
 
+- note: Test -x flag with function declarations (declare form should be wrapped with TTT)
+- cmnd: |-
+    ys -xce 'defn main(): say(hello())' -e 'defn hello(): "Hello"'
+  want: |
+    (TTT (declare hello))
+    (defn main [] (TTT (say (TTT (hello)))))
+    (defn hello [] "Hello")
+    (TTT (apply main ARGS))
+
+- cmnd: |-
+    ys -xce 'defn main(): say(hello() + world())' -e 'defn hello(): "Hello"' -e 'defn world(): "World"'
+  want: |
+    (TTT (declare hello world))
+    (defn main [] (TTT (say (TTT (add+ (TTT (hello)) (TTT (world)))))))
+    (defn hello [] "Hello")
+    (defn world [] "World")
+    (TTT (apply main ARGS))
+
+- cmnd: |-
+    ys -xce 'defn main(): say(hello())' -e 'defn hello(): "Hello"' -e 'defn helper(): "Helper"'
+  want: |
+    (TTT (declare hello))
+    (defn main [] (TTT (say (TTT (hello)))))
+    (defn hello [] "Hello")
+    (defn helper [] "Helper")
+    (TTT (apply main ARGS))
+
+- note: Test that -x flag without function declarations works normally
+- cmnd: |-
+    ys -xce 'say("Hello, World!")'
+  want: |
+    (TTT (say "Hello, World!"))
+
+- note: Test that normal compilation without -x flag doesn't wrap declare forms
+- cmnd: |-
+    ys -ce 'defn main(): say(hello())' -e 'defn hello(): "Hello"'
+  want: |
+    (declare hello)
+    (defn main [] (say (hello)))
+    (defn hello [] "Hello")
+    (apply main ARGS)
+
+- note: Test that functions not referenced by main are not declared
+- cmnd: |-
+    ys -xce 'defn main(): say(hello())' -e 'defn hello(): "Hello"' -e 'defn unused(): "Unused"'
+  want: |
+    (TTT (declare hello))
+    (defn main [] (TTT (say (TTT (hello)))))
+    (defn hello [] "Hello")
+    (defn unused [] "Unused")
+    (TTT (apply main ARGS))
+
 - note: Test compiling YS scripts in the repo
 - cmnd:: "ys -c $ROOT/util/brew-update"
   have: apply main
