@@ -371,7 +371,8 @@
         defn-names (zipmap defn-names (repeat true))
         declares (map Sym
                    (keys (get-declares node defn-names)))
-        form (Lst (cons (Sym 'declare) declares))]
+        form (Lst (cons (Sym 'declare) declares))
+        form (maybe-trace form)]
     (if (seq declares)
       (if (= 'ns (get-in node [:Top 0 :Lst 0 :Sym]))
         (update-in node [:Top]
