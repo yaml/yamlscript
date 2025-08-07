@@ -68,8 +68,8 @@
 (def fnum (re #"(?:$inum\.\d+(?:e$inum)?)"))   ; Floating point literal token
 (def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token
                                            ; Maybe Number token
-(def mnum (re #"(?:$xnum(?:[^\s\,\.\:\)\]\}]*|\.d+)*)"))
-
+(def mnum (re #"(?:$xnum[/0-9A-Za-z\.]*)")); *anything* that starts with a number, could be a number
+                                           ; We check later with `yamlscript.ysreader/is-bad-number?`
 (def xsym #"(?:[=!]~~?)")                  ; Special operator token
 
 ;; Operator symbol token
