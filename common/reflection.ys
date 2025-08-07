@@ -23,6 +23,7 @@ classes:
 - java.lang.String
 - java.lang.System
 - java.lang.Thread
+- java.math.BigInteger
 
 --- !YS-v0:
 
