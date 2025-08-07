@@ -156,7 +156,7 @@ $program
   (let [argv (vec
               (map
                 #(if (re-matches #"\d+" %)
-                  (parse-long %) %)
+                  (bigint %) %)
                   args))]
     (apply main argv)))
 EOF

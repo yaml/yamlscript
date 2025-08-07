@@ -43,14 +43,7 @@
 
 (defn Chr [s] {:Chr (symbol s)})
 
-(defn Int [s]
-  {:Int (cond
-          (re-find #"^0x" s)
-          (Long/parseLong (subs s 2) 16)
-          (re-find #"^0o" s)
-          (Long/parseLong (subs s 2) 8)
-          :else
-          (parse-long s))})
+(defn Int [s] {:Int (bigint s)})
 
 (defn Flt [s] {:Flt (parse-double s)})
 

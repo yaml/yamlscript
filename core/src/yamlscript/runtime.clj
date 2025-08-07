@@ -260,7 +260,7 @@
         [sci/file file
          ARGS (vec
                 (map #(cond
-                        (re-matches re/inum %1) (parse-long %1)
+                        (re-matches re/inum %1) (bigint %1)
                         (re-matches re/fnum %1) (parse-double %1)
                         (re-matches re/keyw %1) (keyword (subs %1 1))
                         :else %1)

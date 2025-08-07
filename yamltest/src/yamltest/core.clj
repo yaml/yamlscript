@@ -46,7 +46,7 @@
                 (let [kw (keyword (subs kw 1))]
                   (when (contains? short-keys kw) kw))
                 (when (re-matches #"\d+" opt)
-                  (parse-long opt))))
+                  (bigint opt))))
             opts))
         (repeat true)))))
 

@@ -619,7 +619,7 @@
      number? x
      string? (if (re-find #"\." x)
                (parse-double x)
-               (parse-long x))
+               (bigint x))
      nil? (util/die "Can't convert a nil value to a number")
      seqable? (count x)
      char? (int x)

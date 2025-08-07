@@ -302,7 +302,7 @@
          (let [[[key val]] (seq %1)
                val (str val)]
            (if (and (= :Sym key) (re-matches #"_\d+" val))
-             (let [n (parse-long (subs val 1))]
+             (let [n (bigint (subs val 1))]
                (swap! args assoc n true)
                (swap! maxn max n))
              %1))
@@ -398,7 +398,7 @@
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
     (is-narg? token) (let [n (subs token 1)
-                           n (parse-long n)
+                           n (bigint n)
                            _ (when (or (<= n 0) (> n 20))
                                (die "Invalid numbered argument: " token))
                            n (str "_" n)]
