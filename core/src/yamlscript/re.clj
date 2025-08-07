@@ -68,14 +68,7 @@
 (def fnum (re #"(?:$inum\.\d+(?:e$inum)?)"))   ; Floating point literal token
 (def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token
                                            ; Maybe Number token
-(def mnum (re #"(?x)
-                (?: $xnum
-                  (?:[-+/*%_] \d* |
-                     \.\d+ |
-                     \.\w+ [\?\!]? (?=[^\(\w\?\!] | $)
-                  )*
-                )
-              "))
+(def mnum (re #"(?:$xnum(?:[^\s\,\.\:\)\]\}]*|\.d+)*)"))
 
 (def xsym #"(?:[=!]~~?)")                  ; Special operator token
 
