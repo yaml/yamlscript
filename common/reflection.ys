@@ -10,9 +10,11 @@ classes:
 - java.lang.AssertionError
 - java.lang.Boolean
 - java.lang.Byte
+- java.lang.Character
 - java.lang.Class
 - java.lang.ClassLoader
 - java.lang.Double
+- java.lang.Error
 - java.lang.Exception
 - java.lang.Float
 - java.lang.IllegalArgumentException
@@ -20,9 +22,15 @@ classes:
 - java.lang.Long
 - java.lang.Math
 - java.lang.Number
+- java.lang.Object
+- java.lang.Process
+- java.lang.Runtime
 - java.lang.String
 - java.lang.System
 - java.lang.Thread
+- java.lang.Throwable
+- java.math.BigDecimal
+- java.math.BigInteger
 
 --- !YS-v0:
 
