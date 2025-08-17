@@ -280,13 +280,24 @@ Security functions:
   sha256(S) X: Calculate the SHA-256 hash of a string
 
 IPC functions:
-- exec(Cmd Str*) Result: Execute a command
-  process(Cmd Str*) Result: Execute a command
-  sh(Cmd Str*) Result: Execute a command
-  shell(Cmd Str*) Result: Execute a command
-  shout(Cmd Str*) Result: Execute a command and return the output
+- exec(Opts? Cmd Str*) Result: Execute a command
+  process(Opts? Cmd Str*) Result: Execute a command
+  sh(Opts? Cmd Str*) Result: Execute a command
+  shell(Opts? Cmd Str*) Result: Execute a command
+  sh-out(Opts? Cmd Str*) Result: Execute a command and return the output
+  bash(Opts? Cmd Str*) Result: Command wrapped with `bash -c '...'`
+  bash-out(Opts? Cmd Str*) Result: Run `bash` and return output
 
-- https://github.com/babashka/process#readme
+- |
+    Opts is an optional mapping that supports the following options:
+
+    * `:in` - stdin for command
+    * `:out` - file to redirect stdout to
+    * `:err` - file to redirect stderr to
+    * `:dir` - working directory
+    * `:env` - environment variables to use
+
+- https://github.com/babashka/process/blob/master/API.md#babashka.process/process
 
 External library functions:
   use-pod(pod-name version) nil: Load an external library pod
@@ -332,7 +343,12 @@ defn mdys-stdlib(o):
                 fmt-fns: body
               body:string?: body
               else:
-                str:
-                  fmt-fns(body.0)
-                  "\n**See also**:\ <$(body.1)>\n\n"
+                if body.# == 3:
+                  str:
+                    fmt-fns(body.0)
+                    "\n$(body.1)"
+                    "\n**See also**:\ <$(body.2)>\n\n"
+                  str:
+                    fmt-fns(body.0)
+                    "\n**See also**:\ <$(body.1)>\n\n"
 ```
