@@ -3407,13 +3407,23 @@ Markdown documents.
 </ul>
 <h2 id="ipc-functions">IPC functions<a class="headerlink" href="#ipc-functions" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>exec(Cmd Str*) → Result</code> — Execute a command</li>
-<li><code>process(Cmd Str*) → Result</code> — Execute a command</li>
-<li><code>sh(Cmd Str*) → Result</code> — Execute a command</li>
-<li><code>shell(Cmd Str*) → Result</code> — Execute a command</li>
-<li><code>shout(Cmd Str*) → Result</code> — Execute a command and return the output</li>
+<li><code>exec(Opts? Cmd Str*) → Result</code> — Execute a command</li>
+<li><code>process(Opts? Cmd Str*) → Result</code> — Execute a command</li>
+<li><code>sh(Opts? Cmd Str*) → Result</code> — Execute a command</li>
+<li><code>shell(Opts? Cmd Str*) → Result</code> — Execute a command</li>
+<li><code>sh-out(Opts? Cmd Str*) → Result</code> — Execute a command and return the output</li>
+<li><code>bash(Opts? Cmd Str*) → Result</code> — Command wrapped with <code>bash -c '...'</code></li>
+<li><code>bash-out(Opts? Cmd Str*) → Result</code> — Run <code>bash</code> and return output</li>
 </ul>
-<p><strong>See also</strong>: <a href="https://github.com/babashka/process#readme">https://github.com/babashka/process#readme&nbsp;<img src="/image/external-link.svg"
+<p>Opts is an optional mapping that supports the following options:</p>
+<ul>
+<li><code>:in</code> - stdin for command</li>
+<li><code>:out</code> - file to redirect stdout to</li>
+<li><code>:err</code> - file to redirect stderr to</li>
+<li><code>:dir</code> - working directory</li>
+<li><code>:env</code> - environment variables to use</li>
+</ul>
+<p><strong>See also</strong>: <a href="https://github.com/babashka/process/blob/master/API.md#babashka.process/process">https://github.com/babashka/process/blob/master/API.md#babashka.process/process&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a></p>
