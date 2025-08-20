@@ -15,6 +15,7 @@ int main()
         "";
     int sz = 0;
     char json[1024];
+    int bufsz = (int)sizeof(json);
     yamlscript_errcode ec = yamlscript_load_ys_to_json(ys, json, (int)sizeof(json), &sz);
     return ec;
 }

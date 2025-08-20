@@ -70,6 +70,5 @@ yamlscript_load_ys_to_json(const char *ys,
         memcpy(json, wtf, len);
         json[len] = '\0';
     }
-    free((void*)wtf);
     return yamlscript_success;
 }
