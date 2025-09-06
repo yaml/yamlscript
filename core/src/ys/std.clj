@@ -161,6 +161,12 @@
            (or
              (get C K)
              (get C (str K))))
+    set? (if (contains? C K)
+           K
+           (if (symbol? K)
+             (let [s (str K)]
+               (if (contains? C s) s nil))
+             nil))
     nil? nil
     seqable? (condf K
                number? (nth C K nil)
