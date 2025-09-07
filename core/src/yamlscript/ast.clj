@@ -5,6 +5,7 @@
 
 (ns yamlscript.ast
   (:require
+   [clojure.string :as str]
    [yamlscript.common])
   (:refer-clojure :exclude [Vec]))
 
@@ -43,16 +44,32 @@
 
 (defn Chr [s] {:Chr (symbol s)})
 
-(defn Int [s]
-  {:Int (cond
-          (re-find #"^0x" s)
-          (Long/parseLong (subs s 2) 16)
-          (re-find #"^0o" s)
-          (Long/parseLong (subs s 2) 8)
-          :else
-          (parse-long s))})
+(defn Num [s]
+  (if (re-matches #"(?:0|[1-9][0-9]{0,17})" s)
+    ;; Positive integers that fit in Long will be represented as :Int
+    {:Int (parse-long s)}
+    {:Num (read-string s)}))
 
-(defn Flt [s] {:Flt (parse-double s)})
+(def special
+  {".inf" "Infinity"
+   ".Inf" "Infinity"
+   ".INF" "Infinity"
+   "+.inf" "Infinity"
+   "+.Inf" "Infinity"
+   "+.INF" "Infinity"
+   "-.inf" "-Infinity"
+   "-.Inf" "-Infinity"
+   "-.INF" "-Infinity"
+   ".nan" "NaN"
+   ".NaN" "NaN"
+   ".NAN" "NaN"})
+
+(defn Flt [s]
+  (let [s (str/replace s
+            #"^([-+]?(?:\.inf|\.Inf|\.INF|\.nan|\.NaN|\.NAN))"
+            (fn [[_ k]]
+              (get special k)))]
+    {:Flt (parse-double s)}))
 
 (defn Str [s] {:Str (str s)})
 
@@ -99,8 +116,8 @@
    (Nil)
    (Sym "foo")
    (Chr "a")
-   (Int "123")
-   (Flt "1.23")
+   (Num "123")
+   (Num "1.23")
    (Str "foo")
    (Key "foo")]
   )

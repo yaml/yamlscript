@@ -158,11 +158,10 @@
 
 (defn resolve-plain-scalar [node]
   (let [val (:= node)]
-    (when (re-matches re-inf-nan val)
-      (die "Inf and NaN not supported in YS"))
     (condp re-matches val
       re-int :int
       re-float :flt
+      re-inf-nan :flt
       re-bool :bln
       re-null :nil
       re-keyword :key

@@ -87,7 +87,12 @@
       :Tup (apply str (map print-node val))
       :Key (str val)
       :Int (str val)
-      :Flt (str val)
+      :Flt (case (str val)
+             "Infinity" "##Inf"
+             "-Infinity" "##-Inf"
+             "NaN" "##NaN"
+             (str val))
+      :Num (pr-str val)
       :Bln (str val)
       :Clj (with-out-str (clojure.core/print val))
       :Nil "nil"

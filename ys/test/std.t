@@ -130,7 +130,7 @@ test::
   want:: \'(9 0 2 1 0)
 - code: digits("012345")
   want:: \'(0 1 2 3 4 5)
-- code: digits(012345)
+- code: digits(12345)
   want:: \'(1 2 3 4 5)
 #'
 

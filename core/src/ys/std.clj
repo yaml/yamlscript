@@ -17,6 +17,7 @@
     [atom? re-find+ regex?]]
    [yamlscript.externals :as ext]
    [yamlscript.global :as global]
+   [yamlscript.re :as re]
    [yamlscript.util :as util]
    [ys.fs :as fs]
    [ys.http :as http]
@@ -621,11 +622,9 @@
   ([x] (to-num x nil))
   ([x default]
    (condf x
-     ratio? (double x)
      number? x
-     string? (if (re-find #"\." x)
-               (parse-double x)
-               (parse-long x))
+     string? (when (re-matches re/xnum x)
+               (read-string x))
      nil? (util/die "Can't convert a nil value to a number")
      seqable? (count x)
      char? (int x)

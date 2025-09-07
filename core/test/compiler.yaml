@@ -683,7 +683,7 @@
 - name: Floating point numbers
   yamlscript: |
     !yamlscript/v0
-    =>: -[ -00.00 0.1 -1.2e3 2.3e-4 ]
+    =>: -[ -0.00 0.1 -1.2e3 2.3e-4 ]
   clojure: |
     [-0.0 0.1 -1200.0 2.3E-4]
 
@@ -791,15 +791,12 @@
     ~~ Invalid number: 1.2.3
 
 
-- name: Invalid number B
+- name: Various numbers
   yamlscript: |
     !yamlscript/v0
     =>: -3/5
-#    =>: -3.foo.5
-  error: |
-    ~~ Invalid number: -3/5
-#    ~~ Invalid number: -3.foo.5
-
+  clojure: |
+    -3/5
 
 - name: Dot grouping in sub-expression
   yamlscript: |

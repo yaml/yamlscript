@@ -260,9 +260,12 @@
         [sci/file file
          ARGS (vec
                 (map #(cond
-                        (re-matches re/inum %1) (parse-long %1)
-                        (re-matches re/fnum %1) (parse-double %1)
-                        (re-matches re/keyw %1) (keyword (subs %1 1))
+                        (re-matches re/xnum %1)
+                        (read-string (str/replace %1 #"^([-+]?)0o"
+                                       (str "$1" "0")))
+                        ,
+                        (re-matches re/keyw %1)
+                        (keyword (subs %1 1))
                         :else %1)
                   args))
          ARGV args

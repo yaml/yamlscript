@@ -16,6 +16,7 @@
 (test/load-yaml-test-files
   ["test/compiler.yaml"
    "test/compiler-stack.yaml"
+   "test/literals.yaml"
    "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :clojure] %1)
    :test (fn [test]
@@ -27,7 +28,8 @@
    :want :clojure})
 
 (test/load-yaml-test-files
-  ["test/compiler.yaml"]
+  ["test/compiler.yaml"
+   "test/literals.yaml"]
   {:add-tests true
    :pick #(test/has-keys? [:yamlscript :error] %1)
    :test (fn [test]

@@ -59,23 +59,49 @@
                 \-\- |
                 [\#\@] |
                 \$(?!\w) |
-                \> | \>\>\>
+                \> |
+                \>\>\>
               )
             )")
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def ukey #"(?:\w+(?:_\w+)+)")             ; Word with _ allowed
-(def inum #"(?:-?\d+)")                    ; Integer literal token
-(def fnum (re #"(?:$inum\.\d+(?:e$inum)?)"))   ; Floating point literal token
-(def xnum (re #"(?:$fnum|$inum)"))         ; Numeric literal token
-                                           ; Maybe Number token
+
+;; Numeric literal tokens for code mode
+
+;; Integer literal token
+(def inum #"(?:[-+]?(?:0|[1-9][0-9]*))")
+;; Big integer literal token
+(def ibig (re #"(?:(?:$inum)N)"))
+;; Hexadecimal literal token
+(def hnum #"(?:[-+]?0x[0-9a-fA-F]+)")
+;; Octal literal token
+(def onum #"(?:[-+]?0o[0-7]+)")
+;; Rational literal token
+(def rnum #"(?:[-+]?[0-9]+/[0-9]+)")
+;; Radix integer literal token
+(def bnum #"(?:[-+]?(?:[2-9]|[12][0-9]|3[0-6])r[0-9a-zA-Z]+)")
+;; Floating point literal token
+(def fnum (re #"(?:$inum\.[0-9]+(?:[eE]$inum)?)"))
+;; Big floating point literal token
+(def fbig (re #"(?:(?:$fnum|$inum\.?)M)"))
+;; Special number literal token
+(def snum #"(?:\\\\(?:Inf|-Inf|NaN))")
+;; Numeric literal token
+(def xnum (re #"(?:$fbig|$fnum|$hnum|$onum|$rnum|$bnum|$ibig|$inum|$snum)"))
+;; Maybe a number token
 (def mnum (re #"(?x)
-                (?: $xnum
-                  (?:[-+/*%_] \d* |
-                     \.\d+ |
-                     \.\w+ [\?\!]? (?=[^\(\w\?\!] | $)
-                  )*
+                (?:
+                  $xnum
+                  (?:\.[0-9])?
+                  .*?
+                  (?=[\:\.\,\s\]\}\)]|$)   # End of token
                 )
               "))
+
+(comment
+  (re-find mnum "1.2.a.3.4.5")
+  (re-find fnum "42.0")
+  )
 
 (def xsym #"(?:[=!]~~?)")                  ; Special operator token
 

@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :as ast :refer
-    [Bln Chr Flt Form Int Key Lst Map Nil
+    [Bln Chr Form Key Lst Map Nil Num
      QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
    [yamlscript.common]
    [yamlscript.global :as global]
@@ -39,11 +39,8 @@
     (re-matches re/mnum (str token))
     (not (re-matches re/xnum (str token)))))
 
-(defn is-integer? [token]
-  (re-matches re/inum (str token)))
-
-(defn is-float? [token]
-  (re-matches re/fnum (str token)))
+(defn is-number? [token]
+  (re-matches re/xnum (str token)))
 
 (defn is-dot-num? [token]
   (re-matches re/dotn (str token)))
@@ -110,12 +107,12 @@
                               # Symbols and operators
       $ksym |                   # Colon chain calls
       $quot |                   # Quote token
-      $char |                   # Character token
       $keyw |                   # Keyword token
       $psym |                   # Symbol followed by paren
       $fsym |                   # Fully qualified symbol
       $nspc |                   # Namespace symbol
-      $mnum |                   # Maybe a numeric literal token  # 10
+      $mnum |                   # Maybe a numeric literal token
+      $char |                   # Character token
       $regx |                   # Regex token
       $xsym |                   # Special operators (=~ etc)
       $dsym |                   # Symbol with default
@@ -388,6 +385,9 @@
 
 (declare read-form)
 
+(comment
+  (read-string "\\\\Inf / \\\\-Inf")
+  )
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
@@ -404,8 +404,10 @@
                            n (str "_" n)]
                        [(Sym n) tokens])
     (is-bad-number? token) (die "Invalid number: " token)
-    (is-integer? token) [(Int token) tokens]
-    (is-float? token) [(Flt token) tokens]
+    (is-number? token) (let [token (str/replace token #"^([-+]?)0o"
+                                       (str "$1" "0"))
+                             token (str/replace token #"\\\\" "##")]
+                         [(Num token) tokens])
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
                           [(Sym ".") tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]

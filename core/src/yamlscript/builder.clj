@@ -8,7 +8,7 @@
   (:require
    [clojure.string :as str]
    [yamlscript.ast :refer
-    [Bln Clj Flt Int Key Lst Map Nil Str Sym Vec]]
+    [Bln Clj Flt Key Lst Map Nil Num Str Sym Vec]]
    [yamlscript.common]
    [yamlscript.composer]
    [yamlscript.global]
@@ -297,7 +297,7 @@
                :Ali node
                :map (build-map node)
                :seq (build-vec node)
-               :int (Int (:int node))
+               :int (Num (str/replace (:int node) #"^0o" "0"))
                :flt (Flt (:flt node))
                :bln (Bln (:bln node))
                :key (Key (subs (:key node) 1))
