@@ -62,15 +62,14 @@ test::
 - code: -'J' + \\5
   want: J5
 - code: -'12' + \\3 + 4
-  what: error
-  want: Cannot add+ multiple types when more than 2 arguments
+  want: "1234"
 - code: \{:a :b} + \{:b :c :d}
   want:: \{:a :b :c :d}
 - name: add+ with hash-maps and array-maps
   code: -{:a 1} + {:b 2} + {:c 1 :d 1 :e 1 :f 1 :g 1 :h 1 :i 1 :j 1 :k 1 :l 1}
   want:: -{:a 1 :b 2 :c 1 :d 1 :e 1 :f 1 :g 1 :h 1 :i 1 :j 1 :k 1 :l 1}
 
-- note: sub+ tests
+- note: 'sub+ tests'
 
 - code: \\C - 2
   want:: \\A
@@ -80,12 +79,17 @@ test::
   want:: \\A
 - code: \\A - []
   what: error
-  want: Cannot sub(\A [])
+  want: "Can't sub(\\A [])"
 - code: -'foobarbazbar' - 'bar'
   want: foobaz
+- code: nil - 2
+  what: error
+  want: "Can't sub+ to a nil value"
 - code: 2 - nil
   what: error
-  want: Can't convert a nil value to a number
+  want: "Can't convert a nil value to a number"
+- code: (1 .. 5) - 3 - 2
+  want:: q(1 4 5)
 
 - note: .-- and .++
 
@@ -99,10 +103,10 @@ test::
   want:: \\A
 - code: nil.++
   what: error
-  want: Can't convert a nil value to a number
+  want: "Can't convert a nil value to a number"
 - code: -"B".++
   what: error
-  want: Cannot inc+("B")
+  want: 'Can''t inc+("B")'
 
 - code: (1 ... 10).#.eq(9)
 - code: (1 ... 0).#.eq(0)

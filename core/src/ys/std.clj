@@ -314,9 +314,9 @@
 
 (defn- op-error
   ([op x]
-   (util/die "Cannot " op "(" (pr-str x) ")"))
+   (util/die "Can't " op "(" (pr-str x) ")"))
   ([op x y]
-   (util/die "Cannot " op "(" (pr-str x) " " (pr-str y) ")")))
+   (util/die "Can't " op "(" (pr-str x) " " (pr-str y) ")")))
 
 (defn inc+ [x]
   (condf x
@@ -338,19 +338,15 @@
 
 (defn add+
   ([x y]
-   (condf (if (nil? x) y x)
+   (condf x
      number? (+ (to-num x 0) (to-num y 0))
      string? (str x y)
      map? (merge (to-map x) (to-map y))
      set? (set/union (to-set x) (to-set y))
      vector? (vec (concat (to-vec x)
-                (if (sequential? y)
-                  (to-list y)
-                  (list y))))
-     seqable? (concat (to-list x)
-                (if (sequential? y)
-                  (to-list y)
-                  (list y)))
+                    (if (sequential? y)
+                      (to-list y)
+                      (list y))))
      char? (if (number? y)
              (char (+ (int x) y))
              (str x y))
@@ -358,13 +354,14 @@
            (fn? y) (comp y x)
            (sequential? y) (apply partial x y)
            :else (partial x y))
+     nil? (util/die "Can't add+ to a nil value")
+     seqable? (concat (to-list x)
+                (if (sequential? y)
+                  (to-list y)
+                  (list y)))
      (+ (to-num x 0) (to-num y 0))))
 
   ([x y & xs]
-   (when (not (or
-                (apply = (type x) (type y) (map type xs))
-                (every? map? (conj xs x y))))
-     (util/die "Cannot add+ multiple types when more than 2 arguments"))
    (reduce add+ (add+ x y) xs)))
 
 (defn div+ [& xs] (apply div (map to-num xs)))
@@ -378,6 +375,7 @@
      (and (number? x) (vector? y)) (vec (apply concat (repeat x y)))
      (and (sequential? x) (number? y)) (apply concat (repeat y x))
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
+     (nil? x) (util/die "Can't mul+ to a nil value")
      :else  (* (to-num x 1) (to-num y 1))))
 
   ([x y & xs]
@@ -390,17 +388,16 @@
      map? (dissoc x y)
      set? (disj x y)
      vector? (vec (remove #(= y %1) x))
-     seqable? (remove #(= y %1) x)
      number? (- x (to-num y 0))
      char? (condf y
              number? (char (- (long x) y))
              char? (- (long x) (long y))
              (op-error "sub" x y))
+     nil? (util/die "Can't sub+ to a nil value")
+     seqable? (remove #(= y %1) x)
      (+ (to-num x 0) (to-num y 0))))
 
   ([x y & xs]
-   (when (apply not= (type x) (type y) (map type xs))
-     (util/die "Cannot sub+ multiple types when more than 2 arguments"))
    (reduce sub+ (sub+ x y) xs)))
 
 

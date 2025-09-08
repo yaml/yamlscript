@@ -37,7 +37,7 @@ test::
   want:: nil
 - code: 35.inc + 10
   what: error
-  want: "Can't convert a nil value to a number"
+  want: "Can't add+ to a nil value"
 - code: -1.inc()
   want: 0
 - code: -1.5.inc()
