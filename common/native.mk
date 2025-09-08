@@ -1,4 +1,4 @@
-REFLECTION-JSON := $(LOCAL-TMP)/reflection.json
+REFLECTION-JSON := $(COMMON)/reflection.json
 
 NATIVE-OPTS := \
   -O$(GRAALVM-O) \
@@ -36,6 +36,12 @@ ZLIB-URL := https://zlib.net/fossils/$(ZLIB-TAR)
 
 
 #-------------------------------------------------------------------------------
+# We need to do this by hand for now because it depends on a working `ys`
+# release which isn't always available:
+# https://github.com/yaml/yamlscript/issues/258
+build-reflection-json: $(YS)
+	ys -J $(COMMON)/reflection.ys > $(REFLECTION-JSON)
+
 $(MUSL-GCC): | $(MUSL-HOME)
 	ln -s $@ $(MUSL-HOME)/bin/x86_64-linux-musl-gcc
 	musl-gcc --version
@@ -64,6 +70,3 @@ $(LOCAL-CACHE)/$(ZLIB-TAR):
 
 muslclean::
 	$(RM) -r $(MUSL-HOME) $(MUSL-DIR) $(MUSL-TAR) $(ZLIB-DIR) $(ZLIB-TAR)
-
-$(REFLECTION-JSON): $(COMMON)/reflection.ys $(YS)
-	ys -J $< > $@
