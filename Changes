@@ -1,3 +1,18 @@
+- version: 0.2.3
+  date:    Tue Sep  9 02:31:36 PM PDT 2025
+  changes:
+  - release: Various fixes to support 0.2.x
+  - make: Make all directories support `make shell`
+  - core: Add sort-by to ys::dwim
+  - core: Fix xtrace (-x) to work with auto-declare
+  - core: Add Java classes to reflection.ys
+  - core: Fix dot access on sets
+  - core: Full numeric literal support
+  - core: Don't type check on 3+ args for + - * ops
+  - make: Don't build reflection.json automatically
+  - make: Build linux release assets in docker ubuntu:20.04
+  - make: Write build logs for ys and libys
+  - python: Makefile fix for virtualenv deps
 - version: 0.2.2
   date:    Fri Jul 18 11:18:19 AM PDT 2025
   changes:

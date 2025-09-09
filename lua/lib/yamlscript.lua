@@ -44,7 +44,7 @@ local json = require("cjson")
 -- This value is automatically updated by 'make bump'.
 -- The version number is used to find the correct shared library file.
 -- We currently only support binding to an exact version of libys.
-local yamlscript_version = '0.2.2'
+local yamlscript_version = '0.2.3'
 
 -- Find the libys shared library file path
 local function find_libys_path()

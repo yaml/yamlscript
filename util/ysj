@@ -3,7 +3,7 @@
 set -euo pipefail
 
 (
-  libys_version=0.2.2
+  libys_version=0.2.3
   root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
   JAVA_HOME=$(make -C "$root/core" env | grep ^JAVA_HOME= | cut -d= -f2)
   export JAVA_HOME

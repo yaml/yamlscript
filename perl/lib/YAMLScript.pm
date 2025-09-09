@@ -10,7 +10,7 @@ use FFI::CheckLib ();
 use FFI::Platypus;
 use Cpanel::JSON::XS ();
 
-our $VERSION = '0.2.2';
+our $VERSION = '0.2.3';
 
 our $libys_version = $VERSION;
 
