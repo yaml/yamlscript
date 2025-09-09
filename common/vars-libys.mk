@@ -31,3 +31,5 @@ LIBYS-SOURCES := \
 LIBYS-HEADERS := \
   $(LIBYS-LIB)/graal_isolate.h \
   $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h \
+
+LIBYS-BUILD-LOG := $(ROOT)/build-libys.log

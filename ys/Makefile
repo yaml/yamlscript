@@ -45,6 +45,7 @@ repl-deps:: $(CORE-INSTALLED)
 
 clean::
 	$(RM) -r .cpcache/
+	$(RM) $(YS-BUILD-LOG)
 
 realclean::
 	$(RM) -r bin lib $(BPAN-LOCAL)
@@ -69,7 +70,8 @@ endif
 	  $(NATIVE-OPTS) \
 	\
 	  -jar $< \
-	  -o $@
+	  -o $@ \
+		|& tee $(YS-BUILD-LOG)
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 	touch $@

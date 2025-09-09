@@ -22,6 +22,9 @@ install:: $(LIBYS-DEPS)
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-APIP))
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-VERS))
 
+clean::
+	$(RM) $(LIBYS-BUILD-LOG)
+
 realclean::
 	$(RM) -r lib/
 	$(RM) src/libys/Core.class
@@ -47,7 +50,8 @@ endif
 	\
 	  --shared \
 	  -jar $< \
-	  -o $(LIBYS-SO-NAME)
+	  -o $(LIBYS-SO-NAME) \
+		|& tee $(LIBYS-BUILD-LOG)
 	mv $(LIBYS-SO-BASE) $@
 	mv $(LIBYS-SO-NAME).h $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h
 	ln -fs $(notdir $@) $(LIBYS-SO-APIP)

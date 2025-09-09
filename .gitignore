@@ -7,6 +7,8 @@
 /.cache/
 /.cursor/
 /bin/
+/build-ys.log
+/build-libys.log
 /homebrew-yamlscript/
 /issue-*
 /lib/

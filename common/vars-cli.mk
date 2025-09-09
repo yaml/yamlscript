@@ -33,3 +33,5 @@ NATIVE-OPTS += \
 endif
 endif
 endif
+
+YS-BUILD-LOG := $(ROOT)/build-ys.log
