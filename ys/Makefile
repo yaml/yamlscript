@@ -3,6 +3,7 @@ include $(COMMON)/java.mk
 include $(COMMON)/clojure.mk
 include $(COMMON)/native.mk
 include $(COMMON)/vars-cli.mk
+include $(COMMON)/docker.mk
 
 include $(MAKES)/shell.mk
 
@@ -51,6 +52,11 @@ realclean::
 $(BPAN-LOCAL):
 	git clone --depth=1 $(BPAN-REPO-URL) $@
 
+ifndef MAKES-IN-DOCKER
+$(CLI-BIN): $(DOCKER-RUN-FILE)
+	@$(DOCKER-EXEC) make -C ys $@
+else
+
 $(CLI-BIN): $(CLI-JAR) $(REFLECTION-JSON)
 ifneq (true,$(LIBZ))
 	$(error *** \
@@ -67,6 +73,7 @@ endif
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 	touch $@
+endif
 
 $(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)
 	mkdir -p $(dir $@)

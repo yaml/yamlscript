@@ -1,5 +1,6 @@
 include common/base.mk
 include $(COMMON)/java.mk
+include $(COMMON)/docker.mk
 include $(MAKES)/shell.mk
 
 BINDINGS := \
@@ -194,8 +195,15 @@ ifndef d
 	)
 endif
 
+ifdef IS-LINUX
+ifdef IS-INTEL
+docker-build := YS_BUILD_IN_DOCKER=1
+endif
+endif
+
 _release-yamlscript: $(YS)
-	(time $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
+	(time $(docker-build) \
+	  $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
 release-assets: $(RELEASE-ASSETS)
@@ -269,8 +277,9 @@ realclean::
 else
 $(REALCLEAN):
 realclean:: clean $(REALCLEAN)
+	$(MAKE) docker-kill
 	$(MAKE) -C www $@
-	$(RM) release-*
+	$(RM) release-* $(DOCKER-FILE)
 realclean-%: %
 	$(MAKE) -C $< realclean
 endif
