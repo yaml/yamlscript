@@ -1,10 +1,10 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+PYTHON-VENV := $(ROOT)/python/.venv
+
 include $(MAKES)/python.mk
 include $(MAKES)/shell.mk
-
-PYTHON-VENV := $(ROOT)/python/.venv
 
 VENV := source $(PYTHON-VENV)/bin/activate
 
