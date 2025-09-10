@@ -1,14 +1,18 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+PYTHON-VER := 3.13
 PYTHON-VENV := $(ROOT)/python/.venv
+PYTHON-VENV-SETUP := \
+  pip install pytest pyyaml setuptools twine
 
 include $(MAKES)/python.mk
 include $(MAKES)/shell.mk
 
 VENV := source $(PYTHON-VENV)/bin/activate
 
-export PYTHONPATH := $(ROOT)/python/lib
+export PYTHONPATH := \
+  $(ROOT)/python/lib:$(PYTHON-VENV)/lib/python$(PYTHON-VER)/site-packages
 
 
 #------------------------------------------------------------------------------
@@ -67,14 +71,6 @@ realclean::
 	$(RM) -r $(PYTHON-VENV)
 
 venv: $(PYTHON-VENV)
-
-$(PYTHON-VENV):
-	$(PYTHON) -mvenv $@
-	$(VENV) && \
-	  pip install \
-	    pytest \
-	    pyyaml \
-	    twine
 
 MANIFEST.in:
 	echo 'include ReadMe.md' > $@
