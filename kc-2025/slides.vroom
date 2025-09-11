@@ -21,9 +21,9 @@ The YS ("wise") Way to YAML
 
 by Ingy döt Net
 
-ACM Kansas City
+Kansas City ACM Meetup
+
 September 11, 2025
-Toronto
 
 
 ----
@@ -35,7 +35,7 @@ Toronto
 * Primary Maintainer of YAML
   * w/ Tina, Panto, Eemeli, Thom; 2015 - 2025
   * YAML 1.3 spec
-* Maintainer of YAML Loader libraries
+* Maintainer of Popular YAML Loader libraries
   * PyYAML, libyaml, go-yaml
 
 * Invented YS / YAMLScript
@@ -178,7 +178,8 @@ $ ys -Y file.yaml
 ----
 == Installing YS
 
-$ curl -L getys.org/ys | bash
+$ curl -sL getys.org/ys | bash
+$ which ys
 
 $ git clone https://github.com/yaml/yamlscript
 $ make -C yamlscript install-ys
@@ -197,7 +198,7 @@ $ ys baby1.ys
 $ ys -l baby1.ys
 $ ys -l baby1.ys | jq .
 $ ys -Y baby1.ys
-$ ys -l baby1.ys | jq . | ys -Y
+$ ys -l baby1.ys | yq . | ys -Y
 $ ys -J baby1.ys
 $ ys --to=tsv baby1.ys
 
@@ -224,8 +225,27 @@ $ FOO=1 ys -Y baby2.ys
 
 
 ----
-== YS is a YAML Loader Library
+== YS Loaders for All Languages
 
+* YS can provide a YAML loader for any language
+  * Requires FFI and JSON support
+
+* So far we have loaders for 15 languages:
+  * C#    Clojure  Crystal
+  * Go    Haskell  Julia
+  * Java  Lua      NodeJS
+  * Perl  PHP      Python
+  * Raku  Ruby     Rust
+
+* https://yamlscript.org/doc/bindings/#currently-available-libraries
+
+* https://github.com/yaml/yamlscript/blob/v0/python/lib/yamlscript/__init__.py
+
+
+----
+== Using YS as a YAML Loader Library
+
+* YS _is_ a YAML loader library
 * Let's use yamlscript.py
 
 $ vim load-pyyaml.py load-yamlscript.py -O
@@ -506,9 +526,9 @@ $ ys -Y fn-tag.yaml
 ----
 == Chained Expressions
 
-$ ys -pe '(1 .. 100).filter(odd?).map(sqr).sum().digits().reverse().join().N()'
+$ ys -pe '(1 .. 100).filter(odd?).map(sqr).sum().inc().digits().reverse().join().N()'
 
-$ ys -pe '(1 .. 100).filter(odd?).map(sqr):sum:digits:reverse:join:N'
+$ ys -pe '(1 .. 100).filter(odd?).map(sqr):sum:inc:digits:reverse:join:N'
 
 
 ----
@@ -723,24 +743,6 @@ $ ys -pe INC      # Module load path directory list
 $ ys -pe IN       # STDIN file handle
 $ ys -pe OUT      # STDOUT file handle
 $ ys -pe ERR      # STDERR file handle
-
-
-----
-== YS Loaders for All Languages
-
-* YS can provide a YAML loader for any language
-  * Requires FFI and JSON support
-
-* So far we have loaders for 15 languages:
-  * C#    Clojure  Crystal
-  * Go    Haskell  Julia
-  * Java  Lua      NodeJS
-  * Perl  PHP      Python
-  * Raku  Ruby     Rust
-
-* https://yamlscript.org/doc/bindings/#currently-available-libraries
-
-* https://github.com/yaml/yamlscript/blob/v0/python/lib/yamlscript/__init__.py
 
 
 ----
