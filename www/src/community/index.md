@@ -13,7 +13,7 @@ We'd love to have you get involved with YS development at any level.
 * [Subscribe to the YS Newsletter](https://groups.google.com/g/ys-news)
 * [Star YS on GitHub](https://github.com/yaml/yamlscript)
 * Chat with us about YS:
-    * [Join our Discord Server](https://discord.gg/QaNytNU9)
+    * [Join our Discord Server](https://discord.gg/hJ7UkFbYVS)
     * [Join our CNCF Slack Channel](
       https://cloud-native.slack.com/archives/yamlscript)
     * [Join our Clojurians Slack Channel](

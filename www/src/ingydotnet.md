@@ -16,8 +16,10 @@ YAML, adding the functional features that many YAML users need.
 * Email: <mailto:ingy@ingy.net>
 * LinkedIn: <https://www.linkedin.com/in/ingydotnet>
 * GitHub: <https://github.com/ingydotnet>
-* Matrix: <https://matrix.to/#/@ingy:yaml.io> (best way to chat w/ Ingy)
-* Slack: <https://kubernetes.slack.com/team/U080RUYTQL8>
+* Discord: User: `ingydotnet_21552`
+    * [Join our Discord Server](https://discord.gg/hJ7UkFbYVS)
+* Matrix: <https://matrix.to/#/@ingy:yaml.io>
+* CNCF Slack: <https://cloud-native.slack.com/team/U08GBQNJTFC>
 * BlueSky: <https://bsky.app/profile/ingydotnet.bsky.social>
 * Mastodon: <https://mastodon.cloud/@ingydotnet>
 
