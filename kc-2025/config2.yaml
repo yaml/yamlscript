@@ -1,0 +1,22 @@
+!YS-v0:
+
+:use loader: :all
+vars =: load-vars()
+
+database:
+  host:: vars.db-host
+  port:: vars.db-port
+  user:: vars.db-user
+  password:: vars.db-password
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+!YS-v0
+
+defn main(x):
+  when x > 100:
+    die: "$x is too big"
+  when x < 0:
+    die: "$x is too small"
+
+  # XXX - FP no-no
+  if is-big?(x):
+    sentence =: "$x is big"
+    sentence =: "$x is small"
+
+  sentence =:
+    if is-big?(x): +
+      "$x is big"
+      "$x is small"
+
+  say: sentence
+
+defn is-big?(x): x > 50
+
+
+
+
+
+
+
+
+
+

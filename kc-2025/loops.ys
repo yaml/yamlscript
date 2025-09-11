@@ -1,0 +1,35 @@
+!YS-v0:
+
+k2: A mountain
+::
+  words =: read('/usr/share/dict/words'):lines
+    .filter(/^y[a-z]+$/).filter(\(3 <= _.# <= 6))
+
+  into {}:
+    for i (1 .. 5): +
+      [words:rand-nth (i * 111)]
+
+numbers:
+- 1
+- ::
+    when rand(2) > 1:
+      map sqr: (4 .. 9)
+- 99
+
+k9: A dog
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

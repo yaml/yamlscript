@@ -1,0 +1,30 @@
+#!/usr/bin/env ys-0
+
+names-list =:: "https://github.com/dominictarr/\
+                random-name/raw/master/first-names.json"
+names =: curl(names-list):json/load
+
+venues =::
+- beach
+- dinner party
+- Perl Toolchain Summit
+
+--- !code
+defn main(event-size):
+  dearest =: names:rand-nth
+  guests =: names:shuffle.take(event-size)
+  say: |
+
+    Dear $dearest,
+
+    Please invite $(guests:drop-last.join(', ')) and $last(guests)
+    to the $rand-nth(venues).
+
+    Love, $(ENV.USER:uc1)
+
+
+
+
+
+
+

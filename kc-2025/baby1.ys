@@ -1,0 +1,28 @@
+# Normal YAML file showing various YAML syntax
+
+strings: &anchor1
+- plain: Look Ma, I don't need quotes!!
+- single: 'I can''t complain'
+- double: "Double\nTrouble\n"
+- literal: |  # Multiline code as scalar
+    !YS-v0
+    defn main(n=10):
+      loop a 0, b 1, i 1:
+        say: a
+        when i < n:
+          recur: b, (a + b), i.++
+numbers:
+- 1729
+- 2.302585092994046
+bools & null: [true, false, null]
+alias: *anchor1
+
+
+
+
+
+
+
+
+
+

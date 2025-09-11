@@ -1,0 +1,60 @@
+# This is a comment in YAML
+--- # (optional) indicates the start of a YAML document
+
+# Key-value pairs (mappings)
+name: John Doe
+age: 30
+isStudent: false # Boolean values can be true/false, yes/no, on/off
+
+# Strings can be unquoted, single-quoted, or double-quoted
+city: "New York"
+occupation: 'Software Engineer'
+favorite_quote: >
+  This is a multi-line string.
+  Newlines are folded into spaces.
+
+description: |
+  This is another multi-line string.
+  Newlines are preserved.
+
+# Lists (sequences)
+skills:
+  - Python
+  - Java
+  - YAML
+  - JavaScript
+
+# List of dictionaries (objects)
+projects:
+  - title: Website Redesign
+    status: In Progress
+    technologies:
+      - HTML
+      - CSS
+      - React
+  - title: Mobile App Development
+    status: Completed
+    technologies:
+      - Kotlin
+      - Swift
+
+# Nested mappings
+contact_info:
+  email: john.doe@example.com
+  phone:
+    home: 123-456-7890
+    work: 987-654-3210
+
+# Anchors and aliases for reusing data
+default_user_settings: &default_settings
+  theme: dark
+  notifications: true
+
+user_config:
+  user1:
+    <<: *default_settings # Inherit settings from default_user_settings
+    language: en
+  user2:
+    theme: light # Override default theme
+    notifications: false
+    language: fr

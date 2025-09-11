@@ -1,0 +1,40 @@
+!YS-v0
+
+--- &dev
+db-host: 127.0.0.1
+db-port: 5432
+db-user: dev
+db-password: d3v
+
+--- !bare &test
+db-host: 127.0.0.2
+db-port: 2345
+db-user: test
+db-password: t35t
+
+--- !code
+vars =:
+  case ENV.ENVIRONMENT:
+    'dev': *dev
+    'test': *test
+    else:
+      die: "Set 'ENVIRONMENT'"
+
+--- !data
+database:
+  host:: vars.db-host
+  port:: vars.db-port
+  user:: vars.db-user
+  password:: vars.db-password
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+!YS-v0
+
+defn main(sentence):
+  say: translate(sentence)
+
+trans =: +
+  { /^([aeiou]|yt|xr).*/                    \(_.0 + 'ay')
+    /^(s?qu|thr|sch|[crst]h|[^aeiou])(.*)/  \("$(_.2)$(_.1)ay") }
+
+defn translate(phrase): words(phrase).map(pig-latin):joins
+
+defn pig-latin(word):
+  reduce-kv _ nil trans:
+    fn(trans regex function):
+      match =: word =~ regex
+      trans ||: match && function(match)
+
+
+
+
+
+
+
+
+
