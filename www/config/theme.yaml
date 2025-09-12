@@ -17,7 +17,8 @@ features:
 - content.action.view
 - content.code.copy
 - header.autohide
-- navigation.expand
+# - navigation.expand
+# - navigation.instant
 - navigation.footer
 - navigation.indexes
 - navigation.tabs
