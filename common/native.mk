@@ -10,6 +10,8 @@ NATIVE-OPTS := \
   --enable-url-protocols=https \
   --emit=build-report \
   -march=compatibility \
+  -H:+UnlockExperimentalVMOptions \
+  -H:+StaticExecutableWithDynamicLibC \
   -H:IncludeResources=SCI_VERSION \
   -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
   -H:+ReportExceptionStackTraces \
