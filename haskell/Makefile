@@ -1,8 +1,6 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-
-GHC-VERSION := 9.12.1
-include $(MAKES)/cabal.mk    		# includes ghc.mk
+include $(MAKES)/cabal.mk      # includes ghc.mk
 include $(MAKES)/shell.mk
 
 CABAL-INDEX := $(CABAL_DIR)/packages/hackage.haskell.org/01-index.tar.gz

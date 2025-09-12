@@ -1,7 +1,5 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-
-RAKU-VERSION := 2025.06.1-01
 include $(MAKES)/raku.mk
 include $(MAKES)/shell.mk
 

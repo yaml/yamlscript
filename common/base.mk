@@ -20,7 +20,8 @@ endif
 
 MAKES-NO-RULES := true
 
-include $(ROOT)/common/vars.mk
+COMMON := $(ROOT)/common
+include $(COMMON)/vars.mk
 
 SUBDIR = $(shell pwd)
 SUBDIR := $(SUBDIR:$(ROOT)/%=%)

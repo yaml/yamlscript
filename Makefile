@@ -1,6 +1,8 @@
 include common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
+
+include $(SHELL-LANGS:%=$(MAKES)/%.mk)
 include $(MAKES)/shell.mk
 
 BINDINGS := \

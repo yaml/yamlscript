@@ -1,7 +1,5 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-
-GO-VERSION := 1.24.4
 include $(MAKES)/go.mk
 include $(MAKES)/shell.mk
 

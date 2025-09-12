@@ -1,8 +1,6 @@
+include $(COMMON)/version.mk
 include $(MAKES)/graalvm.mk
 include $(MAKES)/maven.mk
-
-# This is a previously released `ys` version suitable for internal tasks:
-YS-VERSION := 0.2.1
 include $(MAKES)/ys.mk
 
 export YS_TMPDIR := $(LOCAL-TMP)
@@ -14,8 +12,6 @@ YS-REPO-URL := https://github.com/yaml/yamlscript
 YS-GH-API-URL := https://api.github.com/repos/yaml/yamlscript
 
 YS-INSTALL-URL := https://yamlscript.org/install
-
-COMMON := $(ROOT)/common
 
 unexport YS_FORMATTER
 

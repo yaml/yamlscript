@@ -1,6 +1,5 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
-NODE-VERSION := 16.20.2
 include $(MAKES)/node.mk
 include $(MAKES)/shell.mk
 
@@ -13,7 +12,6 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-ifdef NODE
 test:: update $(LIBYS-SO-FQNP) $(NODE)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
@@ -23,7 +21,6 @@ update: $(NODE)
 
 release: $(NODE)
 	npm publish
-endif
 
 clean::
 	$(RM) package-lock.json strace.txt

@@ -26,12 +26,10 @@ export PATH := $(MUSL-HOME)/bin:$(PATH)
 
 MUSL-GCC := $(MUSL-HOME)/bin/musl-gcc
 
-MUSL-VERSION := 1.2.4
 MUSL-TAR := musl-$(MUSL-VERSION).tar.gz
 MUSL-DIR := $(LOCAL-CACHE)/musl-$(MUSL-VERSION)
 MUSL-URL := https://musl.libc.org/releases/$(MUSL-TAR)
 
-ZLIB-VERSION := 1.2.13
 ZLIB-TAR := zlib-$(ZLIB-VERSION).tar.gz
 ZLIB-DIR := $(LOCAL-CACHE)/zlib-$(ZLIB-VERSION)
 ZLIB-URL := https://zlib.net/fossils/$(ZLIB-TAR)
