@@ -64,14 +64,15 @@ ifneq (true,$(LIBZ))
 	  The 'libz.$(SO)' library is required by native-image but not installed)
 endif
 	mkdir -p $(dir $@)
-	$(TIME) \
-	native-image \
-	  -H:ConfigurationFileDirectories=config/ \
-	  $(NATIVE-OPTS) \
-	\
-	  -jar $< \
-	  -o $@ \
-		|& tee $(YS-BUILD-LOG)
+	# The next command may take a long time (a minute or so)
+	( set -x && \
+	  $(TIME) \
+	  native-image \
+	    -H:ConfigurationFileDirectories=config/ \
+	    $(NATIVE-OPTS) \
+	    -jar $< \
+	    -o $@ \
+	) |& tee $(YS-BUILD-LOG)
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 	touch $@

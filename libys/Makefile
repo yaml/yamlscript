@@ -44,14 +44,14 @@ ifneq (true,$(LIBZ))
 endif
 	mkdir -p $(dir $@)
 	# The next command may take a long time (a minute or so)
-	$(TIME) \
-	native-image \
-	  $(NATIVE-OPTS) \
-	\
-	  --shared \
-	  -jar $< \
-	  -o $(LIBYS-SO-NAME) \
-		|& tee $(LIBYS-BUILD-LOG)
+	( set -x && \
+	  $(TIME) \
+	  native-image \
+	    $(NATIVE-OPTS) \
+	    --shared \
+	    -jar $< \
+	    -o $(LIBYS-SO-NAME) \
+	) |& tee $(LIBYS-BUILD-LOG)
 	mv $(LIBYS-SO-BASE) $@
 	mv $(LIBYS-SO-NAME).h $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h
 	ln -fs $(notdir $@) $(LIBYS-SO-APIP)
