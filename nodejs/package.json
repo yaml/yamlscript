@@ -6,8 +6,8 @@
   "author": "Ingy döt Net",
   "license": "MIT",
   "dependencies": {
-    "ffi-napi": "4.0.3",
-    "ref-napi": "3.0.3"
+    "@makeomatic/ffi-napi": "^4.2.0",
+    "ref-napi": "^3.0.3"
   },
   "directories": {
     "test": "test"
