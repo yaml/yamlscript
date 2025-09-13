@@ -4,69 +4,215 @@ YS / YAMLScript
 Program in YAML — Code is Data
 
 
-## About YS
+## About YS / YAMLScript
 
-> See https://yamlscript.org for the most/latest/best information about YS.
+[YS](https://yamlscript.org) is a new YAML loader for 15 (and counting)
+programming languages:
+[C#](https://www.nuget.org/packages/YAMLScript/),
+[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
+[Crystal](https://github.com/yaml/yamlscript/crystal)
+[Go](https://github.com/yaml/yamlscript-go),
+[Haskell](https://hackage.haskell.org/package/yamlscript),
+[Java](https://clojars.org/org.yamlscript/yamlscript),
+[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
+[Lua](https://luarocks.org/modules/ingy/yamlscript),
+[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
+[Perl](https://metacpan.org/pod/YAMLScript),
+[PHP](https://packagist.org/packages/yaml/yamlscript),
+[Python](https://pypi.org/project/yamlscript/),
+[Raku](https://raku.land/zef:ingy/YAMLScript),
+[Ruby](https://rubygems.org/gems/yamlscript) and
+[Rust](https://crates.io/crates/yamlscript).
 
-YS is a functional programming language with a stylized YAML syntax.
+You should consider trying out YS to replace your current YAML loader, because:
 
-YS can be used for:
+* It's easy to use
+* It works the same way in every programming language
+  * Same features, same bugs, same bug fixes
+* YS has optional functional programming features
+  * File imports, string interpolation, standard library, etc
+  * Everything a compiled programming language has
 
-* Extending YAML config files with functional transformations, external data
-  access, string interpolation; anything a programming language has access to
-* Writing new programs, applications, automation scripts
-  * Run with `ys file.ys`
-  * Or compile to binary with `ys -C file.ys`
-* Writing reusable shared libraries
-  * Bindable to almost any programming language
-* As a YAML loader module in many programming languages
-  * Load plain / existing YAML (or JSON) files
-  * Load YAML files with embedded YS functionality
+How can YS offer all this?
 
-Most existing YAML files in the wild are already valid YS.
+YS is also a functional programming language!
 
-> YS is now an official language on the [Exercism](
-  https://exercism.org/tracks) (free) language learning site!
-  It's a great way to learn how to program in YS.
+Like [PyYAML](https://pyyaml.org/) and many other YAML loaders, YS is
+implemented to the [YAML 1.2 specification](https://yaml.org/spec/1.2.2/).
+But instead of loading YAML into its intended data structure, a YS loader loads
+YAML into a Lisp AST (abstract syntax tree) data structure.
+The AST is then rendered into Lisp code and evaluated, resulting in
+the intended data structure.
 
+The specific Lisp is [Clojure](https://clojure.org/), which is very capable,
+mature and well-documented programming language with a large ecosystem of
+libraries and tools.
 
-### Run or Load?
+You may be aware that Clojure is a JVM hosted language (and also a JavaScript
+hosted one via ClojureScript), but YS doesn't need either of those.
+YS is compiled to a native binary executable and also a native shared library.
+The shared library can be used by nearly any programming language, including the
+ones listed above.
 
-YS programs can either be "run" or "loaded".
-When a YS program is run, it is executed as a normal program.
-When a YS program is loaded, it evaluates to a JSON-model data structure.
+Not only can you use YS as a loader libraryfrom a programming language, but you
+can also use it from the command line with the `ys` command.
 
-If you have a valid YAML ([1.2 Core Schema](
-https://yaml.org/spec/1.2.2/#103-core-schema)) file that doesn't use custom
-tags, and loads to a value expressible in JSON, then it is a valid YS program.
-The YS `load` operation will evaluate that file exactly the same in any
-programming language / environment.
+YS is awesome for:
 
-These existing YAML files obviously can't use the YS functional programming
-features since that would be ambiguous.
-For example, what is the JSON value when "loading" this YS program?
+* Querying, manipulating and transforming YAML (and JSON) files
+  * Outputs include YAML, JSON, CSV, TSV and EDN
+* Refactoring large monolythic YAML files into smaller, more manageable files
+* Using data in your YAML files from external sources
+  * Files, web, databases, APIs, shell commands, etc
+* Applying over 1000 built-in functions to your YAML data
+* Using YS libraries for even more functionality
+* Writing complete programs, applications, automation scripts
 
-```yaml
-foo: inc(41)
-```
-
-Is it `{"foo": "inc(41)"}` or `{"foo": 42}`?
-
-YS programs must start with a special YAML tag `!YS-v0` to indicate
-that they have functional capabilities.
-
-```yaml
-!YS-v0:
-foo:: inc(41)
-```
-
-> Note: The `-v0` in the tag indicates the YS API version.
-This is so that future versions of YS can run programs written to an older API
-version, and also so that older versions of YS don't try to run programs
-written to a newer API version.
+> Note: YS is an official language on the
+> [Exercism](https://exercism.org/tracks) (free) language learning site!
+> It's a great way to learn how to program in YS.
 
 
 ### Using YS
+
+First you need to install `ys` and `libys`.
+You can install both to `~/.local/bin/ys` and `~/.local/lib/libys.so`
+respectively, with:
+
+```bash
+curl https://yamlscript.org/install | bash
+```
+See the [Installing YS](#installing-ys) section below for more details.
+
+Now say you have a file called `file.ys` that looks like this:
+```yaml
+name: Fido
+age: 6
+dog years: 42
+likes: [running, fetching, playing, treats]
+```
+
+You can load it with:
+```bash
+ys --json file.ys
+```
+
+And get this output:
+```json
+{
+  "name": "Fido",
+  "age": 6,
+  "dog years": 42,
+  "likes": ["running", "fetching", "playing", "treats"]
+}
+```
+
+Wait, that's just regular YAML! Exactly! YS is 100% compatible with existing
+YAML files.
+But here's where it gets interesting...
+
+Let's say you want to calculate the dog years dynamically:
+
+```yaml
+!YS-v0:
+age =: 6
+
+name: Fido
+age:: age
+dog years:: age * 7
+likes: [running, fetching, playing, treats]
+```
+
+Now when you load it, the dog years are calculated automatically!
+The `age =: 6` sets a variable, and the `::` tells YS that the value is a code
+expression, not a data value.
+
+
+### Why YS is Different
+
+With YS, YAML files can either be "loaded" or "run".
+When a YS program is loaded, it evaluates to a JSON-model data structure.
+When a YS program is run, it is executed as a normal program.
+
+If you have a valid YAML ([1.2 Core Schema](
+https://yaml.org/spec/1.2.2/#103-core-schema)) file that doesn't use custom
+tags, and loads to a value expressible in JSON, then it will load properly with
+YS.
+The YS `load` operation will evaluate that file exactly the same in any
+programming language / environment.
+
+
+### Real-World Examples
+
+Want to merge multiple YAML files with environment variable overrides?
+
+```yaml
+!YS-v0:
+config =:
+  merge:
+    load: 'base-config.yaml'
+    load: 'prod-config.yaml'
+
+database:
+  host:: config.database.host
+  port:: config.database.port || 5432
+  ssl:: ENV.environment == 'production'
+```
+
+Need to transform data from an API?
+
+```yaml
+!YS-v0:
+users =: http/get('https://api.example.com/users'):json/load
+
+active-users::
+  map user-data:
+    filter users:
+      fn(u):
+        (u.status == 'active') &&
+        (u.lastLogin > date('-30d'))
+
+defn user-data(u)::
+  name:: "$(u.firstName) $(u.lastName)"
+  email:: u.email
+  role:: u.role:uc
+```
+
+<!--
+Want to generate Kubernetes manifests dynamically?
+
+```yaml
+!YS-v0:
+apps =: ['web', 'api', 'worker']
+replicas =: ENV.PRODUCTION ? 3 : 1
+
+deployments::
+  apps:map(fn [app] =>
+    apiVersion: 'apps/v1'
+    kind: 'Deployment'
+    metadata:
+      name: app
+      labels:
+        app: app
+    spec:
+      replicas: replicas
+      selector:
+        matchLabels:
+          app: app
+      template:
+        spec:
+          containers:
+          - name: app
+            image: "mycompany/$app:$ENV.VERSION"
+            resources:
+              limits:
+                memory: ENV."${app:upper-case()}_MEMORY" || '512Mi'
+                cpu: ENV."${app:upper-case()}_CPU" || '500m')
+```
+-->
+
+
+### Getting Started with YS
 
 There are two primary ways to use YS:
 
@@ -74,16 +220,9 @@ There are two primary ways to use YS:
 * Using a YS library in your own programming language
 
 The `ys` command line tool is the easiest way to get started with YS.
-It has these main modes of operation:
-
-* `ys <file>` - Run a YS program
-* `ys --load <file>` - Load a YS program
-* `ys --compile <file>` - Compile a YS program to Clojure
-* `ys --binary <file>` - Compile YS to a native binary executable
-* `ys --eval '<expr>'` - Evaluate a YS expression string
-* `ys --install` - Install the latest libys shared library
-* `ys --upgrade` - Upgrade ys and libys
-* `ys --help` - Show the `ys` command help
+You can use it to load / evaluate / transform YAML files and print the result as
+YAML, JSON, CSV, TSV, or EDN.
+Or you can use it to run programs written in YS.
 
 You can also use YS as a library in your own programming language.
 For example, in Python you can use the `yamlscript` module like this:
@@ -113,73 +252,45 @@ For now other systems cannot be supported because `ys` and `libys` are compiled
 by GraalVM's `native-image` tool, which only supports the above systems.
 
 
-### Supported Programming Language Bindings
+### Quick Examples in Your Language
 
-YS wants to be the best YAML loader for both static and dynamic YAML usage in
-every programming language where YAML is used.
-
-It will have the same API, same features, same bugs and same bug fixes in every
-language, giving you a great and consistent YAML experience everywhere.
-
-At this early stage, YS has bindings for these programming languages:
-
-* [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
-* [Crystal](https://github.com/yaml/yamlscript/crystal)
-* [Go](https://github.com/yaml/yamlscript-go),
-* [Java](https://clojars.org/org.yamlscript/yamlscript)
-* [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
-* [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
-* [Perl](https://metacpan.org/pod/YAMLScript)
-* [PHP](https://packagist.org/packages/yaml/yamlscript)
-* [Python](https://pypi.org/project/yamlscript/)
-* [Raku](https://raku.land/zef:ingy/YAMLScript)
-* [Ruby](https://rubygems.org/gems/yamlscript)
-* [Rust](https://crates.io/crates/yamlscript)
-
-
-### Is YS a Lisp?
-
-Even though YS often has the look of an imperative programming language, it
-actually is just a (YAML based) syntax that *compiles* to
-[Clojure](https://clojure.org/) code.
-The resulting Clojure code is then run by a native-machine-code Clojure runtime
-called [Small Clojure Interpreter (SCI)](https://github.com/babashka/sci).
-
-Clojure is a functional programming language with its own Lisp syntax.
-Therefore it is fair to say that YS is a (functional) Lisp, even though it
-commonly doesn't look like one syntactically.
-
-Typically Clojure produces Java bytecode that is run on the JVM, but for YS
-there is no Java or JVM involved.
-In testing so far, YS programs tend to run as fast or faster than
-equivalent Perl or Python programs.
-
-For getting started with YS, you don't need to know anything about Lisp or
-Clojure.
-You can use it with as much or as little Lisp-ness as you want; the
-syntax is quite flexible (*and even programmable!*).
-As your YS programming requirements grow, you can rest assured that you have
-the full power of Clojure at your disposal.
-
-
-## Try the YS `ys` Command
-
-You can try out the latest version of the `ys` command without actually
-"installing" it.
-
-If you run this command in Bash or Zsh:
-
-```
-. <(curl https://yamlscript.org/try-ys)
+**Python:**
+```python
+import yamlscript
+ys = yamlscript.YAMLScript()
+config = ys.load(open('config.yaml').read())
 ```
 
-it will install the `ys` command in a temporary directory (under `/tmp/`) and
-then add the directory to your current `PATH` shell variable.
+**JavaScript/Node:**
+```javascript
+const YS = require('@yaml/yamlscript');
+const ys = new YS();
+const config = ys.load(fs.readFileSync('config.yaml', 'utf8'));
+```
 
-This will allow you to try the `ys` command in your current shell only.
-No other present or future shell session will be affected.
+**Go:**
+```go
+import "github.com/yaml/yamlscript-go"
+ys := yamlscript.New()
+data, _ := ys.Load(yamlContent)
+```
 
-Try it out!
+**Ruby:**
+```ruby
+require 'yamlscript'
+ys = YAMLScript.new
+config = ys.load(File.read('config.yaml'))
+```
+
+
+### Why Choose YS?
+
+* **🔧 Reliability** - Same implementation across all languages means consistent behavior
+* **📦 Zero Dependencies** - Single shared library with no runtime dependencies
+* **🎯 100% YAML Compatible** - Works with all your existing YAML files today
+* **🚀 Performance** - Native compiled code runs as fast or faster than Python/Perl
+* **💪 Powerful When Needed** - Access to 1000+ built-in functions and full Clojure ecosystem
+* **🌐 Universal** - One syntax to learn, use everywhere
 
 
 ## Installing YS
@@ -236,18 +347,7 @@ make install
 
 That's it!
 
-The `make install` command will install `ys` and `libys` to `~/.local/bin` and
-`~/.local/lib` respectively, by default.
-If run as root they will default to `/usr/local/bin` and `/usr/local/lib`.
-
-To install to a different location, run `make install PREFIX=/some/path`.
-
-> Notes:
-> * `make install` triggers a `make build` if needed, but...
-> * You need to run `make build` not as root
-> * The build can take several minutes (`native-image` is slow)
-> * If you install to a custom location, you will need to add that location to
->   your `PATH` and `LD_LIBRARY_PATH` environment variables
+See [Installing YS](https://yamlscript.org/doc/install/) for full details.
 
 
 ### Installing a YS Binding for a Programming Language
@@ -257,7 +357,6 @@ separately.
 
 Currently, each binding release version requires an exact version of the shared
 library, or it will not work.
-That's because the YS language is still evolving quickly.
 
 The best way to install a binding library is to use your programming language's
 package manager to install the latest binding version, and the YS installer to
@@ -267,7 +366,7 @@ So for Python you would:
 
 ```bash
 pip install yamlscript
-ys --install
+curl https://yamlscript.org/install | bash
 ```
 
 The Perl installation process can automatically install the shared library, so
@@ -295,6 +394,9 @@ is a mono-repo containing:
 
 The YS repository uses a `Makefile` system to build, test and install its
 various offerings.
+It installs (locally within this directory)all the dependencies you need to
+build and test YS, including every programming language needed by the bindings.
+
 There is a top level `Makefile` and each repo subdirectory has its own
 `Makefile`.
 When run at the top level, many `make` targets like `test`, `build`, `install`,
@@ -330,14 +432,14 @@ https://github.com/yaml/yamlscript/tree/main/Contributing.md) for more details.
 ## Authors
 
 * [Ingy döt Net](https://github.com/ingydotnet) - Creator / Lead
-* [Ven de Thiel](https://github.com/vendethiel) - Language design
-* [tony-o](https://github.com/tony-o) - Raku binding
-* [Ethiraric](https://github.com/Ethiraric) - Rust binding
-* [José Joaquín Atria](https://github.com/jjatria) - Perl binding
-* [Delon R.Newman](https://github.com/delonnewman) - Clojure, Java, Ruby bindings
+* [Ven de Thiel](https://github.com/vendethiel) - Language design mentor
+* [Delon R.Newman](https://github.com/delonnewman) - Clojure, Java and Ruby
+* [Josephine Pfeiffer](https://github.com/pfeifferj) - Crystal binding
 * [Andrew Pam](https://github.com/xanni) - Go binding
 * [Kenta Murata](https://github.com/mrkn) - Julia binding
-* [Josephine Pfeiffer](https://github.com/pfeifferj) - Crystal binding
+* [José Joaquín Atria](https://github.com/jjatria) - Perl binding
+* [tony-o](https://github.com/tony-o) - Raku binding
+* [Ethiraric](https://github.com/Ethiraric) - Rust binding
 
 
 ## Copyright and License

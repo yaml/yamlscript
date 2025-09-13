@@ -1,66 +1,44 @@
-# YAMLScript C# Implementation Details
+## C# Usage
 
-This document describes the implementation details of the YAMLScript C# binding.
+Use `YAMLScript.NET` as a drop-in replacement for your current YAML loader:
 
-## Architecture
+```csharp
+// Program.cs
+using YAMLScript;
+using System;
+using System.IO;
 
-The C# binding consists of several key components:
+class Program
+{
+    static void Main()
+    {
+        using var ys = new YAMLScriptLoader();
 
-1. Native FFI Layer
-- Uses C# P/Invoke to interface with YAMLScript core
-- Handles memory management and resource cleanup
-- Manages GraalVM isolates
+        // Load from file
+        string input = File.ReadAllText("config.yaml");
+        var config = ys.Load(input);
 
-2. High-Level API
-- Provides an idiomatic C# interface
-- Handles type conversions between C# and YAMLScript
-- Implements proper error handling and exceptions
+        Console.WriteLine(config);
+    }
+}
+```
 
-3. Testing Infrastructure
-- Unit tests for API functionality
-- Integration tests with YAMLScript core
-- Memory leak detection
-- Performance benchmarks
 
-## Implementation Notes
+## Installation
 
-### FFI Integration
-The binding uses P/Invoke to interface with the YAMLScript core library.
-Memory management is handled through proper disposal patterns and the
-IDisposable interface.
+Install YAMLScript for .NET and the `libys.so` shared library:
 
-### Type System
-YAMLScript types are mapped to C# types as follows:
-- YAMLScript null → C# null
-- YAMLScript boolean → C# bool
-- YAMLScript number → C# double
-- YAMLScript string → C# string
-- YAMLScript array → C# IList<object>
-- YAMLScript object → C# IDictionary<string, object>
+```bash
+# Add package reference
+dotnet add package YAMLScript.NET
 
-### Error Handling
-Errors from the YAMLScript runtime are converted to appropriate C#
-exceptions with meaningful stack traces and context information.
+# Install shared library
+curl -sSL https://yamlscript.org/install | bash
+```
 
-### Memory Management
-The binding implements proper memory management through:
-- Deterministic disposal of unmanaged resources
-- Reference counting for shared resources
-- Automatic cleanup of GraalVM isolates
+See <https://yamlscript.org/doc/install/> for more info.
 
-## Build System
-The project uses the standard .NET build system with MSBuild, integrated
-with the YAMLScript common build infrastructure.
 
-## Testing Strategy
-Tests are implemented using xUnit and cover:
-- API functionality
-- Error conditions
-- Memory management
-- Performance benchmarks
-- Edge cases
+### Requirements
 
-## Dependencies
-- .NET 8.0 or later
-- YAMLScript core library
-- xUnit for testing
+* .NET 8.0 or higher

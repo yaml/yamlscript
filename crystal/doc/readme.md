@@ -1,41 +1,39 @@
 ## Crystal Usage
 
-Here's a simple example of using the YAMLScript Crystal binding:
+Use `yamlscript` as a drop-in replacement for your current YAML loader:
 
 ```crystal
+# program.cr
 require "yamlscript"
 
-# YAMLScript code
-ys_code = <<-YS
-!YS-v0
-inc: 41
-YS
+# Load from file
+input = File.read("config.yaml")
+config = YAMLScript.load(input)
 
-# Load and evaluate the YAMLScript
-result = YAMLScript.load(ys_code)
-puts "Result: #{result}"  # Output: Result: 42
-
-# Regular YAML also works
-yaml_code = "foo: bar"
-result = YAMLScript.load(yaml_code)
-puts "YAML result: #{result["foo"]}"  # Output: YAML result: bar
+puts config.inspect
 ```
 
-## Development
 
-To build and run tests:
+## Installation
+
+Install YAMLScript for Crystal and the `libys.so` shared library:
 
 ```bash
-# Clone the repository
-git clone https://github.com/yaml/yamlscript.git
-cd yamlscript/crystal
+# Add to your shard.yml:
+dependencies:
+  yamlscript:
+    github: yaml/yamlscript-crystal
 
-# Build the binding and copy required libraries
-make build
+# Install dependencies
+shards install
 
-# Run the tests
-make test
-
-# Run the example
-make run-example
+# Install shared library
+curl -sSL https://yamlscript.org/install | bash
 ```
+
+See <https://yamlscript.org/doc/install/> for more info.
+
+
+### Requirements
+
+* Crystal 1.0 or higher

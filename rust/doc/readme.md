@@ -1,79 +1,42 @@
 ## Rust Usage
 
-Create a new Rust project:
-
-```text
-$ cargo new --bin prog
-$ cd prog
-```
-
-Add the file `src/main.rs`:
+Use `yamlscript` as a drop-in replacement for your current YAML loader:
 
 ```rust
-use std::fs::File;
-use std::io::prelude::*;
+// program.rs
 use yamlscript::YAMLScript;
+use std::fs;
 
-fn main() -> std::io::Result<()> {
-    let mut file = File::open("file.ys")?;
-    let mut input = String::new();
-    file.read_to_string(&mut input)?;
-    let ys = YAMLScript::new().unwrap();
-    let data = ys.load::<serde_json::Value>(&input).unwrap();
-    println!("{data:?}");
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let ys = YAMLScript::new()?;
+
+    // Load from file
+    let content = fs::read_to_string("config.yaml")?;
+    let data: serde_json::Value = ys.load(&content)?;
+
+    println!("{:#?}", data);
     Ok(())
 }
-```
-
-Add file `file.ys`:
-
-```yaml
-!YS-v0:
-
-name =: "World"
-
-foo: [1, 2, ! inc(41)]
-bar:: load("other.yaml")
-baz:: "Hello, $name!"
-```
-
-Add file `other.yaml`:
-
-```yaml
-oh: Hello
-```
-
-Run:
-
-```text
-$ curl https://yamlscript.org/install | bash
-$ cargo add yamlscript
-$ cargo add serde_json
-$ cargo run
-    Finished dev [unoptimized + debuginfo] target(s) in 0.02s
-     Running `target/debug/prog`
-Object {"bar": Object {"oh": String("Hello")}, "baz": String("Hello, World!"), "foo": Array [Number(1), Number(2), Number(42)]}
 ```
 
 
 ## Installation
 
-You can install this module like any other Rust module:
+Add YAMLScript to your `Cargo.toml` and install the shared library:
 
-```bash
-cargo add yamlscript
+```toml
+[dependencies]
+yamlscript = "0.2"
+serde_json = "1.0"
 ```
 
-but you will need to have a system install of `libys.so`.
-
-One simple way to do that is with:
-
 ```bash
-curl https://yamlscript.org/install | bash
+curl -sSL https://yamlscript.org/install | bash
 ```
-
-> Note: The above command will install the latest version of the YAMLScript
-command line utility, `ys`, and the shared library, `libys.so`, into
-`~/.local/bin` and `~/.local/lib` respectively.
 
 See <https://yamlscript.org/doc/install/> for more info.
+
+
+### Requirements
+
+* Rust 1.70 or higher

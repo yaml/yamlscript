@@ -1,38 +1,40 @@
-# YAMLScript PHP
+## PHP Usage
 
-The PHP implementation of YAMLScript.
-
-## Installation
-
-```bash
-composer require yaml/yamlscript
-```
-
-## Usage
+Use `yamlscript` as a drop-in replacement for your current YAML loader:
 
 ```php
+<?php
+// program.php
+require_once 'vendor/autoload.php';
+
 use YAMLScript\YAMLScript;
 
 $ys = new YAMLScript();
-$result = $ys->load("inc: 41");
-echo $result;  // Outputs: 42
+
+// Load from file
+$input = file_get_contents('config.yaml');
+$config = $ys->load($input);
+
+echo json_encode($config, JSON_PRETTY_PRINT);
+?>
 ```
 
-## Testing
+
+## Installation
+
+Install YAMLScript for PHP and the `libys.so` shared library:
 
 ```bash
-composer test
+# Install via Composer
+composer require yaml/yamlscript
+
+# Install shared library
+curl -sSL https://yamlscript.org/install | bash
 ```
 
-## Requirements
+See <https://yamlscript.org/doc/install/> for more info.
 
-* PHP 8.3 or later
-* Composer
-* Required PHP extensions:
-  * dom
-  * json
-  * libxml
-  * mbstring
-  * tokenizer
-  * xml
-  * xmlwriter
+
+### Requirements
+
+* PHP 8.3 or higher

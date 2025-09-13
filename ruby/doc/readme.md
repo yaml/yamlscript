@@ -1,59 +1,35 @@
 ## Ruby Usage
 
-File `prog.rb`:
+Use `yamlscript` as a drop-in replacement for your current YAML loader:
 
 ```ruby
+# program.rb
 require 'yamlscript'
-input = IO.read('file.ys')
+require 'json'
+
 ys = YAMLScript.new
-data = ys.load(input)
-puts data
-```
 
-File `file.ys`:
+# Load from file
+input = File.read('config.yaml')
+config = ys.load(input)
 
-```yaml
-!YS-v0:
-
-name =: "World"
-
-foo: [1, 2, ! inc(41)]
-bar:: load("other.yaml")
-baz:: "Hello, $name!"
-```
-
-File `other.yaml`:
-
-```yaml
-oh: Hello
-```
-
-Run:
-
-```text
-$ ruby prog.rb
-{"foo"=>[1, 2, 42], "bar"=>{"oh"=>"Hello"}, "baz"=>"Hello, World!"}
+# Convert to JSON
+puts JSON.pretty_generate(config)
 ```
 
 
 ## Installation
 
-You can install this module like any other Ruby module:
+Install YAMLScript for Ruby and the `libys.so` shared library:
 
 ```bash
 gem install yamlscript
+curl -sSL https://yamlscript.org/install | bash
 ```
-
-but you will need to have a system install of `libys.so`.
-
-One simple way to do that is with:
-
-```bash
-curl https://yamlscript.org/install | bash
-```
-
-> Note: The above command will install the latest version of the YAMLScript
-command line utility, `ys`, and the shared library, `libys.so`, into
-`~/local/bin` and `~/.local/lib` respectively.
 
 See <https://yamlscript.org/doc/install/> for more info.
+
+
+### Requirements
+
+* Ruby 2.7 or higher
