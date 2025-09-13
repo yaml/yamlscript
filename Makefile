@@ -143,27 +143,29 @@ install-%: % build-%
 	-$(MAKE) -C $< install PREFIX=$(PREFIX)
 
 $(TEST):
-test: $(TEST)
+test:
+	$(TIME) $(MAKE) test-all
+test-all: $(TEST)
 	@echo
 	@echo 'ALL TESTS PASSED!'
 test-core:
 	@echo
 	@echo "=== Testing 'core' ==="
 	@echo
-	$(MAKE) -C core test v=$v
+	$(TIME) $(MAKE) -C core test v=$v
 test-ys:
 	@echo
 	@echo "=== Testing 'ys' ==="
 	@echo
-	$(MAKE) -C ys test v=$v GRAALVM-O=b
+	$(TIME) $(MAKE) -C ys test v=$v GRAALVM-O=b
 test-%: %
 	@echo
 	@echo "=== Testing '$<' ==="
 	@echo
-	$(MAKE) -C $< test v=$v GRAALVM-O=b
+	$(TIME) $(MAKE) -C $< test v=$v GRAALVM-O=b
 test-unit:
-	$(MAKE) -C core test v=$v
-	$(MAKE) -C ys test v=$v
+	$(TIME) $(MAKE) -C core test v=$v
+	$(TIME) $(MAKE) -C ys test v=$v
 test-bindings: $(TEST-BINDINGS)
 
 serve publish:
@@ -220,7 +222,7 @@ endif
 endif
 
 _release-yamlscript: $(YS)
-	(time $(docker-build) \
+	($(TIME) $(docker-build) \
 	  $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
