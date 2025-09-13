@@ -48,6 +48,13 @@ BUILD-DOC := $(BINDINGS:%=build-doc-%)
 INSTALL := $(INSTALL-DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
 TEST-BINDINGS := $(BINDINGS:%=test-%)
+
+# XXX - Lua has issues on macOS
+ifdef IS-MACOS
+TEST := $(filter-out test-lua,$(TEST))
+TEST-BINDINGS := $(filter-out test-lua,$(TEST-BINDINGS))
+endif
+
 PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
 REALCLEAN := $(DIRS:%=realclean-%)
