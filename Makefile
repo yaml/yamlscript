@@ -147,10 +147,19 @@ test: $(TEST)
 	@echo
 	@echo 'ALL TESTS PASSED!'
 test-core:
+	@echo
+	@echo "=== Testing 'core' ==="
+	@echo
 	$(MAKE) -C core test v=$v
 test-ys:
+	@echo
+	@echo "=== Testing 'ys' ==="
+	@echo
 	$(MAKE) -C ys test v=$v GRAALVM-O=b
 test-%: %
+	@echo
+	@echo "=== Testing '$<' ==="
+	@echo
 	$(MAKE) -C $< test v=$v GRAALVM-O=b
 test-unit:
 	$(MAKE) -C core test v=$v
