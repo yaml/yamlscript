@@ -1,3 +1,5 @@
+/.cache/
+/bad
 /node_modules/
 /nvm/
 /package-lock.json

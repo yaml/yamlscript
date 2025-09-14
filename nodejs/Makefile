@@ -23,7 +23,7 @@ release: $(NODE)
 	npm publish
 
 clean::
-	$(RM) package-lock.json strace.txt
+	$(RM) package-lock.json strace.txt bad
 
 distclean::
-	$(RM) -r node_modules
+	$(RM) -r node_modules .cache
