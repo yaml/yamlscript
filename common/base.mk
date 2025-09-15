@@ -5,18 +5,10 @@ ROOT := $(shell \
   cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))/..' && pwd -P)
 export ROOT
 
-ifdef YS_MAKES_LOCAL
-  $(if $(wildcard $(YS_MAKES_LOCAL)/init.mk),,\
-       $(error YS_MAKES_LOCAL=$(YS_MAKES_LOCAL) is not correct))
-  include $(YS_MAKES_LOCAL)/init.mk
-  MAKES-LOCAL-DIR := $(ROOT)/.local
-
-else
-  M := $(ROOT)/.cache/makes
-  $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
-  include $M/init.mk
-  MAKES-LOCAL-DIR := $(ROOT)/.cache/.local
-endif
+M := $(ROOT)/.cache/makes
+$(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
+include $M/init.mk
+MAKES-LOCAL-DIR := $(ROOT)/.cache/.local
 
 MAKES-NO-RULES := true
 
