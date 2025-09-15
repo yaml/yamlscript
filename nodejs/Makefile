@@ -16,7 +16,7 @@ test:: update $(LIBYS-SO-FQNP) $(NODE)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
 
-update: $(NODE)
+update: $(NODE) package.json
 	npm install
 
 release: $(NODE)
@@ -27,3 +27,6 @@ clean::
 
 distclean::
 	$(RM) -r node_modules .cache
+
+%.json: %.yaml $(YS)
+	$(YS) -J $< > $@

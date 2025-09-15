@@ -84,6 +84,8 @@ $ ys --compile file.ys
 
 ## NodeJS Usage
 
+> Note: Requires NodeJS version v18.0.0 or higher
+
 A YAMLScript file `some.ys`:
 
 ```yaml
