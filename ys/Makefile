@@ -53,9 +53,9 @@ realclean::
 $(BPAN-LOCAL):
 	git clone --depth=1 $(BPAN-REPO-URL) $@
 
-ifndef MAKES-IN-DOCKER
+ifndef PROPER-BUILD-ENV
 $(CLI-BIN): $(DOCKER-RUN-FILE)
-	@$(DOCKER-EXEC) make -C ys $@
+	$(DOCKER-EXEC) make -C ys $@
 else
 
 $(CLI-BIN): $(CLI-JAR) $(REFLECTION-JSON)

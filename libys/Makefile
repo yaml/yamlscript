@@ -33,7 +33,7 @@ test:: $(LIBYS-SO-FQNP)
 
 repl-deps:: $(LIBYS-JAR-PATH)
 
-ifndef MAKES-IN-DOCKER
+ifndef PROPER-BUILD-ENV
 $(LIBYS-SO-FQNP): $(DOCKER-RUN-FILE)
 	@$(DOCKER-EXEC) make -C libys $@
 else

@@ -11,13 +11,13 @@ DOCKER-BUILD-OPTIONS := \
   --build-arg GID=$(USER-GID) \
 
 ifndef YS_BUILD_IN_DOCKER
-override MAKES-IN-DOCKER := true
+override PROPER-BUILD-ENV := true
 endif
 ifndef IS-LINUX
-override MAKES-IN-DOCKER := true
+override PROPER-BUILD-ENV := true
 endif
 ifndef IS-INTEL
-override MAKES-IN-DOCKER := true
+override PROPER-BUILD-ENV := true
 endif
 
 include $(MAKES)/docker.mk
