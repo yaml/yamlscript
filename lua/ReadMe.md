@@ -8,8 +8,8 @@ Add Logic to Your YAML Files
 
 ## Quick Start
 
-This library lets you load YAML files that may or may not contain YAMLScript
-functional programming logic.
+This library lets you load YAML files that may or may not contain
+[YAMLScript](https://yamlscript.org) functional programming logic.
 You can use it as a drop-in replacement for your current YAML loader.
 
 Here's an example `config.yaml` that makes use of YAMLScript functions.
@@ -41,8 +41,10 @@ features:: load('common.yaml').features
 
 # Use logic and conditions
 cache:
-  directory: .cache
+  # Variable scoped to this mapping
   enabled =: deploy == 'production'
+
+  directory: .cache
   enabled:: enabled
   limit: 100
   # Conditional key/value pairs
@@ -54,8 +56,7 @@ cache:
 
 ## What is YAMLScript?
 
-[YAMLScript](https://yamlscript.org) is a functional programming language
-that can be embedded in YAML.
+YAMLScript is a functional programming language that can be embedded in YAML.
 Its syntax is 100% YAML so files that embed it are still valid YAML files.
 
 The YAMLScript project provides YAML loader libraries for many programming
