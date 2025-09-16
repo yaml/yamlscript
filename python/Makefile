@@ -64,7 +64,7 @@ clean::
 	$(RM) MANIFEST* .long_description.md
 	$(RM) -r dist/ .pytest_cache/ yamlscript-0.*/
 	$(RM) -r lib/yamlscript.egg-info/ .eggs/
-	find . -name '__pycache__' | xargs $(RM) -r
+	$(RM) -r lib/yamlscript/__pycache__/
 	@echo
 
 realclean::
