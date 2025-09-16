@@ -176,14 +176,15 @@ function YAMLScript:load(input)
   return resp.data
 end
 
--- YAMLScript instance destructor
-function YAMLScript:__gc()
+-- Manual cleanup method for the isolate
+function YAMLScript:close()
   if self.isolatethread then
     -- Tear down the isolate thread to free resources
     local rc = libys.graal_tear_down_isolate(self.isolatethread)
     if rc ~= 0 then
       error("Failed to tear down isolate")
     end
+    self.isolatethread = nil
   end
 end
 
