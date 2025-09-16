@@ -51,7 +51,7 @@ endif
 	    --shared \
 	    -jar $< \
 	    -o $(LIBYS-SO-NAME) \
-	) |& tee $(LIBYS-BUILD-LOG)
+	) 2>&1 | tee $(LIBYS-BUILD-LOG)
 	mv $(LIBYS-SO-BASE) $@
 	mv $(LIBYS-SO-NAME).h $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h
 	ln -fs $(notdir $@) $(LIBYS-SO-APIP)

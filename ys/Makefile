@@ -72,7 +72,7 @@ endif
 	    $(NATIVE-OPTS) \
 	    -jar $< \
 	    -o $@ \
-	) |& tee $(YS-BUILD-LOG)
+	) 2>&1 | tee $(YS-BUILD-LOG)
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 	touch $@
