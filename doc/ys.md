@@ -16,7 +16,7 @@ Here's the `ys --help` output:
 ```text
 $ ys --help
 
-ys - The YS Command Line Tool - v0.2.3
+ys - The YS Command Line Tool - v0.2.4
 
 Usage: ys [<option...>] [<file>]
 

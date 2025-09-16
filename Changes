@@ -1,3 +1,19 @@
+- version: 0.2.4
+  date:    Tue Sep 16 11:59:33 AM PDT 2025
+  changes:
+  - python: Fix Makefile for new uv usage
+  - nodejs: Remove Makefile dep on nvm
+  - make: Print titles before tests
+  - make: Time tests
+  - nodejs: NodeJS binding works with node 24.8.0
+  - nodejs: Add test-node-versions.mk for testing versions
+  - nodejs: Enforce NodeJS version restrictions
+  - make: Don't support YS_MAKES_LOCAL, since Docker
+  - make: Fix locale in common/ubuntu.dockerfile
+  - doc: Update ReadMe.md files
+  - lua: Fix isolate teardown segfault issue on macOS
+  - python: Makefile fix for 'clean' target
+  - doc: Updates for ys::std IPC functions docs
 - version: 0.2.3
   date:    Tue Sep  9 02:31:36 PM PDT 2025
   changes:

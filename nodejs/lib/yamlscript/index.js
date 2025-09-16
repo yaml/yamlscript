@@ -1,4 +1,4 @@
-const yamlscriptVersion = '0.2.3';
+const yamlscriptVersion = '0.2.4';
 
 const ffi = require('@makeomatic/ffi-napi');
 const ref = require('ref-napi');
