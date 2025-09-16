@@ -190,9 +190,6 @@ endif
 ifndef YS_RELEASE_VERSION_NEW
 	$(error 'make release' needs the 'n' variable set to the new version)
 endif
-ifeq (,$(shell which yarn))
-	$(error 'make release' needs 'yarn' installed)
-endif
 endif
 endif
 
