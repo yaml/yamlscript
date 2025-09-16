@@ -52,7 +52,7 @@ Currently there are working libraries for:
 * [PHP](https://packagist.org/packages/yaml/yamlscript)
 * [Python](https://pypi.org/project/yamlscript/)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
-* [Ruby](https://rubygems.org/search?query=yamlscript)
+* [Ruby](https://rubygems.org/gems/yamlscript)
 * [Rust](https://crates.io/crates/yamlscript)
 
 Install these libraries like you would any other library for your language.
