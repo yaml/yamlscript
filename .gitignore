@@ -22,6 +22,7 @@
 /ys-*
 /.tmp/
 /.local/
+.claude/
 
 .calva/
 *.class
