@@ -59,7 +59,19 @@
   (err (str "--" s " not implemented yet.")))
 
 ;; ----------------------------------------------------------------------------
-(def to-fmts #{"json" "yaml" "csv" "tsv" "edn"})
+(def to-fmts
+  #{#__
+    "json"
+    "yaml"
+    "xml"
+    "csv"
+    "tsv"
+    "edn"
+    "clj"
+    "glj"
+    "go"
+    "wasm"
+    #__})
 
 (def stages
   {"parse" true
@@ -73,26 +85,50 @@
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
   [;
+   ["-l" "--load"
+    "Evaluate input & print compact JSON result"]
+   ["-c" "--compile"
+    "Compile YS to host code (default: Clojure)"]
+   ["-b" "--binary"
+    "Compile to a native binary executable
+                             requires a 'main/main' function"]
+
+   ["-T" "--to FORMAT"
+    "Output format for --load or --compile:
+                             load: json, yaml, xml, csv, tsv, edn
+                             compile: clj, glj, go, wasm"
+    :validate
+    [#(contains? to-fmts %1)
+     (str "must be one of: "
+       "json, yaml, xml, csv, tsv, edn, "
+       "clj, glj, go, wasm")]]
+   ["-J" "--json"
+    "Short for --to=json"]
+   ["-Y" "--yaml"
+    "Short for --to=yaml"]
+
    ["-e" "--eval YSEXPR"
     "Evaluate a YS expression
+                             enables --mode=code by default
                              multiple -e values are joined by newline"
     :default []
     :update-fn conj
     :multi true]
-   ["-l" "--load"
-    "Output the (compact) JSON of YS evaluation"]
    ["-f" "--file FILE"
     "Explicitly indicate input file"]
-
-   ["-c" "--compile"
-    "Compile YS to Clojure"]
-   ["-b" "--binary"
-    "Compile to a native binary executable"]
    ["-I" "--include PATH"
-    "Add directories to YSPATH for library search"
+    "Add directories to the library search path"
     :default []
     :update-fn conj
     :multi true]
+
+   ["-m" "--mode MODE"
+    "Set input mode: code, data, or bare (for -e)"
+    :validate
+    [#(some #{%1} ["c" "code", "d" "data", "b" "bare"])
+     (str "must be one of: c, code, d, data, b or bare")]]
+   ["-C" "--clojure"
+    "Don't compile input. Treat as Clojure code"]
 
    ["-p" "--print"
     "Print the final evaluation result value"]
@@ -100,27 +136,8 @@
     "Output file for --load, --compile or --binary"]
    ["-s" "--stream"
     "Output all results from a multi-document stream"]
-
-   ["-T" "--to FORMAT"
-    "Output format for --load:
-                             json, yaml, csv, tsv, edn"
-    :validate
-    [#(contains? to-fmts %1)
-     (str "must be one of: json, yaml, csv, tsv, edn")]]
-   ["-J" "--json"
-    "Output (pretty) JSON for --load"]
-   ["-Y" "--yaml"
-    "Output YAML for --load"]
    ["-U" "--unordered"
     "Mappings don't preserve key order (faster)"]
-
-   ["-m" "--mode MODE"
-    "Add a mode tag: code, data, or bare (for -e)"
-    :validate
-    [#(some #{%1} ["c" "code", "d" "data", "b" "bare"])
-     (str "must be one of: c, code, d, data, b or bare")]]
-   ["-C" "--clojure"
-    "Treat input as Clojure code"]
 
    #_["-R" "--repl"
       "Start an interactive YS REPL"]
@@ -230,7 +247,7 @@ Options:
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
         ;; Insert blank lines in help text
-        help (str/replace help #"\n  (-[cmpTd])" "\n\n  $1")
+        help (str/replace help #"\n  (-[TempsdS])" "\n\n  $1")
         help (str/replace help #"\n  (.*--version)" "\n\n  $1")
         help (str/replace help #"\n  (.*--install)" "\n\n  $1")
         help (str/replace help #"    ([A-Z])" #(second %1))]
@@ -367,7 +384,12 @@ Options:
 (defn do-compile [opts args]
   (let [[code _ _ #_file #_args] (get-compiled-code opts)
         clojure (pretty-clojure code)]
-    (println clojure)
+    (case (:to opts)
+      "clj"  (println clojure)
+      "glj"  (err "Glojure output format is not yet implemented")
+      "go"   (err "Go output format is not yet implemented")
+      "wasm" (err "Wasm output format is not yet implemented")
+      ,      (println clojure))
     (System/exit 0)))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
@@ -405,6 +427,10 @@ Options:
                            (csv/write-csv s result :separator \tab)
                            (str s)))
                 "edn"  (pp/pprint result)
+                "xml"  (err "XML output format is not yet implemented")
+                "glj"  (err "GLJ output format is not yet implemented")
+                "go"   (err "Go output format is not yet implemented")
+                "wasm" (err "WASM output format is not yet implemented")
                 ,      (println (json/write-str result json-options))))))))
     (catch Exception e
       (global/reset-error-msg-prefix! "Error: ")
