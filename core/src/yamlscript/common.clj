@@ -8,6 +8,7 @@
    [clojure.stacktrace]
    [clojure.string :as str]
    [yamlscript.debug]
+   [yamlscript.global :as global]
    [yamlscript.util :as util]))
 
 ;; Use for error messages at some point
@@ -65,17 +66,24 @@
 (defn get-cmd-pid []
   (-> ^java.lang.ProcessHandle (get-process-handle) .pid))
 
-(defn get-yspath [base]
-  (let [yspath (or
-                 (get (System/getenv) "YSPATH")
-                 (when (re-matches #"/NO-NAME$" base) (str (cwd)))
-                 (->
-                   base
-                   dirname
-                   abspath))
-        _ (when-not yspath
-            (util/die "YSPATH environment variable not set"))]
-    (str/split yspath #":")))
+(defn get-yspath
+  ([base] (get-yspath base []))
+  ([base additional-paths]
+   (let [yspath (or
+                  (get (System/getenv) "YSPATH")
+                  (when (re-matches #"/NO-NAME$" base) (str (cwd)))
+                  (->
+                    base
+                    dirname
+                    abspath))
+         _ (when-not yspath
+             (util/die "YSPATH environment variable not set"))
+         base-paths (str/split yspath #":")
+         cli-include-paths (or (:include @global/opts) [])
+         split-include-paths (mapcat #(str/split % #":") cli-include-paths)
+         all-additional-paths (concat additional-paths split-include-paths)
+         all-paths (concat all-additional-paths base-paths)]
+     (vec all-paths))))
 
 (defn re-find+ [R S]
   (re-find R (str S)))

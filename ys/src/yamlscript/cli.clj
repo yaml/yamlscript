@@ -88,6 +88,11 @@
     "Compile YS to Clojure"]
    ["-b" "--binary"
     "Compile to a native binary executable"]
+   ["-I" "--include PATH"
+    "Add directories to YSPATH for library search"
+    :default []
+    :update-fn conj
+    :multi true]
 
    ["-p" "--print"
     "Print the final evaluation result value"]
