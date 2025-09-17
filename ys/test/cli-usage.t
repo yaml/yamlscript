@@ -8,38 +8,44 @@ ROOT =: +"$DIR/../.."
 
 HELP =: |
 
-  ys - The YS Command Line Tool - v$VERSION
+  ys - The YS Command Line Tool - v0.2.4
 
   Usage: ys [<option...>] [<file>]
 
   Options:
 
-    -e, --eval YSEXPR        Evaluate a YS expression
-                               multiple -e values are joined by newline
-    -l, --load               Output the (compact) JSON of YS evaluation
-    -f, --file FILE          Explicitly indicate input file
+    -l, --load               Evaluate input & print compact JSON result
+    -c, --compile            Compile YS to host code (default: Clojure)
+    -b, --binary             Compile to a native binary executable
+                               requires a 'main/main' function
 
-#   -c, --compile            Compile YS to Clojure
-#   -b, --binary             Compile to a native binary executable
+    -T, --to FORMAT          Output format for --load or --compile:
+                               load: json, yaml, xml, csv, tsv, edn
+                               compile: clj, glj, go, wasm
+    -J, --json               Short for --to=json
+    -Y, --yaml               Short for --to=yaml
+
+#   -e, --eval YSEXPR        Evaluate a YS expression
+#                              enables --mode=code by default
+#                              multiple -e values are joined by newline
+#   -f, --file FILE          Explicitly indicate input file
+#   -I, --include PATH       Add directories to the library search path
+
+#   -m, --mode MODE          Set input mode: code, data, or bare (for -e)
+#   -C, --clojure            Don't compile input. Treat as Clojure code
 
 #   -p, --print              Print the final evaluation result value
 #   -o, --output FILE        Output file for --load, --compile or --binary
+
 #   -s, --stream             Output all results from a multi-document stream
-
-#   -T, --to FORMAT          Output format for --load:
-#                              json, yaml, csv, tsv, edn
-#   -J, --json               Output (pretty) JSON for --load
-#   -Y, --yaml               Output YAML for --load
 #   -U, --unordered          Mappings don't preserve key order (faster)
-
-#   -m, --mode MODE          Add a mode tag: code, data, or bare (for -e)
-#   -C, --clojure            Treat input as Clojure code
 
 #   -d                       Debug all compilation stages
 #   -D, --debug-stage STAGE  Debug a specific compilation stage:
 #                              parse, compose, resolve, build,
 #                              transform, construct, print
 #                            can be used multiple times
+
 #   -S, --stack-trace        Print full stack trace for errors
 #   -x, --xtrace             Print each expression before evaluation
 
@@ -48,8 +54,6 @@ HELP =: |
 
 #       --version            Print version and exit
 #   -h, --help               Print this help and exit
-
-#'
 
 test::
 - cmnd: ys --version
