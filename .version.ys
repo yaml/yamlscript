@@ -21,7 +21,7 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "()${vp}()"
     file:
     - Meta
-    - ReadMe.md
+    # - ReadMe.md
     - common/install.mk
     - common/release.md
     # Don't update common/vars.mk
@@ -34,8 +34,8 @@ vo =: v-old.str/replace(/\./ '\\.')
     - doc/install.md
     - doc/run-ys.md
     - doc/ys.md
-    - go/ReadMe.md
-    - go/doc/readme.md
+    # - go/ReadMe.md
+    # - go/doc/readme.md
     - go/yamlscript.go
     - java/Makefile
     - java/src/main/java/org/yamlscript/yamlscript/YAMLScript.java
@@ -50,11 +50,12 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ruby/lib/yamlscript/version.rb
     - rust/src/lib.rs
     - util/ysj
+    - www/src/cicd.md
     - www/src/install
     - www/src/run-ys
-    - www/src/cicd.md
     - blog/2023-12-07.md
     - ys/src/yamlscript/cli.clj
+    - ys/src/yamlscript/commands.clj
     - ys/test/cli-usage.t
 
 #------------------------------------------------------------------------------
@@ -64,6 +65,7 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "(yamlscript.*)${vp}(.*)"
     file:
+    - binary/graalvm/project.clj
     - clojure/deps.edn
     - clojure/project.clj
     - core/project.clj
@@ -71,7 +73,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - libys/project.clj
     - ys/deps.edn
     - ys/project.clj
-    - ys/share/ys-0.bash
 
   - regx:: "(yamlscript\/core.*)${vp}(.*)"
     file:

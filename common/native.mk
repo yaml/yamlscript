@@ -1,6 +1,6 @@
 REFLECTION-JSON := $(COMMON)/reflection.json
 
-NATIVE-OPTS := \
+NATIVE-OPTIONS := \
   -O$(GRAALVM-O) \
   --verbose \
   --native-image-info \

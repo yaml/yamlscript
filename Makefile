@@ -43,13 +43,17 @@ INSTALL-DIRS := \
     libys \
     ys \
 
+CLEAN-DIRS := \
+    $(DIRS) \
+    binary/graalvm \
+
 BUILD := $(BUILD-DIRS:%=build-%)
 BUILD-DOC := $(BINDINGS:%=build-doc-%)
 INSTALL := $(INSTALL-DIRS:%=install-%)
 TEST := $(DIRS:%=test-%)
 TEST-BINDINGS := $(BINDINGS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)
-CLEAN := $(DIRS:%=clean-%)
+CLEAN := $(CLEAN-:%=clean-%)
 REALCLEAN := $(DIRS:%=realclean-%)
 DISTCLEAN := $(DIRS:%=distclean-%)
 
@@ -278,7 +282,7 @@ clean:: $(CLEAN)
 	$(RM) -r libys-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) -r homebrew-yamlscript
-	$(RM) NO-NAME release*.log
+	$(RM) eval.out release*.log build*.log
 clean-%: %
 	$(MAKE) -C $< clean
 
