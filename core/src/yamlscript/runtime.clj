@@ -227,16 +227,19 @@
     {:namespaces namespaces
      :classes classes}))
 
+(defn get-resource [name]
+  (-> name
+       (io/resource)
+       slurp
+       str/trim-newline))
+
 (defn get-runtime-info []
   {:args (common/get-cmd-args)
    :bin (common/get-cmd-bin)
    :pid (common/get-cmd-pid)
+   ; :commit (get-resource "YAMLSCRIPT_COMMIT")
    :versions {:clojure "1.12.0"
-              ;; TODO Add graalvm and other versions
-              :sci (->>
-                     (io/resource "SCI_VERSION")
-                     slurp
-                     str/trim-newline)
+              :sci (get-resource "SCI_VERSION")
               :yamlscript ys-version}
    :yspath (common/get-cmd-path)})
 
@@ -253,7 +256,7 @@
    (sci/alter-var-root sci/in (constantly *in*))
 
    (let [clj (str/trim-newline clj)
-         file (common/abspath (or file "NO-NAME"))]
+         file (common/abspath (or file "eval.out"))]
      (if (= "" clj)
        ""
        (sci/binding

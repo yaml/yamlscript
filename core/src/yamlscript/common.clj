@@ -71,7 +71,7 @@
   ([base additional-paths]
    (let [yspath (or
                   (get (System/getenv) "YSPATH")
-                  (when (re-matches #"/NO-NAME$" base) (str (cwd)))
+                  (when (re-matches #"/eval.out$" base) (str (cwd)))
                   (->
                     base
                     dirname

@@ -1,0 +1,23 @@
+!YS-v0
+
+defn main(source):
+  code =: source:read
+  ys-bin =: RUN.yspath
+  rc =: sh("$ys-bin -c $source")
+
+  when rc.exit != 0:
+    die: "Error:\n$(rc.err)"
+
+  code =: rc.out
+  when code !~ /\(defn\s+main\s/:
+    die: "Could not find main function in '$source'"
+
+  code =: code.replace(/\n\(apply main ARGS\)\n\z/)
+
+  wrapper =: read('share/wrapper.clj')
+
+  print:
+    str/replace-first wrapper /;;CODE;;/:
+      str/re-quote-replacement: code
+
+# vim: ft=yaml:

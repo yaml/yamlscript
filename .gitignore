@@ -9,6 +9,7 @@
 /bin/
 /build-ys.log
 /build-libys.log
+eval.out
 /homebrew-yamlscript/
 /issue-*
 /lib/
