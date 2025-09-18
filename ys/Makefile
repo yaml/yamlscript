@@ -26,8 +26,6 @@ install: $(CLI-DEPS)
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $(CLI-BIN)) \
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%)
-	install -m 755 $(CLI-BIN-BASH) \
-	  $(PREFIX)/bin/
 
 jar: $(CLI-JAR)
 
@@ -69,7 +67,7 @@ endif
 	  $(TIME) \
 	  native-image \
 	    -H:ConfigurationFileDirectories=config/ \
-	    $(NATIVE-OPTS) \
+	    $(NATIVE-OPTIONS) \
 	    -jar $< \
 	    -o $@ \
 	) 2>&1 | tee $(YS-BUILD-LOG)
@@ -77,11 +75,6 @@ endif
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 	touch $@
 endif
-
-$(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)
-	mkdir -p $(dir $@)
-	cp $< $@
-	chmod 755 $@
 
 $(CLI-JAR): $(LEIN) $(CLI-JAR-DEPS)
 	lein uberjar

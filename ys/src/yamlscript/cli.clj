@@ -8,7 +8,7 @@
   (:gen-class)
   (:require
    [babashka.fs :as fs]
-   [babashka.process :refer [check exec process]]
+   [babashka.process :refer [check process]]
    [clj-yaml.core :as yaml]
    [clojure.data.csv :as csv]
    [clojure.data.json :as json]
@@ -18,10 +18,12 @@
    [clojure.string :as str]
    [clojure.stacktrace]
    [clojure.tools.cli :as cli]
+   [yamlscript.commands :as commands]
    [yamlscript.common]
    [yamlscript.compiler :as compiler]
    [yamlscript.global :as global :refer [env]]
-   [yamlscript.runtime :as runtime])
+   [yamlscript.runtime :as runtime]
+   [yamlscript.util :as util])
   (:refer-clojure))
 
 (def yamlscript-version "0.2.4")
@@ -55,23 +57,15 @@
         (println (str/replace msg "java.lang.Exception: " "")))))
   (exit 1))
 
-(defn todo [s & _]
+(defn todo [s & _xs]
   (err (str "--" s " not implemented yet.")))
+
+(comment (todo "repl"))
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts
-  #{#__
-    "json"
-    "yaml"
-    "xml"
-    "csv"
-    "tsv"
-    "edn"
-    "clj"
-    "glj"
-    "go"
-    "wasm"
-    #__})
+  #{"json" "yaml" "xml" "csv" "tsv" "edn"
+    "clj" "glj" "go" "wasm"})
 
 (def stages
   {"parse" true
@@ -84,8 +78,7 @@
 
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
-  [;
-   ["-l" "--load"
+  [["-l" "--load"
     "Evaluate input & print compact JSON result"]
    ["-c" "--compile"
     "Compile YS to host code (default: Clojure)"]
@@ -126,7 +119,7 @@
     "Set input mode: code, data, or bare (for -e)"
     :validate
     [#(some #{%1} ["c" "code", "d" "data", "b" "bare"])
-     (str "must be one of: c, code, d, data, b or bare")]]
+     "must be one of: c, code, d, data, b or bare"]]
    ["-C" "--clojure"
     "Don't compile input. Treat as Clojure code"]
 
@@ -138,13 +131,6 @@
     "Output all results from a multi-document stream"]
    ["-U" "--unordered"
     "Mappings don't preserve key order (faster)"]
-
-   #_["-R" "--repl"
-      "Start an interactive YS REPL"]
-   #_["-N" "--nrepl"
-      "Start a new nREPL server"]
-   #_["-K" "--kill"
-      "Stop the nREPL server"]
 
    ["-d" nil
     "Debug all compilation stages"
@@ -185,19 +171,15 @@
     (println (str (str/join "\n* " errs) "\n")))
   (exit 1))
 
-(declare add-ys-mode-tag)
+(declare get-code)
 (defn get-binary-info [opts args]
-  (let [in-file (when (seq args) (first args))
+  (let [in-file (or (first args) (:file opts))
         code (when (seq (:eval opts))
-               (str
-                 (->> opts
-                   :eval
-                   (str/join "\n"))
-                 "\n"))]
+               (first (get-code opts)))]
     (or in-file code
       (err "No input file specified"))
-    (let [in-file (if code "NO-NAME.ys" in-file)]
-      (or (re-find #"\.ys$" in-file)
+    (let [in-file (if code "--eval.ys" in-file)]
+      (when-not (re-find #"\.ys$" in-file)
         (err "Input file must end in .ys"))
       [in-file code])))
 
@@ -209,26 +191,22 @@
                 (str "/ys-sh-" yamlscript-version)))]
     [cmd path]))
 
-(defn do-install [_opts _args]
-  (let [[cmd] (get-ys-sh-path)]
-    (exec cmd "--install")))
+(defn do-install [opts args]
+  (commands/do-install opts args))
 
-(defn do-upgrade [_opts _args]
-  (let [[cmd] (get-ys-sh-path)]
-    (exec cmd "--upgrade")))
+(defn do-upgrade [opts args]
+  (commands/do-upgrade opts args))
 
 (defn do-binary [opts args]
-  (let [[cmd path] (get-ys-sh-path)
-        [in-file code] (get-binary-info opts args)
-        out-file (some identity
-                   [(:output opts)
-                    (and in-file (str/replace in-file #"\.ys$" ""))])
-        path (if (re-find #"-openjdk-" path) "ys" path)]
-    (flush)
-    (exec {:extra-env {"YS_BIN" path
-                       "YS_CODE" (or code "")}}
-      cmd "--compile-to-binary"
-      in-file out-file yamlscript-version)))
+  (let [[in-file code] (get-binary-info opts args)
+        in-file (if (= "--eval.ys" in-file) "--eval" in-file)
+        out-file (or (:output opts)
+                   (if (= "--eval" in-file)
+                     "eval.out"
+                     (fs/strip-ext (fs/file-name in-file))))
+        [_cmd path] (get-ys-sh-path)
+        ys-bin (if (re-find #"-openjdk-" path) "ys" path)]
+    (commands/do-binary code in-file out-file ys-bin)))
 
 (defn do-version []
   (println (str "YS (YAMLScript) " yamlscript-version)))
@@ -319,7 +297,7 @@ Options:
             (binding [*out* *err*]
               (println "Warning: No input found.")))
         code (str f-code e-code)
-        file (or file "NO-NAME")]
+        file (or file "eval.out")]
     [code file (:load opts)]))
 
 (defn compile-code [code opts]
@@ -381,8 +359,8 @@ Options:
             code))
         code))))
 
-(defn do-compile [opts args]
-  (let [[code _ _ #_file #_args] (get-compiled-code opts)
+(defn do-compile [opts _args]
+  (let [[code _file _args] (get-compiled-code opts)
         clojure (pretty-clojure code)]
     (case (:to opts)
       "clj"  (println clojure)
@@ -398,7 +376,7 @@ Options:
   (try
     (let [[code file load] (get-compiled-code opts)
           _ (when (env "YS_SHOW_COMPILE")
-              (eprint (str line (pretty-clojure code) "\n" line)))
+              (util/eprint (str line (pretty-clojure code) "\n" line)))
           result (runtime/eval-string code file args)
           results (if (and (:stream opts) (or load
                                             (seq (:eval opts))))
@@ -436,18 +414,6 @@ Options:
       (global/reset-error-msg-prefix! "Error: ")
       (err e))))
 
-(defn do-repl [opts]
-  (todo "repl" opts))
-
-(defn do-nrepl [opts args]
-  (todo "nrepl" opts args))
-
-(defn do-connect [opts args]
-  (todo "connect" opts args))
-
-(defn do-kill [opts args]
-  (todo "kill" opts args))
-
 (defn elide-empty [opts & keys]
   (reduce
     (fn [opts key]
@@ -455,19 +421,6 @@ Options:
         (dissoc opts key)
         opts))
     opts keys))
-
-(def env-opts
-  #{:unordered :print :stack-trace :xtrace})
-
-(defn do-default [opts args help]
-  (if (or
-        (:file opts)
-        (seq (apply dissoc
-               (elide-empty opts :eval :debug-stage)
-               env-opts))
-        (seq args))
-    (do-run opts args)
-    (do-help help)))
 
 (defn mutex [opts keys]
   (let [omap (reduce #(if (%2 opts)
@@ -566,10 +519,6 @@ Options:
         :run (do-run opts args)
         :compile (do-compile opts args)
         :load (do-run opts args)
-        :repl (do-repl opts)
-        :connect (do-connect opts args)
-        :kill (do-kill opts args)
-        :nrepl (do-nrepl opts args)
         (do-run opts args)))))
 
 (defn get-opts [argv]

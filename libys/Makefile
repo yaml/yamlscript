@@ -47,7 +47,7 @@ endif
 	( set -x && \
 	  $(TIME) \
 	  native-image \
-	    $(NATIVE-OPTS) \
+	    $(NATIVE-OPTIONS) \
 	    --shared \
 	    -jar $< \
 	    -o $(LIBYS-SO-NAME) \
