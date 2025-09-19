@@ -183,14 +183,6 @@
         (err "Input file must end in .ys"))
       [in-file code])))
 
-(defn get-ys-sh-path []
-  (let [path (-> (java.lang.ProcessHandle/current) .info .command .get)
-        cmd (if (re-find #"-openjdk-" path)
-              (str "ys-sh-" yamlscript-version)
-              (str/replace path #"/[^/]*$"
-                (str "/ys-sh-" yamlscript-version)))]
-    [cmd path]))
-
 (defn do-install [opts args]
   (commands/do-install opts args))
 
@@ -204,8 +196,8 @@
                    (if (= "--eval" in-file)
                      "eval.out"
                      (fs/strip-ext (fs/file-name in-file))))
-        [_cmd path] (get-ys-sh-path)
-        ys-bin (if (re-find #"-openjdk-" path) "ys" path)]
+        ys-bin (-> (java.lang.ProcessHandle/current) .info .command .get)
+        ys-bin (if (re-find #"-openjdk-" ys-bin) "ys" ys-bin)]
     (commands/do-binary code in-file out-file ys-bin)))
 
 (defn do-version []
