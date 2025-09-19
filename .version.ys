@@ -73,7 +73,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - libys/project.clj
     - ys/deps.edn
     - ys/project.clj
-    - ys/share/ys-0.bash
 
   - regx:: "(yamlscript\/core.*)${vp}(.*)"
     file:
