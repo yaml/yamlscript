@@ -4,7 +4,7 @@
   :dependencies
   [[org.clojure/clojure "1.12.0"]
    [org.babashka/sci "0.8.41"]
-   [yamlscript/core "0.2.4"]]  ;; #=(get-ys-version)
+   [yamlscript/core "0.2.4"]]
 
   :main ^:skip-aot program
 
