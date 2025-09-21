@@ -14,20 +14,20 @@ HELP =: |
 
   Options:
 
-    -l, --load               Evaluate input & print compact JSON result
-    -c, --compile            Compile YS to host code (default: Clojure)
-    -b, --binary             Compile to a native binary executable
-                               requires a 'main/main' function
+    -l, --load               Evaluate input & print the result value
+                               default outputformat is compact JSON
+    -c, --compile            Compile YS code to source code or binary
+                               default output format is Clojure code
 
     -T, --to FORMAT          Output format for --load or --compile:
-                               load: json, yaml, xml, csv, tsv, edn
-                               compile: clj, glj, go, wasm
-    -J, --json               Short for --to=json
+                               load: yaml, json, xml, csv, tsv, edn
+                               compile: clj, glj, go, graal, gobin, wasm
     -Y, --yaml               Short for --to=yaml
+    -J, --json               Short for --to=json
 
 #   -e, --eval YSEXPR        Evaluate a YS expression
-#                              enables --mode=code by default
-#                              multiple -e values are joined by newline
+#                             enables --mode=code by default
+#                             multiple -e values are joined by newline
 #   -f, --file FILE          Explicitly indicate input file
 #   -I, --include PATH       Add directories to the library search path
 
@@ -35,16 +35,16 @@ HELP =: |
 #   -C, --clojure            Don't compile input. Treat as Clojure code
 
 #   -p, --print              Print the final evaluation result value
-#   -o, --output FILE        Output file for --load, --compile or --binary
+#   -o, --output FILE        Output file for --load or --compile
 
 #   -s, --stream             Output all results from a multi-document stream
 #   -U, --unordered          Mappings don't preserve key order (faster)
 
 #   -d                       Debug all compilation stages
 #   -D, --debug-stage STAGE  Debug a specific compilation stage:
-#                              parse, compose, resolve, build,
-#                              transform, construct, print
-#                            can be used multiple times
+#                             parse, compose, resolve, build,
+#                             transform, construct, print
+#                           can be used multiple times
 
 #   -S, --stack-trace        Print full stack trace for errors
 #   -x, --xtrace             Print each expression before evaluation
@@ -53,7 +53,6 @@ HELP =: |
 #       --upgrade            Upgrade both ys and libys
 
 #       --version            Print version and exit
-#   -h, --help               Print this help and exit
 
 test::
 - cmnd: ys --version

@@ -64,8 +64,8 @@
 
 ;; ----------------------------------------------------------------------------
 (def to-fmts
-  #{"json" "yaml" "xml" "csv" "tsv" "edn"
-    "clj" "glj" "go" "wasm"})
+  #{"cjson" "yaml" "json" "xml" "csv" "tsv" "edn"
+    "clj" "glj" "go" "graal" "gobin" "wasm"})
 
 (def stages
   {"parse" true
@@ -79,31 +79,30 @@
 ;; See https://clojure.github.io/tools.cli/#clojure.tools.cli/parse-opts
 (def cli-options
   [["-l" "--load"
-    "Evaluate input & print compact JSON result"]
+    "Evaluate input & print the result value
+    →  default outputformat is compact JSON"]
    ["-c" "--compile"
-    "Compile YS to host code (default: Clojure)"]
-   ["-b" "--binary"
-    "Compile to a native binary executable
-                             requires a 'main/main' function"]
+    "Compile YS code to source code or binary
+    →  default output format is Clojure code"]
 
    ["-T" "--to FORMAT"
     "Output format for --load or --compile:
-                             load: json, yaml, xml, csv, tsv, edn
-                             compile: clj, glj, go, wasm"
+    →  load: yaml, json, xml, csv, tsv, edn
+    →  compile: clj, glj, go, graal, gobin, wasm"
     :validate
     [#(contains? to-fmts %1)
      (str "must be one of: "
-       "json, yaml, xml, csv, tsv, edn, "
-       "clj, glj, go, wasm")]]
-   ["-J" "--json"
-    "Short for --to=json"]
+       "yaml, json, xml, csv, tsv, edn, "
+       "clj, glj, go, wasm, graal, gobin")]]
    ["-Y" "--yaml"
     "Short for --to=yaml"]
+   ["-J" "--json"
+    "Short for --to=json"]
 
    ["-e" "--eval YSEXPR"
     "Evaluate a YS expression
-                             enables --mode=code by default
-                             multiple -e values are joined by newline"
+    →  enables --mode=code by default
+    →  multiple -e values are joined by newline"
     :default []
     :update-fn conj
     :multi true]
@@ -126,7 +125,7 @@
    ["-p" "--print"
     "Print the final evaluation result value"]
    ["-o" "--output FILE"
-    "Output file for --load, --compile or --binary"]
+    "Output file for --load or --compile"]
    ["-s" "--stream"
     "Output all results from a multi-document stream"]
    ["-U" "--unordered"
@@ -138,9 +137,9 @@
     :update-fn (fn [_] stages)]
    ["-D" "--debug-stage STAGE"
     "Debug a specific compilation stage:
-                             parse, compose, resolve, build,
-                             transform, construct, print
-                           can be used multiple times"
+    →  parse, compose, resolve, build,
+    →  transform, construct, print
+    →can be used multiple times"
     :default {}
     :update-fn #(if (= "all" %2) stages (assoc %1 %2 true))
     :multi true
@@ -171,34 +170,11 @@
     (println (str (str/join "\n* " errs) "\n")))
   (exit 1))
 
-(declare get-code)
-(defn get-binary-info [opts args]
-  (let [in-file (or (first args) (:file opts))
-        code (when (seq (:eval opts))
-               (first (get-code opts)))]
-    (or in-file code
-      (err "No input file specified"))
-    (let [in-file (if code "--eval.ys" in-file)]
-      (when-not (re-find #"\.ys$" in-file)
-        (err "Input file must end in .ys"))
-      [in-file code])))
-
 (defn do-install [opts args]
   (commands/do-install opts args))
 
 (defn do-upgrade [opts args]
   (commands/do-upgrade opts args))
-
-(defn do-binary [opts args]
-  (let [[in-file code] (get-binary-info opts args)
-        in-file (if (= "--eval.ys" in-file) "--eval" in-file)
-        out-file (or (:output opts)
-                   (if (= "--eval" in-file)
-                     "eval.out"
-                     (fs/strip-ext (fs/file-name in-file))))
-        ys-bin (-> (java.lang.ProcessHandle/current) .info .command .get)
-        ys-bin (if (re-find #"-openjdk-" ys-bin) "ys" ys-bin)]
-    (commands/do-binary code in-file out-file ys-bin)))
 
 (defn do-version []
   (println (str "YS (YAMLScript) " yamlscript-version)))
@@ -216,6 +192,7 @@ Options:
   (let [help (str/replace help #"^" help-heading)
         help (str/replace help #"\[\]" "  ")
         help (str/replace help #"\{\}" "  ")
+        help (str/replace help #"→" "                       ")
         ;; Insert blank lines in help text
         help (str/replace help #"\n  (-[TempsdS])" "\n\n  $1")
         help (str/replace help #"\n  (.*--version)" "\n\n  $1")
@@ -351,16 +328,39 @@ Options:
             code))
         code))))
 
-(defn do-compile [opts _args]
-  (let [[code _file _args] (get-compiled-code opts)
-        clojure (pretty-clojure code)]
-    (case (:to opts)
-      "clj"  (println clojure)
-      "glj"  (err "Glojure output format is not yet implemented")
-      "go"   (err "Go output format is not yet implemented")
-      "wasm" (err "Wasm output format is not yet implemented")
-      ,      (println clojure))
-    (System/exit 0)))
+(defn get-build-info [opts args]
+  (let [in-file (or (first args) (:file opts))
+        code (when (seq (:eval opts))
+               (first (get-code opts)))
+        _ (or in-file code
+            (err "No input file specified"))
+        in-file (if code "--eval.ys" in-file)
+        _ (when-not (or (:output opts) (re-find #"\.ys$" in-file))
+            (err "Must specify an output file or input file must end in .ys"))
+        in-file (if (= "--eval.ys" in-file) "--eval" in-file)
+        out-file (or (:output opts)
+                   (if (= "--eval" in-file)
+                     "eval.out"
+                     (fs/strip-ext (fs/file-name in-file))))
+        ys-bin (-> (java.lang.ProcessHandle/current) .info .command .get)
+        ys-bin (if (re-find #"-openjdk-" ys-bin) "ys" ys-bin)]
+    {:code code,
+     :in-file in-file,
+     :out-file out-file,
+     :ys-bin ys-bin}))
+
+(defn do-compile [opts args]
+  (if (= (:to opts) "clj")
+    (let [[code _file _args] (get-compiled-code opts)]
+      (println (pretty-clojure code)))
+    (let [info (get-build-info opts args)]
+      (case (:to opts)
+        "glj"   (commands/do-to-glj info)
+        "go"    (commands/do-to-go info)
+        "graal" (commands/do-build-graal info)
+        "gobin" (commands/do-build-gobin info)
+        "wasm"  (commands/do-build-wasm info)
+        ,       (die "Unknown output format: " (:to opts))))))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
 
@@ -380,28 +380,26 @@ Options:
           (doall
             (for [result (remove nil? results)]
               (case (:to opts)
-                "yaml" (println
-                         (str
-                           (when (> (count results) 1) "---\n")
-                           (str/trim-newline
-                             (yaml/generate-string
-                               result
-                               :dumper-options {:flow-style :block}))))
-                "json" (json/pprint result json-options)
-                "csv"  (println
-                         (with-open [s (java.io.StringWriter.)]
-                           (csv/write-csv s result :separator \,)
-                           (str s)))
-                "tsv"  (println
-                         (with-open [s (java.io.StringWriter.)]
-                           (csv/write-csv s result :separator \tab)
-                           (str s)))
-                "edn"  (pp/pprint result)
-                "xml"  (err "XML output format is not yet implemented")
-                "glj"  (err "GLJ output format is not yet implemented")
-                "go"   (err "Go output format is not yet implemented")
-                "wasm" (err "WASM output format is not yet implemented")
-                ,      (println (json/write-str result json-options))))))))
+                "cjson" (println (json/write-str result json-options))
+                "yaml"  (println
+                          (str
+                            (when (> (count results) 1) "---\n")
+                            (str/trim-newline
+                              (yaml/generate-string
+                                result
+                                :dumper-options {:flow-style :block}))))
+                "json"  (json/pprint result json-options)
+                "xml"   (err "XML output format is not yet implemented")
+                "csv"   (println
+                          (with-open [s (java.io.StringWriter.)]
+                            (csv/write-csv s result :separator \,)
+                            (str s)))
+                "tsv"   (println
+                          (with-open [s (java.io.StringWriter.)]
+                            (csv/write-csv s result :separator \tab)
+                            (str s)))
+                "edn"   (pp/pprint result)
+                ,       (die "Unknown output format: " (:to opts))))))))
     (catch Exception e
       (global/reset-error-msg-prefix! "Error: ")
       (err e))))
@@ -414,10 +412,33 @@ Options:
         opts))
     opts keys))
 
+(def all-opts
+  #{:run :load :eval :compile
+    :print :output :stream
+    :to :json :yaml :unordered
+    :mode :clojure
+    :debug-stage :stack-trace :xtrace
+    :install :upgrade
+    :version :help})
+
+(def action-opts
+  #{:run :load :compile
+    :version :help})
+
+(def eval-action-opts
+  #{:run :load :compile})
+
+(def format-opts
+  #{:to :json :yaml})
+
+(def info-opts
+  #{:version :help})
+
+(def valid-opts
+  {})
+
 (defn mutex [opts keys]
-  (let [omap (reduce #(if (%2 opts)
-                        (assoc %1 %2 true)
-                        %1) {} keys)]
+  (let [omap (zipmap (filter #(opts %) keys) (repeat true))]
     (when (> (count omap) 1)
       (let [[first second] (seq omap)
             first (str "--" (name (key first)))
@@ -426,9 +447,7 @@ Options:
           " are mutually exclusive.")))))
 
 (defn mutex1 [opts opt keys]
-  (let [omap (reduce #(if (%2 opts)
-                        (assoc %1 %2 true)
-                        %1) {} keys)]
+  (let [omap (zipmap (filter #(opts %) keys) (repeat true))]
     (when (and (opt opts) (> (count omap) 0))
       (let [[second] (seq omap)
             first (str "--" (name opt))
@@ -447,34 +466,6 @@ Options:
           (k2o (clojure.core/first keys))
           " one of ...")))))
 
-(def all-opts
-  #{:run :load :eval
-    :compile :binary
-    :print :output :stream
-    :to :json :yaml :edn :unordered
-    :mode :clojure
-    ;:repl :nrepl :kill
-    :debug-stage :stack-trace :xtrace
-    :install :upgrade
-    :version :help})
-
-(def action-opts
-  #{:run :load :compile
-    :repl :nrepl :kill
-    :version :help})
-
-(def eval-action-opts
-  #{:run :load :compile})
-
-(def format-opts
-  #{:to :json :yaml :edn})
-
-(def repl-opts
-  #{:repl :nrepl :kill})
-
-(def info-opts
-  #{:version :help})
-
 (defn validate-opts [opts]
   (let [opts (elide-empty opts :eval :debug-stage)]
     (or
@@ -482,7 +473,7 @@ Options:
       (mutex opts format-opts)
       (mutex1 opts :help (set/difference all-opts #{:help}))
       (mutex1 opts :version (set/difference all-opts #{:version}))
-      (mutex1 opts :mode (set/union info-opts repl-opts))
+      (mutex1 opts :mode (set/union info-opts))
       (mutex1 opts :eval (set/difference action-opts eval-action-opts))
       (needs opts :mode #{:eval})
       (mutex1 opts :print (set/difference action-opts #{:run}))
@@ -507,7 +498,6 @@ Options:
         :version (do-version)
         :install (do-install opts args)
         :upgrade (do-upgrade opts args)
-        :binary (do-binary opts args)
         :run (do-run opts args)
         :compile (do-compile opts args)
         :load (do-run opts args)
@@ -515,6 +505,7 @@ Options:
 
 (defn get-opts [argv]
   (let [orig argv
+        ;; Before parsing options, handle possible input file as first argument
         file (first argv)
         [filed argv] (if (and file
                            (not (re-find #"^-." file))
@@ -526,36 +517,61 @@ Options:
         [argv is--] (if (= "--" (first argv))
                       [(rest argv) true]
                       [argv false])
+        ;; Now parse options with cli/parse-opts
         options (cli/parse-opts args cli-options)
         {opts :options
          args :arguments
          help :summary
          errs :errors} options
-        args (concat args argv)
-        opts (if-not (seq orig) (assoc opts :help true) opts)
+        ;; Check for invalid option combinations and save any errors
         error (validate-opts opts)
-        opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
-        opts (if (env "YS_LOAD") (assoc opts :load true) opts)
-        opts (if (:json opts) (assoc opts :to "json") opts)
+        ;; Combine remaining arguments with parsed options
+        args (concat args argv)
+        ;; Default to --help if no arguments are provided
+        opts (if-not (seq orig) (assoc opts :help true) opts)
+        ;; Handle --yaml and --json
         opts (if (:yaml opts) (assoc opts :to "yaml") opts)
-        opts (if (:edn opts) (assoc opts :to "edn") opts)
+        opts (if (:json opts) (assoc opts :to "json") opts)
+        ;; Default to code mode if --eval is used
         opts (if (and (not (:mode opts)) (seq (:eval opts)))
                (assoc opts :mode "code") opts)
-
+        ;; Honor environment variables for options
+        opts (if (env "YS_FORMAT") (assoc opts :to (env "YS_FORMAT")) opts)
+        opts (if (env "YS_LOAD") (assoc opts :load true) opts)
         opts (if (env "YS_OUTPUT")
                (assoc opts :output (env "YS_OUTPUT")) opts)
         out (:output opts)
         opts (if (env "YS_STREAM")
                (assoc opts :stream (env "YS_STREAM")) opts)
+        ;; Default to output format based on output file extension
         opts (if (and
                    out
-                   (re-find #"\.(?:yml|yaml|json|csv|tsv|edn)$" out)
-                   (not (:to opts)))
+                   (not (:to opts))
+                   (re-find #"\.(?:yml|yaml|json|csv|tsv|edn|go|wasm)$" out))
                (let [to (str/replace out #".*\.(\w+)$" "$1")
                      to (if (= "yml" to) "yaml" to)]
                  (assoc opts :to to))
                opts)
-        opts (if (:to opts) (assoc opts :load true) opts)
+        ;; If --to is set, default to --load or --compile
+        opts (if-not (seq (filter #(contains? opts %1) action-opts))
+               (cond
+                 (re-matches #"(?:yaml|json|xml|csv|tsv|edn)$"
+                   (or (:to opts) ""))
+                 (assoc opts :load true)
+                 ,
+                 (re-matches #"(?:clj|glj|go|wasm|graal|gobin)$"
+                   (or (:to opts) ""))
+                 (assoc opts :compile true)
+                 ,
+                 :else opts)
+               opts)
+        ;; If first argument is a file, default to "run" action
+        opts (if (and filed
+                   (not (seq (filter #(contains? opts %1) action-opts))))
+               (assoc opts :run true)
+               opts)
+
+        ;; Honor environment variables for options
         opts (if (env "YS_PRINT") (assoc opts :print true) opts)
         opts (if (and (env "YS_PRINT_EVAL")
                    (seq (:eval opts))) (assoc opts :print true) opts)
@@ -563,7 +579,9 @@ Options:
         opts (if (env "YS_UNORDERED") (assoc opts :unordered true) opts)
         opts (if (env "YS_XTRACE") (assoc opts :xtrace true) opts)
 
+        ;; Handle --eval
         is-e (seq (:eval opts))
+        ;; Assume --eval if first argument looks like an expression
         [arg1 arg2] args
         [opts args] (if (and
                           (not (seq (:eval opts)))
@@ -586,11 +604,18 @@ Options:
                                    opts)]
                         [opts args])
                       [opts args])
+        ;; Set default output format for --load or --compile
+        opts (cond
+               (:load opts) (assoc opts :to (or (:to opts) "cjson"))
+               (:compile opts) (assoc opts :to (or (:to opts) "clj"))
+               :else opts)
+        ;; Assume stdin ("-") if input file is not provided
         file (:file opts)
         file (cond
                file file
                (and (seq (:eval opts)) (not is-e) (not is--)) "-"
                filed filed)
+        ;; Determine input file and arguments
         [file args] (if file
                       [file args]
                       (if (and (not is--)
@@ -601,10 +626,9 @@ Options:
         file (or file
                (and (not (seq (:eval opts))) (:load opts) "-"))
         opts (if file (assoc opts :file file) opts)
-        args (if filed (rest args) args)
-        args (vec args)]
+        args (vec (if filed (rest args) args))]
     (when (env "YS_SHOW_OPTS")
-      (println (yaml/generate-string{:opts opts :args args})))
+      (println (yaml/generate-string {:opts opts :args args})))
     [opts args error errs help]))
 
 (comment

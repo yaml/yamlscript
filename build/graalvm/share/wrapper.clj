@@ -6,6 +6,11 @@
   (:require
    [ys.std :refer :all]
    [ys.dwim :refer :all]
+   [ys.csv :as csv]
+   [ys.fs :as fs]
+   [ys.http :as http]
+   [ys.json :as json]
+   [ys.yaml :as yaml]
    [yamlscript.debug :refer :all]))
 
 (defn -parse-argv [argv]
