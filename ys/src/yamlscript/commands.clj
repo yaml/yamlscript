@@ -16,16 +16,21 @@
 
 (def yamlscript-version "0.2.4")
 
+(def show-log? (atom false))
+
 (defn o [& msgs]
-  (util/eprintln (str "* " (str/join "\n  " msgs)))
-  (flush))
+  (when @show-log?
+    (util/eprintln (str "* " (str/join "\n  " msgs)))
+    (flush)))
 
 (defn run [cmd-args err-msg]
-  (when (env "YS_BINARY_DEBUG")
+  (when (env "YS_BUILD_DEBUG")
     (util/eprintln
       (str "Running: " (str/join " " (remove map? cmd-args)))))
   (let [result (apply process cmd-args)]
     (when (not= 0 (:exit @result))
+      (when (env "YS_BUILD_DEBUG")
+        (WWW result))
       (die (str err-msg ":\n" (slurp (:err result)))))
     result))
 
@@ -36,10 +41,15 @@
                           (= arg1 "-jar")
                           (re-find #"yamlscript\.cli-" arg2)))
         clone-url (if devel? ".git" "https://github.com/yaml/yamlscript")
-        clone-branch (or (env "YS_BINARY_BRANCH") yamlscript-version)
+        clone-branch (or (env "YS_BUILD_BRANCH")
+                       (if devel?
+                         (-> (run ["git" "rev-parse" "--short" "HEAD"]
+                               "Failed to get current commit hash")
+                           :out slurp str/trim)
+                         yamlscript-version))
         temp-dir "/tmp/yamlscript"
-        clone-work-dir (str temp-dir "/" (if devel? "devel" clone-branch))
-        build-dir (str clone-work-dir "/binary/graalvm")
+        clone-work-dir (str temp-dir "/" clone-branch)
+        build-dir (str clone-work-dir "/build")
         to-tty {:out :inherit :err :inherit}
         install-prefix (or (env "PREFIX")
                          (-> (java.lang.ProcessHandle/current)
@@ -74,69 +84,77 @@
                 clone-branch
                 clone-work-dir
                 build-dir]} opts]
+    (if-not (fs/exists? clone-work-dir)
+      (let [clone-opts
+            (if devel?  [] ["--depth=1" (str "--branch=" clone-branch)])
+            clone-cmd
+            (concat ["git clone"] (conj clone-opts clone-url clone-work-dir))]
+        (o (str "Cloning YAMLScript build repo into '" clone-work-dir "'"))
+        (run clone-cmd "Failed to clone YAMLScript build repo")
+        (when devel?
+          (o (str "Resetting YAMLScript build workdir to current commit hash: "
+               clone-branch))
+          (run ["git" "reset" "--hard" clone-branch]
+            "Failed to reset to current commit hash")))
+      (do
+        (o (str "Cleaning YAMLScript build workdir: '" clone-work-dir "'"))
+        (o "Cleaning the build environment")
+        (run [{:dir build-dir} "git" "clean" "-dxf" "."]
+          "Failed to clean the build environment")))))
 
-    (o "Setting up YAMLScript repo for binary compilation")
-    (let [clone-opts ["--depth=1"]
-          clone-opts (if-not devel?
-                       (conj clone-opts (str "--branch=" clone-branch))
-                       clone-opts)
-          clone-opts (conj clone-opts clone-url clone-work-dir)
-          clone-cmd (concat ["git clone"] clone-opts)]
-      (when (and devel? (fs/exists? clone-work-dir))
-        (o (str "Deleting existing devel repo: " clone-work-dir))
-        (fs/delete-tree clone-work-dir))
-      (when-not (fs/exists? clone-work-dir)
-        (o "Cloning YAMLScript repo into /tmp/:"
-          (str "  " (str/join " " clone-cmd)))
-        (run clone-cmd
-          "Failed to clone YAMLScript repo")))
+(defn do-build
+  ([info build-type]
+   (do-build info build-type #{}))
+  ([info build-type options]
+   (let [stdout? (contains? options :stdout)
+         {:keys [code in-file out-file ys-bin]} info
+         opts (opts)
+         {:keys [devel? build-dir to-tty]} opts
+         ys-bin (if devel? "ys" ys-bin)
+         _ (setup-yamlscript-repo opts)
+         in-path (if (= in-file "--eval")
+                   (let [eval-file (str build-dir "/eval.ys")]
+                     (spit eval-file code)
+                     eval-file)
+                   in-file)
+         in-path (str (fs/absolutize in-path))
+         out-path (if stdout? "/dev/stdout" (str (fs/absolutize out-file)))
+         make-vars [(str "BUILD-TYPE=" build-type)
+                    (str "INPUT-PATH=" in-path)
+                    (str "OUTPUT-PATH=" out-path)
+                    (str "YS-BINARY=" ys-bin)]
+         make-target (str "build-" build-type)
+         make-cmd (concat
+                    [(merge to-tty {:dir build-dir})
+                     "make" make-target]
+                    make-vars)]
+     (when (env "YS_BUILD_DEBUG")
+       (WWW (str/join " " (rest make-cmd))))
+     (run make-cmd "Build failed"))))
 
-    ;; Reset and clean the repo
-    (o "Cleaning the build environment")
-    (run [{:dir build-dir} "make" "realclean"]
-      "Failed to clean the build environment")))
+(defn do-to-glj [info]
+  (reset! show-log? false)
+  (do-build info "glj" #{:stdout}))
 
-(defn get-in-path [code in-file build-dir]
-  ;; Handle inline code case and determine input path
-  (if (= in-file "--eval")
-    (let [eval-file (str build-dir "/eval.ys")]
-      (spit eval-file code)
-      eval-file)
-    (str (fs/absolutize in-file))))
+(defn do-to-go [info]
+  (reset! show-log? false)
+  (do-build info "go" #{:stdout}))
 
-(defn do-build-graal [info]
-  (let [{:keys [code in-file out-file ys-bin]} info
-        opts (opts)
-        {:keys [devel?
-                build-dir
-                to-tty]} opts
-        ys-bin (if devel? "ys" ys-bin)
-        _ (setup-yamlscript-repo opts)
-        in-path (get-in-path code in-file build-dir)
-        out-path (str (fs/absolutize out-file))]
-    ;; Build the binary using the YAMLScript binary/graalvm system
+(defn do-build-graal-bin [info]
+  (reset! show-log? true)
+  (let [{:keys [in-file out-file]} info]
     (o (str "Compiling '" in-file "' to binary '" out-file "'..."))
-    (o "This may take a few minutes...")
+    (do-build info "graal-bin")
+    (o (str "Compiled '" in-file "' to binary '" out-file "'."))))
 
-    (run [(merge to-tty {:dir build-dir})
-          "make" "build"
-          (str "YS-PROGRAM-FILE=" in-path)
-          (str "YS-BIN=" ys-bin)]
-      "Build failed")
+(defn do-build-go-bin [info]
+  (let [{:keys [in-file out-file]} info]
+    (o (str "Compiling '" in-file "' to binary '" out-file "'..."))
+    (do-build info "go-bin")
+    (o (str "Compiled '" in-file "' to binary '" out-file "'."))))
 
-    ;; Move the resulting binary to the desired location
-    (let [program-file (str build-dir "/program")]
-      (when-not (fs/exists? program-file)
-        (die "Build completed but binary not found"))
-
-      (fs/copy program-file out-path {:replace-existing true})
-
-      (o (str "Compiled '" in-file "' to binary '" out-file "'.")))))
-
-(defn do-to-glj [info] info)
-
-(defn do-to-go [info] info)
-
-(defn do-build-gobin [info] info)
-
-(defn do-build-wasm [info] info)
+(defn do-build-wasm [info]
+  (let [{:keys [in-file out-file]} info]
+    (o (str "Compiling '" in-file "' to WebAssembly '" out-file "'..."))
+    (do-build info "wasm")
+    (o (str "Compiled '" in-file "' to WebAssembly '" out-file "'."))))

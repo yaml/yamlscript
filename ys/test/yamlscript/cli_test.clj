@@ -84,12 +84,12 @@
     "Error: Options --yaml and --json are mutually exclusive"
     "Can't use multiple data format options together")
 
-  (has (ys "--help" "--stack-trace" "...")
-    "Error: Options --help and --stack-trace are mutually exclusive"
+  (has (ys "--help" "--stack" "...")
+    "Error: Options --help and --stack are mutually exclusive"
     "Can't use other options with --help")
 
-  (has (ys "--version" "--stack-trace" "...")
-    "Error: Options --version and --stack-trace are mutually exclusive"
+  (has (ys "--version" "--stack" "...")
+    "Error: Options --version and --stack are mutually exclusive"
     "Can't use other options with --version")
 
   (has (ys "-ple" "...")

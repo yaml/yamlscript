@@ -80,7 +80,7 @@
 ; TODO Turn on stack trace printing
 (defn ZZZ [& values]
   (apply DBG values)
-  (swap! global/opts assoc :stack-trace true)
+  (swap! global/opts assoc :stack true)
   (util/die ""))
 
 (def ttt-ctr (atom 0))

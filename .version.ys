@@ -65,7 +65,7 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "(yamlscript.*)${vp}(.*)"
     file:
-    - binary/graalvm/project.clj
+    - build/share/graal-project.clj
     - clojure/deps.edn
     - clojure/project.clj
     - core/project.clj
