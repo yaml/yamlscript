@@ -10,8 +10,6 @@ $(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
 include $M/init.mk
 MAKES-LOCAL-DIR := $(ROOT)/.cache/.local
 
-MAKES-NO-RULES := true
-
 COMMON := $(ROOT)/common
 include $(COMMON)/vars.mk
 

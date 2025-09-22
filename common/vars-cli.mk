@@ -3,7 +3,7 @@ include $(COMMON)/vars-core.mk
 CLI-BIN := bin/ys-$(YS_VERSION)
 CLI-SRC := \
   src/yamlscript/cli.clj \
-  src/yamlscript/commands.clj \
+  src/yamlscript/command.clj \
 
 CLI-JAR := \
   target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar

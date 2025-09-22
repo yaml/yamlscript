@@ -67,7 +67,7 @@
         (.replaceAll (str s#) "[^0-9\\.]" "")])))
 
 (defn stage-with-options [stage-name stage-fn input-args]
-  (if (get-in @yamlscript.global/opts [:debug-stage stage-name])
+  (if (get-in @yamlscript.global/opts [:debug stage-name])
     (let [[value time] (value-time (apply stage-fn input-args))]
       (printf "*** %-9s *** %s ms\n\n" stage-name time)
       (clojure.pprint/pprint value)

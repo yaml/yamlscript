@@ -1,0 +1,53 @@
+#!/usr/bin/env ys-0
+
+use: convert
+
+defn main():
+  in-path =: ENV.YS_INPUT_PATH
+  base-name =: fs/filename(in-path '.ys')
+  ns-name =: "main-$base-name"
+  out-path =: ENV.YS_OUTPUT_PATH
+  convert/setup-src: in-path
+  fs/mkdir: 'src/ys'
+  fs/cp 'share/ys-v0.glj': 'src/ys/v0.glj'
+  convert/ys-to-clj ns-name: fs/find('src').grep(/\.ys$/)
+  convert/clj-to-glj: fs/find('src').grep(/\.clj$/)
+  convert/glj-to-go ns-name: fs/find('src').grep(/\.glj$/)
+  write 'src/main.go': get-main-go(ns-name)
+  write 'src/go.mod': get-go-mod(ns-name)
+  sh {:dir 'src'}: 'go mod tidy'
+  sh {:dir 'src'}: "go build --ldflags=-s -o $base-name"
+
+defn get-main-go(ns-name):
+  file-name =: ns-name.replace(/-/ '_')
+  =>: |
+    package main
+
+    import (
+    	"os"
+    	"github.com/glojurelang/glojure/pkg/glj"
+    	"github.com/glojurelang/glojure/pkg/lang"
+    	_ "github.com/ys-build/$file-name/$file-name"
+    	_ "github.com/ys-build/$file-name/ys/v0"
+    )
+
+    func main() {
+    	require := glj.Var("clojure.core", "require")
+    	require.Invoke(lang.NewSymbol("ys.v0")) //
+    	require.Invoke(lang.NewSymbol("$ns-name"))
+    	myMain := glj.Var("$ns-name", "-main")
+    	args := os.Args[1:]
+    	anyArgs := make([]any, len(args))
+    	for i, arg := range args {
+    		anyArgs[i] = arg
+    	}
+    	myMain.Invoke(anyArgs...)
+    }
+
+
+defn get-go-mod(ns-name):
+  file-name =: ns-name.replace(/-/ '_')
+  =>: |
+    module github.com/ys-build/$file-name
+    go 1.19
+    require github.com/glojurelang/glojure v0.6.3

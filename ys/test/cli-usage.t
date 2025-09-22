@@ -10,49 +10,54 @@ HELP =: |
 
   ys - The YS Command Line Tool - v0.2.4
 
-  Usage: ys [<option...>] [<file>]
+  Usage: ys [<option...>] [<input-file>]
 
   Options:
 
-    -l, --load               Evaluate input & print the result value
-                               default outputformat is compact JSON
-    -c, --compile            Compile YS code to source code or binary
-                               default output format is Clojure code
+    -l, --load          Evaluate input & print the result value
+                          default output format is compact JSON
+    -r, --run           Run the YS code (this is the default action)
+    -c, --compile       Compile YS code to source code or binary
+                          default output format is Clojure code
 
-    -T, --to FORMAT          Output format for --load or --compile:
-                               load: yaml, json, xml, csv, tsv, edn
-                               compile: clj, glj, go, graal, gobin, wasm
-    -Y, --yaml               Short for --to=yaml
-    -J, --json               Short for --to=json
+    -Y, --yaml          Short for --to=yaml
+    -J, --json          Short for --to=json
+    -T, --to FORMAT     Output format for --load or --compile:
+                          load: yaml, json, xml, csv, tsv, edn
+                          compile: clj, glj, go,
+                                   graal-bin, go-bin, wasm
 
-#   -e, --eval YSEXPR        Evaluate a YS expression
-#                             enables --mode=code by default
-#                             multiple -e values are joined by newline
-#   -f, --file FILE          Explicitly indicate input file
-#   -I, --include PATH       Add directories to the library search path
+    -e, --eval YSEXPR   Evaluate a YS expression
+                          enables --mode=code by default
+                          multiple -e values are joined by newline
+    -p, --print         Print the final evaluation result value
+    -m, --mode MODE     Set input mode: code, data, or bare (for -e)
 
-#   -m, --mode MODE          Set input mode: code, data, or bare (for -e)
-#   -C, --clojure            Don't compile input. Treat as Clojure code
+    -i, --input PATH    Explicitly indicate input path (file or dir)
+    -o, --output PATH   Output path for --load or --compile
 
-#   -p, --print              Print the final evaluation result value
-#   -o, --output FILE        Output file for --load or --compile
+    -I, --include PATH  Add directories to the library search path
+    -s, --stream        Output all results from a multi-document stream
+    -U, --unordered     Mappings don't preserve key order (faster)
+    -C, --clojure       Don't compile input. Treat as Clojure code
 
-#   -s, --stream             Output all results from a multi-document stream
-#   -U, --unordered          Mappings don't preserve key order (faster)
+    -x, --xtrace        Print each expression before evaluation
+    -S, --stack         Print full stack trace for errors
+    -d                  Debug all compilation stages
+    -D, --debug STAGE   Debug a specific compilation stage:
+                          parse, compose, resolve, build,
+                          transform, construct, print
+                        can be used multiple times
 
-#   -d                       Debug all compilation stages
-#   -D, --debug-stage STAGE  Debug a specific compilation stage:
-#                             parse, compose, resolve, build,
-#                             transform, construct, print
-#                           can be used multiple times
+        --install       Install the libys shared library
+        --upgrade       Upgrade both ys and libys
 
-#   -S, --stack-trace        Print full stack trace for errors
-#   -x, --xtrace             Print each expression before evaluation
+    -q, --quiet         Less output
+    -v, --verbose       More output
 
-#       --install            Install the libys shared library
-#       --upgrade            Upgrade both ys and libys
+        --version       Print version and exit
+    -h, --help          Print this help and exit
 
-#       --version            Print version and exit
 
 test::
 - cmnd: ys --version
