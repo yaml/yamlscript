@@ -1,0 +1,78 @@
+!YS-v0
+
+ns: convert
+
+defn setup-src(in):
+  fs/rm-r: 'src'
+  if in:fs/dir?:
+    fs/cp-r in: 'src'
+    else:
+      fs/mkdir: 'src'
+      fs/cp in: 'src'
+  each file fs/find('src'):
+    when-not file.re-find(/\.(ys|clj|glj|go)$/):
+      fs/rm-r: file
+  when fs/find('src').!:
+    die: "No source files found in '$in'"
+
+defn ys-to-clj(ns-name ys-files):
+  each ys-file ys-files:
+    ys-code =: ys-file:read
+    clj-code =: ys-code:ys/compile
+      .replace(/\(\+\+\+ \(apply main ARGS\)\)\n*\z/ '')
+      .replace(/ys\.std\//)
+    main? =: clj-code !~ /(?m)^\(ns \w+/
+    clj-file =: ys-file
+      .replace1(/\.ys$/ '.clj')
+      .replace(/-/ '_')
+    clj-file =:
+      if main?:
+        then: "src/$(ns-name.replace(/-/ '_')).clj"
+        else: clj-file
+    clj-code =:
+      if main?:
+        then: |
+          (ns $ns-name (:require [ys.v0 :refer :all]))
+          $clj-code
+          (defn -main [& argv] (apply main (map-parse argv)))
+        else: clj-code
+    write clj-file: clj-code:zprint
+
+defn clj-to-glj(clj-files):
+  each clj-file clj-files:
+    rc =: sh('bb' "$(ENV.GLOJURE_DIR)/scripts/rewrite-core/rewrite.clj"
+            clj-file)
+    when rc.exit.?:
+      die: "Failed to convert $clj-file to glj:\n$(rc.err)"
+    glj-code =: rc.out
+    glj-file =: clj-file.replace(/\.clj$/ '.glj')
+    write glj-file: glj-code
+
+defn glj-to-go(ns-name glj-files):
+  namespaces =:
+    reduce _ [] glj-files:
+      fn(nss file):
+        m =: (file:read =~ /(?m)^\(ns\s+([-\w]+)/)
+          || die("Failed to get namespace from $file")
+        conj nss: m.1
+  # WWW: glj-files namespaces
+  env =::
+    :dir: 'src'
+    :in:: "(compile (quote $ns-name))"
+  rc =: sh(env 'glj')
+  when rc.exit != 0:
+    die: "Failed to compile $glj-files:\n$(rc.err)"
+
+defn zprint(code):
+  deps =: |
+    {:tasks
+     {zprint
+      {:extra-deps
+       {zprint/zprint {:mvn/version "1.3.0"}},
+       :requires ([zprint.main]),
+       :task (apply zprint.main/-main *command-line-args*)}}} 
+  rc =:
+    sh {:in code}: + 'bb' '-Sdeps' deps 'zprint'
+  when rc.exit != 0:
+    die: "Failed to zprint code:\n$(rc.err)"
+  rc: .out

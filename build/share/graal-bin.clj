@@ -1,4 +1,4 @@
-(ns program
+(ns main-file
   (:gen-class)
   (:refer-clojure
    :exclude

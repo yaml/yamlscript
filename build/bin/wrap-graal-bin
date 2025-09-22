@@ -1,6 +1,6 @@
-!YS-v0
+#!/usr/bin/env ys-0
 
-defn main(source):
+defn main(source wrapper):
   code =: source:read
   ys-bin =: RUN.yspath
   rc =: sh("$ys-bin -c $source")
@@ -14,10 +14,8 @@ defn main(source):
 
   code =: code.replace(/\n\(apply main ARGS\)\n\z/)
 
-  wrapper =: read('share/wrapper.clj')
-
   print:
-    str/replace-first wrapper /;;CODE;;/:
+    str/replace-first wrapper:read /;;CODE;;/:
       str/re-quote-replacement: code
 
 # vim: ft=yaml:
