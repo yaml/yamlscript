@@ -38,24 +38,35 @@ RYML_EXPORT void ysparse_destroy(ysparse *obj)
     _RYML_CB_FREE(get_callbacks(), obj, ysparse, 1);
 }
 
-RYML_EXPORT size_type ysparse_parse(ysparse *obj,
-                                    const char *filename,
-                                    char *ys, size_type ys_size,
-                                    evt::DataType *events, size_type evt_size)
+RYML_EXPORT bool ysparse_parse(ysparse *obj,
+                               const char *filename,
+                               char *ys, size_type ys_size,
+                               char *arena, size_type arena_size,
+                               int *events, size_type evt_size)
 {
     TIMED_SECTION("cpp:ysparse", ys_size);
     csubstr filename_ = filename ? to_csubstr(filename) : csubstr{};
     substr ys_(ys, (size_t)ys_size);
+    substr arena_(arena, (size_t)arena_size);
     {
         TIMED_SECTION("cpp:ysparse/reset");
-        obj->reset(ys_, events, evt_size);
-        obj->m_handler.reserve(256u);
+        obj->reset(ys_, arena_, events, evt_size);
     }
     {
         TIMED_SECTION("cpp:ysparse/parse", ys_size);
         obj->m_parser.parse_in_place_ev(filename_, ys_);
     }
-    return (size_type)obj->m_handler.m_evt_curr;
+    return obj->m_handler.fits_buffers();
+}
+
+RYML_EXPORT int ysparse_reqsize_evt(ysparse *obj)
+{
+    return obj->m_handler.required_size_events();
+}
+
+RYML_EXPORT int ysparse_reqsize_arena(ysparse *obj)
+{
+    return (int)obj->m_handler.required_size_arena();
 }
 
 #if defined(__cplusplus)

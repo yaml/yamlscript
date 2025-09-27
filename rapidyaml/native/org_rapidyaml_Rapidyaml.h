@@ -34,18 +34,34 @@ JNIEXPORT void JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1timing_1set
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ysparse_parse
- * Signature: (JLjava/lang/String;[BI[II)I
+ * Signature: (JLjava/lang/String;[BI[BI[II)Z
  */
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1parse
-  (JNIEnv *, jobject, jlong, jstring, jbyteArray, jint, jintArray, jint);
+JNIEXPORT jboolean JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1parse
+  (JNIEnv *, jobject, jlong, jstring, jbyteArray, jint, jbyteArray, jint, jintArray, jint);
 
 /*
  * Class:     org_rapidyaml_Rapidyaml
  * Method:    ysparse_parse_buf
- * Signature: (JLjava/lang/String;Ljava/nio/ByteBuffer;ILjava/nio/IntBuffer;I)I
+ * Signature: (JLjava/lang/String;Ljava/nio/ByteBuffer;ILjava/nio/ByteBuffer;ILjava/nio/IntBuffer;I)Z
  */
-JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1parse_1buf
-  (JNIEnv *, jobject, jlong, jstring, jobject, jint, jobject, jint);
+JNIEXPORT jboolean JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1parse_1buf
+  (JNIEnv *, jobject, jlong, jstring, jobject, jint, jobject, jint, jobject, jint);
+
+/*
+ * Class:     org_rapidyaml_Rapidyaml
+ * Method:    ysparse_reqsize_evt
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1reqsize_1evt
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     org_rapidyaml_Rapidyaml
+ * Method:    ysparse_reqsize_arena
+ * Signature: (J)I
+ */
+JNIEXPORT jint JNICALL Java_org_rapidyaml_Rapidyaml_ysparse_1reqsize_1arena
+  (JNIEnv *, jobject, jlong);
 
 #ifdef __cplusplus
 }

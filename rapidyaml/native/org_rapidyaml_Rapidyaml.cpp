@@ -35,14 +35,17 @@ JNIEXPORT jint JNICALL
 Java_org_rapidyaml_Rapidyaml_ysparse_1parse(JNIEnv *env, jobject,
                                            jlong obj, jstring jfilename,
                                            jbyteArray src, jint src_len,
+                                           jbyteArray arena, jint arena_len,
                                            jintArray dst, jint dst_len)
 {
     TIMED_SECTION("jni:ysparse", (size_type)src_len);
+    jbyte* arena_ = nullptr;
     jbyte* src_ = nullptr;
     int* dst_ = nullptr;
     const char *filename = nullptr;
     jboolean dst_is_copy = false;
     jboolean src_is_copy = false;
+    jboolean arena_is_copy = false;
     {
         TIMED_SECTION("jni:ysparse/get_jni", (size_type)src_len);
         // this is __S__L__O__W__
@@ -51,6 +54,10 @@ Java_org_rapidyaml_Rapidyaml_ysparse_1parse(JNIEnv *env, jobject,
         {
             TIMED_SECTION("jni:ysparse/GetByteArray(src)");
             src_ = env->GetByteArrayElements(src, &src_is_copy);
+        }
+        {
+            TIMED_SECTION("jni:ysparse/GetByteArray(arena)");
+            arena_ = env->GetByteArrayElements(arena, &arena_is_copy);
         }
         {
             TIMED_SECTION("jni:ysparse/GetIntArray(dst)");
@@ -68,6 +75,7 @@ Java_org_rapidyaml_Rapidyaml_ysparse_1parse(JNIEnv *env, jobject,
         {
             rc = ysparse_parse((ysparse*)obj, filename,
                               (char*)src_, src_len,
+                              (char*)arena_, arena_len,
                               dst_, dst_len);
         }
         catch (YsParseError const& exc)
@@ -87,6 +95,10 @@ Java_org_rapidyaml_Rapidyaml_ysparse_1parse(JNIEnv *env, jobject,
             env->ReleaseByteArrayElements(src, src_, 0);
         }
         {
+            TIMED_SECTION("jni:ysparse/ReleaseByteArray(arena)");
+            env->ReleaseByteArrayElements(arena, arena_, 0);
+        }
+        {
             TIMED_SECTION("jni:ysparse/ReleaseIntArray(dst)");
             env->ReleaseIntArrayElements(dst, dst_, 0);
         }
@@ -103,19 +115,24 @@ JNIEXPORT jint JNICALL
 Java_org_rapidyaml_Rapidyaml_ysparse_1parse_1buf(JNIEnv *env, jobject,
                                                 jlong obj, jstring jfilename,
                                                 jobject src, jint src_len,
+                                                jobject arena, jint arena_len,
                                                 jobject dst, jint dst_len)
 {
     TIMED_SECTION("jni:ysparse_buf", (size_type)src_len);
+    char* arena_ = nullptr;
     char* src_ = nullptr;
     int* dst_ = nullptr;
     const char *filename = nullptr;
     {
         TIMED_SECTION("jni:ysparse_buf/get_jni", (size_type)src_len);
         src_ = (char*)env->GetDirectBufferAddress(src);
+        arena_ = (char*)env->GetDirectBufferAddress(arena);
         dst_ = (int*)env->GetDirectBufferAddress(dst);
         filename = env->GetStringUTFChars(jfilename, 0);
         if(!src_)
             throw_runtime_exception(env, "null pointer: src");
+        if(!arena_)
+            throw_runtime_exception(env, "null pointer: arena");
         if(!dst_)
             throw_runtime_exception(env, "null pointer: dst");
     }
@@ -123,7 +140,10 @@ Java_org_rapidyaml_Rapidyaml_ysparse_1parse_1buf(JNIEnv *env, jobject,
         TIMED_SECTION("jni:ysparse_buf/parse", (size_type)src_len);
         try
         {
-            return ysparse_parse((ysparse*)obj, filename, src_, src_len, dst_, dst_len);
+            return ysparse_parse((ysparse*)obj, filename,
+                                 src_, src_len,
+                                 arena_, arena_len,
+                                 dst_, dst_len);
         }
         catch (YsParseError const& exc)
         {

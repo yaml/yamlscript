@@ -34,7 +34,6 @@ RYML_EXPORT void ysparse_timing_set(bool yes);
 
 #ifndef YSPARSE_TIMED
 #define TIMED_SECTION(...)
-#error
 #else
 #include <stdio.h>
 #include <chrono>

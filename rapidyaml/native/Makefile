@@ -10,7 +10,7 @@ include $(COMMON)/vars-rapidyaml.mk
 # https://stackoverflow.com/questions/24493337/linking-static-library-with-jni
 
 THIS_DIR := $(shell pwd)
-BDIR := $(THIS_DIR)/_build/$(RAPIDYAML_BUILD_TYPE)-timed$(RAPIDYAML_TIMED)-dbg$(RAPIDYAML_DBG)
+BDIR := $(THIS_DIR)/build/$(RAPIDYAML_BUILD_TYPE)-timed$(RAPIDYAML_TIMED)-dbg$(RAPIDYAML_DBG)
 
 RAPIDYAML_DEPS := \
   Makefile \
@@ -63,24 +63,24 @@ build-static: $(RAPIDYAML_LIB)
 cfg-static: rapidyaml
 	$(CMK_ENV) $(CMAKE) -S . -B $(BDIR)-static $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=OFF
 test-static: build-static
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target rapidyaml-test-run
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target $(RAPIDYAML_NAME)-test-run
 test-static-timing: build-static
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target rapidyaml-test-run-timing
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --target $(RAPIDYAML_NAME)-test-run-timing
 $(RAPIDYAML_LIB): cfg-static $(RAPIDYAML_DEPS)
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --parallel --target rapidyaml
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-static --verbose --parallel --target $(RAPIDYAML_NAME)
 	cp -fv $(BDIR)-static/*.a $@
 
 build-shared: $(RAPIDYAML_SO)
 cfg-shared: rapidyaml
 	$(CMK_ENV) $(CMAKE) -S . -B $(BDIR)-shared $(CMK_FLAGS) $(CMK_FLAGS_EXTRA) -D BUILD_SHARED_LIBS=ON
 test-shared: build-shared
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --target rapidyaml-test-run
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --target $(RAPIDYAML_NAME)-test-run
 test-shared-timing: build-shared
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --target rapidyaml-test-run-timing
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --target $(RAPIDYAML_NAME)-test-run-timing
 $(RAPIDYAML_SO): cfg-shared $(RAPIDYAML_DEPS)
-	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --parallel --target rapidyaml
+	$(CMK_ENV) $(CMAKE) --build $(BDIR)-shared --verbose --parallel --target $(RAPIDYAML_NAME)
 	cp -fv $(BDIR)-shared/*.so $@
-	ln -fs $@ librapidyaml.so
+	ln -fs $@ $(RAPIDYAML_LIBNAME).$(SO)
 
 $(RAPIDYAML_JNI_H): $(JAVAC) $(RAPIDYAML_JAVA)
 	$(JAVAC) -h . $(RAPIDYAML_JAVA) # $^ doesn't work

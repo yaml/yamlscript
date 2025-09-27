@@ -1,45 +1,14 @@
 #include <ysparse_evt.hpp>
-#include <c4/bitmask.hpp>
+#include <c4/std/string.hpp>
+#include <c4/yml/extra/ints_utils.hpp>
+#include <c4/format.hpp>
 #include <vector>
 
 using c4::csubstr;
 using c4::substr;
 using ryml::Location;
 
-
-namespace c4
-{
-template<>
-c4::EnumSymbols<evt::EventFlags> const esyms<evt::EventFlags>()
-{
-    static constexpr typename c4::EnumSymbols<evt::EventFlags>::Sym syms[] = {
-        {evt::KEY_, "KEY_"},
-        {evt::VAL_, "VAL_"},
-        {evt::SCLR, "SCLR"},
-        {evt::BSEQ, "BSEQ"},
-        {evt::ESEQ, "ESEQ"},
-        {evt::BMAP, "BMAP"},
-        {evt::EMAP, "EMAP"},
-        {evt::ALIA, "ALIA"},
-        {evt::ANCH, "ANCH"},
-        {evt::TAG_, "TAG_"},
-        {evt::PLAI, "PLAI"},
-        {evt::SQUO, "SQUO"},
-        {evt::DQUO, "DQUO"},
-        {evt::LITL, "LITL"},
-        {evt::FOLD, "FOLD"},
-        {evt::FLOW, "FLOW"},
-        {evt::BLCK, "BLCK"},
-        {evt::BDOC, "BDOC"},
-        {evt::EDOC, "EDOC"},
-        {evt::BSTR, "BSTR"},
-        {evt::ESTR, "ESTR"},
-        {evt::EXPL, "EXPL"},
-    };
-    return c4::EnumSymbols<evt::EventFlags>(syms);
-}
-}
-
+namespace ievt = c4::yml::extra::ievt;
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -74,10 +43,10 @@ struct TestResult
 // data in a single structure
 struct EvtWithScalar
 {
-    evt::DataType flags, str_start, str_len;
+    int flags, str_start, str_len;
     csubstr scalar;
     bool needs_filter;
-    EvtWithScalar(evt::DataType t, evt::DataType start=0, evt::DataType len=0, csubstr sclr={}, bool needs_filter_=false)
+    EvtWithScalar(int t, int start=0, int len=0, csubstr sclr={}, bool needs_filter_=false)
     {
         flags = t;
         str_start = start;
@@ -85,7 +54,7 @@ struct EvtWithScalar
         scalar = sclr;
         needs_filter = needs_filter_;
     }
-    size_t required_size() const { return (flags & evt::HAS_STR) ? 3u : 1u; }
+    size_t required_size() const { return (flags & ievt::WSTR) ? 3u : 1u; }
 };
 
 size_t expected_size(std::vector<EvtWithScalar> const& evt)
@@ -139,6 +108,7 @@ size_t expected_size(std::vector<EvtWithScalar> const& evt)
 
 struct TestCase
 {
+    int line;
     csubstr ys;
     std::vector<EvtWithScalar> evt;
 
@@ -162,16 +132,24 @@ public:
         if(evt.empty()) return {};
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
+        std::string arena_;
+        arena_.resize((ys.size() * size_t(3)) / size_t(2));
         substr input = c4::to_substr(input_);
-        std::vector<evt::DataType> output;
+        substr arena = c4::to_substr(arena_);
+        std::vector<ievt::DataType> output;
         output.resize(2 * expected_size(evt));
-        size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
-                                         input.str, (size_type)input.len,
-                                         &output[0], (size_type)output.size());
-        CHECK_MSG((size_t)reqsize == expected_size(evt), "%d vs %zu", reqsize, expected_size(evt));
-        CHECK(reqsize != 0);
-        output.resize(reqsize);
-        CHECK(testeq(output, input));
+        int estimated_size = c4::yml::extra::estimate_events_ints_size(input);
+        bool fits_buffers = ysparse_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          arena.str, (size_type)arena.len,
+                                          &output[0], (size_type)output.size());
+        CHECK(fits_buffers);
+        int reqsize_evt = ysparse_reqsize_evt(ryml2evt);
+        CHECK_MSG((size_t)reqsize_evt == expected_size(evt), "%d vs %zu", reqsize_evt, expected_size(evt));
+        CHECK(reqsize_evt != 0);
+        CHECK(reqsize_evt <= estimated_size);
+        output.resize(reqsize_evt);
+        CHECK(testeq(output, input, arena));
         return tr;
     }
     TestResult test_evt_large_enough() const
@@ -185,23 +163,38 @@ public:
     {
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
+        std::string arena_;
+        arena_.resize(0);
         substr input = c4::to_substr(input_);
-        std::vector<evt::DataType> output;
-        output.resize(expected_size(evt));
-        size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
-                                         input.str, (size_type)input.len,
-                                         output.data(), (size_type)output.size());
-        CHECK(reqsize == expected_size(evt));
-        CHECK(reqsize != 0);
-        output.resize(reqsize);
+        substr arena = c4::to_substr(arena_);
+        std::vector<ievt::DataType> output;
+        int estimated_size = c4::yml::extra::estimate_events_ints_size(input);
+        bool fits_buffers = ysparse_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          arena.str, (size_type)arena.len,
+                                          output.data(), (size_type)output.size());
+        CHECK(!fits_buffers);
+        int reqsize_evt = ysparse_reqsize_evt(ryml2evt);
+        int reqsize_arena = ysparse_reqsize_arena(ryml2evt);
+        CHECK(reqsize_evt == expected_size(evt));
+        CHECK(reqsize_evt != 0);
+        CHECK(reqsize_evt <= estimated_size);
+        output.resize(reqsize_evt);
+        arena_.resize(reqsize_arena);
         input_.assign(ys.begin(), ys.end()); // FIXME
         input = c4::to_substr(input_);
-        size_type reqsize2 = ysparse_parse(ryml2evt, "ysfilename",
-                                          input.str, (size_type)input.len,
-                                          output.data(), (size_type)output.size());
-        CHECK(reqsize2 == reqsize);
-        output.resize(reqsize2);
-        CHECK(testeq(output, input));
+        arena = c4::to_substr(arena_);
+        bool fits_buffers2 = ysparse_parse(ryml2evt, "ysfilename",
+                                           input.str, (size_type)input.len,
+                                           arena.str, (size_type)arena.len,
+                                           output.data(), (size_type)output.size());
+        CHECK(fits_buffers2);
+        int reqsize_evt2 = ysparse_reqsize_evt(ryml2evt);
+        int reqsize_arena2 = ysparse_reqsize_arena(ryml2evt);
+        CHECK(reqsize_evt2 == reqsize_evt);
+        CHECK(reqsize_arena2 == reqsize_arena);
+        output.resize(reqsize_evt2);
+        CHECK(testeq(output, input, arena));
         return tr;
     }
     TestResult test_evt_too_small() const
@@ -216,21 +209,35 @@ public:
         TestResult tr = {};
         std::string input_(ys.begin(), ys.end());
         substr input = c4::to_substr(input_);
-        size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
-                                         input.str, (size_type)input.len,
-                                         nullptr, 0);
-        CHECK(reqsize == expected_size(evt));
-        CHECK(reqsize != 0);
-        std::vector<evt::DataType> output;
-        output.resize(reqsize);
+        int estimated_size = c4::yml::extra::estimate_events_ints_size(input);
+        bool fits_buffers = ysparse_parse(ryml2evt, "ysfilename",
+                                          input.str, (size_type)input.len,
+                                          nullptr, 0,
+                                          nullptr, 0);
+        CHECK(!fits_buffers);
+        int reqsize_evt = ysparse_reqsize_evt(ryml2evt);
+        int reqsize_arena = ysparse_reqsize_arena(ryml2evt);
+        CHECK(reqsize_evt == expected_size(evt));
+        CHECK(reqsize_evt <= estimated_size);
+        CHECK(reqsize_evt != 0);
+        std::string arena_;
+        arena_.resize(reqsize_arena);
+        substr arena = c4::to_substr(arena_);
+        std::vector<ievt::DataType> output;
+        output.resize(reqsize_evt);
         input_.assign(ys.begin(), ys.end()); // FIXME
         input = c4::to_substr(input_);
-        size_type reqsize2 = ysparse_parse(ryml2evt, "ysfilename",
-                                          input.str, (size_type)input.len,
-                                          output.data(), (size_type)output.size());
-        CHECK(reqsize2 == reqsize);
-        CHECK(reqsize2 == output.size());
-        CHECK(testeq(output, input));
+        bool fits_buffers2 = ysparse_parse(ryml2evt, "ysfilename",
+                                           input.str, (size_type)input.len,
+                                           arena.str, (size_type)arena.len,
+                                           output.data(), (size_type)output.size());
+        CHECK(fits_buffers2);
+        int reqsize_evt2 = ysparse_reqsize_evt(ryml2evt);
+        int reqsize_arena2 = ysparse_reqsize_arena(ryml2evt);
+        CHECK(reqsize_evt2 == reqsize_evt);
+        CHECK(reqsize_arena2 == reqsize_arena);
+        CHECK(reqsize_evt2 == output.size());
+        CHECK(testeq(output, input, arena));
         return tr;
     }
     TestResult test_evt_nullptr() const
@@ -241,7 +248,7 @@ public:
 
 public:
 
-    bool testeq(std::vector<evt::DataType> const& actual, csubstr parsed_source) const
+    bool testeq(std::vector<ievt::DataType> const& actual, csubstr parsed_source, csubstr arena) const
     {
         int status = true;
         size_t num_events_expected = evt.size();
@@ -259,37 +266,38 @@ public:
                    actual.size());
             same_size = false;
         }
-        for(size_t i = 0, ie = 0; ie < num_events_expected; ++ie)
+        for(size_t ia = 0, ie = 0; ie < num_events_expected; ++ie)
         {
-            if(i >= actual.size())
+            if(ia >= actual.size())
             {
-                printf("fail: bad actual size. i=%zu vs %zu=actual.size()=\n", i, actual.size());
+                printf("fail: bad actual size. i=%zu vs %zu=actual.size()=\n", ia, actual.size());
                 status = false;
                 break;
             }
             #define _testcmp(fmt, cmp, ...) \
-                if(showcmp) { printf("status=%d cmp=%d evt=%zu i=%zu: " fmt "\n", status, (cmp), ie, i, ## __VA_ARGS__); } \
+                if(showcmp) { printf("status=%d cmp=%d ie=%zu ia=%zu: " fmt "\n", status, (cmp), ie, ia, ## __VA_ARGS__); } \
                 status &= (cmp)
-            char actualbuf[100];
-            char expectedbuf[100];
-            size_t reqsize_actual = c4::bm2str<evt::EventFlags>(actual[i] & evt::MASK, actualbuf, sizeof(actualbuf));
-            size_t reqsize_expected = c4::bm2str<evt::EventFlags>(evt[ie].flags & evt::MASK, expectedbuf, sizeof(expectedbuf));
-            C4_CHECK(reqsize_actual < sizeof(actualbuf));
-            C4_CHECK(reqsize_expected < sizeof(expectedbuf));
-            _testcmp("exp=%d(%s) vs act=%d(%s)", evt[ie].flags == actual[i], evt[ie].flags, expectedbuf, actual[i], actualbuf);
-            status &= (evt[ie].flags == actual[i]);
-            if((evt[ie].flags & evt::HAS_STR) && (actual[i] & evt::HAS_STR))
+            char actualbuf_[100];
+            char expectedbuf_[100];
+            csubstr actualbuf = c4::yml::extra::ievt::to_chars_sub(actualbuf_, actual[ia] & ievt::MASK);
+            csubstr expectedbuf = c4::yml::extra::ievt::to_chars_sub(expectedbuf_, evt[ie].flags & ievt::MASK);
+            _testcmp("exp=%d(%.*s) vs act=%d(%.*s)", evt[ie].flags == actual[ia],
+                     evt[ie].flags, (int)expectedbuf.len, expectedbuf.str,
+                     actual[ia], (int)actualbuf.len, actualbuf.str);
+            status &= (evt[ie].flags == actual[ia]);
+            if((evt[ie].flags & ievt::WSTR) && (actual[ia] & ievt::WSTR))
             {
-                _testcmp("   exp=%d vs act=%d", evt[ie].str_start == actual[i + 1], evt[ie].str_start, actual[i + 1]);
-                _testcmp("   exp=%d vs act=%d", evt[ie].str_len == actual[i + 2], evt[ie].str_len, actual[i + 2]);
-                bool safeactual = (i + 2 < actual.size()) && (actual[i + 1] < (int)parsed_source.len && actual[i + 1] + actual[i + 2] <= (int)parsed_source.len);
-                bool safeexpected = (evt[ie].str_start < (int)parsed_source.len && evt[ie].str_start + evt[ie].str_len <= (int)parsed_source.len);
+                csubstr region = (actual[ia] & ievt::AREN) ? arena : parsed_source;
+                _testcmp("   exp=%d vs act=%d", evt[ie].str_start == actual[ia + 1], evt[ie].str_start, actual[ia + 1]);
+                _testcmp("   exp=%d vs act=%d", evt[ie].str_len == actual[ia + 2], evt[ie].str_len, actual[ia + 2]);
+                bool safeactual = (ia + 2 < actual.size()) && (actual[ia + 1] < (int)region.len && actual[ia + 1] + actual[ia + 2] <= (int)region.len);
+                bool safeexpected = (evt[ie].str_start < (int)region.len && evt[ie].str_start + evt[ie].str_len <= (int)region.len);
                 _testcmp("   safeactual=%d", safeactual, safeactual);
                 _testcmp("   safeactual=%d safeexpected=%d", safeactual == safeexpected, safeactual, safeexpected);
                 if(safeactual && safeexpected)
                 {
-                    csubstr evtstr = parsed_source.sub((size_t)evt[ie].str_start, (size_t)evt[ie].str_len);
-                    csubstr actualstr = parsed_source.sub((size_t)actual[i + 1], (size_t)actual[i + 2]);
+                    csubstr evtstr = region.sub((size_t)evt[ie].str_start, (size_t)evt[ie].str_len);
+                    csubstr actualstr = region.sub((size_t)actual[ia + 1], (size_t)actual[ia + 2]);
                     _testcmp("   ref=[%zu]~~~%.*s~~~ vs act=[%zu]~~~%.*s~~~",
                            evt[ie].scalar == actualstr,
                            evt[ie].scalar.len, (int)evt[ie].scalar.len, evt[ie].scalar.str,
@@ -303,7 +311,7 @@ public:
                     }
                 }
             }
-            i += (actual[i] & evt::HAS_STR) ? 3 : 1;
+            ia += (actual[ia] & ievt::WSTR) ? 3 : 1;
         }
         if(!status)
             printf("------\n"
@@ -319,12 +327,13 @@ public:
 
 struct TestCaseErr
 {
+    int line;
     csubstr ys;
     bool is_parse_err;
     ryml::Location loc;
 
-    TestCaseErr(csubstr ys_) : ys(ys_), is_parse_err(false), loc() {}
-    TestCaseErr(csubstr ys_, ryml::Location loc_) : ys(ys_), is_parse_err(true), loc(loc_) {}
+    TestCaseErr(int line_, csubstr ys_) : line(line_), ys(ys_), is_parse_err(false), loc() {}
+    TestCaseErr(int line_, csubstr ys_, ryml::Location loc_) : line(line_), ys(ys_), is_parse_err(true), loc(loc_) {}
 
     TestResult test(ysparse *ryml2evt) const
     {
@@ -344,6 +353,7 @@ struct TestCaseErr
         {
             size_type reqsize = ysparse_parse(ryml2evt, "ysfilename",
                                               input.str, (size_type)input.len,
+                                              nullptr, 0,
                                               nullptr, 0);
         }
         catch(YsParseError const& exc)
@@ -378,9 +388,9 @@ struct TestCaseErr
 
 namespace {
 // make the declarations shorter
-#define tc(ys, ...) {ys, std::vector<EvtWithScalar>(__VA_ARGS__)}
+#define tc(ys, ...) {__LINE__, ys, std::vector<EvtWithScalar>(__VA_ARGS__)}
 #define e(...) EvtWithScalar{__VA_ARGS__}
-using namespace evt;
+using namespace ievt;
 inline constexpr bool needs_filter = true;
 const TestCase test_cases[] = {
     // case -------------------------------------------------
@@ -388,13 +398,13 @@ const TestCase test_cases[] = {
        {
            e(BSTR),
            e(BDOC),
-           e(VAL_|TAG_, 1, 18, "yamlscript/v0/bare"),
-           e(VAL_|SCLR|PLAI, 0, 0, ""),
-           e(EDOC),
+           e(VAL_|TAG_, 0, 19, "!yamlscript/v0/bare"),
+           e(VAL_|SCLR|PLAI|PSTR, 0, 0, ""),
+           e(EDOC|PSTR),
            e(BDOC|EXPL),
-           e(VAL_|TAG_, 25, 4, "code"),
-           e(VAL_|SCLR|PLAI, 30, 2, "42"),
-           e(EDOC),
+           e(VAL_|TAG_, 24, 5, "!code"),
+           e(VAL_|SCLR|PLAI|PSTR, 30, 2, "42"),
+           e(EDOC|PSTR),
            e(ESTR),
        }),
     // case -------------------------------------------------
@@ -403,9 +413,9 @@ const TestCase test_cases[] = {
            e(BSTR),
            e(BDOC),
            e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 0, 1, "a"),
-           e(VAL_|SCLR|PLAI, 3, 1, "1"),
-           e(EMAP),
+           e(KEY_|SCLR|PLAI,      0, 1, "a"),
+           e(VAL_|SCLR|PLAI|PSTR, 3, 1, "1"),
+           e(EMAP|PSTR),
            e(EDOC),
            e(ESTR),
        }),
@@ -415,9 +425,9 @@ const TestCase test_cases[] = {
            e(BSTR),
            e(BDOC),
            e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 0, 3, "say"),
-           e(VAL_|SCLR|PLAI, 5, 5, "2 + 2"),
-           e(EMAP),
+           e(KEY_|SCLR|PLAI,      0, 3, "say"),
+           e(VAL_|SCLR|PLAI|PSTR, 5, 5, "2 + 2"),
+           e(EMAP|PSTR),
            e(EDOC),
            e(ESTR),
        }),
@@ -427,9 +437,9 @@ const TestCase test_cases[] = {
            e(BSTR),
            e(BDOC),
            e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 0, 4, "𝄞"),
-           e(VAL_|SCLR|PLAI, 6, 3, "✅"),
-           e(EMAP),
+           e(KEY_|SCLR|PLAI,      0, 4, "𝄞"),
+           e(VAL_|SCLR|PLAI|PSTR, 6, 3, "✅"),
+           e(EMAP|PSTR),
            e(EDOC),
            e(ESTR),
        }),
@@ -439,10 +449,10 @@ const TestCase test_cases[] = {
            e(BSTR),
            e(BDOC),
            e(VAL_|BSEQ|FLOW),
-           e(VAL_|SCLR|PLAI, 1, 1, "a"),
-           e(VAL_|SCLR|PLAI, 4, 1, "b"),
-           e(VAL_|SCLR|PLAI, 7, 1, "c"),
-           e(ESEQ),
+           e(VAL_|SCLR|PLAI,      1, 1, "a"),
+           e(VAL_|SCLR|PLAI|PSTR, 4, 1, "b"),
+           e(VAL_|SCLR|PLAI|PSTR, 7, 1, "c"),
+           e(ESEQ|PSTR),
            e(EDOC),
            e(ESTR),
        }),
@@ -453,9 +463,9 @@ const TestCase test_cases[] = {
            e(BDOC),
            e(VAL_|BSEQ|FLOW),
            e(VAL_|BMAP|FLOW),
-           e(KEY_|SCLR|PLAI, 1, 1, "a"),
-           e(VAL_|SCLR|PLAI, 4, 1, "b"),
-           e(EMAP),
+           e(KEY_|SCLR|PLAI,      1, 1, "a"),
+           e(VAL_|SCLR|PLAI|PSTR, 4, 1, "b"),
+           e(EMAP|PSTR),
            e(ESEQ),
            e(EDOC),
            e(ESTR),
@@ -480,42 +490,42 @@ another: doc
        {
            e(BSTR),
            e(BDOC|EXPL),
-           e(VAL_|TAG_, 5, 13, "yamlscript/v0"),
-           e(VAL_|BMAP|BLCK),
+           e(VAL_|TAG_, 4, 14, "!yamlscript/v0"),
+           e(VAL_|BMAP|BLCK|PSTR),
            e(KEY_|SCLR|PLAI, 19, 3, "foo"),
-           e(VAL_|TAG_, 25, 0, ""),
-           e(VAL_|BSEQ|BLCK),
+           e(VAL_|TAG_|PSTR, 24, 1, "!"),
+           e(VAL_|BSEQ|BLCK|PSTR),
            e(VAL_|BMAP|FLOW),
            e(KEY_|SCLR|PLAI, 29, 1, "x"),
-           e(VAL_|SCLR|PLAI, 32, 1, "y"),
-           e(EMAP),
+           e(VAL_|SCLR|PLAI|PSTR, 32, 1, "y"),
+           e(EMAP|PSTR),
            e(VAL_|BSEQ|FLOW),
            e(VAL_|SCLR|PLAI, 38, 1, "x"),
-           e(VAL_|SCLR|PLAI, 41, 1, "y"),
-           e(ESEQ),
+           e(VAL_|SCLR|PLAI|PSTR, 41, 1, "y"),
+           e(ESEQ|PSTR),
            e(VAL_|SCLR|PLAI, 46, 3, "foo"),
-           e(VAL_|SCLR|SQUO, 53, 3, "foo"),
-           e(VAL_|SCLR|DQUO, 61, 3, "foo"),
-           e(VAL_|SCLR|LITL, 70, 4, "foo\n", needs_filter),
-           e(VAL_|SCLR|FOLD, 80, 4, "foo\n", needs_filter),
-           e(VAL_|BSEQ|FLOW),
+           e(VAL_|SCLR|SQUO|PSTR, 53, 3, "foo"),
+           e(VAL_|SCLR|DQUO|PSTR, 61, 3, "foo"),
+           e(VAL_|SCLR|LITL|PSTR, 70, 4, "foo\n", needs_filter),
+           e(VAL_|SCLR|FOLD|PSTR, 80, 4, "foo\n", needs_filter),
+           e(VAL_|BSEQ|FLOW|PSTR),
            e(VAL_|SCLR|PLAI, 89, 1, "1"),
-           e(VAL_|SCLR|PLAI, 92, 1, "2"),
-           e(VAL_|SCLR|PLAI, 95, 4, "true"),
-           e(VAL_|SCLR|PLAI, 101, 5, "false"),
-           e(VAL_|SCLR|PLAI, 108, 4, "null"),
-           e(ESEQ),
-           e(VAL_|TAG_, 127, 5, "tag-1"),
-           e(VAL_|ANCH, 117, 8, "anchor-1"),
-           e(VAL_|SCLR|PLAI, 133, 6, "foobar"),
-           e(ESEQ),
+           e(VAL_|SCLR|PLAI|PSTR, 92, 1, "2"),
+           e(VAL_|SCLR|PLAI|PSTR, 95, 4, "true"),
+           e(VAL_|SCLR|PLAI|PSTR, 101, 5, "false"),
+           e(VAL_|SCLR|PLAI|PSTR, 108, 4, "null"),
+           e(ESEQ|PSTR),
+           e(VAL_|TAG_, 126, 6, "!tag-1"),
+           e(VAL_|ANCH|PSTR, 117, 8, "anchor-1"),
+           e(VAL_|SCLR|PLAI|PSTR, 133, 6, "foobar"),
+           e(ESEQ|PSTR),
            e(EMAP),
            e(EDOC),
            e(BDOC|EXPL),
            e(VAL_|BMAP|BLCK),
            e(KEY_|SCLR|PLAI, 144, 7, "another"),
-           e(VAL_|SCLR|PLAI, 153, 3, "doc"),
-           e(EMAP),
+           e(VAL_|SCLR|PLAI|PSTR, 153, 3, "doc"),
+           e(EMAP|PSTR),
            e(EDOC),
            e(ESTR),
        }),
@@ -540,16 +550,16 @@ fold: >
            e(BDOC),
            e(VAL_|BMAP|BLCK),
            e(KEY_|SCLR|PLAI, 0, 5, "plain"),
-           e(VAL_|SCLR|PLAI, 7, 10, "well a b c"),
-           e(KEY_|SCLR|PLAI, 24, 4, "squo"),
-           e(VAL_|SCLR|SQUO, 31, 12, "single'quote", needs_filter),
-           e(KEY_|SCLR|PLAI, 46, 4, "dquo"),
-           e(VAL_|SCLR|DQUO, 53, 4, "x\t\ny", needs_filter),
-           e(KEY_|SCLR|PLAI, 61, 3, "lit"),
-           e(VAL_|SCLR|LITL, 68, 6, "X\nY\nZ\n", needs_filter),
-           e(KEY_|SCLR|PLAI, 89, 4, "fold"),
-           e(VAL_|SCLR|FOLD, 97, 6, "U V W\n", needs_filter),
-           e(EMAP),
+           e(VAL_|SCLR|PLAI|PSTR, 7, 10, "well a b c"),
+           e(KEY_|SCLR|PLAI|PSTR, 24, 4, "squo"),
+           e(VAL_|SCLR|SQUO|PSTR, 31, 12, "single'quote", needs_filter),
+           e(KEY_|SCLR|PLAI|PSTR, 46, 4, "dquo"),
+           e(VAL_|SCLR|DQUO|PSTR, 53, 4, "x\t\ny", needs_filter),
+           e(KEY_|SCLR|PLAI|PSTR, 61, 3, "lit"),
+           e(VAL_|SCLR|LITL|PSTR, 68, 6, "X\nY\nZ\n", needs_filter),
+           e(KEY_|SCLR|PLAI|PSTR, 89, 4, "fold"),
+           e(VAL_|SCLR|FOLD|PSTR, 97, 6, "U V W\n", needs_filter),
+           e(EMAP|PSTR),
            e(EDOC),
            e(ESTR),
        }),
@@ -560,7 +570,7 @@ fold: >
            e(BDOC),
            e(VAL_|BSEQ|BLCK),
            e(VAL_|TAG_, 2, 5, "!!seq"),
-           e(VAL_|BSEQ|FLOW),
+           e(VAL_|BSEQ|FLOW|PSTR),
            e(ESEQ),
            e(ESEQ),
            e(EDOC),
@@ -578,13 +588,13 @@ fold: >
            e(BSTR),
            e(BDOC),
            e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 0, 28, "defn run(prompt session=nil)"),
-           e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 32, 12, "when session"),
-           e(VAL_|BMAP|BLCK),
-           e(KEY_|SCLR|PLAI, 50, 28, "write session _ :append true"),
-           e(VAL_|SCLR|LITL, 83, 54, "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n", needs_filter),
-           e(EMAP),
+           e(KEY_|SCLR|PLAI,       0, 28, "defn run(prompt session=nil)"),
+           e(VAL_|BMAP|BLCK|PSTR),
+           e(KEY_|SCLR|PLAI,      32, 12, "when session"),
+           e(VAL_|BMAP|BLCK|PSTR),
+           e(KEY_|SCLR|PLAI,      50, 28, "write session _ :append true"),
+           e(VAL_|SCLR|LITL|PSTR, 83, 54, "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n", needs_filter),
+           e(EMAP|PSTR),
            e(EMAP),
            e(EMAP),
            e(EDOC),
@@ -623,42 +633,42 @@ defn run(prompt session=nil):
            e(BDOC),
            e(VAL_|BMAP|BLCK),
            e(KEY_|SCLR|PLAI, 21, 28, "defn run(prompt session=nil)"),
-           e(VAL_|BMAP|BLCK),
+           e(VAL_|BMAP|BLCK|PSTR),
            e(KEY_|SCLR|PLAI, 53, 14, "session-text ="),
-           e(VAL_|BMAP|BLCK),
+           e(VAL_|BMAP|BLCK|PSTR),
            e(KEY_|SCLR|PLAI, 73, 28, "when session && session:fs-e"),
-           e(VAL_|SCLR|PLAI, 0, 0, ""), // note empty scalar pointing at the front
-           e(EMAP),
+           e(VAL_|SCLR|PLAI|PSTR, 0, 0, ""), // note empty scalar pointing at the front
+           e(EMAP|PSTR),
            e(KEY_|SCLR|PLAI, 106, 8, "answer ="),
-           e(VAL_|BMAP|BLCK),
+           e(VAL_|BMAP|BLCK|PSTR),
            e(KEY_|SCLR|PLAI, 120, 4, "cond"),
-           e(VAL_|BMAP|BLCK),
+           e(VAL_|BMAP|BLCK|PSTR),
            e(KEY_|SCLR|PLAI, 132, 22, "api-model =~ /^dall-e/"),
-           e(VAL_|SCLR|PLAI, 164, 31, "openai-image(prompt).data.0.url"),
-           e(KEY_|SCLR|PLAI, 202, 31, "api-model.in?(anthropic-models)"),
-           e(VAL_|SCLR|PLAI, 243, 42, "anthropic(prompt):anthropic-message:format"),
-           e(KEY_|SCLR|PLAI, 292, 26, "api-model.in?(groq-models)"),
-           e(VAL_|SCLR|PLAI, 328, 45, "groq(prompt).choices.0.message.content:format"),
-           e(KEY_|SCLR|PLAI, 380, 28, "api-model.in?(openai-models)"),
-           e(VAL_|SCLR|PLAI, 418, 52, "openai-chat(prompt).choices.0.message.content:format"),
-           e(KEY_|SCLR|PLAI, 477, 4, "else"),
-           e(VAL_|SCLR|PLAI, 483, 5, "die()"),
-           e(EMAP),
+           e(VAL_|SCLR|PLAI|PSTR, 164, 31, "openai-image(prompt).data.0.url"),
+           e(KEY_|SCLR|PLAI|PSTR, 202, 31, "api-model.in?(anthropic-models)"),
+           e(VAL_|SCLR|PLAI|PSTR, 243, 42, "anthropic(prompt):anthropic-message:format"),
+           e(KEY_|SCLR|PLAI|PSTR, 292, 26, "api-model.in?(groq-models)"),
+           e(VAL_|SCLR|PLAI|PSTR, 328, 45, "groq(prompt).choices.0.message.content:format"),
+           e(KEY_|SCLR|PLAI|PSTR, 380, 28, "api-model.in?(openai-models)"),
+           e(VAL_|SCLR|PLAI|PSTR, 418, 52, "openai-chat(prompt).choices.0.message.content:format"),
+           e(KEY_|SCLR|PLAI|PSTR, 477, 4, "else"),
+           e(VAL_|SCLR|PLAI|PSTR, 483, 5, "die()"),
+           e(EMAP|PSTR),
            e(EMAP),
            e(KEY_|SCLR|PLAI, 492, 3, "say"),
-           e(VAL_|SCLR|PLAI, 497, 6, "answer"),
-           e(KEY_|SCLR|PLAI, 507, 12, "when session"),
-           e(VAL_|BMAP|BLCK),
+           e(VAL_|SCLR|PLAI|PSTR, 497, 6, "answer"),
+           e(KEY_|SCLR|PLAI|PSTR, 507, 12, "when session"),
+           e(VAL_|BMAP|BLCK|PSTR),
            e(KEY_|SCLR|PLAI, 525, 28, "write session _ :append true"),
-           e(VAL_|SCLR|LITL, 558, 55, "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n\n", needs_filter),
-           e(EMAP),
+           e(VAL_|SCLR|LITL|PSTR, 558, 55, "Q: $(orig-prompt:trim)\nA ($api-model):\n$(answer:trim)\n\n", needs_filter),
+           e(EMAP|PSTR),
            e(EMAP),
            e(EMAP),
            e(EDOC),
            e(ESTR),
        }),
 };
-#define tcf(...) TestCaseErr(__VA_ARGS__)
+#define tcf(...) TestCaseErr(__LINE__, __VA_ARGS__)
 const TestCaseErr test_cases_err[] = {
     tcf("- !!str, xxx\n", Location(13, 2, 1)),
     //FIXME tcf(": : : :", Location(2, 1, 3)),
@@ -683,23 +693,31 @@ int main(int argc, const char *argv[])
     for(size_t i = 0; i < C4_COUNTOF(test_cases); ++i)
     {
         printf("-----------------------------------------\n"
-               "case %zu/%zu ...\n"
-               "[%zu]~~~%.*s~~~\n", i, num_cases, test_cases[i].ys.len, (int)test_cases[i].ys.len, test_cases[i].ys.str);
+               "%s:%d: case %zu/%zu ...\n"
+               "[%zu]~~~%.*s~~~\n",
+               __FILE__, test_cases[i].line,
+               i, num_cases, test_cases[i].ys.len, (int)test_cases[i].ys.len, test_cases[i].ys.str);
         const TestResult tr = test_cases[i].test(ys2evt.ryml2evt);
         total.add(tr);
         failed_cases += (!tr);
-        printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
+        printf("%s:%d: case %zu/%zu: %s\n",
+               __FILE__, test_cases[i].line,
+               i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
     }
     size_t num_cases_err = C4_COUNTOF(test_cases_err);
     for(size_t i = 0; i < C4_COUNTOF(test_cases_err); ++i)
     {
         printf("-----------------------------------------\n"
-               "errcase %zu/%zu ...\n"
-               "[%zu]~~~%.*s~~~\n", i, num_cases_err, test_cases_err[i].ys.len, (int)test_cases_err[i].ys.len, test_cases_err[i].ys.str);
+               "%s:%d: errcase %zu/%zu ...\n"
+               "[%zu]~~~%.*s~~~\n",
+               __FILE__, test_cases[i].line,
+               i, num_cases_err, test_cases_err[i].ys.len, (int)test_cases_err[i].ys.len, test_cases_err[i].ys.str);
         const TestResult tr = test_cases_err[i].test(ys2evt.ryml2evt);
         total.add(tr);
         failed_cases += (!tr);
-        printf("case %zu/%zu: %s\n", i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
+        printf("%s:%d: case %zu/%zu: %s\n",
+               __FILE__, test_cases[i].line,
+               i, C4_COUNTOF(test_cases), tr ? "ok!" : "failed");
     }
     printf("assertions: %u/%u pass %u/%u fail\n", total.num_assertions - total.num_failed_assertions, total.num_assertions, total.num_failed_assertions, total.num_assertions);
     printf("tests: %u/%u pass %u/%u fail\n", total.num_tests - total.num_failed_tests, total.num_tests, total.num_failed_tests, total.num_tests);

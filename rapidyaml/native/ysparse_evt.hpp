@@ -2,7 +2,9 @@
 #ifndef YSPARSE_EVT_HPP_
 #define YSPARSE_EVT_HPP_
 
-#include "ysparse_evt_handler.hpp"
+#include "c4/yml/parse_engine.hpp"
+#include "c4/yml/parse_engine.def.hpp"
+#include "c4/yml/extra/event_handler_ints.hpp"
 #include "ysparse_common.hpp"
 
 #if defined(__cplusplus)
@@ -11,17 +13,17 @@ extern "C" {
 
 struct RYML_EXPORT ysparse
 {
-    ys::EventHandlerEvt m_handler;
-    c4::yml::ParseEngine<ys::EventHandlerEvt> m_parser;
+    c4::yml::extra::EventHandlerInts m_handler;
+    c4::yml::ParseEngine<c4::yml::extra::EventHandlerInts> m_parser;
     ysparse()
         : m_handler()
         , m_parser(&m_handler)
     {
         RYML_CHECK(m_parser.options().scalar_filtering());
     }
-    void reset(c4::csubstr src, evt::DataType *evt, int32_t evt_size)
+    void reset(c4::substr src, c4::substr arena, int32_t *evt, int32_t evt_size)
     {
-        m_handler.reset(src, evt, evt_size);
+        m_handler.reset(src, arena, evt, evt_size);
     }
 };
 
@@ -43,18 +45,20 @@ RYML_EXPORT void ysparse_destroy(ysparse *ryml2evt);
  * length of the string in the `ys` string. The `ys` string is mutated
  * during parsing.
  *
- * @return the size needed for `evt`. The caller must check if the
- * returned size is larger than `evt_size`. If so, this means that
- * `evt` could not accomodate all events produced from `ys`, and is
- * incomplete. The caller must then (1) resize `evt` to at least the
- * return value, (2) re-copy the original YS into `ys` and (3) call
- * again this function, passing in the resized `evt` and the fresh
- * copy in `ys`.
+ * @return true if the `evt` and `arena` buffers were large enough to
+ * accomodate the result The caller must check this value. When false,
+ * it means that at least one of the buffers could not accomodate the
+ * result. The caller must then (1) resize `evt` to at least
+ * the return value, (2) re-copy the original YS into `ys` and (3)
+ * call again this function, passing in the resized `evt` and the
+ * fresh copy in `ys`.
  *
- * @note nothing is written beyond `evt_size`. This means that when
- * `evt_size` is 0, then `evt` can be null. This function can be
- * safely called for any valid pair of `evt` and `evt_size`, and will
- * always return the same required size.
+ * @note nothing is written beyond `evt_size` or `arena_size`. This
+ * means that when `evt_size`/`arena_size` is 0, then `evt`/`arena`
+ * can be null. This function can be safely called for any valid pair
+ * of `evt`+`evt_size` and `arena`/`arena_size`, and the same required
+ * size will always be reported. The same applies for
+ * `arena`+`arena_size`.
  *
  * For example, the YAML `say: 2 + 2` produces the following sequence of
  * 12 integers:
@@ -82,10 +86,17 @@ RYML_EXPORT void ysparse_destroy(ysparse *ryml2evt);
  * in-place in the input string, and the extra integers will pertain
  * to the resulting filtered string.
  */
-RYML_EXPORT size_type ysparse_parse(ysparse *ryml2evt,
-                                    const char *filename,
-                                    char *ys, size_type ys_size,
-                                    evt::DataType *evt, size_type evt_size);
+RYML_EXPORT bool ysparse_parse(ysparse *ryml2evt,
+                               const char *filename,
+                               char *ys, size_type ys_size,
+                               char *arena, size_type arena_size,
+                               int *evt, size_type evt_size);
+
+/** Get the required size for the event buffer, from the last parse call */
+RYML_EXPORT int ysparse_reqsize_evt(ysparse *ryml2evt);
+
+/** Get the required size for the arena buffer, from the last parse call */
+RYML_EXPORT int ysparse_reqsize_arena(ysparse *ryml2evt);
 
 #if defined(__cplusplus)
 }
