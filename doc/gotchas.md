@@ -31,8 +31,7 @@ say: ('foo' * 3)
 say: 3 * 'foo'
 ```
 
-Now the right-hand side is a plain scalar wThis is because YAML sees a single quoted scalar and text content is not allowed to
-follow the closing quote.hose value is `+'foo' * 3`.
+Now the right-hand side is a plain scalar whose value is `+'foo' * 3`.
 YS will ignore the leading `+` and evaluate the expression as expected.
 
 This `+` escaping character can be used anywhere that you need to use a plain
