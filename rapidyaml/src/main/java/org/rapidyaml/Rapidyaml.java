@@ -12,22 +12,23 @@ import java.nio.ByteOrder;
  * Interface with the librapidyaml shared library
  */
 public class Rapidyaml {
-    public static String RAPIDYAML_NAME = "rapidyaml.0.8.0";
-    public static String RAPIDYAML_LIBNAME = "librapidyaml.0.8.0.so";
+    public static String RAPIDYAML_NAME = "ysparse.0.9.0";
+    public static String RAPIDYAML_LIBNAME = "ysparse.0.9.0.so";
 
+    private final long ysparse; ///< pointer to the c++ object
     private native long ysparse_init();
     private native void ysparse_destroy(long ysparse);
     private native void ysparse_timing_set(boolean yes);
-    private native int ysparse_parse(
-        long ysparse, String filename,
-        byte[] ys, int ys_length,
-        int[] evt, int evt_length);
-    private native int ysparse_parse_buf(
-        long ysparse, String filename,
-        ByteBuffer ys, int ys_length,
-        IntBuffer evt, int evt_length);
-    private final long ysparse;
-
+    private native boolean ysparse_parse(long ysparse, String filename,
+                                         byte[] ys, int ys_length,
+                                         byte[] arena, int arena_length,
+                                         int[] evt, int evt_length);
+    private native boolean ysparse_parse_buf(long ysparse, String filename,
+                                             ByteBuffer ys, int ys_length,
+                                             ByteBuffer arena, int arena_length,
+                                             IntBuffer evt, int evt_length);
+    private native int ysparse_reqsize_evt(long ysparse);
+    private native int ysparse_reqsize_arena(long ysparse);
 
 
             // XXX this 'main' is for testing
@@ -72,34 +73,32 @@ public class Rapidyaml {
     // EVT
     //------------------------
 
-    public int parseYsToEvt(
-        byte[] src, int[] evts
-    ) throws Exception {
-        return parseYsToEvt("yamlscript", src, evts);
+    public boolean parseYs(byte[] src, byte[] arena, int[] evts) throws Exception
+    {
+        return parseYs("yamlscript", src, arena, evts);
     }
 
-    public int parseYsToEvtBuf(
-        ByteBuffer src, IntBuffer evt
-    ) throws Exception {
-        return parseYsToEvtBuf("yamlscript", src, evt);
+    public boolean parseYsDirect(ByteBuffer src, ByteBuffer arena, IntBuffer evt) throws Exception
+    {
+        return parseYsDirect("yamlscript", src, arena, evt);
     }
 
-    public int parseYsToEvt(
-        String filename, byte[] src, int[] evts
-    ) throws Exception {
+    public boolean parseYs(String filename, byte[] src, byte[] arena, int[] evts) throws Exception
+    {
         long t = timingStart("ysparse");
-        int required_size = ysparse_parse(
-            this.ysparse, filename,
-            src, src.length, evts, evts.length);
+        boolean fits_buffers = ysparse_parse(this.ysparse, filename,
+                                             src, src.length,
+                                             arena, arena.length,
+                                             evts, evts.length);
         timingStop("ysparse", t, src.length);
-        return required_size;
+        return fits_buffers;
     }
 
-    public int parseYsToEvtBuf(
-        String filename, ByteBuffer src, IntBuffer evt
-    ) throws Exception {
+    public boolean parseYsDirect(String filename, ByteBuffer src, ByteBuffer arena, IntBuffer evt) throws Exception {
         if (! src.isDirect())
             throw new RuntimeException("src must be direct");
+        if (! arena.isDirect())
+            throw new RuntimeException("arena must be direct");
         if (! evt.isDirect())
             throw new RuntimeException("evt must be direct");
         // the byte order for src does not matter
@@ -108,14 +107,20 @@ public class Rapidyaml {
             throw new RuntimeException("evt byte order must be native");
         long t = timingStart("ysparseBuf");
         evt.position(evt.capacity());
-        int reqsize = ysparse_parse_buf(
-            this.ysparse, filename,
-            src, src.position(), evt, evt.capacity());
-        if (reqsize <= evt.capacity())
-            evt.position(reqsize);
+        boolean fits_buffers = ysparse_parse_buf(this.ysparse, filename,
+                                                 src, src.position(),
+                                                 arena, arena.position(),
+                                                 evt, evt.capacity());
+        if (fits_buffers)
+            evt.position(ysparse_reqsize_evt(this.ysparse));
         timingStop("ysparseBuf", t, src.position());
-        return reqsize;
+        return fits_buffers;
     }
+
+    /** Get the required size for the event output buffer, from the last parse call */
+    public int reqsizeEvt() { return ysparse_reqsize_evt(this.ysparse); }
+    /** Get the required size for the arena buffer, from the last parse call */
+    public int reqsizeArena() { return ysparse_reqsize_arena(this.ysparse); }
 
     public static IntBuffer mkIntBuffer(int numInts) {
         ByteBuffer bb = ByteBuffer.allocateDirect(/*numBytes*/4 * numInts);
