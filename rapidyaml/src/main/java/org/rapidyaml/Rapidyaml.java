@@ -101,8 +101,8 @@ public class Rapidyaml {
             throw new RuntimeException("arena must be direct");
         if (! evt.isDirect())
             throw new RuntimeException("evt must be direct");
-        // the byte order for src does not matter
-        // but for evt it really does
+        // the byte order for src+arena does not matter
+        // but for evt it really does:
         if (evt.order() != ByteOrder.nativeOrder())
             throw new RuntimeException("evt byte order must be native");
         long t = timingStart("ysparseBuf");
@@ -118,10 +118,11 @@ public class Rapidyaml {
     }
 
     /** Get the required size for the event output buffer, from the last parse call */
-    public int reqsizeEvt() { return ysparse_reqsize_evt(this.ysparse); }
+    public int requiredSizeEvt() { return ysparse_reqsize_evt(this.ysparse); }
     /** Get the required size for the arena buffer, from the last parse call */
-    public int reqsizeArena() { return ysparse_reqsize_arena(this.ysparse); }
+    public int requiredSizeArena() { return ysparse_reqsize_arena(this.ysparse); }
 
+    /** a helper to create a direct int buffer */
     public static IntBuffer mkIntBuffer(int numInts) {
         ByteBuffer bb = ByteBuffer.allocateDirect(/*numBytes*/4 * numInts);
         // !!! need to explicitly set the byte order to the native order

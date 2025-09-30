@@ -36,6 +36,11 @@ public class Evt {
                                              // (may be fused with FLOW
                                              // if needed)
 
+    // Directives
+    public static final int YAML = 1 << 22;  // `%YAML <version>` followed by version string
+    public static final int TAGD = 1 << 23;  // tag directive name : `%TAG <name> .......` followed by name string
+    public static final int TAGV = 1 << 24;  // tag directive value: `%TAG ...... <value>` followed by value string
+
     // Buffer flags
     ///< IMPORTANT. Marks events whose string was placed in the
     ///< arena. Fhis happens when the filtered string is larger than the
@@ -44,19 +49,23 @@ public class Evt {
     ///< expand from two to three bytes). Because of this size
     ///< expansion, the filtered string cannot be placed in the original
     ///< source and needs to be placed in the arena.
-    public static final int AREN = 1 << 22;
+    public static final int AREN = 1 << 25;
     ///< special flag to enable look back in the event array. it
     ///< signifies that the previous event has a string, meaning that
     ///< the jump back to that event is 3 positions. without this flag it
     ///< would be impossible to jump to the previous event
-    public static final int PSTR = (1 << 23);
+    public static final int PSTR = 1 << 26;
     ///< special flag to mark a scalar as unfiltered (when the parser
     ///< is set not to filter)
-    public static final int UNFILT = (1 << 24);
+    public static final int UNFILT = 1 << 27;
 
     // Utility flags/masks
-    public static final int LAST = UNFILT;
-    public static final int MASK = ((LAST << 1) - 1);
-    public static final int HAS_STR = SCLR|ALIA|ANCH|TAG_;
+    public static final int LAST = UNFILT;              ///< the last flag defined above
+    public static final int MASK = (LAST << 1) - 1;     ///< a mask of all bits in this enumeration
+    /// with string: mask of all the events that encode a string
+    /// following the event. in the event has a string. the next two
+    /// integers will provide respectively the string's offset and
+    /// length. See also @ref PSTR.
+    public static final int WSTR = SCLR|ALIA|ANCH|TAG_|TAGD|TAGV|YAML;
 
 }
