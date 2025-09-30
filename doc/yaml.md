@@ -318,9 +318,9 @@ for a foo(), b bar(), c [1 2 3]:
 
 # YS requires that the `for […]` key be a plain scalar, and YAML
 # requires that plain scalar keys need to be a single line.
-# This could lead to unreadable code if we our "for binding" is complex.
+# This could lead to unreadable code if our "for binding" is complex.
 
-# Bute can also do it like this:
+# But we can also do it like this:
 
 for:
   ? a: foo()
