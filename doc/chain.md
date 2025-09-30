@@ -36,7 +36,7 @@ The `get+` looks up a key in a map (like the `get` function in Clojure) but
 given `x.y` looks for the string key `"y"` or the keyword `:y` or the symbol
 `'y` in the map `x`.
 
-Instead of needing to write `(:k y)` or `(get x "y")` or `(get x 'y)` depending
+Instead of needing to write `(:y x)` or `(get x "y")` or `(get x 'y)` depending
 on the type of the key, you can just write `x.y`.
 
 When `.` is used to call a function, the value of the LHS is passed as the first
