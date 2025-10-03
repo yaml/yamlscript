@@ -24,8 +24,7 @@ HELP =: |
     -J, --json          Short for --to=json
     -T, --to FORMAT     Output format for --load or --compile:
                           load: yaml, json, xml, csv, tsv, edn
-                          compile: clj, glj, go,
-                                   graal-bin, go-bin, wasm
+                          compile: clj, glj, go, graal, wasm
 
     -e, --eval YSEXPR   Evaluate a YS expression
                           enables --mode=code by default

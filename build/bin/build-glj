@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-source "$(dirname "$0")/init.bash"
-
-"$wrap_bin" "$input_path" "share/$build_type.clj" |
-  bb "$GLOJURE_DIR/scripts/rewrite-core/rewrite.clj" /dev/stdin \
-    > "$output_path"

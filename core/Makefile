@@ -14,6 +14,7 @@ test:: $(LEIN) $(CORE-DEPS)
 	lein $@
 
 install: $(CORE-INSTALLED)
+	@echo $<
 
 $(CORE-INSTALLED): $(LEIN) $(CORE-DEPS)
 	lein install
