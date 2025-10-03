@@ -1,61 +1,82 @@
 MAKES-QUIET := $(if $(YS_BUILD_DEBUG),,true)
 
-include ../common/base.mk
-include $(COMMON)/native.mk
-include $(MAKES)/babashka.mk
-GO-VERSION ?= 1.19.3
-include $(MAKES)/go.mk
-include $(MAKES)/glojure.mk
-include $(MAKES)/graalvm.mk
-include $(MAKES)/shell.mk
+M := ../.cache/makes
+$(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
+include $M/init.mk
 
-LOG := $(if $(YS_BUILD_QUIET),:,echo)
-
-export GLOJURE_DIR := $(GLOJURE-DIR)
-
-export native_options := \
-  $(filter-out \
-    --emit=build-report \
-    --native-image-info \
-    ,$(NATIVE-OPTIONS))
-
-export wrap_bin := bin/wrap-$(YS_BUILD_TYPE)
-
-override export PATH := \
-  $(ROOT)/build/bin:$(abspath $(GLOJURE-DIR))/bin:$(PATH)
-
-export YS_INPUT_NAME := $(basename $(notdir $(YS_INPUT_PATH)))
-
-
-build-glj: $(BB) $(GLOJURE-DIR)
-	$Q $@
-
-build-go: $(BB) $(GO) glj $(GLOJURE-DIR)
-	$Q $@
-
-build-go-bin: $(BB) $(GRAALVM) $(GO) glj $(GLOJURE-DIR)
-ifdef MAKES-QUIET
-	@$(LOG) "* Compiling the Go binary executable"
+ifndef YS_BUILD_TYPE
+  $(error YS_BUILD_TYPE is not set)
 endif
-	$Q $(YS_CLI_BINARY) bin/$@
-	$(call maybe-stdout)
-
-build-graal-bin: $(LEIN)
-	$Q $@
-
-build-wasm: $(GO) $(GLOJURE-DIR)
-	$Q $@
-
-glj: glj-announce $(GLJ)
-
-
-glj-announce:
-ifdef MAKES-QUIET
-	@$(LOG) "* Installing Glojure 'glj' command in build directory"
+ifndef YS_INPUT_PATH
+  $(error YS_INPUT_PATH is not set)
+endif
+ifndef YS_OUTPUT_PATH
+  $(error YS_OUTPUT_PATH is not set)
+endif
+ifndef YS_CLI_BINARY
+  $(error YS_CLI_BINARY is not set)
 endif
 
-ifeq ($(YS_OUTPUT_PATH),/dev/stdout)
-define maybe-stdout
-	$Q cat /tmp/ys-build-stdout
+in-path := $(YS_INPUT_PATH)
+out-path := $(YS_OUTPUT_PATH)
+in-type := $(shell [[ -d $(in-path) ]] && echo 'dir'; \
+                   [[ -f $(in-path) ]] && echo 'file')
+
+ifndef in-type
+  $(error Input path does not exist: $(in-path))
+endif
+ifeq (exists,$(shell [[ -e $(out-path) ]] && echo 'exists'))
+ifneq (/dev/stdout,$(out-path))
+  $(error Output path already exists: $(out-path))
+endif
+endif
+out-type := $(shell [[ $(out-path) == */ ]] && echo 'dir' || echo 'file')
+
+YS_INPUT_TYPE := $(in-type)
+YS_OUTPUT_TYPE := $(out-type)
+
+YS_INPUT_FILE := $(YS_INPUT_PATH)
+ifeq ($(in-type),dir)
+YS_INPUT_FILE := \
+  $(shell (cd $(in-path) && find . -type f | head -n1 | cut -d/ -f2-))
+endif
+YS_INPUT_FILE_NAME := $(notdir $(YS_INPUT_FILE))
+YS_INPUT_NAME := $(basename $(YS_INPUT_FILE_NAME))
+
+CLJ_MAIN_NAMESPACE := main-$(YS_INPUT_NAME)
+CLJ_MAIN_FILE := $(subst -,_,$(CLJ_MAIN_NAMESPACE)).clj
+
+# Put env vars into a file so they can be used by the build Makefile
+define vars_mk
+YS-BUILD-TYPE := $(YS_BUILD_TYPE)
+YS-CLI-BINARY := $(YS_CLI_BINARY)
+YS-INPUT-PATH := $(YS_INPUT_PATH)
+YS-INPUT-TYPE := $(YS_INPUT_TYPE)
+YS-INPUT-FILE := $(YS_INPUT_FILE)
+YS-INPUT-FILE-NAME := $(YS_INPUT_FILE_NAME)
+YS-INPUT-NAME := $(YS_INPUT_NAME)
+YS-OUTPUT-PATH := $(YS_OUTPUT_PATH)
+YS-OUTPUT-TYPE := $(YS_OUTPUT_TYPE)
+CLJ-MAIN-NAMESPACE := $(CLJ_MAIN_NAMESPACE)
+CLJ-MAIN-FILE := $(CLJ_MAIN_FILE)
 endef
+export vars_mk
+
+build: clean
+	@echo "$$vars_mk" > $(YS_BUILD_TYPE)/vars.mk
+	$Q $(MAKE) --no-print-directory -C $(YS_BUILD_TYPE) $@
+ifeq (/dev/stdout,$(YS_OUTPUT_PATH))
+	$Q cat $(YS_BUILD_TYPE)/$(YS_INPUT_NAME)
+else ifeq (dir,$(YS_OUTPUT_TYPE))
+	$Q cp -r $(YS_BUILD_TYPE) $(YS_OUTPUT_PATH)
+	$Q git -C $(YS_OUTPUT_PATH) init $O
+	$Q git -C $(YS_OUTPUT_PATH) add . $O
+	$Q git -C $(YS_OUTPUT_PATH) commit -m "Initial commit" $O
+else ifeq (file,$(YS_OUTPUT_TYPE))
+	$Q cp -p $(YS_BUILD_TYPE)/$(YS_INPUT_NAME) $(YS_OUTPUT_PATH)
+else
+	$(error Unknown output type: '$(YS_OUTPUT_PATH)')
 endif
+
+clean:
+	$Q git clean -xdf .

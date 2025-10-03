@@ -15,8 +15,10 @@
   (:refer-clojure))
 
 (def yamlscript-version "0.2.4")
+(def temp-dir "/tmp/ys-build")
 
 (def show-log? (atom false))
+(def debug? (atom false))
 
 (defn log [& msgs]
   (util/eprintln (str "* " (str/join "\n  " msgs)))
@@ -26,13 +28,12 @@
   (when @show-log? (apply log msgs)))
 
 (defn run [cmd-args err-msg]
-  (when (env "YS_BUILD_DEBUG")
+  (when @debug?
     (util/eprintln
       (str "Running: " (str/join " " (remove map? cmd-args)))))
   (let [result (apply process cmd-args)]
     (when (not= 0 (:exit @result))
-      (when (env "YS_BUILD_DEBUG")
-        (WWW result))
+      (when @debug? (WWW result))
       (die (str err-msg ":\n" (slurp (:err result)))))
     result))
 
@@ -49,7 +50,7 @@
                                "Failed to get current commit hash")
                            :out slurp str/trim)
                          yamlscript-version))
-        temp-dir "/tmp/yamlscript"
+        temp-dir (or (env "YS_BUILD_TEMP_DIR") temp-dir)
         clone-work-dir (str temp-dir "/" clone-branch)
         build-dir (str clone-work-dir "/build")
         to-tty {:out :inherit :err :inherit}
@@ -84,9 +85,9 @@
   (let [{:keys [devel?
                 clone-url
                 clone-branch
-                clone-work-dir
-                build-dir]} opts]
-    (if-not (fs/exists? clone-work-dir)
+                clone-work-dir]} opts]
+    (if (fs/exists? clone-work-dir)
+      (o (str "Building in " clone-url " workdir: '" clone-work-dir "'"))
       (let [clone-opts
             (if devel? [] ["--depth=1" (str "--branch=" clone-branch)])
             clone-cmd
@@ -96,11 +97,7 @@
         (when devel?
           (o (str "Resetting " clone-work-dir " to git commit: " clone-branch))
           (run ["git" "reset" "--hard" clone-branch]
-            "Failed to reset to current commit hash")))
-      (do
-        (o (str "Cleaning the build workdir: '" clone-work-dir "'"))
-        (run [{:dir build-dir} "git" "clean" "-dxf" "."]
-          "Failed to clean the build workdir")))))
+            "Failed to reset to current commit hash"))))))
 
 (defn do-build [info build-type out-file]
   (let [{:keys [code in-file ys-bin]} info
@@ -116,6 +113,9 @@
         in-path (str (fs/absolutize in-path))
         out-file (or (:out-file info) out-file)
         out-path (str (fs/absolutize out-file))
+        out-path (if (= \/ (last out-file))
+                   (str out-path "/")
+                   out-path)
         env-vars {"YS_BUILD_TYPE" build-type
                   "YS_INPUT_PATH" in-path
                   "YS_OUTPUT_PATH" out-path
@@ -126,54 +126,43 @@
         env-vars (if (:verbose info)
                    (assoc env-vars "YS_BUILD_VERBOSE" "1")
                    env-vars)
-        env-vars (if (seq (:debug info))
+        env-vars (if @debug?
                    (assoc env-vars "YS_BUILD_DEBUG" "1")
                    env-vars)
-        make-target (str "build-" build-type)
         make-cmd (concat
                    [(merge to-tty {:dir build-dir} {:extra-env env-vars})
-                    "make" make-target])]
-    (run make-cmd "Build failed")))
+                    "make" "build"])]
+    (o (str "Compiling '" in-file "' to '" out-file "'..."))
+    (run make-cmd "Build failed")
+    (o (str "Compiled '" in-file "' to '" out-file "'."))))
 
-(defn get-files [info extension default]
-  (let [{:keys [in-file out-file print quiet]} info
+(defn get-out-file [info extension default]
+  (let [{:keys [in-file print quiet]} info
         base-name (when (fs/regular-file? in-file)
                     (fs/strip-ext (fs/file-name in-file)))
-        out-file (cond
-                   out-file out-file
-                   print "/dev/stdout"
-                   base-name (str base-name extension)
-                   :else default)
+        out-file (or (:output info)
+                   (cond
+                     print "/dev/stdout"
+                     base-name (str base-name extension)
+                     :else default))
         quiet (or (= out-file "/dev/stdout") quiet)]
     (reset! show-log? (not (or print quiet)))
-    [in-file out-file]))
+    (when (or (seq (:debug info)) (env "YS_BUILD_DEBUG"))
+      (reset! debug? true))
+    out-file))
 
-(defn do-to-glj [info]
-  (let [[in-file out-file] (get-files info ".glj" "/dev/stdout")]
-    (do-build info "glj" out-file)
-    (when (not= out-file "/dev/stdout")
-      (log (str "Compiled YS '" in-file "' to Glojure '" out-file "'")))))
+(defn do-build-glj [info]
+  (let [out-file (get-out-file info ".glj" "/dev/stdout")]
+    (do-build info "glj" out-file)))
 
-(defn do-to-go [info]
-  (let [[in-file out-file] (get-files info "" "/dev/stdout")]
-    (do-build info "go" out-file)
-    (when (not= out-file "/dev/stdout")
-      (log (str "Compiled YS '" in-file "' to Go '" out-file "'")))))
+(defn do-build-go [info]
+  (let [out-file (get-out-file info "" "a.out")]
+    (do-build info "go" out-file)))
 
-(defn do-build-go-bin [info]
-  (let [[in-file out-file] (get-files info "" "a.out")]
-    (o (str "Compiling '" in-file "' to binary '" out-file "'..."))
-    (do-build info "go-bin" out-file)
-    (o (str "Compiled '" in-file "' to binary '" out-file "'."))))
-
-(defn do-build-graal-bin [info]
-  (let [[in-file out-file] (get-files info "" "a.out")]
-    (o (str "Compiling '" in-file "' to binary '" out-file "'..."))
-    (do-build info "graal-bin" out-file)
-    (o (str "Compiled '" in-file "' to binary '" out-file "'."))))
+(defn do-build-graal [info]
+  (let [out-file (get-out-file info "" "a.out")]
+    (do-build info "graal" out-file)))
 
 (defn do-build-wasm [info]
-  (let [[in-file out-file] (get-files info "" "a.wasm")]
-    (o (str "Compiling '" in-file "' to WebAssembly '" out-file "'..."))
-    (do-build info "wasm" out-file)
-    (o (str "Compiled '" in-file "' to WebAssembly '" out-file "'."))))
+  (let [out-file (get-out-file info "" "a.wasm")]
+    (do-build info "wasm" out-file)))

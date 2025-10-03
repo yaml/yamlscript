@@ -65,7 +65,10 @@
 ;; ----------------------------------------------------------------------------
 (def to-fmts
   #{"yaml" "json" "xml" "csv" "tsv" "edn"
-    "clj" "glj" "go" "graal-bin" "go-bin" "wasm"})
+    "clj" "glj" "go" "graal" "wasm"})
+
+(def build-fmts
+  #{"glj" "go" "graal" "wasm"})
 
 (def stages
   {"parse" true
@@ -94,13 +97,12 @@
    ["-T" "--to FORMAT"
     "Output format for --load or --compile:
     →  load: yaml, json, xml, csv, tsv, edn
-    →  compile: clj, glj, go,
-    →           graal-bin, go-bin, wasm"
+    →  compile: clj, glj, go, graal, wasm"
     :validate
     [#(contains? to-fmts %1)
      (str "must be one of: "
        "yaml, json, xml, csv, tsv, edn, "
-       "clj, glj, go, graal-bin, go-bin or wasm")]]
+       "clj, glj, go, graal or wasm")]]
 
    ["-e" "--eval YSEXPR"
     "Evaluate a YS expression
@@ -348,24 +350,23 @@ Options:
             (err "No input file specified"))
         in-file (if code "--eval" in-file)
         ys-bin (-> (java.lang.ProcessHandle/current) .info .command .get)
-        ys-bin (if (re-find #"-openjdk-" ys-bin) "ys" ys-bin)
-        ]
+        ys-bin (if (re-find #"-openjdk-" ys-bin) "ys" ys-bin)]
     (merge opts {:code code,
                  :in-file in-file,
                  :ys-bin ys-bin})))
 
 (defn do-compile [opts args]
-  (if (= (:to opts) "clj")
-    (let [[code _file _args] (get-compiled-code opts)]
-      (println (pretty-clojure code)))
-    (let [info (get-build-info opts args)]
-      (case (:to opts)
-        "glj"       (command/do-to-glj info)
-        "go"        (command/do-to-go info)
-        "go-bin"    (command/do-build-go-bin info)
-        "graal-bin" (command/do-build-graal-bin info)
-        "wasm"      (command/do-build-wasm info)
-        ,           (die "Unknown output format: " (:to opts))))))
+  (let [to (:to opts)]
+    (if (= to "clj")
+      (let [[code _file _args] (get-compiled-code opts)]
+        (println (pretty-clojure code)))
+      (let [info (get-build-info opts args)]
+        (case to
+          "glj"   (command/do-build-glj info)
+          "go"    (command/do-build-go info)
+          "graal" (command/do-build-graal info)
+          "wasm"  (command/do-build-wasm info)
+          ,       (die "Unknown output format: " to))))))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
 
@@ -550,7 +551,7 @@ Options:
                    (or (:to opts) ""))
                  (assoc opts :load true)
                  ,
-                 (re-matches #"(?:clj|glj|go|wasm|graal-bin|go-bin)"
+                 (re-matches #"(?:clj|glj|go|graal|wasm)"
                    (or (:to opts) ""))
                  (assoc opts :compile true)
                  ,
@@ -644,7 +645,9 @@ Options:
 (defn -main [& argv]
   (global/reset-env nil)
   (let [[opts args error errs help] (get-opts argv)
-        out (:output opts)]
+        out (:output opts)
+        to (:to opts)
+        out (if (contains? build-fmts to) *out* out)]
     (reset! global/opts opts)
     (if out
       (with-open [out (io/writer out)]

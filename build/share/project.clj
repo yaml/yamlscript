@@ -1,4 +1,4 @@
-(defproject main-file "build"
+(defproject NAME "build"
   :description "Compile a YS program to native GraalVM binary executable"
 
   :dependencies
@@ -6,7 +6,7 @@
    [org.babashka/sci "0.8.41"]
    [yamlscript/core "0.2.4"]]
 
-  :main ^:skip-aot main-file
+  :main ^:skip-aot main-99-bottles-of-beer
 
   :target-path "target/%s"
 
@@ -17,8 +17,8 @@
 
   :profiles
   {:uberjar
-   {:aot [main-file]
-    :main main-file
+   {:aot [NAME]
+    :main NAME
     :global-vars
     {*assert* false
      *warn-on-reflection* true}
