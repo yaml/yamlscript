@@ -1,4 +1,5 @@
-(ns main (:require [github.com:yaml:yamlscript:glj:ys:v0 :refer :all]))
+(ns main
+  (:require [github.com:yaml:yamlscript:glj:ys:v0 :refer :all]))
 
 (defn -parse-argv [argv]
   (mapv #(if (re-matches #"-?\d+" %) (parse-long %) %) argv))

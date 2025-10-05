@@ -116,7 +116,8 @@
         out-path (if (= \/ (last out-file))
                    (str out-path "/")
                    out-path)
-        env-vars {"YS_BUILD_TYPE" build-type
+        env-vars {"YS_VERSION" yamlscript-version
+                  "YS_BUILD_TYPE" build-type
                   "YS_INPUT_PATH" in-path
                   "YS_OUTPUT_PATH" out-path
                   "YS_CLI_BINARY" ys-bin}

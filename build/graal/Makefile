@@ -1,11 +1,10 @@
 SHELL := bash
 
-YS-VERSION := 0.2.4
-version := $(YS-VERSION)
-
 ifneq (,$(wildcard vars.mk))
 include vars.mk
 endif
+
+version := $(YS-VERSION)
 
 # If we are building in the YS repo:
 ifneq (,$(wildcard ../the-ys-repo-build-dir))
@@ -58,16 +57,14 @@ NATIVE-OPTIONS := \
   -J-Dclojure.compiler.direct-linking=true \
   -J-Xmx3g \
 
-override export PATH := $(shell pwd)/bin:$(PATH)
-
 BUILD-DEPS := \
 	$(BUILD-JAR-FILE) \
 	reflection.json \
+	.gitignore \
 
 JAR-DEPS := \
 	src/$(CLJ-MAIN-FILE) \
 	project.clj \
-	.gitignore \
 	$(LEIN) \
 
 ifdef REPO-BUILD
@@ -85,7 +82,9 @@ endif
 
 STRIP := $(if $(shell command -v strip),strip,:)
 
-# $(shell cat vars.mk >&2)
+ifdef YS_BUILD_DEBUG
+$(shell cat vars.mk >&2)
+endif
 
 build: $(BUILD-DEPS) $(GRAALVM)
 	$Q $(LOG) "* Building the GraalVM native-image binary executable..."
