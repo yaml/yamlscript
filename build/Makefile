@@ -42,13 +42,16 @@ YS_INPUT_FILE := \
 endif
 YS_INPUT_FILE_NAME := $(notdir $(YS_INPUT_FILE))
 YS_INPUT_NAME := $(basename $(YS_INPUT_FILE_NAME))
+YS_BUILD_TARGET := $(YS_INPUT_NAME)
 
 CLJ_MAIN_NAMESPACE := main-$(YS_INPUT_NAME)
 CLJ_MAIN_FILE := $(subst -,_,$(CLJ_MAIN_NAMESPACE)).clj
 
 # Put env vars into a file so they can be used by the build Makefile
 define vars_mk
+YS-VERSION := $(YS_VERSION)
 YS-BUILD-TYPE := $(YS_BUILD_TYPE)
+YS-BUILD-TARGET := $(YS_BUILD_TARGET)
 YS-CLI-BINARY := $(YS_CLI_BINARY)
 YS-INPUT-PATH := $(YS_INPUT_PATH)
 YS-INPUT-TYPE := $(YS_INPUT_TYPE)
@@ -79,4 +82,4 @@ else
 endif
 
 clean:
-	$Q git clean -xdf .
+	$Q git clean -xdf . $O
