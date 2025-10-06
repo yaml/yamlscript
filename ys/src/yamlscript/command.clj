@@ -152,10 +152,6 @@
       (reset! debug? true))
     out-file))
 
-(defn do-build-glj [info]
-  (let [out-file (get-out-file info ".glj" "/dev/stdout")]
-    (do-build info "glj" out-file)))
-
 (defn do-build-go [info]
   (let [out-file (get-out-file info "" "a.out")]
     (do-build info "go" out-file)))
@@ -163,7 +159,3 @@
 (defn do-build-graal [info]
   (let [out-file (get-out-file info "" "a.out")]
     (do-build info "graal" out-file)))
-
-(defn do-build-wasm [info]
-  (let [out-file (get-out-file info "" "a.wasm")]
-    (do-build info "wasm" out-file)))

@@ -8,7 +8,7 @@ ROOT =: +"$DIR/../.."
 
 HELP =: |
 
-  ys - The YS Command Line Tool - v0.2.4
+  ys - The YS Command Line Tool - v0.2.7
 
   Usage: ys [<option...>] [<input-file>]
 

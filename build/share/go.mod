@@ -1,4 +1,4 @@
-module github.com/ys-build/GLJ-MAIN-NAMESPACE
+module build.yamlscript.org/GLJ-MAIN-NAMESPACE
 
 go 1.19
 

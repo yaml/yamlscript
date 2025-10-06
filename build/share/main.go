@@ -4,8 +4,8 @@ import (
 	"os"
 	"github.com/glojurelang/glojure/pkg/glj"
 	"github.com/glojurelang/glojure/pkg/lang"
-	_ "github.com/ys-build/GLJ-MAIN-NAMESPACE/GO-MAIN-PACKAGE"
-	_ "github.com/ys-build/GLJ-MAIN-NAMESPACE/ys/v0"
+	_ "build.yamlscript.org/GLJ-MAIN-NAMESPACE/GO-MAIN-PACKAGE"
+	_ "build.yamlscript.org/GLJ-MAIN-NAMESPACE/ys/v0"
 )
 
 func main() {

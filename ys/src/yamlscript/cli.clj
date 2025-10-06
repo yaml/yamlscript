@@ -362,10 +362,10 @@ Options:
         (println (pretty-clojure code)))
       (let [info (get-build-info opts args)]
         (case to
-          "glj"   (command/do-build-glj info)
+          "glj"   (command/do-build-go info)
           "go"    (command/do-build-go info)
           "graal" (command/do-build-graal info)
-          "wasm"  (command/do-build-wasm info)
+          "wasm"  (command/do-build-go info)
           ,       (die "Unknown output format: " to))))))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
