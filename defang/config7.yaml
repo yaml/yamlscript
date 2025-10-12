@@ -1,0 +1,25 @@
+#!/usr/bin/env ys-0
+source <(curl '-sL' getys.org/run) "$@" :
+
+--- !data
+:use loader: :all
+vars =: load-vars()
+
+database:
+  host:: vars.db-host
+  port:: vars.db-port
+  user:: vars.db-user
+  password:: vars.db-password
+
+--- !code
+say: _:yaml/dump
+
+
+
+
+
+
+
+
+
+

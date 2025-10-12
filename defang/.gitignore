@@ -1,0 +1,15 @@
+/.help
+/0*
+/.watcher.*
+/old/
+/notes/
+/documentation/
+/slides.seajure
+/99-charts-of-yaml
+/chart-*
+/xyzzy
+/kustomize/
+/before.yaml
+/after.yaml
+/helmys-*
+/pre/

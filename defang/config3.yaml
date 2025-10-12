@@ -1,0 +1,23 @@
+!YS-v0:
+
+:use loader :all:
+  :url 'gist:ingydotnet/09668860dcb85b89b7e92dbd8c5bcdad'
+vars =: load-vars()
+
+database:
+  host:: vars.db-host
+  port:: vars.db-port
+  user:: vars.db-user
+  password:: vars.db-password
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+!YS-v0
+
+raw-url =:
+  "github:dominictarr/\
+   random-name/first-names.json"
+names =: raw-url:curl:json/load
+vars =: load('vars.yaml')
+fifty-50 =: rand(2) > 1
+
+--- !YS-v0:
+a key: a value
+5 names:: names:shuffle.take(5)
+:when fifty-50::
+  MAYBE: this MIGHT be included
+letter:: |
+  $(names:rand-nth) wrote:
+
+  Dear $(ENV.USER:uc1),
+
+  My $(vars.color) shoe is size $(vars.size)!
+
