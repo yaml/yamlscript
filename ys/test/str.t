@@ -3,7 +3,7 @@
 use ys::taptest: :all
 
 test::
-- code: -"".split()
+- code: +"".split()
   want: []
 
 done:

@@ -13,13 +13,13 @@ test::
   want: null
 - code: nil.foo
   want: null
-- code: -{}.$NIL
+- code: +{}.$NIL
   want: null
-- code: -[].$NIL
+- code: +[].$NIL
   want: null
 - code: true.foo
   want: null
-- code: -"foo".foo
+- code: +"foo".foo
   want: null
 
 - code: (1 .. 20).partition(3 5)

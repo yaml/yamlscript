@@ -247,17 +247,16 @@
 (defn resolve-code-sequence [_]
   (die "Sequences (block and flow) not allowed in code mode"))
 
-(def esc1 #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
-(def esc2 #"^-[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?]")
+(def esc #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
 (defn resolve-code-scalar [node type style]
   (if type
     (set/rename-keys node {style type})
     (let [val (style node)]
       (case style
-        := (let [node  ;; Remove leading escape character from value
-                 (if (or (re-find esc1 val) (re-find esc2 val))
-                   (assoc node := (subs val 1))
-                   node)]
+        := (let [ ;; Remove leading escape character from value
+                 node (if (re-find esc val)
+                        (assoc node := (subs val 1))
+                        node)]
              (set/rename-keys node {style :expr}))
         :$ (set/rename-keys node {style :xstr})
         :' (set/rename-keys node {style :str})

@@ -20,7 +20,7 @@ test::
 
 - name: Dot chain
   code: (1 .. 10).drop(2).take(3)
-  want:: -[3 4 5]
+  want:: +[3 4 5]
 
 - name: Get nth
   code: (1 .. 10).5
@@ -46,15 +46,15 @@ test::
   code: hash.:bar
   want: two
 
-- code: '-[] |||: 1 && 0'
+- code: '+[] |||: 1 && 0'
   want:: nil
 
-- code: '-"foo" *: 3'
+- code: '+"foo" *: 3'
   want: foofoofoo
 
-- code: -[123].#.?
+- code: +[123].#.?
   want: 1
-- code: -{}.#.!
+- code: +{}.#.!
 - code: a(0).??
 
 - code: (1 .. 10):len.--

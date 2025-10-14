@@ -644,7 +644,7 @@
 - name: Single quoted string
   yamlscript: |
     !yamlscript/v0
-    say: -"123" + ' let''s go'
+    say: +"123" + ' let''s go'
     say: '123 let''s go'
   clojure: |
     (say (add+ "123" " let's go"))
@@ -683,7 +683,7 @@
 - name: Floating point numbers
   yamlscript: |
     !yamlscript/v0
-    =>: -[ -0.00 0.1 -1.2e3 2.3e-4 ]
+    =>: +[ -0.00 0.1 -1.2e3 2.3e-4 ]
   clojure: |
     [-0.0 0.1 -1200.0 2.3E-4]
 
@@ -732,8 +732,8 @@
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      -[a b c] =: -[1 2 3]
-      -{:d d :e e} =: -{:d 4 :e 5}
+      +[a b c] =: +[1 2 3]
+      +{:d d :e e} =: +{:d 4 :e 5}
       =>: a + b + c
   clojure: |
     (defn
@@ -745,7 +745,7 @@
 - name: Destructuring def
   yamlscript: |
     !yamlscript/v0
-    -[a b c] =: -[1 2 3]
+    +[a b c] =: +[1 2 3]
   clojure: |
     (+def [a b c] [1 2 3])
 
@@ -833,7 +833,7 @@
 - name: Dot groupings in vectors
   yamlscript: |
     !yamlscript/v0
-    =>: -[a.3.b(x.y), c.4.d]
+    =>: +[a.3.b(x.y), c.4.d]
   clojure: |
     [(b (get+ a 3) (get+ x 'y)) (get+ (get+ c 4) 'd)]
 
@@ -871,47 +871,15 @@
     {"bar" 44}
 
 
-- name: Plus minus escaping of YAML syntax
+- name: Plus escaping of YAML syntax
   yamlscript: |
     !yamlscript/v0
-    =>: -'foo' * 3
-    =>: -"foo" * 3
+    =>: +'foo' * 3
+    =>: +"foo" * 3
     =>: +[foo] + [bar]
     =>: +
       {foo 1} + {bar 2}
-    foo: -|| bar
-  clojure: |
-    (mul+ "foo" 3)
-    (mul+ "foo" 3)
-    (add+ [foo] [bar])
-    (add+ {foo 1} {bar 2})
-    (foo || bar)
-
-
-- name: Plus escaping of YAML syntax
-  yamlscript: |
-    !yamlscript/v0
-    =>: -'foo' * 3
-    =>: -"foo" * 3
-    =>: -[foo] + [bar]
-    =>: -{foo 1} + {bar 2}
-    foo: +|| bar
-  clojure: |
-    (mul+ "foo" 3)
-    (mul+ "foo" 3)
-    (add+ [foo] [bar])
-    (add+ {foo 1} {bar 2})
-    (foo || bar)
-
-
-- name: Plus escaping of YAML syntax
-  yamlscript: |
-    !yamlscript/v0
-    =>: -'foo' * 3
-    =>: -"foo" * 3
-    =>: -[foo] + [bar]
-    =>: -{foo 1} + {bar 2}
-    foo: +|| bar
+    foo: + || bar
   clojure: |
     (mul+ "foo" 3)
     (mul+ "foo" 3)
@@ -1184,7 +1152,7 @@
   yamlscript: |
     !yamlscript/v0
     =>: "$1 $foo $2"
-    =>: -"$1$foo$2"
+    =>: +"$1$foo$2"
   clojure: |
     (str "$1 " foo " $2")
     (str "$1" foo "$2")
@@ -1212,8 +1180,8 @@
 - name: Escape pound and colon in ysexpr strings
   yamlscript: |
     !yamlscript/v0
-    say: -'foo \# bar :\ baz'
-    say: -"foo \# bar :\ baz"
+    say: +'foo \# bar :\ baz'
+    say: +"foo \# bar :\ baz"
   clojure: |
     (say "foo # bar : baz")
     (say "foo # bar : baz")
@@ -1415,7 +1383,7 @@
 - name: Seq destruct without []
   yamlscript: |
     !yamlscript/v0
-    a b c =: -[1 2 3]
+    a b c =: +[1 2 3]
   clojure: |
     (+def [a b c] [1 2 3])
 
@@ -1428,8 +1396,8 @@
     =>: a.b.:c:d
     =>: a.5:b
     =>: a(5):b
-    =>: -{}:a
-    =>: -[]:a
+    =>: +{}:a
+    =>: +[]:a
     =>: a:b?
     =>: a:b!
     =>: a:b+
@@ -1545,7 +1513,7 @@
 - name: Merge key in data mode
   yamlscript: |
     !yamlscript/v0/data
-    <<:: -[{:a 1 :b 2}]
+    <<:: +[{:a 1 :b 2}]
     :a: 3
   clojure: |
     (+merge {:-<< [{:a 1, :b 2}], :a 3})
@@ -1566,7 +1534,7 @@
 - name: Tag method call with data mode switch to code mode
   yamlscript: |
     !yamlscript/v0:
-    foo: !:merge: -[{:a 1 :b 2} {:a 3}]
+    foo: !:merge: +[{:a 1 :b 2} {:a 3}]
   clojure: |
     {"foo" (merge [{:a 1, :b 2} {:a 3}])}
 

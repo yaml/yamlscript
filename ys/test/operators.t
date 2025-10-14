@@ -55,19 +55,19 @@ test::
   want: AB
 - code: (\\A + 2) + 3
   want:: \\F
-- code: -{:a 1} + {:b 2} + {:c 3}
-  want:: -{:a 1 :b 2 :c 3}
-- code: -'J' + 5
+- code: +{:a 1} + {:b 2} + {:c 3}
+  want:: +{:a 1 :b 2 :c 3}
+- code: +'J' + 5
   want: J5
-- code: -'J' + \\5
+- code: +'J' + \\5
   want: J5
-- code: -'12' + \\3 + 4
+- code: +'12' + \\3 + 4
   want: "1234"
 - code: \{:a :b} + \{:b :c :d}
   want:: \{:a :b :c :d}
 - name: add+ with hash-maps and array-maps
-  code: -{:a 1} + {:b 2} + {:c 1 :d 1 :e 1 :f 1 :g 1 :h 1 :i 1 :j 1 :k 1 :l 1}
-  want:: -{:a 1 :b 2 :c 1 :d 1 :e 1 :f 1 :g 1 :h 1 :i 1 :j 1 :k 1 :l 1}
+  code: +{:a 1} + {:b 2} + {:c 1 :d 1 :e 1 :f 1 :g 1 :h 1 :i 1 :j 1 :k 1 :l 1}
+  want:: +{:a 1 :b 2 :c 1 :d 1 :e 1 :f 1 :g 1 :h 1 :i 1 :j 1 :k 1 :l 1}
 
 - note: 'sub+ tests'
 
@@ -80,7 +80,7 @@ test::
 - code: \\A - []
   what: error
   want: "Can't sub(\\A [])"
-- code: -'foobarbazbar' - 'bar'
+- code: +'foobarbazbar' - 'bar'
   want: foobaz
 - code: nil - 2
   what: error
@@ -104,7 +104,7 @@ test::
 - code: nil.++
   what: error
   want: "Can't convert a nil value to a number"
-- code: -"B".++
+- code: +"B".++
   what: error
   want: 'Can''t inc+("B")'
 

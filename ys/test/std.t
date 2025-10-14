@@ -26,17 +26,17 @@ test::
 - code: uc1('foo') == 'Foo'
 - code: lc('FoOoO') == 'foooo'
 
-- code: -"Hello".split().join()
+- code: +"Hello".split().join()
   want: Hello
 
 - code: chop('hello')
   want: hell
 - code: chop(3 'hello')
   want: he
-- code: -'howdy'.chop(2)
+- code: +'howdy'.chop(2)
   want: how
 
-- code: -{\\o "xyz"}.escape("foo")
+- code: +{\\o "xyz"}.escape("foo")
   want: fxyzxyz
 
 - code: substr('abcde' 2 2)
@@ -73,22 +73,22 @@ test::
   want: 15
 - code: 'reduce _ 0 (1 .. 5): +'
   want: 15
-- code: -[{"a" 1}{"a" 2}].map(\(get _ "a"))
+- code: +[{"a" 1}{"a" 2}].map(\(get _ "a"))
   want:: \'(1 2)
-- code: -"abc".map(int)
+- code: +"abc".map(int)
   want:: \'(97 98 99)
 - code: int.map('abc')
   want:: \'(97 98 99)
 #'
-- code: -"abc".map(int).mapv(inc)
-  want:: -[98 99 100]
+- code: +"abc".map(int).mapv(inc)
+  want:: +[98 99 100]
 - code: '(1 .. 10).has?(5)'
 - code: 'num(5).in?(1 .. 10)'
 
-- code: -"ello".cons(\\H).join()
+- code: +"ello".cons(\\H).join()
   want: Hello
-- code: -[[1 2] [3 4]].mapcat(reverse)
-  want:: -[2 1 4 3]
+- code: +[[1 2] [3 4]].mapcat(reverse)
+  want:: +[2 1 4 3]
 - code: (1 .. 5).reduce(+)
   want: 15
 - code: (1 .. 5).reduce(+ 10)
@@ -97,7 +97,7 @@ test::
 - code: qw(foo bar baz).index('bar')
   want: 1
 
-- code: -{1 2 3 4}.3
+- code: +{1 2 3 4}.3
   want: 4
 
 
@@ -110,8 +110,8 @@ test::
 - code: 1 + \\A
   want: 66
 
-- code: -[1 2 3] + "foo"
-  want:: -[1 2 3 "foo"]
+- code: +[1 2 3] + "foo"
+  want:: +[1 2 3 "foo"]
 
 - code: sum(3 .. 9)
   want: 42
@@ -139,13 +139,13 @@ test::
 - note: Control functions
 
 # call a function by reference, string, or symbol
-- code: -'inc'.call(41)
+- code: +'inc'.call(41)
   want: 42
 - code: \'inc.call(41)
   want: 42
 - code: |
     ns: foo
-    -"inc": .call(41)
+    +"inc": .call(41)
   want: 42
 - code: |
     each x (1 .. 3): x.++
@@ -172,12 +172,12 @@ test::
 #-------------------------------------------------------------------------------
 - note: Regex functions
 
-- code: -"I Like Pie".split().filter(\(/[A-Z]/)).join()
+- code: +"I Like Pie".split().filter(\(/[A-Z]/)).join()
   want: ILP
 
-- code: -'Hello World'.replace('o')
+- code: +'Hello World'.replace('o')
   want: Hell Wrld
-- code: -'Hello World'.replace(/[lo]/)
+- code: +'Hello World'.replace(/[lo]/)
   want: He Wrd
 
 
@@ -194,7 +194,7 @@ test::
 
 - code: len('hello')
   want: 5
-- code: -'Hello'.len()
+- code: +'Hello'.len()
   want: 5
 
 # q is for quote
@@ -212,7 +212,7 @@ test::
   want:: inc
 
 - code: qw(one :two "three" 4 true false nil {} [])
-  want:: -['one' ':two' "three" '4' 'true' 'false' 'nil' '(%)' '[]']
+  want:: +['one' ':two' "three" '4' 'true' 'false' 'nil' '(%)' '[]']
 
 
 #-------------------------------------------------------------------------------
@@ -229,7 +229,7 @@ test::
 - code: eq(false not(true))
 - code: eq(nil first([]) nil)
 - code: (1 .. 10).filter(gt(5))
-  want:: -[6 7 8 9 10]
+  want:: +[6 7 8 9 10]
 
 - code: ne(23 23 23 24)
 - code: ne("x" "x" "x" "y")
@@ -379,8 +379,8 @@ test::
 - name: Test std/reset
   code: |
     a =: atom(nil)
-    reset a: -[1 2 3]
-  want:: -[1 2 3]
+    reset a: +[1 2 3]
+  want:: +[1 2 3]
 
 - name: Test std/atom with no args
   code: atom().@ == nil
@@ -391,13 +391,13 @@ test::
 
 - name: Vector def destructuring
   code: |
-    -[what who] =: qw(Hello World)
+    +[what who] =: qw(Hello World)
     =>: "$what $who"
   want: Hello World
 
 - name: Mapping def destructuring
   code: |
-    -{:strs [what who]} =: -{"what" "Hello" "who" "World"}
+    +{:strs [what who]} =: +{"what" "Hello" "who" "World"}
     =>: "$what $who"
   want: Hello World
 

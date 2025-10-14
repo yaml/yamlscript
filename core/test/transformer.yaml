@@ -210,6 +210,6 @@
   yamlscript: |
     !yamlscript/v0
     defn foo():
-      -[x *y] =: z
+      +[x *y] =: z
   clojure: |
     (defn foo [] (let [[x & y] z]))
