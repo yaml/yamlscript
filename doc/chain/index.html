@@ -2404,7 +2404,7 @@ Functions are chained together using the <code>.</code> operator.</p>
 <p>The <code>get+</code> looks up a key in a map (like the <code>get</code> function in Clojure) but
 given <code>x.y</code> looks for the string key <code>"y"</code> or the keyword <code>:y</code> or the symbol
 <code>'y</code> in the map <code>x</code>.</p>
-<p>Instead of needing to write <code>(:k y)</code> or <code>(get x "y")</code> or <code>(get x 'y)</code> depending
+<p>Instead of needing to write <code>(:y x)</code> or <code>(get x "y")</code> or <code>(get x 'y)</code> depending
 on the type of the key, you can just write <code>x.y</code>.</p>
 <p>When <code>.</code> is used to call a function, the value of the LHS is passed as the first
 argument to the function on the RHS.

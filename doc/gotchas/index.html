@@ -2373,8 +2373,7 @@ to follow the closing quote.</p>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(&#39;foo&#39; * 3)</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3 * &#39;foo&#39;</span>
 </code></pre></div>
-<p>Now the right-hand side is a plain scalar wThis is because YAML sees a single quoted scalar and text content is not allowed to
-follow the closing quote.hose value is <code>+'foo' * 3</code>.
+<p>Now the right-hand side is a plain scalar whose value is <code>+'foo' * 3</code>.
 YS will ignore the leading <code>+</code> and evaluate the expression as expected.</p>
 <p>This <code>+</code> escaping character can be used anywhere that you need to use a plain
 scalar to write a YS expression but the leading character would otherwise be

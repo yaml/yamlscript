@@ -2494,7 +2494,7 @@ It was also created to give people a lot of control over how they write their
 data.</p>
 <p>Modern programmers generally have a decent understanding of YAML basics as it
 ends up in many places in the tech world.
-That said, there are many lesser well-known YAML concepts and features and
+That said, there are many lesser-known YAML concepts and features, and
 YS makes use of most of them.</p>
 <p>Remember, all valid YS is required to be valid YAML syntax.
 To write YS well, you'll need to have a solid understanding of YAML concepts
@@ -2628,21 +2628,21 @@ YAML comments to explain the concepts as much as possible.</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">I can also span multiple lines</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">where whitespace beteween lines</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">folds to a single space</span>
-<span class="nt">single quoted</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;I</span><span class="se">&#39;&#39;</span><span class="s">m</span><span class="nv"> </span><span class="s">single</span><span class="nv"> </span><span class="s">quoted&#39;</span>
+<span class="nt">single-quoted</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;I</span><span class="se">&#39;&#39;</span><span class="s">m</span><span class="nv"> </span><span class="s">single-quoted&#39;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;I</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">thing</span><span class="nv"> </span><span class="s">that</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">escapable,</span>
 <span class="w">  </span><span class="s">the</span><span class="nv"> </span><span class="s">single</span><span class="nv"> </span><span class="s">quote</span><span class="nv"> </span><span class="s">itself</span><span class="nv"> </span><span class="se">&#39;&#39;</span><span class="nv"> </span><span class="s">which</span>
 <span class="w">  </span><span class="s">is</span><span class="nv"> </span><span class="s">escaped</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">doubling</span><span class="nv"> </span><span class="s">it&#39;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;Multiline</span><span class="nv"> </span><span class="s">single</span><span class="nv"> </span><span class="s">quoted</span><span class="nv"> </span><span class="s">scalars</span>
-<span class="w">  </span><span class="s">fold</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">same</span><span class="nv"> </span><span class="s">way</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">plain&#39;</span>
-<span class="nt">double quoted</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I&#39;m</span><span class="nv"> </span><span class="s">double</span><span class="nv"> </span><span class="s">quoted&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;Multiline</span><span class="nv"> </span><span class="s">single-quoted</span><span class="nv"> </span><span class="s">scalars</span>
+<span class="w">  </span><span class="s">fold</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">same</span><span class="nv"> </span><span class="s">way</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">plain</span><span class="nv"> </span><span class="s">ones&#39;</span>
+<span class="nt">double-quoted</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I&#39;m</span><span class="nv"> </span><span class="s">double-quoted&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I&#39;m</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">only</span><span class="nv"> </span><span class="s">style</span><span class="nv"> </span><span class="s">capable</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">encoding</span>
-<span class="w">  </span><span class="s">any</span><span class="nv"> </span><span class="s">possible</span><span class="nv"> </span><span class="s">string</span><span class="nv"> </span><span class="s">value&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">lots</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">escapes</span><span class="nv"> </span><span class="s">like</span><span class="nv"> </span><span class="s">\n</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">\t</span>
-<span class="w">  </span><span class="s">and</span><span class="nv"> </span><span class="s">also</span><span class="nv"> </span><span class="s">\&quot;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">\\&quot;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Multiline</span><span class="nv"> </span><span class="s">double</span><span class="nv"> </span><span class="s">quoted</span><span class="nv"> </span><span class="s">scalars</span>
-<span class="w">  </span><span class="s">fold</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">same</span><span class="nv"> </span><span class="s">way</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">plain&quot;</span>
+<span class="w">  </span><span class="s">all</span><span class="nv"> </span><span class="s">possible</span><span class="nv"> </span><span class="s">string</span><span class="nv"> </span><span class="s">values&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">lots</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">escape</span><span class="nv"> </span><span class="s">sequences,</span><span class="nv"> </span><span class="s">like</span><span class="nv"> </span><span class="s">\n</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">\t</span>
+<span class="w">  </span><span class="s">as</span><span class="nv"> </span><span class="s">well</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">\&quot;</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">\\&quot;</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Multiline</span><span class="nv"> </span><span class="s">double-quoted</span><span class="nv"> </span><span class="s">scalars</span>
+<span class="w">  </span><span class="s">fold</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">same</span><span class="nv"> </span><span class="s">way</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">plain</span><span class="nv"> </span><span class="s">ones</span><span class="nv"> </span><span class="s">do&quot;</span>
 <span class="nt">literal</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">I&#39;m like a heredoc in Shell or Perl.</span>
 
@@ -2650,7 +2650,7 @@ YAML comments to explain the concepts as much as possible.</p>
 <span class="w">  </span><span class="no">Newlines are preserved as you would expect</span>
 <span class="w">  </span><span class="no">from a heredoc.</span>
 <span class="nt">folded</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
-<span class="w">  </span><span class="no">Folded scalars pretty much fold like</span>
+<span class="w">  </span><span class="no">Folded scalars fold pretty much like</span>
 <span class="w">  </span><span class="no">the others, but you can use them without</span>
 <span class="w">  </span><span class="no">worry of ` #` or `: ` being special.</span>
 
@@ -2658,8 +2658,8 @@ YAML comments to explain the concepts as much as possible.</p>
 
 <span class="nt">In YS code mode</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">plain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used for code expressions</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">single quoted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used for character strings</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">double quoted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used for strings with interpolation support</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">single-quoted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used for character strings</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">double-quoted</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used for strings with interpolation support</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">literal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Used for template strings including interpolation</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">folded</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Not allowed in code mode</span>
 
@@ -2671,9 +2671,9 @@ YAML comments to explain the concepts as much as possible.</p>
 
 
 <span class="c1"># Here we start a second document in the stream.</span>
-<span class="c1"># This one is a top level sequence and it has an anchor and a tag:</span>
+<span class="c1"># This one is a top-level sequence and it has an anchor and a tag:</span>
 <span class="c1"># The `---` indicator is required and you can also use the line to specify the</span>
-<span class="c1"># anchor and tag for the top level node.</span>
+<span class="c1"># anchor and tag for the top-level node.</span>
 
 <span class="nn">---</span><span class="w"> </span><span class="nl">&amp;my-seq-1</span><span class="w"> </span><span class="kt">!a-tag</span>
 
@@ -2717,8 +2717,7 @@ YAML comments to explain the concepts as much as possible.</p>
 <span class="c1"># like JSON.</span>
 <span class="c1"># YAML uses curly braces for mappings and square brackets for sequences.</span>
 <span class="c1"># These are called &quot;flow style&quot; for &quot;collections&quot;.</span>
-<span class="c1"># The normal indented style we&#39;ve been using is called &quot;block style&quot; by</span>
-<span class="c1"># comparison.</span>
+<span class="c1"># By comparison, the normal indented style we&#39;ve been using is called &quot;block style&quot;. </span>
 <span class="c1"># Note: A YAML &quot;collection&quot; is the generic term for a node that is either a</span>
 <span class="c1"># mapping or a sequence.</span>
 
@@ -2732,12 +2731,12 @@ YAML comments to explain the concepts as much as possible.</p>
 <span class="nt">empty mapping</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
 <span class="nt">empty sequence</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
-<span class="c1"># There is actually no way to write empty collections in block style.</span>
+<span class="c1"># Note, there is no way to write empty collections in block style.</span>
 </code></pre></div>
 <h2 id="less-common-yaml-syntax">Less Common YAML Syntax<a class="headerlink" href="#less-common-yaml-syntax" title="Permanent link">🔗</a></h2>
 <p>Here's a few YAML syntax variants that you won't see very often.
 Some of these are used in YS, so it's good to know about them.</p>
-<div class="highlight"><pre><span></span><code># YAML has a top level &quot;directive&quot; syntax.
+<div class="highlight"><pre><span></span><code># YAML has a top-level &quot;directive&quot; syntax.
 # There are only 2 directives defined by the YAML 1.2 specification:
 # This is the first one, the &quot;YAML directive&quot;.
 # It simply specifies the version of the YAML specification in play.
@@ -2786,9 +2785,9 @@ for a foo(), b bar(), c [1 2 3]:
 
 # YS requires that the `for […]` key be a plain scalar, and YAML
 # requires that plain scalar keys need to be a single line.
-# This could lead to unreadable code if we our &quot;for binding&quot; is complex.
+# This could lead to unreadable code if our &quot;for binding&quot; is complex.
 
-# Bute can also do it like this:
+# But we can also do it like this:
 
 for:
   ? a: foo()
