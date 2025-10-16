@@ -350,10 +350,7 @@
      char? (if (number? y)
              (char (+ (int x) y))
              (str x y))
-     fn? (cond
-           (fn? y) (comp y x)
-           (sequential? y) (apply partial x y)
-           :else (partial x y))
+     fn? (partial x y)
      nil? (util/die "Can't add+ to a nil value")
      seqable? (concat (to-list x)
                 (if (sequential? y)
@@ -375,6 +372,7 @@
      (and (number? x) (vector? y)) (vec (apply concat (repeat x y)))
      (and (sequential? x) (number? y)) (apply concat (repeat y x))
      (and (number? x) (sequential? y)) (apply concat (repeat x y))
+     (fn? x) (comp y x)
      (nil? x) (util/die "Can't mul+ to a nil value")
      :else  (* (to-num x 1) (to-num y 1))))
 
