@@ -1,8 +1,8 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.ysreader is responsible for reading YS ysexpr (yes
-;; expression) strings into a set of Clojure AST nodes.
+;; The yamlscript.ysreader is responsible for reading YS expression nodes
+;; (YAML scalar nodes with the :expr key) into a set of Clojure AST nodes.
 
 (ns yamlscript.ysreader
   (:require
@@ -16,57 +16,96 @@
    [yamlscript.re :as re])
   (:refer-clojure :exclude [read-string]))
 
-(defn is-clojure-comment? [token]
-  (re-matches re/ccom (str token)))
+(defn is-clojure-comment?
+  "We match Clojure style line comments (starting with `;`) as tokens and then
+  error on them, because YS does not support them. YS used to support them in
+  very early versions, but YAML comment syntax was a more natural fit for YS.
+  We might make use of the semicolon in the future, but for now we error on
+  them."
+  [token] (re-matches re/ccom (str token)))
 
-(defn is-inline-comment? [token]
-  (re-matches re/icom (str token)))
+(defn is-inline-comment?
+  "YAML doesn't support comments in the middle of a multi-line scalar. YS
+  supports a them in code mode using a syntax that consists of a backslash
+  followed by a double quoted string. (Hard to show a clear example in this
+  double quoted docstring)"
+  [token] (re-matches re/icom (str token)))
 
-(defn is-character? [token]
-  (re-matches re/char (str token)))
+(defn is-character?
+  "A character literal token. YS uses a double backslash for character literals,
+  whereas Clojure uses a single backslash. This is because backslash is YS's
+  escape character for various things like anonymous functions."
+  [token] (re-matches re/char (str token)))
 
-(defn is-keyword? [token]
-  (re-matches re/keyw (str token)))
+(defn is-keyword?
+  "YS keywords are stricter than Clojure keywords. They still start with a
+  colon, but then only allow alphanumeric words separated by a single hyphen."
+  [token] (re-matches re/keyw (str token)))
 
-(defn is-namespace? [token]
+(defn is-namespace?
+  "YS namespace tokens are simple words separated by '::'. Clojure uses '.' but
+  the dot is used for the dot chaining operator in YS so that wouldn't work
+  for namespace names."
+  [token]
   (re-matches re/nspc (str token)))
 
-(defn is-narg? [token]
+(defn is-narg?
+  "A numbered argument found inside an anonymous function. YS currently supports
+  the Clojure style %1 %2 etc, but prefers _1 _2 etc. %1 will be removed in v1.
+  YS supports _ to mean _1, but doesn't support % for %1 because % is used for
+  the remainder operator."
+  [token]
   (re-matches re/narg (str token)))
 
-(defn is-bad-number? [token]
+(defn is-bad-number?
+  "YS will be greedy when lexing tokens that start with a digit like '1A2B'.
+  That would be lexed as a single token and then error on it as a bad number."
+  [token]
   (and
     (re-matches re/mnum (str token))
     (not (re-matches re/xnum (str token)))))
 
-(defn is-number? [token]
-  (re-matches re/xnum (str token)))
+(defn is-number?
+  "A valid number token including integers, floats, ratios, radix, hex, octal,
+  big ints and floats and special numbers like .inf, .NaN, etc."
+  [token] (re-matches re/xnum (str token)))
 
-(defn is-dot-num? [token]
-  (re-matches re/dotn (str token)))
+(defn is-dot-num?
+  "A dot operator followed by a number is used for list indexing and needs to be
+  lexed as a single token."
+  [token] (re-matches re/dotn (str token)))
 
-(defn is-dot-sym? [token]
-  (re-matches re/dots (str token)))
+(defn is-dot-sym?
+  "A dot operator followed by a symbol is used for map key lookup and needs to
+  be lexed as a single token."
+  [token] (re-matches re/dots (str token)))
 
-(defn is-dot-special? [token]
-  (re-matches re/dotx (str token)))
+(defn is-dot-special?
+  "A dot operator followed by certain punctuation characters is used for special
+  operations like .++, .--, .?, .!!, etc."
+  [token] (re-matches re/dotx (str token)))
 
-(defn is-operator? [token]
+(defn is-operator?
+  "Infix operator tokens like +, -, *, /, %, %%, **, ==, !=, >, >=, <, <=, &&,
+  ||, &&&, ||| etc."
+  [token]
   (let [t (str token)]
-    (and (re-matches re/osym t)
+    (and
+      (re-matches re/osym t)
       (not= t "&"))))
 
-(defn is-colon-calls? [token]
-  (re-matches re/ksym (str token)))
+(defn is-colon-calls?
+  "A colon chain call token like a:b is short for a.b()."
+  [token] (re-matches re/ksym (str token)))
 
-(defn is-quote? [token]
-  (re-matches re/quot (str token)))
+(defn is-quote?
+  [token] (re-matches re/quot (str token)))
 
-(defn is-special? [token]
-  (re-matches re/spec (str token)))
+(defn is-special?
+  [token] (re-matches re/spec (str token)))
 
-(defn is-clojure-symbol? [token]
-  (re-matches re/csym (str token)))
+(defn is-clojure-symbol?
+  [token] (re-matches re/csym (str token)))
 
 (defn is-regex? [token]
   (re-matches re/regx (str token)))
@@ -129,8 +168,8 @@
       $osym |                   # Operator symbol token
       $anon |                   # Anonymous fn start token
       $sett |                   # Set start token
-      $dstr |                 # String token
-      $sstr |                 # String token
+      $dstr |                 # Double quoted string token
+      $sstr |                 # Single quoted string token
                               # Other tokens
       .                         # Single character tokens
     )"))
@@ -171,17 +210,18 @@
 (defn get-special-expansion [token]
   (let [expanded
         (condp = token
-          ".@"   ". clojure::core/deref( )"
-          ".$"   ". clojure::core/last( )"
-          ".#"   ". clojure::core/count( )"
-          ".?"   ". ys::std/truey?( )"
-          ".!"   ". ys::std/falsey?( )"
-          ".??"  ". clojure::core/boolean( )"
-          ".!!"  ". clojure::core/not( )"
-          ".--"  ". ys::std/dec+( )"
-          ".++"  ". ys::std/inc+( )"
-          ".>"   ". clojure::core/DBG( )"
-          ".>>>" ". clojure::core/DBG( )"
+          ".("   ". call("
+          ".@"   ". deref( )"
+          ".$"   ". last( )"
+          ".#"   ". count( )"
+          ".?"   ". truey?( )"
+          ".!"   ". falsey?( )"
+          ".??"  ". boolean( )"
+          ".!!"  ". not( )"
+          ".--"  ". dec+( )"
+          ".++"  ". inc+( )"
+          ".>"   ". DBG( )"
+          ".>>>" ". DBG( )"
           (die "Unsupported dot special operation: " token))]
     (str/split expanded #" ")))
 
@@ -391,8 +431,10 @@
 (defn read-scalar [[token & tokens]]
   (cond
     (map? token) [token tokens]
+
     (is-clojure-comment? token)
     (die "Clojure style comments are not allowed: '" token "'.")
+
     (is-inline-comment? token) [nil tokens]
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
@@ -405,7 +447,7 @@
                        [(Sym n) tokens])
     (is-bad-number? token) (die "Invalid number: " token)
     (is-number? token) (let [token (str/replace token #"^([-+]?)0o"
-                                       (str "$1" "0"))
+                                     (str "$1" "0"))
                              token (str/replace token #"\\\\" "##")]
                          [(Num token) tokens])
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]

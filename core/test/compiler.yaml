@@ -1129,7 +1129,7 @@
     !yamlscript/v0
     =>: foo.>.bar
   clojure: |
-    (get+ (clojure.core/DBG foo) 'bar)
+    (get+ (DBG foo) 'bar)
 
 - name: Error Clojure style comments
   yamlscript: |
@@ -1299,7 +1299,7 @@
     !yamlscript/v0
     if foo.?: bar
   clojure: |
-    (if (ys.std/truey? foo) bar)
+    (if (truey? foo) bar)
 
 
 - name: Support .# count operator
@@ -1307,7 +1307,7 @@
     !yamlscript/v0
     if foo.#: bar
   clojure: |
-    (if (clojure.core/count foo) bar)
+    (if (count foo) bar)
 
 
 - name: Support parenthesized .# count operator
@@ -1317,9 +1317,9 @@
     if foo.# == 3: bar
     if (== foo.# 3): bar
   clojure: |
-    (if (= (clojure.core/count foo) 3) bar)
-    (if (= (clojure.core/count foo) 3) bar)
-    (if (= (clojure.core/count foo) 3) bar)
+    (if (= (count foo) 3) bar)
+    (if (= (count foo) 3) bar)
+    (if (= (count foo) 3) bar)
 
 
 - name: Use _ for %1 in anonymous function
@@ -1337,7 +1337,7 @@
     !yamlscript/v0
     when a.-- > b.++: c
   clojure: |
-    (when (> (ys.std/dec+ a) (ys.std/inc+ b)) c)
+    (when (> (dec+ a) (inc+ b)) c)
 
 
 - name: Anonymous function with only a regex
@@ -1419,9 +1419,9 @@
     (b+ a)
     (b/c a)
     (d (b/c a))
-    (b (ys.std/inc+ a))
-    (b (ys.std/dec+ a))
-    (b (clojure.core/count a))
+    (b (inc+ a))
+    (b (dec+ a))
+    (b (count a))
 
 
 - name: Bare mode tags

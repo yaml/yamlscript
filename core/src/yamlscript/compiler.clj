@@ -122,4 +122,6 @@
     (apply str)))
 
 (comment
+  (compile "!YS-v0
+a.(b)")
   )

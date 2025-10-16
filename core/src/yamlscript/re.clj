@@ -13,7 +13,9 @@
    [yamlscript.common])
   (:refer-clojure :exclude [char quot]))
 
-(defn re [rgx]
+(defn re
+  "Expand regex template variables."
+  [rgx]
   (loop [rgx (str rgx)]
     (let [match (re-find #"\$([a-zA-Z]+)" rgx)]
       (if match
@@ -28,18 +30,24 @@
           (recur rgx))
         (re-pattern rgx)))))
 
-(def char #"(?x)(?:
-            \\\\
-            (?:
-              newline |
-              space |
-              tab |
-              formfeed |
-              backspace |
-              return |
-              .
-            ))")                           ; Character token
-(def tend #"(?=[\.\,\s\]\}\)]|$)")         ; End of token
+(def char
+  "A character literal token.
+   Clojure uses a single backslash for escaping character literals.
+   YS uses a double backslash for escaping character literals.
+   Example: \\x or \\newline"
+  #"(?x)(?:
+    \\\\
+    (?:
+      newline |
+      space |
+      tab |
+      formfeed |
+      backspace |
+      return |
+      .
+    ))")
+(def tend "Token ending lookahead"
+  #"(?=[\.\,\s\]\}\)]|$)")
 (def ccom #"(?:;.*(?:\n|\z))")             ; Clojure comment
 (def ignr #"(?x)
             (?:                            # Ignorables
@@ -53,6 +61,7 @@
 (def dotx #"(?x)                           # Dot special operator
             (?:\.
               (?:
+                \( |
                 \?{1,2} |
                 \!{1,2} |
                 \+\+ |
