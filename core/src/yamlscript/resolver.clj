@@ -17,16 +17,18 @@
 ;;
 ;; Mode tags:
 ;; * ! - Toggle between code and data mode
-;; * !code - Code mode
-;; * !data - Data mode
+;; * !!ys - Code mode
+;;   * !code - Code mode (deprecated)
+;; * !!ys: - Data mode
+;;   * !data - Data mode (deprecated)
 ;; * !bare - Bare mode
 ;; * !clj - Raw Clojure code
 ;;
 ;; Method tags:
-;; * !:method - Call method on pair value
-;; * !:method* - Apply method on pair value sequence
-;; * !:method: - Call method on pair value & toggle mode
-;; * !:method*: - Apply method on pair value sequence & toggle mode
+;; * !method - Call method on pair value
+;; * !method* - Apply method on pair value sequence
+;; * !method: - Call method on pair value & toggle mode
+;; * !method*: - Apply method on pair value sequence & toggle mode
 ;;
 ;; Data mode node type keys:
 ;; * :map - YAML mapping
@@ -113,7 +115,7 @@
 (def re-null #"(?:|~|null|Null|NULL)")
 (def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
 (def re-keyword re/keyw)
-(def re-call-tag (re/re #"(?::(?:$fsym|$ysym)\*?)+:?"))
+(def re-call-tag (re/re #"(?::?(?:$fsym|$ysym)\*?)+:?"))
 #_(re-matches re-call-tag ":bar:zoo")
 
 (defn check-double-colon-with-tag [key val]
@@ -122,7 +124,7 @@
         [key val] (if (and
                         key-text val-tag
                         (re-find #":$" key-text)
-                        (re-find #"^:\w" val-tag))
+                        (re-find #"^\w" val-tag))
                     (if (re-find #":$" val-tag)
                       (die "Tag '!" val-tag
                         "' can't end with ':' after '::' key")
@@ -290,6 +292,12 @@
         :seq (resolve-code-sequence node)
         :ali (resolve-code-alias node))
       ,
+      ;; !clj is handled specially here, marking the node with :clj (raw Clojure
+      ;; code) instead of a function call. In v1 we should use something else
+      ;; like !!clj or !:clj.
+      (and (= tag "clj") (= :val kind))
+      (resolve-code-scalar node :clj style)
+      ,
       (some #{"" "data"} [tag])
       (case kind
         :map (resolve-data-mapping node)
@@ -307,9 +315,6 @@
       (if (str/ends-with? tag ":")
         (assoc (resolve-data-node node) :! (subs tag 0 (dec (count tag))))
         (assoc (resolve-code-node node) :! tag))
-
-      (and (= tag "clj") (= :val kind))
-      (resolve-code-scalar node :clj style)
       ,
       (re-find #"^tag:yaml.org,2002:" tag)
       (case kind
@@ -368,7 +373,7 @@
                     [key val]))
                 (partition 2 nodes)))}
         mapping (if-let [anchor (:& node)] (assoc mapping :& anchor) mapping)
-        mapping (if merge (assoc mapping :! ":+merge") mapping)]
+        mapping (if merge (assoc mapping :! "+merge") mapping)]
     mapping))
 
 (defn resolve-data-sequence [node]
@@ -487,7 +492,7 @@
         mapping (if-let [anchor (:& node)]
                   (assoc mapping :& anchor)
                   mapping)
-        mapping (if merge (assoc mapping :! ":+merge") mapping)]
+        mapping (if merge (assoc mapping :! "+merge") mapping)]
     mapping))
 
 (defn resolve-bare-sequence [node]

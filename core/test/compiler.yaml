@@ -1495,16 +1495,16 @@
 - name: Method tag in code mode
   yamlscript: |
     !yamlscript/v0
-    a =: !:WWW
+    a =: !WWW
       inc: 41
-    b =: !:WWW 42
+    b =: !WWW 42
 
   resolve: |
     {:xmap
      [{:def "a ="}
-      {:xmap [{:expr "inc"} {:expr "41"}], :! ":WWW"}
+      {:xmap [{:expr "inc"} {:expr "41"}], :! "WWW"}
       {:def "b ="}
-      {:expr "42", :! ":WWW"}]}
+      {:expr "42", :! "WWW"}]}
   clojure: |
     (def a (WWW (inc 41)))
     (def b (WWW 42))
@@ -1522,7 +1522,7 @@
 - name: Tag method call with data mode switch to data mode
   yamlscript: |
     !yamlscript/v0
-    array =: !:vec:
+    array =: !vec:
     - 1
     - 2
     - 3
@@ -1534,7 +1534,7 @@
 - name: Tag method call with data mode switch to code mode
   yamlscript: |
     !yamlscript/v0:
-    foo: !:merge: +[{:a 1 :b 2} {:a 3}]
+    foo: !merge: +[{:a 1 :b 2} {:a 3}]
   clojure: |
     {"foo" (merge [{:a 1, :b 2} {:a 3}])}
 
@@ -1574,7 +1574,7 @@
   yamlscript: |
     !yamlscript/v0
     defn xyz():
-      foo =: !:WWW
+      foo =: !WWW
         bar: 42
   clojure: |
     (defn xyz [] (let [foo (WWW (bar 42))]))
@@ -1583,7 +1583,7 @@
 - name: Fully qualified tag function call
   yamlscript: |
     !yamlscript/v0
-    a =: !:b/c d
+    a =: !b/c d
   clojure: |
     (def a (b/c d))
 
@@ -1591,9 +1591,9 @@
 - name: Chained tag calls
   yamlscript: |
     !yamlscript/v0
-    a =: !:b:d/e:f g
-    a =: !:b*:d/e:f* g
-    a =: !:b*:d/e:f*: g
+    a =: !b:d/e:f g
+    a =: !b*:d/e:f* g
+    a =: !b*:d/e:f*: g
   clojure: |
     (def a (f (d/e (b g))))
     (def a (apply f (d/e (apply b g))))

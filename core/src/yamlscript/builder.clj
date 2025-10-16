@@ -1,8 +1,9 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.builder is responsible parsing all the !expr nodes into YS
+;; The yamlscript.builder is responsible parsing all the :expr nodes into YS
 ;; AST nodes.
+;; Much of the logic is in the ysreader.clj file.
 
 (ns yamlscript.builder
   (:require
@@ -20,7 +21,10 @@
 
 (declare build-node)
 
-(defn adjust-special-key-top [node]
+(defn adjust-special-key-top
+  "When the first key starts with a colon in a data mode mapping, we treat it as
+  code and put it under a => key (which gets removed in the final AST)."
+  [node]
   (if-lets [[key val & rest] (:map node)
             _ (re-matches #":.*[^-\w].*" (str (:expr key)))]
     {:map
@@ -35,7 +39,10 @@
   "Parse all the !expr nodes into YS AST nodes."
   [node] (build-node (adjust-special-key-top node)))
 
-(defn build-from-string [string]
+(defn build-from-string
+  "This function is for development testing the builder. To do that the input
+  needs to be parsed, composed and resolved before it can be built."
+  [string]
   (require
     '[yamlscript.parser]
     '[yamlscript.composer]

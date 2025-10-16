@@ -102,9 +102,10 @@
       :else (Lst (expand-splats (flatten [key val]))))))
 
 (defn construct-tag-call [node tag]
-  (or (re-find #"^:" tag)
-    (die "Function call tag must start with a colon"))
-  (let [tags (str/split (subs tag 1) #":")]
+  ;; XXX - We allow leading colons because they used to be mandatory in v0.
+  ;; Now they are optional in v0 and should be removed in v1.
+  (let [tag (if (str/starts-with? tag ":") (subs tag 1) tag)
+        tags (str/split tag #":")]
     (reduce (fn [node tag]
               (let [[tag splat] (if (re-find #"\*$" tag)
                                   [(subs tag 0 (dec (count tag))) true]

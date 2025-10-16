@@ -36,10 +36,10 @@
 ; !YS-v0              (code)
 ; !YS-v0:             (data)
 ; !YS v0:             (bare)
-; !YS-v0 data:        (data)
-; !YS-v0 code:        (code)
-; !YS-v0 bare:        (bare)
-; !YS-v0 yaml:        (bare)
+; !YS-v0/data:        (data)
+; !YS-v0/code:        (code)
+; !YS-v0/bare:        (bare)
+; !YS-v0/yaml:        (bare)
 
 ;; TODO:
 ;; * Support function call tags at top level: !yamlscript/v0/data;merge*:
@@ -47,7 +47,8 @@
 (defn get-ys-tag [node]
   (if-let [tag (:! node)]
     (cond
-      (or (re-find #"^YS-v0:?$" tag)
+      (or
+        (re-find #"^YS-v0:?$" tag)
         (re-find #"^yamlscript/v0(?:/code|/data|/bare|:)?$" tag)
         (re-find #"^(?:code|data|bare)$" tag)) [tag (dissoc node :!)]
       (re-find #"^tag:yaml.org,2002:" tag) [nil node]
