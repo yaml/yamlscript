@@ -12,32 +12,38 @@ import (
 	"unsafe"
 )
 
-// Create a new GraalVM isolatethread for life of the YAMLScript instance:
-var isolatethread unsafe.Pointer
+// Create a new GraalVM isolate for life of the package
+var isolate *C.graal_isolate_t
 
-// Tear down the isolate thread to free resources
-func free() {
-	rc := C.graal_tear_down_isolate((*C.graal_isolatethread_t)(isolatethread))
-	if rc != 0 {
-		log.Fatal("Failed to tear down isolate")
-	}
-}
-
-// YAMLScript instance constructor
+// YAMLScript package constructor
 func init() {
-	rc := C.graal_create_isolate(nil, nil, (**C.graal_isolatethread_t)(unsafe.Pointer(&isolatethread)))
+	// Create the isolate without creating an initial thread
+	// We'll attach threads as needed per-call
+	rc := C.graal_create_isolate(nil, &isolate, nil)
 	if rc != 0 {
 		log.Fatal("Failed to create isolate")
 	}
-	runtime.SetFinalizer(&isolatethread, free)
 }
 
 // Compile and eval a YAMLScript string and return the result
 func Load(input string) (data any, err error) {
+	// Lock the OS thread for GraalVM native image calls
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
+
+	// Attach a thread for this call
+	var thread *C.graal_isolatethread_t
+	rc := C.graal_attach_thread(isolate, &thread)
+	if rc != 0 {
+		return nil, errors.New("Failed to attach thread")
+	}
+	defer C.graal_detach_thread(thread)
+
 	cs := C.CString(input)
 
 	// Call 'load_ys_to_json' function in libys shared library:
-	data_json := C.GoString(C.load_ys_to_json(C.longlong(uintptr(isolatethread)), cs))
+	// Use the newly attached thread
+	data_json := C.GoString(C.load_ys_to_json((C.longlong)(uintptr(unsafe.Pointer(thread))), cs))
 	C.free(unsafe.Pointer(cs))
 
 	// Decode the JSON response:
