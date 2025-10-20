@@ -27,7 +27,7 @@ foreign import capi "graal_isolate.h graal_tear_down_isolate"
   c_graal_tear_down_isolate :: GraalIsolateThread -> IO CInt
 
 -- | Foreign function interface to load_ys_to_json
-foreign import capi "libys.0.2.5.h load_ys_to_json"
+foreign import capi "libys.0.2.6.h load_ys_to_json"
   c_load_ys_to_json :: GraalIsolateThread -> CString -> IO CString
 
 -- | Create a GraalVM isolate and run an action with it

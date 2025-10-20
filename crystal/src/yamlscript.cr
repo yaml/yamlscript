@@ -9,7 +9,7 @@ class YAMLScript
   # This value is automatically updated by 'make bump'.
   # The version number is used to find the correct shared library file.
   # We currently only support binding to an exact version of libys.
-  YAMLSCRIPT_VERSION = "0.2.5"
+  YAMLSCRIPT_VERSION = "0.2.6"
 
   # A low-level interface to the native library
   module LibYS
