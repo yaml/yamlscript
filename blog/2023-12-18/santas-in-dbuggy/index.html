@@ -2537,7 +2537,7 @@ I don't think it even compiled.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>$ ys map.ys -l -d
 *** parse output ***
-({:+ &quot;+MAP&quot;, :! &quot;YS-v0&quot;}
+({:+ &quot;+MAP&quot;, :! &quot;ys-0&quot;}
  {:+ &quot;=VAL&quot;, := &quot;map inc&quot;}
  {:+ &quot;+SEQ&quot;, :flow true}
  {:+ &quot;=VAL&quot;, := &quot;1 2 3&quot;}
@@ -2545,7 +2545,7 @@ I don't think it even compiled.</p>
  {:+ &quot;-MAP&quot;})
 
 *** compose output ***
-{:! &quot;YS-v0&quot;, :% [{:= &quot;map inc&quot;} {:-- [{:= &quot;1 2 3&quot;}]}]}
+{:! &quot;ys-0&quot;, :% [{:= &quot;map inc&quot;} {:-- [{:= &quot;1 2 3&quot;}]}]}
 
 Compile error: Sequences (block and flow) not allowed in code mode
 </code></pre></div>

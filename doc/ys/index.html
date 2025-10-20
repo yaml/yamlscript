@@ -2386,7 +2386,7 @@ printed as JSON.</p>
 <p>Here's the <code>ys --help</code> output:</p>
 <div class="highlight"><pre><span></span><code>$ ys --help
 
-ys - The YS Command Line Tool - v0.2.6
+ys - The YS Command Line Tool - v0.2.7
 
 Usage: ys [&lt;option...&gt;] [&lt;file&gt;]
 
@@ -2544,7 +2544,7 @@ the compilation takes quite a long time.</p>
 <code>-d</code> option:</p>
 <div class="highlight"><pre><span></span><code>$ ys -cd program.ys
 *** parse output ***
-({:+ &quot;+MAP&quot;, :! &quot;YS-v0&quot;}
+({:+ &quot;+MAP&quot;, :! &quot;ys-0&quot;}
  {:+ &quot;=VAL&quot;, := &quot;defn main(name=&#39;world&#39; n=3)&quot;}
  {:+ &quot;+MAP&quot;}
  {:+ &quot;=VAL&quot;, := &quot;greet&quot;}
@@ -2562,7 +2562,7 @@ the compilation takes quite a long time.</p>
  {:+ &quot;-DOC&quot;})
 
 *** compose output ***
-{:! &quot;YS-v0&quot;,
+{:! &quot;ys-0&quot;,
  :%
  [{:= &quot;defn main(name=&#39;world&#39; n=3)&quot;}
   {:% [{:= &quot;greet&quot;} {:= &quot;name n&quot;}]}

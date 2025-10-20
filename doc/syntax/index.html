@@ -2519,20 +2519,20 @@ This is also true in YS!</p>
 follow without them.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;world&#39;</span>
-<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-&#39;Hello, &#39; + name + &#39;!&#39;</span>
+<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+&#39;Hello, &#39; + name + &#39;!&#39;</span>
 </code></pre></div>
 <p>Here we are doing something that you don't see in Clojure.
 We're using <code>+</code> to concatenate strings.</p>
 <p>When YS operators are infix they compile to polymorphic functions that work on
 types of data other than numbers.</p>
-<p>But what about the <code>-</code> in front of the string?</p>
-<p>Without the <code>-</code> this would be invalid YAML because YAML does not allow text on
+<p>But what about the <code>+</code> in front of the string?</p>
+<p>Without the <code>+</code> this would be invalid YAML because YAML does not allow text on
 the same line after a quoted string.</p>
-<p>The <code>-</code> causes YAML to see everything after it as the scalar value:
+<p>The <code>+</code> causes YAML to see everything after it as the scalar value:
 <code>-'Hello, ' + name + '!'</code>.
 This is like an escape character for situations where you want to write an
 expression but the first character is a syntax character in YAML.
-The <code>-</code> is removed and the rest of the scalar is compiled as an expression.</p>
+The <code>+</code> is removed and the rest of the scalar is compiled as an expression.</p>
 <h2 id="basic-function-definition">Basic Function Definition<a class="headerlink" href="#basic-function-definition" title="Permanent link">🔗</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nt">defn greet(name)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">$name!&quot;</span>
@@ -2612,8 +2612,8 @@ This quasi-data-structure is a collection of variables that are assigned values
 from the RHS of the assignment.</p>
 <p>Clojure and YS have destructuring assignment support for both sequences
 and mappings.</p>
-<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">-[a b c] =</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo()</span>
-<span class="l l-Scalar l-Scalar-Plain">-{d :d e :e} =</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar()</span>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">+[a b c] =</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo()</span>
+<span class="l l-Scalar l-Scalar-Plain">+{d :d e :e} =</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar()</span>
 </code></pre></div>
 <p>This would assign the first three values of the sequence returned by <code>foo</code> to
 <code>a</code>, <code>b</code>, and <code>c</code>, and the values of the <code>:d</code> and <code>:e</code> keys of the mapping to

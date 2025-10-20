@@ -2578,7 +2578,7 @@ You could write it like this:</p>
 <p>Let's run the command now (but we'll use the shorter options):</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;name =: &quot;Clojure&quot;&#39;</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;say: &quot;Hello, $name!&quot;&#39;</span><span class="w"> </span>-d
 ***<span class="w"> </span>parse<span class="w">     </span>***<span class="w"> </span><span class="m">0</span>.127737<span class="w"> </span>ms
-<span class="o">({</span>:+<span class="w"> </span><span class="s2">&quot;+MAP&quot;</span>,<span class="w"> </span>:!<span class="w"> </span><span class="s2">&quot;YS-v0&quot;</span><span class="o">}</span>
+<span class="o">({</span>:+<span class="w"> </span><span class="s2">&quot;+MAP&quot;</span>,<span class="w"> </span>:!<span class="w"> </span><span class="s2">&quot;ys-0&quot;</span><span class="o">}</span>
 <span class="w"> </span><span class="o">{</span>:+<span class="w"> </span><span class="s2">&quot;=VAL&quot;</span>,<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="s2">&quot;name =&quot;</span><span class="o">}</span>
 <span class="w"> </span><span class="o">{</span>:+<span class="w"> </span><span class="s2">&quot;=VAL&quot;</span>,<span class="w"> </span>:$<span class="w"> </span><span class="s2">&quot;Clojure&quot;</span><span class="o">}</span>
 <span class="w"> </span><span class="o">{</span>:+<span class="w"> </span><span class="s2">&quot;=VAL&quot;</span>,<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="s2">&quot;say&quot;</span><span class="o">}</span>
@@ -2587,7 +2587,7 @@ You could write it like this:</p>
 <span class="w"> </span><span class="o">{</span>:+<span class="w"> </span><span class="s2">&quot;-DOC&quot;</span><span class="o">})</span>
 
 ***<span class="w"> </span>compose<span class="w">   </span>***<span class="w"> </span><span class="m">0</span>.009495<span class="w"> </span>ms
-<span class="o">{</span>:!<span class="w"> </span><span class="s2">&quot;YS-v0&quot;</span>,
+<span class="o">{</span>:!<span class="w"> </span><span class="s2">&quot;ys-0&quot;</span>,
 <span class="w"> </span>:%<span class="w"> </span><span class="o">[{</span>:<span class="o">=</span><span class="w"> </span><span class="s2">&quot;name =&quot;</span><span class="o">}</span><span class="w"> </span><span class="o">{</span>:$<span class="w"> </span><span class="s2">&quot;Clojure&quot;</span><span class="o">}</span><span class="w"> </span><span class="o">{</span>:<span class="o">=</span><span class="w"> </span><span class="s2">&quot;say&quot;</span><span class="o">}</span><span class="w"> </span><span class="o">{</span>:$<span class="w"> </span><span class="s2">&quot;Hello, </span><span class="nv">$name</span><span class="s2">!&quot;</span><span class="o">}]}</span>
 
 ***<span class="w"> </span>resolve<span class="w">   </span>***<span class="w"> </span><span class="m">0</span>.073969<span class="w"> </span>ms
@@ -2680,7 +2680,7 @@ In reality, the YS compiler is really just a very fancy YAML loader!</p>
 </ul>
 <p>YS (currently) doesn't care about the first 4 events, so it just ignores them.</p>
 <p>That leaves use with a mapping containing 2 key/value pairs:</p>
-<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="ss">:+</span><span class="w"> </span><span class="s">&quot;+MAP&quot;</span>,<span class="w"> </span><span class="ss">:!</span><span class="w"> </span><span class="s">&quot;YS-v0&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="ss">:+</span><span class="w"> </span><span class="s">&quot;+MAP&quot;</span>,<span class="w"> </span><span class="ss">:!</span><span class="w"> </span><span class="s">&quot;ys-0&quot;</span><span class="p">}</span>
 <span class="w"> </span><span class="p">{</span><span class="ss">:+</span><span class="w"> </span><span class="s">&quot;=VAL&quot;</span>,<span class="w"> </span><span class="ss">:=</span><span class="w"> </span><span class="s">&quot;name =&quot;</span><span class="p">}</span>
 <span class="w"> </span><span class="p">{</span><span class="ss">:+</span><span class="w"> </span><span class="s">&quot;=VAL&quot;</span>,<span class="w"> </span><span class="ss">:$</span><span class="w"> </span><span class="s">&quot;Clojure&quot;</span><span class="p">}</span>
 <span class="w"> </span><span class="p">{</span><span class="ss">:+</span><span class="w"> </span><span class="s">&quot;=VAL&quot;</span>,<span class="w"> </span><span class="ss">:=</span><span class="w"> </span><span class="s">&quot;say&quot;</span><span class="p">}</span>
@@ -2717,7 +2717,7 @@ post.</p>
 <h3 id="transformation-2-compose">Transformation 2: Compose<a class="headerlink" href="#transformation-2-compose" title="Permanent link">🔗</a></h3>
 <p>The second transformer is called the composer (in the <code>yamlscript.composer</code>
 library).</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="ss">:!</span><span class="w"> </span><span class="s">&quot;YS-v0&quot;</span>,
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="ss">:!</span><span class="w"> </span><span class="s">&quot;ys-0&quot;</span>,
 <span class="w"> </span><span class="ss">:%</span><span class="w"> </span><span class="p">[{</span><span class="ss">:=</span><span class="w"> </span><span class="s">&quot;name =&quot;</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="ss">:$</span><span class="w"> </span><span class="s">&quot;Clojure&quot;</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="ss">:=</span><span class="w"> </span><span class="s">&quot;say&quot;</span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="ss">:$</span><span class="w"> </span><span class="s">&quot;Hello, $name!&quot;</span><span class="p">}]}</span>
 </code></pre></div>
 <p>Its simple job is to take the parse events and compose them into a tree of

@@ -2692,7 +2692,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h3 id="assignment">Assignment<a class="headerlink" href="#assignment" title="Permanent link">🔗</a></h3>
 <p>The space before the <code>=</code> is required.</p>
 <div class="highlight"><pre><span></span><code>hello =: &#39;Oh hello&#39;
-a b c =: -[1 2 3]  # Destructuring assignment
+a b c =: +[1 2 3]  # Destructuring assignment
 </code></pre></div>
 <h3 id="ys-expression-escapes">YS expression escapes<a class="headerlink" href="#ys-expression-escapes" title="Permanent link">🔗</a></h3>
 <p>YS expressions need to be written as valid YAML scalars.
@@ -2700,11 +2700,11 @@ When an expression starts with YAML syntax characters like <code>{</code>, <code
 then its not a valid YAML scalar.
 Also expressions that have stuff after a quoted string (<code>''</code> <code>""</code>) are not valid
 YAML.</p>
-<p>You can turn text into a valid YAML plain scalar by prefixing it with a dash
-(<code>-</code>) or a plus (<code>+</code>).
-The dash or plus is removed when YS reads the scalar.</p>
+<p>You can turn text into a valid YAML plain scalar by prefixing it with a plus
+(<code>+</code>).
+The plus is removed when YS reads the scalar.</p>
 <p>Note: the dash cannot have whitespace after it, but the plus can.</p>
-<div class="highlight"><pre><span></span><code>-[1 2 3]: .map(inc)  # =&gt; [2 3 4]
+<div class="highlight"><pre><span></span><code>+[1 2 3]: .map(inc)  # =&gt; [2 3 4]
 =&gt;: +
   &#39;foo&#39; + &#39;bar&#39;      # =&gt; &#39;foobar&#39;
 </code></pre></div>
