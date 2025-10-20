@@ -1,3 +1,13 @@
+- version: 0.2.5
+  date:    Mon Oct 20 08:18:37 AM PDT 2025
+  changes:
+  - www: Fix typos
+  - core: Remove support for '-' escaping
+  - core: Use + for partial and * for comp
+  - core: Support x.(y z)
+  - core: Tags for function calls don't need leading colon
+  - go: Fix intermittent stack overflow bug
+  - core: Support new !ys-0 top level tag
 - version: 0.2.4
   date:    Tue Sep 16 11:59:33 AM PDT 2025
   changes:

@@ -1,7 +1,7 @@
 package yamlscript
 
-// #cgo LDFLAGS: -lys.0.2.4
-// #include <libys.0.2.4.h>
+// #cgo LDFLAGS: -lys.0.2.5
+// #include <libys.0.2.5.h>
 // #include <stdlib.h>
 import "C"
 import (

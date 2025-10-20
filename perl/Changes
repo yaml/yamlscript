@@ -1,5 +1,11 @@
 
 ---
+version: 0.2.5
+date:    Mon Oct 20 08:18:37 AM PDT 2025
+changes:
+- libys 0.2.5
+
+---
 version: 0.2.4
 date:    Tue Sep 16 11:59:33 AM PDT 2025
 changes:
