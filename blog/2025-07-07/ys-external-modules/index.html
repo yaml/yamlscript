@@ -18,7 +18,7 @@
         <link rel="prev" href="../../2025-07-06/ys-regular-expressions/">
       
       
-        <link rel="next" href="../../2025-07-08/about-the-v0/">
+        <link rel="next" href="../../2025-07-08/about-the--0/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -2517,7 +2517,7 @@ command with the <code>-n</code> option:</p>
 <span class="w">     </span><span class="m">5</span><span class="w">  </span>How<span class="w"> </span>numbers<span class="w"> </span>to<span class="w"> </span>letters<span class="w"> </span>transcend!
 </code></pre></div>
 <p>Let's write a YS program called <code>cat-n.ys</code> that does the same thing:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(file)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">doall</span><span class="p">:</span>
@@ -2540,7 +2540,7 @@ command with the <code>-n</code> option:</p>
 <p>This file is begging for a different kind of number!</p>
 <h2 id="a-roman-cat">A Roman cat<a class="headerlink" href="#a-roman-cat" title="Permanent link">🔗</a></h2>
 <p>Let's change the program to use Roman numerals for the line numbers:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(file)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">doall</span><span class="p">:</span>
@@ -2562,7 +2562,7 @@ command with the <code>-n</code> option:</p>
 
 <span class="nt">defn to-roman(n)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">when n &gt;= 1</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">val rom =</span><span class="p">:</span><span class="w"> </span><span class="kt">!:first</span>
+<span class="w">    </span><span class="nt">val rom =</span><span class="p">:</span><span class="w"> </span><span class="kt">!first</span>
 <span class="w">      </span><span class="nt">filter _ numeral-pairs</span><span class="p">:</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">\(_.0 &lt;= n)</span>
 <span class="w">    </span><span class="nt">str</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rom to-roman(n - val)</span>
@@ -2582,7 +2582,7 @@ But that's a lot of code to copy and paste into every program...</p>
 <h2 id="refactoring-a-roman-cat">Refactoring a Roman cat<a class="headerlink" href="#refactoring-a-roman-cat" title="Permanent link">🔗</a></h2>
 <p>First let's turn the roman numeral conversion code into a module, but we'll keep
 in the same file for now.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">ns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">to-roman</span>
 
@@ -2598,7 +2598,7 @@ in the same file for now.</p>
 
 <span class="nt">defn to-roman(n)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">when n &gt;= 1</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">val rom =</span><span class="p">:</span><span class="w"> </span><span class="kt">!:first</span>
+<span class="w">    </span><span class="nt">val rom =</span><span class="p">:</span><span class="w"> </span><span class="kt">!first</span>
 <span class="w">      </span><span class="nt">filter _ numeral-pairs</span><span class="p">:</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">\(_.0 &lt;= n)</span>
 <span class="w">    </span><span class="nt">str</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rom to-roman(n - val)</span>
@@ -2630,7 +2630,7 @@ namespace.</p>
 </code></pre></div>
 <p>Now let's move the first part of the program into a file called <code>to-roman.ys</code>,
 and our main program will look like this:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">use to-roman</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:all</span>
 
 <span class="nt">defn main(file)</span><span class="p">:</span>
@@ -2654,7 +2654,7 @@ and our main program will look like this:</p>
      alt="External link">
 </a></p>
 <p>To use it in our YS program, we just do:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">use to-roman</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:all</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:url &#39;gist:ingydotnet/76662926bc811eecdf6c0d09089a737f&#39;</span>
 
@@ -2669,7 +2669,7 @@ and our main program will look like this:</p>
 <p>Let's run it on something a little bigger.</p>
 <p>How about the module itself?!</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>cat-roman.ys<span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://gist.github.com/ingydotnet/76662926bc811eecdf6c0d09089a737f/raw<span class="o">)</span>
-<span class="w">     </span>I<span class="w">  </span>!YS-v0
+<span class="w">     </span>I<span class="w">  </span>!ys-0
 <span class="w">    </span>II
 <span class="w">   </span>III<span class="w">  </span>ns:<span class="w"> </span>to-roman
 <span class="w">    </span>IV
@@ -2685,7 +2685,7 @@ and our main program will look like this:</p>
 <span class="w">   </span>XIV
 <span class="w">    </span>XV<span class="w">  </span>defn<span class="w"> </span>to-roman<span class="o">(</span>n<span class="o">)</span>:
 <span class="w">   </span>XVI<span class="w">    </span>when<span class="w"> </span>n<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span><span class="m">1</span>:
-<span class="w">  </span>XVII<span class="w">      </span>val<span class="w"> </span><span class="nv">rom</span><span class="w"> </span><span class="o">=</span>:<span class="w"> </span>!:first
+<span class="w">  </span>XVII<span class="w">      </span>val<span class="w"> </span><span class="nv">rom</span><span class="w"> </span><span class="o">=</span>:<span class="w"> </span>!first
 <span class="w"> </span>XVIII<span class="w">        </span>filter<span class="w"> </span>_<span class="w"> </span>numeral-pairs:
 <span class="w">   </span>XIX<span class="w">          </span><span class="se">\(</span>_.0<span class="w"> </span>&lt;<span class="o">=</span><span class="w"> </span>n<span class="o">)</span>
 <span class="w">    </span>XX<span class="w">      </span>str:<span class="w"> </span>rom<span class="w"> </span>to-roman<span class="o">(</span>n<span class="w"> </span>-<span class="w"> </span>val<span class="o">)</span>
@@ -2803,13 +2803,13 @@ to use my new module.</p>
         
         
           
-          <a href="../../2025-07-08/about-the-v0/" class="md-footer__link md-footer__link--next" aria-label="Next: About the v0">
+          <a href="../../2025-07-08/about-the--0/" class="md-footer__link md-footer__link--next" aria-label="Next: About the -0">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                About the v0
+                About the -0
               </div>
             </div>
             <div class="md-footer__button md-icon">

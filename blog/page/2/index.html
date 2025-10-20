@@ -2707,10 +2707,10 @@ return matching results (unlike Perl, and more like all the others).</p>
     <h2 id="the-special-little-symbol"><a class="toclink" href="../../2025-07-05/the-special-little-symbol/">The Special Little Symbol</a></h2>
 <p>Yesterday I showed you a FizzBuzz solution in YS.
 Here it is again:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(n=100)</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">each x (1 .. n)</span><span class="p">:</span><span class="w"> </span><span class="kt">!:say</span>
+<span class="w">  </span><span class="nt">each x (1 .. n)</span><span class="p">:</span><span class="w"> </span><span class="kt">!say</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">or? _ x</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">str ((x % 3).! &amp;&amp;&amp; &#39;Fizz&#39;)</span><span class="p p-Indicator">:</span>
 <span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">((x % 5).! &amp;&amp;&amp; &#39;Buzz&#39;)</span>

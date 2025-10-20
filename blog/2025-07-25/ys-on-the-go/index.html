@@ -2526,7 +2526,7 @@ how it doesn't).</p>
 <span class="s1">defn rng(a b): range(a b:inc)</span>
 <span class="s1">defn or?(a b): a:empty?.if(b a)</span>
 
-<span class="s1">doseq x (1 .. 16): !:say</span>
+<span class="s1">doseq x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
@@ -2592,7 +2592,7 @@ exiting.</p>
 <h2 id="how-ys-works-with-glojure">How YS Works with Glojure<a class="headerlink" href="#how-ys-works-with-glojure" title="Permanent link">🔗</a></h2>
 <p>With normal YS you'd do this:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">each x (1 .. 16): !:say</span>
+<span class="s1">each x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
@@ -2618,7 +2618,7 @@ FizzBuzz
 </code></pre></div>
 <p>The <code>ys -c</code> flag compiles the YS code to Clojure, so let's pipe it to <code>glj</code>:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">each x (1 .. 16): !:say</span>
+<span class="s1">each x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
@@ -2633,7 +2633,7 @@ True.
 <p>It's really just an alternate form for <code>doseq</code>.
 Let's try it with <code>doseq</code>:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">doseq x (1 .. 16): !:say</span>
+<span class="s1">doseq x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
@@ -2645,7 +2645,7 @@ unable<span class="w"> </span>to<span class="w"> </span>resolve<span class="w"> 
 <p>Hmmm, <code>rng</code> isn't even used.</p>
 <p>It's time to look at the Clojure code that <code>ys -c</code> generates:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">doseq x (1 .. 16): !:say</span>
+<span class="s1">doseq x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
@@ -2682,7 +2682,7 @@ and <code>say</code>.</p>
 <span class="s1">defn or?(a b): a:empty?.if(b a)</span>
 <span class="s1">say =: println</span>
 
-<span class="s1">each x (1 .. 16): !:say</span>
+<span class="s1">each x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>
@@ -2707,7 +2707,7 @@ We'll just use <code>doseq</code> for now.</p>
 <span class="s1">defn or?(a b): a:empty?.if(b a)</span>
 <span class="s1">say =: println</span>
 
-<span class="s1">doseq x (1 .. 16): !:say</span>
+<span class="s1">doseq x (1 .. 16): !say</span>
 <span class="s1">  or?:</span>
 <span class="s1">    str:</span>
 <span class="s1">      zero?(x % 3).when(&quot;Fizz&quot;)</span>

@@ -2462,7 +2462,7 @@ like <code>example.ys</code> and running <code>ys -c example.ys</code> which wil
 Clojure code that the YS code compiles to.</p>
 </div>
 <h2 id="first-steps">First Steps<a class="headerlink" href="#first-steps" title="Permanent link">🔗</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="l l-Scalar l-Scalar-Plain">(say &quot;Hello, world!&quot;)</span>
 </code></pre></div>
 <p>This is a simple YS program that prints "Hello, world!".</p>
@@ -2470,15 +2470,15 @@ Clojure code that the YS code compiles to.</p>
 YS compiler (<code>ys -c</code>) is really just a fancy YAML loader.
 Almost all YAML files are valid YS and the compiler turns them into the
 expected data structure.</p>
-<p>This is where the <code>!YS-v0</code> tag comes in.
+<p>This is where the <code>!ys-0</code> tag comes in.
 It tells the YS compiler to "load" the YAML into a YS AST which prints
 naturally to Clojure code.</p>
-<p>The point is that every YS program needs to start with the <code>!YS-v0</code>
+<p>The point is that every YS program needs to start with the <code>!ys-0</code>
 tag, or else it just compiles to a regular data structure.</p>
 <p>The second line is a YS function call that happens to be a Clojure function
 call.</p>
 <p>Let's play around with that function call syntax a bit.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="l l-Scalar l-Scalar-Plain">say(&quot;Hello, world!&quot;)</span>
 </code></pre></div>
 <p>This compiles to the same Clojure code as the first example.
@@ -2490,11 +2490,11 @@ value.</p>
 Generally a mix of the two where the top (file level) structure is a nested
 mapping and the leaf values are scalar expressions.</p>
 <p>Let's change our code to use a mapping instead:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">world!&quot;</span>
 </code></pre></div>
 <p>Again, this compiles to the same Clojure code as the first two examples.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Hello,</span><span class="nv"> </span><span class="s">world!&#39;</span>
 </code></pre></div>
 <p>This is the same as the previous example, but the string is single-quoted.
@@ -2502,12 +2502,12 @@ Single quotes aren't used for strings in Clojure, but they are in YAML.</p>
 <p>In YS, like Perl and Ruby, double quoted strings support variable interpolation
 and character escaping while single quoted strings do not.</p>
 <p>Let's get a bit fancier with our string:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;world&#39;</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">$name!&quot;</span>
 </code></pre></div>
 <p>That's a variable assignment and a string interpolation.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;world&#39;</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">str(&#39;Hello, &#39;, name, &#39;!&#39;)</span>
 </code></pre></div>
@@ -2517,7 +2517,7 @@ In Clojure, commas are whitespace and are completely ignored.
 This is also true in YS!</p>
 <p>In general Clojure and YS only use commas in places where the code is hard to
 follow without them.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;world&#39;</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-&#39;Hello, &#39; + name + &#39;!&#39;</span>
 </code></pre></div>
@@ -2551,7 +2551,7 @@ That's just the natural way to do things in YAML.
 Most of the YS syntax design is about making code look natural in YAML.
 It works out surprisingly well!</p>
 <h2 id="variable-assignment-def-and-let">Variable Assignment (def and let)<a class="headerlink" href="#variable-assignment-def-and-let" title="Permanent link">🔗</a></h2>
-<p>In the remaining examples we'll assume the <code>!YS-v0</code> tag is present.</p>
+<p>In the remaining examples we'll assume the <code>!ys-0</code> tag is present.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>What we are calling variable assignment is known as symbol binding in

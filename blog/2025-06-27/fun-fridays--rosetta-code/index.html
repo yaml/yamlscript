@@ -2588,7 +2588,7 @@ From:<span class="w"> </span>http://rosettacode.org/wiki/Sparkline_in_unicode#Cl
 <p>We should be able to make this work in YS, with very little effort.</p>
 <p>Remember the <code>!clj</code> tag for raw Clojure code?</p>
 <p>Let's write the initial YS program: <code>sparkline-in-unicode.ys</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="kt">!clj</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">(defn sparkline [nums]</span>
 <span class="w">    </span><span class="no">(let [sparks   &quot;▁▂▃▄▅▆▇█&quot;</span>
@@ -2621,7 +2621,7 @@ From:<span class="w"> </span>http://rosettacode.org/wiki/Sparkline_in_unicode#Cl
 This lets them all be run in a consistent way.</p>
 <p>Let's add a <code>main</code> function to our YS program.
 Let's do it by getting out of the clj block and adding <code>main</code> in YS code:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="kt">!clj</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">(defn sparkline [nums]</span>
 <span class="w">    </span><span class="no">(let [sparks   &quot;▁▂▃▄▅▆▇█&quot;</span>
@@ -2656,7 +2656,7 @@ use <code>(declare &lt;name&gt;)</code> before the call.
 YS does this automatically for you, so you can define functions in the order
 that you prefer.</p>
 </div>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main()</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">spark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read-line()</span>
@@ -2714,7 +2714,7 @@ In Clojure, <code>%</code> is short for <code>%1</code> (the first argument).
 In YS, <code>%</code> is a modulo operator, so we use <code>%1</code> instead.
 YS also lets you use <code>_</code> for <code>%1</code> in anonymous functions.</p>
 <p>Let's convert the anonymous functions and get rid of the <code>!clj</code> tags.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main()</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">spark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read-line()</span>
@@ -2742,7 +2742,7 @@ YS also lets you use <code>_</code> for <code>%1</code> in anonymous functions.<
 <p>Still working!</p>
 <h2 id="more-idiomatic-ys">More Idiomatic YS<a class="headerlink" href="#more-idiomatic-ys" title="Permanent link">🔗</a></h2>
 <p>Let's make this more idiomatic YS.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main()</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">spark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read-line()</span>
@@ -2781,7 +2781,7 @@ YS also lets you use <code>_</code> for <code>%1</code> in anonymous functions.<
 <p>Just because we found an example of Clojure code on the Rosetta Code site,
 doesn't mean it's the best way to solve the problem.</p>
 <p>I see several things that we could do better here.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main()</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">spark</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read-line()</span>
@@ -2821,7 +2821,7 @@ We can use <code>.#</code> to get the length of the string and <code>.--</code> 
 <p>I don't think this code needs to read from stdin.
 It's causing us to use <code>read-line</code> and <code>recur</code> in the <code>spark</code> function.</p>
 <p>Let's pass in the data as a text string to the program.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(input)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">each line input:lines</span><span class="p">:</span>

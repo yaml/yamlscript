@@ -2723,15 +2723,15 @@ that could be improved.</p>
 <p>The first was being able to load external data and define variables in a file
 that is just data.</p>
 <p>As you might recall, to use YS in a YAML file, you need to use the special
-<code>!YS-v0:</code> tag at the top.
-Note the difference between that tag and the <code>!YS-v0</code> tag that we need
+<code>!ys-0:</code> tag at the top.
+Note the difference between that tag and the <code>!ys-0</code> tag that we need
 to start a YS <em>program</em>.</p>
 <p>The trailing slash means to start off in "data mode" instead of "code mode".
 This means the the unquoted word <code>foo</code> is a string, not a variable or function.</p>
 <p>But say you want to load another file and use its contents as data (without
 having any effect on the YAML data you are defining in the current file).</p>
 <p>Now you can do that (at any lexical level) with a normal YS assignment.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">default =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;defaults.yaml&#39;)</span>
 
@@ -2749,7 +2749,7 @@ key/value pairs in a YAML map.</p>
 If the evaluation result is a map, it is merged into the current map at the
 current position.
 If it evaluates to <code>nil</code>, nothing is added.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 <span class="nt">:</span><span class="p">:</span>
@@ -2760,7 +2760,7 @@ If it evaluates to <code>nil</code>, nothing is added.</p>
 <p>This is a very powerful way to conditionally add data using any logic you want.</p>
 <p>However its a bit verbose for simple cases.
 Consider this:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">data =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;data.yaml&#39;)</span>
 

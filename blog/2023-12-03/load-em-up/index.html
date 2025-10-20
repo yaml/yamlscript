@@ -2626,14 +2626,14 @@ But of course, YS has SuperPowers™ that other YAML loaders don't have.</p>
 YS won't use its SuperPowers unless you ask it to.
 You may ask it (politely) in one of these ways:</p>
 <ul>
-<li>Start the YS with the <code>!YS-v0</code> tag</li>
+<li>Start the YS with the <code>!ys-0</code> tag</li>
 <li>Words are commands by default</li>
-<li>Start the YS with the <code>!YS-v0:</code> tag</li>
+<li>Start the YS with the <code>!ys-0:</code> tag</li>
 <li>Words are data by default</li>
 <li>Use a <code>ys-0</code> shebang line like: <code>#!/usr/bin/env ys-0</code></li>
-<li>Implicitly defaults to <code>!YS-v0</code></li>
+<li>Implicitly defaults to <code>!ys-0</code></li>
 <li>Use the <code>-e</code> option for YS one-liners</li>
-<li>Imlicitly defaults to <code>!YS-v0</code> (for one-liner convenience)</li>
+<li>Imlicitly defaults to <code>!ys-0</code> (for one-liner convenience)</li>
 </ul>
 <p>After that you are good to go!</p>
 <p>Imagine we have YAML files containing top level mappings such as:</p>
@@ -2646,7 +2646,7 @@ You may ask it (politely) in one of these ways:</p>
 </code></pre></div>
 <p>We can pull data from these files into our YAML dynamically:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># file1.ys</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">key1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">val1</span>
 <span class="nt">key2</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;map1.yaml&#39;)</span>
@@ -2665,16 +2665,16 @@ What does this YS mapping pair mean?</p>
 It could be a command to print the number 123 as text to the console.
 Or it could be a mapping pair with the key <code>say</code> and the value <code>123</code>.
 The starting tag tells us which it is.
-The <code>!YS-v0</code> tag means that we start off things in a state where plain
+The <code>!ys-0</code> tag means that we start off things in a state where plain
 (unquoted) YAML scalars are code.
-OTOH, with <code>!YS-v0:</code> these scalars are data like in normal YAML.</p>
+OTOH, with <code>!ys-0:</code> these scalars are data like in normal YAML.</p>
 <p>The <code>!</code> tag is how we switch back and forth (toggle) between these two states.
 If you have existing YAML files and you want to use a couple of YS functions in
-them, start them with <code>!YS-v0:</code> and then use <code>!</code> tags before the
+them, start them with <code>!ys-0:</code> and then use <code>!</code> tags before the
 functional parts.</p>
 <p>Another way to accomplish the same result is:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># file2.ys</span>
-<span class="kt">!YS-v0</span>
+<span class="kt">!ys-0</span>
 
 <span class="nt">map1 =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;map1.yaml&#39;)</span>
 
@@ -2697,7 +2697,7 @@ More on keywords another day.</p>
 <p>I'll leave you with the two most frequent requests that Santa gets from YAML
 kids: <code>merge</code> and <code>concat</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># file3.ys</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">my-map</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span>
 <span class="w">  </span><span class="nt">merge</span><span class="p">:</span>
@@ -2723,7 +2723,7 @@ did was to suggest that <code>&lt;&lt;</code> used as a key could trigger a merg
 100s more (standard functions) in fact!
 (All in good time, my patient Advent-urers.)</p>
 <p>Let's end this day by making that last YS file even cooler than Rudolph's toes!</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">my-map</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;map1.yaml&#39;) + load(&#39;map2.yaml&#39;)</span>
 <span class="nt">my-seq</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;seq1.yaml&#39;) + load(&#39;seq2.yaml&#39;)</span>

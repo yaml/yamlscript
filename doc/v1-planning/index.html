@@ -2484,7 +2484,7 @@ v0 as stable, then release YS v1 as stable, and then start working on YS v2.</p>
 <h2 id="basic-rules-for-v1">Basic Rules for v1<a class="headerlink" href="#basic-rules-for-v1" title="Permanent link">🔗</a></h2>
 <ul>
 <li>Every YS enabled YAML file (stream) must start with a YS stream tag like
-  <code>!YS/v1</code>.</li>
+  <code>!ys-1</code>.</li>
 <li>That will declare the semantics for the entire stream.</li>
 <li>A stream can import other streams of different versions.</li>
 <li>A runtime of v3 should support v1, v2 and v3, but not v4 or higher.</li>
@@ -2507,23 +2507,22 @@ This is meant to be analogous to the <code>::</code> syntax we use for mode swit
 <p>After a document is started with one of these tags, subsequent documents can
 start with a <code>!code</code>, <code>!data</code>, or (the default) <code>!bare</code> tag.</p>
 <h3 id="v1-planned-changes">v1 Planned Changes<a class="headerlink" href="#v1-planned-changes" title="Permanent link">🔗</a></h3>
-<p>We will allow these <code>!YS-v#</code> tags to start a YAML stream (they will be only
+<p>We will allow these <code>!ys-#</code> tags to start a YAML stream (they will be only
 allowed on the first document in the stream):</p>
 <ul>
-<li><code>!yamlscript.org/v1</code>  # Long form</li>
-<li><code>!YS/v1</code>              # Short form</li>
+<li><code>!ys-1</code>               # Short form</li>
 <li><code>!YS-v0</code>              # Legacy v0 form</li>
 </ul>
 <p>Note: each of those imply code mode and can have a <code>:</code> suffix to imply data
 mode.</p>
 <p>To start in bare mode you can use:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS/v1</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-1</span>
 <span class="nn">---</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 </code></pre></div>
 <p>or:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS/v1</span>
-<span class="nn">---</span><span class="w"> </span><span class="kt">!bare</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-1</span>
+<span class="nn">---</span><span class="w"> </span><span class="kt">!yaml</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 </code></pre></div>
 <p>In the first case, we are starting in code mode, but since we immediately
@@ -2535,16 +2534,16 @@ will do nothing since it evaluates to <code>nil</code> (even in <code>-s</code> 
 <code>nil</code> values are not added to the stream).</p>
 <p>The implicit mode (no tag) is always bare mode.</p>
 <p>For data mode, we can use:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS/v1</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-1</span><span class="p">:</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 </code></pre></div>
 <p>or:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS/v1</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-1</span>
 <span class="nn">---</span><span class="w"> </span><span class="kt">!data</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 </code></pre></div>
 <h3 id="url-tags">URL Tags<a class="headerlink" href="#url-tags" title="Permanent link">🔗</a></h3>
-<p><code>!YS/v1</code> is short for <code>!yamlscript.org/v1</code> and that will be a URL that can do
+<p><code>!ys-1</code> is short for <code>!yamlscript.org/v1</code> and that will be a URL that can do
 interesting things:</p>
 <ul>
 <li><code>docs.yamlscript.org/v1</code> might be the docs.</li>

@@ -2493,7 +2493,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <p>I've said it before, but YS code is 100% valid YAML.</p>
 <p>Here's a YS program:</p>
-<div class="highlight"><pre><span></span><code>!YS-v0
+<div class="highlight"><pre><span></span><code>!ys-0
 say: &#39;You say Goodbye&#39;
 say: &#39;I say Hello&#39;
 </code></pre></div>
@@ -2515,7 +2515,7 @@ Here's an example:</p>
 - !tag6 [!tag7 aaa, !tag8 bbb]
 </code></pre></div>
 <p>In real world YAML, you almost never see tags.
-Even in YS, except for <code>!YS-v0</code> and <code>!</code>, you almost never see tags.</p>
+Even in YS, except for <code>!ys-0</code> and <code>!</code>, you almost never see tags.</p>
 <p>Here's the other YS tags I've shown you so far:</p>
 <ul>
 <li><code>!code</code></li>
@@ -2523,7 +2523,7 @@ Even in YS, except for <code>!YS-v0</code> and <code>!</code>, you almost never 
 <li><code>!bare</code></li>
 <li><code>!clj</code></li>
 </ul>
-<p>I also showed you function calling tags like <code>!:merge</code> and <code>!:reverse</code>.</p>
+<p>I also showed you function calling tags like <code>!merge</code> and <code>!reverse</code>.</p>
 <p>It seems like tags aren't used much in YAML or YS.</p>
 <p>That's not the case!!</p>
 <p>YAML has the concept of implicit tagging.
@@ -2574,18 +2574,18 @@ When you install it, it also installs a CLI called <code>yamlpp-load-dump</code>
 <p>Bingo!</p>
 <h2 id="why-is-the-ys-program-valid-yaml">Why is the YS program valid YAML?<a class="headerlink" href="#why-is-the-ys-program-valid-yaml" title="Permanent link">🔗</a></h2>
 <p>Here it is again:</p>
-<div class="highlight"><pre><span></span><code>!YS-v0
+<div class="highlight"><pre><span></span><code>!ys-0
 say: &#39;You say Goodbye&#39;
 say: &#39;I say Hello&#39;
 </code></pre></div>
-<p>In short, we've tagged the top level mapping with <code>!YS-v0</code>.</p>
+<p>In short, we've tagged the top level mapping with <code>!ys-0</code>.</p>
 <p>YAML's unique key constraint applies to nodes tagged with <code>!!map</code> which tells
 the loader to turn this node into "an unordered association of unique keys to
 values".</p>
 <p>The YS compiler is loading this YAML into a YS AST which is something very
 different than a plain mapping data structure.</p>
 <p>Let's look at something a bit more complex:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">mapping =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 

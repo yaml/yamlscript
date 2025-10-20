@@ -2485,7 +2485,7 @@ and an action.
 Since we are writing code in YAML, it uses mappings for this.
 Each pair has a predicate key and an action value.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># cond.ys</span>
-<span class="kt">!YS-v0</span>
+<span class="kt">!ys-0</span>
 <span class="l l-Scalar l-Scalar-Plain">each x [-1 2 30 400 5000 &quot;sixty thousand&quot;]</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="nt">kind =</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cond</span><span class="p">:</span>
@@ -2514,7 +2514,7 @@ This one takes a value and a set of things it might be equal to.
 The set consists of a mapping whose pairs contain a value and an action.
 The <code>case</code> function also supports an <code>else</code> pair, like <code>cond</code>.</p>
 <div class="highlight"><pre><span></span><code># case.ys
-!YS-v0
+!ys-0
 each n (1 .. 4):
   say:
     case n:

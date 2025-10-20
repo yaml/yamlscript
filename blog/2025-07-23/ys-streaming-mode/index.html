@@ -2495,7 +2495,7 @@ bar:<span class="w"> </span><span class="m">222</span>
 definitions or YS modules that get used by the last document to produce its
 desired value:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
-<span class="s1">!YS-v0</span>
+<span class="s1">!ys-0</span>
 <span class="s1">--- !code</span>
 <span class="s1">foo =: 111</span>
 <span class="s1">--- !data</span>
@@ -2518,7 +2518,7 @@ bar:<span class="w"> </span><span class="m">222</span>
 </code></pre></div>
 <p>What happens if some of the documents are code mode and others are data mode?</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-s<span class="w"> </span>-Y<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
-<span class="s1">!YS-v0</span>
+<span class="s1">!ys-0</span>
 <span class="s1">---</span>
 <span class="s1">foo: bar</span>
 <span class="s1">--- !code</span>
@@ -2575,7 +2575,7 @@ Any document can access the values of the previous documents.</p>
 It's short for <code>stream():last</code> or <code>stream.$</code>.</p>
 <p>Consider this example:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Ye<span class="w"> </span><span class="s1">&#39;</span>
-<span class="s1">!YS-v0</span>
+<span class="s1">!ys-0</span>
 <span class="s1">---</span>
 <span class="s1">foo: 111</span>
 <span class="s1">bar: 222</span>

@@ -2502,14 +2502,14 @@ code we were running:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>hello.ys<span class="w"> </span>-c
 <span class="o">{</span><span class="s2">&quot;say&quot;</span><span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span><span class="o">}</span>
 </code></pre></div>
-<p>Oh snap! We forgot to start the program with <code>!YS-v0</code>.
+<p>Oh snap! We forgot to start the program with <code>!ys-0</code>.
 The program started of in <code>bare</code> mode, which is just a YAML mapping.</p>
 <p>We also could have run the program with <code>--print</code> to see what it evaluated to:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>hello.ys<span class="w"> </span>-p
 <span class="o">{</span><span class="s2">&quot;say&quot;</span><span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span><span class="o">}</span>
 </code></pre></div>
 <p>Same thing. Let's fix the program now:</p>
-<p><div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<p><div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">world!&quot;</span>
 </code></pre></div>
 now:
@@ -2520,7 +2520,7 @@ Hello,<span class="w"> </span>world!
 <hr />
 <p>Let's write a program to dynamically generate a list of numbers:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># map.ys</span>
-<span class="kt">!YS-v0</span>
+<span class="kt">!ys-0</span>
 <span class="nt">map inc</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1 2 3</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p>This program doesn't <code>say</code> anything.
@@ -2567,7 +2567,7 @@ YAML plain (unquoted) scalars can't begin with certain characters, like <code>[<
 <code>{</code>, <code>*</code>, <code>&amp;</code>, <code>!</code>, <code>|</code>, <code>&gt;</code>, <code>%</code>, <code>@</code>, <code>#</code> etc because they are YAML syntax.
 In YS when we want a ysexpr string that starts with one of these characters, we
 can escape it with a plus <code>+</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">map inc</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+[1 2 3]</span>
 </code></pre></div>
 <p>And let's just check the resolve stage this time:</p>
@@ -2685,7 +2685,7 @@ Here&#39;s a contrived example that passes data through a pipeline of functions:
 
 ```yaml
 # pipeline.ys
-!YS-v0
+!ys-0
 -&gt;&gt; (1..10):
   map: inc
   filter: \(= 0 (mod % 2))  # odd?
@@ -2703,7 +2703,7 @@ It's quite nice and handy.</p>
 <p>Often times when I'm writing a pipeline like this, I want to see what the data
 looks like after a particular transformation or maybe after several of them.
 I almost always us <code>WWW</code> for this.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">-&gt;&gt; (1..10)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">WWW</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;before</span><span class="nv"> </span><span class="s">map&quot;</span>
 <span class="w">  </span><span class="nt">map</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc</span>

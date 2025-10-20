@@ -2485,7 +2485,7 @@ template version.</p>
 <table>
 
 <tr><td>
-<div class="highlight"><span class="filename">ys-chart/templates/helpers.yaml</span><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><span class="filename">ys-chart/templates/helpers.yaml</span><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">defn trunc(s)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">take(63 s).str(*).replace(/-$/)</span>
 
 <span class="c1"># Expand the name of the chart:</span>
@@ -2590,7 +2590,7 @@ Create the name of the service account to use
 </td></tr>
 
 <tr><td>
-<div class="highlight"><span class="filename">ys-chart/templates/deployment.yaml</span><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><span class="filename">ys-chart/templates/deployment.yaml</span><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -2706,7 +2706,7 @@ Create the name of the service account to use
 </td></tr>
 
 <tr><td>
-<div class="highlight"><span class="filename">ys-chart/templates/serviceaccount.yaml</span><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><span class="filename">ys-chart/templates/serviceaccount.yaml</span><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">:when Values.serviceAccount.create</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServiceAccount</span>
@@ -2736,7 +2736,7 @@ Create the name of the service account to use
 </td></tr>
 
 <tr><td>
-<div class="highlight"><span class="filename">ys-chart/templates/service.yaml</span><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><span class="filename">ys-chart/templates/service.yaml</span><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
 <span class="nt">metadata</span><span class="p">:</span>

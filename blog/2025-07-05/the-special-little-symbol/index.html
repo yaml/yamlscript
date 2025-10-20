@@ -2502,10 +2502,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <p>Yesterday I showed you a FizzBuzz solution in YS.
 Here it is again:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(n=100)</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">each x (1 .. n)</span><span class="p">:</span><span class="w"> </span><span class="kt">!:say</span>
+<span class="w">  </span><span class="nt">each x (1 .. n)</span><span class="p">:</span><span class="w"> </span><span class="kt">!say</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">or? _ x</span><span class="p p-Indicator">:</span>
 <span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">str ((x % 3).! &amp;&amp;&amp; &#39;Fizz&#39;)</span><span class="p p-Indicator">:</span>
 <span class="w">          </span><span class="l l-Scalar l-Scalar-Plain">((x % 5).! &amp;&amp;&amp; &#39;Buzz&#39;)</span>
@@ -2527,7 +2527,7 @@ So we used <code>_</code> to mean: put the big expression after the <code>:</cod
 you want to use a non-trivial anonymous function for it.
 A common case for this is the <code>reduce</code> function.</p>
 <p>Here's a <code>reduce</code> to find prime numbers:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">say</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">reduce _ [2] (3 .. 100)</span><span class="p p-Indicator">:</span>
@@ -2602,7 +2602,7 @@ anonymous function.</p>
 </code></pre></div>
 <h2 id="the-previous-document-value">The Previous Document Value<a class="headerlink" href="#the-previous-document-value" title="Permanent link">🔗</a></h2>
 <p>In a multi-document YAML file, the <code>_</code> symbol is the previous document value.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;!YS-v0</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;!ys-0</span>
 <span class="s1">--- !data</span>
 <span class="s1">foo: blue</span>
 <span class="s1">bar: 10</span>

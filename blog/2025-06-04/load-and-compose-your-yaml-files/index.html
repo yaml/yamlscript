@@ -2509,7 +2509,7 @@ And since JSON is YAML, you can also load JSON files with <code>load</code>.</p>
 <span class="p">}</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># shoe3.ys</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sandal</span>
 <span class="nt">size:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2 * 2 * 2</span>
 </code></pre></div>
@@ -2518,7 +2518,7 @@ I used a YS expression to calculate the size!
 That's just to show that YS expressions evaluate on load.</p>
 <p>Let's load them all together.</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># shoes.yaml</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">!ys-0</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe1.yaml&#39;)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe2.json&#39;)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe3.ys&#39;)</span>
@@ -2547,7 +2547,7 @@ but that would never work in a JSON file.</p>
 <p>Fortunately, YS is a functional language with 100s of functions.
 Surely it has a <code>merge</code> function!</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># shoes.yaml</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">!ys-0</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(load(&#39;defaults.yaml&#39;), load(&#39;shoe1.yaml&#39;))</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(load(&#39;defaults.yaml&#39;), load(&#39;shoe2.json&#39;))</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge(load(&#39;defaults.yaml&#39;), load(&#39;shoe3.ys&#39;))</span>
@@ -2576,16 +2576,16 @@ I've stolen many of those shiniest gems for YS.</p>
 <p>Anyway, in YS… TMTOWTDI!</p>
 <hr />
 <p>Let's rearrange our new shoes a bit:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!ys-0</span>
 <span class="nt">defaults =</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;defaults.yaml&#39;</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults.merge(load(&#39;shoe1.yaml&#39;))</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span>
 <span class="w">  </span><span class="nt">merge defaults</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;shoe2.json&#39;</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!:merge*</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!merge*</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;shoe3.ys&#39;)</span>
 </code></pre></div>

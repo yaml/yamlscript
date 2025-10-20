@@ -2611,7 +2611,7 @@ write Clojure, so let's just pick a Clojure solution and translate it to YS.</p>
 <span class="p">(</span><span class="nf">print-open-doors</span><span class="p">)</span>
 </code></pre></div>
 <p>Here's a quick translation to YS:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn doors()</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">reduce</span><span class="p">:</span>
@@ -2637,7 +2637,7 @@ Open<span class="w"> </span>doors<span class="w"> </span>after<span class="w"> <
 <p>I'm just going to rename the <code>print-open-doors</code> function to <code>main</code> and move it
 to the top of the file.
 The <code>main</code> function (if defined) is called automatically when the script is run.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main()</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span>
@@ -2669,7 +2669,7 @@ It's a pretty terrible plain text editor, but scroll way down to where
 the YS solutions should go and add this:</p>
 <div class="highlight"><pre><span></span><code>=={&amp;lcub;header|YAMLScript}}==
 &amp;lt;syntaxhighlight lang=&quot;yaml&quot;&gt;
-!YS-v0
+!ys-0
 
 defn main():
   say:

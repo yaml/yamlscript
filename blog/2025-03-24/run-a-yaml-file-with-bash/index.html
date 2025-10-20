@@ -2556,10 +2556,10 @@ file.yaml:<span class="w"> </span>line<span class="w"> </span><span class="m">3<
 </code></pre></div>
 <p>Close, but look at the <code>dog years</code> value. It's just a string.</p>
 <p>We need to tell YS to evaluate the expression <code>age * 7</code> as a math expression.</p>
-<p>YS won't do any evaluation unless we tell it to with the <code>!YS-v0:</code> tag.
+<p>YS won't do any evaluation unless we tell it to with the <code>!ys-0:</code> tag.
 Then we need to tell YS that just the <code>dog years</code> value should be evaluated.
 We do that with the <code>::</code> syntax:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fido</span>
 <span class="nt">age</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="nt">dog years:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">age * 7</span>
@@ -2570,7 +2570,7 @@ Error:<span class="w"> </span>Could<span class="w"> </span>not<span class="w"> <
 </code></pre></div>
 <p>Oh, right. The <code>age</code> symbol is not defined here.
 Luckily we can define it inline:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fido</span>
 <span class="nt">age =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="nt">age:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">age</span>
@@ -2582,7 +2582,7 @@ Luckily we can define it inline:</p>
 </code></pre></div>
 <p>Sweet! We have the JSON output we wanted.</p>
 <p>Note: We could do the same thing with an anchor and alias:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Fido</span>
 <span class="nt">age =</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;age</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
 <span class="nt">dog years:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7 * *age</span>
@@ -2594,7 +2594,7 @@ Luckily we can define it inline:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env ys-0</span>
 <span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export YS_FORMAT=json&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>curl<span class="w"> </span><span class="s1">&#39;-s&#39;</span><span class="w"> </span><span class="s1">&#39;https://getys.org/run&#39;</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>:
 ---
-!YS-v0:
+!ys-0:
 name:<span class="w"> </span>Fido
 age:<span class="w"> </span><span class="p">&amp;</span>age<span class="w"> </span><span class="m">3</span>
 dog<span class="w"> </span>years::<span class="w"> </span><span class="m">7</span><span class="w"> </span>*<span class="w"> </span>*age
@@ -2627,7 +2627,7 @@ YS!</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export YS_FORMAT=json&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>curl<span class="w"> </span><span class="s1">&#39;-s&#39;</span><span class="w"> </span><span class="s1">&#39;https://getys.org/run&#39;</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>:
 ---
-!YS-v0:
+!ys-0:
 name:<span class="w"> </span>Fido
 age:<span class="w"> </span><span class="p">&amp;</span>age<span class="w"> </span><span class="m">3</span>
 dog<span class="w"> </span>years::<span class="w"> </span><span class="m">7</span><span class="w"> </span>*<span class="w"> </span>*age
@@ -2659,7 +2659,7 @@ and MacOS:</p>
 <p>Again, this is both valid Bash and valid YS!
 Here's how YS compiles the <code>source</code> line to Clojure code:</p>
 <div class="highlight"><pre><span></span><code>$ ys -c -
-!YS-v0
+!ys-0
 source /dev/stdin &lt;&lt;&lt;&quot;$(echo &#39;export YS_FORMAT=json&#39; &amp;&amp; curl &#39;-s&#39; &#39;https://getys.org/run&#39;)&quot; &quot;$@&quot;:
 
 (source
@@ -2695,7 +2695,7 @@ whenever it (or one of its dependencies) changed, you'd have a generated
 <code>config.yaml</code> file that would do everything you wanted it to do.</p>
 <p>Let's try it out. We'll make a <code>config.ys</code> file that loads an <code>other.yaml</code> file
 and uses environment variables to set some values:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">My Thing</span>
 <span class="nt">stuff:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;other.yaml&#39;).stuff</span>
 <span class="l l-Scalar l-Scalar-Plain">:when ENV.DEBUG.?:</span><span class="p p-Indicator">:</span>
@@ -2714,13 +2714,13 @@ stuff:
 <p>This pulled in a <em>part</em> of the <code>other.yaml</code> file.
 It also would add a map of all your environment variables if <code>DEBUG</code> was set.</p>
 <p>Let's add 2 lines to make it write to <code>config.yaml</code>:
-<div class="highlight"><pre><span></span><code>!YS-v0:
+<div class="highlight"><pre><span></span><code>!ys-0:
 name: My thing
 stuff:: load(&#39;other.yaml&#39;).stuff
 :when ENV.DEBUG.?::
   environment:: ENV
 
---- !YS-v0
+--- !ys-0
 write FILE.replace(/\.ys$/ &#39;.yaml&#39;): _:yaml/dump
 </code></pre></div></p>
 <p>Now we can run it:</p>
@@ -2736,14 +2736,14 @@ get what we want by running it.</p>
 <p>Let's try it with Bash:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span><span class="s1">&#39;-s&#39;</span><span class="w"> </span><span class="s1">&#39;https://getys.org/run&#39;</span><span class="o">)</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>:
----<span class="w"> </span>!YS-v0:
+---<span class="w"> </span>!ys-0:
 
 name:<span class="w"> </span>My<span class="w"> </span>thing
 stuff::<span class="w"> </span>load<span class="o">(</span><span class="s1">&#39;other.yaml&#39;</span><span class="o">)</span>.stuff
 :when<span class="w"> </span>ENV.DEBUG.?::
 <span class="w">  </span>environment::<span class="w"> </span>ENV
 
----<span class="w"> </span>!YS-v0
+---<span class="w"> </span>!ys-0
 write<span class="w"> </span>FILE.replace<span class="o">(</span>/<span class="se">\.</span>ys$/<span class="w"> </span><span class="s1">&#39;.yaml&#39;</span><span class="o">)</span>:<span class="w"> </span>_:yaml/dump
 </code></pre></div>
 <p>Now:</p>

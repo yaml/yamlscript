@@ -2503,7 +2503,7 @@ the overrides.</p>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>
 </code></pre></div>
 <p>Let's refactor this with YS:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defaults =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">docker</span><span class="p">:</span>
@@ -2548,16 +2548,16 @@ jobs:
 <span class="w">  </span><span class="nt">docker</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cimg/base:2023.03</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">defaults =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;defaults.yaml&#39;)</span>
 <span class="nt">docker-defaults =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge.partial(defaults.docker)</span>
 
 <span class="nt">jobs</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="kt">!:docker-defaults</span>
+<span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="kt">!docker-defaults</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the build job&quot;</span>
-<span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="kt">!:docker-defaults</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="kt">!docker-defaults</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkout</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &quot;this is the test job&quot;</span>

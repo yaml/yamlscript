@@ -2636,7 +2636,7 @@ These are called atoms.</p>
 <span class="p">(</span><span class="nb">println </span><span class="p">(</span><span class="nf">counter</span><span class="p">))</span><span class="w"> </span><span class="o">#</span><span class="w"> </span><span class="nv">=&gt;</span><span class="w"> </span><span class="mi">13</span>
 </code></pre></div>
 <p>Writing this in YS is a simple port:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">defn new-counter(n)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">atom(n)</span>
 <span class="w">  </span><span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\(swap! x inc)</span>

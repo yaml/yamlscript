@@ -2601,7 +2601,7 @@ you wanted without also getting the data that you don't.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">games</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">more</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stuff</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">person</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*map1</span>
 <span class="w">  </span><span class="nt">likes</span><span class="p">:</span><span class="w"> </span><span class="nv">*list1</span>
@@ -2647,12 +2647,12 @@ We aliased  nodes that were anchored in a different document.
 What's up?</p>
 <p>Well, the two YS documents each have a different <a href="/doc/modes.md">YS mode</a>
 and that makes things work differently.</p>
-<p>The first document has no <code>!YS-v0</code> tag and thus is in "bare mode".
+<p>The first document has no <code>!ys-0</code> tag and thus is in "bare mode".
 In bare mode all the rules are the same as YAML 1.2 (using the Core schema).</p>
-<p>The second document has the <code>!YS-v0:</code> tag.
-The <code>!YS-v0</code> tag tells YS that the document is in "code mode"
+<p>The second document has the <code>!ys-0:</code> tag.
+The <code>!ys-0</code> tag tells YS that the document is in "code mode"
 (the content starts as code but can switch to data mode at any time).
-The <code>:</code> in <code>!YS-v0:</code> tells YS to switch to data mode right away.</p>
+The <code>:</code> in <code>!ys-0:</code> tells YS to switch to data mode right away.</p>
 <p>In code mode and data mode, aliases are very different than in bare mode.
 They can access anchored nodes in the same document or any previous document.
 Not only that, you can access parts of the anchored node with a path syntax.
@@ -2667,7 +2667,7 @@ For instance <code>*map1.name</code> would produce the string "Bobbi Datamon" an
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">games</span>
 <span class="nt">more</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stuff</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">person</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;&lt;:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-*data.map1</span>
 <span class="w">  </span><span class="nt">likes:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-*data.list1</span>
@@ -2686,7 +2686,7 @@ That means we don't need anchors at all:</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">games</span>
 <span class="nt">more</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">stuff</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">person</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;&lt;:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+++.last().map1</span>
 <span class="w">  </span><span class="nt">likes:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+++.$.list1</span>
@@ -2696,14 +2696,14 @@ first document in this case)
 The <code>+++.$</code> is a shorthand for <code>+++.last()</code>.</p>
 <p>Another approach to take here is to make the first document use YS in code mode
 and define variables to use in the second document:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!ys-0</span>
 <span class="nt">map1 =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 <span class="nt">list1 =:</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fun</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">games</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">person</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;&lt;:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">map1</span>
 <span class="w">  </span><span class="nt">likes:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list1</span>
@@ -2719,7 +2719,7 @@ file?</p>
 <span class="c1"># ...</span>
 </code></pre></div>
 <p>Now we just change the first document to load the list from the file:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="kt">!ys-0</span>
 <span class="nt">map1 =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 <span class="nt">list1 =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&#39;big-list.yaml&#39;)</span>
@@ -2733,7 +2733,7 @@ affect the data.</p>
 <p>The <code>::</code> syntax is our new friend here.</p>
 <p>This lets us do code things like define variables and even define new functions
 in a way that doesn't affect the data we are defining.</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">defn flip(array)</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">reverse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
@@ -2750,7 +2750,7 @@ in a way that doesn't affect the data we are defining.</p>
 have called <code>reverse</code> directly; but it proves the point.</p>
 <p>We also defined our data variables.
 We can actually define variables without <code>::</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">map1 =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 <span class="nt">list1 =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;big-list.yaml&quot;)</span>
@@ -2761,7 +2761,7 @@ We can actually define variables without <code>::</code>:</p>
 </code></pre></div>
 <p>In a big document, it's sometimes nice to define the data variables closer to
 where they are used.</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">map1 =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 
@@ -2772,7 +2772,7 @@ where they are used.</p>
 </code></pre></div>
 <p>In fact, since we only use <code>map1</code> and <code>list1</code> once, we could have just inlined
 them:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">person</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
@@ -2782,7 +2782,7 @@ them:</p>
 <p>Let me count the ways :)</p>
 <p>We are still using the <code>&lt;&lt;</code> merge key to merge mappings, but YS has a standard
 <code>merge</code> function (among 100s of others).</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">map1 =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 <span class="nt">list1 =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;big-list.yaml&quot;)</span>
@@ -2807,12 +2807,12 @@ variable there.</p>
 <p>Sometimes you want to use a function like <code>merge</code> without needing to further
 indent the data you are applying the function to.</p>
 <p>YS lets you put a function in a tag if you prefix it with a<code>:</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">map1 =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bobbi Datamon</span>
 <span class="nt">list1 =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;big-list.yaml&quot;)</span>
 
-<span class="nt">person</span><span class="p">:</span><span class="w"> </span><span class="kt">!:merge</span>
+<span class="nt">person</span><span class="p">:</span><span class="w"> </span><span class="kt">!merge</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">map1</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">likes:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">list1</span>
 </code></pre></div>
@@ -2826,7 +2826,7 @@ do you make it control whether or not it exists at all?</p>
 <p>You really need to apply a function to its parent mapping to make that happen…</p>
 <p>…or do you?</p>
 <p>YS ended up solving this using the <code>::</code> syntax, with a special rule.</p>
-<div class="highlight"><pre><span></span><code>!YS-v0:
+<div class="highlight"><pre><span></span><code>!ys-0:
 foo: 111
 ::
   when a &gt; b::
@@ -2854,7 +2854,7 @@ Well, data files that use YS are no different!</p>
 <p>As we worked through the standard Helm templates we found that while this
 worked just fine, it was a bit verbose.
 We "fixed" that by letting you put the condition test "inside" the <code>::</code> key:</p>
-<div class="highlight"><pre><span></span><code>!YS-v0:
+<div class="highlight"><pre><span></span><code>!ys-0:
 foo: 111
 :when rand(100) &gt; 50::
   bar: 222
@@ -2863,7 +2863,7 @@ baz: 333
 <p>I've changed <code>a &gt; b</code> here to something you could actually run yourself.
 Note that before we never defined <code>a</code> or <code>b</code>, so that would have failed.</p>
 <p>We can even get this into a single line by using YAML's flow style:</p>
-<div class="highlight"><pre><span></span><code>!YS-v0:
+<div class="highlight"><pre><span></span><code>!ys-0:
 foo: 111
 :when rand(100) &gt; 50:: {bar: 222}
 baz: 333
@@ -2879,7 +2879,7 @@ completely convert a stock Helm chart to use YS instead of Go templating:
 You should be able to conditionally insert items into a sequence at any point.</p>
 <p>All you need to do is use all of the above on a <code>- ...</code> sequence entry
 (returning a sequence or nil):</p>
-<div class="highlight"><pre><span></span><code>!YS-v0:
+<div class="highlight"><pre><span></span><code>!ys-0:
 - aaa
 - :when rand(100) &gt; 50::
   - foo

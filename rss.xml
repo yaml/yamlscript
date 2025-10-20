@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Tue, 14 Oct 2025 17:34:43 -0000</pubDate>
-    <lastBuildDate>Tue, 14 Oct 2025 17:34:43 -0000</lastBuildDate>
+    <pubDate>Mon, 20 Oct 2025 16:05:53 -0000</pubDate>
+    <lastBuildDate>Mon, 20 Oct 2025 16:05:53 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -612,7 +612,7 @@ say: multiply-by-7(6)
       
       <description>&lt;p&gt;I&#39;ve said it before, but YS code is 100% valid YAML.&lt;/p&gt;
 &lt;p&gt;Here&#39;s a YS program:&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;!YS-v0
+&lt;p&gt;&lt;code&gt;!ys-0
 say: &#39;You say Goodbye&#39;
 say: &#39;I say Hello&#39;&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;YAML says that mapping keys must be unique.&lt;/p&gt;
@@ -804,7 +804,7 @@ people:
     </item>
     
     <item>
-      <title>About the v0</title>
+      <title>About the -0</title>
       
       
         
@@ -818,7 +818,7 @@ people:
         
       
       <description>&lt;p&gt;The current version of YS as of today is &lt;code&gt;0.2.1&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;I&#39;m sure you&#39;ve noticed the &lt;code&gt;v0&lt;/code&gt; part of the &lt;code&gt;!YS-v0&lt;/code&gt; tag by now.&lt;/p&gt;
+&lt;p&gt;I&#39;m sure you&#39;ve noticed the &lt;code&gt;-0&lt;/code&gt; part of the &lt;code&gt;!ys-0&lt;/code&gt; tag by now.&lt;/p&gt;
 &lt;p&gt;YS intends to be a &#34;versioned programming language&#34;, where &lt;code&gt;v2&lt;/code&gt; can behave
 very differently from &lt;code&gt;v1&lt;/code&gt; while still being able to use &lt;code&gt;v1&lt;/code&gt; libraries and
 such.&lt;/p&gt;
@@ -826,13 +826,13 @@ such.&lt;/p&gt;
 to work.&lt;/p&gt;
 &lt;p&gt;Remember, we are still officially at &lt;code&gt;v0&lt;/code&gt; so even the rules of how versioning
 works are not yet set in stone!&lt;/p&gt;</description>
-      <link>https://yamlscript.org/blog/2025-07-08/about-the-v0/</link>
+      <link>https://yamlscript.org/blog/2025-07-08/about-the--0/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
       <source url="https://yamlscript.org/rss.xml">YS — YAML Done Wisely</source>
       
-      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-08/about-the-v0/</guid>
+      <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-08/about-the--0/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-08/about-the-v0.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-08/about-the--0.png" type="image/png" length="0" />
       
     </item>
     
@@ -913,9 +913,9 @@ return matching results (unlike Perl, and more like all the others).&lt;/p&gt;
       <description>&lt;p&gt;Yesterday I showed you a FizzBuzz solution in YS.
 Here it is again:&lt;/p&gt;
 &lt;p&gt;```yaml
-!YS-v0&lt;/p&gt;
+!ys-0&lt;/p&gt;
 &lt;p&gt;defn main(n=100):
-  each x (1 .. n): !:say
+  each x (1 .. n): !say
     or? _ x:
       str ((x % 3).! &amp;amp;&amp;amp;&amp;amp; &#39;Fizz&#39;):
           ((x % 5).! &amp;amp;&amp;amp;&amp;amp; &#39;Buzz&#39;)
@@ -1165,7 +1165,7 @@ If you&#39;ve never heard of it, you should check it out.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-27/fun-fridays--rosetta-code/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-27/fun-fridays--rosetta-code.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-27/fun-fridays--rosetta-code.png" type="image/png" length="0" />
       
     </item>
     
@@ -2042,7 +2042,7 @@ In other words...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-24/run-a-yaml-file-with-bash/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-24/run-a-yaml-file-with-bash.png" type="image/png" length="None" />
       
     </item>
     
@@ -2209,7 +2209,7 @@ Well, listen, how do you think *I* feel about it?
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-06-20/dr-strangeyaml-or-how-i-learned-to-stop-worrying-and-love-the-llm.png" type="image/png" length="None" />
       
     </item>
     
@@ -2407,7 +2407,7 @@ I always pictured Santa wearing moon boots around the workshop.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-21/yaml-python-and-the-holy-graal/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-21/yaml-python-and-the-holy-graal.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-21/yaml-python-and-the-holy-graal.png" type="image/png" length="0" />
       
     </item>
     

@@ -2610,21 +2610,21 @@ there is a valid YS.
 When a YS loader loads that file it should produce the same result as your
 regular YAML loader.</p>
 <p>To use YS code anywhere in a YAML file, you need to explicitly enable it by
-tagging a document node with a special YS tag, like <code>!YS-v0</code>.
+tagging a document node with a special YS tag, like <code>!ys-0</code>.
 Without that tag somewhere in the stream, every document will be in "bare" mode.</p>
 <p>Bare mode just means that the document node and every node within it is just
 a plain YAML data node.</p>
-<p>If we tag a document with <code>!YS-v0</code> then the document node is in "code mode".
+<p>If we tag a document with <code>!ys-0</code> then the document node is in "code mode".
 That means every node within it is part of a code expression, unless you
 "switch" it to "data mode".</p>
-<p>If we tag a document with <code>!YS-v0:</code> then the document node is in "data mode".
+<p>If we tag a document with <code>!ys-0:</code> then the document node is in "data mode".
 That means every node within it is just plain data, unless you "switch" it to
 "code mode".</p>
 <h2 id="switching-modes">Switching Modes<a class="headerlink" href="#switching-modes" title="Permanent link">🔗</a></h2>
 <p>The way we switch between code mode and data mode is by using the <code>!</code> tag.
 That's just a single <code>!</code> character with no word following it.</p>
 <p>Let's see an example:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span><span class="w">  </span><span class="c1"># Start this document in code mode</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span><span class="w">  </span><span class="c1"># Start this document in code mode</span>
 
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="w">  </span><span class="c1"># The key and value are both code</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello</span><span class="w">  </span><span class="c1"># The value node of this pair is data (a string)</span>
@@ -2641,7 +2641,7 @@ Wherever you see <code>: !</code> as in <code>foo: ! bar</code>, you can say <co
 They mean exactly the same thing.
 The compiler turns <code>::</code> into <code>: !</code> internally.</p>
 <p>Let's see the above using the <code>::</code> syntax:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span>
 <span class="nt">say:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello</span>
@@ -2654,7 +2654,7 @@ The compiler turns <code>::</code> into <code>: !</code> internally.</p>
 <p>Every document in a stream is bare mode by default.
 Even if you've enabled data or code mode on a previous document.
 IOW, you need to turn data or code mode on explicitly for every document.</p>
-<p>The 2 tags for doing this are <code>!YS-v0</code> and <code>!YS-v0:</code> for code mode and data mode
+<p>The 2 tags for doing this are <code>!ys-0</code> and <code>!ys-0:</code> for code mode and data mode
 respectively.</p>
 <p>However if you have more than one code mode or data mode document in a stream,
 you only need to use those tags on the first one.</p>
@@ -2664,7 +2664,7 @@ you only need to use those tags on the first one.</p>
 <span class="nt">a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span>
 <span class="nn">---</span><span class="w"> </span><span class="c1"># Another bare mode document</span>
 <span class="nt">c</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">d</span>
-<span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span><span class="w">  </span><span class="c1"># Code mode document</span>
+<span class="nn">---</span><span class="w"> </span><span class="kt">!ys-0</span><span class="w">  </span><span class="c1"># Code mode document</span>
 <span class="nt">e</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f</span>
 <span class="nn">---</span><span class="w"> </span><span class="c1"># Another bare mode document</span>
 <span class="nt">g</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">h</span>
@@ -2700,7 +2700,7 @@ you are not in code mode.</p>
 YS code mode expressions (parsed from plain scalars)also uses <code>{}</code>, <code>[]</code>, <code>""</code>
 and <code>''</code> syntax for mappings, sequences and strings.</p>
 <p>Let's look at some examples:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span><span class="w">  </span><span class="c1"># code mode</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span><span class="w">  </span><span class="c1"># code mode</span>
 <span class="nt">a =</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># Error, flow sequence in code mode</span>
 <span class="nt">b =</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">a</span><span class="p">:</span><span class="w"> </span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="nt"> b</span><span class="p">:</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">}</span><span class="w">  </span><span class="c1"># Error, flow mapping in code mode</span>
 <span class="nt">c =</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+ &quot;, World&quot;</span><span class="w">  </span><span class="c1"># Error, invalid YAML. Content after ending quote</span>
@@ -2709,7 +2709,7 @@ and <code>''</code> syntax for mappings, sequences and strings.</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f</span>
 </code></pre></div>
 <p>Here's how we fix those errors:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">a =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+ [1 2]</span><span class="w">  </span><span class="c1"># Make these into plain scalars (for YS expressions)</span>
 <span class="nt">b =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+ {a 1, b 2}</span>
 <span class="nt">c =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+ &quot;Hello&quot; + &quot;, World&quot;</span>
@@ -2727,7 +2727,7 @@ mapping pairs).</p>
 <h2 id="tag-function-calls">Tag Function Calls<a class="headerlink" href="#tag-function-calls" title="Permanent link">🔗</a></h2>
 <p>Yesterday we saw how to use <code>!:&lt;fn&gt;</code> to call a function.</p>
 <p>Let's take a closer look.</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="kt">!:bar</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="kt">!bar</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">a</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span>
 </code></pre></div>
@@ -2743,7 +2743,7 @@ again like this:</p>
 <p>The tag call is much nicer.</p>
 <p>But what if we wanted to have the argument for <code>bar</code> be code?</p>
 <p>We can do that by using the <code>::</code> syntax:</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">foo: !:bar</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">foo: !bar</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">b</span>
 </code></pre></div>
 <p>By adding a <code>:</code> after the tag name, we are switching the argument to code mode.
@@ -2754,8 +2754,8 @@ involve modes, we'll save that for another day.</p>
 <h2 id="code-mode-in-data-sequences">Code Mode in Data Sequences<a class="headerlink" href="#code-mode-in-data-sequences" title="Permanent link">🔗</a></h2>
 <p>I forgot to mention how you switch to code mode in a YAML block sequence (always
 in data mode).</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">start in data mode</span>
-<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="kt">!:bar</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span><span class="w">  </span><span class="c1"># start in data mode</span>
+<span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="kt">!bar</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6 * 7</span>
 </code></pre></div>
@@ -2767,7 +2767,7 @@ You just use the <code>!</code> tag switcher.</p>
 the same as they were before.</p>
 <p>In data mode you can use assignments anywhere and they will be scoped to where
 they are defined.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span><span class="w">  </span><span class="c1"># data mode</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span><span class="w">  </span><span class="c1"># data mode</span>
 
 <span class="nt">vars =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">load(&quot;vars.yaml&quot;)</span>
 

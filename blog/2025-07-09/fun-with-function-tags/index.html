@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://yamlscript.org/blog/2025-07-09/fun-with-function-tags/">
       
       
-        <link rel="prev" href="../../2025-07-08/about-the-v0/">
+        <link rel="prev" href="../../2025-07-08/about-the--0/">
       
       
         <link rel="next" href="../../2025-07-10/building-ys/">
@@ -2494,7 +2494,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <h2 id="tag-function-calls">Tag Function Calls<a class="headerlink" href="#tag-function-calls" title="Permanent link">🔗</a></h2>
 <p>We could use the <code>reverse</code> function:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">people:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">reverse:</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Alice</span>
@@ -2512,8 +2512,8 @@ people:
 We had to indent the people list, add the <code>reverse</code> function, and the switch to
 code mode with <code>::</code> and back to data mode with another <code>::</code>.</p>
 <p>This is where function tag calls really shine.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
-<span class="nt">people</span><span class="p">:</span><span class="w"> </span><span class="kt">!:reverse</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
+<span class="nt">people</span><span class="p">:</span><span class="w"> </span><span class="kt">!reverse</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Alice</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bob</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Charlie</span>
@@ -2535,7 +2535,7 @@ these tag calls.</p>
 <h2 id="chained-tags">Chained Tags<a class="headerlink" href="#chained-tags" title="Permanent link">🔗</a></h2>
 <p>What if we wanted to sort the list in reverse?</p>
 <p>In code mode we can chain tags like this:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">fruit-list =:</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Date</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Banana</span>
@@ -2554,9 +2554,9 @@ fruit-list:
 -<span class="w"> </span>Apple
 </code></pre></div>
 <p>It turns out we can also do this with tags, in data mode:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
-<span class="nt">fruit</span><span class="p">:</span><span class="w"> </span><span class="kt">!:sort:reverse</span>
+<span class="nt">fruit</span><span class="p">:</span><span class="w"> </span><span class="kt">!sort:reverse</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Date</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Banana</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apple</span>
@@ -2564,9 +2564,9 @@ fruit-list:
 </code></pre></div>
 <p>We get the same result.</p>
 <p>Could combine <code>sort()</code> and <code>take(3)</code> to get the first 3 items in sorted order?</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
-<span class="nt">fruit</span><span class="p">:</span><span class="w"> </span><span class="kt">!:sort.take(3)</span>
+<span class="nt">fruit</span><span class="p">:</span><span class="w"> </span><span class="kt">!sort.take(3)</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Date</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Banana</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apple</span>
@@ -2574,7 +2574,7 @@ fruit-list:
 </code></pre></div>
 <p>Let's see what we get:</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>file.yaml
-Compile<span class="w"> </span>error:<span class="w"> </span>Invalid<span class="w"> </span>tag<span class="w"> </span><span class="k">for</span><span class="w"> </span>data<span class="w"> </span>mode<span class="w"> </span>node:<span class="w"> </span>!:sort.take<span class="o">(</span><span class="m">3</span><span class="o">)</span>
+Compile<span class="w"> </span>error:<span class="w"> </span>Invalid<span class="w"> </span>tag<span class="w"> </span><span class="k">for</span><span class="w"> </span>data<span class="w"> </span>mode<span class="w"> </span>node:<span class="w"> </span>!sort.take<span class="o">(</span><span class="m">3</span><span class="o">)</span>
 </code></pre></div>
 <p>Nope.</p>
 <p>We need a different approach.</p>
@@ -2587,7 +2587,7 @@ Compile<span class="w"> </span>error:<span class="w"> </span>Invalid<span class=
 <span class="s1">    take 3:</span>
 <span class="s1">      sort: list</span>
 
-<span class="s1">fruit: !:sort-take-3</span>
+<span class="s1">fruit: !sort-take-3</span>
 <span class="s1">- Date</span>
 <span class="s1">- Banana</span>
 <span class="s1">- Apple</span>
@@ -2607,7 +2607,7 @@ Here we wanted to start in data mode, so we used <code>-md</code> (short for
 <p>Luckily there's more than one way to define a YS function.</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-md<span class="w"> </span>-Y<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;</span>
 <span class="s1">sort-take-3 =: \(_:sort.take(3))</span>
-<span class="s1">fruit: !:sort-take-3</span>
+<span class="s1">fruit: !sort-take-3</span>
 <span class="s1">- Date</span>
 <span class="s1">- Banana</span>
 <span class="s1">- Apple</span>
@@ -2719,7 +2719,7 @@ You can defined them anywhere, as long as they are defined before you use them.<
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../2025-07-08/about-the-v0/" class="md-footer__link md-footer__link--prev" aria-label="Previous: About the v0">
+          <a href="../../2025-07-08/about-the--0/" class="md-footer__link md-footer__link--prev" aria-label="Previous: About the -0">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2729,7 +2729,7 @@ You can defined them anywhere, as long as they are defined before you use them.<
                 Previous
               </span>
               <div class="md-ellipsis">
-                About the v0
+                About the -0
               </div>
             </div>
           </a>

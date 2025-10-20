@@ -2517,10 +2517,10 @@ Error:<span class="w"> </span>Anchor<span class="w"> </span>not<span class="w"> 
 <p>Since YS follows the the rules of the YAML 1.2 spec, it can't do what we want
 here.
 This is just a plain old YAML "stream" (complete YAML file or string).</p>
-<p>What happens if we supercharge things with the YS <code>!YS-v0</code> tag?</p>
+<p>What happens if we supercharge things with the YS <code>!ys-0</code> tag?</p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-Y<span class="w"> </span>-<span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="s1">&#39;</span>
 <span class="s1">--- &amp;number 7</span>
-<span class="s1">--- !YS-v0:</span>
+<span class="s1">--- !ys-0:</span>
 <span class="s1">lucky: *number</span>
 <span class="s1">&#39;</span>
 lucky:<span class="w"> </span><span class="m">7</span>
@@ -2530,10 +2530,10 @@ lucky:<span class="w"> </span><span class="m">7</span>
 anchored nodes in other documents.
 That's handy.</p>
 <p>But wait.
-Why did we use <code>!YS-v0:</code> instead of just <code>!YS-v0</code>?</p>
+Why did we use <code>!ys-0:</code> instead of just <code>!ys-0</code>?</p>
 <ul>
-<li><code>!YS-v0</code> - This document is YS code. (start in code mode)</li>
-<li><code>!YS-v0:</code> - This doc is data, but YS magics are enabled. (start in data mode)</li>
+<li><code>!ys-0</code> - This document is YS code. (start in code mode)</li>
+<li><code>!ys-0:</code> - This doc is data, but YS magics are enabled. (start in data mode)</li>
 <li>Documents without either are just plain YAML. No YS magics. (bare mode)</li>
 </ul>
 <p>We'll talk more about mode setting tags in a future post.</p>
@@ -2544,7 +2544,7 @@ Why did we use <code>!YS-v0:</code> instead of just <code>!YS-v0</code>?</p>
 <span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sneaker</span>
 <span class="w">  </span><span class="nt">&lt;&lt;</span><span class="p">:</span><span class="w"> </span><span class="nv">*defaults</span>
 <span class="w">  </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">red</span>
@@ -2571,12 +2571,12 @@ Why did we use <code>!YS-v0:</code> instead of just <code>!YS-v0</code>?</p>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nl">&amp;size</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nl">&amp;color</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blue</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="kt">!YS-v0</span>
+<span class="nn">---</span><span class="w"> </span><span class="kt">!ys-0</span>
 <span class="nt">defaults =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="nv">*color</span>
 <span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="nv">*size</span>
 
-<span class="nn">---</span><span class="w"> </span><span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nn">---</span><span class="w"> </span><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sneaker</span>
 <span class="w">  </span><span class="nt">&lt;&lt;:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defaults</span>
 <span class="w">  </span><span class="nt">color</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">red</span>

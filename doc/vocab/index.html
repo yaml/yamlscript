@@ -2708,14 +2708,13 @@ Every YAML node in a stream has one of 3 modes:</p>
 bare mode and treated as normal YAML.
 These tags are used to indicate the mode of a node:</p>
 <ul>
-<li><code>!YS-v0</code> - Start a document in code mode</li>
-<li><code>!YS-v0:</code> - Start a document in data mode</li>
-<li><code>!bare</code> - Make a node have bare mode semantics</li>
-<li><code>!code</code> - Make a node have code mode semantics</li>
-<li><code>!data</code> - Make a node have data mode semantics</li>
+<li><code>!ys-0</code> - Start a document in code mode</li>
+<li><code>!ys-0:</code> - Start a document in data mode</li>
+<li><code>!ys</code> - Make a node have code mode semantics</li>
+<li><code>!ys:</code> - Make a node have data mode semantics</li>
 <li><code>!</code> - Toggle between code and data modes (or vice versa)</li>
 </ul>
-<p>A <code>!YS-v0</code> or <code>!YS-v0:</code> mode tags must appear before any other mode tag is
+<p>A <code>!ys-0</code> or <code>!ys-0:</code> mode tags must appear before any other mode tag is
 used in a stream.
 Each document in a stream must have mode tag or else it is considered bare
 mode.</p>

@@ -2396,22 +2396,22 @@ Since most YAML files only have one document, you can think of these tags as
 being declared at the top of the files and being applied to the whole file.</p>
 <h2 id="v0-ys-mode-tags">v0 YS Mode Tags<a class="headerlink" href="#v0-ys-mode-tags" title="Permanent link">🔗</a></h2>
 <ul>
-<li><code>!YS-v0</code> - Start in code mode.</li>
-<li><code>!YS-v0:</code> - Start in data mode.</li>
-<li><code>!code</code> - Start in code mode. Must come after a <code>!YS-v0</code> tag.</li>
-<li><code>!data</code> - Start in data mode. Must come after a <code>!YS-v0</code> tag.</li>
-<li><code>!bare</code> - Start in bare mode. Must come after a <code>!YS-v0</code> tag.</li>
+<li><code>!ys-0</code> - Start in code mode.</li>
+<li><code>!ys-0:</code> - Start in data mode.</li>
+<li><code>!code</code> - Start in code mode. Must come after a <code>!ys-0</code> tag.</li>
+<li><code>!data</code> - Start in data mode. Must come after a <code>!ys-0</code> tag.</li>
+<li><code>!bare</code> - Start in bare mode. Must come after a <code>!ys-0</code> tag.</li>
 </ul>
 <p>The <code>!code</code>, <code>!data</code>, and <code>!bare</code> tags are used for clarity but can only be used
-on a document that follows a document with a <code>!YS-v0</code> tag.</p>
+on a document that follows a document with a <code>!ys-0</code> tag.</p>
 <p>One way to use <code>!data</code> without have a previous document is:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nn">---</span><span class="w"> </span><span class="kt">!data</span>
 <span class="nt">num:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6 * 7</span><span class="w">  </span><span class="c1"># 42</span>
 </code></pre></div>
 <p>In reality this YAML has two documents, but since the first one has no content
 it is ignored by the YS compiler.
-Even though it is ignored, it serves to add the <code>!YS-v0</code> tag to the file, so
+Even though it is ignored, it serves to add the <code>!ys-0</code> tag to the file, so
 that you can now use <code>!data</code> or <code>!code</code> or <code>!bare</code> tags in the rest of the file.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2427,7 +2427,7 @@ at the top of that document.</p>
 <li><code>!yamlscript/v0/data</code> - Start in data mode.</li>
 <li><code>!yamlscript/v0/bare</code> - Start in bare mode.</li>
 </ul>
-<p>These tags are still supported for backwards compatibility, but the <code>!YS-v0</code>
+<p>These tags are still supported for backwards compatibility, but the <code>!ys-0</code>
 tags are preferred.
 They may be removed in a future version of YS.</p>
 

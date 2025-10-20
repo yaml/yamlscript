@@ -2500,44 +2500,44 @@ In one state <code>say</code> is a function, and in the other it's just a plain 
 <ul>
 <li>Code Mode</li>
 </ul>
-<p>A starting <code>!YS-v0</code> tag puts the YS file into Code Mode.
+<p>A starting <code>!ys-0</code> tag puts the YS file into Code Mode.
   Unquoted strings are code expressions which are further parsed into AST
   forms.
   A <code>!</code> tag can switch the mode to Data Mode.</p>
 <ul>
 <li>Data Mode</li>
 </ul>
-<p>A starting <code>!YS-v0:</code> tag puts the YS file into Data Mode.
+<p>A starting <code>!ys-0:</code> tag puts the YS file into Data Mode.
   Everything is the regular YAML data language that you are used to.
   But a <code>!</code> tag can switch the mode to Code Mode.</p>
 <ul>
 <li>Bare Mode</li>
 </ul>
-<p>Without a magic starting <code>!yamlscript</code> tag, the YS file is in Bare Mode.
+<p>Without a magic starting <code>!ys-0</code> tag, the YS file is in Bare Mode.
   This is like Data Mode but you aren't allowed to ever switch to Code Mode.
   This is the default mode for YS files, and the reason we can claim that
   almost all existing YAML files are valid YS files.
   <em>Specifically all those that adhere to the JSON data model, which is almost
   all YAML config files.</em></p>
-<p>The <code>ys</code> CLI tool will implicitly add a <code>!YS-v0</code> tag when you use the
+<p>The <code>ys</code> CLI tool will implicitly add a <code>!ys-0</code> tag when you use the
 <code>--eval</code> (aka <code>-e</code>) option, unless you actually provide a tag yourself.
 This is simply for convenience when you are testing out code snippets.</p>
 <p>Note that you can use multiple <code>-e</code> options and each one acts like a separate
 line of code in a file.</p>
 <p>So <code>ys -e 'say: "Hello"' -e 'say: "World"'</code> is the same as this YS program:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;World&quot;</span>
 </code></pre></div>
 <p>If you wanted to write a <code>ys</code> one-liner that used Data Mode, you could do this:
-<code>ys --load -e '!YS-v0:' -e 'foo: 111' -e 'bar: 222'</code> which is the
+<code>ys --load -e '!ys-0:' -e 'foo: 111' -e 'bar: 222'</code> which is the
 same as this YS program:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">111</span>
 <span class="nt">bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">222</span>
 </code></pre></div>
 <p>If you wanted to write a <code>ys</code> one-liner that used Bare Mode, you could do this:
-<code>ys --load -e '!YS-v0' -e '--- !bare' -e 'foo: 111' -e 'bar: 222'</code> which is the
+<code>ys --load -e '!ys-0' -e '--- !bare' -e 'foo: 111' -e 'bar: 222'</code> which is the
 same as the Data Mode example above.</p>
 <p>There's actually a better way to write Data and Bare Mode one-liners.
 The <code>ys</code> command has a <code>--mode</code> (aka <code>-m</code>) option that lets you set the mode to
@@ -2571,13 +2571,13 @@ It switches between Code Mode and Data Mode.</p>
 <p>If you think <code>!</code> looks weird, there is another cleaner looking way to switch
 from Code Mode to Data Mode.</p>
 <p>You can use <code>::</code> instead of <code>:</code> to separate the key and value of a mapping.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">my-map =:</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">foo = 111</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">bar = 222</span>
 </code></pre></div>
 <p>is the same as:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">my-map =</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span>
 <span class="w">  </span><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">111</span>
 <span class="w">  </span><span class="nt">bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">222</span>

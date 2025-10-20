@@ -2561,7 +2561,7 @@ convert to YS:</p>
 <h2 id="the-ys-code">The YS Code<a class="headerlink" href="#the-ys-code" title="Permanent link">🔗</a></h2>
 <p>I won't go through this step by step this time.</p>
 <p>Here's the YS code:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(steps=511)</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">data [minx maxx miny maxy] =</span><span class="p p-Indicator">:</span>
@@ -2581,7 +2581,7 @@ convert to YS:</p>
 <span class="w">        </span><span class="nt">vector</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data bbox</span>
 
 <span class="w">  </span><span class="nt">each y (miny .. maxy)</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="kt">!:join</span>
+<span class="w">    </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="kt">!join</span>
 <span class="w">      </span><span class="nt">each x (minx .. maxx)</span><span class="p">:</span>
 <span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">get-in(data [y x] 0).nth(&quot; ╵╷│╴┘┐┤╶└┌├─┴┬┼&quot;)</span>
 

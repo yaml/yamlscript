@@ -2535,7 +2535,7 @@ And then call them on your data?</p>
 <p>Now let's say we'd rather not need to specify the <code>port</code> values.
 We'd like the port to be automatically added depending on certain conditions.</p>
 <p>Here's a simplistic solution using a YS function:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">defn auto-port(mapping)</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">assoc mapping &#39;port&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1234</span>
 
@@ -2597,7 +2597,7 @@ If the mapping has a <code>driver</code> key and the value is <code>postgres</co
 Otherwise use port 0 (for unknown).</p>
 </blockquote>
 <p>Here's the AI generated function:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">defn auto-port(mapping)</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">if mapping.get(&#39;host&#39;) == &#39;localhost&#39;</span><span class="p p-Indicator">:</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">return mapping.assoc(&#39;port&#39; rand-int(8000, 8999))</span>
@@ -2651,7 +2651,7 @@ How do we do that?</p>
 <p>YS has a <code>!clj</code> tag that allows us to write raw Clojure code as strings in our
 YAML files.</p>
 <p>Let's put this all together in our <code>config.yaml</code> file:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="kt">!clj</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">(defn auto-port [mapping]</span>
@@ -2661,12 +2661,12 @@ YAML files.</p>
 <span class="w">        </span><span class="no">(assoc mapping &quot;port&quot; 5432)</span>
 <span class="w">        </span><span class="no">(assoc mapping &quot;port&quot; 0))))</span>
 
-<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="kt">!:auto-port</span>
+<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="kt">!auto-port</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="kt">!:auto-port</span>
+<span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="kt">!auto-port</span>
 <span class="w">  </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db.example.com</span>
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span>
@@ -2677,7 +2677,7 @@ YAML files.</p>
 </code></pre></div>
 <p>Before we try this out, let's look at what we did here.</p>
 <ul>
-<li>We start in data mode with the <code>!YS-v0:</code> tag.</li>
+<li>We start in data mode with the <code>!ys-0:</code> tag.</li>
 <li>We use the <code>!clj</code> tag to define some code in raw Clojure.</li>
 <li>Since we need a YAML pair here we use the dummy <code>=&gt;</code> key.</li>
 <li>We use a YAML <code>|</code> literal style scalar for the multi-line string.</li>
@@ -2712,7 +2712,7 @@ database:
 <p>Later on I'll show you a lot about how to go from Clojure back to YS, but for
 today I'll just do it for you:</p>
 <p>Here's a direct translation:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn auto-port(mapping)</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">if mapping.host == &#39;localhost&#39;</span><span class="p p-Indicator">:</span>
@@ -2722,12 +2722,12 @@ today I'll just do it for you:</p>
 <span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">assoc mapping &#39;port&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
 
 <span class="nn">---</span><span class="w"> </span><span class="kt">!data</span>
-<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="kt">!:auto-port</span>
+<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="kt">!auto-port</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="kt">!:auto-port</span>
+<span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="kt">!auto-port</span>
 <span class="w">  </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db.example.com</span>
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span>
@@ -2760,15 +2760,15 @@ how I'd probably do this for real.</p>
 <p>Also the AI didn't write the best idiomatic Clojure code.
 Let's tighten up the YS ported code a bit.</p>
 <p>Here's <code>config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">!YS-v0</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
 <span class="nt">:use helpers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:all</span>
 
-<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="kt">!:auto-port</span>
+<span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="kt">!auto-port</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ssl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
-<span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="kt">!:auto-port</span>
+<span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="kt">!auto-port</span>
 <span class="w">  </span><span class="nt">driver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
 <span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db.example.com</span>
 <span class="w">  </span><span class="nt">port</span><span class="p">:</span>
@@ -2778,7 +2778,7 @@ Let's tighten up the YS ported code a bit.</p>
 <span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s3cr3t</span>
 </code></pre></div>
 <p>and <code>helpers.ys</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">ns</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">helpers</span>
 
 <span class="nt">defn auto-port(mapping)</span><span class="p">:</span>

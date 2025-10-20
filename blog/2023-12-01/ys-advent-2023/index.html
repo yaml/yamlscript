@@ -2612,7 +2612,7 @@ Since every YAML file is a valid YS program, it certainly should be loaded just
 like any other YAML loader would do it.</p>
 <p>Let's fix this to do what we want:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># grocery.yaml</span>
-<span class="nt">!YS-v0</span><span class="p">:</span>
+<span class="nt">!ys-0</span><span class="p">:</span>
 
 <span class="nt">::</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bread</span>
@@ -2632,7 +2632,7 @@ $
 <p>There we go! We got our fruits!</p>
 <p>So what did we do here?
 We added 2 things:
-* A <code>!YS-v0:</code> tag at the top
+* A <code>!ys-0:</code> tag at the top
 * A <code>!</code> tag before the <code>load</code> function call</p>
 <p>We won't get into the details of what these tags mean today, but you'll learn
 about them soon enough.</p>

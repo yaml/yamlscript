@@ -2505,7 +2505,7 @@ They are one of the best ways to share text files with others.</p>
 
 <h2 id="making-a-gist">Making a Gist<a class="headerlink" href="#making-a-gist" title="Permanent link">🔗</a></h2>
 <p>Yesterday we talked about a file called <code>sample.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">fun-things =:</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ice cream</span>
@@ -2608,7 +2608,7 @@ defn main(*files):
 
   request =::
     :headers:: +{:Authorization &quot;token $api-token&quot;}
-    :body: !:json/dump
+    :body: !json/dump
       files:: file-map
 
   response =: http/post(api-url request)

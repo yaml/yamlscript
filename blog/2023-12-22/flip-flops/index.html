@@ -2495,7 +2495,7 @@ I always pictured Santa wearing moon boots around the workshop.</p>
 modes?
 They were <strong>bare</strong>, <strong>data</strong> and <strong>code</strong>.
 The bare mode was what you got then you ran (or loaded) a YS program with no
-<code>!YS-v0</code> tag at the top.
+<code>!ys-0</code> tag at the top.
 It just meant that you were effectively stuck in data mode, with no possibility
 of executing any code.</p>
 <p>There's actually comfort in <strong>bare</strong> mode.
@@ -2510,8 +2510,8 @@ YS.
 We learned before that you could switch modes by using the <code>!</code> tag.
 This is the smallest possible tag and we use it for the most common need.</p>
 <p>Here's an example of using YS to generate data to be loaded.
-We'll start in code mode by using <code>!YS-v0</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+We'll start in code mode by using <code>!ys-0</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">vars =</span><span class="p">:</span><span class="w"> </span><span class="kt">!</span>
 <span class="w">  </span><span class="nt">colors</span><span class="p">:</span>
@@ -2538,8 +2538,8 @@ We'll start in code mode by using <code>!YS-v0</code>:</p>
 to <code>data</code> or vice versa.</p>
 <p>Let's walk through it:</p>
 <ul>
-<li><code>!YS-v0</code> - This tag starts the program in <code>code</code> mode. If we wanted to
-  start in <code>data</code> mode, we would use <code>!YS-v0:</code>.</li>
+<li><code>!ys-0</code> - This tag starts the program in <code>code</code> mode. If we wanted to
+  start in <code>data</code> mode, we would use <code>!ys-0:</code>.</li>
 <li><code>vars =: !</code> - We are setting the value of a variable named <code>vars</code> to the some
   data we want to write in plain old YAML. Before we can do that, we need to
   switch to <code>data</code> mode.</li>
@@ -2557,7 +2557,7 @@ rest of the document.</p>
 <p>The <code>!</code> tag is ok for switching modes, but even though it's one character, I
 find it a bit noisy.
 Here's another way to switch modes:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">vars =:</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">colors</span><span class="p">:</span>

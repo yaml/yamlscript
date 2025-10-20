@@ -2524,11 +2524,11 @@ $
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-c<span class="w"> </span>program.ys
 <span class="s2">&quot;(println \&quot;Hello, World!\&quot;)&quot;</span>
 </code></pre></div>
-<p>Ah! It compiled to a string, because we forgot to add <code>!YS-v0</code> to the
+<p>Ah! It compiled to a string, because we forgot to add <code>!ys-0</code> to the
 top of the file.
 All YAML files are valid YS files.
 They won't evaluate any code unless you explicitly tell them to.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="l l-Scalar l-Scalar-Plain">(println &quot;Hello, World!&quot;)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>program.ys
@@ -2536,7 +2536,7 @@ Hello,<span class="w"> </span>World!
 </code></pre></div>
 <p>There we go!</p>
 <p>Let's make it idiomatic now.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Hello,</span><span class="nv"> </span><span class="s">World!&#39;</span>
 </code></pre></div>
 <p>Look mom, no parentheses!</p>
@@ -2566,7 +2566,7 @@ of the YS standard library.</p>
 <p>We've defined a function <code>hello</code> that takes an optional <code>name</code> argument.
 If <code>name</code> is not provided, it defaults to <code>"World"</code>.</p>
 <p>Let's convert this to YS, but change as little as possible.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="kt">!clj</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">(defn hello</span>
 <span class="w">    </span><span class="no">([name] (println (str &quot;Hello, &quot; name &quot;!&quot;)))</span>
@@ -2592,7 +2592,7 @@ treat the string as Clojure code.</p>
 But it can also be a good first step to converting Clojure code to YS.</p>
 <p>Let's keep going by leaving the function defn alone but playing with the
 function calls.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">=&gt;</span><span class="p">:</span><span class="w"> </span><span class="kt">!clj</span><span class="w"> </span><span class="p p-Indicator">|</span>
 <span class="w">  </span><span class="no">(defn hello</span>
 <span class="w">    </span><span class="no">([name] (println (str &quot;Hello, &quot; name &quot;!&quot;)))</span>
@@ -2604,7 +2604,7 @@ function calls.</p>
 The first one has no value, and that's valid in YS when a function has no
 arguments.</p>
 <p>Now let's convert the function defn to YS.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="nt">defn hello</span><span class="p">:</span>
 <span class="w"> </span><span class="nt">(name)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(println (str &quot;Hello, &quot; name &quot;!&quot;))</span>
 <span class="w"> </span><span class="nt">()</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(hello &quot;World&quot;)</span>
@@ -2614,7 +2614,7 @@ arguments.</p>
 <p>That's how you write a multi-arity function in YS.
 It's advanced stuff and you already learned it during hello-world!
 Take a moment! You deserve it!</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="l l-Scalar l-Scalar-Plain">defn hello(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">(println (str &quot;Hello, &quot; name &quot;!&quot;))</span>
 <span class="nt">hello</span><span class="p">:</span>
@@ -2624,7 +2624,7 @@ Take a moment! You deserve it!</p>
 We don't need it here in YS, because YS has support for default function
 arguments.</p>
 <p>Let's finish up with a little interpolation.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 <span class="l l-Scalar l-Scalar-Plain">defn hello(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
 <span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello,</span><span class="nv"> </span><span class="s">$name!&quot;</span>
 <span class="nt">hello</span><span class="p">:</span>
@@ -2655,7 +2655,7 @@ the classic <a href="https://wikipedia.org/wiki/Fizz_buzz">FizzBuzz&nbsp;<img sr
 </code></pre></div>
 <p>We'll skip the <code>!clj</code> step this time and start by making this a top level YAML
 mapping.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn fizzbuzz(start finish)</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">(map (fn [n]</span>
@@ -2674,7 +2674,7 @@ mapping.</p>
 removing the outer parentheses and adding a colon in the middle.</p>
 <p>We also changed the defn args to use parens instead of square brackets.</p>
 <p>Let's make more expressions into pairs now.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn fizzbuzz(start finish)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">map</span><span class="p">:</span>
@@ -2694,7 +2694,7 @@ removing the outer parentheses and adding a colon in the middle.</p>
 You betcha!
 Are we done?
 Heck no!</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn fizzbuzz(start finish)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">map _ (start .. finish)</span><span class="p">:</span>
@@ -2719,7 +2719,7 @@ If we need to actually define a big function there it would be nicer if we could
 do it last.
 In these cases <code>_</code> is our friend.</p>
 <p>Double quotes to single. What's next?</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn fizzbuzz(start finish)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">map _ (start .. finish)</span><span class="p">:</span>
@@ -2740,7 +2740,7 @@ like that.</p>
 <p>In YS, if you define a function called <code>main</code> it will be called automatically
 when the program is run.</p>
 <p>Let's try that.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(start=1 finish=100)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">each x (start .. finish)</span><span class="p">:</span>
@@ -2769,7 +2769,7 @@ Fizz
 </code></pre></div>
 <p>Pretty sweet!</p>
 <p>Let's tidy up this code a bit more, and come down from our fizzy buzz.</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!YS-v0</span>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 
 <span class="nt">defn main(start=1 finish=100)</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">each x (start .. finish)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x.fizzbuzz().say()</span>
