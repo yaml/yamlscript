@@ -1,6 +1,6 @@
 # Generate yamlscript.cabal dynamically
 
---- !YS-v0
+--- !ys-0
 meta =: load('../Meta')
 to-vars: meta.dissoc('name')
 

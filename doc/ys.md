@@ -212,7 +212,7 @@ When debugging, you can see the output of each compilation stage by adding the
 ```text
 $ ys -cd program.ys
 *** parse output ***
-({:+ "+MAP", :! "YS-v0"}
+({:+ "+MAP", :! "ys-0"}
  {:+ "=VAL", := "defn main(name='world' n=3)"}
  {:+ "+MAP"}
  {:+ "=VAL", := "greet"}
@@ -230,7 +230,7 @@ $ ys -cd program.ys
  {:+ "-DOC"})
 
 *** compose output ***
-{:! "YS-v0",
+{:! "ys-0",
  :%
  [{:= "defn main(name='world' n=3)"}
   {:% [{:= "greet"} {:= "name n"}]}

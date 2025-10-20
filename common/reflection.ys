@@ -32,7 +32,7 @@ classes:
 - java.math.BigDecimal
 - java.math.BigInteger
 
---- !YS-v0:
+--- !ys-0:
 
 defaults =::
   allPublicConstructors: true

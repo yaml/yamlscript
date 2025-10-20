@@ -48,7 +48,7 @@ last-step =: (ENV.YS_RELEASE_LAST_STEP || steps):N
 defn main(old-version=0 new-version=0 start=1):
   ctx =:
     if dryrun || ENV.YS_RELEASE_ID:
-      then: -{}
+      then: +{}
       else:
         check-args: old-version new-version start
 

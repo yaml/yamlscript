@@ -241,7 +241,8 @@ Options:
                [(cond
                   (or
                     (re-find #"(?m)^---\s" ecode)
-                    (re-find #"(?m)^(?:---\s+)?!(?:yamlscript/v0|YS-v0)" ecode)
+                    (re-find #"(?m)^(?:---\s+)?!(?:yamlscript/v0|YS-v0|ys-0)"
+                             ecode)
                     (:clojure opts))
                   ""
                   (or (= "c" mode) (= "code" mode))

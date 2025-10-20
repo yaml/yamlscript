@@ -25,13 +25,15 @@ v0 as stable, then release YS v1 as stable, and then start working on YS v2.
 
 Currently we allow these tags to start a YAML stream:
 
+- `!ys-0`
+- `!ys-0:`
+- `!YS-v0`
+- `!YS-v0:`
 - `!yamlscript/v0`
 - `!yamlscript/v0:`
 - `!yamlscript/v0/bare`
 - `!yamlscript/v0/code`
 - `!yamlscript/v0/data`
-- `!YS-v0`
-- `!YS-v0:`
 
 Tags ending with `:` imply data mode.
 This is meant to be analogous to the `::` syntax we use for mode switching.
