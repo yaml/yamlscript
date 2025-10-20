@@ -60,13 +60,13 @@ $ ys -c program.ys
 "(println \"Hello, World!\")"
 ```
 
-Ah! It compiled to a string, because we forgot to add `!YS-v0` to the
+Ah! It compiled to a string, because we forgot to add `!ys-0` to the
 top of the file.
 All YAML files are valid YS files.
 They won't evaluate any code unless you explicitly tell them to.
 
 ```yaml
-!YS-v0
+!ys-0
 (println "Hello, World!")
 ```
 
@@ -80,7 +80,7 @@ There we go!
 Let's make it idiomatic now.
 
 ```yaml
-!YS-v0
+!ys-0
 say: 'Hello, World!'
 ```
 
@@ -128,7 +128,7 @@ If `name` is not provided, it defaults to `"World"`.
 Let's convert this to YS, but change as little as possible.
 
 ```yaml
-!YS-v0
+!ys-0
 =>: !clj |
   (defn hello
     ([name] (println (str "Hello, " name "!")))
@@ -164,7 +164,7 @@ Let's keep going by leaving the function defn alone but playing with the
 function calls.
 
 ```yaml
-!YS-v0
+!ys-0
 =>: !clj |
   (defn hello
     ([name] (println (str "Hello, " name "!")))
@@ -180,7 +180,7 @@ arguments.
 Now let's convert the function defn to YS.
 
 ```yaml
-!YS-v0
+!ys-0
 defn hello:
  (name): (println (str "Hello, " name "!"))
  (): (hello "World")
@@ -194,7 +194,7 @@ Take a moment! You deserve it!
 
 
 ```yaml
-!YS-v0
+!ys-0
 defn hello(name='world'):
   (println (str "Hello, " name "!"))
 hello:
@@ -208,7 +208,7 @@ arguments.
 Let's finish up with a little interpolation.
 
 ```yaml
-!YS-v0
+!ys-0
 defn hello(name='world'):
   say: "Hello, $name!"
 hello:
@@ -244,7 +244,7 @@ We'll skip the `!clj` step this time and start by making this a top level YAML
 mapping.
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn fizzbuzz(start finish):
   (map (fn [n]
@@ -269,7 +269,7 @@ We also changed the defn args to use parens instead of square brackets.
 Let's make more expressions into pairs now.
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn fizzbuzz(start finish):
   map:
@@ -293,7 +293,7 @@ Are we done?
 Heck no!
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn fizzbuzz(start finish):
   map _ (start .. finish):
@@ -324,7 +324,7 @@ In these cases `_` is our friend.
 Double quotes to single. What's next?
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn fizzbuzz(start finish):
   map _ (start .. finish):
@@ -351,7 +351,7 @@ when the program is run.
 Let's try that.
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn main(start=1 finish=100):
   each x (start .. finish):
@@ -388,7 +388,7 @@ Pretty sweet!
 Let's tidy up this code a bit more, and come down from our fizzy buzz.
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn main(start=1 finish=100):
   each x (start .. finish): x.fizzbuzz().say()

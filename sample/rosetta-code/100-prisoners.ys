@@ -1,4 +1,4 @@
-!YS-v0
+!ys-0
 
 defn main(n=5000):
   :: https://rosettacode.org/wiki/100_prisoners

@@ -25,7 +25,7 @@ Clojure code.
 ## First Steps
 
 ```yaml
-!YS-v0
+!ys-0
 (say "Hello, world!")
 ```
 
@@ -36,11 +36,11 @@ YS compiler (`ys -c`) is really just a fancy YAML loader.
 Almost all YAML files are valid YS and the compiler turns them into the
 expected data structure.
 
-This is where the `!YS-v0` tag comes in.
+This is where the `!ys-0` tag comes in.
 It tells the YS compiler to "load" the YAML into a YS AST which prints
 naturally to Clojure code.
 
-The point is that every YS program needs to start with the `!YS-v0`
+The point is that every YS program needs to start with the `!ys-0`
 tag, or else it just compiles to a regular data structure.
 
 The second line is a YS function call that happens to be a Clojure function
@@ -49,7 +49,7 @@ call.
 Let's play around with that function call syntax a bit.
 
 ```yaml
-!YS-v0
+!ys-0
 say("Hello, world!")
 ```
 
@@ -67,14 +67,14 @@ mapping and the leaf values are scalar expressions.
 Let's change our code to use a mapping instead:
 
 ```yaml
-!YS-v0
+!ys-0
 say: "Hello, world!"
 ```
 
 Again, this compiles to the same Clojure code as the first two examples.
 
 ```yaml
-!YS-v0
+!ys-0
 say: 'Hello, world!'
 ```
 
@@ -87,7 +87,7 @@ and character escaping while single quoted strings do not.
 Let's get a bit fancier with our string:
 
 ```yaml
-!YS-v0
+!ys-0
 name =: 'world'
 say: "Hello, $name!"
 ```
@@ -95,7 +95,7 @@ say: "Hello, $name!"
 That's a variable assignment and a string interpolation.
 
 ```yaml
-!YS-v0
+!ys-0
 name =: 'world'
 say: str('Hello, ', name, '!')
 ```
@@ -110,7 +110,7 @@ In general Clojure and YS only use commas in places where the code is hard to
 follow without them.
 
 ```yaml
-!YS-v0
+!ys-0
 name =: 'world'
 say: -'Hello, ' + name + '!'
 ```
@@ -161,7 +161,7 @@ It works out surprisingly well!
 
 ## Variable Assignment (def and let)
 
-In the remaining examples we'll assume the `!YS-v0` tag is present.
+In the remaining examples we'll assume the `!ys-0` tag is present.
 
 !!! note
 

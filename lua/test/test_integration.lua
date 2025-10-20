@@ -10,7 +10,7 @@ end
 
 function test_ys_functionality()
   local ys = yamlscript.new()
-  local data = ys:load("!YS-v0\ninc: 41")
+  local data = ys:load("!ys-0\ninc: 41")
   assert(data == 42, "YAMLScript inc function should work")
   print("✓ YAMLScript functionality works")
 end
@@ -18,7 +18,7 @@ end
 function test_complex_ys()
   local ys = yamlscript.new()
   local data = ys:load([[
-!YS-v0:
+!ys-0:
 name =: "World"
 foo: [1, 2, ! inc(41)]
 bar:: "Hello, $name!"
@@ -32,7 +32,7 @@ end
 function test_error_handling()
   local ys = yamlscript.new()
   local success, error = pcall(function()
-    ys:load("!YS-v0\nundefined_function: 42")
+    ys:load("!ys-0\nundefined_function: 42")
   end)
   assert(not success, "Should handle errors gracefully")
   print("✓ Error handling works")

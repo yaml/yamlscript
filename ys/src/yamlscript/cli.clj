@@ -232,7 +232,7 @@ Options:
     (println help)))
 
 (defn add-ecode-mode-tag
-  "When we use 'ys -e' we don't want to require the leading !YS-v0 tag.
+  "When we use 'ys -e' we don't want to require the leading !ys-0 tag.
    We can assume code mode by default.
    We need to check if -m was used or if there is already a tag."
   [opts ecode]
@@ -245,15 +245,15 @@ Options:
                     (:clojure opts))
                   ""
                   (or (= "c" mode) (= "code" mode))
-                  "--- !YS-v0\n"
+                  "--- !ys-0\n"
                   (or (= "d" mode) (= "data" mode))
-                  "--- !YS-v0:\n"
+                  "--- !ys-0:\n"
                   (or (= "b" mode) (= "bare" mode))
                   "---\n"
                   (:load opts)
                   ""
                   :else
-                  "--- !YS-v0\n")
+                  "--- !ys-0\n")
                 ecode])
         code (if (or (:clojure opts)
                    (re-find #"^---(?:[ \n]|$)" code))

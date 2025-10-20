@@ -28,45 +28,63 @@
 
 (declare compose-events)
 
-; !yamlscript/v0      (code)
-; !yamlscript/v0:     (data)
-; !yamlscript/v0/data
-; !yamlscript/v0/code
-; !yamlscript/v0/bare
+; !ys-0               (code)
+; !ys-0:              (data)
+; !yaml               (bare)
 ; !YS-v0              (code)
 ; !YS-v0:             (data)
-; !YS v0:             (bare)
-; !YS-v0/data:        (data)
-; !YS-v0/code:        (code)
-; !YS-v0/bare:        (bare)
-; !YS-v0/yaml:        (bare)
+; !yamlscript/v0      (code)
+; !yamlscript/v0:     (data)
 
 ;; TODO:
-;; * Support function call tags at top level: !yamlscript/v0/data;merge*:
+;; * Support function call tags at top level: !ys-0:first
 
-(defn get-ys-tag [node]
+(defn get-ys-tag
+  "Get the YS tag from a top level node. Currently (v0) there are a few
+  different variations of the YS tag that are supported. For v1 we'll likely
+  only support !ys-0 !ys-0: !ys-1 !ys-1:. The !ys-0 form allows 0-n function
+  call tags to follow it: !ys-0:reverse:rest for example."
+  [node]
   (if-let [tag (:! node)]
-    (cond
-      (or
-        (re-find #"^YS-v0:?$" tag)
-        (re-find #"^yamlscript/v0(?:/code|/data|/bare|:)?$" tag)
-        (re-find #"^(?:code|data|bare)$" tag)) [tag (dissoc node :!)]
-      (re-find #"^tag:yaml.org,2002:" tag) [nil node]
-      :else (die "Invalid tag: !" tag))
+    (if-let [[_ ystag fntag colon?] (re-matches #"(ys(?:-0)?)(:.+?)(:?)" tag)]
+      (let [ystag (if-not (empty? colon?) ystag (str ystag ":"))
+            node (assoc node :! fntag)]
+        [ystag node])
+      (cond
+        (or
+          (re-matches #"ys:?" tag)
+          (re-matches #"ys-0:?" tag)
+          (re-matches #"YS-v0:?" tag)
+          (re-matches #"(?:bare|data|code)" tag)
+          (re-matches #"yamlscript/v0(?::|/bare|/data|/code)?" tag))
+        [tag (dissoc node :!)]
+        ,
+        (re-find #"^tag:yaml.org,2002:" tag) [nil node]
+        :else (die "Invalid tag: !" tag)))
     [nil node]))
 
+(comment
+  (get-ys-tag {:! "yamlscript/v0/data"
+               :- [{:= "foo"}]})
+  )
+
 (defn compose
-  "Compose YAML parse events into a tree."
+  "Compose YAML parse events into an initial tree form."
   ([events]
-   (compose events {:first true, :last true, :init false}))
+   (let [ctx {:init false,  ;; Initial !ys-0 tag has been seen
+              :first true,  ;; First document node in stream
+              :last true,   ;; Last document node in stream
+              }]
+     (compose events ctx)))
   ([events ctx]
    (let [node (or
                 (-> events compose-events first)
-                {:+ "code", := ""})  ;; Empty stream
+                {:+ "code", := ""})  ;; Support empty stream (no events)
+
+         ;; Get the YS tag from the node
          [ys-tag node] (get-ys-tag node)
 
-         mode (fn
-                ([mode] (assoc node :+ mode)))
+         mode (fn [mode] (assoc node :+ mode))
 
          ys-pair? (fn [node]
                     (let [key1-tag (get-in node [:% 0 :!])
@@ -80,25 +98,29 @@
 
          node (if ys-tag
                 (if-not (:init ctx)
+                  ;; First ys tag must be one of these:
                   (case ys-tag
+                    "ys-0" (mode "code")
+                    "ys-0:" (mode "data")
+                    ;; The forms below are deprecated:
                     "YS-v0" (mode "code")
                     "YS-v0:" (mode "data")
                     "yamlscript/v0" (mode "code")
                     "yamlscript/v0:" (mode "data")
                     "yamlscript/v0/bare" (mode "bare")
+                    "yamlscript/v0/data" (mode "data")
                     "yamlscript/v0/code" (mode "code")
-                    "yamlscript/v0/data" (mode "data")
-                    (die "Invalid tag: !" ys-tag))
+                    (die "Invalid tag: '!" ys-tag "'\n"
+                      "First ys tag must be one of these: 'ys-0', 'ys-0:', 'YS-v0', 'YS-v0:'"))
+                  ;; Subsequent ys tags must be one of these:
                   (case ys-tag
-                    "code" (mode "code")
-                    "data" (mode "data")
-                    "bare" (mode "bare")
+                    "ys" (mode "code")
+                    "ys:" (mode "data")
                     "yaml" (mode "bare")
-                    "YS-v0" (mode "code")
-                    "YS-v0:" (mode "data")
-                    "yamlscript/v0" (mode "code")
-                    "yamlscript/v0:" (mode "data")
-                    "yamlscript/v0/data" (mode "data")
+                    ;; These 3 are deprecated:
+                    "bare" (mode "bare")
+                    "data" (mode "data")
+                    "code" (mode "code")
                     (if ys-tag
                       (die "Invalid tag: !" ys-tag)
                       node)))

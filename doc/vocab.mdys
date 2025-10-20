@@ -236,14 +236,13 @@ mode tag: |
   bare mode and treated as normal YAML.
   These tags are used to indicate the mode of a node:
 
-  * `!YS-v0` - Start a document in code mode
-  * `!YS-v0:` - Start a document in data mode
-  * `!bare` - Make a node have bare mode semantics
-  * `!code` - Make a node have code mode semantics
-  * `!data` - Make a node have data mode semantics
+  * `!ys-0` - Start a document in code mode
+  * `!ys-0:` - Start a document in data mode
+  * `!ys` - Make a node have code mode semantics
+  * `!ys:` - Make a node have data mode semantics
   * `!` - Toggle between code and data modes (or vice versa)
 
-  A `!YS-v0` or `!YS-v0:` mode tags must appear before any other mode tag is
+  A `!ys-0` or `!ys-0:` mode tags must appear before any other mode tag is
   used in a stream.
   Each document in a stream must have mode tag or else it is considered bare
   mode.

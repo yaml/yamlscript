@@ -10,7 +10,7 @@ It's very simple.
 Here's an example:
 
 ```yaml
-!YS-v0
+!ys-0
 
 name =: 'world'
 

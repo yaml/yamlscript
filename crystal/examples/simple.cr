@@ -1,7 +1,7 @@
 require "../src/yamlscript"
 
 # Simple YAMLScript example
-ys_simple = "!YS-v0\ninc: 41"
+ys_simple = "!ys-0\ninc: 41"
 
 # Try loading the YAMLScript
 begin

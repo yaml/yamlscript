@@ -95,10 +95,10 @@
 
 - name: Basic function call with 2 args (test all phases)
   yamlscript: |
-    --- !yamlscript/v0
+    --- !ys-0
     a: b c
   parse: |
-    "+MAP", :! "yamlscript/v0"
+    "+MAP", :! "ys-0"
     "=VAL", := "a"
     "=VAL", := "b c"
     "-MAP"
@@ -126,10 +126,10 @@
 
 - name: Plus escaping
   yamlscript: |
-    --- !yamlscript/v0
+    --- !ys-0
     map inc: +[2 4 6 8]
   parse: |
-    "+MAP", :! "yamlscript/v0"
+    "+MAP", :! "ys-0"
     "=VAL", := "map inc"
     "=VAL", := "+[2 4 6 8]"
     "-MAP"
@@ -143,7 +143,7 @@
 
 - name: YS reader forms
   yamlscript: |
-    --- !yamlscript/v0
+    --- !ys-0
     prn: +["str" \\c 42 foo true false nil]
     prn: +{:a 1 :c 2 :b 3}
     prn: +"A longer string"
@@ -176,7 +176,7 @@
 
 - name: Basic math ysexpr
   yamlscript: |
-    --- !yamlscript/v0
+    --- !ys-0
     inc: (6 * 7)
   build: |
     {:xmap
@@ -188,7 +188,7 @@
 
 - name: Function call ysexpr
   yamlscript: |
-    --- !yamlscript/v0
+    --- !ys-0
     say: str("The number is:\ " inc(41))
   build: |
     {:xmap
@@ -203,7 +203,7 @@
 
 - name: def expression
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     foo =: 123
   resolve: |
     {:xmap [{:def "foo ="} {:expr "123"}]}
@@ -217,7 +217,7 @@
 
 - name: defn expression
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     defn foo(a b): (a + b)
   resolve: |
     {:xmap [{:defn "defn foo(a b)"} {:expr "(a + b)"}]}
@@ -231,7 +231,7 @@
 
 - name: Structured defn expression
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     defn foo(a b):
       add: a b
   build: |
@@ -246,14 +246,14 @@
 
 - name: def/let expression
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     foo =: 123
     defn bar(a b):
       c =: (a + b)
       =>: 2 * c
     bar: 10 20
   parse: |
-    "+MAP", :! "yamlscript/v0"
+    "+MAP", :! "ys-0"
     "=VAL", := "foo ="
     "=VAL", := "123"
     "=VAL", := "defn bar(a b)"
@@ -310,7 +310,7 @@
 
 - name: The 'if' special form
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if (a > b):
       foo(a b)
       bar(a b)
@@ -331,10 +331,10 @@
 
 - name: Top level scalar in code mode
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     (foo bar)
   parse: |
-    "=VAL", :! "yamlscript/v0", := "(foo bar)"
+    "=VAL", :! "ys-0", := "(foo bar)"
   resolve: |
     {:expr "(foo bar)"}
   print: |
@@ -343,19 +343,19 @@
 
 - name: Top level comment eats following lines
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     ; comment
     (foo bar)
   resolve: |
     {:expr "; comment (foo bar)"}
   parse: |
-    "=VAL", :! "yamlscript/v0", := "; comment (foo bar)"
+    "=VAL", :! "ys-0", := "; comment (foo bar)"
   # Semicolon comments are errors now
 
 
 - name: Switch to code mode
   yamlscript: |
-    !yamlscript/v0/data
+    !ys-0:
     str: foo bar
     num: ! inc(41)
     bar: ! load("bar.yaml")
@@ -388,25 +388,25 @@
     {"str" "foo bar", "num" (inc 41), "bar" (load "bar.yaml")}
 
 
-- name: Shebang line with ys-0 implies !yamlscript/v0
+- name: Shebang line with ys-0 implies !ys-0
   yamlscript: |
     #!/usr/bin/env ys-0
 
     say: "Hi"
   parse: |
-    "+MAP", :! "yamlscript/v0"
+    "+MAP", :! "ys-0"
     "=VAL", := "say"
     "=VAL", :$ "Hi"
     "-MAP"
 
 
-- name: Shebang line with ys-0 and !yamlscript/... tag ignored
+- name: Shebang line with '!ys-0' and '!ys-0:' tag ignored
   yamlscript: |
     #!/usr/bin/env ys-0
-    !yamlscript/v0:
+    !ys-0:
     say: "Hi"
   parse: |
-    "+MAP", :! "yamlscript/v0:"
+    "+MAP", :! "ys-0:"
     "=VAL", := "say"
     "=VAL", :$ "Hi"
     "-MAP"
@@ -418,7 +418,7 @@
     x =: "a\nb"
     y =: ("c" + "d\ne")
   parse: |
-    "+MAP", :! "yamlscript/v0"
+    "+MAP", :! "ys-0"
     "=VAL", := "x ="
     "=VAL", :$ "a\nb"
     "=VAL", := "y ="
@@ -434,7 +434,7 @@
 
 - name: fn special form
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     add =:
       fn(a b): a + b
   resolve: |
@@ -446,7 +446,7 @@
 
 - name: Support '%:' for left/right grouping
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     foo %:
       (a > b): c
       (a < d): e
@@ -476,7 +476,7 @@
 
 - name: Support default fn arguments
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     defn foo(a b=42 c="OK"): +[c b a]
   build: |
     {:xmap
@@ -515,7 +515,7 @@
 
 - name: All args have defaults
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     defn foo(a=1 b=2 c=3): +[c b a]
   print: |
     (defn
@@ -528,7 +528,7 @@
 
 - name: Construct :Lst objects
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     defn foo(a=1):
       say: a
   print: |
@@ -625,10 +625,10 @@
 
 - name: Anchors and aliases in code mode
   yamlscript: |
-    !YS-v0
+    !ys-0
     ---
     &a 123
-    --- !yamlscript/v0
+    --- !ys
     x =: *a
     y =:: *b
   clojure: |
@@ -639,7 +639,7 @@
 
 - name: Function tags in data mode
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     foo: !merge*
     - foo: 1
     - bar: 2
@@ -687,7 +687,7 @@
 
 - name: Raw clojure mode with !clj
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     =>: !clj |
       (defmacro qq [x]
         `(quote ~x))
@@ -728,7 +728,7 @@
 
 - name: Anchors in various contexts in data mode
   yamlscript: |
-    --- !yamlscript/v0: &map1
+    --- !ys-0: &map1
     a: &seq2
     - &map3
       b: &val4 c
@@ -745,7 +745,7 @@
 
 - name: Anchors in various contexts in code mode
   yamlscript: |
-    --- !yamlscript/v0 &map1
+    --- !ys-0 &map1
     a:: &seq2
     - ! &map3
       b: &expr4 c
@@ -763,7 +763,7 @@
 
 - name: 'Implicit !+merge: call tag in bare mode'
   yamlscript: |
-    --- !yamlscript/v0/bare
+    ---
     default: &default
       foo: 1
       bar: 2
@@ -792,7 +792,7 @@
 
 - name: Implicit merge-map call tag in data mode
   yamlscript: |
-    --- !yamlscript/v0:
+    --- !ys-0:
     default: &default
       foo: 1
       bar: 2
@@ -821,7 +821,7 @@
 
 - name: Code assignment in data mode mapping
   yamlscript: |
-    !yamlscript/v0/data
+    !ys-0:
     foo: 1
     bar: 2
     x =: 6
@@ -907,7 +907,7 @@
 
 - name: Load yaml file in data map assignment
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     a: 1
     data =: slurp('data.yaml'):yaml/load
     b: 2
@@ -973,7 +973,7 @@
 
 - name: Conditional pairs in data mode map
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     ::
       use: 'module1'
       use: 'module2'
@@ -1104,7 +1104,7 @@
 
 - name: Conditional pair without other pairs
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     ::
       when x > 1::
         aaa: bbb
@@ -1115,7 +1115,7 @@
 
 - name: Conditional pair with multiple pairs value
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     x: 1
     ::
       say: 'one'
@@ -1129,7 +1129,7 @@
 
 - name: Conditional pair with non-mapping value
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     x: 1
     :: foo(a 3)
     y: 2
@@ -1155,7 +1155,7 @@
 
 - name: Conditional pair dmap in dmap
   yamlscript: |
-    --- !yamlscript/v0:
+    --- !ys-0:
     :: foo()
     a:
       :: bar()
@@ -1182,7 +1182,7 @@
 
 - name: Conditional pair in sequence
   yamlscript: |
-    --- !yamlscript/v0:
+    --- !ys-0:
     a:
     - b: c
       :: foo()
@@ -1219,7 +1219,7 @@
 
 - name: Top level data mode mapping first pair has key '::'
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     ::
       use: 'module1'
       use: 'module2'
@@ -1242,7 +1242,7 @@
 
 - name: Shorthand syntax for conditionals in data mappings
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     :use module1:
     x: 1
     :when x > 1::
@@ -1276,7 +1276,7 @@
 
 - name: Shorthand syntax for conditionals in data mappings 2
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     :use module1:
     x: 1
   build: |
@@ -1292,7 +1292,7 @@
 
 - name: Shorthand syntax for conditionals in data mappings 2
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     :when foo()::
      x: 1
     y:
@@ -1319,7 +1319,7 @@
 
 - name: String keys in fmaps
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     case dir:
       'N': north()
       'S': south()
@@ -1351,7 +1351,7 @@
 
 - name: Let bindings in dmap
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     m1 =::
       a: b
     foo =:
@@ -1367,7 +1367,7 @@
 
 - name: Colon call after dollar key
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     say: ENV.$k:uc1
   clojure: |
     (say (uc1 (get+ ENV k)))
@@ -1375,7 +1375,7 @@
 
 - name: Multiple conditional seq insertion in data mode
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     - aaa
     - :when true: bbb
     - ccc
@@ -1387,7 +1387,7 @@
 
 - name: Multiple code insertions in data mode with mode swap variants
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     - aaa
     - ::
         bbb
@@ -1415,7 +1415,7 @@
 
 - name: Two '::' in a data mode sequence
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     - 0
     - 1
     - :: +[2 3 4]
@@ -1430,7 +1430,7 @@
 
 - name: Two '::' in a row in a data mode sequence
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     - 1
     - :when x: +[2 3 4]
     - :when y:: [6, 7, 8]
@@ -1441,7 +1441,7 @@
 
 - name: Single '::' in a data mode sequence
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     - :when x: +[2 3 4]
   clojure: |
     (concat (when x [2 3 4]))
@@ -1449,7 +1449,7 @@
 
 - name: Two '::' in a row in a data mode mapping
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     a: 1
     :when x: +{'b' 2}
     :when y:: {c: 3}
@@ -1462,7 +1462,7 @@
 
 - name: A '::' before a function call tag
   yamlscript: |
-    !yamlscript/v0:
+    !ys-0:
     foo: !inc: 1 + 2
     bar:: !inc 3 + 4
   resolve: |
@@ -1483,9 +1483,9 @@
      {:+ "data", :% ({:= "foo:"} {:= "1 + 1"})}
 
 
-- name: Fix bug with '!YS-v0:' used with =>
+- name: Fix bug with '!ys-0:' used with =>
   yamlscript: |
-    !YS-v0:
+    !ys-0:
     =>:
       name =: 'World'
     foo:: name
@@ -1494,9 +1494,9 @@
     {"foo" name}
 
 
-- name: Fix bug with '!YS-v0:' used with '::'
+- name: Fix bug with '!ys-0:' used with '::'
   yamlscript: |
-    !YS-v0:
+    !ys-0:
     =>:
       name =: 'World'
     foo:: name
@@ -1507,7 +1507,7 @@
 
 - name: Support top level !code and !data tags
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     x =: 1
     --- !code
     y =: 2
@@ -1519,9 +1519,9 @@
     {"z" (add+ x y)}
 
 
-- name: Support top level !code and !data tags with '!YS-v0'
+- name: Support top level !code and !data tags with '!ys-0'
   yamlscript: |
-    !YS-v0
+    !ys-0
     --- !code
     x =: 1
     y =: 2
@@ -1533,9 +1533,9 @@
     {"z" (add+ x y)}
 
 
-- name: Support top level !code and !data tags with '!YS-v0:'
+- name: Support top level !code and !data tags with '!ys-0:'
   yamlscript: |
-    !YS-v0:
+    !ys-0:
     --- !code
     x =: 1
     y =: 2
@@ -1555,7 +1555,7 @@
 
 - name: Octal and hex literals not loading correctly
   yamlscript: |
-    !YS-v0:
+    !ys-0:
     - 0o12
     - 0x12
   build: |

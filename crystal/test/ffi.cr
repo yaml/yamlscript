@@ -1,7 +1,7 @@
 require "../src/yamlscript"
 
 # Test basic YAMLScript loading - returns a single value
-result = YAMLScript.load("!YS-v0\ninc: 41")
+result = YAMLScript.load("!ys-0\ninc: 41")
 if result.as_i != 42
   puts "Error: Expected 42, got #{result.inspect}"
   exit(1)

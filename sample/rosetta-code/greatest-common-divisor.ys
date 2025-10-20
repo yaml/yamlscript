@@ -1,4 +1,4 @@
-!YS-v0
+!ys-0
 
 defn main(a=42 b=63):
   say: "gcd($a $b) -> $gcd(a b)"

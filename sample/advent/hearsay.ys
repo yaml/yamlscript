@@ -1,6 +1,6 @@
 # ys --load hearsay.ys | jq -r .
 
-!YS-v0
+!ys-0
 
 hackers =::
 - ethiraric

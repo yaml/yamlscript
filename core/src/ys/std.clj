@@ -427,7 +427,7 @@
     (flush)))
 
 (defn eval [S]
-  (ys/eval (str "!YS-v0\n" S)))
+  (ys/eval (str "!ys-0\n" S)))
 
 (defn exit
   ([] (exit 0))

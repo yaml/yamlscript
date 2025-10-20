@@ -122,6 +122,6 @@
     (apply str)))
 
 (comment
-  (compile "!YS-v0
-a.(b)")
+  (compile "!ys-0:
+- foo")
   )

@@ -24,7 +24,7 @@ print()
 -- Example 2: YAMLScript functionality
 print("=== Example 2: YAMLScript Functions ===")
 local data2 = ys:load([[
-!YS-v0:
+!ys-0:
 result:: inc(41)
 list:: &list + [1 2 3 4 5]
 sum:: a(*list).reduce(add)
@@ -36,7 +36,7 @@ print()
 -- Example 3: String interpolation
 print("=== Example 3: String Interpolation ===")
 local data3 = ys:load([[
-!YS-v0:
+!ys-0:
 name =: "Lua"
 greeting:: "Hello, $name!"
 calculation:: "2 + 2 = $(+ 2 2)"
@@ -59,7 +59,7 @@ items:
 temp_file:close()
 
 local data4 = ys:load([[
-!YS-v0:
+!ys-0:
 loaded-data =: load("temp_data.yaml")
 
 loaded_data:: loaded-data

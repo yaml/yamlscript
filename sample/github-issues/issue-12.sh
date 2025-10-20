@@ -64,7 +64,7 @@ cars:
 ...
 
 cat <<... > racers.yaml
-!YS-v0:
+!ys-0:
 
 db =: load("db.yaml")
 

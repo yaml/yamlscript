@@ -40,7 +40,7 @@ test-ffi: $(HASKELL-DEPS) $(LIBYS)
 	      print =<< loadYAMLScript "inc: 41"' && \
 	cabal run yamlscript-test -- \
 	  -c 'import YAMLScript; \
-	      print =<< loadYAMLScript "!YS-v0\ninc: 41"'
+	      print =<< loadYAMLScript "!ys-0\ninc: 41"'
 
 pkg-test: $(HASKELL-DEPS)
 	$(MAKE) clean

@@ -12,7 +12,7 @@ This is done using the `ys --compile --binary` command.
 For example, if you have a file named `hello.ys` with the following content:
 
 ```yaml
-!YS-v0
+!ys-0
 
 defn main(name='world'):
   say: 'Hello, $name!'

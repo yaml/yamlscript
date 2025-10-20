@@ -68,7 +68,7 @@ say $ys.load($program);
 File `file.ys`:
 
 ```yaml
-!YS-v0:
+!ys-0:
 
 name =: "World"
 

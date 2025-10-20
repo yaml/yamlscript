@@ -21,7 +21,7 @@
 
 - name: Valid hex and octal in data mode
   yamlscript: |
-    !YS-v0:
+    !ys-0:
     - [ 0x123, 0o123 ]
     - ! +[ 0x123 0o123 -0x123 -0o123 +0x123 +0o123 ]
   clojure: |
@@ -29,21 +29,21 @@
 
 - name: Valid hex and octal in code mode
   yamlscript: |
-    !YS-v0
+    !ys-0
     + [ 0x123 0o123 -0x123 -0o123 +0x123 +0o123 ]
   clojure: |
     [291 83 -291 -83 291 83]
 
 - name: Valid radix numbers in code mode
   yamlscript: |
-    !YS-v0
+    !ys-0
     + [ 0o123 -0o123 +0o123 0x123 -0x123 +0x123 25r0o123 -25r0o123 +25r0o123 ]
   clojure: |
     [83 -83 83 291 -291 291 375678 -375678 375678]
 
 - name: Big integers in data mode
   yamlscript: |
-    !YS-v0:
+    !ys-0:
     - 12345678901234567890
     - -12345678901234567890
     - ! 12345678901234567890
@@ -52,7 +52,7 @@
 
 - name: Big decimal numbers in code mode
   yamlscript: |
-    !YS-v0
+    !ys-0
     + [ 0M -0M +0M, 0.M -0.M +0.M, 0.0M -0.0M +0.0M ]
   clojure: |
     [0M 0M 0M 0M 0M 0M 0.0M 0.0M 0.0M]
@@ -65,7 +65,7 @@
 
 - name: Special numbers in code mode
   yamlscript: |
-    !YS-v0
+    !ys-0
     a: +[\\Inf \\-Inf \\NaN]
   clojure: |
     (a [##Inf ##-Inf ##NaN])
@@ -80,21 +80,21 @@
 
 - name: 1.2.3 is not a number
   yamlscript: |
-    !YS-v0
+    !ys-0
     =>: 1.2.3
   error: |
     Invalid number: 1.2.3
 
 - name: 00 is not a number
   yamlscript: |
-    !YS-v0
+    !ys-0
     =>: 00
   error: |
     Invalid number: 00
 
 - name: 0123 is not a number
   yamlscript: |
-    !YS-v0
+    !ys-0
     =>: 0123
   error: |
     Invalid number: 0123

@@ -47,7 +47,7 @@ template version.
 
 <tr><td>
 ```yaml title="ys-chart/templates/helpers.yaml"
-!YS-v0
+!ys-0
 defn trunc(s): take(63 s).str(*).replace(/-$/)
 
 # Expand the name of the chart:
@@ -154,7 +154,7 @@ Create the name of the service account to use
 
 <tr><td>
 ```yaml title="ys-chart/templates/deployment.yaml"
-!YS-v0:
+!ys-0:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -272,7 +272,7 @@ spec:
 
 <tr><td>
 ```yaml title="ys-chart/templates/serviceaccount.yaml"
-!YS-v0:
+!ys-0:
 :when Values.serviceAccount.create:
   apiVersion: v1
   kind: ServiceAccount
@@ -304,7 +304,7 @@ automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
 
 <tr><td>
 ```yaml title="ys-chart/templates/service.yaml"
-!YS-v0:
+!ys-0:
 apiVersion: v1
 kind: Service
 metadata:

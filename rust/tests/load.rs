@@ -6,7 +6,7 @@ fn load_sample_ys() {
     let ret = ys
         .load::<serde_json::Value>(
             r#"
-!YS-v0:
+!ys-0:
 say: "Hello"
 key:: inc(42)
 baz:: range(1 6)
@@ -44,7 +44,7 @@ fn load_sample_ys_serde() {
     let ret = ys
         .load::<Response>(
             r#"
-!YS-v0:
+!ys-0:
 say: "Hello"
 key:: inc(42)
 baz:: range(1 6)
@@ -60,7 +60,7 @@ baz:: range(1 6)
 // fn load_sample_error() {
 //     let ys = yamlscript::YAMLScript::new().unwrap();
 //     let result = ys.load::<Response>(
-//         r#"!YS-v0:
+//         r#"!ys-0:
 //            : : : : : :
 //         "#,
 //     );
@@ -71,7 +71,7 @@ baz:: range(1 6)
 #[test]
 fn load_multiple() {
     let data = r#"
-!YS-v0:
+!ys-0:
 say: "Hello"
 key:: inc(42)
 baz:: range(1 6)
@@ -96,7 +96,7 @@ fn load_loop() {
         .map(|i| {
             ys.load::<Response>(&format!(
                 r#"
-!YS-v0:
+!ys-0:
 say: "Hello"
 key:: inc({i})
 baz:: range(1 6)

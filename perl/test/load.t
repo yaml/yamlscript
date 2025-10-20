@@ -3,7 +3,7 @@
 use Test2::V0 -target => 'YAMLScript';
 
 my $program = <<'...';
-!YS-v0:
+!ys-0:
 foo:: 1 .. 10
 ...
 

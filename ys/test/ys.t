@@ -3,7 +3,7 @@
 require ys::taptest: :all
 
 yaml1 =: |
-  !YS-v0
+  !ys-0
   ---
   foo: boom
   ---

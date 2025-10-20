@@ -14,7 +14,7 @@ v0 as stable, then release YS v1 as stable, and then start working on YS v2.
 ## Basic Rules for v1
 
 * Every YS enabled YAML file (stream) must start with a YS stream tag like
-  `!YS/v1`.
+  `!ys-1`.
 * That will declare the semantics for the entire stream.
 * A stream can import other streams of different versions.
 * A runtime of v3 should support v1, v2 and v3, but not v4 or higher.
@@ -44,11 +44,10 @@ start with a `!code`, `!data`, or (the default) `!bare` tag.
 
 ### v1 Planned Changes
 
-We will allow these `!YS-v#` tags to start a YAML stream (they will be only
+We will allow these `!ys-#` tags to start a YAML stream (they will be only
 allowed on the first document in the stream):
 
-* `!yamlscript.org/v1`  # Long form
-* `!YS/v1`              # Short form
+* `!ys-1`               # Short form
 * `!YS-v0`              # Legacy v0 form
 
 Note: each of those imply code mode and can have a `:` suffix to imply data
@@ -57,7 +56,7 @@ mode.
 To start in bare mode you can use:
 
 ```yaml
-!YS/v1
+!ys-1
 ---
 foo: bar
 ```
@@ -65,8 +64,8 @@ foo: bar
 or:
 
 ```yaml
-!YS/v1
---- !bare
+!ys-1
+--- !yaml
 foo: bar
 ```
 
@@ -85,14 +84,14 @@ The implicit mode (no tag) is always bare mode.
 For data mode, we can use:
 
 ```yaml
-!YS/v1:
+!ys-1:
 foo: bar
 ```
 
 or:
 
 ```yaml
-!YS/v1
+!ys-1
 --- !data
 foo: bar
 ```
@@ -100,7 +99,7 @@ foo: bar
 
 ### URL Tags
 
-`!YS/v1` is short for `!yamlscript.org/v1` and that will be a URL that can do
+`!ys-1` is short for `!yamlscript.org/v1` and that will be a URL that can do
 interesting things:
 
 * `docs.yamlscript.org/v1` might be the docs.

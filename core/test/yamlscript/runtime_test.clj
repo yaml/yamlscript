@@ -14,7 +14,7 @@
    :test (fn [test]
            (-> test
              :ys
-             (->> (str "!yamlscript/v0\n"))
+             (->> (str "!ys-0\n"))
              compiler/compile
              runtime/eval-string))
    :want (fn [test]

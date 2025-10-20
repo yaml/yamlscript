@@ -10,7 +10,7 @@ my %wanted =
 ;
 
 my $program = q:to/.../;
-!YS-v0:
+!ys-0:
 foo:: 1 .. 10
 ...
 

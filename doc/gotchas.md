@@ -58,7 +58,7 @@ Using the `+` to get the scalar expression version of the same thing works fine
 
 For example:
 ```yaml
-!YS-v0
+!ys-0
 
 # This is an error (using a flow sequence in code mode):
 say: [1, 2, 3]

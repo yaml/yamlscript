@@ -45,7 +45,7 @@ print(data)
 
 lua-test-2 := \
 local ys = require("yamlscript"); \
-local data = ys.new():load("!YS-v0\ninc: 41"); \
+local data = ys.new():load("!ys-0\ninc: 41"); \
 print(data)
 
 test-ffi: $(LUA-DEPS)

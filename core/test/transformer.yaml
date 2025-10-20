@@ -3,7 +3,7 @@
 
 - name: require simple library
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require: foo::bar
   clojure: |
     (require 'foo.bar)
@@ -11,7 +11,7 @@
 
 - name: require simple library with nil pair value
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require foo::bar:
   clojure: |
     (require 'foo.bar)
@@ -19,7 +19,7 @@
 
 - name: require library with alias
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require foo::bar: => fb
   clojure: |
     (require '[foo.bar :as fb])
@@ -27,7 +27,7 @@
 
 - name: require one-part library with alias
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require foo: => f
   clojure: |
     (require '[foo :as f])
@@ -35,7 +35,7 @@
 
 - name: require one-part library with alias
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require:
       foo: => f
       bar: => b
@@ -45,7 +45,7 @@
 
 - name: Transform require and cond
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require foo::bar: => fb
     cond:
       (x == 1): "one"
@@ -58,7 +58,7 @@
 
 - name: Allow => as else for cond
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     cond:
       (a > b): c
       (a < d): e
@@ -69,7 +69,7 @@
 
 - name: Various require transformations
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require foo::aaa: => fa
     require foo::bbb: one
     require foo::ccc: one two
@@ -85,7 +85,7 @@
 
 - name: Various require transformations in one pair
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require:
       foo::aaa: => fa
       foo::bbb: one
@@ -107,7 +107,7 @@
 
 - name: 'require ns: :all'
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     require foo::bar: :all
   clojure: |
     (require '[foo.bar :refer :all])
@@ -115,7 +115,7 @@
 
 - name: Anonymous function with name
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     fn add(a b): a + b
   clojure: |
     (fn add [a b] (add+ a b))
@@ -123,7 +123,7 @@
 
 - name: Multi-arity anonymous function with name
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     fn add:
       (): 0
       (a b): a + b
@@ -133,7 +133,7 @@
 
 - name: Keywords then and else for if
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if (x == 1):
       then:
         a: b
@@ -146,7 +146,7 @@
 
 - name: Keywords then and else for if with scalar actions
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if (x == 1):
       then: a(b)
       else:
@@ -158,7 +158,7 @@
 
 - name: Using else without then
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if (x == 1):
       a: b
       else: c
@@ -168,7 +168,7 @@
 
 - name: Using else without then for if-not
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if-not (x == 1):
       a: b
       else: c
@@ -178,7 +178,7 @@
 
 - name: Using then without else
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if (x == 1):
       then: a(b)
   error: |
@@ -187,7 +187,7 @@
 
 - name: Error when using then and not else
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     if (x == 1):
       then: a(b)
       =>:
@@ -199,7 +199,7 @@
 
 - name: Support vector destructuring in bindings with *xs
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     for [x *xs] lst:
       a: b
   clojure: |
@@ -208,7 +208,7 @@
 
 - name: Support vector destructuring if def
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     defn foo():
       +[x *y] =: z
   clojure: |

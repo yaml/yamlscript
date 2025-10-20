@@ -42,18 +42,18 @@ basicTests = describe "Basic YAML" $ do
 yamlscriptTests :: Spec
 yamlscriptTests = describe "YAMLScript Features" $ do
   it "evaluates arithmetic expressions" $ do
-    result <- loadYAMLScript "!yamlscript/v0\nadd(2, 3)"
+    result <- loadYAMLScript "!ys-0\nadd(2, 3)"
     result `shouldBe` Aeson.object [("data", Aeson.Number 5)]
 
   it "evaluates function calls" $ do
-    result <- loadYAMLScript "!yamlscript/v0\ninc(41)"
+    result <- loadYAMLScript "!ys-0\ninc(41)"
     result `shouldBe` Aeson.object [("data", Aeson.Number 42)]
 
 -- | Test error handling
 errorTests :: Spec
 errorTests = describe "Error Handling" $ do
   it "returns error on invalid YAMLScript" $ do
-    result <- loadYAMLScript "!yamlscript/v0\ninvalid: syntax"
+    result <- loadYAMLScript "!ys-0\ninvalid: syntax"
     case result of
       Aeson.Object obj -> case KeyMap.lookup (Key.fromString "error") obj of
         Just _ -> return () -- Error present, test passes

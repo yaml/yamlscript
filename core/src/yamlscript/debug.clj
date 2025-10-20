@@ -30,7 +30,7 @@
 (defn YSC [ys-str]
   (let [code (if (re-find #"^\n*!(?:yamlscript|YS)" ys-str)
                ys-str
-               (str "!yamlscript/v0\n" ys-str))]
+               (str "!ys-0\n" ys-str))]
     (YSC0 code)))
 
 (defn fmt [value]

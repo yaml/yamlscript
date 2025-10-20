@@ -20,11 +20,11 @@ YS embeds cleanly into existing YAML files and adds new capabilities such as:
 All of YS is (and must be) valid YAML syntax, even though it might seem
 surprising from time to time.
 Also all YAML config files are valid YS files and YS will treat them as such (no
-code execution), unless you explicitly tell it to do more (by adding a `!YS-v0`
+code execution), unless you explicitly tell it to do more (by adding a `!ys-0`
 tag to the start).
 
 ```yaml
-!YS-v0
+!ys-0
 say: "Welcome to YS!"
 ```
 

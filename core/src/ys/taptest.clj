@@ -72,7 +72,7 @@
         code (get test "code")
         what (get test "what")
         _ (check-string code "code" count)
-        code (str "!yamlscript/v0\n" code "\n")]
+        code (str "!ys-0\n" code "\n")]
     (try (if (= "out" what)
            (with-out-str (ys/eval code))
            (ys/eval code))
@@ -88,7 +88,7 @@
         data (get test "data")
         what (get test "what")
         _ (check-string data "data" count)
-        data (str "!yamlscript/v0:\n" data "\n")]
+        data (str "!ys-0:\n" data "\n")]
     (try (if (= "out" what)
            (with-out-str (ys/eval data))
            (yaml/dump (ys/eval data)))

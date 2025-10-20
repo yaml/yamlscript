@@ -70,7 +70,7 @@ print encode_json $data;
 File `file.ys`:
 
 ```yaml
-!yamlscript/v0
+!ys-0
 
 name =: "World"
 

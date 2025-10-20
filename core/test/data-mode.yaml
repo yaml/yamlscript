@@ -82,7 +82,7 @@
 
 - name: Empty YS File w/ yamlscript Tag
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
   build: |
     nil
   print: |
@@ -90,14 +90,14 @@
 
 - name: Just a comment
   yamlscript: |
-    !yamlscript/v0
+    !ys-0
     ; just a comment
   # Semicolon comments are errors now
 
 
 - name: data mode with code mode
   yamlscript: |
-    !yamlscript/v0/data
+    !ys-0:
     foo: ! inc(41)
     bar: ! dec(43)
   print: |

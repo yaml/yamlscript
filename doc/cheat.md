@@ -12,10 +12,10 @@ talk: 0
   * Data mode data is treated as data (can toggle to code mode)
   * Bare mode data is treated as data (cannot toggle; always normal YAML)
 * YS files must start with a YS (YAMLScript) tag:
-  * `!YS-v0` - Start in code mode
-  * `!YS-v0:` - Start in data mode
+  * `!ys-0` - Start in code mode
+  * `!ys-0:` - Start in data mode
   * No tag - Start in bare mode (plain YAML; no code evaluation)
-  * Initial tagged pair of `!YS v0:` is an alternative; starts in bare mode
+  * Initial tagged pair of `!ys-0:` is an alternative; starts in bare mode
 * YS code mode always uses these YAML forms:
   * Block mappings (normal indented mappings; `: ` separated pairs)
   * Plain scalars (no quotes)

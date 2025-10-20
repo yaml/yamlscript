@@ -114,7 +114,7 @@ But here's where it gets interesting...
 Let's say you want to add some dynamic logic:
 
 ```yaml
-!YS-v0:
+!ys-0:
 age =: 6
 
 name: Fido
@@ -147,7 +147,7 @@ The good stuff is all sorted and the dog years are calculated automatically!
 Want to merge multiple YAML files with environment variable overrides?
 
 ```yaml
-!YS-v0:
+!ys-0:
 config =:
   merge:
     load: 'base-config.yaml'
@@ -162,7 +162,7 @@ database:
 Need to transform data from an API?
 
 ```yaml
-!YS-v0:
+!ys-0:
 users =: http/get('https://api.example.com/users'):json/load
 
 active-users::
@@ -182,7 +182,7 @@ defn user-data(u)::
 Want to generate Kubernetes manifests dynamically?
 
 ```yaml
-!YS-v0:
+!ys-0:
 apps =: ['web', 'api', 'worker']
 replicas =: ENV.PRODUCTION ? 3 : 1
 

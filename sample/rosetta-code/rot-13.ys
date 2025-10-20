@@ -1,4 +1,4 @@
-!YS-v0
+!ys-0
 
 defn main(input='Hello, World!'):
   s =: set(\\A .. \\Z) + (\\a .. \\z)

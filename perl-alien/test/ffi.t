@@ -28,7 +28,7 @@ ffi_ok {symbols => ['graal_create_isolate', 'load_ys_to_json']},
         );
 
         is $load->(<<'...'),
-!YS-v0:
+!ys-0:
 foo:: 1 .. 10
 ...
             {data => {foo => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}},

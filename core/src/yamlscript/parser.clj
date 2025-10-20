@@ -37,7 +37,8 @@
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
   (let [parser (new Parse (.build (LoadSettings/builder)))
-        has-code-mode-shebang (or (re-find shebang-ys yaml-string)
+        has-code-mode-shebang (or
+                                (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
         events (->> yaml-string
                  (.parseString parser)
@@ -49,9 +50,9 @@
         first-event (if (and has-code-mode-shebang
                           (not (and first-event-tag
                                  (re-find
-                                   #"^yamlscript/v0"
+                                   #"^ys-0"
                                    first-event-tag))))
-                      (assoc first-event :! "yamlscript/v0")
+                      (assoc first-event :! "ys-0")
                       first-event)
         events (cons first-event rest-events)]
     (remove nil? events)))

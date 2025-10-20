@@ -1,4 +1,4 @@
-!YS-v0
+!ys-0
 
 defn main(n=31337):
   not =: when((n:S != n:S:reverse) ' not')

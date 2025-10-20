@@ -26,7 +26,7 @@ test-node: $(NODE) $(LIBYS) node_modules
 	@echo '=== $(NODE-VERSION) ==========================================='
 	NODE_PATH=lib \
 	node -e 'YS = require("yamlscript"); ys = new YS(); console.log(ys.load(fs.readFileSync(0, "utf8")))' \
-	<<<$$'!YS-v0:\nfoo:: sum(3 .. 9)' || \
+	<<<$$'!ys-0:\nfoo:: sum(3 .. 9)' || \
 	(echo; ( echo 'Bad version: $(NODE-VERSION)' | tee -a bad ); echo)
 
 $(LIBYS):

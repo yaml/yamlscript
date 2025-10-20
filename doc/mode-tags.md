@@ -18,26 +18,26 @@ being declared at the top of the files and being applied to the whole file.
 
 ## v0 YS Mode Tags
 
-* `!YS-v0` - Start in code mode.
-* `!YS-v0:` - Start in data mode.
-* `!code` - Start in code mode. Must come after a `!YS-v0` tag.
-* `!data` - Start in data mode. Must come after a `!YS-v0` tag.
-* `!bare` - Start in bare mode. Must come after a `!YS-v0` tag.
+* `!ys-0` - Start in code mode.
+* `!ys-0:` - Start in data mode.
+* `!code` - Start in code mode. Must come after a `!ys-0` tag.
+* `!data` - Start in data mode. Must come after a `!ys-0` tag.
+* `!bare` - Start in bare mode. Must come after a `!ys-0` tag.
 
 The `!code`, `!data`, and `!bare` tags are used for clarity but can only be used
-on a document that follows a document with a `!YS-v0` tag.
+on a document that follows a document with a `!ys-0` tag.
 
 One way to use `!data` without have a previous document is:
 
 ```yaml
-!YS-v0
+!ys-0
 --- !data
 num:: 6 * 7  # 42
 ```
 
 In reality this YAML has two documents, but since the first one has no content
 it is ignored by the YS compiler.
-Even though it is ignored, it serves to add the `!YS-v0` tag to the file, so
+Even though it is ignored, it serves to add the `!ys-0` tag to the file, so
 that you can now use `!data` or `!code` or `!bare` tags in the rest of the file.
 
 !!! note
@@ -56,6 +56,6 @@ Originally, these mode tags were supported for YS v0:
 * `!yamlscript/v0/data` - Start in data mode.
 * `!yamlscript/v0/bare` - Start in bare mode.
 
-These tags are still supported for backwards compatibility, but the `!YS-v0`
+These tags are still supported for backwards compatibility, but the `!ys-0`
 tags are preferred.
 They may be removed in a future version of YS.

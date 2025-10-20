@@ -16,7 +16,7 @@ Here's an example `config.yaml` that makes use of YAMLScript functions.
 
 ```yaml
 # config.yaml with YAMLScript:
-!YS-v0:
+!ys-0:
 
 # Define variables
 db-host =: ENV.DB_HOST || 'localhost'
@@ -90,7 +90,7 @@ YAMLScript extends YAML with a simple, elegant syntax:
 
 ```yaml
 # file.yaml
-!YS-v0:               # Enable YAMLScript
+!ys-0:               # Enable YAMLScript
 
 name =: 'World'       # Variable assignment
 nums =:: [1, 2, 3]    # Any YAML value

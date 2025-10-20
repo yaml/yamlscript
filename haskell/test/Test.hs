@@ -22,7 +22,7 @@ main = hspec $ do
         [("data", Aeson.object [("foo", Aeson.String "bar")])]
 
     it "evaluates YAMLScript function call" $ do
-      result <- loadYAMLScript "!yamlscript/v0\nadd(40, 2)"
+      result <- loadYAMLScript "!ys-0\nadd(40, 2)"
       result `shouldBe` Aeson.object [("data", Aeson.Number 42)]
 
     it "loads from file" $ do
@@ -31,7 +31,7 @@ main = hspec $ do
         [("data", Aeson.object [("test", Aeson.String "value")])]
 
     it "handles errors gracefully" $ do
-      result <- loadYAMLScript "!yamlscript/v0\ninvalid: syntax"
+      result <- loadYAMLScript "!ys-0\ninvalid: syntax"
       case result of
         Aeson.Object obj -> case KeyMap.lookup (Key.fromString "error") obj of
           Just _ -> return () -- Error present, test passes

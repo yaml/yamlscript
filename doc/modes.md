@@ -36,7 +36,7 @@ The most important ones to learn about are data and code modes.
 To use YS effectively you'll need to be comfortable with switching back and
 forth between the two.
 
-Bare mode is the default when you haven't added a `!YS-v0` tag to the start of
+Bare mode is the default when you haven't added a `!ys-0` tag to the start of
 a YS document.
 It means that everything in the file is data; code can never be used.
 This is how we can make sure that existing YAML files are valid YS.
@@ -44,9 +44,8 @@ This is how we can make sure that existing YAML files are valid YS.
 To enable a YAML file to use YS code, you need to add one of these tags to the
 top:
 
-* `!YS-v0` - Start in code mode.
-* `!YS-v0:` - Start in data mode.
-* `!YS v0:` - Tagged key/val pair that starts in bare mode.
+* `!ys-0` - Start in code mode.
+* `!ys-0:` - Start in data mode.
 
 Consider the following examples.
 
@@ -63,7 +62,7 @@ Data mode:
 
 ```txt
 $ ys --load <(echo '
-!YS-v0:
+!ys-0:
 foo:
   count: [red, green, blue]')
 {"foo":{"count":["red","green","blue"]}}
@@ -73,7 +72,7 @@ Code mode:
 
 ```txt
 $ ys --load <(echo '
-!YS-v0
+!ys-0
 foo:
   count: [red, green, blue]')
 Error: Sequences (block and flow) not allowed in code mode
@@ -95,7 +94,7 @@ The special tag `!` can be used to switch from data to code and vice versa.
 
 ```txt
 $ ys --load <(echo '
-!YS-v0:
+!ys-0:
 foo: !
   count: [red, green, blue]')
 Error: Sequences (block and flow) not allowed in code mode
@@ -108,7 +107,7 @@ We need to put `[red, green, blue]` into data mode:
 
 ```txt
 $ ys --load <(echo '
-!YS-v0:
+!ys-0:
 foo: !
   count: ! [red, green, blue]')
 {"foo":3}
@@ -124,7 +123,7 @@ Let's try it out:
 
 ```txt
 $ ys --load <(echo '
-!YS-v0:
+!ys-0:
 foo::
   count:: [red, green, blue]')
 {"foo":3}
@@ -136,7 +135,7 @@ However, when *switching in a sequence* you'll need to use `!`:
 
 ```txt
 $ ys --load <(echo '
-!YS-v0:
+!ys-0:
 - !
   count:: [red, green, blue]')
 [3]

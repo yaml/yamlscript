@@ -41,7 +41,7 @@ Learn More About YS</a></div>
 - name: YAML Made Functional
   type: code:yaml
   body: |
-    !YS-v0:
+    !ys-0:
     vars =: load('vars.yaml')
     json-file =: 'data.json'
 
