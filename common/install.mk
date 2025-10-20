@@ -18,7 +18,9 @@ ifneq (,$(YS))
 		'- version $(YAMLSCRIPT_VERSION)'
 else ifneq (,$(LIBYS))
 	mkdir -p $(PREFIX)/lib
-	cp -pP libys* $(PREFIX)/lib/
+	cp -pP libys*.so* $(PREFIX)/lib/
+	mkdir -p $(PREFIX)/include/libys-$(YAMLSCRIPT_VERSION)
+	cp -pP *.h $(PREFIX)/include/libys-$(YAMLSCRIPT_VERSION)/
 	@echo 'Installed $(PREFIX)/lib/$(LIBYS)' \
 		'- version $(YAMLSCRIPT_VERSION)'
 else

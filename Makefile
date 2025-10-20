@@ -236,7 +236,8 @@ endif
 
 $(LYS-RELEASE): $(RELEASE-LYS-NAME)
 	mkdir -p $<
-	cp -pPR libys/lib/libys.$(SO)* $</
+	cp -pPR libys/lib/libys*.$(SO)* $</
+	cp -pPR libys/lib/*.h $</
 	cp common/install.mk $</Makefile
 ifeq (true,$(IS-MACOS))
 	$(TIME) tar -J -cf $@ $<
