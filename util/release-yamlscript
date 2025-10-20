@@ -40,7 +40,6 @@ verbose =: true
 dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
 last-step =: (ENV.YS_RELEASE_LAST_STEP || steps):N
 
-
 #------------------------------------------------------------------------------
 # Run each step in succession, starting at the specified step number if given
 # and ending at the specified last step number if given.
@@ -302,7 +301,10 @@ defn run(cmd):
   say: "+ $cmd"
 
   when-not dryrun:
-    shell: cmd
+    token =:
+      sh-out:
+        "ys -l $(ENV.HOME)/.yamlscript-secrets.yaml -e '.github.token:say'"
+    shell {:extra-env {"YS_GH_TOKEN" token}}: cmd
 
 defn check-args(old new start):
   when-not (string? old) && (re-matches /0\.\d+\.\d+/ old):
