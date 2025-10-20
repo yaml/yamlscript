@@ -38,7 +38,7 @@ The space before the `=` is required.
 
 ```
 hello =: 'Oh hello'
-a b c =: -[1 2 3]  # Destructuring assignment
+a b c =: +[1 2 3]  # Destructuring assignment
 ```
 
 
@@ -50,14 +50,14 @@ then its not a valid YAML scalar.
 Also expressions that have stuff after a quoted string (`''` `""`) are not valid
 YAML.
 
-You can turn text into a valid YAML plain scalar by prefixing it with a dash
-(`-`) or a plus (`+`).
-The dash or plus is removed when YS reads the scalar.
+You can turn text into a valid YAML plain scalar by prefixing it with a plus
+(`+`).
+The plus is removed when YS reads the scalar.
 
 Note: the dash cannot have whitespace after it, but the plus can.
 
 ```
--[1 2 3]: .map(inc)  # => [2 3 4]
++[1 2 3]: .map(inc)  # => [2 3 4]
 =>: +
   'foo' + 'bar'      # => 'foobar'
 ```

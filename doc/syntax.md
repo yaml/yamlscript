@@ -112,7 +112,7 @@ follow without them.
 ```yaml
 !ys-0
 name =: 'world'
-say: -'Hello, ' + name + '!'
+say: +'Hello, ' + name + '!'
 ```
 
 Here we are doing something that you don't see in Clojure.
@@ -121,16 +121,16 @@ We're using `+` to concatenate strings.
 When YS operators are infix they compile to polymorphic functions that work on
 types of data other than numbers.
 
-But what about the `-` in front of the string?
+But what about the `+` in front of the string?
 
-Without the `-` this would be invalid YAML because YAML does not allow text on
+Without the `+` this would be invalid YAML because YAML does not allow text on
 the same line after a quoted string.
 
-The `-` causes YAML to see everything after it as the scalar value:
+The `+` causes YAML to see everything after it as the scalar value:
 `-'Hello, ' + name + '!'`.
 This is like an escape character for situations where you want to write an
 expression but the first character is a syntax character in YAML.
-The `-` is removed and the rest of the scalar is compiled as an expression.
+The `+` is removed and the rest of the scalar is compiled as an expression.
 
 
 ## Basic Function Definition
@@ -243,8 +243,8 @@ Clojure and YS have destructuring assignment support for both sequences
 and mappings.
 
 ```yaml
--[a b c] =: foo()
--{d :d e :e} =: bar()
++[a b c] =: foo()
++{d :d e :e} =: bar()
 ```
 
 This would assign the first three values of the sequence returned by `foo` to

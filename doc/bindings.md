@@ -82,7 +82,7 @@ File `file.ys`:
   name =: "World"
   other =: load("other.yaml")
 
-foo:: -[(6 * 7), inc(41), 43.--, (3 .. 9):sum]
+foo:: +[(6 * 7), inc(41), 43.--, (3 .. 9):sum]
 bar:: other.stuff:shuffle.take(3)
 baz:: "Hello, $name!"
 ```

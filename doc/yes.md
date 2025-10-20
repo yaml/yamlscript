@@ -218,7 +218,7 @@ Note that this works for a `let` expression but not for a `def` expression:
 In YS it works fine:
 
 ```yaml
--[a b] =: c()
++[a b] =: c()
 ```
 
 
