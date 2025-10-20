@@ -1,0 +1,48 @@
+---
+title: ' '
+talk: 0
+hide:
+- navigation
+- toc
+---
+
+## YAMLScript, aka YS (pronounced "wise") is YAML made dynamic.
+
+* 100% valid YAML - Works with existing YAML/JSON, with or embedded logic
+* Batteries included - Has everything a programming language has, including 100s
+  of standard functions
+* Use with `ys` CLI or as a YAML loader replacement in almost any language.
+
+Click on a topic below to learn more!
+
+```mdys:format-bash-example
+opts: open
+desc: YAML code one liners with the `ys` CLI
+text: |
+  $ ys --print --eval 'sum: 3 .. 9'
+  42
+  $ ys -p -e '=>: 2 * 3 * 7'
+  42
+  $ ys -pe 'inc + inc: cube(2) * 5
+  42
+  $
+```
+
+```mdys:format-bash-example
+desc: Install the YS CLI (`ys`) in seconds
+text: |
+  $ curl -sL getys.org/ys | bash
+  Installed /home/me/.local/bin/ys - version 0.2.4
+  $
+```
+
+```mdys:YS-CODE
+defn mdys-format-bash-example(o): |
+  <details $(o.opts)>
+  <summary><strong style="color:green">$(o.desc)</strong></summary>
+
+  ```bash
+  $(o.text)
+  ```
+  </details>
+```
