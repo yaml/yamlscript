@@ -946,7 +946,7 @@
 (defn- destructure-vector [V idx]
   (map-indexed
     (fn [i name]
-      (+def-defn name `(get ~idx ~i)))
+      (+def-defn name `(nth ~idx ~i nil)))
     V))
 
 (defn- destructure-map [M idx]
@@ -959,9 +959,8 @@
   (let [root (gensym)]
     `(let [~root ~idx]
        ~@(condf x
-           vector? (destructure-vector x root)
-           list? (destructure-vector x root)
            map? (destructure-map x root)
+           seqable? (destructure-vector x root)
            []))))
 
 (defn- +def-defn [x y]

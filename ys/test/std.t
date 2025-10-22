@@ -401,6 +401,30 @@ test::
     =>: "$what $who"
   want: Hello World
 
+- name: Range destructuring
+  code: |
+    a b c =: range()
+    =>: "$a - $b - $c"
+  want: '0 - 1 - 2'
+
+- name: Short range destructuring
+  code: |
+    a b c =: range(2)
+    =>: +[a b c]
+  want: [0, 1, null]
+
+- name: Range destructuring
+  code: |
+    a b c =: 1 2 3
+    =>: "$a - $b - $c"
+  want: '1 - 2 - 3'
+
+- name: Auto grouping
+  code: |
+    a =: 1 2 3
+    =>: a
+  want: [1, 2, 3]
+
 
 #-------------------------------------------------------------------------------
 done:
