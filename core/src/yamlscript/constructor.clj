@@ -124,7 +124,7 @@
         [(Vec (->>
                 lets
                 flatten
-                (filter #(not= {:Sym 'def} %1))
+                (remove #(= {:Sym 'def} %1))
                 ;; Handle RHS is mapping
                 (partition 2)
                 (map #(let [[k v] %1]

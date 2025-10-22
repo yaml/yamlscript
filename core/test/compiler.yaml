@@ -742,10 +742,28 @@
       (let [[a b c] [1 2 3] {:d d, :e e} {:d 4, :e 5}] (add+ a b c)))
 
 
+- name: Destructuring let with multiple RHS
+  yamlscript: |
+    !ys-0
+    defn foo():
+      +[a b c] =: 1 2 3
+      =>: a + b + c
+  clojure: |
+    (defn foo [] (let [[a b c] [1 2 3]] (add+ a b c)))
+
+
 - name: Destructuring def
   yamlscript: |
     !ys-0
     +[a b c] =: +[1 2 3]
+  clojure: |
+    (+def [a b c] [1 2 3])
+
+
+- name: Destructuring def with multiple RHS
+  yamlscript: |
+    !ys-0
+    +[a b c] =: 1 2 3
   clojure: |
     (+def [a b c] [1 2 3])
 

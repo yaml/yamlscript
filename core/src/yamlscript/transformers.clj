@@ -41,8 +41,36 @@
   (transform-with-else lhs rhs (Sym "=>")))
 
 ;;-----------------------------------------------------------------------------
-;; defn and fn
+;; def, defn and fn
 ;;-----------------------------------------------------------------------------
+
+(comment
+  (yamlscript.compiler/compile "
+!ys-0
+defn x():
+  a b =: c d")
+  )
+
+(defn transform_def [lhs rhs]
+  (cond
+    (= 2 (count lhs))
+    (let [rhs (if (and (vector? rhs) (> (count rhs) 1))
+                (Vec rhs)
+                rhs)]
+      [lhs rhs])
+    (= 3 (count lhs))
+    (let [[a b c] lhs
+          lhs [a b]
+          op (:Sym c)
+          op (Sym (or ({'|| 'or
+                        '||| 'or?
+                        '+ 'add+
+                        '* 'mul+
+                        '/ 'div+
+                        '** 'pow} op) op))
+          rhs (Lst [op b rhs])]
+      [lhs rhs])
+    :else [lhs rhs]))
 
 (defn transform_defn [lhs rhs]
   (when-lets [lhs (remove nil? lhs)
@@ -53,11 +81,11 @@
               xmap (:xmap rhs)
               _ (every? :Lst (->> xmap (partition 2) (map first)))
               xmap (reduce
-                      (fn [acc [lhs rhs]]
-                        (let [lhs (Vec (:Lst lhs))]
-                          (conj acc lhs rhs)))
-                      []
-                      (partition 2 xmap))
+                     (fn [acc [lhs rhs]]
+                       (let [lhs (Vec (:Lst lhs))]
+                         (conj acc lhs rhs)))
+                     []
+                     (partition 2 xmap))
               rhs {:xmap xmap}]
     [lhs rhs]))
 

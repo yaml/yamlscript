@@ -6,7 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
-   [yamlscript.ast :refer [Lst Sym QSym]]
+   [yamlscript.ast :refer [Lst Sym QSym Vec]]
    [yamlscript.common]
    [yamlscript.transformers]
    [ys.dwim])
@@ -128,23 +128,6 @@
     [lhs rhs]
     [lhs rhs]))
 
-(defn transform-def-ops [lhs rhs]
-  (when (and
-          (vector? lhs)
-          (= 3 (count lhs))
-          (= 'def (:Sym (first lhs))))
-    (let [[a b c] lhs
-          lhs [a b]
-          op (:Sym c)
-          op (Sym (or ({'|| 'or
-                        '||| 'or?
-                        '+ 'add+
-                        '* 'mul+
-                        '/ 'div+
-                        '** 'pow} op) op))
-          rhs (Lst [op b rhs])]
-      [lhs rhs])))
-
 (defn swap-underscores [lhs rhs]
   (if-lets [_ (get-in lhs [0 :Sym])
             _ (some (partial = {:Sym '_}) lhs)
@@ -155,13 +138,13 @@
 
 (defn apply-transformer [key val]
   (let [[key val] (swap-underscores key val)]
-    (or (if-lets [name (or
+    (or
+      (when-lets [name (or
                          (get-in key [:Sym])
                          (get-in key [0 :Sym]))
                   sym (symbol (str "transform_" name))
                   transformer (ns-resolve transformers-ns sym)]
-          (transformer key val)
-          (transform-def-ops key val))
+        (transformer key val))
       [key val])))
 
 (defn transform-xmap [node]
