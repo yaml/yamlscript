@@ -14,8 +14,8 @@
    [yamlscript.global :as global :refer [env]])
   (:refer-clojure))
 
-(def yamlscript-version "0.2.4")
-(def temp-dir "/tmp/ys-build")
+(def yamlscript-version "0.2.7")
+(def temp-dir "/tmp/yamlscript/build")
 
 (def show-log? (atom false))
 (def debug? (atom false))

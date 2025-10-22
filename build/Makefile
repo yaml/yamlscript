@@ -25,9 +25,10 @@ in-type := $(shell [[ -d $(in-path) ]] && echo 'dir'; \
 ifndef in-type
   $(error Input path does not exist: $(in-path))
 endif
-ifeq (exists,$(shell [[ -e $(out-path) ]] && echo 'exists'))
+$(shell [[ -f $(out-path) ]] && rm -f $(out-path))
+ifneq (,$(wildcard $(out-path)))
 ifneq (/dev/stdout,$(out-path))
-  $(error Output path already exists: $(out-path))
+  $(error Won't overwrite output path: $(out-path))
 endif
 endif
 out-type := $(shell [[ $(out-path) == */ ]] && echo 'dir' || echo 'file')
