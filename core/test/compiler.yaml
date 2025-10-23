@@ -1565,7 +1565,7 @@
       - bar
     - baz
   clojure: |
-    (concat ["foo"] (when (> (rand 2) 1) ["bar"]) ["baz"])
+    (+concat ["foo"] (when (> (rand 2) 1) ["bar"]) ["baz"])
 
 
 - name: Fix bug in seq insertion in data mode
@@ -1637,3 +1637,14 @@
     (.foo 123)
     (.bar foo baz)
     (.baz (.bar (.foo 123) baz))
+
+
+- name: Scalar insertion in data mode sequence
+  yamlscript: |
+    !ys-0:
+    - foo
+    - :: 3 .. 5
+    - :: 42
+    - bar
+  clojure: |
+    (+concat ["foo"] (+concat (rng 3 5) 42) ["bar"])

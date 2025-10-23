@@ -205,6 +205,17 @@
   ([C] #(in? C %1))
   ([x C] (has? C x)))
 
+(defn +concat [& C]
+  (apply concat (map #(cond
+                        (sequential? %1) %1
+                        (or
+                          (string? %1)
+                          (number? %1)
+                          (boolean? %1)
+                          (map? %1)
+                          (set? %1)) [%1]
+                        :else nil) C)))
+
 (defn +merge [M]
   (if (:-<< M)
     (let [m (dissoc M :-<<)

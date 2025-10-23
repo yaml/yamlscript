@@ -1382,7 +1382,7 @@
     - :when true: ddd
     - eee
   clojure: |
-    (concat ["aaa"] (when true bbb) ["ccc"] (when true ddd) ["eee"])
+    (+concat ["aaa"] (when true bbb) ["ccc"] (when true ddd) ["eee"])
 
 
 - name: Multiple code insertions in data mode with mode swap variants
@@ -1407,9 +1407,9 @@
       {:map [{:expr ":when true"} {:seq ({:str "bbb"})}]}
       {:str "ccc"})}
   clojure: |
-    (concat
+    (+concat
       ["aaa"]
-      (concat bbb ["bbb"] (when true bbb) (when true ["bbb"]))
+      (+concat bbb ["bbb"] (when true bbb) (when true ["bbb"]))
       ["ccc"])
 
 
@@ -1425,7 +1425,7 @@
     - 9
     - 10
   clojure: |
-    (concat [0 1] [2 3 4] [5 5] [6 7 8] [9 10])
+    (+concat [0 1] [2 3 4] [5 5] [6 7 8] [9 10])
 
 
 - name: Two '::' in a row in a data mode sequence
@@ -1436,7 +1436,7 @@
     - :when y:: [6, 7, 8]
     - 9
   clojure: |
-    (concat [1] (concat (when x [2 3 4]) (when y [6 7 8])) [9])
+    (+concat [1] (+concat (when x [2 3 4]) (when y [6 7 8])) [9])
 
 
 - name: Single '::' in a data mode sequence
@@ -1444,7 +1444,7 @@
     !ys-0:
     - :when x: +[2 3 4]
   clojure: |
-    (concat (when x [2 3 4]))
+    (+concat (when x [2 3 4]))
 
 
 - name: Two '::' in a row in a data mode mapping

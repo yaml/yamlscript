@@ -259,13 +259,13 @@
                    (let [nodes (map #(construct-node %1 ctx) group)
                          node (if (:dmap (first group))
                                 (if (> (count group) 1)
-                                  (Lst (vec (cons (Sym 'concat) (vec nodes))))
+                                  (Lst (vec (cons (Sym '+concat) (vec nodes))))
                                   (first nodes))
                                 (Vec (vec nodes)))
                          new (if new (conj new node) [node])]
                      new))
                  nil nodes)]
-      (Lst (vec (cons (Sym 'concat) vect))))))
+      (Lst (vec (cons (Sym '+concat) vect))))))
 
 (defn construct-vec [node ctx]
   (or

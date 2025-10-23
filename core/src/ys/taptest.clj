@@ -4,6 +4,7 @@
    [clojure.string :as str]
    [ys.ys :as ys]
    [ys.yaml :as yaml]
+   [yamlscript.global :as global]
    [yamlscript.common])
   (:refer-clojure
    :exclude [test]))
@@ -72,7 +73,11 @@
         code (get test "code")
         what (get test "what")
         _ (check-string code "code" count)
-        code (str "!ys-0\n" code "\n")]
+        mode (get test "mode")
+        code (cond
+               (= "data" mode) (str "!ys-0:\n" code "\n")
+               (= "bare" mode) code
+               :else (str "!ys-0\n" code "\n"))]
     (try (if (= "out" what)
            (with-out-str (ys/eval code))
            (ys/eval code))
@@ -128,6 +133,7 @@
       tests2)))
 
 (defn- init-test [test]
+  (swap! global/opts assoc :unordered true)
   (let [keys (set (keys test))
         what (get test "what")
         form (get test "form")]
@@ -151,8 +157,11 @@
 
 (defn- normalize [got test]
   (let [what (get test "what")
-        form (get test "form")]
+        form (get test "form")
+        mode (get test "mode")]
     (cond
+      (= "data" mode) (pr-str got)
+      (= "bare" mode) (pr-str got)
       form (if (fn? form)
              (form got test)
              (die "taptest: 'form' must be a function"))

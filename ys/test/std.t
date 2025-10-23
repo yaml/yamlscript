@@ -212,7 +212,7 @@ test::
   want:: inc
 
 - code: qw(one :two "three" 4 true false nil {} [])
-  want:: +['one' ':two' "three" '4' 'true' 'false' 'nil' '(%)' '[]']
+  want:: +['one' ':two' "three" '4' 'true' 'false' 'nil' '{}' '[]']
 
 
 #-------------------------------------------------------------------------------
