@@ -6,14 +6,12 @@ endif
 
 version := $(YS-VERSION)
 
-GO-VERSION := 1.19.3
+GO-VERSION := 1.24.0
 
 # If we are building in the YS repo:
 ifneq (,$(wildcard ../the-ys-repo-build-dir))
 REPO-BUILD := true
 MAKES := ../../.cache/makes
-MAKES-LOCAL-DIR := /tmp/ys-build-makes-local
-MAKES-LOCAL-DIR := /home/ingy/src/ys-build-makes-local
 ROOT := $(shell cd ../../ && pwd -P)
 MAKES-QUIET := $(if $(YS_BUILD_DEBUG),,true)
 
@@ -21,9 +19,10 @@ MAKES-QUIET := $(if $(YS_BUILD_DEBUG),,true)
 else
 STAND-ALONE-BUILD := true
 MAKES := ./.cache/makes
-MAKES-LOCAL-DIR := /tmp/ys-build-makes-local
 ROOT := $(shell pwd -P)
 endif
+
+MAKES-LOCAL-DIR := /tmp/yamlscript/build/makes-local
 
 $(shell [[ -d $(MAKES) ]] || \
   git clone -q https://github.com/makeplus/makes $(MAKES))

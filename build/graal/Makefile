@@ -10,7 +10,6 @@ version := $(YS-VERSION)
 ifneq (,$(wildcard ../the-ys-repo-build-dir))
 REPO-BUILD := true
 MAKES := ../../.cache/makes
-MAKES-LOCAL-DIR := /tmp/ys-build-makes-local
 ROOT := $(shell cd ../../ && pwd -P)
 MAVEN-HOME := $(MAKES-LOCAL-DIR)/home
 MAKES-QUIET := $(if $(YS_BUILD_DEBUG),,true)
@@ -19,10 +18,11 @@ MAKES-QUIET := $(if $(YS_BUILD_DEBUG),,true)
 else
 STAND-ALONE-BUILD := true
 MAKES := ./.cache/makes
-MAKES-LOCAL-DIR := /tmp/ys-build-makes-local
 ROOT := $(shell pwd -P)
 MAVEN-HOME := $(ROOT)
 endif
+
+MAKES-LOCAL-DIR := /tmp/yamlscript/build/makes-local
 
 export MAVEN_HOME := $(MAVEN-HOME)
 
