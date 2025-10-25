@@ -146,6 +146,7 @@
                       :as [:as nil]
                       :get [:get []]
                       :all [:all true]
+                      :none [:none true]
                       :not [:not []]
                       [nil arg])
               parsed (if k
@@ -183,6 +184,16 @@
   (let [module (str module)
         modpath (str/replace module #"\." "/")
         args (parse-args args)
+        all (:all args)
+        args (cond
+               (:none args) (dissoc args :all :none)
+               (and
+                 (not all)
+                 (not (or
+                        (:as args)
+                        (:get args)
+                        (:not args)))) (assoc args :all true)
+               :else args)
         from (or (:from args) {:yspath (get-yspath @sci/file)})
         [kind spec] (first from)]
     (case kind
