@@ -424,7 +424,7 @@
 
 (defmacro call [x & xs]
   `(let [f# (or (value ~x) ~x)]
-     (when-not (fn? f#) (util/die "Can't call(" (pr-str f#) ")"))
+     (when-not (ifn? f#) (util/die "Can't call(" (pr-str f#) ")"))
      (f# ~@xs)))
 
 (intern 'ys.std 'die yamlscript.util/die)
