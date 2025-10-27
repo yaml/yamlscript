@@ -537,11 +537,13 @@
 
 (defmacro q
   ([x] `(quote ~x))
-  ([x & xs] `(quote [~x ~@xs])))
+  ([x & xs] `(quote (~x ~@xs))))
 
 (defmacro ql [& xs] `(list ~@xs))
 (defmacro qm [& xs] `(hash-map ~@xs))
 (defmacro qo [& xs] `(omap ~@xs))
+(defmacro qs [& xs]
+  `(clojure.string/join " " '(~@xs)))
 (defmacro qv [& xs] `(vector ~@xs))
 
 (defn qr [S] (re-pattern S))
