@@ -1,0 +1,31 @@
+--- !ys-0
+
+cats dogs =: load('vars1.yaml')
+             .slice('cats' 'dogs')
+animals =: curl("gist:borlaym/585e2e09dd6abd9b0d0a")
+           .json/load():shuffle
+fortune =: sh('fortune').out
+favorite-animals =::
+- Crow
+- Penguin
+
+--- !ys:
+
+about: animals
+fortune:: fortune
+animals:
+- :: animals:first
+- ! "Favorite is $(favorite-animals.filterv(/Cro/).0)"
+- :: cats.map(\(_ + " is a cat")):sort
+- :: dogs.map(\(_ + " is a dog"))
+- :: animals:last
+
+
+
+
+
+
+
+
+
+

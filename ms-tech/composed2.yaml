@@ -1,0 +1,39 @@
+!ys-0:
+
+about: cats & dogs
+
+cats dogs =: load('vars1.yaml')
+             .slice('cats' 'dogs')
+
+cats:: cats
+
+dogs:: dogs
+
+cats & dogs::
+  shuffle: cats + dogs
+
+dogs & cats:: shuffle(cats + dogs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+--- !ys-0
+
+vars =: load('vars1.yaml')
+
+defn pick1(type):
+  vector: vars.$type:rand-nth
+
+--- !ys:
+
+animals:
+- Parrot
+
+- :if ENV.CAT: +{:cat pick1('cats')}
+
+- :if ENV.DOG: +{:dog pick1('dogs')}
+
+- Goldfish
+
+:if ENV.DEBUG: vars
+
+
+
+
+
+
+
+
+

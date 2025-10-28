@@ -1,0 +1,44 @@
+!ys-0
+
+nums =::
+- one
+- two
+- three
+
+group =:: [Alice, Bob, Chuck]
+
+tac =: concat * flatten * reverse
+
+--- !ys:
+
+list 1: &list1 !concat*
+- - eh
+  - bee
+  - sea
+- ! nums
+
+list2: !tac*
+- *list1
+- [The End]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

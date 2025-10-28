@@ -1,0 +1,417 @@
+---- config
+title: YAML - A Language Moving Forward
+indent: 5
+
+# auto_size: 1
+height: 25
+width: 87
+
+vim_opts: '-u NONE'
+skip: 0
+top: 2
+before: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+
+YAML - A Language Moving Forward
+
+by Ingy döt Net
+
+Microsoft Tech Stack
+October 28, 2025
+Redmond, WA
+
+
+----
+== Ingy and YAML
+
+* Inventor of YAML
+
+* Inventor of YS / YAMLScript
+  * Dynamic YAML
+
+* Lead Maintainer of the YAML project
+  * YAML Specification
+  * go-yaml (Kubernetes, Helm, Kustomize, etc)
+  * PyYAML (Ansible, OpenShift, SaltStack, etc)
+  * libyaml (Engine for many YAML loaders like PyYAML)
+
+
+----
+== YAML Misconceptions
+
+* YAML was created to improve JSON
+* YAML is a config language
+* YAML was forced on DevOps
+* Kubernetes made YAML popular
+* YAML is a superset of JSON
+* YAML frameworks follow the spec
+* YAML is finished
+* Norway is a problem
+
+
+----
+== YAML has Problems
+
+* YAML is critical infrastructure with massive usage
+* No two YAML frameworks behave the same
+* None passed the YAML 1.2 spec test suite until 2021
+
+* These problems can be fixed
+* Ingy is dedicated to fixing YAML's problems
+  * And moving the language forward for everybody
+  * Many improvements are already underway
+* YAML needs corporate sponsorship to thrive
+
+
+----
+== YAML Business
+
+* I'm launching a YAML Support and Sponsorship Business
+  * YAML development, maintenance, support, consulting, training
+  * "YES" - YAML Enterprise Sustainability
+
+* I'd like Microsoft to be involved in the future of YAML
+  * Keep that in mind during this talk
+  * What does Microsoft want for YAML?
+
+
+----
+== YS (YAMLScript)
+
+* `ys` is the YS command line tool
+
+$ vim file1.yaml
+$ ys --load --yaml file1.yaml
+$ ys -l file1.yaml
+$ ys -l file1.yaml | jq
+$ ys -Y file1.yaml
+
+$ ys -e 'say: "Hello, $(base64-decode(\"TWljcm9zb2Z0\"))!"'
+
+
+----
+== Dynamic YAML Loaders for All Languages
+
+* YS has YAML Loaders for 15 (and counting) languages
+  * Go, Rust, Java, C#, Python, Ruby, NodeJS, etc
+* https://yamlscript.org/doc/bindings/#currently-available-libraries
+* Same features, bugs, and fixes everywhere!
+
+$ vim file1.py
+$ python file1.py
+$ vim file2.py
+$ python file2.py
+$ diff <(python file1.py) <(python file2.py) && echo "No differences!"
+
+
+----
+== Why YS?
+
+* Make YAML Dynamic
+
+* Solve YAML's problems
+  * For Everybody, Everywhere, All at Once!
+
+* Loads existing YAML/JSON files as expected
+  * YS is 100% valid YAML
+  * JSON is 100% valid YAML and YS
+
+* The !ys-v0 tag makes YAML Dynamic
+
+
+----
+== YS is actually a Complete, Functional Programming Language
+
+* Functions, Variables, Conditionals, Loops, Modules, Standard Libraries, etc
+* Transpiles to the Clojure Lisp
+  * But is native binary, no JVM involved (GraalVM native-image)
+  $ ys -e 'say: 42 / 0'
+  $ ys -Se 'say: 42 / 0'
+* Batteries included
+  * 1000+ built-in functions (all clojure.core etc)
+  * File I/O, HTTP, Shell, Env Vars, JSON, YAML, etc
+* Soon to work with as Go Lang via Glojure
+  * Compile YAML to Go code or binaries
+  * Compile to WebAssembly (browser and server)
+* YS Code is surprisingly concise and readable
+  * https://gist.github.com/ingydotnet/90ab729fad4c5518b38f98eda097021c
+* Great for scripting and automations
+  * Most of the yamlscript repo automations are written in YS
+  * https://github.com/yaml/yamlscript/blob/v0/util/release-yamlscript
+
+
+----
+== YS Resources
+
+* Main website w/ Docs, Blog, etc
+  * https://yamlscript.org
+
+* Summer of YS blog series:
+  * https://yamlscript.org/blog/category/summer-of-ys/
+
+* Learn YS online for free with Exercism:
+  * https://exercism.org/tracks/
+
+* YS on Rosetta Code:
+  * https://rosettacode.org/wiki/Category:YAMLScript
+
+
+
+----
+== YS Addresses YAML's Major Real World Limitations
+
+* Composability - Include data from external sources
+  * Files, URLS, Shell commands, Env vars, Databases, etc
+
+* Transformations - 100s of standard functions to apply
+  * Merge, Filter, Map, Reduce, Sort, etc
+
+* Conditionals
+  * Craft data based on runtime conditions
+
+* Interpolation
+  * Expand variables and expressions in strings
+
+* Variables
+  * Store values for reuse
+
+
+----
+== Composing YAML files
+
+$ vim -O composed1.yaml vars1.yaml
+$ ys -Y composed1.yaml
+
+$ vim composed2.yaml
+$ ys -Y composed2.yaml
+
+$ vim composed3.yaml
+$ ys -Y composed3.yaml
+
+
+----
+== Conditional YAML
+
+$ vim conditional.yaml
+
+$ ys -Y conditional.yaml
+
+$ CAT=1 ys -Y conditional.yaml
+
+$ DOG=1 ys -Y conditional.yaml
+
+$ CAT=1 DOG=1 ys -Y conditional.yaml
+
+$ DEBUG=1 ys -Y conditional.yaml
+
+
+----
+== How a YAML Loader Works
+
+* A YAML Loader is a Stack of Transformations
+  * Text File -> Native Data Structure
+
+* Text File          -> (READ)      -> Code Points
+* Code Points        -> (SCAN)      -> Tokens
+* Tokens             -> (PARSE)     -> Parse Events
+  * https://play.yaml.io/main/parser?input=LSBbYWJjXTogMTIzCg==
+
+* Parse Events       -> (COMPOSE)   -> Node Tree
+
+* Node Tree          -> (RESOLVE)   -> Resolved Node Tree
+  * All nodes have tags - explicit or implicit
+
+* Resolved Node Tree -> (CONSTRUCT) -> Native Data Structure
+  * Tags are mapped to functions (not types)
+
+
+----
+== How YS Works
+
+* YS compiles YAMLScript to Clojure
+  * Then evaluates the Clojure with its runtime
+
+* The YS compiler is implemented as a YAML Loader
+  * Loads to an AST rather than a data structure
+
+$ ys -ce  'say: "Hello, $(ENV.USER)"'
+$ ys -cde 'say: "Hello, $(ENV.USER)"'
+
+* YAML's unique features make YS possible
+  * Plain Scalars (unquoted strings)
+  * Implicit tag resolution (taken to the extreme)
+
+* YS supports tags for function calls, BTW
+  $ vim tag-calls.yaml
+  $ ys -Y tag-calls.yaml
+
+
+----
+== YS for DevOps
+
+* YS wants to be adopted by all DevOps tools that use YAML
+  * Configurable drop-in YAML loader for:
+    * Kubernetes
+    * Helm
+    * GitHub Actions
+    * Ansible
+    * AWS CDK
+    * Docker Compose
+    * CircleCI
+
+* Not there yet
+
+* But users can use YS today in their DevOps configs
+
+
+----
+== HelmYS
+
+* HelmYS is a YS-based Helm Post-Renderer
+  * Use YS in your Helm charts today!
+  * Relpace or combine with Go template syntax
+
+* https://yamlscript.org/helmys/
+
+
+----
+== CircleCI Example
+
+* Calva is a very popular Clojure IDE for VS Code
+
+* https://github.com/BetterThanTomorrow/calva/tree/9483828c2/.circleci/
+* https://github.com/BetterThanTomorrow/calva/tree/published/.circleci/
+
+
+----
+== GitHub Actions Example
+
+* Kudos to GitHub for Anchor/Alias Support!
+
+* RapidYAML is the world's fastest and most correct YAML parser
+  * by Joao Paulo Magalhaes
+  * Written in C++
+
+* https://github.com/biojppm/rapidyaml/tree/master/.github/
+
+
+----
+== YS Empowers DevOps Engineers
+
+* People who write DevOps configs need programming features
+* YAML doesn't have that
+* Need to use other tools like Jinja2, Helm, Kustomize, etc
+* YS gives them those features in YAML itself
+
+
+----
+== Scripting with YS
+
+$ vim 99-bottles.ys
+$ ys 99-bottles.ys
+$ ys 99-bottles.ys 3
+
+* -x Trace Debugging (like bash -x)
+$ ys -x 99-bottles.ys
+
+
+----
+== Compile YS to a Go binary
+
+$ rm -fr 99-bottles
+$ (cd ./soon && util/ysj --to=go -o ../99-bottles ../99-bottles.ys)
+$ ./99-bottles 3
+
+$ rm -f 99-bottles
+$ (cd ./soon && util/ysj --to=go -o ../99-bottles/ ../99-bottles.ys)
+$ vim 99-bottles/
+$ ./99-bottles/99-bottles 3
+
+
+----
+== Useful YS scripts
+
+* yamllm - A CLI for LLMs
+  $ yamllm 'Will YAMLScript be adopted by Microsoft?'
+  * https://github.com/yaml/yamllm/blob/main/bin/yamllm
+
+* Creating GitHub Gists
+  $ vim $(which gist)
+  $ gist $(which gist)
+
+
+----
+== What's Next for YAML?
+
+* So many great ideas for improving YAML
+
+* SchemaYS - A YAML Schema Language
+  * Like JSON Schema, but better
+  * Written in YS
+
+* Fundamental YS Functions for go-yaml
+  * !load, !merge, !concat, !if, !map, !filter, !reduce, etc
+  * Opt-in of course
+
+* New YAML Spec Version 1.3 or 2.0
+  * Fix spec ambiguities and errors
+  * Add new features based on YS experience
+  * Support feature extensions
+
+
+----
+== Is Moving YAML Forward even Possible?
+
+* Can we actually improve YAML?
+* New spec version 1.3 or 2.0?
+* Specs need to be implemented!
+* The YAML spec is incredibly hard to implement
+* YAML test suite
+  * https://matrix.yaml.info
+
+
+----
+== The Solution
+
+* What if there was a new YAML framework?
+* That worked the same everywhere?
+* Full featured
+* Highly configurable
+* Shipped to every modern programming language
+
+* When 1.3 is published it's already implemented
+  * Even before a new spec is finalized!
+
+* Coming very soon...
+  * Essentially a slight rework of YS
+
+
+----
+== YAML Needs Microsoft
+
+* I hope you thought of ideas during this talk
+* I'd love Microsoft's involvement in YAML's future
+* I'm available for hire/contract to help make it happen
+  * Training available too
+* Let's discuss after the talk!
+  * I'll hang around as long as needed
+  * I'll be at KubeCon Atlanta in a couple weeks
+  * Or email me: ingy@ingy.net
+
+
+----
+== The End
+
+== Questions?
+
+* Slides: https://github.com/yaml/yamlscript/blob/talk/ms-tech/slides.vroom
+  (See the `talk` branch of yamlscript mono-repo)
+
+* YS Website: https://yamlscript.org
+
+* Contact: ingy@ingy.net

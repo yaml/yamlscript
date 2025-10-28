@@ -1,0 +1,29 @@
+!ys-0
+
+words =:
+  remove \(/['A-Z]/):  # Remove words with `'` or upper
+    lines: read('/usr/share/dict/words')
+
+me =: ENV.USER:uc1
+you =:
+  base64-decode: 'TWljcm9zb2Z0'
+
+--- !ys:
+us:: +[me 'and' you]
+
+passphrase:: words:shuffle.take(5).join('-')
+
+note:: |
+
+  Dear $you,
+
+  I hope $you is happy to meet $me.
+  Everybody loves $you.
+  Never stop being $you.
+
+  Love, $me
+
+
+
+
+

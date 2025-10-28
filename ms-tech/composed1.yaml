@@ -1,0 +1,36 @@
+!ys-0:
+
+about: cats & dogs
+
+cats:: load('vars1.yaml').cats
+
+dogs:: load('vars1.yaml').dogs
+
+cats & dogs::
+  shuffle: load('vars1.yaml').cats +
+           load('vars1.yaml').dogs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
