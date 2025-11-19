@@ -1,0 +1,26 @@
+
+vars =: << vars.yaml
+
+name: $vars.name
+
+user: $ENV.USER
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+
+!let vars: !load vars.yaml
+
+name: !get [vars, name]
+
+user: !get [ENV, USER]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

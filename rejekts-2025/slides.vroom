@@ -1,0 +1,175 @@
+---- config
+title: YAML Incorporated?
+indent: 5
+
+# auto_size: 1
+height: 25
+width: 87
+
+vim_opts: '-u NONE'
+skip: 0
+top: 2
+before: 1
+
+vimrc: |
+  source ./vimrc
+
+
+---- center
+
+YAML Incorporated?
+
+Funding the Future of YAML
+
+by Ingy döt Net
+
+KubeCon Rejekts
+November 8 , 2025
+Atlanta
+
+Capture the floating QR!
+
+(You have 5 minutes to do so)
+
+
+----
+== Ingy and YAML
+
+* Ingy invented YAML
+* Ingy leads YAML maintainance
+* Ingy is still working on YAML
+  * Moving it forward
+  * Every day!
+
+
+----
+== YAML Maintainance
+
+* The YAML Specification
+  * 1.2.2 - 2021
+* go-yaml
+  * Kubernetes, Helm, Kustomize etc
+* PyYAML
+  * Ansible
+* libyaml
+  * Foundation of most YAML loaders
+* yq
+  * Based on go-yaml
+* YAMLScript
+  * Dynamic YAML
+* YAMLStar
+  * Common YAML Loader for all languages
+
+
+----
+== YAMLScript - aka YS - "wise"
+
+* Dynamic YAML
+  * Functions, variables, modules
+  * Composition, transformation, conditionals
+  * Env vars, interpolation
+  * Everything you'd find in a programming language
+* YS _IS_ a complete functional programming language
+* A YAML loader for 15 languages and growing
+* Solves YAML's problems for everyone
+
+* https://exercism.org/tracks/
+* https://rosettacode.org/wiki/Category:YAMLScript#mw-pages
+* https://rosettacode.org/wiki/99_bottles_of_beer#YAMLScript
+
+$ ys 99-bottles-of-beer.ys 3
+
+
+----
+== HelmYS — Helm + YS
+
+* Use YS in place of Go Templating in Helm Charts
+
+* https://yamlscript.org/helmys/#template-file-comparisons
+
+
+----
+== go-yaml
+
+* I lead the New go-yaml dev team
+* New URL:  https://github.com/yaml/go-yaml
+  * Forked: https://github.com/go-yaml/yaml
+* Already in Kubernetes, Helm, Kustomize and more
+* The sigs.k8s.io/yaml fork has UNforked!
+
+* Maintain it - Fixes without Breaking
+* Improve it - Also libyaml, PyYAML, yq etc
+
+
+----
+== Improving YAML via go-yaml
+
+* Keep it stable - no breaking changes
+* Fix critical bugs and security issues
+
+* Extendable options
+  * Like pkg.go.dev/encoding/json
+
+* Add things long wanted for go-yaml
+* Full comment support and roundtripping
+* Schema linking and validation
+* Functional capabilities
+
+
+----
+== Functional Example
+
+* YAML can define a functional Stdlib
+* Expose optionally via major YAML loaders
+* Applications can optionally configure:
+  * What functions to allow
+  * Which library implements them
+  * How they look syntactically in YAML
+
+* Think "Best of YS" for go-yaml
+  * Where "best" is defined by the application
+
+* A minimal example:
+$ vim func1.yaml func2.yaml -O
+
+
+----
+== Extending YAML
+
+* Start a YAML file with:
+
+--- !yaml;kubernetes.io/v1.34
+
+* A configuration of YAML capabilities
+* Configure schema for validation
+* Configure how `no` is interpreted
+* Configure functional capabilities
+
+* The tag/url is just a meaningful identifier
+  * Can be whatever makes sense for the application
+  * go-yaml would be set up to map it to a config
+
+----
+== Funding YAML's Future
+
+* YAML is critical infrastructure
+* I maintain YAML and related projects
+* I lead teams of other volunteer maintainers
+* We need to make a living doing this work
+
+* I'm exploring starting a company
+  * To fund YAML maintainance and development
+  * To provide YAML-related services
+  * To employ other maintainers
+
+* Looking for companies interested in sponsoring
+  * Or hiring me for YAML-related work
+
+----
+== Take the Survey
+
+* https://survey.yaml.com
+
+* Talk to me this week!
+
+* Email: ingy@yaml.com
