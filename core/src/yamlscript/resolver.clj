@@ -133,9 +133,29 @@
                     [key val])]
     [key val]))
 
+;; Only called in data mode
+(defn check-conditional-pair
+  "In data mode pairs with a key ending in :? are conditional pairs.
+   The pair is only merged into the map if the value is not nil."
+  [key val]
+  (let [key-text (:= key)]
+    (if (re-find #":\?$" key-text)
+      (if (:! val)
+        (die "Can't specify tag on value of ':?' pair")
+        (let [key (assoc key := (str/replace key-text #"\s*:\?$" ""))
+              key (assoc key :cond true)
+              ;; Mark value for code mode like check-mode-swap does
+              val (assoc val :! "")]
+          [key val]))
+      [key val])))
+
 (defn check-mode-swap [key val]
   (let [[key val] (check-double-colon-with-tag key val)
         key-text (:= key)]
+    (when (and key-text (re-find #":[!@#$%^&*_=+-/.,;~<>]$" key-text))
+      (die (str
+             "Invalid key suffix in '" key-text "'.\n"
+             "Quote the key if you meant it as a string literal.")))
     (if (and key-text (re-find #":$" key-text))
       (if (re-find #"::$" key-text)
         (let [key (assoc key := (str/replace key-text #"\s*::$" ""))]
@@ -345,6 +365,7 @@
 ;; ----------------------------------------------------------------------------
 ;; Dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
+
 (defn resolve-data-mapping [node]
   (let [nodes (or (:% node) (:%% node))
         merge (some #(re-matches #"<<\s*:?" %1)
@@ -354,6 +375,7 @@
          (vec (mapcat
                 (fn [[key val]]
                   (let [okey key
+                        [key val] (check-conditional-pair key val)
                         [key val] (check-mode-swap key val)
                         key-str (:= key)
                         [key val]

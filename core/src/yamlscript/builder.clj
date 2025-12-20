@@ -214,7 +214,8 @@
   (let [body (vec (map build-node (adjust-special-keys (:map node))))]
     (if (or (some vector? body)
           (= {:Sym '=>} (first body))
-          (some #(= (first %1) {:Nil nil}) (partition 2 body)))
+          (some #(= (first %1) {:Nil nil}) (partition 2 body))
+          (some #(:cond %1) (take-nth 2 body)))
       (build-dmap body)
       (Map (map build-node (:map node))))))
 
@@ -290,7 +291,8 @@
 (defn build-node [node]
   (let [anchor (:& node)
         ytag (:! node)
-        node (dissoc node :! :&)
+        cond-pair (:cond node)
+        node (dissoc node :! :& :cond)
         [tag] (first node)
         node (case tag
                nil nil
@@ -313,6 +315,9 @@
                (die "Don't know how to build node: " node))
         node (if anchor
                (assoc node :& anchor)
+               node)
+        node (if cond-pair
+               (assoc node :cond cond-pair)
                node)]
     (if ytag
       (assoc node :! ytag)

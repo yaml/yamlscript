@@ -8,7 +8,7 @@
   (:require
    [clojure.string :as str]
    [clojure.walk :as walk]
-   [yamlscript.ast :as ast :refer [Lst Map Qts Sym Vec]]
+   [yamlscript.ast :as ast :refer [Lst Map Qts Str Sym Vec]]
    [yamlscript.common]
    [yamlscript.global :as global]
    [yamlscript.re :as re])
@@ -214,6 +214,33 @@
           dmap (reverse parts))]
     result))
 
+(defn construct-conditional-pair [key-node val-node ctx]
+  "Build (if-let [_ (truey? val)] (% key _) (%))"
+  (let [key-str (or (:Str key-node) (str key-node))
+        val (construct-node val-node ctx)]
+    (Lst [(Sym 'if-let)
+          (Vec [(Sym '_) (Lst [(Sym 'some?) val])])
+          (Map [(Str key-str) (Sym '_)])
+          (Map [])])))
+
+(defn- pairs->map
+  "Convert a flat list of k/v pairs to a Map AST node."
+  [pairs ctx]
+  (Map
+    (vec
+      (mapcat
+        #(vector
+           (construct-node (first %) ctx)
+           (construct-node (second %) ctx))
+        (partition 2 pairs)))))
+
+(defn- merge-maps
+  "Create a merge expression, or return map if base is nil."
+  [base new-map]
+  (if base
+    (Lst [(Sym 'merge) base new-map])
+    new-map))
+
 (defn construct-dmap [node ctx]
   (let [parts (vec (map vec (partition-by vector? (:dmap node))))
         parts (reverse parts)
@@ -221,15 +248,47 @@
                 (cons [] parts)
                 parts)
         [amap & parts] parts
-        amap (construct-node (Map amap) ctx)
+        ;; Process amap to handle conditional pairs
+        amap (if (some #(:cond %) (take-nth 2 amap))
+               ;; Has conditional pairs - process with merges
+               (loop [[k v & rest] amap
+                      regular-pairs []
+                      result nil]
+                 (cond
+                   (nil? k)
+                   (if (empty? regular-pairs)
+                     result
+                     (merge-maps result (pairs->map regular-pairs ctx)))
+
+                   (:cond k)
+                   ;; Flush regular pairs and add conditional
+                   (let [base (if (empty? regular-pairs)
+                                result
+                                (merge-maps result
+                                  (pairs->map regular-pairs ctx)))
+                         cond-form
+                           (construct-conditional-pair
+                             (dissoc k :cond) v ctx)]
+                     (recur rest [] (merge-maps base cond-form)))
+
+                   :else
+                   ;; Accumulate regular pair
+                   (recur rest (conj regular-pairs k v) result)))
+               ;; No conditional pairs - use original logic
+               (construct-node (Map amap) ctx))
         dmap (reduce (fn [dmap part]
                        (if (get-in part [0 0])
                          (dmap-code part dmap ctx)
-                         (let [part (if (vector? part)
-                                      (vec (map #(construct-node %1 ctx) part))
-                                      (construct-node part ctx))
-                               amap (Map part)]
-                           (Lst [(Sym 'merge) amap dmap]))))
+                         ;; Check if this is a conditional pair
+                         (if (and (vector? part) (= 2 (count part)) (:cond (first part)))
+                           (let [[key-node val-node] part
+                                 cond-form (construct-conditional-pair (dissoc key-node :cond) val-node ctx)]
+                             (Lst [(Sym 'merge) dmap cond-form]))
+                           (let [part (if (vector? part)
+                                        (vec (map #(construct-node %1 ctx) part))
+                                        (construct-node part ctx))
+                                 amap (Map part)]
+                             (Lst [(Sym 'merge) dmap amap])))))
                amap parts)]
     dmap))
 
@@ -319,7 +378,8 @@
          ctx (update-in ctx [:lvl] inc)
          anchor (:& node)
          tag (:! node)
-         node (dissoc node :& :!)
+         cond-pair (:cond node)
+         node (dissoc node :& :! :cond)
          node (case key
                 :xmap (construct-xmap node ctx)
                 :fmap (construct-fmap node ctx)

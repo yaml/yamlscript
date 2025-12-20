@@ -867,21 +867,21 @@
     {:Top
      [{:Lst
        [{:Sym merge}
-        {:Map [{:Str "foo"} {:Int 1} {:Str "bar"} {:Int 2}]}
         {:Lst
          [{:Sym let}
           {:Vec [{:Sym x} {:Int 6} {:Sym y} {:Int 7}]}
           {:Lst
            [{:Sym merge}
+            {:Lst
+             [{:Sym let}
+              {:Vec [{:Sym z} {:Int 8}]}
+              {:Map [{:Str "bust"} {:Int 2000}]}]}
             {:Map
              [{:Str "baz"}
               {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
               {:Str "boom"}
-              {:Int 1999}]}
-            {:Lst
-             [{:Sym let}
-              {:Vec [{:Sym z} {:Int 8}]}
-              {:Map [{:Str "bust"} {:Int 2000}]}]}]}]}]}]}
+              {:Int 1999}]}]}]}
+        {:Map [{:Str "foo"} {:Int 1} {:Str "bar"} {:Int 2}]}]}]}
   transform: |
     {:dmap
      [{:Str "foo"}
@@ -899,10 +899,10 @@
       {:Int 2000}]}
   clojure: |
     (merge
-      {"foo" 1, "bar" 2}
       (let
        [x 6 y 7]
-       (merge {"baz" (mul+ x y), "boom" 1999} (let [z 8] {"bust" 2000}))))
+       (merge (let [z 8] {"bust" 2000}) {"baz" (mul+ x y), "boom" 1999}))
+      {"foo" 1, "bar" 2})
 
 
 - name: Load yaml file in data map assignment
@@ -952,7 +952,6 @@
     {:Top
      [{:Lst
        [{:Sym merge}
-        {:Map [{:Str "a"} {:Int 1}]}
         {:Lst
          [{:Sym let}
           {:Vec
@@ -964,11 +963,12 @@
            [{:Str "b"}
             {:Int 2}
             {:Str "c"}
-            {:Str "data.foo"}]}]}]}]}
+            {:Str "data.foo"}]}]}
+        {:Map [{:Str "a"} {:Int 1}]}]}]}
   clojure: |
     (merge
-      {"a" 1}
-      (let [data (yaml/load (slurp "data.yaml"))] {"b" 2, "c" "data.foo"}))
+      (let [data (yaml/load (slurp "data.yaml"))] {"b" 2, "c" "data.foo"})
+      {"a" 1})
 
 
 - name: Conditional pairs in data mode map
@@ -1066,11 +1066,6 @@
       {:Lst [{:Sym use} {:Str "module2"}]}
       {:Lst
        [{:Sym merge}
-        {:Map
-         [{:Str "foo"}
-          {:Str "the foo"}
-          {:Str "bar"}
-          {:Str "the bar"}]}
         {:Lst
          [{:Sym let}
           {:Vec
@@ -1088,18 +1083,23 @@
                 {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
                 {:Str "bbb"}
                 {:Int 333}]}]}
-            {:Map [{:Str "baz"} {:Str "the baz"}]}]}]}]}]}
+            {:Map [{:Str "baz"} {:Str "the baz"}]}]}]}
+        {:Map
+         [{:Str "foo"}
+          {:Str "the foo"}
+          {:Str "bar"}
+          {:Str "the bar"}]}]}]}
   clojure: |
     (use "module1")
     (use "module2")
     (+++
      (merge
-      {"foo" "the foo", "bar" "the bar"}
       (let
        [x (rand 2) y (add+ x 1)]
        (merge
         (when (> x 1) {"aaa" (mul+ x y), "bbb" 333})
-        {"baz" "the baz"}))))
+        {"baz" "the baz"}))
+      {"foo" "the foo", "bar" "the bar"}))
 
 
 - name: Conditional pair without other pairs
@@ -1124,7 +1124,7 @@
         y: 2
     z: 3
   clojure: |
-    (merge {"x" 1} (merge (do (say "one") (say "two") {"y" 2}) {"z" 3}))
+    (merge (merge (do (say "one") (say "two") {"y" 2}) {"z" 3}) {"x" 1})
 
 
 - name: Conditional pair with non-mapping value
@@ -1144,13 +1144,13 @@
     {:Top
      [{:Lst
        [{:Sym merge}
-        {:Map [{:Str "x"} {:Int 1}]}
         {:Lst
          [{:Sym merge}
           {:Lst [{:Sym foo} {:Sym a} {:Int 3}]}
-          {:Map [{:Str "y"} {:Int 2}]}]}]}]}
+          {:Map [{:Str "y"} {:Int 2}]}]}
+        {:Map [{:Str "x"} {:Int 1}]}]}]}
   clojure: |
-    (merge {"x" 1} (merge (foo a 3) {"y" 2}))
+    (merge (merge (foo a 3) {"y" 2}) {"x" 1})
 
 
 - name: Conditional pair dmap in dmap
@@ -1205,16 +1205,16 @@
     {:Top
      [{:Lst
        [{:Sym merge}
+        {:Lst [{:Sym bar}]}
         {:Map
          [{:Str "a"}
           {:Vec
            [{:Lst
              [{:Sym merge}
-              {:Map [{:Str "b"} {:Str "c"}]}
-              {:Lst [{:Sym foo}]}]}]}]}
-        {:Lst [{:Sym bar}]}]}]}
+              {:Lst [{:Sym foo}]}
+              {:Map [{:Str "b"} {:Str "c"}]}]}]}]}]}]}
   clojure: |
-    (merge {"a" [(merge {"b" "c"} (foo))]} (bar))
+    (merge (bar) {"a" [(merge (foo) {"b" "c"})]})
 
 
 - name: Top level data mode mapping first pair has key '::'
@@ -1271,7 +1271,7 @@
       {:Int 3}]}
   clojure: |
     (use module1)
-    (merge {"x" 1} (merge (when (> x 1) {"y" 2}) {:z 3}))
+    (merge (merge (when (> x 1) {"y" 2}) {:z 3}) {"x" 1})
 
 
 - name: Shorthand syntax for conditionals in data mappings 2
@@ -1456,8 +1456,8 @@
     d: 4
   clojure: |
     (merge
-      {"a" 1}
-      (merge (when x {"b" 2}) (merge (when y {"c" 3}) {"d" 4})))
+      (merge (when x {"b" 2}) (merge (when y {"c" 3}) {"d" 4}))
+      {"a" 1})
 
 
 - name: A '::' before a function call tag

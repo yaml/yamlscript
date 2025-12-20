@@ -1585,7 +1585,7 @@
       :when x:: {bar: 2}
       x: 3
   clojure: |
-    [(merge {"foo" 1} (merge (when x {"bar" 2}) {"x" 3}))]
+    [(merge (merge (when x {"bar" 2}) {"x" 3}) {"foo" 1})]
 
 
 - name: Tag function on let
@@ -1648,3 +1648,45 @@
     - bar
   clojure: |
     (+concat ["foo"] (+concat (rng 3 5) 42) ["bar"])
+
+
+- name: Conditional pair basic
+  yamlscript: |
+    !ys-0:
+    foo:?: bar
+  clojure: |
+    (if-let [_ (some? bar)] {"foo" _} {})
+
+- name: Conditional pair with dot access
+  yamlscript: |
+    !ys-0:
+    annotations:?: Values.podAnnotations
+  clojure: |
+    (if-let
+      [_ (some? (get+ Values 'podAnnotations))]
+      {"annotations" _}
+      {})
+
+- name: Conditional pair mixed with regular pairs
+  yamlscript: |
+    !ys-0:
+    a: 1
+    b:?: c
+    d: 2
+  clojure: |
+    (merge (merge {"a" 1} (if-let [_ (some? c)] {"b" _} {})) {"d" 2})
+
+- name: Conditional pair only (edge case - returns {} not nil when falsy)
+  yamlscript: |
+    !ys-0:
+    foo:?: nil
+  clojure: |
+    (if-let [_ (some? nil)] {"foo" _} {})
+
+- name: Error on invalid key suffix with exclamation
+  yamlscript: |
+    !ys-0:
+    foo:!: bar
+  error: |
+    Invalid key suffix in 'foo:!'.
+    Quote the key if you meant it as a string literal.
