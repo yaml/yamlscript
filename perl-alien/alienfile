@@ -1,6 +1,6 @@
 use alienfile;
 
-my $libys_version = '0.2.7';
+my $libys_version = '0.2.8';
 
 # Always use a share install
 # We cannot use a system install, because we need to know exactly

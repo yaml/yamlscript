@@ -1,3 +1,13 @@
+- version: 0.2.8
+  date:    Wed Dec 24 10:25:48 AM PST 2025
+  changes:
+  - core: Support destructure assign with multiple RHS args
+  - core: Fix destructure assign from lazy seq
+  - core: Support data mode sequence insertion for scalars
+  - core: Make 'use' refer :all by default
+  - core: Let 'call' use any ifn? value as function
+  - std: Add qs (quote string) support
+  - core: Support ':?:' conditional pairs
 - version: 0.2.7
   date:    Mon Oct 20 01:56:59 PM PDT 2025
   changes:
