@@ -6,7 +6,7 @@ talk: 0
 
 YS (iow Clojure) is a functional programming language.
 That means that everything is a function.
-Running a program is just a calling a function that calls other functions.
+Running a program is just calling a function that calls other functions.
 
 Even though YS tries hard to look like an imperative language, you must
 keep in mind that it's functional and get familiar with how the flow works.
