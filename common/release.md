@@ -2,8 +2,8 @@
 [YS](https://yamlscript.org) publishes binary releases for the `ys` command line tool and for the `libys` shared library.
 The following architectures are currently supported:
 
-* Linux / Intel and ARM
-* macOS / Intel and ARM
+* Linux + Intel 
+* macOS + ARM
 
 Run this command to install `~/.local/bin/ys`:
 
