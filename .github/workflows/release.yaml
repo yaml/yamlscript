@@ -149,50 +149,6 @@ jobs:
           libys-*.tar.xz
         retention-days: 7
 
-  # TODO: Add Linux ARM64 build
-  # Requires cross-compilation setup or native ARM64 runner
-  # build-linux-arm64:
-  #   name: Build Linux ARM64
-  #   needs: create-release
-  #   runs-on: ubuntu-latest
-  #   ...
-
-  build-macos-x64:
-    name: Build macOS x64 (Intel)
-    needs: create-release
-    runs-on: macos-13
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.version }}
-
-    - name: Set up GraalVM
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'graalvm'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        native-image-job-reports: 'true'
-
-    - name: Build and create release archives
-      run: |
-        make -C ys build
-        make -C libys build
-        make release-build
-
-    - name: List created archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: macos-x64
-        path: |
-          ys-*.tar.xz
-          libys-*.tar.xz
-        retention-days: 7
-
   build-macos-arm64:
     name: Build macOS ARM64 (Apple Silicon)
     needs: create-release
@@ -233,8 +189,6 @@ jobs:
     name: Upload Release Assets
     needs:
     - build-linux-x64
-    # - build-linux-arm64  # TODO: Add when ARM64 build is implemented
-    - build-macos-x64
     - build-macos-arm64
     runs-on: ubuntu-latest
     permissions:
