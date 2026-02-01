@@ -7,12 +7,13 @@ include $(MAKES)/python.mk
 include $(MAKES)/shell.mk
 
 LUA-RELEASE-REVISION ?= 1
+LUA-API-VERSION := $(word 1,$(subst ., ,$(LUA-VERSION))).$(word 2,$(subst ., ,$(LUA-VERSION)))
 
 export LUA_PATH := $(ROOT)/lua/lib/?.lua;;
-export LUA_CPATH := $(LOCAL-PREFIX)/lib/lua/5.4/?.so;;
+export LUA_CPATH := $(LOCAL-PREFIX)/lib/lua/$(LUA-API-VERSION)/?.so;;
 
-LUA-CFFI := $(LOCAL-LIB)/lua/5.4/cffi.so
-LUA-CJSON := $(LOCAL-LIB)/lua/5.4/cjson.so
+LUA-CFFI := $(LOCAL-LIB)/lua/$(LUA-API-VERSION)/cffi.so
+LUA-CJSON := $(LOCAL-LIB)/lua/$(LUA-API-VERSION)/cjson.so
 LUA-MESON := $(PYTHON-VENV)/bin/meson
 
 LUA-DEPS := \
