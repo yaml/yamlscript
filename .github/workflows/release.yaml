@@ -168,13 +168,11 @@ jobs:
 
         # Extract and append changes from Changes file
         if [[ -f Changes ]]; then
-          awk '/^- version: '"$VERSION"'$/,/^- version:/ {
-            if (/^- version: '"$VERSION"'$/) next;
-            if (/^- version:/) exit;
-            if (/^  changes:/) next;
-            if (/^  date:/) next;
-            print
-          }' Changes | sed 's/^  - /* /' >> release-notes.txt
+          awk -v ver="$VERSION" '
+            /^- version: / && $3 == ver { found = 1; next }
+            /^- version: / && found { exit }
+            found && $1 != "date:" && $1 != "changes:" { print }
+          ' Changes | sed 's/^  - /* /' >> release-notes.txt
         fi
 
         echo "Release notes:"
