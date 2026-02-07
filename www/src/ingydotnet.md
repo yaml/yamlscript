@@ -10,18 +10,23 @@ https://yaml.org/) data serialization language.
 Recently Ingy created the YS programming language, which embeds cleanly into
 YAML, adding the functional features that many YAML users need.
 
+He maintains many of the most important [YAML Open Source projects](
+https://yaml.com/projects/).
+
 
 ## Contact Ingy
 
 * Email: <mailto:ingy@ingy.net>
 * LinkedIn: <https://www.linkedin.com/in/ingydotnet>
 * GitHub: <https://github.com/ingydotnet>
+* CNCF Slack: <https://cloud-native.slack.com/team/U08GBQNJTFC>
 * Discord: User: `ingydotnet_21552`
     * [Join our Discord Server](https://discord.gg/hJ7UkFbYVS)
 * Matrix: <https://matrix.to/#/@ingy:yaml.io>
-* CNCF Slack: <https://cloud-native.slack.com/team/U08GBQNJTFC>
 * BlueSky: <https://bsky.app/profile/ingydotnet.bsky.social>
+<!--
 * Mastodon: <https://mastodon.cloud/@ingydotnet>
+-->
 
 
 ## Hire Ingy
