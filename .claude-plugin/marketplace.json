@@ -1,0 +1,25 @@
+{
+  "name": "yamlscript",
+  "metadata": {
+    "description": "Claude Code plugins for YAMLScript development"
+  },
+  "owner": {
+    "name": "Ingy dot Net",
+    "email": "ingy@yamlscript.org"
+  },
+  "plugins": [
+    {
+      "name": "ys-skill",
+      "source": "./ai/claude/ys-skill",
+      "description": "Write idiomatic YAMLScript code",
+      "version": "0.1.3",
+      "author": {
+        "name": "Ingy dot Net"
+      },
+      "homepage": "https://yamlscript.org",
+      "repository": "https://github.com/yaml/yamlscript",
+      "license": "MIT",
+      "keywords": ["yaml", "yamlscript", "clojure", "functional"]
+    }
+  ]
+}

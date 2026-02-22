@@ -1,0 +1,11 @@
+{
+  "name": "ys-skill",
+  "description": "Write idiomatic YAMLScript code. Use when asked to write, convert, or review YAMLScript (.ys files).",
+  "version": "0.1.3",
+  "author": {
+    "name": "Ingy dot Net"
+  },
+  "homepage": "https://yamlscript.org",
+  "repository": "https://github.com/yaml/yamlscript",
+  "license": "MIT"
+}

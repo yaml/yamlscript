@@ -15,6 +15,21 @@ best way to work with YAML</h1>
 :octicons-arrow-right-24:
 Learn More About YS</a></div>
 
+```mdys:cards
+- name: AI-Assisted YS with Claude Code
+  icon: material-robot-outline
+  body: |
+    Install the [Claude Code](https://claude.ai/code) plugin to write
+    idiomatic YAMLScript with AI assistance:
+
+    ```bash
+    /plugin marketplace add yaml/yamlscript
+    /plugin install ys-skill@yamlscript
+    ```
+    [:octicons-arrow-right-24: Learn More](
+      https://github.com/yaml/yamlscript/tree/v0/ai/claude)
+```
+
 <!--
 !!! success "Zero to YS in 10 seconds!"
 

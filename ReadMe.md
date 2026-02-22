@@ -303,6 +303,20 @@ config = ys.load(File.read('config.yaml'))
   One syntax to learn, use everywhere
 
 
+## Claude Code Plugin
+
+YS has an official [Claude Code](https://claude.ai/code) plugin that
+teaches Claude to write idiomatic YAMLScript.
+Install it in Claude Code with:
+
+```
+/plugin marketplace add yaml/yamlscript
+/plugin install ys-skill@yamlscript
+```
+
+See [ai/claude/ReadMe.md](ai/claude/ReadMe.md) for more details.
+
+
 ## The YS Repository
 
 The [YS source code repository](https://github.com/yaml/yamlscript)

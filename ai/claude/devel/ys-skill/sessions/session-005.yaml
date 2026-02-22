@@ -1,0 +1,181 @@
+# Teaching session: session-005
+# Focus: API client refactor — :: data mode, I/O functions, top-down order
+# All attempts tested with: /tmp/ys-skill/bin/ys -ce or -c -
+
+- id: session-005-A
+  level: 3
+  prompt: |
+    Convert a Clojure-style API client that calls Anthropic to generate
+    Clojure code. The program reads an API token from a file or prompts
+    for it, prompts the user for a spec, calls the Anthropic API, and
+    prints the result.
+  yamlscript: |
+    !yamlscript/v0
+
+    api-url =: 'https://api.anthropic.com/v1/messages'
+    model =: 'claude-sonnet-4-20250514'
+    token-file =:
+      str: ENV.HOME '/.anthropic-api-token'
+
+    defn prompt(msg):
+      err: msg
+      line =: read-line()
+      when-not line:
+        die: 'No input received (EOF)'
+      when line.empty?():
+        die: 'No input provided'
+      =>: line
+
+    defn get-token():
+      if fs-e(token-file):
+        trim: slurp(token-file)
+        prompt: "Enter your Anthropic API token:\\ "
+
+    defn call-api(token spec):
+      body =:
+        json/dump:
+          +{
+            "model" model
+            "max_tokens" 4096
+            "messages" [{
+              "role" "user"
+              "content"
+                str(
+                  "Write a Clojure program that"
+                  " does the following:\\ "
+                  spec
+                  "\n\nReturn ONLY the Clojure code,"
+                  " no explanation or markdown fences.")
+            }]
+          }
+
+      resp =:
+        http/post api-url:
+          +{
+            :headers {
+              "x-api-key" token
+              "anthropic-version" "2023-06-01"
+              "content-type" "application/json"
+            }
+            :body body
+            :throw false
+          }
+
+      when-not resp.status.eq(200):
+        die:
+          str("API error (" resp.status "):\\ " resp.body)
+
+      data =: json/load(resp.body)
+      =>: data.get("content"):first.get("text")
+
+    defn main():
+      token =: get-token()
+      spec =: prompt("Describe the Clojure program you want:\\ ")
+      warn: 'Generating Clojure program...'
+      say: call-api(token spec)
+  better: |
+    !ys-0
+
+    api-url =: 'https://api.anthropic.com/v1/messages'
+    model =: 'claude-sonnet-4-20250514'
+    token-file =:
+      "$(ENV.HOME)/.anthropic-api-token"
+
+    defn main():
+      token =: get-token()
+      spec =: prompt('Describe the Clojure program you want:\ ')
+      warn: 'Generating Clojure program...'
+      say: call-api(token spec)
+
+    defn get-token():
+      if token-file:fs-e:
+        trim: token-file:read
+        prompt: 'Enter your Anthropic API token: '
+
+    defn prompt(msg):
+      err: msg
+      line =: read-line()
+      when line.!:
+        die: 'No input provided'
+      =>: line
+
+    defn call-api(token spec):
+      body =:
+        json/dump::
+          model:: model
+          max_tokens: 4096
+          messages:
+          - role: user
+            content:: |
+              Write a Clojure program that does the following:
+
+                $spec
+
+              Return ONLY the Clojure code, no explanation or markdown fences.
+
+      resp =:
+        http/post api-url::
+            :headers:
+              x-api-key:: token
+              anthropic-version: 2023-06-01
+              content-type: application/json
+            :body:: body
+            :throw: false
+
+      when-not resp.status.eq(200):
+        die: "API error ($(resp.status)):\\  $(resp.body)"
+
+      data =: json/load(resp.body)
+
+      data: .content:first.text
+  notes: |
+    Top-down function order: `main` must always be the first `defn`.
+    The A version defines `prompt`, `get-token`, `call-api`, then `main`
+    (helpers before main — wrong). The B version puts `main` first, then
+    helpers in call order: `get-token`, `prompt`, `call-api`.
+    This is the single most important structural rule in idiomatic YS.
+
+    `::` (double colon) is the mode-toggle tag — it switches between
+    code and data mode. In code mode (default `!ys-0`), `key:: value`
+    makes the value data (plain YAML). Inside that data block, `key:: expr`
+    switches back to code so the value is evaluated as a YS expression.
+    Use `json/dump::` with an indented YAML map instead of
+    `json/dump: +{...}` — the data mode version is far more readable
+    for building complex nested structures like API request bodies.
+    Similarly, `http/post url::` with an indented YAML map replaces
+    `http/post api-url: +{:headers {...} :body body :throw false}`.
+
+    `content:: |` starts a data-mode block scalar (no interpolation),
+    but inside that literal block you can still use `$spec` because the
+    outer `::` on the parent key makes the whole value data — and inside
+    that data, individual keys can use `::` to code again. Wait — actually
+    the `content:: |` is a block scalar in data mode so `$spec` IS
+    interpolated because interpolation is a YAML loader feature, not
+    a code-mode feature. Test carefully.
+
+    `fs-e` / `fs-f` / `fs-d` are zero-arg predicates: file exists,
+    is-file, is-dir. Use colon-chain: `path:fs-e` not `fs-e(path)`.
+    Use `read` / `write` instead of `slurp` / `spit`.
+
+    `err` prints to stderr without a newline; `warn` prints to stderr
+    with a newline; `die` prints to stderr and exits the process.
+    Use `err` for prompts (no newline so cursor stays on same line),
+    `warn` for progress messages, `die` for fatal errors.
+
+    `.!` (`falsey?`) combines nil-check and empty-check. In the B
+    version `when line.!` replaces two separate `when-not line:` and
+    `when line.empty?():` guards — cleaner and more idiomatic.
+
+    Property access: use `.key` (dot without parens) for map key
+    lookup, not `.get("key")`. In the B version `data.content` replaces
+    `data.get("content")`, and `:first.text` replaces `:first.get("text")`.
+    Note that `.content` is a property lookup (not a function call).
+
+    String interpolation for token-file: `"$(ENV.HOME)/.anthropic-api-token"`
+    replaces `str: ENV.HOME '/.anthropic-api-token'` — interpolation is
+    cleaner than `str()` for simple concatenation.
+
+    Namespace-qualified calls: `json/load`, `json/dump`, `http/post`
+    use a `/` separator between namespace and function name.
+    `read-line()` reads a line from stdin.
+    `trim(s)` / `path:trim` strips leading/trailing whitespace.
