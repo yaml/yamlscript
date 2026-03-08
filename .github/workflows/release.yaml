@@ -25,6 +25,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
+        ref: ${{ inputs.version }}
         fetch-depth: 0
 
     - name: Check tag exists
@@ -56,62 +57,16 @@ jobs:
            2>/dev/null | grep -q '^[1-9]'; then
           echo "ERROR: Release $VERSION already has assets"
           echo "Delete the release first if you want to rebuild"
+          echo "https://github.com/${{ github.repository }}/releases/tag/$VERSION"
           exit 1
         fi
         echo "✓ No existing release assets found"
 
-  create-release:
-    name: Create GitHub Release
-    needs: verify-release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ inputs.version }}
-
-    - name: Extract release notes from Changes file
-      id: extract_notes
-      run: |
-        if [[ -f Changes ]]; then
-          # Extract changes for this version from Changes file
-          awk '/^- version: '"$VERSION"'$/,/^- version:/ {
-            if (/^- version: '"$VERSION"'$/) next;
-            if (/^- version:/) exit;
-            if (/^  changes:/) next;
-            if (/^  date:/) next;
-            print
-          }' Changes | sed 's/^  //' > release-notes.txt
-
-          if [[ ! -s release-notes.txt ]]; then
-            echo "Release $VERSION" > release-notes.txt
-          fi
-        else
-          echo "Release $VERSION" > release-notes.txt
-        fi
-
-        echo "Release notes:"
-        cat release-notes.txt
-
-    - name: Create GitHub Release
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        gh release create "$VERSION" \
-          --title "YAMLScript $VERSION" \
-          --notes-file release-notes.txt \
-          --draft=false \
-          --prerelease=false
-
   build-linux-x64:
     name: Build Linux x64
-    needs: create-release
-    runs-on: ubuntu-20.04
+    needs: verify-release
+    runs-on: ubuntu-latest
+    container: ubuntu:20.04
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -128,17 +83,22 @@ jobs:
 
     - name: Install build dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential zlib1g-dev
+        apt-get update
+        apt-get install -y build-essential zlib1g-dev curl git
 
-    - name: Build and create release archives
+    - name: Build and create release archives (long wait)
       run: |
         make -C ys build
         make -C libys build
         make release-build
+        # Copy JAR files with release names
+        cp libys/target/libys-$VERSION-standalone.jar \
+           libys-$VERSION-standalone.jar
+        cp ys/target/uberjar/yamlscript.cli-$VERSION-SNAPSHOT-standalone.jar \
+           yamlscript.cli-$VERSION-standalone.jar
 
     - name: List created archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -147,11 +107,12 @@ jobs:
         path: |
           ys-*.tar.xz
           libys-*.tar.xz
+          *.jar
         retention-days: 7
 
   build-macos-arm64:
     name: Build macOS ARM64 (Apple Silicon)
-    needs: create-release
+    needs: verify-release
     runs-on: macos-latest
     steps:
     - name: Checkout code
@@ -167,7 +128,7 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         native-image-job-reports: 'true'
 
-    - name: Build and create release archives
+    - name: Build and create release archives (long wait)
       run: |
         make -C ys build
         make -C libys build
@@ -185,11 +146,56 @@ jobs:
           libys-*.tar.xz
         retention-days: 7
 
-  upload-assets:
-    name: Upload Release Assets
+  create-release:
+    name: Create GitHub Release
     needs:
     - build-linux-x64
     - build-macos-arm64
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Extract release notes from Changes file
+      id: extract_notes
+      run: |
+        # Start with the template, replacing version
+        sed "s/0.2.8/$VERSION/g" common/release.md > release-notes.txt
+
+        # Extract and append changes from Changes file
+        if [[ -f Changes ]]; then
+          awk -v ver="$VERSION" '
+            /^- version: / && $3 == ver { found = 1; next }
+            /^- version: / && found { exit }
+            found && $1 != "date:" && $1 != "changes:" { print }
+          ' Changes | sed 's/^  - /* /' >> release-notes.txt
+        fi
+
+        echo "Release notes:"
+        cat release-notes.txt
+
+    - name: Create GitHub Release
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if gh release view "$VERSION" >/dev/null 2>&1; then
+          echo "Release $VERSION already exists, skipping creation"
+        else
+          gh release create "$VERSION" \
+            --title "$VERSION" \
+            --notes-file release-notes.txt \
+            --draft=false \
+            --prerelease=false
+        fi
+
+  upload-assets:
+    name: Upload Release Assets
+    needs: create-release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -205,12 +211,14 @@ jobs:
     - name: Prepare release assets
       run: |
         find . -type f -name "*.tar.xz" -exec mv {} . \;
-        ls -lh *.tar.xz
+        find . -type f -name "*.jar" -exec mv {} . \;
+        ls -lh *.tar.xz *.jar
 
     - name: Upload assets to GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release upload "$VERSION" ys-*.tar.xz libys-*.tar.xz --clobber
+        gh release upload "$VERSION" \
+          ys-*.tar.xz libys-*.tar.xz *.jar --clobber
         echo "Release $VERSION complete!"
         gh release view "$VERSION"

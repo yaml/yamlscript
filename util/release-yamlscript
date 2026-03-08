@@ -1,20 +1,30 @@
 #!/usr/bin/env ys-0
 
-# This script is for automating the YS release process as much as possible.
-# The release process involves many steps, and might need to be restarted at a
-# certain step.
+# This script automates the YAMLScript release process.
 #
-# Usage: release-yamlscript <old-version> <new-version> [<starting-step>]
+# Usage:
+#   release-yamlscript release <old-version> <new-version>  # Interactive
+#   release-yamlscript <command> [args]                      # Individual step
 #
-# The following environment variables can be used to control the script:
+# Commands:
+#   release             - Run full interactive release workflow
+#   list                - Show all release steps
+#   sanity-check        - Verify prerequisites (old/new versions)
+#   version-bump        - Update versions in all files
+#   changelog           - Edit changelog interactively
+#   binding-changelogs  - Update binding changelogs
+#   commit              - Commit changes
+#   tag                 - Create git tag
+#   push                - Push to remote
+#   build-github        - Trigger GitHub Actions workflows
+#   bindings            - Release all language bindings
+#   website             - Publish yamlscript.org
 #
-# * YS_RELEASE_DRYRUN=1     - Don't actually run any commands, just show them
-# * YS_RELEASE_VERBOSE=1    - Show more information about what's happening
-# * YS_RELEASE_LAST_STEP=n  - The last step to run (default is 10)
+# Environment variables:
+#   YS_RELEASE_DRYRUN=1     - Don't run commands, just show them
+#   YS_RELEASE_VERBOSE=1    - Show more information
 
 version-file =: '.version.ys'
-
-steps =: 11
 
 bindings =::
 - java
@@ -34,96 +44,236 @@ bindings =::
 - ruby
 - rust
 
-# verbose =: B(ENV.YS_RELEASE_VERBOSE)
-verbose =: true
-
+verbose =: B(ENV.YS_RELEASE_VERBOSE)
 dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
-last-step =: (ENV.YS_RELEASE_LAST_STEP || steps):N
 
 #------------------------------------------------------------------------------
-# Run each step in succession, starting at the specified step number if given
-# and ending at the specified last step number if given.
+# Main entry point with command dispatch
 #------------------------------------------------------------------------------
 
-defn main(old-version=0 new-version=0 start=1):
-  ctx =:
-    if dryrun || ENV.YS_RELEASE_ID:
-      then: +{}
-      else:
-        check-args: old-version new-version start
+defn main(cmd *args):
+  case cmd:
+    'release'            : do-release(args*)
+    'list'               : do-list()
+    'sanity-check'       : do-sanity-check(args*)
+    'version-bump'       : do-version-bump()
+    'changelog'          : do-changelog(args*)
+    'binding-changelogs' : do-binding-changelogs()
+    'commit'             : do-commit(args*)
+    'tag'                : do-tag(args*)
+    'push'               : do-push(args*)
+    'build-github'       : do-build-github(args*)
+    'bindings'           : do-bindings()
+    'website'            : do-website()
+    else                 :
+      die: |
+        Unknown command: $cmd
+        Run 'make release-list' for help")
 
-  say: "\nReleasing YS v$new-version at $(ctx.date-time)\n"
 
-  if ENV.YS_RELEASE_ID:
-    step-9: ctx
-    each i (1 .. steps):
-      when (i >= start) && (i <= last-step):
-        resolve(symbol("step-$i")): ctx
+#------------------------------------------------------------------------------
+# Show list of all release steps
+#------------------------------------------------------------------------------
 
+defn do-list():
+  say: |
+    YAMLScript Release Process Steps
+    =================================
+
+    Full interactive workflow:
+      make release o=OLD_VERSION n=NEW_VERSION
+
+    Or run individual steps:
+
+      1. make release-sanity-check o=X n=Y
+         Verify old version, clean tree, valid new version
+
+      2. make release-version-bump
+         Update versions in all files via .version.ys
+
+      3. make release-changelog o=X n=Y
+         Edit changelog interactively, validate YAML
+
+      4. make release-binding-changelogs
+         Update perl and ruby changelog files
+
+      5. make release-commit n=Y
+         Commit all changes
+
+      6. make release-tag n=Y
+         Create git tag
+
+      7. make release-push n=Y
+         Push commits and tags to origin
+
+      8. make release-build-github n=Y
+         Trigger test-all and release workflows, watch both
+
+      9. make release-bindings
+         Release all 16 language bindings
+
+     10. make release-website
+         Publish yamlscript.org website
+
+
+#------------------------------------------------------------------------------
+# Interactive release workflow with confirmations between steps
+#------------------------------------------------------------------------------
+
+defn do-release(old new):
+  ctx =: check-args(old new)
+
+  say: "\n============================================================"
+  say: "  YAMLScript Release Workflow"
+  say: "  Version: $old → $new"
+  say: "============================================================\n"
+  say: "This will guide you through the release process."
+  say: "Press Ctrl+C at any time to quit.\n"
+
+  # Step 1: Sanity checks
+  o: 'Step 1: Running sanity checks...'
+  do-sanity-check: old new
   say: ''
 
+  # Step 2: Version bump
+  confirm('Step 2 - Bump version in all files?') ||: exit()
+  do-version-bump:
+  say: ''
+
+  # Step 3: Changelog
+  confirm('Step 3 - Edit changelog?') ||: exit()
+  do-changelog: old new
+  say: ''
+
+  # Step 4: Binding changelogs
+  confirm('Step 4 - Update binding changelogs?') ||: exit()
+  do-binding-changelogs:
+  say: ''
+
+  # Step 5: Commit
+  confirm('Step 5 - Commit changes?') ||: exit()
+  do-commit: new
+  say: ''
+
+  # Step 6: Tag
+  confirm('Step 6 - Create git tag?') ||: exit()
+  do-tag: new
+  say: ''
+
+  # Step 7: Push
+  confirm('Step 7 - Push to remote?') ||: exit()
+  do-push: new
+  say: ''
+
+  # Step 8: Build on GitHub
+  confirm('Step 8 - Trigger GitHub Actions workflows?') ||: exit()
+  do-build-github: new
+  say: ''
+
+  # Step 9: Release bindings
+  confirm('Step 9 - Release all bindings?') ||: exit()
+  do-bindings:
+  say: ''
+
+  # Step 10: Publish website
+  confirm('Step 10 - Publish website?') ||: exit()
+  do-website:
+  say: ''
+
+  say: "============================================================"
+  say: "  Release workflow complete!"
+  say: "============================================================\n"
+
 
 #------------------------------------------------------------------------------
-# Change the .version.ys version bump script to use the new version string.
+# Sanity check: verify old version, clean tree, valid new version
 #------------------------------------------------------------------------------
 
-defn step-1(ctx):
-  o: 'Step 1) Do nothing, Step no longer needed'
+defn do-sanity-check(old new):
+  # Get current version from common/vars.mk
+  current-version =:
+    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+
+  when current-version != old:
+    die: |
+      ERROR: Old version mismatch!
+        Current version: $current-version
+        You specified: $old
+
+      Please use: make release o=$current-version n=$new
+
+  say: "✓ Old version matches current: $old"
+
+  # Check working tree is clean
+  status =: sh('git status --porcelain').out
+  when status.?:
+    say: 'ERROR: Working tree is not clean!'
+    say: 'Uncommitted changes:'
+    run:: git status --short
+    die: '\nPlease commit or stash your changes first.'
+
+  # Check if tag already exists
+  tag-exists =: sh("git rev-parse $new 2>/dev/null"):ok
+
+  when tag-exists:
+    die: "⚠ Tag $new already exists"
+
+  say: '✓ Working tree is clean'
+
+  # Validate new version format
+  when-not new =~ /^0\.[12]\.\d+$/:
+    die: "ERROR: Invalid version format: $new\nExpected: 0.X.Y"
+
+  say: "✓ New version format valid: $new"
+  say: '✓ All sanity checks passed'
 
 
 #------------------------------------------------------------------------------
-# Change all current version strings in dozens of files to the new version.
+# Helper: Ask user for confirmation (Y/n or y/N)
 #------------------------------------------------------------------------------
 
-defn step-2(ctx):
-  o: "Step 2) Run 'make bump'"
+defn confirm(msg default='y'):
+  prompt-text =:
+    if default == 'y':
+      then: "$msg [Y/n]: "
+      else: "$msg [y/N]: "
 
+  print: prompt-text
+  answer =: trim(read-line())
+
+  if answer.?:
+    then: answer =~ /^[Yy]/
+    else: default == 'y'
+
+
+#------------------------------------------------------------------------------
+# Individual step functions (can be called independently)
+#------------------------------------------------------------------------------
+
+defn do-version-bump():
+  o: "Running 'make bump' to update versions in all files"
   run:: make bump
-
   when verbose:
     run:: git -P diff
+  say: '✓ Version bump complete'
 
 
-#------------------------------------------------------------------------------
-# Collect the git log subject lines since the last release, reverse them and
-# then create a new Changes file entry and add it to the top of the Changes
-# file.
-#
-# Open the file in an editor to review the entry and update if needed.
-#------------------------------------------------------------------------------
-
-defn step-3(ctx):
-  o: "Step 3) Update the 'Changes' file"
+defn do-changelog(old new):
+  ctx =: check-args(old new)
+  o: "Updating 'Changes' file"
 
   when-not dryrun:
-    changes =:
-      make-changes-entry: ctx
-
+    changes =: make-changes-entry(ctx)
     write 'release-changes.txt': changes
 
-    prompt: "Press Enter to edit the 'Changes' file."
+    say: "Opening editor to review changelog entry..."
     editor =: ENV.EDITOR || 'vi'
     run: "$editor release-changes.txt"
-    prompt: 'Press Enter to continue or Ctrl-C to abort.'
 
+    say: 'Validating YAML syntax...'
     validate-yaml: read('release-changes.txt')
 
-  when verbose:
-    # Show git changes since last release:
-    run: "grep -F -B999 '$(ctx.old)' Changes"
-
-
-#------------------------------------------------------------------------------
-# Run 'make test' to ensure everything is working as expected.
-#------------------------------------------------------------------------------
-
-defn step-4(ctx):
-  o: "Step 4) Run 'make test'"
-
-  run:: make test
-
-  # Update Changes if tests pass:
-  when-not dryrun:
+    # Prepend to Changes file with version/date header
     changes =: read('release-changes.txt')
 
     file-prepend 'Changes': |
@@ -134,21 +284,15 @@ defn step-4(ctx):
 
     validate-yaml: read('Changes')
 
-    changes =: changes.replace(/(?m)^  -/ '*')
-
-    write 'release-changes.txt': changes
+  say: '✓ Changes log file updated'
 
 
-#------------------------------------------------------------------------------
-# Some of the binding library directories have a change log file.
-# Update them.
-#------------------------------------------------------------------------------
-
-defn step-5(ctx):
-  o: 'Step 5) Update the Change Log files for the binding modules'
+defn do-binding-changelogs():
+  ctx =: make-context()
+  o: 'Updating binding changelog files'
 
   when-not dryrun:
-    # A change log (YAML) entry for Perl:
+    # Perl changelog entry (YAML format)
     perl-entry =: |
 
       ---
@@ -160,14 +304,9 @@ defn step-5(ctx):
     validate-yaml: perl-entry
 
     file-prepend 'perl/Changes': perl-entry
-    when verbose:
-      run:: head perl/Changes
-
     file-prepend 'perl-alien/Changes': perl-entry
-    when verbose:
-      run:: head perl-alien/Changes
 
-    # Change log entry for Ruby:
+    # Ruby changelog entry (Markdown format)
     ruby-entry =: |+
       ## [$(ctx.new)] - $(ctx.date)
 
@@ -176,68 +315,153 @@ defn step-5(ctx):
     file-prepend 'ruby/ChangeLog.md': ruby-entry
 
     when verbose:
+      run:: head perl/Changes
+      run:: head perl-alien/Changes
       run:: head ruby/ChangeLog.md
 
-
-#------------------------------------------------------------------------------
-# git commit the release changes we've made so far.
-#------------------------------------------------------------------------------
-
-defn step-6(ctx):
-  o: 'Step 6) Commit the release changes to git'
-
-  run: "git commit -a -m 'release: $(ctx.new)'"
+  say: '✓ Binding changelogs updated'
 
 
-#------------------------------------------------------------------------------
-# git tag using the new version
-#------------------------------------------------------------------------------
+defn do-commit(new):
+  o: 'Committing release changes'
 
-defn step-7(ctx):
-  o: 'Step 7) Add git tag for the new version'
+  # Check if there are changes to commit
+  status =: sh('git status --porcelain').out
+  when-not status.?:
+    say: 'No changes to commit'
+    exit: 0
 
-  run: "git tag $(ctx.new)"
+  # Show what will be committed
+  when verbose:
+    run:: git -P diff --stat HEAD
+
+  run: "git commit -a -m 'release: $new'"
+  say: "✓ Committed changes for release $new"
 
 
-#------------------------------------------------------------------------------
-# git push commit and tag
-#------------------------------------------------------------------------------
+defn do-tag(new):
+  o: "Creating git tag for version $new"
 
-defn step-8(ctx):
-  o: 'Step 8) Push the git commit and tag'
+  run: "git tag $new"
+  say: "✓ Created tag $new"
+
+
+defn do-push(new):
+  o: 'Pushing commits and tags to remote'
+
+  current-branch =: sh('git rev-parse --abbrev-ref HEAD').out:trim
+  say: "  Branch: $current-branch"
+  say: "  Tag: $new"
 
   run:: git push
+  run:: git push --force --tags
 
-  run:: git push --tags
+  say: '✓ Pushed to remote'
 
 
-#------------------------------------------------------------------------------
-# Call 'make release'
-#------------------------------------------------------------------------------
+defn do-build-github(new):
+  o: 'Triggering GitHub Actions release and test workflows'
 
-defn step-9(ctx):
-  o: "Step 9) Run 'make release-assets'"
+  token =:
+    sh-out:
+      "ys -l $(ENV.HOME)/.yamlscript-secrets.yaml -e '.github.token:say'"
 
-  run:: make test-core test-ys
+  current-branch =: sh-out('git branch --show-current'):trim
+  gh-available =: bash('command -v gh'):ok
 
-  run:: make release-assets
+  if gh-available:
+    then:
+      # 1. Trigger test-all workflow
+      say: 'Triggering test-all workflow...'
+      test-trigger =:
+        shell {:extra-env {"GH_TOKEN" token}}:
+          "gh workflow run test-all.yaml --ref $current-branch"
 
-  run:: make install
+      if test-trigger:ok:
+        then:
+          say: '✓ Test workflow triggered'
+          sleep: 3
+          test-run-id =:
+            trim:
+              sh-out {:extra-env {"GH_TOKEN" token}}:
+                "gh run list --workflow=test-all.yaml --limit=1 --json databaseId --jq '.[0].databaseId'"
+          say: "  Test run ID: $test-run-id"
 
-  when-not dryrun || ENV.YS_RELEASE_ID:
-    shell {:out "release-id.txt"}: "grep '^Release id:' release-$(ctx.new).log"
-    run:: cat release-id.txt
+      # 2. Trigger release workflow
+      say: 'Triggering release workflow...'
+      trigger-result =:
+        shell {:extra-env {"GH_TOKEN" token}}:
+          "gh workflow run release.yaml --ref $current-branch -f version=$new"
 
-#------------------------------------------------------------------------------
-# For each of the many binding libraries, run 'make release'
-#------------------------------------------------------------------------------
+      if trigger-result:ok:
+        then:
+          say: '✓ Release workflow triggered'
+          sleep: 5
+          run-id =:
+            trim:
+              sh-out {:extra-env {"GH_TOKEN" token}}:
+                "gh run list --workflow=release.yaml --limit=1 --json databaseId --jq '.[0].databaseId'"
 
-defn step-10(ctx):
-  o: "Step 10) Run 'make release' for each language binding library"
+          # 3. Watch build workflow
+          say: "\nWatching release workflow (run $run-id)..."
+          watch-result =:
+            shell {:extra-env {"GH_TOKEN" token}}:
+              "gh run watch $run-id --exit-status --interval=10"
 
+          if watch-result:ok:
+            then:
+              release-url =: "https://github.com/yaml/yamlscript/releases/tag/$new"
+              say: "✓ Release workflow completed"
+              say: "  Release page: $release-url"
+
+          # 4. Watch test workflow (may still be running)
+          when test-run-id.?:
+            say: "\nChecking test-all workflow status (run $test-run-id)..."
+            test-watch =:
+              shell {:extra-env {"GH_TOKEN" token}}:
+                "gh run watch $test-run-id --exit-status --interval=10"
+            if test-watch:ok:
+              then:
+                say: '✓ Test workflow completed successfully'
+              else:
+                say: |
+                  ⚠ Test workflow may still be running or failed
+                  Check: https://github.com/yaml/yamlscript/actions/runs/$test-run-id
+        else:
+          workflow-url =:
+            'https://github.com/yaml/yamlscript/actions/workflows/release.yaml'
+          say: |
+            ⚠ Could not trigger workflow (insufficient permissions?)
+
+            Please manually trigger the workflow:
+              1. Go to: $workflow-url
+              2. Click 'Run workflow'
+              3. Enter version: $new
+
+          prompt: 'Press Enter when workflow has completed...'
+    else:
+      workflow-url =:
+        'https://github.com/yaml/yamlscript/actions/workflows/release.yaml'
+      say: |
+        ⚠ GitHub CLI (gh) not found
+
+        Please manually trigger the workflow:
+          1. Go to: $workflow-url
+          2. Click 'Run workflow'
+          3. Enter version: $new
+          4. Click 'Run workflow' button
+          5. Wait for completion
+
+      prompt: 'Press Enter when workflow has completed...'
+
+defn do-bindings():
+  o: "Releasing all language bindings"
+
+  say: 'Waiting for GitHub Release assets to be ready...'
   prompt: 'Press Enter when ready to continue.'
 
   each dir bindings:
+    say: "\nReleasing binding: $dir"
     try:
       run: "make -C $dir release"
       catch Exception e:
@@ -245,27 +469,27 @@ defn step-10(ctx):
           warn: "Failed to release $dir. Continuing."
           die: "Failed to release $dir. Exiting."
 
+  # Clean up v-prefixed tags if they exist
   try:
-    run: "git tag -d v$(ctx.new)"
-    run: "git push origin :v$(ctx.new)"
+    run: "git tag -d v$(ENV.VERSION || '0.0.0')"
+    run: "git push origin :v$(ENV.VERSION || '0.0.0')"
     catch Exception e:
 
+  # Restore perl/perl-alien Changes files
   run: 'git checkout -- perl perl-alien'
 
-  when verbose:
-    run:: git -P diff
+  say: '✓ All bindings released'
 
-#------------------------------------------------------------------------------
-# Publish the website. A new release will change the content of some pages.
-#------------------------------------------------------------------------------
 
-defn step-11(ctx):
-  o: 'Step 11) Publish the yamlscript.org website'
+defn do-website():
+  o: 'Publishing yamlscript.org website'
 
   run: 'rm -fr website'
   run: 'git worktree add -f website'
   run: 'git -C website rebase main'
   run: 'make -C website/www realclean publish website=live'
+
+  say: '✓ Website published'
 
 
 #------------------------------------------------------------------------------
@@ -304,17 +528,14 @@ defn run(cmd):
     token =:
       sh-out:
         "ys -l $(ENV.HOME)/.yamlscript-secrets.yaml -e '.github.token:say'"
-    shell {:extra-env {"YS_GH_TOKEN" token}}: cmd
+    shell {:extra-env {"GH_TOKEN" token}}: cmd
 
-defn check-args(old new start):
+defn check-args(old new):
   when-not (string? old) && (re-matches /0\.\d+\.\d+/ old):
     die: "Invalid old version '$old'"
 
   when-not (string? new) && (re-matches /0\.\d+\.\d+/ new):
     die: "Invalid new version '$new'"
-
-  when-not (number? start) && (start >= 1) && (start <= steps):
-    die: "Invalid starting step number '$start'"
 
   # Return context mapping:
   =>::
@@ -322,3 +543,17 @@ defn check-args(old new start):
     new:: new
     date:: sh('date +%Y-%m-%d').out:str/trim-newline
     date-time:: sh('date').out:str/trim-newline
+
+defn make-context():
+  # Create context with current version info
+  current-version =:
+    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+
+  =>::
+    old:: current-version
+    new:: current-version
+    date:: sh('date +%Y-%m-%d').out:str/trim-newline
+    date-time:: sh('date').out:str/trim-newline
+
+defn ok(sh):
+  sh.exit == 0

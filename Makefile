@@ -2,6 +2,7 @@ include common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
 
+include $(MAKES)/gh.mk
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
 include $(MAKES)/shell.mk
 
@@ -208,9 +209,9 @@ docker-build := YS_BUILD_IN_DOCKER=1
 endif
 endif
 
-_release-yamlscript: $(YS)
+_release-yamlscript: $(YS) $(GH)
 	($(TIME) $(docker-build) \
-	  $< $(ROOT)/util/release-yamlscript $o $n $s) 2>&1 | \
+	  ys $(ROOT)/util/release-yamlscript release $o $n $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
 release-assets: $(RELEASE-ASSETS)
@@ -221,6 +222,85 @@ release-build: release-build-ys release-build-libys
 release-build-ys: $(YS-RELEASE)
 
 release-build-libys: $(LYS-RELEASE)
+
+#------------------------------------------------------------------------------
+# Interactive Release Workflow - Individual Step Targets
+#------------------------------------------------------------------------------
+
+# Show all release steps
+release-list:
+	$(YS) $(ROOT)/util/release-yamlscript list
+
+# Step 1: Sanity checks
+release-sanity-check:
+ifndef o
+	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
+endif
+ifndef n
+	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript sanity-check $(o) $(n)
+
+# Step 2: Version bump
+release-version-bump:
+	$(YS) $(ROOT)/util/release-yamlscript version-bump
+
+# Step 3: Changelog
+release-changelog:
+ifndef o
+	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
+endif
+ifndef n
+	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript changelog $(o) $(n)
+
+# Step 4 (legacy): Test (kept for backwards compatibility)
+release-test:
+	@echo "Note: Tests now run automatically in GitHub Actions"
+	@echo "Use 'gh workflow run test-all.yaml' to trigger manually"
+
+# Step 4: Binding changelogs
+release-binding-changelogs:
+	$(YS) $(ROOT)/util/release-yamlscript binding-changelogs
+
+# Step 5: Commit
+release-commit:
+ifndef n
+	$(error 'make release-commit' requires n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript commit $(n)
+
+# Step 6: Tag
+release-tag:
+ifndef n
+	$(error 'make release-tag' requires n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript tag $(n)
+
+# Step 7: Push
+release-push:
+ifndef n
+	$(error 'make release-push' requires n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript push $(n)
+
+# Step 8: Trigger GitHub Actions
+release-build-github:
+ifndef n
+	$(error 'make release-build-github' requires n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript build-github $(n)
+
+# Step 9: Release bindings
+release-bindings:
+	$(YS) $(ROOT)/util/release-yamlscript bindings
+
+# Step 10: Publish website
+release-website:
+	$(YS) $(ROOT)/util/release-yamlscript website
+
+#------------------------------------------------------------------------------
 
 jars: $(JAR-ASSETS)
 
