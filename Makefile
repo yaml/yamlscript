@@ -1,9 +1,18 @@
 include common/base.mk
 include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
-
+include $(MAKES)/claude.mk
+include $(MAKES)/gh.mk
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
 include $(MAKES)/shell.mk
+
+CLAUDE-NONO-R-FILES += \
+  $(XAUTHORITY) \
+  /etc/gitconfig \
+
+CLAUDE-NONO-R-DIRS += \
+  /tmp/.X11-unix \
+
 
 BINDINGS := \
     clojure \
@@ -100,6 +109,13 @@ export YS_RELEASE_VERSION_OLD := $o
 endif
 
 default::
+
+# Claude Code's paste-image flow writes the clipboard image to
+# $CLAUDE_CODE_TMPDIR (default /tmp) and then reads it back. Nono's
+# default profile allows writes to /tmp but blocks reads, so redirect
+# to the already-RW /tmp/claude-<uid> dir from claude.mk.
+claude: export CLAUDE_CODE_TMPDIR := /tmp/claude-$(shell id -u)
+claude: claude-nono
 
 env::
 	@env | sort | less -FRX
