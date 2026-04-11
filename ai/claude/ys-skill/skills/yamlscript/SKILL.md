@@ -87,6 +87,10 @@ for that case.
   of nesting `say:` as a separate pair inside the body
 - CLI args that look like numbers are auto-converted — `num()` not needed
 - `+` for simple concatenation at end of dot chain, not `str()`
+- `n * 'str'` — integer times string repeats it: `n * '  '` for an
+  indent of `n` levels. Replaces `apply: str repeat(n '  ')`
+- Interpolation auto-stringifies — `"$x"` works for any value, no
+  `str(x)` needed inside `"..."` or `$(...)`
 - `uc1(s)` — capitalize first character; `uc(s)` — all uppercase
 - `join(sep coll)` — join with separator; `join(coll)` — no separator
 - `joins(coll)` — join with a single space
@@ -132,6 +136,14 @@ for that case.
 ### Control Flow
 - `if <cond>: <then-form> <else-form>` — always needs both forms
 - Use `when` for one-armed conditional (no else)
+- `when+ expr:` — like `when`, but binds `_` to the truey value of `expr`
+  inside the body. Use it to test-and-capture in one step:
+  `when+ schema.'$ref': say: "-type: $(ref-sym(_))"`
+- `.when(value)` — receiver acts as the test; returns `value` if truey,
+  else nil. Replaces the `.if(value nil)` pattern:
+  `only-ref?(s).when(ref-sym(s.'$ref'))` not
+  `only-ref?(s).if(ref-sym(s.'$ref') nil)`
+- `cond` returns nil when no clause matches — drop trailing `else: nil`
 - Two consecutive pairs in an `if` block are then and else — no
   keywords needed when both branches are single pairs:
   `if cond: \n  say: yes \n  say: no`
@@ -212,6 +224,9 @@ pairs =: words:frequencies.sort-by(val):reverse
 - `obj.name` (dot without parens) is a **property/key lookup** — NOT
   a function call. Use `:name` to call a zero-arg function by name.
   Example: `.first` → key lookup (nil); `:first` → `(first obj)` (correct)
+- `obj.'key'` — quoted property lookup for keys that aren't valid bare
+  identifiers (start with `$`, contain `-`, etc.):
+  `schema.'$ref'`, `schema.'$defs'` not `schema.get('$ref')`
 - Special postfix operators are NOT property lookups — they compile
   to explicit function calls and work in string interpolation:
   `.++` = `inc+`, `.--` = `dec+`, `.#` = `count`, `.!` = `falsey?`,
@@ -318,6 +333,8 @@ pairs =: words:frequencies.sort-by(val):reverse
   `warn` and `err` go to stderr; `say` adds newline, `err` does not
 - `die(msg)` — print error message to stderr and exit
 - `read-line()` — read a line from stdin
+- `IN` — stdin handle for `read`: `read: IN` instead of
+  `slurp: System/in`
 - `trim(s)` — strip leading/trailing whitespace
 - `fs-e` / `fs-f` / `fs-d` — file exists / is-file / is-dir;
   zero-arg so colon-chain: `path:fs-e`
@@ -354,7 +371,16 @@ pairs =: words:frequencies.sort-by(val):reverse
   with `$var` interpolation
 - Do NOT use `slurp`/`spit` — use `read`/`write`
 - Do NOT use `.get("key")` for map access — use `.key` property
-  lookup when the key is a simple string
+  lookup when the key is a simple string, or `.'key'` (quoted) when
+  the key isn't a valid bare identifier (e.g. `schema.'$ref'`)
+- Do NOT write `.if(value nil)` — use `.when(value)` instead, which
+  returns `value` if the receiver is truey and nil otherwise
+- Do NOT end a `cond` with `else: nil` — `cond` returns nil by
+  default when no clause matches
+- Do NOT use `apply: str repeat(n '  ')` for string repetition —
+  use `n * '  '`
+- Do NOT wrap interpolated values in `str()` — `"$v"` and `"$(expr)"`
+  auto-stringify any value
 
 ## Reference
 
