@@ -62,8 +62,10 @@ This is the only file the skill is allowed to edit inside the clone.
 
 ### 4. Diff the two inputs
 
-Run `diff -u a.ys b.ys` and also read both files end-to-end. Look for
-every material change:
+Run `diff -u a.ys b.ys || true` and also read both files end-to-end.
+The `|| true` is required: `diff` exits 1 when files differ (always
+the case here), and a nonzero Bash exit can fire `PostToolUseFailure`
+hooks that interrupt the skill. Look for every material change:
 
 - Program tag changes (`!yamlscript/v0` → `!ys-0`)
 - Function name swaps (`println` → `say`, `str` → interpolation,
@@ -82,6 +84,13 @@ If `ys` is on PATH (check `command -v ys`), run both files and compare
 stdout. If they differ, say so — the correction is not purely stylistic
 and any extracted rule should reflect that. Continue regardless; the
 diff may still teach a lesson. Do not fail the skill on this check.
+
+Always wrap any comparison command in `|| true` so that a nonzero
+exit cannot trip a `PostToolUseFailure` hook. Example:
+
+```bash
+diff -q <(ys a.ys) <(ys b.ys) || true
+```
 
 ### 6. Extract the lesson(s)
 
@@ -133,7 +142,84 @@ Edit only `$SKILL`. Follow the repo's style rules (from `CLAUDE.md`):
 Use the Edit tool on the file inside `$REPO`. Never edit a yamlscript
 checkout at any other path.
 
-### 8. Report back
+### 8. Append a session entry
+
+Every educate run also archives the raw correction in
+`devel/ys-skill/sessions/` so the corpus stays alive as eval data and as
+a regeneration substrate for `SKILL.md`.
+
+```
+SESSIONS=$REPO/ai/claude/devel/ys-skill/sessions
+```
+
+Pick the next sequential file name:
+
+```bash
+NEXT=$(ls $SESSIONS/session-*.yaml 2>/dev/null \
+  | sed 's/.*session-0*//; s/\.yaml//' \
+  | sort -n | tail -1)
+NEXT=$((${NEXT:-0} + 1))
+NEW=$(printf '%s/session-%03d.yaml' "$SESSIONS" "$NEXT")
+```
+
+Create `$NEW` with one entry holding the full pair. Use the Write
+tool — never `cat <<EOF`. Schema (modeled on `session-005.yaml`):
+
+```yaml
+# Teaching session: session-NNN
+# Source: yamlscript-educate
+# Inputs: <basename(a.ys)>, <basename(b.ys)>
+
+- id: session-NNN
+  level: 2
+  source: yamlscript-educate
+  description: |
+    <one-line summary of what the program does>
+  yamlscript: |
+    <full contents of a.ys, indented 4 spaces>
+  correct: |
+    <full contents of b.ys, indented 4 spaces>
+  notes: |
+    <bullet list of the lessons identified in step 6, each lesson
+    on its own line; wrap function and operator names in
+    backticks (`say`, `.++`, `when+`, etc.) so `skill-audit` can
+    detect them>
+```
+
+Notes on the schema:
+
+- `level: 2` is the default; bump to `3` for genuinely advanced
+  programs (data-mode I/O, complex chaining, etc.).
+- The `notes` field is what `skill-audit` greps for backticked tokens
+  — be deliberate about which function names you wrap.
+- If `educate` finds zero material lessons (step 6 short-circuits),
+  do **not** create a session file. The corpus only grows on real
+  corrections.
+- One file per run, even if multiple lessons — keeps provenance
+  one-to-one with the input pair.
+
+### 9. Run `skill-audit` (informational)
+
+After the SKILL.md edit and the new session file are both in place,
+run the audit script to catch backticked function names that appear in
+session notes but are not documented in `SKILL.md`:
+
+```bash
+(cd $REPO/ai/claude/devel/ys-skill && ./bin/skill-audit) || true
+```
+
+Capture the output. It either prints
+
+> SKILL.md is up to date with all session notes.
+
+or a list of `name  (session-id ...)` pairs. Do **not** act on the
+gap list automatically — the goal here is *visibility*, not autofix.
+Surface it in the next step so the user can decide whether to backfill
+the missing rules in a follow-up educate run or by hand.
+
+If `ys` is not on PATH, skip this step and note that in the report.
+
+### 10. Report back
 
 Show the user, in this order:
 
@@ -142,22 +228,24 @@ Show the user, in this order:
    **new**, **reinforced**, or **already covered**.
 3. The output of `git -C "$REPO" diff -- "$SKILL"` so the user sees
    exactly what the skill changed.
-4. A closing note:
-   > The updated SKILL.md is in `./yamlscript`. Review the diff there,
-   > then commit and push manually when ready.
+4. The path of the new session file written in step 8 (or note that
+   none was written because no material lessons were found).
+5. The `skill-audit` output from step 9 (or note that the audit was
+   skipped because `ys` was not on PATH).
+6. A closing note:
+   > The updated SKILL.md and new session file are in `./yamlscript`.
+   > Review the diff there, then commit and push manually when ready.
 
-### 9. Out of scope for this skill
+### 11. Out of scope for this skill
 
 Do **not**, in this iteration:
 
-- Add entries to `ai/claude/devel/ys-skill/sessions/*.yaml`.
-- Run `skill-audit`.
 - Bump `plugin.json` / `marketplace.json` versions.
 - Create branches, commits, or pull requests.
 - Push to any remote.
 
 The user keeps review control. They will commit the SKILL.md change
-themselves after inspecting it.
+and the new session file themselves after inspecting them.
 
 
 ## Reference

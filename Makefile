@@ -117,6 +117,18 @@ default::
 claude: export CLAUDE_CODE_TMPDIR := /tmp/claude-$(shell id -u)
 claude: claude-nono
 
+# Sync the local ys-skill plugin source into Claude Code's marketplace
+# cache so edits take effect without a push/pull round-trip.
+CLAUDE-CACHE := $(HOME)/.claude/plugins/marketplaces/yamlscript
+
+claude-skill-local-update:
+	[[ -d $(CLAUDE-CACHE)/ai/claude/ys-skill ]]
+	$(RM) -r $(CLAUDE-CACHE)/ai/claude/ys-skill
+	cp -pPR ai/claude/ys-skill $(CLAUDE-CACHE)/ai/claude/
+	cp -pPR .claude-plugin/marketplace.json \
+	  $(CLAUDE-CACHE)/.claude-plugin/marketplace.json
+	@echo "Updated ys-skill -> $(CLAUDE-CACHE)"
+
 env::
 	@env | sort | less -FRX
 
