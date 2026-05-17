@@ -37,16 +37,10 @@ The skill teaches Claude to:
 ```
 ai/claude/
 ├── ReadMe.md               # This file
-├── ys-skill/               # The plugin (installed by users)
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   └── skills/
-│       └── yamlscript/
-│           └── SKILL.md    # The skill prompt
-└── devel/
-    └── ys-skill/           # Development tools (not installed)
-        ├── Makefile
-        ├── bin/
-        │   └── skill-audit # Gap detector: sessions vs SKILL.md
-        └── sessions/       # Teaching session logs
+└── ys-skill/               # The plugin (installed by users)
+    ├── .claude-plugin/
+    │   └── plugin.json
+    └── skills/
+        └── yamlscript/
+            └── SKILL.md    # The skill prompt
 ```
