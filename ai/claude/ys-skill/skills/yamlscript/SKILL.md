@@ -59,12 +59,235 @@ they are more powerful and polymorphic (e.g. `reverse` works on strings,
 If performance is a concern, fall back to the specific Clojure function
 for that case.
 
+## Common Mistakes
+
+Patterns Claude gets wrong most often. Scan these before writing any YS.
+
+### Use `if` for two-branch conditionals — `cond` only for 3+ branches
+
+`cond` is **only** appropriate when there are three or more mutually
+exclusive branches. Any time you have a single predicate plus an
+`else:` (one real branch and one fallback), use `if` instead. This is
+the single most common conditional mistake.
+
+- `cond: x == 0: a / else: b` → `if x == 0: \n  then: a \n  else: b`
+- `cond: pred: x / else: recur(...)` → `if pred: \n  then: x \n  else: recur(...)`
+
+If the then-branch is a bare form, the shortest form drops both keys:
+
+```
+if pred:
+  then-form
+  else-form
+```
+
+Inner conditionals nested inside a `cond` clause are usually
+two-branch and should be `if`. Before writing `cond:`, count the
+clauses: if it's two (one predicate + `else:`), rewrite as `if`. Three
+or more clauses (excluding `else:`) keeps `cond`.
+
+Scan every `cond:` in the file before finishing — if it has only one
+non-`else:` clause, it's wrong.
+
+### `=>:` is for atoms that can't be split into a pair
+
+Use `=>:` only for values that can't be expressed as a `key: value`
+pair: bare symbols, numbers, `nil`, keywords, and data-collection
+literals (`+[a b 3]`, `+{a: 1}`).
+
+For any compound expression — function call, operator expression,
+method chain, range — either write it as a bare scalar value or
+restructure into a mapping pair by splitting at the first natural
+boundary:
+
+- `=>: a.b.c` → `a: .b.c`
+- `=>: a(b c)` → `a: b c`
+- `=>: 1 .. n` → `1 .. n` (bare scalar) or `1 ..: n` (pair)
+- `=>: a + b` → `a + b` (bare scalar) or `a +: b` (pair)
+- `=>: meta.from.split('/wiki/').$` → `meta.from: .split('/wiki/').$`
+
+`=>:` is fine for `=>: x`, `=>: 42`, `=>: nil`, `=>: :foo`,
+`=>: +[1 2 3]`.
+
+### Never write `x + 1` or `x - 1` — use `.++` / `.--`
+
+Increment and decrement by 1 are common enough to have their own
+postfix operators. Use them anywhere — assignment values, argument
+positions, return values, loop bodies, string interpolation:
+
+- `v + 1` → `v.++`
+- `v - 1` → `v.--`
+- `(3 * v) + 1` → `(3 * v).++`
+- `recur: i + 1` → `recur: i.++`
+
+`.++` and `.--` compile to `inc+` / `dec+` (polymorphic). This is the
+single most-forgotten rule — scan every `+ 1` and `- 1` before
+finishing.
+
+### Use specific predicates over generic `.!` for numeric tests
+
+When testing whether a number is zero, prefer `:zero?` (chain) or
+`zero?(...)` (call) over `.!` or `== 0`. The specific predicate
+documents intent: "is the remainder zero" vs "is this falsey".
+
+- `(i % 5):zero?` over `(i % 5).!`
+- `count.zero?` over `count == 0`
+- `zero?(x - y)` when the expression has a natural prefix form
+
+Reserve `.!` for cases where the expression is already busy and the
+terse form aids readability, or where you genuinely want the broader
+"falsey" semantics (nil, false, empty collections, empty strings).
+
+### `else:` not `do:` for the else branch of `if`
+
+When the then-branch is a single form and the else-branch is multiple
+forms, introduce the else block with `else:`, not `do:`. `do:` compiles
+but is not idiomatic.
+
+### `when`/`when-not` for one-armed conditionals returning nil
+
+If a branch of `if` or `cond` returns `nil`, the conditional is really
+one-armed — use `when` (or `when-not`) instead. `when` returns nil when
+the test is false, so the explicit nil branch is dead weight. A `cond`
+with one real arm and a nil fallback is the loudest version of this
+mistake.
+
+- `cond: x.!: nil / else: real` → `when x: real`
+- `cond: m: i / else: nil` → `when m: i`
+- `if cond: form / else: nil` → `when cond: form`
+- `when X.!` → `when-not X`
+
+### `declare` is not needed in YAMLScript
+
+YS resolves `defn` references across the whole file, so mutual
+recursion works regardless of definition order. Don't reach for
+`declare: name` — it's a Clojure habit and adds noise:
+
+```
+# correct — F is defined first and references M defined later
+defn F(n):
+  if n:zero?: 1 (n - M(F(n.--)))
+
+defn M(n):
+  if n:zero?: 0 (n - F(M(n.--)))
+```
+
+## Style Defaults
+
+The choices below have no single right answer in YAMLScript. The skill
+ships with the defaults listed here, but they are **overridable from a
+project's `CLAUDE.md`**. If a project's `CLAUDE.md` contradicts a
+default, follow the project.
+
+These are stylistic only — anything in *Common Mistakes*, *Key Rules*,
+or *Anti-Patterns* is not negotiable.
+
+### Receiver-first vs bare-function form
+
+When a function has an obvious "subject" argument (the thing being
+extended, transformed, or queried), prefer the receiver-first dot
+form:
+
+- `m.assoc(:k v)` over `assoc(m :k v)`
+- `xs.conj(x)` over `conj(xs x)`
+- `s.split('/')` over `split(s '/')`
+
+Use the bare-function form when arguments are co-equal (e.g.
+`merge(a b c)`, `concat(xs ys zs)`) or when there is no natural
+receiver.
+
+To override: in `CLAUDE.md`, write *"prefer bare-function form
+(`assoc(m k v)`) over dot-chain"*.
+
+### Vectors of short strings
+
+For a static vector of short word-like strings, prefer `qw(a b c)`
+over `=:: ['a', 'b', 'c']`:
+
+- `colors =: qw(red green blue)` over `colors =:: ['red', 'green', 'blue']`
+
+`qw` produces a vector of strings. Use the data-mode literal when the
+elements contain spaces or non-word characters.
+
+### Default argument values
+
+For a `defn` arg with a long default value, prefer setting it in the
+body with `||=:` over a long signature line:
+
+```
+defn main(text=nil):
+  text ||=: 'The quick brown fox jumps over the lazy dog'
+```
+
+over
+
+```
+defn main(text='The quick brown fox jumps over the lazy dog'):
+```
+
+Short defaults (numbers, short strings, keywords) belong in the
+signature: `defn main(n=10):`.
+
+### Block form vs chain for multi-arg calls
+
+For a call with three or more substantial args, prefer block form
+with one arg per line over a single-line chain:
+
+```
+concat:
+  quicksort(less)
+  vector(p)
+  quicksort(more)
+```
+
+over
+
+```
+concat: quicksort(less) vector(p) quicksort(more)
+```
+
+Two args fit fine on one line.
+
 ## Key Rules
+
+### Formatting
+- **Lines must not exceed 79 columns.** This is a hard limit, not a
+  suggestion. Target 20/40/60 columns as the natural "square" sizes for
+  most lines. YAML/YS gives you many ways to split:
+  - **Block form**: replace a chain with an indented block
+  - **Intermediate variables**: assign a sub-expression to a name
+  - **Plain scalar folding**: a plain (unquoted) YAML scalar folds at any
+    whitespace — break before a binary operator and indent the
+    continuation:
+    ```
+    user =: ENV.RC_USER ||
+      die('set RC_USER (botpassword username)')
+    ```
+  - **Double-quoted line fold**: a `"..."` string can be split at any
+    space — YAML folds the newline (and the continuation's leading
+    whitespace) into a single space. Indent the continuation to read
+    cleanly:
+    ```
+    say: "map my-add over pairs:
+          $(map(my-add [1 2 3] [10 20 30]):joins)"
+    ```
+  - **Double-quoted backslash continuation**: a `"..."` string can be
+    split with `\` at end of line, even when there's no whitespace to
+    fold at. Useful for long URLs, identifiers, or any unbroken token:
+    ```
+    url =: "https://en.wikipedia.org/w/api.php?action=query\
+            &titles=Rosetta_Code&format=json"
+    ```
+  - **Block scalars** (`|`, `>`): for multi-line literal text
 
 ### Strings
 - Single quotes unless interpolation or escapes needed
 - `"Hello, $name!"` not `str('Hello, ' name '!')`
 - `"Result: $(x * y)"` for expression interpolation
+- `"Now: $now()"` — a bare function or method call interpolates without
+  `$(...)` wrapping. Works for static calls too: `"$System/currentTimeMillis()"`.
+  Use sparingly — prefer it only when it clearly reduces noise; reach
+  for `$(...)` for anything beyond a single call (operators, chains)
 - `say: |` with a multi-line block — all lines interpolated and printed
 - `::` (double colon) is sugar for `! ` (mode-toggle tag).
   `a:: b` = `a: ! b` — toggles between code and data mode:
@@ -85,10 +308,20 @@ for that case.
     `- ! expr` to evaluate `expr` as code within data mode
 - `!<fn>` tag — avoids an extra indent level: `each i xs: !say` instead
   of nesting `say:` as a separate pair inside the body
-- CLI args that look like numbers are auto-converted — `num()` not needed
+- CLI args that look like numbers are auto-converted — `num()` not needed.
+  Do NOT defensively coerce with `:int` / `:N` either. `defn main(n=10):`
+  is enough; `ethiopian(a b)` works with no coercion when `a`/`b` came
+  from the command line.
+  Two globals expose the raw and converted views:
+  - `ARGV` — all CLI args as raw strings (no conversion)
+  - `ARGS` — all CLI args with numeric-looking values converted
+  Use `ARGV` when the task is *about* string handling of numeric-looking
+  input (e.g. "increment a numerical string"); otherwise `ARGS` and
+  named/positional params with defaults are fine.
 - `+` for simple concatenation at end of dot chain, not `str()`
 - `n * 'str'` — integer times string repeats it: `n * '  '` for an
-  indent of `n` levels. Replaces `apply: str repeat(n '  ')`
+  indent of `n` levels. Replaces `apply: str repeat(n '  ')`. Order
+  doesn't matter for this case: `'str' * n` also works.
 - Interpolation auto-stringifies — `"$x"` works for any value, no
   `str(x)` needed inside `"..."` or `$(...)`
 - `uc1(s)` — capitalize first character; `uc(s)` — all uppercase
@@ -108,6 +341,35 @@ for that case.
   - `:\` → literal `: ` (colon-space would trigger colon-chain)
   - ` \#` → literal ` #` (space-hash would start a YAML comment)
 
+### Comments
+- `# ...` — standard YAML comment to end of line. Use it between
+  structures, after values, and at file top/bottom.
+- A `#` comment terminates the surrounding YAML scalar, so it cannot
+  appear inside a multi-line plain-scalar expression such as a
+  dot-chain spread across lines.
+- `\"..."` — YS expression-level comment. Opens with `\"`, closes at
+  the next `"`. Use it to annotate steps inside a multi-line
+  expression where `#` would break the scalar:
+  ```yaml
+  defn scramble(s):
+    s          \"input string"
+      .lc()    \"lowercase"
+      .split() \"split into chars"
+      .shuffle()
+      .join()
+      .uc1()   \"capitalize first char"
+  ```
+- `\"..."` constraints:
+  - The body cannot contain `"` (no escape mechanism).
+  - The body is still lexed by YAML, so YAML-special sequences must
+    be escaped the same way they are in any plain scalar:
+    `:\ ` for `: ` (colon-space), ` \#` for ` #` (space-hash). See
+    Strings.
+  - Not usable inside YAML string literals (`"..."`, `'...'`) or
+    regex literals `/.../`.
+  - Not usable as a standalone YAML block element — only inside an
+    in-progress multi-line expression.
+
 ### Function Definitions
 - `defn name(args):` form with parens
 - Default args over multi-arity: `defn greet(name='World'):`
@@ -121,21 +383,59 @@ for that case.
   Avoids the YAML plain scalar restriction that forbids `: ` inside
   default values written as `\n`-escaped double-quoted strings
 - `defn-` for private helpers
-- `main` with default args for CLI programs
+- `main` with default args for CLI programs. Defaults should be
+  values a user could actually type on the command line — strings
+  and numbers, not vectors or maps. If `main` needs a collection,
+  default a string and parse it in the body (see `ARGV`/`ARGS`).
+- `main` arg-list shapes:
+  - `main(name)` — exactly one named arg (auto-converted if numeric)
+  - `main(_)` — exactly one arg, unnamed (arity matters, name doesn't)
+  - `main(*)` — any number of args, unnamed
+  - `main(*args)` — any number of args, named
 - Define functions top-down: `main` first, then helpers in call
   order — this is idiomatic YAMLScript
 
 ### Function Calls
 - Top level: mapping pair — `say: 'hello'`
+- `a: b c` ≡ `a b: c` ≡ `a b c:` — the colon splits a call into
+  before/after segments; choose the split that reads naturally.
+  Promote the "subject" of a call before the colon when it makes
+  the call read like English:
+  - `write file: content` not `write: file content`
+  - `assoc m: k v` not `assoc: m k v`
+- **Higher-order function calls** — when the function arg is named,
+  put it on the key side; the data flows to the value:
+  - `apply str: seq(s)...` — applying `str` to the seq
+  - `reduce f: init coll` — reducing with `f` over `init`/`coll`
+  - `map double: coll` — mapping `double` over `coll`
+- **Inline-defined function for an HOF** — put `_` where the function
+  arg goes; define the function as the block value:
+  ```
+  reduce _ init coll:
+    fn(acc x):
+      ...body...
+  ```
+  This works for any HOF: `map`, `filter`, `reduce`, etc. The block
+  value substitutes at the `_`.
 - Inline: YeS form — `inc(x)` not `(inc x)`
 - Prefer `a.b(c)` over `b(a c)` — dot chain from the receiver
   unless the receiver needs escaping (`{}`, `[]`, `""`, `''`)
 - Scalar `if`: dot-chain the condition before it —
   `cond.if(then else)` not `if(cond then else)`
+- `X OP: Y` at the pair level is sugar for `X OP Y`, for any binary
+  operator. `a +: b` ≡ `a + b`; `(cond) &&: body` ≡ `cond && body`
+  (body only runs if `cond` is truey); `(cond) ||: body` ≡
+  `cond || body` (body only runs if `cond` is falsey). The `&&:`/`||:`
+  forms overlap functionally with `when`/`when-not` but the mechanism
+  is the operator's short-circuit, not a control structure.
 
 ### Control Flow
-- `if <cond>: <then-form> <else-form>` — always needs both forms
-- Use `when` for one-armed conditional (no else)
+- `if <cond>: <then-form> <else-form>` — always needs both forms.
+  **`if` is the default for two-branch conditionals.** Reach for `cond`
+  only when there are 3+ branches — see Common Mistakes.
+- Use `when` for one-armed conditional (no else); `when-not` is the
+  inverted form (`when-not X` ≡ `when X.!`). See Common Mistakes for
+  when to choose `when`/`when-not` over `if`/`cond`.
 - `when+ expr:` — like `when`, but binds `_` to the truey value of `expr`
   inside the body. Use it to test-and-capture in one step:
   `when+ schema.'$ref': say: "-type: $(ref-sym(_))"`
@@ -144,18 +444,40 @@ for that case.
   `only-ref?(s).when(ref-sym(s.'$ref'))` not
   `only-ref?(s).if(ref-sym(s.'$ref') nil)`
 - `cond` returns nil when no clause matches — drop trailing `else: nil`
-- Two consecutive pairs in an `if` block are then and else — no
-  keywords needed when both branches are single pairs:
-  `if cond: \n  say: yes \n  say: no`
-- `then:`/`else:` keys for clarity or multi-form bodies
+- `case` requires an explicit `else:` default arm. Unlike `cond` (returns
+  nil), `case` throws `No matching clause: <value>` if no arm matches.
+  A bare trailing form is parsed as another `key: action` pair, not a
+  default — `else:` is required.
+- `if` accepts three shapes:
+  - **form / form** — two consecutive pairs, no keywords:
+    `if cond: \n  say: yes \n  say: no`
+  - **block / block** — both `then:` and `else:` required; using
+    `then:` forces `else:`
+  - **form / block** — bare then-form followed by an `else:` block.
+    Do NOT use `do:` for the else block — `else:` is the idiomatic
+    keyword (see Common Mistakes).
+- When both branches are simple, prefer the tersest fit:
+  - **Single-line pair**: `if cond: a b` when both forms parse as a
+    single plain scalar — e.g. bare symbols, function calls, ranges:
+    `if v == v2: v recur(v2)`, `if x:odd?: print('o') print('e')`.
+  - **Single-line with `+` escape**: when the first form starts with a
+    YAML syntax char (`'`, `"`, `[`, `{`, etc.), add `+` to the front:
+    `if x:odd?: +'odd' 'even'`, `if found: +match 'none'`.
+  - **Chain form**: `cond.if(a b)` when the condition reads well as a
+    receiver and you're not already in a mapping-pair context:
+    `x:odd?.if('odd' 'even')`.
+  - **Two-pair form** (newlines): when either branch is too long to
+    inline, fall back to `if cond: \n  a-form \n  b-form`.
 - Consider reversing the condition to avoid `then:` — complex branch
   first (no keyword), simple branch as `else:` — often cleaner
 - `else` not `:else` in `cond`
 - `each` over `doseq` for side-effecting iteration
 - `dotimes [_ n]:` — repeat n times ignoring the index; clearer than
   `each [_ (1 .. n)]:` when you don't need the iteration value
-- `loop i 1, acc 0:` — loop with named bindings; use `recur` for
-  tail recursion back to the loop head
+- `loop i 1, acc 0:` — loop with named bindings (no surrounding
+  brackets). Same bracket-free form works for `let`, `each`, `for`,
+  `dotimes`, `when-let`, `if-let`, `with-open`, etc. (any binding
+  form). Use `recur` for tail recursion back to the loop head.
 - `recur` — tail-call back to enclosing `loop` or `defn`; multi-arg
   form: `recur: arg1 arg2` or `recur arg1: arg2`
 - `for` body can be bare scalar — `=>:` not needed
@@ -168,12 +490,22 @@ Chaining is fine for short, obvious pipelines; block form is better
 for anything non-trivial, especially iteration and nested logic.
 
 Avoid over-chaining. A long dot chain on one line is hard to read.
-Aim to keep lines under 50 characters as a rough guide.
+Aim to keep chained lines short — 20-60 columns is the natural
+"square" range. Never exceed 79 columns (see Formatting in Key Rules).
 
 Options when a chain gets long:
 - Use block form — nest the argument as an indented block
 - Assign intermediate results to named variables
 - Split before `.call(` onto continuation lines (but not before `:call`)
+- A YAML plain scalar can be folded onto multiple lines at any
+  whitespace — the value is still a single expression. For readability,
+  put a binary operator like `||` or `&&` at the end of the first line
+  and indent the continuation:
+  ```
+  user =: ENV.RC_USER ||
+    die('set RC_USER (botpassword username)')
+  ```
+  This is a stylistic choice, not a syntactic rule.
 
 Example — chained vs block form for iterating with a nested function:
 
@@ -215,10 +547,11 @@ pairs =: words:frequencies.sort-by(val):reverse
   scalars); `C('a')` also works but is verbose.
 - `%` = `rem` (remainder); `%%` = `mod` — prefer `%`; they differ only
   for negative numbers
-- `.!` for falsey check (`falsey?`) — replaces `zero?` on mod
-  results; YS truth: 0 and empty collections are also falsey.
-  `x.!` combines nil-check and empty-check in one — use it instead
-  of separate `nil?` + `empty?` guards
+- `.!` for falsey check (`falsey?`) — YS truth: 0 and empty
+  collections are also falsey. `x.!` combines nil-check and
+  empty-check in one — use it instead of separate `nil?` + `empty?`
+  guards. For "is this number zero" prefer `:zero?` / `zero?(...)` —
+  see Common Mistakes.
 - Dot chaining for calls with args: `s.replace(/x/ '')`, `s1.anagram?(s2)`
 - Colon chaining for zero-arg calls: `s:lc:frequencies:reverse`
 - `obj.name` (dot without parens) is a **property/key lookup** — NOT
@@ -227,12 +560,35 @@ pairs =: words:frequencies.sort-by(val):reverse
 - `obj.'key'` — quoted property lookup for keys that aren't valid bare
   identifiers (start with `$`, contain `-`, etc.):
   `schema.'$ref'`, `schema.'$defs'` not `schema.get('$ref')`
+- `obj.$var` — dynamic property lookup; the runtime value of `$var` is
+  used as the key. Useful when the key is computed:
+  ```
+  key =: "${typ}token"
+  data: .query.tokens.$key
+  ```
+  Inside a dot chain that starts the value, split the chain with
+  `data: .query.tokens.$key` rather than `=>: data.query.tokens.$key`.
+- Property lookup is nil-safe — `nil.foo` returns `nil` (no NPE).
+  A chain like `data.error.code` yields `nil` if `error` is missing,
+  so you don't need to guard each step. Combine with `when` for
+  presence checks: `when err.code == 'maxlag': ...` works even when
+  `err` itself is `nil`.
 - Special postfix operators are NOT property lookups — they compile
   to explicit function calls and work in string interpolation:
   `.++` = `inc+`, `.--` = `dec+`, `.#` = `count`, `.!` = `falsey?`,
   `.?` = `truey?`, `.$` = `last`, `.@` = `deref`, `.>` = `DBG`,
   `.??` = `boolean`, `.!!` = `not`.
   Example: `$(i.++)` = `inc+(i)`, `$(xs.#)` = `count(xs)`
+- Postfix forms compile to the polymorphic `ys.std/<op>+` variant
+  (`.++` → `inc+`, `.--` → `dec+`, etc.). Prefer them for readability,
+  and especially in argument positions: `m.--.ack(1)` chains cleanly,
+  whereas `ack((m - 1) 1)` needs paren-grouping so `m - 1` doesn't
+  read as two args. In a tight numeric loop where raw speed dominates,
+  fall back to the colon-chain forms `:inc` / `:dec` which call
+  `clojure.core/inc` / `clojure.core/dec` directly.
+- Use `:sqr` for `** 2` and `:cube` for `** 3` — `x:sqr` not `x ** 2`,
+  `x:cube` not `x ** 3`. Works in any position: `1.0 / _:sqr`,
+  `n:cube + 1`, etc.
 - `\(_ * 2)` for inline lambdas — prefer over `fn([x] x * 2)` for
   single-expression bodies.
   Use `fn` only when you need destructuring or multiple args that `_`
@@ -257,8 +613,14 @@ pairs =: words:frequencies.sort-by(val):reverse
 - `grep(P C)` — not in DWIM list but has own arg-swapping; P can be
   a regex (`re-find`), function (`filter`), or value (`=`); chain
   naturally: `coll.grep(regex)`, `coll.grep(fn?)`, `coll.grep(val)`
+- `qr("pat")` — build a regex from a string (with interpolation):
+  `qr("[$chars]")`. Use when `/.../` literals can't help (they don't
+  interpolate). Prefer `qr` over Clojure's `re-pattern`.
 - `starts?(s prefix)` / `ends?(s suffix)` — string prefix/suffix
   tests; dot form: `s.starts?(prefix)`, `s.ends?(suffix)`
+- `a` is YS's alias for `identity` — returns its argument unchanged.
+  Useful as a no-op transform (`map a coll`) or to satisfy a callback
+  signature.
 - Named operator functions — usable as first-class values or via dot
   syntax (e.g. `6.mul(7)`):
   - Arithmetic: `add` `sub` `mul` `div`
@@ -285,19 +647,51 @@ pairs =: words:frequencies.sort-by(val):reverse
   a collection. Combine with `*`: `(map + uc1) * joins * say`
 - `f(coll*)` — splat spreads collection as variadic args: `min(nums*)`
 - `.#` — count/length operator, shorthand for `:count`
-- `:S` — convert to string
+- `:S` — convert to string (alias for `str`)
+- `:V` — convert to vector (alias for `vec`)
+- `:V+` — wrap as vector (alias for `vector`); `x:V+` ≡ `[x]`
+- `:I` — parse string to integer (alias for `parse-long`)
+- `:N` — parse string to number, int or float (handles `'42'` and `'2.1415'`)
 - `_.0`, `_.1` — indexed access on implicit lambda arg `_`
 - `x.(f*)` — shorthand for `x.apply(f)`
-- `a .=: f(b)` — augmented assignment; works for `.`, `*`, `+`, `||`, etc.
+- `x OP=: expr` — augmented assignment, sugar for `x =: x OP expr`.
+  Works for any binary operator: `.=:` (chain into receiver), `+=:`,
+  `*=:`, `||=:`, etc. Example: `nums .=: words().map(N)` replaces
+  `nums` with `nums.words().map(N)`.
 
 ### Values & Data
-- `+` escape works ONLY at the very start of a YAML value plain
-  scalar — it tells YS the rest of the scalar is a single expression.
-  Anywhere else in an expression, `+` is the addition/concatenation
-  operator:
-  - `+[1 2 3]` — escape: vector literal (value starts with `[`)
-  - `+"hello" + "world"` — escape: string concatenation expression
-  - `+[0] + row` — escape: prepend zero to sequence
+- For purely literal collections (no code inside), prefer the
+  data-mode toggle `=::` over `+`-escaped code-mode literals.
+  YAML is good at data; let it do that work:
+  - `a =:: [1, 2, 3]` — flow seq, data mode (preferred for literals)
+  - `a =: +[1 2 3]` — code-mode vector literal (use when the
+    collection mixes in computed values, e.g. `+[0] + row`)
+- **`+` escape** — needed when the first character of a value would
+  otherwise be a YAML syntax character (`[`, `{`, `"`, `'`, `|`, `>`,
+  `!`, `&`, `*`). It forces the entire value to parse as a single plain
+  scalar; YS then strips the `+` and reads the rest as code.
+
+  Two distinct reasons `+` may be needed:
+  1. **YAML-invalid without it.** `key: 'a' 'b'` — YAML sees `'a'` end
+     and `'b'` dangle. `key: +'a' 'b'` makes the whole `+'a' 'b'` a
+     plain scalar.
+  2. **YAML-valid but YS-rejected.** `key: [b c]` — valid YAML (flow
+     sequence value), but YAMLScript **forbids flow collections and
+     block sequences at code-mode value positions by design**. Code
+     mode only needs scalars and block mappings; flow forms are
+     reserved for use as vector/map literals *via* `+`-escape. So
+     `key: +[b c]` is the canonical form.
+
+  **`+` is only needed at the START of a value.** Once the value is a
+  plain scalar expression, flow forms inside it are fine as arguments:
+  `foo([b c])`, `map(double [1 2 3])`, `assoc(m :k [1 2])` all parse
+  without `+`. The brackets are mid-expression, not at the value start.
+
+  `+` works ONLY at the very start of a value plain scalar — anywhere
+  else in an expression, `+` is addition/concatenation:
+  - `+[1 2 3]` — escape: vector literal
+  - `+"hello" + "world"` — escape on leading `"`, then `+` is concat
+  - `+[0] + row` — escape on leading `[`, then `+` is concat
   - `sieve(xs) +[]` — NOT an escape: means `sieve(xs) + []`
     (vector addition, a no-op)
   - Whitespace after `+` is fine — useful for multi-line expressions:
@@ -307,9 +701,18 @@ pairs =: words:frequencies.sort-by(val):reverse
     ```
 - Keyword keys need `:` prefix: `+{:name "Alice", :age 30}`
 - Flow maps need commas: `{a: 1, b: 2}`
+- **Set literals**: write `\{a b c}`, not Clojure's `#{a b c}` (the
+  `#` starts a YAML comment). Use `\{}` for an empty set. `hash-set(...)`
+  also works but is verbose:
+  - `seen =: \{}` — empty set
+  - `s =: \{:a :b :c}` — three-element set
 - `=:` for assignment (replaces `def`/`let`)
 - `x y =: 6 7` for multiple assignment
-- `=>:` when a mapping pair is required but the value is a plain scalar
+- `=>:` only for atoms that can't be split into a pair: bare symbols,
+  numbers, `nil`, keywords, and data-collection literals (`+[1 2 3]`,
+  `+{a: 1}`). For compound expressions (function calls, operator
+  expressions, method chains, ranges), either write as a bare scalar
+  value or restructure into a pair — see Common Mistakes.
 - `? expr : value` — YAML complex key syntax; lets a multi-line
   expression serve as the key of a mapping pair. Useful when a
   pipeline is too long to fit before the `:` of a block pair:
@@ -329,31 +732,89 @@ pairs =: words:frequencies.sort-by(val):reverse
 ### I/O, System & Namespaces
 - `read(path)` / `path:read` — read file contents;
   `write(path content)` — write content to file
-- `say` / `warn` / `err` / `out` — print to stdout/stderr;
-  `warn` and `err` go to stderr; `say` adds newline, `err` does not
+- `say` / `print` / `out` / `warn` / `err` — write to stdout/stderr.
+  `say` adds a newline; the others do not. `warn` and `err` go to
+  stderr; the rest go to stdout. `print` and `out` are synonyms (both
+  are `clojure.core/print` with auto-flush); prefer `print` when it
+  stands alone, `out` when chaining or pairing with `err`.
 - `die(msg)` — print error message to stderr and exit
 - `read-line()` — read a line from stdin
 - `IN` — stdin handle for `read`: `read: IN` instead of
   `slurp: System/in`
 - `trim(s)` — strip leading/trailing whitespace
-- `fs-e` / `fs-f` / `fs-d` — file exists / is-file / is-dir;
-  zero-arg so colon-chain: `path:fs-e`
+- `sleep(n)` / `sleep: n` — pause for `n` seconds. Use the builtin
+  rather than shelling out via `bash-out: "sleep $n"`.
+- `bash-out(cmd)` / `cmd:bash-out` — run a shell command and return
+  stdout as a string. Pair with a `|` block scalar for multi-line
+  scripts; bash continues naturally across newlines after `&&`, `||`,
+  or `|`, so no trailing `\` is needed:
+  ```
+  cmd =: |
+    cd work &&
+      git rm -fq -- '$rel' &&
+      git commit -q -m 'Push $rel' -- '$rel'
+  bash-out: cmd
+  ```
+  When the command is used only once, pass the heredoc directly:
+  `bash-out: |` followed by the indented script.
+- Filesystem operations live in the `fs/` namespace. When a program
+  needs to do anything with the filesystem (test, read metadata, copy,
+  move, remove, etc.), consult https://yamlscript.org/doc/ys-fs/ for
+  the full inventory. Common entries:
+  - predicates: `fs/e` (exists?), `fs/f` (file?), `fs/d` (dir?),
+    `fs/l` (link?), `fs/r`/`fs/w`/`fs/x` (perms), `fs/z` (empty?)
+  - getters: `fs/abs`, `fs/basename`, `fs/dirname`, `fs/cwd`,
+    `fs/ls`, `fs/glob`, `fs/which`, `fs/mtime`
+  - mutators: `fs/cp`, `fs/mv`, `fs/rm`, `fs/rm-r`, `fs/mkdir-p`,
+    `fs/touch`
+  Predicates and getters also have `fs-` aliases interned into
+  `ys::std` (e.g. `fs-e`, `fs-d`) because those came first, before
+  the `fs/` library existed. Mutators are `fs/`-only. Prefer the
+  `fs/` form for new code; both work for predicates.
 - Namespace-qualified calls: `json/load(s)`, `json/dump(data)`,
   `http/get(url)`, `http/post(url opts)` — call with `/` separator
 
 
 ## Anti-Patterns
 
+- Do NOT use `=>:` for compound expressions (function calls, operator
+  expressions, method chains, ranges) — write as bare scalar value
+  or restructure into a pair: `=>: a.b.c` → `a: .b.c`; `=>: a(b c)`
+  → `a: b c`; `=>: 1 .. n` → `1 .. n`
+- Do NOT write `x + 1` or `x - 1` — use `.++` and `.--`: `i.++` not
+  `i + 1`, `(3 * v).++` not `((3 * v) + 1)`, `n.--` not `n - 1`.
+  Works in chains, args, interpolation, anywhere.
+- Do NOT write `x ** 2` or `x ** 3` — use `:sqr` and `:cube`:
+  `_:sqr` not `_ ** 2`, `n:cube` not `n ** 3`
+- Do NOT use `do:` for the else branch of `if` — use `else:`
+- Do NOT use `cond` for two-branch conditionals — `cond` is for 3+
+  branches. One predicate + `else:` is always `if`: `cond: p: a / else: b`
+  → `if p: \n  then: a \n  else: b`. Scan every `cond:` and count
+  non-`else:` clauses; if it's one, rewrite as `if`.
+- Do NOT write lines longer than 79 columns. Use block form,
+  intermediate variables, plain scalar folding, or double-quoted `\`
+  continuation to split (see Formatting in Key Rules).
+- Do NOT add `:int` / `:N` coercion to numeric CLI args in `main`.
+  YS auto-converts numeric-looking CLI args; coercion is dead code.
 - Do NOT use `str()` for string building — use interpolation or `+`
 - Do NOT use `(func arg)` Lisp style — use `func(arg)` or pair form
 - Do NOT use `range` or `rng` when `..` works — write `1 .. 5` not `1..5`
 - Do NOT use `println` — use `say`
 - Do NOT use `:else` — use `else`
+- Do NOT use `:name(args)` — colon chain is zero-arg only. If you
+  need to pass args, use the dot form `.name(args)`. Writing
+  `xs:join(", ")` fails to compile with a confusing error like
+  `Compile error: nth not supported on this type: PersistentArrayMap`.
+  Write `xs.join(", ")` instead. Zero-arg `xs:join` (no parens) is fine.
 - Do NOT use `fn(x): body` inline — invalid YAML (`:` splits the expression)
 - Do NOT use `fn([x] ...)` when `\(...)` with `_` suffices —
   prefer the shorthand for single-expression lambdas
-- Do NOT start an expression with `[`, `{`, `"`, `'` etc. without
-  a `+` prefix — YAML will interpret them as flow sequences/maps/strings
+- Do NOT start a value with `[`, `{`, `"`, `'`, `|`, `>`, `!`, `&`, `*`
+  without a `+` prefix. Either YAML rejects it, or YAML accepts it but
+  YS rejects flow collections / block sequences at code-mode value
+  positions (by design — see Values & Data). Use `+[...]` / `+{...}`
+  for code-mode literals. Note: this only applies at the START of a
+  value — `foo([b c])` is fine because the `[` is mid-expression.
 - Do NOT use `+` mid-expression to "escape" — `+` is only an escape
   at the start of a value plain scalar; elsewhere it means addition.
   `sieve(xs) +[]` is vector addition (a no-op), not an escaped `[]`
@@ -370,9 +831,11 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Do NOT use `str()` for multi-line text — use `:: |` block scalar
   with `$var` interpolation
 - Do NOT use `slurp`/`spit` — use `read`/`write`
-- Do NOT use `.get("key")` for map access — use `.key` property
-  lookup when the key is a simple string, or `.'key'` (quoted) when
-  the key isn't a valid bare identifier (e.g. `schema.'$ref'`)
+- Do NOT use `.get(...)` for index/key access — use property lookup:
+  - `.key` for a simple string/symbol key (`schema.tokens`)
+  - `.'key'` for a non-bare-identifier key (`schema.'$ref'`)
+  - `.$var` when the key is a variable holding the key value at
+    runtime (`v.$i` not `v.get(i)`)
 - Do NOT write `.if(value nil)` — use `.when(value)` instead, which
   returns `value` if the receiver is truey and nil otherwise
 - Do NOT end a `cond` with `else: nil` — `cond` returns nil by
@@ -381,6 +844,8 @@ pairs =: words:frequencies.sort-by(val):reverse
   use `n * '  '`
 - Do NOT wrap interpolated values in `str()` — `"$v"` and `"$(expr)"`
   auto-stringify any value
+- Do NOT use `#` to annotate steps inside a multi-line dot-chain — it
+  terminates the YAML scalar. Use `\"..."` instead.
 
 ## Reference
 
