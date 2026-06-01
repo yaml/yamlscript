@@ -12,7 +12,7 @@
       "name": "ys-skill",
       "source": "./ai/claude/ys-skill",
       "description": "Write idiomatic YAMLScript code",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "author": {
         "name": "Ingy dot Net"
       },

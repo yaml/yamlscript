@@ -59,6 +59,10 @@ they are more powerful and polymorphic (e.g. `reverse` works on strings,
 If performance is a concern, fall back to the specific Clojure function
 for that case.
 
+Most `Math/*` functions are exposed in `ys.std` (`sqrt`, `sqr`,
+`floor`, `abs`, `pow`, etc.). Drop the `Math/` prefix when a YS
+builtin exists; it's more idiomatic.
+
 ## Common Mistakes
 
 Patterns Claude gets wrong most often. Scan these before writing any YS.
@@ -73,13 +77,47 @@ the single most common conditional mistake.
 - `cond: x == 0: a / else: b` → `if x == 0: \n  then: a \n  else: b`
 - `cond: pred: x / else: recur(...)` → `if pred: \n  then: x \n  else: recur(...)`
 
-If the then-branch is a bare form, the shortest form drops both keys:
+`if` can drop the `then:` and `else:` keys when both branches are
+*pair-form* children (mapping entries), because YS reads the two
+children positionally regardless of their keys. The keys can even
+collide:
 
 ```
-if pred:
-  then-form
-  else-form
+if (n % d) == 0:
+  recur: quot(n d) d cnt.++
+  recur: n d.++ cnt
 ```
+
+This also lets the then-branch be a nested `if X:` pair while the
+else-branch is an explicit `else:`:
+
+```
+if n >= 2:
+  if (n % d) == 0:
+    recur: ...
+    recur: ...
+  else: cnt
+```
+
+Bare-scalar branches (plain identifiers, calls, expressions) are
+fragile in this position — YAML parses two bare siblings only in
+specific contexts, and mixing a bare scalar with an `else:` mapping
+entry is invalid YAML. When in doubt, keep `then:` and `else:`
+explicit; only drop them when both branches are pair-form.
+
+When both branches are bare scalars, a trailing `+` on the `if` line
+folds the next two indented lines into one plain scalar that YS reads
+as the remaining positional args of `if`:
+
+```
+if n == 1: +
+  '1'
+  factors(n).join(' x ')
+```
+
+Compiles to `(if (= n 1) "1" (str/join " x " (factors n)))`. Use this
+when both branches are short bare expressions and the symmetry reads
+better than `then:`/`else:` keys.
 
 Inner conditionals nested inside a `cond` clause are usually
 two-branch and should be `if`. Before writing `cond:`, count the
@@ -89,25 +127,52 @@ or more clauses (excluding `else:`) keeps `cond`.
 Scan every `cond:` in the file before finishing — if it has only one
 non-`else:` clause, it's wrong.
 
-### `=>:` is for atoms that can't be split into a pair
+### `=>:` only when no pair form works
 
-Use `=>:` only for values that can't be expressed as a `key: value`
-pair: bare symbols, numbers, `nil`, keywords, and data-collection
-literals (`+[a b 3]`, `+{a: 1}`).
+A YAML mapping context — `defn` body, `do:` block, conditional
+branch block, `loop` body, etc. — requires every line to be a
+`key: value` pair. `=>:` is the fallback key when the expression
+genuinely cannot be written as a pair.
 
-For any compound expression — function call, operator expression,
-method chain, range — either write it as a bare scalar value or
-restructure into a mapping pair by splitting at the first natural
-boundary:
+**Use `=>:` for atomic values** (no other pair form exists):
+- bare identifiers: `=>: x`, `=>: result`
+- bare numeric/literal atoms: `=>: 42`, `=>: nil`, `=>: true`,
+  `=>: :foo`
+- bare interpolated strings: `=>: "$s$check"`
+- bare data-collection literals: `=>: +[1 2 3]`, `=>: +{a: 1}`
 
-- `=>: a.b.c` → `a: .b.c`
-- `=>: a(b c)` → `a: b c`
-- `=>: 1 .. n` → `1 .. n` (bare scalar) or `1 ..: n` (pair)
-- `=>: a + b` → `a + b` (bare scalar) or `a +: b` (pair)
-- `=>: meta.from.split('/wiki/').$` → `meta.from: .split('/wiki/').$`
+**Restructure compound expressions into a pair:**
 
-`=>:` is fine for `=>: x`, `=>: 42`, `=>: nil`, `=>: :foo`,
-`=>: +[1 2 3]`.
+1. **Function call** → fn-call pair `name: args`
+   - `=>: f(a b)` → `f: a b`
+   - `=>: recur(i.++ b nx)` → `recur: i.++ b nx`
+   - `=>: V+(re im)` → `V+: re im`
+2. **Method chain** → chain-pair `receiver: .method(args)`
+   - `=>: a.b(c).d(e)` → `a: .b(c).d(e)`
+   - `=>: row.assoc(w best)` → `row: .assoc(w best)`
+   - `=>: meta.from.split('/wiki/').$` → `meta.from: .split('/wiki/').$`
+3. **Binary operator** → op-pair `lhs OP: rhs`
+   - `=>: a + b` → `a +: b`
+   - `=>: n == psum` → `n ==: psum`
+   - `=>: is-thu || is-wed-leap` → `is-thu ||: is-wed-leap`
+4. **`cond` default arm**: use `else:` not `=>:`
+
+**Drop single-use indirection**: a `result =: expr` whose only use
+is a trailing `=>: result` folds into a single trailing pair:
+- `result =: r:sqr == n; =>: result` → `r:sqr ==: n`
+- `result =: row.conj(s); =>: result` → `row: .conj(s)`
+
+**Colon-chains must convert to dot-chains in chain-pair position** —
+chain-pair only supports a leading `.`:
+- `=>: stack:pop:pop.conj(x)` → `stack: .pop().pop().conj(x)`
+
+**Op-pair / pair-form quirks**:
+- `%:` does not parse (`Invalid symbol '%'`). Use the fn-call pair
+  form `mod: a b` (or `rem: a b`) instead.
+- A pair value cannot begin with a quoted string followed by more
+  args. `format: '%+.4f' x y` fails to parse. Workarounds:
+  - Promote the string into the key: `format '%+.4f': x y`
+  - Force it into the value with `+`: `format: +'%+.4f' x y`
 
 ### Never write `x + 1` or `x - 1` — use `.++` / `.--`
 
@@ -284,10 +349,17 @@ Two args fit fine on one line.
 - Single quotes unless interpolation or escapes needed
 - `"Hello, $name!"` not `str('Hello, ' name '!')`
 - `"Result: $(x * y)"` for expression interpolation
-- `"Now: $now()"` — a bare function or method call interpolates without
-  `$(...)` wrapping. Works for static calls too: `"$System/currentTimeMillis()"`.
-  Use sparingly — prefer it only when it clearly reduces noise; reach
-  for `$(...)` for anything beyond a single call (operators, chains)
+- `"Now: $now()"` for a bare function or method call. The shortened
+  `$ident(args)` form works for plain identifiers (letters, digits,
+  underscore, hyphen) and static calls like
+  `"$System/currentTimeMillis()"`. Prefer it over `$(ident(args))`
+  when the call is a single function or method on a bare name.
+- Interpolation stops parsing the identifier at `?` or `!`, so
+  predicate names break the shortened form: write
+  `"$(all-equal?(xs))"`, not `"$all-equal?(xs)"` (which interpolates
+  only `$all-equal` and leaves `?(xs)` as literal text). Reach for
+  `$(...)` for operators, chains, anything beyond one call, or any
+  identifier containing `?` or `!`.
 - `say: |` with a multi-line block — all lines interpolated and printed
 - `::` (double colon) is sugar for `! ` (mode-toggle tag).
   `a:: b` = `a: ! b` — toggles between code and data mode:
@@ -383,6 +455,9 @@ Two args fit fine on one line.
   Avoids the YAML plain scalar restriction that forbids `: ` inside
   default values written as `\n`-escaped double-quoted strings
 - `defn-` for private helpers
+- Destructuring in parameter lists: `defn score([a b]):` binds `a`
+  and `b` to elements of a pair argument — saves an intermediate
+  `a b =: pair` line. Works for both `defn` and `fn`.
 - `main` with default args for CLI programs. Defaults should be
   values a user could actually type on the command line — strings
   and numbers, not vectors or maps. If `main` needs a collection,
@@ -537,9 +612,20 @@ pairs =: words:frequencies.sort-by(val):reverse
   - `a * b * c` — OK (same operator)
   - `a * b + c` — NOT OK
   - `(a * b) + c` — OK
-- Parentheses are not needed if the full operator expression is
-  in a key or value position: `x =: a * b * c` is fine because
-  `a * b * c` is the entire value
+- A chain of the same comparison operator means variadic — not
+  nested: `a >= b >= c` is `(>= a b c)`, meaning `a ≥ b AND b ≥ c`,
+  not `(a >= b) >= c`. Same for `==`, `<`, `<=`, `>`, `!=`.
+- **Do not parenthesize a binary expression that stands alone as
+  one side of a key/value pair.** The pair itself delimits the
+  expression, so wrapping parens are pure noise:
+  - `(r > 180): r - 360` → `r > 180: r - 360`
+  - `x =: (a * b * c)` → `x =: a * b * c`
+  - `cs =~ /[0-9]/: I(cs)` (already correct — no parens needed)
+
+  This applies to both sides of the pair. Parens are still needed
+  when the expression is *not* standalone — e.g. when it feeds a
+  chain like `(d < 10).if(...)` or groups mixed operators like
+  `(dir == 'w') && (row > 0):`.
 - `..` for inclusive ranges, not `range`
 - `rng(x y)` — use only for char ranges: `rng(\\a \\z)`. For integer
   ranges, always use `..`: `1 .. 5` (forward) or `5 .. 1` (reverse).
@@ -560,14 +646,30 @@ pairs =: words:frequencies.sort-by(val):reverse
 - `obj.'key'` — quoted property lookup for keys that aren't valid bare
   identifiers (start with `$`, contain `-`, etc.):
   `schema.'$ref'`, `schema.'$defs'` not `schema.get('$ref')`
-- `obj.$var` — dynamic property lookup; the runtime value of `$var` is
-  used as the key. Useful when the key is computed:
+- `obj.$var` — dynamic property/index lookup; the runtime value of
+  `$var` is used as the key. Works on maps (`m.$key`) and vectors
+  (`v.$i`). Useful when the key/index is computed:
   ```
   key =: "${typ}token"
-  data: .query.tokens.$key
+  data: .query.tokens.$key   # map lookup
+  word =: words.$idx          # vector index
   ```
-  Inside a dot chain that starts the value, split the chain with
+  Only takes a bare variable — for computed indices use `.nth(expr)`:
+  `v.$(i - 1)` does not work; write `v.nth(i - 1)` instead. Inside a
+  dot chain that starts the value, split with
   `data: .query.tokens.$key` rather than `=>: data.query.tokens.$key`.
+- `obj.N` — literal-index lookup (the property name is the literal
+  number). Works on vectors and strings: `v.0`, `v.12`, `s.3`. Use
+  this for any constant index — `v.nth(N)` is verbose for literals.
+  Inside `\(...)` lambdas, `_.0`, `_.1`, `_.2`, ... index the
+  implicit arg.
+- **Choose the right index form**:
+  - literal index → `v.N` (e.g. `v.0`, `emp.2`)
+  - bare variable → `v.$var` (e.g. `v.$i`, `units.$idx`)
+  - computed expression → `v.nth(expr)` (e.g. `v.nth(i.--)`,
+    `v.nth((row * 4) + c)`, `v.nth(w - wt)`)
+  Never write `.nth(N)` or `.nth(bareVar)` — the dot/dollar forms
+  are tighter.
 - Property lookup is nil-safe — `nil.foo` returns `nil` (no NPE).
   A chain like `data.error.code` yields `nil` if `error` is missing,
   so you don't need to guard each step. Combine with `when` for
@@ -621,6 +723,9 @@ pairs =: words:frequencies.sort-by(val):reverse
 - `a` is YS's alias for `identity` — returns its argument unchanged.
   Useful as a no-op transform (`map a coll`) or to satisfy a callback
   signature.
+- For atoms, use the bangless aliases `swap` and `reset` instead of
+  Clojure's `swap!` and `reset!`. `swap! buf: constantly(b2)` becomes
+  `swap buf: constantly(b2)`; `reset! a: 0` becomes `reset a: 0`.
 - Named operator functions — usable as first-class values or via dot
   syntax (e.g. `6.mul(7)`):
   - Arithmetic: `add` `sub` `mul` `div`
@@ -706,13 +811,32 @@ pairs =: words:frequencies.sort-by(val):reverse
   also works but is verbose:
   - `seen =: \{}` — empty set
   - `s =: \{:a :b :c}` — three-element set
+- **Special float literals**: write `\\Inf`, `\\-Inf`, and `\\NaN` for
+  positive infinity, negative infinity, and NaN. The `\\` escape
+  stands in for `#` (Clojure's `##Inf` syntax), which YAML would
+  otherwise treat as a comment.
+- **Single-character casting functions** in `ys.std`:
+
+  | Fn | Casts to     | Fn | Casts to         |
+  |----|--------------|----|------------------|
+  | B  | Boolean      | M  | Map              |
+  | C  | Character    | N  | Number           |
+  | D  | Atom deref   | O  | Ordered map      |
+  | F  | Float        | S  | Set (not String) |
+  | I  | Integer      | T  | Type-name string |
+  | K  | Keyword      | V  | Vector           |
+  | L  | List         |    |                  |
+
+  `L+`, `M+`, `O+`, `V+` are variadic variants that build the
+  collection from multiple args. Prefer these single-letter forms
+  over `long(...)`, `int(...)`, etc.: `I(sqrt(n))` is idiomatic.
 - `=:` for assignment (replaces `def`/`let`)
 - `x y =: 6 7` for multiple assignment
-- `=>:` only for atoms that can't be split into a pair: bare symbols,
-  numbers, `nil`, keywords, and data-collection literals (`+[1 2 3]`,
-  `+{a: 1}`). For compound expressions (function calls, operator
-  expressions, method chains, ranges), either write as a bare scalar
-  value or restructure into a pair — see Common Mistakes.
+- `=>:` only when no pair form works: bare identifiers, atoms,
+  interpolated strings, data-collection literals (`+[1 2 3]`,
+  `+{a: 1}`). For compound expressions, restructure into a pair —
+  fn-call `f: args`, chain `x: .m(a)`, or op `a +: b`. See Common
+  Mistakes.
 - `? expr : value` — YAML complex key syntax; lets a multi-line
   expression serve as the key of a mapping pair. Useful when a
   pipeline is too long to fit before the `:` of a block pair:
@@ -728,6 +852,14 @@ pairs =: words:frequencies.sort-by(val):reverse
 ### Do Semantics
 - Top-level, `defn`, `fn` bodies have implicit `do` — rarely need `do:` explicitly
 - YS code blocks are ASTs not mappings — duplicate keys are valid
+
+### Eval
+- `eval(s)` / `s:eval` — parse a string as YS source and run it,
+  returning the value of the final expression. Useful when user input
+  must execute as code: in a 24-game task, the player's expression
+  `'(8 - 2) * (7 - 3)':eval` returns `24`. The string is unrestricted
+  YS, not a sandboxed arithmetic subset, so use it only on trusted
+  input.
 
 ### I/O, System & Namespaces
 - `read(path)` / `path:read` — read file contents;
@@ -777,10 +909,10 @@ pairs =: words:frequencies.sort-by(val):reverse
 
 ## Anti-Patterns
 
-- Do NOT use `=>:` for compound expressions (function calls, operator
-  expressions, method chains, ranges) — write as bare scalar value
-  or restructure into a pair: `=>: a.b.c` → `a: .b.c`; `=>: a(b c)`
-  → `a: b c`; `=>: 1 .. n` → `1 .. n`
+- Do NOT use `=>:` for compound expressions — restructure into a
+  pair: `=>: a.b.c` → `a: .b.c`; `=>: f(a b)` → `f: a b`;
+  `=>: a == b` → `a ==: b`. For a `cond` default arm use `else:`,
+  not `=>:`.
 - Do NOT write `x + 1` or `x - 1` — use `.++` and `.--`: `i.++` not
   `i + 1`, `(3 * v).++` not `((3 * v) + 1)`, `n.--` not `n - 1`.
   Works in chains, args, interpolation, anywhere.
@@ -834,8 +966,12 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Do NOT use `.get(...)` for index/key access — use property lookup:
   - `.key` for a simple string/symbol key (`schema.tokens`)
   - `.'key'` for a non-bare-identifier key (`schema.'$ref'`)
-  - `.$var` when the key is a variable holding the key value at
+  - `.N` for a literal numeric index (`v.0`, `emp.2`)
+  - `.$var` when the index/key is a variable holding the value at
     runtime (`v.$i` not `v.get(i)`)
+- Do NOT write `.nth(N)` or `.nth(bareVar)` — use `v.N` for literal
+  indices and `v.$var` for bare-variable indices. Reserve `.nth(...)`
+  for computed expressions (`v.nth(i.--)`, `v.nth((r * 4) + c)`).
 - Do NOT write `.if(value nil)` — use `.when(value)` instead, which
   returns `value` if the receiver is truey and nil otherwise
 - Do NOT end a `cond` with `else: nil` — `cond` returns nil by
