@@ -237,6 +237,28 @@ defn M(n):
   if n:zero?: 0 (n - F(M(n.--)))
 ```
 
+### No reserved symbols in YS or Clojure
+
+Any symbol can be used as a local binding. Names that shadow stdlib
+functions (`next`, `count`, `key`, `name`, `val`, `type`, `class`,
+`first`, `last`, `rest`, `map`, `line`, `done`, etc.) are fine. Don't
+invent abbreviations like `nxt`, `cnt`, `k`, or `done?` just to avoid
+the stdlib name.
+
+```
+# correct
+next =: next-board(b)
+when next: recur(next)
+
+# wrong reaching for `nxt` to avoid shadowing `next`
+nxt =: next-board(b)
+when nxt: recur(nxt)
+```
+
+Pick the clearest name from the domain. The only reason to avoid a
+particular symbol in a scope is if you need to use the original value
+in that same scope.
+
 ## Style Defaults
 
 The choices below have no single right answer in YAMLScript. The skill
@@ -344,6 +366,8 @@ Two args fit fine on one line.
             &titles=Rosetta_Code&format=json"
     ```
   - **Block scalars** (`|`, `>`): for multi-line literal text
+- **End the file with exactly one newline.** No trailing blank line.
+  The last byte should be one `\n` after the last code line, not two.
 
 ### Strings
 - Single quotes unless interpolation or escapes needed
