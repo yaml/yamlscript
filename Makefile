@@ -172,8 +172,8 @@ endif
 
 release-check:
 ifndef YS_RELEASE_NO_CHECK
-ifneq (v0,$(shell git rev-parse --abbrev-ref HEAD))
-	$(error Must be on branch 'v0' to release)
+ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
+	$(error Must be on branch 'main' to release)
 endif
 ifeq (,$(wildcard $(HOME)/.yamlscript-secrets.yaml))
 	$(error YS release requires $(SECRETS) file)

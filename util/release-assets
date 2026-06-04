@@ -79,7 +79,7 @@ setup() {
     YS_GH_USER=$(ys -l ~/.yamlscript-secrets.yaml -e '.github.user:say')
   [[ ${YS_GH_TOKEN-} ]] ||
     YS_GH_TOKEN=$(ys -l ~/.yamlscript-secrets.yaml -e '.github.token:say')
-  YS_GH_TARGET=v0
+  YS_GH_TARGET=main
 
   [[ $YS_GH_USER && $YS_GH_TOKEN ]] ||
     die "Error: YS_GH_USER and YS_GH_TOKEN must be set in the environment."
