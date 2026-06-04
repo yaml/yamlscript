@@ -1,0 +1,98 @@
+#!/usr/bin/env ys-0
+
+# ys-lint - flag YAMLScript surface-form mistakes the compiler can't see.
+#
+# Many idiomatic-YS rules concern the source form, not the AST. By the
+# time the program parses, `v.nth(0)` and `v.0` are the same node, so
+# the only place to enforce surface style is at the text level.
+#
+# Usage:
+#   ys-lint FILE ...         # lints the given .ys files
+#
+# Exit: 0 clean, 1 issues found, 2 invocation error.
+
+NTH-LIT-RE =: /(\w[\w-]*)\.nth\(\s*(\d+)\s*\)/
+NTH-VAR-RE =: /(\w[\w-]*)\.nth\(\s*([A-Za-z_][\w-]*)\s*\)/
+PLUS-RE =: /([A-Za-z_][\w-]*)\s+\+\s+1(?![\d.])/
+MINUS-RE =: /([A-Za-z_][\w-]*)\s+-\s+1(?![\d.])/
+THEN-NIL-RE =: /\bthen:\s*nil\s*$/
+ELSE-NIL-RE =: /\belse:\s*nil\s*$/
+COMMENT-RE =: /^\s*#/
+
+THEN-NIL-MSG =: 'then: nil -> use when'
+ELSE-NIL-MSG =: 'else: nil -> use when-not'
+
+defn main(*files):
+  when files.!:
+    err: "Usage: ys-lint FILE ...\n"
+    exit: 2
+  total =:
+    reduce add: 0 files.map(lint-file)
+  if total:zero?:
+    err: "ys-lint: clean ($(files.#) file(s))\n"
+    else:
+      err: "\nys-lint: $total issue(s)\n"
+      exit: 1
+
+defn- lint-file(file):
+  lines =: file:read:lines:V
+  loop i 0, total 0:
+    if i < lines.#:
+      recur: i.++ (total + lint-line(file i.++ lines.$i))
+      else: total
+
+defn- lint-line(file lineno orig):
+  long-n =: check-long(file lineno orig)
+  if orig !~ COMMENT-RE:
+    long-n +: check-patterns(file lineno strip(orig))
+    else: long-n
+
+defn- check-long(file lineno orig):
+  if orig.# > 79:
+    then:
+      report: file lineno 'long-line' "$(orig.#) cols, wrap to <=79"
+      =>: 1
+    else: 0
+
+defn- strip(s):
+  s.replace(/\\"[^"]*"/)
+    .replace(/"(?:\\.|[^"\\])*"/)
+    .replace(/'[^']*'/)
+    .replace(/\s#.*$/)
+
+defn- check-patterns(file lineno code):
+  add:
+    file.count-matches(lineno code 'nth-literal' NTH-LIT-RE fmt-nth-lit)
+    file.count-matches(lineno code 'nth-bare-var' NTH-VAR-RE fmt-nth-var)
+    file.count-matches(lineno code 'plus-1' PLUS-RE fmt-plus)
+    file.count-matches(lineno code 'minus-1' MINUS-RE fmt-minus)
+    file.check-once(lineno code 'then-nil' THEN-NIL-RE THEN-NIL-MSG)
+    file.check-once(lineno code 'else-nil' ELSE-NIL-RE ELSE-NIL-MSG)
+
+defn- count-matches(file lineno code rule re fmt):
+  matches =: re-seq(re code)
+  each m matches:
+    report: file lineno rule fmt(m)
+  count: matches
+
+defn- check-once(file lineno code rule re msg):
+  if code =~ re:
+    then:
+      report: file lineno rule msg
+      =>: 1
+    else: 0
+
+defn- fmt-nth-lit(m):
+  format '%s.nth(%s) -> %s.%s': m.1 m.2 m.1 m.2
+
+defn- fmt-nth-var(m):
+  format '%s.nth(%s) -> %s.$%s': m.1 m.2 m.1 m.2
+
+defn- fmt-plus(m):
+  format '%s + 1 -> %s.++': m.1 m.1
+
+defn- fmt-minus(m):
+  format '%s - 1 -> %s.--': m.1 m.1
+
+defn- report(file lineno rule msg):
+  say: "$file:$lineno: [$rule] $msg"

@@ -44,6 +44,26 @@ support, and docs:
    $YS -c - <<<'!ys-0 ...'
    ```
 4. **Iterate** until the output is correct and idiomatic
+5. **Lint the source** with the `ys-lint.ys` script that ships next to this
+   SKILL.md (same skill directory). Run it against every `.ys` file you
+   wrote or edited:
+   ```bash
+   /path/to/skill/ys-lint.ys FILE...
+   ```
+   `ys-lint.ys` flags *possible* surface-form mistakes the compiler can't
+   see because they vanish at the AST stage: `.nth(N)` vs `.N`,
+   `.nth(var)` vs `.$var`, `x + 1` vs `.++`, `x - 1` vs `.--`,
+   `then: nil` / `else: nil` vs `when` / `when-not`, lines over 79 cols.
+
+   The linter matches against source text with regex, so every hit is a
+   *candidate*, not a verdict. False positives are expected: a long line
+   may be a literal task string the program can't shorten; an `x - 1`
+   inside a generated string isn't a `.--` candidate; an identifier that
+   happens to look like a pattern may not be one. Inspect every reported
+   line, fix the real mistakes, and explicitly justify each hit you
+   treat as a false positive. This step is required: the working program
+   isn't done until you have walked every lint hit and either fixed it
+   or accepted it with reason.
 
 ## Program Tag
 
@@ -188,6 +208,27 @@ positions, return values, loop bodies, string interpolation:
 `.++` and `.--` compile to `inc+` / `dec+` (polymorphic). This is the
 single most-forgotten rule — scan every `+ 1` and `- 1` before
 finishing.
+
+### Never write `.nth(N)` or `.nth(bareVar)` — use `.N` / `.$var`
+
+Index access has terse dot-forms that should be preferred over the
+explicit `.nth(...)` call:
+
+- `v.nth(0)` → `v.0`           (literal integer index)
+- `v.nth(12)` → `v.12`
+- `s.nth(0)` → `s.0`           (works on strings too)
+- `parts.nth(2)` → `parts.2`
+- `v.nth(i)` → `v.$i`          (bare variable index)
+- `v.nth(idx)` → `v.$idx`
+- `m.nth(ip)` → `m.$ip`
+
+`.nth(expr)` is only correct when the index is a **computed
+expression** — e.g. `v.nth(i.--)`, `v.nth((row * 4) + c)`,
+`v.nth(i + g)`. The `.$var` form takes a single bare variable; it
+does not accept compound expressions.
+
+Scan every `.nth(` in the file before finishing — if the argument is a
+literal integer or a bare variable, rewrite to the dot/dollar form.
 
 ### Use specific predicates over generic `.!` for numeric tests
 
