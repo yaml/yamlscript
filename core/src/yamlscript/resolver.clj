@@ -79,7 +79,9 @@
   resolve-bare-sequence
   resolve-bare-scalar)
 
-(defn resolve-node [node mode]
+(defn resolve-node
+  "Resolve one composed node using the requested YAMLScript mode."
+  [node mode]
   (case mode
     :bare (resolve-bare-node node)
     :data (resolve-data-node node)
@@ -100,7 +102,9 @@
 ;; ----------------------------------------------------------------------------
 ;; Generic helpers:
 ;; ----------------------------------------------------------------------------
-(defn node-kind [node]
+(defn node-kind
+  "Return the broad YAML node kind for a composed node."
+  [node]
   (condf node
     :%  :map
     :%% :map
@@ -118,7 +122,9 @@
 (def re-call-tag (re/re #"(?::?(?:$fsym|$ysym)\*?)+:?"))
 #_(re-matches re-call-tag ":bar:zoo")
 
-(defn check-double-colon-with-tag [key val]
+(defn check-double-colon-with-tag
+  "Move a trailing double-colon mode marker onto the value tag."
+  [key val]
   (let [key-text (:= key)
         val-tag (:! val)
         [key val] (if (and
@@ -153,7 +159,9 @@
                "Quote the key if you meant it as a string literal."))
         [key val]))))
 
-(defn check-mode-swap [key val]
+(defn check-mode-swap
+  "Detect data/code mode swaps encoded in mapping keys."
+  [key val]
   (let [[key val] (check-double-colon-with-tag key val)
         key-text (:= key)]
     (if (and key-text (re-find #":$" key-text))
@@ -167,7 +175,9 @@
             [key val])))
       [key val])))
 
-(defn check-yaml-core-tag [tag value]
+(defn check-yaml-core-tag
+  "Validate an explicit YAML core tag against a scalar value."
+  [tag value]
   (case tag
     :str :str
     :int (if (re-matches re-int value) :int :ERR)
@@ -178,7 +188,9 @@
     :seq :seq
     nil))
 
-(defn resolve-plain-scalar [node]
+(defn resolve-plain-scalar
+  "Infer the YAML core scalar type for an untagged plain scalar."
+  [node]
   (let [val (:= node)]
     (condp re-matches val
       re-int :int
@@ -189,7 +201,9 @@
       re-keyword :key
       :str)))
 
-(defn tagp [tag]
+(defn tagp
+  "Format an internal tag name for human-facing diagnostics."
+  [tag]
   (when tag
     (str "!" (str/replace tag #"^tag:yaml.org,2002:" "!"))))
 
@@ -197,24 +211,34 @@
 ;; ----------------------------------------------------------------------------
 ;; Taggers for code mode pairs:
 ;; ----------------------------------------------------------------------------
-(defn tag-str [[key val]]
+(defn tag-str
+  "Recognize the code-mode string-literal pair form."
+  [[key val]]
   (when-lets [str (or (:xstr key) (:str key))
               _ (= "" (:expr val))]
     [{:str str} nil]))
 
-(defn tag-fn [[{key :expr} val]]
+(defn tag-fn
+  "Recognize a code-mode anonymous fn pair key."
+  [[{key :expr} val]]
   (when (and key (re-matches re/afnk key))
     [{:fn key} val]))
 
-(defn tag-def [[{key :expr} val]]
+(defn tag-def
+  "Recognize a code-mode definition pair key."
+  [[{key :expr} val]]
   (when (and key (re-matches re/defk key))
     [{:def key} val]))
 
-(defn tag-defn [[{key :expr} val]]
+(defn tag-defn
+  "Recognize a code-mode defn pair key."
+  [[{key :expr} val]]
   (when (and key (re-matches re/dfnk key))
     [{:defn key} val]))
 
-(defn tag-fmap [[key val]]
+(defn tag-fmap
+  "Recognize a code-mode mapping whose value is a form map."
+  [[key val]]
   (when-lets [key-str (:expr key)
               _ (or
                   (re-find #" +%$" key-str)
@@ -224,7 +248,9 @@
               val (set/rename-keys val {:xmap :fmap})]
     [key val]))
 
-(defn tag-form [[key val]]
+(defn tag-form
+  "Recognize a code-mode scalar key that represents a whole form."
+  [[key val]]
   (when-lets [_ (contains? key :expr)
               _ (some val [:expr :str :xstr :xmap])]
     (let [key (if (re-find #" +\|$" (:expr key))
@@ -237,7 +263,9 @@
 ;; Dispatchers for code mode:
 ;; ----------------------------------------------------------------------------
 
-(defn resolve-code-pair [key val]
+(defn resolve-code-pair
+  "Resolve one mapping pair while in code mode."
+  [key val]
   (let [; assert key is scalar
         [key val] (check-mode-swap key val)
         pair [(resolve-code-node key)
@@ -251,7 +279,9 @@
        tag-form
        identity) pair)))
 
-(defn resolve-code-mapping [node]
+(defn resolve-code-mapping
+  "Resolve a YAML mapping as a code-mode expression mapping."
+  [node]
   (when (:%% node)
     (die "Flow mappings not allowed in code mode"))
   (let [anchor (:& node)
@@ -266,11 +296,15 @@
       {:defn [key val]}
       node)))
 
-(defn resolve-code-sequence [_]
+(defn resolve-code-sequence
+  "Reject plain YAML sequences in code mode."
+  [_]
   (die "Sequences (block and flow) not allowed in code mode"))
 
 (def esc #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
-(defn resolve-code-scalar [node type style]
+(defn resolve-code-scalar
+  "Resolve a scalar as a code-mode expression or string."
+  [node type style]
   (if type
     (set/rename-keys node {style type})
     (let [val (style node)]
@@ -286,7 +320,9 @@
         :> (die "Folded scalars not allowed in code mode")
         ,  (die "Scalar has unknown style")))))
 
-(defn resolve-code-alias [node]
+(defn resolve-code-alias
+  "Resolve an alias reference while in code mode."
+  [node]
   (set/rename-keys node {:* :Ali}))
 
 (defn resolve-code-node
@@ -366,7 +402,9 @@
 ;; Dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
 
-(defn resolve-data-mapping [node]
+(defn resolve-data-mapping
+  "Resolve a YAML mapping while preserving data-mode shape."
+  [node]
   (let [nodes (or (:% node) (:%% node))
         merge (some #(re-matches #"<<\s*:?" %1)
                 (remove nil?  (map := (keys (apply hash-map nodes)))))
@@ -398,7 +436,9 @@
         mapping (if merge (assoc mapping :! "+merge") mapping)]
     mapping))
 
-(defn resolve-data-sequence [node]
+(defn resolve-data-sequence
+  "Resolve a YAML sequence while preserving data-mode shape."
+  [node]
   (let [sequence
         {:seq (map resolve-data-node
                 (or (:- node) (:-- node)))}]
@@ -406,10 +446,14 @@
       (assoc sequence :& anchor)
       sequence)))
 
-(defn resolve-data-scalar [node type style]
+(defn resolve-data-scalar
+  "Resolve a scalar according to data-mode YAML typing rules."
+  [node type style]
   (set/rename-keys node {style type}))
 
-(defn resolve-data-alias [node]
+(defn resolve-data-alias
+  "Resolve an alias reference while in data mode."
+  [node]
   (set/rename-keys node {:* :Ali}))
 
 (defn resolve-data-node
@@ -478,7 +522,9 @@
       :else (die "Invalid tag for data mode node: " (tagp tag)))))
 
 ;; XXX Replace this with assignment in data mode
-(defn resolve-data-node-top [node]
+(defn resolve-data-node-top
+  "Resolve the top data-mode node with assignment compatibility."
+  [node]
   (if-lets [xmap (or (:% node) (:%% node))
             key-str (get-in xmap [0 :=])
             _ (some #{":" "=>"} [key-str])
@@ -500,7 +546,9 @@
 ;; ----------------------------------------------------------------------------
 ;; Dispatchers for bare mode:
 ;; ----------------------------------------------------------------------------
-(defn resolve-bare-mapping [node]
+(defn resolve-bare-mapping
+  "Resolve a mapping as ordinary YAML without YS code behavior."
+  [node]
   (let [nodes (or (:% node) (:%% node))
         nodes2 (map-indexed
                  (fn [index item]
@@ -517,7 +565,9 @@
         mapping (if merge (assoc mapping :! "+merge") mapping)]
     mapping))
 
-(defn resolve-bare-sequence [node]
+(defn resolve-bare-sequence
+  "Resolve a sequence as ordinary YAML without YS code behavior."
+  [node]
   (let [sequence
         {:seq (map resolve-bare-node
                 (or (:- node) (:-- node)))}]
@@ -525,10 +575,14 @@
       (assoc sequence :& anchor)
       sequence)))
 
-(defn resolve-bare-scalar [node type style]
+(defn resolve-bare-scalar
+  "Resolve a scalar as ordinary YAML without YS code behavior."
+  [node type style]
   (set/rename-keys node {style type}))
 
-(defn resolve-bare-alias [node]
+(defn resolve-bare-alias
+  "Resolve an alias reference while in bare YAML mode."
+  [node]
   (set/rename-keys node {:* :ali}))
 
 (defn resolve-bare-node

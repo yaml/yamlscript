@@ -111,7 +111,8 @@
                     "yamlscript/v0/data" (mode "data")
                     "yamlscript/v0/code" (mode "code")
                     (die "Invalid tag: '!" ys-tag "'\n"
-                      "First ys tag must be one of these: 'ys-0', 'ys-0:', 'YS-v0', 'YS-v0:'"))
+                      "First ys tag must be one of these: "
+                      "'ys-0', 'ys-0:', 'YS-v0', 'YS-v0:'"))
                   ;; Subsequent ys tags must be one of these:
                   (case ys-tag
                     "ys" (mode "code")
@@ -141,7 +142,9 @@
                 node)]
      [node ctx])))
 
-(defn compose-mapping [events]
+(defn compose-mapping
+  "Compose a YAML mapping event range into a mapping node."
+  [events]
   (let [[event & events] events
         {anchor :& tag :! flow :flow} event
         {start :<} (meta event)
@@ -164,7 +167,9 @@
                 [val events] (compose-events events)]
             (recur (conj coll key val) events)))))))
 
-(defn compose-sequence [events]
+(defn compose-sequence
+  "Compose a YAML sequence event range into a sequence node."
+  [events]
   (let [[event & events] events
         {anchor :& tag :! flow :flow} event
         {start :<} (meta event)
@@ -186,7 +191,9 @@
           (let [[elem events] (compose-events events)]
             (recur (conj coll elem) events)))))))
 
-(defn compose-scalar [events]
+(defn compose-scalar
+  "Compose a YAML scalar event into a scalar node with style metadata."
+  [events]
   (let [[event & events] events
         {anchor :& tag :!} event
         key (some #{:= :$ :' :| :>} (keys event))
@@ -198,14 +205,18 @@
         node (with-meta node (meta event))]
     [node events]))
 
-(defn compose-alias [events]
+(defn compose-alias
+  "Compose a YAML alias event into an alias node."
+  [events]
   (let [[event & events] events
         {value :*} event
         node {:* value}
         node (with-meta node (meta event))]
     [node events]))
 
-(defn compose-events [events]
+(defn compose-events
+  "Dispatch the next parser event to the matching compose function."
+  [events]
   (case (:+ (first events))
     "+MAP" (compose-mapping events)
     "+SEQ" (compose-sequence events)

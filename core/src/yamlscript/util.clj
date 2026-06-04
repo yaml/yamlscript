@@ -4,18 +4,18 @@
 (ns yamlscript.util)
 
 (defn die
-  "Throw a string as an exception"
+  "Throw a YAMLScript exception with a normalized trailing newline."
   ([] (throw (Exception. "Died")))
   ([msg] (throw (Exception. (str msg "\n"))))
   ([x & xs] (die (apply str x xs))))
 
 (defmacro condf
-  "Like condp but with a function"
+  "Like condp, but each clause predicate is called with the same value."
   [x & clauses]
   `(condp (fn [f# x#] (f# x#)) ~x ~@clauses))
 
 (defmacro cond-lets
-  "Like cond-let but with more than one binding"
+  "Try groups of let-style bindings and run the first successful body."
   {:style/indent [0]}
   [& clauses]
   (when clauses
@@ -26,19 +26,19 @@
        (cond-lets ~@(nnext clauses)))))
 
 (defn eprint
-  "Print to stderr"
+  "Print values to stderr without adding a newline."
   [& xs]
   (binding [*out* *err*]
     (apply print xs)))
 
 (defn eprintln
-  "Print to stderr with a newline"
+  "Print values to stderr with a newline."
   [& xs]
   (binding [*out* *err*]
     (apply println xs)))
 
 (defmacro if-lets
-  "Like if-let but with more than one binding"
+  "Like if-let, but require every binding/test pair to succeed."
   ([bindings then]
    `(if-lets ~bindings ~then nil))
   ([bindings then else]
@@ -49,7 +49,7 @@
      then)))
 
 (defn macro?
-  "Check if a symbol is a macro"
+  "Return true when a symbol resolves to a macro var."
   [x]
   (and
     (symbol? x)
@@ -57,7 +57,7 @@
       (:macro (meta x)))))
 
 (defn type-name
-  "Get the name of a type"
+  "Return a readable type name for diagnostics."
   [x]
   (condf x
     map? "Map"
@@ -68,7 +68,7 @@
     (type x)))
 
 (defmacro when-lets
-  "Like when-let but with more than one binding"
+  "Like when-let, but require every binding/test pair to succeed."
   ([bindings & body]
    (if (seq bindings)
      `(when-let [~(first bindings) ~(second bindings)]

@@ -13,7 +13,9 @@
 
 (def width 50)
 
-(defn YSC0 [ys-str]
+(defn YSC0
+  "Compile YAMLScript source for interactive debugging."
+  [ys-str]
   (let [compile (var-get (resolve 'yamlscript.compiler/compile))
         pretty-format (var-get (resolve 'yamlscript.compiler/pretty-format))]
     (binding [*ns* (find-ns 'yamlscript.compiler)]
@@ -27,13 +29,17 @@
                      (str/trim-newline)))]
         code))))
 
-(defn YSC [ys-str]
+(defn YSC
+  "Compile YAMLScript source for interactive debugging."
+  [ys-str]
   (let [code (if (re-find #"^\n*!(?:yamlscript|YS)" ys-str)
                ys-str
                (str "!ys-0\n" ys-str))]
     (YSC0 code)))
 
-(defn fmt [value]
+(defn fmt
+  "Format a debug value with readable width-limited output."
+  [value]
   (cond
     (and (string? value)
       (re-find #"\n." value) (> (count (pr-str value)) width))
@@ -47,45 +53,61 @@
                              value))))
             (pr-str value))))
 
-(defn- dump [values]
+(defn- dump
+  "Print a group of debug values and return the last one."
+  [values]
   (let [parts (map fmt values)
         text (str/join "\n" parts)]
     (if (re-find #"\n" text)
       (str ">>>\n" text "\n<<<\n")
       (str ">>>" text "<<<\n"))))
 
-(defn PPP [& values]
+(defn PPP
+  "Print debugging values and return the final value."
+  [& values]
   (print (dump values))
   (flush)
   (last values))
 
-(defn DBG [& values]
+(defn DBG
+  "Print debugging values and return the final value."
+  [& values]
   (binding [*out* *err*]
     (print (dump values))
     (flush))
   (last values))
 
-(defn WWW [& values]
+(defn WWW
+  "Print debugging values and return the final value."
+  [& values]
   (apply DBG values))
 
-(defn XXX [& values]
+(defn XXX
+  "Print debugging values and return the final value."
+  [& values]
   (apply DBG values)
   (util/die ""))
 
-(defn YYY [& values]
+(defn YYY
+  "Print debugging values and return the final value."
+  [& values]
   (print (dump values))
   (flush)
   (last values))
 
 ; TODO Turn on stack trace printing
-(defn ZZZ [& values]
+(defn ZZZ
+  "Print debugging values and return the final value."
+  [& values]
   (apply DBG values)
   (swap! global/opts assoc :stack-trace true)
   (util/die ""))
 
 (def ttt-ctr (atom 0))
 
-(defn remove-ttt [s]
+(defn remove-ttt
+  "Remove nested TTT tracing forms from printed source."
+  [s]
   (let [tokens (re-seq #"(?:\".*?\"|\(TTT |[()]|[^()\"]+)" s)
         list
         (loop [tokens tokens list [] level 0 levels '()]
@@ -106,6 +128,7 @@
     (str/join "" (remove nil? list))))
 
 (defn ttt-fmt
+  "Format a traced form and its result for TTT output."
   ([xs width]
    (str/join ", "
      (for [x xs]
@@ -170,7 +193,9 @@
 
 (def skip-trace (concat ys-macros clj-specials))
 
-(defmacro TTT [form]
+(defmacro TTT
+  "Trace a form at runtime while preserving its value."
+  [form]
   (let [[fun & args] form
         name (when (and
                      (not (util/macro? fun))

@@ -57,7 +57,9 @@
         events (cons first-event rest-events)]
     (remove nil? events)))
 
-(defn parse-test-case [yaml-string]
+(defn parse-test-case
+  "Parse YAML and drop document boundary events for tests."
+  [yaml-string]
   (->> yaml-string
     parse
     (remove (fn [ev] (= "DOC" (subs (:+ ev) 1))))))
@@ -65,7 +67,9 @@
 ;;
 ;; Functions to turn Java event objects into Clojure objects
 ;;
-(defn event-obj [^Event event]
+(defn event-obj
+  "Convert a SnakeYAML event into a normalized event map."
+  [^Event event]
   (let [class (class event)
         name (condp = class
                DocumentStartEvent "+DOC"
@@ -90,7 +94,9 @@
         (. ^Mark (.orElse end nil) getColumn)
         (. ^Mark (.orElse end nil) getIndex)]})))
 
-(defn event-start [event]
+(defn event-start
+  "Add start-event anchor, tag, flow, and source metadata."
+  [event]
   (let [obj (event-obj event)
         doc-event? (some #(instance? % event)
                      [DocumentStartEvent DocumentEndEvent])
@@ -114,13 +120,27 @@
                 (assoc obj :! (subs tag 1))))]
     obj))
 
-(defn doc-start [^DocumentStartEvent event] (event-start event))
-(defn doc-end   [^DocumentEndEvent event]   (event-obj event))
-(defn map-start [^MappingStartEvent event]  (event-start event))
-(defn map-end   [^MappingEndEvent event]    (event-obj event))
-(defn seq-start [^SequenceStartEvent event] (event-start event))
-(defn seq-end   [^SequenceEndEvent event]   (event-obj event))
-(defn scalar-val [^ScalarEvent event]
+(defn doc-start
+  "Normalize a YAML document-start event."
+  [^DocumentStartEvent event] (event-start event))
+(defn doc-end
+  "Normalize a YAML document-end event."
+  [^DocumentEndEvent event]   (event-obj event))
+(defn map-start
+  "Normalize a YAML mapping-start event."
+  [^MappingStartEvent event]  (event-start event))
+(defn map-end
+  "Normalize a YAML mapping-end event."
+  [^MappingEndEvent event]    (event-obj event))
+(defn seq-start
+  "Normalize a YAML sequence-start event."
+  [^SequenceStartEvent event] (event-start event))
+(defn seq-end
+  "Normalize a YAML sequence-end event."
+  [^SequenceEndEvent event]   (event-obj event))
+(defn scalar-val
+  "Normalize a YAML scalar event and preserve its scalar style."
+  [^ScalarEvent event]
   (let [obj (event-start event)
         style (.. event (getScalarStyle) (toString))
         style (condp = style
@@ -129,11 +149,16 @@
                 style)
         style (keyword style)]
     (assoc obj style (. event getValue))))
-(defn alias-val [^AliasEvent event]
+(defn alias-val
+  "Normalize a YAML alias event."
+  [^AliasEvent event]
   (let [obj (event-obj event)]
     (assoc obj :* (str (. event getAlias)))))
 
-(defmulti  ys-event class)
+(defmulti  ys-event
+  "Dispatch SnakeYAML event objects to normalized event maps."
+  class)
+
 (defmethod ys-event DocumentStartEvent [event] (doc-start  event))
 (defmethod ys-event DocumentEndEvent   [event] (doc-end    event))
 (defmethod ys-event MappingStartEvent  [event] (map-start  event))

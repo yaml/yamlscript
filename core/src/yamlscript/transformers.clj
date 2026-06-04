@@ -1,6 +1,9 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.transformers namespace contains named rewrites for special
+;; forms. yamlscript.transformer finds these by `transform_<symbol>` name.
+
 (ns yamlscript.transformers
   (:require
    [yamlscript.ast :refer [Sym Lst Vec Key]]
@@ -15,7 +18,9 @@
 ;; cond and case
 ;;-----------------------------------------------------------------------------
 
-(defn transform-with-else [lhs rhs subst]
+(defn transform-with-else
+  "Normalize trailing else markers in cond-like form maps."
+  [lhs rhs subst]
   (when-lets [fmap (:fmap rhs)
               len (count fmap)
               _ (>= len 2)
@@ -28,16 +33,24 @@
                     (fn [_] subst))]
     [lhs rhs]))
 
-(defn transform_cond [lhs rhs]
+(defn transform_cond
+  "Transform YAMLScript cond syntax into Clojure cond syntax."
+  [lhs rhs]
   (transform-with-else lhs rhs (Key "else")))
 
-(defn transform_condf [lhs rhs]
+(defn transform_condf
+  "Transform YAMLScript condf syntax into Clojure condf syntax."
+  [lhs rhs]
   (transform-with-else lhs rhs (Sym "=>")))
 
-(defn transform_condp [lhs rhs]
+(defn transform_condp
+  "Transform YAMLScript condp syntax into Clojure condp syntax."
+  [lhs rhs]
   (transform-with-else lhs rhs (Sym "=>")))
 
-(defn transform_case [lhs rhs]
+(defn transform_case
+  "Transform YAMLScript case syntax into Clojure case syntax."
+  [lhs rhs]
   (transform-with-else lhs rhs (Sym "=>")))
 
 ;;-----------------------------------------------------------------------------
@@ -51,7 +64,9 @@ defn x():
   a b =: c d")
   )
 
-(defn transform_def [lhs rhs]
+(defn transform_def
+  "Normalize definition forms, including operator update syntax."
+  [lhs rhs]
   (cond
     (= 2 (count lhs))
     (let [rhs (if (and (vector? rhs) (> (count rhs) 1))
@@ -72,7 +87,9 @@ defn x():
       [lhs rhs])
     :else [lhs rhs]))
 
-(defn transform_defn [lhs rhs]
+(defn transform_defn
+  "Convert multi-body defn shorthand into explicit arities."
+  [lhs rhs]
   (when-lets [lhs (remove nil? lhs)
               lhs (vec lhs)
               _ (= 2 (count lhs))
@@ -89,7 +106,9 @@ defn x():
               rhs {:xmap xmap}]
     [lhs rhs]))
 
-(defn transform_catch [lhs rhs]
+(defn transform_catch
+  "Fill in default exception class and binding for catch forms."
+  [lhs rhs]
   (let [lhs (cond
               (= lhs (Sym 'catch))
               [lhs (Sym 'Exception) (Sym '_e)]
@@ -105,13 +124,17 @@ defn x():
 ;; Group LHS arguments as a single conditional test form
 ;;-----------------------------------------------------------------------------
 
-(defn- lhs-tests [lhs rhs]
+(defn- lhs-tests
+  "Group a multi-token conditional left side into one test form."
+  [lhs rhs]
   (let [lhs (if (> (count lhs) 3)
               [(first lhs) (Lst (yamlscript.ysreader/yes-expr (rest lhs)))]
               lhs)]
     [lhs rhs]))
 
-(defn transform_if [lhs rhs]
+(defn transform_if
+  "Normalize if forms, including then/else block maps."
+  [lhs rhs]
   (let [[lhs rhs] (lhs-tests lhs rhs)
         xmap (:xmap rhs)
         _ (when (and xmap (not= (count xmap) 4))
@@ -152,7 +175,9 @@ defn x():
 ;; let destructuring
 ;;-----------------------------------------------------------------------------
 
-(defn transform-vec-destructure [vec-form]
+(defn transform-vec-destructure
+  "Rewrite YAMLScript vector rest destructuring to Clojure form."
+  [vec-form]
   (if-lets [vect (:Vec vec-form)
             form (last vect)
             list (:Lst form)
@@ -167,7 +192,9 @@ defn x():
 ;; Group LHS arguments as a single bindings form
 ;;-----------------------------------------------------------------------------
 
-(defn transform-bindings [bindings]
+(defn transform-bindings
+  "Group alternating binding names and values into a vector form."
+  [bindings]
   (let [bindings
         (loop [[lhs rhs & forms] (rest bindings) bindings []]
           (let [lhs (if (:Vec lhs)
@@ -178,7 +205,9 @@ defn x():
               (conj bindings lhs rhs))))]
     (Vec bindings)))
 
-(defn- lhs-bindings [lhs rhs]
+(defn- lhs-bindings
+  "Normalize binding-style special forms to one bindings vector."
+  [lhs rhs]
   (let [lhs (cond
               (> (count lhs) 2) [(first lhs) (transform-bindings lhs)]
               (:Sym lhs) [lhs (Vec [])]
@@ -209,7 +238,9 @@ defn x():
 (def AS (Key "as"))
 (def REFER (Key "refer"))
 
-(defn require-spc-lhs? [lhs]
+(defn require-spc-lhs?
+  "Detect require left sides that name a namespace and alias."
+  [lhs]
   (when-lets [sym (get-in lhs [0])
               _ (:Sym sym)
               spc (nth lhs 1)
@@ -217,7 +248,9 @@ defn x():
               _ (= 2 (count lhs))]
     [sym spc]))
 
-(defn require-args [rhs]
+(defn require-args
+  "Build require arguments from a resolved require right side."
+  [rhs]
   (let [args []
         rhs (if (vector? rhs) rhs [rhs])
         [args rhs] (if-lets [_ (= '=> (get-in rhs [0 :Sym]))
@@ -233,7 +266,9 @@ defn x():
                args)]
     args))
 
-(defn require-xmap [xmap]
+(defn require-xmap
+  "Build require arguments from a require form map."
+  [xmap]
   (reduce
     (fn [acc [spc rhs]]
       (or (:Spc spc) (:Sym spc)
@@ -247,7 +282,9 @@ defn x():
     []
     (partition 2 xmap)))
 
-(defn transform_require [lhs rhs]
+(defn transform_require
+  "Normalize YAMLScript require syntax into Clojure require syntax."
+  [lhs rhs]
   (or
     (when-lets [_ (:Sym lhs)
                 _ (:Spc rhs)]

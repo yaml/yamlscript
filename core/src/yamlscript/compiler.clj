@@ -24,7 +24,9 @@
    [yamlscript.transformer])
   (:refer-clojure :exclude [compile]))
 
-(defn parse-events-to-groups [events]
+(defn parse-events-to-groups
+  "Split parser events into one event group per YAML document."
+  [events]
   (->> events
     (reduce
       (fn [acc ev]
@@ -60,13 +62,17 @@
                      blocks)))]
     (str/join "" blocks)))
 
-(defmacro value-time [& body]
+(defmacro value-time
+  "Evaluate body and return its value with the elapsed time string."
+  [& body]
   `(let [s# (new java.io.StringWriter)]
      (binding [*out* s#]
        [(time ~@body)
         (.replaceAll (str s#) "[^0-9\\.]" "")])))
 
-(defn stage-with-options [stage-name stage-fn input-args]
+(defn stage-with-options
+  "Run one compiler stage, optionally printing debug output and timing."
+  [stage-name stage-fn input-args]
   (if (get-in @yamlscript.global/opts [:debug-stage stage-name])
     (let [[value time] (value-time (apply stage-fn input-args))]
       (printf "*** %-9s *** %s ms\n\n" stage-name time)
@@ -111,7 +117,9 @@
                      blocks)))]
     (str/join "" blocks)))
 
-(defn pretty-format [code]
+(defn pretty-format
+  "Pretty-print generated Clojure code as separate top-level forms."
+  [code]
   (->> code
     (#(str "(do " %1 "\n)\n"))
     read-string

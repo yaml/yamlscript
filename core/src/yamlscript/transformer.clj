@@ -34,7 +34,9 @@
 
 (def topic (Sym '_))
 
-(defn dot-list [ctx node]
+(defn dot-list
+  "Apply a dotted list call to its current dot-chain context."
+  [ctx node]
   (let [[func & args] (:Lst node)
         topics (filter #{topic} args)
         [func ctx args]
@@ -54,7 +56,9 @@
                           [func ctx args])]
     (Lst (concat [func ctx] (vec args)))))
 
-(defn transform-dot [node]
+(defn transform-dot
+  "Rewrite a parsed dot chain into nested function and lookup calls."
+  [node]
   (let
    [lst (:dot node)
     form (reduce
@@ -76,7 +80,9 @@
            nil lst)]
     form))
 
-(defn dot-rhs [rhs form]
+(defn dot-rhs
+  "Build the right-hand side of a dot assignment or dot pair."
+  [rhs form]
   (let [rhs (if-lets [dots (:dot rhs)
                       [dot1 & dots] dots
                       dot1 (if-let [sym (:Sym dot1)]
@@ -88,7 +94,9 @@
                 [form rhs]))]
     (transform-dot {:dot rhs})))
 
-(defn adjust-dot-def [[lhs rhs]]
+(defn adjust-dot-def
+  "Rewrite dot assignment syntax in definition pairs."
+  [[lhs rhs]]
   (if-lets [_ (vector? lhs)
             _ (= 3 (count lhs))
             [def sym dot] lhs
@@ -103,7 +111,9 @@
     [lhs rhs]
     [lhs rhs]))
 
-(defn adjust-dot-on-right [lhs rhs]
+(defn adjust-dot-on-right
+  "Move right-side dot syntax into a normal dot pair shape."
+  [lhs rhs]
   (if-lets [_ (map? lhs)
             _ (vector? rhs)
             [dot & rest] rhs
@@ -113,7 +123,9 @@
     [lhs rhs]
     [lhs rhs]))
 
-(defn adjust-dot-pair [[lhs rhs]]
+(defn adjust-dot-pair
+  "Rewrite dot pair syntax into an expression pair."
+  [[lhs rhs]]
   (if-lets [[lhs rhs] (adjust-dot-on-right lhs rhs)
             _ (vector? lhs)
             _ (= 2 (count lhs))
@@ -128,7 +140,9 @@
     [lhs rhs]
     [lhs rhs]))
 
-(defn swap-underscores [lhs rhs]
+(defn swap-underscores
+  "Replace underscore placeholders in a left side with the right side."
+  [lhs rhs]
   (if-lets [_ (get-in lhs [0 :Sym])
             _ (some (partial = {:Sym '_}) lhs)
             _ (map? rhs)
@@ -136,7 +150,9 @@
     [lhs []]
     [lhs rhs]))
 
-(defn apply-transformer [key val]
+(defn apply-transformer
+  "Run a named special-form transformer when one exists."
+  [key val]
   (let [[key val] (swap-underscores key val)]
     (or
       (when-lets [name (or
@@ -147,7 +163,9 @@
         (transformer key val))
       [key val])))
 
-(defn transform-xmap [node]
+(defn transform-xmap
+  "Transform every pair in an expression or forms mapping."
+  [node]
   (let [key (key (first node))]
     (->> node
       first
@@ -169,7 +187,9 @@
         [])
       (hash-map key))))
 
-(defn transform-dmap [node]
+(defn transform-dmap
+  "Transform code-bearing entries inside a data map."
+  [node]
   (->> node
     :dmap
     (reduce (fn [acc node]
@@ -195,25 +215,33 @@
     (remove nil?)
     (hash-map :dmap)))
 
-(defn transform-list [node]
+(defn transform-list
+  "Transform every child node in a list AST node."
+  [node]
   (assoc node :Lst
     (mapv
       transform-node
       (:Lst node))))
 
-(defn transform-map [node]
+(defn transform-map
+  "Transform every child node in a map AST node."
+  [node]
   (assoc node :Map
     (mapv
       transform-node
       (:Map node))))
 
-(defn transform-vec [node]
+(defn transform-vec
+  "Transform every child node in a vector AST node."
+  [node]
   (assoc node :Vec
     (mapv
       transform-node
       (:Vec node))))
 
-(defn transform-sym [node]
+(defn transform-sym
+  "Validate symbols that need special transformer handling."
+  [node]
   (let [sym (str (:Sym node))]
     (when (= sym "%")
       (die "Invalid symbol '%'. Did you mean '%1'?"))
@@ -222,7 +250,9 @@
 ; TODO:
 ; Turn :xmap mappings into :fmap groups when appropriate.
 
-(defn transform-node [node]
+(defn transform-node
+  "Dispatch one AST node through the transformer stage."
+  [node]
   (let [anchor (:& node)
         tag (:! node)
         node (condf node
@@ -239,7 +269,9 @@
         node (if tag (assoc node :! tag) node)]
     node))
 
-(defn transform-node-top [node]
+(defn transform-node-top
+  "Transform the top-level AST form and initialize context."
+  [node]
   (transform-node
     (or
       (when-lets [[key val & rest] (:Map node)

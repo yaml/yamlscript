@@ -99,30 +99,45 @@
   [token] (re-matches re/ksym (str token)))
 
 (defn is-quote?
+  "Return true when token is the YAMLScript quote token."
   [token] (re-matches re/quot (str token)))
 
 (defn is-special?
+  "Return true when token is a special reader token."
   [token] (re-matches re/spec (str token)))
 
 (defn is-clojure-symbol?
+  "Return true when token is accepted as a raw Clojure symbol."
   [token] (re-matches re/csym (str token)))
 
-(defn is-regex? [token]
+(defn is-regex?
+  "Return true when token is a regular-expression literal."
+  [token]
   (re-matches re/regx (str token)))
 
-(defn is-string? [token]
+(defn is-string?
+  "Return true when token is a double-quoted string literal."
+  [token]
   (re-matches re/dstr (str token)))
 
-(defn is-single? [token]
+(defn is-single?
+  "Return true when token is a single-quoted string literal."
+  [token]
   (re-matches re/sstr (str token)))
 
-(defn is-fq-symbol? [token]
+(defn is-fq-symbol?
+  "Return true when token is a namespace-qualified YS symbol."
+  [token]
   (re-matches re/fsym (str token)))
 
-(defn is-alias-symbol? [token]
+(defn is-alias-symbol?
+  "Return true when token names a YAML alias reference."
+  [token]
   (re-matches re/asym (str token)))
 
-(defn is-symbol? [token]
+(defn is-symbol?
+  "Return true when token is any supported YAMLScript symbol form."
+  [token]
   (or
     (re-matches re/fsym (str token))
     (re-matches re/ysym (str token))
@@ -131,10 +146,14 @@
     (re-matches re/asym (str token))
     (re-matches re/splt (str token))))
 
-(defn is-default-symbol? [token]
+(defn is-default-symbol?
+  "Return true when token is an argument symbol with a default marker."
+  [token]
   (re-matches re/dsym (str token)))
 
-(defn is-symbol-paren? [token]
+(defn is-symbol-paren?
+  "Return true when token is a symbol immediately followed by an open paren."
+  [token]
   (re-matches re/psym (str token)))
 
 (def re-tokenize
@@ -190,7 +209,9 @@
     regexes)
   )
 
-(defn split-colon-calls [token]
+(defn split-colon-calls
+  "Expand a colon-call token into dot-call token pieces."
+  [token]
   (let [tokens (str/split token #":")
         [token1 token2 & xtokens] tokens
         [start tokens] (if (re-find #"\.$" token1)
@@ -207,7 +228,9 @@
       start
       tokens)))
 
-(defn get-special-expansion [token]
+(defn get-special-expansion
+  "Return special expansion for the current context."
+  [token]
   (let [expanded
         (condp = token
           ".("   ". call("
@@ -225,7 +248,9 @@
           (die "Unsupported dot special operation: " token))]
     (str/split expanded #" ")))
 
-(defn re-lex-tokens [tokens]
+(defn re-lex-tokens
+  "Reprocess lex tokens for YAMLScript parsing."
+  [tokens]
   (reduce (fn [acc token]
             (cond
               (= token "+++")
@@ -242,7 +267,9 @@
     []
     tokens))
 
-(defn lex-tokens [expr]
+(defn lex-tokens
+  "Lex tokens into YAMLScript tokens."
+  [expr]
   (let [tokens (->> expr
                  (re-seq re-tokenize)
                  (remove #(re-matches re/ignr %1))
@@ -254,14 +281,18 @@
 
 (declare read-form yes-expr)
 
-(defn- conj-seq [coll part & xs]
+(defn- conj-seq
+  "Append one grouped sequence part to an accumulated form."
+  [coll part & xs]
   (apply conj
     (cond-> coll
       (seq part)
       (conj (Form (yes-expr part))))
     xs))
 
-(defn- qf [form]
+(defn- qf
+  "Quote a form unless it already represents quoted syntax."
+  [form]
   (condf form
     :Sym (let [sym (-> form :Sym str)]
            (if (re-find #"^\$\w" sym)
@@ -274,7 +305,9 @@
                           %1) list))))
     form))
 
-(defn fix-dot-chain [expr]
+(defn fix-dot-chain
+  "Normalize dot-chain forms before grouping them."
+  [expr]
   (if-lets [list (or (get-in expr [0 :Lst]) expr)
             _ (= (first list) {:Sym '_dot_})]
     [{:dot (vec (rest list))}]
@@ -282,7 +315,9 @@
 
 (def sep (Sym '.))
 
-(defn group-dots [forms]
+(defn group-dots
+  "Group dot-chain token forms into a single dot AST node."
+  [forms]
   (fix-dot-chain
     (if (>= (count forms) 3)
       (loop [[a b c :as xs] forms, grp [], acc []]
@@ -309,7 +344,9 @@
             (conj-seq acc grp a))))
       forms)))
 
-(defn yes-expr [expr]
+(defn yes-expr
+  "Build an infix yes-expression list from expression forms."
+  [expr]
   (fix-dot-chain
     (if (= (count expr) 3)
       (let [[a op b] expr]
@@ -331,7 +368,9 @@
             (cons op)))
         expr))))
 
-(defn anon-fn-arg-list [node]
+(defn anon-fn-arg-list
+  "Infer an anonymous function argument vector from body usage."
+  [node]
   (let [args (atom {})
         maxn (atom 0)]
     (walk/prewalk
@@ -351,7 +390,9 @@
          (Sym "_"))
       (range 1 (inc @maxn)))))
 
-(defn read-anon-fn [[_ & tokens]]
+(defn read-anon-fn
+  "Read anon fn tokens into AST form."
+  [[_ & tokens]]
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
@@ -370,7 +411,9 @@
       (let [[form tokens] (read-form tokens)]
         (recur tokens (conj list form))))))
 
-(defn read-list [[_ & tokens] type end sym]
+(defn read-list
+  "Read list tokens into AST form."
+  [[_ & tokens] type end sym]
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
@@ -391,7 +434,9 @@
         (recur tokens (if form (conj list form) list))))))
 
 ;; TODO do in one call
-(defn str-unescape [s]
+(defn str-unescape
+  "Unescape YAMLScript double-quoted string content."
+  [s]
   (-> s
     (str/replace "\\\\" "\\")
     (str/replace ":\\ " ": ")
@@ -403,7 +448,9 @@
     (str/replace "\\t" "\t")
     (str/replace "\\\"" "\"")))
 
-(defn read-dq-string [string]
+(defn read-dq-string
+  "Read a double-quoted string token into an AST form."
+  [string]
   (let [build-xstr @yamlscript.global/build-xstr]
     (-> string
       (subs 1 (dec (count string)))
@@ -411,12 +458,16 @@
       (#(hash-map :xstr %))
       build-xstr)))
 
-(defn sstr-unescape [s]
+(defn sstr-unescape
+  "Unescape YAMLScript single-quoted string content."
+  [s]
   (-> s
     (str/replace ":\\ " ": ")
     (str/replace " \\#" " #")))
 
-(defn read-sq-string [string]
+(defn read-sq-string
+  "Read a single-quoted string token into an AST form."
+  [string]
   (-> string
     (subs 1 (dec (count string)))
     sstr-unescape
@@ -428,7 +479,9 @@
 (comment
   (read-string "\\\\Inf / \\\\-Inf")
   )
-(defn read-scalar [[token & tokens]]
+(defn read-scalar
+  "Read one scalar token into an AST form."
+  [[token & tokens]]
   (cond
     (map? token) [token tokens]
 
@@ -484,7 +537,9 @@
     (is-namespace? token) [(Spc token) tokens]
     :else (die "Unexpected token: '" token "'")))
 
-(defn read-form [tokens]
+(defn read-form
+  "Read form tokens into AST form."
+  [tokens]
   (let [token (first tokens)
         [token tokens sym]
         (if (is-symbol-paren? token)
@@ -500,7 +555,9 @@
       "\\{" (read-list tokens Set "}" nil)
       ,   (read-scalar tokens))))
 
-(defn read-forms [tokens]
+(defn read-forms
+  "Read forms tokens into AST form."
+  [tokens]
   (loop [tokens tokens
          forms []]
     (if (seq tokens)
@@ -509,7 +566,9 @@
         (recur tokens forms))
       forms)))
 
-(defn read-string [string]
+(defn read-string
+  "Read string tokens into AST form."
+  [string]
   (let [forms (-> string
                 lex-tokens
                 read-forms)

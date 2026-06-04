@@ -22,7 +22,7 @@
   maybe-trace)
 
 (defn construct-ast
-  "Construct resolved YAML tree into a YS AST."
+  "Construct YAMLScript AST nodes into a top-level Clojure AST."
   [node]
   (->> node
     (#(construct-node %1))
@@ -36,7 +36,7 @@
 (def ^:dynamic no-wrap false)
 
 (defn construct
-  "Make the AST and add wrap the last node."
+  "Construct Clojure AST and wrap the final value when needed."
   [node ctx]
   (let [last (:last ctx)]
     (-> node
@@ -50,10 +50,14 @@
                           (Lst [(Sym '+++) n]))]
                (maybe-trace node)))))))))
 
-(defn is-splat? [value]
+(defn is-splat?
+  "Return true when a symbol value uses YAMLScript splat syntax."
+  [value]
   (re-matches re/splt (str value)))
 
-(defn expand-splats [nodes]
+(defn expand-splats
+  "Rewrite splat arguments into an apply call when needed."
+  [nodes]
   (if (some #(is-splat? (:Sym %1)) nodes)
     (let [[fun & nodes] nodes]
       (loop [nodes nodes new [] splats []]
@@ -74,7 +78,9 @@
             (concat [(Sym 'apply)] [fun] new splats)))))
     nodes))
 
-(defn apply-yes-lhs [key val]
+(defn apply-yes-lhs
+  "Normalize yes-expression operators on the left side of a call."
+  [key val]
   (if-lets [_ (vector? key)
             _ (= 4 (count key))
             [a b c d] key
@@ -84,7 +90,9 @@
     [[(Lst [b a c]) d] val]
     [key val]))
 
-(defn apply-yes [key val]
+(defn apply-yes
+  "Normalize yes-expression operators before constructing a call."
+  [key val]
   (let [[key val] (apply-yes-lhs key val)]
     (if-lets [_ (vector? key)
               _ (= 2 (count key))
@@ -94,14 +102,18 @@
       [[b a] val]
       [key val])))
 
-(defn construct-call [[key val]]
+(defn construct-call
+  "Construct one expression-map pair as a Clojure call form."
+  [[key val]]
   (let [[key val] (apply-yes key val)]
     (cond
       (= '=> (:Sym key)) val
       (and (:Str key) (nil? val)) key
       :else (Lst (expand-splats (flatten [key val]))))))
 
-(defn construct-tag-call [node tag]
+(defn construct-tag-call
+  "Apply one or more YAML tag calls around a constructed node."
+  [node tag]
   ;; XXX - We allow leading colons because they used to be mandatory in v0.
   ;; Now they are optional in v0 and should be removed in v1.
   (let [tag (if (str/starts-with? tag ":") (subs tag 1) tag)
@@ -117,7 +129,9 @@
                     (Lst [(Sym tag) node])))))
       node tags)))
 
-(defn apply-let-bindings [lets rest ctx]
+(defn apply-let-bindings
+  "Turn leading def pairs into a Clojure let form."
+  [lets rest ctx]
   [[(Sym "let")
     (vec
       (concat
@@ -138,7 +152,9 @@
                 vec))]
         (construct-xmap {:xmap (mapcat identity rest)} ctx)))]])
 
-(defn check-let-bindings [xmap ctx]
+(defn check-let-bindings
+  "Detect leading def pairs that should become let bindings."
+  [xmap ctx]
   (let [[lets rest]
         (map vec
           (split-with
@@ -148,12 +164,16 @@
       (apply-let-bindings lets rest ctx)
       xmap)))
 
-(defn construct-side [side ctx]
+(defn construct-side
+  "Construct either side of an expression pair."
+  [side ctx]
   (if (vector? side)
     (vec (map #(construct-node %1 ctx) side))
     (construct-node side ctx)))
 
-(defn construct-xmap [{nodes :xmap} ctx]
+(defn construct-xmap
+  "Construct an expression mapping into Clojure AST forms."
+  [{nodes :xmap} ctx]
   (let [xmap (vec (map vec (partition 2 nodes)))
         node (loop [xmap xmap, new []]
                (if (seq xmap)
@@ -185,7 +205,9 @@
                  new))]
     node))
 
-(defn dmap-code [code dmap ctx]
+(defn dmap-code
+  "Merge embedded code forms into a constructed data map."
+  [code dmap ctx]
   (let [parts (map vec (partition-by #(= (first %1) {:Sym 'def}) code))
         result
         (reduce
@@ -215,7 +237,7 @@
     result))
 
 (defn construct-conditional-pair
-  "Build (if-let [_ (truey? val)] (% key _) (%))"
+  "Construct a data-map pair that appears only when its value is non-nil."
   [key-node val-node ctx]
   (let [key-str (or (:Str key-node) (str key-node))
         val (construct-node val-node ctx)]
@@ -225,7 +247,7 @@
           (Map [])])))
 
 (defn- pairs->map
-  "Convert a flat list of k/v pairs to a Map AST node."
+  "Convert a flat list of key/value pairs to a map AST node."
   [pairs ctx]
   (Map
     (vec
@@ -242,7 +264,9 @@
     (Lst [(Sym 'merge) base new-map])
     new-map))
 
-(defn construct-dmap [node ctx]
+(defn construct-dmap
+  "Construct a data map, including conditional and embedded code pairs."
+  [node ctx]
   (let [parts (vec (map vec (partition-by vector? (:dmap node))))
         parts (reverse parts)
         parts (if (get-in (vec parts) [0 0 0])
@@ -299,7 +323,9 @@
                amap parts)]
     dmap))
 
-(defn construct-fmap [{nodes :fmap} ctx]
+(defn construct-fmap
+  "Construct every form in a forms mapping."
+  [{nodes :fmap} ctx]
   (let [nodes (reduce
                 (fn [nodes node]
                   (let [node (construct-node node ctx)]
@@ -310,7 +336,9 @@
     {:fmap nodes}))
 
 ;; Handle sequences with code elements
-(defn construct-vec-dmap [node ctx]
+(defn construct-vec-dmap
+  "Construct sequence entries that include embedded data-map code."
+  [node ctx]
   ;; Must have a dmap element
   (when-lets [nodes (:Vec node)
               _ (some (fn [node]
@@ -333,7 +361,9 @@
                  nil nodes)]
       (Lst (vec (cons (Sym '+concat) vect))))))
 
-(defn construct-vec [node ctx]
+(defn construct-vec
+  "Construct a YAMLScript vector or sequence node."
+  [node ctx]
   (or
     (construct-vec-dmap node ctx)
     (let [{nodes :Vec} node
@@ -341,19 +371,25 @@
           nodes (map #(construct-node %1 ctx) nodes)]
       {:Vec (-> nodes flatten vec)})))
 
-(defn construct-coll [node ctx key]
+(defn construct-coll
+  "Construct a collection node using the requested AST key."
+  [node ctx key]
   (let [{nodes key} node
         nodes (expand-splats nodes)
         nodes (map #(construct-node %1 ctx) nodes)]
     {key (-> nodes flatten vec)}))
 
-(defn construct-trace [node]
+(defn construct-trace
+  "Wrap a form in tracing when trace mode is active."
+  [node]
   (Lst [(Sym 'TTT) node]))
 
 (def do-not-trace '[+++ TTT catch defn defn- finally ns])
 (def cannot-trace '[-> ->>])
 
-(defn maybe-trace [node]
+(defn maybe-trace
+  "Apply trace wrapping unless the form cannot or should not be traced."
+  [node]
   (if (vector? node)
     (vec (map maybe-trace node))
     (if-lets [_ (:xtrace @global/opts)
@@ -364,13 +400,19 @@
         (construct-trace node))
       node)))
 
-(defn construct-alias [node]
+(defn construct-alias
+  "Construct a document-local YAML alias lookup."
+  [node]
   (Lst [(Sym '_*) (Qts (:ali node))]))
 
-(defn construct-stream-alias [node]
+(defn construct-stream-alias
+  "Construct a stream-level YAML alias lookup."
+  [node]
   (Lst [(Sym '_**) (Qts (:Ali node))]))
 
-(defn construct-interop-call [node]
+(defn construct-interop-call
+  "Construct Java interop shorthand into a Clojure call."
+  [node]
   (if-lets [sym (get-in node [:Lst 0])
             name (str (:Sym sym))
             _ (str/starts-with? name "~")
@@ -379,6 +421,7 @@
     node))
 
 (defn construct-node
+  "Dispatch a YAMLScript AST node to Clojure AST construction."
   ([node ctx]
    (when (vector? ctx) (die "ctx is a vector"))
    (let [[[key]] (seq node)
@@ -413,7 +456,9 @@
 ;;------------------------------------------------------------------------------
 ;; Fix-up functions
 ;;------------------------------------------------------------------------------
-(defn get-declares [node defns]
+(defn get-declares
+  "Collect unresolved function names that need declare forms."
+  [node defns]
   (let [declare (atom {})
         defined (atom {})]
     (walk/prewalk
@@ -430,7 +475,9 @@
       node)
     @declare))
 
-(defn declare-undefined [node]
+(defn declare-undefined
+  "Prepend declare forms for forward references in definitions."
+  [node]
   (let [defn-names (map #(get-in %1 [:Lst 1 :Sym])
                      (filter #(some #{'defn 'defn-}
                                [(get-in %1 [:Lst 0 :Sym])])
@@ -448,12 +495,16 @@
           #(vec (concat [form] %1))))
       node)))
 
-(defn call-main []
+(defn call-main
+  "Build the form that invokes main when one is defined."
+  []
   (Lst [(Sym 'apply)
         (Sym 'main)
         (Sym 'ARGS)]))
 
-(defn maybe-call-main [node]
+(defn maybe-call-main
+  "Append a main call when running a script that defines main."
+  [node]
   (let [need-call-main (atom false)]
     (walk/prewalk
       #(let [main (and (= 'defn (get-in %1 [:Lst 0 :Sym]))

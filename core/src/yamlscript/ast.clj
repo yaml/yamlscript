@@ -9,22 +9,34 @@
    [yamlscript.common])
   (:refer-clojure :exclude [Vec]))
 
-(defn Lst [list] {:Lst (vec list)})
+(defn Lst
+  "Wrap forms in a list AST node."
+  [list] {:Lst (vec list)})
 
-(defn Form [list]
+(defn Form
+  "Return a single map form as-is, otherwise wrap forms in a list."
+  [list]
   (if-lets [_ (= 1 (count list))
             node (first list)
             _ (map? node)]
     node
     (Lst list)))
 
-(defn Vec [list] {:Vec (vec list)})
+(defn Vec
+  "Wrap forms in a vector AST node."
+  [list] {:Vec (vec list)})
 
-(defn Tup [list] {:Tup (vec list)})
+(defn Tup
+  "Wrap forms in a tuple AST node used for grouped tokens."
+  [list] {:Tup (vec list)})
 
-(defn Set [list] {:Set (vec list)})
+(defn Set
+  "Wrap forms in a set AST node."
+  [list] {:Set (vec list)})
 
-(defn Map [list]
+(defn Map
+  "Wrap alternating key/value forms in an ordered map AST node."
+  [list]
   (if (even? (count list))
     {:Map (->> list
             (apply array-map)
@@ -32,19 +44,30 @@
             vec)}
     (die "Odd number of elements in map")))
 
-(defn Spc [s] {:Spc (symbol s)})
+(defn Spc
+  "Wrap a namespace token in a special namespace AST node."
+  [s] {:Spc (symbol s)})
 
 (defn Sym
+  "Wrap a symbol, or symbol with default value, in a symbol AST node."
   ([s] {:Sym (symbol s)})
   ([s d] {:Sym [(symbol s) d]}))
 
-(defn QSym [s] {:QSym s})
+(defn QSym
+  "Wrap a symbol that should print as a quoted symbol."
+  [s] {:QSym s})
 
-(defn Qts [s] {:Qts (str s)})
+(defn Qts
+  "Wrap a value that should print as a quoted literal."
+  [s] {:Qts (str s)})
 
-(defn Chr [s] {:Chr (symbol s)})
+(defn Chr
+  "Wrap a character literal token in a character AST node."
+  [s] {:Chr (symbol s)})
 
-(defn Num [s]
+(defn Num
+  "Parse and wrap an integer or arbitrary numeric literal."
+  [s]
   (if (re-matches #"(?:0|[1-9][0-9]{0,17})" s)
     ;; Positive integers that fit in Long will be represented as :Int
     {:Int (parse-long s)}
@@ -64,30 +87,46 @@
    ".NaN" "NaN"
    ".NAN" "NaN"})
 
-(defn Flt [s]
+(defn Flt
+  "Parse and wrap a floating-point literal, including YAML specials."
+  [s]
   (let [s (str/replace s
             #"^([-+]?(?:\.inf|\.Inf|\.INF|\.nan|\.NaN|\.NAN))"
             (fn [[_ k]]
               (get special k)))]
     {:Flt (parse-double s)}))
 
-(defn Str [s] {:Str (str s)})
+(defn Str
+  "Wrap a value in a string AST node."
+  [s] {:Str (str s)})
 
-(defn Key [s] {:Key (keyword s)})
+(defn Key
+  "Wrap a token in a Clojure keyword AST node."
+  [s] {:Key (keyword s)})
 
-(defn Tok [s] {:Tok (str s)})
+(defn Tok
+  "Wrap a token that should print without extra conversion."
+  [s] {:Tok (str s)})
 
-(defn Rgx [s] {:Rgx (str s)})
+(defn Rgx
+  "Wrap a regular-expression literal body."
+  [s] {:Rgx (str s)})
 
-(defn Bln [b]
+(defn Bln
+  "Parse and wrap a YAML boolean scalar."
+  [b]
   (if (re-matches #"(true|True|TRUE)" b)
     {:Bln true}
     {:Bln false}))
 
-(defn Nil []
+(defn Nil
+  "Return the YAMLScript nil AST node."
+  []
   {:Nil nil})
 
-(defn Clj [c]
+(defn Clj
+  "Wrap raw Clojure data so the printer emits it directly."
+  [c]
   {:Clj c})
 
 (def operators

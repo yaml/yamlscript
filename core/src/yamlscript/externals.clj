@@ -1,6 +1,9 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.externals namespace implements runtime loading for pods,
+;; source files, YSPATH modules, and remote modules used by `use`.
+
 (ns yamlscript.externals
   (:require
    [babashka.pods.sci :as pods]
@@ -18,11 +21,15 @@
 
 ;; ----------------------------------------------------------------------------
 
-(defn load-pod [args]
+(defn load-pod
+  "Load pod into the YAMLScript runtime."
+  [args]
   (let [pod (apply pods/load-pod @G/sci-ctx args)]
     (swap! G/pods conj pod)))
 
-(defn unload-pods []
+(defn unload-pods
+  "Unload every loaded pod and clear the pod registry."
+  []
   (doseq [pod @G/pods]
     (pods/unload-pod pod))
   (reset! G/pods []))
@@ -30,7 +37,9 @@
 ;; ----------------------------------------------------------------------------
 
 ;; XXX Duplicated logic from ys.ys/eval
-(defn load-code-ys [code file]
+(defn load-code-ys
+  "Load code ys into the YAMLScript runtime."
+  [code file]
   (let [code (binding [yamlscript.constructor/no-wrap true]
                (yamlscript.compiler/compile code))
         stream @G/stream-values
@@ -42,23 +51,30 @@
         _ (reset! G/stream-values stream)]
     (:val ret)))
 
-(defn load-file-ys [file]
+(defn load-file-ys
+  "Load file ys into the YAMLScript runtime."
+  [file]
   (let [file (abspath file (dirname @sci/file))
         code (-> file slurp)]
     (load-code-ys code file)))
 
-(defn load-code-clj [code file]
+(defn load-code-clj
+  "Load code clj into the YAMLScript runtime."
+  [code file]
   (sci/binding
    [sci/file file
     G/FILE file]
     (:val (sci/eval-string+ @G/sci-ctx code))))
 
-(defn load-file-clj [file]
+(defn load-file-clj
+  "Load file clj into the YAMLScript runtime."
+  [file]
   (let [file (abspath file (dirname @sci/file))
         code (-> file slurp)]
     (load-code-clj code file)))
 
 (defn load-code-ys-or-clj
+  "Load code ys or clj into the YAMLScript runtime."
   ([code]
    (load-code-ys-or-clj code @sci/file))
   ([code file]
@@ -66,7 +82,9 @@
      (load-code-clj code file)
      (load-code-ys code file))))
 
-(defn load-file-ys-or-clj [module]
+(defn load-file-ys-or-clj
+  "Load file ys or clj into the YAMLScript runtime."
+  [module]
   (let [ys-file (str module ".ys")
         clj-file (str module ".clj")]
     (if (.exists (io/as-file clj-file))
@@ -77,7 +95,9 @@
         (load-file-ys ys-file)
         true))))
 
-(defn load-yspath [modpath yspath]
+(defn load-yspath
+  "Load yspath into the YAMLScript runtime."
+  [modpath yspath]
   (when (not (sci/find-ns @G/sci-ctx
                (symbol (str/replace modpath #"/" "."))))
     (loop [yspath yspath]
@@ -88,19 +108,29 @@
             (recur yspath)))
         (die (str "Module not found: " (str/replace modpath #"/" "::")))))))
 
-(defn load-path [modpath spec]
+(defn load-path
+  "Load path into the YAMLScript runtime."
+  [modpath spec]
   (die ":path not implemented yet"))
 
-(defn load-file [modpath spec]
+(defn load-file
+  "Load file into the YAMLScript runtime."
+  [modpath spec]
   (die ":file not implemented yet"))
 
-(defn load-mvn [modpath spec]
+(defn load-mvn
+  "Load mvn into the YAMLScript runtime."
+  [modpath spec]
   (die ":mvn not implemented yet"))
 
-(defn load-git [modpath spec]
+(defn load-git
+  "Load git into the YAMLScript runtime."
+  [modpath spec]
   (die ":git not implemented yet"))
 
-(defn github-raw-url [url]
+(defn github-raw-url
+  "Convert a raw url shorthand into a raw URL."
+  [url]
   (let [[path ref] (str/split url #"\@")
         ref (or ref "HEAD")
         [user repo path] (str/split path #"/" 3)
@@ -109,7 +139,9 @@
     (str/join "/" ["https://raw.githubusercontent.com"
                    user repo ref path])))
 
-(defn github-gist-url [url]
+(defn github-gist-url
+  "Convert a gist url shorthand into a raw URL."
+  [url]
   (let [url (str/replace url #"/raw/?" "/")
         [path ref] (str/split url #"\@")
         [user gist-id path] (str/split path #"/" 3)
@@ -118,7 +150,9 @@
     (str/join "/" (remove nil? ["https://gist.githubusercontent.com"
                                 user gist-id "raw" ref path]))))
 
-(defn convert-url [url]
+(defn convert-url
+  "Convert url into its canonical form."
+  [url]
   (cond
     (re-find #"^https?://" url) url
     (str/starts-with? url "gist:") (github-gist-url (subs url 5))
@@ -128,10 +162,14 @@
     (not (str/includes? url ":")) (str "https://" url)
     :else (die (str "Invalid url for ':url': " url))))
 
-(defn load-url [_ url]
+(defn load-url
+  "Load url into the YAMLScript runtime."
+  [_ url]
   (-> url convert-url cache/curl load-code-ys-or-clj))
 
-(defn parse-args [args]
+(defn parse-args
+  "Parse YAMLScript use-form arguments into a normalized option map."
+  [args]
   (let [nargs (count args)]
     (loop [i 0, key nil, parsed {}]
       (if (>= i nargs)
@@ -177,7 +215,9 @@
             (recur (inc i) key parsed)
             parsed))))))
 
-(defn use-module [ns module args]
+(defn use-module
+  "Load a module and apply alias, refer, get, or exclusion options."
+  [ns module args]
   (when (not (re-matches (re/re #"(?:$nspc|$symw)")
                (str/replace (str module) #"\." "::")))
     (die (str "Invalid module name: " module)))

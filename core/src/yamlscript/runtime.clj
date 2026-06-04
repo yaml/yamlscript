@@ -1,6 +1,9 @@
 ;; Copyright 2023-2025 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The yamlscript.runtime namespace builds the SCI context that evaluates the
+;; Clojure emitted by the YAMLScript compiler.
+
 (ns yamlscript.runtime
   (:require
    [babashka.pods]
@@ -168,7 +171,9 @@
    'yamlscript.debug debug-namespace
    'yamlscript.util util-namespace})
 
-(defn classes-map [class-symbols]
+(defn classes-map
+  "Build SCI class lookup entries from fully qualified class symbols."
+  [class-symbols]
   (loop [[class-symbol & class-symbols] class-symbols
          m '{}]
     (if class-symbol
@@ -227,7 +232,9 @@
     {:namespaces namespaces
      :classes classes}))
 
-(defn get-runtime-info []
+(defn get-runtime-info
+  "Return runtime version and platform information for YS code."
+  []
   {:args (common/get-cmd-args)
    :bin (common/get-cmd-bin)
    :pid (common/get-cmd-pid)
@@ -241,6 +248,7 @@
    :yspath (common/get-cmd-path)})
 
 (defn eval-string
+  "Evaluate generated Clojure code in the YAMLScript SCI context."
   ([clj]
    (eval-string clj @sci/file))
 

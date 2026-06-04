@@ -20,17 +20,23 @@
    \return "\\r"
    \tab "\\t"})
 
-(defn pr-string [s]
+(defn pr-string
+  "Escape a string for inclusion in generated Clojure code."
+  [s]
   (str/escape s string-escape))
 
 (def regex-escape
   {\" "\\\""})
 
-(defn pr-regex [s]
+(defn pr-regex
+  "Escape a regex body for generated Clojure regex syntax."
+  [s]
   (-> s
     (str/escape regex-escape)))
 
-(defn pr-symbol [s]
+(defn pr-symbol
+  "Translate YAMLScript symbol spellings to Clojure symbol names."
+  [s]
   (case s
     "ERR" "*err*"
     "IN" "*in*"
@@ -47,7 +53,9 @@
           "Use '==' for equality comparison.")
     , s))
 
-(defn print-node [node]
+(defn print-node
+  "Render one Clojure AST node into Clojure source text."
+  [node]
   (let [node (if (keyword? node) {node true} node)
         [type val] (first node)]
     (case type

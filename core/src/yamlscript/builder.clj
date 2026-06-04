@@ -54,7 +54,9 @@
     yamlscript.resolver/resolve
     yamlscript.builder/build))
 
-(defn build-defn-defaults [name doc args body kind]
+(defn build-defn-defaults
+  "Expand default arguments into multiple defn arities."
+  [name doc args body kind]
   (when-lets [args (:Vec args)
               dargs (filter #(vector? (:Sym %1)) args)
               _ (seq dargs)
@@ -86,18 +88,24 @@
                        (range (dec n-args) (- n-args n-dargs 1) -1))]
     [[defn name doc] bodies]))
 
-(defn build-defn-single [name doc args body kind]
+(defn build-defn-single
+  "Build a single-arity defn or fn AST form."
+  [name doc args body kind]
   (when-lets [defn (Sym kind)
               _ true]
     [[defn name doc args] body]))
 
-(defn fix-args [args]
+(defn fix-args
+  "Normalize YAMLScript argument shorthand before expression parsing."
+  [args]
   (let [args (if (= args "*") "& _" args)
         args (str/replace args #"(?:^| )\*$" "& _")
         args (str/replace args (re/re #"\*($symw)") "& $1")]
     args))
 
-(defn build-defn [key val]
+(defn build-defn
+  "Build a defn or fn pair into its YAMLScript AST representation."
+  [key val]
   (let [[key kind] (if-let [key (:defn key)]
                      [key 'defn]
                      [(:fn key) 'fn])
@@ -132,11 +140,15 @@
       (build-defn-defaults name doc args body kind)
       (build-defn-single name doc args body kind))))
 
-(defn build-form-pair [key val]
+(defn build-form-pair
+  "Build a pair whose key already represents a full form."
+  [key val]
   (let [key (:form key)]
     [{:form (build-node key)} (build-node val)]))
 
-(defn build-pair [nodes [key val]]
+(defn build-pair
+  "Build one resolved mapping pair and append it to an accumulator."
+  [nodes [key val]]
   (let [[key val] (condf key
                     :defn (build-defn key val)
                     :fn (build-defn key val)
@@ -144,11 +156,15 @@
                     [(build-node key) (build-node val)])]
     (conj nodes key val)))
 
-(defn build-xmap [{xmap :xmap}]
+(defn build-xmap
+  "Build every pair in an expression mapping."
+  [{xmap :xmap}]
   (let [nodes (reduce build-pair [] (partition 2 xmap))]
     {:xmap nodes}))
 
-(defn build-fmap [node]
+(defn build-fmap
+  "Build a forms mapping whose children are all form nodes."
+  [node]
   (->> node
     first
     val
@@ -156,12 +172,16 @@
     (hash-map :fmap)))
 
 ;; XXX This might belong in the transformer
-(defn optimize-ys-expression [node]
+(defn optimize-ys-expression
+  "Collapse a leading => expression wrapper when possible."
+  [node]
   (if (= '=> (get-in node [:Lst 0 :Sym]))
     (get-in node [:Lst 1])
     node))
 
-(defn build-expr [node]
+(defn build-expr
+  "Read an expression scalar into YAMLScript AST nodes."
+  [node]
   (let [string (:expr node)]
     (when-not (empty? string)
       (let [expr (ysreader/read-string string)]
@@ -170,13 +190,17 @@
 
 ;; XXX The destructure vector is just a string here.
 ;; Needs to be parsed into a proper AST node.
-(defn destruct-vec [s]
+(defn destruct-vec
+  "Normalize vector destructuring shorthand before expression parsing."
+  [s]
   (let [s (if (re-find (re/re #"(?:^$ysym |\] )") s)
             (str "[" s "]")
             s)]
     (str/replace s (re/re #"\[(.*)\*($ysym)\s*\]") "[$1 & $2]")))
 
-(defn build-def [{node :def}]
+(defn build-def
+  "Build a resolved definition key into a definition AST form."
+  [{node :def}]
   (if-lets [m (re-matches re/defk node)
             v [(Sym "def")
                (Sym (destruct-vec (m 1)))]]
@@ -184,7 +208,9 @@
       v
       (conj v (Sym (m 2))))))
 
-(defn build-dmap [body]
+(defn build-dmap
+  "Build a data map that can contain embedded code forms."
+  [body]
   (let [dmap (loop [[k v & body] body new []]
                (if (nil? k)
                  new
@@ -199,7 +225,9 @@
                    (recur body new))))]
     {:dmap dmap}))
 
-(defn adjust-special-keys [nodes]
+(defn adjust-special-keys
+  "Rewrite special data-mode keys into explicit expression pairs."
+  [nodes]
   (reduce
     (fn [body [key val]]
       (let [[key val] (if (= \: (first (:expr key)))
@@ -210,7 +238,9 @@
         (conj body key val)))
     [] (partition 2 nodes)))
 
-(defn build-map [node]
+(defn build-map
+  "Build a resolved data map into a YAMLScript map AST."
+  [node]
   (let [body (vec (map build-node (adjust-special-keys (:map node))))]
     (if (or (some vector? body)
           (= {:Sym '=>} (first body))
@@ -219,7 +249,9 @@
       (build-dmap body)
       (Map (map build-node (:map node))))))
 
-(defn build-vec [node]
+(defn build-vec
+  "Build a resolved sequence into a YAMLScript vector AST."
+  [node]
   (Vec (map build-node (:seq node))))
 
 ;; XXX This is a hack. It should be done with a proper parser.
@@ -238,7 +270,9 @@
       (?: [^\$]*\$+[^\$]*)
     )"))
 
-(defn build-expr-interpolated [node]
+(defn build-expr-interpolated
+  "Build a single expression interpolation from a string part."
+  [node]
   (let [expr (build-expr node)
         lst1 (:Lst expr)
         lst2 (get-in lst1 [0 :Lst])
@@ -247,7 +281,9 @@
               (if (and (= 1 (count lst1)) lst2) (Lst lst2) expr))]
     expr))
 
-(defn build-interpolated [string]
+(defn build-interpolated
+  "Build an interpolated string expression from literal and code parts."
+  [string]
   (let [parts (re-seq re-interpolated-string string)
         exprs (map
                 #(condp (fn [re s] (re-matches re s)) %1
@@ -269,7 +305,9 @@
       (first exprs)
       (Lst (cons (Sym 'str) exprs)))))
 
-(defn build-dq-string [string]
+(defn build-dq-string
+  "Build a double-quoted scalar, including interpolation when needed."
+  [string]
   (-> string
     (str/replace #"\\\$" "$")
     (str/replace #"\\ " " ")
@@ -280,7 +318,9 @@
     (str/replace #"\\t" "\t")
     Str))
 
-(defn build-xstr [node]
+(defn build-xstr
+  "Build an expression string scalar into AST form."
+  [node]
   (let [string (:xstr node)]
     (if (re-find #"\$[\{\(a-zA-Z]" string)
       (build-interpolated string)
@@ -288,7 +328,9 @@
 
 (reset! yamlscript.global/build-xstr build-xstr)
 
-(defn build-node [node]
+(defn build-node
+  "Dispatch a resolved node to the matching AST builder."
+  [node]
   (let [anchor (:& node)
         ytag (:! node)
         cond-pair (:|? node)
