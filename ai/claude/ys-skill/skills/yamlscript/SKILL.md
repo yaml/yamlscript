@@ -53,7 +53,13 @@ support, and docs:
    `ys-lint.ys` flags *possible* surface-form mistakes the compiler can't
    see because they vanish at the AST stage: `.nth(N)` vs `.N`,
    `.nth(var)` vs `.$var`, `x + 1` vs `.++`, `x - 1` vs `.--`,
-   `then: nil` / `else: nil` vs `when` / `when-not`, lines over 79 cols.
+   `.first()` / `.last()` vs `.0` / `.$` (or `:first` / `:last`),
+   `vector(...)` vs `+[...]`, `apply(str ...)` and `apply str:`
+   vs `:join` / `join:`, `str(bareVar)` vs `"$bareVar"`,
+   `if (cond):` / `when (cond):` / `when-not (cond):` with redundant
+   parens, `for [...]:` / `each [...]:` / `loop [...]:` bracketed
+   bindings, `then: nil` / `else: nil` vs `when` / `when-not`, and
+   lines over 79 cols.
 
    The linter matches against source text with regex, so every hit is a
    *candidate*, not a verdict. False positives are expected: a long line
@@ -229,6 +235,59 @@ does not accept compound expressions.
 
 Scan every `.nth(` in the file before finishing — if the argument is a
 literal integer or a bare variable, rewrite to the dot/dollar form.
+
+### `.first()` / `.last()` — use `.0` / `.$` or `:first` / `:last`
+
+The call form `x.first()` and `x.last()` is verbose. Two terser
+alternatives, each with its own niche:
+
+- `.0` / `.$` — positional access. Use when the value is a vector or
+  pair and you're thinking "first/last element by index":
+  - `pair.first()` → `pair.0`
+  - `tuple.last()` → `tuple.$`
+  - `sorted.first()` → `sorted.0`
+- `:first` / `:last` — colon-chain. Use when the value is a sequence
+  and you want the seq operations' "head/tail" framing:
+  - `tri.last()` → `tri:last`
+  - `lines.first()` → `lines:first`
+
+Either reads better than the call form. Pick by whether the data is
+*indexable* (`.0`/`.$`) or *seq-like* (`:first`/`:last`); both compile
+to the same thing for vectors, so when in doubt use the dot form.
+
+### Never write `vector(...)` literals — use `+[...]`
+
+`vector(a b c)` (the fn call) and `+[a b c]` (data-mode vector with the
+`+` cast back to code-mode) build the same thing. Always prefer
+`+[...]` — it reads as a vector literal, not a function call:
+
+- `vector(a b c d)` → `+[a b c d]`
+- `vector(nt ny)` → `+[nt ny]`
+- `vector()` → `+[]`
+
+Use `vec(coll)` only when you're *converting* an existing collection,
+not when listing elements.
+
+### Use `:join` / `join:` instead of `apply(str ...)` / `apply str:`
+
+`apply(str coll)` and the pair form `apply str: coll` both concatenate
+a collection of strings. The colon-chain `coll:join` and pair form
+`join: coll` say what they mean directly:
+
+- `apply(str pieces)` → `pieces:join` (or `join: pieces`)
+- `apply str: pieces` → `join: pieces`
+- `apply(str butlast(code))` → `join: butlast(code)`
+
+### Avoid `str(bareVar)` — use interpolation `"$bareVar"`
+
+Single-argument `str(x)` where `x` is a bare identifier is wasteful
+when string interpolation already auto-stringifies anything:
+
+- `str(c)` → `"$c"`
+- `str(n)` → `"$n"`
+
+`str(...)` with multiple args (e.g. `str(a b c)` for concatenation) is
+fine. The rule is only about the single-bare-var case.
 
 ### Use specific predicates over generic `.!` for numeric tests
 
@@ -462,7 +521,12 @@ Two args fit fine on one line.
 - Interpolation auto-stringifies — `"$x"` works for any value, no
   `str(x)` needed inside `"..."` or `$(...)`
 - `uc1(s)` — capitalize first character; `uc(s)` — all uppercase
-- `join(sep coll)` — join with separator; `join(coll)` — no separator
+- `join(sep coll)` — join with separator; `join(coll)` — no separator.
+  Also `coll:join` (colon chain) and `join: coll` (pair form) for the
+  no-separator variant. **Prefer these over `apply(str coll)` /
+  `apply str: coll`** — they say what they mean and read tighter:
+  - `apply(str chunks)` → `chunks:join` (or `join: chunks`)
+  - `apply str: pieces` → `join: pieces` (or `pieces:join`)
 - `joins(coll)` — join with a single space
 - `split` and `join` have their own arg-swapping (not in DWIM list)
 - `qw(word1 word2 ...)` — quoted word list; creates a vector of

@@ -15,12 +15,23 @@ NTH-LIT-RE =: /(\w[\w-]*)\.nth\(\s*(\d+)\s*\)/
 NTH-VAR-RE =: /(\w[\w-]*)\.nth\(\s*([A-Za-z_][\w-]*)\s*\)/
 PLUS-RE =: /([A-Za-z_][\w-]*)\s+\+\s+1(?![\d.])/
 MINUS-RE =: /([A-Za-z_][\w-]*)\s+-\s+1(?![\d.])/
+FIRST-CALL-RE =: /(\w[\w-]*)\.first\(\)/
+LAST-CALL-RE =: /(\w[\w-]*)\.last\(\)/
+VECTOR-LIT-RE =: /\bvector\(/
+APPLY-STR-RE =: /\bapply\(\s*str\b/
+APPLY-STR-PAIR-RE =: /^\s+apply\s+str:/
+STR-SINGLE-RE =: /\bstr\(\s*([A-Za-z_][\w-]*)\)/
+KW-BRACKETS-RE =: /^\s+(for|each|loop)\s+\[/
+KW-PARENS-RE =: /^\s+(when-not|when|if)\s+\(([^()]*)\):/
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 COMMENT-RE =: /^\s*#/
 
 THEN-NIL-MSG =: 'then: nil -> use when'
 ELSE-NIL-MSG =: 'else: nil -> use when-not'
+VECTOR-LIT-MSG =: 'vector(...) -> +[...]'
+APPLY-STR-MSG =: 'apply(str X) -> X:join (or join: X)'
+APPLY-STR-PAIR-MSG =: 'apply str: X -> X:join (or join: X)'
 
 defn main(*files):
   when files.!:
@@ -66,6 +77,20 @@ defn- check-patterns(file lineno code):
     file.count-matches(lineno code 'nth-bare-var' NTH-VAR-RE fmt-nth-var)
     file.count-matches(lineno code 'plus-1' PLUS-RE fmt-plus)
     file.count-matches(lineno code 'minus-1' MINUS-RE fmt-minus)
+    file.count-matches(lineno code 'first-call' FIRST-CALL-RE
+                       fmt-first-call)
+    file.count-matches(lineno code 'last-call' LAST-CALL-RE fmt-last-call)
+    file.count-matches(lineno code 'vector-lit' VECTOR-LIT-RE
+                       fmt-static(VECTOR-LIT-MSG))
+    file.count-matches(lineno code 'apply-str' APPLY-STR-RE
+                       fmt-static(APPLY-STR-MSG))
+    file.count-matches(lineno code 'apply-str-pair' APPLY-STR-PAIR-RE
+                       fmt-static(APPLY-STR-PAIR-MSG))
+    file.count-matches(lineno code 'str-single' STR-SINGLE-RE
+                       fmt-str-single)
+    file.count-matches(lineno code 'kw-brackets' KW-BRACKETS-RE
+                       fmt-kw-brackets)
+    file.count-matches(lineno code 'kw-parens' KW-PARENS-RE fmt-kw-parens)
     file.check-once(lineno code 'then-nil' THEN-NIL-RE THEN-NIL-MSG)
     file.check-once(lineno code 'else-nil' ELSE-NIL-RE ELSE-NIL-MSG)
 
@@ -93,6 +118,28 @@ defn- fmt-plus(m):
 
 defn- fmt-minus(m):
   format '%s - 1 -> %s.--': m.1 m.1
+
+defn- fmt-first-call(m):
+  format '%s.first() -> %s:first or %s.0': m.1 m.1 m.1
+
+defn- fmt-last-call(m):
+  format '%s.last() -> %s:last or %s.$': m.1 m.1 m.1
+
+defn- fmt-str-single(m):
+  format 'str(%s) -> "$%s"': m.1 m.1
+
+defn- fmt-static(msg):
+  fn(_):
+    =>: msg
+
+defn- fmt-kw-brackets(m):
+  kw =: m.1
+  =>: "$kw [...]: -> $kw ...:"
+
+defn- fmt-kw-parens(m):
+  kw =: m.1
+  cond =: m.2
+  =>: "$kw ($cond): -> $kw $cond:"
 
 defn- report(file lineno rule msg):
   say: "$file:$lineno: [$rule] $msg"
