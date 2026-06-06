@@ -521,10 +521,12 @@ defn binding-published?(dir new):
   if ENV.YS_RELEASE_FORCE_BINDINGS:
     =>: false
     else:
-      result =:
+      try:
         shell {:extra-env {"YS_RELEASE_PUBLISHED_QUIET" "1"}}:
           "util/release-binding-published $dir $new"
-      =>: result:ok
+        =>: true
+        catch Exception e:
+          =>: false
 
 
 defn do-website():
