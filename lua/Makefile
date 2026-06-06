@@ -79,10 +79,10 @@ $(LUA-ROCKSPEC): yamlscript.rockspec
 	          s/%REVISION%/$(LUA-RELEASE-REVISION)/g;' $< > $@
 
 $(LUA-CFFI): $(LUAROCKS) $(LUA-MESON)
-	luarocks install cffi-lua MESON_DIR=$(PYTHON-VENV)
+	luarocks install cffi-lua MESON_BINDIR=$(PYTHON-VENV)/bin
 
 $(LUA-CJSON): $(LUAROCKS) $(LUA-MESON)
-	luarocks install lua-cjson MESON_DIR=$(PYTHON-VENV)
+	luarocks install lua-cjson MESON_BINDIR=$(PYTHON-VENV)/bin
 
 $(LUA-MESON): $(PYTHON-VENV)
 	pip install meson ninja
