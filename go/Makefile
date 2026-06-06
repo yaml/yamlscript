@@ -26,7 +26,8 @@ build-doc:: ReadMe.md
 
 test:: build $(GO)
 	go $@
-	chmod -R u+w $(GOPATH)
+	[[ ! -d $(GOPATH) ]] || \
+	  chmod -R u+w $(GOPATH)
 
 release:
 	$(ROOT)/util/release-go
