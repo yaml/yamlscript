@@ -12,6 +12,9 @@ SHELL-LANGS += $(SECRETS-LANGS)
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
 include $(MAKES)/shell.mk
 
+FEZ := $(RAKU-SITE-BIN)/fez
+SECRETS-TOOLS := $(NODE) $(FEZ)
+
 BINDINGS := \
     clojure \
     crystal \
@@ -251,11 +254,23 @@ ifndef n
 endif
 	$(YS) $(ROOT)/util/release-yamlscript sanity-check $(o) $(n)
 
-# Step 2: Version bump
+# Step 2: Credential status
+release-secrets-list: $(YS)
+	$(YS) $(ROOT)/util/release-yamlscript secrets-list
+
+# Step 3: Credential updates
+release-secrets-update: $(YS) $(GH) $(SECRETS-TOOLS)
+	$(YS) $(ROOT)/util/release-yamlscript secrets-update
+
+# Step 4: Publish credentials
+release-secrets-publish: $(YS) $(GH)
+	$(YS) $(ROOT)/util/release-yamlscript secrets-publish
+
+# Step 5: Version bump
 release-version-bump: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript version-bump
 
-# Step 3: Changelog
+# Step 6: Changelog
 release-changelog: $(YS)
 ifndef o
 	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
@@ -270,46 +285,46 @@ release-test:
 	@echo "Note: Tests now run automatically in GitHub Actions"
 	@echo "Use 'gh workflow run test-all.yaml' to trigger manually"
 
-# Step 4: Binding changelogs
+# Step 7: Binding changelogs
 release-binding-changelogs: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript binding-changelogs
 
-# Step 5: Commit
+# Step 8: Commit
 release-commit: $(YS)
 ifndef n
 	$(error 'make release-commit' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript commit $(n)
 
-# Step 6: Tag
+# Step 9: Tag
 release-tag: $(YS)
 ifndef n
 	$(error 'make release-tag' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript tag $(n)
 
-# Step 7: Push
+# Step 10: Push
 release-push: $(YS)
 ifndef n
 	$(error 'make release-push' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript push $(n)
 
-# Step 8: Trigger GitHub Actions
+# Step 11: Trigger GitHub Actions
 release-build-github: $(YS)
 ifndef n
 	$(error 'make release-build-github' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript build-github $(n)
 
-# Step 9: Release bindings
+# Step 12: Release bindings
 release-bindings: $(YS)
 ifndef n
 	$(error 'make release-bindings' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript bindings $(n)
 
-# Step 10: Publish website
+# Step 13: Publish website
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript website
 
@@ -321,9 +336,6 @@ release-website: $(YS)
 # system). Grows as services gain a 'login'/'fetch' in
 # util/yamlscript-secrets. node provides `npm login`; fez (installed
 # via zef on the local rakudo) provides `fez login`.
-FEZ := $(RAKU-SITE-BIN)/fez
-SECRETS-TOOLS := $(NODE) $(FEZ)
-
 $(FEZ): $(RAKU)
 	zef install fez
 	touch $@
@@ -341,8 +353,8 @@ secrets-list: $(YS)
 secrets-publish: $(YS) $(GH)
 	$(YS) $(ROOT)/util/yamlscript-secrets --publish
 
-# Prepare a release: bump version, edit changelog, then refresh and
-# publish any due credentials. Usage: make release-prep o=OLD n=NEW
+# Prepare a release: refresh credentials, bump versions, and update
+# changelogs. Usage: make release-prep o=OLD n=NEW
 release-prep: $(YS) $(GH)
 ifndef o
 	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
@@ -350,10 +362,11 @@ endif
 ifndef n
 	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
 endif
-	$(MAKE) release-version-bump
-	$(MAKE) release-changelog o=$(o) n=$(n)
 	$(MAKE) secrets-update
 	$(MAKE) secrets-publish
+	$(MAKE) release-version-bump
+	$(MAKE) release-changelog o=$(o) n=$(n)
+	$(MAKE) release-binding-changelogs
 
 #------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., 1.2.3)'
+        description: 'Version to release (e.g., 0.2.10)'
         required: true
         type: string
 
@@ -12,55 +12,88 @@ defaults:
   run:
     shell: bash
 
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+
 env:
   VERSION: ${{ inputs.version }}
-  GRAALVM_VERSION: '22.3.0'
   JAVA_VERSION: '17'
 
 jobs:
   verify-release:
-    name: Verify Release Prerequisites
+    name: Verify release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-    - name: Checkout code
+    - name: Checkout tag
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.version }}
         fetch-depth: 0
 
-    - name: Check tag exists
+    - name: Check tag and version
       run: |
+        if ! [[ "$VERSION" =~ ^0\.[0-9]+\.[0-9]+$ ]]; then
+          echo "ERROR: Invalid version: $VERSION"
+          exit 1
+        fi
+
         if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
           echo "ERROR: Tag $VERSION does not exist"
-          echo "Please run 'make release o=OLD n=$VERSION' locally first"
           exit 1
         fi
-        echo "✓ Tag $VERSION exists"
 
-    - name: Check tag points to current commit
-      run: |
-        TAG_COMMIT=$(git rev-parse "$VERSION^{commit}")
-        HEAD_COMMIT=$(git rev-parse HEAD)
-        if [[ $TAG_COMMIT != $HEAD_COMMIT ]]; then
-          echo "ERROR: Tag $VERSION does not point to HEAD"
-          echo "Tag commit: $TAG_COMMIT"
-          echo "HEAD commit: $HEAD_COMMIT"
+        if [[ $(git rev-parse "$VERSION^{commit}") != \
+              $(git rev-parse HEAD) ]]; then
+          echo "ERROR: Tag $VERSION does not point to checkout HEAD"
           exit 1
         fi
-        echo "✓ Tag $VERSION points to HEAD"
 
-    - name: Check no existing release with assets
+        if [[ $(sed -n 's/^version: //p' Meta) != "$VERSION" ]]; then
+          echo "ERROR: Meta version does not match $VERSION"
+          exit 1
+        fi
+
+    - name: Check release assets are not already published
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         if gh release view "$VERSION" --json assets --jq '.assets | length' \
            2>/dev/null | grep -q '^[1-9]'; then
           echo "ERROR: Release $VERSION already has assets"
-          echo "Delete the release first if you want to rebuild"
-          echo "https://github.com/${{ github.repository }}/releases/tag/$VERSION"
+          printf '%s%s\n' \
+            "https://github.com/${{ github.repository }}/releases/tag/" \
+            "$VERSION"
           exit 1
         fi
-        echo "✓ No existing release assets found"
+
+  test-linux:
+    name: Test Linux
+    needs: verify-release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Run tests
+      run: make test-all
+
+  test-macos:
+    name: Test macOS
+    needs: verify-release
+    runs-on: macos-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Run tests
+      run: make test-all
 
   build-linux-x64:
     name: Build Linux x64
@@ -68,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:20.04
     steps:
-    - name: Checkout code
+    - name: Checkout tag
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.version }}
@@ -77,30 +110,25 @@ jobs:
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'graalvm'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
         native-image-job-reports: 'true'
 
     - name: Install build dependencies
       run: |
         apt-get update
-        apt-get install -y build-essential zlib1g-dev curl git
+        apt-get install -y build-essential curl git zlib1g-dev
 
-    - name: Build and create release archives (long wait)
+    - name: Build release archives
       run: |
         make -C ys build
         make -C libys build
-        make release-build
-        # Copy JAR files with release names
-        cp libys/target/libys-$VERSION-standalone.jar \
-           libys-$VERSION-standalone.jar
-        cp ys/target/uberjar/yamlscript.cli-$VERSION-SNAPSHOT-standalone.jar \
-           yamlscript.cli-$VERSION-standalone.jar
+        make release-build jars
 
-    - name: List created archives
+    - name: List release archives
       run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
 
-    - name: Upload artifact
+    - name: Upload Linux artifacts
       uses: actions/upload-artifact@v4
       with:
         name: linux-x64
@@ -111,11 +139,11 @@ jobs:
         retention-days: 7
 
   build-macos-arm64:
-    name: Build macOS ARM64 (Apple Silicon)
+    name: Build macOS ARM64
     needs: verify-release
     runs-on: macos-latest
     steps:
-    - name: Checkout code
+    - name: Checkout tag
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.version }}
@@ -124,20 +152,20 @@ jobs:
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'graalvm'
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
         native-image-job-reports: 'true'
 
-    - name: Build and create release archives (long wait)
+    - name: Build release archives
       run: |
         make -C ys build
         make -C libys build
         make release-build
 
-    - name: List created archives
+    - name: List release archives
       run: ls -lh ys-*.tar.xz libys-*.tar.xz
 
-    - name: Upload artifact
+    - name: Upload macOS artifacts
       uses: actions/upload-artifact@v4
       with:
         name: macos-arm64
@@ -147,26 +175,26 @@ jobs:
         retention-days: 7
 
   create-release:
-    name: Create GitHub Release
+    name: Create GitHub release
     needs:
+    - test-linux
+    - test-macos
     - build-linux-x64
     - build-macos-arm64
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-    - name: Checkout code
+    - name: Checkout tag
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.version }}
 
-    - name: Extract release notes from Changes file
-      id: extract_notes
+    - name: Build release notes
       run: |
-        # Start with the template, replacing version
-        sed "s/0.2.8/$VERSION/g" common/release.md > release-notes.txt
+        sed "s/YS version .*/YS version $VERSION/" \
+          common/release.md > release-notes.txt
 
-        # Extract and append changes from Changes file
         if [[ -f Changes ]]; then
           awk -v ver="$VERSION" '
             /^- version: / && $3 == ver { found = 1; next }
@@ -175,16 +203,14 @@ jobs:
           ' Changes | sed 's/^  - /* /' >> release-notes.txt
         fi
 
-        echo "Release notes:"
         cat release-notes.txt
 
-    - name: Create GitHub Release
-      id: create_release
+    - name: Create release
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         if gh release view "$VERSION" >/dev/null 2>&1; then
-          echo "Release $VERSION already exists, skipping creation"
+          echo "Release $VERSION already exists"
         else
           gh release create "$VERSION" \
             --title "$VERSION" \
@@ -194,31 +220,117 @@ jobs:
         fi
 
   upload-assets:
-    name: Upload Release Assets
+    name: Upload release assets
     needs: create-release
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-    - name: Checkout code
+    - name: Checkout tag
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.version }}
 
-    - name: Download all artifacts
+    - name: Download release artifacts
       uses: actions/download-artifact@v4
 
     - name: Prepare release assets
       run: |
-        find . -type f -name "*.tar.xz" -exec mv {} . \;
-        find . -type f -name "*.jar" -exec mv {} . \;
-        ls -lh *.tar.xz *.jar
+        find . -type f -name '*.tar.xz' -exec mv {} . \;
+        find . -type f -name '*.jar' -exec mv {} . \;
+        ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
 
-    - name: Upload assets to GitHub Release
+    - name: Upload release assets
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         gh release upload "$VERSION" \
           ys-*.tar.xz libys-*.tar.xz *.jar --clobber
-        echo "Release $VERSION complete!"
         gh release view "$VERSION"
+
+  publish-bindings:
+    name: Publish language bindings
+    needs: upload-assets
+    runs-on: ubuntu-latest
+    environment: release-publish
+    permissions:
+      contents: write
+    env:
+      YS_RELEASE_CI: '1'
+      YS_RELEASE_VERSION_NEW: ${{ inputs.version }}
+      GH_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
+      GITHUB_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
+      CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
+      CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+      clojars_username: ${{ secrets.CLOJARS_USERNAME }}
+      clojars_password: ${{ secrets.CLOJARS_PASSWORD }}
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      HACKAGE_TOKEN: ${{ secrets.HACKAGE_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+      PACKAGIST_USER: ${{ secrets.PACKAGIST_USER }}
+      PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+      PAUSE_USER: ${{ secrets.PAUSE_USER }}
+      PAUSE_PASS: ${{ secrets.PAUSE_PASS }}
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
+      CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
+      FEZ_TOKEN: ${{ secrets.FEZ_TOKEN }}
+      BINDING_REPO_SSH_KEY: ${{ secrets.BINDING_REPO_SSH_KEY }}
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+        fetch-depth: 0
+
+    - name: Configure mirror repo SSH key
+      if: ${{ env.BINDING_REPO_SSH_KEY != '' }}
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ env.BINDING_REPO_SSH_KEY }}
+
+    - name: Configure Maven credentials
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.mvn-user-settings.xml <<EOF
+        <settings>
+          <servers>
+            <server>
+              <id>clojars</id>
+              <username>${CLOJARS_USERNAME}</username>
+              <password>${CLOJARS_PASSWORD}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
+
+    - name: Configure npm credentials
+      run: |
+        if [[ -n "${NODE_AUTH_TOKEN:-}" ]]; then
+          echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' \
+            > ~/.npmrc
+        fi
+
+    - name: Publish bindings
+      run: make release-bindings n="$VERSION"
+
+  publish-website:
+    name: Publish website
+    needs: publish-bindings
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.version }}
+        fetch-depth: 0
+
+    - name: Publish website
+      run: make release-website

@@ -16,10 +16,16 @@ $(if $(shell which composer),,$(error PHP composer not installed))
 # $(if $(shell which ys),,$(shell $(MAKE) ys &>/dev/null))
 # $(error $(shell which ys))
 
+PACKAGIST-USER ?= $(PACKAGIST_USER)
+PACKAGIST-TOKEN ?= $(PACKAGIST_TOKEN)
+ifeq (,$(PACKAGIST-USER))
 PACKAGIST-USER := \
-  $(shell ys -e '.packagist.user:say' ~/.yamlscript-secrets.yaml)
+  $(shell ys -e '.packagist.user:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
+ifeq (,$(PACKAGIST-TOKEN))
 PACKAGIST-TOKEN := \
-  $(shell ys -e '.packagist.token:say' ~/.yamlscript-secrets.yaml)
+  $(shell ys -e '.packagist.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 PACKAGIST-URL := \
   https://packagist.org/api/update-package
 PACKAGIST-URL := \

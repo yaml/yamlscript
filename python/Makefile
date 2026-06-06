@@ -11,6 +11,16 @@ include $(MAKES)/shell.mk
 
 VENV := source $(PYTHON-VENV)/bin/activate
 
+ifdef PYPI_API_TOKEN
+TWINE-UPLOAD := \
+  TWINE_USERNAME=__token__ \
+  TWINE_PASSWORD=$(PYPI_API_TOKEN) \
+  twine upload --verbose dist/yamlscript-*.tar.gz
+else
+TWINE-UPLOAD := \
+  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz
+endif
+
 export PYTHONPATH := \
   $(ROOT)/python/lib:$(PYTHON-VENV)/lib/python$(PYTHON-VER)/site-packages
 
@@ -57,7 +67,7 @@ release: publish
 publish: dist
 	( \
 	  $(VENV) && \
-	  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz \
+	  $(TWINE-UPLOAD) \
 	)
 
 clean::

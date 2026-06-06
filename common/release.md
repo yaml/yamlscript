@@ -2,7 +2,7 @@
 [YS](https://yamlscript.org) publishes binary releases for the `ys` command line tool and for the `libys` shared library.
 The following architectures are currently supported:
 
-* Linux + Intel 
+* Linux + Intel
 * macOS + ARM
 
 Run this command to install `~/.local/bin/ys`:
@@ -14,5 +14,4 @@ $ curl https://getys.org/ys | bash
 See [Installing YS](https://yamlscript.org/doc/install/) for more detailed information about installing YS things.
 
 
-## Changes in YS version 0.2.8
-
+## Changes in YS version VERSION

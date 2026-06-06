@@ -5,10 +5,13 @@ include $(MAKES)/shell.mk
 
 CABAL-INDEX := $(CABAL_DIR)/packages/hackage.haskell.org/01-index.tar.gz
 
+HACKAGE-TOKEN ?= $(HACKAGE_TOKEN)
+ifeq (,$(HACKAGE-TOKEN))
 ifneq (,$(shell command -v ys))
 ifneq (,$(wildcard ~/.yamlscript-secrets.yaml))
 HACKAGE-TOKEN := \
-  $(shell ys -e '.hackage.token:say' ~/.yamlscript-secrets.yaml)
+  $(shell ys -e '.hackage.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 endif
 endif
 

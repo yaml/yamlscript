@@ -7,8 +7,14 @@ include $(MAKES)/shell.mk
 NODE-ROOT := $(ROOT)/nodejs
 export NODE_PATH := $(NODE-ROOT)/lib
 
+NPM-TOKEN ?= $(NODE_AUTH_TOKEN)
+ifeq (,$(NPM-TOKEN))
+NPM-TOKEN := $(NPM_TOKEN)
+endif
+ifeq (,$(NPM-TOKEN))
 NPM-TOKEN := \
   $(shell ys -e '.npm.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 
 #------------------------------------------------------------------------------
 
@@ -24,7 +30,7 @@ update: $(NODE) package.json
 	npm install
 
 release: $(NODE)
-	NPM_TOKEN=$(NPM-TOKEN) npm publish
+	NODE_AUTH_TOKEN=$(NPM-TOKEN) npm publish
 
 clean::
 	$(RM) package-lock.json strace.txt bad

@@ -4,10 +4,13 @@ include $(COMMON)/binding.mk
 include $(MAKES)/rust.mk
 include $(MAKES)/shell.mk
 
+CRATES-TOKEN ?= $(CRATES_TOKEN)
+ifeq (,$(CRATES-TOKEN))
 ifneq (,$(shell command -v ys))
 ifneq (,$(wildcard ~/.yamlscript-secrets.yaml))
 CRATES-TOKEN := \
-  $(shell ys -e '.crates.token:say' ~/.yamlscript-secrets.yaml)
+  $(shell ys -e '.crates.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 endif
 endif
 

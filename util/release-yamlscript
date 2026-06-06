@@ -10,6 +10,9 @@
 #   release             - Run full interactive release workflow
 #   list                - Show all release steps
 #   sanity-check        - Verify prerequisites (old/new versions)
+#   secrets-list        - Show release credential status
+#   secrets-update      - Refresh due release credentials
+#   secrets-publish     - Publish credentials to GitHub Actions secrets
 #   version-bump        - Update versions in all files
 #   changelog           - Edit changelog interactively
 #   binding-changelogs  - Update binding changelogs
@@ -23,6 +26,7 @@
 # Environment variables:
 #   YS_RELEASE_DRYRUN=1     - Don't run commands, just show them
 #   YS_RELEASE_VERBOSE=1    - Show more information
+#   YS_RELEASE_CI=1         - Run non-interactively in GitHub Actions
 
 version-file =: '.version.ys'
 
@@ -36,8 +40,8 @@ bindings =::
 - julia
 - lua
 - nodejs
-- perl
 - perl-alien
+- perl
 - php
 - python
 - raku
@@ -56,6 +60,9 @@ defn main(cmd *args):
     'release'            : do-release(args*)
     'list'               : do-list()
     'sanity-check'       : do-sanity-check(args*)
+    'secrets-list'       : do-secrets-list()
+    'secrets-update'     : do-secrets-update()
+    'secrets-publish'    : do-secrets-publish()
     'version-bump'       : do-version-bump()
     'changelog'          : do-changelog(args*)
     'binding-changelogs' : do-binding-changelogs()
@@ -63,7 +70,7 @@ defn main(cmd *args):
     'tag'                : do-tag(args*)
     'push'               : do-push(args*)
     'build-github'       : do-build-github(args*)
-    'bindings'           : do-bindings()
+    'bindings'           : do-bindings(args*)
     'website'            : do-website()
     else                 :
       die: |
@@ -88,31 +95,40 @@ defn do-list():
       1. make release-sanity-check o=X n=Y
          Verify old version, clean tree, valid new version
 
-      2. make release-version-bump
+      2. make secrets-list
+         Show release credential status
+
+      3. make secrets-update
+         Refresh due release credentials
+
+      4. make secrets-publish
+         Publish release credentials to GitHub Actions secrets
+
+      5. make release-version-bump
          Update versions in all files via .version.ys
 
-      3. make release-changelog o=X n=Y
+      6. make release-changelog o=X n=Y
          Edit changelog interactively, validate YAML
 
-      4. make release-binding-changelogs
+      7. make release-binding-changelogs
          Update perl and ruby changelog files
 
-      5. make release-commit n=Y
+      8. make release-commit n=Y
          Commit all changes
 
-      6. make release-tag n=Y
+      9. make release-tag n=Y
          Create git tag
 
-      7. make release-push n=Y
+     10. make release-push n=Y
          Push commits and tags to origin
 
-      8. make release-build-github n=Y
-         Trigger test-all and release workflows, watch both
+     11. make release-build-github n=Y
+         Trigger release workflow and watch it
 
-      9. make release-bindings
+     12. make release-bindings n=Y
          Release all 16 language bindings
 
-     10. make release-website
+     13. make release-website
          Publish yamlscript.org website
 
 
@@ -135,48 +151,63 @@ defn do-release(old new):
   do-sanity-check: old new
   say: ''
 
-  # Step 2: Version bump
-  confirm('Step 2 - Bump version in all files?') ||: exit()
-  do-version-bump:
+  # Step 2: Release credentials
+  confirm('Step 2 - Review release credentials?') ||: exit()
+  do-secrets-list:
   say: ''
 
-  # Step 3: Changelog
-  confirm('Step 3 - Edit changelog?') ||: exit()
+  confirm('Step 3 - Update due release credentials?') ||: exit()
+  do-secrets-update:
+  say: ''
+
+  confirm('Step 4 - Publish release credentials to GitHub?') ||: exit()
+  do-secrets-publish:
+  say: ''
+
+  # Step 5: Version bump
+  confirm('Step 5 - Bump version in all files?') ||: exit()
+  do-version-bump:
+  show-version-diff:
+  confirm('Review the version edits above. Continue?') ||: exit()
+  say: ''
+
+  # Step 6: Changelog
+  confirm('Step 6 - Edit changelog?') ||: exit()
   do-changelog: old new
   say: ''
 
-  # Step 4: Binding changelogs
-  confirm('Step 4 - Update binding changelogs?') ||: exit()
+  # Step 7: Binding changelogs
+  confirm('Step 7 - Update binding changelogs?') ||: exit()
   do-binding-changelogs:
   say: ''
 
-  # Step 5: Commit
-  confirm('Step 5 - Commit changes?') ||: exit()
+  # Step 8: Commit
+  confirm('Step 8 - Commit changes?') ||: exit()
   do-commit: new
   say: ''
 
-  # Step 6: Tag
-  confirm('Step 6 - Create git tag?') ||: exit()
+  # Step 9: Tag
+  confirm('Step 9 - Create git tag?') ||: exit()
   do-tag: new
   say: ''
 
-  # Step 7: Push
-  confirm('Step 7 - Push to remote?') ||: exit()
+  # Step 10: Push
+  confirm('Step 10 - Push to remote?') ||: exit()
   do-push: new
   say: ''
 
-  # Step 8: Build on GitHub
-  confirm('Step 8 - Trigger GitHub Actions workflows?') ||: exit()
+  # Step 11: Build on GitHub
+  confirm('Step 11 - Trigger GitHub Actions workflow?') ||: exit()
   do-build-github: new
   say: ''
 
-  # Step 9: Release bindings
-  confirm('Step 9 - Release all bindings?') ||: exit()
-  do-bindings:
+  # Step 12: Release bindings
+  confirm('Step 12 - Release all bindings?') ||: exit()
+  do-bindings: new
   say: ''
 
-  # Step 10: Publish website
-  confirm('Step 10 - Publish website?') ||: exit()
+  # Step 13: Publish website
+  confirm('Step 13 - Publish website?') ||: exit()
   do-website:
   say: ''
 
@@ -253,9 +284,27 @@ defn confirm(msg default='y'):
 defn do-version-bump():
   o: "Running 'make bump' to update versions in all files"
   run:: make bump
-  when verbose:
-    run:: git -P diff
   say: '✓ Version bump complete'
+
+
+defn do-secrets-list():
+  o: 'Showing release credential status'
+  run:: make secrets-list
+
+
+defn do-secrets-update():
+  o: 'Updating due release credentials'
+  run:: make secrets-update
+
+
+defn do-secrets-publish():
+  o: 'Publishing release credentials to GitHub Actions'
+  run:: make secrets-publish
+
+
+defn show-version-diff():
+  o: 'Version edit diff'
+  run:: git -P diff
 
 
 defn do-changelog(old new):
@@ -353,8 +402,8 @@ defn do-push(new):
   say: "  Branch: $current-branch"
   say: "  Tag: $new"
 
-  run:: git push
-  run:: git push --force --tags
+  run: "git push origin $current-branch"
+  run: "git push origin $new"
 
   say: '✓ Pushed to remote'
 
@@ -371,23 +420,6 @@ defn do-build-github(new):
 
   if gh-available:
     then:
-      # 1. Trigger test-all workflow
-      say: 'Triggering test-all workflow...'
-      test-trigger =:
-        shell {:extra-env {"GH_TOKEN" token}}:
-          "gh workflow run test-all.yaml --ref $current-branch"
-
-      if test-trigger:ok:
-        then:
-          say: '✓ Test workflow triggered'
-          sleep: 3
-          test-run-id =:
-            trim:
-              sh-out {:extra-env {"GH_TOKEN" token}}:
-                "gh run list --workflow=test-all.yaml --limit=1 --json databaseId --jq '.[0].databaseId'"
-          say: "  Test run ID: $test-run-id"
-
-      # 2. Trigger release workflow
       say: 'Triggering release workflow...'
       trigger-result =:
         shell {:extra-env {"GH_TOKEN" token}}:
@@ -400,7 +432,8 @@ defn do-build-github(new):
           run-id =:
             trim:
               sh-out {:extra-env {"GH_TOKEN" token}}:
-                "gh run list --workflow=release.yaml --limit=1 --json databaseId --jq '.[0].databaseId'"
+                str: +"gh run list --workflow=release.yaml --limit=1 "
+                  "--json databaseId --jq '.[0].databaseId'"
 
           # 3. Watch build workflow
           say: "\nWatching release workflow (run $run-id)..."
@@ -408,25 +441,13 @@ defn do-build-github(new):
             shell {:extra-env {"GH_TOKEN" token}}:
               "gh run watch $run-id --exit-status --interval=10"
 
-          if watch-result:ok:
-            then:
-              release-url =: "https://github.com/yaml/yamlscript/releases/tag/$new"
-              say: "✓ Release workflow completed"
-              say: "  Release page: $release-url"
+          when watch-result:ok:
+            release-url =:
+              str: +"https://github.com/yaml/yamlscript/releases/tag/"
+                new
+            say: "✓ Release workflow completed"
+            say: "  Release page: $release-url"
 
-          # 4. Watch test workflow (may still be running)
-          when test-run-id.?:
-            say: "\nChecking test-all workflow status (run $test-run-id)..."
-            test-watch =:
-              shell {:extra-env {"GH_TOKEN" token}}:
-                "gh run watch $test-run-id --exit-status --interval=10"
-            if test-watch:ok:
-              then:
-                say: '✓ Test workflow completed successfully'
-              else:
-                say: |
-                  ⚠ Test workflow may still be running or failed
-                  Check: https://github.com/yaml/yamlscript/actions/runs/$test-run-id
         else:
           workflow-url =:
             'https://github.com/yaml/yamlscript/actions/workflows/release.yaml'
@@ -454,16 +475,18 @@ defn do-build-github(new):
 
       prompt: 'Press Enter when workflow has completed...'
 
-defn do-bindings():
+defn do-bindings(new):
   o: "Releasing all language bindings"
+  check-version: new
 
-  say: 'Waiting for GitHub Release assets to be ready...'
-  prompt: 'Press Enter when ready to continue.'
+  when-not ENV.YS_RELEASE_CI:
+    say: 'Waiting for GitHub Release assets to be ready...'
+    prompt: 'Press Enter when ready to continue.'
 
   each dir bindings:
     say: "\nReleasing binding: $dir"
     try:
-      run: "make -C $dir release"
+      run: "make -C $dir release n=$new"
       catch Exception e:
         if dir.in?(qw(clojure java)):
           warn: "Failed to release $dir. Continuing."
@@ -471,8 +494,8 @@ defn do-bindings():
 
   # Clean up v-prefixed tags if they exist
   try:
-    run: "git tag -d v$(ENV.VERSION || '0.0.0')"
-    run: "git push origin :v$(ENV.VERSION || '0.0.0')"
+    run: "git tag -d v$new"
+    run: "git push origin :v$new"
     catch Exception e:
 
   # Restore perl/perl-alien Changes files
@@ -525,17 +548,11 @@ defn run(cmd):
   say: "+ $cmd"
 
   when-not dryrun:
-    token =:
-      sh-out:
-        "ys -l $(ENV.HOME)/.yamlscript-secrets.yaml -e '.github.token:say'"
-    shell {:extra-env {"GH_TOKEN" token}}: cmd
+    shell {:extra-env github-env()}: cmd
 
 defn check-args(old new):
-  when-not (string? old) && (re-matches /0\.\d+\.\d+/ old):
-    die: "Invalid old version '$old'"
-
-  when-not (string? new) && (re-matches /0\.\d+\.\d+/ new):
-    die: "Invalid new version '$new'"
+  check-version: old 'old'
+  check-version: new 'new'
 
   # Return context mapping:
   =>::
@@ -557,3 +574,29 @@ defn make-context():
 
 defn ok(sh):
   sh.exit == 0
+
+defn check-version(version name='version'):
+  valid =: (string? version) && (version =~ /^0\.\d+\.\d+$/)
+
+  when-not valid:
+    die: "Invalid $name version '$version'"
+
+defn github-env():
+  token =:
+    ENV.GH_TOKEN || ENV.GITHUB_TOKEN || legacy-github-token()
+
+  env =:
+    if token.?:
+      hash-map: +"GH_TOKEN" token
+      hash-map:
+
+  =>: env
+
+defn legacy-github-token():
+  secrets =: "$(ENV.HOME)/.yamlscript-secrets.yaml"
+  token =:
+    if test("-f" secrets):
+      sh-out: "ys -l $secrets -e '.github.token:say'"
+      =>: ''
+
+  =>: token

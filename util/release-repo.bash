@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-set -x
+[[ ${YS_RELEASE_VERBOSE-} ]] && set -x
 
 root=$YAMLSCRIPT_ROOT
 version=$YS_RELEASE_VERSION_NEW
@@ -12,11 +12,11 @@ main() (
   clone
   update
   test
-  release || true
+  release
 )
 
 git() (
-  if [[ ${YS_RELEASE_DRY_RUN-} ]]; then
+  if [[ ${YS_RELEASE_DRYRUN-} || ${YS_RELEASE_DRY_RUN-} ]]; then
     echo "X - git $@"
   else
     command git "$@"
@@ -24,7 +24,7 @@ git() (
 )
 
 curl() (
-  if [[ ${YS_RELEASE_DRY_RUN-} ]]; then
+  if [[ ${YS_RELEASE_DRYRUN-} || ${YS_RELEASE_DRY_RUN-} ]]; then
     echo "X - curl $@"
   else
     command curl "$@"
@@ -37,11 +37,7 @@ init() {
   from_dir=$root/$lang
 }
 
-repo_url=git@github.com:yaml/yamlscript-$lang
-from_dir=$root/$lang
-
 clone() (
-  unset YS_RELEASE_DRY_RUN
   rm -fr "$repo_dir"
   git clone "$repo_url" "$repo_dir"
 )
@@ -50,12 +46,20 @@ test() (:)
 
 release() (
   cd "$repo_dir" || exit
-  [[ ${YS_RELEASE_DRY_RUN-} ]] && set +x
   git add -A .
-  git commit -m "Release $YS_RELEASE_VERSION_NEW"
-  git push
+
+  if git diff --cached --quiet; then
+    echo "No changes for yamlscript-$lang"
+  else
+    git commit -m "Release $YS_RELEASE_VERSION_NEW"
+    git push origin HEAD
+  fi
+
+  if git rev-parse "v$YS_RELEASE_VERSION_NEW" >/dev/null 2>&1; then
+    git tag -d "v$YS_RELEASE_VERSION_NEW"
+  fi
   git tag "v$YS_RELEASE_VERSION_NEW"
-  git push --tags
+  git push origin "v$YS_RELEASE_VERSION_NEW"
 )
 
 true

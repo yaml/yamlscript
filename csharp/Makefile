@@ -9,8 +9,11 @@ TEST-PROJECT-FILE := test/YAMLScript.Tests.csproj
 
 NUGET-SCHEMA := https://api.nuget.org/v3/index.json
 NUGET-PACKAGE-DIR := nupkg
+NUGET-API-KEY ?= $(NUGET_API_KEY)
+ifeq (,$(NUGET-API-KEY))
 NUGET-API-KEY := \
-  $(shell ys -e '.nuget.token:say' ~/.yamlscript-secrets.yaml)
+  $(shell ys -e '.nuget.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 
 build:: build-doc build-project
 

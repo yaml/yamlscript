@@ -7,7 +7,8 @@ include $(MAKES)/python.mk
 include $(MAKES)/shell.mk
 
 LUA-RELEASE-REVISION ?= 1
-LUA-API-VERSION := $(word 1,$(subst ., ,$(LUA-VERSION))).$(word 2,$(subst ., ,$(LUA-VERSION)))
+LUA-API-VERSION := \
+  $(word 1,$(subst ., ,$(LUA-VERSION))).$(word 2,$(subst ., ,$(LUA-VERSION)))
 
 export LUA_PATH := $(ROOT)/lua/lib/?.lua;;
 export LUA_CPATH := $(LOCAL-PREFIX)/lib/lua/$(LUA-API-VERSION)/?.so;;
@@ -26,8 +27,11 @@ LUA-DEPS := \
 LUA-ROCKSPEC := \
   yamlscript-$(YAMLSCRIPT_VERSION)-$(LUA-RELEASE-REVISION).rockspec
 
+LUAROCKS-API-KEY ?= $(LUAROCKS_API_KEY)
+ifeq (,$(LUAROCKS-API-KEY))
 LUAROCKS-API-KEY := \
   $(shell ys -e '.luarocks.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 
 
 build:: build-doc
