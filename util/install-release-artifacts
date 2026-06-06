@@ -59,6 +59,7 @@ cp -pP "$libys_dir"/libys* libys/lib/
 cp -pP "$libys_dir"/*.h libys/lib/
 
 chmod +x ys/bin/ys-* 2>/dev/null || true
+find ys/bin libys/lib -type f -exec touch {} +
 
 echo "Installed release artifacts:"
 ls -lh ys/bin/ys-* libys/lib/libys*

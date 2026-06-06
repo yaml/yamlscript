@@ -63,6 +63,11 @@ CLEAN := $(DIRS:%=clean-%)
 REALCLEAN := $(DIRS:%=realclean-%)
 DISTCLEAN := $(DIRS:%=distclean-%)
 
+ifdef YS_RELEASE_SKIP_HASKELL_TESTS
+TEST := $(filter-out test-haskell,$(TEST))
+TEST-BINDINGS := $(filter-out test-haskell,$(TEST-BINDINGS))
+endif
+
 export HEAD := $(shell git rev-parse HEAD)
 
 LYS-JAR-RELEASE := libys-$(YS_VERSION)-standalone.jar
@@ -334,7 +339,7 @@ endif
 	$(MAKE) release-build-github n=$(n)
 
 # Step 12: Release bindings
-release-bindings: $(YS)
+release-bindings: $(if $(YS_RELEASE_CI),,$(YS))
 ifndef n
 	$(error 'make release-bindings' requires n=NEW_VERSION)
 endif

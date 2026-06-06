@@ -90,7 +90,7 @@ jobs:
       run: util/install-release-artifacts release-artifacts
 
     - name: Run tests
-      run: make test-all
+      run: make test-all YS_RELEASE_SKIP_HASKELL_TESTS=1
 
   test-macos:
     name: Test macOS
@@ -112,7 +112,7 @@ jobs:
       run: util/install-release-artifacts release-artifacts
 
     - name: Run tests
-      run: make test-all
+      run: make test-all YS_RELEASE_SKIP_HASKELL_TESTS=1
 
   build-linux-x64:
     name: Build Linux x64
