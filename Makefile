@@ -322,16 +322,15 @@ ifndef n
 endif
 	$(YS) $(ROOT)/util/release-yamlscript build-github $(n)
 
-# Retry a failed unpublished release by moving the existing tag to HEAD and
-# redispatching the GitHub release workflow.
+# Retry a failed release by deleting its GitHub release, moving the existing
+# tag to HEAD, and redispatching the GitHub release workflow.
 release-retry: $(YS) $(GH)
 ifndef n
 	$(error 'make release-retry' requires n=NEW_VERSION)
 endif
 	@if gh release view $(n) --repo yaml/yamlscript >/dev/null 2>&1; then \
-	  echo "Error: GitHub release $(n) already exists."; \
-	  echo "Refusing to retag a release that may be published."; \
-	  exit 1; \
+	  echo "Deleting existing GitHub release $(n)"; \
+	  gh release delete $(n) --repo yaml/yamlscript --yes; \
 	fi
 	git push origin main
 	git tag -f $(n) HEAD
