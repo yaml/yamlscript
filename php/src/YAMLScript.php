@@ -65,16 +65,22 @@ class YAMLScript
 
         if (self::$ffi === null) {
             self::$ffi = FFI::cdef('
-                int graal_create_isolate(void* params, void** isolate, void** thread);
+                int graal_create_isolate(
+                    void* params, void** isolate, void** thread
+                );
                 int graal_tear_down_isolate(void* thread);
-                char* load_ys_to_json(void* thread, const char* input);
+                char* load_ys_to_json(long long int thread, const char* input);
             ', self::$libPath);
         }
 
         // Create isolate thread
         $isolatePtr = FFI::addr(FFI::new('void*'));
         $threadPtr = FFI::addr(FFI::new('void*'));
-        $result = self::$ffi->graal_create_isolate(null, $isolatePtr, $threadPtr);
+        $result = self::$ffi->graal_create_isolate(
+            null,
+            $isolatePtr,
+            $threadPtr
+        );
 
         if ($result !== 0) {
             throw new RuntimeException('Failed to create isolate');
@@ -106,7 +112,8 @@ class YAMLScript
                 return json_encode([]);
             }
 
-            $result = self::$ffi->load_ys_to_json($this->isolateThread, $input);
+            $threadId = FFI::cast('long long int', $this->isolateThread);
+            $result = self::$ffi->load_ys_to_json($threadId, $input);
 
             if ($result === null) {
                 throw new RuntimeException('Compilation failed');

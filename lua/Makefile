@@ -38,7 +38,12 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
+ifdef IS-MACOS
+test::
+	@echo "Skipping Lua tests on macOS: cffi-lua fails on macOS ARM64"
+else
 test:: test-basic test-ffi
+endif
 
 test-basic: $(LUA-DEPS)
 	lua test/test_basic.lua
