@@ -15,6 +15,7 @@
 /libys-*
 /release*.log
 /release-changes.txt
+/release-changes.txt.*
 /release-id.txt
 /talk/
 /website/

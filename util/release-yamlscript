@@ -152,35 +152,35 @@ defn do-release(old new):
   say: ''
 
   # Step 2: Release credentials
-  confirm('Step 2 - Update due release credentials?') ||: exit()
+  confirm: 'Step 2 - Update due release credentials?'
   do-secrets-update:
   say: ''
 
-  confirm('Step 3 - Review release credentials?') ||: exit()
+  confirm: 'Step 3 - Review release credentials?'
   do-secrets-list:
   say: ''
 
-  confirm('Step 4 - Publish release credentials to GitHub?') ||: exit()
+  confirm: 'Step 4 - Publish release credentials to GitHub?'
   do-secrets-publish:
   say: ''
 
   # Step 5: Version bump
-  confirm('Step 5 - Bump version in all files?') ||: exit()
+  confirm: 'Step 5 - Bump version in all files?'
   do-version-bump:
   say: ''
 
   # Step 6: Changelog
-  confirm('Step 6 - Edit changelog?') ||: exit()
+  confirm: 'Step 6 - Edit changelog?'
   do-changelog: old new
   say: ''
 
   # Step 7: Binding changelogs
-  confirm('Step 7 - Update binding changelogs?') ||: exit()
+  confirm: 'Step 7 - Update binding changelogs?'
   do-binding-changelogs:
   say: ''
 
   # Step 8: Commit
-  confirm('Step 8 - Commit changes?') ||: exit()
+  confirm: 'Step 8 - Commit changes?'
   do-commit: new
   say: ''
 
@@ -193,7 +193,7 @@ defn do-release(old new):
   say: ''
 
   # Step 11: Build on GitHub
-  confirm('Step 11 - Trigger GitHub Actions workflow?') ||: exit()
+  confirm: 'Step 11 - Trigger GitHub Actions workflow?'
   do-build-github: new
   say: ''
 
@@ -256,10 +256,12 @@ defn confirm(msg default='y'):
       else: "$msg [y/N]: "
 
   print: prompt-text
-  answer =: trim(read-line())
+  answer =: read-line():trim
 
   if answer.?:
-    then: answer =~ /^[Yy]/
+    if answer =~ /^[Yy]/:
+      true
+      exit()
     else: default == 'y'
 
 
@@ -271,7 +273,7 @@ defn do-version-bump():
   o: "Running 'make bump' to update versions in all files"
   run:: make bump
   show-version-diff:
-  confirm('Review the version edits above. Continue?') ||: exit()
+  confirm: 'Continue?'
   say: '✓ Version bump complete'
 
 
@@ -302,21 +304,23 @@ defn show-changelog-diff():
 
 defn do-changelog(old new):
   ctx =: check-args(old new)
+  changes-file =: "release-changes.txt.$(ctx.new)"
   o: "Updating 'Changes' file"
 
   when-not dryrun:
-    changes =: make-changes-entry(ctx)
-    write 'release-changes.txt': changes
+    when-not fs-e(changes-file):
+      changes =: make-changes-entry(ctx)
+      write changes-file: changes
 
     say: "Opening editor to review changelog entry..."
     editor =: ENV.EDITOR || 'vi'
-    run: "$editor release-changes.txt"
+    run: "$editor $changes-file"
 
     say: 'Validating YAML syntax...'
-    validate-yaml: read('release-changes.txt')
+    validate-yaml: read(changes-file)
 
     # Prepend to Changes file with version/date header
-    changes =: read('release-changes.txt')
+    changes =: read(changes-file)
 
     file-prepend 'Changes': |
       - version: $(ctx.new)
@@ -328,7 +332,7 @@ defn do-changelog(old new):
 
   say: '✓ Changes log file updated'
   show-changelog-diff:
-  confirm('Review the changelog edits above. Continue?') ||: exit()
+  confirm: 'Continue?'
 
 
 defn do-binding-changelogs():
@@ -386,7 +390,7 @@ defn do-commit(new):
 defn do-tag(new):
   o: "Creating git tag for version $new"
 
-  confirm("Create git tag $new now?") ||: exit()
+  confirm: "Create git tag $new now?"
   run: "git tag $new"
   say: "✓ Created tag $new"
 
@@ -398,7 +402,7 @@ defn do-push(new):
   say: "  Branch: $current-branch"
   say: "  Tag: $new"
 
-  confirm("Push $current-branch and tag $new to origin now?") ||: exit()
+  confirm: "Push $current-branch and tag $new to origin now?"
   run: "git push origin $current-branch"
   run: "git push origin $new"
 
