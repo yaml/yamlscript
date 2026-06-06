@@ -19,6 +19,7 @@ concurrency:
 env:
   VERSION: ${{ inputs.version }}
   JAVA_VERSION: '17'
+  YS_RELEASE_CI: '1'
 
 jobs:
   verify-release:
@@ -256,7 +257,6 @@ jobs:
     permissions:
       contents: write
     env:
-      YS_RELEASE_CI: '1'
       YS_RELEASE_VERSION_NEW: ${{ inputs.version }}
       GH_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
       GITHUB_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
