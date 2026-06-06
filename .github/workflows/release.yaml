@@ -262,8 +262,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
       CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
       CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
-      clojars_username: ${{ secrets.CLOJARS_USERNAME }}
-      clojars_password: ${{ secrets.CLOJARS_PASSWORD }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       HACKAGE_TOKEN: ${{ secrets.HACKAGE_TOKEN }}
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -314,7 +312,10 @@ jobs:
         fi
 
     - name: Publish bindings
-      run: make release-bindings n="$VERSION"
+      run: |
+        export clojars_username="$CLOJARS_USERNAME"
+        export clojars_password="$CLOJARS_PASSWORD"
+        make release-bindings n="$VERSION"
 
   publish-website:
     name: Publish website
