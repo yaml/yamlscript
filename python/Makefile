@@ -4,7 +4,7 @@ include $(COMMON)/binding.mk
 PYTHON-VER := 3.13
 PYTHON-VENV := $(ROOT)/python/.venv
 PYTHON-VENV-SETUP := \
-  pip install pytest pyyaml setuptools twine
+  uv pip install --python $(PYTHON-VENV) pytest pyyaml setuptools twine
 
 include $(MAKES)/python.mk
 include $(MAKES)/shell.mk
