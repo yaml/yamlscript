@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+binding=${1:?Usage: release-binding-published <binding> <version>}
+version=${2:?Usage: release-binding-published <binding> <version>}
+
+quiet=${YS_RELEASE_PUBLISHED_QUIET:-}
+
+log() {
+  [[ $quiet ]] || echo "$@"
+}
+
+url-exists() {
+  curl -A yamlscript-release -fsIL "$1" >/dev/null 2>&1
+}
+
+json-url-exists() {
+  curl -A yamlscript-release -fsL "$1" >/dev/null 2>&1
+}
+
+git-tag-exists() {
+  git ls-remote --exit-code --tags "$1" "refs/tags/$2" \
+    >/dev/null 2>&1
+}
+
+haskell-version() {
+  case $version in
+    *.*.*.*) printf '%s\n' "$version" ;;
+    *) printf '%s.0\n' "$version" ;;
+  esac
+}
+
+published=false
+
+case $binding in
+  java)
+    url='https://repo.clojars.org/org/yamlscript/yamlscript'
+    url-exists "$url/$version/yamlscript-$version.jar" &&
+      published=true
+    ;;
+  clojure)
+    url='https://repo.clojars.org/org/yamlscript/clj-yamlscript'
+    url-exists "$url/$version/clj-yamlscript-$version.jar" &&
+      published=true
+    ;;
+  csharp)
+    lower_version=$(printf '%s' "$version" | tr '[:upper:]' '[:lower:]')
+    url='https://api.nuget.org/v3-flatcontainer/yamlscript'
+    url-exists "$url/$lower_version/yamlscript.$lower_version.nupkg" &&
+      published=true
+    ;;
+  go)
+    git-tag-exists https://github.com/yaml/yamlscript-go "v$version" &&
+      published=true
+    ;;
+  haskell)
+    hversion=$(haskell-version)
+    url-exists "https://hackage.haskell.org/package/yamlscript-$hversion" &&
+      published=true
+    ;;
+  nodejs)
+    npm view "@yaml/yamlscript@$version" version >/dev/null 2>&1 &&
+      published=true
+    ;;
+  python)
+    json-url-exists "https://pypi.org/pypi/yamlscript/$version/json" &&
+      published=true
+    ;;
+  ruby)
+    url="https://rubygems.org/api/v2/rubygems/yamlscript/versions"
+    json-url-exists "$url/$version.json" &&
+      published=true
+    ;;
+  rust)
+    json-url-exists "https://crates.io/api/v1/crates/yamlscript/$version" &&
+      published=true
+    ;;
+  crystal|php)
+    git-tag-exists "https://github.com/yaml/yamlscript-$binding" \
+      "v$version" &&
+      published=true
+    ;;
+  julia|lua|perl|perl-alien|raku)
+    log "No published check for binding: $binding"
+    exit 1
+    ;;
+  *)
+    log "No published check for binding: $binding"
+    exit 1
+    ;;
+esac
+
+if $published; then
+  log "$binding $version is already published"
+  exit 0
+fi
+
+log "$binding $version is not published"
+exit 1

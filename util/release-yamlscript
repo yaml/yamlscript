@@ -27,6 +27,8 @@
 #   YS_RELEASE_DRYRUN=1     - Don't run commands, just show them
 #   YS_RELEASE_VERBOSE=1    - Show more information
 #   YS_RELEASE_CI=1         - Run non-interactively in GitHub Actions
+#   YS_RELEASE_FORCE_BINDINGS=1
+#                            - Try bindings even when already published
 
 version-file =: '.version.ys'
 
@@ -490,12 +492,15 @@ defn do-bindings(new):
   failures =: atom([])
 
   each dir bindings:
-    say: "\nReleasing binding: $dir"
-    try:
-      run: "make -C $dir release n=$new"
-      catch Exception e:
-        warn: "Failed to release $dir. Continuing."
-        swap failures: \(_.conj(dir))
+    if binding-published?(dir new):
+      say: "\nSkipping binding already published: $dir"
+      else:
+        say: "\nReleasing binding: $dir"
+        try:
+          run: "make -C $dir release n=$new"
+          catch Exception e:
+            warn: "Failed to release $dir. Continuing."
+            swap failures: \(_.conj(dir))
 
   # Clean up v-prefixed tags if they exist
   try:
@@ -510,6 +515,17 @@ defn do-bindings(new):
     die: "Failed binding release(s): $(failures.@.join(', '))"
 
   say: '✓ All bindings released'
+
+
+defn binding-published?(dir new):
+  if ENV.YS_RELEASE_FORCE_BINDINGS:
+    =>: false
+    else:
+      result =:
+        shell:
+          str: +"YS_RELEASE_PUBLISHED_QUIET=1 "
+            "util/release-binding-published $dir $new"
+      =>: result:ok
 
 
 defn do-website():
