@@ -484,14 +484,15 @@ defn do-bindings(new):
     say: 'Waiting for GitHub Release assets to be ready...'
     prompt: 'Press Enter when ready to continue.'
 
+  failures =: atom([])
+
   each dir bindings:
     say: "\nReleasing binding: $dir"
     try:
       run: "make -C $dir release n=$new"
       catch Exception e:
-        if dir.in?(qw(clojure java)):
-          warn: "Failed to release $dir. Continuing."
-          die: "Failed to release $dir. Exiting."
+        warn: "Failed to release $dir. Continuing."
+        swap failures: \(_.conj(dir))
 
   # Clean up v-prefixed tags if they exist
   try:
@@ -501,6 +502,9 @@ defn do-bindings(new):
 
   # Restore perl/perl-alien Changes files
   run: 'git checkout -- perl perl-alien'
+
+  when failures.@.?:
+    die: "Failed binding release(s): $(failures.@.join(', '))"
 
   say: '✓ All bindings released'
 

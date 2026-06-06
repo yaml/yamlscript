@@ -85,4 +85,4 @@ $(LUA-CJSON): $(LUAROCKS) $(LUA-MESON)
 	luarocks install lua-cjson MESON_BINDIR=$(PYTHON-VENV)/bin
 
 $(LUA-MESON): $(PYTHON-VENV)
-	pip install meson ninja
+	uv pip install --python $(PYTHON-VENV) meson ninja
