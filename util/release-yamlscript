@@ -167,8 +167,6 @@ defn do-release(old new):
   # Step 5: Version bump
   confirm('Step 5 - Bump version in all files?') ||: exit()
   do-version-bump:
-  show-version-diff:
-  confirm('Review the version edits above. Continue?') ||: exit()
   say: ''
 
   # Step 6: Changelog
@@ -187,28 +185,16 @@ defn do-release(old new):
   say: ''
 
   # Step 9: Tag
-  confirm('Step 9 - Create git tag?') ||: exit()
   do-tag: new
   say: ''
 
   # Step 10: Push
-  confirm('Step 10 - Push to remote?') ||: exit()
   do-push: new
   say: ''
 
   # Step 11: Build on GitHub
   confirm('Step 11 - Trigger GitHub Actions workflow?') ||: exit()
   do-build-github: new
-  say: ''
-
-  # Step 12: Release bindings
-  confirm('Step 12 - Release all bindings?') ||: exit()
-  do-bindings: new
-  say: ''
-
-  # Step 13: Publish website
-  confirm('Step 13 - Publish website?') ||: exit()
-  do-website:
   say: ''
 
   say: "============================================================"
@@ -284,6 +270,8 @@ defn confirm(msg default='y'):
 defn do-version-bump():
   o: "Running 'make bump' to update versions in all files"
   run:: make bump
+  show-version-diff:
+  confirm('Review the version edits above. Continue?') ||: exit()
   say: '✓ Version bump complete'
 
 
@@ -305,6 +293,11 @@ defn do-secrets-publish():
 defn show-version-diff():
   o: 'Version edit diff'
   run:: git -P diff
+
+
+defn show-changelog-diff():
+  o: 'Changelog edit diff'
+  run:: git -P diff -- Changes
 
 
 defn do-changelog(old new):
@@ -334,6 +327,8 @@ defn do-changelog(old new):
     validate-yaml: read('Changes')
 
   say: '✓ Changes log file updated'
+  show-changelog-diff:
+  confirm('Review the changelog edits above. Continue?') ||: exit()
 
 
 defn do-binding-changelogs():
@@ -391,6 +386,7 @@ defn do-commit(new):
 defn do-tag(new):
   o: "Creating git tag for version $new"
 
+  confirm("Create git tag $new now?") ||: exit()
   run: "git tag $new"
   say: "✓ Created tag $new"
 
@@ -402,6 +398,7 @@ defn do-push(new):
   say: "  Branch: $current-branch"
   say: "  Tag: $new"
 
+  confirm("Push $current-branch and tag $new to origin now?") ||: exit()
   run: "git push origin $current-branch"
   run: "git push origin $new"
 
