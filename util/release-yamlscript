@@ -424,7 +424,8 @@ defn do-build-github(new):
       say: 'Triggering release workflow...'
       trigger-result =:
         shell {:extra-env {"GH_TOKEN" token}}:
-          "gh workflow run release.yaml --ref $current-branch -f version=$new"
+          str: +"gh workflow run release.yaml --repo yaml/yamlscript "
+            "--ref $current-branch -f version=$new"
 
       if trigger-result:ok:
         then:
@@ -434,13 +435,15 @@ defn do-build-github(new):
             trim:
               sh-out {:extra-env {"GH_TOKEN" token}}:
                 str: +"gh run list --workflow=release.yaml --limit=1 "
-                  "--json databaseId --jq '.[0].databaseId'"
+                  "--repo yaml/yamlscript --json databaseId "
+                  "--jq '.[0].databaseId'"
 
           # 3. Watch build workflow
           say: "\nWatching release workflow (run $run-id)..."
           watch-result =:
             shell {:extra-env {"GH_TOKEN" token}}:
-              "gh run watch $run-id --exit-status --interval=10"
+              str: +"gh run watch $run-id --repo yaml/yamlscript "
+                "--exit-status --interval=10"
 
           when watch-result:ok:
             release-url =:
