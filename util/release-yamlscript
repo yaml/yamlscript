@@ -592,7 +592,7 @@ defn github-env():
 defn legacy-github-token():
   secrets =: "$(ENV.HOME)/.yamlscript-secrets.yaml"
   token =:
-    if test("-f" secrets):
+    if bash("test -f '$secrets'"):ok:
       sh-out: "ys -l $secrets -e '.github.token:say'"
       =>: ''
 
