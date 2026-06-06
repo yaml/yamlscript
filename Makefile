@@ -425,7 +425,7 @@ clean:: $(CLEAN)
 	$(RM) -r libys-0* ys-0* yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) -r homebrew-yamlscript
-	$(RM) NO-NAME release*.log
+	$(RM) NO-NAME release*.log release-changes.txt release-id.txt
 clean-%: %
 	$(MAKE) -C $< clean
 
@@ -436,7 +436,7 @@ $(REALCLEAN):
 realclean:: clean $(REALCLEAN)
 	$(MAKE) docker-kill
 	$(MAKE) -C www $@
-	$(RM) release-* $(DOCKER-FILE)
+	$(RM) $(DOCKER-FILE)
 realclean-%: %
 	$(MAKE) -C $< realclean
 endif
