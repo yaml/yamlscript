@@ -4,7 +4,7 @@ include $(COMMON)/java.mk
 
 include $(MAKES)/shell.mk
 
-YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.2.10.jar
+YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.2.11.jar
 
 MVN-COMMANDS := \
   compile \

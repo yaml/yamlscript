@@ -70,7 +70,7 @@ use crate::error::LibYSError;
 const LIBYS_BASENAME: &str = "libys";
 
 /// The version of the yamlscript library this bindings works with.
-const LIBYS_VERSION: &str = "0.2.10";
+const LIBYS_VERSION: &str = "0.2.11";
 
 /// The extension of the `YAMLScript` library. On Linux, it's a `.so` file.
 #[cfg(target_os = "linux")]
