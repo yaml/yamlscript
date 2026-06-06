@@ -3,6 +3,7 @@
 set -euo pipefail
 
 artifact_dir=${1:-.}
+version=$(sed -n 's/^version: //p' Meta)
 
 ys_tar=$(
   find "$artifact_dir" -maxdepth 2 -type f -name 'ys-*.tar.xz' |
@@ -14,6 +15,18 @@ libys_tar=$(
     LC_ALL=C sort |
     head -n1
 )
+ys_jar=$(
+  find "$artifact_dir" -maxdepth 2 -type f \
+    -name "yamlscript.cli-$version-standalone.jar" |
+    LC_ALL=C sort |
+    head -n1
+)
+libys_jar=$(
+  find "$artifact_dir" -maxdepth 2 -type f \
+    -name "libys-$version-standalone.jar" |
+    LC_ALL=C sort |
+    head -n1
+)
 
 if [[ -z "$ys_tar" ]]; then
   echo "ERROR: No ys release artifact found in $artifact_dir" >&2
@@ -22,6 +35,16 @@ fi
 
 if [[ -z "$libys_tar" ]]; then
   echo "ERROR: No libys release artifact found in $artifact_dir" >&2
+  exit 1
+fi
+
+if [[ -z "$ys_jar" ]]; then
+  echo "ERROR: No ys jar artifact found in $artifact_dir" >&2
+  exit 1
+fi
+
+if [[ -z "$libys_jar" ]]; then
+  echo "ERROR: No libys jar artifact found in $artifact_dir" >&2
   exit 1
 fi
 
@@ -52,14 +75,19 @@ if [[ -z "$libys_dir" ]]; then
   exit 1
 fi
 
-mkdir -p ys/bin libys/lib
+mkdir -p ys/bin ys/target/uberjar libys/lib libys/target
 
 cp -pP "$ys_dir"/ys* ys/bin/
 cp -pP "$libys_dir"/libys* libys/lib/
 cp -pP "$libys_dir"/*.h libys/lib/
+cp -p "$ys_jar" \
+  "ys/target/uberjar/yamlscript.cli-$version-SNAPSHOT-standalone.jar"
+cp -p "$libys_jar" "libys/target/libys-$version-standalone.jar"
 
 chmod +x ys/bin/ys-* 2>/dev/null || true
-find ys/bin libys/lib -type f -exec touch {} +
+find ys/bin ys/target/uberjar libys/lib libys/target -type f \
+  -exec touch {} +
 
 echo "Installed release artifacts:"
 ls -lh ys/bin/ys-* libys/lib/libys*
+ls -lh ys/target/uberjar/*.jar libys/target/*.jar

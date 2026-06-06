@@ -179,10 +179,10 @@ jobs:
       run: |
         make -C ys build
         make -C libys build
-        make release-build
+        make release-build jars
 
     - name: List release archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
 
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v4
@@ -191,6 +191,7 @@ jobs:
         path: |
           ys-*.tar.xz
           libys-*.tar.xz
+          *.jar
         retention-days: 7
 
   create-release:
