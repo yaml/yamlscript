@@ -1,3 +1,13 @@
+- version: 0.2.10
+  date:    Sat Jun  6 12:21:56 PM EDT 2026
+  changes:
+  - release: Fix for new NodeJS release process
+  - release: Add workflow to build a new release
+  - release: Revamp the entire release system
+  - ai: Add a Claude Code skill
+  - release: Change main branch back to main from v0
+  - core: Add docstrings to core/src/yamlscript defns
+  - lua: Fix 'make test-lua'
 - version: 0.2.8
   date:    Wed Dec 24 10:25:48 AM PST 2025
   changes:

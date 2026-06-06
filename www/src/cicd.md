@@ -103,7 +103,7 @@ end in `.ys` from the corresponding `.yaml` file:
 ```makefile
 SHELL := bash
 
-YS_VERSION := 0.2.8
+YS_VERSION := 0.2.10
 YS := /tmp/bin/ys-$(YS_VERSION)
 YS_FILES := $(shell find . -name '*.ys')
 YAML_FILES := $(YS_FILES:.ys=.yaml)

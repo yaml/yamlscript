@@ -1,6 +1,6 @@
 [package]
 name = "yamlscript"
-version = "0.2.8"
+version = "0.2.10"
 edition = "2021"
 description = "Program in YAML — Code is Data"
 license = "MIT"

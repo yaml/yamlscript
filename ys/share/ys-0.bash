@@ -4,7 +4,7 @@ set -euo pipefail
 
 [[ ${YS_SH_DEBUG-} ]] && set -x
 
-yamlscript_version=0.2.8
+yamlscript_version=0.2.10
 
 main() (
   setup "$@"
