@@ -72,7 +72,7 @@ jobs:
 
   test-linux:
     name: Test Linux
-    needs: verify-release
+    needs: build-linux-x64
     runs-on: ubuntu-latest
     steps:
     - name: Checkout tag
@@ -80,18 +80,36 @@ jobs:
       with:
         ref: ${{ inputs.version }}
 
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: linux-x64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
     - name: Run tests
       run: make test-all
 
   test-macos:
     name: Test macOS
-    needs: verify-release
+    needs: build-macos-arm64
     runs-on: macos-latest
     steps:
     - name: Checkout tag
       uses: actions/checkout@v4
       with:
         ref: ${{ inputs.version }}
+
+    - name: Download macOS artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: macos-arm64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
 
     - name: Run tests
       run: make test-all
@@ -283,6 +301,15 @@ jobs:
         ref: ${{ inputs.version }}
         fetch-depth: 0
 
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: linux-x64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
     - name: Configure mirror repo SSH key
       if: ${{ env.BINDING_REPO_SSH_KEY != '' }}
       uses: webfactory/ssh-agent@v0.9.0
@@ -315,7 +342,7 @@ jobs:
       run: |
         export clojars_username="$CLOJARS_USERNAME"
         export clojars_password="$CLOJARS_PASSWORD"
-        make release-bindings n="$VERSION"
+        make release-bindings n="$VERSION" YS="$PWD/ys/bin/ys-$VERSION"
 
   publish-website:
     name: Publish website

@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+artifact_dir=${1:-.}
+
+ys_tar=$(
+  find "$artifact_dir" -maxdepth 2 -type f -name 'ys-*.tar.xz' |
+    LC_ALL=C sort |
+    head -n1
+)
+libys_tar=$(
+  find "$artifact_dir" -maxdepth 2 -type f -name 'libys-*.tar.xz' |
+    LC_ALL=C sort |
+    head -n1
+)
+
+if [[ -z "$ys_tar" ]]; then
+  echo "ERROR: No ys release artifact found in $artifact_dir" >&2
+  exit 1
+fi
+
+if [[ -z "$libys_tar" ]]; then
+  echo "ERROR: No libys release artifact found in $artifact_dir" >&2
+  exit 1
+fi
+
+work_dir=$(mktemp -d)
+trap 'rm -rf "$work_dir"' EXIT
+
+tar -C "$work_dir" -xf "$ys_tar"
+tar -C "$work_dir" -xf "$libys_tar"
+
+ys_dir=$(
+  find "$work_dir" -mindepth 1 -maxdepth 1 -type d -name 'ys-*' |
+    LC_ALL=C sort |
+    head -n1
+)
+libys_dir=$(
+  find "$work_dir" -mindepth 1 -maxdepth 1 -type d -name 'libys-*' |
+    LC_ALL=C sort |
+    head -n1
+)
+
+if [[ -z "$ys_dir" ]]; then
+  echo "ERROR: No unpacked ys release directory found" >&2
+  exit 1
+fi
+
+if [[ -z "$libys_dir" ]]; then
+  echo "ERROR: No unpacked libys release directory found" >&2
+  exit 1
+fi
+
+mkdir -p ys/bin libys/lib
+
+cp -pP "$ys_dir"/ys* ys/bin/
+cp -pP "$libys_dir"/libys* libys/lib/
+cp -pP "$libys_dir"/*.h libys/lib/
+
+chmod +x ys/bin/ys-* 2>/dev/null || true
+
+echo "Installed release artifacts:"
+ls -lh ys/bin/ys-* libys/lib/libys*
