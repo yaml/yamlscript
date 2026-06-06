@@ -3,6 +3,12 @@ include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
 
 include $(MAKES)/gh.mk
+# Languages whose CLIs 'secrets-update' uses to authenticate. Each entry
+# installs that toolchain locally and puts it on PATH (never system).
+# Must track the services that declare a 'login'/'fetch' in
+# util/yamlscript-secrets (npm -> node; fez -> raku).
+SECRETS-LANGS := node raku
+SHELL-LANGS += $(SECRETS-LANGS)
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
 include $(MAKES)/shell.mk
 
@@ -59,7 +65,8 @@ export HEAD := $(shell git rev-parse HEAD)
 LYS-JAR-RELEASE := libys-$(YS_VERSION)-standalone.jar
 YS-JAR-RELEASE := yamlscript.cli-$(YS_VERSION)-standalone.jar
 LYS-JAR-PATH := libys/target/libys-$(YS_VERSION)-standalone.jar
-YS-JAR-PATH := ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
+YS-JAR-PATH := \
+    ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
 YS-RELEASE := $(RELEASE-YS-NAME).tar.xz
 LYS-RELEASE := $(RELEASE-LYS-NAME).tar.xz
@@ -78,6 +85,9 @@ RELEASE-ASSETS += \
     $(JAR-ASSETS) \
 
 RELEASE-LOG := release-$n.log
+RELEASE-SECRETS := $(wildcard $(HOME)/.yamlscript-secrets.yaml)
+RELEASE-AUTH := \
+    $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
 
 ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
@@ -176,8 +186,8 @@ ifndef YS_RELEASE_NO_CHECK
 ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
 	$(error Must be on branch 'main' to release)
 endif
-ifeq (,$(wildcard $(HOME)/.yamlscript-secrets.yaml))
-	$(error YS release requires $(SECRETS) file)
+ifeq (,$(RELEASE-AUTH))
+	$(error YS release requires GH_TOKEN or $(SECRETS) file)
 endif
 endif
 ifndef d
@@ -228,11 +238,11 @@ release-build-libys: $(LYS-RELEASE)
 #------------------------------------------------------------------------------
 
 # Show all release steps
-release-list:
+release-list: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript list
 
 # Step 1: Sanity checks
-release-sanity-check:
+release-sanity-check: $(YS)
 ifndef o
 	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
 endif
@@ -242,11 +252,11 @@ endif
 	$(YS) $(ROOT)/util/release-yamlscript sanity-check $(o) $(n)
 
 # Step 2: Version bump
-release-version-bump:
+release-version-bump: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript version-bump
 
 # Step 3: Changelog
-release-changelog:
+release-changelog: $(YS)
 ifndef o
 	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
 endif
@@ -261,44 +271,89 @@ release-test:
 	@echo "Use 'gh workflow run test-all.yaml' to trigger manually"
 
 # Step 4: Binding changelogs
-release-binding-changelogs:
+release-binding-changelogs: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript binding-changelogs
 
 # Step 5: Commit
-release-commit:
+release-commit: $(YS)
 ifndef n
 	$(error 'make release-commit' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript commit $(n)
 
 # Step 6: Tag
-release-tag:
+release-tag: $(YS)
 ifndef n
 	$(error 'make release-tag' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript tag $(n)
 
 # Step 7: Push
-release-push:
+release-push: $(YS)
 ifndef n
 	$(error 'make release-push' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript push $(n)
 
 # Step 8: Trigger GitHub Actions
-release-build-github:
+release-build-github: $(YS)
 ifndef n
 	$(error 'make release-build-github' requires n=NEW_VERSION)
 endif
 	$(YS) $(ROOT)/util/release-yamlscript build-github $(n)
 
 # Step 9: Release bindings
-release-bindings:
-	$(YS) $(ROOT)/util/release-yamlscript bindings
+release-bindings: $(YS)
+ifndef n
+	$(error 'make release-bindings' requires n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/release-yamlscript bindings $(n)
 
 # Step 10: Publish website
-release-website:
+release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript website
+
+#------------------------------------------------------------------------------
+# Release Credentials Management
+#------------------------------------------------------------------------------
+
+# Tools the credential-login CLIs need, installed locally (never
+# system). Grows as services gain a 'login'/'fetch' in
+# util/yamlscript-secrets. node provides `npm login`; fez (installed
+# via zef on the local rakudo) provides `fez login`.
+FEZ := $(RAKU-SITE-BIN)/fez
+SECRETS-TOOLS := $(NODE) $(FEZ)
+
+$(FEZ): $(RAKU)
+	zef install fez
+	touch $@
+
+# Refresh due publishing credentials (or a forced list like
+# SECRETS=npm,clojars)
+secrets-update: $(YS) $(GH) $(SECRETS-TOOLS)
+	$(YS) $(ROOT)/util/yamlscript-secrets --update=$(or $(SECRETS),all)
+
+# List credential status: present (masked) and rotation due date
+secrets-list: $(YS)
+	$(YS) $(ROOT)/util/yamlscript-secrets --list
+
+# Publish all stored credentials as GitHub repo secrets
+secrets-publish: $(YS) $(GH)
+	$(YS) $(ROOT)/util/yamlscript-secrets --publish
+
+# Prepare a release: bump version, edit changelog, then refresh and
+# publish any due credentials. Usage: make release-prep o=OLD n=NEW
+release-prep: $(YS) $(GH)
+ifndef o
+	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
+endif
+ifndef n
+	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
+endif
+	$(MAKE) release-version-bump
+	$(MAKE) release-changelog o=$(o) n=$(n)
+	$(MAKE) secrets-update
+	$(MAKE) secrets-publish
 
 #------------------------------------------------------------------------------
 
