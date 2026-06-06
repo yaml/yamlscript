@@ -254,13 +254,13 @@ ifndef n
 endif
 	$(YS) $(ROOT)/util/release-yamlscript sanity-check $(o) $(n)
 
-# Step 2: Credential status
-release-secrets-list: $(YS)
-	$(YS) $(ROOT)/util/release-yamlscript secrets-list
-
-# Step 3: Credential updates
+# Step 2: Credential updates
 release-secrets-update: $(YS) $(GH) $(SECRETS-TOOLS)
 	$(YS) $(ROOT)/util/release-yamlscript secrets-update
+
+# Step 3: Credential status
+release-secrets-list: $(YS)
+	$(YS) $(ROOT)/util/release-yamlscript secrets-list
 
 # Step 4: Publish credentials
 release-secrets-publish: $(YS) $(GH)
@@ -363,6 +363,7 @@ ifndef n
 	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
 endif
 	$(MAKE) secrets-update
+	$(MAKE) secrets-list
 	$(MAKE) secrets-publish
 	$(MAKE) release-version-bump
 	$(MAKE) release-changelog o=$(o) n=$(n)

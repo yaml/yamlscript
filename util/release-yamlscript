@@ -95,11 +95,11 @@ defn do-list():
       1. make release-sanity-check o=X n=Y
          Verify old version, clean tree, valid new version
 
-      2. make secrets-list
-         Show release credential status
-
-      3. make secrets-update
+      2. make secrets-update
          Refresh due release credentials
+
+      3. make secrets-list
+         Show release credential status
 
       4. make secrets-publish
          Publish release credentials to GitHub Actions secrets
@@ -152,12 +152,12 @@ defn do-release(old new):
   say: ''
 
   # Step 2: Release credentials
-  confirm('Step 2 - Review release credentials?') ||: exit()
-  do-secrets-list:
+  confirm('Step 2 - Update due release credentials?') ||: exit()
+  do-secrets-update:
   say: ''
 
-  confirm('Step 3 - Update due release credentials?') ||: exit()
-  do-secrets-update:
+  confirm('Step 3 - Review release credentials?') ||: exit()
+  do-secrets-list:
   say: ''
 
   confirm('Step 4 - Publish release credentials to GitHub?') ||: exit()
