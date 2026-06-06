@@ -317,6 +317,22 @@ ifndef n
 endif
 	$(YS) $(ROOT)/util/release-yamlscript build-github $(n)
 
+# Retry a failed unpublished release by moving the existing tag to HEAD and
+# redispatching the GitHub release workflow.
+release-retry: $(YS) $(GH)
+ifndef n
+	$(error 'make release-retry' requires n=NEW_VERSION)
+endif
+	@if gh release view $(n) --repo yaml/yamlscript >/dev/null 2>&1; then \
+	  echo "Error: GitHub release $(n) already exists."; \
+	  echo "Refusing to retag a release that may be published."; \
+	  exit 1; \
+	fi
+	git push origin main
+	git tag -f $(n) HEAD
+	git push -f origin $(n)
+	$(MAKE) release-build-github n=$(n)
+
 # Step 12: Release bindings
 release-bindings: $(YS)
 ifndef n
