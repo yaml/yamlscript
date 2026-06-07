@@ -10,11 +10,11 @@ description: >
 
 ## Setup
 
-Ensure `ys` is available for testing:
+Ensure `ys` version 0.2.13 is available for testing:
 
 ```bash
-[[ -x /tmp/ys-skill/bin/ys ]] ||
-  curl -s https://yamlscript.org/install | PREFIX=/tmp/ys-skill bash
+[[ -x /tmp/ys-skill/bin/ys-0.2.13 ]] ||
+  curl -s https://yamlscript.org/install | VERSION=0.2.13 PREFIX=/tmp/ys-skill bash
 YS=/tmp/ys-skill/bin/ys
 ```
 
@@ -55,11 +55,15 @@ support, and docs:
    `.nth(var)` vs `.$var`, `x + 1` vs `.++`, `x - 1` vs `.--`,
    `.first()` / `.last()` vs `.0` / `.$` (or `:first` / `:last`),
    `vector(...)` vs `+[...]`, `apply(str ...)` and `apply str:`
-   vs `:join` / `join:`, `str(bareVar)` vs `"$bareVar"`,
-   `if (cond):` / `when (cond):` / `when-not (cond):` with redundant
-   parens, `for [...]:` / `each [...]:` / `loop [...]:` bracketed
-   bindings, `then: nil` / `else: nil` vs `when` / `when-not`, and
-   lines over 79 cols.
+   vs `:join` / `join:`, `str(bareVar)` vs `bareVar:S`,
+   `quot(a b)` and `a.quot(b)` vs `a // b`,
+   any `KW (cond):` test-expression paren-wrap (for `if`, `if-not`,
+   `when`, `when-not`, `while`), any `KW [...]:` bracketed binding
+   form for the reliably-strippable keywords (`binding`,
+   `if-let`/`if-lets`/`if-some`, `let`, `loop`,
+   `when-first`/`when-let`/`when-lets`/`when-some`, `with-open`),
+   `then: nil` / `else: nil` vs `when` / `when-not`, and lines over
+   79 cols.
 
    The linter matches against source text with regex, so every hit is a
    *candidate*, not a verdict. False positives are expected: a long line
@@ -278,16 +282,30 @@ a collection of strings. The colon-chain `coll:join` and pair form
 - `apply str: pieces` → `join: pieces`
 - `apply(str butlast(code))` → `join: butlast(code)`
 
-### Avoid `str(bareVar)` — use interpolation `"$bareVar"`
+### Prefer `:S` colon-chain over `str(bareVar)`
 
-Single-argument `str(x)` where `x` is a bare identifier is wasteful
-when string interpolation already auto-stringifies anything:
+Single-argument `str(x)` where `x` is a bare identifier has a terser
+colon-chain form `x:S`. Use that:
 
-- `str(c)` → `"$c"`
-- `str(n)` → `"$n"`
+- `str(c)` → `c:S`
+- `str(n)` → `n:S`
+
+`:S` reads as "convert to String" — that's exactly what the call is
+doing. Use it whenever the intent is *stringification*.
+
+**Don't** rewrite `str(bareVar)` as `"$bareVar"`. Interpolation is
+for composing a string from parts, not for stringification — even
+when the result happens to look the same. And the two are not always
+equivalent: at the interpolation boundary the value's original type
+can leak through (a `Character` can come back as a `Character`),
+whereas `str(x)` and `x:S` always produce a real `String`. The
+difference shows up in places where the result is used as a map
+key, a regex operand, or an `in?` test — Soundex's `code-map`
+lookup is a real example where `"$c"` misses entries that `c:S`
+finds.
 
 `str(...)` with multiple args (e.g. `str(a b c)` for concatenation) is
-fine. The rule is only about the single-bare-var case.
+unrelated — keep it. The rule is only about the single-bare-var case.
 
 ### Use specific predicates over generic `.!` for numeric tests
 
@@ -679,9 +697,27 @@ Two args fit fine on one line.
 - `dotimes [_ n]:` — repeat n times ignoring the index; clearer than
   `each [_ (1 .. n)]:` when you don't need the iteration value
 - `loop i 1, acc 0:` — loop with named bindings (no surrounding
-  brackets). Same bracket-free form works for `let`, `each`, `for`,
-  `dotimes`, `when-let`, `if-let`, `with-open`, etc. (any binding
-  form). Use `recur` for tail recursion back to the loop head.
+  brackets). The bracket-free form is the *canonical* style for
+  binding-list forms in YS — never write the bracketed Clojure
+  form when you can avoid it. Reliably strippable: `binding`,
+  `if-let`, `if-lets`, `if-some`, `let`, `loop`, `when-first`,
+  `when-let`, `when-lets`, `when-some`, `with-open`. For these,
+  `KW [a b c d]:` is always wrong — write `KW a b, c d:`
+  (comma-separated pairs) or `KW a b c d:` (no commas) instead.
+  Use `recur` for tail recursion back to the loop head.
+- **Iteration keywords keep their brackets in some cases.**
+  `each`, `for`, `doseq`, `dotimes` share the same lhs-bindings
+  transformer, but the parser also reads the surface form to
+  separate the binding from the body. When the value is a bare
+  symbol you can drop brackets: `each x xs:`, `for x xs:`.
+  When the value is a parenthesized expression or the form is a
+  single binding-pair with a non-symbol value, brackets are
+  required: `each [_ (1 .. n)]:`, `for [k (range n)]:`,
+  `dotimes [_ n]:`. Without brackets the parser eats the body as
+  part of the binding. The destructuring shortcut
+  `each [a b] coll:` also keeps brackets — there the `[a b]`
+  is a destructure pattern, not a binding-list wrapper. The
+  lint rule only flags the always-strippable keywords above.
 - `recur` — tail-call back to enclosing `loop` or `defn`; multi-arg
   form: `recur: arg1 arg2` or `recur arg1: arg2`
 - `for` body can be bare scalar — `=>:` not needed
@@ -733,8 +769,8 @@ pairs =: words:frequencies.sort-by(val):reverse
 ### Operators & Chaining
 - **Binary operators require whitespace on both sides** — `1 .. 5` not
   `1..5`; `a + b` not `a+b`; `a * b` not `a*b`. This applies to all
-  binary operators: `..` `+` `-` `*` `/` `||` `&&` `=~` `!~` `%`
-  `**` etc. Omitting whitespace may sometimes work but is not idiomatic
+  binary operators: `..` `+` `-` `*` `/` `//` `||` `&&` `=~` `!~`
+  `%` `%%` `**` etc. Omitting whitespace may sometimes work but is not idiomatic
   and may break in future versions. Exception: `.` (dot chain) does not
   need whitespace.
 - Do NOT mix different operators without parentheses:
@@ -755,6 +791,18 @@ pairs =: words:frequencies.sort-by(val):reverse
   when the expression is *not* standalone — e.g. when it feeds a
   chain like `(d < 10).if(...)` or groups mixed operators like
   `(dir == 'w') && (row > 0):`.
+
+  The same rule applies to the *test* position of every conditional
+  / loop control form: `if`, `if-not`, `when`, `when-not`, `while`.
+  Each takes its test as a standalone pair-key expression, so the
+  parens are noise:
+  - `if (x > 0):` → `if x > 0:`
+  - `when (xs.empty?):` → `when xs.empty?:`
+  - `while (running):` → `while running:`
+
+  This is the analog of the bracket-free binding-list form for
+  binding-bearing keywords — same idea, but for the keywords that
+  take a single test expression instead of a binding list.
 - `..` for inclusive ranges, not `range`
 - `rng(x y)` — use only for char ranges: `rng(\\a \\z)`. For integer
   ranges, always use `..`: `1 .. 5` (forward) or `5 .. 1` (reverse).
@@ -762,6 +810,13 @@ pairs =: words:frequencies.sort-by(val):reverse
   scalars); `C('a')` also works but is verbose.
 - `%` = `rem` (remainder); `%%` = `mod` — prefer `%`; they differ only
   for negative numbers
+- `//` = `quot` (integer division, truncated toward zero) — prefer
+  the operator over the call/method forms:
+  - `a // b` over `quot(a b)` or `a.quot(b)`
+  - Works the same as Python's `//` for non-negative operands; for
+    negatives it truncates toward zero (Python floors). Use this for
+    division-by-base extraction (`n // 10`), midpoint computation
+    (`(lo + hi) // 2`), etc.
 - `.!` for falsey check (`falsey?`) — YS truth: 0 and empty
   collections are also falsey. `x.!` combines nil-check and
   empty-check in one — use it instead of separate `nil?` + `empty?`
