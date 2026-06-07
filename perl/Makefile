@@ -6,16 +6,6 @@ include $(MAKES)/shell.mk
 
 test ?= test/
 
-ZILD-COMMANDS := \
-    cpan \
-    cpanshell \
-    dist \
-    distdir \
-    distshell \
-    disttest \
-    install \
-    update \
-
 export PATH := $(ROOT)/perl/bin:$(PATH)
 
 PERL-VERSION := $(shell grep '^version:' Meta | cut -d' ' -f2)
@@ -28,14 +18,14 @@ CPAN-DEPS := \
     FFI::CheckLib \
     FFI::Platypus \
     Test2::V0 \
-    Zilla::Dist \
 
 CPAN-DIST := YAMLScript-$(PERL-VERSION).tar.gz
 
 LOCAL-LIB := local
 
 export PATH := $(ROOT)/perl/$(LOCAL-LIB)/bin:$(PATH)
-export PERL5LIB := $(LOCAL-LIB)/lib/perl5
+export PERL5LIB := $(ALIEN-BLIB-LIB):$(LOCAL-LIB)/lib/perl5
+export PERL5LIB := $(ROOT)/perl-alien/$(LOCAL-LIB)/lib/perl5:$(PERL5LIB)
 
 #------------------------------------------------------------------------------
 
@@ -43,8 +33,11 @@ ifneq (,$(shell command -v cpanm))
 	PERLOK := true
 endif
 
-$(ZILD-COMMANDS):: $(LOCAL-LIB)
-	zild $@
+distdir dist:: $(LOCAL-LIB)
+	$(ROOT)/util/make-perl-cpan-dist $@
+
+disttest:: $(LOCAL-LIB) $(ALIEN-BLIB-LIB)
+	$(ROOT)/util/make-perl-cpan-dist $@
 
 ifdef PERLOK
 test:: $(LOCAL-LIB)
@@ -63,8 +56,7 @@ endif
 ifndef PAUSE_PASS
 	$(error 'make release' needs PAUSE_PASS set)
 endif
-	cpan-upload --user $(PAUSE_USER) --password '$(PAUSE_PASS)' \
-	  $(CPAN-DIST)
+	$(ROOT)/util/upload-perl-cpan-dist $(CPAN-DIST)
 
 clean::
 	$(RM) -r cpan YAMLScript-*
@@ -75,6 +67,7 @@ realclean::
 $(ALIEN-BLIB-LIB): $(ALIEN-DIST-DIR)
 	( \
 	    cd $< && \
+	    export PERL5LIB=$(ROOT)/perl-alien/local/lib/perl5:$(PERL5LIB) && \
 	    perl Makefile.PL && \
 	    make \
 	)
@@ -83,5 +76,5 @@ $(ALIEN-BLIB-LIB): $(ALIEN-DIST-DIR)
 $(ALIEN-DIST-DIR):
 	$(MAKE) -C $(ROOT)/perl-alien distdir
 
-$(LOCAL-LIB):
+$(LOCAL-LIB): Makefile
 	cpanm -L $@ -n $(CPAN-DEPS)

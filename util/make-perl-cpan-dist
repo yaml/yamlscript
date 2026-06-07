@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+command=${1:?Usage: make-perl-cpan-dist <distdir|dist|disttest>}
+root=${ROOT:-$(cd "$(dirname "$0")/.." && pwd -P)}
+dir=${PWD##*/}
+src_dir=$PWD
+
+export PERL5LIB="$src_dir/local/lib/perl5${PERL5LIB:+:$PERL5LIB}"
+
+version() {
+  sed -n 's/^version: //p' Meta
+}
+
+copy_common_files() {
+  local distdir=$1
+  cp Changes "$distdir/"
+  cp -R lib "$distdir/"
+  cp -R test "$distdir/t"
+}
+
+write_yamlscript_makefile() {
+  local distdir=$1
+
+  cat > "$distdir/Makefile.PL" <<'EOF'
+use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+  NAME => 'YAMLScript',
+  VERSION_FROM => 'lib/YAMLScript.pm',
+  ABSTRACT => 'Program in YAML - Code is Data',
+  AUTHOR => 'Ingy dot Net <ingy@ingy.net>',
+  LICENSE => 'mit',
+  MIN_PERL_VERSION => '5.016',
+  PREREQ_PM => {
+    'Alien::YAMLScript' => '0.2.12',
+    'Cpanel::JSON::XS' => '4.37',
+    'FFI::CheckLib' => '0.31',
+    'FFI::Platypus' => '2.08',
+  },
+  TEST_REQUIRES => {
+    'Test2::V0' => '0.000159',
+  },
+  META_MERGE => {
+    'meta-spec' => { version => 2 },
+    resources => {
+      bugtracker => {
+        web => 'https://github.com/yaml/yamlscript/issues',
+      },
+      homepage => 'https://yamlscript.org',
+      repository => {
+        type => 'git',
+        url => 'https://github.com/yaml/yamlscript.git',
+        web => 'https://github.com/yaml/yamlscript',
+      },
+    },
+  },
+);
+EOF
+}
+
+write_alien_makefile() {
+  local distdir=$1
+
+  cat > "$distdir/Makefile.PL" <<'EOF'
+use strict;
+use warnings;
+use ExtUtils::MakeMaker;
+use Alien::Build::MM;
+
+my $abmm = Alien::Build::MM->new;
+
+WriteMakefile($abmm->mm_args(
+  NAME => 'Alien::YAMLScript',
+  DISTNAME => 'Alien-YAMLScript',
+  VERSION_FROM => 'lib/Alien/YAMLScript.pm',
+  ABSTRACT => 'YAMLScript shared library',
+  AUTHOR => 'Ingy dot Net <ingy@ingy.net>',
+  LICENSE => 'mit',
+  MIN_PERL_VERSION => '5.016',
+  CONFIGURE_REQUIRES => {
+    'Alien::Build' => '2.80',
+    'Alien::Build::MM' => '2.80',
+    'Alien::Build::Plugin::Download::GitHub' => '0.10',
+    'ExtUtils::MakeMaker' => '0',
+  },
+  PREREQ_PM => {
+    'Alien::Base' => '0',
+    'Cpanel::JSON::XS' => '4.37',
+    'Mozilla::CA' => '0',
+  },
+  TEST_REQUIRES => {
+    'Test2::V0' => '0.000159',
+    'Test::Alien' => '2.80',
+  },
+  META_MERGE => {
+    'meta-spec' => { version => 2 },
+    resources => {
+      bugtracker => {
+        web => 'https://github.com/yaml/yamlscript/issues',
+      },
+      homepage => 'https://yamlscript.org',
+      repository => {
+        type => 'git',
+        url => 'https://github.com/yaml/yamlscript.git',
+        web => 'https://github.com/yaml/yamlscript',
+      },
+    },
+  },
+));
+
+sub MY::postamble {
+  $abmm->mm_postamble(@_);
+}
+
+sub MY::install {
+  $abmm->mm_install(@_);
+}
+EOF
+}
+
+write_manifest() {
+  local distdir=$1
+  (
+    cd "$distdir"
+    {
+      printf '%s\n' MANIFEST
+      for path in Changes Makefile.PL alienfile doc lib t; do
+        [[ -e $path ]] && find "$path" -type f
+      done
+    } |
+      LC_ALL=C sort > MANIFEST
+  )
+}
+
+make_distdir() {
+  local version distdir
+  version=$(version)
+
+  case $dir in
+    perl)
+      distdir="YAMLScript-$version"
+      rm -rf "$distdir"
+      mkdir -p "$distdir"
+      copy_common_files "$distdir"
+      cp -R doc "$distdir/" 2>/dev/null || true
+      write_yamlscript_makefile "$distdir"
+      write_manifest "$distdir"
+      ;;
+    perl-alien)
+      distdir="Alien-YAMLScript-$version"
+      rm -rf "$distdir"
+      mkdir -p "$distdir"
+      copy_common_files "$distdir"
+      cp alienfile "$distdir/"
+      cp -R doc "$distdir/" 2>/dev/null || true
+      write_alien_makefile "$distdir"
+      write_manifest "$distdir"
+      ;;
+    *)
+      echo "ERROR: run from perl or perl-alien" >&2
+      exit 1
+      ;;
+  esac
+
+  echo "$distdir"
+}
+
+run_make_dist_command() {
+  local target=$1
+  local distdir distfile
+
+  distdir=$(make_distdir)
+  (
+    cd "$distdir"
+    perl Makefile.PL
+    make "$target"
+  )
+
+  if [[ $target == dist ]]; then
+    distfile=$(find "$distdir" -maxdepth 1 -name '*.tar.gz' -print -quit)
+    cp "$distfile" .
+  fi
+}
+
+case $command in
+  distdir)
+    make_distdir >/dev/null
+    ;;
+  dist)
+    run_make_dist_command dist
+    ;;
+  disttest)
+    run_make_dist_command disttest
+    ;;
+  *)
+    echo "ERROR: unknown command: $command" >&2
+    exit 1
+    ;;
+esac

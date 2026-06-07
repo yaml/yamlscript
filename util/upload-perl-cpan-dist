@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use CPAN::Uploader;
+
+my $file = shift or die "Usage: upload-perl-cpan-dist <dist.tar.gz>\n";
+my $user = $ENV{PAUSE_USER} or die "PAUSE_USER is not set\n";
+my $pass = $ENV{PAUSE_PASS} or die "PAUSE_PASS is not set\n";
+
+CPAN::Uploader->upload_file($file, {
+    user => $user,
+    password => $pass,
+});

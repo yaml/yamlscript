@@ -27,6 +27,36 @@ julia-version-exists() {
     grep -Fq "[\"$version\"]"
 }
 
+cpan-package-exists() {
+  local package=$1
+  local cpan_version
+  local url='https://www.cpan.org/modules/02packages.details.txt.gz'
+  cpan_version=$(perl-cpan-version)
+  curl -A yamlscript-release -fsL "$url" |
+    gzip -dc |
+    awk \
+      -v package="$package" \
+      -v version="$version" \
+      -v cpan_version="$cpan_version" '
+      $1 == package && ($2 == version || $2 == cpan_version) { found = 1 }
+      END { exit found ? 0 : 1 }
+    '
+}
+
+perl-cpan-version() {
+  awk -v version="$version" '
+    BEGIN {
+      n = split(version, part, ".")
+      if (n == 3 && part[1] ~ /^[0-9]+$/ &&
+          part[2] ~ /^[0-9]+$/ && part[3] ~ /^[0-9]+$/) {
+        printf "%d.%03d%03d\n", part[1], part[2], part[3]
+        exit
+      }
+      print version
+    }
+  '
+}
+
 git-tag-exists() {
   git ls-remote --exit-code --tags "$1" "refs/tags/$2" \
     >/dev/null 2>&1
@@ -99,7 +129,15 @@ case $binding in
       "v$version" &&
       published=true
     ;;
-  perl|perl-alien|raku)
+  perl)
+    cpan-package-exists YAMLScript &&
+      published=true
+    ;;
+  perl-alien)
+    cpan-package-exists Alien::YAMLScript &&
+      published=true
+    ;;
+  raku)
     log "No published check for binding: $binding"
     exit 1
     ;;
