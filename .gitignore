@@ -5,6 +5,7 @@
 /*.yaml
 /*.ys
 /.cache/
+/.fez-config.json
 /.cursor/
 /bin/
 /build-ys.log

@@ -331,6 +331,7 @@ jobs:
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
       GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_KEY }}
       CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
+      FEZ_USER: ${{ secrets.FEZ_USER }}
       FEZ_TOKEN: ${{ secrets.FEZ_TOKEN }}
       BINDING_REPO_SSH_KEY: ${{ secrets.BINDING_REPO_SSH_KEY }}
     steps:
@@ -394,6 +395,21 @@ jobs:
         if [[ -n "${NODE_AUTH_TOKEN:-}" ]]; then
           echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' \
             > ~/.npmrc
+        fi
+
+    - name: Configure Fez credentials
+      run: |
+        if [[ -n "${FEZ_USER:-}" && -n "${FEZ_TOKEN:-}" ]]; then
+          cat > ~/.fez-config.json <<EOF
+        {
+          "ecosystems": {
+            "zef": "https://42.zef.pm"
+          },
+          "groups": [],
+          "key": "${FEZ_TOKEN}",
+          "un": "${FEZ_USER}"
+        }
+        EOF
         fi
 
     - name: Configure Git identity
