@@ -3,7 +3,7 @@ version: 0.2.12
 abstract: Program in YAML — Code is Data
 homepage: https://yamlscript.org
 license: mit
-copyright: 2022-2025
+copyright: 2022-2026
 
 author:
   name: Ingy döt Net

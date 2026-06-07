@@ -1,5 +1,5 @@
 ;; This code is licensed under MIT license (See License for details)
-;; Copyright 2023-2025 Ingy dot Net
+;; Copyright 2023-2026 Ingy dot Net
 
 (defproject org.yamlscript/clj-yamlscript "0.2.12"
   :description

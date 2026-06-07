@@ -1,4 +1,4 @@
--- Copyright 2022-2025 Ingy döt Net
+-- Copyright 2022-2026 Ingy döt Net
 -- This code is licensed under MIT license (See License for details)
 
 {-# LANGUAGE OverloadedStrings #-}

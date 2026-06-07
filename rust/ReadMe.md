@@ -179,7 +179,7 @@ See <https://yamlscript.org/doc/install/> for more info.
 
 ## License & Copyright
 
-Copyright 2022-2025 Ingy döt Net <ingy@ingy.net>
+Copyright 2022-2026 Ingy döt Net <ingy@ingy.net>
 
 This project is licensed under the terms of the `MIT` license.
 See [LICENSE](https://github.com/yaml/yamlscript/blob/main/License) for more

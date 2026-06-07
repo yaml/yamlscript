@@ -1,5 +1,5 @@
 ;; This code is licensed under MIT license (See License for details)
-;; Copyright 2023-2025 Ingy dot Net
+;; Copyright 2023-2026 Ingy dot Net
 
 (defproject yamlscript/core "0.2.12"
   :description "Program in YAML — Code is Data"
