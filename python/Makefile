@@ -41,10 +41,10 @@ test-pytest: $(PYTHON-VENV)
 
 test-ffi: $(LIBYS-SO-FQNP)
 	$(VENV) && \
-	  $(PYTHON) \
+	  python \
 	    -c 'import yamlscript; \
 	        print(yamlscript.YAMLScript().load("inc: 41"))' && \
-	  $(PYTHON) \
+	  python \
 	    -c 'import yamlscript; \
 	        print(yamlscript.YAMLScript().load("!ys-0\ninc: 41"))'
 
@@ -59,7 +59,7 @@ pkg-test: venv
 dist: venv MANIFEST.in .long_description.md
 	( \
 	  $(VENV) && \
-	  $(PYTHON) setup.py sdist \
+	  python setup.py sdist \
 	)
 
 release: publish
