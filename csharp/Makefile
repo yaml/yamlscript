@@ -31,7 +31,8 @@ ifndef NUGET-API-KEY
 endif
 	dotnet nuget push $(NUGET-PACKAGE-DIR)/*.nupkg \
 		--source $(NUGET-SCHEMA) \
-		--api-key $(NUGET-API-KEY)
+		--api-key $(NUGET-API-KEY) \
+		--skip-duplicate
 
 pack: $(DOTNET) update
 	dotnet pack $(PROJECT-FILE) \
