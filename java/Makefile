@@ -18,9 +18,16 @@ MVN-COMMANDS := \
 $(MVN-COMMANDS):: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
 	mvn $@
 
+ifdef YS_RELEASE_CI
+release: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
+else
 release: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP) test package
+endif
 ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
+endif
+ifdef YS_RELEASE_CI
+	mvn package -DskipTests
 endif
 	mvn deploy:deploy-file \
 	    -s ~/.mvn-user-settings.xml \

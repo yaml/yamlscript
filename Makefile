@@ -67,6 +67,9 @@ ifdef YS_RELEASE_SKIP_HASKELL_TESTS
 TEST := $(filter-out test-haskell,$(TEST))
 TEST-BINDINGS := $(filter-out test-haskell,$(TEST-BINDINGS))
 endif
+ifdef YS_RELEASE_SKIP_CORE_TESTS
+TEST := $(filter-out test-core,$(TEST))
+endif
 
 export HEAD := $(shell git rev-parse HEAD)
 
