@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "minitest", "~> 5.20.0"
+  spec.add_dependency "mutex_m", "~> 0.3"
 end
