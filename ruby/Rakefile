@@ -4,6 +4,7 @@ require "bundler/gem_tasks"
 require "minitest/test_task"
 
 Rake::Task["release:guard_clean"].clear
+Rake::Task["release:source_control_push"].clear
 
 # Disable tagging for `rake release`
 namespace :release do
@@ -18,6 +19,9 @@ namespace :release do
   end
   task :push do
     puts "Overriding push task"
+  end
+  task :source_control_push do
+    puts "Overriding source_control_push task"
   end
 end
 
