@@ -43,6 +43,15 @@ cpan-package-exists() {
     '
 }
 
+pause-dist-verified() {
+  local dist=$1
+  local path="I/IN/INGY/$dist-$version.tar.gz"
+  local url='https://pause.perl.org/pause/authenquery?ACTION=tail_logfile'
+  [[ ${PAUSE_USER:-} && ${PAUSE_PASS:-} ]] || return 1
+  curl -A yamlscript-release -fsL -u "$PAUSE_USER:$PAUSE_PASS" "$url" |
+    grep -Fq "Verified $path"
+}
+
 perl-cpan-version() {
   awk -v version="$version" '
     BEGIN {
@@ -130,12 +139,16 @@ case $binding in
       published=true
     ;;
   perl)
-    cpan-package-exists YAMLScript &&
+    if pause-dist-verified YAMLScript ||
+        cpan-package-exists YAMLScript; then
       published=true
+    fi
     ;;
   perl-alien)
-    cpan-package-exists Alien::YAMLScript &&
+    if pause-dist-verified Alien-YAMLScript ||
+        cpan-package-exists Alien::YAMLScript; then
       published=true
+    fi
     ;;
   raku)
     log "No published check for binding: $binding"
