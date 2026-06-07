@@ -7,6 +7,15 @@ on:
         description: 'Version to release (e.g., 0.2.10)'
         required: true
         type: string
+      bindings:
+        description: 'Optional space-separated binding directories'
+        required: false
+        type: string
+      publish_bindings_only:
+        description: 'Publish bindings from existing release assets'
+        default: false
+        required: false
+        type: boolean
 
 defaults:
   run:
@@ -20,10 +29,12 @@ env:
   VERSION: ${{ inputs.version }}
   JAVA_VERSION: '17'
   YS_RELEASE_CI: '1'
+  YS_RELEASE_BINDINGS: ${{ inputs.bindings }}
 
 jobs:
   verify-release:
     name: Verify release
+    if: ${{ !inputs.publish_bindings_only }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -72,6 +83,7 @@ jobs:
 
   test-linux:
     name: Test Linux
+    if: ${{ !inputs.publish_bindings_only }}
     needs: build-linux-x64
     runs-on: ubuntu-latest
     steps:
@@ -100,6 +112,7 @@ jobs:
 
   test-macos:
     name: Test macOS
+    if: ${{ !inputs.publish_bindings_only }}
     needs: build-macos-arm64
     runs-on: macos-latest
     steps:
@@ -128,6 +141,7 @@ jobs:
 
   build-linux-x64:
     name: Build Linux x64
+    if: ${{ !inputs.publish_bindings_only }}
     needs: verify-release
     runs-on: ubuntu-latest
     container: ubuntu:20.04
@@ -171,6 +185,7 @@ jobs:
 
   build-macos-arm64:
     name: Build macOS ARM64
+    if: ${{ !inputs.publish_bindings_only }}
     needs: verify-release
     runs-on: macos-latest
     steps:
@@ -208,6 +223,7 @@ jobs:
 
   create-release:
     name: Create GitHub release
+    if: ${{ !inputs.publish_bindings_only }}
     needs:
     - test-linux
     - test-macos
@@ -253,6 +269,7 @@ jobs:
 
   upload-assets:
     name: Upload release assets
+    if: ${{ !inputs.publish_bindings_only }}
     needs: create-release
     runs-on: ubuntu-latest
     permissions:
@@ -282,6 +299,15 @@ jobs:
 
   publish-bindings:
     name: Publish language bindings
+    if: |
+      ${{
+        always() &&
+        !cancelled() &&
+        (
+          inputs.publish_bindings_only ||
+          needs.upload-assets.result == 'success'
+        )
+      }}
     needs: upload-assets
     runs-on: ubuntu-latest
     permissions:
@@ -311,14 +337,33 @@ jobs:
     - name: Checkout tag
       uses: actions/checkout@v6
       with:
-        ref: ${{ inputs.version }}
+        ref: >-
+          ${{
+            inputs.publish_bindings_only &&
+            github.ref ||
+            inputs.version
+          }}
         fetch-depth: 0
 
-    - name: Download Linux artifacts
+    - name: Download Linux workflow artifacts
+      if: ${{ !inputs.publish_bindings_only }}
       uses: actions/download-artifact@v8
       with:
         name: linux-x64
         path: release-artifacts
+
+    - name: Download Linux release assets
+      if: ${{ inputs.publish_bindings_only }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p release-artifacts
+        gh release download "$VERSION" \
+          --repo "${{ github.repository }}" \
+          --pattern '*.tar.xz' \
+          --pattern '*.jar' \
+          --dir release-artifacts
+        ls -lh release-artifacts
 
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
@@ -364,6 +409,7 @@ jobs:
 
   publish-website:
     name: Publish website
+    if: ${{ !inputs.publish_bindings_only }}
     needs: publish-bindings
     runs-on: ubuntu-latest
     permissions:

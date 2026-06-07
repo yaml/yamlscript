@@ -62,7 +62,7 @@ test-ffi: $(LUA-DEPS)
 	lua -e '$(lua-test-1)'
 	lua -e '$(lua-test-2)'
 
-release: $(LUA-ROCKSPEC) $(YS)
+release: $(LUA-ROCKSPEC) $(YS) $(LUAROCKS)
 ifndef YS_RELEASE_VERSION_NEW
 	@echo "Error: YS_RELEASE_VERSION_NEW not set"
 	@exit 1
@@ -71,8 +71,12 @@ ifndef LUAROCKS-API-KEY
 	@echo "Error: YAMLScript LuaRocks credentials not configured"
 	@exit 1
 endif
+ifeq (nil,$(LUAROCKS-API-KEY))
+	@echo "Error: YAMLScript LuaRocks credentials not configured"
+	@exit 1
+endif
 	$(ROOT)/util/release-lua
-	luarocks upload --api-key '$(LUAROCKS-API-KEY)' $(LUA-ROCKSPEC)
+	$(LUAROCKS) upload --api-key '$(LUAROCKS-API-KEY)' $(LUA-ROCKSPEC)
 
 clean::
 	$(RM) yamlscript-*.rock
@@ -84,10 +88,10 @@ $(LUA-ROCKSPEC): yamlscript.rockspec
 	          s/%REVISION%/$(LUA-RELEASE-REVISION)/g;' $< > $@
 
 $(LUA-CFFI): $(LUAROCKS) $(LUA-MESON)
-	luarocks install cffi-lua MESON_BINDIR=$(PYTHON-VENV)/bin
+	$(LUAROCKS) install cffi-lua MESON_BINDIR=$(PYTHON-VENV)/bin
 
 $(LUA-CJSON): $(LUAROCKS) $(LUA-MESON)
-	luarocks install lua-cjson MESON_BINDIR=$(PYTHON-VENV)/bin
+	$(LUAROCKS) install lua-cjson MESON_BINDIR=$(PYTHON-VENV)/bin
 
 $(LUA-MESON): $(PYTHON-VENV)
 	uv pip install --python $(PYTHON-VENV) meson ninja

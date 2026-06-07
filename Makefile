@@ -353,11 +353,23 @@ endif
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript website
 
-release-publish-bindings:
+release-publish-bindings: $(GH)
 ifndef n
 	$(error 'make release-publish-bindings' requires n=NEW_VERSION)
 endif
-	$(MAKE) release-bindings n=$(n) YS_RELEASE_CI=1
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  git push origin HEAD:$$branch; \
+	  gh workflow run release.yaml \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
+	    -f publish_bindings_only=true \
+	    -f bindings='$(YS_RELEASE_BINDINGS)'; \
+	  sleep 5; \
+	  run_id=$$(gh run list --workflow=release.yaml \
+	    --repo yaml/yamlscript --branch $$branch --limit=1 \
+	    --json databaseId --jq '.[0].databaseId'); \
+	  gh run watch $$run_id --repo yaml/yamlscript \
+	    --exit-status --interval=10
 
 #------------------------------------------------------------------------------
 # Release Credentials Management
