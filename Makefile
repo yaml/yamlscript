@@ -6,7 +6,7 @@ include $(MAKES)/gh.mk
 # Languages whose CLIs 'secrets-update' uses to authenticate. Each entry
 # installs that toolchain locally and puts it on PATH (never system).
 # Must track the services that declare a 'login'/'fetch' in
-# util/yamlscript-secrets (npm -> node; fez -> raku).
+# util/yamlscript-secrets (npm/nodejs -> node; fez/raku -> raku).
 SECRETS-LANGS := node raku
 SHELL-LANGS += $(SECRETS-LANGS)
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
