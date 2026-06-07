@@ -63,6 +63,11 @@ case $binding in
     npm view "@yaml/yamlscript@$version" version >/dev/null 2>&1 &&
       published=true
     ;;
+  lua)
+    url='https://luarocks.org/modules/ingy/yamlscript'
+    url-exists "$url/$version-1" &&
+      published=true
+    ;;
   python)
     json-url-exists "https://pypi.org/pypi/yamlscript/$version/json" &&
       published=true
@@ -81,7 +86,7 @@ case $binding in
       "v$version" &&
       published=true
     ;;
-  julia|lua|perl|perl-alien|raku)
+  julia|perl|perl-alien|raku)
     log "No published check for binding: $binding"
     exit 1
     ;;

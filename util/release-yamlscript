@@ -523,7 +523,7 @@ defn release-bindings():
 
   if list.?:
     then:
-      binding-list =: list.trim().split('\s+')
+      binding-list =: list.trim().split('[,\s]+')
       allowed =: set(bindings)
       invalid =:
         remove(\(contains? allowed %1) binding-list)
