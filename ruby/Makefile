@@ -1,6 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+RUBY-VERSION := 3.4.8
+
 include $(MAKES)/ruby.mk
 include $(MAKES)/shell.mk
 
