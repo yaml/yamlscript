@@ -19,6 +19,14 @@ json-url-exists() {
   curl -A yamlscript-release -fsL "$1" >/dev/null 2>&1
 }
 
+julia-version-exists() {
+  local url
+  url='https://raw.githubusercontent.com/JuliaRegistries/General/master'
+  url="$url/Y/YAMLScript/Versions.toml"
+  curl -A yamlscript-release -fsL "$url" |
+    grep -Fq "[\"$version\"]"
+}
+
 git-tag-exists() {
   git ls-remote --exit-code --tags "$1" "refs/tags/$2" \
     >/dev/null 2>&1
@@ -69,6 +77,10 @@ case $binding in
     url-exists "$url/$version-1" &&
       published=true
     ;;
+  julia)
+    julia-version-exists &&
+      published=true
+    ;;
   python)
     json-url-exists "https://pypi.org/pypi/yamlscript/$version/json" &&
       published=true
@@ -87,7 +99,7 @@ case $binding in
       "v$version" &&
       published=true
     ;;
-  julia|perl|perl-alien|raku)
+  perl|perl-alien|raku)
     log "No published check for binding: $binding"
     exit 1
     ;;
