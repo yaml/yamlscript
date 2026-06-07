@@ -30,6 +30,7 @@
 #   YS_RELEASE_FORCE_BINDINGS=1
 #                            - Try bindings even when already published
 #   YS_RELEASE_BINDINGS="..." - Release only listed binding directories
+#   YS_RELEASE_BINDINGS_SKIP  - Skip listed binding directories
 
 version-file =: '.version.ys'
 
@@ -520,20 +521,35 @@ defn do-bindings(new):
 
 defn release-bindings():
   list =: ENV.YS_RELEASE_BINDINGS
+  skip =: ENV.YS_RELEASE_BINDINGS_SKIP
+  allowed =: set(bindings)
 
-  if list.?:
+  selected =:
+    if list.?:
+      then:
+        binding-list =: parse-binding-list(list allowed 'binding')
+        expand-binding-list: binding-list
+      else:
+        =>: bindings
+
+  if skip.?:
     then:
-      binding-list =: list.trim().split('[,\s]+')
-      allowed =: set(bindings)
-      invalid =:
-        remove(\(contains? allowed %1) binding-list)
-
-      when invalid.?:
-        die: "Invalid binding(s): $(invalid.join(', '))"
-
-      expand-binding-list: binding-list
+      skip-list =: parse-binding-list(skip allowed 'skip binding')
+      skip-set =: set(expand-binding-list(skip-list))
+      remove: \(contains? skip-set %1) selected
     else:
-      =>: bindings
+      =>: selected
+
+
+defn parse-binding-list(list allowed what):
+  binding-list =: list.trim().split('[,\s]+')
+  invalid =:
+    remove(\(contains? allowed %1) binding-list)
+
+  when invalid.?:
+    die: "Invalid $what list: $(invalid.join(', '))"
+
+  =>: binding-list
 
 
 defn expand-binding-list(items):

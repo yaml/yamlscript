@@ -363,7 +363,8 @@ endif
 	  gh workflow run release.yaml \
 	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
 	    -f publish_bindings_only=true \
-	    -f bindings='$(YS_RELEASE_BINDINGS)'; \
+	    -f bindings='$(YS_RELEASE_BINDINGS)' \
+	    -f bindings_skip='$(YS_RELEASE_BINDINGS_SKIP)'; \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
 	    --repo yaml/yamlscript --branch $$branch --limit=1 \

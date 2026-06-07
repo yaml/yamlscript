@@ -11,6 +11,10 @@ on:
         description: 'Optional space-separated binding directories'
         required: false
         type: string
+      bindings_skip:
+        description: 'Optional space-separated binding directories to skip'
+        required: false
+        type: string
       publish_bindings_only:
         description: 'Publish bindings from existing release assets'
         default: false
@@ -30,6 +34,7 @@ env:
   JAVA_VERSION: '17'
   YS_RELEASE_CI: '1'
   YS_RELEASE_BINDINGS: ${{ inputs.bindings }}
+  YS_RELEASE_BINDINGS_SKIP: ${{ inputs.bindings_skip }}
 
 jobs:
   verify-release:
