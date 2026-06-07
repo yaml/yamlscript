@@ -29,6 +29,7 @@
 #   YS_RELEASE_CI=1         - Run non-interactively in GitHub Actions
 #   YS_RELEASE_FORCE_BINDINGS=1
 #                            - Try bindings even when already published
+#   YS_RELEASE_BINDINGS="..." - Release only listed binding directories
 
 version-file =: '.version.ys'
 
@@ -491,7 +492,7 @@ defn do-bindings(new):
 
   failures =: atom([])
 
-  each dir bindings:
+  each dir release-bindings():
     if binding-published?(dir new):
       say: "\nSkipping binding already published: $dir"
       else:
@@ -515,6 +516,24 @@ defn do-bindings(new):
     die: "Failed binding release(s): $(failures.@.join(', '))"
 
   say: '✓ All bindings released'
+
+
+defn release-bindings():
+  list =: ENV.YS_RELEASE_BINDINGS
+
+  if list.?:
+    then:
+      binding-list =: list.trim().split('\s+')
+      allowed =: set(bindings)
+      invalid =:
+        remove(\(contains? allowed %1) binding-list)
+
+      when invalid.?:
+        die: "Invalid binding(s): $(invalid.join(', '))"
+
+      =>: binding-list
+    else:
+      =>: bindings
 
 
 defn binding-published?(dir new):

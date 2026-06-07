@@ -195,7 +195,9 @@ endif
 release-check:
 ifndef YS_RELEASE_NO_CHECK
 ifneq (main,$(shell git rev-parse --abbrev-ref HEAD))
+ifndef YS_RELEASE_ALLOW_BRANCH
 	$(error Must be on branch 'main' to release)
+endif
 endif
 ifeq (,$(RELEASE-AUTH))
 	$(error YS release requires GH_TOKEN or $(SECRETS) file)
@@ -335,7 +337,7 @@ endif
 	  echo "Deleting existing GitHub release $(n)"; \
 	  gh release delete $(n) --repo yaml/yamlscript --yes; \
 	fi
-	git push origin main
+	git push origin HEAD:$$(git branch --show-current)
 	git tag -f $(n) HEAD
 	git push -f origin $(n)
 	$(MAKE) release-build-github n=$(n)
@@ -350,6 +352,12 @@ endif
 # Step 13: Publish website
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript website
+
+release-publish-bindings:
+ifndef n
+	$(error 'make release-publish-bindings' requires n=NEW_VERSION)
+endif
+	$(MAKE) release-bindings n=$(n) YS_RELEASE_CI=1
 
 #------------------------------------------------------------------------------
 # Release Credentials Management
