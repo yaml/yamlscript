@@ -5,15 +5,15 @@ include $(COMMON)/docker.mk
 include $(MAKES)/gh.mk
 # Languages whose CLIs 'secrets-update' uses to authenticate. Each entry
 # installs that toolchain locally and puts it on PATH (never system).
-# Must track the services that declare a 'login'/'fetch' in
-# util/yamlscript-secrets (npm/nodejs -> node; fez/raku -> raku).
-SECRETS-LANGS := node raku
+# Must track the services that declare a 'login' in
+# util/yamlscript-secrets (fez/raku -> raku).
+SECRETS-LANGS := raku
 SHELL-LANGS += $(SECRETS-LANGS)
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
 include $(MAKES)/shell.mk
 
 FEZ := $(RAKU-SITE-BIN)/fez
-SECRETS-TOOLS := $(NODE) $(FEZ)
+SECRETS-TOOLS := $(FEZ)
 
 BINDINGS := \
     clojure \
@@ -376,9 +376,8 @@ endif
 #------------------------------------------------------------------------------
 
 # Tools the credential-login CLIs need, installed locally (never
-# system). Grows as services gain a 'login'/'fetch' in
-# util/yamlscript-secrets. node provides `npm login`; fez (installed
-# via zef on the local rakudo) provides `fez login`.
+# system). Grows as services gain a 'login' in util/yamlscript-secrets.
+# fez (installed via zef on the local rakudo) provides `fez login`.
 $(FEZ): $(RAKU)
 	zef install fez
 	touch $@

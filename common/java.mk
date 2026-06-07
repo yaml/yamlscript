@@ -1,5 +1,7 @@
 include $(MAKES)/graalvm.mk
 
+MVN ?= mvn --batch-mode --no-transfer-progress
+
 YAMLSCRIPT-JAVA-INSTALLED := \
   $(MAVEN-REPOSITORY)/org/yamlscript/yamlscript/maven-metadata-local.xml
 

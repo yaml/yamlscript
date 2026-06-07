@@ -16,7 +16,7 @@ MVN-COMMANDS := \
 #------------------------------------------------------------------------------
 
 $(MVN-COMMANDS):: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
-	mvn $@
+	$(MVN) $@
 
 ifdef YS_RELEASE_CI
 release: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
@@ -27,9 +27,9 @@ ifndef n
 	$(error 'make $@' needs the n variable set to the new version)
 endif
 ifdef YS_RELEASE_CI
-	mvn package -DskipTests
+	$(MVN) package -DskipTests
 endif
-	mvn deploy:deploy-file \
+	$(MVN) deploy:deploy-file \
 	    -s ~/.mvn-user-settings.xml \
 	    -Dfile=$(YAMLSCRIPT-JAVA-JAR) \
 	    -DpomFile=pom.xml \
