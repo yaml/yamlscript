@@ -183,8 +183,11 @@ test-unit:
 	$(TIME) $(MAKE) -C ys test v=$v
 test-bindings: $(TEST-BINDINGS)
 
-serve publish:
-	$(MAKE) -C www $@
+serve-www:
+	$(MAKE) -C www serve
+
+publish-www:
+	$(MAKE) -C www publish
 
 ifneq (,$(or $s,$(YS_RELEASE_ID),$(YS_RELEASE_NO_CHECK)))
 release: _release-yamlscript
@@ -488,6 +491,7 @@ $(DISTCLEAN):
 distclean:: realclean $(DISTCLEAN)
 	$(MAKE) -C www $@
 	$(RM) -r bin/ lib/ website/
+	$(RM) -r $(ROOT)/.cache/
 distclean-%: %
 	$(MAKE) -C $< distclean
 	$(RM) -r .calva/ .clj-kondo/.cache .lsp/

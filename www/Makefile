@@ -6,8 +6,6 @@ SHELL-DEPS := $(PYTHON-VENV)
 SHELL-NAME := makes+venv
 include $(MAKES)/shell.mk
 
-PYTHON-VENV-SETUP := pip install -r requirements.txt
-
 CONFIG := mkdocs.yml
 
 MD-FILES := $(shell find ../doc -name '*.md' | sort)
@@ -158,7 +156,7 @@ realclean:: clean
 
 # YS doesn't support !!python tags yet.
 # This hack is a workaround to preserve them.
-YS_YAML_TAG_HACK := perl -pe 's{: \+!}{: !}'
+YS_YAML_TAG_HACK := env -u PERL5OPT perl -pe 's{: \+!}{: !}'
 
 $(CONFIG): mkdocs.ys ../Meta config/*
 	@( \
