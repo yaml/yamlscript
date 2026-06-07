@@ -32,6 +32,10 @@ test::
   want: 24
 - code: 24 / 3 / 4
   want: 2
+- code: 24 // 5
+  want: 4
+- code: -5 // 2
+  want: -2
 - code: 2 + 3 + 4
   want: 9
 - code: 9 - 3 - 4

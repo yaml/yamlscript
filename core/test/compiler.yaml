@@ -538,6 +538,14 @@
     (mod a b)
 
 
+- name: quot operator
+  yamlscript: |
+    !ys-0
+    =>: (a // b)
+  clojure: |
+    (quot a b)
+
+
 - name: Error on % in anonymous function
   yamlscript: |
     !ys-0

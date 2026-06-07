@@ -137,6 +137,7 @@
    (Sym '-)   (Sym 'sub+)
    (Sym '*)   (Sym 'mul+)
    (Sym '/)   (Sym 'div+)
+   (Sym "//") (Sym 'quot)
    (Sym '!=)  (Sym 'not=)
    (Sym '||)  (Sym 'or)
    (Sym '&&)  (Sym 'and)

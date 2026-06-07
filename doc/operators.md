@@ -45,6 +45,7 @@ sets and functions!
   `seq * num`, `num * seq`.
 * `/` - Division - Works on numbers. Infix returns a double in the cases where
   Clojure would return a ratio.
+* `//` - Quotient - Works on numbers. Compiles to `quot` in Clojure.
 * `%` - Remainder - Works on numbers. Compiles to `rem` in Clojure.
 * `%%` - Modulus - Works on numbers. Compiles to `mod` in Clojure.
 * `**` - Exponentiation - Works on numbers and has right associativity.
