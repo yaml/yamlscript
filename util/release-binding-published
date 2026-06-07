@@ -27,6 +27,18 @@ julia-version-exists() {
     grep -Fq "[\"$version\"]"
 }
 
+zef-version-exists() {
+  curl -A yamlscript-release -fsL https://360.zef.pm |
+    jq -e \
+      --arg name YAMLScript \
+      --arg auth zef:ingy \
+      --arg version "$version" '
+        any(.[]; .name == $name and
+                 .auth == $auth and
+                 .version == $version)
+      ' >/dev/null
+}
+
 cpan-package-exists() {
   local package=$1
   local cpan_version
@@ -151,8 +163,8 @@ case $binding in
     fi
     ;;
   raku)
-    log "No published check for binding: $binding"
-    exit 1
+    zef-version-exists &&
+      published=true
     ;;
   *)
     log "No published check for binding: $binding"
