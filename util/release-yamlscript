@@ -531,9 +531,19 @@ defn release-bindings():
       when invalid.?:
         die: "Invalid binding(s): $(invalid.join(', '))"
 
-      =>: binding-list
+      expand-binding-list: binding-list
     else:
       =>: bindings
+
+
+defn expand-binding-list(items):
+  reduce _ [] items:
+    fn(out dir):
+      if dir == 'perl':
+        then:
+          out: .conj('perl-alien').conj('perl')
+        else:
+          out: .conj(dir)
 
 
 defn binding-published?(dir new):
