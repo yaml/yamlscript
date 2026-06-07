@@ -18,7 +18,7 @@ ifeq (,$(shell find $(LOCAL-TMP) | grep -F 'LibraryMake.rakumod'))
 endif
 
 
-release:
+release: raku-install
 	fez upload
 
 dist::

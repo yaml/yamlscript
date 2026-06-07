@@ -88,8 +88,8 @@ MANIFEST.in:
 	echo 'include .long_description.md' >> $@
 
 .long_description.md: ReadMe.md
-	cat $< | \
-	    grep -A999 '## Synopsis' | \
-	    grep -B999 '## Features' | \
-	    head -n-2 \
-	> $@
+	awk '\
+	  /^## Synopsis/ { found = 1 } \
+	  found && /^## Features/ { exit } \
+	  found { print } \
+	' $< > $@

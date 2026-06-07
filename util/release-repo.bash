@@ -11,7 +11,9 @@ main() (
   init
   clone
   update
-  test
+  if [[ ! ${YS_RELEASE_CI-} ]]; then
+    test
+  fi
   release
 )
 

@@ -12,9 +12,10 @@ update() (
     cp \
       ReadMe.md \
       go.mod \
-      go.sum \
       yamlscript.go \
       "$repo_dir"
+    [[ ! -f go.sum ]] ||
+      cp go.sum "$repo_dir"
   )
 
   perl -pi -e 's{yamlscript/go}{yamlscript-go}' \

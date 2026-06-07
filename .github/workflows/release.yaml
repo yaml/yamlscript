@@ -284,13 +284,13 @@ jobs:
     name: Publish language bindings
     needs: upload-assets
     runs-on: ubuntu-latest
-    environment: release-publish
     permissions:
       contents: write
     env:
       YS_RELEASE_VERSION_NEW: ${{ inputs.version }}
       GH_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
       GITHUB_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
+      YS_GH_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
       CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
       CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
@@ -350,6 +350,11 @@ jobs:
           echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' \
             > ~/.npmrc
         fi
+
+    - name: Configure Git identity
+      run: |
+        git config --global user.name 'YAMLScript Release Bot'
+        git config --global user.email 'yamlscript-release@yaml.io'
 
     - name: Publish bindings
       run: |

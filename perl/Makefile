@@ -1,6 +1,7 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+include $(MAKES)/perl.mk
 include $(MAKES)/shell.mk
 
 test ?= test/
@@ -27,12 +28,13 @@ CPAN-DEPS := \
     FFI::CheckLib \
     FFI::Platypus \
     Test2::V0 \
+    Zilla::Dist \
 
-CPAN-UPLOAD := $(shell command -v cpan-upload)
 CPAN-DIST := YAMLScript-$(PERL-VERSION).tar.gz
 
 LOCAL-LIB := local
 
+export PATH := $(ROOT)/perl/$(LOCAL-LIB)/bin:$(PATH)
 export PERL5LIB := $(LOCAL-LIB)/lib/perl5
 
 #------------------------------------------------------------------------------
@@ -41,10 +43,8 @@ ifneq (,$(shell command -v cpanm))
 	PERLOK := true
 endif
 
-ifneq (,$(shell command -v zild))
-$(ZILD-COMMANDS)::
+$(ZILD-COMMANDS):: $(LOCAL-LIB)
 	zild $@
-endif
 
 ifdef PERLOK
 test:: $(LOCAL-LIB)
@@ -56,15 +56,12 @@ test-alien: $(ALIEN-BLIB-LIB)
 	    prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
 endif
 
-release: dist
+release: $(LOCAL-LIB) dist
 ifndef PAUSE_USER
 	$(error 'make release' needs PAUSE_USER set)
 endif
 ifndef PAUSE_PASS
 	$(error 'make release' needs PAUSE_PASS set)
-endif
-ifndef CPAN-UPLOAD
-	$(error 'make release' needs cpan-upload installed)
 endif
 	cpan-upload --user $(PAUSE_USER) --password '$(PAUSE_PASS)' \
 	  $(CPAN-DIST)

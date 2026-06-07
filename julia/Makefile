@@ -6,6 +6,13 @@ include $(MAKES)/shell.mk
 
 HEAD-COMMIT := $(shell git rev-parse HEAD)
 
+ifeq (,$(YS_GH_TOKEN))
+YS_GH_TOKEN := $(GH_TOKEN)
+endif
+ifeq (,$(YS_GH_TOKEN))
+YS_GH_TOKEN := $(GITHUB_TOKEN)
+endif
+
 #------------------------------------------------------------------------------
 build:: build-doc
 

@@ -34,7 +34,7 @@ test:: $(LIBYS-SO-FQNP)
 $(CARGO-CMDS):: $(CARGO)
 	cargo $@
 
-release:
+release: $(CARGO)
 	CARGO_REGISTRY_TOKEN=$(CRATES-TOKEN) \
 	  cargo publish
 

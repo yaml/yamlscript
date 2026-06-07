@@ -1,10 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
-# include $(MAKES)/ruby.mk  # TODO
+include $(MAKES)/ruby.mk
 include $(MAKES)/shell.mk
-
-RUBY := $(shell command -v bundle)
 
 RAKE-CMDS := \
     build \
@@ -21,17 +19,15 @@ build:: build-doc
 
 build-doc:: ReadMe.md
 
-ifdef RUBY
 update:
 	bundle install
 
 $(RAKE-CMDS):: $(GEM-HOME)
 	bundle exec rake $@
 
-$(GEM-HOME):
+$(GEM-HOME): $(RUBY)
 	gem install minitest -v 5.20.0
 	bundle install
-endif
 
 clean::
 	$(RM) Gemfile.lock .rake_tasks*
