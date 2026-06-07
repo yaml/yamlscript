@@ -30,7 +30,7 @@ update: $(NODE) package.json
 	npm install
 
 release: $(NODE)
-	NODE_AUTH_TOKEN=$(NPM-TOKEN) npm publish
+	NODE_AUTH_TOKEN=$(NPM-TOKEN) npm publish --access public
 
 clean::
 	$(RM) package-lock.json strace.txt bad
