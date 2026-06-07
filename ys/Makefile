@@ -5,12 +5,19 @@ include $(COMMON)/native.mk
 include $(COMMON)/vars-cli.mk
 include $(COMMON)/docker.mk
 
+include $(MAKES)/perl.mk
 include $(MAKES)/shell.mk
 
 BPAN-LOCAL := .bpan
 BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
 test := test/
+
+YSJ-TMP := .cache/tmp/ysj
+YSJ-BIN-DIR := $(YSJ-TMP)/bin
+YSJ-BIN := $(YSJ-BIN-DIR)/ys
+YSJ-API-BIN := $(YSJ-BIN-DIR)/ys-$(API_VERSION)
+YSJ-DOCKER-CONFIG := $(YSJ-TMP)/docker
 
 # override PATH := $(ROOT)/ys/bin:$(PATH)
 # export PATH
@@ -38,7 +45,14 @@ test-all: test-unit test-run
 test-unit: $(LEIN) $(CORE-INSTALLED)
 	lein test $(lein-test)
 
-test-run: $(CLI-DEPS) $(BPAN-LOCAL)
+test-run: $(PERL) $(CLI-DEPS) $(BPAN-LOCAL)
+	prove $${TEST_VERBOSE:+'-v'} $(test)
+
+test-ysj: export DOCKER_CONFIG := $(abspath $(YSJ-DOCKER-CONFIG))
+test-ysj: export PATH := $(abspath $(YSJ-BIN-DIR)):$(PATH)
+test-ysj: export YS_BIN_DIR := $(abspath $(YSJ-BIN-DIR))
+test-ysj: $(PERL) $(YSJ-BIN) $(YSJ-API-BIN) $(YSJ-DOCKER-CONFIG) \
+	  $(BPAN-LOCAL)
 	prove $${TEST_VERBOSE:+'-v'} $(test)
 
 repl-deps:: $(CORE-INSTALLED)
@@ -52,6 +66,19 @@ realclean::
 
 $(BPAN-LOCAL):
 	git clone --depth=1 $(BPAN-REPO-URL) $@
+
+$(YSJ-BIN): $(ROOT)/util/ysj
+	mkdir -p $(dir $@)
+	printf '%s\n' \
+	  '#!/usr/bin/env bash' \
+	  'exec $(abspath $<) "$$@"' > $@
+	chmod 755 $@
+
+$(YSJ-API-BIN): $(YSJ-BIN)
+	ln -fs ys $@
+
+$(YSJ-DOCKER-CONFIG):
+	mkdir -p $@
 
 ifndef PROPER-BUILD-ENV
 $(CLI-BIN): $(DOCKER-RUN-FILE)

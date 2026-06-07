@@ -173,6 +173,11 @@ test-ys:
 	@echo "=== Testing 'ys' ==="
 	@echo
 	$(TIME) $(MAKE) -C ys test v=$v GRAALVM-O=b
+test-ysj:
+	@echo
+	@echo "=== Testing 'ys' with 'util/ysj' ==="
+	@echo
+	$(TIME) $(MAKE) -C ys test-ysj v=$v
 test-%: %
 	@echo
 	@echo "=== Testing '$<' ==="
