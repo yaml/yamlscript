@@ -4,6 +4,8 @@ set -euo pipefail
 
 artifact_dir=${1:-.}
 version=$(sed -n 's/^version: //p' Meta)
+maven_repo=${MAVEN_REPOSITORY:-$PWD/.cache/.local/home/.m2/repository}
+core_installed=$maven_repo/yamlscript/core/$version/core-$version.jar
 
 ys_tar=$(
   find "$artifact_dir" -maxdepth 2 -type f -name 'ys-*.tar.xz' |
@@ -76,6 +78,7 @@ if [[ -z "$libys_dir" ]]; then
 fi
 
 mkdir -p ys/bin ys/target/uberjar libys/lib libys/target
+mkdir -p "$(dirname "$core_installed")"
 
 cp -pP "$ys_dir"/ys* ys/bin/
 cp -pP "$libys_dir"/libys* libys/lib/
@@ -83,6 +86,7 @@ cp -pP "$libys_dir"/*.h libys/lib/
 cp -p "$ys_jar" \
   "ys/target/uberjar/yamlscript.cli-$version-SNAPSHOT-standalone.jar"
 cp -p "$libys_jar" "libys/target/libys-$version-standalone.jar"
+touch "$core_installed"
 
 chmod +x ys/bin/ys-* 2>/dev/null || true
 find ys/bin ys/target/uberjar libys/lib libys/target -type f \
@@ -91,3 +95,4 @@ find ys/bin ys/target/uberjar libys/lib libys/target -type f \
 echo "Installed release artifacts:"
 ls -lh ys/bin/ys-* libys/lib/libys*
 ls -lh ys/target/uberjar/*.jar libys/target/*.jar
+ls -lh "$core_installed"
