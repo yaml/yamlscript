@@ -46,6 +46,7 @@ endif
 	# The next command may take a long time (a minute or so)
 	( set -x && \
 	  $(TIME) \
+	  $(NATIVE-ENV) \
 	  native-image \
 	    $(NATIVE-OPTS) \
 	    --shared \
