@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2026 Ingy dot Net
 
-(defproject yamlscript/libys "0.2.13"
+(defproject yamlscript/libys "0.2.14"
   :description "Shared Library for YS"
 
   :url "https://yamlscript.org"
@@ -20,7 +20,7 @@
   [[org.clojure/clojure "1.12.0"]
    [org.babashka/sci "0.8.41"]
    [org.clojure/data.json "2.4.0"]
-   [yamlscript/core "0.2.13"]]
+   [yamlscript/core "0.2.14"]]
 
   :plugins
   [[lein-exec "0.3.7"]

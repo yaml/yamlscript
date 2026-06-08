@@ -1,3 +1,9 @@
+- version: 0.2.14
+  date:    Mon Jun  8 08:27:15 AM EDT 2026
+  changes:
+  - ai: Add // operator and tighten rules
+  - ai: Bump skill version to 0.1.9
+  - ys: Fix native CLI UTF-8 output
 - version: 0.2.13
   date:    Sun Jun  7 02:35:29 PM EDT 2026
   changes:
