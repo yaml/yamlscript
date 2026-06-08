@@ -20,7 +20,6 @@ vo =: v-old.str/replace(/\./ '\\.')
   bump:
   - regx:: "()${vp}()"
     file:
-    - .github/workflows/release.yaml
     - Meta
     - common/install.mk
     - common/release.md
