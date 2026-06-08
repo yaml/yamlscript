@@ -28,32 +28,6 @@
 
 (def testing (atom false))
 
-;; Native-image static musl builds can report a non-UTF-8 default charset even
-;; under a UTF-8 locale.  Make CLI output explicit so Clojure writers don't
-;; replace non-ASCII characters with '?'.
-(defn native-image? []
-  (some? (System/getProperty "org.graalvm.nativeimage.imagecode")))
-
-(defn utf8-print-stream [^java.io.FileDescriptor fd]
-  (java.io.PrintStream.
-    (java.io.FileOutputStream. fd) true "UTF-8"))
-
-(defn utf8-print-writer [^java.io.FileDescriptor fd]
-  (java.io.PrintWriter.
-    (java.io.OutputStreamWriter.
-      (java.io.FileOutputStream. fd)
-      java.nio.charset.StandardCharsets/UTF_8)
-    true))
-
-(defn set-native-output-encoding! []
-  (when (native-image?)
-    (System/setOut (utf8-print-stream java.io.FileDescriptor/out))
-    (System/setErr (utf8-print-stream java.io.FileDescriptor/err))
-    (alter-var-root #'*out*
-      (constantly (utf8-print-writer java.io.FileDescriptor/out)))
-    (alter-var-root #'*err*
-      (constantly (utf8-print-writer java.io.FileDescriptor/err)))))
-
 ;; ----------------------------------------------------------------------------
 (defn in-repl []
   (some #(and
@@ -668,7 +642,6 @@ Options:
   #__)
 
 (defn -main [& argv]
-  (set-native-output-encoding!)
   (global/reset-env nil)
   (let [[opts args error errs help] (get-opts argv)
         out (:output opts)]

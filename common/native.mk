@@ -16,6 +16,8 @@ NATIVE-OPTS := \
   -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
   -H:+ReportExceptionStackTraces \
   -H:Log=registerResource: \
+  -Dfile.encoding=UTF-8 \
+  -Dsun.jnu.encoding=UTF-8 \
   -J-Dclojure.spec.skip-macros=true \
   -J-Dclojure.compiler.direct-linking=true \
   -J-Xmx3g \
