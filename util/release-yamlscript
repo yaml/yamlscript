@@ -579,7 +579,7 @@ defn do-website():
 
   run: 'rm -fr website'
   run: 'git worktree add -f website'
-  run: 'git -C website rebase main'
+  run: 'git -C website rebase origin/main'
   run: 'make -C website/www realclean publish website=live'
 
   say: '✓ Website published'
