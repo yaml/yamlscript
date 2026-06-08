@@ -1,10 +1,10 @@
-name: Release YAMLScript
+name: Release YAMLScript 0.2.14
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., 0.2.10)'
+        description: 'Version to release (e.g., 0.2.14)'
         required: true
         type: string
       bindings:
