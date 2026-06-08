@@ -73,6 +73,9 @@ test::
 - cmnd: "ys -pe '=>: 6 * 7'"
   want: '42'
 
+- cmnd: "ys -e 'say: \"Ingy döt Net ┌┼┐\"'"
+  want: Ingy döt Net ┌┼┐
+
 - cmnd: ys -Cle '{:x 123}'
   want: '{"x":123}'
 
