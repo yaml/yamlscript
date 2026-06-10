@@ -68,6 +68,7 @@ support, and docs:
    `x.foo()` vs the colon chain `x:foo`, a trailing `=>:` whose value is
    a call / method-chain / spaced binary op vs a pair form
    (`f: args` / `x: .m(a)` / `a OP: b`), `say: ''` vs bare `say:`,
+   `x.join(' ')` vs the colon chain `x:joins`,
    a wide `recur:` / `loop` arg list that should be comma-separated,
    and lines over 79 cols.
 
@@ -551,7 +552,9 @@ Two args fit fine on one line.
   `apply str: coll`** — they say what they mean and read tighter:
   - `apply(str chunks)` → `chunks:join` (or `join: chunks`)
   - `apply str: pieces` → `join: pieces` (or `pieces:join`)
-- `joins(coll)` — join with a single space
+- `joins(coll)` — join with a single space. **`xs.join(' ')` is
+  always `xs:joins`** — the colon chain says "join with one space"
+  directly. `say: row.join(' ')` → `say: row:joins`.
 - `split` and `join` have their own arg-swapping (not in DWIM list)
 - `qw(word1 word2 ...)` — quoted word list; creates a vector of
   strings without needing quotes around each word

@@ -57,6 +57,9 @@ RECUR-RE =: /^\s*recur:\s*(\S.*)$/
 LOOP-RE =: /^\s*loop\s+(\S.*):\s*$/
 WS-RE =: /\s+/
 SAY-EMPTY-RE =: /^\s*say:\s*(''|"")\s*$/
+# x.join(' ') joins with a single space -> the colon chain x:joins.
+# Checked on the unstripped line (string masking would hide the ' ').
+JOIN-SPACE-RE =: /\.join\(\s*(?:' '|" ")\s*\)/
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 COMMENT-RE =: /^\s*#/
@@ -89,7 +92,8 @@ defn- lint-file(file):
 defn- lint-line(file lineno orig):
   long-n =: check-long(file lineno orig)
   say-n =: check-say-empty(file lineno orig)
-  base =: long-n + say-n
+  join-n =: check-join-space(file lineno orig)
+  base =: long-n + say-n + join-n
   if orig !~ COMMENT-RE:
     base +: check-patterns(file lineno strip(orig))
     else: base
@@ -100,6 +104,15 @@ defn- check-say-empty(file lineno orig):
     then:
       msg =: "say: '' -> say:"
       report: file lineno 'say-empty' msg
+      =>: 1
+    else: 0
+
+# x.join(' ') -> x:joins (join with a single space)
+defn- check-join-space(file lineno orig):
+  if (orig !~ COMMENT-RE) && (orig =~ JOIN-SPACE-RE):
+    then:
+      msg =: "join with one space -> :joins"
+      report: file lineno 'join-space' msg
       =>: 1
     else: 0
 
