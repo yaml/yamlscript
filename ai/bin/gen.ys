@@ -1,0 +1,26 @@
+#!/usr/bin/env ys-0
+
+# Generate the Codex skill from the canonical Claude skill.
+#
+# The Claude skill (ai/claude/ys-skill/skills/yamlscript) is the single
+# source of truth. The Codex skill is byte-identical except for a few
+# agent-name tokens, so we derive it here instead of maintaining a
+# second copy. Run via `make gen` from ai/ after editing the Claude
+# SKILL.md or ys-lint.ys.
+
+SRC =: 'claude/ys-skill/skills/yamlscript'
+DST =: 'codex/.agents/skills/yamlscript'
+
+defn main():
+  write "$DST/SKILL.md": codex-skill(read("$SRC/SKILL.md"))
+  write "$DST/ys-lint.ys": read("$SRC/ys-lint.ys")
+  say: "Wrote $DST/ from $SRC/"
+
+# Rewrite the agent-name tokens. Order matters: the two-word product
+# name is handled before the bare name (so "Claude Code" -> "Codex
+# CLI"), and CLAUDE.md (uppercase) is distinct from the bare "Claude".
+defn codex-skill(text):
+  text
+    .replace('CLAUDE.md' 'AGENTS.md')
+    .replace('Claude Code' 'Codex CLI')
+    .replace('Claude' 'Codex')

@@ -1,0 +1,6 @@
+interface:
+  display_name: YAMLScript
+  short_description: Write idiomatic YAMLScript code
+
+policy:
+  allow_implicit_invocation: true

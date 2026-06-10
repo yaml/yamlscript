@@ -136,6 +136,10 @@ ys-files:
 	) | grep -Ev '(^note/)' | \
 	LC_ALL=C sort | uniq
 
+# Regenerate the Codex AI skill from the canonical Claude skill.
+ai-skill-generator: $(YS)
+	cd ai && $(YS) bin/gen.ys
+
 nrepl nrepl-stop nrepl+:
 	$(MAKE) -C core $@
 
