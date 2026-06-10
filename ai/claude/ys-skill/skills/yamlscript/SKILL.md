@@ -69,6 +69,7 @@ support, and docs:
    a call / method-chain / spaced binary op vs a pair form
    (`f: args` / `x: .m(a)` / `a OP: b`), `say: ''` vs bare `say:`,
    `x.join(' ')` vs the colon chain `x:joins`,
+   `slurp` / `spit` vs `read` / `write`,
    a wide `recur:` / `loop` arg list that should be comma-separated,
    and lines over 79 cols.
 
@@ -568,6 +569,16 @@ Two args fit fine on one line.
 - In scalar expressions, escape YAML-special sequences:
   - `:\` → literal `: ` (colon-space would trigger colon-chain)
   - ` \#` → literal ` #` (space-hash would start a YAML comment)
+
+### File I/O
+- **Never use `slurp` / `spit`** — these are the Clojure names. YS
+  spells them `read` and `write`, and those are the only idiomatic
+  forms:
+  - `read(file)` — read a whole file to a string (was `slurp`).
+    Colon chain: `file:read`, e.g. `FILE:read:lines`.
+  - `write(file content)` — write a string to a file (was `spit`).
+- `FILE` is bound to the running program's own source path, handy for
+  a program that reads data embedded in itself.
 
 ### Comments
 - `# ...` — standard YAML comment to end of line. Use it between

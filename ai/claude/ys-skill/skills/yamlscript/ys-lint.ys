@@ -60,6 +60,10 @@ SAY-EMPTY-RE =: /^\s*say:\s*(''|"")\s*$/
 # x.join(' ') joins with a single space -> the colon chain x:joins.
 # Checked on the unstripped line (string masking would hide the ' ').
 JOIN-SPACE-RE =: /\.join\(\s*(?:' '|" ")\s*\)/
+# slurp/spit are the Clojure names; YS spells them read/write. The two
+# words are written with a [.]-class so this pattern doesn't match its
+# own source when the linter is run over itself.
+SLURP-SPIT-RE =: /(?<![\w-])(slur[p]|spi[t])(?![\w-])/
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 COMMENT-RE =: /^\s*#/
@@ -158,6 +162,8 @@ defn- check-patterns(file lineno code):
     file.count-matches(lineno code 'quot-call' QUOT-CALL-RE fmt-quot-call)
     file.count-matches(lineno code 'quot-dot' QUOT-DOT-RE fmt-quot-dot)
     file.count-matches(lineno code 'zero-arg' ZERO-ARG-RE fmt-zero-arg)
+    file.count-matches(lineno code 'slurp-spit' SLURP-SPIT-RE
+                       fmt-slurp-spit)
     file.check-arrow(lineno code)
     file.check-commas(lineno code)
     file.check-once(lineno code 'then-nil' THEN-NIL-RE THEN-NIL-MSG)
@@ -205,6 +211,10 @@ defn- fmt-quot-dot(m):
 
 defn- fmt-zero-arg(m):
   format '%s.%s() -> %s:%s': m.1 m.2 m.1 m.2
+
+defn- fmt-slurp-spit(m):
+  repl =: (m.1 == 'slurp').if('read' 'write')
+  =>: "$(m.1) -> $repl"
 
 # A trailing =>: whose value is a compound expression (a call with
 # args, a method chain, or a spaced binary op) should be restructured
