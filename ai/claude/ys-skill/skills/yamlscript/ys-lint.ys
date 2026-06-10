@@ -26,12 +26,37 @@ KW-BRACKETS-PAT =:
    when-first|when-let|when-lets|when-some|\
    with-open)\\s+\\["
 KW-BRACKETS-RE =: re-pattern(KW-BRACKETS-PAT)
+# Iteration keywords also take a bracket-free binding, but only when
+# it's a name-value binding list (the brackets end the binding, '...]:').
+# A destructure shortcut (each [a b] coll:) keeps its brackets, and a
+# '_' ignore-var binding (dotimes [_ n]:) must keep them too, so the
+# leading binding var must start with a letter.
+ITER-BRACKETS-RE =:
+  /^\s+(each|for|doseq|dotimes)\s+\[[a-z][\w?!-]*\s.*\]:\s*$/
 KW-PARENS-RE =:
   /^\s+(if-not|if|when-not|when|while)\s+\(([^()]*)\):(?:\s|$)/
 QUOT-CALL-RE =:
   /(?<![\w-])quot\(\s*([\w$.-]+)\s+([\w$.-]+)\s*\)/
 QUOT-DOT-RE =:
   /([\w$.-]+)\.quot\(\s*([\w$.-]+)\s*\)/
+# Zero-arg method call x.foo() -> x:foo. first()/last() excluded
+# (their own rules suggest .0/.$).
+ZERO-ARG-RE =:
+  /(\w[\w-]*)\.(?!first\(\)|last\(\))([a-z][\w?!-]*)\(\)/
+# A trailing =>: whose value is a restructurable compound expression.
+ARROW-RE =: /^\s*=>:\s*(\S.*)$/
+ARROW-BARE-CALL-RE =: /^[\w.!?-]+\(\)$/
+# A call: a name (or name!/name?) immediately before '('. Excludes a
+# leading-paren group like the (. obj method) interop form, which has
+# no pair equivalent.
+ARROW-CALL-RE =: /[\w!?]\(/
+ARROW-OP-RE =:
+  re-pattern("\\s(\\+|-|\\*|//|/|%|==|!=|<=|>=|<|>|&&|\\|\\|)\\s")
+# recur / loop heads, for the comma-separated-bindings check.
+RECUR-RE =: /^\s*recur:\s*(\S.*)$/
+LOOP-RE =: /^\s*loop\s+(\S.*):\s*$/
+WS-RE =: /\s+/
+SAY-EMPTY-RE =: /^\s*say:\s*(''|"")\s*$/
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 COMMENT-RE =: /^\s*#/
@@ -63,9 +88,20 @@ defn- lint-file(file):
 
 defn- lint-line(file lineno orig):
   long-n =: check-long(file lineno orig)
+  say-n =: check-say-empty(file lineno orig)
+  base =: long-n + say-n
   if orig !~ COMMENT-RE:
-    long-n +: check-patterns(file lineno strip(orig))
-    else: long-n
+    base +: check-patterns(file lineno strip(orig))
+    else: base
+
+# say: '' / say: "" -> say: (print just a newline)
+defn- check-say-empty(file lineno orig):
+  if orig =~ SAY-EMPTY-RE:
+    then:
+      msg =: "say: '' -> say:"
+      report: file lineno 'say-empty' msg
+      =>: 1
+    else: 0
 
 defn- check-long(file lineno orig):
   if orig.# > 79:
@@ -74,10 +110,14 @@ defn- check-long(file lineno orig):
       =>: 1
     else: 0
 
+# Mask string literals with a single non-identifier placeholder '~'
+# (not removed) so an argument string doesn't collapse a call's parens
+# to '()' and look like a zero-arg method. Trailing comments are
+# dropped entirely.
 defn- strip(s):
-  s.replace(/\\"[^"]*"/)
-    .replace(/"(?:\\.|[^"\\])*"/)
-    .replace(/'[^']*'/)
+  s.replace(/\\"[^"]*"/ '~')
+    .replace(/"(?:\\.|[^"\\])*"/ '~')
+    .replace(/'[^']*'/ '~')
     .replace(/\s#.*$/)
 
 defn- check-patterns(file lineno code):
@@ -99,9 +139,14 @@ defn- check-patterns(file lineno code):
                        fmt-str-single)
     file.count-matches(lineno code 'kw-brackets' KW-BRACKETS-RE
                        fmt-kw-brackets)
+    file.count-matches(lineno code 'iter-brackets' ITER-BRACKETS-RE
+                       fmt-kw-brackets)
     file.count-matches(lineno code 'kw-parens' KW-PARENS-RE fmt-kw-parens)
     file.count-matches(lineno code 'quot-call' QUOT-CALL-RE fmt-quot-call)
     file.count-matches(lineno code 'quot-dot' QUOT-DOT-RE fmt-quot-dot)
+    file.count-matches(lineno code 'zero-arg' ZERO-ARG-RE fmt-zero-arg)
+    file.check-arrow(lineno code)
+    file.check-commas(lineno code)
     file.check-once(lineno code 'then-nil' THEN-NIL-RE THEN-NIL-MSG)
     file.check-once(lineno code 'else-nil' ELSE-NIL-RE ELSE-NIL-MSG)
 
@@ -144,6 +189,63 @@ defn- fmt-quot-call(m):
 
 defn- fmt-quot-dot(m):
   format '%s.quot(%s) -> %s // %s': m.1 m.2 m.1 m.2
+
+defn- fmt-zero-arg(m):
+  format '%s.%s() -> %s:%s': m.1 m.2 m.1 m.2
+
+# A trailing =>: whose value is a compound expression (a call with
+# args, a method chain, or a spaced binary op) should be restructured
+# into a pair form: f: args / x: .m(a) / a OP: b. Bare atoms, property
+# lookups, data literals, and zero-arg calls are left alone.
+defn- check-arrow(file lineno code):
+  m =: re-find(ARROW-RE code)
+  if m.!:
+    then: 0
+    else:
+      val =: m.1:trim
+      cond:
+        val =~ ARROW-BARE-CALL-RE: 0
+        (val =~ ARROW-CALL-RE) || (val =~ ARROW-OP-RE):
+          msg =: "=>: $val -> use a pair form"
+          report: file lineno 'arrow-pair' msg
+          =>: 1
+        else: 0
+
+# recur: / loop heads with two or more space-separated args (or
+# binding pairs) and no commas: Ingy comma-separates these. Balanced
+# groups are collapsed first so spaces inside (...) / [...] don't
+# count as separators.
+# Thresholds are intentionally high (3+ recur args, 3+ loop binding
+# pairs): Ingy comma-separates wide arg lists but leaves short ones, so
+# a low threshold over-fires. This rule is the softest of the set.
+defn- check-commas(file lineno code):
+  rn =:
+    check-comma-line(file lineno code RECUR-RE 'recur' 3)
+  ln =:
+    check-comma-line(file lineno code LOOP-RE 'loop' 6)
+  rn +: ln
+
+defn- check-comma-line(file lineno code re kw min-tokens):
+  m =: re-find(re code)
+  if m.!:
+    then: 0
+    else:
+      args =: m.1
+      tokens =: strip-groups(args).split(WS-RE).remove(empty?)
+      no-comma =: args !~ /,/
+      flag =: no-comma && (tokens.# >= min-tokens)
+      if flag:
+        then:
+          msg =: "$kw -> comma-separate the args"
+          report: file lineno 'commas' msg
+          =>: 1
+        else: 0
+
+defn- strip-groups(s):
+  s.replace(/\([^()]*\)/ '0')
+    .replace(/\([^()]*\)/ '0')
+    .replace(/\[[^\[\]]*\]/ '0')
+    .replace(/\([^()]*\)/ '0')
 
 defn- fmt-static(msg):
   fn(_):

@@ -61,9 +61,15 @@ support, and docs:
    `when`, `when-not`, `while`), any `KW [...]:` bracketed binding
    form for the reliably-strippable keywords (`binding`,
    `if-let`/`if-lets`/`if-some`, `let`, `loop`,
-   `when-first`/`when-let`/`when-lets`/`when-some`, `with-open`),
-   `then: nil` / `else: nil` vs `when` / `when-not`, and lines over
-   79 cols.
+   `when-first`/`when-let`/`when-lets`/`when-some`, `with-open`) and
+   for the iteration keywords (`each`, `for`, `doseq`, `dotimes`) when
+   the binding starts with a named var (not a `_`-var or destructure
+   pattern), `then: nil` / `else: nil` vs `when` / `when-not`, a zero-arg method
+   `x.foo()` vs the colon chain `x:foo`, a trailing `=>:` whose value is
+   a call / method-chain / spaced binary op vs a pair form
+   (`f: args` / `x: .m(a)` / `a OP: b`), `say: ''` vs bare `say:`,
+   a wide `recur:` / `loop` arg list that should be comma-separated,
+   and lines over 79 cols.
 
    The linter matches against source text with regex, so every hit is a
    *candidate*, not a verdict. False positives are expected: a long line
@@ -705,19 +711,26 @@ Two args fit fine on one line.
   `KW [a b c d]:` is always wrong — write `KW a b, c d:`
   (comma-separated pairs) or `KW a b c d:` (no commas) instead.
   Use `recur` for tail recursion back to the loop head.
-- **Iteration keywords keep their brackets in some cases.**
-  `each`, `for`, `doseq`, `dotimes` share the same lhs-bindings
-  transformer, but the parser also reads the surface form to
-  separate the binding from the body. When the value is a bare
-  symbol you can drop brackets: `each x xs:`, `for x xs:`.
-  When the value is a parenthesized expression or the form is a
-  single binding-pair with a non-symbol value, brackets are
-  required: `each [_ (1 .. n)]:`, `for [k (range n)]:`,
-  `dotimes [_ n]:`. Without brackets the parser eats the body as
-  part of the binding. The destructuring shortcut
-  `each [a b] coll:` also keeps brackets — there the `[a b]`
-  is a destructure pattern, not a binding-list wrapper. The
-  lint rule only flags the always-strippable keywords above.
+- **Iteration keywords (`each`, `for`, `doseq`, `dotimes`) also take
+  the bracket-free binding form.** A name-value binding list drops its
+  brackets regardless of the value — even a parenthesized range or a
+  vector literal:
+  - `each [y (0 .. h)]:` → `each y (0 .. h):`
+  - `for [i (0 .. n), j (i .. n)]:` → `for i (0 .. n), j (i .. n):`
+  - `each [c [true false]]:` → `each c [true false]:`
+
+  Two cases keep their brackets:
+  1. **Ignore-var binding** whose variable is `_`: `dotimes [_ n]:`,
+     `each [_ (1 .. n)]:`. The `_` form must stay bracketed.
+  2. **Destructure shortcut** where a pattern binds each element of one
+     collection: `each [a b] coll:`, `each [k v] m:`. Here `[a b]` is a
+     destructure pattern (followed by the collection), not a binding
+     list, so the brackets stay.
+
+  The `iter-brackets` lint rule flags only the first case — a bracketed
+  binding that starts with a real (letter-leading) variable name and
+  ends the binding (`...]:`). It leaves `_`-var and destructure forms
+  alone.
 - `recur` — tail-call back to enclosing `loop` or `defn`; multi-arg
   form: `recur: arg1 arg2` or `recur arg1: arg2`
 - `for` body can be bare scalar — `=>:` not needed
@@ -1053,6 +1066,8 @@ pairs =: words:frequencies.sort-by(val):reverse
   stderr; the rest go to stdout. `print` and `out` are synonyms (both
   are `clojure.core/print` with auto-flush); prefer `print` when it
   stands alone, `out` when chaining or pairing with `err`.
+- To print just a blank line, write bare `say:` — not `say: ''`. A
+  valueless `say:` emits the newline on its own.
 - `die(msg)` — print error message to stderr and exit
 - `read-line()` — read a line from stdin
 - `IN` — stdin handle for `read`: `read: IN` instead of
