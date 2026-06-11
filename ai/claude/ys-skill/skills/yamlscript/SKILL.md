@@ -54,8 +54,9 @@ support, and docs:
    see because they vanish at the AST stage: `.nth(N)` vs `.N`,
    `.nth(var)` vs `.$var`, `x + 1` vs `.++`, `x - 1` vs `.--`,
    `.first()` / `.last()` vs `.0` / `.$` (or `:first` / `:last`),
-   `vector(...)` vs `+[...]`, `apply(str ...)` and `apply str:`
-   vs `:join` / `join:`, `str(bareVar)` vs `bareVar:S`,
+   `vector(...)` and inline `V+(...)` vs `+[...]`, inline `M+(...)`
+   vs `+{...}`, `apply(str ...)` and `apply str:` vs `:join` /
+   `join:`, `str(bareVar)` vs `bareVar:S`,
    `quot(a b)` and `a.quot(b)` vs `a // b`,
    any `KW (cond):` test-expression paren-wrap (for `if`, `if-not`,
    `when`, `when-not`, `while`), any `KW [...]:` bracketed binding
@@ -67,7 +68,8 @@ support, and docs:
    pattern), `then: nil` / `else: nil` vs `when` / `when-not`, a zero-arg method
    `x.foo()` vs the colon chain `x:foo`, a trailing `=>:` whose value is
    a call / method-chain / spaced binary op vs a pair form
-   (`f: args` / `x: .m(a)` / `a OP: b`), `say: ''` vs bare `say:`,
+   (`f: args` / `x: .m(a)` / `a OP: b`), a direct `=>:` child under
+   an `if` block vs `then:` / `else:`, `say: ''` vs bare `say:`,
    `x.join(' ')` vs the colon chain `x:joins`,
    `slurp` / `spit` vs `read` / `write`,
    a wide `recur:` / `loop` arg list that should be comma-separated,
@@ -179,6 +181,27 @@ genuinely cannot be written as a pair.
 - bare interpolated strings: `=>: "$s$check"`
 - bare data-collection literals: `=>: +[1 2 3]`, `=>: +{a: 1}`
 
+**Never use `=>:` as a direct branch key of an `if` construct.**
+Even when the branch result is an atom that would normally allow
+`=>:`, an `if` branch already has semantic keys. Use `then:` or
+`else:` instead:
+
+```
+if done?:
+  then: result
+  else:
+    recur: next
+```
+
+not:
+
+```
+if done?:
+  =>: result
+  else:
+    recur: next
+```
+
 **Restructure compound expressions into a pair:**
 
 1. **Function call** → fn-call pair `name: args`
@@ -279,6 +302,49 @@ to the same thing for vectors, so when in doubt use the dot form.
 
 Use `vec(coll)` only when you're *converting* an existing collection,
 not when listing elements.
+
+### Prefer `+[]` / `+{}` for collection literals
+
+Use `+[...]` and `+{...}` for collection literals in expression/value
+position. They read as literals and should be the default for short
+vectors and maps, including maps with computed values:
+
+```
+pair =: +[name score]
+node =: +{:char ch :freq freq}
+```
+
+Use `V+` and `M+` mainly when the collection constructor is the pair
+key, especially for block form or when the call layout is clearer as a
+YAML pair:
+
+```
+M+: :a 1, :b 2
+
+V+:
+  item-a
+  item-b
+  item-c
+```
+
+Avoid inline `V+(...)` / `M+(...)` when a `+[...]` / `+{...}` literal
+is equally clear.
+
+### Avoid defensive `:V`
+
+Do not add `:V` just because a value is lazy or because the next form
+will iterate it. Prefer leaving sequence-producing calls as sequences,
+then run the program without materializing first.
+
+Add `:V` only when the program needs vector behavior:
+- indexed access with `.N` / `.$i`
+- vector-style `conj` order
+- repeated traversal where laziness would be surprising
+- output must visibly print as a vector
+- a later operation specifically requires an indexed collection
+
+When unsure, remove `:V` and run the program. Keep it only if the
+program fails or the output semantics change.
 
 ### Use `:join` / `join:` instead of `apply(str ...)` / `apply str:`
 
@@ -1039,15 +1105,18 @@ pairs =: words:frequencies.sort-by(val):reverse
   | L  | List         |    |                  |
 
   `L+`, `M+`, `O+`, `V+` are variadic variants that build the
-  collection from multiple args. Prefer these single-letter forms
-  over `long(...)`, `int(...)`, etc.: `I(sqrt(n))` is idiomatic.
+  collection from multiple args. Prefer single-letter cast forms over
+  long Clojure names: `I(sqrt(n))` is idiomatic. For collection
+  literals, prefer `+[]` / `+{}` over inline `V+(...)` / `M+(...)`
+  unless the constructor is clearer as the pair key (`V+:` / `M+:`).
 - `=:` for assignment (replaces `def`/`let`)
 - `x y =: 6 7` for multiple assignment
 - `=>:` only when no pair form works: bare identifiers, atoms,
   interpolated strings, data-collection literals (`+[1 2 3]`,
   `+{a: 1}`). For compound expressions, restructure into a pair —
   fn-call `f: args`, chain `x: .m(a)`, or op `a +: b`. See Common
-  Mistakes.
+  Mistakes. Exception: never use `=>:` as a direct `if` branch key;
+  write `then:` or `else:` instead.
 - `? expr : value` — YAML complex key syntax; lets a multi-line
   expression serve as the key of a mapping pair. Useful when a
   pipeline is too long to fit before the `:` of a block pair:
@@ -1126,6 +1195,9 @@ pairs =: words:frequencies.sort-by(val):reverse
   pair: `=>: a.b.c` → `a: .b.c`; `=>: f(a b)` → `f: a b`;
   `=>: a == b` → `a ==: b`. For a `cond` default arm use `else:`,
   not `=>:`.
+- Do NOT use `=>:` as a direct child of an `if`. Write `then:` or
+  `else:` so the branch role is explicit: `if done?: \n  then: result`,
+  not `if done?: \n  =>: result`.
 - Do NOT write `x + 1` or `x - 1` — use `.++` and `.--`: `i.++` not
   `i + 1`, `(3 * v).++` not `((3 * v) + 1)`, `n.--` not `n - 1`.
   Works in chains, args, interpolation, anywhere.
@@ -1160,6 +1232,11 @@ pairs =: words:frequencies.sort-by(val):reverse
   positions (by design — see Values & Data). Use `+[...]` / `+{...}`
   for code-mode literals. Note: this only applies at the START of a
   value — `foo([b c])` is fine because the `[` is mid-expression.
+- Do NOT use inline `V+(...)` / `M+(...)` when a `+[...]` / `+{...}`
+  literal is equally clear. Reserve `V+:` / `M+:` for pair-key and
+  block-form construction.
+- Do NOT add defensive `:V`. First remove it and run the program;
+  keep it only when vector behavior is needed or semantics change.
 - Do NOT use `+` mid-expression to "escape" — `+` is only an escape
   at the start of a value plain scalar; elsewhere it means addition.
   `sieve(xs) +[]` is vector addition (a no-op), not an escaped `[]`

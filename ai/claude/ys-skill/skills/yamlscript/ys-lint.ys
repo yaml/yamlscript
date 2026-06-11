@@ -18,6 +18,7 @@ MINUS-RE =: /([A-Za-z_][\w-]*)\s+-\s+1(?![\d.])/
 FIRST-CALL-RE =: /(\w[\w-]*)\.first\(\)/
 LAST-CALL-RE =: /(\w[\w-]*)\.last\(\)/
 VECTOR-LIT-RE =: /\bvector\(/
+CONSTRUCTOR-CALL-RE =: /(?<![\w-])([VM])\+\(/
 APPLY-STR-RE =: /(?<![\w-])apply\(\s*str(?![\w-])/
 APPLY-STR-PAIR-RE =: /^\s+apply\s+str:/
 STR-SINGLE-RE =: /(?<![\w-])str\(\s*([A-Za-z_][\w-]*)\)/
@@ -35,6 +36,7 @@ ITER-BRACKETS-RE =:
   /^\s+(each|for|doseq|dotimes)\s+\[[a-z][\w?!-]*\s.*\]:\s*$/
 KW-PARENS-RE =:
   /^\s+(if-not|if|when-not|when|while)\s+\(([^()]*)\):(?:\s|$)/
+IF-HEAD-RE =: /^\s*if\b.*:\s*$/
 QUOT-CALL-RE =:
   /(?<![\w-])quot\(\s*([\w$.-]+)\s+([\w$.-]+)\s*\)/
 QUOT-DOT-RE =:
@@ -90,7 +92,11 @@ defn- lint-file(file):
   lines =: file:read:lines:V
   loop i 0, total 0:
     if i < lines.#:
-      recur: i.++ (total + lint-line(file i.++ lines.$i))
+      then:
+        line-total =:
+          lint-line(file i.++ lines.$i) +
+          check-if-arrow(file i.++ lines i)
+        recur: i.++ (total + line-total)
       else: total
 
 defn- lint-line(file lineno orig):
@@ -148,6 +154,8 @@ defn- check-patterns(file lineno code):
     file.count-matches(lineno code 'last-call' LAST-CALL-RE fmt-last-call)
     file.count-matches(lineno code 'vector-lit' VECTOR-LIT-RE
                        fmt-static(VECTOR-LIT-MSG))
+    file.count-matches(lineno code 'constructor-call' CONSTRUCTOR-CALL-RE
+                       fmt-constructor-call)
     file.count-matches(lineno code 'apply-str' APPLY-STR-RE
                        fmt-static(APPLY-STR-MSG))
     file.count-matches(lineno code 'apply-str-pair' APPLY-STR-PAIR-RE
@@ -212,6 +220,11 @@ defn- fmt-quot-dot(m):
 defn- fmt-zero-arg(m):
   format '%s.%s() -> %s:%s': m.1 m.2 m.1 m.2
 
+defn- fmt-constructor-call(m):
+  if m.1 == 'V':
+    then: 'V+(...) -> +[...]'
+    else: 'M+(...) -> +{...}'
+
 defn- fmt-slurp-spit(m):
   repl =: (m.1 == 'slurp').if('read' 'write')
   =>: "$(m.1) -> $repl"
@@ -233,6 +246,42 @@ defn- check-arrow(file lineno code):
           report: file lineno 'arrow-pair' msg
           =>: 1
         else: 0
+
+# Direct `=>:` children of `if` should be `then:` or `else:` instead.
+# This intentionally catches only the direct-child shape:
+#   if done?:
+#     =>: result
+# It does not try to parse multi-form `then:` / `else:` blocks.
+defn- check-if-arrow(file lineno lines i):
+  code =: strip(lines.$i)
+  if (code =~ ARROW-RE) && direct-child-of-if?(lines i):
+    then:
+      msg =: '=>: under if -> then:/else:'
+      report: file lineno 'if-arrow' msg
+      =>: 1
+    else: 0
+
+defn- direct-child-of-if?(lines i):
+  parent-i =: prev-code-index(lines i)
+  if parent-i.!:
+    then: false
+    else:
+      parent =: strip(lines.$parent-i)
+      child =: strip(lines.$i)
+      parent-is-if =: parent =~ IF-HEAD-RE
+      child-deeper =: indent(child) > indent(parent)
+      parent-is-if &&: child-deeper
+
+defn- prev-code-index(lines i):
+  loop j i.--:
+    cond:
+      j < 0: nil
+      lines.$j:trim.!: recur(j.--)
+      lines.$j =~ COMMENT-RE: recur(j.--)
+      else: j
+
+defn- indent(s):
+  s.replace(/\S.*$/).#
 
 # recur: / loop heads with two or more space-separated args (or
 # binding pairs) and no commas: Ingy comma-separates these. Balanced
