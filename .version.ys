@@ -51,6 +51,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - www/src/run-ys
     - www/src/cicd.md
     - ai/claude/ys-skill/skills/yamlscript/SKILL.md
+    - ai/codex/.agents/skills/yamlscript/SKILL.md
     - blog/2023-12-07.md
     - ys/src/yamlscript/cli.clj
     - ys/test/cli-usage.t

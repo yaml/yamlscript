@@ -490,5 +490,10 @@ jobs:
         ref: ${{ inputs.version }}
         fetch-depth: 0
 
+    - name: Install website build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libjpeg-dev zlib1g-dev
+
     - name: Publish website
       run: make release-website
