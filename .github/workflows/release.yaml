@@ -493,7 +493,7 @@ jobs:
     - name: Install website build dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libjpeg-dev zlib1g-dev
+        sudo apt-get install -y libfreetype6-dev libjpeg-dev zlib1g-dev
 
     - name: Publish website
       run: make release-website
