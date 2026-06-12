@@ -1,3 +1,9 @@
+- version: 0.2.15
+  date:    Fri Jun 12 02:56:28 PM EDT 2026
+  changes:
+  - ai: Bump skill version to 0.1.10
+  - ai: Generate Codex skill from Claude skill
+  - release: Add Homebrew tap publishing
 - version: 0.2.14
   date:    Mon Jun  8 08:27:15 AM EDT 2026
   changes:
