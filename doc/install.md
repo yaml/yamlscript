@@ -19,6 +19,7 @@ You can install `ys` on macOS or Linux with Homebrew.
 Just run these commands:
 
 ```bash
+brew trust yaml/yamlscript
 brew tap yaml/yamlscript
 brew install ys
 ```
