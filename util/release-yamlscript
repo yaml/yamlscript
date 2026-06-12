@@ -132,7 +132,10 @@ defn do-list():
      12. make release-bindings n=Y
          Release all 16 language bindings
 
-     13. make release-website
+     13. make release-homebrew n=Y
+         Publish the Homebrew tap formulas
+
+     14. make release-website
          Publish yamlscript.org website
 
 

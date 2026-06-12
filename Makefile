@@ -361,7 +361,14 @@ ifndef n
 endif
 	$(YS) $(ROOT)/util/release-yamlscript bindings $(n)
 
-# Step 13: Publish website
+# Step 13: Publish Homebrew tap
+release-homebrew: $(if $(YS_RELEASE_CI),,$(YS))
+ifndef n
+	$(error 'make release-homebrew' requires n=NEW_VERSION)
+endif
+	$(YS) $(ROOT)/util/brew-update $(n)
+
+# Step 14: Publish website
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript website
 

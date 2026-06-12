@@ -1,65 +1,229 @@
 #!/usr/bin/env ys-0
 
 releases-url =: 'https://github.com/yaml/yamlscript/releases'
-brew-url =: 'git@github.com:yaml/homebrew-yamlscript'
+brew-url =: ENV.YS_HOMEBREW_URL ||
+  'git@github.com:yaml/homebrew-yamlscript'
+
 
 defn main(version):
   check-version: version
   download-releases: version
   update-brew: version
+  commit-brew: version
+
 
 defn update-brew(version):
-  releases =: releases(version)
+  clone-brew:
+  shas =: release-shas(version)
 
+  write 'homebrew-yamlscript/ys.rb':
+    ys-formula(version 'Ys' shas)
+
+  write "homebrew-yamlscript/ys@$version.rb":
+    ys-formula(version class-name('YsAT' version) shas)
+
+  write 'homebrew-yamlscript/libys.rb':
+    libys-formula(version 'Libys' shas)
+
+  write "homebrew-yamlscript/libys@$version.rb":
+    libys-formula(version class-name('LibysAT' version) shas)
+
+  write 'homebrew-yamlscript/ReadMe.md':
+    readme(version)
+
+  show-status:
+
+
+defn clone-brew():
   when-not fs/e('homebrew-yamlscript'):
     say: "Cloning $brew-url"
-    res =: sh("git clone $brew-url")
+    res =: sh("git clone $brew-url homebrew-yamlscript")
     when res.exit:N.?:
       die: "git clone of '$brew-url' failed\n$(res.err)"
 
-  text =: read('homebrew-yamlscript/template/ys.rb')
-          .replace('VERSION' version)
-  text =:
-    reduce-kv _ text releases:
-      fn(text key file):
-        sha256 =: sh("sha256sum $file").out:words.0
-        text: .replace(key sha256)
 
-  say: "Updating homebrew-yamlscript/ys.rb"
-  write 'homebrew-yamlscript/ys.rb':
-    text.replace('CLASS' 'Ys')
-
-  vrsn =: version.replace('.')
-  say: "Updating homebrew-yamlscript/ys@version.rb"
-  write "homebrew-yamlscript/ys@$version.rb":
-    text.replace('CLASS' "YsAT$vrsn")
-
-  say: "Updating homebrew-yamlscript/ReadMe.md"
-  write "homebrew-yamlscript/ReadMe.md":
-    read("homebrew-yamlscript/template/ReadMe.md")
-      .replace('VERSION' version)
-
-  status =: sh('git -C homebrew-yamlscript status --short --ignored').out
+defn commit-brew(version):
+  status =: sh('git -C homebrew-yamlscript status --short').out
   if status.?:
+    then:
+      run-cmd: 'git -C homebrew-yamlscript add .'
+      run-cmd: "git -C homebrew-yamlscript commit -m 'Add $version'"
+      if ENV.YS_HOMEBREW_PUSH == '0':
+        say: 'Skipping Homebrew tap push'
+        run-cmd: 'git -C homebrew-yamlscript push'
+    else:
+      say: 'Homebrew tap already up to date'
+
+
+defn show-status():
+  status =: sh('git -C homebrew-yamlscript status --short --ignored').out
+  when status.?:
     say: status
-    say: "Nothing changed"
+
+
+defn run-cmd(command):
+  say: "+ $command"
+  res =: sh(command)
+  when res.exit:N.?:
+    die: |
+      Command failed: $command
+      $(res.err)
+
 
 defn download-releases(version):
-  releases =: releases(version)
-  reduce-kv _ nil releases:
-    fn(_ _ file):
-      when-not fs/e(file):
-        say: "Downloading $file"
-        url =: "$releases-url/download/$version/$file"
-        res =: sh("wget -q $url")
-        when res.exit:N.?:
-          die: "Download of '$url' failed:\n$(res.err)"
+  each file release-files(version):
+    when-not fs/e(file):
+      say: "Downloading $file"
+      url =: "$releases-url/download/$version/$file"
+      res =: sh("curl -fsSLO $url")
+      when res.exit:N.?:
+        die: "Download of '$url' failed:\n$(res.err)"
 
-defn releases(version)::
-  LIN_ARM:: "ys-${version}-linux-aarch64.tar.xz"
-  LIN_INT:: "ys-${version}-linux-x64.tar.xz"
-  MAC_ARM:: "ys-${version}-macos-aarch64.tar.xz"
-  MAC_INT:: "ys-${version}-macos-x64.tar.xz"
+
+defn release-shas(version):
+  reduce _ hash-map() release-files(version):
+    fn(shas file):
+      shas.assoc(file sha256(file))
+
+
+defn sha256(file):
+  sh("shasum -a 256 $file").out:words.0
+
+
+defn release-files(version): +
+  [
+    "ys-${version}-linux-x64.tar.xz"
+    "ys-${version}-macos-aarch64.tar.xz"
+    "libys-${version}-linux-x64.tar.xz"
+    "libys-${version}-macos-aarch64.tar.xz"
+  ]
+
+
+defn ys-formula(version class shas):
+  lin-file =: "ys-${version}-linux-x64.tar.xz"
+  mac-file =: "ys-${version}-macos-aarch64.tar.xz"
+  lin =: shas.$lin-file
+  mac =: shas.$mac-file
+  formula =:: |
+    class CLASS < Formula
+      desc "Program in YAML - Code is Data"
+      homepage "https://github.com/yaml/yamlscript"
+      version "VERSION"
+      license "MIT"
+
+      on_linux do
+        if Hardware::CPU.intel?
+          url "https://github.com/yaml/yamlscript/releases/download/" \
+            "#{version}/ys-#{version}-linux-x64.tar.xz"
+          sha256 "LINUX_SHA"
+        else
+          odie "YAMLScript is not available for this Linux architecture"
+        end
+      end
+
+      on_macos do
+        if Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlscript/releases/download/" \
+            "#{version}/ys-#{version}-macos-aarch64.tar.xz"
+          sha256 "MACOS_SHA"
+        else
+          odie "YAMLScript is not available for this macOS architecture"
+        end
+      end
+
+      def install
+        bin.install "ys"
+        bin.install "ys-0"
+        bin.install "ys-#{version}"
+      end
+
+      test do
+        assert_equal "YAMLScript #{version}\n",
+          pipe_output("#{bin}/ys --version")
+      end
+    end
+  formula:
+    .replace('CLASS' class)
+    .replace('VERSION' version)
+    .replace('LINUX_SHA' lin)
+    .replace('MACOS_SHA' mac)
+
+
+defn libys-formula(version class shas):
+  lin-file =: "libys-${version}-linux-x64.tar.xz"
+  mac-file =: "libys-${version}-macos-aarch64.tar.xz"
+  lin =: shas.$lin-file
+  mac =: shas.$mac-file
+  formula =:: |
+    class CLASS < Formula
+      desc "YAMLScript shared library"
+      homepage "https://github.com/yaml/yamlscript"
+      version "VERSION"
+      license "MIT"
+
+      on_linux do
+        if Hardware::CPU.intel?
+          url "https://github.com/yaml/yamlscript/releases/download/" \
+            "#{version}/libys-#{version}-linux-x64.tar.xz"
+          sha256 "LINUX_SHA"
+        else
+          odie "libys is not available for this Linux architecture"
+        end
+      end
+
+      on_macos do
+        if Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlscript/releases/download/" \
+            "#{version}/libys-#{version}-macos-aarch64.tar.xz"
+          sha256 "MACOS_SHA"
+        else
+          odie "libys is not available for this macOS architecture"
+        end
+      end
+
+      def install
+        lib.install Dir["libys*.so*"]
+        lib.install Dir["libys*.dylib*"]
+        (include/"libys-#{version}").install Dir["*.h"]
+      end
+
+      test do
+        if OS.mac?
+          assert_predicate lib/"libys.dylib", :exist?
+        else
+          assert_predicate lib/"libys.so", :exist?
+        end
+      end
+    end
+  formula:
+    .replace('CLASS' class)
+    .replace('VERSION' version)
+    .replace('LINUX_SHA' lin)
+    .replace('MACOS_SHA' mac)
+
+
+defn readme(version): |
+  homebrew-yamlscript
+  ===================
+
+  [Homebrew](https://brew.sh/) for YAMLScript
+
+
+  ## Install YAMLScript with Homebrew
+
+  Works on Linux Intel and macOS ARM.
+
+  ```
+  $ brew install yaml/yamlscript/ys
+  $ brew install yaml/yamlscript/ys@$version
+  $ brew install yaml/yamlscript/libys
+  $ brew install yaml/yamlscript/libys@$version
+  ```
+
+
+defn class-name(prefix version):
+  "$prefix$(version.replace('.'))"
+
 
 defn check-version(version):
   when version !~ /^0\.[12]\.\d+$/:

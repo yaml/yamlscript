@@ -302,6 +302,49 @@ jobs:
           ys-*.tar.xz libys-*.tar.xz *.jar --clobber
         gh release view "$VERSION"
 
+  publish-homebrew:
+    name: Publish Homebrew tap
+    if: ${{ !inputs.publish_bindings_only }}
+    needs: upload-assets
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      HOMEBREW_TAP_SSH_KEY: ${{ secrets.HOMEBREW_TAP_SSH_KEY }}
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download Linux artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Configure tap SSH key
+      if: ${{ env.HOMEBREW_TAP_SSH_KEY != '' }}
+      uses: webfactory/ssh-agent@v0.10.0
+      with:
+        ssh-private-key: ${{ env.HOMEBREW_TAP_SSH_KEY }}
+
+    - name: Configure Git identity
+      run: |
+        git config --global user.name 'YAMLScript Release Bot'
+        git config --global user.email 'yamlscript-release@yaml.io'
+
+    - name: Publish Homebrew tap
+      run: |
+        if [[ -z "${HOMEBREW_TAP_SSH_KEY:-}" ]]; then
+          echo "ERROR: HOMEBREW_TAP_SSH_KEY secret is not set"
+          exit 1
+        fi
+        make release-homebrew n="$VERSION" YS="$PWD/ys/bin/ys-$VERSION"
+
   publish-bindings:
     name: Publish language bindings
     if: |
@@ -431,7 +474,9 @@ jobs:
   publish-website:
     name: Publish website
     if: ${{ !inputs.publish_bindings_only }}
-    needs: publish-bindings
+    needs:
+    - publish-bindings
+    - publish-homebrew
     runs-on: ubuntu-latest
     permissions:
       contents: write
