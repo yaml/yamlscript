@@ -11,6 +11,8 @@
 #
 # Exit: 0 clean, 1 issues found, 2 invocation error.
 
+require ys::yaml:
+
 NTH-LIT-RE =: /(\w[\w-]*)\.nth\(\s*(\d+)\s*\)/
 NTH-VAR-RE =: /(\w[\w-]*)\.nth\(\s*([A-Za-z][\w-]*)\s*\)/
 PLUS-RE =: /([A-Za-z_][\w-]*)\s+\+\s+1(?![\d.])/
@@ -90,14 +92,142 @@ defn main(*files):
 
 defn- lint-file(file):
   lines =: file:read:lines:V
+  line-total =:
+    loop i 0, total 0:
+      if i < lines.#:
+        then:
+          total +=:
+            lint-line(file i.++ lines.$i) +
+            check-if-arrow(file i.++ lines i)
+          recur: i.++ total
+        else: total
+  line-total +: check-structural(file lines)
+
+defn- check-structural(file lines):
+  data =:
+    parse-plain-yaml: lines
+  if data.!:
+    then: 0
+    else:
+      hits =: count-if-scalar-branches(data)
+      if hits:zero?: 0 report-if-scalar-lines(file lines)
+
+defn- parse-plain-yaml(lines):
+  text =:
+    lines
+      .drop-while(tag-or-blank?)
+      .join("\n")
+  try:
+    ys::yaml/load: text
+    catch Exception e:
+      =>: nil
+
+defn- tag-or-blank?(line):
+  s =: line:trim
+  s.! ||: s.starts?('!ys-0')
+
+defn- count-if-scalar-branches(node):
+  cond:
+    map?(node):
+      keys =: keys(node):V
+      loop i 0, total 0:
+        if i < keys.#:
+          then:
+            k =: keys.$i
+            v =: node.$k
+            hit =: if-scalar-branch?(k v).if(1 0)
+            recur: i.++ (total + hit + count-if-scalar-branches(v))
+          else: total
+    sequential?(node):
+      reduce add: 0 node.map(count-if-scalar-branches)
+    else: 0
+
+defn- if-scalar-branch?(k v):
+  =>:
+    if-string?(k) &&
+    map?(v) &&
+    contains?(v "then") &&
+    contains?(v "else") &&
+    scalar-yaml?(v.get("then")) &&
+    scalar-yaml?(v.get("else"))
+
+defn- if-string?(s):
+  string?(s) &&: s.starts?('if ')
+
+defn- scalar-yaml?(x):
+  map?(x).! &&: sequential?(x).!
+
+defn- report-if-scalar-lines(file lines):
   loop i 0, total 0:
     if i < lines.#:
       then:
-        line-total =:
-          lint-line(file i.++ lines.$i) +
-          check-if-arrow(file i.++ lines i)
-        recur: i.++ (total + line-total)
+        total +=: check-if-scalar-line(file i.++ lines i)
+        recur: i.++ total
       else: total
+
+defn- check-if-scalar-line(file lineno lines i):
+  line =: strip(lines.$i):trim
+  if line-is-if-head?(line) && direct-scalar-then-else?(lines i):
+    then:
+      msg =: 'then:/else: scalar branches -> use positional if branches'
+      report: file lineno 'if-scalar-branches' msg
+      =>: 1
+    else: 0
+
+defn- line-is-if-head?(line):
+  line.starts?('if ') &&: line.ends?(':')
+
+defn- direct-scalar-then-else?(lines i):
+  children =: direct-child-code-lines(lines i)
+  if children.# >= 2:
+    then:
+      a =: children.0
+      b =: children.1
+      then-scalar-line?(a) &&: else-scalar-line?(b)
+    else: false
+
+defn- direct-child-code-lines(lines i):
+  parent-indent =: indent(lines.$i)
+  loop j i.++, out []:
+    if j >= lines.#:
+      then: out
+      else:
+        line =: lines.$j
+        code =: strip-comment(line):trim
+        current-indent =: indent(line)
+        child-indent =: parent-indent + 2
+        cond:
+          code.!:
+            recur: j.++ out
+          current-indent <= parent-indent:
+            =>: out
+          current-indent == child-indent:
+            recur: j.++ out.conj(code)
+          else:
+            recur: j.++ out
+
+defn- then-scalar-line?(line):
+  scalar-branch-line? line: 'then:'
+
+defn- else-scalar-line?(line):
+  scalar-branch-line? line: 'else:'
+
+defn- scalar-branch-line?(line prefix):
+  if line.starts?(prefix):
+    then:
+      value =: subs(line prefix.#):trim
+      if value.?:
+        then:
+          scalar-branch-start-ok?(value) &&: value !~ WS-RE
+        else: false
+    else: false
+
+defn- scalar-branch-start-ok?(value):
+  ch =: value.0
+  ch.! ||: ch.in?("'\"[]{}|>!&*").!
+
+defn- strip-comment(s):
+  s.replace(/\s#.*$/)
 
 defn- lint-line(file lineno orig):
   long-n =: check-long(file lineno orig)
@@ -221,9 +351,7 @@ defn- fmt-zero-arg(m):
   format '%s.%s() -> %s:%s': m.1 m.2 m.1 m.2
 
 defn- fmt-constructor-call(m):
-  if m.1 == 'V':
-    then: 'V+(...) -> +[...]'
-    else: 'M+(...) -> +{...}'
+  (m.1 == 'V').if('V+(...) -> +[...]' 'M+(...) -> +{...}')
 
 defn- fmt-slurp-spit(m):
   repl =: (m.1 == 'slurp').if('read' 'write')

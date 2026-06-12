@@ -72,18 +72,21 @@ support, and docs:
    an `if` block vs `then:` / `else:`, `say: ''` vs bare `say:`,
    `x.join(' ')` vs the colon chain `x:joins`,
    `slurp` / `spit` vs `read` / `write`,
+   plain-YAML structural checks such as scalar `then:` / `else:`
+   branches that can be positional `if` branches,
    a wide `recur:` / `loop` arg list that should be comma-separated,
    and lines over 79 cols.
 
-   The linter matches against source text with regex, so every hit is a
-   *candidate*, not a verdict. False positives are expected: a long line
-   may be a literal task string the program can't shorten; an `x - 1`
-   inside a generated string isn't a `.--` candidate; an identifier that
-   happens to look like a pattern may not be one. Inspect every reported
-   line, fix the real mistakes, and explicitly justify each hit you
-   treat as a false positive. This step is required: the working program
-   isn't done until you have walked every lint hit and either fixed it
-   or accepted it with reason.
+   Most linter rules match source text with regex; a few strip the
+   top `!ys-0` tag, load the file as plain YAML, and inspect the YAML
+   shape. Every hit is still a *candidate*, not a verdict. False
+   positives are expected: a long line may be a literal task string the
+   program can't shorten; an `x - 1` inside a generated string isn't a
+   `.--` candidate; an identifier that happens to look like a pattern
+   may not be one. Inspect every reported line, fix the real mistakes,
+   and explicitly justify each hit you treat as a false positive. This
+   step is required: the working program isn't done until you have
+   walked every lint hit and either fixed it or accepted it with reason.
 
 ## Program Tag
 
@@ -139,11 +142,37 @@ if n >= 2:
   else: cnt
 ```
 
-Bare-scalar branches (plain identifiers, calls, expressions) are
-fragile in this position — YAML parses two bare siblings only in
-specific contexts, and mixing a bare scalar with an `else:` mapping
-entry is invalid YAML. When in doubt, keep `then:` and `else:`
-explicit; only drop them when both branches are pair-form.
+Bare-scalar branches (plain identifiers, calls, expressions) can also
+drop `then:` / `else:` when both branches are simple direct scalar
+values with no whitespace and neither branch starts with YAML syntax
+characters such as quotes, brackets, braces, block-scalar markers, or
+tags:
+
+```
+if prime?(candidate):
+  count.++
+  count
+```
+
+Prefer this over:
+
+```
+if prime?(candidate):
+  then: count.++
+  else: count
+```
+
+The linter flags `{if ...: {then: scalar, else: scalar}}` shapes by
+loading the file as plain YAML and checking the branch values, but
+only when both scalar branch source values contain no whitespace. This
+rule deliberately skips quoted strings and other YAML-special starts.
+This is not the same as using `=>:` under `if`, which is never correct.
+
+Bare-scalar branches are still fragile when mixed with mapping entries:
+mixing a bare scalar with an `else:` mapping entry is invalid YAML.
+When in doubt, keep `then:` and `else:` explicit unless both branches
+are pair-form children or both are simple direct scalar branch values
+with no whitespace and no YAML-special start.
 
 When both branches are bare scalars, a trailing `+` on the `if` line
 folds the next two indented lines into one plain scalar that YS reads
