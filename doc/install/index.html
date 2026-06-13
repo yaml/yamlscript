@@ -170,7 +170,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#install-ys-with-homebrew" class="md-skip">
+        <a href="#install-with-homebrew" class="md-skip">
           Skip to content
         </a>
       
@@ -1170,13 +1170,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-ys-with-homebrew" class="md-nav__link">
+  <a href="#install-with-homebrew" class="md-nav__link">
     <span class="md-ellipsis">
-      Install ys with Homebrew
+      Install with Homebrew
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Install ys with Homebrew">
+    <nav class="md-nav" aria-label="Install with Homebrew">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2414,13 +2414,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-ys-with-homebrew" class="md-nav__link">
+  <a href="#install-with-homebrew" class="md-nav__link">
     <span class="md-ellipsis">
-      Install ys with Homebrew
+      Install with Homebrew
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Install ys with Homebrew">
+    <nav class="md-nav" aria-label="Install with Homebrew">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2527,14 +2527,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <li>A <a href="../bindings/#currently-available-libraries">YS loader library</a> for your
    particular programming language, like Python, Rust, NodeJS, etc.</li>
 </ol>
-<h2 id="install-ys-with-homebrew">Install <code>ys</code> with Homebrew<a class="headerlink" href="#install-ys-with-homebrew" title="Permanent link">🔗</a></h2>
-<p>You can install <code>ys</code> on macOS or Linux with Homebrew.</p>
-<p>Just run these commands:</p>
+<h2 id="install-with-homebrew">Install with Homebrew<a class="headerlink" href="#install-with-homebrew" title="Permanent link">🔗</a></h2>
+<p>You can install <code>ys</code> and <code>libys</code> on macOS or Linux with Homebrew.</p>
 <div class="highlight"><pre><span></span><code>brew<span class="w"> </span>trust<span class="w"> </span>yaml/yamlscript
 brew<span class="w"> </span>tap<span class="w"> </span>yaml/yamlscript
-brew<span class="w"> </span>install<span class="w"> </span>ys
+
+brew<span class="w"> </span>install<span class="w"> </span>ys<span class="w">                       </span><span class="c1"># Install ys first time</span>
+brew<span class="w"> </span>upgrade<span class="w"> </span>yaml/yamlscript/ys<span class="w">       </span><span class="c1"># Install new ys version later</span>
+
+brew<span class="w"> </span>install<span class="w"> </span>yaml/yamlscript/libys<span class="w">    </span><span class="c1"># Install libys first time</span>
+brew<span class="w"> </span>upgrade<span class="w"> </span>yaml/yamlscript/libys<span class="w">    </span><span class="c1"># Install new libys version later</span>
 </code></pre></div>
-<p>Homebrew support for installing <code>libys</code> is coming soon.</p>
+<p>Install <code>libys</code> (<code>libys.so</code> on Linux, <code>libys.dylib</code> on macOS) when you need the
+shared library for a YS loader library in another programming language.</p>
 <h3 id="quick-install-script-for-ys-and-libys">Quick Install Script for <code>ys</code> and <code>libys</code><a class="headerlink" href="#quick-install-script-for-ys-and-libys" title="Permanent link">🔗</a></h3>
 <p>You can install both <code>ys</code> and <code>libys</code> with a single CLI command, where:</p>
 <ul>
@@ -2555,7 +2560,7 @@ install script will tell you that.</p>
 <code>PREFIX/lib</code> to your <code>LD_LIBRARY_PATH</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">An even shorter command to install <code>ys</code></p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>https://getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-sL<span class="w"> </span>getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </code></pre></div>
 <p>You can use all the same options as above (before <code>bash</code>).</p>
 </div>
@@ -2595,7 +2600,7 @@ in.
 <li>Run <code>make install</code> or <code>make install PREFIX=...</code>.</li>
 </ul>
 <p>This will take a few minutes but it requires no dependencies besides <code>bash</code>,
-<code>make</code> and <code>curl</code>.</p>
+<code>git</code>, <code>make</code> and <code>curl</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>On Linux it also requires the <code>libz-dev</code> package.</p>
