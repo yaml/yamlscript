@@ -1,3 +1,7 @@
+- version: 0.2.19
+  date:    Sat Jun 13 08:21:30 AM EDT 2026
+  changes:
+  - release: Use generic release token
 - version: 0.2.18
   date:    Fri Jun 12 09:12:49 PM EDT 2026
   changes:
