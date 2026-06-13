@@ -2530,7 +2530,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h2 id="install-ys-with-homebrew">Install <code>ys</code> with Homebrew<a class="headerlink" href="#install-ys-with-homebrew" title="Permanent link">🔗</a></h2>
 <p>You can install <code>ys</code> on macOS or Linux with Homebrew.</p>
 <p>Just run these commands:</p>
-<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>tap<span class="w"> </span>yaml/yamlscript
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>trust<span class="w"> </span>yaml/yamlscript
+brew<span class="w"> </span>tap<span class="w"> </span>yaml/yamlscript
 brew<span class="w"> </span>install<span class="w"> </span>ys
 </code></pre></div>
 <p>Homebrew support for installing <code>libys</code> is coming soon.</p>
@@ -2544,8 +2545,8 @@ brew<span class="w"> </span>install<span class="w"> </span>ys
 </ul>
 <p>Examples:
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
-$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.14<span class="w"> </span>bash
-$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.14<span class="w"> </span><span class="nv">LIB</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash
+$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.19<span class="w"> </span>bash
+$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.19<span class="w"> </span><span class="nv">LIB</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash
 $<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">PREFIX</span><span class="o">=</span>/tmp/yamlscript<span class="w"> </span>bash
 </code></pre></div></p>
 <p>For the <code>ys</code> command you'll need to have <code>PREFIX/bin</code> in your <code>PATH</code>, but the
