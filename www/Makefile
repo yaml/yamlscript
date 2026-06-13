@@ -56,6 +56,7 @@ default::
 
 deps: line1 $(DEPS) line2
 
+website ?= live
 YS-WWW-DOMAIN := yamlscript.org
 ifeq (live,$(website))
   export YS_WWW_LIVE := true
