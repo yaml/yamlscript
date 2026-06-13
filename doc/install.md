@@ -12,19 +12,23 @@ YS has 3 main things you might want to install:
    particular programming language, like Python, Rust, NodeJS, etc.
 
 
-## Install `ys` with Homebrew
+## Install with Homebrew
 
-You can install `ys` on macOS or Linux with Homebrew.
-
-Just run these commands:
+You can install `ys` and `libys` on macOS or Linux with Homebrew.
 
 ```bash
 brew trust yaml/yamlscript
 brew tap yaml/yamlscript
-brew install ys
+
+brew install ys                       # Install ys first time
+brew upgrade yaml/yamlscript/ys       # Install new ys version later
+
+brew install yaml/yamlscript/libys    # Install libys first time
+brew upgrade yaml/yamlscript/libys    # Install new libys version later
 ```
 
-Homebrew support for installing `libys` is coming soon.
+Install `libys` (`libys.so` on Linux, `libys.dylib` on macOS) when you need the
+shared library for a YS loader library in another programming language.
 
 
 ### Quick Install Script for `ys` and `libys`
@@ -53,7 +57,7 @@ For `libys`, unless you use the default `PREFIX` you'll need to add
 !!! note "An even shorter command to install `ys`"
 
     ```bash
-    $ curl -s https://getys.org/ys | bash
+    $ curl -sL getys.org/ys | bash
     ```
 
     You can use all the same options as above (before `bash`).
@@ -97,7 +101,7 @@ You can also easily build and install `ys` and `libys` from source:
 * Run `make install` or `make install PREFIX=...`.
 
 This will take a few minutes but it requires no dependencies besides `bash`,
-`make` and `curl`.
+`git`, `make` and `curl`.
 
 !!! note
 
