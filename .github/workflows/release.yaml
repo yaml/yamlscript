@@ -335,7 +335,7 @@ jobs:
     - name: Configure Git identity
       run: |
         git config --global user.name 'YAMLScript Release Bot'
-        git config --global user.email 'yamlscript-release@yaml.io'
+        git config --global user.email 'yamlscript-release@yaml.com'
 
     - name: Publish Homebrew tap
       run: |
@@ -463,7 +463,7 @@ jobs:
     - name: Configure Git identity
       run: |
         git config --global user.name 'YAMLScript Release Bot'
-        git config --global user.email 'yamlscript-release@yaml.io'
+        git config --global user.email 'yamlscript-release@yaml.com'
 
     - name: Publish bindings
       run: |
@@ -493,7 +493,16 @@ jobs:
     - name: Install website build dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libfreetype6-dev libjpeg-dev zlib1g-dev
+        sudo apt-get install -y \
+          libfreetype6-dev \
+          libjpeg-dev \
+          tzdata \
+          zlib1g-dev
+
+    - name: Configure Git identity
+      run: |
+        git config --global user.name 'YAMLScript Release Bot'
+        git config --global user.email 'yamlscript-release@yaml.com'
 
     - name: Publish website
       run: make release-website

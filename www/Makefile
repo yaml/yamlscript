@@ -70,7 +70,8 @@ endif
 .PHONY: site
 build site:: $(DIRS) $(DEPS)
 	$(RM) -r site
-	git worktree add -f site
+	git fetch $(YS-WWW-REMOTE) $(YS-WWW-BRANCH)
+	git worktree add -f --detach site $(YS-WWW-REMOTE)/$(YS-WWW-BRANCH)
 	$(RM) -r site/*
 	mkdocs build
 	echo $(YS-WWW-DOMAIN) > site/CNAME
@@ -94,8 +95,8 @@ publish:
 	$(error Use 'make publish website=<live|stage>' to publish)
 else
 publish: build
-	-git -C site commit -m "Publish $$(date)"
-	git -C site push $(YS-WWW-REMOTE) HEAD:$(YS-WWW-BRANCH) --force
+	git -C site commit -m "Publish $$(date)"
+	git -C site push $(YS-WWW-REMOTE) HEAD:$(YS-WWW-BRANCH)
 	@echo
 	@echo "Published to https://$(YS-WWW-DOMAIN)"
 	@echo
