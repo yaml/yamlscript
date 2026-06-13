@@ -362,9 +362,9 @@ jobs:
       contents: write
     env:
       YS_RELEASE_VERSION_NEW: ${{ inputs.version }}
-      GH_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
-      GITHUB_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
-      YS_GH_TOKEN: ${{ secrets.JULIA_GITHUB_TOKEN || github.token }}
+      GH_TOKEN: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN || github.token }}
+      GITHUB_TOKEN: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN || github.token }}
+      YS_GH_TOKEN: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN || github.token }}
       CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
       CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
@@ -481,14 +481,22 @@ jobs:
     permissions:
       contents: write
     env:
-      GH_TOKEN: ${{ github.token }}
-      GITHUB_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN }}
     steps:
+    - name: Check GitHub release token
+      run: |
+        if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+          echo "ERROR: YAMLSCRIPT_RELEASE_TOKEN secret is not set"
+          exit 1
+        fi
+
     - name: Checkout tag
       uses: actions/checkout@v6
       with:
         ref: ${{ inputs.version }}
         fetch-depth: 0
+        token: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN }}
 
     - name: Install website build dependencies
       run: |
