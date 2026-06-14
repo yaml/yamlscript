@@ -4,7 +4,7 @@ include $(COMMON)/binding.mk
 PYTHON-VER := 3.13
 PYTHON-VENV := $(ROOT)/python/.venv
 PYTHON-VENV-SETUP := \
-  uv pip install --python $(PYTHON-VENV) pytest pyyaml setuptools twine
+  uv pip install --python $(PYTHON-VENV) pytest pyyaml setuptools twine wheel
 
 include $(MAKES)/python.mk
 include $(MAKES)/shell.mk
@@ -15,11 +15,27 @@ ifdef PYPI_API_TOKEN
 TWINE-UPLOAD := \
   TWINE_USERNAME=__token__ \
   TWINE_PASSWORD=$(PYPI_API_TOKEN) \
-  twine upload --verbose dist/yamlscript-*.tar.gz
+  twine upload --verbose dist/yamlscript-*
+TWINE-WHEEL-UPLOAD := \
+  TWINE_USERNAME=__token__ \
+  TWINE_PASSWORD=$(PYPI_API_TOKEN) \
+  twine upload --verbose --skip-existing dist/*.whl
 else
 TWINE-UPLOAD := \
-  twine upload --verbose --repository yamlscript dist/yamlscript-*.tar.gz
+  twine upload --verbose --repository yamlscript dist/yamlscript-*
+TWINE-WHEEL-UPLOAD := \
+  twine upload --verbose --skip-existing --repository yamlscript dist/*.whl
 endif
+
+WHEEL-PLAT-linux-int64 := manylinux_2_31_x86_64
+WHEEL-PLAT-macos-arm64 := macosx_14_0_arm64
+WHEEL-PLAT := $(WHEEL-PLAT-$(OS-ARCH))
+WHEEL-LIBYS-DIR := lib/yamlscript/libys
+WHEEL-LIBYS := $(WHEEL-LIBYS-DIR)/$(notdir $(LIBYS-SO-FQNP))
+RELEASE-WHEEL-VERSION := $(or $(n),$(YS_VERSION))
+RELEASE-WHEEL-DIR ?= dist/release-assets
+RELEASE-WHEEL-TARS := \
+  $(wildcard $(RELEASE-WHEEL-DIR)/libys-$(RELEASE-WHEEL-VERSION)-*.tar.xz)
 
 export PYTHONPATH := \
   $(ROOT)/python/lib:$(PYTHON-VENV)/lib/python$(PYTHON-VER)/site-packages
@@ -62,6 +78,48 @@ dist: venv MANIFEST.in .long_description.md
 	  python setup.py sdist \
 	)
 
+wheel: venv MANIFEST.in .long_description.md $(WHEEL-LIBYS)
+	@test -n "$(WHEEL-PLAT)" || { \
+	  echo "No Python wheel platform tag for $(OS-ARCH)"; \
+	  exit 1; \
+	}
+	( \
+	  $(VENV) && \
+	  python setup.py bdist_wheel --plat-name $(WHEEL-PLAT) \
+	)
+
+$(WHEEL-LIBYS): $(LIBYS-SO-FQNP)
+	mkdir -p $(dir $@)
+	cp -p $< $@
+
+wheels-from-release: venv MANIFEST.in .long_description.md
+	@test -n "$(RELEASE-WHEEL-TARS)" || { \
+	  echo 'No libys release archives found in $(RELEASE-WHEEL-DIR)'; \
+	  exit 1; \
+	}
+	@set -e; \
+	  for tar in $(RELEASE-WHEEL-TARS); do \
+	    name=$$(basename "$$tar" .tar.xz); \
+	    relplat=$${name#libys-$(RELEASE-WHEEL-VERSION)-}; \
+	    case "$$relplat" in \
+	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libys.so.*' ;; \
+	      macos-aarch64) plat=macosx_14_0_arm64; libpat='libys.dylib.*' ;; \
+	      *) echo "Skipping unsupported Python wheel asset: $$name"; \
+	         continue ;; \
+	    esac; \
+	    rm -rf build $(WHEEL-LIBYS-DIR); \
+	    mkdir -p $(WHEEL-LIBYS-DIR); \
+	    tmp=$$(mktemp -d); \
+	    tar -C "$$tmp" -xf "$$tar"; \
+	    lib=$$(find "$$tmp" -type f -name "$$libpat" | sort | head -n1); \
+	    test -n "$$lib" || { echo "No $$libpat found in $$tar"; exit 1; }; \
+	    cp -p "$$lib" $(WHEEL-LIBYS-DIR)/; \
+	    echo "Building Python wheel for $$relplat"; \
+	    $(VENV) && python setup.py bdist_wheel --plat-name "$$plat"; \
+	    rm -rf "$$tmp"; \
+	  done; \
+	  rm -rf build $(WHEEL-LIBYS-DIR)
+
 release: publish
 
 publish: dist
@@ -70,9 +128,20 @@ publish: dist
 	  $(TWINE-UPLOAD) \
 	)
 
+publish-wheels: venv
+	@test "$$(find dist -maxdepth 1 -name '*.whl' | wc -l)" -gt 0 || { \
+	  echo 'No Python wheels found in python/dist'; \
+	  exit 1; \
+	}
+	( \
+	  $(VENV) && \
+	  $(TWINE-WHEEL-UPLOAD) \
+	)
+
 clean::
 	$(RM) MANIFEST* .long_description.md
 	$(RM) -r dist/ .pytest_cache/ yamlscript-0.*/
+	$(RM) -r build/ $(WHEEL-LIBYS-DIR)/
 	$(RM) -r lib/yamlscript.egg-info/ .eggs/
 	$(RM) -r lib/yamlscript/__pycache__/
 	$(RM) -r test/__pycache__/

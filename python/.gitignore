@@ -2,7 +2,9 @@
 /.eggs/
 __pycache__/
 /libys.so
+/build/
 /.long_description.md
 /MANIFEST.in
 /dist/
+/lib/yamlscript/libys/
 /lib/yamlscript.egg-info/

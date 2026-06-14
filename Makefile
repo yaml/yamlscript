@@ -391,6 +391,19 @@ endif
 	  gh run watch $$run_id --repo yaml/yamlscript \
 	    --exit-status --interval=10
 
+publish-python-wheels: $(GH)
+ifndef n
+	$(error 'make publish-python-wheels' requires n=VERSION)
+endif
+	rm -fr python/dist
+	mkdir -p python/dist/release-assets
+	gh release download $(n) \
+	  --repo yaml/yamlscript \
+	  --pattern 'libys-$(n)-*.tar.xz' \
+	  --dir python/dist/release-assets
+	$(MAKE) -C python wheels-from-release n=$(n)
+	$(MAKE) -C python publish-wheels
+
 #------------------------------------------------------------------------------
 # Release Credentials Management
 #------------------------------------------------------------------------------

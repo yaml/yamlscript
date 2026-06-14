@@ -21,6 +21,7 @@ yamlscript_version = '0.2.19'
 import os, sys
 import ctypes
 import json
+from pathlib import Path
 
 # Require Python 3.6 or greater:
 assert sys.version_info >= (3, 6), \
@@ -44,8 +45,14 @@ def find_libys_path():
   libys_name = \
     "libys.%s.%s" % (so, yamlscript_version)
 
-  # Use LD_LIBRARY_PATH to find libys shared library, or default to
-  # '/usr/local/lib' (where it is installed by default):
+  # First look for the shared library bundled in platform wheels.
+  bundled_path = \
+    Path(__file__).resolve().parent / 'libys' / libys_name
+  if bundled_path.is_file():
+    return str(bundled_path)
+
+  # Then use LD_LIBRARY_PATH to find libys shared library, or default
+  # to '/usr/local/lib' (where it is installed by default):
   ld_library_path = os.environ.get('LD_LIBRARY_PATH')
   ld_library_paths = ld_library_path.split(':') if ld_library_path else []
   ld_library_paths.append('/usr/local/lib')

@@ -174,9 +174,10 @@ jobs:
         make -C ys build
         make -C libys build
         make release-build jars
+        make -C python wheel
 
     - name: List release archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar python/dist/*.whl
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v7
@@ -186,6 +187,7 @@ jobs:
           ys-*.tar.xz
           libys-*.tar.xz
           *.jar
+          python/dist/*.whl
         retention-days: 7
 
   build-macos-arm64:
@@ -212,9 +214,10 @@ jobs:
         make -C ys build
         make -C libys build
         make release-build jars
+        make -C python wheel
 
     - name: List release archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar python/dist/*.whl
 
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v7
@@ -224,6 +227,7 @@ jobs:
           ys-*.tar.xz
           libys-*.tar.xz
           *.jar
+          python/dist/*.whl
         retention-days: 7
 
   create-release:
@@ -292,14 +296,15 @@ jobs:
       run: |
         find . -type f -name '*.tar.xz' -exec mv {} . \;
         find . -type f -name '*.jar' -exec mv {} . \;
-        ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
+        find . -type f -name '*.whl' -exec mv {} . \;
+        ls -lh ys-*.tar.xz libys-*.tar.xz *.jar *.whl
 
     - name: Upload release assets
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         gh release upload "$VERSION" \
-          ys-*.tar.xz libys-*.tar.xz *.jar --clobber
+          ys-*.tar.xz libys-*.tar.xz *.jar *.whl --clobber
         gh release view "$VERSION"
 
   publish-homebrew:
@@ -413,6 +418,21 @@ jobs:
           --pattern '*.jar' \
           --dir release-artifacts
         ls -lh release-artifacts
+
+    - name: Download Python wheels
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p python/dist
+        gh release download "$VERSION" \
+          --repo "${{ github.repository }}" \
+          --pattern '*.whl' \
+          --dir python/dist || true
+        if compgen -G 'python/dist/*.whl' >/dev/null; then
+          ls -lh python/dist/*.whl
+        else
+          echo 'No Python wheels found in release assets'
+        fi
 
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
