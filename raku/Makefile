@@ -7,6 +7,13 @@ test ?= t/*
 
 export RAKULIB=$(ROOT)/raku/lib
 
+FEZ-UPLOAD = fez upload
+
+ifdef YS_RELEASE_CI
+FEZ-UPLOAD = timeout 60s fez upload --unattended --force || \
+	echo 'Ignoring failed or timed out Raku fez upload'
+endif
+
 
 
 test:: raku-install
@@ -19,7 +26,7 @@ endif
 
 
 release: raku-install
-	fez upload
+	$(FEZ-UPLOAD)
 
 dist::
 	fez upload --dry-run
