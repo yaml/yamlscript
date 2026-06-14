@@ -1046,6 +1046,56 @@
        (add+ b c d e f)))
 
 
+- name: Support conditional let assignment
+  yamlscript: |
+    !ys-0
+    defn a(c x y):
+      x :if c =: y
+      =>: x
+  clojure: |
+    (defn a [c x y] (let [x (if c y x)] x))
+
+
+- name: Support conditional let assignment operators
+  yamlscript: |
+    !ys-0
+    defn a(c x y):
+      x :if c +=: y
+      y :if c *=: x
+      z :if c |||=: y
+      =>: x + y + z
+  clojure: |
+    (defn
+      a
+      [c x y]
+      (let
+       [x (if c (add+ x y) x) y (if c (mul+ y x) y) z (if c (or? z y) z)]
+       (add+ x y z)))
+
+
+- name: Support conditional destructuring assignment
+  yamlscript: |
+    !ys-0
+    defn a(a b c x y d e f):
+      a b c :if (x == y) =: d e f
+      =>: a + b + c
+  clojure: |
+    (defn
+      a
+      [a b c x y d e f]
+      (let [[a b c] (if (= x y) [d e f] [a b c])] (add+ a b c)))
+
+
+- name: Error on conditional assignment with multi-form condition
+  yamlscript: |
+    !ys-0
+    defn a(x y):
+      a b c :if x == y =: d e f
+      =>: a + b + c
+  error: |
+    ~~ Invalid conditional assignment: a b c :if x == y
+
+
 - name: Support the `.=` let operator
   yamlscript: |
     !ys-0
@@ -1078,6 +1128,18 @@
     (def a (add+ a 2))
     (def a (get+ a 'b))
     (def a (d (get+ a 'c) e))
+
+
+- name: Support conditional defs with operators
+  yamlscript: |
+    !ys-0
+    a :if c =: 1
+    a :if c +=: 2
+    a :if c .=: b
+  clojure: |
+    (def a (if c 1 a))
+    (def a (if c (add+ a 2) a))
+    (def a (if c (get+ a 'b) a))
 
 
 - name: Dot op when first arg is function call

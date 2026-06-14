@@ -97,19 +97,25 @@
 (defn adjust-dot-def
   "Rewrite dot assignment syntax in definition pairs."
   [[lhs rhs]]
-  (if-lets [_ (vector? lhs)
-            _ (= 3 (count lhs))
-            [def sym dot] lhs
-            _ (= 'def (:Sym def))
-            _ (= '. (:Sym dot))
-            _ (if-not (or (map? rhs)
-                        (> (count rhs) 1))
-                (die "Invalid dot assignment")
-                true)
-            lhs [def sym]
-            rhs (dot-rhs rhs sym)]
-    [lhs rhs]
-    [lhs rhs]))
+  (let [orig-lhs lhs
+        [target condition fallback]
+        (yamlscript.transformers/split-if-target (second lhs))
+        lhs (if condition (assoc lhs 1 target) lhs)]
+    (if-lets [_ (vector? lhs)
+              _ (= 3 (count lhs))
+              [def sym dot] lhs
+              _ (= 'def (:Sym def))
+              _ (= '. (:Sym dot))
+              _ (if-not (or (map? rhs)
+                          (> (count rhs) 1))
+                  (die "Invalid dot assignment")
+                  true)
+              lhs [def sym]
+              rhs (dot-rhs rhs sym)]
+      [lhs (if condition
+             (Lst [(Sym 'if) condition rhs fallback])
+             rhs)]
+      [orig-lhs rhs])))
 
 (defn adjust-dot-on-right
   "Move right-side dot syntax into a normal dot pair shape."

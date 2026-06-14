@@ -13,6 +13,40 @@
 
 (def Q {:Sym 'quote})
 
+(defn- if-marker?
+  "Return true for the ':if' marker in conditional assignment targets."
+  [node]
+  (= :if (:Key node)))
+
+(defn- target-node
+  "Return a binding target from one or more parsed target forms."
+  [forms]
+  (if (= 1 (count forms))
+    (first forms)
+    (Vec (vec forms))))
+
+(defn split-if-target
+  "Split a conditional assignment target into target, condition and fallback."
+  [target]
+  (when-lets [sym (:Sym target)
+              s (str sym)
+              _ (and
+                  (> (count s) 2)
+                  (= \[ (first s))
+                  (= \] (last s))
+                  (re-find #" +:if +" s))
+              forms (yamlscript.ysreader/read-string
+                      (subs s 1 (dec (count s))))
+              forms (if (vector? forms) forms [forms])
+              [lhs [_ & rhs]] [(take-while (complement if-marker?) forms)
+                                (drop-while (complement if-marker?) forms)]
+              _ (if (and (seq lhs) (= 1 (count rhs)))
+                  true
+                  (die "Invalid conditional assignment: "
+                    (subs s 1 (dec (count s)))))]
+    (let [target (target-node lhs)]
+      [target (first rhs) target])))
+
 
 ;;-----------------------------------------------------------------------------
 ;; cond and case
@@ -67,25 +101,32 @@ defn x():
 (defn transform_def
   "Normalize definition forms, including operator update syntax."
   [lhs rhs]
-  (cond
-    (= 2 (count lhs))
-    (let [rhs (if (and (vector? rhs) (> (count rhs) 1))
-                (Vec rhs)
-                rhs)]
-      [lhs rhs])
-    (= 3 (count lhs))
-    (let [[a b c] lhs
-          lhs [a b]
-          op (:Sym c)
-          op (Sym (or ({'|| 'or
-                        '||| 'or?
-                        '+ 'add+
-                        '* 'mul+
-                        '/ 'div+
-                        '** 'pow} op) op))
-          rhs (Lst [op b rhs])]
-      [lhs rhs])
-    :else [lhs rhs]))
+  (let [[target condition fallback] (split-if-target (second lhs))
+        lhs (if condition (assoc lhs 1 target) lhs)
+        [lhs rhs]
+        (cond
+          (= 2 (count lhs))
+          (let [rhs (if (and (vector? rhs) (> (count rhs) 1))
+                      (Vec rhs)
+                      rhs)]
+            [lhs rhs])
+          (= 3 (count lhs))
+          (let [[a b c] lhs
+                lhs [a b]
+                op (:Sym c)
+                op (Sym (or ({'|| 'or
+                              '||| 'or?
+                              '+ 'add+
+                              '* 'mul+
+                              '/ 'div+
+                              '** 'pow} op) op))
+                rhs (Lst [op b rhs])]
+            [lhs rhs])
+          :else [lhs rhs])
+        rhs (if condition
+              (Lst [(Sym 'if) condition rhs fallback])
+              rhs)]
+    [lhs rhs]))
 
 (defn transform_defn
   "Convert multi-body defn shorthand into explicit arities."
