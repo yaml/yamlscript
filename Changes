@@ -1,3 +1,10 @@
+- version: 0.2.20
+  date:    Sun Jun 14 12:56:46 PM EDT 2026
+  changes:
+  - doc: Update Homebrew install instructions
+  - www: Default publish target to live
+  - core: Add conditional assignment syntax
+  - python: Publish wheels in release workflow
 - version: 0.2.19
   date:    Sat Jun 13 08:21:30 AM EDT 2026
   changes:
