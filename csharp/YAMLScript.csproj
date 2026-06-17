@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>YAMLScript</AssemblyName>
     <RootNamespace>YAMLScript</RootNamespace>
-    <Version>0.2.20</Version>
+    <Version>0.2.21</Version>
     <Authors>YAMLScript Contributors</Authors>
     <Description>YAMLScript language binding for C#</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -14,7 +14,7 @@
 
     <!-- NuGet Package Metadata -->
     <PackageId>YAMLScript</PackageId>
-    <PackageVersion>0.2.20</PackageVersion>
+    <PackageVersion>0.2.21</PackageVersion>
     <Title>YAMLScript</Title>
     <Summary>YAMLScript language binding for C#/.NET</Summary>
     <PackageDescription>YAMLScript is a programming language that uses YAML syntax. This package provides a C# binding for YAMLScript, allowing you to execute YAMLScript code from .NET applications.</PackageDescription>

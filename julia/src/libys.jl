@@ -2,7 +2,7 @@ module libys
 
 import Base.Libc: Libdl
 
-const YAMLSCRIPT_VERSION = "0.2.20"
+const YAMLSCRIPT_VERSION = "0.2.21"
 const libys_name = "libys.$(Libdl.dlext).$(YAMLSCRIPT_VERSION)"
 const libhandle = Ref{Ptr{Cvoid}}()
 const graal_create_isolate_fptr = Ref{Ptr{Cvoid}}()
