@@ -1874,6 +1874,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
     
     
       
@@ -1904,6 +1906,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             Archive
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="archive/2026/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2026
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -2327,6 +2352,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ys-dry" class="md-nav__link">
+    <span class="md-ellipsis">
+      YS DRY
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ys-summer-break" class="md-nav__link">
     <span class="md-ellipsis">
       YS Summer Break
@@ -2542,15 +2576,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#about-the-0" class="md-nav__link">
-    <span class="md-ellipsis">
-      About the -0
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2568,6 +2593,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <h1 id="the-ys-blog">The YS Blog<a class="headerlink" href="#the-ys-blog" title="Permanent link">🔗</a></h1>
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+      <nav class="md-post__authors md-typeset">
+        
+          <span class="md-author">
+            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
+          </span>
+        
+      </nav>
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2026-06-17 00:00:00+00:00">June 17, 2026</time></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              4 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="ys-dry"><a class="toclink" href="2026-06-17/ys-dry/">YS DRY</a></h2>
+<p>My friend <a href="https://github.com/Vad1mo">Vadim Bauer</a> filed <a href="https://github.com/helm-unittest/helm-unittest/issues/891">this GitHub issue</a> for the
+<a href="https://github.com/helm-unittest/helm-unittest/">helm-unittest</a> project, to
+DRY (don't repeat yourself) out some of the repetitive test data.</p>
+<p>He also pinged me to weigh in, so I decided to do that in this post!</p>
+<p>Simplifying repetitive YAML is what YS was made for.
+Well, one of many things; but let's focus on that today.</p>
+<p>Vadim proposed taking existing YAML data files and using YS variables to define
+repeated data once, then referring to it in the places it is needed.
+Solid idea.</p>
+<p>Let's use a very simple example here for brevity sake.
+I'll leave it to you to expand the concepts to your soaking wet YAML files.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="2026-06-17/ys-dry/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -3863,61 +3940,6 @@ etc.</p>
     
       <nav class="md-post__action">
         <a href="2025-07-09/fun-with-function-tags/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-      <nav class="md-post__authors md-typeset">
-        
-          <span class="md-author">
-            <img src="https://avatars.githubusercontent.com/u/21826" alt="Ingy döt Net">
-          </span>
-        
-      </nav>
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2025-07-08 00:00:00+00:00">July 8, 2025</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/summer-of-ys/" class="md-meta__link">Summer-of-YS</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="about-the-0"><a class="toclink" href="2025-07-08/about-the--0/">About the -0</a></h2>
-<p>The current version of YS as of today is <code>0.2.1</code>.</p>
-<p>I'm sure you've noticed the <code>-0</code> part of the <code>!ys-0</code> tag by now.</p>
-<p>YS intends to be a "versioned programming language", where <code>v2</code> can behave
-very differently from <code>v1</code> while still being able to use <code>v1</code> libraries and
-such.</p>
-<p>Today I'll tell you a bit more about the versioning and how things are expected
-to work.</p>
-<p>Remember, we are still officially at <code>v0</code> so even the rules of how versioning
-works are not yet set in stone!</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2025-07-08/about-the--0/">
           Continue reading
         </a>
       </nav>
