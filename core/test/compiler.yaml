@@ -1056,6 +1056,16 @@
     (defn a [c x y] (let [x (if c y x)] x))
 
 
+- name: Support conditional let assignment with dot condition
+  yamlscript: |
+    !ys-0
+    defn a(a b y):
+      a :if b.c =: y
+      =>: a
+  clojure: |
+    (defn a [a b y] (let [a (if (get+ b 'c) y a)] a))
+
+
 - name: Support conditional let assignment operators
   yamlscript: |
     !ys-0
@@ -1071,6 +1081,16 @@
       (let
        [x (if c (add+ x y) x) y (if c (mul+ y x) y) z (if c (or? z y) z)]
        (add+ x y z)))
+
+
+- name: Support conditional let assignment operators with dot condition
+  yamlscript: |
+    !ys-0
+    defn a(a b y):
+      a :if b.c +=: y
+      =>: a
+  clojure: |
+    (defn a [a b y] (let [a (if (get+ b 'c) (add+ a y) a)] a))
 
 
 - name: Support conditional destructuring assignment
@@ -1140,6 +1160,24 @@
     (def a (if c 1 a))
     (def a (if c (add+ a 2) a))
     (def a (if c (get+ a 'b) a))
+
+
+- name: Support conditional defs with dot condition
+  yamlscript: |
+    !ys-0
+    a :if b.c =: d
+    e :if (f.g > h) =: i
+  clojure: |
+    (def a (if (get+ b 'c) d a))
+    (def e (if (> (get+ f 'g) h) i e))
+
+
+- name: Support conditional def operators with dot condition
+  yamlscript: |
+    !ys-0
+    a :if b.c +=: d
+  clojure: |
+    (def a (if (get+ b 'c) (add+ a d) a))
 
 
 - name: Dot op when first arg is function call

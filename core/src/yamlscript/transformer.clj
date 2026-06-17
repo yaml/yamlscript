@@ -169,6 +169,13 @@
         (transformer key val))
       [key val])))
 
+(defn transform-child
+  "Transform a node or a vector of nodes."
+  [node]
+  (if (vector? node)
+    (mapv transform-node node)
+    (transform-node node)))
+
 (defn transform-xmap
   "Transform every pair in an expression or forms mapping."
   [node]
@@ -180,14 +187,15 @@
       (mapv adjust-dot-def)
       (mapv adjust-dot-pair)
       (apply concat)
-      (mapv #(if (vector? %1)
-               (mapv transform-node %1)
-               (transform-node %1)))
+      (mapv transform-child)
       (partition 2)
       (reduce
         (fn [acc [k v]]
           (let [[k v] (if (= :xmap key)
                         (apply-transformer k v)
+                        [k v])
+                [k v] (if (= :xmap key)
+                        [(transform-child k) (transform-child v)]
                         [k v])]
             (conj acc k v)))
         [])
@@ -207,9 +215,7 @@
     (mapv adjust-dot-def)
     (mapv adjust-dot-pair)
     (apply concat)
-    (mapv #(if (vector? %1)
-             (mapv transform-node %1)
-             (transform-node %1)))
+    (mapv transform-child)
     (partition 2)
     (reduce
       (fn [acc [k v]]
