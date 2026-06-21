@@ -43,6 +43,7 @@ setup(
     'yamlscript': [
       'libys/libys.so.*',
       'libys/libys.dylib.*',
+      'libys/libys.dll',
     ],
   },
   cmdclass = cmdclass,

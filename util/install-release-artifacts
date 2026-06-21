@@ -12,8 +12,18 @@ ys_tar=$(
     LC_ALL=C sort |
     head -n1
 )
+ys_zip=$(
+  find "$artifact_dir" -maxdepth 2 -type f -name 'ys-*.zip' |
+    LC_ALL=C sort |
+    head -n1
+)
 libys_tar=$(
   find "$artifact_dir" -maxdepth 2 -type f -name 'libys-*.tar.xz' |
+    LC_ALL=C sort |
+    head -n1
+)
+libys_zip=$(
+  find "$artifact_dir" -maxdepth 2 -type f -name 'libys-*.zip' |
     LC_ALL=C sort |
     head -n1
 )
@@ -30,12 +40,12 @@ libys_jar=$(
     head -n1
 )
 
-if [[ -z "$ys_tar" ]]; then
+if [[ -z "$ys_tar" && -z "$ys_zip" ]]; then
   echo "ERROR: No ys release artifact found in $artifact_dir" >&2
   exit 1
 fi
 
-if [[ -z "$libys_tar" ]]; then
+if [[ -z "$libys_tar" && -z "$libys_zip" ]]; then
   echo "ERROR: No libys release artifact found in $artifact_dir" >&2
   exit 1
 fi
@@ -53,8 +63,17 @@ fi
 work_dir=$(mktemp -d)
 trap 'rm -rf "$work_dir"' EXIT
 
-tar -C "$work_dir" -xf "$ys_tar"
-tar -C "$work_dir" -xf "$libys_tar"
+if [[ $ys_tar ]]; then
+  tar -C "$work_dir" -xf "$ys_tar"
+else
+  unzip -q "$ys_zip" -d "$work_dir"
+fi
+
+if [[ $libys_tar ]]; then
+  tar -C "$work_dir" -xf "$libys_tar"
+else
+  unzip -q "$libys_zip" -d "$work_dir"
+fi
 
 ys_dir=$(
   find "$work_dir" -mindepth 1 -maxdepth 1 -type d -name 'ys-*' |

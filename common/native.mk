@@ -1,30 +1,18 @@
 REFLECTION-JSON := $(COMMON)/reflection.json
 
+ifeq ($(OS-NAME),windows)
+NATIVE-IMAGE := $(GRAALVM).cmd
+else
+NATIVE-IMAGE := $(GRAALVM)
+endif
+
 NATIVE-ENV := \
   LANG=C.UTF-8 \
   LC_ALL=C.UTF-8
 
-NATIVE-OPTS := \
-  -O$(GRAALVM-O) \
-  --verbose \
-  --native-image-info \
-  --no-fallback \
-  --initialize-at-build-time \
-  --enable-preview \
-  --enable-url-protocols=https \
-  --emit=build-report \
-  -march=compatibility \
-  -H:+UnlockExperimentalVMOptions \
+ifneq ($(OS-NAME),windows)
+NATIVE-UNIX-OPTS := \
   -H:+StaticExecutableWithDynamicLibC \
-  -H:IncludeResources=SCI_VERSION \
-  -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
-  -H:+ReportExceptionStackTraces \
-  -H:Log=registerResource: \
-  -Dfile.encoding=UTF-8 \
-  -Dsun.jnu.encoding=UTF-8 \
-  -J-Dclojure.spec.skip-macros=true \
-  -J-Dclojure.compiler.direct-linking=true \
-  -J-Xmx3g \
 
 MUSL-HOME := $(LOCAL-CACHE)/musl
 export MUSL_HOME := $(MUSL-HOME)
@@ -39,6 +27,29 @@ MUSL-URL := https://musl.libc.org/releases/$(MUSL-TAR)
 ZLIB-TAR := zlib-$(ZLIB-VERSION).tar.gz
 ZLIB-DIR := $(LOCAL-CACHE)/zlib-$(ZLIB-VERSION)
 ZLIB-URL := https://zlib.net/fossils/$(ZLIB-TAR)
+endif
+
+NATIVE-OPTS := \
+  -O$(GRAALVM-O) \
+  --verbose \
+  --native-image-info \
+  --no-fallback \
+  --initialize-at-build-time \
+  --enable-preview \
+  --enable-url-protocols=https \
+  --emit=build-report \
+  -march=compatibility \
+  -H:+UnlockExperimentalVMOptions \
+  $(NATIVE-UNIX-OPTS) \
+  -H:IncludeResources=SCI_VERSION \
+  -H:ReflectionConfigurationFiles=$(REFLECTION-JSON) \
+  -H:+ReportExceptionStackTraces \
+  -H:Log=registerResource: \
+  -Dfile.encoding=UTF-8 \
+  -Dsun.jnu.encoding=UTF-8 \
+  -J-Dclojure.spec.skip-macros=true \
+  -J-Dclojure.compiler.direct-linking=true \
+  -J-Xmx3g \
 
 
 #-------------------------------------------------------------------------------
@@ -48,6 +59,7 @@ ZLIB-URL := https://zlib.net/fossils/$(ZLIB-TAR)
 build-reflection-json: $(YS)
 	ys -J $(COMMON)/reflection.ys > $(REFLECTION-JSON)
 
+ifneq ($(OS-NAME),windows)
 $(MUSL-GCC): | $(MUSL-HOME)
 	ln -s $@ $(MUSL-HOME)/bin/x86_64-linux-musl-gcc
 	musl-gcc --version
@@ -76,3 +88,4 @@ $(LOCAL-CACHE)/$(ZLIB-TAR):
 
 muslclean::
 	$(RM) -r $(MUSL-HOME) $(MUSL-DIR) $(MUSL-TAR) $(ZLIB-DIR) $(ZLIB-TAR)
+endif

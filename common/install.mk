@@ -5,20 +5,21 @@ ROOT := $(shell \
 
 YAMLSCRIPT_VERSION := 0.2.21
 
-YS := $(wildcard ys)
-LIBYS := $(firstword $(wildcard libys.*))
+YS := $(firstword $(wildcard ys ys.exe))
+LIBYS := $(firstword $(wildcard libys.so* libys.dylib* libys.dll))
+LIBYS-FILES := $(wildcard libys.so* libys.dylib* libys.dll)
 
 PREFIX ?= /usr/local
 
 install:
 ifneq (,$(YS))
 	mkdir -p $(PREFIX)/bin
-	cp -pP ys* $(PREFIX)/bin/
+	cp -pP $(YS) $(PREFIX)/bin/
 	@echo 'Installed $(PREFIX)/bin/$(YS)' \
 		'- version $(YAMLSCRIPT_VERSION)'
 else ifneq (,$(LIBYS))
 	mkdir -p $(PREFIX)/lib
-	cp -pP libys*.so* $(PREFIX)/lib/
+	cp -pP $(LIBYS-FILES) $(PREFIX)/lib/
 	mkdir -p $(PREFIX)/include/libys-$(YAMLSCRIPT_VERSION)
 	cp -pP *.h $(PREFIX)/include/libys-$(YAMLSCRIPT_VERSION)/
 	@echo 'Installed $(PREFIX)/lib/$(LIBYS)' \

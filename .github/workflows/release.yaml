@@ -230,14 +230,87 @@ jobs:
           python/dist/*.whl
         retention-days: 7
 
+  build-windows-x64:
+    name: Build Windows x64
+    if: ${{ !inputs.publish_bindings_only }}
+    needs: verify-release
+    runs-on: windows-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Set up MSVC
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
+        native-image-job-reports: 'true'
+
+    - name: Install zip
+      run: choco install zip -y
+
+    - name: Install shasum shim
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
+          echo '  sha256sum -c'
+          echo 'else'
+          echo '  echo "Unsupported shasum arguments: $*" >&2'
+          echo '  exit 2'
+          echo 'fi'
+        } > "$RUNNER_TEMP/bin/shasum"
+        chmod +x "$RUNNER_TEMP/bin/shasum"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+    - name: Bootstrap makes
+      run: |
+        root=$(pwd -P)
+        makes=$root/.cache/makes
+        echo "root=$root"
+        echo "makes=$makes"
+        mkdir -p "$root/.cache"
+        test -f "$makes/init.mk" || rm -rf "$makes"
+        test -f "$makes/init.mk" || \
+          git clone -q https://github.com/makeplus/makes "$makes"
+        test -f "$makes/init.mk"
+
+    - name: Build release archives
+      run: |
+        make release-build jars
+        make -C python wheel
+
+    - name: List release archives
+      run: ls -lh ys-*.zip libys-*.zip *.jar python/dist/*.whl
+
+    - name: Upload Windows artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: windows-x64
+        path: |
+          ys-*.zip
+          libys-*.zip
+          *.jar
+          python/dist/*.whl
+        retention-days: 7
+
   create-release:
     name: Create GitHub release
     if: ${{ !inputs.publish_bindings_only }}
     needs:
     - test-linux
     - test-macos
+    - test-windows
     - build-linux-x64
     - build-macos-arm64
+    - build-windows-x64
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -276,6 +349,42 @@ jobs:
             --prerelease=false
         fi
 
+  test-windows:
+    name: Test Windows
+    if: ${{ !inputs.publish_bindings_only }}
+    needs: build-windows-x64
+    runs-on: windows-latest
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Download Windows artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: windows-x64
+        path: release-artifacts
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Smoke test CLI
+      run: |
+        ys/bin/ys-$VERSION.exe --version
+        result=$(printf 'a: 1\n' | ys/bin/ys-$VERSION.exe)
+        [[ "$result" == '{"a":1}' ]]
+
+    - name: Smoke test Python wheel
+      run: |
+        wheel=$(find release-artifacts -type f -name '*.whl' | head -n1)
+        test -n "$wheel"
+        python -m pip install --force-reinstall "$wheel"
+        python - <<'PY'
+        import yamlscript
+        print(yamlscript.YAMLScript().load('a: 1'))
+        PY
+
   upload-assets:
     name: Upload release assets
     if: ${{ !inputs.publish_bindings_only }}
@@ -295,16 +404,18 @@ jobs:
     - name: Prepare release assets
       run: |
         find . -type f -name '*.tar.xz' -exec mv {} . \;
+        find . -type f -name '*.zip' -exec mv {} . \;
         find . -type f -name '*.jar' -exec mv {} . \;
         find . -type f -name '*.whl' -exec mv {} . \;
-        ls -lh ys-*.tar.xz libys-*.tar.xz *.jar *.whl
+        ls -lh ys-* libys-* *.jar *.whl
 
     - name: Upload release assets
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         gh release upload "$VERSION" \
-          ys-*.tar.xz libys-*.tar.xz *.jar *.whl --clobber
+          ys-*.tar.xz ys-*.zip libys-*.tar.xz libys-*.zip \
+          *.jar *.whl --clobber
         gh release view "$VERSION"
 
   publish-homebrew:

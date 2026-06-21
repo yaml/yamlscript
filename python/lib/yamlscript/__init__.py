@@ -30,39 +30,45 @@ assert sys.version_info >= (3, 6), \
 # Find the libys shared library file path:
 def find_libys_path():
   # We currently only support platforms that GraalVM supports.
-  # And Windows is not yet implemented...
   # Confirm platform and determine file extension:
   if sys.platform == 'linux':
-    so = 'so'
+    libys_name = \
+      "libys.so.%s" % yamlscript_version
   elif sys.platform == 'darwin':
-    so = 'dylib'
+    libys_name = \
+      "libys.dylib.%s" % yamlscript_version
+  elif sys.platform == 'win32':
+    libys_name = 'libys.dll'
   else:
     raise Exception(
       "Unsupported platform '%s' for yamlscript." % sys.platform)
 
   # We currently bind to an exact version of libys.
   # eg 'libys.so.0.2.21'
-  libys_name = \
-    "libys.%s.%s" % (so, yamlscript_version)
-
   # First look for the shared library bundled in platform wheels.
   bundled_path = \
     Path(__file__).resolve().parent / 'libys' / libys_name
   if bundled_path.is_file():
     return str(bundled_path)
 
-  # Then use LD_LIBRARY_PATH to find libys shared library, or default
-  # to '/usr/local/lib' (where it is installed by default):
-  ld_library_path = os.environ.get('LD_LIBRARY_PATH')
-  ld_library_paths = ld_library_path.split(':') if ld_library_path else []
-  ld_library_paths.append('/usr/local/lib')
-  ld_library_paths.append(os.environ.get('HOME') + '/.local/lib')
+  # Then use the platform library path plus common install locations.
+  if sys.platform == 'win32':
+    library_path = os.environ.get('PATH')
+    library_paths = library_path.split(os.pathsep) if library_path else []
+  else:
+    library_path = os.environ.get('LD_LIBRARY_PATH')
+    library_paths = library_path.split(os.pathsep) if library_path else []
+    library_paths.append('/usr/local/lib')
+
+  home = os.environ.get('HOME') or os.path.expanduser('~')
+  if home:
+    library_paths.append(os.path.join(home, '.local', 'lib'))
 
   libys_path = None
-  for path in ld_library_paths:
-    path = path + '/' + libys_name
-    if os.path.isfile(path):
-      libys_path = path
+  for path in library_paths:
+    full_path = os.path.join(path, libys_name)
+    if os.path.isfile(full_path):
+      libys_path = full_path
       break
 
   if not libys_path:

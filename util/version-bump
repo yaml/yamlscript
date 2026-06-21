@@ -28,5 +28,3 @@ defn main():
                 str/re-quote-replacement("$m1$vers$m2")
             say: "Bumped '$f'"
           warn: +['No Match!!' f regx]
-
-  shell: 'make -C rust update'

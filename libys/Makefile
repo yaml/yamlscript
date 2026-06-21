@@ -11,16 +11,18 @@ include $(MAKES)/shell.mk
 #------------------------------------------------------------------------------
 build:: $(LIBYS-DEPS)
 
-# jar: $(LIBYS-JAR-PATH)
+jar: $(LIBYS-JAR-PATH)
 
 install:: $(LIBYS-DEPS)
 	mkdir -p $(PREFIX)/include/
 	install -m 644 $(LIBYS-HEADERS) $(PREFIX)/include/
 	mkdir -p $(PREFIX)/lib/
 	install -m 644 $< $(PREFIX)/lib/
+ifneq ($(OS-NAME),windows)
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-BASE))
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-APIP))
 	ln -fs $(notdir $<) $(PREFIX)/lib/$(notdir $(LIBYS-SO-VERS))
+endif
 
 clean::
 	$(RM) $(LIBYS-BUILD-LOG)
@@ -40,24 +42,29 @@ else
 
 $(LIBYS-SO-FQNP): $(LIBYS-JAR-PATH) $(REFLECTION-JSON)
 ifneq (true,$(LIBZ))
-	$(error *** The 'libz.$(SO)' library is required by native-image but not installed)
+	$(error *** \
+	  The 'libz.$(SO)' library is required by native-image but not installed)
 endif
 	mkdir -p $(dir $@)
 	# The next command may take a long time (a minute or so)
 	( set -x && \
 	  $(TIME) \
 	  $(NATIVE-ENV) \
-	  native-image \
+	  $(NATIVE-IMAGE) \
 	    $(NATIVE-OPTS) \
 	    --shared \
 	    -jar $< \
 	    -o $(LIBYS-SO-NAME) \
 	) 2>&1 | tee $(LIBYS-BUILD-LOG)
+ifeq ($(OS-NAME),windows)
+	test -f $@
+else
 	mv $(LIBYS-SO-BASE) $@
 	mv $(LIBYS-SO-NAME).h $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h
 	ln -fs $(notdir $@) $(LIBYS-SO-APIP)
 	ln -fs $(notdir $@) $(LIBYS-SO-VERS)
 	ln -fs $(notdir $@) $(LIBYS-SO-BASE)
+endif
 	touch $@
 endif
 

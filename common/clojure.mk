@@ -1,6 +1,8 @@
 include $(MAKES)/clojure.mk
 include $(MAKES)/lein.mk
+ifneq ($(OS-NAME),windows)
 include $(MAKES)/ys.mk
+endif
 
 YAMLSCRIPT-CORE-INSTALLED := \
   $(MAVEN-REPOSITORY)/yamlscript/core/maven-metadata-local.xml
@@ -53,7 +55,9 @@ realclean:: clean
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
 
+ifneq ($(OS-NAME),windows)
 $(LEIN):: | $(YS)
+endif
 
 # Leiningen targets
 $(LEIN-COMMANDS):: $(LEIN)

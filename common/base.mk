@@ -1,18 +1,22 @@
 $(if $(findstring GNU,$(firstword $(shell $(MAKE) --version))),,\
 $(error Error: 'make' must be 'GNU make'))
 
-ROOT := $(shell \
-  cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))/..' && pwd -P)
+SHELL := bash
+
+ROOT-MAKE := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
+ROOT := $(shell cd '$(ROOT-MAKE)' && pwd -P)
 export ROOT
 
-M := $(ROOT)/.cache/makes
-$(shell [ -d $M ] || git clone -q https://github.com/makeplus/makes $M)
+M := $(ROOT-MAKE)/.cache/makes
+$(shell mkdir -p "$(ROOT)/.cache")
+$(shell test -f "$M/init.mk" || { \
+  rm -rf "$M" && git clone -q https://github.com/makeplus/makes "$M"; })
 include $M/init.mk
-MAKES-LOCAL-DIR := $(ROOT)/.cache/.local
+MAKES-LOCAL-DIR := $(ROOT-MAKE)/.cache/.local
 
 MAKES-NO-RULES := true
 
-COMMON := $(ROOT)/common
+COMMON := $(ROOT-MAKE)/common
 include $(COMMON)/vars.mk
 
 SUBDIR = $(shell pwd)

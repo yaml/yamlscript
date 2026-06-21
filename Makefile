@@ -3,10 +3,9 @@ include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
 
 include $(MAKES)/gh.mk
-# Languages whose CLIs 'secrets-update' uses to authenticate. Each entry
-# installs that toolchain locally and puts it on PATH (never system).
-# Must track the services that declare a 'login' in
-# util/yamlscript-secrets (fez/raku -> raku).
+# Languages whose release credential helpers may use CLI authentication.
+# These are only installed by explicit helper targets, not by every
+# secrets-update run.
 SECRETS-LANGS := raku
 SHELL-LANGS += $(SECRETS-LANGS)
 include $(SHELL-LANGS:%=$(MAKES)/%.mk)
@@ -79,8 +78,8 @@ LYS-JAR-PATH := libys/target/libys-$(YS_VERSION)-standalone.jar
 YS-JAR-PATH := \
     ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
-YS-RELEASE := $(RELEASE-YS-NAME).tar.xz
-LYS-RELEASE := $(RELEASE-LYS-NAME).tar.xz
+YS-RELEASE := $(RELEASE-YS-NAME).$(RELEASE-EXT)
+LYS-RELEASE := $(RELEASE-LYS-NAME).$(RELEASE-EXT)
 
 JAR-ASSETS := \
     $(LYS-JAR-RELEASE) \
@@ -400,6 +399,7 @@ endif
 	gh release download $(n) \
 	  --repo yaml/yamlscript \
 	  --pattern 'libys-$(n)-*.tar.xz' \
+	  --pattern 'libys-$(n)-*.zip' \
 	  --dir python/dist/release-assets
 	$(MAKE) -C python wheels-from-release n=$(n)
 	$(MAKE) -C python publish-wheels
@@ -408,16 +408,14 @@ endif
 # Release Credentials Management
 #------------------------------------------------------------------------------
 
-# Tools the credential-login CLIs need, installed locally (never
-# system). Grows as services gain a 'login' in util/yamlscript-secrets.
-# fez (installed via zef on the local rakudo) provides `fez login`.
+# Install Fez locally for manual Raku credential refresh when needed.
 $(FEZ): $(RAKU)
 	zef install fez
 	touch $@
 
 # Refresh due publishing credentials (or a forced list like
 # SECRETS=npm,clojars)
-secrets-update: $(YS) $(GH) $(SECRETS-TOOLS)
+secrets-update: $(YS) $(GH)
 	$(YS) $(ROOT)/util/yamlscript-secrets --update=$(or $(SECRETS),all)
 
 # List credential status: present (masked) and rotation due date
@@ -452,10 +450,14 @@ $(YS-RELEASE): $(RELEASE-YS-NAME)
 	mkdir -p $<
 	cp -pPR ys/bin/ys* $</
 	cp common/install.mk $</Makefile
+ifeq ($(OS-NAME),windows)
+	$(TIME) zip -r $@ $<
+else
 ifeq (true,$(IS-MACOS))
 	$(TIME) tar -J -cf $@ $<
 else
 	$(TIME) tar -I'xz -0' -cf $@ $<
+endif
 endif
 
 $(LYS-RELEASE): $(RELEASE-LYS-NAME)
@@ -463,10 +465,14 @@ $(LYS-RELEASE): $(RELEASE-LYS-NAME)
 	cp -pPR libys/lib/libys*.$(SO)* $</
 	cp -pPR libys/lib/*.h $</
 	cp common/install.mk $</Makefile
+ifeq ($(OS-NAME),windows)
+	$(TIME) zip -r $@ $<
+else
 ifeq (true,$(IS-MACOS))
 	$(TIME) tar -J -cf $@ $<
 else
 	$(TIME) tar -I'xz -0' -cf $@ $<
+endif
 endif
 
 $(RELEASE-YS-NAME): build-ys

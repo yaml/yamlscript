@@ -1,6 +1,12 @@
 include $(COMMON)/vars-core.mk
 
+ifeq ($(OS-NAME),windows)
+CLI-BIN := bin/ys-$(YS_VERSION).exe
+CLI-OUT := bin/ys-$(YS_VERSION)
+else
 CLI-BIN := bin/ys-$(YS_VERSION)
+CLI-OUT := $(CLI-BIN)
+endif
 CLI-SRC := \
   src/yamlscript/cli.clj \
 

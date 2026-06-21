@@ -102,6 +102,10 @@ vo =: v-old.str/replace(/\./ '\\.')
     - raku/META6.json
     - rust/Cargo.toml
 
+  - regx:: "(name = \"yamlscript\"\nversion = \")${vp}(\")"
+    file:
+    - rust/Cargo.lock
+
   - regx:: "(libys\\.)${vp}(\\.h)"
     file:
     - haskell/lib/YAMLScript/FFI.hs

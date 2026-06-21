@@ -29,12 +29,14 @@ build:: $(CLI-DEPS)
 install: $(CLI-DEPS)
 	mkdir -p $(PREFIX)/bin
 	install -m 755 $(CLI-BIN) $(PREFIX)/bin/
+ifneq ($(OS-NAME),windows)
 	ln -fs $(notdir $(CLI-BIN)) \
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $(CLI-BIN)) \
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%)
 	install -m 755 $(CLI-BIN-BASH) \
 	  $(PREFIX)/bin/
+endif
 
 jar: $(CLI-JAR)
 
@@ -95,14 +97,17 @@ endif
 	( set -x && \
 	  $(TIME) \
 	  $(NATIVE-ENV) \
-	  native-image \
+	  $(NATIVE-IMAGE) \
 	    -H:ConfigurationFileDirectories=config/ \
 	    $(NATIVE-OPTS) \
 	    -jar $< \
-	    -o $@ \
+	    -o $(CLI-OUT) \
 	) 2>&1 | tee $(YS-BUILD-LOG)
+	test -f $@
+ifneq ($(OS-NAME),windows)
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
+endif
 	touch $@
 endif
 
@@ -115,7 +120,7 @@ $(CLI-JAR): $(LEIN) $(CLI-JAR-DEPS)
 	lein uberjar
 
 $(CORE-INSTALLED): $(CORE-JAR)
-	@$(MAKE) -C $(CORE-DIR) $@ > /dev/null 2>&1
+	$(MAKE) -C $(CORE-DIR) $@
 
 $(CORE-JAR):
-	@$(MAKE) -C $(CORE-DIR) >/dev/null 2>&1
+	$(MAKE) -C $(CORE-DIR)

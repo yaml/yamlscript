@@ -1,7 +1,11 @@
 include $(COMMON)/version.mk
 include $(MAKES)/graalvm.mk
 include $(MAKES)/maven.mk
+ifeq ($(OS-NAME),windows)
+YS ?= $(ROOT)/ys/bin/ys-$(YS_VERSION).exe
+else
 include $(MAKES)/ys.mk
+endif
 
 export YS_TMPDIR := $(LOCAL-TMP)
 export TMPDIR := $(LOCAL-TMP)
@@ -27,20 +31,25 @@ ifdef v
   export TEST_VERBOSE := 1
 endif
 
-ifdef IS-LINUX
+ifeq ($(OS-NAME),linux)
   GCC := gcc -std=gnu99 -fPIC -shared
   SO := so
   DY :=
-else ifdef IS-MACOS
+else ifeq ($(OS-NAME),macos)
   GCC := gcc -dynamiclib
   SO := dylib
   DY := DY
+else ifeq ($(OS-NAME),windows)
+  SO := dll
+  DY :=
 else
   $(error Unsupported OSTYPE: $(OS-TYPE))
 endif
 
 LIBZ := false
-ifdef IS-MACOS
+ifeq ($(OS-NAME),macos)
+  LIBZ := true
+else ifeq ($(OS-NAME),windows)
   LIBZ := true
 else
 # Fix https://github.com/yaml/yamlscript/issues/210
@@ -69,7 +78,11 @@ define need-curl
 	}
 endef
 
+ifeq ($(OS-NAME),windows)
+TIME :=
+else
 TIME := time -p
+endif
 
 ifeq (true,$(IS-ROOT))
   PREFIX ?= /usr/local
@@ -110,12 +123,14 @@ OA-linux-arm64 := linux-aarch64
 OA-linux-int64 := linux-x64
 OA-macos-arm64 := macos-aarch64
 OA-macos-int64 := macos-x64
+OA-windows-int64 := windows-x64
 
 RELEASE-YS-NAME := ys-$(YS_VERSION)-$(OA-$(OS-ARCH))
-RELEASE-YS-TAR := $(RELEASE-YS-NAME).tar.xz
+RELEASE-EXT := $(if $(filter windows,$(OS-NAME)),zip,tar.xz)
+RELEASE-YS-TAR := $(RELEASE-YS-NAME).$(RELEASE-EXT)
 
 RELEASE-LYS-NAME := libys-$(YS_VERSION)-$(OA-$(OS-ARCH))
-RELEASE-LYS-TAR := $(RELEASE-LYS-NAME).tar.xz
+RELEASE-LYS-TAR := $(RELEASE-LYS-NAME).$(RELEASE-EXT)
 
 
 #------------------------------------------------------------------------------
