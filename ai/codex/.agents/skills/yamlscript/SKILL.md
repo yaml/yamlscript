@@ -10,12 +10,12 @@ description: >
 
 ## Setup
 
-Ensure `ys` version 0.2.21 is available for testing:
+Ensure `ys` version 0.2.22 is available for testing:
 
 ```bash
-[[ -x /tmp/ys-skill/bin/ys-0.2.21 ]] ||
+[[ -x /tmp/ys-skill/bin/ys-0.2.22 ]] ||
   curl -s https://yamlscript.org/install |
-    VERSION=0.2.21 PREFIX=/tmp/ys-skill bash
+    VERSION=0.2.22 PREFIX=/tmp/ys-skill bash
 YS=/tmp/ys-skill/bin/ys
 ```
 

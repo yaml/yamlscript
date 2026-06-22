@@ -43,8 +43,8 @@ You can install both `ys` and `libys` with a single CLI command, where:
 Examples:
 ```bash
 $ curl https://yamlscript.org/install | bash
-$ curl https://yamlscript.org/install | VERSION=0.2.21 bash
-$ curl https://yamlscript.org/install | VERSION=0.2.21 LIB=1 bash
+$ curl https://yamlscript.org/install | VERSION=0.2.22 bash
+$ curl https://yamlscript.org/install | VERSION=0.2.22 LIB=1 bash
 $ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
 ```
 
