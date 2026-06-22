@@ -58,5 +58,5 @@ jobs:
       run: |
         version=$(sed -n 's/^version: //p' Meta)
         ys/bin/ys-$version.exe --version
-        result=$(printf 'a: 1\n' | ys/bin/ys-$version.exe)
+        result=$(printf 'a: 1\n' | ys/bin/ys-$version.exe --load)
         [[ "$result" == '{"a":1}' ]]

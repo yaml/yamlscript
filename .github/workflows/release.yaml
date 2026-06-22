@@ -372,7 +372,7 @@ jobs:
     - name: Smoke test CLI
       run: |
         ys/bin/ys-$VERSION.exe --version
-        result=$(printf 'a: 1\n' | ys/bin/ys-$VERSION.exe)
+        result=$(printf 'a: 1\n' | ys/bin/ys-$VERSION.exe --load)
         [[ "$result" == '{"a":1}' ]]
 
     - name: Smoke test Python wheel
