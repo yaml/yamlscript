@@ -7,50 +7,91 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibYS {
     public static String extension()
     {
-        return Platform.isMac() ? "dylib" : "so";
+        return extension(Platform.isWindows(), Platform.isMac());
+    }
+
+    static String extension(boolean isWindows, boolean isMac)
+    {
+        if (isWindows) return "dll";
+
+        return isMac ? "dylib" : "so";
     }
 
     public static char pathDelimiter()
     {
-        return Platform.isWindows() ? '\\' : '/';
+        return File.separatorChar;
     }
 
     public static String filename()
     {
-        return "libys." + extension() + '.' +
-               YAMLScript.YAMLSCRIPT_VERSION;
+        return filename(Platform.isWindows(), Platform.isMac());
+    }
+
+    static String filename(boolean isWindows, boolean isMac)
+    {
+        String name = "libys." + extension(isWindows, isMac);
+
+        return isWindows ? name : name + '.' + YAMLScript.YAMLSCRIPT_VERSION;
     }
 
     public static String[] libraryPaths()
     {
-        String envValue = System.getenv("LD_LIBRARY_PATH");
-        if (envValue == null) return new String[0];
+        List<String> paths = new ArrayList<String>();
+        String javaPath = System.getProperty("java.library.path");
 
-        return envValue.split(":");
+        addPaths(paths, javaPath);
+        paths.add(".");
+        if (Platform.isWindows()) {
+            addPaths(paths, System.getenv("PATH"));
+        } else if (Platform.isMac()) {
+            addPaths(paths, System.getenv("DYLD_LIBRARY_PATH"));
+        } else {
+            addPaths(paths, System.getenv("LD_LIBRARY_PATH"));
+        }
+
+        return paths.toArray(new String[0]);
+    }
+
+    static void addPaths(List<String> paths, String value)
+    {
+        if (value == null || value.length() == 0) return;
+
+        for (String path : value.split(File.pathSeparator)) {
+            if (path.length() > 0) paths.add(path);
+        }
+    }
+
+    static String findLibrary(String name, String[] dirs)
+    {
+        for (String dir : dirs) {
+            String path = dir + pathDelimiter() + name;
+            if (new File(path).exists()) return path;
+        }
+
+        return null;
     }
 
     public static String path() throws RuntimeException
     {
         String name = filename();
-        String[] dirs = libraryPaths();
-
-        String path = null;
-        for (String dir : dirs) {
-            path = dir + pathDelimiter() + name;
-            if (new File(path).exists()) break;
-        }
+        String path = findLibrary(name, libraryPaths());
         if (path != null) return path;
 
         path = "/usr/local/lib" + pathDelimiter() + name;
         if (new File(path).exists()) return path;
 
-        path = System.getenv("HOME") + pathDelimiter() +
-               ".local/lib" + pathDelimiter() + name;
-        if (new File(path).exists()) return path;
+        String home = System.getProperty("user.home");
+        if (home != null) {
+            path = home + pathDelimiter() + ".local/lib" +
+                   pathDelimiter() + name;
+            if (new File(path).exists()) return path;
+        }
 
         throw new RuntimeException(
             "Shared library file " + name + " not found\n" +

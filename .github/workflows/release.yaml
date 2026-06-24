@@ -360,6 +360,14 @@ jobs:
       with:
         ref: ${{ inputs.version }}
 
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
+        native-image-job-reports: 'true'
+
     - name: Download Windows artifacts
       uses: actions/download-artifact@v8
       with:
@@ -374,6 +382,15 @@ jobs:
         ys/bin/ys-$VERSION.exe --version
         result=$(printf 'a: 1\n' | ys/bin/ys-$VERSION.exe --load)
         [[ "$result" == '{"a":1}' ]]
+
+    - name: Test Java binding
+      run: |
+        mvn \
+          --batch-mode \
+          --no-transfer-progress \
+          -DargLine='-Djava.library.path=libys/lib' \
+          -f java/pom.xml \
+          test
 
     - name: Smoke test Python wheel
       run: |
