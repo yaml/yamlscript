@@ -185,8 +185,6 @@ jobs:
 
     - name: Build release archives
       run: |
-        make -C ys build
-        make -C libys build
         make release-build jars
         make -C python wheel
 
@@ -225,8 +223,6 @@ jobs:
 
     - name: Build release archives
       run: |
-        make -C ys build
-        make -C libys build
         make release-build jars
         make -C python wheel
 
