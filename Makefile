@@ -69,6 +69,9 @@ endif
 ifdef YS_RELEASE_SKIP_CORE_TESTS
 TEST := $(filter-out test-core,$(TEST))
 endif
+ifdef YS_RELEASE_SKIP_LIBYS_TESTS
+TEST := $(filter-out test-libys,$(TEST))
+endif
 ifneq (,$(YS_RELEASE_BINDINGS_SKIP))
 TEST := $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST))
 TEST-BINDINGS := \

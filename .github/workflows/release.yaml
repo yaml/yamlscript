@@ -127,6 +127,7 @@ jobs:
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
+          YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_SKIP_HASKELL_TESTS=1
 
   test-macos:
@@ -156,6 +157,7 @@ jobs:
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
+          YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_SKIP_HASKELL_TESTS=1
 
   build-linux-x64:
@@ -422,7 +424,8 @@ jobs:
           ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
-          YS_RELEASE_SKIP_CORE_TESTS=1
+          YS_RELEASE_SKIP_CORE_TESTS=1 \
+          YS_RELEASE_SKIP_LIBYS_TESTS=1
 
   upload-assets:
     name: Upload release assets
