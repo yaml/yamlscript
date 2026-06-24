@@ -423,6 +423,11 @@ jobs:
         chmod +x "$RUNNER_TEMP/bin/shasum"
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
+    - name: Configure archive tools
+      run: |
+        echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
+        echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
     - name: Run core tests
       run: make test-core
 
@@ -490,6 +495,11 @@ jobs:
         } > "$RUNNER_TEMP/bin/shasum"
         chmod +x "$RUNNER_TEMP/bin/shasum"
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+    - name: Configure archive tools
+      run: |
+        echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
+        echo 'UNZIP=-o' >> "$GITHUB_ENV"
 
     - name: Run core tests
       run: make test-core
