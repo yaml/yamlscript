@@ -84,7 +84,7 @@ yamlscript.cabal: cabal.ys
 else
 yamlscript.cabal: cabal.ys $(YS)
 endif
-	ys $< > $@
+	$(YS) $< > $@
 
 License: ../License
 	cp $< $@

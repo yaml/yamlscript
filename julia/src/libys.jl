@@ -3,7 +3,8 @@ module libys
 import Base.Libc: Libdl
 
 const YAMLSCRIPT_VERSION = "0.2.22"
-const libys_name = "libys.$(Libdl.dlext).$(YAMLSCRIPT_VERSION)"
+const libys_name = Sys.iswindows() ?
+    "libys.dll" : "libys.$(Libdl.dlext).$(YAMLSCRIPT_VERSION)"
 const libhandle = Ref{Ptr{Cvoid}}()
 const graal_create_isolate_fptr = Ref{Ptr{Cvoid}}()
 const graal_tear_down_isolate_fptr = Ref{Ptr{Cvoid}}()
@@ -20,13 +21,16 @@ function graal_tear_down_isolate(thread)
 end
 
 function load_ys_to_json(thread, script::String)
-    ccall(load_ys_to_json_fptr[], Cstring, (Ptr{Cvoid}, Cstring), thread, script)
+    ccall(load_ys_to_json_fptr[],
+          Cstring, (Ptr{Cvoid}, Cstring),
+          thread, script)
 end
 
 function _library_not_found_error(libname)
     msg = """
 Shared library file `$(libname)` not found
-Try: curl https://yamlscript.org/install | VERSION=$(YAMLSCRIPT_VERSION) LIB=1 bash
+Try: curl https://yamlscript.org/install \\
+  | VERSION=$(YAMLSCRIPT_VERSION) LIB=1 bash
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"""
     error(msg)
 end
@@ -38,8 +42,10 @@ function init()
     end
 
     libhandle[] = Libdl.dlopen(libpath, Libdl.RTLD_LAZY | Libdl.RTLD_LOCAL)
-    graal_create_isolate_fptr[] = Libdl.dlsym(libhandle[], :graal_create_isolate)
-    graal_tear_down_isolate_fptr[] = Libdl.dlsym(libhandle[], :graal_tear_down_isolate)
+    graal_create_isolate_fptr[] =
+        Libdl.dlsym(libhandle[], :graal_create_isolate)
+    graal_tear_down_isolate_fptr[] =
+        Libdl.dlsym(libhandle[], :graal_tear_down_isolate)
     load_ys_to_json_fptr[] = Libdl.dlsym(libhandle[], :load_ys_to_json)
 end
 
