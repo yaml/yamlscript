@@ -25,6 +25,10 @@ on:
         default: false
         required: false
         type: boolean
+      windows_test_artifacts_run_id:
+        description: 'Prior release workflow run ID for Windows test retry'
+        required: false
+        type: string
 
 defaults:
   run:
@@ -129,6 +133,7 @@ jobs:
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
+          YS_RELEASE_USE_INSTALLED_YS=1 \
           YS_RELEASE_SKIP_HASKELL_TESTS=1
 
   test-macos:
@@ -160,6 +165,7 @@ jobs:
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
+          YS_RELEASE_USE_INSTALLED_YS=1 \
           YS_RELEASE_SKIP_HASKELL_TESTS=1
 
   build-linux-x64:
@@ -246,7 +252,11 @@ jobs:
 
   build-windows-x64:
     name: Build Windows x64
-    if: ${{ !inputs.publish_bindings_only }}
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        inputs.windows_test_artifacts_run_id == ''
+      }}
     needs: verify-release
     runs-on: windows-latest
     steps:
@@ -374,7 +384,11 @@ jobs:
 
   test-windows:
     name: Test Windows
-    if: ${{ !inputs.publish_bindings_only }}
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        inputs.windows_test_artifacts_run_id == ''
+      }}
     needs: build-windows-x64
     runs-on: windows-latest
     steps:
@@ -428,7 +442,76 @@ jobs:
         make -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
-          YS_RELEASE_USE_INSTALLED_LIBYS=1
+          YS_RELEASE_USE_INSTALLED_LIBYS=1 \
+          YS_RELEASE_USE_INSTALLED_YS=1
+
+  test-windows-retry:
+    name: Test Windows
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        inputs.windows_test_artifacts_run_id != ''
+      }}
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{
+            inputs.windows_tests_only &&
+            github.ref ||
+            inputs.version
+          }}
+
+    - name: Download Windows artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.windows_test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name windows-x64 \
+          --dir release-artifacts
+
+    - name: Install shasum shim
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
+          echo '  sha256sum -c'
+          echo 'else'
+          echo '  echo "Unsupported shasum arguments: $*" >&2'
+          echo '  exit 2'
+          echo 'fi'
+        } > "$RUNNER_TEMP/bin/shasum"
+        chmod +x "$RUNNER_TEMP/bin/shasum"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+    - name: Run core tests
+      run: make test-core
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Add libys to PATH
+      run: |
+        cygpath -w "$PWD/libys/lib" >> "$GITHUB_PATH"
+
+    - name: Run tests
+      env:
+        YS_RELEASE_BINDINGS_SKIP: >-
+          go nodejs perl perl-alien php ruby rust
+          ${{ inputs.bindings_skip }}
+      run: |
+        make -k test-all \
+          YS_RELEASE_SKIP_CORE_TESTS=1 \
+          YS_RELEASE_SKIP_LIBYS_TESTS=1 \
+          YS_RELEASE_USE_INSTALLED_LIBYS=1 \
+          YS_RELEASE_USE_INSTALLED_YS=1
 
   upload-assets:
     name: Upload release assets
