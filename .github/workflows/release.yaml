@@ -429,10 +429,18 @@ jobs:
         echo 'UNZIP=-o' >> "$GITHUB_ENV"
 
     - name: Install Crystal link dependencies
-      run: |
-        pacman --noconfirm -S --needed \
-          mingw-w64-x86_64-gc \
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gc
           mingw-w64-x86_64-pcre2
+
+    - name: Configure Crystal link dependencies
+      run: |
+        echo 'C:\msys64\mingw64\bin' >> "$GITHUB_PATH"
+        echo 'CRYSTAL_MINGW_LIB=/c/msys64/mingw64/lib' >> "$GITHUB_ENV"
 
     - name: Run core tests
       run: make test-core
@@ -508,10 +516,18 @@ jobs:
         echo 'UNZIP=-o' >> "$GITHUB_ENV"
 
     - name: Install Crystal link dependencies
-      run: |
-        pacman --noconfirm -S --needed \
-          mingw-w64-x86_64-gc \
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: >-
+          mingw-w64-x86_64-gc
           mingw-w64-x86_64-pcre2
+
+    - name: Configure Crystal link dependencies
+      run: |
+        echo 'C:\msys64\mingw64\bin' >> "$GITHUB_PATH"
+        echo 'CRYSTAL_MINGW_LIB=/c/msys64/mingw64/lib' >> "$GITHUB_ENV"
 
     - name: Run core tests
       run: make test-core

@@ -8,8 +8,8 @@ BUILD-DEPS := $(CRYSTAL)
 
 # Set library path for Crystal compiler
 CRYSTAL-ENV := \
-  LIBRARY_PATH=$(ROOT)/libys/lib \
-  LD_LIBRARY_PATH=$(ROOT)/libys/lib
+  LIBRARY_PATH=$(ROOT)/libys/lib:$(CRYSTAL_MINGW_LIB) \
+  LD_LIBRARY_PATH=$(ROOT)/libys/lib:$(CRYSTAL_MINGW_LIB)
 
 #------------------------------------------------------------------------------
 
