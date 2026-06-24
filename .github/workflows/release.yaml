@@ -300,7 +300,11 @@ jobs:
     - name: Build release archives
       run: |
         make release-build jars
-        make -C python wheel
+        mkdir -p python/dist/release-assets
+        for archive in libys-*.tar.xz libys-*.zip; do
+          [[ -e "$archive" ]] && cp "$archive" python/dist/release-assets/
+        done
+        make -C python wheels-from-release
 
     - name: List release archives
       run: ls -lh ys-*.zip libys-*.zip *.jar python/dist/*.whl
