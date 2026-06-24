@@ -428,6 +428,12 @@ jobs:
         echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
         echo 'UNZIP=-o' >> "$GITHUB_ENV"
 
+    - name: Install Crystal link dependencies
+      run: |
+        pacman --noconfirm -S --needed \
+          mingw-w64-x86_64-gc \
+          mingw-w64-x86_64-pcre2
+
     - name: Run core tests
       run: make test-core
 
@@ -441,7 +447,7 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          go nodejs perl perl-alien php ruby rust
+          go lua nodejs perl perl-alien php raku ruby rust
           ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
@@ -501,6 +507,12 @@ jobs:
         echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
         echo 'UNZIP=-o' >> "$GITHUB_ENV"
 
+    - name: Install Crystal link dependencies
+      run: |
+        pacman --noconfirm -S --needed \
+          mingw-w64-x86_64-gc \
+          mingw-w64-x86_64-pcre2
+
     - name: Run core tests
       run: make test-core
 
@@ -514,7 +526,7 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          go nodejs perl perl-alien php ruby rust
+          go lua nodejs perl perl-alien php raku ruby rust
           ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
