@@ -10,7 +10,7 @@ export CLOJARS_PASSWORD ?= $(shell util/get-setting password)
 
 #------------------------------------------------------------------------------
 
-test install deploy:: $(LEIN) $(YAMLSCRIPT-JAVA-INSTALLED) $(CLOJURE)
+test install deploy:: $(LEIN) $(YAMLSCRIPT-JAVA-INSTALLED) $(CLOJURE) $(JAVA)
 	lein $@
 
 release: deploy
