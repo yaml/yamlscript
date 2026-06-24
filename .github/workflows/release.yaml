@@ -380,19 +380,26 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up GraalVM
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
-
     - name: Download Windows artifacts
       uses: actions/download-artifact@v8
       with:
         name: windows-x64
         path: release-artifacts
+
+    - name: Install shasum shim
+      run: |
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
+          echo '  sha256sum -c'
+          echo 'else'
+          echo '  echo "Unsupported shasum arguments: $*" >&2'
+          echo '  exit 2'
+          echo 'fi'
+        } > "$RUNNER_TEMP/bin/shasum"
+        chmod +x "$RUNNER_TEMP/bin/shasum"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
     - name: Run core tests
       run: make test-core
@@ -410,7 +417,7 @@ jobs:
           go nodejs perl perl-alien php ruby rust
           ${{ inputs.bindings_skip }}
       run: |
-        make test-all \
+        make -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1
 
   upload-assets:
