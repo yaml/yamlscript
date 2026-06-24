@@ -2,7 +2,7 @@ module libys
 
 import Base.Libc: Libdl
 
-const YAMLSCRIPT_VERSION = "0.2.22"
+const YAMLSCRIPT_VERSION = "0.2.23"
 const libys_name = Sys.iswindows() ?
     "libys.dll" : "libys.$(Libdl.dlext).$(YAMLSCRIPT_VERSION)"
 const libhandle = Ref{Ptr{Cvoid}}()

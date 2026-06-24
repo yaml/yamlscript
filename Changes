@@ -1,3 +1,8 @@
+- version: 0.2.23
+  date:    Wed Jun 24 04:30:09 PM EDT 2026
+  changes:
+  - www: Fix CPAN link
+  - java: Fix Windows libys loading
 - version: 0.2.22
   date:    Mon Jun 22 09:22:51 AM EDT 2026
   changes:

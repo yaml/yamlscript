@@ -16,7 +16,7 @@ object that the YAMLScript code evaluates to.
 # This value is automatically updated by 'make bump'.
 # The version number is used to find the correct shared library file.
 # We currently only support binding to an exact version of libys.
-yamlscript_version = '0.2.22'
+yamlscript_version = '0.2.23'
 
 import os, sys
 import ctypes
@@ -44,7 +44,7 @@ def find_libys_path():
       "Unsupported platform '%s' for yamlscript." % sys.platform)
 
   # We currently bind to an exact version of libys.
-  # eg 'libys.so.0.2.22'
+  # eg 'libys.so.0.2.23'
   # First look for the shared library bundled in platform wheels.
   bundled_path = \
     Path(__file__).resolve().parent / 'libys' / libys_name
