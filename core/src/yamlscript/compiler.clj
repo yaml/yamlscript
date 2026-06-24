@@ -127,7 +127,8 @@
     (map #(str
             (with-out-str (clojure.pprint/write %1))
             "\n"))
-    (apply str)))
+    (apply str)
+    (#(str/replace %1 #"\r\n?" "\n"))))
 
 (comment
   (compile "!ys-0:
