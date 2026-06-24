@@ -6,8 +6,11 @@ import junit.framework.TestSuite;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
 
 /**
  * Unit test for simple App.
@@ -101,5 +104,32 @@ public class YAMLScriptTest extends TestCase
         BigDecimal data = YAMLScript.loadBigDecimal("1.4");
 
         assertEquals(new BigDecimal("1.4"), data);
+    }
+
+    public void testLibYSFilename()
+    {
+        String version = YAMLScript.YAMLSCRIPT_VERSION;
+
+        assertEquals("libys.dll", LibYS.filename(true, false));
+        assertEquals("libys.dylib." + version, LibYS.filename(false, true));
+        assertEquals("libys.so." + version, LibYS.filename(false, false));
+    }
+
+    public void testLibYSFindLibrary() throws IOException
+    {
+        File dir = Files.createTempDirectory("yamlscript-test").toFile();
+        File libys = new File(dir, "libys.dll");
+
+        assertTrue(libys.createNewFile());
+        assertEquals(
+            libys.getPath(),
+            LibYS.findLibrary("libys.dll", new String[] {dir.getPath()})
+        );
+        assertNull(LibYS.findLibrary("missing.dll", new String[] {
+            dir.getPath()
+        }));
+
+        assertTrue(libys.delete());
+        assertTrue(dir.delete());
     }
 }

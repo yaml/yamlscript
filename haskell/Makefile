@@ -79,8 +79,12 @@ clean::
 $(CABAL-INDEX): $(CABAL)
 	cabal update
 
+ifdef YS_RELEASE_USE_INSTALLED_YS
+yamlscript.cabal: cabal.ys
+else
 yamlscript.cabal: cabal.ys $(YS)
-	ys $< > $@
+endif
+	$(YS) $< > $@
 
 License: ../License
 	cp $< $@

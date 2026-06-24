@@ -6,7 +6,7 @@ YAMLSCRIPT-JAVA-INSTALLED := \
   $(MAVEN-REPOSITORY)/org/yamlscript/yamlscript/maven-metadata-local.xml
 
 YAMLSCRIPT-JAVA-SRC := \
-  $(ROOT)/java/src/main/java/org/yamlscript/yamlscript/*.java \
+  $(wildcard $(ROOT)/java/src/main/java/org/yamlscript/yamlscript/*.java) \
 
 
 #------------------------------------------------------------------------------

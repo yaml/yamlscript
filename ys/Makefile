@@ -11,6 +11,12 @@ include $(MAKES)/shell.mk
 BPAN-LOCAL := .bpan
 BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
+ifeq ($(OS-NAME),windows)
+PROVE := $(PERL) -S prove
+else
+PROVE := prove
+endif
+
 test := test/
 
 YSJ-TMP := .cache/tmp/ysj
@@ -47,15 +53,24 @@ test-all: test-unit test-run
 test-unit: $(LEIN) $(CORE-INSTALLED)
 	lein test $(lein-test)
 
-test-run: $(PERL) $(CLI-DEPS) $(BPAN-LOCAL)
-	prove $${TEST_VERBOSE:+'-v'} $(test)
+ifdef YS_RELEASE_USE_INSTALLED_YS
+TEST-RUN-DEPS := $(PERL) $(BPAN-LOCAL)
+else
+TEST-RUN-DEPS := $(PERL) $(CLI-DEPS) $(BPAN-LOCAL)
+endif
+
+test-run: $(TEST-RUN-DEPS)
+ifdef YS_RELEASE_USE_INSTALLED_YS
+	test -f $(CLI-BIN)
+endif
+	$(PROVE) $${TEST_VERBOSE:+'-v'} $(test)
 
 test-ysj: export DOCKER_CONFIG := $(abspath $(YSJ-DOCKER-CONFIG))
 test-ysj: export PATH := $(abspath $(YSJ-BIN-DIR)):$(PATH)
 test-ysj: export YS_BIN_DIR := $(abspath $(YSJ-BIN-DIR))
 test-ysj: $(PERL) $(YSJ-BIN) $(YSJ-API-BIN) $(YSJ-DOCKER-CONFIG) \
 	  $(BPAN-LOCAL)
-	prove $${TEST_VERBOSE:+'-v'} $(test)
+	$(PROVE) $${TEST_VERBOSE:+'-v'} $(test)
 
 repl-deps:: $(CORE-INSTALLED)
 

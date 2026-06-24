@@ -69,6 +69,14 @@ endif
 ifdef YS_RELEASE_SKIP_CORE_TESTS
 TEST := $(filter-out test-core,$(TEST))
 endif
+ifdef YS_RELEASE_SKIP_LIBYS_TESTS
+TEST := $(filter-out test-libys,$(TEST))
+endif
+ifneq (,$(YS_RELEASE_BINDINGS_SKIP))
+TEST := $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST))
+TEST-BINDINGS := \
+    $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST-BINDINGS))
+endif
 
 export HEAD := $(shell git rev-parse HEAD)
 
@@ -305,6 +313,51 @@ endif
 release-test:
 	@echo "Note: Tests now run automatically in GitHub Actions"
 	@echo "Use 'gh workflow run test-all.yaml' to trigger manually"
+
+release-test-windows: n ?= $(YS_VERSION)
+release-test-windows: $(GH)
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  git push origin HEAD:$$branch; \
+	  gh workflow run release.yaml \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
+	    -f windows_tests_only=true; \
+	  sleep 5; \
+	  run_id=$$(gh run list --workflow=release.yaml \
+	    --repo yaml/yamlscript --branch $$branch --limit=1 \
+	    --json databaseId --jq '.[0].databaseId'); \
+	  mkdir -p .cache; \
+	  printf '%s\n' "$$run_id" > .cache/release-test-windows-run-id; \
+	  gh run watch $$run_id --repo yaml/yamlscript \
+	    --exit-status --interval=10
+
+release-test-windows-retry: n ?= $(YS_VERSION)
+release-test-windows-retry: $(GH)
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  artifact_run_id='$(r)'; \
+	  if [[ -z "$$artifact_run_id" && \
+	        -f .cache/release-test-windows-run-id ]]; then \
+	    artifact_run_id=$$(cat .cache/release-test-windows-run-id); \
+	  fi; \
+	  if [[ -z "$$artifact_run_id" ]]; then \
+	    artifact_run_id=$$(gh run list --workflow=release.yaml \
+	      --repo yaml/yamlscript --branch $$branch --limit=1 \
+	      --json databaseId --jq '.[0].databaseId'); \
+	  fi; \
+	  test -n "$$artifact_run_id"; \
+	  echo "Using Windows artifacts from run $$artifact_run_id"; \
+	  git push origin HEAD:$$branch; \
+	  gh workflow run release.yaml \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
+	    -f windows_tests_only=true \
+	    -f windows_test_artifacts_run_id=$$artifact_run_id; \
+	  sleep 5; \
+	  run_id=$$(gh run list --workflow=release.yaml \
+	    --repo yaml/yamlscript --branch $$branch --limit=1 \
+	    --json databaseId --jq '.[0].databaseId'); \
+	  gh run watch $$run_id --repo yaml/yamlscript \
+	    --exit-status --interval=10
 
 # Step 7: Binding changelogs
 release-binding-changelogs: $(YS)
