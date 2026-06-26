@@ -15,7 +15,7 @@ require ys::yaml:
 
 NTH-LIT-RE =: /(\w[\w-]*)\.nth\(\s*(\d+)\s*\)/
 NTH-VAR-RE =: /(\w[\w-]*)\.nth\(\s*([A-Za-z][\w-]*)\s*\)/
-PLUS-RE =: /([A-Za-z_][\w-]*)\s+\+\s+1(?![\d.])/
+PLUS-RE =: /(?<![\w(])([A-Za-z_][\w-]*)\s+\+\s+1(?![\d.])/
 MINUS-RE =: /([A-Za-z_][\w-]*)\s+-\s+1(?![\d.])/
 FIRST-CALL-RE =: /(\w[\w-]*)\.first\(\)/
 LAST-CALL-RE =: /(\w[\w-]*)\.last\(\)/
@@ -37,7 +37,7 @@ KW-BRACKETS-RE =: re-pattern(KW-BRACKETS-PAT)
 ITER-BRACKETS-RE =:
   /^\s+(each|for|doseq|dotimes)\s+\[[a-z][\w?!-]*\s.*\]:\s*$/
 KW-PARENS-RE =:
-  /^\s+(if-not|if|when-not|when|while)\s+\(([^()]*)\):(?:\s|$)/
+  /^\s+(if-not|if|when-not|when|while)\s+\((?!\.\s)([^()]*)\):(?:\s|$)/
 IF-HEAD-RE =: /^\s*if\b.*:\s*$/
 QUOT-CALL-RE =:
   /(?<![\w-])quot\(\s*([\w$.-]+)\s+([\w$.-]+)\s*\)/

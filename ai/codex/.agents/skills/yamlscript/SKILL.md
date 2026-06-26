@@ -14,8 +14,7 @@ Ensure `ys` version 0.2.23 is available for testing:
 
 ```bash
 [[ -x /tmp/ys-skill/bin/ys-0.2.23 ]] ||
-  curl -s https://yamlscript.org/install |
-    VERSION=0.2.23 PREFIX=/tmp/ys-skill bash
+  curl -s https://yamlscript.org/install | VERSION=0.2.23 PREFIX=/tmp/ys-skill bash
 YS=/tmp/ys-skill/bin/ys
 ```
 
@@ -280,6 +279,11 @@ positions, return values, loop bodies, string interpolation:
 single most-forgotten rule — scan every `+ 1` and `- 1` before
 finishing.
 
+Exception: do not rewrite `f + 1` when `f` is a function and the
+expression is a partial application. For example, `(rotate + 1)` means
+"a function that calls `rotate` with `1` as its first argument"; it is
+not numeric increment and must not become `rotate.++`.
+
 ### Never write `.nth(N)` or `.nth(bareVar)` — use `.N` / `.$var`
 
 Index access has terse dot-forms that should be preferred over the
@@ -320,28 +324,50 @@ Either reads better than the call form. Pick by whether the data is
 *indexable* (`.0`/`.$`) or *seq-like* (`:first`/`:last`); both compile
 to the same thing for vectors, so when in doubt use the dot form.
 
-### Never write `vector(...)` literals — use `+[...]`
+### Never write `vector(...)` literals — use vector syntax
 
-`vector(a b c)` (the fn call) and `+[a b c]` (data-mode vector with the
-`+` cast back to code-mode) build the same thing. Always prefer
-`+[...]` — it reads as a vector literal, not a function call:
+`vector(a b c)` (the fn call) and vector literal syntax build the
+same thing. Always prefer vector syntax — it reads as a literal, not
+a function call.
+
+Use `+[...]` only when the vector literal is the entire YAML value
+plain scalar and therefore needs the leading `+` escape:
 
 - `vector(a b c d)` → `+[a b c d]`
 - `vector(nt ny)` → `+[nt ny]`
 - `vector()` → `+[]`
+
+Inside YeS expressions, function arguments, lambdas, method calls, or
+any other expression context where `[` is not the first character of
+the YAML value, use bare `[...]` with no `+`:
+
+- `digits.map(\(vector(_ s)))` → `digits.map(\([_ s]))`
+- `rest.conj(vector(v ns))` → `rest.conj([v ns])`
+
+Never write `\(+[...])`, `foo(+[...])`, or `obj.method(+[...])`.
+There `+` is not an escape; it is parsed as addition/concatenation.
 
 Use `vec(coll)` only when you're *converting* an existing collection,
 not when listing elements.
 
 ### Prefer `+[]` / `+{}` for collection literals
 
-Use `+[...]` and `+{...}` for collection literals in expression/value
-position. They read as literals and should be the default for short
-vectors and maps, including maps with computed values:
+Use `+[...]` and `+{...}` for collection literals when the literal
+starts the YAML value. They read as literals and should be the default
+for short vectors and maps in value position, including maps with
+computed values:
 
 ```
 pair =: +[name score]
 node =: +{:char ch :freq freq}
+```
+
+If the literal is inside a YeS expression, drop the `+` because the
+literal no longer starts the YAML value:
+
+```
+items.map(\([name score]))
+nodes.conj({:char ch :freq freq})
 ```
 
 Use `V+` and `M+` mainly when the collection constructor is the pair
@@ -425,6 +451,54 @@ Reserve `.!` for cases where the expression is already busy and the
 terse form aids readability, or where you genuinely want the broader
 "falsey" semantics (nil, false, empty collections, empty strings).
 
+### Use conditional assignment for "if true update, else keep same value"
+
+YS 0.2.21 supports conditional assignment targets. When an assignment
+would set a target to a new value only when a condition is true, and
+otherwise keep the same target value, put the condition in the target:
+
+```
+foo :if pred =: bar
+```
+
+This means "if `pred`, assign `bar` to `foo`; otherwise keep `foo`".
+Prefer it over the verbose self-fallback shape:
+
+```
+foo =:
+  if pred:
+    then: bar
+    else: foo
+```
+
+The same syntax works with update assignments:
+
+```
+count :if prime?(candidate) +=: 1
+```
+
+over:
+
+```
+count =:
+  if prime?(candidate):
+    then: count.++
+    else: count
+```
+
+It also works with destructuring and functional/modified assignment
+operators (`+=:`, `*=:`, `||=:`, `.=:` etc.):
+
+```
+a b c :if (x == y) =: d e f
+total :if include? +=: n
+data :if found .=: assoc(k v)
+```
+
+The condition after `:if` must be a single form. Parenthesize compound
+conditions: `a b :if (x == y) =: c d`, not
+`a b :if x == y =: c d`.
+
 ### `else:` not `do:` for the else branch of `if`
 
 When the then-branch is a single form and the else-branch is multiple
@@ -491,22 +565,31 @@ default, follow the project.
 These are stylistic only — anything in *Common Mistakes*, *Key Rules*,
 or *Anti-Patterns* is not negotiable.
 
-### Receiver-first vs bare-function form
+### Prefer subject-first chains over nested calls
 
 When a function has an obvious "subject" argument (the thing being
-extended, transformed, or queried), prefer the receiver-first dot
-form:
+extended, transformed, queried, or tested), prefer the subject-first
+chain form over a nested function call. Less parenthesizing is usually
+better, and `subject:op` / `subject:op1:op2` reads left-to-right:
 
-- `m.assoc(:k v)` over `assoc(m :k v)`
-- `xs.conj(x)` over `conj(xs x)`
-- `s.split('/')` over `split(s '/')`
+- `n:random-brackets` over `random-brackets(n)`
+- `s:balanced?` over `balanced?(s)`
+- `s:seq` over `seq(s)`
+- `brackets:seq:shuffle` over `shuffle(seq(brackets))`
+- `m.assoc(:k v)` over `assoc(m :k v)` when args are needed
+- `xs.conj(x)` over `conj(xs x)` when args are needed
+- `s.split('/')` over `split(s '/')` when args are needed
+
+Use colon chains for zero-argument calls and subject-first unary calls:
+`b:a` is preferred over `a(b)`, and `c:b:a` is preferred over
+`a(b(c))`, when the chained order is the natural data flow.
 
 Use the bare-function form when arguments are co-equal (e.g.
 `merge(a b c)`, `concat(xs ys zs)`) or when there is no natural
 receiver.
 
 To override: in `AGENTS.md`, write *"prefer bare-function form
-(`assoc(m k v)`) over dot-chain"*.
+(`assoc(m k v)`) over receiver-first chains"*.
 
 ### Vectors of short strings
 
@@ -741,6 +824,11 @@ Two args fit fine on one line.
   the call read like English:
   - `write file: content` not `write: file content`
   - `assoc m: k v` not `assoc: m k v`
+  - `join: brackets:seq:shuffle` not `join: shuffle(seq(brackets))`
+- Prefer colon-chain composition for unary pipelines. Write `x:b:a`
+  instead of `a(b(x))` when each step takes the previous value as its
+  only argument. This keeps the data flow left-to-right and avoids
+  nested parentheses.
 - **Higher-order function calls** — when the function arg is named,
   put it on the key side; the data flows to the value:
   - `apply str: seq(s)...` — applying `str` to the seq
@@ -923,6 +1011,12 @@ pairs =: words:frequencies.sort-by(val):reverse
   - `when (xs.empty?):` → `when xs.empty?:`
   - `while (running):` → `while running:`
 
+  Exception: keep the parens around Clojure/Java interop special forms
+  like `(. IN ready)` or `(. obj method arg)`. Interop is rare, and
+  the parens make the special form clear:
+  - `when (. IN ready):` (correct)
+  - `when . IN ready:` (avoid)
+
   This is the analog of the bracket-free binding-list form for
   binding-bearing keywords — same idea, but for the keywords that
   take a single test expression instead of a binding list.
@@ -1078,10 +1172,15 @@ pairs =: words:frequencies.sort-by(val):reverse
   - `a =:: [1, 2, 3]` — flow seq, data mode (preferred for literals)
   - `a =: +[1 2 3]` — code-mode vector literal (use when the
     collection mixes in computed values, e.g. `+[0] + row`)
-- **`+` escape** — needed when the first character of a value would
-  otherwise be a YAML syntax character (`[`, `{`, `"`, `'`, `|`, `>`,
-  `!`, `&`, `*`). It forces the entire value to parse as a single plain
-  scalar; YS then strips the `+` and reads the rest as code.
+- **`+` escape** — needed only when the first non-space character of a
+  YAML value would otherwise be a YAML syntax character (`[`, `{`,
+  `"`, `'`, `|`, `>`, `!`, `&`, `*`). It forces the entire value to
+  parse as a single plain scalar; YS then strips the `+` and reads the
+  rest as code. The `+` escape must be at the front of the value and
+  must be followed, possibly after whitespace, by one of those YAML
+  syntax characters. If the next meaningful character is a letter,
+  digit, `_`, `(`, or other expression character, the `+` is not an
+  escape; it is just the plus operator.
 
   Two distinct reasons `+` may be needed:
   1. **YAML-invalid without it.** `key: 'a' 'b'` — YAML sees `'a'` end
@@ -1098,12 +1197,15 @@ pairs =: words:frequencies.sort-by(val):reverse
   plain scalar expression, flow forms inside it are fine as arguments:
   `foo([b c])`, `map(double [1 2 3])`, `assoc(m :k [1 2])` all parse
   without `+`. The brackets are mid-expression, not at the value start.
+  Do not carry the `+` from `+[...]` into YeS expression position.
 
   `+` works ONLY at the very start of a value plain scalar — anywhere
   else in an expression, `+` is addition/concatenation:
   - `+[1 2 3]` — escape: vector literal
   - `+"hello" + "world"` — escape on leading `"`, then `+` is concat
   - `+[0] + row` — escape on leading `[`, then `+` is concat
+  - `f([1 2 3])` — no escape needed inside the call
+  - `f(+[1 2 3])` — WRONG: `+` is addition, not an escape
   - `sieve(xs) +[]` — NOT an escape: means `sieve(xs) + []`
     (vector addition, a no-op)
   - Whitespace after `+` is fine — useful for multi-line expressions:
