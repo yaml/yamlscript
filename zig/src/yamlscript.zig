@@ -19,12 +19,19 @@ const builtin = @import("builtin");
 // We currently only support binding to an exact version of libys.
 pub const yamlscript_version = "0.2.24";
 
-// We currently only support platforms that GraalVM supports:
+// We currently only support platforms that GraalVM supports.
+// Windows uses an unversioned file name, matching the Python binding:
 const libys_name = switch (builtin.os.tag) {
     .linux => "libys.so." ++ yamlscript_version,
     .macos => "libys.dylib." ++ yamlscript_version,
+    .windows => "libys.dll",
     else => @compileError("Unsupported platform for yamlscript."),
 };
+
+const is_windows = builtin.os.tag == .windows;
+
+// Windows finds DLLs via PATH; other platforms use LD_LIBRARY_PATH:
+const lib_path_env = if (is_windows) "PATH" else "LD_LIBRARY_PATH";
 
 // FFI signatures for the 3 libys functions used by this binding:
 const CreateIsolateFn = *const fn (
@@ -58,47 +65,60 @@ pub const Result = struct {
     }
 };
 
-// Format a candidate path and return it if the file exists:
-fn checkPath(buf: []u8, dir: []const u8) ?[]const u8 {
-    const path = std.fmt.bufPrint(
-        buf,
-        "{s}/{s}",
-        .{ dir, libys_name },
+// Join a candidate path and return it (owned) if the file exists:
+fn checkDir(allocator: std.mem.Allocator, dir: []const u8) ?[]u8 {
+    const path = std.fs.path.join(
+        allocator,
+        &.{ dir, libys_name },
     ) catch return null;
-    std.fs.cwd().access(path, .{}) catch return null;
+    std.fs.cwd().access(path, .{}) catch {
+        allocator.free(path);
+        return null;
+    };
     return path;
 }
 
-// Find the libys shared library file path.
-// Search LD_LIBRARY_PATH entries, then common install locations:
-fn findLibys(buf: []u8) ?[]const u8 {
-    if (std.posix.getenv("LD_LIBRARY_PATH")) |ld_path| {
-        var dirs = std.mem.splitScalar(u8, ld_path, ':');
+// Find the libys shared library file path (owned by caller).
+// Search the platform library path entries, then common install
+// locations:
+fn findLibys(allocator: std.mem.Allocator) ?[]u8 {
+    if (std.process.getEnvVarOwned(allocator, lib_path_env)) |paths| {
+        defer allocator.free(paths);
+        var dirs = std.mem.splitScalar(
+            u8,
+            paths,
+            std.fs.path.delimiter,
+        );
         while (dirs.next()) |dir| {
             if (dir.len == 0) continue;
-            if (checkPath(buf, dir)) |path| return path;
+            if (checkDir(allocator, dir)) |path| return path;
         }
+    } else |_| {}
+
+    if (!is_windows) {
+        if (checkDir(allocator, "/usr/local/lib")) |path| return path;
     }
 
-    if (checkPath(buf, "/usr/local/lib")) |path| return path;
-
-    if (std.posix.getenv("HOME")) |home| {
-        var dir_buf: [std.fs.max_path_bytes]u8 = undefined;
-        const dir = std.fmt.bufPrint(
-            &dir_buf,
-            "{s}/.local/lib",
-            .{home},
-        ) catch return null;
-        if (checkPath(buf, dir)) |path| return path;
+    for ([_][]const u8{ "HOME", "USERPROFILE" }) |env_name| {
+        const home = std.process.getEnvVarOwned(
+            allocator,
+            env_name,
+        ) catch continue;
+        defer allocator.free(home);
+        const dir = std.fs.path.join(
+            allocator,
+            &.{ home, ".local", "lib" },
+        ) catch continue;
+        defer allocator.free(dir);
+        if (checkDir(allocator, dir)) |path| return path;
     }
 
     return null;
 }
 
 // Open the libys shared library or explain how to install it:
-fn openLibys() !std.DynLib {
-    var buf: [std.fs.max_path_bytes]u8 = undefined;
-    const path = findLibys(&buf) orelse {
+fn openLibys(allocator: std.mem.Allocator) !std.DynLib {
+    const path = findLibys(allocator) orelse {
         std.log.err(
             \\Shared library file '{s}' not found
             \\Try: curl https://yamlscript.org/install | VERSION={s} LIB=1 bash
@@ -106,6 +126,7 @@ fn openLibys() !std.DynLib {
         , .{ libys_name, yamlscript_version });
         return Error.LibysNotFound;
     };
+    defer allocator.free(path);
     return std.DynLib.open(path);
 }
 
@@ -131,7 +152,7 @@ pub const YAMLScript = struct {
     /// Load libys and create a GraalVM isolate for the life of the
     /// YAMLScript instance.
     pub fn init(allocator: std.mem.Allocator) !YAMLScript {
-        var lib = try openLibys();
+        var lib = try openLibys(allocator);
         errdefer lib.close();
 
         const create_isolate = lib.lookup(

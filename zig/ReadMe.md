@@ -174,7 +174,7 @@ See <https://yamlscript.org/doc/install/> for more info.
 ### Requirements
 
 * Zig 0.15.2 or higher
-* Linux or macOS
+* Linux, macOS or Windows
 
 ## See Also
 
