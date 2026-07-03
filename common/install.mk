@@ -5,7 +5,9 @@ ROOT := $(shell \
 
 YAMLSCRIPT_VERSION := 0.2.23
 
-YS := $(firstword $(wildcard ys ys.exe))
+YS-FILES := $(filter-out %-build-report.html,\
+	$(wildcard ys ys.exe ys-[0-9]* ys-sh-[0-9]*))
+YS := $(firstword $(YS-FILES))
 LIBYS := $(firstword $(wildcard libys.so* libys.dylib* libys.dll))
 LIBYS-FILES := $(wildcard libys.so* libys.dylib* libys.dll)
 
@@ -14,7 +16,7 @@ PREFIX ?= /usr/local
 install:
 ifneq (,$(YS))
 	mkdir -p $(PREFIX)/bin
-	cp -pP $(YS) $(PREFIX)/bin/
+	cp -pP $(YS-FILES) $(PREFIX)/bin/
 	@echo 'Installed $(PREFIX)/bin/$(YS)' \
 		'- version $(YAMLSCRIPT_VERSION)'
 else ifneq (,$(LIBYS))
