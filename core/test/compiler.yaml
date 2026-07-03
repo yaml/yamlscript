@@ -1645,6 +1645,24 @@
     (+merge {:-<< [{:a 1, :b 2}], :a 3})
 
 
+- name: Map merges preserve document order in data mode
+  yamlscript: |
+    !ys-0:
+    foo:
+      one: 111
+      :::
+        a: 1
+      two: 222
+      :::
+        b: 2
+      three: 333
+  clojure: |
+    {"foo"
+      (merge
+       {"one" 111}
+       (merge {"a" 1} (merge {"two" 222} (merge {"b" 2} {"three" 333}))))}
+
+
 - name: Tag method call with data mode switch to data mode
   yamlscript: |
     !ys-0
@@ -1693,7 +1711,7 @@
       :when x:: {bar: 2}
       x: 3
   clojure: |
-    [(merge (merge (when x {"bar" 2}) {"x" 3}) {"foo" 1})]
+    [(merge {"foo" 1} (merge (when x {"bar" 2}) {"x" 3}))]
 
 
 - name: Tag function on let

@@ -313,13 +313,13 @@
                                              (dissoc key-node :|?)
                                              val-node
                                              ctx)]
-                             (Lst [(Sym 'merge) dmap cond-form]))
+                             (Lst [(Sym 'merge) cond-form dmap]))
                            (let [part (if (vector? part)
                                         (vec
                                           (map #(construct-node %1 ctx) part))
                                         (construct-node part ctx))
                                  amap (Map part)]
-                             (Lst [(Sym 'merge) dmap amap])))))
+                             (Lst [(Sym 'merge) amap dmap])))))
                amap parts)]
     dmap))
 
