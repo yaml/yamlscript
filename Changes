@@ -1,3 +1,10 @@
+- version: 0.2.24
+  date:    Fri Jul  3 02:02:44 PM EDT 2026
+  changes:
+  - ai: Update YAMLScript skill guidance
+  - install: Fix bug for BIN=1
+  - core: Add machine fields to RUN
+  - core: Fix data mode merge ordering regression
 - version: 0.2.23
   date:    Wed Jun 24 04:30:09 PM EDT 2026
   changes:
