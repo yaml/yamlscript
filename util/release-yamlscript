@@ -51,6 +51,7 @@ bindings =::
 - raku
 - ruby
 - rust
+- zig
 
 verbose =: B(ENV.YS_RELEASE_VERBOSE)
 dryrun =: boolean(ENV.YS_RELEASE_DRYRUN)
@@ -130,7 +131,7 @@ defn do-list():
          Trigger release workflow and watch it
 
      12. make release-bindings n=Y
-         Release all 16 language bindings
+         Release all 17 language bindings
 
      13. make release-homebrew n=Y
          Publish the Homebrew tap formulas

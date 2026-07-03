@@ -6,7 +6,7 @@ Program in YAML — Code is Data
 
 ## About YS / YAMLScript
 
-**[YS](https://yamlscript.org) (aka YAMLScript) is a new YAML loader** for 15
+**[YS](https://yamlscript.org) (aka YAMLScript) is a new YAML loader** for 16
 (and counting) programming languages:  
 [C#](https://www.nuget.org/packages/YAMLScript/),
 [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
@@ -21,8 +21,9 @@ Program in YAML — Code is Data
 [PHP](https://packagist.org/packages/yaml/yamlscript),
 [Python](https://pypi.org/project/yamlscript/),
 [Raku](https://raku.land/zef:ingy/YAMLScript),
-[Ruby](https://rubygems.org/gems/yamlscript) and
-[Rust](https://crates.io/crates/yamlscript).
+[Ruby](https://rubygems.org/gems/yamlscript),
+[Rust](https://crates.io/crates/yamlscript) and
+[Zig](https://github.com/yaml/yamlscript-zig).
 
 Try using YS in place of your current YAML loader!
 

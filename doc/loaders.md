@@ -31,3 +31,4 @@ The following loader libraries are currently available:
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/search?query=yamlscript)
 * [Rust](https://crates.io/crates/yamlscript)
+* [Zig](https://github.com/yaml/yamlscript-zig)

@@ -54,6 +54,7 @@ Currently there are working libraries for:
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/gems/yamlscript)
 * [Rust](https://crates.io/crates/yamlscript)
+* [Zig](https://github.com/yaml/yamlscript-zig)
 
 Install these libraries like you would any other library for your language.
 You must also install the matching version of the `libys.so` shared

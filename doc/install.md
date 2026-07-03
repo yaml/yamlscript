@@ -131,6 +131,7 @@ languages:
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/gems/yamlscript)
 * [Rust](https://crates.io/crates/yamlscript)
+* [Zig](https://github.com/yaml/yamlscript-zig)
 
 Install the library you want using the normal library installer for your
 language.

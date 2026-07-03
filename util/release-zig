@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+lang=zig
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      build.zig \
+      build.zig.zon \
+      "$repo_dir"
+    mkdir -p "$repo_dir/src"
+    cp src/*.zig "$repo_dir/src/"
+  )
+)
+
+main "$@"

@@ -103,18 +103,24 @@ https://github.com/yaml/yamlscript/releases/).
 
 This shared library can be bound to almost all modern  programming languages as
 a YAML Loader module.
-It currently ships to these 10 languages:
+It currently ships to these 16 languages:
 
+* [C#](https://www.nuget.org/packages/YAMLScript/)
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+* [Crystal](https://shardbox.org/shards/yamlscript)
 * [Go](https://github.com/yaml/yamlscript-go)
+* [Haskell](https://hackage.haskell.org/package/yamlscript)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
+* [Lua](https://luarocks.org/modules/ingy/yamlscript)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
+* [PHP](https://packagist.org/packages/yaml/yamlscript)
 * [Python](https://pypi.org/project/yamlscript/)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/search?query=yamlscript)
 * [Rust](https://crates.io/crates/yamlscript)
+* [Zig](https://github.com/yaml/yamlscript-zig)
 
 with many more on the way.
 

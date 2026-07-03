@@ -50,3 +50,5 @@ target/
 .vscode/
 .yamllm/
 **/.idea/
+.zig-cache/
+zig-out/

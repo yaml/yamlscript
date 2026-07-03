@@ -456,7 +456,7 @@ jobs:
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
           crystal go haskell lua nodejs perl perl-alien php raku ruby rust
-          ${{ inputs.bindings_skip }}
+          zig ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
@@ -543,7 +543,7 @@ jobs:
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
           crystal go haskell lua nodejs perl perl-alien php raku ruby rust
-          ${{ inputs.bindings_skip }}
+          zig ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \

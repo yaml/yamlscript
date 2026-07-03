@@ -31,6 +31,7 @@ BINDINGS := \
     raku \
     ruby \
     rust \
+    zig \
 
 DIRS := \
     core \
@@ -46,6 +47,7 @@ BUILD-DIRS := \
     python \
     ruby \
     rust \
+    zig \
     ys \
 
 INSTALL-DIRS := \

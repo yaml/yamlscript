@@ -47,6 +47,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ruby/lib/yamlscript/version.rb
     - rust/src/lib.rs
     - util/ysj
+    - zig/src/yamlscript.zig
+    - zig/doc/readme.md
+    - zig/ReadMe.md
     - www/src/install
     - www/src/run-ys
     - www/src/cicd.md
@@ -101,6 +104,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - python/setup.py
     - raku/META6.json
     - rust/Cargo.toml
+    - zig/build.zig.zon
 
   - regx:: "(name = \"yamlscript\"\nversion = \")${vp}(\")"
     file:
