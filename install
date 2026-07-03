@@ -9,7 +9,7 @@
 
 set -e -u -o pipefail
 
-YAMLSCRIPT_VERSION=0.2.23
+YAMLSCRIPT_VERSION=0.2.24
 VERSION=${VERSION:-$YAMLSCRIPT_VERSION}
 export VERSION
 
@@ -40,11 +40,7 @@ install() (
   (
     CDPATH='' cd -- "$release_dir" || exit
 
-    if [[ $name == ys ]]; then
-      install_ys_bin
-    else
-      make -s --no-print-directory -C "$name"-* install
-    fi
+    make -s --no-print-directory -C "$name"-* install
   )
 
   if [[ ! ${QUIET-} &&
@@ -74,22 +70,6 @@ install() (
     echo
   fi
 )
-
-install_ys_bin() {
-  shopt -s nullglob
-  files=()
-  for file in ys-*/ys ys-*/ys.exe ys-*/ys-[0-9]* ys-*/ys-sh-[0-9]*; do
-    [[ $file == *-build-report.html ]] ||
-      files+=("$file")
-  done
-
-  [[ ${#files[@]} -gt 0 ]] ||
-    die "No YS binary files found in release"
-
-  mkdir -p "$PREFIX/bin"
-  cp -pP "${files[@]}" "$PREFIX/bin/"
-  echo "Installed $PREFIX/bin/ys - version $vers"
-}
 
 setup() {
 
