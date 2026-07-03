@@ -33,7 +33,9 @@
    [ys.std]
    [ys.taptest]
    [ys.yaml]
-   [ys.ys :as ys]))
+   [ys.ys :as ys])
+  (:import
+   [java.net InetAddress UnknownHostException]))
 
 (def ys-version "0.2.23")
 
@@ -232,11 +234,44 @@
     {:namespaces namespaces
      :classes classes}))
 
+(defn- normalize-os
+  "Return the stable YS name for the host operating system."
+  [os-name]
+  (let [os-name (str/lower-case (or os-name ""))]
+    (cond
+      (str/includes? os-name "linux") "linux"
+      (str/includes? os-name "mac") "macos"
+      (str/includes? os-name "windows") "windows"
+      :else "unknown")))
+
+(defn- normalize-arch
+  "Return the stable YS name for the host architecture."
+  [arch]
+  (let [arch (str/lower-case (or arch ""))]
+    (case arch
+      ("amd64" "x86_64") "x86_64"
+      ("aarch64" "arm64") "aarch64"
+      (if (seq arch) arch "unknown"))))
+
+(defn- get-hostname
+  "Return the system hostname when it can be determined."
+  []
+  (or
+    (try
+      (not-empty (.getHostName (InetAddress/getLocalHost)))
+      (catch UnknownHostException _ nil)
+      (catch SecurityException _ nil))
+    (not-empty (System/getenv "HOSTNAME"))
+    (not-empty (System/getenv "COMPUTERNAME"))))
+
 (defn get-runtime-info
   "Return runtime version and platform information for YS code."
   []
   {:args (common/get-cmd-args)
+   :arch (normalize-arch (System/getProperty "os.arch"))
    :bin (common/get-cmd-bin)
+   :hostname (get-hostname)
+   :os (normalize-os (System/getProperty "os.name"))
    :pid (common/get-cmd-pid)
    :versions {:clojure "1.12.0"
               ;; TODO Add graalvm and other versions

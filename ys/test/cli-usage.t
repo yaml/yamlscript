@@ -76,6 +76,9 @@ test::
 - cmnd: "ys -e 'say: \"Ingy döt Net ┌┼┐\"'"
   want: Ingy döt Net ┌┼┐
 
+- cmnd: "ys -e \"if RUN.os: say('has-os') say('missing-os')\""
+  want: has-os
+
 - cmnd: ys -Cle '{:x 123}'
   want: '{"x":123}'
 

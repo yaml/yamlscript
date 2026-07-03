@@ -116,6 +116,21 @@ baz:
     #"(?s)Character.*Long.*Double.*String.*Boolean"
     "Standard java classes available")
 
+  (is (ys "-Cpe"
+        (str "(contains? #{\"linux\" \"macos\" \"windows\" \"unknown\"} "
+          "(:os RUN))"))
+    "true"
+    "RUN.os is normalized")
+
+  (is (ys "-Cpe" "(boolean (seq (:arch RUN)))")
+    "true"
+    "RUN.arch is set")
+
+  (is (ys "-Cpe"
+        "(or (nil? (:hostname RUN)) (boolean (seq (:hostname RUN))))")
+    "true"
+    "RUN.hostname is nil or non-empty")
+
   (is (ys "-pe" "+{:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 7 :h 8 :i 9 :j 10
                    :k 1 :l 1 :m 1 :n 1 :o 1 :p 1 :q 1 :r 1 :s 1 :t 1
                    :u 1 :v 1 :w 1 :x 1 :y 1 :z 1}")
