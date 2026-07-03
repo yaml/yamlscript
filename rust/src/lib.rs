@@ -78,12 +78,25 @@ const LIBYS_EXTENSION: &str = "so";
 /// The extension of the `YAMLScript` library. On MacOS, it's a `.dylib` file.
 #[cfg(target_os = "macos")]
 const LIBYS_EXTENSION: &str = "dylib";
+/// The extension of the `YAMLScript` library. On Windows, it's a `.dll` file.
+#[cfg(target_os = "windows")]
+const LIBYS_EXTENSION: &str = "dll";
 // This should be the extension of the library file, but the platform is unsupported.
-#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+#[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
 compile_error!(
     "Unsupported platform {} for yamlscript.",
     std::env::consts::OS
 );
+
+/// The file name of the `YAMLScript` library.
+/// Windows uses an unversioned file name, matching the Python binding.
+fn libys_filename() -> String {
+    if cfg!(target_os = "windows") {
+        format!("{LIBYS_BASENAME}.{LIBYS_EXTENSION}")
+    } else {
+        format!("{LIBYS_BASENAME}.{LIBYS_EXTENSION}.{LIBYS_VERSION}")
+    }
+}
 
 /// A wrapper around libys.
 pub struct YAMLScript {
@@ -223,26 +236,39 @@ impl YAMLScript {
         }
     }
 
-    /// Open the library found at the first matching path in `LD_LIBRARY_PATH`.
+    /// Open the library found at the first matching path in the library
+    /// search path (`PATH` on Windows, `LD_LIBRARY_PATH` elsewhere).
     fn open_library() -> Result<Library, Error> {
         let mut first_error = None;
-        let library_path = std::env::var("LD_LIBRARY_PATH").map_err(|_| Error::NotFound)?;
+        let env_name = if cfg!(target_os = "windows") {
+            "PATH"
+        } else {
+            "LD_LIBRARY_PATH"
+        };
+        let path_sep = if cfg!(target_os = "windows") {
+            ';'
+        } else {
+            ':'
+        };
+        let library_path = std::env::var(env_name).map_err(|_| Error::NotFound)?;
 
-        // Additionally look in `/usr/local/lib` and `${HOME}/.local/lib`.
-        let mut additional_paths = vec!["/usr/local/lib"];
-        let home_path = std::env::var("HOME")
-            .ok()
-            .map(|home| format!("{home}/.local/lib"));
-        if let Some(path) = &home_path {
-            additional_paths.push(path.as_str());
+        // Additionally look in `/usr/local/lib` (not on Windows) and
+        // `${HOME}/.local/lib`.
+        let mut additional_paths = vec![];
+        if !cfg!(target_os = "windows") {
+            additional_paths.push("/usr/local/lib".to_string());
+        }
+        if let Ok(home) = std::env::var("HOME").or_else(|_| std::env::var("USERPROFILE")) {
+            additional_paths.push(format!("{home}/.local/lib"));
         }
 
-        // Iterate over segments of `LD_LIBRARY_PATH`.
-        for path in library_path.split(':').chain(additional_paths.into_iter()) {
+        // Iterate over segments of the library search path.
+        for path in library_path
+            .split(path_sep)
+            .chain(additional_paths.iter().map(String::as_str))
+        {
             // Try to open the library, if it exists.
-            let path = Path::new(path).join(format!(
-                "{LIBYS_BASENAME}.{LIBYS_EXTENSION}.{LIBYS_VERSION}"
-            ));
+            let path = Path::new(path).join(libys_filename());
             if !path.is_file() {
                 continue;
             }
