@@ -20,6 +20,8 @@ BINDINGS := \
     csharp \
     d \
     dart \
+    delphi \
+    fortran \
     go \
     haskell \
     java \
@@ -46,6 +48,8 @@ BUILD-DIRS := \
     libys \
     d \
     dart \
+    delphi \
+    fortran \
     go \
     haskell \
     nodejs \

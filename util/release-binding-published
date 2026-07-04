@@ -150,7 +150,7 @@ case $binding in
       "https://pub.dev/api/packages/yamlscript/versions/$version" &&
       published=true
     ;;
-  crystal|d|php|swift|zig)
+  crystal|d|delphi|fortran|php|swift|zig)
     git-tag-exists "https://github.com/yaml/yamlscript-$binding" \
       "v$version" &&
       published=true

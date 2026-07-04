@@ -32,6 +32,12 @@ vo =: v-old.str/replace(/\./ '\\.')
     - csharp/YAMLScript.csproj
     - d/source/yamlscript.d
     - dart/lib/yamlscript.dart
+    - delphi/src/yamlscript.pas
+    - delphi/src/yamlscript_native.pas
+    - fortran/fpm.toml
+    - fortran/src/yamlscript.f90
+    - fortran/doc/readme.md
+    - fortran/ReadMe.md
     - doc/install.md
     - doc/run-ys.md
     - doc/ys.md

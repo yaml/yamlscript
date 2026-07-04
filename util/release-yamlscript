@@ -41,6 +41,8 @@ bindings =::
 - csharp
 - d
 - dart
+- delphi
+- fortran
 - go
 - haskell
 - julia
@@ -134,7 +136,7 @@ defn do-list():
          Trigger release workflow and watch it
 
      12. make release-bindings n=Y
-         Release all 20 language bindings
+         Release all 22 language bindings
 
      13. make release-homebrew n=Y
          Publish the Homebrew tap formulas

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+lang=fortran
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      fpm.toml \
+      "$repo_dir"
+    rm -fr "$repo_dir/src" "$repo_dir/test"
+    cp -r src test "$repo_dir"
+  )
+)
+
+main "$@"

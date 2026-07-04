@@ -121,6 +121,8 @@ languages:
 * [Crystal](https://shardbox.org/shards/yamlscript)
 * [D](https://code.dlang.org/packages/yamlscript)
 * [Dart](https://pub.dev/packages/yamlscript)
+* [Delphi](https://github.com/yaml/yamlscript-delphi)
+* [Fortran](https://github.com/yaml/yamlscript-fortran)
 * [Go](https://github.com/yaml/yamlscript-go)
 * [Haskell](https://hackage.haskell.org/package/yamlscript)
 * [Java](https://clojars.org/org.yamlscript/yamlscript)
