@@ -432,13 +432,18 @@ defn do-build-github(new):
   current-branch =: sh-out('git branch --show-current'):trim
   gh-available =: bash('command -v gh'):ok
 
+  bindings =: ENV.YS_RELEASE_BINDINGS || ''
+  bindings-skip =: ENV.YS_RELEASE_BINDINGS_SKIP || ''
+
   if gh-available:
     then:
       say: 'Triggering release workflow...'
       trigger-result =:
         shell {:extra-env {"GH_TOKEN" token}}:
           str: +"gh workflow run release.yaml --repo yaml/yamlscript "
-            "--ref $current-branch -f version=$new"
+            "--ref $current-branch -f version=$new "
+            "-f bindings='$(bindings)' "
+            "-f bindings_skip='$(bindings-skip)'"
 
       if trigger-result:ok:
         then:

@@ -90,6 +90,11 @@ TEST-BINDINGS := \
     $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST-BINDINGS))
 endif
 
+# Ensure these reach child processes (e.g. util/release-yamlscript)
+# even when set as make command line variables:
+export YS_RELEASE_BINDINGS
+export YS_RELEASE_BINDINGS_SKIP
+
 export HEAD := $(shell git rev-parse HEAD)
 
 LYS-JAR-RELEASE := libys-$(YS_VERSION)-standalone.jar
