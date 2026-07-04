@@ -2,7 +2,7 @@
   This code is licensed under MIT license (See License for details) }
 
 {
-  Delphi/Pascal binding for the libys shared library.
+  Delphi (Free Pascal) binding for the libys shared library.
 
   This unit is a Pascal port of the Python 'yamlscript' module, the
   reference implementation for YAMLScript FFI bindings to libys.

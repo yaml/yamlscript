@@ -6,29 +6,31 @@ Program in YAML — Code is Data
 
 ## About YS / YAMLScript
 
-**[YS](https://yamlscript.org) (aka YAMLScript) is a new YAML loader** for 21
-(and counting) programming languages:  
-[C#](https://www.nuget.org/packages/YAMLScript/),
-[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript),
-[Crystal](https://shardbox.org/shards/yamlscript),
-[D](https://code.dlang.org/packages/yamlscript),
-[Dart](https://pub.dev/packages/yamlscript),
-[Delphi](https://github.com/yaml/yamlscript-delphi),
-[Fortran](https://github.com/yaml/yamlscript-fortran),
-[Go](https://github.com/yaml/yamlscript-go),
-[Haskell](https://hackage.haskell.org/package/yamlscript),
-[Java](https://clojars.org/org.yamlscript/yamlscript),
-[Julia](https://juliahub.com/ui/Packages/General/YAMLScript),
-[Lua](https://luarocks.org/modules/ingy/yamlscript),
-[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript),
-[Perl](https://metacpan.org/pod/YAMLScript),
-[PHP](https://packagist.org/packages/yaml/yamlscript),
-[Python](https://pypi.org/project/yamlscript/),
-[Raku](https://raku.land/zef:ingy/YAMLScript),
-[Ruby](https://rubygems.org/gems/yamlscript),
-[Rust](https://crates.io/crates/yamlscript),
-[Swift](https://github.com/yaml/yamlscript-swift) and
-[Zig](https://github.com/yaml/yamlscript-zig).
+**YS** (aka **[YAMLScript](https://yamlscript.org)**) is a YAML loader (with
+**Functional Programming Capabilities**) for 21 (and counting) programming
+languages:
+
+**[C#](https://www.nuget.org/packages/YAMLScript/)**,
+**[Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)**,
+**[Crystal](https://shardbox.org/shards/yamlscript)**,
+**[D](https://code.dlang.org/packages/yamlscript)**,
+**[Dart](https://pub.dev/packages/yamlscript)**,
+**[Delphi (Free Pascal)](https://github.com/yaml/yamlscript-delphi)**,
+**[Fortran](https://github.com/yaml/yamlscript-fortran)**,
+**[Go](https://github.com/yaml/yamlscript-go)**,
+**[Haskell](https://hackage.haskell.org/package/yamlscript)**,
+**[Java](https://clojars.org/org.yamlscript/yamlscript)**,
+**[Julia](https://juliahub.com/ui/Packages/General/YAMLScript)**,
+**[Lua](https://luarocks.org/modules/ingy/yamlscript)**,
+**[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)**,
+**[Perl](https://metacpan.org/pod/YAMLScript)**,
+**[PHP](https://packagist.org/packages/yaml/yamlscript)**,
+**[Python](https://pypi.org/project/yamlscript/)**,
+**[Raku](https://raku.land/zef:ingy/YAMLScript)**,
+**[Ruby](https://rubygems.org/gems/yamlscript)**,
+**[Rust](https://crates.io/crates/yamlscript)**,
+**[Swift](https://github.com/yaml/yamlscript-swift)** and
+**[Zig](https://github.com/yaml/yamlscript-zig)**.
 
 Try using YS in place of your current YAML loader!
 

@@ -1,4 +1,4 @@
-## Delphi / Pascal Usage
+## Delphi (Free Pascal) Usage
 
 Use `yamlscript` as a drop-in replacement for your current YAML
 loader:
@@ -61,3 +61,8 @@ See <https://yamlscript.org/doc/install/> for more info.
 
 * Free Pascal Compiler (FPC) 3.0 or higher
 * Linux, macOS or Windows
+
+The binding is written in the Delphi dialect of Object Pascal and
+currently builds with Free Pascal.
+Native Delphi (Embarcadero) support is planned; contributions are
+welcome.
