@@ -1,0 +1,8 @@
+{
+  "name": "yamlscript",
+  "description": "Load YAML files with optional YS functional programming",
+  "authors": ["Ingy dot Net"],
+  "license": "MIT",
+  "copyright": "Copyright 2023-2026 Ingy dot Net",
+  "homepage": "https://yamlscript.org"
+}

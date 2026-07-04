@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+lang=d
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      dub.json \
+      "$repo_dir"
+    mkdir -p "$repo_dir/source"
+    cp source/*.d "$repo_dir/source/"
+  )
+)
+
+main "$@"
