@@ -145,7 +145,12 @@ case $binding in
     json-url-exists "https://crates.io/api/v1/crates/yamlscript/$version" &&
       published=true
     ;;
-  crystal|php|zig)
+  dart)
+    json-url-exists \
+      "https://pub.dev/api/packages/yamlscript/versions/$version" &&
+      published=true
+    ;;
+  crystal|d|php|swift|zig)
     git-tag-exists "https://github.com/yaml/yamlscript-$binding" \
       "v$version" &&
       published=true

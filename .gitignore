@@ -52,3 +52,4 @@ target/
 **/.idea/
 .zig-cache/
 zig-out/
+.swift-version

@@ -30,6 +30,8 @@ vo =: v-old.str/replace(/\./ '\\.')
     - crystal/src/yamlscript/version.cr
     - crystal/src/yamlscript.cr
     - csharp/YAMLScript.csproj
+    - d/source/yamlscript.d
+    - dart/lib/yamlscript.dart
     - doc/install.md
     - doc/run-ys.md
     - doc/ys.md
@@ -46,6 +48,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ruby/lib/yamlscript.rb
     - ruby/lib/yamlscript/version.rb
     - rust/src/lib.rs
+    - swift/Sources/YAMLScript/YAMLScript.swift
+    - swift/doc/readme.md
+    - swift/ReadMe.md
     - util/ysj
     - zig/src/yamlscript.zig
     - zig/doc/readme.md
@@ -95,6 +100,7 @@ vo =: v-old.str/replace(/\./ '\\.')
 
   - regx:: "(version.*)${vp}(.*)"
     file:
+    - dart/pubspec.yaml
     - nodejs/package.json
     - java/pom.xml
     - julia/Project.toml

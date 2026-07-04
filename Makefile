@@ -18,6 +18,8 @@ BINDINGS := \
     clojure \
     crystal \
     csharp \
+    d \
+    dart \
     go \
     haskell \
     java \
@@ -31,6 +33,7 @@ BINDINGS := \
     raku \
     ruby \
     rust \
+    swift \
     zig \
 
 DIRS := \
@@ -41,12 +44,15 @@ DIRS := \
 
 BUILD-DIRS := \
     libys \
+    d \
+    dart \
     go \
     haskell \
     nodejs \
     python \
     ruby \
     rust \
+    swift \
     zig \
     ys \
 

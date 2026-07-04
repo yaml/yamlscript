@@ -39,6 +39,8 @@ bindings =::
 - clojure
 - crystal
 - csharp
+- d
+- dart
 - go
 - haskell
 - julia
@@ -51,6 +53,7 @@ bindings =::
 - raku
 - ruby
 - rust
+- swift
 - zig
 
 verbose =: B(ENV.YS_RELEASE_VERBOSE)
@@ -131,7 +134,7 @@ defn do-list():
          Trigger release workflow and watch it
 
      12. make release-bindings n=Y
-         Release all 17 language bindings
+         Release all 20 language bindings
 
      13. make release-homebrew n=Y
          Publish the Homebrew tap formulas
