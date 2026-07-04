@@ -160,6 +160,11 @@ jobs:
       run: util/install-release-artifacts release-artifacts
 
     - name: Run tests
+      env:
+        # delphi: FPC has no macOS tarball (fpc.mk cannot install it)
+        # fortran: fpm has no macos-arm64 prebuilt; source build untested
+        YS_RELEASE_BINDINGS_SKIP: >-
+          delphi fortran ${{ inputs.bindings_skip }}
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
