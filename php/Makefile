@@ -41,13 +41,8 @@ path:
 	@(IFS=:; printf '%s\n' $$PATH)
 	which ys
 
-ifdef YS_RELEASE_CI
-test::
-	@echo "Skipping PHP tests in release CI: PHP FFI segfaults on GHA"
-else
 test:: install
 	PHP_INI_SCAN_DIR=$(PHP_CONF_DIR) $(PHP) vendor/bin/phpunit
-endif
 
 install:: composer.json
 	composer $@
