@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+lang=swift
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      Package.swift \
+      "$repo_dir"
+    rm -fr "$repo_dir/Sources" "$repo_dir/Tests"
+    cp -r Sources Tests "$repo_dir"
+  )
+)
+
+main "$@"
