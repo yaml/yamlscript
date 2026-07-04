@@ -40,7 +40,7 @@ disttest:: $(LOCAL-LIB) $(ALIEN-BLIB-LIB)
 	$(ROOT)/util/make-perl-cpan-dist $@
 
 ifdef PERLOK
-test:: $(LOCAL-LIB)
+test:: $(PERL) $(LOCAL-LIB)
 	prove -l $${TEST_VERBOSE:+'-v'} $(test)
 
 test-alien: $(ALIEN-BLIB-LIB)
@@ -76,5 +76,10 @@ $(ALIEN-BLIB-LIB): $(ALIEN-DIST-DIR)
 $(ALIEN-DIST-DIR):
 	$(MAKE) -C $(ROOT)/perl-alien distdir
 
-$(LOCAL-LIB): Makefile
+# The $(PERL) prerequisite matters: it guarantees the makes perl
+# (whose bin dir ships a cpanm wrapper that always runs its sibling
+# perl) is first on PATH before deps are built. Without it, cpanm
+# can resolve to a host perl (e.g. perlbrew) and build XS modules
+# for the wrong perl version:
+$(LOCAL-LIB): Makefile $(PERL)
 	cpanm -L $@ -n $(CPAN-DEPS)
