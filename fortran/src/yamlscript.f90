@@ -60,7 +60,7 @@ module yamlscript
 
   ! This value is automatically updated by 'make bump'.
   ! We currently only support binding to an exact version of libys.
-  character(len=*), parameter :: yamlscript_version = '0.2.24'
+  character(len=*), parameter :: yamlscript_version = '0.2.25'
 
   ! YAMLScript class/derived type
   type :: yamlscript_t

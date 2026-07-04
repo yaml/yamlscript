@@ -1,5 +1,11 @@
 
 ---
+version: 0.2.25
+date:    Sat Jul  4 03:08:08 PM EDT 2026
+changes:
+- libys 0.2.25
+
+---
 version: 0.2.24
 date:    Fri Jul  3 02:03:04 PM EDT 2026
 changes:

@@ -1,3 +1,9 @@
+- version: 0.2.25
+  date:    Sat Jul  4 03:05:07 PM EDT 2026
+  changes:
+  - bindings: Add D, Dart, Delphi, Fortran, Swift, Zig bindings
+  - bindings: All support Windows
+  - delphi: Label Delphi as 'Delphi (Free Pascal)'
 - version: 0.2.24
   date:    Fri Jul  3 02:02:44 PM EDT 2026
   changes:
