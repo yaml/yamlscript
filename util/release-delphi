@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+lang=delphi
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp ReadMe.md "$repo_dir"
+    rm -fr "$repo_dir/src" "$repo_dir/test"
+    cp -r src test "$repo_dir"
+  )
+)
+
+main "$@"

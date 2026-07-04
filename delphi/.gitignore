@@ -1,0 +1,3 @@
+*.o
+*.ppu
+/test/test_yamlscript
