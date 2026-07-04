@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Fri, 03 Jul 2026 18:30:38 -0000</pubDate>
-    <lastBuildDate>Fri, 03 Jul 2026 18:30:38 -0000</lastBuildDate>
+    <pubDate>Sat, 04 Jul 2026 22:25:54 -0000</pubDate>
+    <lastBuildDate>Sat, 04 Jul 2026 22:25:54 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -60,7 +60,7 @@ I&#39;ll leave it to you to expand the concepts to your soaking wet YAML files.&
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2026-06-17/ys-dry/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2026-06-17/ys-dry.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2026-06-17/ys-dry.png" type="image/png" length="32648" />
       
     </item>
     
@@ -147,7 +147,7 @@ expect it.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-30/sometimes-its-hard-to-be-lazy/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-30/sometimes-its-hard-to-be-lazy.png" type="image/png" length="None" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-30/sometimes-its-hard-to-be-lazy.png" type="image/png" length="47963" />
       
     </item>
     
@@ -176,7 +176,7 @@ this.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-29/is-json-really-a-subset-of-yaml/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-29/is-json-really-a-subset-of-yaml.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-29/is-json-really-a-subset-of-yaml.png" type="image/png" length="53555" />
       
     </item>
     
@@ -209,7 +209,7 @@ this.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-28/ys-on-jank-bb-and-ys/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-28/ys-on-jank-bb-and-ys.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-28/ys-on-jank-bb-and-ys.png" type="image/png" length="42096" />
       
     </item>
     
@@ -279,7 +279,7 @@ during the loading process.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-26/the-ys-core-yaml-schema/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-26/the-ys-core-yaml-schema.png" type="image/png" length="49539" />
       
     </item>
     
@@ -314,7 +314,7 @@ a more powerful YAML experience.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-25/ys-on-the-go/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/ys-on-the-go.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-25/ys-on-the-go.png" type="image/png" length="36851" />
       
     </item>
     
@@ -344,7 +344,7 @@ been written in any language.)&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-24/why-ys-chose-clojure/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-24/why-ys-chose-clojure.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-24/why-ys-chose-clojure.png" type="image/png" length="48112" />
       
     </item>
     
@@ -405,7 +405,7 @@ for Go, and am working with Mike to help it fix certain issues in yq.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-22/ys-and-yq/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-22/ys-and-yq.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-22/ys-and-yq.png" type="image/png" length="34353" />
       
     </item>
     
@@ -464,7 +464,7 @@ We came up with a list of 40 or so things that we all agreed on.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-20/yaml-best-practices/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-20/yaml-best-practices.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-20/yaml-best-practices.png" type="image/png" length="44912" />
       
     </item>
     
@@ -719,7 +719,7 @@ And it is.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-12/ys-testing/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-12/ys-testing.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-12/ys-testing.png" type="image/png" length="36830" />
       
     </item>
     
@@ -800,7 +800,7 @@ etc.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-10/building-ys/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-10/building-ys.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-10/building-ys.png" type="image/png" length="36093" />
       
     </item>
     
@@ -865,7 +865,7 @@ works are not yet set in stone!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-08/about-the--0/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-08/about-the--0.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-08/about-the--0.png" type="image/png" length="35607" />
       
     </item>
     
@@ -925,7 +925,7 @@ return matching results (unlike Perl, and more like all the others).&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-06/ys-regular-expressions/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-06/ys-regular-expressions.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-06/ys-regular-expressions.png" type="image/png" length="46569" />
       
     </item>
     
@@ -1049,7 +1049,7 @@ Clojure code is interoperable with Java code.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-02/ys--java-interoperability/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-02/ys--java-interoperability.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-02/ys--java-interoperability.png" type="image/png" length="45255" />
       
     </item>
     
@@ -1078,7 +1078,7 @@ Symbols that resolved to functions.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-01/ys-symbols/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-01/ys-symbols.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-01/ys-symbols.png" type="image/png" length="37550" />
       
     </item>
     
@@ -1106,7 +1106,7 @@ Clojure&#39;s commonly used and longer function names.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-30/ys-shorties/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-30/ys-shorties.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-30/ys-shorties.png" type="image/png" length="37046" />
       
     </item>
     
@@ -1228,7 +1228,7 @@ This will make everything else much easier to explain going forward.&lt;/p&gt;</
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-26/ys-mode-switching/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-26/ys-mode-switching.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-26/ys-mode-switching.png" type="image/png" length="43070" />
       
     </item>
     
@@ -1257,7 +1257,7 @@ And then call them on your data?&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-25/ai--clojure-functions-in-yaml/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-25/ai--clojure-functions-in-yaml.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-25/ai--clojure-functions-in-yaml.png" type="image/png" length="46953" />
       
     </item>
     
@@ -1297,7 +1297,7 @@ And then call them on your data?&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-24/how-does-ys-work/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-24/how-does-ys-work.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-24/how-does-ys-work.png" type="image/png" length="45073" />
       
     </item>
     
@@ -1336,7 +1336,7 @@ $ perl -E &#39;@l = &amp;lt;&amp;gt;; say scalar(@l)&#39; &amp;lt; file.txt
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-23/ys-one-liners/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-23/ys-one-liners.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-23/ys-one-liners.png" type="image/png" length="37322" />
       
     </item>
     
@@ -1367,7 +1367,7 @@ They are one of the best ways to share text files with others.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-22/the-gist-of-ys/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-22/the-gist-of-ys.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-22/the-gist-of-ys.png" type="image/png" length="38966" />
       
     </item>
     
@@ -1488,7 +1488,7 @@ multiple conditions.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-18/fancier-ys-conditionals/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-18/fancier-ys-conditionals.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-18/fancier-ys-conditionals.png" type="image/png" length="45535" />
       
     </item>
     
@@ -1516,7 +1516,7 @@ You might end up using it more than &lt;code&gt;if&lt;/code&gt;!&lt;/p&gt;</desc
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-17/when-to-when/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-17/when-to-when.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-17/when-to-when.png" type="image/png" length="35159" />
       
     </item>
     
@@ -1545,7 +1545,7 @@ but… it doesn&#39;t require the actual &lt;code&gt;then&lt;/code&gt; and &lt;c
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-16/if---we-must/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-16/if---we-must.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-16/if---we-must.png" type="image/png" length="35735" />
       
     </item>
     
@@ -1574,7 +1574,7 @@ but… it doesn&#39;t require the actual &lt;code&gt;then&lt;/code&gt; and &lt;c
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-15/if---you-are-special/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-15/if---you-are-special.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-15/if---you-are-special.png" type="image/png" length="41063" />
       
     </item>
     
@@ -1602,7 +1602,7 @@ but… it doesn&#39;t require the actual &lt;code&gt;then&lt;/code&gt; and &lt;c
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-14/if---you-have-to-ask/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-14/if---you-have-to-ask.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-14/if---you-have-to-ask.png" type="image/png" length="40871" />
       
     </item>
     
@@ -1631,7 +1631,7 @@ Global variables.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-13/ys-global-variables/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-13/ys-global-variables.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-13/ys-global-variables.png" type="image/png" length="42557" />
       
     </item>
     
@@ -1688,7 +1688,7 @@ It dispatches on the number of arguments.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-11/ys-multi-functions/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-11/ys-multi-functions.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-11/ys-multi-functions.png" type="image/png" length="39113" />
       
     </item>
     
@@ -1864,7 +1864,7 @@ say: str(people.2, &#34; wears size &#34;, shoes.2.size, &#34; &#34;, join([shoe
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-06/loops-and-strings/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-06/loops-and-strings.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-06/loops-and-strings.png" type="image/png" length="40150" />
       
     </item>
     
@@ -2011,7 +2011,7 @@ nicer to use.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-02/yaml-variables/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-02/yaml-variables.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-02/yaml-variables.png" type="image/png" length="39855" />
       
     </item>
     
@@ -2107,7 +2107,7 @@ make YS the best it can be.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-03-10/yamlscript-is-ys/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-10/yamlscript-is-ys.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-03-10/yamlscript-is-ys.png" type="image/png" length="40291" />
       
     </item>
     
@@ -2282,7 +2282,7 @@ Super excited about that!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-04-16/ys-spring-update/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-04-16/ys-spring-update.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-04-16/ys-spring-update.png" type="image/png" length="40241" />
       
     </item>
     
@@ -2321,7 +2321,7 @@ Yesterday I automated that list...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-03-14/ys-firsts/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-03-14/ys-firsts.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-03-14/ys-firsts.png" type="image/png" length="33246" />
       
     </item>
     
@@ -2376,7 +2376,7 @@ gets from Perl to Rust.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-23/perl-to-rust/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-23/perl-to-rust.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-23/perl-to-rust.png" type="image/png" length="34901" />
       
     </item>
     
@@ -2533,7 +2533,7 @@ He&#39;s done this a few times, so he knows how to get the bugs out.&lt;/p&gt;</
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-18/santas-in-dbuggy/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-18/santas-in-dbuggy.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-18/santas-in-dbuggy.png" type="image/png" length="40372" />
       
     </item>
     
@@ -2627,7 +2627,7 @@ Naughty-Xor-Nice???&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-15/naughty-is-nice/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-15/naughty-is-nice.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-15/naughty-is-nice.png" type="image/png" length="39928" />
       
     </item>
     
@@ -2656,7 +2656,7 @@ I still have a quite a bit to learn about it myself! :-)&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-14/stocking-stuffers/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-14/stocking-stuffers.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-14/stocking-stuffers.png" type="image/png" length="40788" />
       
     </item>
     
@@ -2686,7 +2686,7 @@ Today I&#39;d like to tell you a little bit about it.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-13/history-lesson/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-13/history-lesson.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-13/history-lesson.png" type="image/png" length="35253" />
       
     </item>
     
@@ -2718,7 +2718,7 @@ end?&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-12/future-proof/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-12/future-proof.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-12/future-proof.png" type="image/png" length="32508" />
       
     </item>
     
@@ -2781,7 +2781,7 @@ distinct States and seven distinct ~~Ladders~~ transformations.&lt;/p&gt;</descr
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-10/states-and-ladders/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-10/states-and-ladders.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-10/states-and-ladders.png" type="image/png" length="37383" />
       
     </item>
     
@@ -2814,7 +2814,7 @@ It also gives the code a certain je ne sais quoi.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-09/coding-with-style/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-09/coding-with-style.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-09/coding-with-style.png" type="image/png" length="42004" />
       
     </item>
     
@@ -2846,7 +2846,7 @@ There you&#39;ll find all-time best sellers like &lt;code&gt;map&lt;/code&gt;, &
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-08/going-to-the-library/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-08/going-to-the-library.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-08/going-to-the-library.png" type="image/png" length="40103" />
       
     </item>
     
@@ -2908,7 +2908,7 @@ In one state &lt;code&gt;say&lt;/code&gt; is a function, and in the other it&#39
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-06/modes-of-transportation/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-06/modes-of-transportation.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-06/modes-of-transportation.png" type="image/png" length="43578" />
       
     </item>
     
@@ -2940,7 +2940,7 @@ You don&#39;t even have YS installed yet!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-05/unwrapping-gifts/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-05/unwrapping-gifts.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-05/unwrapping-gifts.png" type="image/png" length="39691" />
       
     </item>
     
@@ -2971,7 +2971,7 @@ I&#39;ve actually been hiding something very very big something from you.&lt;/p&
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-04/santas-big-secret/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-04/santas-big-secret.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-04/santas-big-secret.png" type="image/png" length="40733" />
       
     </item>
     
@@ -3010,7 +3010,7 @@ from the same JSON input.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-03/load-em-up/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-03/load-em-up.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-03/load-em-up.png" type="image/png" length="35884" />
       
     </item>
     
@@ -3056,7 +3056,7 @@ YS on your side!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-02/twas-a-bit/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-02/twas-a-bit.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-02/twas-a-bit.png" type="image/png" length="33830" />
       
     </item>
     
@@ -3106,7 +3106,7 @@ evolves.&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-10-26/welcome-to-the-ys-blog/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-10-26/welcome-to-the-ys-blog.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-10-26/welcome-to-the-ys-blog.png" type="image/png" length="44449" />
       
     </item>
     
