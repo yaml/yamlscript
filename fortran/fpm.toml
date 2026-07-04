@@ -1,0 +1,17 @@
+name = "yamlscript"
+version = "0.2.24"
+license = "MIT"
+author = "Ingy dot Net"
+maintainer = "ingy@ingy.net"
+copyright = "Copyright 2023-2026 Ingy dot Net"
+
+[library]
+source-dir = "src"
+
+[build]
+link = ["ys.0.2.24"]
+
+[[test]]
+name = "test_yamlscript"
+source-dir = "test"
+main = "test_yamlscript.f90"
