@@ -21,17 +21,21 @@ BINDINGS := \
     d \
     dart \
     delphi \
+    elixir \
     fortran \
     go \
     haskell \
     java \
     julia \
+    kotlin \
     lua \
+    nim \
     nodejs \
     perl \
     perl-alien \
     php \
     python \
+    r \
     raku \
     ruby \
     rust \
@@ -49,11 +53,15 @@ BUILD-DIRS := \
     d \
     dart \
     delphi \
+    elixir \
     fortran \
     go \
     haskell \
+    kotlin \
+    nim \
     nodejs \
     python \
+    r \
     ruby \
     rust \
     swift \

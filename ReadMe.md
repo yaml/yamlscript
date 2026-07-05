@@ -7,7 +7,7 @@ Program in YAML — Code is Data
 ## About YS / YAMLScript
 
 **YS** (aka **[YAMLScript](https://yamlscript.org)**) is a YAML loader (with
-**Functional Programming Capabilities**) for 21 (and counting) programming
+**Functional Programming Capabilities**) for 25 (and counting) programming
 languages:
 
 **[C#](https://www.nuget.org/packages/YAMLScript/)**,
@@ -16,16 +16,20 @@ languages:
 **[D](https://code.dlang.org/packages/yamlscript)**,
 **[Dart](https://pub.dev/packages/yamlscript)**,
 **[Delphi (Free Pascal)](https://github.com/yaml/yamlscript-delphi)**,
+**[Elixir](https://hex.pm/packages/yamlscript)**,
 **[Fortran](https://github.com/yaml/yamlscript-fortran)**,
 **[Go](https://github.com/yaml/yamlscript-go)**,
 **[Haskell](https://hackage.haskell.org/package/yamlscript)**,
 **[Java](https://clojars.org/org.yamlscript/yamlscript)**,
 **[Julia](https://juliahub.com/ui/Packages/General/YAMLScript)**,
+**[Kotlin](https://clojars.org/org.yamlscript/kotlin-yamlscript)**,
 **[Lua](https://luarocks.org/modules/ingy/yamlscript)**,
+**[Nim](https://github.com/yaml/yamlscript-nim)**,
 **[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)**,
 **[Perl](https://metacpan.org/pod/YAMLScript)**,
 **[PHP](https://packagist.org/packages/yaml/yamlscript)**,
 **[Python](https://pypi.org/project/yamlscript/)**,
+**[R](https://github.com/yaml/yamlscript-r)**,
 **[Raku](https://raku.land/zef:ingy/YAMLScript)**,
 **[Ruby](https://rubygems.org/gems/yamlscript)**,
 **[Rust](https://crates.io/crates/yamlscript)**,

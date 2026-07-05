@@ -34,10 +34,22 @@ vo =: v-old.str/replace(/\./ '\\.')
     - dart/lib/yamlscript.dart
     - delphi/src/yamlscript.pas
     - delphi/src/yamlscript_native.pas
+    - elixir/c_src/yamlscript_nif.c
+    - elixir/doc/readme.md
+    - elixir/ReadMe.md
     - fortran/fpm.toml
     - fortran/src/yamlscript.f90
     - fortran/doc/readme.md
     - fortran/ReadMe.md
+    - kotlin/Makefile
+    - kotlin/src/main/kotlin/org/yamlscript/yamlscript/YS.kt
+    - kotlin/doc/readme.md
+    - kotlin/ReadMe.md
+    - nim/src/yamlscript.nim
+    - nim/yamlscript.nimble
+    - r/DESCRIPTION
+    - r/R/yamlscript.R
+    - r/src/yamlscript.c
     - doc/install.md
     - doc/run-ys.md
     - doc/ys.md
@@ -107,6 +119,8 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "(version.*)${vp}(.*)"
     file:
     - dart/pubspec.yaml
+    - elixir/mix.exs
+    - kotlin/pom.xml
     - nodejs/package.json
     - java/pom.xml
     - julia/Project.toml

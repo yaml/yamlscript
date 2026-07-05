@@ -42,16 +42,20 @@ bindings =::
 - d
 - dart
 - delphi
+- elixir
 - fortran
 - go
 - haskell
 - julia
+- kotlin
 - lua
+- nim
 - nodejs
 - perl-alien
 - perl
 - php
 - python
+- r
 - raku
 - ruby
 - rust
@@ -136,7 +140,7 @@ defn do-list():
          Trigger release workflow and watch it
 
      12. make release-bindings n=Y
-         Release all 22 language bindings
+         Release all 26 language bindings
 
      13. make release-homebrew n=Y
          Publish the Homebrew tap formulas

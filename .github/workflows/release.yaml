@@ -611,8 +611,9 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          crystal d dart delphi fortran go haskell lua nodejs perl
-          perl-alien php raku ruby swift ${{ inputs.bindings_skip }}
+          crystal d dart delphi elixir fortran go haskell lua nim
+          nodejs perl perl-alien php r raku ruby swift
+          ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
@@ -699,8 +700,9 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          crystal d dart delphi fortran go haskell lua nodejs perl
-          perl-alien php raku ruby swift ${{ inputs.bindings_skip }}
+          crystal d dart delphi elixir fortran go haskell lua nim
+          nodejs perl perl-alien php r raku ruby swift
+          ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \

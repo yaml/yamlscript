@@ -150,7 +150,17 @@ case $binding in
       "https://pub.dev/api/packages/yamlscript/versions/$version" &&
       published=true
     ;;
-  crystal|d|delphi|fortran|php|swift|zig)
+  elixir)
+    json-url-exists \
+      "https://hex.pm/api/packages/yamlscript/releases/$version" &&
+      published=true
+    ;;
+  kotlin)
+    url='https://repo.clojars.org/org/yamlscript/kotlin-yamlscript'
+    url-exists "$url/$version/kotlin-yamlscript-$version.jar" &&
+      published=true
+    ;;
+  crystal|d|delphi|fortran|nim|php|r|swift|zig)
     git-tag-exists "https://github.com/yaml/yamlscript-$binding" \
       "v$version" &&
       published=true
