@@ -1,0 +1,20 @@
+# Build the yamlscript NIF shared library (used by elixir_make).
+
+ERTS_INCLUDE_DIR ?= $(shell erl -noshell -eval \
+  'io:format("~ts/erts-~ts/include", \
+    [code:root_dir(), erlang:system_info(version)]).' -s init stop)
+
+CFLAGS ?= -O2 -Wall
+NIF_LDFLAGS := -shared -fPIC
+UNAME := $(shell uname -s)
+ifeq ($(UNAME),Darwin)
+NIF_LDFLAGS := -dynamiclib -undefined dynamic_lookup -fPIC
+endif
+
+priv/yamlscript_nif.so: c_src/yamlscript_nif.c
+	mkdir -p priv
+	$(CC) $(CFLAGS) -fPIC -I"$(ERTS_INCLUDE_DIR)" \
+	    $(NIF_LDFLAGS) -o $@ $< -ldl
+
+clean:
+	rm -rf priv
