@@ -148,8 +148,7 @@ jobs:
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
-          YS_RELEASE_USE_INSTALLED_YS=1 \
-          YS_RELEASE_SKIP_HASKELL_TESTS=1
+          YS_RELEASE_USE_INSTALLED_YS=1
 
   test-linux-retry:
     name: Test Linux (retry)
@@ -195,8 +194,7 @@ jobs:
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
-          YS_RELEASE_USE_INSTALLED_YS=1 \
-          YS_RELEASE_SKIP_HASKELL_TESTS=1
+          YS_RELEASE_USE_INSTALLED_YS=1
 
   test-macos:
     name: Test macOS
@@ -236,8 +234,9 @@ jobs:
       env:
         # delphi: FPC has no macOS tarball (fpc.mk cannot install it)
         # fortran: fpm has no macos-arm64 prebuilt; source build untested
+        # r: r.mk macOS pkg relocation is untested (no Rprofile shim)
         YS_RELEASE_BINDINGS_SKIP: >-
-          delphi fortran ${{ inputs.bindings_skip }}
+          delphi elixir fortran r ${{ inputs.bindings_skip }}
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
@@ -288,8 +287,9 @@ jobs:
       env:
         # delphi: FPC has no macOS tarball (fpc.mk cannot install it)
         # fortran: fpm has no macos-arm64 prebuilt; source build untested
+        # r: r.mk macOS pkg relocation is untested (no Rprofile shim)
         YS_RELEASE_BINDINGS_SKIP: >-
-          delphi fortran ${{ inputs.bindings_skip }}
+          delphi elixir fortran r ${{ inputs.bindings_skip }}
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
@@ -587,6 +587,10 @@ jobs:
     - name: Install Crystal link dependencies
       uses: msys2/setup-msys2@v2
       with:
+        # Install into the preinstalled C:\msys64 (the default is a
+        # fresh copy under RUNNER_TEMP, which CRYSTAL_MINGW_LIB and
+        # the C:\msys64\mingw64\bin PATH entry would not see):
+        release: false
         msystem: MINGW64
         update: true
         install: >-
@@ -611,8 +615,7 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          crystal d dart delphi elixir fortran go haskell lua nim
-          nodejs perl perl-alien php r raku ruby swift
+          elixir haskell lua perl perl-alien swift
           ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
@@ -676,6 +679,10 @@ jobs:
     - name: Install Crystal link dependencies
       uses: msys2/setup-msys2@v2
       with:
+        # Install into the preinstalled C:\msys64 (the default is a
+        # fresh copy under RUNNER_TEMP, which CRYSTAL_MINGW_LIB and
+        # the C:\msys64\mingw64\bin PATH entry would not see):
+        release: false
         msystem: MINGW64
         update: true
         install: >-
@@ -700,8 +707,7 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          crystal d dart delphi elixir fortran go haskell lua nim
-          nodejs perl perl-alien php r raku ruby swift
+          elixir haskell lua perl perl-alien swift
           ${{ inputs.bindings_skip }}
       run: |
         make -k test-all \
