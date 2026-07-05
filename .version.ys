@@ -122,6 +122,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - elixir/mix.exs
     - kotlin/pom.xml
     - nodejs/package.json
+    - nodejs/package.yaml
     - java/pom.xml
     - julia/Project.toml
     - lua/lib/yamlscript.lua
