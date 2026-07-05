@@ -26,7 +26,15 @@ test:: update $(LIBYS-SO-FQNP) $(NODE)
 	@printf '%.0s-' {1..80}; echo
 	$(strace) node test/test.js
 
+# package.json is tracked and kept current by 'make bump'. In
+# installed-artifacts CI mode skip regenerating it: the $(YS) path
+# is a unix-style ROOT path that native Windows make cannot stat as
+# a prerequisite:
+ifdef YS_RELEASE_USE_INSTALLED_YS
+update: $(NODE)
+else
 update: $(NODE) package.json
+endif
 	npm install
 
 release: $(NODE)

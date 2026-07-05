@@ -81,15 +81,24 @@ class YAMLScript {
 
 // Helper function to find the libys shared library path
 function findLibysPath() {
-  let soExtension = os.platform() === 'linux' ? 'so' : 'dylib';
-  let libysName = `libys.${soExtension}.${yamlscriptVersion}`;
+  let libysName;
+  let searchPaths;
+  if (os.platform() === 'win32') {
+    libysName = 'libys.dll';
+    searchPaths = process.env.PATH
+      ? process.env.PATH.split(path.delimiter)
+      : [];
+  } else {
+    let soExtension = os.platform() === 'linux' ? 'so' : 'dylib';
+    libysName = `libys.${soExtension}.${yamlscriptVersion}`;
+    searchPaths = process.env.LD_LIBRARY_PATH
+      ? process.env.LD_LIBRARY_PATH.split(':')
+      : [];
+    searchPaths.push('/usr/local/lib');
+  }
+  searchPaths.push(path.join(os.homedir(), '.local', 'lib'));
 
 //  console.log('JS - libysName:', libysName);
-
-  let searchPaths = process.env.LD_LIBRARY_PATH
-    ? process.env.LD_LIBRARY_PATH.split(':')
-    : [];
-  searchPaths.push('/usr/local/lib', path.join(os.homedir(), '.local', 'lib'));
 
   for (let p of searchPaths) {
     let fullPath = path.join(p, libysName);
