@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+lang=nim
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  cp "$root/License" "$repo_dir/LICENSE"
+
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      yamlscript.nimble \
+      "$repo_dir"
+    rm -fr "$repo_dir/src" "$repo_dir/tests"
+    cp -r src tests "$repo_dir"
+  )
+)
+
+main "$@"
