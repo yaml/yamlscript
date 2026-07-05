@@ -128,6 +128,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - lua/lib/yamlscript.lua
     - perl/Meta
     - perl-alien/Meta
+    - php/composer.json
     - python/setup.py
     - raku/META6.json
     - rust/Cargo.toml

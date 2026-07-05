@@ -17,8 +17,7 @@ class YAMLScript
             self::$libPath = $libPath;
         } elseif (!isset(self::$libPath)) {
             // Default library path based on common locations
-            // Determine platform and file extension
-            $so = PHP_OS === 'Darwin' ? 'dylib' : 'so';
+            // Determine platform and library file name
 
             // Get version from composer.json
             $composerJson = json_decode(
@@ -27,29 +26,46 @@ class YAMLScript
             );
             $version = $composerJson['version'];
 
-            // Build library name with version
-            $libName = "libys.$so.$version";
+            if (PHP_OS_FAMILY === 'Windows') {
+                $libName = 'libys.dll';
+            } else {
+                $so = PHP_OS === 'Darwin' ? 'dylib' : 'so';
+                // Build library name with version
+                $libName = "libys.$so.$version";
+            }
 
             // Check library path environment variables
             $paths = [];
-            if (PHP_OS === 'Darwin') {
-                $dyldLibraryPath = getenv('DYLD_LIBRARY_PATH');
-                if ($dyldLibraryPath) {
-                    foreach (explode(':', $dyldLibraryPath) as $path) {
+            if (PHP_OS_FAMILY === 'Windows') {
+                // The dll is found via the PATH directories
+                $envPath = getenv('PATH');
+                if ($envPath) {
+                    foreach (explode(PATH_SEPARATOR, $envPath) as $path) {
                         $paths[] = "$path/$libName";
                     }
                 }
-            }
-            $ldLibraryPath = getenv('LD_LIBRARY_PATH');
-            if ($ldLibraryPath) {
-                foreach (explode(':', $ldLibraryPath) as $path) {
-                    $paths[] = "$path/$libName";
+                $home = getenv('USERPROFILE') ?: getenv('HOME');
+            } else {
+                if (PHP_OS === 'Darwin') {
+                    $dyldLibraryPath = getenv('DYLD_LIBRARY_PATH');
+                    if ($dyldLibraryPath) {
+                        foreach (explode(':', $dyldLibraryPath) as $path) {
+                            $paths[] = "$path/$libName";
+                        }
+                    }
                 }
-            }
+                $ldLibraryPath = getenv('LD_LIBRARY_PATH');
+                if ($ldLibraryPath) {
+                    foreach (explode(':', $ldLibraryPath) as $path) {
+                        $paths[] = "$path/$libName";
+                    }
+                }
 
-            // Add default locations
-            $paths[] = "/usr/local/lib/$libName";
-            $paths[] = getenv('HOME') . "/.local/lib/$libName";
+                // Add default locations
+                $paths[] = "/usr/local/lib/$libName";
+                $home = getenv('HOME');
+            }
+            $paths[] = $home . "/.local/lib/$libName";
             foreach ($paths as $path) {
                 if (file_exists($path)) {
                     self::$libPath = $path;
