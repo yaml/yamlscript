@@ -1,0 +1,5 @@
+# The root .gitignore ignores Leiningen-generated pom.xml files, but
+# this one is source code:
+!/pom.xml
+/reports/
+/target/
