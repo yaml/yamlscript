@@ -15,10 +15,8 @@ import qualified Data.ByteString.Lazy as LBS
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import qualified Data.Aeson as Aeson
-import qualified Data.Aeson.Types as Aeson
 import Control.Exception (Exception, throwIO)
 import Control.Monad.IO.Class (MonadIO, liftIO)
-import System.IO.Unsafe (unsafePerformIO)
 import YAMLScript.FFI
 
 -- | Error type for YAMLScript operations
@@ -49,8 +47,3 @@ loadYAMLScriptFile filepath = liftIO $ do
   case Aeson.eitherDecode (LBS.fromStrict result) of
     Left err -> throwIO $ YAMLScriptParseError err
     Right value -> return value
-
--- | Convenience function for pure contexts
--- Note: This uses unsafePerformIO and should be used carefully
-loadYAMLScriptPure :: T.Text -> Aeson.Value
-loadYAMLScriptPure = unsafePerformIO . loadYAMLScript

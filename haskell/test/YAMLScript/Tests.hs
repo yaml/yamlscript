@@ -6,7 +6,6 @@
 module YAMLScript.Tests where
 
 import Test.Hspec
-import qualified Data.Text as T
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap

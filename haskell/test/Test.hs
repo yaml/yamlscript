@@ -6,12 +6,10 @@
 module Main where
 
 import Test.Hspec
-import qualified Data.Text as T
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
 import YAMLScript
-import YAMLScript.Tests
 
 main :: IO ()
 main = hspec $ do
