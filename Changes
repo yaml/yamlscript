@@ -1,3 +1,13 @@
+- version: 0.2.26
+  date:    Sat Jul  4 09:31:13 PM EDT 2026
+  changes:
+  - php: Fix FFI bugs that made libys calls segfault
+  - nim: Add Nim language binding
+  - kotlin: Add Kotlin language binding
+  - r: Add R language binding
+  - elixir: Add Elixir language binding
+  - nodejs: Fix version in package.yaml source file
+  - release: Add Hex credentials for elixir publishing
 - version: 0.2.25
   date:    Sat Jul  4 03:05:07 PM EDT 2026
   changes:

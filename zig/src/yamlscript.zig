@@ -17,7 +17,7 @@ const builtin = @import("builtin");
 // This value is automatically updated by 'make bump'.
 // The version number is used to find the correct shared library file.
 // We currently only support binding to an exact version of libys.
-pub const yamlscript_version = "0.2.25";
+pub const yamlscript_version = "0.2.26";
 
 // We currently only support platforms that GraalVM supports.
 // Windows uses an unversioned file name, matching the Python binding:

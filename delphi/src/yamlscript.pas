@@ -25,7 +25,7 @@ uses
 const
   { This value is automatically updated by 'make bump'.
     Version matching the libys shared library }
-  YAMLSCRIPT_VERSION = '0.2.25';
+  YAMLSCRIPT_VERSION = '0.2.26';
 
 type
   { Exception raised when YAMLScript encounters an error }

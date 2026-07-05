@@ -2,7 +2,7 @@
 
 use ys::taptest: :all
 
-VERSION =: '0.2.25'
+VERSION =: '0.2.26'
 
 ROOT =: +"$DIR/../.."
 
