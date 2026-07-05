@@ -7,9 +7,18 @@ include $(MAKES)/shell.mk
 BUILD-DEPS := $(CRYSTAL)
 
 # Set library path for Crystal compiler
+ifeq ($(OS-NAME),windows)
+# Native tools need Windows-style paths and a ';' separator. The
+# mingw linker finds libys.dll via LIBRARY_PATH; at run time the OS
+# loader finds it via PATH:
+CRYSTAL-ENV := \
+  LIBRARY_PATH="$$(cygpath -m $(ROOT)/libys/lib);$$(cygpath -m \
+    $(CRYSTAL_MINGW_LIB) 2>/dev/null)"
+else
 CRYSTAL-ENV := \
   LIBRARY_PATH=$(ROOT)/libys/lib:$(CRYSTAL_MINGW_LIB) \
   LD_LIBRARY_PATH=$(ROOT)/libys/lib:$(CRYSTAL_MINGW_LIB)
+endif
 
 #------------------------------------------------------------------------------
 

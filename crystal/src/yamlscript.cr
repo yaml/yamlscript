@@ -18,13 +18,19 @@ class YAMLScript
         "dylib"
       {% elsif flag?(:linux) %}
         "so"
+      {% elsif flag?(:windows) %}
+        "dll"
       {% else %}
         raise Error.new("Unsupported platform for yamlscript.")
       {% end %}
     end
 
     def self.libys_name
-      "libys.#{extension}.#{YAMLScript::YAMLSCRIPT_VERSION}"
+      {% if flag?(:windows) %}
+        "libys.dll"
+      {% else %}
+        "libys.#{extension}.#{YAMLScript::YAMLSCRIPT_VERSION}"
+      {% end %}
     end
 
     # Returns an array of library paths extracted from the LD_LIBRARY_PATH
@@ -32,19 +38,31 @@ class YAMLScript
     def self.ld_library_paths
       paths = [] of String
 
-      # Check LD_LIBRARY_PATH first
-      if env_path = ENV["LD_LIBRARY_PATH"]?
-        paths.concat(env_path.split(":"))
-      end
+      {% if flag?(:windows) %}
+        # The dll is found via the PATH directories on Windows
+        if env_path = ENV["PATH"]?
+          paths.concat(env_path.split(";"))
+        end
 
-      # Add standard system paths
-      paths << "/usr/local/lib"
-      paths << "/usr/lib"
+        # Add user's local lib directory if USERPROFILE is set
+        if home = ENV["USERPROFILE"]?
+          paths << File.join(home, ".local", "lib")
+        end
+      {% else %}
+        # Check LD_LIBRARY_PATH first
+        if env_path = ENV["LD_LIBRARY_PATH"]?
+          paths.concat(env_path.split(":"))
+        end
 
-      # Add user's local lib directory if HOME is set
-      if home = ENV["HOME"]?
-        paths << File.join(home, ".local", "lib")
-      end
+        # Add standard system paths
+        paths << "/usr/local/lib"
+        paths << "/usr/lib"
+
+        # Add user's local lib directory if HOME is set
+        if home = ENV["HOME"]?
+          paths << File.join(home, ".local", "lib")
+        end
+      {% end %}
 
       paths
     end
