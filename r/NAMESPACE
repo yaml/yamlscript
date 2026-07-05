@@ -1,0 +1,4 @@
+useDynLib(yamlscript, C_yamlscript_load)
+export(yamlscript_load)
+export(YAMLSCRIPT_VERSION)
+importFrom(jsonlite, fromJSON)

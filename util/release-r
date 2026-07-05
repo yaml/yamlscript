@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+lang=r
+
+source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
+
+update() (
+  (
+    cd "$from_dir" || exit
+    cp \
+      ReadMe.md \
+      DESCRIPTION \
+      LICENSE \
+      NAMESPACE \
+      "$repo_dir"
+    rm -fr "$repo_dir/R" "$repo_dir/src" "$repo_dir/tests"
+    cp -r R src tests "$repo_dir"
+    rm -f "$repo_dir"/src/*.o "$repo_dir"/src/*.so
+  )
+)
+
+main "$@"

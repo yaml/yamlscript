@@ -1,0 +1,15 @@
+Package: yamlscript
+Type: Package
+Title: Load YAML Files with Optional YS Functional Programming
+Version: 0.2.25
+Author: Ingy dot Net
+Maintainer: Ingy dot Net <ingy@ingy.net>
+Description: Load YAML files that may use YS (YAMLScript) functional
+    programming capabilities. A drop-in replacement for your current
+    YAML loader, binding to the libys shared library.
+License: MIT + file LICENSE
+Imports: jsonlite
+NeedsCompilation: yes
+Encoding: UTF-8
+URL: https://yamlscript.org
+BugReports: https://github.com/yaml/yamlscript/issues
