@@ -22,30 +22,43 @@ class YAMLScript
   module LibYS
     extend Fiddle::Importer
 
+    def self.windows?
+      RUBY_PLATFORM.match?(/mingw|mswin/)
+    end
+
     def self.extension
       case RUBY_PLATFORM
       when /darwin/
         'dylib'
       when /linux/
         'so'
+      when /mingw|mswin/
+        'dll'
       else
         raise Error, "Unsupported platform #{RUBY_PLATFORM} for yamlscript."
       end
     end
 
     def self.libys_name
+      return 'libys.dll' if windows?
+
       "libys.#{extension}.#{YAMLSCRIPT_VERSION}"
     end
 
     # Returns an array of library paths extracted from the LD_LIBRARY_PATH
-    # environment variable.
+    # environment variable (PATH on Windows).
     # If the environment variable is not set will return an array with
     # `/usr/local/lib` only.
     def self.ld_library_paths
-      env_value = ENV.fetch('LD_LIBRARY_PATH', '')
-      paths = env_value.split(':')
-      paths << '/usr/local/lib'
-      paths << ENV.fetch('HOME', '') + '/.local/lib'
+      if windows?
+        paths = ENV.fetch('PATH', '').split(File::PATH_SEPARATOR)
+        home = ENV.fetch('USERPROFILE', ENV.fetch('HOME', ''))
+      else
+        paths = ENV.fetch('LD_LIBRARY_PATH', '').split(':')
+        paths << '/usr/local/lib'
+        home = ENV.fetch('HOME', '')
+      end
+      paths << home + '/.local/lib'
     end
 
     # Find the libys shared library file path
