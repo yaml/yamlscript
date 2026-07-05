@@ -8,7 +8,11 @@
 // paths and exact version pinning are ported from the Python
 // reference implementation.
 
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <dlfcn.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,7 +24,9 @@
 // We currently only support binding to an exact version of libys:
 #define YAMLSCRIPT_VERSION "0.2.26"
 
-#ifdef __APPLE__
+#ifdef _WIN32
+#define LIBYS_NAME "libys.dll"
+#elif defined(__APPLE__)
 #define LIBYS_NAME "libys.dylib." YAMLSCRIPT_VERSION
 #else
 #define LIBYS_NAME "libys.so." YAMLSCRIPT_VERSION
@@ -47,27 +53,38 @@ static int check_dir(const char *dir, char *path, size_t size) {
 }
 
 // Find the libys shared library file path.
-// Search LD_LIBRARY_PATH entries, then common install locations:
+// Search LD_LIBRARY_PATH entries (PATH on Windows), then common
+// install locations:
 static int find_libys(char *path, size_t size) {
+#ifdef _WIN32
+  const char *library_path = getenv("PATH");
+  const char *sep = ";";
+#else
   const char *library_path = getenv("LD_LIBRARY_PATH");
+  const char *sep = ":";
+#endif
   const char *home;
 
   if (library_path != NULL) {
     char *paths = strdup(library_path);
-    char *dir = strtok(paths, ":");
+    char *dir = strtok(paths, sep);
     while (dir != NULL) {
       if (check_dir(dir, path, size)) {
         free(paths);
         return 1;
       }
-      dir = strtok(NULL, ":");
+      dir = strtok(NULL, sep);
     }
     free(paths);
   }
 
+#ifdef _WIN32
+  home = getenv("USERPROFILE");
+#else
   if (check_dir("/usr/local/lib", path, size)) return 1;
 
   home = getenv("HOME");
+#endif
   if (home != NULL) {
     char dir[4096];
     snprintf(dir, sizeof(dir), "%s/.local/lib", home);
@@ -93,17 +110,27 @@ static void open_libys(void) {
       LIBYS_NAME, YAMLSCRIPT_VERSION);
   }
 
+#ifdef _WIN32
+  libys = (void *)LoadLibraryA(path);
+#else
   libys = dlopen(path, RTLD_NOW);
+#endif
   if (libys == NULL) {
     Rf_error("Failed to load shared library '%s'", path);
   }
 
+#ifdef _WIN32
+#define LIBYS_SYM(name) ((void *)GetProcAddress((HMODULE)libys, name))
+#else
+#define LIBYS_SYM(name) (dlsym(libys, name))
+#endif
+
   create_isolate =
-    (create_isolate_fn)dlsym(libys, "graal_create_isolate");
+    (create_isolate_fn)LIBYS_SYM("graal_create_isolate");
   tear_down_isolate =
-    (tear_down_isolate_fn)dlsym(libys, "graal_tear_down_isolate");
+    (tear_down_isolate_fn)LIBYS_SYM("graal_tear_down_isolate");
   load_ys_to_json =
-    (load_ys_to_json_fn)dlsym(libys, "load_ys_to_json");
+    (load_ys_to_json_fn)LIBYS_SYM("load_ys_to_json");
 
   if (create_isolate == NULL || tear_down_isolate == NULL ||
       load_ys_to_json == NULL) {
