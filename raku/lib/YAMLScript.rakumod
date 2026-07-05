@@ -3,18 +3,28 @@
 
 unit class YAMLScript;
 
-use LibraryMake;
 use NativeCall;
 
 constant YAMLSCRIPT_VERSION = v0.2.26;
 
 sub resolve-lib {
   state $ = do {
-    my $libname = "libys{get-vars('')<SO>}.{YAMLSCRIPT_VERSION.Str}";
-    my $path = [|(%*ENV<LD_LIBRARY_PATH>//'').split(':', :ignore-empty),
-     '/usr/local/lib',
-     %*ENV<HOME> ~ '/.local/lib',
-    ].grep(* ne '').first({ $_.IO.add($libname).e ?? True !! Nil });
+    my $libname;
+    my @lib-paths;
+    if $*DISTRO.is-win {
+      $libname = 'libys.dll';
+      @lib-paths = (%*ENV<PATH>//'').split(';', :ignore-empty);
+    }
+    else {
+      my $so = $*KERNEL.name eq 'darwin' ?? '.dylib' !! '.so';
+      $libname = "libys{$so}.{YAMLSCRIPT_VERSION.Str}";
+      @lib-paths = (%*ENV<LD_LIBRARY_PATH>//'').split(':', :ignore-empty);
+      @lib-paths.push: '/usr/local/lib';
+    }
+    my $home = %*ENV<HOME> // %*ENV<USERPROFILE>;
+    @lib-paths.push($home ~ '/.local/lib') if $home;
+    my $path = @lib-paths
+      .grep(* ne '').first({ $_.IO.add($libname).e ?? True !! Nil });
     unless $path {
       my $vers = YAMLSCRIPT_VERSION;
       $*ERR.say: qq:to/EOM/;

@@ -16,13 +16,18 @@ endif
 
 
 
-test:: raku-install
-	prove $${TEST_VERBOSE:+'-v'} $(test)
+# The tests are TAP-emitting raku programs that exit nonzero on
+# failure. Run them directly; prove is unreliable on the Windows CI
+# runners (a Strawberry Perl script running under the MSYS perl):
+test:: $(RAKU)
+	@set -e; for t in $(test); do \
+	  echo "== $$t"; raku $$t; \
+	done
 
+# fez is only needed for publishing; the binding and its tests have
+# no module dependencies (zef is also unreliable on Windows):
 raku-install: $(RAKU)
-ifeq (,$(shell find $(LOCAL-TMP) | grep -F 'LibraryMake.rakumod'))
-	zef install LibraryMake fez
-endif
+	command -v fez > /dev/null || zef install fez
 
 
 release: raku-install
