@@ -339,6 +339,10 @@ release-test:
 	@echo "Note: Tests now run automatically in GitHub Actions"
 	@echo "Use 'gh workflow run test-all.yaml' to trigger manually"
 
+# The t= platform list accepts spaces or commas:
+#   t='macos linux'  or  t=macos,linux
+comma := ,
+
 # Build and test only the platforms in t= (default: all three),
 # skipping the release and publish jobs. Example:
 #   make release-tests t='macos linux'
@@ -350,7 +354,7 @@ release-tests: $(GH)
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
 	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
-	    -f tests_only='$(t)'; \
+	    -f tests_only='$(subst $(comma), ,$(t))'; \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
 	    --repo yaml/yamlscript --branch $$branch --limit=1 \
@@ -379,11 +383,14 @@ release-tests-retry: $(GH)
 	      --json databaseId --jq '.[0].databaseId'); \
 	  fi; \
 	  test -n "$$artifact_run_id"; \
+	  gh run view $$artifact_run_id --repo yaml/yamlscript \
+	    --json databaseId --jq .databaseId > /dev/null || { \
+	    echo "ERROR: run id '$$artifact_run_id' not found"; exit 1; }; \
 	  echo "Using build artifacts from run $$artifact_run_id"; \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
 	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
-	    -f tests_only='$(t)' \
+	    -f tests_only='$(subst $(comma), ,$(t))' \
 	    -f test_artifacts_run_id=$$artifact_run_id; \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
