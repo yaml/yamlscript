@@ -42,6 +42,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - fortran/doc/readme.md
     - fortran/ReadMe.md
     - kotlin/Makefile
+    - kotlin/pom.xml
     - kotlin/src/main/kotlin/org/yamlscript/yamlscript/YS.kt
     - kotlin/doc/readme.md
     - kotlin/ReadMe.md
@@ -120,7 +121,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     file:
     - dart/pubspec.yaml
     - elixir/mix.exs
-    - kotlin/pom.xml
     - nodejs/package.json
     - nodejs/package.yaml
     - java/pom.xml
