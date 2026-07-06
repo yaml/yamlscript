@@ -45,12 +45,23 @@ docker-image-build:
 
 docker-image-push: docker-image-build
 	docker push $(ELIXIR-IMAGE)
+
+# Publish from the container too (the toolchain path would compile
+# Erlang/OTP from source); hex reads HEX_API_KEY from the env:
+release: docker-image
+	docker run --rm \
+	  --user $(USER-UID):$(USER-GID) \
+	  --env HOME=/tmp/home \
+	  --env HEX_API_KEY \
+	  --volume $(ROOT):$(ROOT) \
+	  --workdir $(CURDIR) \
+	  $(ELIXIR-IMAGE) \
+	  make release
 else
 test:: $(LIBYS-SO-FQNP) $(ERL) $(ELIXIR)
 	mix local.hex --force --if-missing
 	mix deps.get
 	mix test
-endif
 
 # Hex requires the file names README.md and a LICENSE:
 release: $(ERL) $(ELIXIR) README.md
@@ -58,6 +69,7 @@ release: $(ERL) $(ELIXIR) README.md
 	mix deps.get
 	mix hex.publish --yes
 	$(RM) README.md
+endif
 
 README.md: ReadMe.md
 	cp $< $@
