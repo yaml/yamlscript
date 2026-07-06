@@ -203,7 +203,7 @@ This means that <u>No Java or JVM</u> installation is required to use YS, and
 startup/execution speed is very fast.
 
 YS also produces the `libys.so` shared library.
-It has [binding modules for 21 programming languages](doc/bindings.md) including
+It has [binding modules for 25 programming languages](doc/bindings.md) including
 Go, JavaScript, Python, Rust and Swift, with many more on the way.
 These modules can be used in your programs to load normal YAML files as well as
 YS enhanced ones.
@@ -215,7 +215,7 @@ There are many ways to use YS:
   * Check out [HelmYS](https://github.com/kubeys/helmys), a tool for using
     YS in Kubernetes Helm chart templates painlessly.
 * [Load YS (or YAML) in your programs](doc/bindings.md)
-  * Available in 21 programming languages (and counting)
+  * Available in 25 programming languages (and counting)
 * Program in YS
   * Learn how at [Exercism](https://exercism.org/tracks/yamlscript)
 * [Script Automation with YS](doc/examples.md)
