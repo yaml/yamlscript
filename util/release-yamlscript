@@ -515,12 +515,18 @@ defn do-bindings(new):
     if binding-published?(dir new):
       say: "\nSkipping binding already published: $dir"
       else:
-        say: "\nReleasing binding: $dir"
-        try:
-          run: "make -C $dir release n=$new"
-          catch Exception e:
-            warn: "Failed to release $dir. Continuing."
-            swap failures: \(_.conj(dir))
+        # Publishing to pub.dev requires an interactive browser
+        # OAuth login, which hangs forever on a CI runner. Publish
+        # dart locally with 'make -C dart release' instead:
+        if (dir == 'dart') && ENV.YS_RELEASE_CI:
+          say: "\nSkipping dart binding: pub.dev requires interactive OAuth"
+          else:
+            say: "\nReleasing binding: $dir"
+            try:
+              run: "make -C $dir release n=$new"
+              catch Exception e:
+                warn: "Failed to release $dir. Continuing."
+                swap failures: \(_.conj(dir))
 
   # Clean up v-prefixed tags if they exist
   try:
