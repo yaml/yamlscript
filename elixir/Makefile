@@ -75,4 +75,4 @@ README.md: ReadMe.md
 	cp $< $@
 
 clean::
-	$(RM) -r _build deps priv README.md
+	$(RM) -r _build deps priv README.md .docs

@@ -15,7 +15,10 @@ defmodule YAMLScript.MixProject do
       description:
         "Load YAML files with optional YS functional programming",
       package: package(),
-      source_url: "https://github.com/yaml/yamlscript"
+      source_url: "https://github.com/yaml/yamlscript",
+      # Keep generated docs out of doc/, which holds the tracked
+      # readme fragments:
+      docs: [main: "YAMLScript", output: ".docs"]
     ]
   end
 
@@ -25,7 +28,8 @@ defmodule YAMLScript.MixProject do
 
   defp deps do
     [
-      {:elixir_make, "~> 0.8", runtime: false}
+      {:elixir_make, "~> 0.8", runtime: false},
+      {:ex_doc, "~> 0.34", only: :dev, runtime: false}
     ]
   end
 
