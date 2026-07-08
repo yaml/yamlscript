@@ -558,12 +558,6 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up Perl
-      uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: latest
-        distribution: strawberry
-
     - name: Download Windows artifacts
       uses: actions/download-artifact@v8
       with:
@@ -589,6 +583,11 @@ jobs:
       run: |
         echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
         echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
+    - name: Configure Strawberry Perl toolchain
+      run: |
+        echo 'C:\Strawberry\perl\bin' >> "$GITHUB_PATH"
+        echo 'C:\Strawberry\c\bin' >> "$GITHUB_PATH"
 
     - name: Install Crystal link dependencies
       uses: msys2/setup-msys2@v2
@@ -654,12 +653,6 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up Perl
-      uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: latest
-        distribution: strawberry
-
     - name: Download Windows artifacts
       env:
         GH_TOKEN: ${{ github.token }}
@@ -688,6 +681,11 @@ jobs:
       run: |
         echo 'TAR_OPTIONS=--force-local' >> "$GITHUB_ENV"
         echo 'UNZIP=-o' >> "$GITHUB_ENV"
+
+    - name: Configure Strawberry Perl toolchain
+      run: |
+        echo 'C:\Strawberry\perl\bin' >> "$GITHUB_PATH"
+        echo 'C:\Strawberry\c\bin' >> "$GITHUB_PATH"
 
     - name: Install Crystal link dependencies
       uses: msys2/setup-msys2@v2
