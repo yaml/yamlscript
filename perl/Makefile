@@ -13,8 +13,6 @@ ALIEN-DIST-DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL-VERSION)
 ALIEN-BLIB-LIB := $(ALIEN-DIST-DIR)/blib/lib
 
 CPAN-DEPS := \
-    CPAN::Uploader \
-    Cpanel::JSON::XS \
     FFI::CheckLib \
     FFI::Platypus \
     Test2::V0 \
@@ -26,6 +24,19 @@ LOCAL-LIB := local
 export PATH := $(ROOT)/perl/$(LOCAL-LIB)/bin:$(PATH)
 export PERL5LIB := $(ALIEN-BLIB-LIB):$(LOCAL-LIB)/lib/perl5
 export PERL5LIB := $(ROOT)/perl-alien/$(LOCAL-LIB)/lib/perl5:$(PERL5LIB)
+
+ifeq ($(OS-NAME),windows)
+PROVE := $(shell command -v prove)
+PERL-CMD := $(dir $(PROVE))perl
+CPANM-CMD := $(PERL-CMD) -S cpanm
+PROVE-CMD := $(PERL-CMD) $(PROVE)
+TEST-DEPS := $(PERL) $(LOCAL-LIB)
+else
+PERL-CMD := perl
+CPANM-CMD := cpanm
+PROVE-CMD := perl -S prove
+TEST-DEPS := $(PERL) $(LOCAL-LIB) $(ALIEN-BLIB-LIB)
+endif
 
 #------------------------------------------------------------------------------
 
@@ -40,13 +51,13 @@ disttest:: $(LOCAL-LIB) $(ALIEN-BLIB-LIB)
 	$(ROOT)/util/make-perl-cpan-dist $@
 
 ifdef PERLOK
-test:: $(PERL) $(LOCAL-LIB)
-	prove -l $${TEST_VERBOSE:+'-v'} $(test)
+test:: $(TEST-DEPS)
+	$(PROVE-CMD) -l $${TEST_VERBOSE:+'-v'} $(test)
 
 test-alien: $(ALIEN-BLIB-LIB)
 	LD_LIBRARY_PATH= \
 	    DYLD_LIBRARY_PATH= \
-	    prove -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
+	    $(PROVE-CMD) -I$< -l $${TEST_VERBOSE:+'-v'} $(test)
 endif
 
 release: $(LOCAL-LIB) dist
@@ -56,6 +67,7 @@ endif
 ifndef PAUSE_PASS
 	$(error 'make release' needs PAUSE_PASS set)
 endif
+	$(CPANM-CMD) -L $(LOCAL-LIB) -n CPAN::Uploader
 	$(ROOT)/util/upload-perl-cpan-dist $(CPAN-DIST)
 
 clean::
@@ -68,8 +80,8 @@ $(ALIEN-BLIB-LIB): $(ALIEN-DIST-DIR)
 	( \
 	    cd $< && \
 	    export PERL5LIB=$(ROOT)/perl-alien/local/lib/perl5:$(PERL5LIB) && \
-	    perl Makefile.PL && \
-	    make \
+	    $(PERL-CMD) Makefile.PL && \
+	    $(MAKE) \
 	)
 	touch $@
 
@@ -82,4 +94,4 @@ $(ALIEN-DIST-DIR):
 # can resolve to a host perl (e.g. perlbrew) and build XS modules
 # for the wrong perl version:
 $(LOCAL-LIB): Makefile $(PERL)
-	cpanm -L $@ -n $(CPAN-DEPS)
+	$(CPANM-CMD) -L $@ -n $(CPAN-DEPS)

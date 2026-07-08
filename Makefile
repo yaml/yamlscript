@@ -92,6 +92,10 @@ endif
 ifdef YS_RELEASE_SKIP_LIBYS_TESTS
 TEST := $(filter-out test-libys,$(TEST))
 endif
+ifneq (,$(YS_RELEASE_BINDINGS))
+TEST := $(filter $(YS_RELEASE_BINDINGS:%=test-%),$(TEST))
+TEST-BINDINGS := $(filter $(YS_RELEASE_BINDINGS:%=test-%),$(TEST-BINDINGS))
+endif
 ifneq (,$(YS_RELEASE_BINDINGS_SKIP))
 TEST := $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST))
 TEST-BINDINGS := \

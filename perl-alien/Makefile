@@ -9,8 +9,6 @@ CPAN-DEPS := \
     Alien::Build \
     Alien::Build::MM \
     Alien::Build::Plugin::Download::GitHub \
-    CPAN::Uploader \
-    Cpanel::JSON::XS \
     Mozilla::CA \
     Test2::V0 \
     Test::Alien \
@@ -19,6 +17,13 @@ LOCAL-LIB := local
 
 export PATH := $(ROOT)/perl-alien/$(LOCAL-LIB)/bin:$(PATH)
 export PERL5LIB := $(LOCAL-LIB)/lib/perl5
+
+ifeq ($(OS-NAME),windows)
+PERL-CMD := $(dir $(shell command -v prove))perl
+CPANM-CMD := $(PERL-CMD) -S cpanm
+else
+CPANM-CMD := cpanm
+endif
 
 #------------------------------------------------------------------------------
 
@@ -34,6 +39,7 @@ endif
 ifndef PAUSE_PASS
 	$(error 'make release' needs PAUSE_PASS set)
 endif
+	$(CPANM-CMD) -L $(LOCAL-LIB) -n CPAN::Uploader
 	$(ROOT)/util/upload-perl-cpan-dist $(CPAN-DIST)
 
 clean::
@@ -45,4 +51,4 @@ realclean::
 build-doc::
 
 $(LOCAL-LIB): $(PERL) Makefile
-	cpanm -L $@ -n $(CPAN-DEPS)
+	$(CPANM-CMD) -L $@ -n $(CPAN-DEPS)

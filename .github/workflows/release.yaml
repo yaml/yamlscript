@@ -558,6 +558,12 @@ jobs:
             inputs.version
           }}
 
+    - name: Set up Perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: latest
+        distribution: strawberry
+
     - name: Download Windows artifacts
       uses: actions/download-artifact@v8
       with:
@@ -600,10 +606,11 @@ jobs:
     - name: Configure Crystal link dependencies
       run: |
         echo 'C:\msys64\mingw64\bin' >> "$GITHUB_PATH"
+        echo 'CC=gcc' >> "$GITHUB_ENV"
         echo 'CRYSTAL_MINGW_LIB=/c/msys64/mingw64/lib' >> "$GITHUB_ENV"
 
     - name: Run core tests
-      run: make test-core
+      run: gmake test-core
 
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
@@ -615,10 +622,10 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          elixir haskell lua perl perl-alien swift
+          elixir haskell lua perl-alien swift
           ${{ inputs.bindings_skip }}
       run: |
-        make -k test-all \
+        gmake -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
@@ -646,6 +653,12 @@ jobs:
             github.ref ||
             inputs.version
           }}
+
+    - name: Set up Perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: latest
+        distribution: strawberry
 
     - name: Download Windows artifacts
       env:
@@ -692,10 +705,11 @@ jobs:
     - name: Configure Crystal link dependencies
       run: |
         echo 'C:\msys64\mingw64\bin' >> "$GITHUB_PATH"
+        echo 'CC=gcc' >> "$GITHUB_ENV"
         echo 'CRYSTAL_MINGW_LIB=/c/msys64/mingw64/lib' >> "$GITHUB_ENV"
 
     - name: Run core tests
-      run: make test-core
+      run: gmake test-core
 
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
@@ -707,10 +721,10 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          elixir haskell lua perl perl-alien swift
+          elixir haskell lua perl-alien swift
           ${{ inputs.bindings_skip }}
       run: |
-        make -k test-all \
+        gmake -k test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
           YS_RELEASE_SKIP_LIBYS_TESTS=1 \
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
