@@ -23,7 +23,7 @@ on:
       tests_only:
         description: >-
           Only build and test these platforms (space-separated subset
-          of: linux macos windows); skips release and publish jobs
+          of: linux aarch64 macos windows); skips release and publish jobs
         default: ''
         required: false
         type: string
@@ -180,6 +180,94 @@ jobs:
         gh run download "${{ inputs.test_artifacts_run_id }}" \
           --repo "${{ github.repository }}" \
           --name linux-x64 \
+          --dir release-artifacts
+
+    - name: Run core tests
+      run: make test-core
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Run tests
+      run: |
+        make test-all \
+          YS_RELEASE_SKIP_CORE_TESTS=1 \
+          YS_RELEASE_SKIP_LIBYS_TESTS=1 \
+          YS_RELEASE_USE_INSTALLED_LIBYS=1 \
+          YS_RELEASE_USE_INSTALLED_YS=1
+
+  test-linux-aarch64:
+    name: Test Linux AArch64
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'aarch64')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: build-linux-aarch64
+    runs-on: ubuntu-24.04-arm
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{
+            inputs.tests_only &&
+            github.ref ||
+            inputs.version
+          }}
+
+    - name: Download Linux AArch64 artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-aarch64
+        path: release-artifacts
+
+    - name: Run core tests
+      run: make test-core
+
+    - name: Install release artifacts
+      run: util/install-release-artifacts release-artifacts
+
+    - name: Run tests
+      run: |
+        make test-all \
+          YS_RELEASE_SKIP_CORE_TESTS=1 \
+          YS_RELEASE_SKIP_LIBYS_TESTS=1 \
+          YS_RELEASE_USE_INSTALLED_LIBYS=1 \
+          YS_RELEASE_USE_INSTALLED_YS=1
+
+  test-linux-aarch64-retry:
+    name: Test Linux AArch64 (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        contains(inputs.tests_only, 'aarch64') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{
+            inputs.tests_only &&
+            github.ref ||
+            inputs.version
+          }}
+
+    - name: Download Linux AArch64 artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name linux-aarch64 \
           --dir release-artifacts
 
     - name: Run core tests
@@ -353,6 +441,61 @@ jobs:
           python/dist/*.whl
         retention-days: 7
 
+  build-linux-aarch64:
+    name: Build Linux AArch64
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'aarch64')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: verify-release
+    runs-on: ubuntu-24.04-arm
+    container: ubuntu:20.04
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{
+            inputs.tests_only &&
+            github.ref ||
+            inputs.version
+          }}
+
+    - name: Set up GraalVM
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
+        native-image-job-reports: 'true'
+
+    - name: Install build dependencies
+      run: |
+        apt-get update
+        apt-get install -y build-essential curl git zlib1g-dev
+
+    - name: Build release archives
+      run: |
+        make release-build jars
+        make -C python wheel
+
+    - name: List release archives
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar python/dist/*.whl
+
+    - name: Upload Linux AArch64 artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: linux-aarch64
+        path: |
+          ys-*.tar.xz
+          libys-*.tar.xz
+          *.jar
+          python/dist/*.whl
+        retention-days: 7
+
   build-macos-arm64:
     name: Build macOS ARM64
     if: >-
@@ -493,9 +636,11 @@ jobs:
     if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
     needs:
     - test-linux
+    - test-linux-aarch64
     - test-macos
     - test-windows
     - build-linux-x64
+    - build-linux-aarch64
     - build-macos-arm64
     - build-windows-x64
     runs-on: ubuntu-latest

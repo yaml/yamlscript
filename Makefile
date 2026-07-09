@@ -345,12 +345,13 @@ release-test:
 
 # The t= platform list accepts spaces or commas:
 #   t='macos linux'  or  t=macos,linux
+#   t=aarch64
 comma := ,
 
-# Build and test only the platforms in t= (default: all three),
+# Build and test only the platforms in t= (default: all four),
 # skipping the release and publish jobs. Example:
-#   make release-tests t='macos linux'
-release-tests: t ?= linux macos windows
+#   make release-tests t='linux aarch64'
+release-tests: t ?= linux aarch64 macos windows
 release-tests: n ?= $(YS_VERSION)
 release-tests: $(GH)
 	@set -e; \
@@ -371,7 +372,7 @@ release-tests: $(GH)
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the last release-tests run). Example:
 #   make release-tests-retry t=macos r=12345678
-release-tests-retry: t ?= linux macos windows
+release-tests-retry: t ?= linux aarch64 macos windows
 release-tests-retry: n ?= $(YS_VERSION)
 release-tests-retry: $(GH)
 	@set -e; \

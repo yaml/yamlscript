@@ -94,6 +94,8 @@ setup() {
   if [[ $OSTYPE == *linux* ]]; then
     if [[ $MACHTYPE == x86_64-*-linux* ]]; then
       graalvm_arch=linux-x64
+    elif [[ $MACHTYPE == aarch64-*-linux* ]]; then
+      graalvm_arch=linux-aarch64
     else
       die "Unsupported Linux architecture: $MACHTYPE"
     fi

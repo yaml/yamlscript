@@ -31,6 +31,7 @@ TWINE-WHEEL-UPLOAD := \
   twine upload --verbose --skip-existing --repository yamlscript dist/*.whl
 endif
 
+WHEEL-PLAT-linux-arm64 := manylinux_2_31_aarch64
 WHEEL-PLAT-linux-int64 := manylinux_2_31_x86_64
 WHEEL-PLAT-macos-arm64 := macosx_14_0_arm64
 WHEEL-PLAT-windows-int64 := win_amd64
@@ -110,6 +111,7 @@ wheels-from-release: venv MANIFEST.in .long_description.md
 	    name=$${name%.zip}; \
 	    relplat=$${name#libys-$(RELEASE-WHEEL-VERSION)-}; \
 	    case "$$relplat" in \
+	      linux-aarch64) plat=manylinux_2_31_aarch64; libpat='libys.so.*' ;; \
 	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libys.so.*' ;; \
 	      macos-aarch64) plat=macosx_14_0_arm64; libpat='libys.dylib.*' ;; \
 	      windows-x64) plat=win_amd64; libpat='libys.dll' ;; \

@@ -92,17 +92,21 @@ defn sha256(file):
 
 defn release-files(version): +
   [
+    "ys-${version}-linux-aarch64.tar.xz"
     "ys-${version}-linux-x64.tar.xz"
     "ys-${version}-macos-aarch64.tar.xz"
+    "libys-${version}-linux-aarch64.tar.xz"
     "libys-${version}-linux-x64.tar.xz"
     "libys-${version}-macos-aarch64.tar.xz"
   ]
 
 
 defn ys-formula(version class shas):
-  lin-file =: "ys-${version}-linux-x64.tar.xz"
+  lin-arm-file =: "ys-${version}-linux-aarch64.tar.xz"
+  lin-int-file =: "ys-${version}-linux-x64.tar.xz"
   mac-file =: "ys-${version}-macos-aarch64.tar.xz"
-  lin =: shas.$lin-file
+  lin-arm =: shas.$lin-arm-file
+  lin-int =: shas.$lin-int-file
   mac =: shas.$mac-file
   formula =:: |
     class CLASS < Formula
@@ -115,7 +119,11 @@ defn ys-formula(version class shas):
         if Hardware::CPU.intel?
           url "https://github.com/yaml/yamlscript/releases/download/" \
             "#{version}/ys-#{version}-linux-x64.tar.xz"
-          sha256 "LINUX_SHA"
+          sha256 "LINUX_INTEL_SHA"
+        elsif Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlscript/releases/download/" \
+            "#{version}/ys-#{version}-linux-aarch64.tar.xz"
+          sha256 "LINUX_ARM_SHA"
         else
           odie "YAMLScript is not available for this Linux architecture"
         end
@@ -145,14 +153,17 @@ defn ys-formula(version class shas):
   formula:
     .replace('CLASS' class)
     .replace('VERSION' version)
-    .replace('LINUX_SHA' lin)
+    .replace('LINUX_ARM_SHA' lin-arm)
+    .replace('LINUX_INTEL_SHA' lin-int)
     .replace('MACOS_SHA' mac)
 
 
 defn libys-formula(version class shas):
-  lin-file =: "libys-${version}-linux-x64.tar.xz"
+  lin-arm-file =: "libys-${version}-linux-aarch64.tar.xz"
+  lin-int-file =: "libys-${version}-linux-x64.tar.xz"
   mac-file =: "libys-${version}-macos-aarch64.tar.xz"
-  lin =: shas.$lin-file
+  lin-arm =: shas.$lin-arm-file
+  lin-int =: shas.$lin-int-file
   mac =: shas.$mac-file
   formula =:: |
     class CLASS < Formula
@@ -165,7 +176,11 @@ defn libys-formula(version class shas):
         if Hardware::CPU.intel?
           url "https://github.com/yaml/yamlscript/releases/download/" \
             "#{version}/libys-#{version}-linux-x64.tar.xz"
-          sha256 "LINUX_SHA"
+          sha256 "LINUX_INTEL_SHA"
+        elsif Hardware::CPU.arm?
+          url "https://github.com/yaml/yamlscript/releases/download/" \
+            "#{version}/libys-#{version}-linux-aarch64.tar.xz"
+          sha256 "LINUX_ARM_SHA"
         else
           odie "libys is not available for this Linux architecture"
         end
@@ -198,7 +213,8 @@ defn libys-formula(version class shas):
   formula:
     .replace('CLASS' class)
     .replace('VERSION' version)
-    .replace('LINUX_SHA' lin)
+    .replace('LINUX_ARM_SHA' lin-arm)
+    .replace('LINUX_INTEL_SHA' lin-int)
     .replace('MACOS_SHA' mac)
 
 
@@ -211,7 +227,7 @@ defn readme(version): |
 
   ## Install YAMLScript with Homebrew
 
-  Works on Linux Intel and macOS ARM.
+  Works on Linux Intel, Linux ARM and macOS ARM.
 
   ```
   $ brew install yaml/yamlscript/ys

@@ -3,7 +3,9 @@
 The following architectures are currently supported:
 
 * Linux + Intel
+* Linux + ARM
 * macOS + ARM
+* Windows + Intel
 
 Run this command to install `~/.local/bin/ys`:
 
