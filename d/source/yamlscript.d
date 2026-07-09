@@ -23,7 +23,7 @@ import std.string : fromStringz, split, toStringz;
 // This value is automatically updated by 'make bump'.
 // The version number is used to find the correct shared library file.
 // We currently only support binding to an exact version of libys.
-enum yamlscriptVersion = "0.2.26";
+enum yamlscriptVersion = "0.2.27";
 
 // We currently only support platforms that GraalVM supports.
 // Windows uses an unversioned file name, matching the Python binding:

@@ -4,7 +4,7 @@ include $(COMMON)/java.mk
 
 include $(MAKES)/shell.mk
 
-KOTLIN-YAMLSCRIPT-JAR := target/kotlin-yamlscript-0.2.26.jar
+KOTLIN-YAMLSCRIPT-JAR := target/kotlin-yamlscript-0.2.27.jar
 
 MVN-COMMANDS := \
   compile \

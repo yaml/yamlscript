@@ -21,7 +21,7 @@ import 'package:ffi/ffi.dart';
 // This value is automatically updated by 'make bump'.
 // The version number is used to find the correct shared library file.
 // We currently only support binding to an exact version of libys.
-const String yamlscriptVersion = '0.2.26';
+const String yamlscriptVersion = '0.2.27';
 
 typedef _CreateIsolateC = Int32 Function(
   Pointer<Void>,

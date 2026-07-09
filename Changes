@@ -1,3 +1,11 @@
+- version: 0.2.27
+  date:    Thu Jul  9 04:27:32 PM EDT 2026
+  changes:
+  - release: Always skip dart publishing in CI
+  - elixir: Publish from the docker test image too
+  - r: Make the release script executable
+  - ci: Enable Perl Windows release tests
+  - release: Add Linux AArch64 binaries
 - version: 0.2.26
   date:    Sat Jul  4 09:31:13 PM EDT 2026
   changes:
