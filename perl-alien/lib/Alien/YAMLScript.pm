@@ -3,7 +3,7 @@ use warnings;
 
 package Alien::YAMLScript;
 
-our $VERSION = '0.2.27';
+our $VERSION = '0.2.26';
 
 use parent 'Alien::Base';
 

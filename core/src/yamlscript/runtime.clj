@@ -37,7 +37,7 @@
   (:import
    [java.net InetAddress UnknownHostException]))
 
-(def ys-version "0.2.27")
+(def ys-version "0.2.26")
 
 (def ARGS (sci/new-dynamic-var 'ARGS [] {:ns global/main-ns}))
 (def ARGV (sci/new-dynamic-var 'ARGV [] {:ns global/main-ns}))

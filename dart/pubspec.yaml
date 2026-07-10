@@ -2,7 +2,7 @@ name: yamlscript
 description: >-
   Load YAML files with optional YS (YAMLScript) functional programming
   capabilities. A drop-in replacement for your current YAML loader.
-version: 0.2.27
+version: 0.2.26
 homepage: https://yamlscript.org
 repository: https://github.com/yaml/yamlscript
 
