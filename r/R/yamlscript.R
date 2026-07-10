@@ -12,7 +12,7 @@
 # returns the R object that the YAMLScript code evaluates to.
 
 # This value is automatically updated by 'make bump':
-YAMLSCRIPT_VERSION <- "0.2.26"
+YAMLSCRIPT_VERSION <- "0.2.27"
 
 # Compile and eval a YAMLScript string and return the result:
 yamlscript_load <- function(input) {

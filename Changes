@@ -1,3 +1,9 @@
+- version: 0.2.27
+  date:    Fri Jul 10 10:30:34 AM EDT 2026
+  changes:
+  - elixir: Publish from the docker test image
+  - ci: Enable Perl Windows release tests
+  - release: Add Linux AArch64 binaries
 - version: 0.2.26
   date:    Sat Jul  4 09:31:13 PM EDT 2026
   changes:

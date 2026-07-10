@@ -1,7 +1,7 @@
 Package: yamlscript
 Type: Package
 Title: Load YAML Files with Optional YS Functional Programming
-Version: 0.2.26
+Version: 0.2.27
 Author: Ingy dot Net
 Maintainer: Ingy dot Net <ingy@ingy.net>
 Description: Load YAML files that may use YS (YAMLScript) functional
