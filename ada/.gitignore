@@ -1,0 +1,3 @@
+*.ali
+*.o
+/test/test_yamlscript

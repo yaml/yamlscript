@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>YAMLScript</RootNamespace>
+    <Version>0.2.26</Version>
+    <PackageId>YAMLScript.FSharp</PackageId>
+    <PackageVersion>0.2.26</PackageVersion>
+    <Authors>YAMLScript Contributors</Authors>
+    <Description>YAMLScript language binding for F#</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/yaml/yamlscript</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src/YAMLScript.fs" />
+  </ItemGroup>
+</Project>

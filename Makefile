@@ -15,13 +15,17 @@ FEZ := $(RAKU-SITE-BIN)/fez
 SECRETS-TOOLS := $(FEZ)
 
 BINDINGS := \
+    ada \
     clojure \
+    common-lisp \
     crystal \
     csharp \
     d \
     dart \
     delphi \
     elixir \
+    erlang \
+    fsharp \
     fortran \
     go \
     haskell \
@@ -34,11 +38,14 @@ BINDINGS := \
     perl \
     perl-alien \
     php \
+    powershell \
+    prolog \
     python \
     r \
     raku \
     ruby \
     rust \
+    scala \
     swift \
     zig \
 
@@ -50,20 +57,27 @@ DIRS := \
 
 BUILD-DIRS := \
     libys \
+    ada \
     d \
     dart \
     delphi \
     elixir \
+    erlang \
+    fsharp \
     fortran \
     go \
     haskell \
     kotlin \
     nim \
     nodejs \
+    powershell \
+    prolog \
     python \
     r \
     ruby \
     rust \
+    common-lisp \
+    scala \
     swift \
     zig \
     ys \
