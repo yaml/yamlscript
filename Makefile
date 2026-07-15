@@ -619,6 +619,7 @@ clean:: $(CLEAN)
 	$(RM) -r yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) -r homebrew-yamlscript
+	$(RM) .swift-version CLAUDE.md
 	$(RM) NO-NAME release*.log release-changes.txt release-id.txt
 clean-%: %
 	$(MAKE) -C $< clean

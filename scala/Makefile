@@ -37,4 +37,4 @@ endif
 	$(MAKE) maven-central-release
 
 clean::
-	$(RM) -r .bsp .scala-build target
+	$(RM) -r .bsp .scala-build src/.bsp src/.scala-build target

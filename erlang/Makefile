@@ -59,4 +59,5 @@ ebin $(ERLANG-PRIV):
 build:: ebin/yamlscript_test.beam
 
 clean::
-	$(RM) -r ebin priv
+	$(RM) -r _build ebin priv
+	$(RM) rebar.lock
