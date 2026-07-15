@@ -1004,6 +1004,10 @@ jobs:
       YS_GH_TOKEN: ${{ secrets.YAMLSCRIPT_RELEASE_TOKEN || github.token }}
       CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
       CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
+      CENTRAL_TOKEN: ${{ secrets.CENTRAL_TOKEN }}
+      GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
       PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
       HACKAGE_TOKEN: ${{ secrets.HACKAGE_TOKEN }}
@@ -1070,6 +1074,12 @@ jobs:
 
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
+
+    - name: Import GPG signing key
+      if: ${{ env.GPG_PRIVATE_KEY != '' }}
+      run: |
+        printf '%s' "$GPG_PRIVATE_KEY" | gpg --batch --import
+        gpg --batch --list-secret-keys "$GPG_KEY_ID"
 
     - name: Configure mirror repo SSH key
       if: ${{ env.BINDING_REPO_SSH_KEY != '' }}

@@ -15,10 +15,29 @@
 
   <licenses>
     <license>
-      <name>MIT</name>
-      <url>https://github.com/yaml/yamlscript/blob/main/License</url>
+      <name>MIT License</name>
+      <url>https://opensource.org/license/mit/</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <developers>
+    <developer>
+      <id>ingydotnet</id>
+      <name>Ingy dot Net</name>
+      <email>ingy@ingy.net</email>
+      <url>https://github.com/ingydotnet</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/yaml/yamlscript.git</connection>
+    <developerConnection>
+      scm:git:ssh://git@github.com/yaml/yamlscript.git
+    </developerConnection>
+    <url>https://github.com/yaml/yamlscript</url>
+    <tag>0.2.27</tag>
+  </scm>
 
   <properties>
     <maven.compiler.release>17</maven.compiler.release>

@@ -4,7 +4,17 @@ include $(COMMON)/java.mk
 
 include $(MAKES)/shell.mk
 
+export JAVA_TOOL_OPTIONS := -Djna.tmpdir=$(ROOT)/.cache/jna
+
 YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.2.27.jar
+MAVEN-CENTRAL-ARTIFACT := yamlscript
+MAVEN-CENTRAL-JAR := $(YAMLSCRIPT-JAVA-JAR)
+MAVEN-CENTRAL-SOURCE-FILES := \
+  $(wildcard src/main/java/org/yamlscript/yamlscript/*.java)
+MAVEN-CENTRAL-JAVADOC-TEXT := \
+  YAMLScript Java API documentation is in the sources JAR.
+
+include $(COMMON)/maven-central.mk
 
 MVN-COMMANDS := \
   compile \
@@ -16,6 +26,7 @@ MVN-COMMANDS := \
 #------------------------------------------------------------------------------
 
 $(MVN-COMMANDS):: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
+	mkdir -p $(ROOT)/.cache/jna
 	$(MVN) $@
 
 ifdef YS_RELEASE_CI
@@ -29,12 +40,7 @@ endif
 ifdef YS_RELEASE_CI
 	$(MVN) package -DskipTests
 endif
-	$(MVN) deploy:deploy-file \
-	    -s ~/.mvn-user-settings.xml \
-	    -Dfile=$(YAMLSCRIPT-JAVA-JAR) \
-	    -DpomFile=pom.xml \
-	    -DrepositoryId=clojars \
-	    -Durl=https://clojars.org/repo/
+	$(MAKE) maven-central-release
 
 clean::
 	$(RM) -r reports/ target/

@@ -24,7 +24,7 @@ Add the `kotlin-yamlscript` artifact to your project and install the
 ```kotlin
 // build.gradle.kts
 repositories {
-    maven("https://repo.clojars.org")
+    mavenCentral()
 }
 dependencies {
     implementation("org.yamlscript:kotlin-yamlscript:0.2.27")

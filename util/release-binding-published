@@ -94,7 +94,7 @@ published=false
 
 case $binding in
   java)
-    url='https://repo.clojars.org/org/yamlscript/yamlscript'
+    url='https://repo1.maven.org/maven2/org/yamlscript/yamlscript'
     url-exists "$url/$version/yamlscript-$version.jar" &&
       published=true
     ;;
@@ -167,7 +167,7 @@ case $binding in
       published=true
     ;;
   kotlin)
-    url='https://repo.clojars.org/org/yamlscript/kotlin-yamlscript'
+    url='https://repo1.maven.org/maven2/org/yamlscript/kotlin-yamlscript'
     url-exists "$url/$version/kotlin-yamlscript-$version.jar" &&
       published=true
     ;;
@@ -178,7 +178,7 @@ case $binding in
       published=true
     ;;
   scala)
-    url='https://repo.clojars.org/org/yamlscript/scala-yamlscript'
+    url='https://repo1.maven.org/maven2/org/yamlscript/scala-yamlscript'
     url-exists "$url/$version/scala-yamlscript-$version.jar" &&
       published=true
     ;;

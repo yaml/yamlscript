@@ -26,18 +26,28 @@
   <licenses>
     <license>
       <name>MIT License</name>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <url>https://opensource.org/license/mit/</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
 
-  <distributionManagement>
-    <repository>
-      <id>clojars</id>
-      <name>Clojars repository</name>
-      <url>https://clojars.org/repo</url>
-    </repository>
-  </distributionManagement>
+  <developers>
+    <developer>
+      <id>ingydotnet</id>
+      <name>Ingy dot Net</name>
+      <email>ingy@ingy.net</email>
+      <url>https://github.com/ingydotnet</url>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/yaml/yamlscript.git</connection>
+    <developerConnection>
+      scm:git:ssh://git@github.com/yaml/yamlscript.git
+    </developerConnection>
+    <url>https://github.com/yaml/yamlscript</url>
+    <tag>0.2.27</tag>
+  </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
