@@ -10,6 +10,6 @@ set -euo pipefail
   export PATH=$JAVA_HOME/bin:$PATH
   root_ys=$root/ys
   jar=yamlscript.cli-$libys_version-SNAPSHOT-standalone.jar
-  make --no-print-directory -C "$root_ys" jar
+  make -s --no-print-directory -C "$root_ys" jar >/dev/null
   java -jar "$root_ys/target/uberjar/$jar" "$@"
 )
