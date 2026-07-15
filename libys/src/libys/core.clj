@@ -7,7 +7,7 @@
   (:require
    [clojure.data.json :as json]
    [sci.core :as sci]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.compiler :as compiler]
    [yamlscript.runtime :as runtime])
   (:gen-class

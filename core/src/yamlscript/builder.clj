@@ -10,7 +10,7 @@
    [clojure.string :as str]
    [yamlscript.ast :refer
     [Bln Clj Flt Key Lst Map Nil Num Str Sym Vec]]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.composer]
    [yamlscript.global]
    [yamlscript.parser]

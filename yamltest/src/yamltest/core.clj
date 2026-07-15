@@ -9,7 +9,7 @@
    [clj-yaml.core :as yaml]
    [clojure.string :as str]
    [clojure.test :as test]
-   [yamlscript.common]))
+   [ys.v0.common]))
 
 
 ;; ----------------------------------------------------------------------------

@@ -5,7 +5,7 @@
   (:require
    [clojure.test :as test]
    [yamlscript.cli :as cli]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.test :as yt :refer [is]])
   (:refer-clojure))
 

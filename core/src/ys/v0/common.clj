@@ -1,17 +1,17 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.common namespace holds small helpers shared by the compiler,
+;; The ys.v0.common namespace holds small helpers shared by the compiler,
 ;; runtime, and module loader.
 
-(ns yamlscript.common
+(ns ys.v0.common
   (:require
    [babashka.fs :refer [cwd]]
    [clojure.java.io :as io]
    [clojure.stacktrace]
    [clojure.string :as str]
-   [yamlscript.debug]
-   [yamlscript.util :as util]))
+   [ys.v0.debug]
+   [ys.v0.util :as util]))
 
 ;; Use for error messages at some point
 #_(defn find-var-by-value [x]
@@ -110,15 +110,15 @@
   [x]
   (= (type x) java.util.regex.Pattern))
 
-(intern 'clojure.core (with-meta 'TTT {:macro true}) @#'yamlscript.debug/TTT)
-(intern 'clojure.core 'YSC yamlscript.debug/YSC)
-(intern 'clojure.core 'YSC0 yamlscript.debug/YSC0)
-(intern 'clojure.core 'DBG yamlscript.debug/DBG)
-(intern 'clojure.core 'PPP yamlscript.debug/PPP)
-(intern 'clojure.core 'WWW yamlscript.debug/WWW)
-(intern 'clojure.core 'XXX yamlscript.debug/XXX)
-(intern 'clojure.core 'YYY yamlscript.debug/YYY)
-(intern 'clojure.core 'ZZZ yamlscript.debug/ZZZ)
+(intern 'clojure.core (with-meta 'TTT {:macro true}) @#'ys.v0.debug/TTT)
+(intern 'clojure.core 'YSC ys.v0.debug/YSC)
+(intern 'clojure.core 'YSC0 ys.v0.debug/YSC0)
+(intern 'clojure.core 'DBG ys.v0.debug/DBG)
+(intern 'clojure.core 'PPP ys.v0.debug/PPP)
+(intern 'clojure.core 'WWW ys.v0.debug/WWW)
+(intern 'clojure.core 'XXX ys.v0.debug/XXX)
+(intern 'clojure.core 'YYY ys.v0.debug/YYY)
+(intern 'clojure.core 'ZZZ ys.v0.debug/ZZZ)
 
 (comment
   )

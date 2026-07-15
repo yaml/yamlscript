@@ -6,7 +6,7 @@
 
 (ns yamlscript.composer
   (:require
-   [yamlscript.common])
+   [ys.v0.common])
   (:refer-clojure))
 
 (comment

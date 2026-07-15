@@ -4,7 +4,7 @@
 (ns yamlscript.transformer-test
   (:require
    [yamlscript.builder :as builder]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.composer :as composer]
    [yamlscript.parser :as parser]
    [yamlscript.resolver :as resolver]

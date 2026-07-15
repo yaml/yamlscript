@@ -1,7 +1,7 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns yamlscript.util)
+(ns ys.v0.util)
 
 (defn die
   "Throw a YAMLScript exception with a normalized trailing newline."

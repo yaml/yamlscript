@@ -1,10 +1,10 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.dwim
+(ns ys.v0.dwim
   (:require
    [clojure.string :refer [escape replace]]
-   [yamlscript.common :as common :refer [chop re-find+ regex?]])
+   [ys.v0.common :as common :refer [chop re-find+ regex?]])
   (:refer-clojure :exclude [replace]))
 
 

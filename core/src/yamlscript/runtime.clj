@@ -18,26 +18,28 @@
    ; [clojure.zip]
    [java-time.api]
    [sci.core :as sci]
-   [yamlscript.common :as common]
-   [yamlscript.debug]
+   [ys.v0]
+   [ys.v0.common :as common]
+   [ys.v0.debug]
    [yamlscript.global :as global]
-   [yamlscript.re :as re]
-   [yamlscript.util]
-   [ys.clj]
-   [ys.csv]
-   [ys.dwim]
-   [ys.ext]
-   [ys.fs]
-   [ys.http]
-   [ys.json]
-   [ys.std]
-   [ys.taptest]
-   [ys.yaml]
+   [ys.v0.manifest :as manifest]
+   [ys.v0.re :as re]
+   [ys.v0.util]
+   [ys.v0.clj]
+   [ys.v0.csv]
+   [ys.v0.dwim]
+   [ys.v0.ext]
+   [ys.v0.fs]
+   [ys.v0.http]
+   [ys.v0.json]
+   [ys.v0.std]
+   [ys.v0.taptest]
+   [ys.v0.yaml]
    [ys.ys :as ys])
   (:import
    [java.net InetAddress UnknownHostException]))
 
-(def ys-version "0.2.28")
+(def ys-version ys.v0/VERSION)
 
 (def ARGS (sci/new-dynamic-var 'ARGS [] {:ns global/main-ns}))
 (def ARGV (sci/new-dynamic-var 'ARGV [] {:ns global/main-ns}))
@@ -46,7 +48,9 @@
 (def INC (sci/new-dynamic-var 'INC [] {:ns global/main-ns}))
 (def RUN (sci/new-dynamic-var 'RUN {} {:ns global/main-ns}))
 
-;; Define the clojure.core namespace that is referenced into all namespaces
+;; Define the clojure.core namespace that is referenced into all namespaces.
+;; The exported vars come from the ys.v0.manifest so the SCI runtime and
+;; ys.v0/init (babashka, JVM Clojure) always expose the same set.
 (def clojure-core-ns
   (let [core {;; Runtime variables
               '_ global/_
@@ -63,37 +67,24 @@
 
               ;; clojure.core functions overridden by YS
               'load (sci/copy-var ys.ys/load-file nil)
-              'use (sci/copy-var ys.ys/use nil)
+              'use (sci/copy-var ys.ys/use nil)}
 
-              ;; clojure.core functions not added by SCI
-              'abs (sci/copy-var clojure.core/abs nil)
-              'file-seq (sci/copy-var clojure.core/file-seq nil)
-              'infinite? (sci/copy-var clojure.core/infinite? nil)
-              'parse-double (sci/copy-var clojure.core/parse-double nil)
-              'parse-long (sci/copy-var clojure.core/parse-long nil)
-              'parse-uuid (sci/copy-var clojure.core/parse-uuid nil)
-              'pprint (sci/copy-var clojure.pprint/pprint nil)
-              'random-uuid (sci/copy-var clojure.core/random-uuid nil)
-              'slurp (sci/copy-var clojure.core/slurp nil)
-              'spit (sci/copy-var clojure.core/spit nil)
-              'NaN? (sci/copy-var clojure.core/NaN? nil)
+        ;; clojure.core functions not added by SCI
+        extras (-> (ns-publics 'clojure.core)
+                 (select-keys manifest/sci-core-extras)
+                 (update-vals #(sci/copy-var* %1 nil)))
 
-              ;; YS util public functions
-              'condf (sci/copy-var yamlscript.util/condf nil)
-
-              ;; YS debugging functions
-              'DBG (sci/copy-var yamlscript.debug/DBG nil)
-              'PPP (sci/copy-var yamlscript.debug/PPP nil)
-              'TTT (sci/copy-var yamlscript.debug/TTT nil)
-              'WWW (sci/copy-var yamlscript.debug/WWW nil)
-              'XXX (sci/copy-var yamlscript.debug/XXX nil)
-              'YYY (sci/copy-var yamlscript.debug/YYY nil)
-              'ZZZ (sci/copy-var yamlscript.debug/ZZZ nil)}
-        std (ns-publics 'ys.std)
-        std (update-vals std #(sci/copy-var* %1 nil))
-        dwim (ns-publics 'ys.dwim)
-        dwim (update-vals dwim #(sci/copy-var* %1 nil))]
-    (merge core std dwim)))
+        ;; The manifest exports (ys.v0.std, ys.v0.dwim, condf, debug fns...)
+        refers (reduce
+                 (fn [m [ns-sym syms]]
+                   (let [publics (ns-publics ns-sym)
+                         publics (if (= :all syms)
+                                   publics
+                                   (select-keys publics syms))]
+                     (merge m (update-vals publics
+                                #(sci/copy-var* %1 nil)))))
+                 {} manifest/refers)]
+    (merge core extras refers)))
 
 (def pods-namespace
   {'load-pod (sci/copy-var ys/load-pod nil)
@@ -106,72 +97,92 @@
 (def cli-namespace
   (sci/copy-ns clojure.tools.cli (sci/create-ns 'cli)))
 (def clj-namespace
-  (sci/copy-ns ys.clj (sci/create-ns 'clj)))
+  (sci/copy-ns ys.v0.clj (sci/create-ns 'clj)))
 (def csv-namespace
-  (sci/copy-ns ys.csv (sci/create-ns 'csv)))
+  (sci/copy-ns ys.v0.csv (sci/create-ns 'csv)))
 (def debug-namespace
-  (sci/copy-ns yamlscript.debug (sci/create-ns 'yamlscript.debug)))
+  (sci/copy-ns ys.v0.debug (sci/create-ns 'ys.v0.debug)))
 (def fs-namespace
-  (sci/copy-ns ys.fs (sci/create-ns 'fs)))
+  (sci/copy-ns ys.v0.fs (sci/create-ns 'fs)))
 (def java-time-namespace
   (sci/copy-ns java-time.api (sci/create-ns 'java-time.api)))
 (def http-namespace
-  (sci/copy-ns ys.http (sci/create-ns 'http)))
+  (sci/copy-ns ys.v0.http (sci/create-ns 'http)))
 (def io-namespace
   (sci/copy-ns clojure.java.io (sci/create-ns 'io)))
 (def json-namespace
-  (sci/copy-ns ys.json (sci/create-ns 'json)))
+  (sci/copy-ns ys.v0.json (sci/create-ns 'json)))
 (def math-namespace
   (sci/copy-ns clojure.math (sci/create-ns 'math)))
 (def set-namespace
   (sci/copy-ns clojure.set (sci/create-ns 'set)))
 (def ext-namespace
-  (sci/copy-ns ys.ext (sci/create-ns 'ys.ext)))
+  (sci/copy-ns ys.v0.ext (sci/create-ns 'ys.ext)))
 (def std-namespace
-  (sci/copy-ns ys.std (sci/create-ns 'std)))
+  (sci/copy-ns ys.v0.std (sci/create-ns 'std)))
 (def str-namespace
   (sci/copy-ns clojure.string (sci/create-ns 'str)))
 (def taptest-namespace
-  (sci/copy-ns ys.taptest (sci/create-ns 'ys.taptest)))
+  (sci/copy-ns ys.v0.taptest (sci/create-ns 'ys.taptest)))
 (def util-namespace
-  (sci/copy-ns yamlscript.util (sci/create-ns 'yamlscript.util)))
+  (sci/copy-ns ys.v0.util (sci/create-ns 'ys.v0.util)))
 (def walk-namespace
   (sci/copy-ns clojure.walk (sci/create-ns 'walk)))
 (def yaml-namespace
-  (sci/copy-ns ys.yaml (sci/create-ns 'yaml)))
+  (sci/copy-ns ys.v0.yaml (sci/create-ns 'yaml)))
 (def ys-namespace
   (sci/copy-ns ys.ys (sci/create-ns 'ys)))
+(def v0-ys-namespace
+  (sci/copy-ns ys.v0.ys (sci/create-ns 'ys.v0.ys)))
+
+;; The SCI copies of the host namespaces that user code can reach.
+(def host-namespaces
+  {'ys.v0.std std-namespace
+   'ys.v0.clj clj-namespace
+   'ys.v0.csv csv-namespace
+   'ys.v0.ext ext-namespace
+   'ys.v0.fs fs-namespace
+   'ys.v0.http http-namespace
+   'ys.v0.json json-namespace
+   'ys.v0.taptest taptest-namespace
+   'ys.v0.yaml yaml-namespace
+   'ys.v0.ys v0-ys-namespace
+   'clojure.tools.cli cli-namespace
+   'clojure.java.io io-namespace
+   'clojure.math math-namespace
+   'clojure.set set-namespace
+   'clojure.string str-namespace
+   'clojure.walk walk-namespace})
+
+;; A no-op ys.v0 namespace so that code compiled with `ys -c --v0` (which
+;; starts with `(ns main (:require ys.v0))` and `(ys.v0/init)`) also runs
+;; under the ys runtime, where everything is already set up.
+(def v0-namespace
+  {'init (fn [& _] nil)
+   'VERSION ys-version})
 
 (def namespaces
-  {'main {}
+  (merge
+    {'main {}
+     'clojure.core clojure-core-ns 'core clojure-core-ns}
 
-   ;; These need to be first:
-   'clojure.core clojure-core-ns 'core clojure-core-ns
-   'ys      ys-namespace   'ys.ys      ys-namespace
-   'std     std-namespace  'ys.std     std-namespace
-   'clj     clj-namespace  'ys.clj     clj-namespace
+    ;; The user-visible aliases (str, json, ys, std...) from the manifest
+    (update-vals manifest/aliases host-namespaces)
 
-   'cli     cli-namespace  'ys.cli     cli-namespace
-   'csv     csv-namespace  'ys.csv     csv-namespace
-   'ext     ext-namespace  'ys.ext     ext-namespace  'x ext-namespace
-   'fs      fs-namespace   'ys.fs      fs-namespace
-   'http    http-namespace 'ys.http    http-namespace
-   'io      io-namespace   'ys.io      io-namespace
-   'json    json-namespace 'ys.json    json-namespace
-   'math    math-namespace 'ys.math    math-namespace
-   'pods    pods-namespace 'ys.pods    pods-namespace
-   'set     set-namespace  'ys.set     set-namespace
-   'str     str-namespace  'ys.str     str-namespace
-   'walk    walk-namespace 'ys.walk    walk-namespace
-   'yaml    yaml-namespace 'ys.yaml    yaml-namespace
+    ;; ys.v0.* host namespace names; macro expansions of stdlib macros
+    ;; resolve these directly
+    (select-keys host-namespaces
+      (filter #(str/starts-with? (str %1) "ys.v0.")
+        (keys host-namespaces)))
 
-   'babashka.pods     babashka-pods-ns
-   'babashka.pods.sci babashka-pods-sci-ns
-
-   'java-time java-time-namespace
-   'ys.taptest taptest-namespace
-   'yamlscript.debug debug-namespace
-   'yamlscript.util util-namespace})
+    ;; SCI-runtime-only namespaces
+    {'ys.v0 v0-namespace
+     'pods    pods-namespace 'ys.pods    pods-namespace
+     'babashka.pods     babashka-pods-ns
+     'babashka.pods.sci babashka-pods-sci-ns
+     'java-time java-time-namespace
+     'ys.v0.debug debug-namespace 'yamlscript.debug debug-namespace
+     'ys.v0.util util-namespace   'yamlscript.util util-namespace}))
 
 (defn classes-map
   "Build SCI class lookup entries from fully qualified class symbols."
@@ -313,7 +324,7 @@
                   args))
          ARGV args
          RUN (get-runtime-info)
-         CWD (str (ys.fs/cwd))
+         CWD (str (ys.v0.fs/cwd))
          DIR (common/dirname file)
          global/ENV (into {} (System/getenv))
          global/FILE file

@@ -1,12 +1,12 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.http
+(ns ys.v0.http
   (:require
    [babashka.http-client :as http])
   (:refer-clojure :exclude [get]))
 
-(def this 'ys.http)
+(def this 'ys.v0.http)
 
 (intern this 'delete http/delete)
 (intern this 'get http/get)

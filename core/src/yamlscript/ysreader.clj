@@ -11,7 +11,7 @@
    [yamlscript.ast :as ast :refer
     [Bln Chr Form Key Lst Map Nil Num
      QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.global :as global]
    [yamlscript.re :as re])
   (:refer-clojure :exclude [read-string]))

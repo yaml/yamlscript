@@ -9,7 +9,7 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :as ast :refer [Lst Map Qts Str Sym Vec]]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.global :as global]
    [yamlscript.re :as re])
   (:refer-clojure))

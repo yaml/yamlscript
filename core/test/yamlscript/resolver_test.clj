@@ -4,7 +4,7 @@
 (ns yamlscript.resolver-test
   (:require
    [clojure.edn :as edn]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.composer :as composer]
    [yamlscript.parser :as parser]
    [yamlscript.resolver :as resolver]

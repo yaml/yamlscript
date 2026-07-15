@@ -1,7 +1,7 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.yaml
+(ns ys.v0.yaml
   (:require
    [clojure.string :as str]
    [clj-yaml.core :as yaml])

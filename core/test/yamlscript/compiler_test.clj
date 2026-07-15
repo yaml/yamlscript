@@ -4,7 +4,7 @@
 (ns yamlscript.compiler-test
   (:require
    [clojure.string :as str]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.compiler :as compiler]
    [yamltest.core :as test]))
 

@@ -1,7 +1,7 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.json
+(ns ys.v0.json
   (:require
    [clojure.data.json :as json])
   (:refer-clojure :exclude [load]))

@@ -4,7 +4,7 @@
 (ns yamlscript.printer-test
   (:require
    [yamlscript.builder :as builder]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.compiler :as compiler]
    [yamlscript.composer :as composer]
    [yamlscript.constructor :as constructor]

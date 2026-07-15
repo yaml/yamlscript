@@ -1,14 +1,14 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.debug library defines a set of Clojure debugging functions.
+;; The ys.v0.debug library defines a set of Clojure debugging functions.
 
-(ns yamlscript.debug
+(ns ys.v0.debug
   (:require
    [clojure.pprint :as pp]
    [clojure.string :as str]
-   [yamlscript.global :as global]
-   [yamlscript.util :as util])
+   [ys.v0.global :as global]
+   [ys.v0.util :as util])
   (:refer-clojure :exclude [YSC DBG PPP WWW XXX YYY ZZZ]))
 
 (def width 50)
@@ -16,8 +16,11 @@
 (defn YSC0
   "Compile YAMLScript source for interactive debugging."
   [ys-str]
-  (let [compile (var-get (resolve 'yamlscript.compiler/compile))
-        pretty-format (var-get (resolve 'yamlscript.compiler/pretty-format))]
+  (let [compile (some-> (resolve 'yamlscript.compiler/compile) var-get)
+        pretty-format (some-> (resolve 'yamlscript.compiler/pretty-format)
+                        var-get)
+        _ (when-not (and compile pretty-format)
+            (util/die "YSC requires the ys runtime (no YS compiler loaded)"))]
     (binding [*ns* (find-ns 'yamlscript.compiler)]
       (let [code (eval
                    (->

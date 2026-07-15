@@ -18,9 +18,10 @@
    [clojure.string :as str]
    [clojure.stacktrace]
    [clojure.tools.cli :as cli]
-   [yamlscript.common]
+   [ys.v0.common]
+   [ys.v0.global :refer [env]]
    [yamlscript.compiler :as compiler]
-   [yamlscript.global :as global :refer [env]]
+   [yamlscript.global :as global]
    [yamlscript.runtime :as runtime])
   (:refer-clojure))
 

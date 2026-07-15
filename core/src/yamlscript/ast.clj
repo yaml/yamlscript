@@ -6,7 +6,7 @@
 (ns yamlscript.ast
   (:require
    [clojure.string :as str]
-   [yamlscript.common])
+   [ys.v0.common])
   (:refer-clojure :exclude [Vec]))
 
 (defn Lst

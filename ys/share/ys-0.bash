@@ -146,7 +146,7 @@ write-program-clj() (
   cat <<EOF > src/program.clj
 (ns program (:gen-class) (:refer-clojure :exclude [print]))
 (use 'clojure.core)
-(use 'ys.std)
+(use 'ys.v0.std)
 (def ^:dynamic ARGS [])
 (def ^:dynamic ENV {})
 ;; ------------------------------------------------------------------------

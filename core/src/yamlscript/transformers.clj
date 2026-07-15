@@ -7,7 +7,7 @@
 (ns yamlscript.transformers
   (:require
    [yamlscript.ast :refer [Sym Lst Vec Key]]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.ysreader])
   (:refer-clojure))
 

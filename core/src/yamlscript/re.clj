@@ -10,7 +10,8 @@
 (ns yamlscript.re
   (:require
    [clojure.string :as str]
-   [yamlscript.common])
+   [ys.v0.common]
+   [ys.v0.re :as v0re])
   (:refer-clojure :exclude [char quot]))
 
 (defn re
@@ -75,28 +76,18 @@
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
 (def ukey #"(?:\w+(?:_\w+)+)")             ; Word with _ allowed
 
-;; Numeric literal tokens for code mode
+;; Numeric literal tokens for code mode (shared tokens live in ys.v0.re)
 
-;; Integer literal token
-(def inum #"(?:[-+]?(?:0|[1-9][0-9]*))")
-;; Big integer literal token
-(def ibig (re #"(?:(?:$inum)N)"))
-;; Hexadecimal literal token
-(def hnum #"(?:[-+]?0x[0-9a-fA-F]+)")
-;; Octal literal token
-(def onum #"(?:[-+]?0o[0-7]+)")
-;; Rational literal token
-(def rnum #"(?:[-+]?[0-9]+/[0-9]+)")
-;; Radix integer literal token
-(def bnum #"(?:[-+]?(?:[2-9]|[12][0-9]|3[0-6])r[0-9a-zA-Z]+)")
-;; Floating point literal token
-(def fnum (re #"(?:$inum\.[0-9]+(?:[eE]$inum)?)"))
-;; Big floating point literal token
-(def fbig (re #"(?:(?:$fnum|$inum\.?)M)"))
-;; Special number literal token
-(def snum #"(?:\\\\(?:Inf|-Inf|NaN))")
-;; Numeric literal token
-(def xnum (re #"(?:$fbig|$fnum|$hnum|$onum|$rnum|$bnum|$ibig|$inum|$snum)"))
+(def inum v0re/inum)
+(def ibig v0re/ibig)
+(def hnum v0re/hnum)
+(def onum v0re/onum)
+(def rnum v0re/rnum)
+(def bnum v0re/bnum)
+(def fnum v0re/fnum)
+(def fbig v0re/fbig)
+(def snum v0re/snum)
+(def xnum v0re/xnum)
 ;; Maybe a number token
 (def mnum (re #"(?x)
                 (?:
@@ -152,12 +143,12 @@
             )")
 (def icom (re #"(?:\\$dstr)"))             ; Inline comment token
 (def pnum #"(?:\d+)")                      ; Positive integer
-(def alph #"(?:[a-zA-Z])")                 ; Alpha
-(def anum #"(?:[a-zA-Z0-9])")              ; Alphanumeric
-(def symw (re #"(?:$alph$anum*(?:-$anum+)*)"))  ; Symbol word
+(def alph v0re/alph)                       ; Alpha
+(def anum v0re/anum)                       ; Alphanumeric
+(def symw v0re/symw)                       ; Symbol word
 (def vsym (re #"(?:\$$symw|\$(?=\.))"))    ; Variable lookup symbol
 (def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
-(def keyw (re #"(?:\:$symw)"))             ; Keyword token
+(def keyw v0re/keyw)                       ; Keyword token
 (def jsym #"(?:~\w+)")                     ; Java interop symbol
                                            ; Dot operator word with _ allowed
 (def dots (re #"(?:(?:\.(?:$jsym|$ukey))$tend)"))

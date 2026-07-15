@@ -3,7 +3,7 @@
 
 ;; This is the YS standard library.
 
-(ns ys.std
+(ns ys.v0.std
   (:require
    [babashka.process :as process]
    [clojure.data :as data]
@@ -12,16 +12,15 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [flatland.ordered.map]
-   [java-time.api :as jtime]
-   [yamlscript.common :as common :refer
+   [ys.v0.common :as common :refer
     [atom? re-find+ regex?]]
-   [yamlscript.externals :as ext]
-   [yamlscript.global :as global]
-   [yamlscript.re :as re]
-   [yamlscript.util :as util]
-   [ys.fs :as fs]
-   [ys.http :as http]
-   [ys.ys :as ys])
+   [ys.v0.ext :as ext]
+   [ys.v0.global :as global]
+   [ys.v0.re :as re]
+   [ys.v0.util :as util]
+   [ys.v0.fs :as fs]
+   [ys.v0.http :as http]
+   [ys.v0.ys :as ys])
   (:import java.security.MessageDigest
            java.util.Base64)
   (:refer-clojure :exclude [atom
@@ -49,12 +48,12 @@
   (.encode (Base64/getEncoder) (.getBytes ^String S)))
 (defn base64 [S] (base64-encode S))
 
-(intern 'ys.std 'blank? clojure.string/blank?)
-(intern 'ys.std 'chomp clojure.string/trim-newline)
-(intern 'ys.std 'chop common/chop)
-(intern 'ys.std 'ends? clojure.string/ends-with?)
-(intern 'ys.std 'escape clojure.string/escape)
-(intern 'ys.std 'index clojure.string/index-of)
+(intern 'ys.v0.std 'blank? clojure.string/blank?)
+(intern 'ys.v0.std 'chomp clojure.string/trim-newline)
+(intern 'ys.v0.std 'chop common/chop)
+(intern 'ys.v0.std 'ends? clojure.string/ends-with?)
+(intern 'ys.v0.std 'escape clojure.string/escape)
+(intern 'ys.v0.std 'index clojure.string/index-of)
 
 (defn index [C x]
   (condf C
@@ -74,7 +73,7 @@
 
 (defn joins [Ss] (join " " Ss))
 
-(intern 'ys.std 'lc clojure.string/lower-case)
+(intern 'ys.v0.std 'lc clojure.string/lower-case)
 
 (defn lines [S]
   (if (empty? S)
@@ -96,8 +95,8 @@
            (clojure.core/replace x y)))
   ([x y z] (clojure.string/replace x y z)))
 
-(intern 'ys.std 'replace1 clojure.string/replace-first)
-(intern 'ys.std 'rindex clojure.string/last-index-of)
+(intern 'ys.v0.std 'replace1 clojure.string/replace-first)
+(intern 'ys.v0.std 'rindex clojure.string/last-index-of)
 
 (defn split
   ([S]
@@ -111,7 +110,7 @@
          R (if (string? R) (re-pattern R) R)]
      (clojure.string/split S R))))
 
-(intern 'ys.std 'starts? clojure.string/starts-with?)
+(intern 'ys.v0.std 'starts? clojure.string/starts-with?)
 
 (defn substr
   ([str off] (substr str off (- (count str) off)))
@@ -138,12 +137,12 @@
     (str/join "\n"
       (concat Ss (list "")))))
 
-(intern 'ys.std 'trim clojure.string/trim)
-(intern 'ys.std 'triml clojure.string/triml)
-(intern 'ys.std 'trimr clojure.string/trimr)
+(intern 'ys.v0.std 'trim clojure.string/trim)
+(intern 'ys.v0.std 'triml clojure.string/triml)
+(intern 'ys.v0.std 'trimr clojure.string/trimr)
 
-(intern 'ys.std 'uc clojure.string/upper-case)
-(intern 'ys.std 'uc1 clojure.string/capitalize)
+(intern 'ys.v0.std 'uc clojure.string/upper-case)
+(intern 'ys.v0.std 'uc1 clojure.string/capitalize)
 
 (defn words [S]
   (clojure.string/split S #"\s+"))
@@ -232,7 +231,7 @@
 (defn omap [& xs]
   (apply flatland.ordered.map/ordered-map xs))
 
-(intern 'ys.std '% omap)
+(intern 'ys.v0.std '% omap)
 
 (defn reverse [x]
   (condf x
@@ -298,7 +297,7 @@
       (for [d n]
         (- (byte d) 48)))))
 
-(intern 'ys.std 'floor math/floor)
+(intern 'ys.v0.std 'floor math/floor)
 
 (defn pow
   ([x] #(pow %1 x))
@@ -314,14 +313,14 @@
    (let [[& xs] (clojure.core/reverse (conj xs y x))]
      (reduce #(pow %2 %1) 1 xs))))
 
-(intern 'ys.std 'round math/round)
+(intern 'ys.v0.std 'round math/round)
 
 (defn sum [xs]
   (reduce + 0 (filter identity xs)))
 
 (defn sqr  [N] (pow N 2))
 (defn cube [N] (pow N 3))
-(intern 'ys.std 'sqrt math/sqrt)
+(intern 'ys.v0.std 'sqrt math/sqrt)
 
 (defn- op-error
   ([op x]
@@ -427,7 +426,7 @@
      (when-not (ifn? f#) (util/die "Can't call(" (pr-str f#) ")"))
      (f# ~@xs)))
 
-(intern 'ys.std 'die yamlscript.util/die)
+(intern 'ys.v0.std 'die ys.v0.util/die)
 
 (defmacro each [bindings & body]
   `(doall (for ~bindings (do ~@body))))
@@ -497,8 +496,8 @@
 ;;------------------------------------------------------------------------------
 ;; I/O functions
 ;;------------------------------------------------------------------------------
-(intern 'ys.std 'read clojure.core/slurp)
-(intern 'ys.std 'write clojure.core/spit)
+(intern 'ys.v0.std 'read clojure.core/slurp)
+(intern 'ys.v0.std 'write clojure.core/spit)
 
 (defn out [& xs]
   (apply clojure.core/print xs)
@@ -526,9 +525,9 @@
 ;; Shorter named alias functions
 ;;------------------------------------------------------------------------------
 
-(intern 'ys.std 'a clojure.core/identity)
+(intern 'ys.v0.std 'a clojure.core/identity)
 
-(intern 'ys.std 'len clojure.core/count)
+(intern 'ys.v0.std 'len clojure.core/count)
 
 
 ;;------------------------------------------------------------------------------
@@ -702,23 +701,23 @@
     nil? []
     (util/die "Can't convert " (or (type x) "nil") " to vector")))
 
-(intern 'ys.std 'B to-bool)
-(intern 'ys.std 'C to-char)
-(intern 'ys.std 'F to-float)
-(intern 'ys.std 'I to-int)
-(intern 'ys.std 'K to-keyw)
-(intern 'ys.std 'L to-list)
-(intern 'ys.std 'M to-map)
-(intern 'ys.std 'N to-num)
-(intern 'ys.std 'O to-omap)
-(intern 'ys.std 'S to-str)
-(intern 'ys.std 'T to-type)
-(intern 'ys.std 'V to-vec)
+(intern 'ys.v0.std 'B to-bool)
+(intern 'ys.v0.std 'C to-char)
+(intern 'ys.v0.std 'F to-float)
+(intern 'ys.v0.std 'I to-int)
+(intern 'ys.v0.std 'K to-keyw)
+(intern 'ys.v0.std 'L to-list)
+(intern 'ys.v0.std 'M to-map)
+(intern 'ys.v0.std 'N to-num)
+(intern 'ys.v0.std 'O to-omap)
+(intern 'ys.v0.std 'S to-str)
+(intern 'ys.v0.std 'T to-type)
+(intern 'ys.v0.std 'V to-vec)
 
-(intern 'ys.std 'L+ list)
-(intern 'ys.std 'M+ hash-map)
-(intern 'ys.std 'O+ omap)
-(intern 'ys.std 'V+ vector)
+(intern 'ys.v0.std 'L+ list)
+(intern 'ys.v0.std 'M+ hash-map)
+(intern 'ys.v0.std 'O+ omap)
+(intern 'ys.v0.std 'V+ vector)
 
 
 ;;------------------------------------------------------------------------------
@@ -761,40 +760,44 @@
 ;;------------------------------------------------------------------------------
 ;; File system functions
 ;;------------------------------------------------------------------------------
-(intern 'ys.std 'fs-d fs/d)
-(intern 'ys.std 'fs-e fs/e)
-(intern 'ys.std 'fs-f fs/f)
-(intern 'ys.std 'fs-l fs/l)
-(intern 'ys.std 'fs-r fs/r)
-(intern 'ys.std 'fs-s fs/s)
-(intern 'ys.std 'fs-w fs/w)
-(intern 'ys.std 'fs-x fs/x)
-(intern 'ys.std 'fs-z fs/z)
-(intern 'ys.std 'fs-abs fs/abs)
-(intern 'ys.std 'fs-abs? fs/abs?)
-(intern 'ys.std 'fs-dirname fs/dirname)
-(intern 'ys.std 'fs-filename fs/filename)
-(intern 'ys.std 'fs-basename fs/basename)
-(intern 'ys.std 'fs-glob fs/glob)
-(intern 'ys.std 'fs-ls fs/ls)
-(intern 'ys.std 'fs-mtime fs/mtime)
-(intern 'ys.std 'fs-rel fs/rel)
-(intern 'ys.std 'fs-rel? fs/rel?)
-(intern 'ys.std 'fs-which fs/which)
+(intern 'ys.v0.std 'fs-d fs/d)
+(intern 'ys.v0.std 'fs-e fs/e)
+(intern 'ys.v0.std 'fs-f fs/f)
+(intern 'ys.v0.std 'fs-l fs/l)
+(intern 'ys.v0.std 'fs-r fs/r)
+(intern 'ys.v0.std 'fs-s fs/s)
+(intern 'ys.v0.std 'fs-w fs/w)
+(intern 'ys.v0.std 'fs-x fs/x)
+(intern 'ys.v0.std 'fs-z fs/z)
+(intern 'ys.v0.std 'fs-abs fs/abs)
+(intern 'ys.v0.std 'fs-abs? fs/abs?)
+(intern 'ys.v0.std 'fs-dirname fs/dirname)
+(intern 'ys.v0.std 'fs-filename fs/filename)
+(intern 'ys.v0.std 'fs-basename fs/basename)
+(intern 'ys.v0.std 'fs-glob fs/glob)
+(intern 'ys.v0.std 'fs-ls fs/ls)
+(intern 'ys.v0.std 'fs-mtime fs/mtime)
+(intern 'ys.v0.std 'fs-rel fs/rel)
+(intern 'ys.v0.std 'fs-rel? fs/rel?)
+(intern 'ys.v0.std 'fs-which fs/which)
 
 
 ;;------------------------------------------------------------------------------
 ;; Date/Time functions
 ;;------------------------------------------------------------------------------
 (defn now
-  ([] (jtime/instant))
+  ([] (java.time.Instant/now))
   ([f] (condp eq f
-         :local (jtime/local-date-time)
-         :zoned (jtime/zoned-date-time)
-         :utc (jtime/instant)
+         :local (java.time.LocalDateTime/now)
+         :zoned (java.time.ZonedDateTime/now)
+         :utc (java.time.Instant/now)
          (util/die "Unknown time format: '" f "'"))))
 
-(defn instant [x] (jtime/instant x))
+(defn instant [x]
+  (condf x
+    number? (java.time.Instant/ofEpochMilli x)
+    string? (java.time.Instant/parse x)
+    (util/die "Can't instant(" (pr-str x) ")")))
 
 
 ;;------------------------------------------------------------------------------
@@ -821,9 +824,21 @@
 ;;------------------------------------------------------------------------------
 ;; Java interop functions
 ;;------------------------------------------------------------------------------
+;; clojure.lang.Reflector only exists on JVM Clojure, so resolve it lazily
+;; and die at call time on other runtimes (like babashka).
+(def ^:private invoke-constructor
+  (delay
+    (try
+      (clojure.core/eval
+        '(fn [class args]
+           (clojure.lang.Reflector/invokeConstructor
+             class (into-array Object args))))
+      (catch Exception _ nil))))
+
 (defn new [class & xs]
-  (clojure.lang.Reflector/invokeConstructor
-    class (into-array Object xs)))
+  (if-let [f @invoke-constructor]
+    (f class xs)
+    (util/die "new() requires a JVM Clojure runtime")))
 
 
 ;;------------------------------------------------------------------------------
@@ -899,7 +914,7 @@
   (ext/convert-url url))
 
 (defn load-url [url]
-  (ext/load-url nil url))
+  (ys/load-url url))
 
 (defn curl [url]
   (let [url (get-url url)

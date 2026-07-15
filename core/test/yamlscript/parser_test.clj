@@ -4,7 +4,7 @@
 (ns yamlscript.parser-test
   (:require
    [clojure.string :as str]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.parser :as parser]
    [yamltest.core :as test]))
 

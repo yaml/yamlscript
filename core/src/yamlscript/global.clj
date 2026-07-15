@@ -1,28 +1,29 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The yamlscript.global namespace owns mutable runtime state shared across the
-;; compiler and SCI evaluator.
+;; The yamlscript.global namespace owns the SCI-coupled runtime state shared
+;; across the compiler and SCI evaluator. The portable state lives in
+;; ys.v0.global; this namespace re-exports it for compiler code and installs
+;; the SCI-aware hooks.
 
 (ns yamlscript.global
   (:require
-   [sci.core :as sci])
+   [sci.core :as sci]
+   [ys.v0.global :as v0])
   (:refer-clojure :exclude [create-ns
                             intern
                             ns-name
                             resolve]))
 
-#_(defn WWW [& xs]
-  (println (apply str ">>> " xs) " <<<")
-  (last xs))
-
 (def main-ns (sci/create-ns 'main))
 (def sci-ctx (atom nil))
 
-(def stream-anchors_ (atom {}))
-(def doc-anchors_ (atom {}))
-(def stream-values (atom []))
-(def opts (atom {}))
+;; Portable state re-exports (same atom objects as ys.v0.global)
+(def stream-anchors_ v0/stream-anchors_)
+(def doc-anchors_ v0/doc-anchors_)
+(def stream-values v0/stream-values)
+(def opts v0/opts)
+
 (def pods (atom []))
 (defonce build-xstr (atom nil))
 
@@ -35,8 +36,6 @@
   []
   (sci/eval-string+ @sci-ctx "(var-get (resolve 'PUN))"))
 
-(def env {})
-
 (defn create-ns
   "Create an SCI namespace."
   [ns]
@@ -48,7 +47,7 @@
   (sci/ns-name ns))
 
 (defn resolve
-  "Walk a composed YAML node tree and tag every node by YS rules."
+  "Resolve a symbol in the SCI context."
   [sym]
   (sci/resolve @sci-ctx sym))
 
@@ -65,31 +64,21 @@
 (defn update-environ
   "Update environ in the current context."
   [m]
-  (sci/alter-var-root ENV
-    (fn [env]
-      (if (empty? m)
-        (reduce dissoc env (keys env))
-        (reduce-kv
-          (fn [env k v]
-            (if v
-              (assoc env k v)
-              (dissoc env k)))
-          env m)))))
+  (sci/alter-var-root ENV (v0/make-environ-updater m)))
 
-#_{:clj-kondo/ignore [:var-same-name-except-case]}
+;; Route the stdlib's portable hooks at the SCI implementations
+(reset! v0/underscore-hook set-underscore)
+(reset! v0/environ-hook update-environ)
+
 (defn update-env
   "Update env in the current context."
   [m]
-  (let [m (reduce-kv
-            (fn [m k v] (if v (assoc m k v) (dissoc m k)))
-            env m)]
-    (alter-var-root #'env (constantly m))))
+  (v0/update-env m))
 
 (defn reset-env
   "Reset env to its initial state."
   [m]
-  (let [m (or m (into {} (System/getenv)))]
-    (alter-var-root #'env (constantly m))))
+  (v0/reset-env m))
 
 (def FILE (sci/new-dynamic-var 'FILE nil))
 

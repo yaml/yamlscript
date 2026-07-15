@@ -7,7 +7,7 @@
 (ns yamlscript.printer
   (:require
    [clojure.string :as str]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.global])
   (:refer-clojure :exclude [print]))
 

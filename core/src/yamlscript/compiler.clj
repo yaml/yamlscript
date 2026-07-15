@@ -14,7 +14,7 @@
    [clojure.edn]
    [clojure.string :as str]
    [yamlscript.builder]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.composer]
    [yamlscript.constructor]
    [yamlscript.global]

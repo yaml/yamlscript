@@ -6,12 +6,13 @@
    [clojure.java.io :as io]
    [clojure.string :as str]
    [sci.core :as sci]
-   [yamlscript.common :refer [abspath dirname]]
+   [ys.v0.common :refer [abspath dirname]]
    [yamlscript.compiler]
    [yamlscript.externals :as externals]
    [yamlscript.global :as global]
    [yamlscript.re :as re]
-   [yamlscript.util :as util])
+   [ys.v0.util :as util]
+   [ys.v0.ys])
   (:refer-clojure
    :exclude [compile
              eval
@@ -105,6 +106,18 @@
 
 (defmacro use [& forms]
   `(+use *ns* '~forms))
+
+;; Give the portable ys.v0 stdlib the real compiler-backed implementations.
+(reset! ys.v0.ys/hooks
+  {:compile compile
+   :eval eval
+   :eval-stream eval-stream
+   :load-file load-file
+   :load-url (fn [url] (externals/load-url nil url))
+   :load-pod (fn [args] (externals/load-pod args))
+   :unload-pods externals/unload-pods
+   :+use +use
+   :+def-vars +def-vars})
 
 (comment
   )

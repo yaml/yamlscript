@@ -60,7 +60,7 @@
   (:require
    [clojure.set :as set]
    [clojure.string :as str]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.re :as re])
   (:refer-clojure :exclude [resolve]))
 

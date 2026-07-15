@@ -1,15 +1,14 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.fs
+(ns ys.v0.fs
   (:require
    [babashka.fs :as fs]
    [clojure.java.io :as io]
-   [clojure.string :as str]
-   [java-time.api :as jtime])
+   [clojure.string :as str])
   (:refer-clojure :exclude [abs empty? find]))
 
-(def this 'ys.fs)
+(def this 'ys.v0.fs)
 (def TRUE (constantly true))
 
 (defn- multi [func]
@@ -110,7 +109,8 @@
 (intern this 'rmdir (multi #(-> %1 fs/canonicalize fs/delete not)))
 (intern this 'touch (multi #(str
                               (if (exists? %1)
-                                (fs/set-last-modified-time %1 (jtime/instant))
+                                (fs/set-last-modified-time
+                                  %1 (java.time.Instant/now))
                                 (fs/create-file %1)))))
 
 (comment

@@ -7,9 +7,9 @@
 (ns yamlscript.transformer
   (:require
    [yamlscript.ast :refer [Lst Sym QSym Vec]]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.transformers]
-   [ys.dwim])
+   [ys.v0.dwim])
   (:refer-clojure))
 
 (declare
@@ -24,7 +24,7 @@
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
 (def plus-fn?
-  (-> 'ys.dwim
+  (-> 'ys.v0.dwim
     ns-publics
     keys
     (->> (map str)

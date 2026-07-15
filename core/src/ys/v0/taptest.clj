@@ -1,11 +1,11 @@
-(ns ys.taptest
+(ns ys.v0.taptest
   (:require
    [babashka.process :as process]
    [clojure.string :as str]
-   [ys.ys :as ys]
-   [ys.yaml :as yaml]
-   [yamlscript.global :as global]
-   [yamlscript.common])
+   [ys.v0.ys :as ys]
+   [ys.v0.yaml :as yaml]
+   [ys.v0.global :as global]
+   [ys.v0.common])
   (:refer-clojure
    :exclude [test]))
 

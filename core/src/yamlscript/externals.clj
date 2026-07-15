@@ -11,7 +11,8 @@
    [clojure.string :as str]
    [sci.core :as sci]
    [yamlscript.cache :as cache]
-   [yamlscript.common :refer [abspath dirname get-yspath]]
+   [ys.v0.common :refer [abspath dirname get-yspath]]
+   [ys.v0.ext :as ext]
    [yamlscript.compiler]
    [yamlscript.constructor]
    [yamlscript.global :as G]
@@ -128,44 +129,10 @@
   [modpath spec]
   (die ":git not implemented yet"))
 
-(defn github-raw-url
-  "Convert a raw url shorthand into a raw URL."
-  [url]
-  (let [[path ref] (str/split url #"\@")
-        ref (or ref "HEAD")
-        [user repo path] (str/split path #"/" 3)
-        _ (when-not (and user repo path)
-            (die (str "Invalid github url: " url)))]
-    (str/join "/" ["https://raw.githubusercontent.com"
-                   user repo ref path])))
-
-(defn github-gist-url
-  "Convert a gist url shorthand into a raw URL."
-  [url]
-  (let [url (str/replace url #"/raw/?" "/")
-        [path ref] (str/split url #"\@")
-        [user gist-id path] (str/split path #"/" 3)
-        _ (when-not (and user gist-id)
-            (die (str "Invalid github gist url: " url)))]
-    (str/join "/" (remove nil? ["https://gist.githubusercontent.com"
-                                user gist-id "raw" ref path]))))
-
-(defn convert-url
-  "Convert url into its canonical form."
-  [url]
-  (cond
-    (re-find #"^https?://" url) url
-    (str/starts-with? url "gist:") (github-gist-url (subs url 5))
-    (str/starts-with? url "github:") (github-raw-url (subs url 7))
-    (str/starts-with? url "https:") url
-    (str/starts-with? url "http:") url
-    (not (str/includes? url ":")) (str "https://" url)
-    :else (die (str "Invalid url for ':url': " url))))
-
 (defn load-url
   "Load url into the YAMLScript runtime."
   [_ url]
-  (-> url convert-url cache/curl load-code-ys-or-clj))
+  (-> url ext/convert-url cache/curl load-code-ys-or-clj))
 
 (defn parse-args
   "Parse YAMLScript use-form arguments into a normalized option map."

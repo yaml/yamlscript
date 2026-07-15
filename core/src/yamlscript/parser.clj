@@ -9,7 +9,7 @@
 
 (ns yamlscript.parser
   (:require
-   [yamlscript.common])
+   [ys.v0.common])
   (:import
    (java.util Optional)
    (org.snakeyaml.engine.v2.api LoadSettings)

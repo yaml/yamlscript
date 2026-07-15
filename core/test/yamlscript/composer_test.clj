@@ -4,7 +4,7 @@
 (ns yamlscript.composer-test
   (:require
    [clojure.edn :as edn]
-   [yamlscript.common]
+   [ys.v0.common]
    [yamlscript.composer :as composer]
    [yamlscript.parser :as parser]
    [yamltest.core :as test]))
