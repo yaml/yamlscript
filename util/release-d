@@ -4,6 +4,25 @@ lang=d
 
 source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
 
+dub_secret() {
+  local secret=${DUB_UPDATE_SECRET:-}
+  if [[ -z $secret ]]; then
+    secret=$(
+      awk '
+        $1 == "dlang:" { in_dlang = 1; next }
+        in_dlang && $0 ~ /^[^[:space:]]/ { in_dlang = 0 }
+        in_dlang && $1 == "token:" {
+          sub(/^[[:space:]]*token:[[:space:]]*/, "")
+          gsub(/^'\''|'\''$/, "")
+          print
+          exit
+        }
+      ' ~/.yamlscript-secrets.yaml 2>/dev/null || true
+    )
+  fi
+  printf '%s' "$secret"
+}
+
 update() (
   cp "$root/License" "$repo_dir/LICENSE"
 
@@ -16,6 +35,26 @@ update() (
     mkdir -p "$repo_dir/source"
     cp source/*.d "$repo_dir/source/"
   )
+)
+
+after_release() (
+  local secret
+  secret=$(dub_secret)
+
+  if [[ ${YS_RELEASE_DRYRUN-} || ${YS_RELEASE_DRY_RUN-} ]]; then
+    echo 'X - curl -X POST https://code.dlang.org/api/packages/yamlscript/update'
+    return
+  fi
+
+  [[ $secret ]] || {
+    echo 'Error: DUB_UPDATE_SECRET or .dlang.token must be set' >&2
+    exit 1
+  }
+
+  curl -fsS -X POST \
+    https://code.dlang.org/api/packages/yamlscript/update \
+    -H 'Content-Type: application/json' \
+    -d "$(jq -cn --arg secret "$secret" '{secret: $secret}')"
 )
 
 main "$@"

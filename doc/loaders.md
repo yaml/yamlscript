@@ -16,10 +16,9 @@ language.
 
 The following loader libraries are currently available:
 
-* [Ada](https://github.com/yaml/yamlscript/tree/main/ada)
+* [Ada](https://alire.ada.dev/crates/yamlscript.html)
 * [C#](https://www.nuget.org/packages/YAMLScript/)
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
-* [Common Lisp](https://github.com/yaml/yamlscript/tree/main/common-lisp)
 * [Crystal](https://shardbox.org/shards/yamlscript)
 * [D](https://code.dlang.org/packages/yamlscript)
 * [Dart](https://pub.dev/packages/yamlscript)
@@ -39,7 +38,6 @@ The following loader libraries are currently available:
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
 * [PHP](https://packagist.org/packages/yaml/yamlscript)
 * [PowerShell](https://www.powershellgallery.com/packages/YAMLScript/)
-* [Prolog](https://github.com/yaml/yamlscript/tree/main/prolog)
 * [Python](https://pypi.org/project/yamlscript/)
 * [R](https://github.com/yaml/yamlscript-r)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)

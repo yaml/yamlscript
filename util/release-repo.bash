@@ -5,7 +5,12 @@ set -euo pipefail
 [[ ${YS_RELEASE_VERBOSE-} ]] && set -x
 
 root=$YAMLSCRIPT_ROOT
-version=$YS_RELEASE_VERSION_NEW
+version=${YS_RELEASE_VERSION_NEW:-${n:-}}
+
+[[ $version ]] || {
+  echo 'Error: YS_RELEASE_VERSION_NEW or n must be set' >&2
+  exit 1
+}
 
 main() (
   init
@@ -42,6 +47,9 @@ init() {
 clone() (
   rm -fr "$repo_dir"
   git clone "$repo_url" "$repo_dir"
+  if [[ ${YS_RELEASE_DRYRUN-} || ${YS_RELEASE_DRY_RUN-} ]]; then
+    mkdir -p "$repo_dir"
+  fi
 )
 
 test() (:)
@@ -53,15 +61,19 @@ release() (
   if git diff --cached --quiet; then
     echo "No changes for yamlscript-$lang"
   else
-    git commit -m "Release $YS_RELEASE_VERSION_NEW"
+    git commit -m "Release $version"
     git push origin HEAD
   fi
 
-  if git rev-parse "v$YS_RELEASE_VERSION_NEW" >/dev/null 2>&1; then
-    git tag -d "v$YS_RELEASE_VERSION_NEW"
+  if git rev-parse "v$version" >/dev/null 2>&1; then
+    git tag -d "v$version"
   fi
-  git tag "v$YS_RELEASE_VERSION_NEW"
-  git push origin "v$YS_RELEASE_VERSION_NEW"
+  git tag "v$version"
+  git push origin "v$version"
+
+  if declare -F after_release >/dev/null; then
+    after_release
+  fi
 )
 
 true

@@ -122,6 +122,11 @@ case $binding in
     url-exists "$url/$lower_version/yamlscript.$lower_version.nupkg" &&
       published=true
     ;;
+  d)
+    url="https://code.dlang.org/packages/yamlscript/$version"
+    url-exists "$url" &&
+      published=true
+    ;;
   erlang)
     json-url-exists \
       "https://hex.pm/api/packages/yamlscript_erlang/releases/$version" &&
@@ -195,7 +200,7 @@ case $binding in
     url-exists "$url/$version/scala-yamlscript-$version.jar" &&
       published=true
     ;;
-  crystal|d|delphi|fortran|nim|php|r|swift|zig)
+  crystal|delphi|fortran|nim|php|r|swift|zig)
     git-tag-exists "https://github.com/yaml/yamlscript-$binding" \
       "v$version" &&
       published=true
