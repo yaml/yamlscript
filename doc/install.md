@@ -138,7 +138,7 @@ languages:
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)
 * [PHP](https://packagist.org/packages/yaml/yamlscript)
-* [PowerShell](https://github.com/yaml/yamlscript/tree/main/powershell)
+* [PowerShell](https://www.powershellgallery.com/packages/YAMLScript/)
 * [Prolog](https://github.com/yaml/yamlscript/tree/main/prolog)
 * [Python](https://pypi.org/project/yamlscript/)
 * [R](https://github.com/yaml/yamlscript-r)

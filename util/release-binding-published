@@ -143,8 +143,8 @@ case $binding in
       published=true
     ;;
   nodejs)
-    export NPM_CONFIG_CACHE="${NPM_CONFIG_CACHE:-.cache/npm}"
-    npm view "@yaml/yamlscript@$version" version >/dev/null 2>&1 &&
+    json-url-exists \
+      "https://registry.npmjs.org/@yaml%2fyamlscript/$version" &&
       published=true
     ;;
   lua)
@@ -185,8 +185,8 @@ case $binding in
       published=true
     ;;
   powershell)
-    url='https://www.powershellgallery.com/api/v2'
-    url="$url/Packages(Id='YAMLScript',Version='$version')"
+    url='https://www.powershellgallery.com/packages/YAMLScript'
+    url="$url/$version"
     url-exists "$url" &&
       published=true
     ;;

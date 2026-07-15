@@ -38,7 +38,7 @@ The following loader libraries are currently available:
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
 * [PHP](https://packagist.org/packages/yaml/yamlscript)
-* [PowerShell](https://github.com/yaml/yamlscript/tree/main/powershell)
+* [PowerShell](https://www.powershellgallery.com/packages/YAMLScript/)
 * [Prolog](https://github.com/yaml/yamlscript/tree/main/prolog)
 * [Python](https://pypi.org/project/yamlscript/)
 * [R](https://github.com/yaml/yamlscript-r)
