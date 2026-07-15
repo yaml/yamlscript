@@ -243,13 +243,13 @@ jobs:
     - name: Run tests
       env:
         # crystal: makes has no Crystal tarball for linux-aarch64.
-        # elixir/haskell: test Docker images are linux/amd64.
+        # elixir/erlang/haskell: test Docker images are linux/amd64.
         # lua: cffi-lua test deps need Python, unavailable via uv on arm.
         # python: uv has no managed CPython linux-aarch64-none download.
         # raku: makes has no Rakudo tarball mapping for linux-aarch64.
         # rust: pointer signedness mismatch in generated FFI on linux-aarch64.
         YS_RELEASE_BINDINGS_SKIP: >-
-          crystal elixir haskell lua python raku rust
+          crystal elixir erlang haskell lua python raku rust
           ${{ inputs.bindings_skip }}
       run: |
         make test-all \
@@ -300,13 +300,13 @@ jobs:
     - name: Run tests
       env:
         # crystal: makes has no Crystal tarball for linux-aarch64.
-        # elixir/haskell: test Docker images are linux/amd64.
+        # elixir/erlang/haskell: test Docker images are linux/amd64.
         # lua: cffi-lua test deps need Python, unavailable via uv on arm.
         # python: uv has no managed CPython linux-aarch64-none download.
         # raku: makes has no Rakudo tarball mapping for linux-aarch64.
         # rust: pointer signedness mismatch in generated FFI on linux-aarch64.
         YS_RELEASE_BINDINGS_SKIP: >-
-          crystal elixir haskell lua python raku rust
+          crystal elixir erlang haskell lua python raku rust
           ${{ inputs.bindings_skip }}
       run: |
         make test-all \
@@ -354,10 +354,11 @@ jobs:
       env:
         # delphi: FPC has no macOS tarball (fpc.mk cannot install it)
         # fortran: fpm has no macos-arm64 prebuilt; source build untested
+        # erlang: tests use the linux/amd64 Elixir Docker image.
         # r: r.mk macOS pkg relocation is untested (no Rprofile shim)
         # zig: Zig 0.15.2 fails to link on the current macOS runner.
         YS_RELEASE_BINDINGS_SKIP: >-
-          delphi elixir fortran r zig ${{ inputs.bindings_skip }}
+          delphi elixir erlang fortran r zig ${{ inputs.bindings_skip }}
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
@@ -408,10 +409,11 @@ jobs:
       env:
         # delphi: FPC has no macOS tarball (fpc.mk cannot install it)
         # fortran: fpm has no macos-arm64 prebuilt; source build untested
+        # erlang: tests use the linux/amd64 Elixir Docker image.
         # r: r.mk macOS pkg relocation is untested (no Rprofile shim)
         # zig: Zig 0.15.2 fails to link on the current macOS runner.
         YS_RELEASE_BINDINGS_SKIP: >-
-          delphi elixir fortran r zig ${{ inputs.bindings_skip }}
+          delphi elixir erlang fortran r zig ${{ inputs.bindings_skip }}
       run: |
         make test-all \
           YS_RELEASE_SKIP_CORE_TESTS=1 \
@@ -798,7 +800,7 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          elixir haskell lua perl-alien swift
+          elixir erlang haskell lua perl-alien swift
           ${{ inputs.bindings_skip }}
       run: |
         gmake -k test-all \
@@ -896,7 +898,7 @@ jobs:
     - name: Run tests
       env:
         YS_RELEASE_BINDINGS_SKIP: >-
-          elixir haskell lua perl-alien swift
+          elixir erlang haskell lua perl-alien swift
           ${{ inputs.bindings_skip }}
       run: |
         gmake -k test-all \
