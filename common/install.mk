@@ -3,7 +3,7 @@ SHELL := bash
 ROOT := $(shell \
 	cd '$(abspath $(dir $(lastword $(MAKEFILE_LIST))))' && pwd -P)
 
-YAMLSCRIPT_VERSION := 0.2.27
+YAMLSCRIPT_VERSION := 0.2.28
 
 YS-FILES := $(filter-out %-build-report.html,\
 	$(wildcard ys ys.exe ys-[0-9]* ys-sh-[0-9]*))

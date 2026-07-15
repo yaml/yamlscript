@@ -2,7 +2,7 @@ defmodule YAMLScript.MixProject do
   use Mix.Project
 
   # This value is automatically updated by 'make bump':
-  @version "0.2.27"
+  @version "0.2.28"
 
   def project do
     [

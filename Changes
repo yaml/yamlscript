@@ -1,3 +1,15 @@
+- version: 0.2.28
+  date:    Wed Jul 15 05:07:34 PM EDT 2026
+  changes:
+  - bindings: Add more language bindings
+  - binding: Add Ada
+  - binding: Add Erlang
+  - binding: Add F#
+  - binding: Add PowerShell
+  - binding: Add Scala
+  - release: Publish JVM bindings to Maven Central
+  - docs: Add new binding docs
+  - release: Wire DUB publishing
 - version: 0.2.27
   date:    Fri Jul 10 10:30:34 AM EDT 2026
   changes:

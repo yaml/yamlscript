@@ -5,7 +5,7 @@ unit class YAMLScript;
 
 use NativeCall;
 
-constant YAMLSCRIPT_VERSION = v0.2.27;
+constant YAMLSCRIPT_VERSION = v0.2.28;
 
 sub resolve-lib {
   state $ = do {

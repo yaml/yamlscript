@@ -1,5 +1,5 @@
 name(yamlscript).
-version('0.2.27').
+version('0.2.28').
 title('YAMLScript language binding for Prolog').
 keywords([yaml, yamlscript]).
 author('YAMLScript Contributors', 'ingy@ingy.net').

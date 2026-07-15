@@ -1,6 +1,6 @@
 .{
     .name = .yamlscript,
-    .version = "0.2.27",
+    .version = "0.2.28",
     .fingerprint = 0x875e6a1200a6c02,
     .minimum_zig_version = "0.15.2",
     .paths = .{

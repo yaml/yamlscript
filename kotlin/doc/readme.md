@@ -27,7 +27,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("org.yamlscript:kotlin-yamlscript:0.2.27")
+    implementation("org.yamlscript:kotlin-yamlscript:0.2.28")
 }
 ```
 
