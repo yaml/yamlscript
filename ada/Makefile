@@ -3,7 +3,10 @@ include $(COMMON)/binding.mk
 
 include $(MAKES)/gnat.mk
 include $(MAKES)/alire.mk
+include $(MAKES)/clean.mk
 include $(MAKES)/shell.mk
+
+MAKES-CLEAN += alire
 
 ADA-ORIGIN := https://github.com/yaml/yamlscript.git
 ADA-MANIFEST := ada/alire.toml
