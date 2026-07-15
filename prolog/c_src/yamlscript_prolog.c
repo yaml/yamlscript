@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define YAMLSCRIPT_VERSION "0.2.26"
+#ifndef YAMLSCRIPT_VERSION
+#define YAMLSCRIPT_VERSION "0.0.0"
+#endif
 
 #ifdef __APPLE__
 #define LIBYS_NAME "libys.dylib." YAMLSCRIPT_VERSION

@@ -1,2 +1,5 @@
+/_build/
 /ebin/
+/erl_crash.dump
 /priv/*.so
+/rebar.lock

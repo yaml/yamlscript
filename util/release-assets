@@ -91,6 +91,8 @@ setup() {
   else
     die "Error: Release file must be named libys-* or ys-*"
   fi
+  VERSION=${VERSION%.tar.xz}
+  VERSION=${VERSION%.zip}
   VERSION=${VERSION%%-*}
 
   YS_GH_API_PATH=repos/$YS_GH_REPO_USER/$YS_GH_REPO/releases

@@ -43,6 +43,8 @@ bindings =::
 - dart
 - delphi
 - elixir
+- erlang
+- fsharp
 - fortran
 - go
 - haskell
@@ -54,11 +56,13 @@ bindings =::
 - perl-alien
 - perl
 - php
+- powershell
 - python
 - r
 - raku
 - ruby
 - rust
+- scala
 - swift
 - zig
 
@@ -140,7 +144,7 @@ defn do-list():
          Trigger release workflow and watch it
 
      12. make release-bindings n=Y
-         Release all 26 language bindings
+        Release all 30 language bindings
 
      13. make release-homebrew n=Y
          Publish the Homebrew tap formulas
@@ -166,53 +170,53 @@ defn do-release(old new):
   # Step 1: Sanity checks
   o: 'Step 1: Running sanity checks...'
   do-sanity-check: old new
-  say: ''
+  say:
 
   # Step 2: Release credentials
   confirm: 'Step 2 - Update due release credentials?'
   do-secrets-update:
-  say: ''
+  say:
 
   confirm: 'Step 3 - Review release credentials?'
   do-secrets-list:
-  say: ''
+  say:
 
   confirm: 'Step 4 - Publish release credentials to GitHub?'
   do-secrets-publish:
-  say: ''
+  say:
 
   # Step 5: Version bump
   confirm: 'Step 5 - Bump version in all files?'
   do-version-bump:
-  say: ''
+  say:
 
   # Step 6: Changelog
   confirm: 'Step 6 - Edit changelog?'
   do-changelog: old new
-  say: ''
+  say:
 
   # Step 7: Binding changelogs
   confirm: 'Step 7 - Update binding changelogs?'
   do-binding-changelogs:
-  say: ''
+  say:
 
   # Step 8: Commit
   confirm: 'Step 8 - Commit changes?'
   do-commit: new
-  say: ''
+  say:
 
   # Step 9: Tag
   do-tag: new
-  say: ''
+  say:
 
   # Step 10: Push
   do-push: new
-  say: ''
+  say:
 
   # Step 11: Build on GitHub
   confirm: 'Step 11 - Trigger GitHub Actions workflow?'
   do-build-github: new
-  say: ''
+  say:
 
   say: "============================================================"
   say: "  Release workflow complete!"
@@ -566,7 +570,8 @@ defn release-bindings():
 
 
 defn parse-binding-list(list allowed what):
-  binding-list =: list.trim().split('[,\s]+')
+  trimmed =: list:trim
+  binding-list =: trimmed.split('[,\s]+')
   invalid =:
     remove(\(contains? allowed %1) binding-list)
 
@@ -588,7 +593,7 @@ defn expand-binding-list(items):
 
 defn binding-published?(dir new):
   if ENV.YS_RELEASE_FORCE_BINDINGS:
-    =>: false
+    then: false
     else:
       try:
         shell {:extra-env {"YS_RELEASE_PUBLISHED_QUIET" "1"}}:

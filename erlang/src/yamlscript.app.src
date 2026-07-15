@@ -1,0 +1,14 @@
+{application, yamlscript, [
+  {description, "YAMLScript language binding for Erlang"},
+  {vsn, "0.2.27"},
+  {pkg_name, yamlscript_erlang},
+  {licenses, ["MIT"]},
+  {links, [
+    {"GitHub", "https://github.com/yaml/yamlscript"},
+    {"Website", "https://yamlscript.org"}
+  ]},
+  {registered, []},
+  {modules, [yamlscript]},
+  {applications, [kernel, stdlib]},
+  {env, []}
+]}.

@@ -9,7 +9,11 @@ CPAN-DEPS := \
     Alien::Build \
     Alien::Build::MM \
     Alien::Build::Plugin::Download::GitHub \
+    Cpanel::JSON::XS \
+    IO::Socket::SSL \
+    Mojo::DOM58 \
     Mozilla::CA \
+    Net::SSLeay \
     Test2::V0 \
     Test::Alien \
 

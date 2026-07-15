@@ -1005,6 +1005,7 @@ jobs:
       CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
       CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
       HACKAGE_TOKEN: ${{ secrets.HACKAGE_TOKEN }}
       HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

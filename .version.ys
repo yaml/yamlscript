@@ -21,6 +21,7 @@ vo =: v-old.str/replace(/\./ '\\.')
   - regx:: "()${vp}()"
     file:
     - Meta
+    - ada/alire.toml
     - common/install.mk
     - common/release.md
     # Don't update common/vars.mk
@@ -29,6 +30,8 @@ vo =: v-old.str/replace(/\./ '\\.')
     - crystal/shard.yml
     - crystal/src/yamlscript/version.cr
     - crystal/src/yamlscript.cr
+    - common-lisp/c_src/yamlscript_lisp.c
+    - common-lisp/yamlscript.asd
     - csharp/YAMLScript.csproj
     - d/source/yamlscript.d
     - dart/lib/yamlscript.dart
@@ -37,10 +40,14 @@ vo =: v-old.str/replace(/\./ '\\.')
     - elixir/c_src/yamlscript_nif.c
     - elixir/doc/readme.md
     - elixir/ReadMe.md
+    - erlang/c_src/yamlscript_nif.c
+    - erlang/rebar.config
+    - erlang/src/yamlscript.app.src
     - fortran/fpm.toml
     - fortran/src/yamlscript.f90
     - fortran/doc/readme.md
     - fortran/ReadMe.md
+    - fsharp/YAMLScript.fsproj
     - kotlin/Makefile
     - kotlin/pom.xml
     - kotlin/src/main/kotlin/org/yamlscript/yamlscript/YS.kt
@@ -62,11 +69,16 @@ vo =: v-old.str/replace(/\./ '\\.')
     - perl-alien/alienfile
     - perl-alien/lib/Alien/YAMLScript.pm
     - perl/lib/YAMLScript.pm
+    - powershell/YAMLScript.psd1
+    - prolog/c_src/yamlscript_prolog.c
+    - prolog/pack.pl
     - python/lib/yamlscript/__init__.py
     - raku/lib/YAMLScript.rakumod
     - ruby/lib/yamlscript.rb
     - ruby/lib/yamlscript/version.rb
     - rust/src/lib.rs
+    - scala/pom.xml
+    - scala/src/YAMLScript.scala
     - swift/Sources/YAMLScript/YAMLScript.swift
     - swift/doc/readme.md
     - swift/ReadMe.md

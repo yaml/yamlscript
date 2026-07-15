@@ -109,6 +109,17 @@ case $binding in
     url-exists "$url/$lower_version/yamlscript.$lower_version.nupkg" &&
       published=true
     ;;
+  erlang)
+    json-url-exists \
+      "https://hex.pm/api/packages/yamlscript_erlang/releases/$version" &&
+      published=true
+    ;;
+  fsharp)
+    lower_version=$(printf '%s' "$version" | tr '[:upper:]' '[:lower:]')
+    url='https://api.nuget.org/v3-flatcontainer/yamlscript.fsharp'
+    url-exists "$url/$lower_version/yamlscript.fsharp.$lower_version.nupkg" &&
+      published=true
+    ;;
   go)
     git-tag-exists https://github.com/yaml/yamlscript-go "v$version" &&
       published=true
@@ -158,6 +169,17 @@ case $binding in
   kotlin)
     url='https://repo.clojars.org/org/yamlscript/kotlin-yamlscript'
     url-exists "$url/$version/kotlin-yamlscript-$version.jar" &&
+      published=true
+    ;;
+  powershell)
+    url='https://www.powershellgallery.com/api/v2'
+    url="$url/Packages(Id='YAMLScript',Version='$version')"
+    url-exists "$url" &&
+      published=true
+    ;;
+  scala)
+    url='https://repo.clojars.org/org/yamlscript/scala-yamlscript'
+    url-exists "$url/$version/scala-yamlscript-$version.jar" &&
       published=true
     ;;
   crystal|d|delphi|fortran|nim|php|r|swift|zig)

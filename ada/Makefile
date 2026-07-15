@@ -4,6 +4,7 @@ include $(COMMON)/binding.mk
 include $(MAKES)/gnat.mk
 include $(MAKES)/shell.mk
 
+ALR ?= alr
 
 #------------------------------------------------------------------------------
 build:: build-doc obj/yamlscript.o

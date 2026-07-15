@@ -615,7 +615,8 @@ clean:: $(CLEAN)
 	$(RM) -r $(MAVEN-REPOSITORY)/yamlscript
 	$(RM) -r $(MAVEN-REPOSITORY)/org/yamlscript
 	$(RM) -r libys/lib ys/bin
-	$(RM) -r libys-0* ys-0* yamlscript.cli-*.jar
+	$(RM) -r libys-0* ys-0*
+	$(RM) -r yamlscript.cli-*.jar
 	$(RM) -r sample/advent/hearsay-rust/target/
 	$(RM) -r homebrew-yamlscript
 	$(RM) NO-NAME release*.log release-changes.txt release-id.txt

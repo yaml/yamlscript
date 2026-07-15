@@ -1,0 +1,11 @@
+name = "yamlscript"
+description = "YAMLScript language binding for Ada"
+version = "0.2.27"
+licenses = "MIT"
+authors = ["YAMLScript Contributors"]
+maintainers = ["YAMLScript Contributors <ingy@ingy.net>"]
+maintainers-logins = ["ingydotnet"]
+project-files = ["yamlscript.gpr"]
+
+[[depends-on]]
+gnat = ">=16"
