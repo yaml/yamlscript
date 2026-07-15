@@ -5,7 +5,9 @@ licenses = "MIT"
 authors = ["YAMLScript Contributors"]
 maintainers = ["YAMLScript Contributors <ingy@ingy.net>"]
 maintainers-logins = ["ingydotnet"]
-project-files = ["yamlscript.gpr"]
+project-files = ["ada/yamlscript.gpr"]
+tags = ["yaml", "yamlscript", "loader"]
+website = "https://yamlscript.org"
 
 [[depends-on]]
 gnat = ">=16"

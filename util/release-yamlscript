@@ -35,6 +35,7 @@
 version-file =: '.version.ys'
 
 bindings =::
+- ada
 - java
 - clojure
 - crystal
