@@ -2,6 +2,7 @@ include ../common/base.mk
 include $(COMMON)/binding.mk
 include $(COMMON)/java.mk
 
+include $(MAKES)/scala.mk
 include $(MAKES)/shell.mk
 
 export COURSIER_CACHE := $(ROOT)/.cache/coursier
