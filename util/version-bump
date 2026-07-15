@@ -7,7 +7,7 @@ defn main():
   plan =: load("$ROOT/.version.ys")
 
   each p plan:
-    vers bump all =: p.slice(qw(vers bump all))
+    vers bump move all =: p.slice(qw(vers bump move all))
     each b bump:
       regx file =: b.slice(qw(regx file))
       regx =: qr(regx)
@@ -28,3 +28,12 @@ defn main():
                 str/re-quote-replacement("$m1$vers$m2")
             say: "Bumped '$f'"
           warn: +['No Match!!' f regx]
+
+    each m move:
+      from to =: m.slice(qw(from to))
+      from =: "$ROOT/$from"
+      to =: "$ROOT/$to"
+      when fs-e(from):
+        do:
+          fs/mv: from to
+          say: "Moved '$from' to '$to'"

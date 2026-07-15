@@ -95,6 +95,13 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ys/src/yamlscript/cli.clj
     - ys/test/cli-usage.t
 
+  - regx:: "()${vp}()"
+    file:: +["ada/alire/releases/yamlscript-${v-old}.toml"]
+
+  move:
+  - from:: "ada/alire/releases/yamlscript-${v-old}.toml"
+    to:: "ada/alire/releases/yamlscript-${v-new}.toml"
+
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally but something wrongly.
 #------------------------------------------------------------------------------
