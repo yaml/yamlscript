@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ingydotnet/yamlscript"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub const VERSION : String = "0.2.28"
+
+pub fn load(String) -> Json raise
+
+// Errors
+pub suberror YAMLScriptError {
+  YAMLScriptError(String)
+} derive(@debug.Debug)
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

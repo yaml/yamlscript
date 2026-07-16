@@ -7,7 +7,7 @@ Program in YAML — Code is Data
 ## About YS / YAMLScript
 
 **YS** (aka **[YAMLScript](https://yamlscript.org)**) is a YAML loader (with
-**Functional Programming Capabilities**) for 30 (and counting) programming
+**Functional Programming Capabilities**) for 31 (and counting) programming
 languages:
 
 **[Ada](https://alire.ada.dev/crates/yamlscript.html)**,
@@ -27,6 +27,7 @@ languages:
 **[Julia](https://juliahub.com/ui/Packages/General/YAMLScript)**,
 **[Kotlin](https://clojars.org/org.yamlscript/kotlin-yamlscript)**,
 **[Lua](https://luarocks.org/modules/ingy/yamlscript)**,
+**[MoonBit](https://mooncakes.io/docs/ingydotnet/yamlscript)**,
 **[Nim](https://github.com/yaml/yamlscript-nim)**,
 **[NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)**,
 **[Perl](https://metacpan.org/pod/YAMLScript)**,

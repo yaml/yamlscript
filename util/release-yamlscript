@@ -52,6 +52,7 @@ bindings =::
 - julia
 - kotlin
 - lua
+- moonbit
 - nim
 - nodejs
 - perl-alien

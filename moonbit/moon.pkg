@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/json",
+}
+
+import {
+  "moonbitlang/core/test",
+} for "test"
+
+options(
+  "native-stub": [ "yamlscript.c" ],
+  link: { "native": { "cc-link-flags": "-ldl" } },
+)

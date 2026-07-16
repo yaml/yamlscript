@@ -31,8 +31,10 @@ The following loader libraries are currently available:
 * [Haskell](https://hackage.haskell.org/package/yamlscript)
 * [Java](https://central.sonatype.com/artifact/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
-* [Kotlin](https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
+* [Kotlin](
+  https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
 * [Lua](https://luarocks.org/modules/ingy/yamlscript)
+* [MoonBit](https://mooncakes.io/docs/ingydotnet/yamlscript)
 * [Nim](https://github.com/yaml/yamlscript-nim)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)

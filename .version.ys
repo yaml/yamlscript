@@ -145,6 +145,9 @@ vo =: v-old.str/replace(/\./ '\\.')
     - java/pom.xml
     - julia/Project.toml
     - lua/lib/yamlscript.lua
+    - moonbit/moon.mod
+    - moonbit/yamlscript.c
+    - moonbit/yamlscript.mbt
     - perl/Meta
     - perl-alien/Meta
     - php/composer.json

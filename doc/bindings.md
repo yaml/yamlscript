@@ -37,7 +37,7 @@ YS YAML loaders have major advantages over the existing YAML loaders:
 
 ## Currently Available Libraries
 
-Currently there are working libraries for these 30 (and counting) programming
+Currently there are working libraries for these 31 (and counting) programming
 languages:
 
 * [Ada](https://alire.ada.dev/crates/yamlscript.html)
@@ -55,8 +55,10 @@ languages:
 * [Haskell](https://hackage.haskell.org/package/yamlscript)
 * [Java](https://central.sonatype.com/artifact/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
-* [Kotlin](https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
+* [Kotlin](
+  https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
 * [Lua](https://luarocks.org/modules/ingy/yamlscript)
+* [MoonBit](https://mooncakes.io/docs/ingydotnet/yamlscript)
 * [Nim](https://github.com/yaml/yamlscript-nim)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/pod/YAMLScript)
@@ -120,5 +122,7 @@ Run:
 
 ```text
 $ python prog.py
-{'foo': [42, 42, 42, 42], 'bar': ['cat', 'flan', 'doll'], 'baz': 'Hello, World!'}
+{'foo': [42, 42, 42, 42],
+ 'bar': ['cat', 'flan', 'doll'],
+ 'baz': 'Hello, World!'}
 ```

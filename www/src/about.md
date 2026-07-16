@@ -103,8 +103,9 @@ https://github.com/yaml/yamlscript/releases/).
 
 This shared library can be bound to almost all modern  programming languages as
 a YAML Loader module.
-It currently ships to these 25 languages:
+It currently ships to these 31 languages:
 
+* [Ada](https://alire.ada.dev/crates/yamlscript.html)
 * [C#](https://www.nuget.org/packages/YAMLScript/)
 * [Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
 * [Crystal](https://shardbox.org/shards/yamlscript)
@@ -112,22 +113,28 @@ It currently ships to these 25 languages:
 * [Dart](https://pub.dev/packages/yamlscript)
 * [Delphi (Free Pascal)](https://github.com/yaml/yamlscript-delphi)
 * [Elixir](https://hex.pm/packages/yamlscript)
+* [Erlang](https://hex.pm/packages/yamlscript_erlang)
+* [F#](https://www.nuget.org/packages/YAMLScript.FSharp)
 * [Fortran](https://github.com/yaml/yamlscript-fortran)
 * [Go](https://github.com/yaml/yamlscript-go)
 * [Haskell](https://hackage.haskell.org/package/yamlscript)
-* [Java](https://clojars.org/org.yamlscript/yamlscript)
+* [Java](https://central.sonatype.com/artifact/org.yamlscript/yamlscript)
 * [Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
-* [Kotlin](https://clojars.org/org.yamlscript/kotlin-yamlscript)
+* [Kotlin](
+  https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
 * [Lua](https://luarocks.org/modules/ingy/yamlscript)
+* [MoonBit](https://mooncakes.io/docs/ingydotnet/yamlscript)
 * [Nim](https://github.com/yaml/yamlscript-nim)
 * [NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
 * [Perl](https://metacpan.org/dist/YAMLScript/view/lib/YAMLScript.pod)
 * [PHP](https://packagist.org/packages/yaml/yamlscript)
+* [PowerShell](https://www.powershellgallery.com/packages/YAMLScript/)
 * [Python](https://pypi.org/project/yamlscript/)
 * [R](https://github.com/yaml/yamlscript-r)
 * [Raku](https://raku.land/zef:ingy/YAMLScript)
 * [Ruby](https://rubygems.org/search?query=yamlscript)
 * [Rust](https://crates.io/crates/yamlscript)
+* [Scala](https://central.sonatype.com/artifact/org.yamlscript/scala-yamlscript)
 * [Swift](https://github.com/yaml/yamlscript-swift)
 * [Zig](https://github.com/yaml/yamlscript-zig)
 

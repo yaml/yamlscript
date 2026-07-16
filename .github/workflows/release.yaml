@@ -1018,6 +1018,8 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       DUB_UPDATE_SECRET: ${{ secrets.DUB_UPDATE_SECRET }}
       LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+      MOONCAKES_USERNAME: ${{ secrets.MOONCAKES_USERNAME }}
+      MOONCAKES_TOKEN: ${{ secrets.MOONCAKES_TOKEN }}
       PACKAGIST_USER: ${{ secrets.PACKAGIST_USER }}
       PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
       PAUSE_USER: ${{ secrets.PAUSE_USER }}

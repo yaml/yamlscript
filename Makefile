@@ -33,6 +33,7 @@ BINDINGS := \
     julia \
     kotlin \
     lua \
+    moonbit \
     nim \
     nodejs \
     perl \
@@ -68,6 +69,7 @@ BUILD-DIRS := \
     go \
     haskell \
     kotlin \
+    moonbit \
     nim \
     nodejs \
     powershell \

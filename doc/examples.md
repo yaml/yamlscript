@@ -16,8 +16,7 @@ This page contains a links to programs written in YS.
 
 ## YS Examples of Refactoring Large YAML Files
 
-* [Calva's CircleCI Config](
-  https://github.com/BetterThanTomorrow/calva/tree/published/.circleci#circleci-configyml)
+* [Calva's CircleCI Config][calva-circleci]
 * [HelmYS Helm Templating](
   https://github.com/kubeys/helmys?tab=readme-ov-file#helmys)
 
@@ -42,7 +41,7 @@ This page contains a links to programs written in YS.
   * [util/release-yamlscript](
     https://github.com/yaml/yamlscript/blob/main/util/release-yamlscript)
     The utility that orchestrates the release of YS; including `ys`, libys.so`
-    and `libys.so` bindings for 30 programming languages.
+    and `libys.so` bindings for 31 programming languages.
   * [util/brew-update](
     https://github.com/yaml/yamlscript/blob/main/util/brew-update)
     The utility that updates the Homebrew formula for YS.
@@ -60,3 +59,6 @@ More examples will be added here as they become known.
 
 If you have YS example code you'd like to share, please submit a PR to the
 [YS Repo](https://github.com/yaml/yamlscript).
+
+[calva-circleci]:
+  https://github.com/BetterThanTomorrow/calva/tree/published/.circleci

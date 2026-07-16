@@ -83,6 +83,20 @@ git-tag-exists() {
     >/dev/null 2>&1
 }
 
+mooncakes-version-exists() {
+  local module=$1
+  local file
+  local tmp
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' RETURN
+  git clone --depth 1 https://mooncakes.io/git/index "$tmp" \
+    >/dev/null 2>&1 || return 1
+  file="$tmp/user/$module.index"
+  test -f "$file" || return 1
+  jq -e --arg version "$version" 'select(.version == $version)' "$file" \
+    >/dev/null
+}
+
 haskell-version() {
   case $version in
     *.*.*.*) printf '%s\n' "$version" ;;
@@ -155,6 +169,10 @@ case $binding in
   lua)
     url='https://luarocks.org/modules/ingy/yamlscript'
     url-exists "$url/$version-1" &&
+      published=true
+    ;;
+  moonbit)
+    mooncakes-version-exists ingydotnet/yamlscript &&
       published=true
     ;;
   julia)
