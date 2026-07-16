@@ -1,0 +1,23 @@
+#!/usr/bin/env dyalogscript
+
+⎕IO←0
+⎕FIX⊃⎕NGET 'src/YAMLScript.apln' 1
+
+Assert←{
+  ⍵:1
+  ⎕SIGNAL 11
+}
+
+nl←⎕UCS 10
+source←'!ys-0:',nl,'answer:: 6 * 7'
+data←YAMLScript.Load source
+Assert data.answer=42
+
+plainSource←'foo: bar'
+plain←YAMLScript.Load plainSource
+Assert 'bar'≡plain.foo
+
+fromFile←YAMLScript.LoadFile 'test/test.ys'
+Assert fromFile.sum=42
+
+⎕←'ok'

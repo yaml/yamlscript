@@ -23,6 +23,7 @@ BINDINGS := \
     d \
     dart \
     delphi \
+    dyalog \
     elixir \
     erlang \
     fsharp \
@@ -62,6 +63,7 @@ BUILD-DIRS := \
     d \
     dart \
     delphi \
+    dyalog \
     elixir \
     erlang \
     fsharp \

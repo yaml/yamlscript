@@ -37,6 +37,11 @@ vo =: v-old.str/replace(/\./ '\\.')
     - dart/lib/yamlscript.dart
     - delphi/src/yamlscript.pas
     - delphi/src/yamlscript_native.pas
+    - dyalog/apl-package.json
+    - dyalog/doc/readme.md
+    - dyalog/ReadMe.md
+    - dyalog/src/YAMLScript.apln
+    - dyalog/src/yamlscript_dyalog.c
     - elixir/c_src/yamlscript_nif.c
     - elixir/doc/readme.md
     - elixir/ReadMe.md

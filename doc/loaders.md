@@ -23,6 +23,7 @@ The following loader libraries are currently available:
 * [D](https://code.dlang.org/packages/yamlscript)
 * [Dart](https://pub.dev/packages/yamlscript)
 * [Delphi (Free Pascal)](https://github.com/yaml/yamlscript-delphi)
+* [Dyalog APL](https://github.com/yaml/yamlscript/tree/main/dyalog)
 * [Elixir](https://hex.pm/packages/yamlscript)
 * [Erlang](https://hex.pm/packages/yamlscript_erlang)
 * [F#](https://www.nuget.org/packages/YAMLScript.FSharp)

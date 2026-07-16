@@ -1,0 +1,31 @@
+#!/usr/bin/env dyalogscript
+
+⎕IO←0
+
+ClientWS←'/home/dyalog/dyalog.200U64.files/SessionExtensions/'
+ClientWS,←'CiderTatin/Tatin/Client.dws'
+⎕CY ClientWS
+
+Getenv←{2 ⎕NQ'.' 'GetEnvironment' ⍵}
+
+Version←Getenv'TATIN_RELEASE_VERSION'
+BuildDir←Getenv'TATIN_BUILD_DIR'
+Registry←Getenv'TATIN_REGISTRY'
+
+:If 0=≢Version
+    ⎕←'Error: TATIN_RELEASE_VERSION not set'
+    ⎕OFF 1
+:EndIf
+:If 0=≢BuildDir
+    BuildDir←'/work/.cache/tatin/build'
+:EndIf
+:If 0=≢Registry
+    Registry←'[tatin]'
+:EndIf
+
+_←_Tatin.Client.InitUserSettings '/home/dyalog/Tatin'
+Parms←_Tatin.Client.CreateBuildParms '/work'
+Parms.targetPath←BuildDir
+Parms.version←Version
+Zip←_Tatin.Client.BuildPackage Parms
+⎕←Zip

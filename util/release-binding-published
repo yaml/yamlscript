@@ -175,6 +175,10 @@ case $binding in
     mooncakes-version-exists ingydotnet/yamlscript &&
       published=true
     ;;
+  dyalog)
+    url-exists "https://tatin.dev/yaml-yamlscript-$version" &&
+      published=true
+    ;;
   julia)
     julia-version-exists &&
       published=true

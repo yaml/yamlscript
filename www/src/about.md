@@ -103,7 +103,7 @@ https://github.com/yaml/yamlscript/releases/).
 
 This shared library can be bound to almost all modern  programming languages as
 a YAML Loader module.
-It currently ships to these 31 languages:
+It currently ships to these 32 languages:
 
 * [Ada](https://alire.ada.dev/crates/yamlscript.html)
 * [C#](https://www.nuget.org/packages/YAMLScript/)
@@ -112,6 +112,7 @@ It currently ships to these 31 languages:
 * [D](https://code.dlang.org/packages/yamlscript)
 * [Dart](https://pub.dev/packages/yamlscript)
 * [Delphi (Free Pascal)](https://github.com/yaml/yamlscript-delphi)
+* [Dyalog APL](https://github.com/yaml/yamlscript/tree/main/dyalog)
 * [Elixir](https://hex.pm/packages/yamlscript)
 * [Erlang](https://hex.pm/packages/yamlscript_erlang)
 * [F#](https://www.nuget.org/packages/YAMLScript.FSharp)
