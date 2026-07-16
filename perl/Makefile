@@ -13,7 +13,6 @@ ALIEN-DIST-DIR := $(ROOT)/perl-alien/Alien-YAMLScript-$(PERL-VERSION)
 ALIEN-BLIB-LIB := $(ALIEN-DIST-DIR)/blib/lib
 
 CPAN-DEPS := \
-    Cpanel::JSON::XS \
     FFI::CheckLib \
     FFI::Platypus \
     Test2::V0 \

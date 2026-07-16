@@ -37,7 +37,6 @@ WriteMakefile(
   MIN_PERL_VERSION => '5.016',
   PREREQ_PM => {
     'Alien::YAMLScript' => '0.2.12',
-    'Cpanel::JSON::XS' => '4.37',
     'FFI::CheckLib' => '0.31',
     'FFI::Platypus' => '2.08',
   },
