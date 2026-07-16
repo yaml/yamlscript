@@ -11,10 +11,19 @@ MAKES-CLEAN += alire
 ADA-ORIGIN := https://github.com/yaml/yamlscript.git
 ADA-MANIFEST := ada/alire.toml
 ADA-RELEASE-COMMIT ?= $(shell git rev-parse HEAD)
-ADA-GITHUB-USER ?= \
+ADA-GITHUB-USER ?= $(GITHUB_ACTOR)
+ifeq (,$(ADA-GITHUB-USER))
+ADA-GITHUB-USER := \
   $(shell ys -e '.github.user:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
-ADA-GITHUB-TOKEN ?= \
+endif
+ifeq (,$(ADA-GITHUB-USER))
+ADA-GITHUB-USER := $(shell gh api user --jq .login 2>/dev/null)
+endif
+ADA-GITHUB-TOKEN ?= $(GH_TOKEN)
+ifeq (,$(ADA-GITHUB-TOKEN))
+ADA-GITHUB-TOKEN := \
   $(shell ys -e '.github.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
 
 #------------------------------------------------------------------------------
 build:: build-doc obj/yamlscript.o
