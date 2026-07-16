@@ -1055,8 +1055,9 @@ jobs:
         mkdir -p release-artifacts
         gh release download "$VERSION" \
           --repo "${{ github.repository }}" \
-          --pattern '*.tar.xz' \
-          --pattern '*.jar' \
+          --pattern 'ys-*-linux-x64.tar.xz' \
+          --pattern 'libys-*-linux-x64.tar.xz' \
+          --pattern '*-standalone.jar' \
           --dir release-artifacts
         ls -lh release-artifacts
 
