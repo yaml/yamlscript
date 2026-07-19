@@ -143,6 +143,15 @@ defn ys-formula(version class shas):
         bin.install "ys"
         bin.install "ys-0"
         bin.install "ys-#{version}"
+        bin.install "ys-sh-#{version}"
+      end
+
+      def caveats
+        <<~EOS
+          To run 'ys -T bb' compiled scripts under babashka
+          without java, install the ys.v0 jars into ~/.m2 with:
+            ys-sh-#{version} --install-m2
+        EOS
       end
 
       test do

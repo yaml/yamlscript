@@ -1,9 +1,9 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-;; The ys.v0 namespace makes code compiled by `ys -c --v0` runnable by
-;; plain Clojure runtimes like babashka and JVM Clojure. Compiled programs
-;; start with:
+;; The ys.v0 namespace makes code compiled by `ys -T clj` (and the other
+;; code targets) runnable by plain Clojure runtimes like babashka, JVM
+;; Clojure, jolt and glojure. Compiled programs start with:
 ;;
 ;;   (ns main (:require ys.v0))
 ;;   (ys.v0/init)
@@ -14,16 +14,13 @@
 ;;
 ;; Under the ys runtime this namespace is shadowed by a no-op SCI stub, so
 ;; the same compiled code runs identically there.
+;;
+;; Namespaces some runtimes lack (see manifest/optional-nses) load via
+;; guarded requires; their aliases are only created when they loaded.
 
 (ns ys.v0
   (:require
-   [babashka.fs]
-   [clojure.java.io]
-   [clojure.math]
-   [clojure.pprint]
-   [clojure.set]
    [clojure.string :as str]
-   [clojure.tools.cli]
    [clojure.walk]
    [ys.v0.clj]
    [ys.v0.common :as common]
@@ -31,30 +28,34 @@
    [ys.v0.debug]
    [ys.v0.dwim]
    [ys.v0.ext]
-   [ys.v0.fs]
    [ys.v0.global :as global]
    [ys.v0.http]
    [ys.v0.json]
    [ys.v0.manifest :as manifest]
    [ys.v0.re :as re]
    [ys.v0.std]
-   [ys.v0.taptest]
    [ys.v0.util :as util]
    [ys.v0.yaml]
    [ys.v0.ys]))
 
 (def VERSION "0.2.28")
 
+;; Load what this runtime can provide of the optional namespaces:
+(doseq [ns-sym manifest/optional-nses]
+  (util/catching (require ns-sym) nil))
+
 (defn- refer-exports
   "Refer every manifest export into the target namespace. Symbols are
-  ns-unmapped first so clojure.core shadows replace silently."
+  ns-unmapped first so clojure.core shadows replace silently. (Needs
+  glojure newer than 0.6.8, where ns-unmap was broken.)"
   [target]
   (doseq [sym (manifest/exported-syms)]
     (ns-unmap target sym))
   (doseq [[ns-sym syms] manifest/refers]
-    (if (= :all syms)
-      (refer ns-sym)
-      (refer ns-sym :only (vec syms))))
+    (when (find-ns ns-sym)
+      (if (= :all syms)
+        (refer ns-sym)
+        (refer ns-sym :only (vec syms)))))
   ;; The YS runtime overrides clojure.core load and use with YS versions.
   ;; Here they refer to the ys.v0.ys bridge, which dies with a clear
   ;; message outside the ys runtime.
@@ -67,10 +68,12 @@
     (ns-unmap target sym))
   (refer 'ys.v0.global :only (vec manifest/runtime-vars)))
 
-(defn- alias-namespaces [target]
+(defn- alias-namespaces [_target]
+  ;; catching instead of an ns-aliases lookup makes repeat init calls
+  ;; harmless everywhere (and glojure's ns-aliases is broken anyway):
   (doseq [[a ns-sym] manifest/aliases]
-    (when-not (get (ns-aliases target) a)
-      (alias a ns-sym))))
+    (when (find-ns ns-sym)
+      (util/catching (alias a ns-sym) nil))))
 
 (defn- coerce-args
   "Coerce command line arguments the way the ys runtime does."
@@ -103,22 +106,25 @@
 
 (defn- get-hostname []
   (or
-    (try
-      (not-empty (.getHostName (java.net.InetAddress/getLocalHost)))
-      (catch Exception _ nil))
+    #?(:glj nil
+       :default
+       (util/catching
+         (not-empty (.getHostName (java.net.InetAddress/getLocalHost)))
+         nil))
     (not-empty (System/getenv "HOSTNAME"))
     (not-empty (System/getenv "COMPUTERNAME"))))
 
 (defn- get-runtime-info []
-  {:args (try (common/get-cmd-args) (catch Exception _ []))
+  {:args (util/catching (common/get-cmd-args) [])
    :arch (normalize-arch (System/getProperty "os.arch"))
-   :bin (try (common/get-cmd-bin) (catch Exception _ nil))
+   :bin (util/catching (common/get-cmd-bin) nil)
    :hostname (get-hostname)
    :os (normalize-os (System/getProperty "os.name"))
-   :pid (try (common/get-cmd-pid) (catch Exception _ nil))
-   :versions {:clojure (clojure-version)
+   :pid (util/catching (common/get-cmd-pid) nil)
+   :versions {:clojure #?(:glj (str "glojure " *glojure-version*)
+                          :default (clojure-version))
               :yamlscript VERSION}
-   :yspath (try (common/get-cmd-path) (catch Exception _ nil))})
+   :yspath (util/catching (common/get-cmd-path) nil)})
 
 (defn- set-var! [v value]
   (alter-var-root v (constantly value)))
@@ -130,7 +136,7 @@
         argv (vec (or *command-line-args* []))]
     (set-var! #'global/ARGS (coerce-args argv))
     (set-var! #'global/ARGV argv)
-    (set-var! #'global/CWD (str (babashka.fs/cwd)))
+    (set-var! #'global/CWD (common/cwd))
     (set-var! #'global/DIR (common/dirname file))
     (set-var! #'global/ENV (into {} (System/getenv)))
     (set-var! #'global/FILE file)

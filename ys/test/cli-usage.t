@@ -28,6 +28,8 @@ HELP =: |
 
 #   -T, --to FORMAT          Output format for --load:
 #                              json, yaml, csv, tsv, edn
+#                            or target for --compile:
+#                              bb, clj, jolt, glj
 #   -J, --json               Output (pretty) JSON for --load
 #   -Y, --yaml               Output YAML for --load
 #   -U, --unordered          Mappings don't preserve key order (faster)
@@ -69,6 +71,91 @@ test::
 
 - cmnd: "ys -ce '=>: 1 + 2'"
   want: (add+ 1 2)
+
+# -T clj emits the portable ys.v0 header with a JVM Clojure deps
+# bootstrap (and implies -c)
+- cmnd: "ys -T clj -e 'say: 1 + 2'"
+  want: |
+    (when-not (or (System/getProperty "babashka.version")
+                  (System/getProperty "jolt.version"))
+      (or (try (require 'ys.v0) true (catch Exception _ false))
+          (eval
+            '(let [t (Thread/currentThread)
+                   cl (clojure.lang.DynamicClassLoader.
+                        (.getContextClassLoader t))]
+               (.setContextClassLoader t cl)
+               (with-bindings {(requiring-resolve 'clojure.core/*repl*) true}
+                 ((requiring-resolve 'clojure.repl.deps/add-libs)
+                  '{org.yamlscript/ys.v0 {:mvn/version "0.2.28"}}))
+               (with-bindings {clojure.lang.Compiler/LOADER cl}
+                 (require 'ys.v0)
+                 (doseq [lib '[flatland.ordered.map clj-yaml.core
+                               clojure.data.json clojure.data.csv
+                               babashka.process babashka.http-client]]
+                   (try (require lib) (catch Throwable _))))))))
+    (ns main (:require ys.v0))
+    (ys.v0/init)
+
+    (say (add+ 1 2))
+
+- cmnd: "ys -cT bb -e 'say: 123'"
+  want: |
+    (when (System/getProperty "babashka.version")
+      (let [m2 (str (System/getProperty "user.home") "/.m2/repository/")
+            jars [(str m2 "org/yamlscript/ys.v0/0.2.28/ys.v0-0.2.28.jar")
+                  (str m2 "org/clojure/data.json/2.4.0/data.json-2.4.0.jar")]]
+        (if (every? #(.exists (java.io.File. %)) jars)
+          ((requiring-resolve 'babashka.classpath/add-classpath)
+           (clojure.string/join java.io.File/pathSeparator jars))
+          ((requiring-resolve 'babashka.deps/add-deps)
+           '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.28"}}}))))
+    (ns main (:require ys.v0))
+    (ys.v0/init)
+
+    (say 123)
+
+- cmnd: "ys -T jolt -e 'say: 123'"
+  want: |
+    (when (System/getProperty "jolt.version")
+      ((requiring-resolve 'jolt.deps/add-deps)
+       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.28"}
+                io.github.jolt-lang/yaml
+                {:git/url "https://github.com/jolt-lang/yaml.git"
+                 :git/sha "348ff807899042317db3a1169002c6fec7be2194"}}}))
+    (ns main (:require ys.v0))
+    (ys.v0/init)
+
+    (say 123)
+
+- cmnd: "ys -T glj -e 'say: 123'"
+  want: |
+    (when (resolve '*glojure-version*)
+      ((resolve 'add-load-path)
+       (or (System/getenv "YS_V0_PATH")
+           (str (System/getenv "HOME")
+                "/.m2/repository/org/yamlscript/ys.v0/"
+                "0.2.28/ys.v0-0.2.28.jar.d"))))
+    (ns main (:require ys.v0))
+    (ys.v0/init)
+
+    (say 123)
+
+- cmnd: "ys -T bb -C -e 'say: 123'"
+  want: 'Error: Options --to=bb and --clojure are mutually exclusive.'
+
+- cmnd: "ys -T bb -l -e 'say: 123'"
+  want: 'Error: Options --to=bb and --load are mutually exclusive.'
+
+- cmnd: "ys -T frob -e 'say: 123'"
+  have: 'bb, clj, jolt, glj (for --compile)'
+
+# -T bb with -o makes an executable bb script
+- name: ys -T bb -o file
+  cmnd: >-
+    bash -c 'f=/tmp/ys-cli-usage-v0.clj;
+    ys -T bb -e "say: 123" -o "$f" &&
+    test -x "$f" && head -1 "$f"; rm -f "$f"'
+  want: '#!/usr/bin/env bb'
 
 - cmnd: "ys -pe '=>: 6 * 7'"
   want: '42'

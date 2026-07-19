@@ -60,7 +60,10 @@
   (err (str "--" s " not implemented yet.")))
 
 ;; ----------------------------------------------------------------------------
+;; Data output formats for --load:
 (def to-fmts #{"json" "yaml" "csv" "tsv" "edn"})
+;; Code targets for --compile:
+(def to-code-fmts #{"bb" "clj" "jolt" "glj"})
 
 (def stages
   {"parse" true
@@ -99,10 +102,14 @@
 
    ["-T" "--to FORMAT"
     "Output format for --load:
-                             json, yaml, csv, tsv, edn"
+                             json, yaml, csv, tsv, edn
+                           or target for --compile:
+                             bb, clj, jolt, glj"
     :validate
-    [#(contains? to-fmts %1)
-     (str "must be one of: json, yaml, csv, tsv, edn")]]
+    [#(contains? (set/union to-fmts to-code-fmts) %1)
+     (str "must be one of:\n"
+       "  json, yaml, csv, tsv, edn (for --load)\n"
+       "  bb, clj, jolt, glj (for --compile)")]]
    ["-J" "--json"
     "Output (pretty) JSON for --load"]
    ["-Y" "--yaml"
@@ -361,10 +368,134 @@ Options:
             code))
         code))))
 
+(def v0-header
+  (str
+    "(ns main (:require ys.v0))\n"
+    "(ys.v0/init)\n"))
+
+;; The ys.v0 dependency that babashka can't provide as a builtin.
+;; Keep the version in sync with v0/project.clj.
+(def data-json-version "2.4.0")
+
+;; Under babashka, use the ys.v0 jar and its one non-builtin dependency
+;; straight from ~/.m2 when they are there (no dependency resolution, no
+;; java needed); otherwise fall back to add-deps, which fetches them from
+;; Clojars (and shells out to java to do so).
+(def v0-bb-header
+  (str
+    "(when (System/getProperty \"babashka.version\")\n"
+    "  (let [m2 (str (System/getProperty \"user.home\")"
+    " \"/.m2/repository/\")\n"
+    "        jars [(str m2 \"org/yamlscript/ys.v0/"
+    yamlscript-version "/ys.v0-" yamlscript-version ".jar\")\n"
+    "              (str m2 \"org/clojure/data.json/"
+    data-json-version "/data.json-" data-json-version ".jar\")]]\n"
+    "    (if (every? #(.exists (java.io.File. %)) jars)\n"
+    "      ((requiring-resolve 'babashka.classpath/add-classpath)\n"
+    "       (clojure.string/join java.io.File/pathSeparator jars))\n"
+    "      ((requiring-resolve 'babashka.deps/add-deps)\n"
+    "       '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
+    yamlscript-version "\"}}}))))\n"))
+
+;; Under JVM Clojure, resolve the ys.v0 dependency at runtime with
+;; Clojure 1.12's add-libs unless it is already on the classpath. The
+;; try/require probe also makes this a no-op under the ys runtime, where
+;; ys.v0 is built in. Script execution (unlike the REPL) provides
+;; neither the DynamicClassLoader context that add-libs requires nor a
+;; *repl* true binding, and requires later in the file resolve through
+;; Compiler/LOADER, which was fixed when the file load began. So: install
+;; a DynamicClassLoader, run add-libs, then require ys.v0 through that
+;; loader; the (ns main ...) require below is then already satisfied.
+;; The whole fallback is (eval '...) quoted data so that analyzers
+;; without these classes (the ys SCI runtime) and older Clojure versions
+;; never see the interop forms (add-libs itself needs 1.12+).
+(def v0-clj-header
+  (str
+    "(when-not (or (System/getProperty \"babashka.version\")\n"
+    "              (System/getProperty \"jolt.version\"))\n"
+    "  (or (try (require 'ys.v0) true (catch Exception _ false))\n"
+    "      (eval\n"
+    "        '(let [t (Thread/currentThread)\n"
+    "               cl (clojure.lang.DynamicClassLoader.\n"
+    "                    (.getContextClassLoader t))]\n"
+    "           (.setContextClassLoader t cl)\n"
+    "           (with-bindings"
+    " {(requiring-resolve 'clojure.core/*repl*) true}\n"
+    "             ((requiring-resolve 'clojure.repl.deps/add-libs)\n"
+    "              '{org.yamlscript/ys.v0 {:mvn/version \""
+    yamlscript-version "\"}}))\n"
+    "           (with-bindings {clojure.lang.Compiler/LOADER cl}\n"
+    "             (require 'ys.v0)\n"
+    ;; The ys.v0 backend libraries load lazily, which would resolve
+    ;; through the original loader at run time and miss the add-libs
+    ;; jars; load them here while the loader is bound:
+    "             (doseq [lib '[flatland.ordered.map clj-yaml.core\n"
+    "                           clojure.data.json clojure.data.csv\n"
+    "                           babashka.process babashka.http-client]]\n"
+    "               (try (require lib) (catch Throwable _))))))))\n"))
+
+;; Under jolt (a Clojure dialect hosted on Chez Scheme), resolve the
+;; ys.v0 dependency with jolt's add-deps, which resolves the Maven
+;; transitives from the pom.xml inside the ys.v0 jar. jolt's own
+;; libyaml based clj-yaml.core implementation is added as a git dep
+;; (top level pins win over the transitive clj-commons/clj-yaml):
+(def jolt-yaml-sha "348ff807899042317db3a1169002c6fec7be2194")
+
+(def v0-jolt-header
+  (str
+    "(when (System/getProperty \"jolt.version\")\n"
+    "  ((requiring-resolve 'jolt.deps/add-deps)\n"
+    "   '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
+    yamlscript-version "\"}\n"
+    "            io.github.jolt-lang/yaml\n"
+    "            {:git/url \"https://github.com/jolt-lang/yaml.git\"\n"
+    "             :git/sha \"" jolt-yaml-sha "\"}}}))\n"))
+
+;; Under glojure, add the extracted ys.v0 jar sources to the load path
+;; (glojure loads plain source; there is no jar or Maven machinery).
+;; The YS_V0_PATH env var overrides the ~/.m2 extraction convention
+;; that the ys installers and 'ys-sh --install-m2' maintain. Every
+;; symbol funnels through resolve so other runtimes never analyze
+;; glojure specifics:
+(def v0-glj-header
+  (str
+    "(when (resolve '*glojure-version*)\n"
+    "  ((resolve 'add-load-path)\n"
+    "   (or (System/getenv \"YS_V0_PATH\")\n"
+    "       (str (System/getenv \"HOME\")\n"
+    "            \"/.m2/repository/org/yamlscript/ys.v0/\"\n"
+    "            \"" yamlscript-version "/ys.v0-" yamlscript-version
+    ".jar.d\"))))\n"))
+
+(def to-code-headers
+  {"bb" v0-bb-header
+   "clj" v0-clj-header
+   "jolt" v0-jolt-header
+   "glj" v0-glj-header})
+
+(defn v0-bb-script?
+  "Is the compiled output an executable babashka script file?"
+  [opts]
+  (boolean
+    (and (:output opts)
+      (= "bb" (:to opts)))))
+
+(defn compiled-output [opts clojure]
+  (if-let [deps-header (get to-code-headers (:to opts))]
+    (str
+      (when (v0-bb-script? opts)
+        "#!/usr/bin/env bb\n")
+      deps-header
+      v0-header "\n" clojure)
+    clojure))
+
 (defn do-compile [opts args]
   (let [[code _ _ #_file #_args] (get-compiled-code opts)
-        clojure (pretty-clojure code)]
+        clojure (pretty-clojure code)
+        clojure (compiled-output opts clojure)]
     (println clojure)
+    (when (v0-bb-script? opts)
+      (.setExecutable (io/file (:output opts)) true false))
     (System/exit 0)))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
@@ -501,6 +632,17 @@ Options:
 (def info-opts
   #{:version :help})
 
+(defn to-code-conflict
+  "A code target --to value conflicts with data output options."
+  [opts]
+  (when (contains? to-code-fmts (:to opts))
+    (some
+      (fn [key]
+        (when (key opts)
+          (str "Options --to=" (:to opts) " and --" (name key)
+            " are mutually exclusive.")))
+      [:clojure :load :json :yaml :edn :print])))
+
 (defn validate-opts [opts]
   (let [opts (elide-empty opts :eval :debug-stage)]
     (or
@@ -512,7 +654,8 @@ Options:
       (mutex1 opts :eval (set/difference action-opts eval-action-opts))
       (needs opts :mode #{:eval})
       (mutex1 opts :print (set/difference action-opts #{:run}))
-      (mutex1 opts :to (set/difference action-opts #{:load :compile})))))
+      (mutex1 opts :to (set/difference action-opts #{:load :compile}))
+      (to-code-conflict opts))))
 
 (defn looks-like-expr [file]
   (when (and
@@ -585,7 +728,12 @@ Options:
                      to (if (= "yml" to) "yaml" to)]
                  (assoc opts :to to))
                opts)
-        opts (if (:to opts) (assoc opts :load true) opts)
+        ;; A data format --to implies --load; a code target --to implies
+        ;; --compile:
+        opts (if (contains? to-fmts (:to opts))
+               (assoc opts :load true) opts)
+        opts (if (contains? to-code-fmts (:to opts))
+               (assoc opts :compile true) opts)
         opts (if (env "YS_PRINT") (assoc opts :print true) opts)
         opts (if (and (env "YS_PRINT_EVAL")
                    (seq (:eval opts))) (assoc opts :print true) opts)

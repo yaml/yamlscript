@@ -8,6 +8,16 @@
   (:require
    [babashka.pods]
    [babashka.pods.sci]
+   ;; The ys.v0 namespaces resolve these backend libraries lazily (so
+   ;; that limited Clojure runtimes can load ys.v0), but the ys runtime
+   ;; must have them AOT compiled into the native binaries, so require
+   ;; them eagerly here:
+   [babashka.http-client]
+   [babashka.process]
+   [clj-yaml.core]
+   [clojure.data.json]
+   [flatland.ordered.map]
+   ,
    [clojure.java.io :as io]
    [clojure.math]
    [clojure.pprint]

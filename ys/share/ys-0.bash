@@ -23,6 +23,49 @@ do-upgrade() (
   curl -sS https://yamlscript.org/install | bash
 )
 
+# Install the jars that java free 'ys -T bb' scripts load from ~/.m2
+# under babashka. Source loading runtimes ('ys -T glj' output under
+# glojure) read the ys.v0 sources from the extracted <jar>.d directory
+# created here:
+do-install-m2() (
+  # Keep in sync with v0/project.clj:
+  data_json_version=2.4.0
+
+  install-m2-file \
+    "org/yamlscript/ys.v0/$yamlscript_version" \
+    "ys.v0-$yamlscript_version" \
+    'https://repo.clojars.org'
+
+  install-m2-file \
+    "org/clojure/data.json/$data_json_version" \
+    "data.json-$data_json_version" \
+    'https://repo1.maven.org/maven2'
+
+  jar=$HOME/.m2/repository/org/yamlscript/ys.v0
+  jar+=/$yamlscript_version/ys.v0-$yamlscript_version.jar
+  if [[ ! -e $jar.d ]] && command -v unzip >/dev/null; then
+    unzip -o -q "$jar" -d "$jar.d"
+    echo "Extracted: $jar.d"
+  fi
+)
+
+install-m2-file() (
+  path=$1 name=$2 repo=$3
+
+  dir=$HOME/.m2/repository/$path
+  mkdir -p "$dir"
+
+  for file in "$name.jar" "$name.pom"; do
+    if [[ -e $dir/$file ]]; then
+      echo "Already installed: $dir/$file"
+    else
+      curl -fsSL -o "$dir/$file" "$repo/$path/$file" ||
+        die "Failed to download: $repo/$path/$file"
+      echo "Installed: $dir/$file"
+    fi
+  done
+)
+
 do-compile-to-binary() (
   in_file=${1-}
   out_file=${2-}

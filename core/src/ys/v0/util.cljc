@@ -4,10 +4,45 @@
 (ns ys.v0.util)
 
 (defn die
-  "Throw a YAMLScript exception with a normalized trailing newline."
-  ([] (throw (Exception. "Died")))
-  ([msg] (throw (Exception. (str msg "\n"))))
+  "Throw a YAMLScript exception with a normalized trailing newline.
+  Thrown as ex-info because every Clojure runtime YS targets supports
+  it (there is no Exception class outside the JVM family)."
+  ([] (die "Died"))
+  ([msg] (throw (ex-info (str msg "\n") {})))
   ([x & xs] (die (apply str x xs))))
+
+(defmacro catching
+  "Evaluate expr, returning fallback if anything is thrown. The caught
+  type is chosen when THIS file loads (via reader conditional), so
+  consumers stay portable across runtimes with different catch types
+  (glojure catches go/any; the JVM family catches Exception)."
+  [expr fallback]
+  `(try
+     ~expr
+     (catch #?(:glj go/any :default Exception) e# ~fallback)))
+
+(defn backend
+  "Resolve a backend library var at call time, so that Clojure runtimes
+  without the library (like jolt) can still load the ys.v0 namespaces.
+  Dies with a clear message when the library is not available.
+  Requires then resolves (rather than requiring-resolve) because some
+  runtimes only resolve reliably in already loaded namespaces."
+  [sym]
+  (or
+    (catching
+      (do
+        (require (symbol (namespace sym)))
+        (resolve sym))
+      nil)
+    (die (str "The '" (namespace sym) "' library is not available"
+           " in this Clojure runtime"))))
+
+(defn pprint*
+  "Pretty print x via clojure.pprint when available, else plain prn."
+  [x]
+  (if-let [f (catching (backend 'clojure.pprint/pprint) nil)]
+    (f x)
+    (prn x)))
 
 (defmacro condf
   "Like condp, but each clause predicate is called with the same value."

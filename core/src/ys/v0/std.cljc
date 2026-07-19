@@ -3,26 +3,27 @@
 
 ;; This is the YS standard library.
 
+;; The :glj reader conditionals keep this namespace loadable on
+;; glojure, which lacks the clojure.math/pprint/data namespaces, Java
+;; class imports and the babashka.fs backed ys.v0.fs namespace.
 (ns ys.v0.std
   (:require
-   [babashka.process :as process]
-   [clojure.data :as data]
-   [clojure.math :as math]
-   [clojure.pprint :as pp]
-   [clojure.set :as set]
+   #?@(:glj []
+       :default [[clojure.data :as data]
+                 [clojure.math :as math]
+                 [ys.v0.fs :as fs]])
    [clojure.string :as str]
-   [flatland.ordered.map]
    [ys.v0.common :as common :refer
     [atom? re-find+ regex?]]
    [ys.v0.ext :as ext]
    [ys.v0.global :as global]
    [ys.v0.re :as re]
    [ys.v0.util :as util]
-   [ys.v0.fs :as fs]
    [ys.v0.http :as http]
    [ys.v0.ys :as ys])
-  (:import java.security.MessageDigest
-           java.util.Base64)
+  #?@(:glj []
+      :default [(:import java.security.MessageDigest
+                         java.util.Base64)])
   (:refer-clojure :exclude [atom
                             die
                             eval
@@ -86,7 +87,7 @@
 (defn pretty [x]
   (str/trim-newline
     (with-out-str
-      (pp/pprint x))))
+      (util/pprint* x))))
 
 (defn replace
   ([x] (clojure.core/replace x))
@@ -174,7 +175,8 @@
                nil)
     nil))
 
-(defn diff [a b] (data/diff a b))
+(defn diff [a b]
+  ((util/backend 'clojure.data/diff) a b))
 
 (defn flat [C]
   (mapcat
@@ -228,8 +230,26 @@
       (+merge M))
     M))
 
+;; The flatland.ordered backend resolves at first call so that Clojure
+;; runtimes that can't run it (like jolt, currently) can still load
+;; this namespace. Those runtimes fall back to array-map, which keeps
+;; construction order at any size; order is only lost when assoc grows
+;; a map past eight entries and promotes it to a hash map. The probe
+;; constructs a map because loading can succeed where construction
+;; does not.
+(def ^:private ordered-map-fn
+  (delay
+    (util/catching
+      (let [f (do (require 'flatland.ordered.map)
+                  (resolve 'flatland.ordered.map/ordered-map))]
+        (f :a 1 :b 2)
+        f)
+      nil)))
+
 (defn omap [& xs]
-  (apply flatland.ordered.map/ordered-map xs))
+  (if-let [ordered-map @ordered-map-fn]
+    (apply ordered-map xs)
+    (apply array-map xs)))
 
 (intern 'ys.v0.std '% omap)
 
@@ -297,30 +317,44 @@
       (for [d n]
         (- (byte d) 48)))))
 
-(intern 'ys.v0.std 'floor math/floor)
+;; On glojure the math functions come from Go's math package (there is
+;; no clojure.math namespace there yet):
+(def max-long 9223372036854775807)
+
+(defn- pow* [x y]
+  #?(:glj (math.Pow (double x) (double y))
+     :default (math/pow x y)))
+
+(intern 'ys.v0.std 'floor
+  #?(:glj (fn [x] (math.Floor (double x)))
+     :default math/floor))
 
 (defn pow
   ([x] #(pow %1 x))
   ([x y]
    (if (and (integer? x) (integer? y) (>= y 0))
-     (let [a (math/pow x y)]
-       (if (<= a Long/MAX_VALUE)
+     (let [a (pow* x y)]
+       (if (<= a max-long)
          (long a)
          a))
-     (math/pow x y)))
+     (pow* x y)))
 
   ([x y & xs]
    (let [[& xs] (clojure.core/reverse (conj xs y x))]
      (reduce #(pow %2 %1) 1 xs))))
 
-(intern 'ys.v0.std 'round math/round)
+(intern 'ys.v0.std 'round
+  #?(:glj (fn [x] (long (math.Round (double x))))
+     :default math/round))
 
 (defn sum [xs]
   (reduce + 0 (filter identity xs)))
 
 (defn sqr  [N] (pow N 2))
 (defn cube [N] (pow N 3))
-(intern 'ys.v0.std 'sqrt math/sqrt)
+(intern 'ys.v0.std 'sqrt
+  #?(:glj (fn [x] (math.Sqrt (double x)))
+     :default math/sqrt))
 
 (defn- op-error
   ([op x]
@@ -352,7 +386,7 @@
      number? (+ (to-num x 0) (to-num y 0))
      string? (str x y)
      map? (merge (to-map x) (to-map y))
-     set? (set/union (to-set x) (to-set y))
+     set? (into (to-set x) (to-set y))
      vector? (vec (concat (to-vec x)
                     (if (sequential? y)
                       (to-list y)
@@ -504,7 +538,7 @@
   (flush))
 
 (defn pp [x]
-  (pp/pprint x))
+  (util/pprint* x))
 
 (defn print [& xs]
   (apply clojure.core/print xs)
@@ -760,26 +794,37 @@
 ;;------------------------------------------------------------------------------
 ;; File system functions
 ;;------------------------------------------------------------------------------
-(intern 'ys.v0.std 'fs-d fs/d)
-(intern 'ys.v0.std 'fs-e fs/e)
-(intern 'ys.v0.std 'fs-f fs/f)
-(intern 'ys.v0.std 'fs-l fs/l)
-(intern 'ys.v0.std 'fs-r fs/r)
-(intern 'ys.v0.std 'fs-s fs/s)
-(intern 'ys.v0.std 'fs-w fs/w)
-(intern 'ys.v0.std 'fs-x fs/x)
-(intern 'ys.v0.std 'fs-z fs/z)
-(intern 'ys.v0.std 'fs-abs fs/abs)
-(intern 'ys.v0.std 'fs-abs? fs/abs?)
-(intern 'ys.v0.std 'fs-dirname fs/dirname)
-(intern 'ys.v0.std 'fs-filename fs/filename)
-(intern 'ys.v0.std 'fs-basename fs/basename)
-(intern 'ys.v0.std 'fs-glob fs/glob)
-(intern 'ys.v0.std 'fs-ls fs/ls)
-(intern 'ys.v0.std 'fs-mtime fs/mtime)
-(intern 'ys.v0.std 'fs-rel fs/rel)
-(intern 'ys.v0.std 'fs-rel? fs/rel?)
-(intern 'ys.v0.std 'fs-which fs/which)
+#?(:glj
+   ;; No babashka.fs backend on glojure yet; intern clean failures so
+   ;; the export set stays identical across runtimes:
+   (doseq [name '[d e f l r s w x z abs abs? dirname filename basename
+                  glob ls mtime rel rel? which]]
+     (intern 'ys.v0.std (symbol (str "fs-" name))
+       (fn [& _]
+         (util/die "The fs functions are not available"
+           " in this Clojure runtime"))))
+   :default
+   (do
+     (intern 'ys.v0.std 'fs-d fs/d)
+     (intern 'ys.v0.std 'fs-e fs/e)
+     (intern 'ys.v0.std 'fs-f fs/f)
+     (intern 'ys.v0.std 'fs-l fs/l)
+     (intern 'ys.v0.std 'fs-r fs/r)
+     (intern 'ys.v0.std 'fs-s fs/s)
+     (intern 'ys.v0.std 'fs-w fs/w)
+     (intern 'ys.v0.std 'fs-x fs/x)
+     (intern 'ys.v0.std 'fs-z fs/z)
+     (intern 'ys.v0.std 'fs-abs fs/abs)
+     (intern 'ys.v0.std 'fs-abs? fs/abs?)
+     (intern 'ys.v0.std 'fs-dirname fs/dirname)
+     (intern 'ys.v0.std 'fs-filename fs/filename)
+     (intern 'ys.v0.std 'fs-basename fs/basename)
+     (intern 'ys.v0.std 'fs-glob fs/glob)
+     (intern 'ys.v0.std 'fs-ls fs/ls)
+     (intern 'ys.v0.std 'fs-mtime fs/mtime)
+     (intern 'ys.v0.std 'fs-rel fs/rel)
+     (intern 'ys.v0.std 'fs-rel? fs/rel?)
+     (intern 'ys.v0.std 'fs-which fs/which)))
 
 
 ;;------------------------------------------------------------------------------
@@ -828,12 +873,12 @@
 ;; and die at call time on other runtimes (like babashka).
 (def ^:private invoke-constructor
   (delay
-    (try
+    (util/catching
       (clojure.core/eval
         '(fn [class args]
            (clojure.lang.Reflector/invokeConstructor
              class (into-array Object args))))
-      (catch Exception _ nil))))
+      nil)))
 
 (defn new [class & xs]
   (if-let [f @invoke-constructor]
@@ -863,6 +908,11 @@
 ;;------------------------------------------------------------------------------
 ;; IPC functions
 ;;------------------------------------------------------------------------------
+;; The babashka.process backend resolves at call time so that Clojure
+;; runtimes without it (like jolt) can still load this namespace.
+(defn- process-backend [name]
+  (util/backend (symbol "babashka.process" name)))
+
 (defn- process-opts [[opts & xs]]
   (let [opts (if (map? opts)
                (let [env (or (:env opts) global/env)
@@ -872,16 +922,16 @@
     (vec (concat opts xs))))
 
 (defn exec [& xs]
-  (apply process/exec (process-opts xs)))
+  (apply (process-backend "exec") (process-opts xs)))
 
 (defn process [& xs]
-  (apply process/process (process-opts xs)))
+  (apply (process-backend "process") (process-opts xs)))
 
 (defn sh [& xs]
-  (apply process/sh (process-opts xs)))
+  (apply (process-backend "sh") (process-opts xs)))
 
 (defn shell [& xs]
-  (apply process/shell (process-opts xs)))
+  (apply (process-backend "shell") (process-opts xs)))
 
 (defn sh-out [& xs]
   (let [ret (apply sh xs)]

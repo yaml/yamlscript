@@ -5,7 +5,6 @@
 
 (ns ys.v0.debug
   (:require
-   [clojure.pprint :as pp]
    [clojure.string :as str]
    [ys.v0.global :as global]
    [ys.v0.util :as util])
@@ -50,10 +49,10 @@
     :else (if (> (count (pr-str value)) 80)
             (str/trim-newline
               (with-out-str
-                (pp/pprint (condf value
-                             map? (into (sorted-map) value)
-                             set? (apply sorted-set value)
-                             value))))
+                (util/pprint* (condf value
+                                map? (into (sorted-map) value)
+                                set? (apply sorted-set value)
+                                value))))
             (pr-str value))))
 
 (defn- dump

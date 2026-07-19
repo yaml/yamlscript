@@ -34,6 +34,19 @@
 (def runtime-overrides
   '[load use])
 
+;; Namespaces that some Clojure runtimes lack (glojure bundles neither
+;; the clojure.* ones nor the babashka.fs backend that ys.v0.fs and
+;; ys.v0.taptest pull in). ys.v0 requires them via a guarded loop and
+;; only aliases/refers the ones that loaded.
+(def optional-nses
+  '[clojure.java.io
+    clojure.math
+    clojure.pprint
+    clojure.set
+    clojure.tools.cli
+    ys.v0.fs
+    ys.v0.taptest])
+
 ;; Namespace aliases available to user code. ys.v0/init sets these up with
 ;; clojure.core/alias; the ys runtime maps them to SCI namespaces.
 (def aliases
@@ -55,13 +68,16 @@
     ys.taptest ys.v0.taptest})
 
 (defn exported-syms
-  "Return the set of symbols that init will refer into the user namespace."
+  "Return the set of symbols that init will refer into the user
+  namespace. Namespaces this runtime could not load contribute
+  nothing."
   []
   (into #{}
     (mapcat (fn [[ns-sym syms]]
-              (if (= :all syms)
-                (keys (ns-publics ns-sym))
-                syms)))
+              (when (find-ns ns-sym)
+                (if (= :all syms)
+                  (keys (ns-publics ns-sym))
+                  syms))))
     refers))
 
 (comment

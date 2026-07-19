@@ -116,6 +116,11 @@ alire-crate-exists() {
 published=false
 
 case $binding in
+  v0)
+    url='https://repo.clojars.org/org/yamlscript/ys.v0'
+    url-exists "$url/$version/ys.v0-$version.jar" &&
+      published=true
+    ;;
   ada)
     alire-crate-exists yamlscript &&
       published=true

@@ -2,14 +2,73 @@
 
 set -euo pipefail
 
+# Keep in sync with v0/project.clj:
+data_json_version=2.4.0
+
+# Install the ys.v0 jar into the real ~/.m2 (not the repo local Makes m2)
+# when it is missing or older than its sources, so that babashka and other
+# tools.deps consumers can resolve org.yamlscript/ys.v0 before it is
+# published to Clojars.
+install-ys-v0() (
+  if [[ -e $m2_jar && -e $m2_jar.d ]]; then
+    stale=$(
+      find "$root/core/src/ys" "$root/v0/project.clj" \
+        \( -name '*.clj' -o -name '*.cljc' \) -newer "$m2_jar" \
+        2>/dev/null
+    )
+    [[ $stale ]] || return 0
+  fi
+
+  # 'make -C v0 install' copies just the ys.v0 artifact (jar, pom and
+  # the extracted <jar>.d for source loading runtimes) into the real
+  # ~/.m2; lein resolution stays in the repo local Makes m2:
+  make -s --no-print-directory -C "$root/v0" install >/dev/null ||
+    echo "WARNING: could not install ys.v0 into ~/.m2" >&2
+  true
+)
+
 (
   libys_version=0.2.28
   root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
+  caller_java_home=${JAVA_HOME:-}
+
+  m2_repo=$HOME/.m2/repository
+  m2_jar=$m2_repo/org/yamlscript/ys.v0
+  m2_jar+=/$libys_version/ys.v0-$libys_version.jar
+  m2_data_json=$m2_repo/org/clojure/data.json
+  m2_data_json+=/$data_json_version/data.json-$data_json_version.jar
+
   JAVA_HOME=$(make -C "$root/core" env | grep ^JAVA_HOME= | cut -d= -f2)
   export JAVA_HOME
   export PATH=$JAVA_HOME/bin:$PATH
   root_ys=$root/ys
   jar=yamlscript.cli-$libys_version-SNAPSHOT-standalone.jar
   make -s --no-print-directory -C "$root_ys" jar >/dev/null
+
+  # Detect a code target compile: -T bb, --to=clj, -cT jolt, etc.
+  to_target=''
+  if [[ " $* " =~ \
+       [[:space:]](-[a-zA-Z]*T|--to)(=|[[:space:]]+)(bb|clj|jolt|glj)([[:space:]]|$) ]]
+  then
+    to_target=${BASH_REMATCH[3]}
+  fi
+
+  if [[ $to_target ]]; then
+    install-ys-v0
+  fi
+
+  # The header emitted by -T bb uses the jars from ~/.m2 when they are
+  # there and otherwise falls back to babashka's add-deps, which runs
+  # $JAVA_HOME/bin/java from the caller's environment to resolve the
+  # dependencies. Catch that setup gap here instead of in the eventual
+  # bb run:
+  if [[ $to_target == bb ]] &&
+     [[ ! -e $m2_jar || ! -e $m2_data_json ]] &&
+     [[ ! -x $caller_java_home/bin/java ]]; then
+    echo "Error: the -T bb output will need java to resolve the" >&2
+    echo "ys.v0 dependencies; set JAVA_HOME to a JDK" >&2
+    exit 1
+  fi
+
   java -jar "$root_ys/target/uberjar/$jar" "$@"
 )

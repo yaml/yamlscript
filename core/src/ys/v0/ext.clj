@@ -4,14 +4,13 @@
 (ns ys.v0.ext
   (:require
    [clojure.string :as str]
-   [babashka.process :as process]
    [ys.v0.util :as util]
    [ys.v0.yaml :as yaml]))
 
 (defn yq [data cmd]
   (let [yaml (yaml/dump data)
-        res (process/sh {:in yaml}
-              "yq" "-e" cmd)
+        res ((util/backend 'babashka.process/sh) {:in yaml}
+             "yq" "-e" cmd)
         {:keys [exit out err]} res]
     (when (and
             (not= 0 exit)

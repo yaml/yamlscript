@@ -27,6 +27,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     # Don't update common/vars.mk
     # - common/vars.mk
     - core/src/yamlscript/runtime.clj
+    - core/src/ys/v0.clj
     - crystal/shard.yml
     - crystal/src/yamlscript/version.cr
     - crystal/src/yamlscript.cr
@@ -66,6 +67,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - doc/install.md
     - doc/run-ys.md
     - doc/ys.md
+    - doc/ys-v0.md
     - go/yamlscript.go
     - java/Makefile
     - java/src/main/java/org/yamlscript/yamlscript/YAMLScript.java
@@ -119,6 +121,7 @@ vo =: v-old.str/replace(/\./ '\\.')
     - core/project.clj
     - libys/deps.edn
     - libys/project.clj
+    - v0/project.clj
     - ys/deps.edn
     - ys/project.clj
     - ys/share/ys-0.bash

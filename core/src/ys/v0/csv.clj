@@ -1,27 +1,35 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
+;; The clojure.data.csv backend resolves at call time so that Clojure
+;; runtimes without it can still load this namespace. The writer interop
+;; lives in a private helper so its analysis is also deferred on
+;; runtimes that analyze function bodies lazily.
+
 (ns ys.v0.csv
   (:require
-   [clojure.data.csv :as csv]
-   [clojure.string :as str])
+   [clojure.string :as str]
+   [ys.v0.util :as util])
   (:refer-clojure :exclude [read]))
 
 (defn read-csv [s]
-  (csv/read-csv (str/trim-newline s) :separator \,))
+  ((util/backend 'clojure.data.csv/read-csv)
+   (str/trim-newline s) :separator \,))
 
 (defn read-tsv [s]
-  (csv/read-csv (str/trim-newline s) :separator \tab))
+  ((util/backend 'clojure.data.csv/read-csv)
+   (str/trim-newline s) :separator \tab))
+
+(defn- write-str [write-fn data sep]
+  (with-open [s (java.io.StringWriter.)]
+    (write-fn s data :separator sep)
+    (str s)))
 
 (defn write-csv [data]
-  (with-open [s (java.io.StringWriter.)]
-    (csv/write-csv s data :separator \,)
-    (str s)))
+  (write-str (util/backend 'clojure.data.csv/write-csv) data \,))
 
 (defn write-tsv [data]
-  (with-open [s (java.io.StringWriter.)]
-    (csv/write-csv s data :separator \tab)
-    (str s)))
+  (write-str (util/backend 'clojure.data.csv/write-csv) data \tab))
 
 (defn read [s]
   (read-csv s))

@@ -9,7 +9,8 @@ YAMLSCRIPT-CORE-INSTALLED := \
 
 YAMLSCRIPT-CORE-SRC := \
   $(ROOT)/core/src/yamlscript/*.clj \
-  $(ROOT)/core/src/ys/*.clj \
+  $(ROOT)/core/src/ys/*.clj* \
+  $(ROOT)/core/src/ys/v0/*.clj* \
 
 ifdef w
   export WARN_ON_REFLECTION := 1

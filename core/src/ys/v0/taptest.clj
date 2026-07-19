@@ -1,7 +1,7 @@
 (ns ys.v0.taptest
   (:require
-   [babashka.process :as process]
    [clojure.string :as str]
+   [ys.v0.util :as util]
    [ys.v0.ys :as ys]
    [ys.v0.yaml :as yaml]
    [ys.v0.global :as global]
@@ -114,7 +114,7 @@
         opts (if stdi
                (assoc opts :in stdi)
                opts)
-        ret (process/sh opts cmnd)]
+        ret ((util/backend 'babashka.process/sh) opts cmnd)]
     (if (get test "form")
       ret
       (case what

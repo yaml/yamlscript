@@ -10,21 +10,19 @@
    [clojure.string :as str]))
 
 (defn re
-  "Expand regex template variables."
+  "Expand regex template variables. A greedy scan makes each match the
+  full variable name, so no lookahead is needed (Go RE2 engines have
+  none)."
   [rgx]
   (loop [rgx (str rgx)]
-    (let [match (re-find #"\$([a-zA-Z]+)" rgx)]
-      (if match
-        (let [var (second match)
-              val (var-get
-                    (resolve
-                      (symbol (str "ys.v0.re/" var))))
-              rgx (str/replace
-                    rgx
-                    (re-pattern (str #"\$" var #"(?![a-zA-Z])"))
-                    (str/re-quote-replacement val))]
-          (recur rgx))
-        (re-pattern rgx)))))
+    (if (re-find #"\$[a-zA-Z]" rgx)
+      (recur
+        (str/replace rgx #"\$[a-zA-Z]+"
+          (fn [match]
+            (str (var-get
+                   (resolve
+                     (symbol (str "ys.v0.re/" (subs match 1)))))))))
+      (re-pattern rgx))))
 
 ;; Numeric literal tokens
 
