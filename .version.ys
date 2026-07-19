@@ -145,8 +145,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - julia/Project.toml
     - lua/lib/yamlscript.lua
     - moonbit/moon.mod
-    - moonbit/yamlscript.c
-    - moonbit/yamlscript.mbt
     - perl/Meta
     - perl-alien/Meta
     - php/composer.json
@@ -154,6 +152,13 @@ vo =: v-old.str/replace(/\./ '\\.')
     - raku/META6.json
     - rust/Cargo.toml
     - zig/build.zig.zon
+
+  - regx:: "(VERSION.*)${vp}(.*)"
+    file:
+    - dyalog/Makefile
+    - moonbit/pkg.generated.mbti
+    - moonbit/yamlscript.c
+    - moonbit/yamlscript.mbt
 
   - regx:: "(name = \"yamlscript\"\nversion = \")${vp}(\")"
     file:
