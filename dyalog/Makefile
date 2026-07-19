@@ -76,6 +76,10 @@ shell:: build
 clean::
 	$(RM) -r lib .cache
 
+realclean:: clean
+
+distclean:: realclean
+
 FORCE::
 
 $(TATIN-ZIP): FORCE $(TATIN-SOURCES) $(TATIN-CLIENT) | .cache/image
