@@ -1,6 +1,11 @@
 - version: 0.2.28
   date:    Wed Jul 15 05:07:34 PM EDT 2026
   changes:
+  - v0: Publish the YS stdlib as org.yamlscript/ys.v0 on Clojars
+  - ys: Add -T bb/clj/jolt/glj compile targets for other runtimes
+  - ys: Make -T bb -o output an executable bb script
+  - release: Install the ys.v0 m2 jars with ys releases
+  - docs: Add doc/ys-v0.md for running YS on other Clojure runtimes
   - bindings: Add more language bindings
   - binding: Add Ada
   - binding: Add Erlang

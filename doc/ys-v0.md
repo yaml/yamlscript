@@ -12,7 +12,8 @@ To do that, the compiled code needs the YS standard library.
 It is published to Clojars as
 [`org.yamlscript/ys.v0`](https://clojars.org/org.yamlscript/ys.v0).
 
-Use the `-T` / `--to` option with a code target (`bb`, `clj` or `jolt`)
+Use the `-T` / `--to` option with a code target (`bb`, `clj`, `jolt` or
+`glj`)
 and ys will compile (no `-c` needed; a code target implies it) with this
 header added to the output:
 
@@ -111,6 +112,8 @@ libyaml based yaml library so the YS yaml functions work natively.
 
 [Glojure](https://github.com/glojurelang/glojure) is a Clojure dialect
 implemented in Go.
+This needs a Glojure release newer than 0.6.8 (where `ns-unmap` was
+broken).
 
 ```bash
 $ ys -T glj program.ys > program.clj

@@ -4,8 +4,8 @@
 (defproject org.yamlscript/ys.v0 "0.2.28"
   :description
   "The YS (YAMLScript) v0 standard library for Clojure runtimes.
-  Code compiled with `ys -c --v0` runs on babashka and JVM Clojure with
-  this library on the classpath."
+  Code compiled with `ys -T bb|clj|jolt|glj` runs on babashka, JVM
+  Clojure, jolt and glojure with this library on the classpath."
 
   :url "https://yamlscript.org"
 
