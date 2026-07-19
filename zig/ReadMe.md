@@ -153,7 +153,7 @@ shared library:
 
 ```bash
 zig fetch --save \
-  https://github.com/yaml/yamlscript-zig/archive/refs/tags/v0.2.28.tar.gz
+  https://github.com/yaml/yamlscript-zig/archive/refs/tags/v0.2.29.tar.gz
 curl -sSL https://yamlscript.org/install | LIB=1 bash
 export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 ```

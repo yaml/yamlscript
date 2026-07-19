@@ -28,7 +28,7 @@ install-ys-v0() (
 )
 
 (
-  libys_version=0.2.28
+  libys_version=0.2.29
   root=$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")/.." && pwd -P)
   caller_java_home=${JAVA_HOME:-}
 

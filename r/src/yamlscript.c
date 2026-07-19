@@ -22,7 +22,7 @@
 
 // This value is automatically updated by 'make bump'.
 // We currently only support binding to an exact version of libys:
-#define YAMLSCRIPT_VERSION "0.2.28"
+#define YAMLSCRIPT_VERSION "0.2.29"
 
 #ifdef _WIN32
 #define LIBYS_NAME "libys.dll"

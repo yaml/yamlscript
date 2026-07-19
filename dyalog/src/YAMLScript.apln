@@ -1,7 +1,7 @@
 :Namespace YAMLScript
 
 ⎕IO←0
-Version←'0.2.28'
+Version←'0.2.29'
 BufferSize←1048576
 Library←'./lib/yamlscript_dyalog.so'
 'ys_load_json'⎕NA'I4 ',Library,'|ys_load_json <0UTF8 >0UTF8 I4'

@@ -12,7 +12,7 @@
 
   <artifactId>kotlin-yamlscript</artifactId>
 
-  <version>0.2.28</version>
+  <version>0.2.29</version>
 
   <name>kotlin-yamlscript</name>
 
@@ -46,7 +46,7 @@
       scm:git:ssh://git@github.com/yaml/yamlscript.git
     </developerConnection>
     <url>https://github.com/yaml/yamlscript</url>
-    <tag>0.2.28</tag>
+    <tag>0.2.29</tag>
   </scm>
 
   <properties>
@@ -63,7 +63,7 @@
     <dependency>
       <groupId>org.yamlscript</groupId>
       <artifactId>yamlscript</artifactId>
-      <version>0.2.28</version>
+      <version>0.2.29</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

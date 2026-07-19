@@ -10,11 +10,11 @@ description: >
 
 ## Setup
 
-Ensure `ys` version 0.2.28 is available for testing:
+Ensure `ys` version 0.2.29 is available for testing:
 
 ```bash
-[[ -x /tmp/ys-skill/bin/ys-0.2.28 ]] ||
-  curl -s https://yamlscript.org/install | VERSION=0.2.28 PREFIX=/tmp/ys-skill bash
+[[ -x /tmp/ys-skill/bin/ys-0.2.29 ]] ||
+  curl -s https://yamlscript.org/install | VERSION=0.2.29 PREFIX=/tmp/ys-skill bash
 YS=/tmp/ys-skill/bin/ys
 ```
 
@@ -453,7 +453,7 @@ terse form aids readability, or where you genuinely want the broader
 
 ### Use conditional assignment for "if true update, else keep same value"
 
-YS 0.2.28 supports conditional assignment targets. When an assignment
+YS 0.2.29 supports conditional assignment targets. When an assignment
 would set a target to a new value only when a condition is true, and
 otherwise keep the same target value, put the condition in the target:
 

@@ -1,6 +1,6 @@
 @{
   RootModule = 'YAMLScript.psm1'
-  ModuleVersion = '0.2.28'
+  ModuleVersion = '0.2.29'
   GUID = '3169069f-8994-44b9-b086-8384419f45c4'
   Author = 'YAMLScript Contributors'
   CompanyName = 'YAMLScript'

@@ -1,7 +1,7 @@
 ;; This code is licensed under MIT license (See License for details)
 ;; Copyright 2023-2026 Ingy dot Net
 
-(defproject org.yamlscript/ys.v0 "0.2.28"
+(defproject org.yamlscript/ys.v0 "0.2.29"
   :description
   "The YS (YAMLScript) v0 standard library for Clojure runtimes.
   Code compiled with `ys -T bb|clj|jolt|glj` runs on babashka, JVM

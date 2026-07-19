@@ -1,3 +1,12 @@
+- version: 0.2.29
+  date:    Sun Jul 19 07:28:04 PM EDT 2026
+  changes:
+  - release: Download x64 assets for binding publish
+  - moonbit: Add YAMLScript binding
+  - dyalog: Add YAMLScript binding
+  - Fix ysj to keep build output off stdout
+  - Move YS stdlib into portable ys.v0 namespaces
+  - Publish ys.v0 and add -T runtime code targets
 - version: 0.2.28
   date:    Wed Jul 15 05:07:34 PM EDT 2026
   changes:

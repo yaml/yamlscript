@@ -147,7 +147,7 @@ repositories {
     maven("https://repo.clojars.org")
 }
 dependencies {
-    implementation("org.yamlscript:kotlin-yamlscript:0.2.28")
+    implementation("org.yamlscript:kotlin-yamlscript:0.2.29")
 }
 ```
 
