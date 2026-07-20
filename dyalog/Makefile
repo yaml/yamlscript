@@ -145,14 +145,23 @@ $(TATIN-CLIENT): FORCE
 $(SHIM): src/yamlscript_dyalog.c $(LIBYS) | .cache/image
 	$(RUN) 'gcc -shared -fPIC -Wall -Wextra -o $@ $< -ldl'
 
-$(LIBYS): .cache/$(LIBYS-ARCHIVE) | .cache/image
-	mkdir -p lib .cache/libys
-	tar -C .cache/libys --strip-components=1 -xf $<
-	cp -pP .cache/libys/libys.so* lib/
+# Use the locally built or CI installed libys when present (a release
+# test runs before the version's release assets exist); otherwise
+# download the released archive. Both run on the host: the container
+# user cannot write to the bind mounted .cache/:
+LIBYS-LOCAL := ../libys/lib/libys.so.$(YAMLSCRIPT_VERSION)
 
-.cache/$(LIBYS-ARCHIVE): | .cache/image
-	mkdir -p $(@D)
-	$(RUN) 'wget -q $(LIBYS-URL) -O $@'
+$(LIBYS):
+	mkdir -p lib
+	if [[ -e $(LIBYS-LOCAL) ]]; then \
+	  cp -pP ../libys/lib/libys.so* lib/; \
+	else \
+	  mkdir -p .cache/libys && \
+	  curl -fsSL $(LIBYS-URL) -o .cache/$(LIBYS-ARCHIVE) && \
+	  tar -C .cache/libys --strip-components=1 \
+	    -xf .cache/$(LIBYS-ARCHIVE) && \
+	  cp -pP .cache/libys/libys.so* lib/; \
+	fi
 
 .cache/image: dyalog.dockerfile
 	mkdir -p $(DOCKER_CONFIG) $(@D)
