@@ -9,14 +9,20 @@
 
 set -e -u -o pipefail
 
-YAMLSCRIPT_VERSION=0.2.28
+YAMLSCRIPT_VERSION=0.2.29
 VERSION=${VERSION:-$YAMLSCRIPT_VERSION}
 export VERSION
 
 main() (
   setup "$@"
 
-  if [[ ${BIN-} ]]; then
+  if [[ ${TARBALL-} ]]; then
+    case $(basename -- "$TARBALL") in
+      libys-*) install libys;;
+      ys-*) install ys;;
+      *) die "Can't tell ys from libys by tarball name: '$TARBALL'";;
+    esac
+  elif [[ ${BIN-} ]]; then
     install ys
   elif [[ ${LIB-} ]]; then
     install libys
@@ -29,9 +35,13 @@ main() (
 install() (
   name=$1
 
-  url+=/$vers/$name-$vers-$os-$arch.tar.xz
+  if [[ ${TARBALL-} ]]; then
+    cp -- "$TARBALL" "$dir/download.tar.xz"
+  else
+    url+=/$vers/$name-$vers-$os-$arch.tar.xz
 
-  curl -s -S -L -o "$dir/download.tar.xz" "$url"
+    curl -s -S -L -o "$dir/download.tar.xz" "$url"
+  fi
 
   release_dir=$dir/$name
   mkdir -- "$release_dir"
@@ -72,6 +82,14 @@ install() (
 )
 
 setup() {
+
+  # A local release tarball (argument or TARBALL env var) installs that
+  # file instead of downloading from GitHub. For testing releases.
+  TARBALL=${1-${TARBALL-}}
+  if [[ $TARBALL ]]; then
+    [[ -f $TARBALL ]] ||
+      die "Release tarball not found: '$TARBALL'"
+  fi
 
   vers=${VERSION:-$DEFAULT_VERSION}
 

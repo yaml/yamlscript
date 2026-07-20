@@ -12,13 +12,13 @@
         <meta name="author" content="Ingy döt Net">
       
       
-        <link rel="canonical" href="https://yamlscript.org/doc/ys-clj/">
+        <link rel="canonical" href="https://yamlscript.org/doc/ys-v0/">
       
       
-        <link rel="prev" href="../ys-csv/">
+        <link rel="prev" href="../v0/">
       
       
-        <link rel="next" href="../ys-taptest/">
+        <link rel="next" href="../binary/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="/rss.xml">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Replaced Clojure Functions - YS — YAML Done Wisely</title>
+        <title>Running Compiled YS on Other Clojure Runtimes - YS — YAML Done Wisely</title>
       
     
     
@@ -127,11 +127,11 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Replaced Clojure Functions - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Running Compiled YS on Other Clojure Runtimes - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
-        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/ys-clj.png" >
+        <meta  property="og:image"  content="https://yamlscript.org/assets/images/social/doc/ys-v0.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -139,15 +139,15 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://yamlscript.org/doc/ys-clj/" >
+        <meta  property="og:url"  content="https://yamlscript.org/doc/ys-v0/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Replaced Clojure Functions - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Running Compiled YS on Other Clojure Runtimes - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
-        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/ys-clj.png" >
+        <meta  name="twitter:image"  content="https://yamlscript.org/assets/images/social/doc/ys-v0.png" >
       
     
     
@@ -170,7 +170,7 @@ f.parentNode.insertBefore(j,f);
     <div data-md-component="skip">
       
         
-        <a href="#functions" class="md-skip">
+        <a href="#babashka" class="md-skip">
           Skip to content
         </a>
       
@@ -209,7 +209,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Replaced Clojure Functions
+              Running Compiled YS on Other Clojure Runtimes
             
           </span>
           </a>
@@ -1194,10 +1194,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
     
     
       
@@ -1225,11 +1223,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" >
         
           
           <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
@@ -1243,7 +1241,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_6">
             <span class="md-nav__icon md-icon"></span>
             YS Libraries
@@ -1401,28 +1399,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Replaced Clojure Functions
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../ys-clj/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1431,33 +1411,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      Functions
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1728,8 +1681,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
+  
     
     
       
@@ -1747,11 +1702,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" checked>
         
           
           <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
@@ -1765,7 +1720,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_8">
             <span class="md-nav__icon md-icon"></span>
             More YS Topics
@@ -1797,10 +1752,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../ys-v0/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Running Compiled YS on Other Clojure Runtimes
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1809,6 +1782,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#babashka" class="md-nav__link">
+    <span class="md-ellipsis">
+      Babashka
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jvm-clojure" class="md-nav__link">
+    <span class="md-ellipsis">
+      JVM Clojure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jolt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jolt
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glojure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glojure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2420,9 +2456,45 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#functions" class="md-nav__link">
+  <a href="#babashka" class="md-nav__link">
     <span class="md-ellipsis">
-      Functions
+      Babashka
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jvm-clojure" class="md-nav__link">
+    <span class="md-ellipsis">
+      JVM Clojure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jolt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Jolt
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glojure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glojure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
     </span>
   </a>
   
@@ -2466,14 +2538,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </a>
   
 
-  <a href="https://github.com/yaml/yamlscript/edit/website/doc/ys-clj.md"
+  <a href="https://github.com/yaml/yamlscript/edit/website/doc/ys-v0.md"
      title="Edit this page"
      class="md-content__button md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
   </a>
 
-  <a href="https://github.com/yaml/yamlscript/raw/website/doc/ys-clj.md"
+  <a href="https://github.com/yaml/yamlscript/raw/website/doc/ys-v0.md"
      title="View source of this page"
      class="md-content__button md-icon">
     
@@ -2481,62 +2553,124 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Replaced Clojure Functions</h1>
+  <h1>Running Compiled YS on Other Clojure Runtimes</h1>
 
-<p>A number of standard functions from Clojure's standard library <code>clojure::core</code>
-have been replaced by functions in the <code>ys::std</code> library.
-In general the replacements have the same intent as the original functions, but
-from a YS perspective.</p>
-<p>When you absolutely need the original Clojure functions, they are available in
-this <code>ys::clj</code> library.
-These functions are automatically available in YAMLSCript by using the <code>clj/</code>
-prefix.</p>
-<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">🔗</a></h2>
-<p>The documentation for these functions is available in the Clojure documentation
-web site, so we include a link to there in each definition.</p>
+<p>YS code compiles to Clojure code.
+Normally the <code>ys</code> command line tool compiles and runs it for you in one step,
+but you can also compile it once with <code>ys -c</code> and run the result on another
+Clojure runtime like <a href="https://babashka.org">Babashka&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> or JVM Clojure.</p>
+<p>To do that, the compiled code needs the YS standard library.
+It is published to Clojars as
+<a href="https://clojars.org/org.yamlscript/ys.v0"><code>org.yamlscript/ys.v0</code>&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<p>Use the <code>-T</code> / <code>--to</code> option with a code target (<code>bb</code>, <code>clj</code>, <code>jolt</code> or
+<code>glj</code>)
+and ys will compile (no <code>-c</code> needed; a code target implies it) with this
+header added to the output:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="kd">ns </span><span class="nv">main</span><span class="w"> </span><span class="p">(</span><span class="ss">:require</span><span class="w"> </span><span class="nv">ys.v0</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">ys.v0/init</span><span class="p">)</span>
+</code></pre></div>
+<p>plus a target specific form that resolves the ys.v0 dependency at run
+time.</p>
+<p>The <code>ys.v0/init</code> call sets up the namespace to work like the ys runtime:</p>
 <ul>
-<li>
-<p><code>clj/compile</code> — <a href="https://clojuredocs.org/clojure.core/compile">In Clojure&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> the
-  <code>compile</code> function compiles a namespace into a set of class files.
-  In YS it converts a YS source code string into a
-  Clojure source code string.</p>
-</li>
-<li>
-<p><code>clj/load</code> — <a href="https://clojuredocs.org/clojure.core/load">In Clojure&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> the
-  <code>load</code> function loads a file from the classpath.
-  In YS it's an alias for <code>load-file</code>(below).</p>
-</li>
-<li>
-<p><code>clj/load-file</code> — <a href="https://clojuredocs.org/clojure.core/load-file">In Clojure&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>
-  the <code>load-file</code> function loads a Clojure file from a given file path.
-  In YS it loads a YS file from a given file path.</p>
-</li>
-<li>
-<p><code>clj/num</code> — <a href="https://clojuredocs.org/clojure.core/num">In Clojure&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> the <code>num</code>
-  function converts a Java number to a Clojure number.
-  In YS it converts a numeric string to a number.</p>
-</li>
-<li>
-<p><code>clj/use</code> — <a href="https://clojuredocs.org/clojure.core/use">In Clojure&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> the <code>use</code>
-  function is used to refer a namespace into the current namespace.
-  In YS it loads a YS or Clojure library from <code>YSPATH</code>.</p>
-</li>
+<li>All of the YS standard library functions and macros are referred in</li>
+<li>The YS namespace aliases (<code>str/</code>, <code>json/</code>, <code>fs/</code>, etc) are set up</li>
+<li>The YS runtime variables (<code>ARGS</code>, <code>ENV</code>, <code>FILE</code>, <code>CWD</code>, etc) are bound</li>
 </ul>
+<p>The same compiled file still runs under ys itself (<code>ys -C file.clj</code>),
+where the header is a no-op.</p>
+<h2 id="babashka">Babashka<a class="headerlink" href="#babashka" title="Permanent link">🔗</a></h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>bb<span class="w"> </span>program.ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bb<span class="w"> </span>/dev/stdin
+</code></pre></div>
+<p>The <code>-T bb</code> header form (active only under Babashka; it does nothing on
+other runtimes) puts the <code>ys.v0</code> jar and its <code>data.json</code> dependency on the
+classpath with <code>babashka.classpath/add-classpath</code> when they are already in
+<code>~/.m2</code>, and otherwise fetches them with <code>babashka.deps/add-deps</code>.
+The <code>add-classpath</code> path needs no <code>java</code> at all; the <code>add-deps</code> fallback
+runs <code>java</code> once to resolve the dependencies from Clojars.</p>
+<p>Installing a ys release also installs those two jars into your
+<code>~/.m2/repository</code>, so the java free path works out of the box.
+The jars are bundled in the release archive; <code>make install</code> skips them
+when run as root (system installs), and you can install them per user at
+any time with:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys-sh-0.2.29<span class="w"> </span>--install-m2
+</code></pre></div>
+<p>(Homebrew installs print this as a caveat, since brew cannot write to
+your home directory.)</p>
+<p>With <code>-o</code> / <code>--output</code>, the compiled file also gets a <code>#!/usr/bin/env bb</code>
+shebang line and the executable bit, so it is a ready to run script:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>bb<span class="w"> </span>program.ys<span class="w"> </span>-o<span class="w"> </span>program
+$<span class="w"> </span>./program
+</code></pre></div>
+<p>(The shebang line is a comment to Clojure readers, so the same file still
+runs under <code>ys -C</code> and JVM Clojure.)</p>
+<h2 id="jvm-clojure">JVM Clojure<a class="headerlink" href="#jvm-clojure" title="Permanent link">🔗</a></h2>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>clj<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
+$<span class="w"> </span>clojure<span class="w"> </span>-M<span class="w"> </span>program.clj
+</code></pre></div>
+<p>The <code>-T clj</code> header form is a no-op when <code>ys.v0</code> is already on the
+classpath (or under the ys, Babashka and jolt runtimes); otherwise it
+resolves the dependency at run time with <code>clojure.repl.deps/add-libs</code>,
+which needs Clojure 1.12 or later.
+You can also skip the runtime resolution by providing the dependency
+yourself:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.2.29&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-M<span class="w"> </span>program.clj
+</code></pre></div>
+<h2 id="jolt">Jolt<a class="headerlink" href="#jolt" title="Permanent link">🔗</a></h2>
+<p>Jolt is a new Clojure dialect hosted on Chez Scheme.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>jolt<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
+$<span class="w"> </span>jolt<span class="w"> </span>program.clj
+</code></pre></div>
+<p>The <code>-T jolt</code> header form resolves the ys.v0 dependency with
+<code>jolt.deps/add-deps</code> when running under jolt (transitive dependencies
+come from the pom.xml inside the ys.v0 jar), and adds jolt's own
+libyaml based yaml library so the YS yaml functions work natively.</p>
+<h2 id="glojure">Glojure<a class="headerlink" href="#glojure" title="Permanent link">🔗</a></h2>
+<p><a href="https://github.com/glojurelang/glojure">Glojure&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a> is a Clojure dialect
+implemented in Go.
+This needs a Glojure release newer than 0.6.8 (where <code>ns-unmap</code> was
+broken).</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>glj<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
+$<span class="w"> </span>glj<span class="w"> </span>program.clj
+</code></pre></div>
+<p>Glojure loads plain Clojure source from a load path (no jars), so the
+<code>-T glj</code> header form adds the extracted ys.v0 sources to the load path
+at run time: the <code>YS_V0_PATH</code> env var if set, else the
+<code>~/.m2/repository/org/yamlscript/ys.v0/&lt;version&gt;/ys.v0-&lt;version&gt;.jar.d</code>
+directory that the ys installers and <code>ys-sh --install-m2</code> maintain.</p>
+<p>Backend libraries (json, yaml, shell, http, fs) don't exist on glojure
+yet, so those YS functions fail with a clear message there; ordered
+maps fall back to array-map (insertion order is kept for literals of
+any size, and lost when assoc grows a map past eight entries).</p>
+<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">🔗</a></h2>
+<p>A few standard library functions need the YS compiler and only work under
+the ys runtime.
+On other runtimes they fail with a clear error message:</p>
+<ul>
+<li><code>eval</code> — evaluates YS source code</li>
+<li><code>load</code> — loads a YS file</li>
+<li><code>use</code> — loads YS modules</li>
+<li><code>load-url</code> — loads YS code from a URL</li>
+<li><code>new</code> — reflective constructor calls (works on JVM Clojure but not
+  Babashka)</li>
+</ul>
+<p>The yaml, json, http, shell and ordered map functions resolve their
+backend libraries (clj-yaml, data.json, http-client, process, flatland
+ordered) lazily at first call, so the library loads even on runtimes
+that can't load those backends (like jolt, currently); the functions
+themselves fail with a clear message there.</p>
+<p>Data documents (which ys prints as YAML output) are evaluated but not
+printed when running compiled code on other runtimes.</p>
 
 
 
@@ -2571,7 +2705,7 @@ web site, so we include a link to there in each definition.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../ys-csv/" class="md-footer__link md-footer__link--prev" aria-label="Previous: CSV and TSV">
+          <a href="../v0/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Understanding &#34;v0&#34;">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2581,20 +2715,20 @@ web site, so we include a link to there in each definition.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                CSV and TSV
+                Understanding "v0"
               </div>
             </div>
           </a>
         
         
           
-          <a href="../ys-taptest/" class="md-footer__link md-footer__link--next" aria-label="Next: YS TAP Testing Library">
+          <a href="../binary/" class="md-footer__link md-footer__link--next" aria-label="Next: Compiling YS to Binary">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                YS TAP Testing Library
+                Compiling YS to Binary
               </div>
             </div>
             <div class="md-footer__button md-icon">
