@@ -23,6 +23,5 @@ make -C dyalog test
 
 ## Packaging
 
-Dyalog packages are commonly distributed with Tatin.
-The included `apl-package.json` is a starting point for publishing this binding
-from a future `yaml/yamlscript-dyalog` repository.
+This binding is published to [Tatin](https://tatin.dev/) as
+[yaml-yamlscript](https://tatin.dev/v1/packages/versions/yaml-yamlscript-0).

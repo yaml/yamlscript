@@ -112,7 +112,7 @@ It currently ships to these 32 languages:
 * [D](https://code.dlang.org/packages/yamlscript)
 * [Dart](https://pub.dev/packages/yamlscript)
 * [Delphi (Free Pascal)](https://github.com/yaml/yamlscript-delphi)
-* [Dyalog APL](https://github.com/yaml/yamlscript/tree/main/dyalog)
+* [Dyalog APL](https://tatin.dev/v1/packages/versions/yaml-yamlscript-0)
 * [Elixir](https://hex.pm/packages/yamlscript)
 * [Erlang](https://hex.pm/packages/yamlscript_erlang)
 * [F#](https://www.nuget.org/packages/YAMLScript.FSharp)
