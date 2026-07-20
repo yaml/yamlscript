@@ -1,6 +1,10 @@
 #include "moonbit.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <dlfcn.h>
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,13 +26,37 @@ static void fail(const char *message) {
   abort();
 }
 
+#ifdef _WIN32
+static void *dl_open(const char *name) {
+  return (void *)LoadLibraryA(name);
+}
+static void *dl_sym(void *handle, const char *symbol) {
+  return (void *)GetProcAddress((HMODULE)handle, symbol);
+}
+static const char *dl_error(void) {
+  return "could not load libys.dll";
+}
+#else
+static void *dl_open(const char *name) {
+  return dlopen(name, RTLD_LAZY);
+}
+static void *dl_sym(void *handle, const char *symbol) {
+  return dlsym(handle, symbol);
+}
+static const char *dl_error(void) {
+  return dlerror();
+}
+#endif
+
 static void open_libys(void) {
   if (libys != NULL) {
     return;
   }
 
   const char *names[] = {
-#ifdef __APPLE__
+#if defined(_WIN32)
+    "libys.dll",
+#elif defined(__APPLE__)
     "libys.dylib." YS_VERSION,
     "libys.dylib",
 #else
@@ -39,21 +67,21 @@ static void open_libys(void) {
   };
 
   for (int i = 0; names[i] != NULL; i++) {
-    libys = dlopen(names[i], RTLD_LAZY);
+    libys = dl_open(names[i]);
     if (libys != NULL) {
       break;
     }
   }
 
   if (libys == NULL) {
-    fail(dlerror());
+    fail(dl_error());
   }
 
   graal_create_isolate_fn create_isolate =
-    (graal_create_isolate_fn)dlsym(libys, "graal_create_isolate");
+    (graal_create_isolate_fn)dl_sym(libys, "graal_create_isolate");
   tear_down_isolate =
-    (graal_tear_down_isolate_fn)dlsym(libys, "graal_tear_down_isolate");
-  load_ys = (load_ys_to_json_fn)dlsym(libys, "load_ys_to_json");
+    (graal_tear_down_isolate_fn)dl_sym(libys, "graal_tear_down_isolate");
+  load_ys = (load_ys_to_json_fn)dl_sym(libys, "load_ys_to_json");
 
   if (
     create_isolate == NULL ||
