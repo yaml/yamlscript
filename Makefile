@@ -120,6 +120,12 @@ TEST := $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST))
 TEST-BINDINGS := \
     $(filter-out $(YS_RELEASE_BINDINGS_SKIP:%=test-%),$(TEST-BINDINGS))
 endif
+# The dyalog binding tests need docker and the linux/amd64 only
+# dyalog/dyalog image:
+ifneq (linux-int64,$(OS-ARCH))
+TEST := $(filter-out test-dyalog,$(TEST))
+TEST-BINDINGS := $(filter-out test-dyalog,$(TEST-BINDINGS))
+endif
 
 # Ensure these reach child processes (e.g. util/release-yamlscript)
 # even when set as make command line variables:
