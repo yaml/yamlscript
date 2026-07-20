@@ -66,6 +66,21 @@ test:: $(LIBYS-SO-FQNP) yamlscript.cabal License docker-image
 	  $(HASKELL-IMAGE) \
 	  make test
 
+# Publish from the container too (the host toolchain path downloads
+# ghc and cabal from downloads.haskell.org, which the image already
+# has baked in); cabal reads HACKAGE_TOKEN from the env:
+release: export HACKAGE_TOKEN := $(HACKAGE-TOKEN)
+release: docker-image
+	docker run --rm \
+	  --user $(USER-UID):$(USER-GID) \
+	  --env HOME=/tmp/home \
+	  --env CABAL_DIR=/opt/cabal \
+	  --env HACKAGE_TOKEN \
+	  --volume $(ROOT):$(ROOT) \
+	  --workdir $(CURDIR) \
+	  $(HASKELL-IMAGE) \
+	  make release
+
 docker-image: yamlscript.cabal
 	docker image inspect $(HASKELL-IMAGE) > /dev/null 2>&1 || \
 	docker pull $(HASKELL-IMAGE) 2> /dev/null || \
@@ -78,6 +93,17 @@ docker-image-push: docker-image-build
 	docker push $(HASKELL-IMAGE)
 else
 test:: test-cabal test-ffi
+
+release: dist
+ifndef HACKAGE-TOKEN
+	@echo "HACKAGE-TOKEN is not set"
+	@exit 1
+endif
+	cabal upload \
+	  --publish \
+	  --verbose \
+	  --token='$(HACKAGE-TOKEN)' \
+	  $(HASKELL-DIST)
 endif
 
 test-cabal: $(HASKELL-DEPS) $(LIBYS-COPY)
@@ -98,17 +124,6 @@ pkg-test: $(HASKELL-DEPS)
 
 ls: dist
 	ls -l $(HASKELL-DIST)
-
-release: dist
-ifndef HACKAGE-TOKEN
-	@echo "HACKAGE-TOKEN is not set"
-	@exit 1
-endif
-	cabal upload \
-	  --publish \
-	  --verbose \
-	  --token='$(HACKAGE-TOKEN)' \
-	  $(HASKELL-DIST)
 
 check: $(HASKELL-DEPS)
 	cabal $@
