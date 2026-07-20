@@ -88,6 +88,7 @@ ifeq (,$(DYALOG-RELEASE-VERSION))
 	@exit 1
 endif
 	mkdir -p $(TATIN-BUILD-DIR)
+	chmod a+w $(TATIN-BUILD-DIR)
 	$(TATIN-RUN) 'dyalogscript tools/tatin-release.apls'
 
 $(TATIN-CLIENT): FORCE
@@ -142,7 +143,11 @@ $(TATIN-CLIENT): FORCE
 	  printf '%s\n' '}'; \
 	} > $@
 
+# The container user's uid may differ from the host owner of the
+# bind mounted /work (it does on CI runners), so host created dirs
+# the container writes into must be world writable:
 $(SHIM): src/yamlscript_dyalog.c $(LIBYS) | .cache/image
+	chmod a+w lib
 	$(RUN) 'gcc -shared -fPIC -Wall -Wextra -o $@ $< -ldl'
 
 # Use the locally built or CI installed libys when present (a release
