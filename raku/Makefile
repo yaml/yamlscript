@@ -7,15 +7,6 @@ test ?= t/*
 
 export RAKULIB=$(ROOT)/raku/lib
 
-FEZ-UPLOAD = fez upload
-
-ifdef YS_RELEASE_CI
-FEZ-UPLOAD = timeout 60s fez upload --unattended --force || \
-	echo 'Ignoring failed or timed out Raku fez upload'
-endif
-
-
-
 # The tests are TAP-emitting raku programs that exit nonzero on
 # failure. Run them directly; prove is unreliable on the Windows CI
 # runners (a Strawberry Perl script running under the MSYS perl):
@@ -30,8 +21,8 @@ raku-install: $(RAKU)
 	command -v fez > /dev/null || zef install fez
 
 
-release: raku-install
-	$(FEZ-UPLOAD)
+release:
+	$(ROOT)/util/release-raku
 
 dist::
 	fez upload --dry-run

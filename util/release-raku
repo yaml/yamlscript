@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo 'Publishing Raku package to fez...'
+make raku-install
+
+secrets=$HOME/.yamlscript-secrets.yaml
+if [[ -f $secrets ]]; then
+  if [[ -z ${FEZ_USER:-} ]]; then
+    for expr in .raku.user .fez.user; do
+      value=$(ys -e "$expr:say" "$secrets" 2>/dev/null || true)
+      if [[ $value && $value != nil ]]; then
+        FEZ_USER=$value
+        break
+      fi
+    done
+  fi
+
+  if [[ -z ${FEZ_TOKEN:-} ]]; then
+    for expr in .raku.token .fez.token; do
+      value=$(ys -e "$expr:say" "$secrets" 2>/dev/null || true)
+      if [[ $value && $value != nil ]]; then
+        FEZ_TOKEN=$value
+        break
+      fi
+    done
+  fi
+fi
+
+[[ -n ${FEZ_USER:-} ]] || {
+  echo 'ERROR: FEZ_USER not set' >&2
+  exit 1
+}
+[[ ${#FEZ_USER} -gt 3 ]] || {
+  echo 'ERROR: FEZ_USER must be longer than 3 chars' >&2
+  exit 1
+}
+[[ -n ${FEZ_TOKEN:-} ]] || {
+  echo 'ERROR: FEZ_TOKEN not set' >&2
+  exit 1
+}
+
+mkdir -p "$HOME"
+printf '{"un":"%s","key":"%s"}\n' "$FEZ_USER" "$FEZ_TOKEN" \
+  > "$HOME/.fez-config.json"
+
+if [[ -n ${YS_RELEASE_CI:-} ]]; then
+  timeout 60s fez upload --unattended --force
+else
+  fez upload --unattended --force
+fi
