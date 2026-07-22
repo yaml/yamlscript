@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+user=${1:?Usage: release-ada-ready GITHUB-USER VERSION}
+version=${2:?Usage: release-ada-ready GITHUB-USER VERSION}
+
+repo=alire-project/alire-index
+branch=release/yamlscript-$version
+
+die() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+echo "Locating Alire index PR for yamlscript $version..."
+pr=$(gh pr list \
+  --repo "$repo" \
+  --state open \
+  --author "$user" \
+  --head "$branch" \
+  --json url \
+  --jq '.[0].url // empty')
+[[ $pr ]] || die "Alire index PR not found for branch $branch"
+
+gh pr ready "$pr" --repo "$repo"

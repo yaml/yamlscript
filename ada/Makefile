@@ -57,6 +57,9 @@ endif
 	@GH_TOKEN=$(ADA-GITHUB-TOKEN) \
 	  $(ALR) publish --manifest $(ADA-MANIFEST) \
 	    $(ADA-ORIGIN) $(ADA-RELEASE-COMMIT)
+	@GH_TOKEN=$(ADA-GITHUB-TOKEN) \
+	  $(ROOT)/util/release-ada-ready \
+	    $(ADA-GITHUB-USER) $(v)
 
 obj:
 	mkdir -p $@
