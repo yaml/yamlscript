@@ -52,6 +52,40 @@ BINDINGS := \
     v0 \
     zig \
 
+RELEASE-BINDING-LANGS := \
+    ada \
+    clojure \
+    crystal \
+    csharp \
+    d \
+    dart \
+    delphi \
+    dyalog \
+    elixir \
+    erlang \
+    fsharp \
+    fortran \
+    go \
+    haskell \
+    java \
+    julia \
+    kotlin \
+    lua \
+    moonbit \
+    nim \
+    nodejs \
+    perl \
+    php \
+    powershell \
+    python \
+    r \
+    raku \
+    ruby \
+    rust \
+    scala \
+    swift \
+    zig \
+
 DIRS := \
     core \
     libys \
@@ -164,7 +198,7 @@ endif
 RELEASE-ASSETS += \
     $(JAR-ASSETS) \
 
-RELEASE-LOG := release-$n.log
+RELEASE-LOG := release-$v.log
 RELEASE-SECRETS := $(wildcard $(HOME)/.yamlscript-secrets.yaml)
 RELEASE-AUTH := \
     $(strip $(GH_TOKEN)$(GITHUB_TOKEN)$(RELEASE-SECRETS))
@@ -173,17 +207,14 @@ ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
 endif
 
-ifdef v
-export YS_RELEASE_VERBOSE := 1
-endif
 ifdef d
 export YS_RELEASE_DRYRUN := 1
 endif
 ifdef l
 export YS_RELEASE_LAST_STEP := $l
 endif
-ifdef n
-export YS_RELEASE_VERSION_NEW := $n
+ifdef v
+export YS_RELEASE_VERSION_NEW := $v
 endif
 ifdef o
 export YS_OLD_TAG := $o
@@ -267,6 +298,17 @@ serve-www:
 publish-www:
 	$(MAKE) -C www publish
 
+RELEASE-BINDINGS := $(RELEASE-BINDING-LANGS:%=release-%)
+RELEASE-CHECK-BINDINGS := $(RELEASE-BINDING-LANGS)
+
+release-binding-version-check:
+ifndef v
+	$(error Binding release targets require v=VERSION)
+endif
+
+$(RELEASE-BINDINGS): release-binding-version-check $(GH)
+	$(MAKE) -C $(@:release-%=%) release
+
 ifneq (,$(or $s,$(YS_RELEASE_ID),$(YS_RELEASE_NO_CHECK)))
 release: _release-yamlscript
 else
@@ -290,7 +332,7 @@ ifndef YS_RELEASE_VERSION_OLD
 	$(error 'make release' needs the 'o' variable set to the old version)
 endif
 ifndef YS_RELEASE_VERSION_NEW
-	$(error 'make release' needs the 'n' variable set to the new version)
+	$(error 'make release' needs the 'v' variable set to the new version)
 endif
 endif
 endif
@@ -315,7 +357,7 @@ endif
 
 _release-yamlscript: $(YS) $(GH)
 	($(TIME) $(docker-build) \
-	  ys $(ROOT)/util/release-yamlscript release $o $n $s) 2>&1 | \
+	  ys $(ROOT)/util/release-yamlscript release $o $v $s) 2>&1 | \
 	  tee -a $(RELEASE-LOG)
 
 release-assets: $(RELEASE-ASSETS)
@@ -338,12 +380,12 @@ release-list: $(YS)
 # Step 1: Sanity checks
 release-sanity-check: $(YS)
 ifndef o
-	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
+	$(error 'make release-sanity-check' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-ifndef n
-	$(error 'make release-sanity-check' requires o=OLD_VERSION n=NEW_VERSION)
+ifndef v
+	$(error 'make release-sanity-check' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript sanity-check $(o) $(n)
+	$(YS) $(ROOT)/util/release-yamlscript sanity-check $(o) $(v)
 
 # Step 2: Credential updates
 release-secrets-update: $(YS) $(GH) $(SECRETS-TOOLS)
@@ -364,12 +406,12 @@ release-version-bump: $(YS)
 # Step 6: Changelog
 release-changelog: $(YS)
 ifndef o
-	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
+	$(error 'make release-changelog' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-ifndef n
-	$(error 'make release-changelog' requires o=OLD_VERSION n=NEW_VERSION)
+ifndef v
+	$(error 'make release-changelog' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript changelog $(o) $(n)
+	$(YS) $(ROOT)/util/release-yamlscript changelog $(o) $(v)
 
 # Step 4 (legacy): Test (kept for backwards compatibility)
 release-test:
@@ -385,13 +427,13 @@ comma := ,
 # skipping the release and publish jobs. Example:
 #   make release-tests t='linux aarch64'
 release-tests: t ?= linux aarch64 macos windows
-release-tests: n ?= $(YS_VERSION)
+release-tests: v ?= $(YS_VERSION)
 release-tests: $(GH)
 	@set -e; \
 	  branch=$$(git branch --show-current); \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(v) \
 	    -f tests_only='$(subst $(comma), ,$(t))'; \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
@@ -404,9 +446,9 @@ release-tests: $(GH)
 
 # Rerun tests for the platforms in t= using build artifacts from a
 # prior run (r=RUN_ID, default: the last release-tests run). Example:
-#   make release-tests-retry t=macos r=12345678
+#   make release-tests-retry v=0.2.0 t=macos r=12345678
 release-tests-retry: t ?= linux aarch64 macos windows
-release-tests-retry: n ?= $(YS_VERSION)
+release-tests-retry: v ?= $(YS_VERSION)
 release-tests-retry: $(GH)
 	@set -e; \
 	  branch=$$(git branch --show-current); \
@@ -427,7 +469,7 @@ release-tests-retry: $(GH)
 	  echo "Using build artifacts from run $$artifact_run_id"; \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(v) \
 	    -f tests_only='$(subst $(comma), ,$(t))' \
 	    -f test_artifacts_run_id=$$artifact_run_id; \
 	  sleep 5; \
@@ -443,74 +485,91 @@ release-binding-changelogs: $(YS)
 
 # Step 8: Commit
 release-commit: $(YS)
-ifndef n
-	$(error 'make release-commit' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-commit' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript commit $(n)
+	$(YS) $(ROOT)/util/release-yamlscript commit $(v)
 
 # Step 9: Tag
 release-tag: $(YS)
-ifndef n
-	$(error 'make release-tag' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-tag' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript tag $(n)
+	$(YS) $(ROOT)/util/release-yamlscript tag $(v)
 
 # Step 10: Push
 release-push: $(YS)
-ifndef n
-	$(error 'make release-push' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-push' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript push $(n)
+	$(YS) $(ROOT)/util/release-yamlscript push $(v)
 
 # Step 11: Trigger GitHub Actions
 release-build-github: $(YS)
-ifndef n
-	$(error 'make release-build-github' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-build-github' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript build-github $(n)
+	$(YS) $(ROOT)/util/release-yamlscript build-github $(v)
 
 # Retry a failed release by deleting its GitHub release, moving the existing
 # tag to HEAD, and redispatching the GitHub release workflow.
 release-retry: $(YS) $(GH)
-ifndef n
-	$(error 'make release-retry' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-retry' requires v=NEW_VERSION)
 endif
-	@if gh release view $(n) --repo yaml/yamlscript >/dev/null 2>&1; then \
-	  echo "Deleting existing GitHub release $(n)"; \
-	  gh release delete $(n) --repo yaml/yamlscript --yes; \
+	@if gh release view $(v) --repo yaml/yamlscript >/dev/null 2>&1; then \
+	  echo "Deleting existing GitHub release $(v)"; \
+	  gh release delete $(v) --repo yaml/yamlscript --yes; \
 	fi
 	git push origin HEAD:$$(git branch --show-current)
-	git tag -f $(n) HEAD
-	git push -f origin $(n)
-	$(MAKE) release-build-github n=$(n)
+	git tag -f $(v) HEAD
+	git push -f origin $(v)
+	$(MAKE) release-build-github v=$(v)
 
 # Step 12: Release bindings
 release-bindings: $(if $(YS_RELEASE_CI),,$(YS))
-ifndef n
-	$(error 'make release-bindings' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-bindings' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/release-yamlscript bindings $(n)
+	$(YS) $(ROOT)/util/release-yamlscript bindings $(v)
+
+release-check-binding:
+ifndef b
+	$(error 'make release-check-binding' requires b=BINDING)
+endif
+ifndef v
+	$(error 'make release-check-binding' requires v=VERSION)
+endif
+	@util/release-binding-published $(b) $(v) || true
+
+release-check-bindings:
+ifndef v
+	$(error 'make release-check-bindings' requires v=VERSION)
+endif
+	@for binding in $(RELEASE-CHECK-BINDINGS); do \
+	  util/release-binding-published $$binding $(v) || true; \
+	done
 
 # Step 13: Publish Homebrew tap
 release-homebrew: $(if $(YS_RELEASE_CI),,$(YS))
-ifndef n
-	$(error 'make release-homebrew' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-homebrew' requires v=NEW_VERSION)
 endif
-	$(YS) $(ROOT)/util/brew-update $(n)
+	$(YS) $(ROOT)/util/brew-update $(v)
 
 # Step 14: Publish website
 release-website: $(YS)
 	$(YS) $(ROOT)/util/release-yamlscript website
 
 release-publish-bindings: $(GH)
-ifndef n
-	$(error 'make release-publish-bindings' requires n=NEW_VERSION)
+ifndef v
+	$(error 'make release-publish-bindings' requires v=NEW_VERSION)
 endif
 	@set -e; \
 	  branch=$$(git branch --show-current); \
 	  git push origin HEAD:$$branch; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlscript --ref $$branch -f version=$(n) \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(v) \
 	    -f publish_bindings_only=true \
 	    -f bindings='$(YS_RELEASE_BINDINGS)' \
 	    -f bindings_skip='$(YS_RELEASE_BINDINGS_SKIP)'; \
@@ -522,17 +581,17 @@ endif
 	    --exit-status --interval=10
 
 publish-python-wheels: $(GH)
-ifndef n
-	$(error 'make publish-python-wheels' requires n=VERSION)
+ifndef v
+	$(error 'make publish-python-wheels' requires v=VERSION)
 endif
 	rm -fr python/dist
 	mkdir -p python/dist/release-assets
-	gh release download $(n) \
+	gh release download $(v) \
 	  --repo yaml/yamlscript \
-	  --pattern 'libys-$(n)-*.tar.xz' \
-	  --pattern 'libys-$(n)-*.zip' \
+	  --pattern 'libys-$(v)-*.tar.xz' \
+	  --pattern 'libys-$(v)-*.zip' \
 	  --dir python/dist/release-assets
-	$(MAKE) -C python wheels-from-release n=$(n)
+	$(MAKE) -C python wheels-from-release v=$(v)
 	$(MAKE) -C python publish-wheels
 
 #------------------------------------------------------------------------------
@@ -558,19 +617,19 @@ secrets-publish: $(YS) $(GH)
 	$(YS) $(ROOT)/util/yamlscript-secrets --publish
 
 # Prepare a release: refresh credentials, bump versions, and update
-# changelogs. Usage: make release-prep o=OLD n=NEW
+# changelogs. Usage: make release-prep o=OLD v=NEW
 release-prep: $(YS) $(GH)
 ifndef o
-	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
+	$(error 'make release-prep' requires o=OLD_VERSION v=NEW_VERSION)
 endif
-ifndef n
-	$(error 'make release-prep' requires o=OLD_VERSION n=NEW_VERSION)
+ifndef v
+	$(error 'make release-prep' requires o=OLD_VERSION v=NEW_VERSION)
 endif
 	$(MAKE) secrets-update
 	$(MAKE) secrets-list
 	$(MAKE) secrets-publish
 	$(MAKE) release-version-bump
-	$(MAKE) release-changelog o=$(o) n=$(n)
+	$(MAKE) release-changelog o=$(o) v=$(v)
 	$(MAKE) release-binding-changelogs
 
 #------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ include $(COMMON)/binding.mk
 include $(MAKES)/moonbit.mk
 include $(MAKES)/shell.mk
 
-MOONBIT-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$n)
+MOONBIT-RELEASE-VERSION := $(or $(YS_RELEASE_VERSION_NEW),$v)
 
 
 #------------------------------------------------------------------------------

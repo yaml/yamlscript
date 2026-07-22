@@ -249,15 +249,15 @@ case $binding in
       published=true
     ;;
   *)
-    log "No published check for binding: $binding"
-    exit 1
+    echo "Unknown binding: $binding" >&2
+    exit 2
     ;;
 esac
 
 if $published; then
-  log "$binding $version is already published"
+  log "Published: $binding $version"
   exit 0
 fi
 
-log "$binding $version is not published"
+log "Not published: $binding $version"
 exit 1

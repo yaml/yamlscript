@@ -38,7 +38,7 @@ WHEEL-PLAT-windows-int64 := win_amd64
 WHEEL-PLAT := $(WHEEL-PLAT-$(OS-ARCH))
 WHEEL-LIBYS-DIR := lib/yamlscript/libys
 WHEEL-LIBYS := $(WHEEL-LIBYS-DIR)/$(notdir $(LIBYS-SO-FQNP))
-RELEASE-WHEEL-VERSION := $(or $(n),$(YS_VERSION))
+RELEASE-WHEEL-VERSION := $(or $(v),$(YS_VERSION))
 RELEASE-WHEEL-DIR ?= dist/release-assets
 RELEASE-WHEEL-ARCHIVES := \
   $(wildcard $(RELEASE-WHEEL-DIR)/libys-$(RELEASE-WHEEL-VERSION)-*.tar.xz) \

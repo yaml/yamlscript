@@ -34,8 +34,8 @@ release: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP)
 else
 release: $(JAVA-INSTALLED) $(LIBYS-SO-FQNP) test package
 endif
-ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
+ifndef v
+	$(error 'make $@' needs the v variable set to the new version)
 endif
 ifdef YS_RELEASE_CI
 	$(MVN) package -DskipTests

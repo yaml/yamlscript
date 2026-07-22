@@ -109,11 +109,11 @@ defn do-list():
     =================================
 
     Full interactive workflow:
-      make release o=OLD_VERSION n=NEW_VERSION
+      make release o=OLD_VERSION v=NEW_VERSION
 
     Or run individual steps:
 
-      1. make release-sanity-check o=X n=Y
+      1. make release-sanity-check o=X v=Y
          Verify old version, clean tree, valid new version
 
       2. make secrets-update
@@ -128,28 +128,28 @@ defn do-list():
       5. make release-version-bump
          Update versions in all files via .version.ys
 
-      6. make release-changelog o=X n=Y
+      6. make release-changelog o=X v=Y
          Edit changelog interactively, validate YAML
 
       7. make release-binding-changelogs
          Update perl and ruby changelog files
 
-      8. make release-commit n=Y
+      8. make release-commit v=Y
          Commit all changes
 
-      9. make release-tag n=Y
+      9. make release-tag v=Y
          Create git tag
 
-     10. make release-push n=Y
+     10. make release-push v=Y
          Push commits and tags to origin
 
-     11. make release-build-github n=Y
+     11. make release-build-github v=Y
          Trigger release workflow and watch it
 
-     12. make release-bindings n=Y
-        Release all 30 language bindings
+     12. make release-bindings v=Y
+        Release all language bindings
 
-     13. make release-homebrew n=Y
+     13. make release-homebrew v=Y
          Publish the Homebrew tap formulas
 
      14. make release-website
@@ -241,7 +241,7 @@ defn do-sanity-check(old new):
         Current version: $current-version
         You specified: $old
 
-      Please use: make release o=$current-version n=$new
+      Please use: make release o=$current-version v=$new
 
   say: "✓ Old version matches current: $old"
 
@@ -530,7 +530,7 @@ defn do-bindings(new):
           else:
             say: "\nReleasing binding: $dir"
             try:
-              run: "make -C $dir release n=$new"
+              run: "make -C $dir release v=$new"
               catch Exception e:
                 warn: "Failed to release $dir. Continuing."
                 swap failures: \(_.conj(dir))

@@ -32,8 +32,8 @@ package: $(JAVA-INSTALLED)
 	$(MVN) package -DskipTests
 
 release: $(JAVA-INSTALLED) package
-ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
+ifndef v
+	$(error 'make $@' needs the v variable set to the new version)
 endif
 	$(MAKE) maven-central-release
 

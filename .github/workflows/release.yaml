@@ -981,7 +981,7 @@ jobs:
           echo "ERROR: HOMEBREW_TAP_SSH_KEY secret is not set"
           exit 1
         fi
-        make release-homebrew n="$VERSION" YS="$PWD/ys/bin/ys-$VERSION"
+        make release-homebrew v="$VERSION" YS="$PWD/ys/bin/ys-$VERSION"
 
   publish-bindings:
     name: Publish language bindings
@@ -1139,7 +1139,7 @@ jobs:
       run: |
         export clojars_username="$CLOJARS_USERNAME"
         export clojars_password="$CLOJARS_PASSWORD"
-        make release-bindings n="$VERSION" YS="$PWD/ys/bin/ys-$VERSION"
+        make release-bindings v="$VERSION" YS="$PWD/ys/bin/ys-$VERSION"
 
   publish-website:
     name: Publish website

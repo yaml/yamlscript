@@ -43,8 +43,8 @@ release: $(ALR) test build-doc
 ifndef ALR
 	$(error 'alr' is required to publish the Ada binding)
 endif
-ifndef n
-	$(error 'make $@' needs the n variable set to the new version)
+ifndef v
+	$(error 'make $@' needs the v variable set to the new version)
 endif
 ifndef ADA-GITHUB-USER
 	$(error Can't determine GitHub user)
