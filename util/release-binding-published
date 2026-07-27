@@ -109,7 +109,7 @@ alire-crate-exists() {
   local prefix=${name:0:2}
   local file="$name-$version.toml"
   local url='https://raw.githubusercontent.com/alire-project/alire-index'
-  url="$url/stable-1.2/index/$prefix/$name/$file"
+  url="$url/master/index/$prefix/$name/$file"
   url-exists "$url"
 }
 
