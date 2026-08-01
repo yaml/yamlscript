@@ -103,8 +103,9 @@ $ jolt program.clj
 ```
 
 The `-T jolt` header form resolves the ys.v0 dependency with
-`jolt.deps/add-deps` when running under jolt (transitive dependencies
-come from the pom.xml inside the ys.v0 jar), and adds jolt's own
+`jolt.deps/add-deps` when running under jolt. Jolt uses Grenadine to build
+the effective Maven POM and resolve transitive dependencies without Java.
+The header also adds jolt's own
 libyaml based yaml library so the YS yaml functions work natively.
 
 

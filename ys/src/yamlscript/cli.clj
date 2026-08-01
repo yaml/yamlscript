@@ -436,7 +436,7 @@ Options:
 
 ;; Under jolt (a Clojure dialect hosted on Chez Scheme), resolve the
 ;; ys.v0 dependency with jolt's add-deps, which resolves the Maven
-;; transitives from the pom.xml inside the ys.v0 jar. jolt's own
+;; transitives from Grenadine's effective POM model. jolt's own
 ;; libyaml based clj-yaml.core implementation is added as a git dep
 ;; (top level pins win over the transitive clj-commons/clj-yaml):
 (def jolt-yaml-sha "348ff807899042317db3a1169002c6fec7be2194")
