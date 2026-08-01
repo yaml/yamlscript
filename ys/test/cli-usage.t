@@ -130,11 +130,11 @@ test::
 - cmnd: "ys -T glj -e 'say: 123'"
   want: |
     (when (resolve '*glojure-version*)
-      ((resolve 'add-load-path)
-       (or (System/getenv "YS_V0_PATH")
-           (str (System/getenv "HOME")
-                "/.m2/repository/org/yamlscript/ys.v0/"
-                "0.2.29/ys.v0-0.2.29.jar.d"))))
+      (require 'glojure.deps)
+      ((resolve 'glojure.deps/add-deps)
+       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.29"}}}
+       '{:source-libs #{org.yamlscript/ys.v0}})
+      nil)
     (ns main (:require ys.v0))
     (ys.v0/init)
 

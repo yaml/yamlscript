@@ -451,21 +451,18 @@ Options:
     "            {:git/url \"https://github.com/jolt-lang/yaml.git\"\n"
     "             :git/sha \"" jolt-yaml-sha "\"}}}))\n"))
 
-;; Under glojure, add the extracted ys.v0 jar sources to the load path
-;; (glojure loads plain source; there is no jar or Maven machinery).
-;; The YS_V0_PATH env var overrides the ~/.m2 extraction convention
-;; that the ys installers and 'ys-sh --install-m2' maintain. Every
-;; symbol funnels through resolve so other runtimes never analyze
-;; glojure specifics:
+;; Under glojure, resolve ys.v0 and its Maven transitives through the
+;; Grenadine-backed glojure.deps facade. Glojure extracts installed JARs and
+;; appends their source roots without requiring Java:
 (def v0-glj-header
   (str
     "(when (resolve '*glojure-version*)\n"
-    "  ((resolve 'add-load-path)\n"
-    "   (or (System/getenv \"YS_V0_PATH\")\n"
-    "       (str (System/getenv \"HOME\")\n"
-    "            \"/.m2/repository/org/yamlscript/ys.v0/\"\n"
-    "            \"" yamlscript-version "/ys.v0-" yamlscript-version
-    ".jar.d\"))))\n"))
+    "  (require 'glojure.deps)\n"
+    "  ((resolve 'glojure.deps/add-deps)\n"
+    "   '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
+    yamlscript-version "\"}}}\n"
+    "   '{:source-libs #{org.yamlscript/ys.v0}})\n"
+    "  nil)\n"))
 
 (def to-code-headers
   {"bb" v0-bb-header

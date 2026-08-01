@@ -121,11 +121,12 @@ $ ys -T glj program.ys > program.clj
 $ glj program.clj
 ```
 
-Glojure loads plain Clojure source from a load path (no jars), so the
-`-T glj` header form adds the extracted ys.v0 sources to the load path
-at run time: the `YS_V0_PATH` env var if set, else the
-`~/.m2/repository/org/yamlscript/ys.v0/<version>/ys.v0-<version>.jar.d`
-directory that the ys installers and `ys-sh --install-m2` maintain.
+Glojure loads plain Clojure source from a load path (no jars). Its
+Grenadine-backed `glojure.deps` API resolves ys.v0 and its transitive Maven
+dependencies, installs them into `GRENADINE_LOCAL_REPOSITORY` (or the normal
+`~/.m2/repository` default), safely extracts the required ys.v0 source root,
+and appends it to the load path. This is implemented by the self-contained
+`glj` binary and does not require Java.
 
 Backend libraries (json, yaml, shell, http, fs) don't exist on glojure
 yet, so those YS functions fail with a clear message there; ordered
