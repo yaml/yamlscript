@@ -57,7 +57,10 @@ support, and docs:
    `vector(...)` and inline `V+(...)` vs `+[...]`, inline `M+(...)`
    vs `+{...}`, `apply(str ...)` and `apply str:` vs `:join` /
    `join:`, `str(bareVar)` vs `bareVar:S`,
-   `quot(a b)` and `a.quot(b)` vs `a // b`,
+   `quot(a b)` and `a.quot(b)` vs `a // b`, `rem(a b)` vs `a % b`,
+   parenthesized simple integer-looking divisions such as `(n / d)` vs
+   `(n // d)`, `:zero?` vs `.!` when falsey-zero semantics are OK,
+   ` or(` / ` and(` calls vs `||` / `&&`,
    any `KW (cond):` test-expression paren-wrap (for `if`, `if-not`,
    `when`, `when-not`, `while`), any `KW [...]:` bracketed binding
    form for the reliably-strippable keywords (`binding`,
@@ -65,7 +68,9 @@ support, and docs:
    `when-first`/`when-let`/`when-lets`/`when-some`, `with-open`) and
    for the iteration keywords (`each`, `for`, `doseq`, `dotimes`) when
    the binding starts with a named var (not a `_`-var or destructure
-   pattern), `then: nil` / `else: nil` vs `when` / `when-not`, a zero-arg method
+   pattern), `then: nil` / `else: nil` vs `when` / `when-not`,
+   direct `then: false` under `if` as a candidate for reversed
+   `when`, a zero-arg method
    `x.foo()` vs the colon chain `x:foo`, a trailing `=>:` whose value is
    a call / method-chain / spaced binary op vs a pair form
    (`f: args` / `x: .m(a)` / `a OP: b`), a direct `=>:` child under
@@ -437,19 +442,19 @@ finds.
 `str(...)` with multiple args (e.g. `str(a b c)` for concatenation) is
 unrelated — keep it. The rule is only about the single-bare-var case.
 
-### Use specific predicates over generic `.!` for numeric tests
+### Prefer `.!` over `:zero?` when falsey-zero semantics are OK
 
-When testing whether a number is zero, prefer `:zero?` (chain) or
-`zero?(...)` (call) over `.!` or `== 0`. The specific predicate
-documents intent: "is the remainder zero" vs "is this falsey".
+YS falsey semantics make numeric `0` false, so `.!` is usually the
+terser way to test "zero result" in numeric code. Prefer it for counts,
+remainders, and loop totals when the value is known to be numeric:
 
-- `(i % 5):zero?` over `(i % 5).!`
-- `count.zero?` over `count == 0`
-- `zero?(x - y)` when the expression has a natural prefix form
+- `(i % 5).!` over `(i % 5):zero?`
+- `count.!` over `count == 0` or `count:zero?`
+- `total.!` over `zero?(total)`
 
-Reserve `.!` for cases where the expression is already busy and the
-terse form aids readability, or where you genuinely want the broader
-"falsey" semantics (nil, false, empty collections, empty strings).
+Use `:zero?` / `zero?(...)` only when you specifically need the
+stricter predicate and must distinguish numeric zero from nil, false,
+empty strings, or empty collections.
 
 ### Use conditional assignment for "if true update, else keep same value"
 
@@ -518,6 +523,27 @@ mistake.
 - `if cond: form / else: nil` → `when cond: form`
 - `when X.!` → `when-not X`
 
+When an `if` has `then: false`, consider reversing the condition and
+using `when` for the else branch. `when` returns nil when its test is
+false, and nil often works anywhere false was only used as "no result":
+
+```
+if letters.# < 2:
+  then: false
+  else:
+    every?: ...
+```
+
+can become:
+
+```
+when letters.# >= 2:
+  every?: ...
+```
+
+Only make this rewrite when nil is acceptable in place of false. Keep
+the explicit `if` when callers require a strict Boolean `false`.
+
 ### `declare` is not needed in YAMLScript
 
 YS resolves `defn` references across the whole file, so mutual
@@ -527,10 +553,10 @@ recursion works regardless of definition order. Don't reach for
 ```
 # correct — F is defined first and references M defined later
 defn F(n):
-  if n:zero?: 1 (n - M(F(n.--)))
+  if n.!: 1 (n - M(F(n.--)))
 
 defn M(n):
-  if n:zero?: 0 (n - F(M(n.--)))
+  if n.!: 0 (n - F(M(n.--)))
 ```
 
 ### No reserved symbols in YS or Clojure
@@ -1025,8 +1051,8 @@ pairs =: words:frequencies.sort-by(val):reverse
   ranges, always use `..`: `1 .. 5` (forward) or `5 .. 1` (reverse).
   `\\a` is a Clojure char literal (backslash doubled in YAML block
   scalars); `C('a')` also works but is verbose.
-- `%` = `rem` (remainder); `%%` = `mod` — prefer `%`; they differ only
-  for negative numbers
+- `%` = `rem` (remainder); `%%` = `mod` — prefer `a % b` over
+  `rem(a b)`; they differ only for negative numbers
 - `//` = `quot` (integer division, truncated toward zero) — prefer
   the operator over the call/method forms:
   - `a // b` over `quot(a b)` or `a.quot(b)`
@@ -1036,9 +1062,9 @@ pairs =: words:frequencies.sort-by(val):reverse
     (`(lo + hi) // 2`), etc.
 - `.!` for falsey check (`falsey?`) — YS truth: 0 and empty
   collections are also falsey. `x.!` combines nil-check and
-  empty-check in one — use it instead of separate `nil?` + `empty?`
-  guards. For "is this number zero" prefer `:zero?` / `zero?(...)` —
-  see Common Mistakes.
+  empty-check in one, and is also the usual short form for numeric
+  zero tests. Use `:zero?` / `zero?(...)` only when strict numeric
+  zero semantics matter — see Common Mistakes.
 - Dot chaining for calls with args: `s.replace(/x/ '')`, `s1.anagram?(s2)`
 - Colon chaining for zero-arg calls: `s:lc:frequencies:reverse`
 - `obj.name` (dot without parens) is a **property/key lookup** — NOT
@@ -1059,6 +1085,16 @@ pairs =: words:frequencies.sort-by(val):reverse
   `v.$(i - 1)` does not work; write `v.nth(i - 1)` instead. Inside a
   dot chain that starts the value, split with
   `data: .query.tokens.$key` rather than `=>: data.query.tokens.$key`.
+- Dynamic method/function calls can use the same lookup in call
+  position: `a.$name(b)` calls the member selected by runtime variable
+  `name`. This is the direct YS counterpart to "send an unknown method
+  call" examples such as Perl's `$obj->$name($arg)`.
+  If the local test compiler parses that as lookup plus a separate
+  argument form, use the equivalent two-step shape:
+  ```
+  method =: a.$name
+  method: b
+  ```
 - `obj.N` — literal-index lookup (the property name is the literal
   number). Works on vectors and strings: `v.0`, `v.12`, `s.3`. Use
   this for any constant index — `v.nth(N)` is verbose for literals.
@@ -1134,6 +1170,8 @@ pairs =: words:frequencies.sort-by(val):reverse
   - Logical: `and` `or`; YS truth variants: `and?` (`&&&`),
     `or?` (`|||`) — use YS falsey semantics (0/empty = false).
     `(a ||| b)` = use `a` if truey, else `b` (like `a || b` in JS)
+    For simple inline logic, prefer symbolic operators:
+    `a || b` over `or(a b)`, and `a && b` over `and(a b)`.
   - Regex: `s =~ /pat/` for match, `s !~ /pat/` for no-match
   - For simple inline comparisons, use symbolic operators directly:
     `limit > 2` not `limit.ge(2)`.
@@ -1377,6 +1415,8 @@ pairs =: words:frequencies.sort-by(val):reverse
   inline comparisons — write `limit > 2` not `limit.ge(2)`.
   Reserve named forms for use as predicates passed to higher-order
   functions (`filter ge(10)`, `drop-while lt(0)`, etc.)
+- Do NOT use named logical calls for simple inline logic — write
+  `a || b` not `or(a b)`, and `a && b` not `and(a b)`.
 - Do NOT guess without testing — run `$YS -pe` or `$YS -c -` first
 - Do NOT define helpers before `main` — `main` must always be first;
   define helpers below in call order (top-down style)

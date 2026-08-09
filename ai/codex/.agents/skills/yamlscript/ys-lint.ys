@@ -43,6 +43,12 @@ QUOT-CALL-RE =:
   /(?<![\w-])quot\(\s*([\w$.-]+)\s+([\w$.-]+)\s*\)/
 QUOT-DOT-RE =:
   /([\w$.-]+)\.quot\(\s*([\w$.-]+)\s*\)/
+REM-CALL-RE =: /\srem\(/
+INT-DIV-PARENS-RE =:
+  /\(([$A-Za-z_][\w$-]*|\d+)\s+\/\s+([$A-Za-z_][\w$-]*|\d+)\)/
+ZERO-CHAIN-RE =: /:zero\?/
+OR-CALL-RE =: /\sor\(/
+AND-CALL-RE =: /\sand\(/
 # Zero-arg method call x.foo() -> x:foo. first()/last() excluded
 # (their own rules suggest .0/.$).
 ZERO-ARG-RE =:
@@ -70,6 +76,7 @@ JOIN-SPACE-RE =: /\.join\(\s*(?:' '|" ")\s*\)/
 SLURP-SPIT-RE =: /(?<![\w-])(slur[p]|spi[t])(?![\w-])/
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
+THEN-FALSE-RE =: /\bthen:\s*false\s*$/
 COMMENT-RE =: /^\s*#/
 
 THEN-NIL-MSG =: 'then: nil -> use when'
@@ -84,7 +91,7 @@ defn main(*files):
     exit: 2
   total =:
     reduce add: 0 files.map(lint-file)
-  if total:zero?:
+  if total.!:
     err: "ys-lint: clean ($(files.#) file(s))\n"
     else:
       err: "\nys-lint: $total issue(s)\n"
@@ -98,7 +105,8 @@ defn- lint-file(file):
         then:
           total +=:
             lint-line(file i.++ lines.$i) +
-            check-if-arrow(file i.++ lines i)
+            check-if-arrow(file i.++ lines i) +
+            check-if-then-false(file i.++ lines i)
           recur: i.++ total
         else: total
   line-total +: check-structural(file lines)
@@ -110,7 +118,7 @@ defn- check-structural(file lines):
     then: 0
     else:
       hits =: count-if-scalar-branches(data)
-      if hits:zero?: 0 report-if-scalar-lines(file lines)
+      if hits.!: 0 report-if-scalar-lines(file lines)
 
 defn- parse-plain-yaml(lines):
   text =:
@@ -299,6 +307,15 @@ defn- check-patterns(file lineno code):
     file.count-matches(lineno code 'kw-parens' KW-PARENS-RE fmt-kw-parens)
     file.count-matches(lineno code 'quot-call' QUOT-CALL-RE fmt-quot-call)
     file.count-matches(lineno code 'quot-dot' QUOT-DOT-RE fmt-quot-dot)
+    file.count-matches(lineno code 'rem-call' REM-CALL-RE
+                       fmt-static('rem(a b) -> a % b'))
+    file.count-matches(lineno code 'int-div' INT-DIV-PARENS-RE fmt-int-div)
+    file.count-matches(lineno code 'zero-chain' ZERO-CHAIN-RE
+                       fmt-static(':zero? -> .! when falsey-zero works'))
+    file.count-matches(lineno code 'or-call' OR-CALL-RE
+                       fmt-static('or(a b) -> a || b'))
+    file.count-matches(lineno code 'and-call' AND-CALL-RE
+                       fmt-static('and(a b) -> a && b'))
     file.count-matches(lineno code 'zero-arg' ZERO-ARG-RE fmt-zero-arg)
     file.count-matches(lineno code 'slurp-spit' SLURP-SPIT-RE
                        fmt-slurp-spit)
@@ -347,6 +364,10 @@ defn- fmt-quot-call(m):
 defn- fmt-quot-dot(m):
   format '%s.quot(%s) -> %s // %s': m.1 m.2 m.1 m.2
 
+defn- fmt-int-div(m):
+  format '(%s / %s) -> (%s // %s) if integer division intended':
+    m.1 m.2 m.1 m.2
+
 defn- fmt-zero-arg(m):
   format '%s.%s() -> %s:%s': m.1 m.2 m.1 m.2
 
@@ -389,16 +410,26 @@ defn- check-if-arrow(file lineno lines i):
       =>: 1
     else: 0
 
+# A direct `then: false` child often means the if is really a `when`
+# with the test reversed. `when` returns nil when false, and nil is
+# often good enough where false was being used as the negative branch.
+defn- check-if-then-false(file lineno lines i):
+  code =: strip(lines.$i)
+  if (code =~ THEN-FALSE-RE) && direct-child-of-if?(lines i):
+    then:
+      msg =: 'then: false under if -> reverse condition and use when'
+      report: file lineno 'if-then-false' msg
+      =>: 1
+    else: 0
+
 defn- direct-child-of-if?(lines i):
   parent-i =: prev-code-index(lines i)
-  if parent-i.!:
-    then: false
-    else:
-      parent =: strip(lines.$parent-i)
-      child =: strip(lines.$i)
-      parent-is-if =: parent =~ IF-HEAD-RE
-      child-deeper =: indent(child) > indent(parent)
-      parent-is-if &&: child-deeper
+  when parent-i.?:
+    parent =: strip(lines.$parent-i)
+    child =: strip(lines.$i)
+    parent-is-if =: parent =~ IF-HEAD-RE
+    child-deeper =: indent(child) > indent(parent)
+    parent-is-if &&: child-deeper
 
 defn- prev-code-index(lines i):
   loop j i.--:
