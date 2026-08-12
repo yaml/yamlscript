@@ -176,6 +176,15 @@
     (mapv transform-node node)
     (transform-node node)))
 
+(defn- normalize-fmap-form
+  "Wrap a multi-form form-map expression in a do expression."
+  [form]
+  (if (or
+        (and (vector? form) (> (count form) 1))
+        (> (count (:xmap form)) 2))
+    {:xmap [(Sym 'do) form]}
+    form))
+
 (defn transform-xmap
   "Transform every pair in an expression or forms mapping."
   [node]
@@ -193,6 +202,10 @@
         (fn [acc [k v]]
           (let [[k v] (if (= :xmap key)
                         (apply-transformer k v)
+                        [k v])
+                [k v] (if (= :fmap key)
+                        [(normalize-fmap-form k)
+                         (normalize-fmap-form v)]
                         [k v])
                 [k v] (if (= :xmap key)
                         [(transform-child k) (transform-child v)]

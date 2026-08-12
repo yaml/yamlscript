@@ -82,6 +82,15 @@
     (cond true (do 1 2 3))
 
 
+- name: Wrap multiple scalar forms in a cond test
+  yamlscript: |
+    !ys-0
+    cond:
+      false true: 1
+  clojure: |
+    (cond (do false true) 1)
+
+
 - name: Normalize mapping bodies for cond
   yamlscript: |
     !ys-0
@@ -141,6 +150,45 @@
         r: 4
   clojure: |
     (case value a (do (x 1) (y 2)) b z (do (q 3) (r 4)))
+
+
+- name: Normalize bodies in generic form maps
+  yamlscript: |
+    !ys-0
+    foo %:
+      a: 1 2 3
+      b:
+        x: 1
+        y: 2
+      c: z
+      =>:
+        q: 3
+        r: 4
+  transform: |
+    {:xmap
+     [{:Sym foo}
+      {:fmap
+       [{:Sym a}
+        {:xmap [{:Sym do} [{:Int 1} {:Int 2} {:Int 3}]]}
+        {:Sym b}
+        {:xmap [{:Sym do} {:xmap [{:Sym x} {:Int 1}
+                                  {:Sym y} {:Int 2}]}]}
+        {:Sym c}
+        {:Sym z}
+        {:Sym =>}
+        {:xmap [{:Sym do} {:xmap [{:Sym q} {:Int 3}
+                                  {:Sym r} {:Int 4}]}]}]}]}
+  clojure: |
+    (foo a (do 1 2 3) b (do (x 1) (y 2)) c z (do (q 3) (r 4)))
+
+
+- name: Normalize both sides of generic form maps
+  yamlscript: |
+    !ys-0
+    foo %:
+      1 2 3: 4 5 6
+  clojure: |
+    (foo (do 1 2 3) (do 4 5 6))
 
 
 - name: Various require transformations
