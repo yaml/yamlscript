@@ -264,14 +264,6 @@
       transform-node
       (:Vec node))))
 
-(defn transform-sym
-  "Validate symbols that need special transformer handling."
-  [node]
-  (let [sym (str (:Sym node))]
-    (when (= sym "%")
-      (die "Invalid symbol '%'. Did you mean '%1'?"))
-    node))
-
 ; TODO:
 ; Turn :xmap mappings into :fmap groups when appropriate.
 
@@ -288,7 +280,6 @@
                :Lst (transform-list node)
                :Map (transform-map node)
                :Vec (transform-vec node)
-               :Sym (transform-sym node)
                node)
         node (if anchor (assoc node :& anchor) node)
         node (if tag (assoc node :! tag) node)]

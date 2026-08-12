@@ -262,8 +262,9 @@ chain-pair only supports a leading `.`:
 - `=>: stack:pop:pop.conj(x)` → `stack: .pop().pop().conj(x)`
 
 **Op-pair / pair-form quirks**:
-- `%:` does not parse (`Invalid symbol '%'`). Use the fn-call pair
-  form `mod: a b` (or `rem: a b`) instead.
+- `%:` with a scalar value is the pair form of the remainder operator:
+  `a %: b` compiles to `(rem a b)`. With a mapping value, trailing `%`
+  is the legacy generic form-map marker instead.
 - A pair value cannot begin with a quoted string followed by more
   args. `format: '%+.4f' x y` fails to parse. Workarounds:
   - Promote the string into the key: `format '%+.4f': x y`

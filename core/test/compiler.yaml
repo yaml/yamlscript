@@ -287,7 +287,7 @@
 
     defn lol(x):
       y =: 2 * x
-      =>: \(%1 + y)
+      =>: \(_1 + y)
 
     say:
       lol(10): 4
@@ -339,7 +339,7 @@
 - name: Anonymous function
   yamlscript: |
     !ys-0
-    foo =: \(%1 + %4)
+    foo =: \(_1 + _4)
   build: |
    {:xmap
     ([{:Sym def} {:Sym foo}]
@@ -356,7 +356,7 @@
 - name: Anonymous function 2
   yamlscript: |
     !ys-0
-    map: \(str ((%1 / %3) + %2)) (1 .. 3)
+    map: \(str ((_1 / _3) + _2)) (1 .. 3)
   clojure: |
     (map (fn [& [_1 _2 _3]] (str (add+ (div+ _1 _3) _2))) (rng 1 3))
 
@@ -400,12 +400,12 @@
   yamlscript: |
     !ys-0
     defn tree(width):
-      stars =:  \(inc(%1) * "*")
-      spaces =: \(%1 * " ")
+      stars =:  \(inc(_1) * "*")
+      spaces =: \(_1 * " ")
       top =:
         join:
           map:
-            \(line width, %1): (width..1)
+            \(line width, _1): (width..1)
   clojure: |
     (defn
       tree
@@ -422,7 +422,7 @@
 - name: Star operator in anonymous function
   yamlscript: |
     !ys-0
-    say: \(inc(%1) * 2)
+    say: \(inc(_1) * 2)
   clojure: |
     (say (fn [& [_1]] (mul+ (inc _1) 2)))
 
@@ -526,7 +526,9 @@
   yamlscript: |
     !ys-0
     =>: (a % b)
+    a %: b
   clojure: |
+    (rem a b)
     (rem a b)
 
 
@@ -546,12 +548,36 @@
     (quot a b)
 
 
-- name: Error on % in anonymous function
+- name: Error on legacy %1 anonymous function argument
+  yamlscript: |
+    !ys-0
+    =>: \(_1 + %1)
+  error: |
+    ~~ Invalid anonymous function argument '%1'. Use '_1' instead.
+
+
+- name: Error on legacy %2 anonymous function argument
+  yamlscript: |
+    !ys-0
+    =>: \(_1 + %2)
+  error: |
+    ~~ Invalid anonymous function argument '%2'. Use '_2' instead.
+
+
+- name: Error on sparse legacy anonymous function argument
+  yamlscript: |
+    !ys-0
+    =>: \(_1 + %4)
+  error: |
+    ~~ Invalid anonymous function argument '%4'. Use '_4' instead.
+
+
+- name: Allow bare percent as an operator symbol
   yamlscript: |
     !ys-0
     =>: \(inc(%) * 2)
-  error: |
-    ~~ Invalid symbol '%'. Did you mean '%1'?
+  clojure: |
+    (fn [& []] (mul+ (inc %) 2))
 
 
 - name: Support doc string in defn
@@ -1448,11 +1474,11 @@
     (if (= (count foo) 3) bar)
 
 
-- name: Use _ for %1 in anonymous function
+- name: Use numbered underscore arguments in anonymous function
   yamlscript: |
     !ys-0
     =>: \(add(_ 1) 2)
-    =>: \(%2 + _ + _ + %1)
+    =>: \(_2 + _ + _ + _1)
   clojure: |
     (fn [& [_1]] ((add _1 1) 2))
     (fn [& [_1 _2]] (add+ _2 _1 _1 _1))

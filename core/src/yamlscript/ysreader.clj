@@ -50,10 +50,8 @@
   (re-matches re/nspc (str token)))
 
 (defn is-narg?
-  "A numbered argument found inside an anonymous function. YS currently supports
-  the Clojure style %1 %2 etc, but prefers _1 _2 etc. %1 will be removed in v1.
-  YS supports _ to mean _1, but doesn't support % for %1 because % is used for
-  the remainder operator."
+  "A numbered argument found inside an anonymous function. YS uses _1, _2 and
+  so on. Legacy %N forms are recognized only to report a migration error."
   [token]
   (re-matches re/narg (str token)))
 
@@ -492,12 +490,14 @@
     (= "nil" token) [(Nil) tokens]
     (= "true" token) [(Bln token) tokens]
     (= "false" token) [(Bln token) tokens]
-    (is-narg? token) (let [n (subs token 1)
-                           n (parse-long n)
-                           _ (when (or (<= n 0) (> n 20))
-                               (die "Invalid numbered argument: " token))
-                           n (str "_" n)]
-                       [(Sym n) tokens])
+    (is-narg? token)
+    (if (str/starts-with? token "%")
+      (die "Invalid anonymous function argument '" token
+        "'. Use '_" (subs token 1) "' instead.")
+      (let [n (parse-long (subs token 1))
+            _ (when (or (<= n 0) (> n 20))
+                (die "Invalid numbered argument: " token))]
+        [(Sym token) tokens]))
     (is-bad-number? token) (die "Invalid number: " token)
     (is-number? token) (let [token (str/replace token #"^([-+]?)0o"
                                      (str "$1" "0"))
