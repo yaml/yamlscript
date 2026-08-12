@@ -52,20 +52,39 @@
 ;; cond and case
 ;;-----------------------------------------------------------------------------
 
+(defn- normalize-cond-body
+  "Wrap a multi-form cond-like clause body in a do expression."
+  [body]
+  (if (or
+        (and (vector? body) (> (count body) 1))
+        (> (count (:xmap body)) 2))
+    {:xmap [(Sym 'do) body]}
+    body))
+
+(defn- normalize-cond-bodies
+  "Normalize the body positions in an alternating cond-like form map."
+  [fmap]
+  (mapv
+    (fn [idx node]
+      (if (odd? idx)
+        (normalize-cond-body node)
+        node))
+    (range)
+    fmap))
+
 (defn transform-with-else
-  "Normalize trailing else markers in cond-like form maps."
+  "Normalize clause bodies and trailing else markers in cond-like forms."
   [lhs rhs subst]
-  (when-lets [fmap (:fmap rhs)
-              len (count fmap)
-              _ (>= len 2)
-              last-key-pos (- len 2)
-              last-key (nth fmap last-key-pos)
-              last-sym (:Sym last-key)
-              _ (or (= '=> last-sym) (= 'else last-sym))
-              rhs (update-in rhs
-                    [:fmap last-key-pos]
-                    (fn [_] subst))]
-    [lhs rhs]))
+  (when-let [fmap (:fmap rhs)]
+    (let [fmap (normalize-cond-bodies fmap)
+          last-key-pos (- (count fmap) 2)
+          last-key (when (>= last-key-pos 0)
+                     (nth fmap last-key-pos))
+          last-sym (:Sym last-key)
+          fmap (if (or (= '=> last-sym) (= 'else last-sym))
+                 (assoc fmap last-key-pos subst)
+                 fmap)]
+      [lhs (assoc rhs :fmap fmap)])))
 
 (defn transform_cond
   "Transform YAMLScript cond syntax into Clojure cond syntax."

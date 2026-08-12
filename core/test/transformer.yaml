@@ -67,6 +67,82 @@
     (cond (> a b) c (< a d) e :else f)
 
 
+- name: Wrap multiple scalar forms in a cond body
+  yamlscript: |
+    !ys-0
+    cond:
+      true: 1 2 3
+  transform: |
+    {:xmap
+     [{:Sym cond}
+      {:fmap
+       [{:Bln true}
+        {:xmap [{:Sym do} [{:Int 1} {:Int 2} {:Int 3}]]}]}]}
+  clojure: |
+    (cond true (do 1 2 3))
+
+
+- name: Normalize mapping bodies for cond
+  yamlscript: |
+    !ys-0
+    cond:
+      a:
+        x: 1
+        y: 2
+      b: q
+      c: r
+      else:
+        z: 3
+        q: 4
+  clojure: |
+    (cond a (do (x 1) (y 2)) b q c r :else (do (z 3) (q 4)))
+
+
+- name: Normalize bodies and => default for condf
+  yamlscript: |
+    !ys-0
+    condf value:
+      :Int:
+        x: 1
+        y: 2
+      :Str: z
+      =>:
+        q: 3
+        r: 4
+  clojure: |
+    (condf value :Int (do (x 1) (y 2)) :Str z (do (q 3) (r 4)))
+
+
+- name: Normalize bodies and else default for condp
+  yamlscript: |
+    !ys-0
+    condp eq value:
+      1:
+        x: 1
+        y: 2
+      2: z
+      else:
+        q: 3
+        r: 4
+  clojure: |
+    (condp eq value 1 (do (x 1) (y 2)) 2 z (do (q 3) (r 4)))
+
+
+- name: Normalize bodies and => default for case
+  yamlscript: |
+    !ys-0
+    case value:
+      a:
+        x: 1
+        y: 2
+      b: z
+      =>:
+        q: 3
+        r: 4
+  clojure: |
+    (case value a (do (x 1) (y 2)) b z (do (q 3) (r 4)))
+
+
 - name: Various require transformations
   yamlscript: |
     !ys-0
