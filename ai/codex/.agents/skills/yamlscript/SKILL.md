@@ -265,6 +265,9 @@ chain-pair only supports a leading `.`:
 - `%:` with a scalar value is the pair form of the remainder operator:
   `a %: b` compiles to `(rem a b)`. With a mapping value, trailing `%`
   is the legacy generic form-map marker instead.
+- An operator-pair scalar value must contain exactly one form. A compound
+  expression such as `a %: b - c` is one form, but `a %: b c` is invalid.
+  Mapping values retain their mapping and form-map semantics.
 - A pair value cannot begin with a quoted string followed by more
   args. `format: '%+.4f' x y` fails to parse. Workarounds:
   - Promote the string into the key: `format '%+.4f': x y`
@@ -881,6 +884,8 @@ Two args fit fine on one line.
   `cond || body` (body only runs if `cond` is falsey). The `&&:`/`||:`
   forms overlap functionally with `when`/`when-not` but the mechanism
   is the operator's short-circuit, not a control structure.
+  Scalar `Y` must contain exactly one form; a compound expression counts
+  as one form. Mapping values keep their mapping and form-map semantics.
 
 ### Control Flow
 - `if <cond>: <then-form> <else-form>` — always needs both forms.

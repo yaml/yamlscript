@@ -78,29 +78,44 @@
             (concat [(Sym 'apply)] [fun] new splats)))))
     nodes))
 
-(defn apply-yes-lhs
-  "Normalize yes-expression operators on the left side of a call."
-  [key val]
-  (if-lets [_ (vector? key)
-            _ (= 4 (count key))
-            [a b c d] key
-            _ (re-matches re/osym (str (:Sym d)))
-            _ (re-matches re/osym (str (:Sym b)))
-            b (or (ast/operators b) b)]
-    [[(Lst [b a c]) d] val]
-    [key val]))
+(defn operator-node?
+  "Return true when an AST node is an operator symbol."
+  [node]
+  (boolean (re-matches re/osym (str (:Sym node)))))
+
+(defn yes-pair
+  "Return normalized operands for a yes-expression operator pair."
+  [key]
+  (when (vector? key)
+    (case (count key)
+      2 (let [[a b] key]
+          (when (operator-node? b)
+            [a b]))
+      4 (let [[a b c d] key]
+          (when (and (operator-node? b) (operator-node? d))
+            [(Lst [(or (ast/operators b) b) a c]) d]))
+      nil)))
+
+(defn validate-operator-pair
+  "Require exactly one scalar RHS form for an operator pair."
+  [lhs rhs]
+  (when-let [[_ operator] (yes-pair lhs)]
+    (let [operator (:Sym operator)]
+      (cond
+        (or (nil? rhs) (and (vector? rhs) (empty? rhs)))
+        (die "Binary operator pair '" operator
+          "' requires a right-hand side")
+
+        (and (vector? rhs) (> (count rhs) 1))
+        (die "Binary operator pair '" operator
+          "' cannot have multiple scalar forms on the right-hand side")))))
 
 (defn apply-yes
   "Normalize yes-expression operators before constructing a call."
   [key val]
-  (let [[key val] (apply-yes-lhs key val)]
-    (if-lets [_ (vector? key)
-              _ (= 2 (count key))
-              [a b] key
-              _ (re-matches re/osym (str (:Sym b)))
-              b (or (ast/operators b) b)]
-      [[b a] val]
-      [key val])))
+  (if-let [[key operator] (yes-pair key)]
+    [[(or (ast/operators operator) operator) key] val]
+    [key val]))
 
 (defn construct-call
   "Construct one expression-map pair as a Clojure call form."
@@ -181,6 +196,7 @@
                               (check-let-bindings xmap ctx)
                               xmap)
                        [[lhs rhs] & xmap] xmap
+                       _ (validate-operator-pair lhs rhs)
                        lhs (if (and
                                  (= 2 (count lhs))
                                  (= {:Sym 'def} (first lhs))

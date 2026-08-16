@@ -532,6 +532,48 @@
     (rem a b)
 
 
+- name: Operator pair with compound scalar RHS
+  yamlscript: |
+    !ys-0
+    x %: y - z
+  clojure: |
+    (rem x (sub+ y z))
+
+
+- name: Operator pair with explicit nil RHS
+  yamlscript: |
+    !ys-0
+    x +: nil
+  clojure: |
+    (add+ x nil)
+
+
+- name: Error on operator pair without RHS
+  yamlscript: |
+    !ys-0
+    x +:
+  error: |
+    ~~ Binary operator pair '+' requires a right-hand side
+
+
+- name: Error on operator pair with multiple scalar RHS forms
+  yamlscript: |
+    !ys-0
+    x %: y z
+  error: >-
+    ~~ Binary operator pair '%' cannot have multiple scalar forms on the
+    right-hand side
+
+
+- name: Error on plus pair with multiple scalar RHS forms
+  yamlscript: |
+    !ys-0
+    x +: y z
+  error: >-
+    ~~ Binary operator pair '+' cannot have multiple scalar forms on the
+    right-hand side
+
+
 - name: mod operator
   yamlscript: |
     !ys-0
@@ -1530,6 +1572,25 @@
       c: d
   clojure: |
     (or (and a b) (c d))
+
+
+- name: Error on LHS YeS pair with multiple scalar RHS forms
+  yamlscript: |
+    !ys-0
+    a && b ||: c d
+  error: >-
+    ~~ Binary operator pair '||' cannot have multiple scalar forms on the
+    right-hand side
+
+
+- name: YeS pair with multiple mapping RHS forms
+  yamlscript: |
+    !ys-0
+    x +:
+      y: z
+      q: r
+  clojure: |
+    (add+ x (y z) (q r))
 
 
 - name: Seq destruct without []
