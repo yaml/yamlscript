@@ -20,7 +20,7 @@
 - name: require library with alias
   yamlscript: |
     !ys-0
-    require foo::bar: => fb
+    require foo::bar: :as fb
   clojure: |
     (require '[foo.bar :as fb])
 
@@ -28,7 +28,7 @@
 - name: require one-part library with alias
   yamlscript: |
     !ys-0
-    require foo: => f
+    require foo: :as f
   clojure: |
     (require '[foo :as f])
 
@@ -37,8 +37,8 @@
   yamlscript: |
     !ys-0
     require:
-      foo: => f
-      bar: => b
+      foo: :as f
+      bar: :as b
   clojure: |
     (require '[foo :as f] '[bar :as b])
 
@@ -46,7 +46,7 @@
 - name: Transform require and cond
   yamlscript: |
     !ys-0
-    require foo::bar: => fb
+    require foo::bar: :as fb
     cond:
       (x == 1): "one"
       (x == 2): "two"
@@ -194,12 +194,10 @@
 - name: Various require transformations
   yamlscript: |
     !ys-0
-    require foo::aaa: => fa
-    require foo::bbb: one
-    require foo::ccc: one two
-    require foo::ddd:
-      => fd
-      one two
+    require foo::aaa: :as fa
+    require foo::bbb: :get one
+    require foo::ccc: :get one two
+    require foo::ddd: :as fd :get one two
   clojure: |
     (require '[foo.aaa :as fa])
     (require '[foo.bbb :refer [one]])
@@ -211,12 +209,10 @@
   yamlscript: |
     !ys-0
     require:
-      foo::aaa: => fa
-      foo::bbb: one
-      foo::ccc: one two
-      foo::ddd:
-        => fd
-        one two
+      foo::aaa: :as fa
+      foo::bbb: :get one
+      foo::ccc: :get one two
+      foo::ddd: :as fd :get one two
       foo::eee:
       foo::fff: :all
   clojure: |
@@ -235,6 +231,125 @@
     require foo::bar: :all
   clojure: |
     (require '[foo.bar :refer :all])
+
+
+- name: Require all except selected names
+  yamlscript: |
+    !ys-0
+    require foo::bar: :not one two
+    require foo::baz: :all :not three four
+  clojure: |
+    (require '[foo.bar :refer :all :exclude [one two]])
+    (require '[foo.baz :refer :all :exclude [three four]])
+
+
+- name: Require no referred names
+  yamlscript: |
+    !ys-0
+    require foo::bar: :none
+    require foo::baz: :none :as baz
+  clojure: |
+    (require 'foo.bar)
+    (require '[foo.baz :as baz])
+
+
+- name: Require and rename selected names
+  yamlscript: |
+    !ys-0
+    require foo::bar: :get one/first two three/third
+  clojure: |
+    (require
+      '[foo.bar :refer [one two three] :rename {one first, three third}])
+
+
+- name: Error on legacy require alias syntax
+  yamlscript: |
+    !ys-0
+    require foo::bar: => fb one two
+  error: >
+    Legacy 'require' syntax '=> fb one two'. Use ':as fb :get one two'
+    instead.
+
+
+- name: Error on legacy require refer syntax
+  yamlscript: |
+    !ys-0
+    require foo::bar: one two
+  error: >
+    Legacy 'require' syntax 'one two'. Use ':get one two' instead.
+
+
+- name: Error on Clojure require refer option
+  yamlscript: |
+    !ys-0
+    require foo::bar: :refer one two
+  error: >
+    Invalid 'require' option ':refer'. Use ':get' instead.
+
+
+- name: Error on require option without arguments
+  yamlscript: |
+    !ys-0
+    require foo::bar: :get
+  error: >
+    Invalid 'require' option ':get': expected at least one symbol
+
+
+- name: Error on require alias option without an argument
+  yamlscript: |
+    !ys-0
+    require foo::bar: :as
+  error: |
+    Invalid 'require' option ':as': expected one symbol
+
+
+- name: Error on require exclusion option without arguments
+  yamlscript: |
+    !ys-0
+    require foo::bar: :not
+  error: |
+    Invalid 'require' option ':not': expected at least one symbol
+
+
+- name: Error on unknown require option
+  yamlscript: |
+    !ys-0
+    require foo::bar: :url thing
+  error: |
+    Invalid 'require' option ':url'
+
+
+- name: Error on duplicate require option
+  yamlscript: |
+    !ys-0
+    require foo::bar: :as fb :as fbb
+  error: >
+    Duplicate 'require' option ':as'
+
+
+- name: Error on require all and get options
+  yamlscript: |
+    !ys-0
+    require foo::bar: :all :get one
+  error: >
+    Invalid 'require' options: ':get' cannot be combined with ':all'
+
+
+- name: Error on require get and not options
+  yamlscript: |
+    !ys-0
+    require foo::bar: :get one :not two
+  error: >
+    Invalid 'require' options: ':get' cannot be combined with ':not'
+
+
+- name: Error on require none and selection options
+  yamlscript: |
+    !ys-0
+    require foo::bar: :none :all
+  error: >
+    Invalid 'require' options: ':none' cannot be combined with ':get',
+    ':all', or ':not'
 
 
 - name: Anonymous function with name

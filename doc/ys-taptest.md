@@ -13,7 +13,7 @@ Here's an example of a simple test file (test-1.t):
 ```yaml
 #!/usr/bin/env ys-0
 
-require ys::taptest: test done
+require ys::taptest: :get test done
 
 hash1 =::
   foo: one

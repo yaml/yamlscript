@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-require ys::taptest: test done
+require ys::taptest: :get test done
 
 AV =: fs/abs("$DIR/../../sample/advent")
 
