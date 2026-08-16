@@ -85,7 +85,7 @@ test::
 
 - name: Use form on return value
   code: '41'
-  form:: \(inc %1)
+  form:: \(inc _1)
   want: 42
 
 - name: Use a previously defined form function on return value
