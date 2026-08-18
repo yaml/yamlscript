@@ -35,3 +35,64 @@
          .flatten().take(5)
   eval: |
     [11 11 11 11 11]
+
+
+- name: Put aliases assoc
+  ys: |
+    =>: +[
+      put(hash-map("a" 1) "b" 2)
+      std/put(hash-map("a" 1) "b" 2)]
+  eval: |
+    [{"a" 1, "b" 2} {"a" 1, "b" 2}]
+
+
+- name: Dotted assignment paths
+  ys: |
+    calls =: atom(0)
+    defn choose(container):
+      swap: calls inc
+      =>: container.which
+    a =:
+      hash-map(
+        "outer"
+        hash-map(
+          "which" "target"
+          "target" hash-map("d" 1)))
+    b =: hash-map(:d 1)
+    c =: hash-map(\'d 1)
+    missing =: hash-map()
+    a.outer.choose().d =: 4
+    b.d =: 2
+    c.d =: 2
+    missing.d =: 3
+    =>: +[a b c missing calls.@]
+  eval: |
+    [{"outer" {"which" "target", "target" {"d" 4}}}
+     {:d 2}
+     {d 2}
+     {"d" 3}
+     1]
+
+
+- name: Mixed and repeated dotted assignment targets
+  ys: |
+    defn assign(a d):
+      a.b c d.e =: 3 4 5
+      a.b a.c =: +[6 7]
+      =>: +[a c d]
+    assign:
+      hash-map("b" 1)
+      hash-map("e" 2)
+  eval: |
+    [{"b" 6, "c" 7} 4 {"e" 5}]
+
+
+- name: Dotted compound and conditional assignments
+  ys: |
+    a =: hash-map("n" 2 "items" hash-map("x" 1))
+    a.n +=: 3
+    a.items .=: assoc("y" 2)
+    a.n :if false *=: 10
+    =>: a
+  eval: |
+    {"n" 5, "items" {"x" 1, "y" 2}}

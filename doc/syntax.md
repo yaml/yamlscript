@@ -266,6 +266,45 @@ For some reason Clojure does not support destructuring assignment in `def`
 forms but YS makes it work just fine.
 
 
+## Dotted Assignment
+
+A dotted assignment updates a value inside a collection and rebinds the root
+symbol.
+Bare path names use the existing symbol, string, or keyword key when present.
+A missing bare key is created as a string key.
+
+```yaml
+data.user.name =: 'Alice'
+```
+
+This is equivalent to rebinding `data` with an `assoc-in` call.
+The `std/put` function, also available as `put`, is a synonym for `assoc` when
+only one mapping level needs to be updated explicitly.
+
+A call in the path computes a key from the collection at that point.
+The call is evaluated once.
+
+```yaml
+data.choose-user().name =: 'Alice'
+```
+
+Dotted and plain targets can be mixed in positional assignment.
+All right-hand-side values are evaluated before the targets are updated, and
+repeated roots accumulate their updates from left to right.
+
+```yaml
+a.b c d.e =: f g h
+a.b a.c =: +[f g]
+```
+
+Compound and conditional assignment work with dotted targets too.
+
+```yaml
+scores.alice +=: 10
+scores.alice :if bonus *=: 2
+```
+
+
 ### Function Arguments
 
 Like Clojure, all YS functions must be defined with the number of arguments

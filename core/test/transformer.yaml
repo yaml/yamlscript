@@ -452,3 +452,11 @@
       +[x *y] =: z
   clojure: |
     (defn foo [] (let [[x & y] z]))
+
+
+- name: Dotted assignment root must be a symbol
+  yamlscript: |
+    !ys-0
+    make().value =: 42
+  error: |
+    Dotted assignment root must be a symbol

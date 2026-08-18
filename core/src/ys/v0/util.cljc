@@ -37,6 +37,43 @@
     (die (str "The '" (namespace sym) "' library is not available"
            " in this Clojure runtime"))))
 
+(defn- resolve-assignment-key
+  "Resolve one dotted-assignment key against its current container."
+  [container [kind value]]
+  (case kind
+    :bare
+    (if (map? container)
+      (cond
+        (contains? container value) value
+        (contains? container (str value)) (str value)
+        (contains? container (keyword value)) (keyword value)
+        :else (str value))
+      (str value))
+
+    :call (value container)
+    :value value))
+
+(defn- resolve-assignment-path
+  "Resolve dotted-assignment step descriptors into an exact key path."
+  [root steps]
+  (loop [container root
+         steps (seq steps)
+         path []]
+    (if-let [step (first steps)]
+      (let [key (resolve-assignment-key container step)]
+        (recur (get container key) (next steps) (conj path key)))
+      path)))
+
+(defn assoc-assignment-path
+  "Associate a value at a dotted-assignment path."
+  [root steps value]
+  (assoc-in root (resolve-assignment-path root steps) value))
+
+(defn update-assignment-path
+  "Apply an update function at a dotted-assignment path."
+  [root steps f & args]
+  (apply update-in root (resolve-assignment-path root steps) f args))
+
 (defn pprint*
   "Pretty print x via clojure.pprint when available, else plain prn."
   [x]

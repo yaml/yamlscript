@@ -6,7 +6,7 @@
 
 (ns yamlscript.transformer
   (:require
-   [yamlscript.ast :refer [Lst Sym QSym Vec]]
+   [yamlscript.ast :refer [Key Lst Sym QSym Vec]]
    [ys.v0.common]
    [yamlscript.transformers]
    [ys.v0.dwim])
@@ -94,6 +94,67 @@
                 [form rhs]))]
     (transform-dot {:dot rhs})))
 
+(defn- assignment-path-step
+  "Convert one dotted target segment into a runtime path descriptor."
+  [node]
+  (condf node
+    :QSym (Vec [(Key "bare") node])
+    :Lst (let [ctx (Sym (gensym "container__"))
+               call (dot-list ctx (transform-node node))]
+           (Vec [(Key "call")
+                 (Lst [(Sym 'fn) (Vec [ctx]) call])]))
+    (Vec [(Key "value") (transform-node node)])))
+
+(defn- transform-assignment-target
+  "Normalize one plain or dotted assignment target."
+  [target]
+  (if-let [dots (:dot target)]
+    (let [[root & path] dots
+          _ (when-not (:Sym root)
+              (die "Dotted assignment root must be a symbol"))
+          _ (when-not (seq path)
+              (die "Dotted assignment requires a path"))]
+      {:root root
+       :steps (Vec (mapv assignment-path-step path))})
+    (if (:Sym target)
+      {:root target}
+      (die "Mixed assignment targets must be symbols or dotted paths"))))
+
+(defn transform-assign
+  "Normalize parsed dotted-assignment targets and their condition."
+  [node]
+  (let [assign (:Assign node)]
+    (if (every? :root (:targets assign))
+      node
+      {:Assign
+       (-> assign
+         (update :targets #(mapv transform-assignment-target %1))
+         (update :condition #(when %1 (transform-node %1))))})))
+
+(defn- dot-assignment-updater
+  "Build a unary updater for one `.=` right-hand-side form."
+  [rhs]
+  (let [old (Sym (gensym "value__"))
+        body (if rhs (dot-rhs rhs old) {:Nil nil})]
+    (Lst [(Sym 'fn) (Vec [old]) body])))
+
+(defn- finalize-assignment
+  "Attach `.=` updater functions after both pair sides are transformed."
+  [lhs rhs]
+  (if-lets [assign (:Assign (second lhs))
+            _ (= '. (get-in assign [:operator :Sym]))
+            targets (:targets assign)
+            forms (if (= 1 (count targets))
+                    [rhs]
+                    (when (:Vec rhs) (:Vec rhs)))
+            _ (if forms
+                true
+                (die "Multi-target '.=' requires positional RHS forms"))
+            updaters (mapv dot-assignment-updater
+                       (take (count targets) (concat forms (repeat nil))))]
+    [(assoc-in lhs [1 :Assign :updaters] (Vec updaters)) rhs]
+    [lhs rhs]))
+
 (defn adjust-dot-def
   "Rewrite dot assignment syntax in definition pairs."
   [[lhs rhs]]
@@ -106,6 +167,7 @@
               [def sym dot] lhs
               _ (= 'def (:Sym def))
               _ (= '. (:Sym dot))
+              _ (not (re-find #"\." (str (:Sym sym))))
               _ (if-not (or (map? rhs)
                           (> (count rhs) 1))
                   (die "Invalid dot assignment")
@@ -209,6 +271,9 @@
                         [k v])
                 [k v] (if (= :xmap key)
                         [(transform-child k) (transform-child v)]
+                        [k v])
+                [k v] (if (= :xmap key)
+                        (finalize-assignment k v)
                         [k v])]
             (conj acc k v)))
         [])
@@ -276,6 +341,7 @@
                :xmap (transform-xmap node)
                :fmap (transform-xmap node)  ;; :fmap also uses transform-xmap
                :dmap (transform-dmap node)
+               :Assign (transform-assign node)
                :dot (transform-dot node)
                :Lst (transform-list node)
                :Map (transform-map node)

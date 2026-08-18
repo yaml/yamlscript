@@ -48,6 +48,37 @@
     (let [target (target-node lhs)]
       [target (first rhs) target])))
 
+(defn- assignment-target-forms
+  "Parse one or more assignment targets when any target is dotted."
+  [target]
+  (let [target
+        (if-lets [sym (:Sym target)
+                  text (str sym)
+                  _ (str/includes? text ".")]
+          (yamlscript.ysreader/read-string text)
+          target)]
+    (cond
+      (:Vec target) (:Vec target)
+      (vector? target) target
+      :else [target])))
+
+(defn- dotted-assignment-targets
+  "Return parsed targets when an assignment contains a dotted target."
+  [target]
+  (let [targets (assignment-target-forms target)]
+    (when (some :dot targets)
+      targets)))
+
+(defn- assignment-operator
+  "Normalize an assignment operator to its runtime function."
+  [op]
+  (Sym (or ({'|| 'or
+             '||| 'or?
+             '+ 'add+
+             '* 'mul+
+             '/ 'div+
+             '** 'pow} op) op)))
+
 
 ;;-----------------------------------------------------------------------------
 ;; cond and case
@@ -101,28 +132,33 @@ defn x():
   "Normalize definition forms, including operator update syntax."
   [lhs rhs]
   (let [[target condition fallback] (split-if-target (second lhs))
+        target (or target (second lhs))
         lhs (if condition (assoc lhs 1 target) lhs)
+        targets (dotted-assignment-targets target)
+        rhs (if (and (vector? rhs) (> (count rhs) 1))
+              (Vec rhs)
+              rhs)
         [lhs rhs]
         (cond
+          targets
+          (let [op (when (= 3 (count lhs)) (:Sym (nth lhs 2)))
+                assign {:targets targets
+                        :operator (when op (assignment-operator op))
+                        :condition condition}]
+            [[(first lhs) {:Assign assign}] rhs])
+
           (= 2 (count lhs))
-          (let [rhs (if (and (vector? rhs) (> (count rhs) 1))
-                      (Vec rhs)
-                      rhs)]
-            [lhs rhs])
+          [lhs rhs]
+
           (= 3 (count lhs))
           (let [[a b c] lhs
                 lhs [a b]
                 op (:Sym c)
-                op (Sym (or ({'|| 'or
-                              '||| 'or?
-                              '+ 'add+
-                              '* 'mul+
-                              '/ 'div+
-                              '** 'pow} op) op))
+                op (assignment-operator op)
                 rhs (Lst [op b rhs])]
             [lhs rhs])
           :else [lhs rhs])
-        rhs (if condition
+        rhs (if (and condition (not targets))
               (Lst [(Sym 'if) condition rhs fallback])
               rhs)]
     [lhs rhs]))

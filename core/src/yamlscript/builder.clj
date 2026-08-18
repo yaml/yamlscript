@@ -193,7 +193,8 @@
 (defn destruct-vec
   "Normalize vector destructuring shorthand before expression parsing."
   [s]
-  (let [s (if (re-find (re/re #"(?:^$ysym |\] )") s)
+  (let [s (if (or (str/includes? s " :if ")
+                  (re-find (re/re #"(?:^$ysym |\] )") s))
             (str "[" s "]")
             s)]
     (str/replace s (re/re #"\[(.*)\*($ysym)\s*\]") "[$1 & $2]")))

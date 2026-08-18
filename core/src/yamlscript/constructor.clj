@@ -144,27 +144,114 @@
                     (Lst [(Sym tag) node])))))
       node tags)))
 
+(defn- assignment-node
+  "Return the assignment metadata stored in a definition target."
+  [lhs]
+  (when (vector? lhs)
+    (:Assign (second lhs))))
+
+(defn- binding-rhs
+  "Prepare a binding RHS that contains an expression mapping."
+  [rhs ctx]
+  (if (:xmap rhs)
+    (let [tag (:! rhs)
+          rhs (construct-xmap rhs ctx)
+          rhs (if tag [(construct-tag-call rhs tag)] rhs)]
+      (Lst (get-in rhs [0 :Lst])))
+    rhs))
+
+(defn- assignment-result
+  "Build one root binding for a plain or dotted assignment target."
+  [target value operator condition]
+  (let [{:keys [root steps]} target
+        dot-op (= '. (:Sym operator))
+        result
+        (cond
+          (and steps dot-op)
+          (Lst [(Sym 'ys.v0.util/update-assignment-path)
+                root steps value])
+
+          steps
+          (if operator
+            (Lst [(Sym 'ys.v0.util/update-assignment-path)
+                  root steps operator value])
+            (Lst [(Sym 'ys.v0.util/assoc-assignment-path)
+                  root steps value]))
+
+          dot-op
+          (Lst [value root])
+
+          operator
+          (Lst [operator root value])
+
+          :else value)
+        result (if condition
+                 (Lst [(Sym 'if) condition result root])
+                 result)]
+    [root result]))
+
+(defn- positional-value
+  "Select one value from a captured positional assignment RHS."
+  [values index]
+  (Lst [(Sym 'nth) values {:Int index} {:Nil nil}]))
+
+(defn- assignment-bindings
+  "Expand a dotted or mixed assignment into ordinary let bindings."
+  [assign rhs ctx]
+  (let [{:keys [condition operator targets updaters]} assign
+        count-targets (count targets)
+        multi? (> count-targets 1)
+        dot-op (= '. (:Sym operator))
+        condition-sym (when condition (Sym (gensym "condition__")))
+        values-sym (when multi? (Sym (gensym "values__")))
+        rhs (binding-rhs rhs ctx)
+        values-node (if dot-op updaters rhs)
+        values-node (if (and condition (not dot-op))
+                      (Lst [(Sym 'when) condition-sym values-node])
+                      values-node)
+        prefix (cond-> []
+                 condition
+                 (conj condition-sym condition)
+
+                 multi?
+                 (conj values-sym values-node))
+        bindings
+        (mapcat
+          (fn [index target]
+            (let [value (if multi?
+                          (positional-value values-sym index)
+                          (if dot-op (first (:Vec updaters)) rhs))]
+              (assignment-result target value operator condition-sym)))
+          (range) targets)]
+    (vec (concat prefix bindings))))
+
+(defn- normal-let-bindings
+  "Expand leading definition pairs into one flat let binding vector."
+  [lets ctx]
+  (vec
+    (mapcat
+      (fn [[lhs rhs]]
+        (if-let [assign (assignment-node lhs)]
+          (assignment-bindings assign rhs ctx)
+          [(second lhs) (binding-rhs rhs ctx)]))
+      lets)))
+
+(defn- construct-top-assignment
+  "Construct a top-level dotted assignment without leaking temporaries."
+  [assign rhs ctx]
+  (let [bindings (assignment-bindings assign rhs ctx)
+        roots (distinct (map :root (:targets assign)))
+        defs (mapv #(Lst [(Sym 'def) %1 %1]) roots)
+        form (Lst (vec (concat [(Sym 'let) (Vec bindings)] defs)))]
+    (construct-node form ctx)))
+
 (defn apply-let-bindings
   "Turn leading def pairs into a Clojure let form."
   [lets rest ctx]
   [[(Sym "let")
     (vec
       (concat
-        [(Vec (->>
-                lets
-                flatten
-                (remove #(= {:Sym 'def} %1))
-                ;; Handle RHS is mapping
-                (partition 2)
-                (map #(let [[k v] %1]
-                        (if (:xmap v)
-                          (let [t (:! v)
-                                v (construct-xmap v ctx)
-                                v (if t [(construct-tag-call v t)] v)]
-                            [k (Lst (get-in v [0 :Lst]))])
-                          %1)))
-                (mapcat identity)
-                vec))]
+        [(Vec (normal-let-bindings lets ctx))]
         (construct-xmap {:xmap (mapcat identity rest)} ctx)))]])
 
 (defn check-let-bindings
@@ -197,6 +284,7 @@
                               xmap)
                        [[lhs rhs] & xmap] xmap
                        _ (validate-operator-pair lhs rhs)
+                       assign (assignment-node lhs)
                        lhs (if (and
                                  (= 2 (count lhs))
                                  (= {:Sym 'def} (first lhs))
@@ -211,12 +299,16 @@
                        [fmap lhs] (if (get-in lhs [:form])
                                     [true (:form lhs)]
                                     [false lhs])
-                       lhs (construct-side lhs ctx)
-                       rhs (construct-side rhs ctx)
-                       rhs (or (:fmap rhs) rhs)
-                       new (if fmap
+                       new
+                       (if assign
+                         (conj new
+                           (construct-top-assignment assign rhs ctx))
+                         (let [lhs (construct-side lhs ctx)
+                               rhs (construct-side rhs ctx)
+                               rhs (or (:fmap rhs) rhs)]
+                           (if fmap
                              (conj new lhs rhs)
-                             (conj new (construct-call [lhs rhs])))]
+                             (conj new (construct-call [lhs rhs])))))]
                    (recur xmap, new))
                  new))]
     node))
