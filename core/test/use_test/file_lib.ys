@@ -1,0 +1,6 @@
+!ys-0
+
+ns: use-test::file-lib
+
+defn file-one(): 3
+defn file-two(): 4

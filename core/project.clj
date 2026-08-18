@@ -21,6 +21,7 @@
    [org.clojure/data.csv "1.1.0"]
    [org.clojure/data.json "2.4.0"]
    [clj-commons/clj-yaml "1.0.27"]
+   [cc.clojure/grenadine "0.1.7"]
    [org.flatland/ordered "1.15.11"]
    [org.snakeyaml/snakeyaml-engine "2.7"]
    [babashka/babashka.pods "0.2.0"]

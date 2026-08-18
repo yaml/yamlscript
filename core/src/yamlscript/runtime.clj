@@ -31,6 +31,7 @@
    [ys.v0]
    [ys.v0.common :as common]
    [ys.v0.debug]
+   [yamlscript.deps :as deps]
    [yamlscript.global :as global]
    [ys.v0.manifest :as manifest]
    [ys.v0.re :as re]
@@ -253,7 +254,9 @@
 (reset! global/sci-ctx
   (sci/init
     {:namespaces namespaces
-     :classes classes}))
+     :classes classes
+     :features #{:clj}
+     :load-fn deps/load-fn}))
 
 (defn- normalize-os
   "Return the stable YS name for the host operating system."
