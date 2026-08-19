@@ -37,7 +37,7 @@ Options:
   -T, --to FORMAT          Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, jolt, glj
+                             bb, clj, compat
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -U, --unordered          Mappings don't preserve key order (faster)

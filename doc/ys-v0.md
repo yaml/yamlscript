@@ -12,8 +12,7 @@ To do that, the compiled code needs the YS standard library.
 It is published to Clojars as
 [`org.yamlscript/ys.v0`](https://clojars.org/org.yamlscript/ys.v0).
 
-Use the `-T` / `--to` option with a code target (`bb`, `clj`, `jolt` or
-`glj`)
+Use the `-T` / `--to` option with a code target (`bb`, `clj` or `compat`)
 and ys will compile (no `-c` needed; a code target implies it) with this
 header added to the output:
 
@@ -22,7 +21,7 @@ header added to the output:
 (ys.v0/init)
 ```
 
-plus a target specific form that resolves the ys.v0 dependency at run
+plus a target-specific form that resolves the ys.v0 dependency at run
 time.
 
 The `ys.v0/init` call sets up the namespace to work like the ys runtime:
@@ -31,8 +30,9 @@ The `ys.v0/init` call sets up the namespace to work like the ys runtime:
 * The YS namespace aliases (`str/`, `json/`, `fs/`, etc) are set up
 * The YS runtime variables (`ARGS`, `ENV`, `FILE`, `CWD`, etc) are bound
 
-The same compiled file still runs under ys itself (`ys -C file.clj`),
-where the header is a no-op.
+The `bb` and `clj` compiled files still run under ys itself
+(`ys -C file.clj`), where their dependency headers are no-ops.
+The `compat` header requires a runtime that supplies `clojurestar.deps`.
 
 
 ## Babashka
@@ -42,17 +42,14 @@ $ ys -T bb program.ys | bb /dev/stdin
 ```
 
 The `-T bb` header form (active only under Babashka; it does nothing on
-other runtimes) puts the `ys.v0` jar and its `data.json` dependency on the
-classpath with `babashka.classpath/add-classpath` when they are already in
-`~/.m2`, and otherwise fetches them with `babashka.deps/add-deps`.
-The `add-classpath` path needs no `java` at all; the `add-deps` fallback
-runs `java` once to resolve the dependencies from Clojars.
+other runtimes) puts the `ys.v0` jar on the classpath from `~/.m2` with
+`babashka.classpath/add-classpath`.
+It does not run a dependency resolver and needs no `java`.
 
-Installing a ys release also installs those two jars into your
-`~/.m2/repository`, so the java free path works out of the box.
-The jars are bundled in the release archive; `make install` skips them
-when run as root (system installs), and you can install them per user at
-any time with:
+Installing a ys release also installs this jar into your `~/.m2/repository`,
+so the java free path works out of the box.
+The jar is bundled in the release archive; `make install` skips it when run as
+root (system installs), and you can install it per user at any time with:
 
 ```bash
 $ ys-sh-0.2.29 --install-m2
@@ -93,45 +90,28 @@ $ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.29"}}}' \
 ```
 
 
-## Jolt
+## Compatible Clojure Runtimes
 
-Jolt is a new Clojure dialect hosted on Chez Scheme.
+The `compat` target generates one program for Jolt, Glojure and Gobb.
 
 ```bash
-$ ys -T jolt program.ys > program.clj
+$ ys -T compat program.ys > program.clj
 $ jolt program.clj
-```
-
-The `-T jolt` header form resolves the ys.v0 dependency with
-`jolt.deps/add-deps` when running under jolt. Jolt uses Grenadine to build
-the effective Maven POM and resolve transitive dependencies without Java.
-The header also adds jolt's own
-libyaml based yaml library so the YS yaml functions work natively.
-
-
-## Glojure
-
-[Glojure](https://github.com/glojurelang/glojure) is a Clojure dialect
-implemented in Go.
-This needs a Glojure release newer than 0.6.8 (where `ns-unmap` was
-broken).
-
-```bash
-$ ys -T glj program.ys > program.clj
 $ glj program.clj
+$ gobb program.clj
 ```
 
-Glojure loads plain Clojure source from a load path (no jars). Its
-Grenadine-backed `glojure.deps` API resolves ys.v0 and its transitive Maven
-dependencies, installs them into `GRENADINE_LOCAL_REPOSITORY` (or the normal
-`~/.m2/repository` default), safely extracts the required ys.v0 source root,
-and appends it to the load path. This is implemented by the self-contained
-`glj` binary and does not require Java.
+The generated dependency header is:
 
-Backend libraries (json, yaml, shell, http, fs) don't exist on glojure
-yet, so those YS functions fail with a clear message there; ordered
-maps fall back to array-map (insertion order is kept for literals of
-any size, and lost when assoc grows a map past eight entries).
+```clojure
+(require '[clojurestar.deps :as deps])
+(deps/add-deps
+ '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.29"}}})
+```
+
+These runtimes supply the dialect-neutral `clojurestar.deps` API.
+It resolves ys.v0 and its transitive Maven dependencies, then adds the
+required source roots to the running dialect.
 
 
 ## Limitations
@@ -147,11 +127,11 @@ On other runtimes they fail with a clear error message:
 * `new` — reflective constructor calls (works on JVM Clojure but not
   Babashka)
 
-The yaml, json, http, shell and ordered map functions resolve their
-backend libraries (clj-yaml, data.json, http-client, process, flatland
-ordered) lazily at first call, so the library loads even on runtimes
-that can't load those backends (like jolt, currently); the functions
-themselves fail with a clear message there.
+The yaml, json, http, shell and ordered map functions resolve their backend
+libraries (clj-yaml, data.json, http-client, process, flatland ordered) lazily
+at first call.
+The library still loads on runtimes that cannot load those backends; the
+functions themselves fail with a clear message there.
 
 Data documents (which ys prints as YAML output) are evaluated but not
 printed when running compiled code on other runtimes.

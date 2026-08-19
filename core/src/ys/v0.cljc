@@ -2,8 +2,8 @@
 ;; This code is licensed under MIT license (See License for details)
 
 ;; The ys.v0 namespace makes code compiled by `ys -T clj` (and the other
-;; code targets) runnable by plain Clojure runtimes like babashka, JVM
-;; Clojure, jolt and glojure. Compiled programs start with:
+;; code targets) runnable by plain Clojure runtimes like Babashka, JVM
+;; Clojure, Jolt, Glojure and Gobb. Compiled programs start with:
 ;;
 ;;   (ns main (:require ys.v0))
 ;;   (ys.v0/init)

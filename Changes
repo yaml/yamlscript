@@ -7,6 +7,9 @@
   - Fix ysj to keep build output off stdout
   - Move YS stdlib into portable ys.v0 namespaces
   - Publish ys.v0 and add -T runtime code targets
+  - ys: Replace -T jolt/glj targets with -T compat
+  - ys: Make -T bb dependency loading always Java-free
+  - ys: Remove data.json from the -T bb bootstrap
 - version: 0.2.28
   date:    Wed Jul 15 05:07:34 PM EDT 2026
   changes:

@@ -23,23 +23,14 @@ do-upgrade() (
   curl -sS https://yamlscript.org/install | bash
 )
 
-# Install the jars that java free 'ys -T bb' scripts load from ~/.m2
-# under babashka. Source loading runtimes ('ys -T glj' output under
-# glojure) read the ys.v0 sources from the extracted <jar>.d directory
-# created here:
+# Install the ys.v0 jar that java free 'ys -T bb' scripts load from ~/.m2.
+# Source loading runtimes ('ys -T compat' output) read its sources from the
+# extracted <jar>.d directory created here:
 do-install-m2() (
-  # Keep in sync with v0/project.clj:
-  data_json_version=2.4.0
-
   install-m2-file \
     "org/yamlscript/ys.v0/$yamlscript_version" \
     "ys.v0-$yamlscript_version" \
     'https://repo.clojars.org'
-
-  install-m2-file \
-    "org/clojure/data.json/$data_json_version" \
-    "data.json-$data_json_version" \
-    'https://repo1.maven.org/maven2'
 
   jar=$HOME/.m2/repository/org/yamlscript/ys.v0
   jar+=/$yamlscript_version/ys.v0-$yamlscript_version.jar

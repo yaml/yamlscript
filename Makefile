@@ -174,13 +174,10 @@ LYS-JAR-PATH := libys/target/libys-$(YS_VERSION)-standalone.jar
 YS-JAR-PATH := \
     ys/target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
 
-# The m2 jars bundled into the ys release package so that `make install`
-# can place them in the user's ~/.m2 for java free `ys -c --deps=+bb`:
-DATA-JSON-VERSION := \
-    $(shell sed -n 's/.*data.json "\(.*\)".*/\1/p' v0/project.clj)
+# The m2 jar bundled into the ys release package so that `make install`
+# can place it in the user's ~/.m2 for java free `ys -T bb` output:
 MAKES-M2 := .cache/.local/home/.m2/repository
 V0-M2-DIR := $(MAKES-M2)/org/yamlscript/ys.v0/$(YS_VERSION)
-DATA-JSON-M2-DIR := $(MAKES-M2)/org/clojure/data.json/$(DATA-JSON-VERSION)
 
 YS-RELEASE := $(RELEASE-YS-NAME).$(RELEASE-EXT)
 LYS-RELEASE := $(RELEASE-LYS-NAME).$(RELEASE-EXT)
@@ -642,10 +639,8 @@ $(YS-RELEASE): $(RELEASE-YS-NAME)
 	cp common/install.mk $</Makefile
 ifneq ($(OS-NAME),windows)
 	$(MAKE) -C v0 install
-	mkdir -p $</m2/repository/org/yamlscript/ys.v0 \
-	  $</m2/repository/org/clojure/data.json
+	mkdir -p $</m2/repository/org/yamlscript/ys.v0
 	cp -pR $(V0-M2-DIR) $</m2/repository/org/yamlscript/ys.v0/
-	cp -pR $(DATA-JSON-M2-DIR) $</m2/repository/org/clojure/data.json/
 endif
 ifeq ($(OS-NAME),windows)
 	$(TIME) zip -r $@ $<

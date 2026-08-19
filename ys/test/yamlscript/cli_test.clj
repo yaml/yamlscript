@@ -77,7 +77,9 @@
     "-l in code mode")
 
   (has (ys "--to=foo")
-    "must be one of: json, yaml, csv, tsv, edn"
+    (str "must be one of:\n"
+      "  json, yaml, csv, tsv, edn (for --load)\n"
+      "  bb, clj, compat (for --compile)")
     "Validate --to=...")
 
   (has (ys "-J" "-Y" "...")
