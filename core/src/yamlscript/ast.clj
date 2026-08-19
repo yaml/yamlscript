@@ -30,6 +30,10 @@
   "Wrap forms in a tuple AST node used for grouped tokens."
   [list] {:Tup (vec list)})
 
+(defn Splat
+  "Wrap an expression that should be spread into its containing form."
+  [node] {:Splat node})
+
 (defn Set
   "Wrap forms in a set AST node."
   [list] {:Set (vec list)})

@@ -314,6 +314,21 @@ Functions can be written to take different specific numbers of arguments, where
 each arity has its own definition body.
 Functions can also be written to take a variable number of arguments.
 
+A trailing `*` spreads a value into a function call.
+It can be attached to a symbol, a call, or any parenthesized expression.
+
+```yaml
+add: nums*
+add: (1 .. 4)*
+add: make-nums()*
+```
+
+Splat expressions can appear between regular arguments.
+
+```yaml
+call: first make-middle()* last
+```
+
 Multi-arity functions are called with the same name but the number of arguments
 used determines which body is evaluated.
 

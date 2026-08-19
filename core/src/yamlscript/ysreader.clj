@@ -10,7 +10,7 @@
    [clojure.walk :as walk]
    [yamlscript.ast :as ast :refer
     [Bln Chr Form Key Lst Map Nil Num
-     QSym Qts Rgx Set Spc Str Sym Tok Tup Vec]]
+     QSym Qts Rgx Set Spc Splat Str Sym Tok Tup Vec]]
    [ys.v0.common]
    [yamlscript.global :as global]
    [yamlscript.re :as re])
@@ -188,6 +188,7 @@
       $dstr |                 # Double quoted string token
       $sstr |                 # Single quoted string token
                               # Other tokens
+      [\)\]\}]\* |             # Collection or call splat ending
       .                         # Single character tokens
     )"))
 
@@ -308,7 +309,11 @@
   [expr]
   (if-lets [list (or (get-in expr [0 :Lst]) expr)
             _ (= (first list) {:Sym '_dot_})]
-    [{:dot (vec (rest list))}]
+    (let [dots (vec (rest list))
+          splat (:Splat (peek dots))
+          dots (if splat (conj (pop dots) splat) dots)
+          node {:dot dots}]
+      [(if splat (Splat node) node)])
     expr))
 
 (def sep (Sym '.))
@@ -417,8 +422,10 @@
     (when (not (seq tokens))
       (die "Unexpected end of input"))
 
-    (if (= (first tokens) end)
-      (let [list (if (= type Lst)
+    (let [token (first tokens)
+          splat? (= token (str end "*"))]
+      (if (or (= token end) splat?)
+        (let [list (if (= type Lst)
                    (let [list (group-dots list)
                          forms (yes-expr list)]
                      (if sym
@@ -426,10 +433,11 @@
                          [sym (Form forms)]
                          (cons sym forms))
                        forms))
-                   (group-dots list))]
-        [(type list) (rest tokens)])
-      (let [[form tokens] (read-form tokens)]
-        (recur tokens (if form (conj list form) list))))))
+                   (group-dots list))
+              node (type list)]
+          [(if splat? (Splat node) node) (rest tokens)])
+        (let [[form tokens] (read-form tokens)]
+          (recur tokens (if form (conj list form) list)))))))
 
 ;; TODO do in one call
 (defn str-unescape

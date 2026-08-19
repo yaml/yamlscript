@@ -19,7 +19,8 @@
   construct-xmap
   declare-undefined
   maybe-call-main
-  maybe-trace)
+  maybe-trace
+  validate-splats)
 
 (defn construct-ast
   "Construct YAMLScript AST nodes into a top-level Clojure AST."
@@ -29,6 +30,7 @@
     (#(if (vector? %1)
         %1
         [%1]))
+    validate-splats
     (hash-map :Top)
     declare-undefined
     maybe-call-main))
@@ -55,19 +57,32 @@
   [value]
   (re-matches re/splt (str value)))
 
+(defn splat-node?
+  "Return true when an AST node represents a splatted expression."
+  [node]
+  (or (:Splat node)
+      (is-splat? (:Sym node))))
+
+(defn unsplat-node
+  "Return the expression wrapped by a splat AST node."
+  [node]
+  (or (:Splat node)
+      (when-let [value (:Sym node)]
+        (when (is-splat? value)
+          (Sym (apply str (butlast (str value))))))))
+
 (defn expand-splats
   "Rewrite splat arguments into an apply call when needed."
   [nodes]
-  (if (some #(is-splat? (:Sym %1)) nodes)
+  (if (some splat-node? (rest nodes))
     (let [[fun & nodes] nodes]
       (loop [nodes nodes new [] splats []]
         (if (seq nodes)
           (let [[node & nodes] nodes
-                val (str (:Sym node))
                 [new splats] (if (or (seq splats)
-                                   (is-splat? val))
-                               (let [node (if (is-splat? val)
-                                            (Sym (apply str (butlast val)))
+                                   (splat-node? node))
+                               (let [node (if (splat-node? node)
+                                            (unsplat-node node)
                                             (Vec [node]))]
                                  [new (conj splats node)])
                                [(conj new node) splats])]
@@ -475,7 +490,8 @@
   (or
     (construct-vec-dmap node ctx)
     (let [{nodes :Vec} node
-          nodes (expand-splats nodes)
+          _ (when (some splat-node? nodes)
+              (die "Splat expression must be used in a call"))
           nodes (map #(construct-node %1 ctx) nodes)]
       {:Vec (-> nodes flatten vec)})))
 
@@ -483,7 +499,7 @@
   "Construct a collection node using the requested AST key."
   [node ctx key]
   (let [{nodes key} node
-        nodes (expand-splats nodes)
+        nodes (if (= key :Lst) (expand-splats nodes) nodes)
         nodes (map #(construct-node %1 ctx) nodes)]
     {key (-> nodes flatten vec)}))
 
@@ -518,6 +534,20 @@
   [node]
   (Lst [(Sym '_**) (Qts (:Ali node))]))
 
+(defn construct-splat
+  "Construct a splat expression while preserving its spread marker."
+  [node ctx]
+  (update node :Splat #(construct-node %1 ctx)))
+
+(defn validate-splats
+  "Reject splat markers left outside a call or vector."
+  [node]
+  (walk/prewalk
+    #(if (:Splat %1)
+       (die "Splat expression must be used in a call")
+       %1)
+    node))
+
 (defn construct-interop-call
   "Construct Java interop shorthand into a Clojure call."
   [node]
@@ -546,6 +576,7 @@
                 :Lst (construct-coll node ctx :Lst)
                 :ali (construct-alias node)
                 :Ali (construct-stream-alias node)
+                :Splat (construct-splat node ctx)
                 ,      node)
          node (if anchor
                 (let [node (if (vector? node)

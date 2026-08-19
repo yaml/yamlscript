@@ -1068,6 +1068,34 @@
     (apply foo (concat bar [baz]))
 
 
+- name: Splatted expression arguments
+  yamlscript: |
+    !ys-0
+    =>: add((1 .. 4)*)
+    =>: foo(a bar()* c)
+    =>: foo(obj.bar()* c)
+  clojure: |
+    (apply add (rng 1 4))
+    (apply foo a (concat (bar) [c]))
+    (apply foo (concat (bar obj) [c]))
+
+
+- name: Splat expression requires a containing form
+  yamlscript: |
+    !ys-0
+    =>: (1 .. 4)*
+  error: |
+    Splat expression must be used in a call
+
+
+- name: Splat expression not allowed in a vector
+  yamlscript: |
+    !ys-0
+    =>: +[a (1 .. 4)* b]
+  error: |
+    Splat expression must be used in a call
+
+
 - name: String escapes
   yamlscript: |
     rgx: |

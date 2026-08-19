@@ -96,3 +96,11 @@
     =>: a
   eval: |
     {"n" 5, "items" {"x" 1, "y" 2}}
+
+
+- name: Splat expression and vector values
+  ys: |
+    defn numbers(): 3 .. 4
+    =>: +[add((1 .. 4)*) add(numbers()*)]
+  eval: |
+    [10 7]

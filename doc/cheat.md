@@ -114,6 +114,10 @@ greet('Bob')
 greet:              # Map pair call variations
 greet: 'Bob'
 greet 'Bob':
+
+add: nums*           # Splat a variable into call arguments
+add: (1 .. 4)*       # Splat any parenthesized expression
+foo: make-args()*    # Splat a call result
 ```
 
 

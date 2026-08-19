@@ -329,6 +329,11 @@
       transform-node
       (:Vec node))))
 
+(defn transform-splat
+  "Transform the expression contained by a postfix splat."
+  [node]
+  (update node :Splat transform-node))
+
 ; TODO:
 ; Turn :xmap mappings into :fmap groups when appropriate.
 
@@ -346,6 +351,7 @@
                :Lst (transform-list node)
                :Map (transform-map node)
                :Vec (transform-vec node)
+               :Splat (transform-splat node)
                node)
         node (if anchor (assoc node :& anchor) node)
         node (if tag (assoc node :! tag) node)]
