@@ -1,3 +1,20 @@
+- version: 0.2.30
+  date:    Wed Aug 19 03:50:13 PM EDT 2026
+  changes:
+  - raku: Fix unattended releases
+  - ada: Mark Alire releases ready for review
+  - ai: Update YAMLScript skill and linter rules
+  - core: Add do semantics to cond-like bodies
+  - core: Generalize do semantics for form maps
+  - core: Fix percent operator and argument syntax
+  - core: Validate binary operator pair arguments
+  - ys: Migrate remaining anonymous arguments
+  - core: Align require syntax with use
+  - core: Complete use dependency loading
+  - core: Add dotted assignment semantics
+  - core: Generalize splat call arguments
+  - core: Support splatted colon chains
+  - core: Support underscore operands in expression pairs
 - version: 0.2.29
   date:    Sun Jul 19 07:28:04 PM EDT 2026
   changes:

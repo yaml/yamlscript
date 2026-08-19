@@ -34,7 +34,7 @@ library:
 ```toml
 [dependencies.yamlscript]
 git = "https://github.com/yaml/yamlscript-fortran"
-tag = "v0.2.29"
+tag = "v0.2.30"
 ```
 
 ```bash

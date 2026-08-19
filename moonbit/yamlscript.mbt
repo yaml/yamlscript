@@ -1,5 +1,5 @@
 ///|
-pub const VERSION = "0.2.29"
+pub const VERSION = "0.2.30"
 
 ///|
 pub suberror YAMLScriptError {

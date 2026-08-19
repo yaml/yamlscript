@@ -2,7 +2,7 @@
 
 use ys::taptest: :all
 
-VERSION =: '0.2.29'
+VERSION =: '0.2.30'
 
 ROOT =: +"$DIR/../.."
 
@@ -86,7 +86,7 @@ test::
                (.setContextClassLoader t cl)
                (with-bindings {(requiring-resolve 'clojure.core/*repl*) true}
                  ((requiring-resolve 'clojure.repl.deps/add-libs)
-                  '{org.yamlscript/ys.v0 {:mvn/version "0.2.29"}}))
+                  '{org.yamlscript/ys.v0 {:mvn/version "0.2.30"}}))
                (with-bindings {clojure.lang.Compiler/LOADER cl}
                  (require 'ys.v0)
                  (doseq [lib '[flatland.ordered.map clj-yaml.core
@@ -102,13 +102,13 @@ test::
   want: |
     (when (System/getProperty "babashka.version")
       (let [m2 (str (System/getProperty "user.home") "/.m2/repository/")
-            jars [(str m2 "org/yamlscript/ys.v0/0.2.29/ys.v0-0.2.29.jar")
+            jars [(str m2 "org/yamlscript/ys.v0/0.2.30/ys.v0-0.2.30.jar")
                   (str m2 "org/clojure/data.json/2.4.0/data.json-2.4.0.jar")]]
         (if (every? #(.exists (java.io.File. %)) jars)
           ((requiring-resolve 'babashka.classpath/add-classpath)
            (clojure.string/join java.io.File/pathSeparator jars))
           ((requiring-resolve 'babashka.deps/add-deps)
-           '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.29"}}}))))
+           '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.30"}}}))))
     (ns main (:require ys.v0))
     (ys.v0/init)
 
@@ -118,7 +118,7 @@ test::
   want: |
     (when (System/getProperty "jolt.version")
       ((requiring-resolve 'jolt.deps/add-deps)
-       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.29"}
+       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.30"}
                 io.github.jolt-lang/yaml
                 {:git/url "https://github.com/jolt-lang/yaml.git"
                  :git/sha "348ff807899042317db3a1169002c6fec7be2194"}}}))
@@ -134,7 +134,7 @@ test::
        (or (System/getenv "YS_V0_PATH")
            (str (System/getenv "HOME")
                 "/.m2/repository/org/yamlscript/ys.v0/"
-                "0.2.29/ys.v0-0.2.29.jar.d"))))
+                "0.2.30/ys.v0-0.2.30.jar.d"))))
     (ns main (:require ys.v0))
     (ys.v0/init)
 

@@ -55,7 +55,7 @@ when run as root (system installs), and you can install them per user at
 any time with:
 
 ```bash
-$ ys-sh-0.2.29 --install-m2
+$ ys-sh-0.2.30 --install-m2
 ```
 
 (Homebrew installs print this as a caveat, since brew cannot write to
@@ -88,7 +88,7 @@ You can also skip the runtime resolution by providing the dependency
 yourself:
 
 ```bash
-$ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.29"}}}' \
+$ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.30"}}}' \
     -M program.clj
 ```
 

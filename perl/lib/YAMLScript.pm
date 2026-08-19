@@ -17,7 +17,7 @@ my $json = eval {
     JSON::PP->new;
 };
 
-our $VERSION = '0.2.29';
+our $VERSION = '0.2.30';
 
 our $libys_version = $VERSION;
 

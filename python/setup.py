@@ -1,7 +1,7 @@
 import pathlib
 from setuptools import setup
 
-version = '0.2.29'
+version = '0.2.30'
 
 root = pathlib.Path(__file__).parent.resolve()
 
