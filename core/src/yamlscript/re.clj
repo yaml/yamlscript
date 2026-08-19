@@ -194,6 +194,7 @@
                       $symw [+?!]?
                     )
                   )+
+                  \*?
                 )"))
 
 ;; Pair key for def/let call

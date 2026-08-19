@@ -321,6 +321,7 @@ It can be attached to a symbol, a call, or any parenthesized expression.
 add: nums*
 add: (1 .. 4)*
 add: make-nums()*
+add: nums:reverse*
 ```
 
 Splat expressions can appear between regular arguments.

@@ -118,6 +118,7 @@ greet 'Bob':
 add: nums*           # Splat a variable into call arguments
 add: (1 .. 4)*       # Splat any parenthesized expression
 foo: make-args()*    # Splat a call result
+sub: nums:reverse*   # Splat a colon-chain call result
 ```
 
 

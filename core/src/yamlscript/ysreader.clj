@@ -211,7 +211,9 @@
 (defn split-colon-calls
   "Expand a colon-call token into dot-call token pieces."
   [token]
-  (let [tokens (str/split token #":")
+  (let [splat? (str/ends-with? token "*")
+        token (if splat? (subs token 0 (dec (count token))) token)
+        tokens (str/split token #":")
         [token1 token2 & xtokens] tokens
         [start tokens] (if (re-find #"\.$" token1)
                          [[(-> token1 butlast str/join)
@@ -222,10 +224,13 @@
         start (if (re-find #"_." (first start))
                 [(str \" (first start) \")]
                 start)]
-    (reduce
-      #(conj %1 "." (str %2 "(") ")")
-      start
-      tokens)))
+    (let [result (reduce
+                   #(conj %1 "." (str %2 "(") ")")
+                   start
+                   tokens)]
+      (if splat?
+        (update result (dec (count result)) str "*")
+        result))))
 
 (defn get-special-expansion
   "Return special expansion for the current context."

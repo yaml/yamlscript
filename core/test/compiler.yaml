@@ -1074,10 +1074,12 @@
     =>: add((1 .. 4)*)
     =>: foo(a bar()* c)
     =>: foo(obj.bar()* c)
+    sub: (1 .. 10):reverse*
   clojure: |
     (apply add (rng 1 4))
     (apply foo a (concat (bar) [c]))
     (apply foo (concat (bar obj) [c]))
+    (apply sub (reverse (rng 1 10)))
 
 
 - name: Splat expression requires a containing form

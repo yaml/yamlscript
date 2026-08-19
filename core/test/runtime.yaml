@@ -101,6 +101,6 @@
 - name: Splat expression and vector values
   ys: |
     defn numbers(): 3 .. 4
-    =>: +[add((1 .. 4)*) add(numbers()*)]
+    =>: +[add((1 .. 4)*) add(numbers()*) sub((1 .. 10):reverse*)]
   eval: |
-    [10 7]
+    [10 7 -35]
