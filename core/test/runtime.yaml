@@ -104,3 +104,17 @@
     =>: +[add((1 .. 4)*) add(numbers()*) sub((1 .. 10):reverse*)]
   eval: |
     [10 7 -35]
+
+
+- name: YeS expression pair topic
+  ys: |
+    defn choose(x):
+      _ ||| x:
+        str: x
+    sum =:
+      3 + _: 4
+    double =:
+      _ + _: 4
+    =>: +[choose(0) choose(2) sum double]
+  eval: |
+    ["0" "2" 7 8]

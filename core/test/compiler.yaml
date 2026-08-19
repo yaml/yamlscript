@@ -1476,8 +1476,15 @@
     reduce _ [] (1 .. 10):
       fn(a b):
         conj a: b * 10
+    _ ||| x:
+      foo: bar
+    3 + _: 4
+    _ + _: 4
   clojure: |
     (reduce (fn [a b] (conj a (mul+ b 10))) [] (rng 1 10))
+    (or? (foo bar) x)
+    (add+ 3 4)
+    (add+ 4 4)
 
 
 - name: Form with dot on LHS

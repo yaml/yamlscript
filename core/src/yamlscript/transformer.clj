@@ -211,12 +211,15 @@
 (defn swap-underscores
   "Replace underscore placeholders in a left side with the right side."
   [lhs rhs]
-  (if-lets [_ (get-in lhs [0 :Sym])
-            _ (some (partial = {:Sym '_}) lhs)
-            _ (map? rhs)
-            lhs (vec (map #(if (= {:Sym '_} %1) rhs %1) lhs))]
-    [lhs []]
-    [lhs rhs]))
+  (let [forms (if-let [forms (:Lst lhs)]
+                (when (>= (count forms) 3) forms)
+                (when (vector? lhs) lhs))]
+    (if-lets [_ (get-in forms [0 :Sym])
+              _ (some (partial = {:Sym '_}) forms)
+              _ (map? rhs)
+              forms (vec (map #(if (= {:Sym '_} %1) rhs %1) forms))]
+      [forms []]
+      [lhs rhs])))
 
 (defn apply-transformer
   "Run a named special-form transformer when one exists."

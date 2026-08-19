@@ -173,6 +173,15 @@ reduce _ 0 (1 2 3):
 
 The `_` is a placeholder for the defined function argument.
 Use `_` when the function argument is too long to write in place.
+It can also replace an operand in a YeS operator expression.
+
+```
+3 + _:
+  get-number()
+
+_ ||| fallback:
+  make-value()
+```
 
 
 ### Conditional (if/else)

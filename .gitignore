@@ -23,6 +23,7 @@
 /work/
 /ys-*
 /.tmp/
+/.jolt/
 /.local/
 
 .calva/
