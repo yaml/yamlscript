@@ -71,8 +71,8 @@ support, and docs:
    pattern), `then: nil` / `else: nil` vs `when` / `when-not`,
    direct `then: false` under `if` as a candidate for reversed
    `when`, a zero-arg method
-   `x.foo()` vs the colon chain `x:foo`, a trailing `=>:` whose value is
-   a call / method-chain / spaced binary op vs a pair form
+   `x.foo()` vs the colon chain `x:foo`, a `=>:` whose value is a call /
+   colon-chain / dot-chain / spaced binary op vs a pair form
    (`f: args` / `x: .m(a)` / `a OP: b`), a direct `=>:` child under
    an `if` block vs `then:` / `else:`, `say: ''` vs bare `say:`,
    `x.join(' ')` vs the colon chain `x:joins`,
@@ -240,9 +240,12 @@ if done?:
 
 1. **Function call** → fn-call pair `name: args`
    - `=>: f(a b)` → `f: a b`
+   - `=>: vec(out)` → `vec: out`
+   - `=>: foo()` → `foo:`
    - `=>: recur(i.++ b nx)` → `recur: i.++ b nx`
    - `=>: V+(re im)` → `V+: re im`
-2. **Method chain** → chain-pair `receiver: .method(args)`
+2. **Dot/property or method chain** → chain-pair `receiver: .member`
+   - `=>: x.y` → `x: .y`
    - `=>: a.b(c).d(e)` → `a: .b(c).d(e)`
    - `=>: row.assoc(w best)` → `row: .assoc(w best)`
    - `=>: meta.from.split('/wiki/').$` → `meta.from: .split('/wiki/').$`
@@ -259,6 +262,7 @@ is a trailing `=>: result` folds into a single trailing pair:
 
 **Colon-chains must convert to dot-chains in chain-pair position** —
 chain-pair only supports a leading `.`:
+- `=>: out:V` → `vec: out`
 - `=>: stack:pop:pop.conj(x)` → `stack: .pop().pop().conj(x)`
 
 **Op-pair / pair-form quirks**:

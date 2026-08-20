@@ -54,13 +54,18 @@ AND-CALL-RE =: /\sand\(/
 # (their own rules suggest .0/.$).
 ZERO-ARG-RE =:
   /(\w[\w-]*)\.(?!first\(\)|last\(\))([a-z][\w?!-]*)\(\)/
-# A trailing =>: whose value is a restructurable compound expression.
+# A =>: whose value is a restructurable compound expression.
 ARROW-RE =: /^\s*=>:\s*(\S.*)$/
-ARROW-BARE-CALL-RE =: /^[\w.!?-]+\(\)$/
-# A call: a name (or name!/name?) immediately before '('. Excludes a
-# leading-paren group like the (. obj method) interop form, which has
-# no pair equivalent.
-ARROW-CALL-RE =: /[\w!?]\(/
+# Calls, colon chains, and dot chains all have pair equivalents. Avoid
+# matching keyword atoms (:foo) and namespace separators (ys::std/foo).
+ARROW-COMPOUND-RE =:
+  /(\(|[A-Za-z0-9_?!.$)\]]:(?!:)[A-Za-z_]|\.[A-Za-z_])/
+# These compound-looking forms are nevertheless single values with no
+# useful pair rewrite.
+ARROW-DATA-RE =: /^\+\s*[\[{]/
+ARROW-LAMBDA-RE =: /^\\\(/
+ARROW-REGEX-RE =: /^\/(?:\\.|[^\/])*\/[a-z]*$/
+ARROW-INTEROP-RE =: /^\(\.\s/
 ARROW-OP-RE =:
   re-pattern("\\s(\\+|-|\\*|//|/|%|==|!=|<=|>=|<|>|&&|\\|\\|)\\s")
 # recur / loop heads, for the comma-separated-bindings check.
@@ -389,10 +394,10 @@ defn- fmt-slurp-spit(m):
   repl =: (m.1 == 'slurp').if('read' 'write')
   =>: "$(m.1) -> $repl"
 
-# A trailing =>: whose value is a compound expression (a call with
-# args, a method chain, or a spaced binary op) should be restructured
-# into a pair form: f: args / x: .m(a) / a OP: b. Bare atoms, property
-# lookups, data literals, and zero-arg calls are left alone.
+# A =>: whose value is a compound expression (a call, colon/dot chain,
+# or spaced binary op) should be restructured into a pair form:
+# f: args / x: .m(a) / a OP: b. Bare atoms, data literals, regexes,
+# lambdas, and interop special forms are left alone.
 defn- check-arrow(file lineno code):
   m =: re-find(ARROW-RE code)
   if m.!:
@@ -400,8 +405,11 @@ defn- check-arrow(file lineno code):
     else:
       val =: m.1:trim
       cond:
-        val =~ ARROW-BARE-CALL-RE: 0
-        (val =~ ARROW-CALL-RE) || (val =~ ARROW-OP-RE):
+        val =~ ARROW-DATA-RE: 0
+        val =~ ARROW-LAMBDA-RE: 0
+        val =~ ARROW-REGEX-RE: 0
+        val =~ ARROW-INTEROP-RE: 0
+        (val =~ ARROW-COMPOUND-RE) || (val =~ ARROW-OP-RE):
           msg =: "=>: $val -> use a pair form"
           report: file lineno 'arrow-pair' msg
           =>: 1
