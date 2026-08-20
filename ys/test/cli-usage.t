@@ -29,7 +29,7 @@ HELP =: |
 #   -T, --to FORMAT          Output format for --load:
 #                              json, yaml, csv, tsv, edn
 #                            or target for --compile:
-#                              bb, clj, jolt, glj
+#                              bb, clj, star
 #   -J, --json               Output (pretty) JSON for --load
 #   -Y, --yaml               Output YAML for --load
 #   -U, --unordered          Mappings don't preserve key order (faster)
@@ -114,27 +114,12 @@ test::
 
     (say 123)
 
-- cmnd: "ys -T jolt -e 'say: 123'"
+- cmnd: "ys -T star -e 'say: 123'"
   want: |
-    (when (System/getProperty "jolt.version")
-      ((requiring-resolve 'jolt.deps/add-deps)
-       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.31"}
-                io.github.jolt-lang/yaml
-                {:git/url "https://github.com/jolt-lang/yaml.git"
-                 :git/sha "348ff807899042317db3a1169002c6fec7be2194"}}}))
-    (ns main (:require ys.v0))
-    (ys.v0/init)
+    (require '[clojurestar.deps :as deps])
+    (deps/add-deps
+     '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.31"}}})
 
-    (say 123)
-
-- cmnd: "ys -T glj -e 'say: 123'"
-  want: |
-    (when (resolve '*glojure-version*)
-      ((resolve 'add-load-path)
-       (or (System/getenv "YS_V0_PATH")
-           (str (System/getenv "HOME")
-                "/.m2/repository/org/yamlscript/ys.v0/"
-                "0.2.31/ys.v0-0.2.31.jar.d"))))
     (ns main (:require ys.v0))
     (ys.v0/init)
 
@@ -146,8 +131,17 @@ test::
 - cmnd: "ys -T bb -l -e 'say: 123'"
   want: 'Error: Options --to=bb and --load are mutually exclusive.'
 
+- cmnd: "ys -T star -l -e 'say: 123'"
+  want: 'Error: Options --to=star and --load are mutually exclusive.'
+
 - cmnd: "ys -T frob -e 'say: 123'"
-  have: 'bb, clj, jolt, glj (for --compile)'
+  have: 'bb, clj, star (for --compile)'
+
+- cmnd: "ys -T jolt -e 'say: 123'"
+  have: 'bb, clj, star (for --compile)'
+
+- cmnd: "ys -T glj -e 'say: 123'"
+  have: 'bb, clj, star (for --compile)'
 
 # -T bb with -o makes an executable bb script
 - name: ys -T bb -o file

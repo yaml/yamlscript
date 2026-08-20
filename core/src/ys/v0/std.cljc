@@ -152,8 +152,19 @@
 ;;------------------------------------------------------------------------------
 ;; Collection functions
 ;;------------------------------------------------------------------------------
-(intern 'ys.v0.std 'put clojure.core/assoc)
-(intern 'ys.v0.std 'del clojure.core/dissoc)
+(defn put
+  ([map key value]
+   (assoc map key value))
+  ([map key value & key-values]
+   (apply assoc map key value key-values)))
+
+(defn del
+  ([map]
+   map)
+  ([map key]
+   (dissoc map key))
+  ([map key & keys]
+   (apply dissoc map key keys)))
 
 (defn get+ [C K]
   (condf C

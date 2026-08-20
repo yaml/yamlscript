@@ -10,6 +10,8 @@
 (ns ys.v0.ys
   (:require
    [clojure.string :as str]
+   [ys.v0.common :refer [get-yspath]]
+   [ys.v0.global :as global]
    [ys.v0.re :as re]
    [ys.v0.util :as util])
   (:refer-clojure
@@ -99,8 +101,196 @@
                     [~m ~ns])]
      (+def-vars ns# m#)))
 
+(def source-options #{:path :file :url :deps})
+(def selection-options #{:as :get :all :none :not})
+(def use-options (into source-options selection-options))
+
+(defn- use-option-value [option args pred description]
+  (let [value (second args)]
+    (when-not (and value (pred value))
+      (util/die (str "Invalid 'use' option '" option
+                  "': expected " description)))
+    value))
+
+(defn- use-option-symbols [option args]
+  (let [[symbols more] (split-with (complement keyword?) (rest args))]
+    (when-not (and (seq symbols) (every? symbol? symbols))
+      (util/die (str "Invalid 'use' option '" option
+                  "': expected at least one symbol")))
+    [symbols more]))
+
+(defn- validate-use-options [options]
+  (when (and (:none options) (some options [:get :all :not]))
+    (util/die "Invalid 'use' options: ':none' cannot be combined with "
+      "':get', ':all', or ':not'"))
+  (when (and (:get options) (:all options))
+    (util/die "Invalid 'use' options: ':get' cannot be combined with ':all'"))
+  (when (and (:get options) (:not options))
+    (util/die "Invalid 'use' options: ':get' cannot be combined with ':not'"))
+  (if (some options [:as :get :all :none :not])
+    options
+    (assoc options :all true)))
+
+(defn- parse-use-args [args]
+  (loop [args (seq args) options {}]
+    (if-not args
+      (validate-use-options options)
+      (let [option (first args)]
+        (when-not (and (keyword? option) (use-options option))
+          (util/die (str "Invalid 'use' option '" option "'")))
+        (when (contains? options option)
+          (util/die (str "Duplicate 'use' option '" option "'")))
+        (cond
+          (source-options option)
+          (let [value (use-option-value option args string? "one string")]
+            (when-let [[source] (:from options)]
+              (util/die (str "Invalid 'use' option '" option
+                          "': source option '" source "' is already set")))
+            (recur (nnext args) (assoc options :from [option value])))
+
+          (= option :as)
+          (let [alias (use-option-value
+                        option args
+                        #(and (symbol? %1) (nil? (namespace %1)))
+                        "one symbol")]
+            (recur (nnext args) (assoc options option alias)))
+
+          (some #{option} [:get :not])
+          (let [[symbols more] (use-option-symbols option args)]
+            (when (and (= option :not) (some namespace symbols))
+              (util/die
+                "Invalid 'use' option ':not': expected plain symbols"))
+            (recur (seq more) (assoc options option (vec symbols))))
+
+          :else
+          (recur (next args) (assoc options option true)))))))
+
+(defn- resolve-bb-add-classpath []
+  (try
+    (require 'babashka.classpath)
+    (resolve 'babashka.classpath/add-classpath)
+    (catch Throwable _ nil)))
+
+(defn- add-jvm-load-path [path]
+  (try
+    (clojure.core/eval
+      (read-string
+        (str
+          "(let [thread (Thread/currentThread) "
+          "loader (clojure.lang.DynamicClassLoader. "
+          "(.getContextClassLoader thread)) "
+          "file (java.io.File. " (pr-str path) ")] "
+          "(.addURL loader (.toURL (.toURI file))) "
+          "(.setContextClassLoader thread loader))")))
+    true
+    (catch Throwable _ false)))
+
+(defn- add-load-paths [paths]
+  (let [add-load-path (resolve 'add-load-path)
+        add-classpath (when-not add-load-path
+                        (resolve-bb-add-classpath))]
+    (doseq [path paths]
+      (cond
+        add-load-path (add-load-path path)
+        add-classpath (add-classpath path)
+        (add-jvm-load-path path) nil
+        :else
+        (util/die "This Clojure runtime cannot load modules from paths")))))
+
+(defn- resolve-require-deps []
+  (try
+    (require 'clojurestar.deps)
+    (resolve 'clojurestar.deps/require-deps*)
+    (catch Throwable error
+      (if (some resolve
+            '[*glojure-version* *jolt-version* *gobb-version*])
+        (throw error)
+        nil))))
+
+(defn- load-classpath-dependency [module]
+  (try
+    (require module)
+    (catch Throwable _
+      (util/die
+        (str "Portable 'use :deps' cannot acquire dependencies in this "
+          "runtime; put namespace '" module "' on the classpath")))))
+
+(defn- load-portable-module [module options]
+  (let [[kind spec] (or (:from options) [:yspath (get-yspath *file*)])]
+    (case kind
+      :yspath
+      (do
+        (add-load-paths spec)
+        (require module))
+
+      :path
+      (do
+        (add-load-paths [spec])
+        (require module))
+
+      :file
+      (do
+        (when (str/ends-with? spec ".ys")
+          (util/die "Portable 'use :file' does not support .ys files"))
+        (when-not (or (str/ends-with? spec ".clj")
+                    (str/ends-with? spec ".cljc"))
+          (util/die
+            "Invalid 'use' option ':file': expected a .clj or .cljc file"))
+        (clojure.core/load-file spec))
+
+      :url
+      (do
+        (when-not (str/starts-with? spec "https://")
+          (util/die "Invalid 'use' option ':url': expected an HTTPS URL"))
+        (load-string (slurp spec)))
+
+      :deps
+      (let [dependency-options
+            (cond-> {}
+              (get global/ENV "YS_MAVEN_REPOSITORY")
+              (assoc :mvn/local-repo
+                (get global/ENV "YS_MAVEN_REPOSITORY"))
+
+              (get global/ENV "YS_GITLIBS_DIR")
+              (assoc :gitlibs/dir (get global/ENV "YS_GITLIBS_DIR")))]
+        (if-let [require-deps (resolve-require-deps)]
+          (require-deps dependency-options [spec])
+          (load-classpath-dependency module)))))
+  (when-not (find-ns module)
+    (util/die (str "Namespace not found: " module))))
+
+(defn- select-portable-vars [module options]
+  (when-let [alias (:as options)]
+    (clojure.core/alias alias module))
+  (when-let [symbols (:get options)]
+    (let [only (mapv #(if (namespace %1)
+                        (symbol (namespace %1))
+                        %1)
+                 symbols)
+          rename (into {}
+                   (keep #(when-let [old (namespace %1)]
+                            [(symbol old) (symbol (name %1))]))
+                   symbols)]
+      (refer module :only only :rename rename)))
+  (when (or (:all options) (:not options))
+    (refer module :exclude (vec (:not options)))))
+
+(defn- portable-use [ns forms]
+  (when-not (seq forms)
+    (util/die "use requires at least one form"))
+  (let [forms (if (symbol? (first forms)) (list forms) forms)]
+    (binding [*ns* ns]
+      (doseq [form forms]
+        (let [module (first form)
+              options (parse-use-args (rest form))]
+          (load-portable-module module options)
+          (select-portable-vars module options)))))
+  nil)
+
 (defn +use [ns forms]
-  (hook :+use ns forms))
+  (if-let [f (get @hooks :+use)]
+    (f ns forms)
+    (portable-use ns forms)))
 
 (defmacro use [& forms]
   `(+use *ns* '~forms))

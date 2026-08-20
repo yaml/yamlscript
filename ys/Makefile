@@ -43,7 +43,7 @@ ifneq ($(OS-NAME),windows)
 	install -m 755 $(CLI-BIN-BASH) \
 	  $(PREFIX)/bin/
 endif
-# The -T bb/clj/jolt/glj compile targets need the ys.v0 and data.json
+# The -T bb/clj/star compile targets need the ys.v0 and data.json
 # jars in ~/.m2:
 	$(MAKE) -C $(ROOT)/v0 install
 

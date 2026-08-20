@@ -93,43 +93,18 @@ $ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.31"}}}' \
 ```
 
 
-## Jolt
+## Portable Clojure dialects
 
-Jolt is a new Clojure dialect hosted on Chez Scheme.
-
-```bash
-$ ys -T jolt program.ys > program.clj
-$ jolt program.clj
-```
-
-The `-T jolt` header form resolves the ys.v0 dependency with
-`jolt.deps/add-deps` when running under jolt (transitive dependencies
-come from the pom.xml inside the ys.v0 jar), and adds jolt's own
-libyaml based yaml library so the YS yaml functions work natively.
-
-
-## Glojure
-
-[Glojure](https://github.com/glojurelang/glojure) is a Clojure dialect
-implemented in Go.
-This needs a Glojure release newer than 0.6.8 (where `ns-unmap` was
-broken).
+The `star` target emits a dialect-neutral dependency preamble through
+the `clojurestar.deps` API.
 
 ```bash
-$ ys -T glj program.ys > program.clj
-$ glj program.clj
+$ ys --to=star program.ys > program.clj
 ```
 
-Glojure loads plain Clojure source from a load path (no jars), so the
-`-T glj` header form adds the extracted ys.v0 sources to the load path
-at run time: the `YS_V0_PATH` env var if set, else the
-`~/.m2/repository/org/yamlscript/ys.v0/<version>/ys.v0-<version>.jar.d`
-directory that the ys installers and `ys-sh --install-m2` maintain.
-
-Backend libraries (json, yaml, shell, http, fs) don't exist on glojure
-yet, so those YS functions fail with a clear message there; ordered
-maps fall back to array-map (insertion order is kept for literals of
-any size, and lost when assoc grows a map past eight entries).
+Compatible runtimes such as Glojure, Jolt, and Gobb provide that API.
+They resolve `org.yamlscript/ys.v0`, then run the same portable program
+body.
 
 
 ## Limitations

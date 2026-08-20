@@ -63,7 +63,7 @@
 ;; Data output formats for --load:
 (def to-fmts #{"json" "yaml" "csv" "tsv" "edn"})
 ;; Code targets for --compile:
-(def to-code-fmts #{"bb" "clj" "jolt" "glj"})
+(def to-code-fmts #{"bb" "clj" "star"})
 
 (def stages
   {"parse" true
@@ -104,12 +104,12 @@
     "Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, jolt, glj"
+                             bb, clj, star"
     :validate
     [#(contains? (set/union to-fmts to-code-fmts) %1)
      (str "must be one of:\n"
        "  json, yaml, csv, tsv, edn (for --load)\n"
-       "  bb, clj, jolt, glj (for --compile)")]]
+       "  bb, clj, star (for --compile)")]]
    ["-J" "--json"
     "Output (pretty) JSON for --load"]
    ["-Y" "--yaml"
@@ -434,44 +434,19 @@ Options:
     "                           babashka.process babashka.http-client]]\n"
     "               (try (require lib) (catch Throwable _))))))))\n"))
 
-;; Under jolt (a Clojure dialect hosted on Chez Scheme), resolve the
-;; ys.v0 dependency with jolt's add-deps, which resolves the Maven
-;; transitives from the pom.xml inside the ys.v0 jar. jolt's own
-;; libyaml based clj-yaml.core implementation is added as a git dep
-;; (top level pins win over the transitive clj-commons/clj-yaml):
-(def jolt-yaml-sha "348ff807899042317db3a1169002c6fec7be2194")
-
-(def v0-jolt-header
+;; Resolve the ys.v0 dependency through the dialect-neutral clojurestar.deps
+;; API shared by compatible Clojure runtimes.
+(def v0-star-header
   (str
-    "(when (System/getProperty \"jolt.version\")\n"
-    "  ((requiring-resolve 'jolt.deps/add-deps)\n"
-    "   '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
-    yamlscript-version "\"}\n"
-    "            io.github.jolt-lang/yaml\n"
-    "            {:git/url \"https://github.com/jolt-lang/yaml.git\"\n"
-    "             :git/sha \"" jolt-yaml-sha "\"}}}))\n"))
-
-;; Under glojure, add the extracted ys.v0 jar sources to the load path
-;; (glojure loads plain source; there is no jar or Maven machinery).
-;; The YS_V0_PATH env var overrides the ~/.m2 extraction convention
-;; that the ys installers and 'ys-sh --install-m2' maintain. Every
-;; symbol funnels through resolve so other runtimes never analyze
-;; glojure specifics:
-(def v0-glj-header
-  (str
-    "(when (resolve '*glojure-version*)\n"
-    "  ((resolve 'add-load-path)\n"
-    "   (or (System/getenv \"YS_V0_PATH\")\n"
-    "       (str (System/getenv \"HOME\")\n"
-    "            \"/.m2/repository/org/yamlscript/ys.v0/\"\n"
-    "            \"" yamlscript-version "/ys.v0-" yamlscript-version
-    ".jar.d\"))))\n"))
+    "(require '[clojurestar.deps :as deps])\n"
+    "(deps/add-deps\n"
+    " '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
+    yamlscript-version "\"}}})\n\n"))
 
 (def to-code-headers
   {"bb" v0-bb-header
    "clj" v0-clj-header
-   "jolt" v0-jolt-header
-   "glj" v0-glj-header})
+   "star" v0-star-header})
 
 (defn v0-bb-script?
   "Is the compiled output an executable babashka script file?"
