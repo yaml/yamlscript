@@ -1161,8 +1161,11 @@ pairs =: words:frequencies.sort-by(val):reverse
   `n:cube + 1`, etc.
 - `\(_ * 2)` for inline lambdas — prefer over `fn([x] x * 2)` for
   single-expression bodies.
-  Use `fn` only when you need destructuring or multiple args that `_`
-  can't express.
+  Anonymous-function arguments are `_` for the first argument and `_1`,
+  `_2`, etc. when numbered positions are needed. YAMLScript 0.2.30 no
+  longer accepts `%`, `%1`, `%2`, etc. as anonymous-function arguments;
+  `%` remains the binary remainder operator. Use `fn` only when you need
+  destructuring or multiple named args.
   Never `fn(x): body` — invalid inline (`:` splits the expression)
 - `_` placeholder when collection arg should come last in a chain,
   or to mark where a block value will be substituted
@@ -1427,6 +1430,8 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Do NOT use `fn(x): body` inline — invalid YAML (`:` splits the expression)
 - Do NOT use `fn([x] ...)` when `\(...)` with `_` suffices —
   prefer the shorthand for single-expression lambdas
+- Do NOT use `%`, `%1`, `%2`, etc. as anonymous-function arguments.
+  Use `_`, `_1`, `_2`, etc. (`%` remains the remainder operator).
 - Do NOT start a value with `[`, `{`, `"`, `'`, `|`, `>`, `!`, `&`, `*`
   without a `+` prefix. Either YAML rejects it, or YAML accepts it but
   YS rejects flow collections / block sequences at code-mode value

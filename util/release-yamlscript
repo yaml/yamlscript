@@ -567,7 +567,7 @@ defn release-bindings():
     then:
       skip-list =: parse-binding-list(skip allowed 'skip binding')
       skip-set =: set(expand-binding-list(skip-list))
-      remove: \(contains? skip-set _1) selected
+      remove: \(contains? skip-set _) selected
     else:
       =>: selected
 
@@ -576,7 +576,7 @@ defn parse-binding-list(list allowed what):
   trimmed =: list:trim
   binding-list =: trimmed.split('[,\s]+')
   invalid =:
-    remove(\(contains? allowed _1) binding-list)
+    remove(\(contains? allowed _) binding-list)
 
   when invalid.?:
     die: "Invalid $what list: $(invalid.join(', '))"
@@ -636,7 +636,7 @@ defn make-changes-entry(ctx):
       .out:str/split-lines:reverse
 
   str/join "\n":
-    map \(str/replace _1, /^\w+ /, '  - '): lines
+    map \(str/replace _, /^\w+ /, '  - '): lines
 
 defn validate-yaml(yaml):
   when-not dryrun:
