@@ -55,8 +55,8 @@ support, and docs:
    `.nth(var)` vs `.$var`, `x + 1` vs `.++`, `x - 1` vs `.--`,
    `.first()` / `.last()` vs `.0` / `.$` (or `:first` / `:last`),
    `vector(...)` and inline `V+(...)` vs `+[...]`, inline `M+(...)`
-   vs `+{...}`, `apply(str ...)` and `apply str:` vs `:join` /
-   `join:`, `str(bareVar)` vs `bareVar:S`,
+   vs `+{...}`, avoidable `apply` calls vs direct splats (`f(xs*)` /
+   `f: xs*`), `str(bareVar)` vs `bareVar:S`,
    `quot(a b)` and `a.quot(b)` vs `a // b`, `rem(a b)` vs `a % b`,
    parenthesized simple integer-looking divisions such as `(n / d)` vs
    `(n // d)`, `:zero?` vs `.!` when falsey-zero semantics are OK,
@@ -411,15 +411,42 @@ Add `:V` only when the program needs vector behavior:
 When unsure, remove `:V` and run the program. Keep it only if the
 program fails or the output semantics change.
 
-### Use `:join` / `join:` instead of `apply(str ...)` / `apply str:`
+### Prefer direct splat calls over `apply`
 
-`apply(str coll)` and the pair form `apply str: coll` both concatenate
-a collection of strings. The colon-chain `coll:join` and pair form
-`join: coll` say what they mean directly:
+YS 0.2.30 can splat collection-producing expressions directly into a
+call. When the collection is already a value or fits naturally in a
+scalar expression, call the target function and append `*` to the
+collection instead of wrapping the call in `apply`:
 
-- `apply(str pieces)` → `pieces:join` (or `join: pieces`)
-- `apply str: pieces` → `join: pieces`
-- `apply(str butlast(code))` → `join: butlast(code)`
+- `apply(max xs)` → `max(xs*)`
+- `apply max: xs` → `max: xs*`
+- `apply(min-key score xs)` → `min-key(score xs*)`
+- `apply(max 0 map(count lines))` → `max(0 map(count lines)*)`
+- `apply(concat groups)` → `concat(groups*)`
+- `apply f: args` → `f: args*`
+
+The splatted argument can be a variable (`xs*`), a parenthesized
+expression (`([f] + args)*`), a call result (`make-args()*`), a dot-chain
+(`rows.map(count)*`), or a colon-chain (`freqs:vals*`). Regular arguments
+may appear before it, and calls may contain multiple splats.
+
+For operator functions, use a named callable such as `add(xs*)`,
+`mul(xs*)`, or `le(xs*)`; a parenthesized operator head such as
+`(+ xs*)` also works.
+
+Use `:join` / `join:` when the operation is conceptually joining strings:
+`apply(str pieces)` can become `pieces:join`. Use `str(pieces*)` when the
+variadic `str` call itself is the clearer expression.
+
+Keep `apply` when the collection is naturally produced by an indented
+block and forcing it into a scalar expression would make the code less
+clear:
+
+```
+apply max-key last:
+  map _ xs:
+    fn(x): score(x)
+```
 
 ### Prefer `:S` colon-chain over `str(bareVar)`
 
@@ -758,10 +785,9 @@ Two args fit fine on one line.
 - `uc1(s)` — capitalize first character; `uc(s)` — all uppercase
 - `join(sep coll)` — join with separator; `join(coll)` — no separator.
   Also `coll:join` (colon chain) and `join: coll` (pair form) for the
-  no-separator variant. **Prefer these over `apply(str coll)` /
-  `apply str: coll`** — they say what they mean and read tighter:
-  - `apply(str chunks)` → `chunks:join` (or `join: chunks`)
-  - `apply str: pieces` → `join: pieces` (or `pieces:join`)
+  no-separator variant. Prefer these when the operation is conceptually
+  joining strings: `apply(str chunks)` → `chunks:join`. When preserving
+  the variadic call is clearer, use a direct splat: `str(chunks*)`.
 - `joins(coll)` — join with a single space. **`xs.join(' ')` is
   always `xs:joins`** — the colon chain says "join with one space"
   directly. `say: row.join(' ')` → `say: row:joins`.
@@ -861,7 +887,6 @@ Two args fit fine on one line.
   nested parentheses.
 - **Higher-order function calls** — when the function arg is named,
   put it on the key side; the data flows to the value:
-  - `apply str: seq(s)...` — applying `str` to the seq
   - `reduce f: init coll` — reducing with `f` over `init`/`coll`
   - `map double: coll` — mapping `double` over `coll`
 - **Inline-defined function for an HOF** — put `_` where the function
@@ -1444,6 +1469,9 @@ pairs =: words:frequencies.sort-by(val):reverse
   returns `value` if the receiver is truey and nil otherwise
 - Do NOT end a `cond` with `else: nil` — `cond` returns nil by
   default when no clause matches
+- Do NOT use `apply` when the same call can directly splat its collection:
+  `apply(max xs)` → `max(xs*)`, `apply f: args` → `f: args*`. Keep
+  `apply` when an indented block produces the collection and is clearer.
 - Do NOT use `apply: str repeat(n '  ')` for string repetition —
   use `n * '  '`
 - Do NOT wrap interpolated values in `str()` — `"$v"` and `"$(expr)"`

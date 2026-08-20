@@ -21,8 +21,9 @@ FIRST-CALL-RE =: /(\w[\w-]*)\.first\(\)/
 LAST-CALL-RE =: /(\w[\w-]*)\.last\(\)/
 VECTOR-LIT-RE =: /\bvector\(/
 CONSTRUCTOR-CALL-RE =: /(?<![\w-])([VM])\+\(/
-APPLY-STR-RE =: /(?<![\w-])apply\(\s*str(?![\w-])/
-APPLY-STR-PAIR-RE =: /^\s+apply\s+str:/
+APPLY-CALL-RE =: /(?<![\w-])[a]pply\(/
+APPLY-PAIR-RE =: /^\s+[a]pply(?:\s+[^:]+)?:/
+APPLY-INTERP-RE =: /\$\([^"\n]*[a]pply\(/
 STR-SINGLE-RE =: /(?<![\w-])str\(\s*([A-Za-z_][\w-]*)\)/
 KW-BRACKETS-PAT =:
   "^\\s+(binding|if-let|if-lets|if-some|let|loop|\
@@ -82,8 +83,8 @@ COMMENT-RE =: /^\s*#/
 THEN-NIL-MSG =: 'then: nil -> use when'
 ELSE-NIL-MSG =: 'else: nil -> use when-not'
 VECTOR-LIT-MSG =: 'vector(...) -> +[...]'
-APPLY-STR-MSG =: 'apply(str X) -> X:join (or join: X)'
-APPLY-STR-PAIR-MSG =: 'apply str: X -> X:join (or join: X)'
+APPLY-CALL-MSG =: 'apply(...) -> call target directly with splatted args'
+APPLY-PAIR-MSG =: 'apply ...: -> direct call with collection* when practical'
 
 defn main(*files):
   when files.!:
@@ -241,7 +242,8 @@ defn- lint-line(file lineno orig):
   long-n =: check-long(file lineno orig)
   say-n =: check-say-empty(file lineno orig)
   join-n =: check-join-space(file lineno orig)
-  base =: long-n + say-n + join-n
+  apply-n =: check-apply-interp(file lineno orig)
+  base =: long-n + say-n + join-n + apply-n
   if orig !~ COMMENT-RE:
     base +: check-patterns(file lineno strip(orig))
     else: base
@@ -262,6 +264,15 @@ defn- check-join-space(file lineno orig):
       msg =: "join with one space -> :joins"
       report: file lineno 'join-space' msg
       =>: 1
+    else: 0
+
+# String masking normally hides call-looking text, but code inside $(...)
+# interpolation is real YS and should still get the generic apply check.
+defn- check-apply-interp(file lineno orig):
+  if orig !~ COMMENT-RE:
+    then:
+      file.count-matches(lineno orig 'apply-call' APPLY-INTERP-RE
+                         fmt-static(APPLY-CALL-MSG))
     else: 0
 
 defn- check-long(file lineno orig):
@@ -294,10 +305,10 @@ defn- check-patterns(file lineno code):
                        fmt-static(VECTOR-LIT-MSG))
     file.count-matches(lineno code 'constructor-call' CONSTRUCTOR-CALL-RE
                        fmt-constructor-call)
-    file.count-matches(lineno code 'apply-str' APPLY-STR-RE
-                       fmt-static(APPLY-STR-MSG))
-    file.count-matches(lineno code 'apply-str-pair' APPLY-STR-PAIR-RE
-                       fmt-static(APPLY-STR-PAIR-MSG))
+    file.count-matches(lineno code 'apply-call' APPLY-CALL-RE
+                       fmt-static(APPLY-CALL-MSG))
+    file.count-matches(lineno code 'apply-pair' APPLY-PAIR-RE
+                       fmt-static(APPLY-PAIR-MSG))
     file.count-matches(lineno code 'str-single' STR-SINGLE-RE
                        fmt-str-single)
     file.count-matches(lineno code 'kw-brackets' KW-BRACKETS-RE
