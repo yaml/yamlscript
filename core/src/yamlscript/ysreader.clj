@@ -444,20 +444,24 @@
         (let [[form tokens] (read-form tokens)]
           (recur tokens (if form (conj list form) list)))))))
 
-;; TODO do in one call
+(def ^:private string-escape-re
+  #"\\[\\bfnrt\"]|:\\ | \\#")
+
+(def ^:private string-escapes
+  {"\\\\" "\\"
+   ":\\ " ": "
+   " \\#" " #"
+   "\\b" "\b"
+   "\\f" "\f"
+   "\\n" "\n"
+   "\\r" "\r"
+   "\\t" "\t"
+   "\\\"" "\""})
+
 (defn str-unescape
   "Unescape YAMLScript double-quoted string content."
   [s]
-  (-> s
-    (str/replace "\\\\" "\\")
-    (str/replace ":\\ " ": ")
-    (str/replace " \\#" " #")
-    (str/replace "\\b" "\b")
-    (str/replace "\\f" "\f")
-    (str/replace "\\n" "\n")
-    (str/replace "\\r" "\r")
-    (str/replace "\\t" "\t")
-    (str/replace "\\\"" "\"")))
+  (str/replace s string-escape-re string-escapes))
 
 (defn read-dq-string
   "Read a double-quoted string token into an AST form."

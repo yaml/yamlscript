@@ -131,6 +131,24 @@
     (say "Hello $name")
 
 
+- name: Double quoted strings unescape exactly once
+  yamlscript: |
+    !ys-0
+    direct =: "D:\\a\\yamlscript\\core\\test"
+    nested =: identity("D:\\a\\yamlscript\\core\\test")
+    direct-tab =: "a\tb"
+    nested-tab =: identity("a\tb")
+    direct-slash-t =: "a\\tb"
+    nested-slash-t =: identity("a\\tb")
+  clojure: |
+    (def direct "D:\\a\\yamlscript\\core\\test")
+    (def nested (identity "D:\\a\\yamlscript\\core\\test"))
+    (def direct-tab "a\tb")
+    (def nested-tab (identity "a\tb"))
+    (def direct-slash-t "a\\tb")
+    (def nested-slash-t (identity "a\\tb"))
+
+
 - name: Automatically call the main function when defined
   yamlscript: |
     !ys-0
