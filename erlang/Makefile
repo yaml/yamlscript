@@ -8,6 +8,7 @@ ifneq (,$(wildcard /.dockerenv))
 ERLANG-DOCKER-INNER := true
 ERL := erl
 ERLC := erlc
+REBAR3 := rebar3
 ERLANG-DEPS :=
 ERLANG-ROOT := $(shell erl -noshell \
   -eval 'io:format("~s", [code:root_dir()]).' -s init stop)
