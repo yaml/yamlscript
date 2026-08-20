@@ -2741,6 +2741,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <p>The space before the <code>=</code> is required.</p>
 <div class="highlight"><pre><span></span><code>hello =: &#39;Oh hello&#39;
 a b c =: +[1 2 3]  # Destructuring assignment
+a.b =: 42           # Rebind a after updating its b key
+a.b c d.e =: f g h  # Mix dotted and plain positional targets
+put(a &#39;b&#39; 42)        # put and std/put are synonyms for assoc
 </code></pre></div>
 <h3 id="ys-expression-escapes">YS expression escapes<a class="headerlink" href="#ys-expression-escapes" title="Permanent link">🔗</a></h3>
 <p>YS expressions need to be written as valid YAML scalars.
@@ -2794,6 +2797,11 @@ greet(&#39;Bob&#39;)
 greet:              # Map pair call variations
 greet: &#39;Bob&#39;
 greet &#39;Bob&#39;:
+
+add: nums*           # Splat a variable into call arguments
+add: (1 .. 4)*       # Splat any parenthesized expression
+foo: make-args()*    # Splat a call result
+sub: nums:reverse*   # Splat a colon-chain call result
 </code></pre></div>
 <h3 id="chain-calls">Chain calls<a class="headerlink" href="#chain-calls" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>say: read(&#39;/usr/share/dict/words&#39;)
@@ -2831,7 +2839,14 @@ It must be be attached to something on the left.</p>
   fn(acc num): acc + num
 </code></pre></div>
 <p>The <code>_</code> is a placeholder for the defined function argument.
-Use <code>_</code> when the function argument is too long to write in place.</p>
+Use <code>_</code> when the function argument is too long to write in place.
+It can also replace an operand in a YeS operator expression.</p>
+<div class="highlight"><pre><span></span><code>3 + _:
+  get-number()
+
+_ ||| fallback:
+  make-value()
+</code></pre></div>
 <h3 id="conditional-ifelse">Conditional (if/else)<a class="headerlink" href="#conditional-ifelse" title="Permanent link">🔗</a></h3>
 <div class="highlight"><pre><span></span><code>if a &gt; 10:
   say: &#39;BIG&#39;

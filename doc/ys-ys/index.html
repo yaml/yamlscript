@@ -1371,6 +1371,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Modules
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#macro-wrapper-functions" class="md-nav__link">
     <span class="md-ellipsis">
       Macro Wrapper Functions
@@ -2438,6 +2447,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#using-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Modules
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#macro-wrapper-functions" class="md-nav__link">
     <span class="md-ellipsis">
       Macro Wrapper Functions
@@ -2529,6 +2547,38 @@ chaining operations</a>.</p>
   Normally called as <code>use</code>, not <code>ys/use</code>.</p>
 </li>
 </ul>
+<h2 id="using-modules">Using Modules<a class="headerlink" href="#using-modules" title="Permanent link">🔗</a></h2>
+<p>The <code>use</code> form loads a module and optionally aliases or refers its names.
+Without a source option, YAMLScript searches the directories in <code>YSPATH</code>.
+The <code>:path</code> option searches one directory, and <code>:file</code> loads one exact <code>.ys</code>,
+<code>.clj</code>, or <code>.cljc</code> file.
+The <code>:url</code> option loads an actual HTTP or HTTPS source-file URL.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:path &#39;./lib&#39;</span>
+<span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:file &#39;./lib/foo/bar.ys&#39;</span>
+<span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:url &#39;https://example.com/foo/bar.ys&#39;</span>
+</code></pre></div>
+<p>The <code>:deps</code> option accepts one coordinate supported by Grenadine's
+<code>clojurestar.deps</code> library.
+Maven coordinates use normal dotted group names.
+Gist coordinates may name a file and full commit SHA.
+GitHub coordinates name one source file at a branch, tag, or commit.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">use clojure::math::combinatorics</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:deps &#39;mvn:org.clojure/math.combinatorics@0.3.0/clojure.math.combinatorics&#39;</span>
+<span class="nt">use mathy</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:deps &#39;gist:ingydotnet/f70409675d234aa4f2fe379cd975a4f5/mathy.clj&#39;</span>
+<span class="nt">use grenadine::require-deps</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:deps &#39;github:clojurestar/grenadine/v0.1.7/src/grenadine/require_deps.cljc&#39;</span>
+</code></pre></div>
+<p>The module name on the left must match the namespace provided by <code>:deps</code>.
+Generic Git repositories and dependency coordinate maps are not accepted.</p>
+<p>Use <code>:as</code> to add an alias, <code>:get</code> to refer selected names, <code>:all</code> to refer all
+names, <code>:none</code> to refer none, and <code>:not</code> to refer all except selected names.
+A slash in a <code>:get</code> name renames it, as in <code>old-name/new-name</code>.
+With no selection option, <code>use</code> refers all public names.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:as bar :get one two/second</span>
+<span class="nt">use foo::baz</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:all :not internal</span>
+<span class="nt">use foo::quux</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:as quux :none</span>
+</code></pre></div>
 <h2 id="macro-wrapper-functions">Macro Wrapper Functions<a class="headerlink" href="#macro-wrapper-functions" title="Permanent link">🔗</a></h2>
 <ul>
 <li><code>for</code> — An eager version of Clojure's lazy <code>for</code> macro</li>

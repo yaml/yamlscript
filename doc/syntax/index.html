@@ -2395,7 +2395,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Destructuring Assignment">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dotted-assignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dotted Assignment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dotted Assignment">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2675,6 +2684,30 @@ and mappings.</p>
 values of that sequence would be assigned to <code>a</code>, <code>b</code>, and <code>c</code> respectively.</p>
 <p>For some reason Clojure does not support destructuring assignment in <code>def</code>
 forms but YS makes it work just fine.</p>
+<h2 id="dotted-assignment">Dotted Assignment<a class="headerlink" href="#dotted-assignment" title="Permanent link">🔗</a></h2>
+<p>A dotted assignment updates a value inside a collection and rebinds the root
+symbol.
+Bare path names use the existing symbol, string, or keyword key when present.
+A missing bare key is created as a string key.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">data.user.name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Alice&#39;</span>
+</code></pre></div>
+<p>This is equivalent to rebinding <code>data</code> with an <code>assoc-in</code> call.
+The <code>std/put</code> function, also available as <code>put</code>, is a synonym for <code>assoc</code> when
+only one mapping level needs to be updated explicitly.</p>
+<p>A call in the path computes a key from the collection at that point.
+The call is evaluated once.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">data.choose-user().name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Alice&#39;</span>
+</code></pre></div>
+<p>Dotted and plain targets can be mixed in positional assignment.
+All right-hand-side values are evaluated before the targets are updated, and
+repeated roots accumulate their updates from left to right.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">a.b c d.e =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">f g h</span>
+<span class="nt">a.b a.c =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+[f g]</span>
+</code></pre></div>
+<p>Compound and conditional assignment work with dotted targets too.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">scores.alice +=</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="nt">scores.alice :if bonus *=</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</code></pre></div>
 <h3 id="function-arguments">Function Arguments<a class="headerlink" href="#function-arguments" title="Permanent link">🔗</a></h3>
 <p>Like Clojure, all YS functions must be defined with the number of arguments
 they take.
@@ -2682,6 +2715,16 @@ This is know as the function's arity.
 Functions can be written to take different specific numbers of arguments, where
 each arity has its own definition body.
 Functions can also be written to take a variable number of arguments.</p>
+<p>A trailing <code>*</code> spreads a value into a function call.
+It can be attached to a symbol, a call, or any parenthesized expression.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">add</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nums*</span>
+<span class="nt">add</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(1 .. 4)*</span>
+<span class="nt">add</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">make-nums()*</span>
+<span class="nt">add</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nums:reverse*</span>
+</code></pre></div>
+<p>Splat expressions can appear between regular arguments.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">call</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first make-middle()* last</span>
+</code></pre></div>
 <p>Multi-arity functions are called with the same name but the number of arguments
 used determines which body is evaluated.</p>
 <p>Note that unlike some other languages with multi-arity functions, the type of
