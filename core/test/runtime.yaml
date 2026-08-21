@@ -46,6 +46,16 @@
     [{"a" 1, "b" 2} {"a" 1, "b" 2}]
 
 
+- name: Del aliases dissoc
+  ys: |
+    =>: +[
+      del(hash-map("a" 1 "b" 2) "b")
+      std/del(hash-map("a" 1 "b" 2 "c" 3) "b" "c")
+      hash-map("a" 1 "b" 2).del("b")]
+  eval: |
+    [{"a" 1} {"a" 1} {"a" 1}]
+
+
 - name: Dotted assignment paths
   ys: |
     calls =: atom(0)

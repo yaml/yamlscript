@@ -153,6 +153,7 @@
 ;; Collection functions
 ;;------------------------------------------------------------------------------
 (intern 'ys.v0.std 'put clojure.core/assoc)
+(intern 'ys.v0.std 'del clojure.core/dissoc)
 
 (defn get+ [C K]
   (condf C
