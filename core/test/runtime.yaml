@@ -128,3 +128,88 @@
     =>: +[choose(0) choose(2) sum double]
   eval: |
     ["0" "2" 7 8]
+
+
+- name: Code-value mappings and sequences
+  ys: |
+    x =: 2
+    value =:::
+      scalar: inc(x)
+      nested:
+        product: x * 3
+      items:
+      - x
+      - x + 4
+      literal: 'x'
+      interpolated: "x=$x"
+    =>: value
+  eval: |
+    {"scalar" 3,
+     "nested" {"product" 6},
+     "items" [2 6],
+     "literal" "x",
+     "interpolated" "x=2"}
+
+
+- name: Code-value flow collections
+  ys: |
+    x =: 2
+    mapping =::: {a: inc(x), b: x * 4}
+    sequence =::: [inc(x), x * 4]
+    =>: +[mapping sequence]
+  eval: |
+    [{"a" 3, "b" 8} [3 8]]
+
+
+- name: Code-value data overrides and re-entry
+  ys: |
+    x =: 2
+    value =:::
+      data::
+        literal: inc(x)
+        computed:: inc(x)
+      items:
+      - ! inc(x)
+      - inc(x)
+      nested:::
+        computed: inc(x)
+    =>: value
+  eval: |
+    {"data" {"literal" "inc(x)", "computed" 3},
+     "items" ["inc(x)" 3],
+     "nested" {"computed" 3}}
+
+
+- name: Code-value data features
+  ys: |
+    x =: 2
+    base =::: &base
+      first: inc(x)
+    value =:::
+      <<: *base
+      optional:?: x * 2
+      local =: x * 3
+      result: local
+    =>: value
+  eval: |
+    {"first" 3, "optional" 4, "result" 6}
+
+
+- name: Code-value marker in data mode
+  ys: |
+    x =: 2
+    value =::
+      nested:::
+        computed: inc(x)
+    =>: value
+  eval: |
+    {"nested" {"computed" 3}}
+
+
+- name: Code-value generic pair
+  ys: |
+    x =: 2
+    identity:::
+      computed: inc(x)
+  eval: |
+    {"computed" 3}

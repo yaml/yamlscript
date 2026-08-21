@@ -1958,3 +1958,11 @@
   error: |
     Invalid key suffix in 'foo:!'.
     Quote the key if you meant it as a string literal.
+
+
+- name: Error on scalar code-value mode
+  yamlscript: |
+    !ys-0
+    value =::: inc(41)
+  error: |
+    Code-value mode requires a mapping or sequence

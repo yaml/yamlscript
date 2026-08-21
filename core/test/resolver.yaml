@@ -181,3 +181,62 @@
     {:xmap
      [{:def "list ="}
       {:seq [{:int "1"} {:int "2"} {:int "3"}]}]}
+
+
+- name: Code-value mode resolves data keys and code values
+  yamlscript: |
+    !ys-0
+    x =: 2
+    value =:::
+      scalar: inc(x)
+      nested:
+        product: x * 3
+      items:
+      - x
+      - x + 4
+      literal: 'x'
+  resolve: |
+    {:xmap
+     [{:def "x ="}
+      {:expr "2"}
+      {:def "value ="}
+      {:map
+       [{:str "scalar"}
+        {:expr "inc(x)"}
+        {:str "nested"}
+        {:map [{:str "product"} {:expr "x * 3"}]}
+        {:str "items"}
+        {:seq ({:expr "x"} {:expr "x + 4"})}
+        {:str "literal"}
+        {:str "x"}]}]}
+
+
+- name: Code-value mode supports data overrides and re-entry
+  yamlscript: |
+    !ys-0
+    x =: 2
+    value =:::
+      data::
+        literal: inc(x)
+        computed:: inc(x)
+      items:
+      - ! inc(x)
+      - inc(x)
+      nested:::
+        computed: inc(x)
+  resolve: |
+    {:xmap
+     [{:def "x ="}
+      {:expr "2"}
+      {:def "value ="}
+      {:map
+       [{:str "data"}
+        {:map
+         [{:str "literal"}
+          {:str "inc(x)"}
+          {:str "computed"}
+          {:expr "inc(x)"}]}
+        {:str "items"}
+        {:seq ({:str "inc(x)"} {:expr "inc(x)"})}
+        {:str "nested"}
+        {:map [{:str "computed"} {:expr "inc(x)"}]}]}]}

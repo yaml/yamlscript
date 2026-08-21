@@ -11,7 +11,7 @@ considered as a data string or a code symbol (variable, function name etc).
 Since the main focus of YS is about embedding code into YAML data files,
 it's very important to know what mode you are in at any given point.
 
-YS has 3 modes:
+YS has 4 modes:
 
 * Bare mode
 
@@ -31,6 +31,12 @@ YS has 3 modes:
   YS "code" is  written using block mappings (`k: v`), plain scalars,
   quoted scalars (single and double) and literal (`|`) scalars.
   Folded scalars (`>`) are also disallowed in code mode.
+
+* Code-value mode
+
+  Mapping keys and collection structure are data, while scalar values and
+  sequence elements are code.
+  This mode is only entered on a mapping pair value with `:::`.
 
 The most important ones to learn about are data and code modes.
 To use YS effectively you'll need to be comfortable with switching back and
@@ -152,3 +158,59 @@ $ ys --load <(echo '
 count:: [red, green, blue]')
 {"count:":["red","green","blue"]}
 ```
+
+
+## Code Values in Data Collections
+
+Use `:::` when a mapping or sequence contains mostly computed values.
+It keeps the collection structure and mapping keys in data mode while treating
+each scalar value and sequence element as code.
+
+```yaml
+!ys-0
+x =: 6
+result =:::
+  answer: x * 7
+  nested:
+    next: inc(x)
+  items:
+  - x
+  - x + 1
+```
+
+This produces:
+
+```yaml
+answer: 42
+nested:
+  next: 7
+items:
+- 6
+- 7
+```
+
+Code-value mode recurses through block and flow mappings and sequences.
+It can be entered from code mode, data mode, or another code-value collection.
+The value after `:::` must be a mapping or sequence.
+
+Use `::` on a mapping pair to make its entire value subtree data again.
+Use `!` for the same override on a sequence element.
+An inner `::` can switch from that data subtree back to code as usual.
+
+```yaml
+result =:::
+  computed: inc(x)
+  config::
+    literal: inc(x)
+    computed:: inc(x)
+  items:
+  - inc(x)
+  - ! inc(x)
+```
+
+An unmarked mapping in code-value mode is always a structural mapping.
+Write a block-form code value as a scalar call to a helper function instead.
+
+Use `:::` when most values in a collection are computed.
+For a mostly literal collection with only one or two computed values, ordinary
+data mode with `::` on those values is often clearer.

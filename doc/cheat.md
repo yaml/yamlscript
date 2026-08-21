@@ -27,6 +27,12 @@ talk: 0
 * All YAML forms are allowed in data mode
 * `!` tag toggles between code and data mode
 * `a:: b` is sugar for `a: ! b` in mapping pairs
+* `a::: {...}` enters code-value mode for a mapping or sequence
+  * Collection structure and mapping keys are data
+  * Scalar values and sequence elements are code
+  * Nested mappings and sequences stay in code-value mode
+  * Use `key:: value` or `- ! value` for a data subtree
+  * The value after `:::` must be a mapping or sequence
 * Use `=>: x` to write `x` as a mapping pair in code mode
 
 The following examples are in code mode unless otherwise noted.

@@ -66,6 +66,7 @@
 
 (declare
   resolve-code-node
+  resolve-code-value-node
   resolve-data-node
   resolve-data-node-top
   resolve-bare-node
@@ -74,6 +75,9 @@
   resolve-data-sequence
   resolve-data-scalar
   resolve-data-alias
+
+  resolve-code-value-mapping
+  resolve-code-value-sequence
 
   resolve-bare-mapping
   resolve-bare-sequence
@@ -86,6 +90,7 @@
     :bare (resolve-bare-node node)
     :data (resolve-data-node node)
     :data-top (resolve-data-node-top node)
+    :code-value (resolve-code-value-node node)
     :code (resolve-code-node node)))
 
 (defn resolve
@@ -174,6 +179,20 @@
                 val (assoc val :! "")]
             [key val])))
       [key val])))
+
+(defn check-code-value-mode
+  "Detect the code-value mode marker encoded in a mapping key."
+  [key val]
+  (let [key-text (:= key)
+        base (when key-text
+               (str/replace key-text #"\s*::$" ""))
+        swap? (and key-text
+                (re-find #"::$" key-text)
+                (not (str/blank? base)))]
+    (when (and swap?
+            (not (contains? #{:map :seq} (node-kind val))))
+      (die "Code-value mode requires a mapping or sequence"))
+    [(if swap? (assoc key := base) key) val swap?]))
 
 (defn check-yaml-core-tag
   "Validate an explicit YAML core tag against a scalar value."
@@ -267,9 +286,14 @@
   "Resolve one mapping pair while in code mode."
   [key val]
   (let [; assert key is scalar
-        [key val] (check-mode-swap key val)
+        [key val code-value?] (check-code-value-mode key val)
+        [key val] (if code-value?
+                    [key val]
+                    (check-mode-swap key val))
         pair [(resolve-code-node key)
-              (resolve-code-node val)]]
+              ((if code-value?
+                 resolve-code-value-node
+                 resolve-code-node) val)]]
     ((some-fn
        tag-str
        tag-fn
@@ -399,42 +423,119 @@
       :else (die "Invalid tag for code mode node: " (tagp tag)))))
 
 ;; ----------------------------------------------------------------------------
+;; Dispatchers for code-value mode:
+;; ----------------------------------------------------------------------------
+
+(defn resolve-code-value-mapping
+  "Resolve a mapping with data keys and code values."
+  [node]
+  (resolve-data-mapping node :code-value))
+
+(defn resolve-code-value-sequence
+  "Resolve a sequence whose elements are code values."
+  [node]
+  (let [sequence
+        {:seq (map resolve-code-value-node
+                (or (:- node) (:-- node)))}]
+    (if-let [anchor (:& node)]
+      (assoc sequence :& anchor)
+      sequence)))
+
+(defn resolve-code-value-node
+  "Resolve collection structure as data and its values as code."
+  [node]
+  (let [kind (node-kind node)
+        tag (:! node)
+        node (dissoc node :!)]
+    (cond
+      (nil? tag)
+      (case kind
+        :val (resolve-code-node node)
+        :map (resolve-code-value-mapping node)
+        :seq (resolve-code-value-sequence node)
+        :ali (resolve-code-alias node))
+      ,
+      (some #{"" "data"} [tag])
+      (resolve-data-node node)
+      ,
+      (= "code" tag)
+      (resolve-code-node node)
+      ,
+      (and tag (re-matches re-call-tag tag))
+      (if (str/ends-with? tag ":")
+        (assoc (resolve-data-node node) :! (subs tag 0 (dec (count tag))))
+        (assoc (resolve-code-value-node node) :! tag))
+      ,
+      :else
+      (resolve-code-node (assoc node :! tag)))))
+
+;; ----------------------------------------------------------------------------
 ;; Dispatchers for data mode:
 ;; ----------------------------------------------------------------------------
 
 (defn resolve-data-mapping
   "Resolve a YAML mapping while preserving data-mode shape."
-  [node]
-  (let [nodes (or (:% node) (:%% node))
-        merge (some #(re-matches #"<<\s*:?" %1)
-                (remove nil?  (map := (keys (apply hash-map nodes)))))
-        mapping
-        {:map
-         (vec (mapcat
-                (fn [[key val]]
-                  (let [okey key
-                        [key val] (check-conditional-pair key val)
-                        [key val] (check-mode-swap key val)
-                        key-str (:= key)
-                        [key val]
-                        (cond
-                          (and key-str (re-matches re/defk key-str))
-                          [{:def key-str} (resolve-code-node val)]
-                          (and key-str (re-matches #":.*[^-\w].*" key-str))
-                          [(resolve-code-node key)
-                           (if (str/ends-with? (:= okey) ":")
-                             (resolve-data-node (dissoc val :!))
-                             (resolve-code-node val))]
-                          :else
-                          [(resolve-data-node key) (resolve-data-node val)])
-                        key (if (and key-str (= key-str "<<"))
-                              {:key ":-<<"}
-                              key)]
-                    [key val]))
-                (partition 2 nodes)))}
-        mapping (if-let [anchor (:& node)] (assoc mapping :& anchor) mapping)
-        mapping (if merge (assoc mapping :! "+merge") mapping)]
-    mapping))
+  ([node]
+   (resolve-data-mapping node :data))
+  ([node value-mode]
+   (let [nodes (or (:% node) (:%% node))
+         merge (some #(re-matches #"<<\s*:?" %1)
+                 (remove nil?  (map := (keys (apply hash-map nodes)))))
+         default-resolver (case value-mode
+                            :code-value resolve-code-value-node
+                            :data resolve-data-node)
+         mapping
+         {:map
+          (vec (mapcat
+                 (fn [[key val]]
+                   (let [[key val code-value?]
+                         (check-code-value-mode key val)
+                         okey key
+                         conditional? (and (not code-value?)
+                                        (when-let [text (:= key)]
+                                          (re-find #":\?$" text)))
+                         [key val] (if code-value?
+                                     [key val]
+                                     (check-conditional-pair key val))
+                         [key val] (if code-value?
+                                     [key val]
+                                     (check-mode-swap key val))
+                         key-str (:= key)
+                         value-resolver (if code-value?
+                                          resolve-code-value-node
+                                          default-resolver)
+                         [key val]
+                         (cond
+                           (and key-str (re-matches re/defk key-str))
+                           [{:def key-str}
+                            ((if code-value?
+                               resolve-code-value-node
+                               resolve-code-node) val)]
+                           (and key-str
+                             (re-matches #":.*[^-\w].*" key-str))
+                           [(resolve-code-node key)
+                            (cond
+                              code-value?
+                              (resolve-code-value-node val)
+                              (str/ends-with? (:= okey) ":")
+                              (resolve-data-node (dissoc val :!))
+                              :else
+                              (resolve-code-node val))]
+                           :else
+                           [(resolve-data-node key)
+                            ((if conditional?
+                               resolve-data-node
+                               value-resolver) val)])
+                         key (if (and key-str (= key-str "<<"))
+                               {:key ":-<<"}
+                               key)]
+                     [key val]))
+                 (partition 2 nodes)))}
+         mapping (if-let [anchor (:& node)]
+                   (assoc mapping :& anchor)
+                   mapping)
+         mapping (if merge (assoc mapping :! "+merge") mapping)]
+     mapping)))
 
 (defn resolve-data-sequence
   "Resolve a YAML sequence while preserving data-mode shape."
