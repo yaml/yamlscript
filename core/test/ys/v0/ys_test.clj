@@ -74,6 +74,7 @@
 (deftest loads-portable-dependencies
   (testing "dialect loader receives environment-controlled cache paths"
     (let [called (atom nil)
+          loader-ns (atom nil)
           target (fresh-namespace)]
       (binding [global/ENV
                 {"YS_MAVEN_REPOSITORY" "/tmp/m2"
@@ -81,7 +82,8 @@
         (with-redefs [portable/resolve-require-deps
                       (fn []
                         (fn [options libspec]
-                          (reset! called [options libspec])))]
+                          (reset! called [options libspec])
+                          (reset! loader-ns *ns*)))]
           (#'portable/portable-use
             target
             '((clojure.string
@@ -89,7 +91,9 @@
       (is (= [{:mvn/local-repo "/tmp/m2"
                :gitlibs/dir "/tmp/gitlibs"}
               ["mvn:example/lib@1/clojure.string"]]
-            @called))))
+            @called))
+      (is (not= target @loader-ns)
+          "dependency loading does not rebind the caller namespace")))
   (testing "JVM and BB use a dependency already on the classpath"
     (let [target (fresh-namespace)]
       (with-redefs [portable/resolve-require-deps (constantly nil)]

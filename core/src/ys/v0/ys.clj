@@ -279,11 +279,11 @@
   (when-not (seq forms)
     (util/die "use requires at least one form"))
   (let [forms (if (symbol? (first forms)) (list forms) forms)]
-    (binding [*ns* ns]
-      (doseq [form forms]
-        (let [module (first form)
-              options (parse-use-args (rest form))]
-          (load-portable-module module options)
+    (doseq [form forms]
+      (let [module (first form)
+            options (parse-use-args (rest form))]
+        (load-portable-module module options)
+        (binding [*ns* ns]
           (select-portable-vars module options)))))
   nil)
 
