@@ -213,3 +213,12 @@
       computed: inc(x)
   eval: |
     {"computed" 3}
+
+
+- name: Data sequence code insertions return vectors
+  ys: |
+    =>::
+    - :when true: 41.++
+    - 99
+  eval: |
+    [42 99]
