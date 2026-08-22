@@ -768,6 +768,47 @@ Two args fit fine on one line.
   - `::` only works on mapping pair values (key-value syntax).
     For sequence entries, use the explicit `!` tag:
     `- ! expr` to evaluate `expr` as code within data mode
+- `:::` enters code-value mode for a mapping or sequence value.
+  Collection structure and mapping keys are data, while scalar values
+  and sequence elements are code:
+  ```yaml
+  result =:::
+    first: foo()
+    nested:
+      second: bar()
+    items:
+    - foo()
+    - bar()
+  ```
+  Code-value mode recurses through block and flow mappings and sequences.
+  It can be entered from code mode, data mode, or code-value mode.
+  A nested `:::` is therefore valid but redundant.
+  The value after `:::` must be a mapping or sequence; a scalar is an
+  error.
+  Use `key:: value` to make an entire mapping value subtree data again.
+  Use `- ! value` for the same data override on a sequence element.
+  Inside an overridden data subtree, ordinary `::` re-enters code mode.
+  An unmarked mapping is always structural in code-value mode, so write
+  block-form code as a scalar call to a helper function instead.
+  Prefer `:::` when most values in a collection are computed.
+  For a mostly literal collection with only one or two computed values,
+  data mode with `::` on those values is often clearer.
+- In code-value mode, `:when condition:::` conditionally splices mapping
+  entries into the surrounding map:
+  ```yaml
+  result =:::
+    always: current
+    :when include-extra:::
+      extra: make-extra()
+  ```
+  When the condition is false, the spliced entries are absent.
+  The remaining entries keep their source-key insertion order.
+  The triple colon is required so the splice body is also code-value
+  mode.
+  Do not put block-form code under an ordinary key because that nested
+  mapping is structural.
+  Use a conditional splice for an optional key, or compute the value in
+  a helper or intermediate variable and use that scalar result.
 - `!<fn>` tag — avoids an extra indent level: `each i xs: !say` instead
   of nesting `say:` as a separate pair inside the body
 - CLI args that look like numbers are auto-converted — `num()` not needed.
