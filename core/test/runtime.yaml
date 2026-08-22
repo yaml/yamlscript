@@ -222,3 +222,10 @@
     - 99
   eval: |
     [42 99]
+
+
+- name: Property lookup preserves false values
+  ys: |
+    identity({'y' false}.y)
+  eval: |
+    false

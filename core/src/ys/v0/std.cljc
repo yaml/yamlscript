@@ -158,11 +158,11 @@
 (defn get+ [C K]
   (condf C
     map? (if (symbol? K)
-           (or
-             (get C K)
-             (get C (str K))
-             (get C (keyword K)))
-           (or
+           (cond
+             (contains? C K) (get C K)
+             (contains? C (str K)) (get C (str K))
+             :else (get C (keyword K)))
+           (if (contains? C K)
              (get C K)
              (get C (str K))))
     set? (if (contains? C K)

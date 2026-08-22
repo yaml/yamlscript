@@ -21,6 +21,8 @@ test::
   want: null
 - code: +"foo".foo
   want: null
+- code: a({'y' false}.y)
+  want:: false
 
 - code: (1 .. 20).partition(3 5)
   want:: \'((1 2 3) (6 7 8) (11 12 13) (16 17 18))
