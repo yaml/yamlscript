@@ -1,6 +1,6 @@
 name = "yamlscript"
 description = "YAMLScript language binding for Ada"
-version = "0.2.30"
+version = "0.2.31"
 licenses = "MIT"
 authors = ["YAMLScript Contributors"]
 maintainers = ["YAMLScript Contributors <ingy@ingy.net>"]

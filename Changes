@@ -1,3 +1,16 @@
+- version: 0.2.31
+  date:    Sat Aug 22 11:21:39 AM EDT 2026
+  changes:
+  - erlang: Use rebar3 in the release container
+  - ai: Update skill for YAMLScript 0.2.30 splats
+  - docs: Migrate anonymous function arguments
+  - ai: Lint compound arrow expressions
+  - core: Add del alias for dissoc
+  - core: Add code-value collection mode
+  - core: Preserve conditional map key order
+  - ai: Explain code-value collection mode
+  - core: Return vectors from +concat
+  - core: Preserve false property values
 - version: 0.2.30
   date:    Wed Aug 19 03:50:13 PM EDT 2026
   changes:

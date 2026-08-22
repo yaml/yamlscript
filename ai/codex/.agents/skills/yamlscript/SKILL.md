@@ -10,11 +10,11 @@ description: >
 
 ## Setup
 
-Ensure `ys` version 0.2.30 is available for testing:
+Ensure `ys` version 0.2.31 is available for testing:
 
 ```bash
-[[ -x /tmp/ys-skill/bin/ys-0.2.30 ]] ||
-  curl -s https://yamlscript.org/install | VERSION=0.2.30 PREFIX=/tmp/ys-skill bash
+[[ -x /tmp/ys-skill/bin/ys-0.2.31 ]] ||
+  curl -s https://yamlscript.org/install | VERSION=0.2.31 PREFIX=/tmp/ys-skill bash
 YS=/tmp/ys-skill/bin/ys
 ```
 
@@ -417,7 +417,7 @@ program fails or the output semantics change.
 
 ### Prefer direct splat calls over `apply`
 
-YS 0.2.30 can splat collection-producing expressions directly into a
+YS 0.2.31 can splat collection-producing expressions directly into a
 call. When the collection is already a value or fits naturally in a
 scalar expression, call the target function and append `*` to the
 collection instead of wrapping the call in `apply`:
@@ -493,7 +493,7 @@ empty strings, or empty collections.
 
 ### Use conditional assignment for "if true update, else keep same value"
 
-YS 0.2.30 supports conditional assignment targets. When an assignment
+YS 0.2.31 supports conditional assignment targets. When an assignment
 would set a target to a new value only when a condition is true, and
 otherwise keep the same target value, put the condition in the target:
 
@@ -1207,7 +1207,7 @@ pairs =: words:frequencies.sort-by(val):reverse
 - `\(_ * 2)` for inline lambdas — prefer over `fn([x] x * 2)` for
   single-expression bodies.
   Anonymous-function arguments are `_` for the first argument and `_1`,
-  `_2`, etc. when numbered positions are needed. YAMLScript 0.2.30 no
+  `_2`, etc. when numbered positions are needed. YAMLScript 0.2.31 no
   longer accepts `%`, `%1`, `%2`, etc. as anonymous-function arguments;
   `%` remains the binary remainder operator. Use `fn` only when you need
   destructuring or multiple named args.

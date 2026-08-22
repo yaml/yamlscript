@@ -22,7 +22,7 @@ shared library:
 ```elixir
 def deps do
   [
-    {:yamlscript, "~> 0.2.30"}
+    {:yamlscript, "~> 0.2.31"}
   ]
 end
 ```

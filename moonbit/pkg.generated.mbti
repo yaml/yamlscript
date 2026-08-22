@@ -6,7 +6,7 @@ import {
 }
 
 // Values
-pub const VERSION : String = "0.2.30"
+pub const VERSION : String = "0.2.31"
 
 pub fn load(String) -> Json raise
 

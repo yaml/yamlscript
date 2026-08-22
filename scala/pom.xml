@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.yamlscript</groupId>
   <artifactId>scala-yamlscript</artifactId>
-  <version>0.2.30</version>
+  <version>0.2.31</version>
   <packaging>jar</packaging>
 
   <name>scala-yamlscript</name>
@@ -36,7 +36,7 @@
       scm:git:ssh://git@github.com/yaml/yamlscript.git
     </developerConnection>
     <url>https://github.com/yaml/yamlscript</url>
-    <tag>0.2.30</tag>
+    <tag>0.2.31</tag>
   </scm>
 
   <properties>

@@ -1,5 +1,5 @@
 name = "yamlscript"
-version = "0.2.30"
+version = "0.2.31"
 license = "MIT"
 author = "Ingy dot Net"
 maintainer = "ingy@ingy.net"
@@ -9,7 +9,7 @@ copyright = "Copyright 2023-2026 Ingy dot Net"
 source-dir = "src"
 
 [build]
-link = ["ys.0.2.30"]
+link = ["ys.0.2.31"]
 
 [[test]]
 name = "test_yamlscript"
