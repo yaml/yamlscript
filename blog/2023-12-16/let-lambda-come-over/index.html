@@ -2577,13 +2577,13 @@ Here's a simple lambda that squares a number:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Using the fn keyword</span>
 <span class="nt">fn(x)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x * x</span>
 <span class="c1"># Using the #() reader macro</span>
-<span class="l l-Scalar l-Scalar-Plain">\(%1 * %1)</span>
+<span class="l l-Scalar l-Scalar-Plain">\(_ * _)</span>
 </code></pre></div>
 <p>The latter method is shorter but the former is more flexible.</p>
 <p>Typically you use lambdas to return closures, which are functions that have
 access to the variables in the scope where they were created.</p>
 <p>Here's a function the returns a function that adds a number to another number:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">defn adder(x)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\(%1 + x)</span>
+<div class="highlight"><pre><span></span><code><span class="nt">defn adder(x)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\(_ + x)</span>
 <span class="nt">add-5 =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adder(5)</span>
 <span class="nt">add-5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w">           </span><span class="c1"># =&gt; 15</span>
 </code></pre></div>

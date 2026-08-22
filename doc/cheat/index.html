@@ -2734,6 +2734,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <li>All YAML forms are allowed in data mode</li>
 <li><code>!</code> tag toggles between code and data mode</li>
 <li><code>a:: b</code> is sugar for <code>a: ! b</code> in mapping pairs</li>
+<li><code>a::: {...}</code> enters code-value mode for a mapping or sequence</li>
+<li>Collection structure and mapping keys are data</li>
+<li>Scalar values and sequence elements are code</li>
+<li>Nested mappings and sequences stay in code-value mode</li>
+<li>Use <code>key:: value</code> or <code>- ! value</code> for a data subtree</li>
+<li>The value after <code>:::</code> must be a mapping or sequence</li>
 <li>Use <code>=&gt;: x</code> to write <code>x</code> as a mapping pair in code mode</li>
 </ul>
 <p>The following examples are in code mode unless otherwise noted.</p>

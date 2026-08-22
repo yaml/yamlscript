@@ -1015,6 +1015,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#code-values-in-data-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Values in Data Collections
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1663,6 +1672,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#switching-modes" class="md-nav__link">
     <span class="md-ellipsis">
       Switching Modes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-values-in-data-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Values in Data Collections
     </span>
   </a>
   
@@ -2473,6 +2491,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#code-values-in-data-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Values in Data Collections
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2534,7 +2561,7 @@ of "modes".</p>
 considered as a data string or a code symbol (variable, function name etc).
 Since the main focus of YS is about embedding code into YAML data files,
 it's very important to know what mode you are in at any given point.</p>
-<p>YS has 3 modes:</p>
+<p>YS has 4 modes:</p>
 <ul>
 <li>Bare mode</li>
 </ul>
@@ -2554,6 +2581,12 @@ it's very important to know what mode you are in at any given point.</p>
   YS "code" is  written using block mappings (<code>k: v</code>), plain scalars,
   quoted scalars (single and double) and literal (<code>|</code>) scalars.
   Folded scalars (<code>&gt;</code>) are also disallowed in code mode.</p>
+<ul>
+<li>Code-value mode</li>
+</ul>
+<p>Mapping keys and collection structure are data, while scalar values and
+  sequence elements are code.
+  This mode is only entered on a mapping pair value with <code>:::</code>.</p>
 <p>The most important ones to learn about are data and code modes.
 To use YS effectively you'll need to be comfortable with switching back and
 forth between the two.</p>
@@ -2639,6 +2672,48 @@ In the examples above <code>count:</code> is simply a plain scalar ending with <
 count:: [red, green, blue]&#39;)
 {&quot;count:&quot;:[&quot;red&quot;,&quot;green&quot;,&quot;blue&quot;]}
 </code></pre></div>
+<h2 id="code-values-in-data-collections">Code Values in Data Collections<a class="headerlink" href="#code-values-in-data-collections" title="Permanent link">🔗</a></h2>
+<p>Use <code>:::</code> when a mapping or sequence contains mostly computed values.
+It keeps the collection structure and mapping keys in data mode while treating
+each scalar value and sequence element as code.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
+<span class="nt">x =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
+<span class="nt">result =::</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">answer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x * 7</span>
+<span class="w">  </span><span class="nt">nested</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">next</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc(x)</span>
+<span class="w">  </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">x + 1</span>
+</code></pre></div>
+<p>This produces:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">answer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
+<span class="nt">nested</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">next</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<span class="nt">items</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+</code></pre></div>
+<p>Code-value mode recurses through block and flow mappings and sequences.
+It can be entered from code mode, data mode, or another code-value collection.
+The value after <code>:::</code> must be a mapping or sequence.</p>
+<p>Use <code>::</code> on a mapping pair to make its entire value subtree data again.
+Use <code>!</code> for the same override on a sequence element.
+An inner <code>::</code> can switch from that data subtree back to code as usual.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">result =::</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">computed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc(x)</span>
+<span class="w">  </span><span class="nt">config:</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">literal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc(x)</span>
+<span class="w">    </span><span class="nt">computed:</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc(x)</span>
+<span class="w">  </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc(x)</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="kt">!</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc(x)</span>
+</code></pre></div>
+<p>An unmarked mapping in code-value mode is always a structural mapping.
+Write a block-form code value as a scalar call to a helper function instead.</p>
+<p>Use <code>:::</code> when most values in a collection are computed.
+For a mostly literal collection with only one or two computed values, ordinary
+data mode with <code>::</code> on those values is often clearer.</p>
 
 
 

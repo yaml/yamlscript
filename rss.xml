@@ -13,8 +13,8 @@
     <language>en</language>
 
     
-    <pubDate>Thu, 20 Aug 2026 01:50:11 -0000</pubDate>
-    <lastBuildDate>Thu, 20 Aug 2026 01:50:11 -0000</lastBuildDate>
+    <pubDate>Sat, 22 Aug 2026 15:55:52 -0000</pubDate>
+    <lastBuildDate>Sat, 22 Aug 2026 15:55:52 -0000</lastBuildDate>
     <ttl>1440</ttl>
 
     
@@ -800,7 +800,7 @@ etc.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-07-10/building-ys/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-10/building-ys.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-07-10/building-ys.png" type="image/png" length="36093" />
       
     </item>
     
@@ -1336,7 +1336,7 @@ $ perl -E &#39;@l = &amp;lt;&amp;gt;; say scalar(@l)&#39; &amp;lt; file.txt
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-23/ys-one-liners/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-23/ys-one-liners.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-23/ys-one-liners.png" type="image/png" length="37322" />
       
     </item>
     
@@ -1545,7 +1545,7 @@ but… it doesn&#39;t require the actual &lt;code&gt;then&lt;/code&gt; and &lt;c
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2025-06-16/if---we-must/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-16/if---we-must.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2025-06-16/if---we-must.png" type="image/png" length="35735" />
       
     </item>
     
@@ -2321,7 +2321,7 @@ Yesterday I automated that list...&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2024-03-14/ys-firsts/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-03-14/ys-firsts.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2024-03-14/ys-firsts.png" type="image/png" length="33246" />
       
     </item>
     
@@ -2376,7 +2376,7 @@ gets from Perl to Rust.&lt;/p&gt;
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-23/perl-to-rust/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-23/perl-to-rust.png" type="image/png" length="0" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-23/perl-to-rust.png" type="image/png" length="34901" />
       
     </item>
     
@@ -3056,7 +3056,7 @@ YS on your side!&lt;/p&gt;</description>
       
       <guid isPermaLink="true">https://yamlscript.org/blog/2023-12-02/twas-a-bit/</guid>
       
-      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-02/twas-a-bit.png" type="image/png" length="33830" />
+      <enclosure url="https://yamlscript.org/assets/images/social/blog/2023-12-02/twas-a-bit.png" type="image/png" length="0" />
       
     </item>
     

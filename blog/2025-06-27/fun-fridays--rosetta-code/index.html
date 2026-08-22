@@ -2759,8 +2759,8 @@ They define Clojure anonymous functions.</p>
 <p>In clojure, you can use <code>#(...)</code> to define an anonymous function and in YS you
 use <code>\(...)</code>.
 In Clojure, <code>%</code> is short for <code>%1</code> (the first argument).
-In YS, <code>%</code> is a modulo operator, so we use <code>%1</code> instead.
-YS also lets you use <code>_</code> for <code>%1</code> in anonymous functions.</p>
+In YS, <code>%</code> is a modulo operator, so use <code>_</code> for the first argument.
+Use <code>_1</code>, <code>_2</code>, and so on when numbered arguments are needed.</p>
 <p>Let's convert the anonymous functions and get rid of the <code>!clj</code> tags.</p>
 <div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
 

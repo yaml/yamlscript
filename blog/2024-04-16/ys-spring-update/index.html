@@ -2769,8 +2769,8 @@ It's the namespace separator, as in <code>clojure.core/println</code>.</p>
 <code>(mod a b)</code>; 2 slightly different math functions.</p>
 <p>In Clojure, <code>%</code> was already a shorthand for the <code>%1</code> argument in anonymous
 functions.</p>
-<p>In YS, you'll need to use <code>%1</code> for that:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">square =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\(%1 * %1)</span>
+<p>In YS, use <code>_</code> for the first argument:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">square =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\(_ * _)</span>
 </code></pre></div>
 <p>Next we added <code>**</code> for exponentiation.
 So <code>2 ** 3</code> compiles to <code>(pow 2 3)</code>.

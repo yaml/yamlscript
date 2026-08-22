@@ -2599,7 +2599,7 @@ runs <code>java</code> once to resolve the dependencies from Clojars.</p>
 The jars are bundled in the release archive; <code>make install</code> skips them
 when run as root (system installs), and you can install them per user at
 any time with:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys-sh-0.2.30<span class="w"> </span>--install-m2
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys-sh-0.2.31<span class="w"> </span>--install-m2
 </code></pre></div>
 <p>(Homebrew installs print this as a caveat, since brew cannot write to
 your home directory.)</p>
@@ -2620,7 +2620,7 @@ resolves the dependency at run time with <code>clojure.repl.deps/add-libs</code>
 which needs Clojure 1.12 or later.
 You can also skip the runtime resolution by providing the dependency
 yourself:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.2.30&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.2.31&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-M<span class="w"> </span>program.clj
 </code></pre></div>
 <h2 id="jolt">Jolt<a class="headerlink" href="#jolt" title="Permanent link">🔗</a></h2>

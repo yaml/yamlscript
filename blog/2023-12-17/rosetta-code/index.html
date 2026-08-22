@@ -2665,7 +2665,7 @@ write Clojure, so let's just pick a Clojure solution and translate it to YS.</p>
 <span class="w">  </span><span class="nt">reduce</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">fn(doors idx)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assoc(doors idx true)</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">into []</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat(100 false)</span>
-<span class="w">    </span><span class="nt">map \(dec (%1 * %1))</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 .. 10</span>
+<span class="w">    </span><span class="nt">map \(dec (_ * _))</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 .. 10</span>
 
 <span class="nt">defn open-doors()</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">for [d n] map(vector doors() iterate(inc 1)) :when d</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">n</span>
@@ -2699,7 +2699,7 @@ The <code>main</code> function (if defined) is called automatically when the scr
 <span class="w">  </span><span class="nt">reduce</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">fn(doors idx)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">assoc(doors idx true)</span>
 <span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">into []</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">repeat(100 false)</span>
-<span class="w">    </span><span class="nt">map \(dec (%1 * %1))</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 .. 10</span>
+<span class="w">    </span><span class="nt">map \(dec (_ * _))</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1 .. 10</span>
 </code></pre></div>
 <p>I also ordered the functions top-down in the order they are called since we know
 that YS will auto-declare them in the generated Clojure code.</p>
@@ -2731,7 +2731,7 @@ defn doors():
   reduce:
     fn(doors idx): assoc(doors idx true)
     into []: repeat(100 false)
-    map \(dec (%1 * %1)): 1 .. 10
+    map \(dec (_ * _)): 1 .. 10
 &amp;lt;/syntaxhighlight&gt;
 {&amp;lcub;out}}
 &amp;lt;pre&gt;

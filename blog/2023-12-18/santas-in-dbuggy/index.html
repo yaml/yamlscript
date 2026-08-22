@@ -2736,7 +2736,7 @@ Here&#39;s a contrived example that passes data through a pipeline of functions:
 !ys-0
 -&gt;&gt; (1..10):
   map: inc
-  filter: \(= 0 (mod % 2))  # odd?
+  filter: \((_ %% 2).!)  # odd?
   reduce: +
   =&gt;: say
 </code></pre></div>
@@ -2756,7 +2756,7 @@ I almost always us <code>WWW</code> for this.</p>
 <span class="w">  </span><span class="nt">WWW</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;before</span><span class="nv"> </span><span class="s">map&quot;</span>
 <span class="w">  </span><span class="nt">map</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inc</span>
 <span class="w">  </span><span class="nt">WWW</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;after</span><span class="nv"> </span><span class="s">map&quot;</span>
-<span class="w">  </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\(= 0 (mod % 2))</span><span class="w">  </span><span class="c1"># odd?</span>
+<span class="w">  </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">\((_ %% 2).!)</span><span class="w">  </span><span class="c1"># odd?</span>
 <span class="w">  </span><span class="nt">WWW</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;after</span><span class="nv"> </span><span class="s">filter&quot;</span>
 <span class="w">  </span><span class="nt">reduce</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">+</span>
 <span class="w">  </span><span class="nt">WWW</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;after</span><span class="nv"> </span><span class="s">reduce&quot;</span>
