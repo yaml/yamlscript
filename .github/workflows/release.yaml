@@ -1144,9 +1144,7 @@ jobs:
   publish-website:
     name: Publish website
     if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
-    needs:
-    - publish-bindings
-    - publish-homebrew
+    needs: upload-assets
     runs-on: ubuntu-latest
     permissions:
       contents: write
