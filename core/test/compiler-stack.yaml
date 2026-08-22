@@ -866,13 +866,13 @@
   construct: |
     {:Top
      [{:Lst
-       [{:Sym merge}
+       [{:Sym merge-omap}
         {:Map [{:Str "foo"} {:Int 1} {:Str "bar"} {:Int 2}]}
         {:Lst
          [{:Sym let}
           {:Vec [{:Sym x} {:Int 6} {:Sym y} {:Int 7}]}
           {:Lst
-           [{:Sym merge}
+           [{:Sym merge-omap}
             {:Map
              [{:Str "baz"}
               {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
@@ -898,11 +898,13 @@
       {:Str "bust"}
       {:Int 2000}]}
   clojure: |
-    (merge
+    (merge-omap
       {"foo" 1, "bar" 2}
       (let
        [x 6 y 7]
-       (merge {"baz" (mul+ x y), "boom" 1999} (let [z 8] {"bust" 2000}))))
+       (merge-omap
+        {"baz" (mul+ x y), "boom" 1999}
+        (let [z 8] {"bust" 2000}))))
 
 
 - name: Load yaml file in data map assignment
@@ -951,7 +953,7 @@
   construct: |
     {:Top
      [{:Lst
-       [{:Sym merge}
+       [{:Sym merge-omap}
         {:Map [{:Str "a"} {:Int 1}]}
         {:Lst
          [{:Sym let}
@@ -966,7 +968,7 @@
             {:Str "c"}
             {:Str "data.foo"}]}]}]}]}
   clojure: |
-    (merge
+    (merge-omap
       {"a" 1}
       (let [data (yaml/load (slurp "data.yaml"))] {"b" 2, "c" "data.foo"}))
 
@@ -1065,7 +1067,7 @@
      [{:Lst [{:Sym use} {:Str "module1"}]}
       {:Lst [{:Sym use} {:Str "module2"}]}
       {:Lst
-       [{:Sym merge}
+       [{:Sym merge-omap}
         {:Map
          [{:Str "foo"}
           {:Str "the foo"}
@@ -1079,7 +1081,7 @@
             {:Sym y}
             {:Lst [{:Sym add+} {:Sym x} {:Int 1}]}]}
           {:Lst
-           [{:Sym merge}
+           [{:Sym merge-omap}
             {:Lst
              [{:Sym when}
               {:Lst [{:Sym >} {:Sym x} {:Int 1}]}
@@ -1093,11 +1095,11 @@
     (use "module1")
     (use "module2")
     (+++
-     (merge
+     (merge-omap
       {"foo" "the foo", "bar" "the bar"}
       (let
        [x (rand 2) y (add+ x 1)]
-       (merge
+       (merge-omap
         (when (> x 1) {"aaa" (mul+ x y), "bbb" 333})
         {"baz" "the baz"}))))
 
@@ -1124,7 +1126,9 @@
         y: 2
     z: 3
   clojure: |
-    (merge {"x" 1} (merge (do (say "one") (say "two") {"y" 2}) {"z" 3}))
+    (merge-omap
+      {"x" 1}
+      (merge-omap (do (say "one") (say "two") {"y" 2}) {"z" 3}))
 
 
 - name: Conditional pair with non-mapping value
@@ -1143,14 +1147,14 @@
   construct: |
     {:Top
      [{:Lst
-       [{:Sym merge}
+       [{:Sym merge-omap}
         {:Map [{:Str "x"} {:Int 1}]}
         {:Lst
-         [{:Sym merge}
+         [{:Sym merge-omap}
           {:Lst [{:Sym foo} {:Sym a} {:Int 3}]}
           {:Map [{:Str "y"} {:Int 2}]}]}]}]}
   clojure: |
-    (merge {"x" 1} (merge (foo a 3) {"y" 2}))
+    (merge-omap {"x" 1} (merge-omap (foo a 3) {"y" 2}))
 
 
 - name: Conditional pair dmap in dmap
@@ -1204,17 +1208,17 @@
   construct: |
     {:Top
      [{:Lst
-       [{:Sym merge}
+       [{:Sym merge-omap}
         {:Map
          [{:Str "a"}
           {:Vec
            [{:Lst
-             [{:Sym merge}
+             [{:Sym merge-omap}
               {:Map [{:Str "b"} {:Str "c"}]}
               {:Lst [{:Sym foo}]}]}]}]}
         {:Lst [{:Sym bar}]}]}]}
   clojure: |
-    (merge {"a" [(merge {"b" "c"} (foo))]} (bar))
+    (merge-omap {"a" [(merge-omap {"b" "c"} (foo))]} (bar))
 
 
 - name: Top level data mode mapping first pair has key '::'
@@ -1271,7 +1275,7 @@
       {:Int 3}]}
   clojure: |
     (use module1)
-    (merge {"x" 1} (merge (when (> x 1) {"y" 2}) {:z 3}))
+    (merge-omap {"x" 1} (merge-omap (when (> x 1) {"y" 2}) {:z 3}))
 
 
 - name: Shorthand syntax for conditionals in data mappings 2
@@ -1362,7 +1366,7 @@
   clojure: |
     (let
       [m1 {"a" "b"} foo (merge m1 {"x" "y"})]
-      (merge (when true foo) {"z" 1}))
+      (merge-omap (when true foo) {"z" 1}))
 
 
 - name: Colon call after dollar key
@@ -1455,9 +1459,9 @@
     :when y:: {c: 3}
     d: 4
   clojure: |
-    (merge
+    (merge-omap
       {"a" 1}
-      (merge (when x {"b" 2}) (merge (when y {"c" 3}) {"d" 4})))
+      (merge-omap (when x {"b" 2}) (merge-omap (when y {"c" 3}) {"d" 4})))
 
 
 - name: A '::' before a function call tag

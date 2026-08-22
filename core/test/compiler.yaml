@@ -1800,9 +1800,11 @@
       three: 333
   clojure: |
     {"foo"
-      (merge
+      (merge-omap
        {"one" 111}
-       (merge {"a" 1} (merge {"two" 222} (merge {"b" 2} {"three" 333}))))}
+       (merge-omap
+        {"a" 1}
+        (merge-omap {"two" 222} (merge-omap {"b" 2} {"three" 333}))))}
 
 
 - name: Tag method call with data mode switch to data mode
@@ -1853,7 +1855,7 @@
       :when x:: {bar: 2}
       x: 3
   clojure: |
-    [(merge {"foo" 1} (merge (when x {"bar" 2}) {"x" 3}))]
+    [(merge-omap {"foo" 1} (merge-omap (when x {"bar" 2}) {"x" 3}))]
 
 
 - name: Tag function on let
@@ -1942,7 +1944,9 @@
     b:?: c
     d: 2
   clojure: |
-    (merge (merge {"a" 1} (if-let [_ (some? c)] {"b" _} {})) {"d" 2})
+    (merge-omap
+      (merge-omap {"a" 1} (if-let [_ (some? c)] {"b" _} {}))
+      {"d" 2})
 
 - name: Conditional pair only (edge case - returns {} not nil when falsy)
   yamlscript: |

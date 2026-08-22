@@ -162,6 +162,33 @@ baz:
  :z 1}"
     "Literal maps > 8 pairs ordered by default")
 
+  (is (ys "-e" "flag =: false
+map =:::
+  first: 1
+  :when flag:::
+    conditional: 2
+  second: 2
+  third: 3
+  fourth: 4
+  fifth: 5
+  sixth: 6
+  seventh: 7
+  eighth: 8
+  ninth: 9
+  tenth: 10
+say: map:yaml/dump")
+    "first: 1
+second: 2
+third: 3
+fourth: 4
+fifth: 5
+sixth: 6
+seventh: 7
+eighth: 8
+ninth: 9
+tenth: 10"
+    "False conditional map splice preserves key order")
+
   #__)
 
 (swap! cli/testing (constantly true))

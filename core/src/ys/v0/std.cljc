@@ -254,6 +254,12 @@
     (apply ordered-map xs)
     (apply array-map xs)))
 
+(defn merge-omap
+  "Merge maps while preserving the first insertion position of each key."
+  [& maps]
+  (apply omap
+    (mapcat #(mapcat identity %1) maps)))
+
 (intern 'ys.v0.std '% omap)
 
 (defn reverse [x]

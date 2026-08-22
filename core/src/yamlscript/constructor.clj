@@ -328,6 +328,13 @@
                  new))]
     node))
 
+(defn- merge-maps
+  "Create an order-preserving merge, or return map if base is nil."
+  [base new-map]
+  (if base
+    (Lst [(Sym 'merge-omap) base new-map])
+    new-map))
+
 (defn dmap-code
   "Merge embedded code forms into a constructed data map."
   [code dmap ctx]
@@ -354,7 +361,7 @@
                                        (Lst (apply vector (Sym 'do) form))))]
                           (if (= dmap {:Map []})
                             form
-                            (Lst [(Sym 'merge) form dmap]))))
+                            (merge-maps form dmap))))
                 dmap (reverse part))))
           dmap (reverse parts))]
     result))
@@ -379,13 +386,6 @@
            (construct-node (first %) ctx)
            (construct-node (second %) ctx))
         (partition 2 pairs)))))
-
-(defn- merge-maps
-  "Create a merge expression, or return map if base is nil."
-  [base new-map]
-  (if base
-    (Lst [(Sym 'merge) base new-map])
-    new-map))
 
 (defn construct-dmap
   "Construct a data map, including conditional and embedded code pairs."
@@ -436,13 +436,13 @@
                                              (dissoc key-node :|?)
                                              val-node
                                              ctx)]
-                             (Lst [(Sym 'merge) cond-form dmap]))
+                             (merge-maps cond-form dmap))
                            (let [part (if (vector? part)
                                         (vec
                                           (map #(construct-node %1 ctx) part))
                                         (construct-node part ctx))
                                  amap (Map part)]
-                             (Lst [(Sym 'merge) amap dmap])))))
+                             (merge-maps amap dmap)))))
                amap parts)]
     dmap))
 
