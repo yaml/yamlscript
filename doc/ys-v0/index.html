@@ -1815,18 +1815,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
-  <a href="#jolt" class="md-nav__link">
+  <a href="#portable-clojure-dialects" class="md-nav__link">
     <span class="md-ellipsis">
-      Jolt
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#glojure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Glojure
+      Portable Clojure dialects
     </span>
   </a>
   
@@ -2474,18 +2465,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
-  <a href="#jolt" class="md-nav__link">
+  <a href="#portable-clojure-dialects" class="md-nav__link">
     <span class="md-ellipsis">
-      Jolt
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#glojure" class="md-nav__link">
-    <span class="md-ellipsis">
-      Glojure
+      Portable Clojure dialects
     </span>
   </a>
   
@@ -2599,7 +2581,7 @@ runs <code>java</code> once to resolve the dependencies from Clojars.</p>
 The jars are bundled in the release archive; <code>make install</code> skips them
 when run as root (system installs), and you can install them per user at
 any time with:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys-sh-0.2.31<span class="w"> </span>--install-m2
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys-sh-0.2.32<span class="w"> </span>--install-m2
 </code></pre></div>
 <p>(Homebrew installs print this as a caveat, since brew cannot write to
 your home directory.)</p>
@@ -2620,38 +2602,17 @@ resolves the dependency at run time with <code>clojure.repl.deps/add-libs</code>
 which needs Clojure 1.12 or later.
 You can also skip the runtime resolution by providing the dependency
 yourself:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.2.31&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.2.32&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-M<span class="w"> </span>program.clj
 </code></pre></div>
-<h2 id="jolt">Jolt<a class="headerlink" href="#jolt" title="Permanent link">🔗</a></h2>
-<p>Jolt is a new Clojure dialect hosted on Chez Scheme.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>jolt<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
-$<span class="w"> </span>jolt<span class="w"> </span>program.clj
+<h2 id="portable-clojure-dialects">Portable Clojure dialects<a class="headerlink" href="#portable-clojure-dialects" title="Permanent link">🔗</a></h2>
+<p>The <code>star</code> target emits a dialect-neutral dependency preamble through
+the <code>clojurestar.deps</code> API.</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--to<span class="o">=</span>star<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
 </code></pre></div>
-<p>The <code>-T jolt</code> header form resolves the ys.v0 dependency with
-<code>jolt.deps/add-deps</code> when running under jolt (transitive dependencies
-come from the pom.xml inside the ys.v0 jar), and adds jolt's own
-libyaml based yaml library so the YS yaml functions work natively.</p>
-<h2 id="glojure">Glojure<a class="headerlink" href="#glojure" title="Permanent link">🔗</a></h2>
-<p><a href="https://github.com/glojurelang/glojure">Glojure&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a> is a Clojure dialect
-implemented in Go.
-This needs a Glojure release newer than 0.6.8 (where <code>ns-unmap</code> was
-broken).</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>glj<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
-$<span class="w"> </span>glj<span class="w"> </span>program.clj
-</code></pre></div>
-<p>Glojure loads plain Clojure source from a load path (no jars), so the
-<code>-T glj</code> header form adds the extracted ys.v0 sources to the load path
-at run time: the <code>YS_V0_PATH</code> env var if set, else the
-<code>~/.m2/repository/org/yamlscript/ys.v0/&lt;version&gt;/ys.v0-&lt;version&gt;.jar.d</code>
-directory that the ys installers and <code>ys-sh --install-m2</code> maintain.</p>
-<p>Backend libraries (json, yaml, shell, http, fs) don't exist on glojure
-yet, so those YS functions fail with a clear message there; ordered
-maps fall back to array-map (insertion order is kept for literals of
-any size, and lost when assoc grows a map past eight entries).</p>
+<p>Compatible runtimes such as Glojure, Jolt, and Gobb provide that API.
+They resolve <code>org.yamlscript/ys.v0</code>, then run the same portable program
+body.</p>
 <h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">🔗</a></h2>
 <p>A few standard library functions need the YS compiler and only work under
 the ys runtime.
