@@ -1,11 +1,11 @@
 package yamlscript
 
-// #cgo !windows LDFLAGS: -lys.0.2.31
+// #cgo !windows LDFLAGS: -lys.0.2.32
 // #cgo windows LDFLAGS: -lys
 // #ifdef _WIN32
 // #include <libys.h>
 // #else
-// #include <libys.0.2.31.h>
+// #include <libys.0.2.32.h>
 // #endif
 // #include <stdlib.h>
 import "C"

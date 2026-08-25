@@ -1,3 +1,7 @@
+- version: 0.2.32
+  date:    Tue Aug 25 09:51:51 AM EDT 2026
+  changes:
+  - core: Add portable star compilation
 - version: 0.2.31
   date:    Sat Aug 22 11:21:39 AM EDT 2026
   changes:

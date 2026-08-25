@@ -2,7 +2,7 @@
 
 use ys::taptest: :all
 
-VERSION =: '0.2.31'
+VERSION =: '0.2.32'
 
 ROOT =: +"$DIR/../.."
 
@@ -86,7 +86,7 @@ test::
                (.setContextClassLoader t cl)
                (with-bindings {(requiring-resolve 'clojure.core/*repl*) true}
                  ((requiring-resolve 'clojure.repl.deps/add-libs)
-                  '{org.yamlscript/ys.v0 {:mvn/version "0.2.31"}}))
+                  '{org.yamlscript/ys.v0 {:mvn/version "0.2.32"}}))
                (with-bindings {clojure.lang.Compiler/LOADER cl}
                  (require 'ys.v0)
                  (doseq [lib '[flatland.ordered.map clj-yaml.core
@@ -102,13 +102,13 @@ test::
   want: |
     (when (System/getProperty "babashka.version")
       (let [m2 (str (System/getProperty "user.home") "/.m2/repository/")
-            jars [(str m2 "org/yamlscript/ys.v0/0.2.31/ys.v0-0.2.31.jar")
+            jars [(str m2 "org/yamlscript/ys.v0/0.2.32/ys.v0-0.2.32.jar")
                   (str m2 "org/clojure/data.json/2.4.0/data.json-2.4.0.jar")]]
         (if (every? #(.exists (java.io.File. %)) jars)
           ((requiring-resolve 'babashka.classpath/add-classpath)
            (clojure.string/join java.io.File/pathSeparator jars))
           ((requiring-resolve 'babashka.deps/add-deps)
-           '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.31"}}}))))
+           '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.32"}}}))))
     (ns main (:require ys.v0))
     (ys.v0/init)
 
@@ -118,7 +118,7 @@ test::
   want: |
     (require '[clojurestar.deps :as deps])
     (deps/add-deps
-     '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.31"}}})
+     '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.32"}}})
 
     (ns main (:require ys.v0))
     (ys.v0/init)

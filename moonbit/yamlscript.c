@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define YS_VERSION "0.2.31"
+#define YS_VERSION "0.2.32"
 
 typedef int (*graal_create_isolate_fn)(void *, void *, void *);
 typedef int (*graal_tear_down_isolate_fn)(void *);
