@@ -547,7 +547,12 @@ ifndef v
 	$(error 'make release-check-bindings' requires v=VERSION)
 endif
 	@for binding in $(RELEASE-CHECK-BINDINGS); do \
-	  util/release-binding-published $$binding $(v) || true; \
+	  status=0; \
+	  timeout 10 util/release-binding-published $$binding $(v) || \
+	    status=$$?; \
+	  if [[ $$status -eq 124 ]]; then \
+	    echo "Timed out: $$binding $(v)"; \
+	  fi; \
 	done
 
 # Step 13: Publish Homebrew tap
