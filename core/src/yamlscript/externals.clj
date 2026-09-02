@@ -174,7 +174,7 @@
           {:ns ns}))
       load-file-clj)))
 
-(def source-options #{:path :file :url :deps})
+(def source-options #{:path :file :url :from})
 (def selection-options #{:as :get :all :none :not})
 (def use-options (into source-options selection-options))
 
@@ -229,10 +229,10 @@
         (cond
           (source-options option)
           (let [value (use-option-value option args string? "one string")]
-            (when-let [[source] (:from options)]
+            (when-let [[source] (:source options)]
               (die (str "Invalid 'use' option '" option
                      "': source option '" source "' is already set")))
-            (recur (nnext args) (assoc options :from [option value])))
+            (recur (nnext args) (assoc options :source [option value])))
 
           (= option :as)
           (let [alias (use-option-value
@@ -259,14 +259,14 @@
   (let [module (str module)
         modpath (str/replace module #"\." "/")
         args (parse-args args)
-        [kind spec] (or (:from args) [:yspath (get-yspath @sci/file)])
+        [kind spec] (or (:source args) [:yspath (get-yspath @sci/file)])
         loaded-namespace
         (case kind
           :yspath (do (load-yspath modpath spec) nil)
           :path (do (load-path modpath spec) nil)
           :file (do (load-file modpath spec) nil)
           :url (do (load-url modpath spec) nil)
-          :deps (load-deps ns modpath spec))
+          :from (load-deps ns modpath spec))
         namespace-sym (symbol module)]
     (when (and loaded-namespace (not= loaded-namespace namespace-sym))
       (die (str "Dependency namespace '" loaded-namespace

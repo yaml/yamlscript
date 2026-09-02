@@ -101,7 +101,7 @@
                     [~m ~ns])]
      (+def-vars ns# m#)))
 
-(def source-options #{:path :file :url :deps})
+(def source-options #{:path :file :url :from})
 (def selection-options #{:as :get :all :none :not})
 (def use-options (into source-options selection-options))
 
@@ -143,10 +143,10 @@
         (cond
           (source-options option)
           (let [value (use-option-value option args string? "one string")]
-            (when-let [[source] (:from options)]
+            (when-let [[source] (:source options)]
               (util/die (str "Invalid 'use' option '" option
                           "': source option '" source "' is already set")))
-            (recur (nnext args) (assoc options :from [option value])))
+            (recur (nnext args) (assoc options :source [option value])))
 
           (= option :as)
           (let [alias (use-option-value
@@ -212,11 +212,11 @@
     (require module)
     (catch Throwable _
       (util/die
-        (str "Portable 'use :deps' cannot acquire dependencies in this "
+        (str "Portable 'use :from' cannot acquire dependencies in this "
           "runtime; put namespace '" module "' on the classpath")))))
 
 (defn- load-portable-module [module options]
-  (let [[kind spec] (or (:from options) [:yspath (get-yspath *file*)])]
+  (let [[kind spec] (or (:source options) [:yspath (get-yspath *file*)])]
     (case kind
       :yspath
       (do
@@ -244,7 +244,7 @@
           (util/die "Invalid 'use' option ':url': expected an HTTPS URL"))
         (load-string (slurp spec)))
 
-      :deps
+      :from
       (let [dependency-options
             (cond-> {}
               (get global/ENV "YS_MAVEN_REPOSITORY")

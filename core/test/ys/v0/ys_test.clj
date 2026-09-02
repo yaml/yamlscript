@@ -25,15 +25,22 @@
     target))
 
 (deftest parses-portable-use-options
-  (is (= {:from [:path "lib"]
+  (is (= {:source [:path "lib"]
           :as 'library
           :get ['one 'two/second]}
         (#'portable/parse-use-args
           [:path "lib" :as 'library :get 'one 'two/second])))
-  (is (= {:from [:deps "mvn:example/lib@1/example.lib"]
+  (is (= {:source [:from "mvn:example/lib@1/example.lib"]
           :all true}
         (#'portable/parse-use-args
-          [:deps "mvn:example/lib@1/example.lib"])))
+          [:from "mvn:example/lib@1/example.lib"])))
+  (is (= "Invalid 'use' option ':deps'"
+        (error-message
+          #(#'portable/parse-use-args [:deps "x"]))))
+  (is (= (str "Invalid 'use' option ':from': source option ':path' "
+           "is already set")
+        (error-message
+          #(#'portable/parse-use-args [:path "one" :from "two"]))))
   (is (= "Duplicate 'use' option ':all'"
         (error-message
           #(#'portable/parse-use-args [:all :all])))))
@@ -87,7 +94,7 @@
           (#'portable/portable-use
             target
             '((clojure.string
-                :deps "mvn:example/lib@1/clojure.string" :none)))))
+                :from "mvn:example/lib@1/clojure.string" :none)))))
       (is (= [{:mvn/local-repo "/tmp/m2"
                :gitlibs/dir "/tmp/gitlibs"}
               ["mvn:example/lib@1/clojure.string"]]
@@ -99,18 +106,18 @@
       (with-redefs [portable/resolve-require-deps (constantly nil)]
         (#'portable/portable-use
           target
-          '((clojure.string :deps "mvn:example/lib@1/clojure.string"
+          '((clojure.string :from "mvn:example/lib@1/clojure.string"
               :get upper-case))))
       (is (= "PORTABLE" ((ns-resolve target 'upper-case) "portable")))))
   (testing "classpath-only runtimes report unavailable namespaces"
     (let [target (fresh-namespace)]
       (with-redefs [portable/resolve-require-deps (constantly nil)]
-        (is (= (str "Portable 'use :deps' cannot acquire dependencies in "
+        (is (= (str "Portable 'use :from' cannot acquire dependencies in "
                  "this runtime; put namespace 'missing.portable' on the "
                  "classpath")
               (error-message
                 #(#'portable/portable-use
                    target
                    '((missing.portable
-                       :deps "mvn:example/lib@1/missing.portable"
+                       :from "mvn:example/lib@1/missing.portable"
                        :none))))))))))

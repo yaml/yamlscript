@@ -29,17 +29,17 @@
       (str/trimr (ex-message error)))))
 
 (deftest parses-use-options
-  (is (= {:from [:path "lib"]
+  (is (= {:source [:path "lib"]
           :as 'library
           :get ['one 'two/second]}
         (externals/parse-args
           [:path "lib" :as 'library :get 'one 'two/second])))
   (is (= {:not ['one 'two]}
         (externals/parse-args [:not 'one 'two])))
-  (is (= {:from [:deps "mvn:example/lib@1/example.lib"]
+  (is (= {:source [:from "mvn:example/lib@1/example.lib"]
           :all true}
         (externals/parse-args
-          [:deps "mvn:example/lib@1/example.lib"])))
+          [:from "mvn:example/lib@1/example.lib"])))
   (is (= {:none true}
         (externals/parse-args [:none])))
   (is (= {:as 'library}
@@ -52,7 +52,9 @@
     (is (= "Invalid 'use' option ':git'"
           (error-message #(externals/parse-args [:git "x"]))))
     (is (= "Invalid 'use' option ':refer'"
-          (error-message #(externals/parse-args [:refer 'one])))))
+          (error-message #(externals/parse-args [:refer 'one]))))
+    (is (= "Invalid 'use' option ':deps'"
+          (error-message #(externals/parse-args [:deps "x"])))))
   (testing "arity and type validation"
     (is (= "Invalid 'use' option ':path': expected one string"
           (error-message #(externals/parse-args [:path]))))
@@ -70,6 +72,10 @@
              "is already set")
           (error-message
             #(externals/parse-args [:path "one" :file "two"]))))
+    (is (= (str "Invalid 'use' option ':from': source option ':path' "
+             "is already set")
+          (error-message
+            #(externals/parse-args [:path "one" :from "two"]))))
     (is (= (str "Invalid 'use' options: ':get' cannot be combined with "
              "':all'")
           (error-message
@@ -156,14 +162,14 @@
               (externals/use-module
                 (sci/create-ns (gensym "use-deps-case"))
                 'str
-                [:deps coordinate :none])))
+                [:from coordinate :none])))
         (is (= provider (:provider @parsed))))))
   (is (= "Unsupported require coordinate: https://example.com/source.clj"
         (error-message
           #(externals/use-module
              (sci/create-ns 'use-deps-invalid-case)
              'str
-             [:deps "https://example.com/source.clj" :none]))))
+             [:from "https://example.com/source.clj" :none]))))
   (with-redefs [deps/prepare-required! (fn [& _] 'other.namespace)]
     (is (= (str "Dependency namespace 'other.namespace' does not match "
              "use module 'str'")
@@ -171,4 +177,4 @@
             #(externals/use-module
                (sci/create-ns 'use-deps-mismatch-case)
                'str
-               [:deps "mvn:example/lib@1/str" :none]))))))
+               [:from "mvn:example/lib@1/str" :none]))))))

@@ -15,9 +15,9 @@ separating words.
 
 * `YS_PATH` - An alternative to `YSPATH` that is used if `YSPATH` is not set.
 
-* `YS_MAVEN_REPOSITORY` - The local Maven repository used by `use :deps`.
+* `YS_MAVEN_REPOSITORY` - The local Maven repository used by `use :from`.
 
-* `YS_GITLIBS_DIR` - The cache directory used by `use :deps` for Gist and
+* `YS_GITLIBS_DIR` - The cache directory used by `use :from` for Gist and
   GitHub source files.
 
 * `YS_PRINT=1` - Same as `-p` (`--print`) command line option.

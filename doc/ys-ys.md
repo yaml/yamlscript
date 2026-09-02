@@ -43,7 +43,7 @@ use foo::bar: :file './lib/foo/bar.ys'
 use foo::bar: :url 'https://example.com/foo/bar.ys'
 ```
 
-The `:deps` option accepts one coordinate supported by Grenadine's
+The `:from` option accepts one coordinate supported by Grenadine's
 `clojurestar.deps` library.
 Maven coordinates use normal dotted group names.
 Gist coordinates may name a file and full commit SHA.
@@ -51,14 +51,14 @@ GitHub coordinates name one source file at a branch, tag, or commit.
 
 ```yaml
 use clojure::math::combinatorics:
-  :deps 'mvn:org.clojure/math.combinatorics@0.3.0/clojure.math.combinatorics'
+  :from 'mvn:org.clojure/math.combinatorics@0.3.0/clojure.math.combinatorics'
 use mathy:
-  :deps 'gist:ingydotnet/f70409675d234aa4f2fe379cd975a4f5/mathy.clj'
+  :from 'gist:ingydotnet/f70409675d234aa4f2fe379cd975a4f5/mathy.clj'
 use grenadine::require-deps:
-  :deps 'github:clojurestar/grenadine/v0.1.7/src/grenadine/require_deps.cljc'
+  :from 'github:clojurestar/grenadine/v0.1.7/src/grenadine/require_deps.cljc'
 ```
 
-The module name on the left must match the namespace provided by `:deps`.
+The module name on the left must match the namespace provided by `:from`.
 Generic Git repositories and dependency coordinate maps are not accepted.
 
 Use `:as` to add an alias, `:get` to refer selected names, `:all` to refer all
