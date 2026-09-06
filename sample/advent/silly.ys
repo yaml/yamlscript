@@ -1,7 +1,8 @@
 #!/usr/bin/env ys-0
 
-require ys::json: :as json
-require ys::yaml: :as yaml
+use:
+  ys::json: :as json
+  ys::yaml: :as yaml
 
 my-yaml =: |
   - Hello

@@ -28,7 +28,8 @@ time.
 The `ys.v0/init` call sets up the namespace to work like the ys runtime:
 
 * All of the YS standard library functions and macros are referred in
-* The YS `require` bridge makes bundled `ys::*` modules available on demand
+* The YS `use` function makes bundled `ys::*` modules available on demand
+* The retired `require` function directs callers to use `use`
 * The YS runtime variables (`ARGS`, `ENV`, `FILE`, `CWD`, etc) are bound
 
 The same compiled file still runs under ys itself (`ys -C file.clj`),

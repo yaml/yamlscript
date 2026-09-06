@@ -4,6 +4,7 @@
 (ns yamlscript.runtime-test
   (:require
    [clojure.edn :as edn]
+   [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [sci.core :as sci]
    [yamlscript.compiler :as compiler]
@@ -18,7 +19,7 @@
      :features #{:clj}
      :load-fn runtime/load-fn}))
 
-(deftest requires-public-modules
+(deftest uses-public-modules
   (testing "public modules are absent from a new context"
     (let [ctx (fresh-context)]
       (doseq [module (keys manifest/modules)]
@@ -29,31 +30,43 @@
   (testing "every public module loads on demand"
     (let [ctx (fresh-context)]
       (doseq [module (keys manifest/modules)]
-        (sci/eval-string* ctx (str "(require '" module ")"))
+        (sci/eval-string* ctx (str "(use (" module "))"))
         (is (some? (sci/find-ns ctx module))
           (str "module is loaded: " module)))))
-  (testing "plain and aliased requires load built-in modules"
+  (testing "plain and aliased uses load built-in modules"
     (let [ctx (fresh-context)]
       (is (thrown? Exception
             (sci/eval-string* ctx "(ys.fs/cwd)")))
       (is (thrown? Exception
             (sci/eval-string* ctx "(fs/cwd)")))
-      (sci/eval-string* ctx "(require 'ys.fs)")
+      (sci/eval-string* ctx "(use (ys.fs))")
       (is (string? (sci/eval-string* ctx "(ys.fs/cwd)")))
       (is (thrown? Exception
             (sci/eval-string* ctx "(fs/cwd)")))
-      (sci/eval-string* ctx "(require '[ys.str :as str])")
+      (sci/eval-string* ctx "(use (ys.str :as str))")
       (is (= "ALIAS"
             (sci/eval-string* ctx "(str/upper-case \"alias\")")))))
-  (testing "refer, rename and exclude options are preserved"
+  (testing "get, rename and exclusion options are preserved"
     (let [ctx (fresh-context)]
       (sci/eval-string* ctx
-        (str "(require '[ys.str :refer [lower-case upper-case] "
-          ":rename {lower-case downcase} :exclude [upper-case]])"))
+        "(use (ys.str :get lower-case/downcase))")
       (is (= "mixed"
             (sci/eval-string* ctx "(downcase \"MIXED\")")))
+      (sci/eval-string* ctx
+        "(use (ys.str :not lower-case))")
       (is (thrown? Exception
-            (sci/eval-string* ctx "(upper-case \"missing\")"))))))
+            (sci/eval-string* ctx "(lower-case \"missing\")")))
+      (is (= "PRESENT"
+            (sci/eval-string* ctx "(upper-case \"present\")"))))))
+
+(deftest require-is-retired
+  (let [ctx (fresh-context)]
+    (is (= "The 'require' function is retired. Use 'use' instead."
+          (try
+            (sci/eval-string* ctx "(require 'ys.str)")
+            nil
+            (catch Throwable error
+              (str/trimr (ex-message error))))))))
 
 (test/load-yaml-test-files
   ["test/runtime.yaml"]

@@ -78,7 +78,8 @@ test::
   want: |
     (when-not (or (System/getProperty "babashka.version")
                   (System/getProperty "jolt.version"))
-      (or (try (require 'ys.v0) true (catch Exception _ false))
+      (or (find-ns 'ys.v0)
+          (try (require 'ys.v0) true (catch Exception _ false))
           (eval
             '(let [t (Thread/currentThread)
                    cl (clojure.lang.DynamicClassLoader.
@@ -116,9 +117,10 @@ test::
 
 - cmnd: "ys -T star -e 'say: 123'"
   want: |
-    (require '[clojurestar.deps :as deps])
-    (deps/add-deps
-     '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.32"}}})
+    (when-not (find-ns 'ys.v0)
+      (require 'clojurestar.deps)
+      ((resolve 'clojurestar.deps/add-deps)
+       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.32"}}}))
 
     (ns main (:require ys.v0))
     (ys.v0/init)
@@ -165,17 +167,27 @@ test::
   what: err
   want: 'Error: Could not resolve symbol: ys.fs/cwd'
 
-- name: Plain require enables full module name
+- name: Plain use enables full module name
   cmnd: >-
-    ys -e 'require: ys::str'
-    -e 'say: ys::str/upper-case("required")'
-  want: REQUIRED
+    ys -e 'use: ys::str'
+    -e 'say: ys::str/upper-case("used")'
+  want: USED
 
-- name: Require alias enables short name
+- name: Use alias enables short name
   cmnd: >-
-    ys -e 'require ys::str: :as str'
+    ys -e 'use ys::str: :as str'
     -e 'say: str/upper-case("aliased")'
   want: ALIASED
+
+- name: Plain use does not refer names
+  cmnd: "ys -e 'use: ys::str' -e '=>: upper-case(\"missing\")'"
+  what: err
+  want: 'Error: Could not resolve symbol: upper-case'
+
+- name: Require directs callers to use
+  cmnd: "ys -e 'require: ys::str'"
+  what: err
+  want: "Error: The 'require' function is retired. Use 'use' instead."
 
 - name: Short module name requires alias
   cmnd: "ys -e 'fs/cwd()'"

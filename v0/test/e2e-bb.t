@@ -54,8 +54,9 @@ check "$(bb_run "$tmp/main.clj")" 'Hello, World!' 'defn main default args'
 # Multi-doc code with +++, aliases and ordered maps
 cat > "$tmp/multi.ys" <<'EOF'
 !ys-0
-require ys::json: :as json
-require ys::str: :as str
+use:
+  ys::json: :as json
+  ys::str: :as str
 say: str/upper-case('doc one')
 --- !code
 say: json/dump({'a' 1})

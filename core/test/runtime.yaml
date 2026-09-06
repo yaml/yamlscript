@@ -39,7 +39,7 @@
 
 - name: Put aliases assoc
   ys: |
-    require ys::std: :as std
+    use ys::std: :as std
     =>: +[
       put(hash-map("a" 1) "b" 2)
       std/put(hash-map("a" 1) "b" 2)]
@@ -49,7 +49,7 @@
 
 - name: Del aliases dissoc
   ys: |
-    require ys::std: :as std
+    use ys::std: :as std
     =>: +[
       del(hash-map("a" 1 "b" 2) "b")
       std/del(hash-map("a" 1 "b" 2 "c" 3) "b" "c")

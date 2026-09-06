@@ -7,12 +7,10 @@
 (ns yamlscript.transformers
   (:require
    [clojure.string :as str]
-   [yamlscript.ast :refer [Clj Sym Lst Vec Key]]
+   [yamlscript.ast :refer [Sym Lst Vec Key]]
    [ys.v0.common]
    [yamlscript.ysreader])
   (:refer-clojure))
-
-(def Q {:Sym 'quote})
 
 (defn- if-marker?
   "Return true for the ':if' marker in conditional assignment targets."
@@ -308,192 +306,13 @@ defn x():
 
 
 ;;-----------------------------------------------------------------------------
-;; require
+;; retired require
 ;;-----------------------------------------------------------------------------
 
-(def AS (Key "as"))
-(def EXCLUDE (Key "exclude"))
-(def REFER (Key "refer"))
-(def RENAME (Key "rename"))
-
-(defn require-spc-lhs?
-  "Detect require left sides that name a namespace and alias."
-  [lhs]
-  (when-lets [sym (get-in lhs [0])
-              _ (:Sym sym)
-              spc (nth lhs 1)
-              _ (or (:Spc spc) (:Sym spc))
-              _ (= 2 (count lhs))]
-    [sym spc]))
-
-(defn require-forms-str
-  "Render require argument nodes for migration error messages."
-  [nodes]
-  (str/join " " (map #(str (or (:Sym %1) (:Key %1))) nodes)))
-
-(defn require-legacy-error
-  "Reject old positional require options with migration guidance."
-  [rhs]
-  (let [form (require-forms-str rhs)]
-    (if (= '=> (get-in rhs [0 :Sym]))
-      (let [[_ alias & refers] rhs
-            alias (:Sym alias)
-            _ (or alias (die "Invalid 'require' alias syntax"))
-            _ (or (every? :Sym refers)
-                (die "Invalid 'require' alias syntax"))
-            replacement (str ":as " alias
-                          (when (seq refers)
-                            (str " :get " (require-forms-str refers))))]
-        (die "Legacy 'require' syntax '" form
-          "'. Use '" replacement "' instead."))
-      (when (every? :Sym rhs)
-        (die "Legacy 'require' syntax '" form
-          "'. Use ':get " form "' instead.")))))
-
-(defn require-option-error
-  "Report an invalid or unsupported require option."
-  [option]
-  (if (= :refer option)
-    (die "Invalid 'require' option ':refer'. Use ':get' instead.")
-    (die "Invalid 'require' option ':" (name option) "'")))
-
-(defn require-symbols
-  "Take one or more symbol arguments for a require option."
-  [option nodes]
-  (let [[symbols nodes] (split-with :Sym nodes)]
-    (when-not (seq symbols)
-      (die "Invalid 'require' option ':" (name option)
-        "': expected at least one symbol"))
-    [symbols nodes]))
-
-(defn parse-require-options
-  "Parse keyword-based YAMLScript require options."
-  [rhs]
-  (loop [nodes rhs options {}]
-    (if-not (seq nodes)
-      options
-      (let [node (first nodes)
-            option (:Key node)]
-        (or option
-          (require-legacy-error nodes)
-          (die "Invalid 'require' arguments"))
-        (when-not (some #{option} [:as :get :all :not :none])
-          (require-option-error option))
-        (when (contains? options option)
-          (die "Duplicate 'require' option ':" (name option) "'"))
-        (case option
-          :as
-          (let [alias (second nodes)]
-            (when-not (:Sym alias)
-              (die "Invalid 'require' option ':as': expected one symbol"))
-            (recur (drop 2 nodes) (assoc options option alias)))
-
-          :get
-          (let [[symbols nodes] (require-symbols option (rest nodes))]
-            (recur nodes (assoc options option symbols)))
-
-          :not
-          (let [[symbols nodes] (require-symbols option (rest nodes))]
-            (when (some #(namespace (:Sym %1)) symbols)
-              (die "Invalid 'require' option ':not': expected plain symbols"))
-            (recur nodes (assoc options option symbols)))
-
-          :all
-          (recur (rest nodes) (assoc options option true))
-
-          :none
-          (recur (rest nodes) (assoc options option true)))))))
-
-(defn validate-require-options
-  "Reject conflicting YAMLScript require selection options."
-  [options]
-  (when (and (:none options)
-          (some options [:get :all :not]))
-    (die "Invalid 'require' options: ':none' cannot be combined with "
-      "':get', ':all', or ':not'"))
-  (when (and (:get options) (:all options))
-    (die "Invalid 'require' options: ':get' cannot be combined with ':all'"))
-  (when (and (:get options) (:not options))
-    (die "Invalid 'require' options: ':get' cannot be combined with ':not'"))
-  options)
-
-(defn require-get-args
-  "Build Clojure refer and rename arguments from ':get' symbols."
-  [symbols]
-  (let [[refers renames]
-        (reduce
-          (fn [[refers renames] node]
-            (let [sym (:Sym node)]
-              (if-let [old (namespace sym)]
-                [(conj refers (Sym old))
-                 (conj renames (symbol old) (symbol (name sym)))]
-                [(conj refers node) renames])))
-          [[] []] symbols)]
-    (vec
-      (concat [REFER (Vec refers)]
-        (when (seq renames)
-          [RENAME (Clj (apply array-map renames))])))))
-
-(defn require-args
-  "Build require arguments from a resolved require right side."
-  [rhs]
-  (let [rhs (if (vector? rhs) rhs [rhs])
-        _ (require-legacy-error rhs)
-        options (-> rhs parse-require-options validate-require-options)]
-    (vec
-      (concat
-        (when-let [alias (:as options)] [AS alias])
-        (when-let [symbols (:get options)]
-          (require-get-args symbols))
-        (when (or (:all options) (:not options))
-          [REFER (Key "all")])
-        (when-let [symbols (:not options)]
-          [EXCLUDE (Vec symbols)])))))
-
-(defn require-lib
-  "Build one quoted Clojure require libspec."
-  [spc rhs]
-  (let [args (require-args rhs)]
-    (if (seq args)
-      (Lst [Q (Vec (concat [spc] args))])
-      (Lst [Q spc]))))
-
-(defn require-xmap
-  "Build require arguments from a require form map."
-  [xmap]
-  (reduce
-    (fn [acc [spc rhs]]
-      (or (:Spc spc) (:Sym spc)
-        (die "Invalid 'require' xmap"))
-      (let [args (if (nil? rhs)
-                   (Lst [Q spc])
-                   (require-lib spc rhs))]
-        (conj acc args)))
-    []
-    (partition 2 xmap)))
-
 (defn transform_require
-  "Normalize YAMLScript require syntax into Clojure require syntax."
-  [lhs rhs]
-  (or
-    (when-lets [_ (:Sym lhs)
-                _ (:Spc rhs)]
-      [lhs (Lst [Q rhs])])
-
-    (when-lets [[sym spc] (require-spc-lhs? lhs)
-                _ (nil? rhs)]
-      [sym (Lst [Q spc])])
-
-    (when-lets [[sym spc] (require-spc-lhs? lhs)
-                form (require-lib spc rhs)]
-      [sym form])
-
-    (when-lets [_ (:Sym lhs)
-                xmap (:xmap rhs)
-                args (require-xmap xmap)]
-      [lhs args])
-
-    (die "Invalid 'require' form")))
+  "Compile every former require form as a call to its retirement stub."
+  [lhs _]
+  [(if (vector? lhs) (first lhs) lhs) []])
 
 (comment
   )

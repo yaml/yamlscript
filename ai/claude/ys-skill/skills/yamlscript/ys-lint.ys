@@ -11,7 +11,7 @@
 #
 # Exit: 0 clean, 1 issues found, 2 invocation error.
 
-require ys::yaml:
+use ys::yaml:
 
 NTH-LIT-RE =: /(\w[\w-]*)\.nth\(\s*(\d+)\s*\)/
 NTH-VAR-RE =: /(\w[\w-]*)\.nth\(\s*([A-Za-z][\w-]*)\s*\)/
@@ -84,6 +84,7 @@ THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 THEN-FALSE-RE =: /\bthen:\s*false\s*$/
 COMMENT-RE =: /^\s*#/
+REQUIRE-RE =: /^\s*require(?:\s|:)/
 
 THEN-NIL-MSG =: 'then: nil -> use when'
 ELSE-NIL-MSG =: 'else: nil -> use when-not'
@@ -339,6 +340,8 @@ defn- check-patterns(file lineno code):
     file.check-commas(lineno code)
     file.check-once(lineno code 'then-nil' THEN-NIL-RE THEN-NIL-MSG)
     file.check-once(lineno code 'else-nil' ELSE-NIL-RE ELSE-NIL-MSG)
+    file.check-once(lineno code 'require' REQUIRE-RE
+                    'require -> use')
 
 defn- count-matches(file lineno code rule re fmt):
   matches =: re-seq(re code)

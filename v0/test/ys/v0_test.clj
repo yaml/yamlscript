@@ -54,8 +54,8 @@
         (is (nil? (get (ns-aliases scratch) module))
           (str "module requires import: " module))))))
 
-(deftest requires-public-modules
-  (let [scratch (create-ns 'ys.v0-test.require-scratch)]
+(deftest uses-public-modules
+  (let [scratch (create-ns 'ys.v0-test.use-scratch)]
     (binding [*ns* scratch]
       (refer-clojure)
       (ys.v0/init)
@@ -63,25 +63,30 @@
             (eval '(ys.str/upper-case "before"))))
       (is (thrown? Exception
             (eval '(str/upper-case "before"))))
-      (eval '(require 'ys.str))
+      (eval '(use (ys.str)))
       (is (= "PLAIN" (eval '(ys.str/upper-case "plain"))))
       (is (thrown? Exception
             (eval '(str/upper-case "plain"))))
-      (eval '(require '[ys.fs :as fs] '[ys.set :as set] :reload))
+      (eval '(use (ys.fs :as fs) (ys.set :as set)))
       (is (string? (eval '(fs/cwd))))
       (is (= #{1} (eval '(set/intersection #{1 2} #{1 3}))))))
-  (let [scratch (create-ns 'ys.v0-test.require-options-scratch)]
+  (let [scratch (create-ns 'ys.v0-test.use-options-scratch)]
     (binding [*ns* scratch]
       (refer-clojure)
       (ys.v0/init)
-      (eval
-        '(require
-           '[ys.str
-             :refer [lower-case upper-case]
-             :rename {lower-case downcase}
-             :exclude [upper-case]]))
+      (eval '(use (ys.str :get lower-case/downcase)))
       (is (= "mixed" (eval '(downcase "MIXED"))))
       (is (nil? (ns-resolve scratch 'upper-case))))))
+
+(deftest require-is-retired
+  (let [scratch (create-ns 'ys.v0-test.retired-require-scratch)]
+    (binding [*ns* scratch]
+      (refer-clojure)
+      (ys.v0/init)
+      (is (thrown-with-msg?
+            Exception
+            #"The 'require' function is retired\. Use 'use' instead\."
+            (eval '(require 'ys.str)))))))
 
 (deftest init-twice-is-idempotent
   (let [err (java.io.StringWriter.)

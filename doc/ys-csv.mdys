@@ -11,7 +11,7 @@ https://en.wikipedia.org/wiki/Tab-separated_values) formats.
 Require it as `csv` before using the qualified names:
 
 ```yaml
-require ys::csv: :as csv
+use ys::csv: :as csv
 ```
 
 ```mdys:fmt-fns

@@ -399,7 +399,7 @@ Options:
 
 ;; Under JVM Clojure, resolve the ys.v0 dependency at runtime with
 ;; Clojure 1.12's add-libs unless it is already on the classpath. The
-;; try/require probe also makes this a no-op under the ys runtime, where
+;; The find-ns check also makes this a no-op under the ys runtime, where
 ;; ys.v0 is built in. Script execution (unlike the REPL) provides
 ;; neither the DynamicClassLoader context that add-libs requires nor a
 ;; *repl* true binding, and requires later in the file resolve through
@@ -413,7 +413,8 @@ Options:
   (str
     "(when-not (or (System/getProperty \"babashka.version\")\n"
     "              (System/getProperty \"jolt.version\"))\n"
-    "  (or (try (require 'ys.v0) true (catch Exception _ false))\n"
+    "  (or (find-ns 'ys.v0)\n"
+    "      (try (require 'ys.v0) true (catch Exception _ false))\n"
     "      (eval\n"
     "        '(let [t (Thread/currentThread)\n"
     "               cl (clojure.lang.DynamicClassLoader.\n"
@@ -438,10 +439,11 @@ Options:
 ;; API shared by compatible Clojure runtimes.
 (def v0-star-header
   (str
-    "(require '[clojurestar.deps :as deps])\n"
-    "(deps/add-deps\n"
-    " '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
-    yamlscript-version "\"}}})\n\n"))
+    "(when-not (find-ns 'ys.v0)\n"
+    "  (require 'clojurestar.deps)\n"
+    "  ((resolve 'clojurestar.deps/add-deps)\n"
+    "   '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
+    yamlscript-version "\"}}}))\n\n"))
 
 (def to-code-headers
   {"bb" v0-bb-header

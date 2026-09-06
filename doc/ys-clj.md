@@ -13,7 +13,7 @@ this `ys::clj` library.
 Require the library with an alias before using the `clj/` prefix:
 
 ```yaml
-require ys::clj: :as clj
+use ys::clj: :as clj
 ```
 
 

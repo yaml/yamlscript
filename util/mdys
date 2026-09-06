@@ -1,6 +1,6 @@
 #!/usr/bin/env ys-0
 
-require ys::ys: :as ys
+use ys::ys: :as ys
 
 input-dir =: atom(nil)
 

@@ -36,8 +36,7 @@
           [:path "lib" :as 'library :get 'one 'two/second])))
   (is (= {:not ['one 'two]}
         (externals/parse-args [:not 'one 'two])))
-  (is (= {:source [:from "mvn:example/lib@1/example.lib"]
-          :all true}
+  (is (= {:source [:from "mvn:example/lib@1/example.lib"]}
         (externals/parse-args
           [:from "mvn:example/lib@1/example.lib"])))
   (is (= {:none true}
@@ -90,12 +89,12 @@
             #(externals/parse-args [:none :not 'one]))))))
 
 (deftest loads-local-use-sources
-  (testing "path source and default refer all"
+  (testing "path source and explicit refer all"
     (is (= [1 2]
           (eval-ys
             (format
               (str "ns: use-path-case\n"
-                "use use-test::path-lib: :path %s\n"
+                "use use-test::path-lib: :path %s :all\n"
                 "vector: path-one() path-two()")
               (pr-str fixture-root))))))
   (testing "exact YAMLScript file and get rename"

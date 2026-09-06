@@ -30,8 +30,7 @@
           :get ['one 'two/second]}
         (#'portable/parse-use-args
           [:path "lib" :as 'library :get 'one 'two/second])))
-  (is (= {:source [:from "mvn:example/lib@1/example.lib"]
-          :all true}
+  (is (= {:source [:from "mvn:example/lib@1/example.lib"]}
         (#'portable/parse-use-args
           [:from "mvn:example/lib@1/example.lib"])))
   (is (= "Invalid 'use' option ':deps'"
@@ -68,10 +67,21 @@
   (let [target (fresh-namespace)]
     (#'portable/portable-use
       target
-      '((ys.fs :as fs :none)))
+      '((ys.fs :as fs)))
     (is (string? ((ns-resolve target 'fs/cwd))))
     (is (= 'ys.v0.fs
           (ns-name (get (ns-aliases target) 'ys.fs))))))
+
+(deftest plain-use-does-not-refer-public-names
+  (let [target (fresh-namespace)]
+    (#'portable/portable-use target '((ys.str)))
+    (is (= "QUALIFIED"
+          ((ns-resolve target 'ys.str/upper-case) "qualified")))
+    (is (nil? (ns-resolve target 'upper-case)))))
+
+(deftest require-is-retired
+  (is (= "The 'require' function is retired. Use 'use' instead."
+        (error-message #(portable/require 'ys.str)))))
 
 (deftest validates-portable-file-and-url-sources
   (let [target (fresh-namespace)]

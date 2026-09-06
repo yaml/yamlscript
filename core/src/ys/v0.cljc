@@ -10,7 +10,7 @@
 ;;
 ;; init refers the full YS standard library into the calling namespace
 ;; (silently replacing any clojure.core mappings, so no replace warnings),
-;; installs the YS require bridge, and binds the YS runtime variables.
+;; installs the YS runtime functions and binds the YS runtime variables.
 ;;
 ;; Under the ys runtime this namespace is shadowed by a no-op SCI stub, so
 ;; the same compiled code runs identically there.
@@ -56,9 +56,8 @@
       (if (= :all syms)
         (refer ns-sym)
         (refer ns-sym :only (vec syms)))))
-  ;; The YS runtime overrides clojure.core load, require and use with YS
-  ;; versions.
-  ;; Here they refer to the portable ys.v0.ys bridge.
+  ;; The YS runtime overrides clojure.core load and use with YS versions.
+  ;; require is replaced by a migration error.
   (doseq [sym manifest/runtime-overrides]
     (ns-unmap target sym))
   (refer 'ys.v0.ys

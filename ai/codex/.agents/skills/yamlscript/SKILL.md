@@ -76,7 +76,7 @@ support, and docs:
    (`f: args` / `x: .m(a)` / `a OP: b`), a direct `=>:` child under
    an `if` block vs `then:` / `else:`, `say: ''` vs bare `say:`,
    `x.join(' ')` vs the colon chain `x:joins`,
-   `slurp` / `spit` vs `read` / `write`,
+   `slurp` / `spit` vs `read` / `write`, retired `require` vs `use`,
    plain-YAML structural checks such as scalar `then:` / `else:`
    branches that can be positional `if` branches,
    a wide `recur:` / `loop` arg list that should be comma-separated,
@@ -1391,6 +1391,23 @@ pairs =: words:frequencies.sort-by(val):reverse
   input.
 
 ### I/O, System & Namespaces
+- Bundled namespaces such as `ys::fs`, `ys::str`, `ys::http`, and
+  `ys::yaml` are unavailable until loaded with `use`.
+  Never use `require`; it is retired and only reports a migration error.
+- Prefer one grouped mapping when loading multiple modules:
+  ```yaml
+  use:
+    ys::fs: :as fs
+    ys::str: :as str
+  ```
+- Plain `use ys::str:` loads the module for qualified access as
+  `ys::str/upper-case` without referring its names.
+  Use `:as` for an alias, `:get` for selected names, `:all` to refer all
+  names, `:not` to exclude names from `:all`, or `:none` as an explicit
+  spelling of qualified-only loading.
+- Use `:path`, `:file`, or `:url` for source locations.
+  Use `:from` for Maven, Gist, or GitHub dependency coordinates.
+  The retired `:deps` spelling is invalid.
 - `read(path)` / `path:read` — read file contents;
   `write(path content)` — write content to file
 - `say` / `print` / `out` / `warn` / `err` — write to stdout/stderr.
@@ -1440,6 +1457,8 @@ pairs =: words:frequencies.sort-by(val):reverse
 
 ## Anti-Patterns
 
+- Do NOT use `require` to load a namespace.
+  Use `use`; group multiple imports under one `use:` mapping.
 - Do NOT use `=>:` for compound expressions — restructure into a
   pair: `=>: a.b.c` → `a: .b.c`; `=>: f(a b)` → `f: a b`;
   `=>: a == b` → `a ==: b`. For a `cond` default arm use `else:`,

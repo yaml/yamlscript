@@ -11,6 +11,8 @@
    [clojure.string :as str]
    [grenadine.require-deps :as required]
    [sci.core :as sci]
+   [sci.ctx-store :as sci-store]
+   [sci.impl.namespaces]
    [yamlscript.cache :as cache]
    [yamlscript.deps :as deps]
    [ys.v0.common :refer [abspath dirname get-yspath]]
@@ -24,10 +26,22 @@
 
 ;; ----------------------------------------------------------------------------
 
+(defn- context []
+  (try
+    (sci-store/get-ctx)
+    (catch Throwable _
+      @G/sci-ctx)))
+
+(defn- require-sci [module]
+  (let [ctx (context)]
+    (if-let [require* (ns-resolve 'sci.impl.namespaces 'require*)]
+      (require* ctx module)
+      ((ns-resolve 'sci.impl.namespaces 'require) ctx module))))
+
 (defn load-pod
   "Load pod into the YAMLScript runtime."
   [args]
-  (let [pod (apply pods/load-pod @G/sci-ctx args)]
+  (let [pod (apply pods/load-pod (context) args)]
     (swap! G/pods conj pod)))
 
 (defn unload-pods
@@ -50,7 +64,7 @@
         ret (sci/binding
              [sci/file file
               G/FILE file]
-              (sci/eval-string+ @G/sci-ctx code))
+              (sci/eval-string+ (context) code))
         _ (reset! G/stream-values stream)]
     (:val ret)))
 
@@ -67,7 +81,7 @@
   (sci/binding
    [sci/file file
     G/FILE file]
-    (:val (sci/eval-string+ @G/sci-ctx code))))
+    (:val (sci/eval-string+ (context) code))))
 
 (defn load-file-clj
   "Load file clj into the YAMLScript runtime."
@@ -103,15 +117,13 @@
 
 (defn load-yspath
   "Load a built-in module or search YSPATH in the YAMLScript runtime."
-  [ns modpath yspath]
+  [_ns modpath yspath]
   (let [module (symbol (str/replace modpath #"/" "."))]
     (if (manifest/modules module)
-      (sci/eval-string+ @G/sci-ctx
-        (str "(require '" module ")")
-        {:ns ns})
+      (require-sci module)
       (do
         (deps/add-roots! yspath)
-        (when-not (sci/find-ns @G/sci-ctx module)
+        (when-not (sci/find-ns (context) module)
           (loop [yspath yspath]
             (if (seq yspath)
               (let [[path & yspath] yspath]
@@ -172,14 +184,12 @@
 
 (defn load-deps
   "Load a released clojurestar.deps require coordinate."
-  [ns _ coordinate]
+  [_ns _ coordinate]
   (let [coordinate (required/parse-coordinate coordinate)]
     (deps/prepare-required!
       coordinate
       (fn [namespace]
-        (sci/eval-string+ @G/sci-ctx
-          (str "(require '" namespace ")")
-          {:ns ns}))
+        (require-sci namespace))
       load-file-clj)))
 
 (def source-options #{:path :file :url :from})
@@ -219,9 +229,7 @@
     (die "Invalid 'use' options: ':get' cannot be combined with ':all'"))
   (when (and (:get options) (:not options))
     (die "Invalid 'use' options: ':get' cannot be combined with ':not'"))
-  (if (some options [:as :get :all :none :not])
-    options
-    (assoc options :all true)))
+  options)
 
 (defn parse-args
   "Parse YAMLScript use-form arguments into a normalized option map."
@@ -267,7 +275,8 @@
   (let [module (str module)
         modpath (str/replace module #"\." "/")
         args (parse-args args)
-        [kind spec] (or (:source args) [:yspath (get-yspath @sci/file)])
+        [kind spec] (or (:source args)
+                      [:yspath (get-yspath (or @sci/file "/NO-NAME"))])
         loaded-namespace
         (case kind
           :yspath (do (load-yspath ns modpath spec) nil)
@@ -280,11 +289,11 @@
       (die (str "Dependency namespace '" loaded-namespace
              "' does not match use module '" namespace-sym "'")))
     (let [namespace-sym (symbol module)
-          namespace-object (sci/find-ns @G/sci-ctx namespace-sym)]
+          namespace-object (sci/find-ns (context) namespace-sym)]
       (when-not namespace-object
         (die (str "Namespace not found: " namespace-sym)))
       (when-let [as (:as args)]
-        (sci/eval-string+ @G/sci-ctx
+        (sci/eval-string+ (context)
           (str "(alias '" as " '" namespace-sym ")")
           {:ns ns}))
       (when-let [syms (:get args)]
@@ -301,10 +310,10 @@
                      (when (seq rename)
                        (str " :rename '" (pr-str rename)))
                      ")")]
-          (sci/eval-string+ @G/sci-ctx code {:ns ns})))
+          (sci/eval-string+ (context) code {:ns ns})))
       (when (or (:all args) (:not args))
         (let [syms (some->> (:not args) (map str))]
-          (sci/eval-string+ @G/sci-ctx
+          (sci/eval-string+ (context)
             (str "(refer '" namespace-sym
               (when syms
                 (str " :exclude '[" (str/join " " syms) "]"))

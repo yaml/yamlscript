@@ -129,9 +129,7 @@
     (util/die "Invalid 'use' options: ':get' cannot be combined with ':all'"))
   (when (and (:get options) (:not options))
     (util/die "Invalid 'use' options: ':get' cannot be combined with ':not'"))
-  (if (some options [:as :get :all :none :not])
-    options
-    (assoc options :all true)))
+  options)
 
 (defn- parse-use-args [args]
   (loop [args (seq args) options {}]
@@ -217,34 +215,18 @@
         (str "Portable 'use :from' cannot acquire dependencies in this "
           "runtime; put namespace '" module "' on the classpath")))))
 
-(defn- public-module-libspec [libspec]
-  (let [module (if (vector? libspec) (first libspec) libspec)]
-    (when-let [target (manifest/modules module)]
-      [module target
-       (if (vector? libspec)
-         (assoc libspec 0 target)
-         target)])))
-
-(defn +require [target libspecs]
-  (let [entries (mapv #(or (public-module-libspec %1)
-                         [nil nil %1])
-                  libspecs)]
-    (binding [*ns* target]
-      (apply clojure.core/require (mapv #(nth %1 2) entries))
-      (doseq [[module host-namespace] entries
-              :when module]
-        (clojure.core/alias module host-namespace))))
-  nil)
-
-(defmacro require [& libspecs]
-  `(+require *ns* [~@libspecs]))
+(defn require [& _]
+  (util/die "The 'require' function is retired. Use 'use' instead."))
 
 (defn- load-portable-module [target module options]
   (let [[kind spec] (or (:source options) [:yspath (get-yspath *file*)])]
-    (if (and (= kind :yspath) (manifest/modules module))
+    (if-let [host-namespace
+             (and (= kind :yspath) (manifest/modules module))]
       (do
-        (+require target [module])
-        (manifest/modules module))
+        (binding [*ns* target]
+          (clojure.core/require host-namespace)
+          (clojure.core/alias module host-namespace))
+        host-namespace)
       (do
         (case kind
           :yspath

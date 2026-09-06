@@ -47,7 +47,7 @@ See Also:
 
 * [`clojure.math`](https://clojure.github.io/clojure/clojure.math-api.html)
   functions callable as `math/<func-name>` after
-  `require ys::math: :as math`.
+  `use ys::math: :as math`.
 
 
 ### Comparison
@@ -106,7 +106,7 @@ See Also:
 
 * [`clojure.string`](https://clojure.github.io/clojure/clojure.string-api.html)
   functions callable as `str/<func-name>` after
-  `require ys::str: :as str`.
+  `use ys::str: :as str`.
 
 
 ## Regular Expression

@@ -10,10 +10,10 @@ It also provides functions that are wrappers around common Clojure functions so
 that they can be used in places where functions are not allowed; like in [dot
 chaining operations](chain.md).
 
-Require the library before using its full name or an alias:
+Load the library before using its full name or an alias:
 
 ```yaml
-require ys::ys: :as ys
+use ys::ys: :as ys
 ```
 
 
@@ -40,6 +40,14 @@ Without a source option, YAMLScript searches the directories in `YSPATH`.
 The `:path` option searches one directory, and `:file` loads one exact `.ys`,
 `.clj`, or `.cljc` file.
 The `:url` option loads an actual HTTP or HTTPS source-file URL.
+
+Prefer one grouped mapping when loading multiple modules:
+
+```yaml
+use:
+  ys::fs: :as fs
+  ys::str: :as str
+```
 
 ```yaml
 use foo::bar: :path './lib'
@@ -68,13 +76,18 @@ Generic Git repositories and dependency coordinate maps are not accepted.
 Use `:as` to add an alias, `:get` to refer selected names, `:all` to refer all
 names, `:none` to refer none, and `:not` to refer all except selected names.
 A slash in a `:get` name renames it, as in `old-name/new-name`.
-With no selection option, `use` refers all public names.
+With no selection option, `use` loads the module for qualified access without
+referring any names.
+The `:none` option remains as an explicit spelling of the same behavior.
 
 ```yaml
 use foo::bar: :as bar :get one two/second
 use foo::baz: :all :not internal
 use foo::quux: :as quux :none
 ```
+
+The former `require` function is retired and reports an error directing callers
+to `use`.
 
 
 ## Macro Wrapper Functions

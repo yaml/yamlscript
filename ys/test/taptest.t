@@ -3,7 +3,7 @@
 use ys::taptest: :all
 
 # Load the hello-world YS module:
-use: hello-world
+use hello-world: :all
 
 # Define a custom form function:
 defn inc2(n _): n + 2

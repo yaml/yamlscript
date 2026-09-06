@@ -29,8 +29,8 @@
   '[abs file-seq infinite? parse-double parse-long parse-uuid
     random-uuid slurp spit NaN?])
 
-;; clojure.core functions overridden by the ys runtime with SCI-aware
-;; implementations (compiler-backed load, require and use).
+;; clojure.core functions overridden by the ys runtime with YS behavior.
+;; require is retained only to report its migration error.
 (def runtime-overrides
   '[load require use])
 
@@ -48,7 +48,7 @@
     ys.v0.taptest])
 
 ;; Public modules provided by the YS runtime. They are loaded only by an
-;; explicit require or use. The values are their internal host namespaces.
+;; explicit use. The values are their internal host namespaces.
 (def modules
   '{ys.std     ys.v0.std
     ys.clj     ys.v0.clj
