@@ -8,7 +8,9 @@ talk: 0
 
 YS has over 1000 functions that are always available to your YS programs without
 needing to explicitly import (`use`) any libraries.
-Over 800 of these can be used without a namespace prefix like `str/` or `math/`.
+Over 800 of these can be used without a namespace prefix.
+Qualified libraries such as `ys::str` and `ys::math` must be required before
+using their full names or aliases.
 
 Most of these functions are from the [Clojure standard library](
 https://clojuredocs.org/quickref), but YS also has the `ys::std` standard

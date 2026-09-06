@@ -12,12 +12,14 @@
    [clojure.string :as str]
    [ys.v0.common :refer [get-yspath]]
    [ys.v0.global :as global]
+   [ys.v0.manifest :as manifest]
    [ys.v0.re :as re]
    [ys.v0.util :as util])
   (:refer-clojure
    :exclude [compile
              eval
              load-file
+             require
              use]))
 
 (def hooks
@@ -167,7 +169,7 @@
 
 (defn- resolve-bb-add-classpath []
   (try
-    (require 'babashka.classpath)
+    (clojure.core/require 'babashka.classpath)
     (resolve 'babashka.classpath/add-classpath)
     (catch Throwable _ nil)))
 
@@ -199,7 +201,7 @@
 
 (defn- resolve-require-deps []
   (try
-    (require 'clojurestar.deps)
+    (clojure.core/require 'clojurestar.deps)
     (resolve 'clojurestar.deps/require-deps*)
     (catch Throwable error
       (if (some resolve
@@ -209,55 +211,86 @@
 
 (defn- load-classpath-dependency [module]
   (try
-    (require module)
+    (clojure.core/require module)
     (catch Throwable _
       (util/die
         (str "Portable 'use :from' cannot acquire dependencies in this "
           "runtime; put namespace '" module "' on the classpath")))))
 
-(defn- load-portable-module [module options]
+(defn- public-module-libspec [libspec]
+  (let [module (if (vector? libspec) (first libspec) libspec)]
+    (when-let [target (manifest/modules module)]
+      [module target
+       (if (vector? libspec)
+         (assoc libspec 0 target)
+         target)])))
+
+(defn +require [target libspecs]
+  (let [entries (mapv #(or (public-module-libspec %1)
+                         [nil nil %1])
+                  libspecs)]
+    (binding [*ns* target]
+      (apply clojure.core/require (mapv #(nth %1 2) entries))
+      (doseq [[module host-namespace] entries
+              :when module]
+        (clojure.core/alias module host-namespace))))
+  nil)
+
+(defmacro require [& libspecs]
+  `(+require *ns* [~@libspecs]))
+
+(defn- load-portable-module [target module options]
   (let [[kind spec] (or (:source options) [:yspath (get-yspath *file*)])]
-    (case kind
-      :yspath
+    (if (and (= kind :yspath) (manifest/modules module))
       (do
-        (add-load-paths spec)
-        (require module))
-
-      :path
+        (+require target [module])
+        (manifest/modules module))
       (do
-        (add-load-paths [spec])
-        (require module))
+        (case kind
+          :yspath
+          (do
+            (add-load-paths spec)
+            (clojure.core/require module))
 
-      :file
-      (do
-        (when (str/ends-with? spec ".ys")
-          (util/die "Portable 'use :file' does not support .ys files"))
-        (when-not (or (str/ends-with? spec ".clj")
-                    (str/ends-with? spec ".cljc"))
-          (util/die
-            "Invalid 'use' option ':file': expected a .clj or .cljc file"))
-        (clojure.core/load-file spec))
+          :path
+          (do
+            (add-load-paths [spec])
+            (clojure.core/require module))
 
-      :url
-      (do
-        (when-not (str/starts-with? spec "https://")
-          (util/die "Invalid 'use' option ':url': expected an HTTPS URL"))
-        (load-string (slurp spec)))
+          :file
+          (do
+            (when (str/ends-with? spec ".ys")
+              (util/die "Portable 'use :file' does not support .ys files"))
+            (when-not (or (str/ends-with? spec ".clj")
+                        (str/ends-with? spec ".cljc"))
+              (util/die
+                (str "Invalid 'use' option ':file': expected a .clj or "
+                  ".cljc file")))
+            (clojure.core/load-file spec))
 
-      :from
-      (let [dependency-options
-            (cond-> {}
-              (get global/ENV "YS_MAVEN_REPOSITORY")
-              (assoc :mvn/local-repo
-                (get global/ENV "YS_MAVEN_REPOSITORY"))
+          :url
+          (do
+            (when-not (str/starts-with? spec "https://")
+              (util/die
+                "Invalid 'use' option ':url': expected an HTTPS URL"))
+            (load-string (slurp spec)))
 
-              (get global/ENV "YS_GITLIBS_DIR")
-              (assoc :gitlibs/dir (get global/ENV "YS_GITLIBS_DIR")))]
-        (if-let [require-deps (resolve-require-deps)]
-          (require-deps dependency-options [spec])
-          (load-classpath-dependency module)))))
-  (when-not (find-ns module)
-    (util/die (str "Namespace not found: " module))))
+          :from
+          (let [dependency-options
+                (cond-> {}
+                  (get global/ENV "YS_MAVEN_REPOSITORY")
+                  (assoc :mvn/local-repo
+                    (get global/ENV "YS_MAVEN_REPOSITORY"))
+
+                  (get global/ENV "YS_GITLIBS_DIR")
+                  (assoc :gitlibs/dir
+                    (get global/ENV "YS_GITLIBS_DIR")))]
+            (if-let [require-deps (resolve-require-deps)]
+              (require-deps dependency-options [spec])
+              (load-classpath-dependency module))))
+        (when-not (find-ns module)
+          (util/die (str "Namespace not found: " module)))
+        module))))
 
 (defn- select-portable-vars [module options]
   (when-let [alias (:as options)]
@@ -281,10 +314,10 @@
   (let [forms (if (symbol? (first forms)) (list forms) forms)]
     (doseq [form forms]
       (let [module (first form)
-            options (parse-use-args (rest form))]
-        (load-portable-module module options)
+            options (parse-use-args (rest form))
+            loaded-module (load-portable-module ns module options)]
         (binding [*ns* ns]
-          (select-portable-vars module options)))))
+          (select-portable-vars loaded-module options)))))
   nil)
 
 (defn +use [ns forms]

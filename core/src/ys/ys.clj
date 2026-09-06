@@ -58,7 +58,7 @@
   `(let [[m# ns#] (if (~m "+")
                     [(dissoc ~m "+") (symbol (~m "+"))]
                     [~m ~ns])]
-     (+def-vars ns# m#)))
+     (ys.v0.ys/+def-vars ns# m#)))
 
 (defn eval
   ([ys-code] (ys.ys/eval ys-code "EVAL" false))
@@ -105,7 +105,7 @@
   nil)
 
 (defmacro use [& forms]
-  `(+use *ns* '~forms))
+  `(ys.v0.ys/+use *ns* '~forms))
 
 ;; Give the portable ys.v0 stdlib the real compiler-backed implementations.
 (reset! ys.v0.ys/hooks

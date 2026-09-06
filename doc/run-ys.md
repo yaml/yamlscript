@@ -76,6 +76,8 @@ arguments:
 
 source <(curl '-s' 'https://yamlscript.org/run-ys') "$@" :
 
+require ys::str: :as str
+
 alphabet =: set((\\A .. \\Z) + (\\a .. \\z))
 rot13 =: cycle(alphabet).drop(13 * 2).zipmap(alphabet)
 

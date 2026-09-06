@@ -160,6 +160,28 @@ test::
 - cmnd: "ys -e \"if RUN.os: say('has-os') say('missing-os')\""
   want: has-os
 
+- name: Public module requires import
+  cmnd: "ys -e 'ys::fs/cwd()'"
+  what: err
+  want: 'Error: Could not resolve symbol: ys.fs/cwd'
+
+- name: Plain require enables full module name
+  cmnd: >-
+    ys -e 'require: ys::str'
+    -e 'say: ys::str/upper-case("required")'
+  want: REQUIRED
+
+- name: Require alias enables short name
+  cmnd: >-
+    ys -e 'require ys::str: :as str'
+    -e 'say: str/upper-case("aliased")'
+  want: ALIASED
+
+- name: Short module name requires alias
+  cmnd: "ys -e 'fs/cwd()'"
+  what: err
+  want: 'Error: Could not resolve symbol: fs/cwd'
+
 - cmnd: ys -Cle '{:x 123}'
   want: '{"x":123}'
 

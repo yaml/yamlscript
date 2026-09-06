@@ -10,8 +10,11 @@ from a YS perspective.
 
 When you absolutely need the original Clojure functions, they are available in
 this `ys::clj` library.
-These functions are automatically available in YAMLSCript by using the `clj/`
-prefix.
+Require the library with an alias before using the `clj/` prefix:
+
+```yaml
+require ys::clj: :as clj
+```
 
 
 ## Functions

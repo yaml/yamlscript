@@ -148,33 +148,33 @@
   (is (= "Invalid 'use' option ':url': expected an HTTP(S) URL"
         (error-message #(externals/load-url nil "github:one/two/file"))))
   (doseq [[coordinate provider]
-          [["mvn:example/lib@1/str" :mvn]
+          [["mvn:example/lib@1/clojure.string" :mvn]
            ["gist:owner/0123456789abcdef/source.clj" :gist]
            ["https://gist.github.com/owner/0123456789abcdef" :gist]
-           ["github:owner/repo/main/src/str.cljc" :github]]]
+           ["github:owner/repo/main/src/clojure/string.cljc" :github]]]
     (let [parsed (atom nil)]
       (with-redefs [deps/prepare-required!
                     (fn [coordinate require! _]
                       (reset! parsed coordinate)
-                      (require! 'str)
-                      'str)]
+                      (require! 'clojure.string)
+                      'clojure.string)]
         (is (nil?
               (externals/use-module
                 (sci/create-ns (gensym "use-deps-case"))
-                'str
+                'clojure.string
                 [:from coordinate :none])))
         (is (= provider (:provider @parsed))))))
   (is (= "Unsupported require coordinate: https://example.com/source.clj"
         (error-message
           #(externals/use-module
              (sci/create-ns 'use-deps-invalid-case)
-             'str
+             'clojure.string
              [:from "https://example.com/source.clj" :none]))))
   (with-redefs [deps/prepare-required! (fn [& _] 'other.namespace)]
     (is (= (str "Dependency namespace 'other.namespace' does not match "
-             "use module 'str'")
+             "use module 'clojure.string'")
           (error-message
             #(externals/use-module
                (sci/create-ns 'use-deps-mismatch-case)
-               'str
-               [:from "mvn:example/lib@1/str" :none]))))))
+               'clojure.string
+               [:from "mvn:example/lib@1/clojure.string" :none]))))))

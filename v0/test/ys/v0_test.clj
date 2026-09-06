@@ -18,7 +18,7 @@
     +map +filter +apply ++map
     to-num to-str to-vec get+
     DBG PPP WWW XXX
-    load use])
+    load require use])
 
 (deftest init-in-fresh-namespace
   (let [err (java.io.StringWriter.)
@@ -49,10 +49,39 @@
       (is (string? @(ns-resolve scratch 'CWD)))
       (is (= ys.v0/VERSION @(ns-resolve scratch 'VERSION))))
 
-    (testing "namespace aliases are set up"
-      (doseq [[a target] manifest/aliases]
-        (is (= target (ns-name (get (ns-aliases scratch) a)))
-          (str "alias: " a))))))
+    (testing "public modules are not aliased"
+      (doseq [module (keys manifest/modules)]
+        (is (nil? (get (ns-aliases scratch) module))
+          (str "module requires import: " module))))))
+
+(deftest requires-public-modules
+  (let [scratch (create-ns 'ys.v0-test.require-scratch)]
+    (binding [*ns* scratch]
+      (refer-clojure)
+      (ys.v0/init)
+      (is (thrown? Exception
+            (eval '(ys.str/upper-case "before"))))
+      (is (thrown? Exception
+            (eval '(str/upper-case "before"))))
+      (eval '(require 'ys.str))
+      (is (= "PLAIN" (eval '(ys.str/upper-case "plain"))))
+      (is (thrown? Exception
+            (eval '(str/upper-case "plain"))))
+      (eval '(require '[ys.fs :as fs] '[ys.set :as set] :reload))
+      (is (string? (eval '(fs/cwd))))
+      (is (= #{1} (eval '(set/intersection #{1 2} #{1 3}))))))
+  (let [scratch (create-ns 'ys.v0-test.require-options-scratch)]
+    (binding [*ns* scratch]
+      (refer-clojure)
+      (ys.v0/init)
+      (eval
+        '(require
+           '[ys.str
+             :refer [lower-case upper-case]
+             :rename {lower-case downcase}
+             :exclude [upper-case]]))
+      (is (= "mixed" (eval '(downcase "MIXED"))))
+      (is (nil? (ns-resolve scratch 'upper-case))))))
 
 (deftest init-twice-is-idempotent
   (let [err (java.io.StringWriter.)

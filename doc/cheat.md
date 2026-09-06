@@ -47,7 +47,7 @@ hello =: 'Oh hello'
 a b c =: +[1 2 3]  # Destructuring assignment
 a.b =: 42           # Rebind a after updating its b key
 a.b c d.e =: f g h  # Mix dotted and plain positional targets
-put(a 'b' 42)        # put and std/put are synonyms for assoc
+put(a 'b' 42)        # put is a synonym for assoc
 ```
 
 

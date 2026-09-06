@@ -30,14 +30,14 @@
     random-uuid slurp spit NaN?])
 
 ;; clojure.core functions overridden by the ys runtime with SCI-aware
-;; implementations (compiler-backed load and use).
+;; implementations (compiler-backed load, require and use).
 (def runtime-overrides
-  '[load use])
+  '[load require use])
 
 ;; Namespaces that some Clojure runtimes lack (glojure bundles neither
 ;; the clojure.* ones nor the babashka.fs backend that ys.v0.fs and
 ;; ys.v0.taptest pull in). ys.v0 requires them via a guarded loop and
-;; only aliases/refers the ones that loaded.
+;; only refers exports from the ones that loaded.
 (def optional-nses
   '[clojure.java.io
     clojure.math
@@ -47,24 +47,24 @@
     ys.v0.fs
     ys.v0.taptest])
 
-;; Namespace aliases available to user code. ys.v0/init sets these up with
-;; clojure.core/alias; the ys runtime maps them to SCI namespaces.
-(def aliases
-  '{std     ys.v0.std          ys.std     ys.v0.std
-    clj     ys.v0.clj          ys.clj     ys.v0.clj
-    ys      ys.v0.ys           ys.ys      ys.v0.ys
-    cli     clojure.tools.cli  ys.cli     clojure.tools.cli
-    csv     ys.v0.csv          ys.csv     ys.v0.csv
-    ext     ys.v0.ext          ys.ext     ys.v0.ext    x ys.v0.ext
-    fs      ys.v0.fs           ys.fs      ys.v0.fs
-    http    ys.v0.http         ys.http    ys.v0.http
-    io      clojure.java.io    ys.io      clojure.java.io
-    json    ys.v0.json         ys.json    ys.v0.json
-    math    clojure.math       ys.math    clojure.math
-    set     clojure.set        ys.set     clojure.set
-    str     clojure.string     ys.str     clojure.string
-    walk    clojure.walk       ys.walk    clojure.walk
-    yaml    ys.v0.yaml         ys.yaml    ys.v0.yaml
+;; Public modules provided by the YS runtime. They are loaded only by an
+;; explicit require or use. The values are their internal host namespaces.
+(def modules
+  '{ys.std     ys.v0.std
+    ys.clj     ys.v0.clj
+    ys.ys      ys.v0.ys
+    ys.cli     clojure.tools.cli
+    ys.csv     ys.v0.csv
+    ys.ext     ys.v0.ext
+    ys.fs      ys.v0.fs
+    ys.http    ys.v0.http
+    ys.io      clojure.java.io
+    ys.json    ys.v0.json
+    ys.math    clojure.math
+    ys.set     clojure.set
+    ys.str     clojure.string
+    ys.walk    clojure.walk
+    ys.yaml    ys.v0.yaml
     ys.taptest ys.v0.taptest})
 
 (defn exported-syms

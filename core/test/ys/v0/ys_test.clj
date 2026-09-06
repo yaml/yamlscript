@@ -64,6 +64,15 @@
             :get 'path-value/renamed)))
       (is (= 1 ((ns-resolve target 'renamed)))))))
 
+(deftest loads-portable-built-in-modules
+  (let [target (fresh-namespace)]
+    (#'portable/portable-use
+      target
+      '((ys.fs :as fs :none)))
+    (is (string? ((ns-resolve target 'fs/cwd))))
+    (is (= 'ys.v0.fs
+          (ns-name (get (ns-aliases target) 'ys.fs))))))
+
 (deftest validates-portable-file-and-url-sources
   (let [target (fresh-namespace)]
     (is (= "Portable 'use :file' does not support .ys files"

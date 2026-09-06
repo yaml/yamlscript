@@ -1,5 +1,8 @@
 #!/usr/bin/env ys-0
 
+require ys::str: :as str
+require ys::yaml: :as yaml
+
 # This script automates the YAMLScript release process.
 #
 # Usage:

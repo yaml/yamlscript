@@ -1,5 +1,8 @@
 #!/usr/bin/env ys-0
 
+require ys::fs: :as fs
+require ys::str: :as str
+
 ROOT =: ENV.ROOT ||
   die("'ROOT' env var not defined")
 

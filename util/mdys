@@ -1,5 +1,7 @@
 #!/usr/bin/env ys-0
 
+require ys::ys: :as ys
+
 input-dir =: atom(nil)
 
 DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"

@@ -278,8 +278,8 @@ data.user.name =: 'Alice'
 ```
 
 This is equivalent to rebinding `data` with an `assoc-in` call.
-The `std/put` function, also available as `put`, is a synonym for `assoc` when
-only one mapping level needs to be updated explicitly.
+The `put` function is a synonym for `assoc` when only one mapping level needs
+to be updated explicitly.
 
 A call in the path computes a key from the collection at that point.
 The call is evaluated once.

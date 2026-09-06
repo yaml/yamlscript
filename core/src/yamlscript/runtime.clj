@@ -177,9 +177,6 @@
     {'main {}
      'clojure.core clojure-core-ns 'core clojure-core-ns}
 
-    ;; The user-visible aliases (str, json, ys, std...) from the manifest
-    (update-vals manifest/aliases host-namespaces)
-
     ;; ys.v0.* host namespace names; macro expansions of stdlib macros
     ;; resolve these directly
     (select-keys host-namespaces
@@ -194,6 +191,15 @@
      'java-time java-time-namespace
      'ys.v0.debug debug-namespace 'yamlscript.debug debug-namespace
      'ys.v0.util util-namespace   'yamlscript.util util-namespace}))
+
+(defn load-fn
+  "Load a bundled public module or delegate to the source loader."
+  [{:keys [ctx namespace] :as options}]
+  (if-let [target (manifest/modules namespace)]
+    (do
+      (sci/add-namespace! ctx namespace (host-namespaces target))
+      {:file (str "<built-in:" namespace ">")})
+    (deps/load-fn options)))
 
 (defn classes-map
   "Build SCI class lookup entries from fully qualified class symbols."
@@ -256,7 +262,7 @@
     {:namespaces namespaces
      :classes classes
      :features #{:clj}
-     :load-fn deps/load-fn}))
+     :load-fn load-fn}))
 
 (defn- normalize-os
   "Return the stable YS name for the host operating system."

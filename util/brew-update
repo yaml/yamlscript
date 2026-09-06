@@ -1,5 +1,7 @@
 #!/usr/bin/env ys-0
 
+require ys::fs: :as fs
+
 releases-url =: 'https://github.com/yaml/yamlscript/releases'
 brew-url =: ENV.YS_HOMEBREW_URL ||
   'git@github.com:yaml/homebrew-yamlscript'

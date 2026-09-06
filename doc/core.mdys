@@ -46,7 +46,8 @@ YS Std:
 See Also:
 
 * [`clojure.math`](https://clojure.github.io/clojure/clojure.math-api.html)
-  functions callable as `math/<func-name>` in YS.
+  functions callable as `math/<func-name>` after
+  `require ys::math: :as math`.
 
 
 ### Comparison
@@ -104,7 +105,8 @@ YS Std:
 See Also:
 
 * [`clojure.string`](https://clojure.github.io/clojure/clojure.string-api.html)
-  functions callable as `str/<func-name>` in YS.
+  functions callable as `str/<func-name>` after
+  `require ys::str: :as str`.
 
 
 ## Regular Expression

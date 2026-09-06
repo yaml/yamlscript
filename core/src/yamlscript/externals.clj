@@ -17,7 +17,8 @@
    [yamlscript.compiler]
    [yamlscript.constructor]
    [yamlscript.global :as G]
-   [yamlscript.re :as re])
+   [yamlscript.re :as re]
+   [ys.v0.manifest :as manifest])
   (:refer-clojure
    :exclude [load-file]))
 
@@ -101,18 +102,25 @@
      [".ys" load-file-ys false]]))
 
 (defn load-yspath
-  "Load yspath into the YAMLScript runtime."
-  [modpath yspath]
-  (deps/add-roots! yspath)
-  (when (not (sci/find-ns @G/sci-ctx
-               (symbol (str/replace modpath #"/" "."))))
-    (loop [yspath yspath]
-      (if (seq yspath)
-        (let [[path & yspath] yspath]
-          (if (load-file-ys-or-clj path modpath)
-            nil
-            (recur yspath)))
-        (die (str "Module not found: " (str/replace modpath #"/" "::")))))))
+  "Load a built-in module or search YSPATH in the YAMLScript runtime."
+  [ns modpath yspath]
+  (let [module (symbol (str/replace modpath #"/" "."))]
+    (if (manifest/modules module)
+      (sci/eval-string+ @G/sci-ctx
+        (str "(require '" module ")")
+        {:ns ns})
+      (do
+        (deps/add-roots! yspath)
+        (when-not (sci/find-ns @G/sci-ctx module)
+          (loop [yspath yspath]
+            (if (seq yspath)
+              (let [[path & yspath] yspath]
+                (if (load-file-ys-or-clj path modpath)
+                  nil
+                  (recur yspath)))
+              (die
+                (str "Module not found: "
+                  (str/replace modpath #"/" "::"))))))))))
 
 (defn load-path
   "Load path into the YAMLScript runtime."
@@ -262,7 +270,7 @@
         [kind spec] (or (:source args) [:yspath (get-yspath @sci/file)])
         loaded-namespace
         (case kind
-          :yspath (do (load-yspath modpath spec) nil)
+          :yspath (do (load-yspath ns modpath spec) nil)
           :path (do (load-path modpath spec) nil)
           :file (do (load-file modpath spec) nil)
           :url (do (load-url modpath spec) nil)

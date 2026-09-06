@@ -258,7 +258,7 @@
   (reduce (fn [acc token]
             (cond
               (= token "+++")
-              (vec (concat acc ["(" "ys::std/stream" ")"]))
+              (vec (concat acc ["(" "ys::v0::std/stream" ")"]))
               ,
               (is-colon-calls? token)
               (vec (concat acc (re-lex-tokens (split-colon-calls token))))
