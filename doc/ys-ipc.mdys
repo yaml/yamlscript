@@ -1,0 +1,25 @@
+---
+title: Process Library
+talk: 0
+---
+
+# `ys::ipc` - The YS Process Library
+
+Process functions are available only after explicitly using `ys::ipc`.
+
+```yaml
+use ipc: :all
+output =: sh-out('printf hello')
+```
+
+```mdys:fmt-fns
+exec(Opts? Cmd Str*) Result: Replace the current process
+process(Opts? Cmd Str*) Result: Start a process
+sh(Opts? Cmd Str*) Result: Run a command and return its result
+shell(Opts? Cmd Str*) Result: Run a command through a shell
+sh-out(Opts? Cmd Str*) Str: Run a command and return stdout
+bash(Opts? Cmd Str*) Result: Run a command through bash
+bash-out(Opts? Cmd Str*) Str: Run bash and return stdout
+```
+
+The optional mapping accepts `:in`, `:out`, `:err`, `:dir`, and `:env`.

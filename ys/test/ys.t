@@ -1,9 +1,9 @@
 #!/usr/bin/env ys-0
 
 use:
-  ys::taptest: :all
-  ys::yaml: :as yaml
-  ys::ys: :as ys
+  taptest: :all
+  yaml:
+  ys:
 
 yaml1 =: |
   !ys-0

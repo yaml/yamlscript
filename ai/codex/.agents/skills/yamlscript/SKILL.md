@@ -76,7 +76,8 @@ support, and docs:
    (`f: args` / `x: .m(a)` / `a OP: b`), a direct `=>:` child under
    an `if` block vs `then:` / `else:`, `say: ''` vs bare `say:`,
    `x.join(' ')` vs the colon chain `x:joins`,
-   `slurp` / `spit` vs `read` / `write`, retired `require` vs `use`,
+   `slurp` / `spit` vs `read` / `write`, displaced Clojure I/O names
+   such as `println` and `read-line`, retired `require` vs `use`,
    plain-YAML structural checks such as scalar `then:` / `else:`
    branches that can be positional `if` branches,
    a wide `recur:` / `loop` arg list that should be comma-separated,
@@ -851,8 +852,8 @@ Two args fit fine on one line.
   - ` \#` → literal ` #` (space-hash would start a YAML comment)
 
 ### File I/O
-- **Never use `slurp` / `spit`** — these are the Clojure names. YS
-  spells them `read` and `write`, and those are the only idiomatic
+- **Never use `slurp` / `spit`** - these are the Clojure names and YS
+  does not expose them. It spells them `read` and `write`, the only idiomatic
   forms:
   - `read(file)` — read a whole file to a string (was `slurp`).
     Colon chain: `file:read`, e.g. `FILE:read:lines`.
@@ -1397,9 +1398,13 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Prefer one grouped mapping when loading multiple modules:
   ```yaml
   use:
-    ys::fs: :as fs
-    ys::str: :as str
+    fs:
+    str:
   ```
+- A bare short name expands under `ys::` and receives the same alias.
+  `use: http fs ipc ys` loads four aliases.
+  A short name with options does not imply an alias, so
+  `use http: :all` imports all of `ys::http` without an `http` alias.
 - Plain `use ys::str:` loads the module for qualified access as
   `ys::str/upper-case` without referring its names.
   Use `:as` for an alias, `:get` for selected names, `:all` to refer all
@@ -1408,23 +1413,27 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Use `:path`, `:file`, or `:url` for source locations.
   Use `:from` for Maven, Gist, or GitHub dependency coordinates.
   The retired `:deps` spelling is invalid.
-- `read(path)` / `path:read` — read file contents;
-  `write(path content)` — write content to file
+- `read(path)` / `path:read` - read file contents through `ys::fs`;
+  `write(path content)` - write content through `ys::fs`
 - `say` / `print` / `out` / `warn` / `err` — write to stdout/stderr.
   `say` adds a newline; the others do not. `warn` and `err` go to
   stderr; the rest go to stdout. `print` and `out` are synonyms (both
-  are `clojure.core/print` with auto-flush); prefer `print` when it
+  are backed by `ys::io` with auto-flush); prefer `print` when it
   stands alone, `out` when chaining or pairing with `err`.
 - To print just a blank line, write bare `say:` — not `say: ''`. A
   valueless `say:` emits the newline on its own.
 - `die(msg)` — print error message to stderr and exit
-- `read-line()` — read a line from stdin
-- `IN` — stdin handle for `read`: `read: IN` instead of
-  `slurp: System/in`
+- `readline()` - read a line from stdin; `IN:readline` or
+  `fh:readline` makes the input handle explicit
+- Raw Clojure I/O functions including `println`, `printf`, `pr`,
+  `prn`, `newline`, `flush`, and `read-line` are not builtins.
+  Use the YS functions above. If original Clojure behavior is truly
+  required, load `ys::clj` and call the function through `clj/`.
 - `trim(s)` — strip leading/trailing whitespace
 - `sleep(n)` / `sleep: n` — pause for `n` seconds. Use the builtin
   rather than shelling out via `bash-out: "sleep $n"`.
-- `bash-out(cmd)` / `cmd:bash-out` — run a shell command and return
+- Process functions require `use ipc: :all`.
+  `bash-out(cmd)` / `cmd:bash-out` runs a shell command and returns
   stdout as a string. Pair with a `|` block scalar for multi-line
   scripts; bash continues naturally across newlines after `&&`, `||`,
   or `|`, so no trailing `\` is needed:
@@ -1447,10 +1456,7 @@ pairs =: words:frequencies.sort-by(val):reverse
     `fs/ls`, `fs/glob`, `fs/which`, `fs/mtime`
   - mutators: `fs/cp`, `fs/mv`, `fs/rm`, `fs/rm-r`, `fs/mkdir-p`,
     `fs/touch`
-  Predicates and getters also have `fs-` aliases interned into
-  `ys::std` (e.g. `fs-e`, `fs-d`) because those came first, before
-  the `fs/` library existed. Mutators are `fs/`-only. Prefer the
-  `fs/` form for new code; both work for predicates.
+  The former `fs-` aliases are not available.
 - Namespace-qualified calls: `json/load(s)`, `json/dump(data)`,
   `http/get(url)`, `http/post(url opts)` — call with `/` separator
 
@@ -1525,6 +1531,8 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Do NOT use `str()` for multi-line text — use `:: |` block scalar
   with `$var` interpolation
 - Do NOT use `slurp`/`spit` — use `read`/`write`
+- Do NOT use `println`, `printf`, `pr`, `prn`, `newline`, `flush`, or
+  `read-line` as builtins. Use `say`, `print`, `pp`, or `readline`.
 - Do NOT use `.get(...)` for index/key access — use property lookup:
   - `.key` for a simple string/symbol key (`schema.tokens`)
   - `.'key'` for a non-bare-identifier key (`schema.'$ref'`)

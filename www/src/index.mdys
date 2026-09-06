@@ -57,6 +57,7 @@ Learn More About YS</a></div>
   type: code:yaml
   body: |
     !ys-0:
+    use http: :all
     vars =: load('vars.yaml')
     json-file =: 'data.json'
 

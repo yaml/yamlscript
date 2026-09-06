@@ -13,7 +13,7 @@ chaining operations](chain.md).
 Load the library before using its full name or an alias:
 
 ```yaml
-use ys::ys: :as ys
+use: ys
 ```
 
 
@@ -45,9 +45,15 @@ Prefer one grouped mapping when loading multiple modules:
 
 ```yaml
 use:
-  ys::fs: :as fs
-  ys::str: :as str
+  fs:
+  str:
 ```
+
+Bare short names expand into `ys::` module names and receive matching aliases.
+The scalar form `use: http fs ipc ys` loads four such aliases.
+A short name with options does not imply an alias, so `use http: :all` means
+`use ys::http: :all`.
+Fully qualified module names retain their existing behavior.
 
 ```yaml
 use foo::bar: :path './lib'
@@ -85,6 +91,12 @@ use foo::bar: :as bar :get one two/second
 use foo::baz: :all :not internal
 use foo::quux: :as quux :none
 ```
+
+Selection options on `ys::std` replace the automatically referred standard
+set for the current namespace.
+For example, `use std: :not read write` keeps all standard names except file
+input and output, while preserving user definitions with those names.
+Bare `use: std` only creates the `std` alias.
 
 The former `require` function is retired and reports an error directing callers
 to `use`.

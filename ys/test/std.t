@@ -1,8 +1,8 @@
 #!/usr/bin/env ys-0
 
 use:
-  ys::taptest: :all
-  ys::fs: :as fs
+  fs:
+  taptest: :all
 
 NIL =: nil
 

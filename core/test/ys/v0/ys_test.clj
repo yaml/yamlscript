@@ -5,7 +5,9 @@
   (:require
    [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
+   [ys.v0 :as v0]
    [ys.v0.global :as global]
+   [ys.v0.manifest :as manifest]
    [ys.v0.ys :as portable]))
 
 (def fixture-root
@@ -23,6 +25,12 @@
     (binding [*ns* target]
       (refer 'clojure.core))
     target))
+
+(defn refer-standard [target]
+  (binding [*ns* target]
+    (doseq [sym (keys (ns-publics 'ys.v0.std))]
+      (ns-unmap target sym))
+    (refer 'ys.v0.std)))
 
 (deftest parses-portable-use-options
   (is (= {:source [:path "lib"]
@@ -43,6 +51,21 @@
   (is (= "Duplicate 'use' option ':all'"
         (error-message
           #(#'portable/parse-use-args [:all :all])))))
+
+(deftest normalizes-short-use-forms
+  (is (= '((ys.http :as http))
+        (portable/normalize-use-forms '(http))))
+  (is (= '((ys.http :as http) (ys.fs :as fs) (ys.ipc :as ipc))
+        (portable/normalize-use-forms '(http fs ipc))))
+  (is (= '((ys.http :all))
+        (portable/normalize-use-forms '(http :all))))
+  (is (= '((ys.http :as web))
+        (portable/normalize-use-forms '(http :as web))))
+  (is (= '((foo.bar :get baz)
+           (ys.http :as http)
+           (xyz.abc :all))
+        (portable/normalize-use-forms
+          '((foo.bar :get baz) (http) (xyz.abc :all))))))
 
 (deftest loads-portable-files-and-paths
   (testing "file source with alias and no referred names"
@@ -72,12 +95,36 @@
     (is (= 'ys.v0.fs
           (ns-name (get (ns-aliases target) 'ys.fs))))))
 
+(deftest restricts-portable-core-side-effects
+  (let [target (fresh-namespace)]
+    (binding [*ns* target]
+      (v0/init))
+    (doseq [sym manifest/hidden-core]
+      (is (nil? (ns-resolve target sym))
+        (str "portable core function is hidden: " sym)))
+    (is (some? (ns-resolve target 'read)))
+    (is (some? (ns-resolve target 'readline)))))
+
 (deftest plain-use-does-not-refer-public-names
   (let [target (fresh-namespace)]
     (#'portable/portable-use target '((ys.str)))
     (is (= "QUALIFIED"
           ((ns-resolve target 'ys.str/upper-case) "qualified")))
     (is (nil? (ns-resolve target 'upper-case)))))
+
+(deftest reselects-portable-standard-functions
+  (let [target (fresh-namespace)]
+    (refer-standard target)
+    (#'portable/portable-use target '((ys.std :not read write)))
+    (is (nil? (ns-resolve target 'read)))
+    (is (nil? (ns-resolve target 'write)))
+    (is (some? (ns-resolve target 'say))))
+  (let [target (fresh-namespace)]
+    (refer-standard target)
+    (ns-unmap target 'read)
+    (intern target 'read :local)
+    (#'portable/portable-use target '((ys.std :none)))
+    (is (= :local (var-get (ns-resolve target 'read))))))
 
 (deftest require-is-retired
   (is (= "The 'require' function is retired. Use 'use' instead."

@@ -21,6 +21,9 @@
   - doc/ys-std.md
   - doc/core.md
   - doc/ys-fs.md
+  - doc/ys-io.md
+  - doc/ys-http.md
+  - doc/ys-ipc.md
   - doc/ys-ys.md
   - doc/ys-yaml.md
   - doc/ys-json.md

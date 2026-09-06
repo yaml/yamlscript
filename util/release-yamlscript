@@ -1,8 +1,10 @@
 #!/usr/bin/env ys-0
 
 use:
-  ys::str: :as str
-  ys::yaml: :as yaml
+  fs: :all
+  ipc: :all
+  str:
+  yaml:
 
 # This script automates the YAMLScript release process.
 #
@@ -284,7 +286,7 @@ defn confirm(msg default='y'):
       else: "$msg [y/N]: "
 
   print: prompt-text
-  answer =: read-line():trim
+  answer =: readline():trim
 
   if answer.?:
     if answer =~ /^[Yy]/:
@@ -336,7 +338,7 @@ defn do-changelog(old new):
   o: "Updating 'Changes' file"
 
   when-not dryrun:
-    when-not fs-e(changes-file):
+    when-not e(changes-file):
       changes =: make-changes-entry(ctx)
       write changes-file: changes
 
@@ -628,7 +630,7 @@ defn o(msg): say("\n$msg")
 
 defn prompt(msg):
   print: "$msg "
-  trim: read-line()
+  trim: readline()
 
 defn file-prepend(file text):
   write file:

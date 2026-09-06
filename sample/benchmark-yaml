@@ -1,5 +1,7 @@
 #!/usr/bin/env ys
 
+use ipc: :all
+
 #------------------------------------------------------------------------------
 # A YS program to benchmark loading of long YAML strings.
 # See: https://yamlscript.org
@@ -84,7 +86,7 @@ defn main(loader='libyaml' n=5):
     func =: "test-$loader"                  # Test funtion name
     tester =: resolve(func.symbol()) ||
       die("No test function '$func'")       # Test function
-    printf "%$str(n + 1)d) ": r             # Print test prefix
+    print: format("%$str(n + 1)d) " r)        # Print test prefix
     tester: yaml                            # Run timing test
 
 # ###

@@ -1,0 +1,34 @@
+---
+title: Stream I/O Library
+talk: 0
+---
+
+# `ys::io` - The YS Stream I/O Library
+
+The `ys::io` library reads from open input handles and writes to the standard
+output streams.
+It does not expose `clojure.java.io` or open filesystem paths.
+
+```yaml
+use io: :all
+```
+
+## Stream Input
+
+```mdys:fmt-fns
+readline(Reader) Str?: Read one line, returning nil at end of input
+```
+
+## Stream Output
+
+```mdys:fmt-fns
+err(Str*) nil: Print to stderr without a newline
+out(Str*) nil: Print to stdout without a newline
+pp(X) nil: Pretty print a value
+print(Str*) nil: Print to stdout without a newline
+say(Str*) nil: Print to stdout with a newline
+warn(Str*) nil: Print to stderr with a newline
+```
+
+The standard `readline()` proxy reads from `IN`.
+Pass an explicit input handle as `IN:readline` or `fh:readline`.

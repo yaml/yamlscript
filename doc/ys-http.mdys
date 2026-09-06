@@ -1,0 +1,33 @@
+---
+title: HTTP Library
+talk: 0
+---
+
+# `ys::http` - The YS HTTP Library
+
+```yaml
+use: http
+```
+
+Use the alias for response mappings:
+
+```yaml
+response =: http/get('https://example.com/data.json')
+```
+
+Import all names when the body-returning `curl` helper is preferred:
+
+```yaml
+use http: :all
+body =: curl('https://example.com/data.json')
+```
+
+```mdys:fmt-fns
+delete(URL Opts?) Map: Send an HTTP DELETE request
+get(URL Opts?) Map: Send an HTTP GET request
+head(URL Opts?) Map: Send an HTTP HEAD request
+patch(URL Opts?) Map: Send an HTTP PATCH request
+post(URL Opts?) Map: Send an HTTP POST request
+put(URL Opts?) Map: Send an HTTP PUT request
+curl(URL) Str: Get a URL and return its body
+```

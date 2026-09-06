@@ -29,6 +29,22 @@
 
 (def env {})
 
+(def input-hook
+  (atom (fn [] *in*)))
+(def output-hook
+  (atom (fn [] *out*)))
+(def error-hook
+  (atom (fn [] *err*)))
+
+(defn current-input []
+  (@input-hook))
+
+(defn current-output []
+  (@output-hook))
+
+(defn current-error []
+  (@error-hook))
+
 (defn update-env
   "Update env in the current context."
   [m]

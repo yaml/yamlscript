@@ -1,9 +1,9 @@
 #!/usr/bin/env ys-0
 
-use ys::taptest: :all
+use taptest: :all
 
 # Load the hello-world YS module:
-use hello-world: :all
+use foo::hello-world: :as hello-world :all
 
 # Define a custom form function:
 defn inc2(n _): n + 2

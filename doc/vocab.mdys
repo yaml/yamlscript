@@ -256,7 +256,7 @@ S-expression: |
   Any of the forms may themselves be s-expressions.
 
     ```
-    (println (* 6 7))  # => 42
+    (say (* 6 7))  # => 42
     ```
 
   YS supports s-expressions, YeS-expressions, pair-expressions and dot-chain
@@ -267,7 +267,7 @@ YeS-expression: |
   infix operator expressions are allowed:
 
     ```
-    println(6 * 7)
+    say(6 * 7)
     ```
 
 Pair expression: |
@@ -276,7 +276,7 @@ Pair expression: |
   The argument forms can be on either side of the `: `.
 
     ```
-    println: 6 * 7
+    say: 6 * 7
     ```
 
 Dot-chain expressions: |

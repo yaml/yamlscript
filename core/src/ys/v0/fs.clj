@@ -6,7 +6,7 @@
    [babashka.fs :as fs]
    [clojure.java.io :as io]
    [clojure.string :as str])
-  (:refer-clojure :exclude [abs empty? find]))
+  (:refer-clojure :exclude [abs empty? file-seq find read]))
 
 (def this 'ys.v0.fs)
 (def TRUE (constantly true))
@@ -38,6 +38,14 @@
   ls
   size?
   )
+
+(defn read [path]
+  (slurp path))
+
+(defn write [path content]
+  (spit path content))
+
+(intern this 'file-seq clojure.core/file-seq)
 
 ;; FS boolean functions
 (intern this 'abs? (multi fs/absolute?))

@@ -42,6 +42,8 @@
    [ys.v0.ext]
    [ys.v0.fs]
    [ys.v0.http]
+   [ys.v0.io]
+   [ys.v0.ipc]
    [ys.v0.json]
    [ys.v0.std]
    [ys.v0.taptest]
@@ -121,7 +123,9 @@
 (def http-namespace
   (sci/copy-ns ys.v0.http (sci/create-ns 'http)))
 (def io-namespace
-  (sci/copy-ns clojure.java.io (sci/create-ns 'io)))
+  (sci/copy-ns ys.v0.io (sci/create-ns 'io)))
+(def ipc-namespace
+  (sci/copy-ns ys.v0.ipc (sci/create-ns 'ipc)))
 (def json-namespace
   (sci/copy-ns ys.v0.json (sci/create-ns 'json)))
 (def math-namespace
@@ -155,12 +159,13 @@
    'ys.v0.ext ext-namespace
    'ys.v0.fs fs-namespace
    'ys.v0.http http-namespace
+   'ys.v0.io io-namespace
+   'ys.v0.ipc ipc-namespace
    'ys.v0.json json-namespace
    'ys.v0.taptest taptest-namespace
    'ys.v0.yaml yaml-namespace
    'ys.v0.ys v0-ys-namespace
    'clojure.tools.cli cli-namespace
-   'clojure.java.io io-namespace
    'clojure.math math-namespace
    'clojure.set set-namespace
    'clojure.string str-namespace
@@ -258,12 +263,21 @@
 
       java.util.regex.Pattern]))
 
-(reset! global/sci-ctx
-  (sci/init
-    {:namespaces namespaces
-     :classes classes
-     :features #{:clj}
-     :load-fn load-fn}))
+(defn init-context []
+  (let [ctx (sci/init
+              {:namespaces namespaces
+               :classes classes
+               :features #{:clj}
+               :load-fn load-fn})]
+    (doseq [sym manifest/hidden-core]
+      (sci/eval-string* ctx
+        (str "(ns-unmap 'clojure.core '" sym ")")))
+    ctx))
+
+(reset! global/sci-ctx (init-context))
+(reset! ys.v0.global/input-hook (fn [] @sci/in))
+(reset! ys.v0.global/output-hook (fn [] @sci/out))
+(reset! ys.v0.global/error-hook (fn [] @sci/err))
 
 (defn- normalize-os
   "Return the stable YS name for the host operating system."
@@ -331,7 +345,10 @@
      (if (= "" clj)
        ""
        (sci/binding
-        [sci/file file
+        [sci/in *in*
+         sci/out *out*
+         sci/err *err*
+         sci/file file
          ARGS (vec
                 (map #(cond
                         (re-matches re/xnum %1)

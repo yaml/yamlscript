@@ -106,7 +106,7 @@ See Also:
 
 * [`clojure.string`](https://clojure.github.io/clojure/clojure.string-api.html)
   functions callable as `str/<func-name>` after
-  `use ys::str: :as str`.
+  `use: str`.
 
 
 ## Regular Expression
@@ -247,12 +247,12 @@ YS Std:
 ## I/O
 
 ```mdys:quick-ref
-print printf println pr prn
 print-str println-str pr-str prn-str
-newline flush read write
 with-out-str with-open with-in-str
 ```
 
 YS Std:
 
-* `say`, `out`, `warn`, `pp`
+* `read`, `write`, `readline`, `say`, `print`, `out`, `warn`, `err`, `pp`
+
+Raw Clojure I/O functions are available from [`ys::clj`](ys-clj.md) only.

@@ -10,10 +10,10 @@ from a YS perspective.
 
 When you absolutely need the original Clojure functions, they are available in
 this `ys::clj` library.
-Require the library with an alias before using the `clj/` prefix:
+Use the library with an alias before using the `clj/` prefix:
 
 ```yaml
-use ys::clj: :as clj
+use: clj
 ```
 
 
@@ -35,6 +35,19 @@ web site, so we include a link to there in each definition.
 * `clj/load-file` — [In Clojure](https://clojuredocs.org/clojure.core/load-file)
   the `load-file` function loads a Clojure file from a given file path.
   In YS it loads a YS file from a given file path.
+
+* `clj/load-reader` loads and evaluates Clojure forms from a reader.
+
+* `clj/line-seq` preserves the original Clojure reader sequence helper.
+
+* `clj/flush`, `clj/newline`, `clj/print`, `clj/printf`, `clj/println`,
+  `clj/pr`, and `clj/prn` preserve the original Clojure output functions.
+
+* `clj/read` and `clj/read-line` preserve the original Clojure input
+  functions.
+
+The Clojure `slurp` and `spit` functions are not exposed.
+Use `read` and `write`, which are backed by `ys::fs`.
 
 * `clj/num` — [In Clojure](https://clojuredocs.org/clojure.core/num) the `num`
   function converts a Java number to a Clojure number.

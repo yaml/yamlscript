@@ -1,6 +1,6 @@
 !ys-0
 
-ns: hello-world
+ns: foo::hello-world
 
 defn hello():
   'Hello, world!'

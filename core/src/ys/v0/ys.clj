@@ -290,22 +290,52 @@
   (when (or (:all options) (:not options))
     (refer module :exclude (vec (:not options)))))
 
+(defn- selects-vars? [options]
+  (some options [:get :all :none :not]))
+
+(defn- clear-portable-std [target]
+  (doseq [[sym var] (ns-refers target)
+          :when (= 'ys.v0.std (some-> var meta :ns ns-name))]
+    (ns-unmap target sym)))
+
+(defn- short-module? [module]
+  (and (symbol? module)
+    (nil? (namespace module))
+    (not (str/includes? (str module) "."))))
+
+(defn normalize-use-forms [forms]
+  (let [forms (if (every? symbol? forms)
+                (map list forms)
+                (if (symbol? (first forms)) (list forms) forms))]
+    (map
+      (fn [form]
+        (let [[module & args] form]
+          (if (short-module? module)
+            (let [public-module (symbol (str "ys." module))]
+              (if (seq args)
+                (cons public-module args)
+                (list public-module :as module)))
+            form)))
+      forms)))
+
 (defn- portable-use [ns forms]
   (when-not (seq forms)
     (util/die "use requires at least one form"))
-  (let [forms (if (symbol? (first forms)) (list forms) forms)]
-    (doseq [form forms]
-      (let [module (first form)
-            options (parse-use-args (rest form))
-            loaded-module (load-portable-module ns module options)]
-        (binding [*ns* ns]
-          (select-portable-vars loaded-module options)))))
+  (doseq [form forms]
+    (let [module (first form)
+          options (parse-use-args (rest form))
+          loaded-module (load-portable-module ns module options)]
+      (binding [*ns* ns]
+        (when (and (= module 'ys.std) (selects-vars? options))
+          (clear-portable-std ns))
+        (select-portable-vars loaded-module options))))
   nil)
 
 (defn +use [ns forms]
-  (if-let [f (get @hooks :+use)]
-    (f ns forms)
-    (portable-use ns forms)))
+  (let [forms (normalize-use-forms forms)]
+    (if-let [f (get @hooks :+use)]
+      (f ns forms)
+      (portable-use ns forms))))
 
 (defmacro use [& forms]
   `(+use *ns* '~forms))

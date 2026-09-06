@@ -10,14 +10,11 @@
    [yamlscript.compiler :as compiler]
    [yamlscript.runtime :as runtime]
    [ys.v0.manifest :as manifest]
+   [ys.v0.ys :as ys]
    [yamltest.core :as test]))
 
 (defn fresh-context []
-  (sci/init
-    {:namespaces runtime/namespaces
-     :classes runtime/classes
-     :features #{:clj}
-     :load-fn runtime/load-fn}))
+  (runtime/init-context))
 
 (deftest uses-public-modules
   (testing "public modules are absent from a new context"
@@ -46,6 +43,17 @@
       (sci/eval-string* ctx "(use (ys.str :as str))")
       (is (= "ALIAS"
             (sci/eval-string* ctx "(str/upper-case \"alias\")")))))
+  (testing "short uses add matching aliases"
+    (let [ctx (fresh-context)]
+      (sci/eval-string* ctx "(use http fs ipc io)")
+      (doseq [sym '[http/curl fs/read ipc/sh io/readline]]
+        (is (some? (sci/eval-string* ctx (str "(resolve '" sym ")")))
+          (str "short use resolves " sym)))))
+  (testing "short uses with options do not add aliases"
+    (let [ctx (fresh-context)]
+      (sci/eval-string* ctx "(use http :get curl)")
+      (is (some? (sci/eval-string* ctx "(resolve 'curl)")))
+      (is (nil? (sci/eval-string* ctx "(resolve 'http/curl)")))))
   (testing "get, rename and exclusion options are preserved"
     (let [ctx (fresh-context)]
       (sci/eval-string* ctx
@@ -58,6 +66,83 @@
             (sci/eval-string* ctx "(lower-case \"missing\")")))
       (is (= "PRESENT"
             (sci/eval-string* ctx "(upper-case \"present\")"))))))
+
+(deftest restricts-core-side-effects
+  (let [ctx (fresh-context)]
+    (doseq [sym manifest/hidden-core]
+      (is (nil? (sci/eval-string* ctx
+                  (str "(resolve 'clojure.core/" sym ")")))
+        (str "core function is hidden: " sym)))
+    (sci/eval-string* ctx "(use clj)")
+    (doseq [sym '[compile flush line-seq load-file load-reader newline
+                  pr prn printf println read-line]]
+      (is (some? (sci/eval-string* ctx (str "(resolve 'clj/" sym ")")))
+        (str "core function is available from ys::clj: " sym)))
+    (is (nil? (sci/eval-string* ctx "(resolve 'clj/slurp)")))
+    (is (nil? (sci/eval-string* ctx "(resolve 'clj/spit)")))))
+
+(deftest reselects-standard-functions
+  (testing "selection removes only automatic standard mappings"
+    (let [ctx (fresh-context)]
+      (sci/eval-string* ctx "(use std :not read write)")
+      (is (nil? (sci/eval-string* ctx "(resolve 'read)")))
+      (is (nil? (sci/eval-string* ctx "(resolve 'write)")))
+      (is (some? (sci/eval-string* ctx "(resolve 'say)")))))
+  (testing "get and all select exact standard sets"
+    (let [ctx (fresh-context)]
+      (sci/eval-string* ctx "(use std :get say)")
+      (is (some? (sci/eval-string* ctx "(resolve 'say)")))
+      (is (nil? (sci/eval-string* ctx "(resolve 'read)")))
+      (sci/eval-string* ctx "(use std :all)")
+      (is (some? (sci/eval-string* ctx "(resolve 'read)")))))
+  (testing "bare std use only adds an alias"
+    (let [ctx (fresh-context)]
+      (sci/eval-string* ctx "(use std)")
+      (is (some? (sci/eval-string* ctx "(resolve 'read)")))
+      (is (some? (sci/eval-string* ctx "(resolve 'std/read)")))))
+  (testing "selection preserves user definitions"
+    (let [ctx (fresh-context)]
+      (sci/eval-string* ctx "(def read :local)")
+      (sci/eval-string* ctx "(use std :none)")
+      (is (= :local (sci/eval-string* ctx "read"))))))
+
+(deftest owns-stream-and-file-io
+  (let [ctx (fresh-context)]
+    (is (= ["one" "two" nil]
+          (sci/eval-string* ctx
+            (str "(with-in-str \"one\\ntwo\\n\" "
+              "[(readline) (readline) (readline)])"))))
+    (is (= "explicit"
+          (sci/eval-string* ctx
+            "(with-in-str \"explicit\\n\" (readline *in*))")))
+    (sci/eval-string* ctx "(use io)")
+    (is (nil? (sci/eval-string* ctx "(resolve 'io/reader)")))
+    (is (some? (sci/eval-string* ctx "(resolve 'io/readline)")))
+    (is (= "line\n"
+          (sci/eval-string* ctx
+            "(with-out-str (io/say \"line\"))")))
+    (is (= "nested\n"
+          (with-out-str
+            (ys/eval "!ys-0\nsay: \"nested\"\n"))))))
+
+(deftest delegates-standard-file-io
+  (let [ctx (fresh-context)
+        file (java.io.File/createTempFile "ys-fs-" ".txt")
+        path (.getCanonicalPath file)]
+    (try
+      (sci/eval-string* ctx
+        (str "(write " (pr-str path) " \"standard\")"))
+      (sci/eval-string* ctx "(use fs)")
+      (is (= "standard"
+            (sci/eval-string* ctx
+              (str "(fs/read " (pr-str path) ")"))))
+      (sci/eval-string* ctx
+        (str "(fs/write " (pr-str path) " \"module\")"))
+      (is (= "module"
+            (sci/eval-string* ctx
+              (str "(read " (pr-str path) ")"))))
+      (finally
+        (.delete file)))))
 
 (deftest require-is-retired
   (let [ctx (fresh-context)]

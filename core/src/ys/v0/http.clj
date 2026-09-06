@@ -6,6 +6,7 @@
 
 (ns ys.v0.http
   (:require
+   [ys.v0.ext :as ext]
    [ys.v0.util :as util])
   (:refer-clojure :exclude [get]))
 
@@ -18,6 +19,13 @@
 (defn patch [& args] (apply (backend "patch") args))
 (defn post [& args] (apply (backend "post") args))
 (defn put [& args] (apply (backend "put") args))
+
+(defn curl [url]
+  (let [url (ext/convert-url url)
+        resp (get url)]
+    (if-let [body (:body resp)]
+      (str body)
+      (util/die resp))))
 
 (comment
   )

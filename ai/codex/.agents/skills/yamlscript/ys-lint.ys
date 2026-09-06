@@ -80,6 +80,12 @@ JOIN-SPACE-RE =: /\.join\(\s*(?:' '|" ")\s*\)/
 # words are written with a [.]-class so this pattern doesn't match its
 # own source when the linter is run over itself.
 SLURP-SPIT-RE =: /(?<![\w-])(slur[p]|spi[t])(?![\w-])/
+RAW-IO-RE =:
+  re-pattern(
+    str(
+      '(?<![\w/-])'
+      '(printl[n]|print[f]|p[r]|pr[n]|newlin[e]|flus[h]|read-lin[e])'
+      '(?=\s*[:(])'))
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 THEN-FALSE-RE =: /\bthen:\s*false\s*$/
@@ -336,6 +342,7 @@ defn- check-patterns(file lineno code):
     file.count-matches(lineno code 'zero-arg' ZERO-ARG-RE fmt-zero-arg)
     file.count-matches(lineno code 'slurp-spit' SLURP-SPIT-RE
                        fmt-slurp-spit)
+    file.count-matches(lineno code 'raw-io' RAW-IO-RE fmt-raw-io)
     file.check-arrow(lineno code)
     file.check-commas(lineno code)
     file.check-once(lineno code 'then-nil' THEN-NIL-RE THEN-NIL-MSG)
@@ -396,6 +403,18 @@ defn- fmt-constructor-call(m):
 defn- fmt-slurp-spit(m):
   repl =: (m.1 == 'slurp').if('read' 'write')
   =>: "$(m.1) -> $repl"
+
+defn- fmt-raw-io(m):
+  replacement =:
+    cond:
+      m.1 == 'println': 'say'
+      m.1 == 'printf': 'print(format(...))'
+      m.1 == 'pr': 'pp'
+      m.1 == 'prn': 'pp'
+      m.1 == 'newline': 'say'
+      m.1 == 'flush': 'YS output functions auto-flush'
+      m.1 == 'read-line': 'readline'
+  =>: "$(m.1) -> $replacement"
 
 # A =>: whose value is a compound expression (a call, colon/dot chain,
 # or spaced binary op) should be restructured into a pair form:

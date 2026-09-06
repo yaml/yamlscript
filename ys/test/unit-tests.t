@@ -1,8 +1,8 @@
 #!/usr/bin/env ys-0
 
 use:
-  ys::taptest: :get test done
-  ys::fs: :as fs
+  fs:
+  taptest: :get test done
 
 AV =: fs/abs("$DIR/../../sample/advent")
 

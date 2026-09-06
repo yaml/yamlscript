@@ -26,8 +26,12 @@
 ;; Clojure do. The ys runtime adds these to its clojure.core; ys.v0/init
 ;; leaves them alone.
 (def sci-core-extras
-  '[abs file-seq infinite? parse-double parse-long parse-uuid
-    random-uuid slurp spit NaN?])
+  '[abs infinite? parse-double parse-long parse-uuid random-uuid NaN?])
+
+;; Host clojure.core functions that are not part of the YS core surface.
+(def hidden-core
+  '[compile file-seq flush line-seq load-file load-reader newline
+    pr prn printf println read-line slurp spit])
 
 ;; clojure.core functions overridden by the ys runtime with YS behavior.
 ;; require is retained only to report its migration error.
@@ -58,7 +62,8 @@
     ys.ext     ys.v0.ext
     ys.fs      ys.v0.fs
     ys.http    ys.v0.http
-    ys.io      clojure.java.io
+    ys.io      ys.v0.io
+    ys.ipc     ys.v0.ipc
     ys.json    ys.v0.json
     ys.math    clojure.math
     ys.set     clojure.set

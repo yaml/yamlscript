@@ -911,7 +911,7 @@
   yamlscript: |
     !ys-0:
     a: 1
-    data =: slurp('data.yaml'):yaml/load
+    data =: read('data.yaml'):yaml/load
     b: 2
     c: data.foo
   resolve: |
@@ -919,7 +919,7 @@
      [{:str "a"}
       {:int "1"}
       {:def "data ="}
-      {:expr "slurp('data.yaml'):yaml/load"}
+      {:expr "read('data.yaml'):yaml/load"}
       {:str "b"}
       {:int "2"}
       {:str "c"}
@@ -931,7 +931,7 @@
       [{:Sym def}
        {:Sym data}
        {:dot
-        [{:Lst [{:Sym slurp} {:Str "data.yaml"}]}
+        [{:Lst [{:Sym read} {:Str "data.yaml"}]}
          {:Lst [{:Sym yaml/load}]}]}]
       {:Str "b"}
       {:Int 2}
@@ -945,7 +945,7 @@
        {:Sym data}
        {:Lst
         [{:Sym yaml/load}
-         {:Lst [{:Sym slurp} {:Str "data.yaml"}]}]}]
+         {:Lst [{:Sym read} {:Str "data.yaml"}]}]}]
       {:Str "b"}
       {:Int 2}
       {:Str "c"}
@@ -961,7 +961,7 @@
            [{:Sym data}
             {:Lst
              [{:Sym yaml/load}
-              {:Lst [{:Sym slurp} {:Str "data.yaml"}]}]}]}
+              {:Lst [{:Sym read} {:Str "data.yaml"}]}]}]}
           {:Map
            [{:Str "b"}
             {:Int 2}
@@ -970,7 +970,7 @@
   clojure: |
     (merge-omap
       {"a" 1}
-      (let [data (yaml/load (slurp "data.yaml"))] {"b" 2, "c" "data.foo"}))
+      (let [data (yaml/load (read "data.yaml"))] {"b" 2, "c" "data.foo"}))
 
 
 - name: Conditional pairs in data mode map

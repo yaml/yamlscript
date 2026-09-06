@@ -193,19 +193,19 @@ Regex functions:
 - https://clojuredocs.org/quickref#regular-expressions
 
 I/O functions:
-  err(Str*) nil: Print to stderr
+  err(Str*) nil: Print to stderr without a newline
   out(Str*) nil: Print to stdout|
     Flushes stdout after printing
   pp(X) nil: Pretty print a value
   print(Str*) nil: Print to stdout without newline|
     Flushes stdout after printing
-  read(path) Str: Alias of CC/slurp |
-    Read a file into a string
+  read(Path) Str: Read a file through ys::fs
+  readline(Reader?) Str?: Read one line through ys::io|
+    With no argument, reads from IN
   say(Str*) nil: Print to stdout with newline
   warn(Str*) nil: Print to stderr with newline|
     Flushes stderr after printing
-  write(path Str) nil: Alias of CC/spit |
-    Write a string to a file
+  write(Path Str) nil: Write a file through ys::fs
 
 Shorter named alias functions:
   a(X) X: Alias of CC/identity
@@ -271,7 +271,7 @@ Alternate truth functions:
   and?(X X+) X: Return last truey value or nil
 
 File system functions: |
-  See [FS Library](ys-fs.md)
+  See the explicit [FS Library](ys-fs.md)
 
 Date/Time functions:
   now() Instant: Returns `java.time.Instant` object
@@ -281,31 +281,14 @@ Security functions:
   sha1(S) X: Calculate the SHA-1 hash of a string
   sha256(S) X: Calculate the SHA-256 hash of a string
 
-IPC functions:
-- exec(Opts? Cmd Str*) Result: Execute a command
-  process(Opts? Cmd Str*) Result: Execute a command
-  sh(Opts? Cmd Str*) Result: Execute a command
-  shell(Opts? Cmd Str*) Result: Execute a command
-  sh-out(Opts? Cmd Str*) Result: Execute a command and return the output
-  bash(Opts? Cmd Str*) Result: Command wrapped with `bash -c '...'`
-  bash-out(Opts? Cmd Str*) Result: Run `bash` and return output
-
-- |
-    Opts is an optional mapping that supports the following options:
-
-    * `:in` - stdin for command
-    * `:out` - file to redirect stdout to
-    * `:err` - file to redirect stderr to
-    * `:dir` - working directory
-    * `:env` - environment variables to use
-
-- https://github.com/babashka/process/blob/master/API.md#babashka.process/process
+IPC functions: |
+  See the explicit [Process Library](ys-ipc.md)
 
 External library functions:
   use-pod(pod-name version) nil: Load an external library pod
 
-HTTP functions:
-  curl(URL) Str: Get a URL and return the body
+HTTP functions: |
+  See the explicit [HTTP Library](ys-http.md)
 
 YAML document result stashing functions:
   stream() X: Mapping of document results|

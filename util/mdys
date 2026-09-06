@@ -1,17 +1,17 @@
 #!/usr/bin/env ys-0
 
-use ys::ys: :as ys
+use: fs str ys
 
 input-dir =: atom(nil)
 
 DNE =: "<!-- DO NOT EDIT — THIS FILE WAS GENERATED -->\n\n"
 
 defn main(input-file):
-  dir =: fs-dirname(input-file):fs-abs
+  dir =: fs/dirname(input-file):fs/abs
   reset! input-dir: dir
 
   mdys-lib =: "$dir/mdys.ys"
-  when fs-f(mdys-lib):
+  when fs/f(mdys-lib):
     load: mdys-lib
 
   markdown =: input-file:process:trim
@@ -36,7 +36,7 @@ defn process(input-file):
 
 fenced-re =: /(?sm)(?:^```mdys:\S+\n.*?\n```\n)/
 defn load-mdys(file):
-  text =: file:fs-abs:read
+  text =: file:fs/abs:read
   texts =: text.split(fenced-re)
   fenced =: text.re-seq(fenced-re) || []
   fenced =: fenced:V.conj('')
@@ -118,8 +118,8 @@ defn error-fmt(text msg):
     </code></pre>
 
 defn get-path(file):
-  if-not fs-abs?(file):
-    fs-abs _ file: input-dir:deref
+  if-not fs/abs?(file):
+    fs/abs _ file: input-dir:deref
     else: file
 
 defn mdys-include(data):

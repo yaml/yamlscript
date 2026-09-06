@@ -49,6 +49,8 @@ File System Getters:
   readlink(Path) Path: Get the path of a symbolic link
   rel(Path) Path: Get the relative path
   which(name) Path: Find the path of an executable
+  file-seq(Path) [File]: Walk a path recursively
+  read(Path) Str: Read a file into a string
 
 File System Mutators:
   cp(Path Path): Copy a file
@@ -61,6 +63,7 @@ File System Mutators:
   rmdir(Path) Path: Remove a directory
   touch(Path) Path: Create a file if it doesn't exist, or update its
     modification time
+  write(Path Str) nil: Write a string to a file
 ```
 
 ```mdys:YS-CODE

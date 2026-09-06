@@ -67,7 +67,10 @@
          _ (reset! global/stream-values [])
          clj-code (ys.ys/compile ys-code)
          value (sci/binding
-                [sci/file file
+                [sci/in *in*
+                 sci/out *out*
+                 sci/err *err*
+                 sci/file file
                  global/FILE file]
                  (sci/eval-string+ @global/sci-ctx clj-code))
          value (if stream-mode
@@ -94,14 +97,11 @@
 (defn +use [ns forms]
   (when (not (seq forms))
     (die "use requires at least one form"))
-  (let [forms (if (symbol? (first forms))
-                (list forms)
-                forms)]
-    (reduce (fn [_ form]
-              (let [module (first form)
-                    args (rest form)]
-                (externals/use-module ns module args)))
-      nil forms))
+  (reduce (fn [_ form]
+            (let [module (first form)
+                  args (rest form)]
+              (externals/use-module ns module args)))
+    nil forms)
   nil)
 
 (defmacro use [& forms]

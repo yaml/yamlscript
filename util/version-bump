@@ -1,8 +1,8 @@
 #!/usr/bin/env ys-0
 
 use:
-  ys::fs: :as fs
-  ys::str: :as str
+  fs:
+  str:
 
 ROOT =: ENV.ROOT ||
   die("'ROOT' env var not defined")
@@ -37,7 +37,7 @@ defn main():
       from to =: m.slice(qw(from to))
       from =: "$ROOT/$from"
       to =: "$ROOT/$to"
-      when fs-e(from):
+      when fs/e(from):
         do:
           fs/mv: from to
           say: "Moved '$from' to '$to'"

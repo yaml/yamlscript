@@ -28,35 +28,35 @@
 - name: Double quoted string
   yamlscript: |
     !ys-0
-    println: "foo"
+    say: "foo"
   clojure: |
-    (println "foo")
+    (say "foo")
 
 
 - name: Single quoted string
   yamlscript: |
     !ys-0
-    println: 'foo'
+    say: 'foo'
   clojure: |
-    (println "foo")
+    (say "foo")
 
 
 - name: Literal style string
   yamlscript: |
     !ys-0
-    println: |-
+    say: |-
       foo
   clojure: |
-    (println "foo")
+    (say "foo")
 
 
 - name: Folded style string
   yamlscript: |
     !ys-0
-    println:: >-
+    say:: >-
       foo
   clojure: |
-    (println "foo")
+    (say "foo")
 
 
 - name: rng operator
@@ -1323,12 +1323,12 @@
     !ys-0
     a =:
       loop:
-        a =: read-line()
+        a =: readline()
         if empty?(a):
           recur()
           a
   clojure: |
-    (def a (loop [] (let [a (read-line)] (if (empty? a) (recur) a))))
+    (def a (loop [] (let [a (readline)] (if (empty? a) (recur) a))))
 
 
 - name: Allow catch with no arguments
@@ -1337,9 +1337,9 @@
     try:
       1:
       catch:
-        (println "Error")
+        (say "Error")
   clojure: |
-    (try (1) (catch Exception _e (println "Error")))
+    (try (1) (catch Exception _e (say "Error")))
 
 
 - name: Allow catch with one argument
@@ -1348,9 +1348,9 @@
     try:
       1:
       catch err:
-        (println "Error")
+        (say "Error")
   clojure: |
-    (try (1) (catch Exception err (println "Error")))
+    (try (1) (catch Exception err (say "Error")))
 
 
 - name: Allow underscores in symbols in dot chains

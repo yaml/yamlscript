@@ -30,6 +30,8 @@
    [ys.v0.ext]
    [ys.v0.global :as global]
    [ys.v0.http]
+   [ys.v0.io]
+   [ys.v0.ipc]
    [ys.v0.json]
    [ys.v0.manifest :as manifest]
    [ys.v0.re :as re]
@@ -50,6 +52,8 @@
   glojure newer than 0.6.8, where ns-unmap was broken.)"
   [target]
   (doseq [sym (manifest/exported-syms)]
+    (ns-unmap target sym))
+  (doseq [sym manifest/hidden-core]
     (ns-unmap target sym))
   (doseq [[ns-sym syms] manifest/refers]
     (when (find-ns ns-sym)

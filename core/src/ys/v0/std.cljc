@@ -17,9 +17,9 @@
     [atom? re-find+ regex?]]
    [ys.v0.ext :as ext]
    [ys.v0.global :as global]
+   [ys.v0.io :as io]
    [ys.v0.re :as re]
    [ys.v0.util :as util]
-   [ys.v0.http :as http]
    [ys.v0.ys :as ys])
   #?@(:glj []
       :default [(:import java.security.MessageDigest
@@ -486,11 +486,6 @@
 (defmacro each [bindings & body]
   `(doall (for ~bindings (do ~@body))))
 
-(defn err [& xs]
-  (binding [*out* *err*]
-    (apply clojure.core/print xs)
-    (flush)))
-
 (defn eval [S]
   (ys/eval (str "!ys-0\n" S)))
 
@@ -551,29 +546,43 @@
 ;;------------------------------------------------------------------------------
 ;; I/O functions
 ;;------------------------------------------------------------------------------
-(intern 'ys.v0.std 'read clojure.core/slurp)
-(intern 'ys.v0.std 'write clojure.core/spit)
+#?(:glj
+   (defn read [& _]
+     (util/die "The fs functions are not available"
+       " in this Clojure runtime"))
+   :default
+   (defn read [path]
+     (fs/read path)))
+
+#?(:glj
+   (defn write [& _]
+     (util/die "The fs functions are not available"
+       " in this Clojure runtime"))
+   :default
+   (defn write [path content]
+     (fs/write path content)))
+
+(defn err [& xs]
+  (apply io/err xs))
 
 (defn out [& xs]
-  (apply clojure.core/print xs)
-  (flush))
+  (apply io/out xs))
 
 (defn pp [x]
-  (util/pprint* x))
+  (io/pp x))
 
 (defn print [& xs]
-  (apply clojure.core/print xs)
-  (flush))
+  (apply io/print xs))
 
-(def _println (resolve 'println))
+(defn readline
+  ([] (io/readline (global/current-input)))
+  ([reader] (io/readline reader)))
 
 (defn say [& xs]
-  (apply _println xs))
+  (apply io/say xs))
 
 (defn warn [& xs]
-  (binding [*out* *err*]
-    (apply _println xs)
-    (flush)))
+  (apply io/warn xs))
 
 
 ;;------------------------------------------------------------------------------
@@ -813,42 +822,6 @@
 
 
 ;;------------------------------------------------------------------------------
-;; File system functions
-;;------------------------------------------------------------------------------
-#?(:glj
-   ;; No babashka.fs backend on glojure yet; intern clean failures so
-   ;; the export set stays identical across runtimes:
-   (doseq [name '[d e f l r s w x z abs abs? dirname filename basename
-                  glob ls mtime rel rel? which]]
-     (intern 'ys.v0.std (symbol (str "fs-" name))
-       (fn [& _]
-         (util/die "The fs functions are not available"
-           " in this Clojure runtime"))))
-   :default
-   (do
-     (intern 'ys.v0.std 'fs-d fs/d)
-     (intern 'ys.v0.std 'fs-e fs/e)
-     (intern 'ys.v0.std 'fs-f fs/f)
-     (intern 'ys.v0.std 'fs-l fs/l)
-     (intern 'ys.v0.std 'fs-r fs/r)
-     (intern 'ys.v0.std 'fs-s fs/s)
-     (intern 'ys.v0.std 'fs-w fs/w)
-     (intern 'ys.v0.std 'fs-x fs/x)
-     (intern 'ys.v0.std 'fs-z fs/z)
-     (intern 'ys.v0.std 'fs-abs fs/abs)
-     (intern 'ys.v0.std 'fs-abs? fs/abs?)
-     (intern 'ys.v0.std 'fs-dirname fs/dirname)
-     (intern 'ys.v0.std 'fs-filename fs/filename)
-     (intern 'ys.v0.std 'fs-basename fs/basename)
-     (intern 'ys.v0.std 'fs-glob fs/glob)
-     (intern 'ys.v0.std 'fs-ls fs/ls)
-     (intern 'ys.v0.std 'fs-mtime fs/mtime)
-     (intern 'ys.v0.std 'fs-rel fs/rel)
-     (intern 'ys.v0.std 'fs-rel? fs/rel?)
-     (intern 'ys.v0.std 'fs-which fs/which)))
-
-
-;;------------------------------------------------------------------------------
 ;; Date/Time functions
 ;;------------------------------------------------------------------------------
 (defn now
@@ -927,50 +900,6 @@
 
 
 ;;------------------------------------------------------------------------------
-;; IPC functions
-;;------------------------------------------------------------------------------
-;; The babashka.process backend resolves at call time so that Clojure
-;; runtimes without it (like jolt) can still load this namespace.
-(defn- process-backend [name]
-  (util/backend (symbol "babashka.process" name)))
-
-(defn- process-opts [[opts & xs]]
-  (let [opts (if (map? opts)
-               (let [env (or (:env opts) global/env)
-                     opts (assoc opts :env env)]
-                 [opts])
-               [{:env global/env} opts])]
-    (vec (concat opts xs))))
-
-(defn exec [& xs]
-  (apply (process-backend "exec") (process-opts xs)))
-
-(defn process [& xs]
-  (apply (process-backend "process") (process-opts xs)))
-
-(defn sh [& xs]
-  (apply (process-backend "sh") (process-opts xs)))
-
-(defn shell [& xs]
-  (apply (process-backend "shell") (process-opts xs)))
-
-(defn sh-out [& xs]
-  (let [ret (apply sh xs)]
-    (when (not= 0 (:exit ret))
-      (util/die (:err ret)))
-    (str/trim-newline
-      (:out ret))))
-
-(defn bash [& xs]
-  (let [cmd (str/join " " xs)]
-    (sh "bash -c" cmd)))
-
-(defn bash-out [& xs]
-  (let [cmd (str/join " " xs)]
-    (sh-out "bash -c" cmd)))
-
-
-;;------------------------------------------------------------------------------
 ;; External library functions
 ;;------------------------------------------------------------------------------
 (defn use-pod [pod-name version]
@@ -986,14 +915,6 @@
 
 (defn load-url [url]
   (ys/load-url url))
-
-(defn curl [url]
-  (let [url (get-url url)
-        resp (http/get url)]
-    (if-let [body (:body resp)]
-      (str body)
-      (util/die resp))))
-
 
 ;;------------------------------------------------------------------------------
 ;; YS document result stashing functions

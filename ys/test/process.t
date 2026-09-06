@@ -1,6 +1,8 @@
 #!/usr/bin/env ys-0
 
-use ys::taptest: :all
+use:
+  ipc: :all
+  taptest: :all
 
 env-update::
   FOO_BAR: BAZ

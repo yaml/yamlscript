@@ -266,6 +266,22 @@
           :else
           (recur (next args) (assoc options option true)))))))
 
+(defn- selects-vars? [options]
+  (some options [:get :all :none :not]))
+
+(defn- clear-std-refers [ns]
+  (let [syms (-> 'ys.v0.std ns-publics keys sort vec)
+        code (str
+               "(let [interns (ns-interns *ns*)] "
+               "(doseq [sym '" (pr-str syms) "] "
+               "(let [owner (some-> (get (ns-refers *ns*) sym) "
+               "meta :ns ns-name)] "
+               "(when (and (not (contains? interns sym)) "
+               "(contains? '#{std ys.std ys.v0.std} owner)) "
+               "(ns-unmap *ns* sym)))) "
+               "(refer-clojure :exclude '" (pr-str syms) "))")]
+    (sci/eval-string+ (context) code {:ns ns})))
+
 (defn use-module
   "Load a module and apply alias, refer, get, or exclusion options."
   [ns module args]
@@ -292,6 +308,8 @@
           namespace-object (sci/find-ns (context) namespace-sym)]
       (when-not namespace-object
         (die (str "Namespace not found: " namespace-sym)))
+      (when (and (= namespace-sym 'ys.std) (selects-vars? args))
+        (clear-std-refers ns))
       (when-let [as (:as args)]
         (sci/eval-string+ (context)
           (str "(alias '" as " '" namespace-sym ")")
