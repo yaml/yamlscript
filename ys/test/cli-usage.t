@@ -173,6 +173,17 @@ test::
   cmnd: "ys -dc -e '=>: 6 * 7'"
   have: '*** parse     *** 0.'
 
+- name: Definitions silently shadow referred vars
+  cmnd: >-
+    bash -c 'ys
+    -e "name =: 1"
+    -e "hash =: 2"
+    -e "VERSION =: 3"
+    -e "a =: 4"
+    -e "say: +[name hash VERSION a]:joins"
+    2>&1'
+  want: 1 2 3 4
+
 - cmnd: "ys -e 'say: \"Ingy döt Net ┌┼┐\"'"
   want: Ingy döt Net ┌┼┐
 

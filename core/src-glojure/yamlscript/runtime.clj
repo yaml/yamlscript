@@ -212,11 +212,26 @@
 
 (declare install! set-root!)
 
+(defn- definition-symbols [form]
+  (when (seq? form)
+    (let [head (first form)]
+      (cond
+        (= 'declare head) (rest form)
+        (contains? '#{def defmacro defn defn- defonce} head)
+        [(second form)]))))
+
+(defn- unmap-referred-definitions! [form]
+  (let [refers (ns-refers *ns*)]
+    (doseq [sym (definition-symbols form)
+            :when (and (symbol? sym) (contains? refers sym))]
+      (ns-unmap *ns* sym))))
+
 (defn- eval-forms [forms]
   (loop [forms forms result nil]
     (if-let [form (first forms)]
       (let [namespace-form? (and (seq? form) (= 'ns (first form)))
             _ (check-form-access! form)
+            _ (unmap-referred-definitions! form)
             result (eval form)]
         (when namespace-form?
           (install! *ns*))
@@ -256,6 +271,7 @@
     (if-let [form (first forms)]
       (let [namespace-form? (and (seq? form) (= 'ns (first form)))
             _ (check-form-access! form)
+            _ (unmap-referred-definitions! form)
             result (eval-document form)]
         (when namespace-form?
           (install! *ns*))
