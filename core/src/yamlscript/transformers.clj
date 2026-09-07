@@ -9,6 +9,7 @@
    [clojure.string :as str]
    [yamlscript.ast :refer [Sym Lst Vec Key]]
    [ys.v0.common]
+   [ys.v0.util :as util]
    [yamlscript.ysreader])
   (:refer-clojure))
 
@@ -41,7 +42,7 @@
                                 (drop-while (complement if-marker?) forms)]
               _ (if (and (seq lhs) (= 1 (count rhs)))
                   true
-                  (die "Invalid conditional assignment: "
+                  (util/die "Invalid conditional assignment: "
                     (subs s 1 (dec (count s)))))]
     (let [target (target-node lhs)]
       [target (first rhs) target])))
@@ -212,14 +213,14 @@ defn x():
   (let [[lhs rhs] (lhs-tests lhs rhs)
         xmap (:xmap rhs)
         _ (when (and xmap (not= (count xmap) 4))
-            (die "Invalid 'if' form"))
+            (util/die "Invalid 'if' form"))
         rhs (if-lets
               [_ xmap
                [k1 v1 k2 v2] xmap
                _ (= k1 (Sym 'then))]
               (do
                 (when-not (= k2 (Sym 'else))
-                  (die "Form after 'then' must be 'else'"))
+                  (util/die "Form after 'then' must be 'else'"))
                 (let [rhs
                       (if (> (count (:xmap v1)) 2)
                         (update-in rhs [:xmap 0] (fn [_] (Sym 'do)))

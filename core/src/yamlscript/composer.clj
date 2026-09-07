@@ -6,7 +6,9 @@
 
 (ns yamlscript.composer
   (:require
-   [ys.v0.common])
+   [clojure.string :as str]
+   [ys.v0.common]
+   [ys.v0.util :as util])
   (:refer-clojure))
 
 (comment
@@ -45,22 +47,27 @@
   only support !ys-0 !ys-0: !ys-1 !ys-1:. The !ys-0 form allows 0-n function
   call tags to follow it: !ys-0:reverse:rest for example."
   [node]
-  (if-let [tag (:! node)]
-    (if-let [[_ ystag fntag colon?] (re-matches #"(ys(?:-0)?)(:.+?)(:?)" tag)]
-      (let [ystag (if-not (empty? colon?) ystag (str ystag ":"))
-            node (assoc node :! fntag)]
-        [ystag node])
-      (cond
-        (or
-          (re-matches #"ys:?" tag)
-          (re-matches #"ys-0:?" tag)
-          (re-matches #"YS-v0:?" tag)
-          (re-matches #"(?:bare|data|code)" tag)
-          (re-matches #"yamlscript/v0(?::|/bare|/data|/code)?" tag))
-        [tag (dissoc node :!)]
-        ,
-        (re-find #"^tag:yaml.org,2002:" tag) [nil node]
-        :else (die "Invalid tag: !" tag)))
+  (if-let [tag (some-> (:! node) str)]
+    (cond
+      (contains?
+        #{"ys" "ys:" "ys-0" "ys-0:" "YS-v0" "YS-v0:"
+          "bare" "data" "code" "yamlscript/v0"
+          "yamlscript/v0:" "yamlscript/v0/bare"
+          "yamlscript/v0/data" "yamlscript/v0/code"}
+        tag)
+      [tag (dissoc node :!)]
+
+      (or (str/starts-with? tag "ys:")
+          (str/starts-with? tag "ys-0:"))
+      (let [prefix (if (str/starts-with? tag "ys-0:") "ys-0" "ys")
+            data-mode? (str/ends-with? tag ":")
+            end (if data-mode? (dec (count tag)) (count tag))
+            function-tag (subs tag (count prefix) end)
+            ys-tag (if data-mode? prefix (str prefix ":"))]
+        [ys-tag (assoc node :! function-tag)])
+
+      (str/starts-with? tag "tag:yaml.org,2002:") [nil node]
+      :else (util/die "Invalid tag: !" tag))
     [nil node]))
 
 (comment
@@ -93,7 +100,8 @@
                       (if (and (= "YS" key1-tag) (= "v0" key1-val))
                         (if (= {:= ""} val1)
                           true
-                          (die "Values not yet supported for '!YS v0:' key"))
+                          (util/die
+                            "Values not yet supported for '!YS v0:' key"))
                         false)))
 
          node (if ys-tag
@@ -110,7 +118,7 @@
                     "yamlscript/v0/bare" (mode "bare")
                     "yamlscript/v0/data" (mode "data")
                     "yamlscript/v0/code" (mode "code")
-                    (die "Invalid tag: '!" ys-tag "'\n"
+                    (util/die "Invalid tag: '!" ys-tag "'\n"
                       "First ys tag must be one of these: "
                       "'ys-0', 'ys-0:', 'YS-v0', 'YS-v0:'"))
                   ;; Subsequent ys tags must be one of these:
@@ -123,7 +131,7 @@
                     "data" (mode "data")
                     "code" (mode "code")
                     (if ys-tag
-                      (die "Invalid tag: !" ys-tag)
+                      (util/die "Invalid tag: !" ys-tag)
                       node)))
                 (if (ys-pair? node)
                   (let [node (mode "bare")]

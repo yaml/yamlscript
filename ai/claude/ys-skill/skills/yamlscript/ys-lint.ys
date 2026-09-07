@@ -15,16 +15,16 @@ use ys::yaml:
 
 NTH-LIT-RE =: /(\w[\w-]*)\.nth\(\s*(\d+)\s*\)/
 NTH-VAR-RE =: /(\w[\w-]*)\.nth\(\s*([A-Za-z][\w-]*)\s*\)/
-PLUS-RE =: /(?<![\w(])([A-Za-z_][\w-]*)\s+\+\s+1(?![\d.])/
-MINUS-RE =: /([A-Za-z_][\w-]*)\s+-\s+1(?![\d.])/
+PLUS-RE =: /(?:^|[^\w(])([A-Za-z_][\w-]*)\s+\+\s+1(?:$|[^\d.])/
+MINUS-RE =: /([A-Za-z_][\w-]*)\s+-\s+1(?:$|[^\d.])/
 FIRST-CALL-RE =: /(\w[\w-]*)\.first\(\)/
 LAST-CALL-RE =: /(\w[\w-]*)\.last\(\)/
 VECTOR-LIT-RE =: /\bvector\(/
-CONSTRUCTOR-CALL-RE =: /(?<![\w-])([VM])\+\(/
-APPLY-CALL-RE =: /(?<![\w-])[a]pply\(/
+CONSTRUCTOR-CALL-RE =: /(?:^|[^\w-])([VM])\+\(/
+APPLY-CALL-RE =: /(?:^|[^\w-])[a]pply\(/
 APPLY-PAIR-RE =: /^\s+[a]pply(?:\s+[^:]+)?:/
 APPLY-INTERP-RE =: /\$\([^"\n]*[a]pply\(/
-STR-SINGLE-RE =: /(?<![\w-])str\(\s*([A-Za-z_][\w-]*)\)/
+STR-SINGLE-RE =: /(?:^|[^\w-])str\(\s*([A-Za-z_][\w-]*)\)/
 KW-BRACKETS-PAT =:
   "^\\s+(binding|if-let|if-lets|if-some|let|loop|\
    when-first|when-let|when-lets|when-some|\
@@ -38,10 +38,10 @@ KW-BRACKETS-RE =: re-pattern(KW-BRACKETS-PAT)
 ITER-BRACKETS-RE =:
   /^\s+(each|for|doseq|dotimes)\s+\[[a-z][\w?!-]*\s.*\]:\s*$/
 KW-PARENS-RE =:
-  /^\s+(if-not|if|when-not|when|while)\s+\((?!\.\s)([^()]*)\):(?:\s|$)/
+  /^\s+(if-not|if|when-not|when|while)\s+\(([^()]*)\):(?:\s|$)/
 IF-HEAD-RE =: /^\s*if\b.*:\s*$/
 QUOT-CALL-RE =:
-  /(?<![\w-])quot\(\s*([\w$.-]+)\s+([\w$.-]+)\s*\)/
+  /(?:^|[^\w-])quot\(\s*([\w$.-]+)\s+([\w$.-]+)\s*\)/
 QUOT-DOT-RE =:
   /([\w$.-]+)\.quot\(\s*([\w$.-]+)\s*\)/
 REM-CALL-RE =: /\srem\(/
@@ -53,13 +53,13 @@ AND-CALL-RE =: /\sand\(/
 # Zero-arg method call x.foo() -> x:foo. first()/last() excluded
 # (their own rules suggest .0/.$).
 ZERO-ARG-RE =:
-  /(\w[\w-]*)\.(?!first\(\)|last\(\))([a-z][\w?!-]*)\(\)/
+  /(\w[\w-]*)\.([a-z][\w?!-]*)\(\)/
 # A =>: whose value is a restructurable compound expression.
 ARROW-RE =: /^\s*=>:\s*(\S.*)$/
 # Calls, colon chains, and dot chains all have pair equivalents. Avoid
 # matching keyword atoms (:foo) and namespace separators (ys::std/foo).
 ARROW-COMPOUND-RE =:
-  /(\(|[A-Za-z0-9_?!.$)\]]:(?!:)[A-Za-z_]|\.[A-Za-z_])/
+  /(\(|[A-Za-z0-9_?!.$)\]]:[A-Za-z_]|\.[A-Za-z_])/
 # These compound-looking forms are nevertheless single values with no
 # useful pair rewrite.
 ARROW-DATA-RE =: /^\+\s*[\[{]/
@@ -79,13 +79,13 @@ JOIN-SPACE-RE =: /\.join\(\s*(?:' '|" ")\s*\)/
 # slurp/spit are the Clojure names; YS spells them read/write. The two
 # words are written with a [.]-class so this pattern doesn't match its
 # own source when the linter is run over itself.
-SLURP-SPIT-RE =: /(?<![\w-])(slur[p]|spi[t])(?![\w-])/
+SLURP-SPIT-RE =: /(?:^|[^\w-])(slur[p]|spi[t])(?:$|[^\w-])/
 RAW-IO-RE =:
   re-pattern(
     str(
-      '(?<![\w/-])'
+      '(?:^|[^\w/-])'
       '(printl[n]|print[f]|p[r]|pr[n]|newlin[e]|flus[h]|read-lin[e])'
-      '(?=\s*[:(])'))
+      '\s*[:(]'))
 THEN-NIL-RE =: /\bthen:\s*nil\s*$/
 ELSE-NIL-RE =: /\belse:\s*nil\s*$/
 THEN-FALSE-RE =: /\bthen:\s*false\s*$/
@@ -327,7 +327,7 @@ defn- check-patterns(file lineno code):
                        fmt-kw-brackets)
     file.count-matches(lineno code 'iter-brackets' ITER-BRACKETS-RE
                        fmt-kw-brackets)
-    file.count-matches(lineno code 'kw-parens' KW-PARENS-RE fmt-kw-parens)
+    file.count-kw-parens(lineno code)
     file.count-matches(lineno code 'quot-call' QUOT-CALL-RE fmt-quot-call)
     file.count-matches(lineno code 'quot-dot' QUOT-DOT-RE fmt-quot-dot)
     file.count-matches(lineno code 'rem-call' REM-CALL-RE
@@ -339,7 +339,7 @@ defn- check-patterns(file lineno code):
                        fmt-static('or(a b) -> a || b'))
     file.count-matches(lineno code 'and-call' AND-CALL-RE
                        fmt-static('and(a b) -> a && b'))
-    file.count-matches(lineno code 'zero-arg' ZERO-ARG-RE fmt-zero-arg)
+    file.count-zero-args(lineno code)
     file.count-matches(lineno code 'slurp-spit' SLURP-SPIT-RE
                        fmt-slurp-spit)
     file.count-matches(lineno code 'raw-io' RAW-IO-RE fmt-raw-io)
@@ -362,6 +362,20 @@ defn- check-once(file lineno code rule re msg):
       report: file lineno rule msg
       =>: 1
     else: 0
+
+defn- count-kw-parens(file lineno code):
+  matches =: re-seq(KW-PARENS-RE code)
+  matches =: matches.remove(\(_.2.starts?('. ')))
+  each m matches:
+    report: file lineno 'kw-parens' fmt-kw-parens(m)
+  count: matches
+
+defn- count-zero-args(file lineno code):
+  matches =: re-seq(ZERO-ARG-RE code)
+  matches =: matches.remove(\(_.2.in?(qw(first last))))
+  each m matches:
+    report: file lineno 'zero-arg' fmt-zero-arg(m)
+  count: matches
 
 defn- fmt-nth-lit(m):
   format '%s.nth(%s) -> %s.%s': m.1 m.2 m.1 m.2

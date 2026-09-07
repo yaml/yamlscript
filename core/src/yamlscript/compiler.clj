@@ -10,8 +10,8 @@
 
 (ns yamlscript.compiler
   (:require
-   [clojure.pprint]
    [clojure.edn]
+   [clojure.pprint :as pprint]
    [clojure.string :as str]
    [yamlscript.builder]
    [ys.v0.common]
@@ -21,7 +21,8 @@
    [yamlscript.parser]
    [yamlscript.printer]
    [yamlscript.resolver]
-   [yamlscript.transformer])
+   [yamlscript.transformer]
+   [ys.v0.debug :as debug])
   (:refer-clojure :exclude [compile]))
 
 (defn parse-events-to-groups
@@ -40,7 +41,7 @@
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
   (when (System/getenv "YS_SHOW_PARSER_INPUT")
-    (WWW "parser-input" yamlscript-string))
+    (debug/WWW "parser-input" yamlscript-string))
   (let [events (yamlscript.parser/parse yamlscript-string)
         groups (parse-events-to-groups events)
         n (count groups)
@@ -76,7 +77,7 @@
   (if (get-in @yamlscript.global/opts [:debug-stage stage-name])
     (let [[value time] (value-time (apply stage-fn input-args))]
       (printf "*** %-9s *** %s ms\n\n" stage-name time)
-      (clojure.pprint/pprint value)
+      (pprint/pprint value)
       (println)
       value)
     (apply stage-fn input-args)))
@@ -85,7 +86,7 @@
   "Convert YAMLScript code string to an equivalent Clojure code string."
   [^String yamlscript-string]
   (when (System/getenv "YS_SHOW_PARSER_INPUT")
-    (WWW "parser-input" yamlscript-string))
+    (debug/WWW "parser-input" yamlscript-string))
   (let [events (stage-with-options "parse"
                  yamlscript.parser/parse [yamlscript-string])
         groups (parse-events-to-groups events)
@@ -124,9 +125,7 @@
     (#(str "(do " %1 "\n)\n"))
     read-string
     rest
-    (map #(str
-            (with-out-str (clojure.pprint/write %1))
-            "\n"))
+    (map #(str (pprint/write %1 :stream nil) "\n"))
     (apply str)
     (#(str/replace %1 #"\r\n?" "\n"))))
 

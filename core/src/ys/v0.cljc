@@ -34,6 +34,8 @@
    [ys.v0.ipc]
    [ys.v0.json]
    [ys.v0.manifest :as manifest]
+   [ys.v0.pods]
+   [ys.v0.pprint]
    [ys.v0.re :as re]
    [ys.v0.std]
    [ys.v0.util :as util]

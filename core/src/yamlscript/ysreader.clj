@@ -9,12 +9,14 @@
    [clojure.string :as str]
    [clojure.walk :as walk]
    [yamlscript.ast :as ast :refer
-    [Bln Chr Form Key Lst Map Nil Num
-     QSym Qts Rgx Set Spc Splat Str Sym Tok Tup Vec]]
+    [Bln Chr Form Key Lst Nil Num
+     QSym Qts Rgx Spc Splat Str Sym Tok Tup Vec]]
    [ys.v0.common]
    [yamlscript.global :as global]
-   [yamlscript.re :as re])
-  (:refer-clojure :exclude [read-string]))
+   [yamlscript.re :as re]
+   [ys.v0.debug :as debug]
+   [ys.v0.util :as util])
+  (:refer-clojure :exclude [Map Set read-string]))
 
 (defn is-clojure-comment?
   "We match Clojure style line comments (starting with `;`) as tokens and then
@@ -35,7 +37,12 @@
   "A character literal token. YS uses a double backslash for character literals,
   whereas Clojure uses a single backslash. This is because backslash is YS's
   escape character for various things like anonymous functions."
-  [token] (re-matches re/char (str token)))
+  [token]
+  (let [token (str token)]
+    (or
+      (re-matches re/char token)
+      (and (= 3 (count token))
+        (= "\\\\" (subs token 0 2))))))
 
 (defn is-keyword?
   "YS keywords are stricter than Clojure keywords. They still start with a
@@ -89,7 +96,9 @@
   [token]
   (let [t (str token)]
     (and
-      (re-matches re/osym t)
+      (or (= t "<=")
+          (= t ">=")
+          (re-matches re/osym t))
       (not= t "&"))))
 
 (defn is-colon-calls?
@@ -204,7 +213,7 @@
     (fn [i v] (prn [i v])
       (let [rgx (re-pattern (str "^" v))
             result (re-find rgx "5.inc()")]
-        (when result (prn result) (die 123))))
+        (when result (prn result) (util/die 123))))
     regexes)
   )
 
@@ -215,15 +224,19 @@
         token (if splat? (subs token 0 (dec (count token))) token)
         tokens (str/split token #":")
         [token1 token2 & xtokens] tokens
-        [start tokens] (if (re-find #"\.$" token1)
-                         [[(-> token1 butlast str/join)
-                           "."
-                           (str ":" token2)]
-                          xtokens]
-                         [[token1] (vec (rest tokens))])
-        start (if (re-find #"_." (first start))
-                [(str \" (first start) \")]
-                start)]
+        [start tokens]
+        (cond
+          (re-find #"\.$" token1)
+          [[(-> token1 butlast str/join) "." (str ":" token2)]
+           xtokens]
+
+          (and (str/starts-with? token1 ".")
+            (str/includes? token1 "_"))
+          [["." (subs token1 1)] (vec (rest tokens))]
+
+          :else
+          [[token1] (vec (rest tokens))])
+        start (mapv #(if (re-find #"_." %1) (str \" %1 \") %1) start)]
     (let [result (reduce
                    #(conj %1 "." (str %2 "(") ")")
                    start
@@ -249,7 +262,7 @@
           ".++"  ". inc+( )"
           ".>"   ". DBG( )"
           ".>>>" ". DBG( )"
-          (die "Unsupported dot special operation: " token))]
+          (util/die "Unsupported dot special operation: " token))]
     (str/split expanded #" ")))
 
 (defn re-lex-tokens
@@ -276,11 +289,13 @@
   [expr]
   (let [tokens (->> expr
                  (re-seq re-tokenize)
-                 (remove #(re-matches re/ignr %1))
+                 (remove #(or (str/blank? %1)
+                              (= "," %1)
+                              (re-matches re/ignr %1)))
                  re-lex-tokens)]
     ;; XXX Might be too hot of a path to check here:
     (if (System/getenv "YS_SHOW_LEX")
-      (WWW tokens)
+      (debug/WWW tokens)
       tokens)))
 
 (declare read-form yes-expr)
@@ -366,7 +381,9 @@
                      (partition 2)
                      (map second)
                      (apply = %1))
-              (map Sym '[+ - * / || ||| && &&& . ** = == > >= < <=])))
+              (map Sym
+                ["+" "-" "*" "/" "||" "|||" "&&" "&&&"
+                 "." "**" "=" "==" ">" ">=" "<" "<="])))
         (let [op (second expr)
               op (or (ast/operators op) op)]
           (->> expr
@@ -404,7 +421,7 @@
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
-      (die "Unexpected end of input"))
+      (util/die "Unexpected end of input"))
 
     (if (= (first tokens) ")")
       (let [form (-> list group-dots yes-expr)
@@ -425,7 +442,7 @@
   (loop [tokens tokens
          list []]
     (when (not (seq tokens))
-      (die "Unexpected end of input"))
+      (util/die "Unexpected end of input"))
 
     (let [token (first tokens)
           splat? (= token (str end "*"))]
@@ -501,7 +518,7 @@
     (map? token) [token tokens]
 
     (is-clojure-comment? token)
-    (die "Clojure style comments are not allowed: '" token "'.")
+    (util/die "Clojure style comments are not allowed: '" token "'.")
 
     (is-inline-comment? token) [nil tokens]
     (= "nil" token) [(Nil) tokens]
@@ -509,21 +526,22 @@
     (= "false" token) [(Bln token) tokens]
     (is-narg? token)
     (if (str/starts-with? token "%")
-      (die "Invalid anonymous function argument '" token
+      (util/die "Invalid anonymous function argument '" token
         "'. Use '_" (subs token 1) "' instead.")
       (let [n (parse-long (subs token 1))
             _ (when (or (<= n 0) (> n 20))
-                (die "Invalid numbered argument: " token))]
+                (util/die "Invalid numbered argument: " token))]
         [(Sym token) tokens]))
-    (is-bad-number? token) (die "Invalid number: " token)
+    (is-bad-number? token) (util/die "Invalid number: " token)
     (is-number? token) (let [token (str/replace token #"^([-+]?)0o"
                                      (str "$1" "0"))
-                             token (str/replace token #"\\\\" "##")]
+                             slash-pair (re-pattern (str "\\\\" "\\\\"))
+                             token (str/replace token slash-pair "##")]
                          [(Num token) tokens])
     (is-dot-num? token) (let [tokens (cons (subs token 1) tokens)]
-                          [(Sym ".") tokens])
+                          [{:Sym "."} tokens])
     (is-dot-sym? token) (let [tokens (cons (Sym (subs token 1)) tokens)]
-                          [(Sym ".") tokens])
+                          [{:Sym "."} tokens])
     (is-quote? token) (let [[value tokens] (read-form tokens)]
                         [(Tup [(Tok "'") value]) tokens])
     (is-special? token) (let [[value tokens] (read-form tokens)]
@@ -549,10 +567,10 @@
       [(Sym token value) tokens])
 
     (is-clojure-symbol? token)
-    (die "Invalid symbol: '" token "'")
+    (util/die "Invalid symbol: '" token "'")
 
     (is-namespace? token) [(Spc token) tokens]
-    :else (die "Unexpected token: '" token "'")))
+    :else (util/die "Unexpected token: '" token "'")))
 
 (defn read-form
   "Read form tokens into AST form."
@@ -568,8 +586,8 @@
       "\\(" (read-anon-fn tokens)
       "(" (read-list tokens Lst ")" sym)
       "[" (read-list tokens Vec "]" nil)
-      "{" (read-list tokens Map "}" nil)
-      "\\{" (read-list tokens Set "}" nil)
+      "{" (read-list tokens ast/MapNode "}" nil)
+      "\\{" (read-list tokens ast/SetNode "}" nil)
       ,   (read-scalar tokens))))
 
 (defn read-forms

@@ -8,16 +8,17 @@
 (ns yamlscript.builder
   (:require
    [clojure.string :as str]
-   [yamlscript.ast :refer
-    [Bln Clj Flt Key Lst Map Nil Num Str Sym Vec]]
+   [yamlscript.ast :as ast :refer
+    [Bln Clj Flt Key Lst Nil Num Str Sym Vec]]
    [ys.v0.common]
    [yamlscript.composer]
    [yamlscript.global]
    [yamlscript.parser]
    [yamlscript.re :as re]
    [yamlscript.resolver]
-   [yamlscript.ysreader :as ysreader])
-  (:refer-clojure))
+   [yamlscript.ysreader :as ysreader]
+   [ys.v0.util :as util])
+  (:refer-clojure :exclude [Map]))
 
 (declare build-node)
 
@@ -85,7 +86,7 @@
                                                  (concat dvals)))])]
                            (conj bodies body)))
                        [main]
-                       (range (dec n-args) (- n-args n-dargs 1) -1))]
+                       (map #(- (dec n-args) %1) (range n-dargs)))]
     [[defn name doc] bodies]))
 
 (defn build-defn-single
@@ -248,7 +249,7 @@
           (some #(= (first %1) {:Nil nil}) (partition 2 body))
           (some #(:|? %1) (take-nth 2 body)))
       (build-dmap body)
-      (Map (map build-node (:map node))))))
+      (ast/MapNode (map build-node (:map node))))))
 
 (defn build-vec
   "Build a resolved sequence into a YAMLScript vector AST."
@@ -260,16 +261,37 @@
   (re/re
     #"(?sx)
     (?:
-      (?:
-        (?: \\\$ | \$ [^\w\{\(] | [^\$] )+?
-        (?= \$ $symw | \$ $bpar | \$ \{ | $)
-      ) |
       \$ \{ $symw \} |
       \$ $symw $bpar |
       \$ $symw |
       \$ $bpar |
-      (?: [^\$]*\$+[^\$]*)
+      \\\$ |
+      .
     )"))
+
+(def re-braced-interpolation (re/re #"\$\{$symw\}"))
+(def re-called-interpolation (re/re #"\$$symw$bpar"))
+(def re-symbol-interpolation (re/re #"\$$symw"))
+(def re-form-interpolation (re/re #"\$$bpar"))
+
+(defn interpolation-token? [token]
+  (some #(re-matches % token)
+    [re-braced-interpolation
+     re-called-interpolation
+     re-symbol-interpolation
+     re-form-interpolation]))
+
+(defn interpolation-parts [string]
+  (reduce
+    (fn [parts token]
+      (if (interpolation-token? token)
+        (conj parts token)
+        (if (and (seq parts)
+                 (not (interpolation-token? (peek parts))))
+          (update parts (dec (count parts)) str token)
+          (conj parts token))))
+    []
+    (re-seq re-interpolated-string string)))
 
 (defn build-expr-interpolated
   "Build a single expression interpolation from a string part."
@@ -285,19 +307,19 @@
 (defn build-interpolated
   "Build an interpolated string expression from literal and code parts."
   [string]
-  (let [parts (re-seq re-interpolated-string string)
+  (let [parts (interpolation-parts string)
         exprs (map
                 #(condp (fn [re s] (re-matches re s)) %1
-                   (re/re #"\$\{$symw\}")
+                   re-braced-interpolation
                    (Sym (subs %1 2 (dec (count %1))))
 
-                   (re/re #"\$$symw$bpar")
+                   re-called-interpolation
                    (build-expr {:expr (subs %1 1)})
 
-                   (re/re #"\$$symw")
+                   re-symbol-interpolation
                    (Sym (subs %1 1))
 
-                   (re/re #"\$$bpar")
+                   re-form-interpolation
                    (build-expr-interpolated {:expr (subs %1 1)})
 
                    (Str (str/replace %1 #"\\(\$)" "$1")))
@@ -350,7 +372,7 @@
                :key (Key (subs (:key node) 1))
                :clj (Clj (:clj node))
                :nil (Nil)
-               (die "Don't know how to build node: " node))
+               (util/die "Don't know how to build node: " node))
         node (if anchor
                (assoc node :& anchor)
                node)

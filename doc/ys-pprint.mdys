@@ -1,0 +1,28 @@
+---
+title: Pretty Printing Library
+talk: 0
+---
+
+# `ys::pprint` - The YS Pretty Printing Library
+
+The `ys::pprint` library formats Clojure data consistently across the JVM,
+Babashka, Jolt, and Glojure runtimes.
+Its default right margin is 72 columns and its default miser width is 40.
+
+```yaml
+use pprint: :all
+```
+
+```mdys:fmt-fns
+pp(X) nil: Pretty print a value to the current output stream
+write(X Opt*) Str|nil: Pretty print a value with Clojure pprint options
+```
+
+Pass `:stream nil` to `write` to return the formatted string.
+The `:right-margin`, `:miser-width`, `:length`, `:level`, `:pretty`,
+`:stream`, and `:suppress-namespaces` options are supported.
+
+The always available `pp` function in `ys::std` delegates to
+`ys::pprint/pp`.
+It remains available for convenience, while `use pprint:` provides explicit
+access to the library.

@@ -28,10 +28,9 @@ Options:
   -f, --file FILE          Explicitly indicate input file
 
   -c, --compile            Compile YS to Clojure
-  -b, --binary             Compile to a native binary executable
 
   -p, --print              Print the final evaluation result value
-  -o, --output FILE        Output file for --load, --compile or --binary
+  -o, --output FILE        Output file for --load or --compile
   -s, --stream             Output all results from a multi-document stream
 
   -T, --to FORMAT          Output format for --load:
@@ -170,41 +169,6 @@ $ ys -c program.ys
   ([name] (greet name 1)))
 (apply main ARGS)
 ```
-
-----
-
-You can compile the program to a native binary executable:
-
-```text
-$ time ys -b program.ys
-* Compiling YS 'program.ys' to 'program' executable
-* Setting up build env in '/tmp/tmp.xU8K3OPymt'
-* This may take a few minutes...
-[1/8] Initializing		(2.8s @ 0.14GB)
-[2/8] Performing analysis		(9.1s @ 0.33GB)
-[3/8] Building universe		(1.2s @ 0.39GB)
-[4/8] Parsing methods		(1.4s @ 0.41GB)
-[5/8] Inlining methods		(0.9s @ 0.49GB)
-[6/8] Compiling methods		(10.6s @ 0.50GB)
-[7/8] Layouting methods		(1.0s @ 0.50GB)
-[8/8] Creating image		(1.5s @ 0.44GB)
-* Compiled YS 'program.ys' to 'program' executable
-
-real	0m36.340s
-user	4m34.165s
-sys	0m3.915s
-
-$ time ./program Bob 2
-1) Hello, Bob!
-2) Hello, Bob!
-
-real	0m0.007s
-user	0m0.003s
-sys	0m0.004s
-```
-
-As you can see, the native binary is faster than the interpreted version, but
-the compilation takes quite a long time.
 
 ----
 

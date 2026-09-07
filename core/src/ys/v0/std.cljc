@@ -18,6 +18,7 @@
    [ys.v0.ext :as ext]
    [ys.v0.global :as global]
    [ys.v0.io :as io]
+   [ys.v0.pprint :as pprint]
    [ys.v0.re :as re]
    [ys.v0.util :as util]
    [ys.v0.ys :as ys])
@@ -85,9 +86,7 @@
       (str/split S #"\n" -1))))
 
 (defn pretty [x]
-  (str/trim-newline
-    (with-out-str
-      (util/pprint* x))))
+  (pprint/write x :stream nil))
 
 (defn replace
   ([x] (clojure.core/replace x))
@@ -185,6 +184,7 @@
     nil? nil
     seqable? (condf K
                number? (nth C K nil)
+               #(= '$ %1) (last C)
                nil? nil
                nil)
     nil))
@@ -552,6 +552,7 @@
        " in this Clojure runtime"))
    :default
    (defn read [path]
+     (ys/check-module-access! 'ys.fs)
      (fs/read path)))
 
 #?(:glj
@@ -560,28 +561,39 @@
        " in this Clojure runtime"))
    :default
    (defn write [path content]
+     (ys/check-module-access! 'ys.fs)
      (fs/write path content)))
 
 (defn err [& xs]
+  (ys/check-module-access! 'ys.io)
   (apply io/err xs))
 
 (defn out [& xs]
+  (ys/check-module-access! 'ys.io)
   (apply io/out xs))
 
 (defn pp [x]
-  (io/pp x))
+  (ys/check-module-access! 'ys.pprint)
+  (pprint/pp x))
 
 (defn print [& xs]
+  (ys/check-module-access! 'ys.io)
   (apply io/print xs))
 
 (defn readline
-  ([] (io/readline (global/current-input)))
-  ([reader] (io/readline reader)))
+  ([]
+   (ys/check-module-access! 'ys.io)
+   (io/readline (global/current-input)))
+  ([reader]
+   (ys/check-module-access! 'ys.io)
+   (io/readline reader)))
 
 (defn say [& xs]
+  (ys/check-module-access! 'ys.io)
   (apply io/say xs))
 
 (defn warn [& xs]
+  (ys/check-module-access! 'ys.io)
   (apply io/warn xs))
 
 
@@ -612,7 +624,11 @@
 (defn qr [S] (re-pattern S))
 
 (defmacro qw [& xs]
-  (let [xs# (map #(if (nil? %1) "nil" (str %1)) xs)]
+  (let [xs# (map #(cond
+                    (nil? %1) "nil"
+                    (= {} %1) "{}"
+                    :else (str %1))
+              xs)]
     `[~@xs#]))
 
 

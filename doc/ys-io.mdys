@@ -24,7 +24,6 @@ readline(Reader) Str?: Read one line, returning nil at end of input
 ```mdys:fmt-fns
 err(Str*) nil: Print to stderr without a newline
 out(Str*) nil: Print to stdout without a newline
-pp(X) nil: Pretty print a value
 print(Str*) nil: Print to stdout without a newline
 say(Str*) nil: Print to stdout with a newline
 warn(Str*) nil: Print to stderr with a newline

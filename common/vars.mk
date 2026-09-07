@@ -1,4 +1,8 @@
 include $(COMMON)/version.mk
+GLOAT-VERSION := 0.1.80
+GLOJURE-VERSION := 0.7.15
+YAMLSCRIPT_ENGINE ?= glojure
+DATA-JSON-VERSION := 2.4.0
 include $(MAKES)/graalvm.mk
 include $(MAKES)/maven.mk
 ifeq ($(OS-NAME),windows)
@@ -42,8 +46,17 @@ else ifeq ($(OS-NAME),macos)
 else ifeq ($(OS-NAME),windows)
   SO := dll
   DY :=
+else ifeq ($(OS-NAME),freebsd)
+  GCC := cc -std=gnu99 -fPIC -shared
+  SO := so
+  DY :=
 else
   $(error Unsupported OSTYPE: $(OS-TYPE))
+endif
+
+ifneq (,$(filter windows/%,$(GLOAT_PLATFORM)))
+  SO := dll
+  DY :=
 endif
 
 LIBZ := false
@@ -121,15 +134,23 @@ export LEIN_JVM_OPTS := \
 
 OA-linux-arm64 := linux-aarch64
 OA-linux-int64 := linux-x64
-OA-macos-arm64 := macos-aarch64
+OA-macos-arm64 := macos-arm64
 OA-macos-int64 := macos-x64
+OA-freebsd-int64 := freebsd-x64
+OA-windows-arm64 := windows-arm64
 OA-windows-int64 := windows-x64
 
-RELEASE-YS-NAME := ys-$(YS_VERSION)-$(OA-$(OS-ARCH))
-RELEASE-EXT := $(if $(filter windows,$(OS-NAME)),zip,tar.xz)
+RELEASE_PLATFORM ?= $(OA-$(OS-ARCH))
+RELEASE-ENGINE-SUFFIX := \
+  $(if $(filter graalvm,$(YAMLSCRIPT_ENGINE)),-graalvm)
+RELEASE-YS-NAME := \
+  ys-$(YS_VERSION)-$(RELEASE_PLATFORM)$(RELEASE-ENGINE-SUFFIX)
+RELEASE-EXT := \
+  $(if $(findstring windows,$(RELEASE_PLATFORM)),zip,tar.xz)
 RELEASE-YS-TAR := $(RELEASE-YS-NAME).$(RELEASE-EXT)
 
-RELEASE-LYS-NAME := libys-$(YS_VERSION)-$(OA-$(OS-ARCH))
+RELEASE-LYS-NAME := \
+  libys-$(YS_VERSION)-$(RELEASE_PLATFORM)$(RELEASE-ENGINE-SUFFIX)
 RELEASE-LYS-TAR := $(RELEASE-LYS-NAME).$(RELEASE-EXT)
 
 

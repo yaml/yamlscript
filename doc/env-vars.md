@@ -20,6 +20,13 @@ separating words.
 * `YS_GITLIBS_DIR` - The cache directory used by `use :from` for Gist and
   GitHub source files.
 
+* `YS_MODULES` - A comma-separated or whitespace-separated allowlist of
+  bundled modules that a program may load with `use`.
+  Short names such as `fs` and full names such as `ys.fs` are accepted.
+  When unset, all modules supported by the host platform may be loaded.
+  Standard proxies such as `read`, `say`, and `pp` also require their owning
+  `ys::fs`, `ys::io`, or `ys::pprint` module to be allowed.
+
 * `YS_PRINT=1` - Same as `-p` (`--print`) command line option.
 
 * `YS_STREAM=1` - Same as `-s` (`--stream`) command line option.
@@ -27,7 +34,12 @@ separating words.
 * `YS_OUTPUT=<file-name>` - Same as `-o` (`--output=<file-name>`) command line
   option.
 
-* `YS_FORMAT=<yaml|json|edn|csv|tsv>` - Same as `-t` ()
+* `YS_FORMAT=<yaml|json|edn|csv|tsv>` - Same as `-t` (`--to`).
+
+* `YS_FORMATTER=<command>` - Filter compiled Clojure output through an external
+  formatter command.
+  When unset, `ys --compile` uses its built-in pretty printer.
+  External formatters are not available in the WASI build.
 
 * `YS_UNORDERED=1` - Same as `-u` (`--unordered`) command line option.
 

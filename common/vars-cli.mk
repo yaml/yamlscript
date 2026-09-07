@@ -1,12 +1,19 @@
 include $(COMMON)/vars-core.mk
 
-ifeq ($(OS-NAME),windows)
-CLI-BIN := bin/ys-$(YS_VERSION).exe
-CLI-OUT := bin/ys-$(YS_VERSION)
+ifneq (,$(filter wasip1/wasm,$(GLOAT_PLATFORM)))
+CLI-BIN-GLOJURE := bin/ys-$(YS_VERSION).wasm
+else ifneq (,$(filter windows/%,$(GLOAT_PLATFORM)))
+CLI-BIN-GLOJURE := bin/ys-$(YS_VERSION).exe
+else ifeq ($(OS-NAME),windows)
+CLI-BIN-GLOJURE := bin/ys-$(YS_VERSION).exe
+CLI-BIN-GRAALVM := bin/ys-$(YS_VERSION)-graalvm.exe
 else
-CLI-BIN := bin/ys-$(YS_VERSION)
-CLI-OUT := $(CLI-BIN)
+CLI-BIN-GLOJURE := bin/ys-$(YS_VERSION)
 endif
+CLI-BIN-GRAALVM ?= bin/ys-$(YS_VERSION)-graalvm
+CLI-BIN := $(if $(filter graalvm,$(YAMLSCRIPT_ENGINE)),\
+  $(CLI-BIN-GRAALVM),$(CLI-BIN-GLOJURE))
+CLI-OUT := $(CLI-BIN)
 CLI-SRC := \
   src/yamlscript/cli.clj \
 

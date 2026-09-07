@@ -6,7 +6,8 @@
 (ns yamlscript.ast
   (:require
    [clojure.string :as str]
-   [ys.v0.common])
+   [ys.v0.common]
+   [ys.v0.util :as util])
   (:refer-clojure :exclude [Vec]))
 
 (defn Lst
@@ -34,11 +35,11 @@
   "Wrap an expression that should be spread into its containing form."
   [node] {:Splat node})
 
-(defn Set
+(defn SetNode
   "Wrap forms in a set AST node."
   [list] {:Set (vec list)})
 
-(defn Map
+(defn MapNode
   "Wrap alternating key/value forms in an ordered map AST node."
   [list]
   (if (even? (count list))
@@ -46,16 +47,29 @@
             (apply array-map)
             (mapcat seq)
             vec)}
-    (die "Odd number of elements in map")))
+    (util/die "Odd number of elements in map")))
 
 (defn Spc
   "Wrap a namespace token in a special namespace AST node."
-  [s] {:Spc (symbol s)})
+  [s] {:Spc (str s)})
 
 (defn Sym
   "Wrap a symbol, or symbol with default value, in a symbol AST node."
-  ([s] {:Sym (symbol s)})
-  ([s d] {:Sym [(symbol s) d]}))
+  ([s] (let [text (str s)]
+         {:Sym (if (or (= text ".")
+                     (= text "//")
+                     (= text "<=")
+                     (= text ">="))
+                 text
+                 (symbol s))}))
+  ([s d]
+   (let [text (str s)]
+     {:Sym [(if (or (= text ".")
+                  (= text "//")
+                  (= text "<=")
+                  (= text ">="))
+              text
+              (symbol s)) d]})))
 
 (defn QSym
   "Wrap a symbol that should print as a quoted symbol."
@@ -67,7 +81,7 @@
 
 (defn Chr
   "Wrap a character literal token in a character AST node."
-  [s] {:Chr (symbol s)})
+  [s] {:Chr (str s)})
 
 (defn Num
   "Parse and wrap an integer or arbitrary numeric literal."
@@ -143,6 +157,8 @@
    (Sym '/)   (Sym 'div+)
    (Sym "//") (Sym 'quot)
    (Sym '!=)  (Sym 'not=)
+   (Sym "<=") (Sym 'le)
+   (Sym ">=") (Sym 'ge)
    (Sym '||)  (Sym 'or)
    (Sym '&&)  (Sym 'and)
    (Sym '|||) (Sym 'or?)
@@ -154,7 +170,7 @@
 (comment
   [(Lst [1 2 3])
    (Vec [1 2 3])
-   (Map [1 2 3 4 5 6])
+   (MapNode [1 2 3 4 5 6])
    (Bln "true")
    (Bln "false")
    (Nil)

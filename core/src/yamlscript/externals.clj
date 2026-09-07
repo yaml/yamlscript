@@ -20,7 +20,8 @@
    [yamlscript.constructor]
    [yamlscript.global :as G]
    [yamlscript.re :as re]
-   [ys.v0.manifest :as manifest])
+   [ys.v0.manifest :as manifest]
+   [ys.v0.ys :as ys])
   (:refer-clojure
    :exclude [load-file]))
 
@@ -285,6 +286,7 @@
 (defn use-module
   "Load a module and apply alias, refer, get, or exclusion options."
   [ns module args]
+  (ys/check-module-access! module)
   (when (not (re-matches (re/re #"(?:$nspc|$symw)")
                (str/replace (str module) #"\." "::")))
     (die (str "Invalid module name: " module)))

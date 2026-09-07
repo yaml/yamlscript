@@ -152,7 +152,7 @@
      {:Sym prn}
      {:Vec
       [{:Str "str"}
-       {:Chr c}
+       {:Chr "c"}
        {:Int 42}
        {:Sym foo}
        {:Bln true}

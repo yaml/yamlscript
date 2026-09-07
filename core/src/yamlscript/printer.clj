@@ -8,6 +8,7 @@
   (:require
    [clojure.string :as str]
    [ys.v0.common]
+   [ys.v0.util :as util]
    [yamlscript.global])
   (:refer-clojure :exclude [print]))
 
@@ -31,7 +32,11 @@
 (defn pr-regex
   "Escape a regex body for generated Clojure regex syntax."
   [s]
-  (-> s
+  (-> (if (resolve '*glojure-version*)
+        (-> s
+          (str/replace #"([?*+])\+" "$1")
+          (str/replace #"(\{[0-9]+(?:,[0-9]*)?\})\+" "$1"))
+        s)
     (str/escape regex-escape)))
 
 (defn pr-symbol
@@ -48,7 +53,7 @@
     "!~~" "!---"
     "==" "="
     "===" "=="
-    "=" (die
+    "=" (util/die
           "Operator '=' is not allowed in YS.\n"
           "Use '==' for equality comparison.")
     , s))
@@ -104,7 +109,7 @@
       :Bln (str val)
       :Clj (with-out-str (clojure.core/print val))
       :Nil "nil"
-      ,    (die "Unknown AST node type:" node))))
+      ,    (util/die "Unknown AST node type:" node))))
 
 (defn print
   "Render a YS AST as Clojure code."

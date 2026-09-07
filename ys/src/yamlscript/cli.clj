@@ -90,13 +90,11 @@
 
    ["-c" "--compile"
     "Compile YS to Clojure"]
-   ["-b" "--binary"
-    "Compile to a native binary executable"]
 
    ["-p" "--print"
     "Print the final evaluation result value"]
    ["-o" "--output FILE"
-    "Output file for --load, --compile or --binary"]
+    "Output file for --load or --compile"]
    ["-s" "--stream"
     "Output all results from a multi-document stream"]
 
@@ -172,20 +170,6 @@
   (exit 1))
 
 (declare add-ys-mode-tag)
-(defn get-binary-info [opts args]
-  (let [in-file (when (seq args) (first args))
-        code (when (seq (:eval opts))
-               (str
-                 (->> opts
-                   :eval
-                   (str/join "\n"))
-                 "\n"))]
-    (or in-file code
-      (err "No input file specified"))
-    (let [in-file (if code "NO-NAME.ys" in-file)]
-      (or (re-find #"\.ys$" in-file)
-        (err "Input file must end in .ys"))
-      [in-file code])))
 
 (defn get-ys-sh-path []
   (let [path (-> (java.lang.ProcessHandle/current) .info .command .get)
@@ -202,19 +186,6 @@
 (defn do-upgrade [_opts _args]
   (let [[cmd] (get-ys-sh-path)]
     (exec cmd "--upgrade")))
-
-(defn do-binary [opts args]
-  (let [[cmd path] (get-ys-sh-path)
-        [in-file code] (get-binary-info opts args)
-        out-file (some identity
-                   [(:output opts)
-                    (and in-file (str/replace in-file #"\.ys$" ""))])
-        path (if (re-find #"-openjdk-" path) "ys" path)]
-    (flush)
-    (exec {:extra-env {"YS_BIN" path
-                       "YS_CODE" (or code "")}}
-      cmd "--compile-to-binary"
-      in-file out-file yamlscript-version)))
 
 (defn do-version []
   (println (str "YS (YAMLScript) " yamlscript-version)))
@@ -583,7 +554,7 @@ Options:
 
 (def all-opts
   #{:run :load :eval
-    :compile :binary
+    :compile
     :print :output :stream
     :to :json :yaml :edn :unordered
     :mode :clojure
@@ -653,7 +624,6 @@ Options:
         :version (do-version)
         :install (do-install opts args)
         :upgrade (do-upgrade opts args)
-        :binary (do-binary opts args)
         :run (do-run opts args)
         :compile (do-compile opts args)
         :load (do-run opts args)

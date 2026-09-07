@@ -5,8 +5,7 @@
 
 (ns ys.v0.io
   (:require
-   [ys.v0.global :as global]
-   [ys.v0.util :as util])
+   [ys.v0.global :as global])
   (:refer-clojure :exclude [print]))
 
 (defn err [& xs]
@@ -18,10 +17,6 @@
   (binding [*out* (global/current-output)]
     (apply clojure.core/print xs)
     (flush)))
-
-(defn pp [x]
-  (binding [*out* (global/current-output)]
-    (util/pprint* x)))
 
 (defn print [& xs]
   (binding [*out* (global/current-output)]

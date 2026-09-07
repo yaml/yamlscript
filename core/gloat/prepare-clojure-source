@@ -1,0 +1,88 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+my ($input, $output) = @ARGV;
+die "usage: $0 INPUT OUTPUT\n" unless $input && $output;
+
+open my $in, '<', $input or die "Can't read $input: $!\n";
+local $/;
+my $source = <$in>;
+close $in or die "Can't close $input: $!\n";
+
+my $result = '';
+my $offset = 0;
+
+while ((my $start = index($source, '#"', $offset)) >= 0) {
+  $result .= substr($source, $offset, $start + 2 - $offset);
+  my $index = $start + 2;
+  my $body = '';
+
+  while ($index < length $source) {
+    my $char = substr($source, $index, 1);
+    if ($char eq '\\') {
+      $body .= substr($source, $index, 2);
+      $index += 2;
+      next;
+    }
+    last if $char eq '"';
+    $body .= $char;
+    $index++;
+  }
+
+  die "Unterminated regex literal in $input\n"
+    if $index >= length $source;
+
+  if ($body =~ s/^\(\?([a-z]*x[a-z]*)\)//) {
+    my $flags = $1;
+    $flags =~ s/x//g;
+    $body = compact_extended_regex($body);
+    $body = "(?$flags)$body" if length $flags;
+  }
+
+  $result .= $body . '"';
+  $offset = $index + 1;
+}
+
+$result .= substr($source, $offset);
+
+my $directory = $output;
+$directory =~ s{/[^/]+$}{};
+if (length $directory && !-d $directory) {
+  require File::Path;
+  File::Path::make_path($directory);
+}
+
+open my $out, '>', $output or die "Can't write $output: $!\n";
+print {$out} $result;
+close $out or die "Can't close $output: $!\n";
+
+sub compact_extended_regex {
+  my ($body) = @_;
+  my $result = '';
+  my $index = 0;
+
+  while ($index < length $body) {
+    my $char = substr($body, $index, 1);
+    if ($char eq '\\') {
+      $result .= substr($body, $index, 2);
+      $index += 2;
+      next;
+    }
+    if ($char eq '#') {
+      my $newline = index($body, "\n", $index);
+      last if $newline < 0;
+      $index = $newline + 1;
+      next;
+    }
+    if ($char =~ /\s/) {
+      $index++;
+      next;
+    }
+    $result .= $char;
+    $index++;
+  }
+
+  return $result;
+}

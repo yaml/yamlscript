@@ -20,10 +20,8 @@ HELP =: |
     -f, --file FILE          Explicitly indicate input file
 
 #   -c, --compile            Compile YS to Clojure
-#   -b, --binary             Compile to a native binary executable
-
 #   -p, --print              Print the final evaluation result value
-#   -o, --output FILE        Output file for --load, --compile or --binary
+#   -o, --output FILE        Output file for --load or --compile
 #   -s, --stream             Output all results from a multi-document stream
 
 #   -T, --to FORMAT          Output format for --load:
@@ -128,21 +126,27 @@ test::
     (say 123)
 
 - cmnd: "ys -T bb -C -e 'say: 123'"
+  what: err
   want: 'Error: Options --to=bb and --clojure are mutually exclusive.'
 
 - cmnd: "ys -T bb -l -e 'say: 123'"
+  what: err
   want: 'Error: Options --to=bb and --load are mutually exclusive.'
 
 - cmnd: "ys -T star -l -e 'say: 123'"
+  what: err
   want: 'Error: Options --to=star and --load are mutually exclusive.'
 
 - cmnd: "ys -T frob -e 'say: 123'"
+  what: err
   have: 'bb, clj, star (for --compile)'
 
 - cmnd: "ys -T jolt -e 'say: 123'"
+  what: err
   have: 'bb, clj, star (for --compile)'
 
 - cmnd: "ys -T glj -e 'say: 123'"
+  what: err
   have: 'bb, clj, star (for --compile)'
 
 # -T bb with -o makes an executable bb script
@@ -155,6 +159,19 @@ test::
 
 - cmnd: "ys -pe '=>: 6 * 7'"
   want: '42'
+
+- name: YS_PRINT enables result printing
+  cmnd: "env YS_PRINT=1 ys -e '=>: 6 * 7'"
+  want: '42'
+
+- name: YS_FORMATTER runs for compilation
+  cmnd: "env YS_FORMATTER=false ys -ce '=>: 6 * 7'"
+  what: err
+  have: "Compiler formatter error in 'false'"
+
+- name: Debug stages include elapsed time
+  cmnd: "ys -dc -e '=>: 6 * 7'"
+  have: '*** parse     *** 0.'
 
 - cmnd: "ys -e 'say: \"Ingy döt Net ┌┼┐\"'"
   want: Ingy döt Net ┌┼┐
@@ -173,11 +190,92 @@ test::
     -e 'say: ys::str/upper-case("used")'
   want: USED
 
+- name: HTTP all imports curl
+  cmnd: >-
+    ys -e 'use ys::http: :all'
+    -e 'say: fn?(curl)'
+  want: 'true'
+
 - name: Use alias enables short name
   cmnd: >-
     ys -e 'use ys::str: :as str'
     -e 'say: str/upper-case("aliased")'
   want: ALIASED
+
+- name: Grouped use loads aliases
+  cmnd: >-
+    bash -c 'printf "%s\n" "!ys-0" "use:"
+    "  ys::fs: :as fs" "  ys::str: :as str"
+    "say: str/upper-case(fs/basename(CWD))" | ys -'
+  want: YS
+
+- name: Scalar short names create aliases
+  cmnd: >-
+    ys -e 'use: fs str'
+    -e 'say: str/upper-case(fs/basename(CWD))'
+  want: YS
+
+- name: Scalar short names load all aliases
+  cmnd: >-
+    ys -e 'use: http fs ipc ys'
+    -e 'say: and(fn?(http/get) fn?(fs/e) fn?(ipc/shell) fn?(ys/compile))'
+  want: 'true'
+
+- name: Filesystem short function has a module counterpart
+  cmnd: >-
+    ys -e 'use fs: :as fs'
+    -e 'say: fs/e("../Meta")'
+  want: 'true'
+
+- name: Shell belongs to the IPC module
+  cmnd: >-
+    ys -e 'use ipc: :as ipc'
+    -e 'say: fn?(ipc/shell)'
+  want: 'true'
+
+- name: Math module is available
+  cmnd: >-
+    ys -e 'use math: :as math'
+    -e 'say: math/sqrt(81)'
+  want: '9.0'
+
+- name: Set module is available
+  cmnd: >-
+    ys -e 'use set: :as set'
+    -e 'say: set/rename-keys({:old 42} {:old :new}).new'
+  want: '42'
+
+- name: CLI module is available
+  cmnd: >-
+    ys -e 'use cli: :as cli'
+    -e "say: cli/parse-opts(['--help'], [['-h', '--help']]).options.help"
+  want: 'true'
+
+- name: Pprint module is available
+  cmnd: >-
+    ys -e 'use pprint: :as pprint'
+    -e 'out: pprint/write([1 2 3] :stream nil)'
+  want: '[1 2 3]'
+
+- name: IO does not own pp
+  cmnd: "ys -e 'use io: :as io' -e 'io/pp: 42'"
+  what: err
+  want: 'Error: Could not resolve symbol: io/pp'
+
+- name: Filesystem passthrough is not standard
+  cmnd: "ys -e 'fs-e: \"Meta\"'"
+  what: err
+  want: 'Error: Could not resolve symbol: fs-e'
+
+- name: HTTP passthrough is not standard
+  cmnd: "ys -e 'curl: \"https://example.com\"'"
+  what: err
+  want: 'Error: Could not resolve symbol: curl'
+
+- name: Process passthrough is not standard
+  cmnd: "ys -e 'shell: \"true\"'"
+  what: err
+  want: 'Error: Could not resolve symbol: shell'
 
 - name: Plain use does not refer names
   cmnd: "ys -e 'use: ys::str' -e '=>: upper-case(\"missing\")'"
@@ -189,6 +287,44 @@ test::
   what: err
   want: "Error: The 'require' function is retired. Use 'use' instead."
 
+- name: Deps use option is retired
+  cmnd: "ys -e 'use foo::bar: :deps \"unused\"'"
+  what: err
+  want: "Error: Invalid 'use' option ':deps'"
+
+- name: Module allowlist permits use
+  cmnd: >-
+    env YS_MODULES=str,io ys -e 'use: ys::str'
+    -e 'say: ys::str/upper-case("allowed")'
+  want: ALLOWED
+
+- name: Module allowlist rejects use
+  cmnd: "env YS_MODULES=str ys -e 'use: ys::fs'"
+  what: err
+  want: 'Error: ys.fs is disabled by YS_MODULES'
+
+- name: Standard IO proxy honors module allowlist
+  cmnd: "env YS_MODULES=str ys -e 'say: \"hidden\"'"
+  what: err
+  want: 'Error: ys.io is disabled by YS_MODULES'
+
+- name: Standard filesystem proxy honors module allowlist
+  cmnd: "env YS_MODULES=str ys -e 'read: \"Meta\"'"
+  what: err
+  want: 'Error: ys.fs is disabled by YS_MODULES'
+
+- name: Standard pprint proxy honors module allowlist
+  cmnd: "env YS_MODULES=io ys -e 'pp: 42'"
+  what: err
+  want: 'Error: ys.pprint is disabled by YS_MODULES'
+
+- name: YS file loader honors module allowlist
+  cmnd: >-
+    env YS_MODULES=ys ys -e 'use: ys'
+    -e 'ys/load-file: "Meta"'
+  what: err
+  want: 'Error: ys.fs is disabled by YS_MODULES'
+
 - name: Short module name requires alias
   cmnd: "ys -e 'fs/cwd()'"
   what: err
@@ -198,9 +334,11 @@ test::
   want: '{"x":123}'
 
 - cmnd: ys -pl ...
+  what: err
   want: 'Error: Options --print and --load are mutually exclusive.'
 
 - cmnd: ys -cp ...
+  what: err
   want: 'Error: Options --print and --compile are mutually exclusive.'
 
 - name: ys ys/test/hello.ys
@@ -292,17 +430,22 @@ test::
     +7 >>> str(3, ") Hello #", 3)
     +8 >>> say("3) Hello #3")
 
-- note: Test -x flag with function declarations (declare form should be wrapped with TTT)
-- cmnd: |-
-    ys -xce 'defn main(): say(hello())' -e 'defn hello(): "Hello"'
+- note: >-
+    Test -x flag with function declarations
+    (declare form should be wrapped with TTT)
+- cmnd: >-
+    ys -xce 'defn main(): say(hello())'
+    -e 'defn hello(): "Hello"'
   want: |
     (TTT (declare hello))
     (defn main [] (TTT (say (TTT (hello)))))
     (defn hello [] "Hello")
     (TTT (apply main ARGS))
 
-- cmnd: |-
-    ys -xce 'defn main(): say(hello() + world())' -e 'defn hello(): "Hello"' -e 'defn world(): "World"'
+- cmnd: >-
+    ys -xce 'defn main(): say(hello() + world())'
+    -e 'defn hello(): "Hello"'
+    -e 'defn world(): "World"'
   want: |
     (TTT (declare hello world))
     (defn main [] (TTT (say (TTT (add+ (TTT (hello)) (TTT (world)))))))
@@ -310,8 +453,10 @@ test::
     (defn world [] "World")
     (TTT (apply main ARGS))
 
-- cmnd: |-
-    ys -xce 'defn main(): say(hello())' -e 'defn hello(): "Hello"' -e 'defn helper(): "Helper"'
+- cmnd: >-
+    ys -xce 'defn main(): say(hello())'
+    -e 'defn hello(): "Hello"'
+    -e 'defn helper(): "Helper"'
   want: |
     (TTT (declare hello))
     (defn main [] (TTT (say (TTT (hello)))))
@@ -335,8 +480,10 @@ test::
     (apply main ARGS)
 
 - note: Test that functions not referenced by main are not declared
-- cmnd: |-
-    ys -xce 'defn main(): say(hello())' -e 'defn hello(): "Hello"' -e 'defn unused(): "Unused"'
+- cmnd: >-
+    ys -xce 'defn main(): say(hello())'
+    -e 'defn hello(): "Hello"'
+    -e 'defn unused(): "Unused"'
   want: |
     (TTT (declare hello))
     (defn main [] (TTT (say (TTT (hello)))))

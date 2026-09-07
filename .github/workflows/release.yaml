@@ -22,8 +22,9 @@ on:
         type: boolean
       tests_only:
         description: >-
-          Only build and test these platforms (space-separated subset
-          of: linux aarch64 macos windows); skips release and publish jobs
+          Only build and test these platforms (space-separated subset of:
+          linux-x64 linux-aarch64 macos-arm64 macos-x64 freebsd-x64
+          windows-x64 windows-arm64 wasm-p1); skips release and publish jobs
         default: ''
         required: false
         type: string
@@ -33,6 +34,11 @@ on:
           instead of building (use together with tests_only)
         required: false
         type: string
+      graalvm:
+        description: 'Also build the -graalvm CLI and library assets'
+        default: false
+        required: false
+        type: boolean
 
 defaults:
   run:
@@ -75,7 +81,8 @@ jobs:
           exit 1
         fi
 
-        if [[ $(sed -n 's/^version: //p' Meta) != "$VERSION" ]]; then
+        if [[ $(perl -ne 'print $1 if /^version: (.*)/' Meta) != \
+              "$VERSION" ]]; then
           echo "ERROR: Meta version does not match $VERSION"
           exit 1
         fi
@@ -446,6 +453,7 @@ jobs:
           }}
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -456,11 +464,14 @@ jobs:
     - name: Install build dependencies
       run: |
         apt-get update
-        apt-get install -y build-essential curl git zlib1g-dev
+        apt-get install -y build-essential curl git unzip zlib1g-dev
 
     - name: Build release archives
       run: |
         make release-build jars
+        if ${{ inputs.graalvm }}; then
+          make release-build YAMLSCRIPT_ENGINE=graalvm
+        fi
         make -C python wheel
 
     - name: List release archives
@@ -501,6 +512,7 @@ jobs:
           }}
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -511,11 +523,14 @@ jobs:
     - name: Install build dependencies
       run: |
         apt-get update
-        apt-get install -y build-essential curl git zlib1g-dev
+        apt-get install -y build-essential curl git unzip zlib1g-dev
 
     - name: Build release archives
       run: |
         make release-build jars
+        if ${{ inputs.graalvm }}; then
+          make release-build YAMLSCRIPT_ENGINE=graalvm
+        fi
 
     - name: List release archives
       run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
@@ -553,6 +568,7 @@ jobs:
           }}
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -563,6 +579,9 @@ jobs:
     - name: Build release archives
       run: |
         make release-build jars
+        if ${{ inputs.graalvm }}; then
+          make release-build YAMLSCRIPT_ENGINE=graalvm
+        fi
         make -C python wheel
 
     - name: List release archives
@@ -605,6 +624,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
       uses: graalvm/setup-graalvm@v1
       with:
         java-version: ${{ env.JAVA_VERSION }}
@@ -645,6 +665,9 @@ jobs:
     - name: Build release archives
       run: |
         make release-build jars
+        if ${{ inputs.graalvm }}; then
+          make release-build YAMLSCRIPT_ENGINE=graalvm
+        fi
         mkdir -p python/dist/release-assets
         for archive in libys-*.tar.xz libys-*.zip; do
           [[ -e "$archive" ]] && cp "$archive" python/dist/release-assets/
@@ -665,6 +688,171 @@ jobs:
           python/dist/*.whl
         retention-days: 7
 
+  build-macos-x64:
+    name: Build macOS x64
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'macos-x64')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: verify-release
+    runs-on: macos-15-intel
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{ inputs.tests_only && github.ref || inputs.version }}
+
+    - name: Set up GraalVM
+      if: ${{ inputs.graalvm }}
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: graalvm
+        github-token: ${{ github.token }}
+
+    - name: Build release archives
+      run: |
+        make release-build jars
+        if ${{ inputs.graalvm }}; then
+          make release-build YAMLSCRIPT_ENGINE=graalvm
+        fi
+
+    - name: Upload macOS x64 artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: macos-x64
+        path: |
+          ys-*.tar.xz
+          libys-*.tar.xz
+          *.jar
+        retention-days: 7
+
+  build-cross-platform:
+    name: Build ${{ matrix.name }}
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'freebsd-x64') ||
+         contains(inputs.tests_only, 'windows-arm64') ||
+         contains(inputs.tests_only, 'wasm-p1')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: verify-release
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - name: FreeBSD x64
+          platform: freebsd-x64
+          gloat_platform: freebsd/amd64
+          cross_cc_target: x86_64-freebsd
+          archive_ext: tar.xz
+          shared_library: true
+        - name: Windows ARM64
+          platform: windows-arm64
+          gloat_platform: windows/arm64
+          cross_cc_target: aarch64-windows-gnu
+          archive_ext: zip
+          shared_library: true
+        - name: WASI Preview 1
+          platform: wasm-p1
+          gloat_platform: wasip1/wasm
+          archive_ext: tar.xz
+          shared_library: false
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{ inputs.tests_only && github.ref || inputs.version }}
+
+    - name: Install build dependencies
+      run: >-
+        sudo apt-get update && sudo apt-get install -y
+        build-essential curl git perl unzip xz-utils zip
+
+    - name: Build CLI archive
+      run: |
+        make release-build-ys \
+          GLOAT_PLATFORM="${{ matrix.gloat_platform }}" \
+          RELEASE_PLATFORM="${{ matrix.platform }}"
+
+    - name: Build shared library archive
+      if: ${{ matrix.shared_library }}
+      run: |
+        make release-build-libys \
+          GLOAT_PLATFORM="${{ matrix.gloat_platform }}" \
+          RELEASE_PLATFORM="${{ matrix.platform }}" \
+          CROSS_CC_TARGET="${{ matrix.cross_cc_target }}"
+
+    - name: Stage release artifacts
+      run: |
+        mkdir release-output
+        cp "ys-$VERSION-${{ matrix.platform }}.${{ matrix.archive_ext }}" \
+          release-output/
+        if ${{ matrix.shared_library }}; then
+          cp "libys-$VERSION-${{ matrix.platform }}.${{ matrix.archive_ext }}" \
+            release-output/
+        fi
+
+    - name: Upload cross-platform artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ matrix.platform }}
+        path: release-output/
+        retention-days: 7
+
+  test-wasm-p1:
+    name: Test WASI Preview 1
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'wasm-p1')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: build-cross-platform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{ inputs.tests_only && github.ref || inputs.version }}
+
+    - name: Download WASI artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: wasm-p1
+        path: release-artifacts
+
+    - name: Install Wasmtime
+      run: |
+        curl -sSf https://wasmtime.dev/install.sh |
+          WASMTIME_HOME="$RUNNER_TEMP/wasmtime" bash
+        echo "$RUNNER_TEMP/wasmtime/bin" >> "$GITHUB_PATH"
+
+    - name: Smoke test WASI CLI
+      run: |
+        mkdir release-wasm
+        tar -xf "release-artifacts/ys-$VERSION-wasm-p1.tar.xz" \
+          -C release-wasm
+        ys_wasm="release-wasm/ys-$VERSION-wasm-p1/ys.wasm"
+        wasmtime run "$ys_wasm" --version
+        [[ $(printf '%s\n' '!ys-0' '=>: 1 + 2' |
+          wasmtime run "$ys_wasm" -l -) == 3 ]]
+        for module in fs http ipc pods; do
+          output=$(wasmtime run "$ys_wasm" -e "use: $module" 2>&1 || true)
+          [[ $output == \
+            *"ys.$module is not available in the WASI build"* ]]
+        done
+
   create-release:
     name: Create GitHub release
     if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
@@ -676,7 +864,10 @@ jobs:
     - build-linux-x64
     - build-linux-aarch64
     - build-macos-arm64
+    - build-macos-x64
     - build-windows-x64
+    - build-cross-platform
+    - test-wasm-p1
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -688,15 +879,20 @@ jobs:
 
     - name: Build release notes
       run: |
-        sed "s/YS version .*/YS version $VERSION/" \
+        perl -pe 's/YS version .*/YS version $ENV{VERSION}/' \
           common/release.md > release-notes.txt
 
         if [[ -f Changes ]]; then
-          awk -v ver="$VERSION" '
-            /^- version: / && $3 == ver { found = 1; next }
-            /^- version: / && found { exit }
-            found && $1 != "date:" && $1 != "changes:" { print }
-          ' Changes | sed 's/^  - /* /' >> release-notes.txt
+          perl -ne '
+            if (/^- version: (\S+)/) {
+              $found = $1 eq $ENV{VERSION};
+              next;
+            }
+            if ($found && !/^\s+(?:date|changes):/) {
+              s/^  - /* /;
+              print;
+            }
+          ' Changes >> release-notes.txt
         fi
 
         cat release-notes.txt

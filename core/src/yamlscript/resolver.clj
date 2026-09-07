@@ -61,6 +61,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [ys.v0.common]
+   [ys.v0.util :as util]
    [yamlscript.re :as re])
   (:refer-clojure :exclude [resolve]))
 
@@ -118,10 +119,10 @@
     :*  :ali
     :val))
 
-(def re-int #"(?:[-+]?[0-9]+|0o[0-7]+|0x[0-9a-fA-F]+)")
+(def re-int #"(?:0o[0-7]+|0x[0-9a-fA-F]+|[-+]?[0-9]+)")
 (def re-float #"[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?")
 (def re-bool #"(?:true|True|TRUE|false|False|FALSE)")
-(def re-null #"(?:|~|null|Null|NULL)")
+(def re-null #"(?:~|null|Null|NULL|)")
 (def re-inf-nan #"(?:[-+]?(?:\.inf|\.Inf|\.INF)|\.nan|\.NaN|\.NAN)")
 (def re-keyword re/keyw)
 (def re-call-tag (re/re #"(?::?(?:$fsym|$ysym)\*?)+:?"))
@@ -137,7 +138,7 @@
                         (re-find #":$" key-text)
                         (re-find #"^\w" val-tag))
                     (if (re-find #":$" val-tag)
-                      (die "Tag '!" val-tag
+                      (util/die "Tag '!" val-tag
                         "' can't end with ':' after '::' key")
                       [(assoc key := (str/replace key-text #"\s*:$" ""))
                        (assoc val :! (str val-tag ":"))])
@@ -152,14 +153,14 @@
   (let [key-text (:= key)]
     (if (re-find #":\?$" key-text)
       (if (:! val)
-        (die "Can't specify tag on value of ':?' pair")
+        (util/die "Can't specify tag on value of ':?' pair")
         (let [key (assoc key := (str/replace key-text #"\s*:\?$" ""))
               key (assoc key :|? true)
               ;; Mark value for code mode like check-mode-swap does
               val (assoc val :! "")]
           [key val]))
       (if (and key-text (re-find #":[!@#$%^&*_=+-/.,;~<>]$" key-text))
-        (die (str
+        (util/die (str
                "Invalid key suffix in '" key-text "'.\n"
                "Quote the key if you meant it as a string literal."))
         [key val]))))
@@ -174,7 +175,7 @@
         (let [key (assoc key := (str/replace key-text #"\s*::$" ""))]
           [key val])
         (if (:! val)
-          (die "Can't specify tag on value of '::' pair")
+          (util/die "Can't specify tag on value of '::' pair")
           (let [key (assoc key := (str/replace key-text #"\s*:$" ""))
                 val (assoc val :! "")]
             [key val])))
@@ -191,7 +192,7 @@
                 (not (str/blank? base)))]
     (when (and swap?
             (not (contains? #{:map :seq} (node-kind val))))
-      (die "Code-value mode requires a mapping or sequence"))
+      (util/die "Code-value mode requires a mapping or sequence"))
     [(if swap? (assoc key := base) key) val swap?]))
 
 (defn check-yaml-core-tag
@@ -261,7 +262,9 @@
   (when-lets [key-str (:expr key)
               _ (or
                   (re-find #" +%$" key-str)
-                  (re-matches #"(cond|cond[fp] .+|case .+)" key-str))
+                  (= "cond" key-str)
+                  (re-matches #"cond[fp] .+" key-str)
+                  (re-matches #"case .+" key-str))
               _ (contains? val :xmap)
               key (assoc key :expr (str/replace key-str #" +%$" ""))
               val (set/rename-keys val {:xmap :fmap})]
@@ -307,7 +310,7 @@
   "Resolve a YAML mapping as a code-mode expression mapping."
   [node]
   (when (:%% node)
-    (die "Flow mappings not allowed in code mode"))
+    (util/die "Flow mappings not allowed in code mode"))
   (let [anchor (:& node)
         node {:xmap (vec
                        (mapcat
@@ -323,7 +326,7 @@
 (defn resolve-code-sequence
   "Reject plain YAML sequences in code mode."
   [_]
-  (die "Sequences (block and flow) not allowed in code mode"))
+  (util/die "Sequences (block and flow) not allowed in code mode"))
 
 (def esc #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
 (defn resolve-code-scalar
@@ -341,8 +344,8 @@
         :$ (set/rename-keys node {style :xstr})
         :' (set/rename-keys node {style :str})
         :| (set/rename-keys node {style :xstr})
-        :> (die "Folded scalars not allowed in code mode")
-        ,  (die "Scalar has unknown style")))))
+        :> (util/die "Folded scalars not allowed in code mode")
+        ,  (util/die "Scalar has unknown style")))))
 
 (defn resolve-code-alias
   "Resolve an alias reference while in code mode."
@@ -360,7 +363,7 @@
         check (fn [type value]
                 (let [type (check-yaml-core-tag type value)]
                   (if (= type :ERR)
-                    (die "Invalid value for code mode scalar with tag "
+                    (util/die "Invalid value for code mode scalar with tag "
                       (tagp tag) ": '" value "'")
                     type)))]
 
@@ -400,10 +403,10 @@
       (case kind
         :map (if (= tag "tag:yaml.org,2002:map")
                (resolve-bare-mapping node)
-               (die "Invalid tag for code mode mapping: " (tagp tag)))
+               (util/die "Invalid tag for code mode mapping: " (tagp tag)))
         :seq (if (= tag "tag:yaml.org,2002:seq")
                (resolve-bare-sequence node)
-               (die "Invalid tag for code mode sequence: " (tagp tag)))
+               (util/die "Invalid tag for code mode sequence: " (tagp tag)))
         :val (case tag
                "tag:yaml.org,2002:str"
                (resolve-bare-scalar node :str style)
@@ -416,11 +419,11 @@
                "tag:yaml.org,2002:null"
                (resolve-bare-scalar node (check :nil value) style)
                "tag:yaml.org,2002:map"
-               (die "Invalid tag for code mode scalar: " (tagp tag))
+               (util/die "Invalid tag for code mode scalar: " (tagp tag))
                "tag:yaml.org,2002:seq"
-               (die "Invalid tag for code mode scalar: " (tagp tag))))
+               (util/die "Invalid tag for code mode scalar: " (tagp tag))))
       ,
-      :else (die "Invalid tag for code mode node: " (tagp tag)))))
+      :else (util/die "Invalid tag for code mode node: " (tagp tag)))))
 
 ;; ----------------------------------------------------------------------------
 ;; Dispatchers for code-value mode:
@@ -568,7 +571,7 @@
         check (fn [type value]
                 (let [type (check-yaml-core-tag type value)]
                   (if (= type :ERR)
-                    (die "Invalid value for data mode scalar with tag "
+                    (util/die "Invalid value for data mode scalar with tag "
                       (tagp tag) ": '" value "'")
                     type)))]
     (cond
@@ -603,10 +606,10 @@
       (case kind
         :map (if (= tag "tag:yaml.org,2002:map")
                (resolve-bare-mapping node)
-               (die "Invalid tag for data mode mapping: " (tagp tag)))
+               (util/die "Invalid tag for data mode mapping: " (tagp tag)))
         :seq (if (= tag "tag:yaml.org,2002:seq")
                (resolve-bare-sequence node)
-               (die "Invalid tag for data mode sequence: " (tagp tag)))
+               (util/die "Invalid tag for data mode sequence: " (tagp tag)))
         :val (case tag
                "tag:yaml.org,2002:str"
                (resolve-bare-scalar node :str style)
@@ -618,9 +621,9 @@
                (resolve-bare-scalar node (check :bln value) style)
                "tag:yaml.org,2002:null"
                (resolve-bare-scalar node (check :nil value) style)
-               (die "Invalid tag for data mode scalar: " (tagp tag))))
+               (util/die "Invalid tag for data mode scalar: " (tagp tag))))
       ,
-      :else (die "Invalid tag for data mode node: " (tagp tag)))))
+      :else (util/die "Invalid tag for data mode node: " (tagp tag)))))
 
 ;; XXX Replace this with assignment in data mode
 (defn resolve-data-node-top
@@ -697,7 +700,7 @@
         check (fn [type value]
                 (let [type (check-yaml-core-tag type value)]
                   (if (= type :ERR)
-                    (die "Invalid value for bare mode scalar with tag "
+                    (util/die "Invalid value for bare mode scalar with tag "
                       (tagp tag) ": '" value "'")
                     type)))]
     (cond
@@ -714,10 +717,10 @@
       (case kind
         :map (if (= tag "tag:yaml.org,2002:map")
                (resolve-bare-mapping node)
-               (die "Invalid tag for bare mode mapping: " (tagp tag)))
+               (util/die "Invalid tag for bare mode mapping: " (tagp tag)))
         :seq (if (= tag "tag:yaml.org,2002:seq")
                (resolve-bare-sequence node)
-               (die "Invalid tag for bare mode sequence: " (tagp tag)))
+               (util/die "Invalid tag for bare mode sequence: " (tagp tag)))
         :val (case tag
                "tag:yaml.org,2002:str"
                (resolve-bare-scalar node :str style)
@@ -729,9 +732,9 @@
                (resolve-bare-scalar node (check :bln value) style)
                "tag:yaml.org,2002:null"
                (resolve-bare-scalar node (check :nil value) style)
-               (die "Invalid tag for bare mode scalar: " (tagp tag))))
+               (util/die "Invalid tag for bare mode scalar: " (tagp tag))))
       ,
-      :else (die "Invalid tag for bare mode node: " (tagp tag)))))
+      :else (util/die "Invalid tag for bare mode node: " (tagp tag)))))
 
 (comment
   )

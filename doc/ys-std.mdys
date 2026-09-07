@@ -196,7 +196,7 @@ I/O functions:
   err(Str*) nil: Print to stderr without a newline
   out(Str*) nil: Print to stdout|
     Flushes stdout after printing
-  pp(X) nil: Pretty print a value
+  pp(X) nil: Pretty print a value through ys::pprint
   print(Str*) nil: Print to stdout without newline|
     Flushes stdout after printing
   read(Path) Str: Read a file through ys::fs

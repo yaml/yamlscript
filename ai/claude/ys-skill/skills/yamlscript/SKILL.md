@@ -1395,6 +1395,11 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Bundled namespaces such as `ys::fs`, `ys::str`, `ys::http`, and
   `ys::yaml` are unavailable until loaded with `use`.
   Never use `require`; it is retired and only reports a migration error.
+- A host can set `YS_MODULES` to a comma-separated or whitespace-separated
+  allowlist of bundled modules.
+  Code must handle a disabled module as unavailable.
+  WASI builds always disable `ys::fs`, `ys::http`, `ys::ipc`, and
+  `ys::pods`.
 - Prefer one grouped mapping when loading multiple modules:
   ```yaml
   use:
@@ -1420,6 +1425,9 @@ pairs =: words:frequencies.sort-by(val):reverse
   stderr; the rest go to stdout. `print` and `out` are synonyms (both
   are backed by `ys::io` with auto-flush); prefer `print` when it
   stands alone, `out` when chaining or pairing with `err`.
+- `pp(value)` pretty prints through `ys::pprint`.
+  Use `use pprint:` when direct access to `pprint/write` or its formatting
+  options is needed.
 - To print just a blank line, write bare `say:` — not `say: ''`. A
   valueless `say:` emits the newline on its own.
 - `die(msg)` — print error message to stderr and exit

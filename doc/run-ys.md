@@ -158,9 +158,9 @@ internet.
 
 Caveat yamlscriptor!
 
-    A more secure way to distribute a YS program is to
-    [compile it to a binary executable](binary.md) and distribute the binary
-    instead.
+    A more secure distribution should bundle a reviewed YS source file with a
+    pinned [standalone `ys` executable](binary.md), instead of downloading code
+    at run time.
 
 There is at least one use case where this Bash technique is safe and useful:
 

@@ -5,11 +5,18 @@
    [ys.v0.ys :as ys]
    [ys.v0.yaml :as yaml]
    [ys.v0.global :as global]
+   [yamlscript.regex :as regex]
    [ys.v0.common])
   (:refer-clojure
    :exclude [test]))
 
 (def counter (atom 0))
+
+(def error-map-hook
+  (atom (fn [error] (Throwable->map error))))
+
+(defn- error-map [error]
+  (@error-map-hook error))
 
 (defn- get-test-name [test]
   (let [name (or
@@ -84,7 +91,7 @@
          (catch Exception e
            (cond
              (= "error" what) (str/trim-newline (.getMessage e))
-             (get test "form") (Throwable->map e)
+             (get test "form") (error-map e)
              :else (throw e))))))
 
 (defn- load-data [test]
@@ -100,7 +107,7 @@
          (catch Exception e
            (cond
              (= "error" what) (str/trim-newline (.getMessage e))
-             (get test "form") (Throwable->map e)
+             (get test "form") (error-map e)
              :else (throw e))))))
 
 (defn- run-cmnd [test]
@@ -205,7 +212,7 @@
                     (failed test got)))
                 ,
                 "like"
-                (let [rgx (re-pattern (get test "like"))]
+                (let [rgx (regex/compile (get test "like"))]
                   (if (re-find rgx got)
                     (passed test)
                     (failed test got)))

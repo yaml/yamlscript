@@ -9,7 +9,8 @@
    [yamlscript.ast :refer [Key Lst Sym QSym Vec]]
    [ys.v0.common]
    [yamlscript.transformers]
-   [ys.v0.dwim])
+   [ys.v0.dwim]
+   [ys.v0.util :as util])
   (:refer-clojure))
 
 (declare
@@ -50,7 +51,7 @@
                           func)]
               [+func ctx args])
           1 [func nil (map (fn [arg] (if (= topic arg) ctx arg)) args)]
-          (die "XXX support for multiple topics not yet implemented"))
+          (util/die "XXX support for multiple topics not yet implemented"))
         [func ctx args] (if (= args '({:Sym *}))
                           [{:Sym 'apply} func [ctx]]
                           [func ctx args])]
@@ -111,14 +112,14 @@
   (if-let [dots (:dot target)]
     (let [[root & path] dots
           _ (when-not (:Sym root)
-              (die "Dotted assignment root must be a symbol"))
+              (util/die "Dotted assignment root must be a symbol"))
           _ (when-not (seq path)
-              (die "Dotted assignment requires a path"))]
+              (util/die "Dotted assignment requires a path"))]
       {:root root
        :steps (Vec (mapv assignment-path-step path))})
     (if (:Sym target)
       {:root target}
-      (die "Mixed assignment targets must be symbols or dotted paths"))))
+      (util/die "Mixed assignment targets must be symbols or dotted paths"))))
 
 (defn transform-assign
   "Normalize parsed dotted-assignment targets and their condition."
@@ -142,14 +143,14 @@
   "Attach `.=` updater functions after both pair sides are transformed."
   [lhs rhs]
   (if-lets [assign (:Assign (second lhs))
-            _ (= '. (get-in assign [:operator :Sym]))
+            _ (= "." (str (get-in assign [:operator :Sym])))
             targets (:targets assign)
             forms (if (= 1 (count targets))
                     [rhs]
                     (when (:Vec rhs) (:Vec rhs)))
             _ (if forms
                 true
-                (die "Multi-target '.=' requires positional RHS forms"))
+                (util/die "Multi-target '.=' requires positional RHS forms"))
             updaters (mapv dot-assignment-updater
                        (take (count targets) (concat forms (repeat nil))))]
     [(assoc-in lhs [1 :Assign :updaters] (Vec updaters)) rhs]
@@ -166,11 +167,11 @@
               _ (= 3 (count lhs))
               [def sym dot] lhs
               _ (= 'def (:Sym def))
-              _ (= '. (:Sym dot))
+              _ (= "." (str (:Sym dot)))
               _ (not (re-find #"\." (str (:Sym sym))))
               _ (if-not (or (map? rhs)
                           (> (count rhs) 1))
-                  (die "Invalid dot assignment")
+                  (util/die "Invalid dot assignment")
                   true)
               lhs [def sym]
               rhs (dot-rhs rhs sym)]
@@ -185,7 +186,7 @@
   (if-lets [_ (map? lhs)
             _ (vector? rhs)
             [dot & rest] rhs
-            _ (= '. (:Sym dot))
+            _ (= "." (str (:Sym dot)))
             lhs [lhs dot]
             rhs (if (= 1 (count rest)) (first rest) rest)]
     [lhs rhs]
@@ -198,10 +199,10 @@
             _ (vector? lhs)
             _ (= 2 (count lhs))
             [form dot] lhs
-            _ (= '. (:Sym dot))
+            _ (= "." (str (:Sym dot)))
             _ (if-not (or (map? rhs)
                         (> (count rhs) 1))
-                (die "Invalid dot pair")
+                (util/die "Invalid dot pair")
                 true)
             lhs (Sym '=>)
             rhs (dot-rhs rhs form)]

@@ -4,6 +4,7 @@ include $(COMMON)/clojure.mk
 include $(COMMON)/native.mk
 include $(COMMON)/vars-cli.mk
 include $(COMMON)/docker.mk
+include $(COMMON)/glojure.mk
 
 include $(MAKES)/perl.mk
 include $(MAKES)/shell.mk
@@ -18,6 +19,8 @@ PROVE := prove
 endif
 
 test := test/
+TEST-RUN-BASH := test/taptest-failures.t
+TEST-RUN-YS := $(filter-out $(TEST-RUN-BASH),$(wildcard test/*.t))
 
 YSJ-TMP := .cache/tmp/ysj
 YSJ-BIN-DIR := $(YSJ-TMP)/bin
@@ -25,12 +28,17 @@ YSJ-BIN := $(YSJ-BIN-DIR)/ys
 YSJ-API-BIN := $(YSJ-BIN-DIR)/ys-$(API_VERSION)
 YSJ-DOCKER-CONFIG := $(YSJ-TMP)/docker
 
-# override PATH := $(ROOT)/ys/bin:$(PATH)
-# export PATH
+test-run: export PATH := $(abspath bin):$(PATH)
 
 
 #------------------------------------------------------------------------------
 build:: $(CLI-DEPS)
+
+build-glojure:
+	$(MAKE) build YAMLSCRIPT_ENGINE=glojure
+
+build-graalvm:
+	$(MAKE) build YAMLSCRIPT_ENGINE=graalvm
 
 install: $(CLI-DEPS)
 	mkdir -p $(PREFIX)/bin
@@ -66,7 +74,9 @@ test-run: $(TEST-RUN-DEPS)
 ifdef YS_RELEASE_USE_INSTALLED_YS
 	test -f $(CLI-BIN)
 endif
-	$(PROVE) $${TEST_VERBOSE:+'-v'} $(test)
+	$(PROVE) --exec $(abspath $(CLI-BIN)) \
+	  $${TEST_VERBOSE:+'-v'} $(TEST-RUN-YS)
+	$(PROVE) $${TEST_VERBOSE:+'-v'} $(TEST-RUN-BASH)
 
 test-ysj: export DOCKER_CONFIG := $(abspath $(YSJ-DOCKER-CONFIG))
 test-ysj: export PATH := $(abspath $(YSJ-BIN-DIR)):$(PATH)
@@ -100,12 +110,13 @@ $(YSJ-API-BIN): $(YSJ-BIN)
 $(YSJ-DOCKER-CONFIG):
 	mkdir -p $@
 
+ifeq ($(YAMLSCRIPT_ENGINE),graalvm)
 ifndef PROPER-BUILD-ENV
-$(CLI-BIN): $(DOCKER-RUN-FILE)
+$(CLI-BIN-GRAALVM): $(DOCKER-RUN-FILE)
 	$(DOCKER-EXEC) make -C ys $@
 else
 
-$(CLI-BIN): $(CLI-JAR) $(REFLECTION-JSON)
+$(CLI-BIN-GRAALVM): $(CLI-JAR) $(REFLECTION-JSON)
 ifneq (true,$(LIBZ))
 	$(error *** \
 	  The 'libz.$(SO)' library is required by native-image but not installed)
@@ -122,11 +133,33 @@ endif
 	    -o $(CLI-OUT) \
 	) 2>&1 | tee $(YS-BUILD-LOG)
 	test -f $@
-ifneq ($(OS-NAME),windows)
+	touch $@
+endif
+
+else ifeq ($(YAMLSCRIPT_ENGINE),glojure)
+
+GLOAT-CLI-SRCS := \
+  $(GLOJURE-SRCS) \
+  gloat/src/yamlscript/cli.clj
+
+$(CLI-BIN-GLOJURE): \
+  $(GLOAT) $(GLOJURE-PREPARED-STAMP) $(GLOAT-CLI-SRCS)
+	mkdir -p $(dir $@)
+	</dev/null env -u GOROOT \
+	  GLOAT_YS_RUNTIME=all \
+	  GLOAT_MODULE=github.com/yaml/yamlscript \
+	  GLOAT_EXTRA_GO_DIR=$(GO-YAML-GENERATED-DIR) \
+	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
+	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
+	  $(GLOAT-CLI-SRCS) -o $@
+	test -x $@
+ifeq (,$(GLOAT-WINDOWS-TARGET)$(GLOAT-WASI-TARGET))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
 endif
-	touch $@
+
+else
+$(error Unknown YAMLSCRIPT_ENGINE '$(YAMLSCRIPT_ENGINE)')
 endif
 
 $(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)

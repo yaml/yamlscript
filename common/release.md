@@ -5,7 +5,11 @@ The following architectures are currently supported:
 * Linux + Intel
 * Linux + ARM
 * macOS + ARM
+* macOS + Intel
+* FreeBSD + Intel
 * Windows + Intel
+* Windows + ARM
+* WASI Preview 1, command line tool only
 
 Run this command to install `~/.local/bin/ys`:
 

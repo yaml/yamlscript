@@ -14,8 +14,7 @@
   '[[ys.v0.std :all]
     [ys.v0.dwim :all]
     [ys.v0.util [condf]]
-    [ys.v0.debug [DBG PPP TTT WWW XXX YYY ZZZ]]
-    [clojure.pprint [pprint]]])
+    [ys.v0.debug [DBG PPP TTT WWW XXX YYY ZZZ]]])
 
 ;; Runtime variables. ys.v0/init refers these from ys.v0.global and binds
 ;; them; the ys runtime provides SCI dynamic vars of the same names.
@@ -66,6 +65,8 @@
     ys.ipc     ys.v0.ipc
     ys.json    ys.v0.json
     ys.math    clojure.math
+    ys.pods    ys.v0.pods
+    ys.pprint  ys.v0.pprint
     ys.set     clojure.set
     ys.str     clojure.string
     ys.walk    clojure.walk

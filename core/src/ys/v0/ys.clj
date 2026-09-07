@@ -26,6 +26,19 @@
   "Implementation hooks installed by the ys runtime."
   (atom {}))
 
+(defn configured-modules []
+  (when-let [value (System/getenv "YS_MODULES")]
+    (into #{}
+      (map #(if (str/starts-with? %1 "ys.")
+              (symbol %1)
+              (symbol (str "ys." %1))))
+      (remove str/blank? (str/split value #"[,\s]+")))))
+
+(defn check-module-access! [module]
+  (when-let [allowed (configured-modules)]
+    (when-not (allowed module)
+      (util/die (str module " is disabled by YS_MODULES")))))
+
 (defn- hook [key & args]
   (if-let [f (get @hooks key)]
     (apply f args)
@@ -44,9 +57,11 @@
   (hook :eval-stream ys-code))
 
 (defn load-file [ys-file]
+  (check-module-access! 'ys.fs)
   (hook :load-file ys-file))
 
 (defn load-url [url]
+  (check-module-access! 'ys.http)
   (hook :load-url url))
 
 (defn- default-load-pod [args]
@@ -54,11 +69,13 @@
     (apply load-pod args)))
 
 (defn load-pod [& args]
+  (check-module-access! 'ys.pods)
   (if-let [f (get @hooks :load-pod)]
     (f args)
     (default-load-pod args)))
 
 (defn unload-pods []
+  (check-module-access! 'ys.pods)
   (when-let [f (get @hooks :unload-pods)]
     (f)))
 
@@ -219,6 +236,7 @@
   (util/die "The 'require' function is retired. Use 'use' instead."))
 
 (defn- load-portable-module [target module options]
+  (check-module-access! module)
   (let [[kind spec] (or (:source options) [:yspath (get-yspath *file*)])]
     (if-let [host-namespace
              (and (= kind :yspath) (manifest/modules module))]

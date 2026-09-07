@@ -12,7 +12,7 @@
   '[+++ +++* % +concat +def +merge
     _& _* _**
     add+ sub+ mul+ div+ pow rng sum
-    say die print condf pprint stream
+    say die print condf stream
     eq ne gt ge lt le or? and?
     each value call q qw omap
     +map +filter +apply ++map
@@ -67,8 +67,12 @@
       (is (= "PLAIN" (eval '(ys.str/upper-case "plain"))))
       (is (thrown? Exception
             (eval '(str/upper-case "plain"))))
-      (eval '(use (ys.fs :as fs) (ys.set :as set)))
+      (eval '(use (ys.fs :as fs)
+               (ys.pprint :as pprint)
+               (ys.set :as set)))
       (is (string? (eval '(fs/cwd))))
+      (is (= "{:answer 42}"
+            (eval '(pprint/write {:answer 42} :stream nil))))
       (is (= #{1} (eval '(set/intersection #{1 2} #{1 3}))))))
   (let [scratch (create-ns 'ys.v0-test.use-options-scratch)]
     (binding [*ns* scratch]

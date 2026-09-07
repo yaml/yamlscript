@@ -8,11 +8,12 @@
   (:require
    [clojure.string :as str]
    [clojure.walk :as walk]
-   [yamlscript.ast :as ast :refer [Lst Map Qts Str Sym Vec]]
+   [yamlscript.ast :as ast :refer [Lst Qts Str Sym Vec]]
    [ys.v0.common]
+   [ys.v0.util :as util]
    [yamlscript.global :as global]
    [yamlscript.re :as re])
-  (:refer-clojure))
+  (:refer-clojure :exclude [Map]))
 
 (declare
   construct-node
@@ -21,6 +22,13 @@
   maybe-call-main
   maybe-trace
   validate-splats)
+
+(defn flatten-vectors
+  "Flatten nested vectors while keeping AST maps intact."
+  [value]
+  (if (vector? value)
+    (reduce into [] (map flatten-vectors value))
+    [value]))
 
 (defn construct-ast
   "Construct YAMLScript AST nodes into a top-level Clojure AST."
@@ -96,7 +104,11 @@
 (defn operator-node?
   "Return true when an AST node is an operator symbol."
   [node]
-  (boolean (re-matches re/osym (str (:Sym node)))))
+  (let [operator (str (:Sym node))]
+    (boolean
+      (or (= operator "<=")
+          (= operator ">=")
+          (re-matches re/osym operator)))))
 
 (defn yes-pair
   "Return normalized operands for a yes-expression operator pair."
@@ -118,11 +130,11 @@
     (let [operator (:Sym operator)]
       (cond
         (or (nil? rhs) (and (vector? rhs) (empty? rhs)))
-        (die "Binary operator pair '" operator
+        (util/die "Binary operator pair '" operator
           "' requires a right-hand side")
 
         (and (vector? rhs) (> (count rhs) 1))
-        (die "Binary operator pair '" operator
+        (util/die "Binary operator pair '" operator
           "' cannot have multiple scalar forms on the right-hand side")))))
 
 (defn apply-yes
@@ -139,7 +151,7 @@
     (cond
       (= '=> (:Sym key)) val
       (and (:Str key) (nil? val)) key
-      :else (Lst (expand-splats (flatten [key val]))))))
+      :else (Lst (expand-splats (flatten-vectors [key val]))))))
 
 (defn construct-tag-call
   "Apply one or more YAML tag calls around a constructed node."
@@ -179,7 +191,7 @@
   "Build one root binding for a plain or dotted assignment target."
   [target value operator condition]
   (let [{:keys [root steps]} target
-        dot-op (= '. (:Sym operator))
+        dot-op (= "." (str (:Sym operator)))
         result
         (cond
           (and steps dot-op)
@@ -216,7 +228,7 @@
   (let [{:keys [condition operator targets updaters]} assign
         count-targets (count targets)
         multi? (> count-targets 1)
-        dot-op (= '. (:Sym operator))
+        dot-op (= "." (str (:Sym operator)))
         condition-sym (when condition (Sym (gensym "condition__")))
         values-sym (when multi? (Sym (gensym "values__")))
         rhs (binding-rhs rhs ctx)
@@ -373,13 +385,13 @@
         val (construct-node val-node ctx)]
     (Lst [(Sym 'if-let)
           (Vec [(Sym '_) (Lst [(Sym 'some?) val])])
-          (Map [(Str key-str) (Sym '_)])
-          (Map [])])))
+          (ast/MapNode [(Str key-str) (Sym '_)])
+          (ast/MapNode [])])))
 
 (defn- pairs->map
   "Convert a flat list of key/value pairs to a map AST node."
   [pairs ctx]
-  (Map
+  (ast/MapNode
     (vec
       (mapcat
         #(vector
@@ -423,7 +435,7 @@
                    ;; Accumulate regular pair
                    (recur rest (conj regular-pairs k v) result)))
                ;; No conditional pairs - use original logic
-               (construct-node (Map amap) ctx))
+               (construct-node (ast/MapNode amap) ctx))
         dmap (reduce (fn [dmap part]
                        (if (get-in part [0 0])
                          (dmap-code part dmap ctx)
@@ -441,7 +453,7 @@
                                         (vec
                                           (map #(construct-node %1 ctx) part))
                                         (construct-node part ctx))
-                                 amap (Map part)]
+                                 amap (ast/MapNode part)]
                              (merge-maps amap dmap)))))
                amap parts)]
     dmap))
@@ -491,9 +503,9 @@
     (construct-vec-dmap node ctx)
     (let [{nodes :Vec} node
           _ (when (some splat-node? nodes)
-              (die "Splat expression must be used in a call"))
+              (util/die "Splat expression must be used in a call"))
           nodes (map #(construct-node %1 ctx) nodes)]
-      {:Vec (-> nodes flatten vec)})))
+      {:Vec (-> nodes vec flatten-vectors)})))
 
 (defn construct-coll
   "Construct a collection node using the requested AST key."
@@ -501,7 +513,7 @@
   (let [{nodes key} node
         nodes (if (= key :Lst) (expand-splats nodes) nodes)
         nodes (map #(construct-node %1 ctx) nodes)]
-    {key (-> nodes flatten vec)}))
+    {key (-> nodes vec flatten-vectors)}))
 
 (defn construct-trace
   "Wrap a form in tracing when trace mode is active."
@@ -520,7 +532,7 @@
               sym (get-in node [:Lst 0 :Sym])
               _ (not (some #{sym} do-not-trace))]
       (if (some #{sym} cannot-trace)
-        (die "Cannot yet trace YS code containing: '" sym "'")
+        (util/die "Cannot yet trace YS code containing: '" sym "'")
         (construct-trace node))
       node)))
 
@@ -544,7 +556,7 @@
   [node]
   (walk/prewalk
     #(if (:Splat %1)
-       (die "Splat expression must be used in a call")
+       (util/die "Splat expression must be used in a call")
        %1)
     node))
 
@@ -561,7 +573,7 @@
 (defn construct-node
   "Dispatch a YAMLScript AST node to Clojure AST construction."
   ([node ctx]
-   (when (vector? ctx) (die "ctx is a vector"))
+   (when (vector? ctx) (util/die "ctx is a vector"))
    (let [[[key]] (seq node)
          ctx (update-in ctx [:lvl] inc)
          anchor (:& node)

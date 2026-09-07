@@ -38,25 +38,17 @@ jobs:
     - name: Set up MSVC
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Set up GraalVM
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: '17'
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
-
     - name: Install zip
       run: choco install zip -y
 
-    - name: Build native artifacts
+    - name: Build Glojure artifacts
       run: |
         make -C ys build
         make -C libys build
 
     - name: Smoke test CLI
       run: |
-        version=$(sed -n 's/^version: //p' Meta)
+        version=$(perl -ne 'print $1 if /^version: (.*)/' Meta)
         ys/bin/ys-$version.exe --version
         result=$(printf 'a: 1\n' | ys/bin/ys-$version.exe --load)
         [[ "$result" == '{"a":1}' ]]

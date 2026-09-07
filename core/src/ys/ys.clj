@@ -83,15 +83,18 @@
   (ys.ys/eval ys-code "EVAL" true))
 
 (defn load-file [ys-file]
+  (ys.v0.ys/check-module-access! 'ys.fs)
   (let [ys-file (abspath ys-file (dirname @sci/file))]
     (if (.exists (io/as-file ys-file))
       (externals/load-file-ys ys-file)
       (die (str "File not found: " ys-file)))))
 
 (defn load-pod [& args]
+  (ys.v0.ys/check-module-access! 'ys.pods)
   (externals/load-pod args))
 
 (defn unload-pods []
+  (ys.v0.ys/check-module-access! 'ys.pods)
   (externals/unload-pods))
 
 (defn +use [ns forms]

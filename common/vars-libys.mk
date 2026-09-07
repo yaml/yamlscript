@@ -7,6 +7,10 @@ export $(DY)LD_LIBRARY_PATH := $(LD_LIBRARY_PATH)
 endif
 
 LIBYS-SO-NAME := $(LIBYS-LIB)/libys
+LIBYS-SO-GLOJURE := $(LIBYS-SO-NAME)-glojure.$(SO)
+LIBYS-SO-GRAALVM := $(LIBYS-SO-NAME)-graalvm.$(SO)
+LIBYS-SO-ENGINE := $(if $(filter graalvm,$(YAMLSCRIPT_ENGINE)),\
+  $(LIBYS-SO-GRAALVM),$(LIBYS-SO-GLOJURE))
 ifeq ($(OS-NAME),windows)
 LIBYS-SO-FQNP := $(LIBYS-SO-NAME).$(SO)
 LIBYS-SO-BASE := $(LIBYS-SO-FQNP)
@@ -46,5 +50,9 @@ endif
 LIBYS-HEADERS := \
   $(LIBYS-LIB)/graal_isolate.h \
   $(LIBYS-API-HEADER) \
+
+LIBYS-GLOJURE-HEADER := $(LIBYS-DIR)/gloat/include/libys.h
+LIBYS-GLOJURE-ISOLATE-HEADER := \
+  $(LIBYS-DIR)/gloat/include/graal_isolate.h
 
 LIBYS-BUILD-LOG := $(ROOT)/build-libys.log

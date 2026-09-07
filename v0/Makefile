@@ -25,8 +25,6 @@ V0-M2 := $(HOME)/.m2/repository/org/yamlscript/ys.v0/$(YS_VERSION)
 # data.json is the one ys.v0 backend that babashka does not bundle, so
 # the -T bb header's java free add-classpath path needs its jar in
 # ~/.m2 too. The lein install above resolves it into the Makes m2:
-DATA-JSON-VERSION := \
-    $(shell sed -n 's/.*data.json "\(.*\)".*/\1/p' project.clj)
 DATA-JSON-JAR := data.json-$(DATA-JSON-VERSION).jar
 DATA-JSON-POM := data.json-$(DATA-JSON-VERSION).pom
 DATA-JSON-MAKES-M2 := $(ROOT)/.cache/.local/home/.m2/repository

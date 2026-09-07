@@ -1,8 +1,15 @@
 include common/base.mk
+include $(COMMON)/vars-cli.mk
+include $(COMMON)/vars-libys.mk
 include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
 
 include $(MAKES)/gh.mk
+include $(MAKES)/wasmtime.mk
+ifdef CROSS_CC_TARGET
+include $(MAKES)/zig.mk
+export CC := $(ZIG) cc -target $(CROSS_CC_TARGET)
+endif
 # Languages whose release credential helpers may use CLI authentication.
 # These are only installed by explicit helper targets, not by every
 # secrets-update run.
@@ -176,8 +183,6 @@ YS-JAR-PATH := \
 
 # The m2 jars bundled into the ys release package so that `make install`
 # can place them in the user's ~/.m2 for java free `ys -c --deps=+bb`:
-DATA-JSON-VERSION := \
-    $(shell sed -n 's/.*data.json "\(.*\)".*/\1/p' v0/project.clj)
 MAKES-M2 := .cache/.local/home/.m2/repository
 V0-M2-DIR := $(MAKES-M2)/org/yamlscript/ys.v0/$(YS_VERSION)
 DATA-JSON-M2-DIR := $(MAKES-M2)/org/clojure/data.json/$(DATA-JSON-VERSION)
@@ -367,7 +372,7 @@ release-build: release-build-ys release-build-libys
 
 release-build-ys: $(YS-RELEASE)
 
-release-build-libys: $(LYS-RELEASE)
+release-build-libys: $(if $(CROSS_CC_TARGET),$(ZIG)) $(LYS-RELEASE)
 
 #------------------------------------------------------------------------------
 # Interactive Release Workflow - Individual Step Targets
@@ -641,18 +646,35 @@ endif
 
 jars: $(JAR-ASSETS)
 
-$(YS-RELEASE): $(RELEASE-YS-NAME)
+$(YS-RELEASE): \
+  $(RELEASE-YS-NAME) \
+  build-ys \
+  common/install.mk
+	$(RM) -r $<
 	mkdir -p $<
-	cp -pPR ys/bin/ys* $</
+	cp -p $(CLI-BIN:%=ys/%) $</
+ifeq (,$(findstring wasm,$(RELEASE_PLATFORM)))
+ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
+	cp -p $(CLI-BIN:%=ys/%) $</ys.exe
+else
+	ln -fs $(notdir $(CLI-BIN)) $</ys-$(API_VERSION)
+	ln -fs $(notdir $(CLI-BIN)) $</ys
+	cp -p $(CLI-BIN-BASH:%=ys/%) $</
+endif
+else
+	cp -p $(CLI-BIN:%=ys/%) $</ys.wasm
+endif
 	cp common/install.mk $</Makefile
-ifneq ($(OS-NAME),windows)
+ifeq (,$(findstring windows,$(RELEASE_PLATFORM)))
+ifeq (,$(findstring wasm,$(RELEASE_PLATFORM)))
 	$(MAKE) -C v0 install
 	mkdir -p $</m2/repository/org/yamlscript/ys.v0 \
 	  $</m2/repository/org/clojure/data.json
 	cp -pR $(V0-M2-DIR) $</m2/repository/org/yamlscript/ys.v0/
 	cp -pR $(DATA-JSON-M2-DIR) $</m2/repository/org/clojure/data.json/
 endif
-ifeq ($(OS-NAME),windows)
+endif
+ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
 	$(TIME) zip -r $@ $<
 else
 ifeq (true,$(IS-MACOS))
@@ -662,12 +684,24 @@ else
 endif
 endif
 
-$(LYS-RELEASE): $(RELEASE-LYS-NAME)
+$(LYS-RELEASE): \
+  $(RELEASE-LYS-NAME) \
+  build-libys \
+  common/install.mk
+	$(RM) -r $<
 	mkdir -p $<
-	cp -pPR libys/lib/libys*.$(SO)* $</
+	cp -p $(LIBYS-SO-ENGINE) $</
+ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
+	cp -p $(LIBYS-SO-ENGINE) $</libys.$(SO)
+else
+	ln -fs $(notdir $(LIBYS-SO-ENGINE)) $</libys.$(SO)
+	ln -fs $(notdir $(LIBYS-SO-ENGINE)) $</libys.$(SO).$(API_VERSION)
+	ln -fs $(notdir $(LIBYS-SO-ENGINE)) \
+	  $</libys.$(SO).$(YAMLSCRIPT_VERSION)
+endif
 	cp -pPR libys/lib/*.h $</
 	cp common/install.mk $</Makefile
-ifeq ($(OS-NAME),windows)
+ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
 	$(TIME) zip -r $@ $<
 else
 ifeq (true,$(IS-MACOS))

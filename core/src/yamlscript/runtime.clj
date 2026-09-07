@@ -45,6 +45,8 @@
    [ys.v0.io]
    [ys.v0.ipc]
    [ys.v0.json]
+   [ys.v0.pods]
+   [ys.v0.pprint]
    [ys.v0.std]
    [ys.v0.taptest]
    [ys.v0.yaml]
@@ -101,8 +103,7 @@
     (merge core extras refers)))
 
 (def pods-namespace
-  {'load-pod (sci/copy-var ys/load-pod nil)
-   'unload-pod (sci/copy-var babashka.pods.sci/unload-pod nil)})
+  (sci/copy-ns ys.v0.pods (sci/create-ns 'pods)))
 (def babashka-pods-ns
   (sci/copy-ns babashka.pods (sci/create-ns 'babashka.pods)))
 (def babashka-pods-sci-ns
@@ -130,6 +131,8 @@
   (sci/copy-ns ys.v0.json (sci/create-ns 'json)))
 (def math-namespace
   (sci/copy-ns clojure.math (sci/create-ns 'math)))
+(def pprint-namespace
+  (sci/copy-ns ys.v0.pprint (sci/create-ns 'pprint)))
 (def set-namespace
   (sci/copy-ns clojure.set (sci/create-ns 'set)))
 (def ext-namespace
@@ -162,6 +165,8 @@
    'ys.v0.io io-namespace
    'ys.v0.ipc ipc-namespace
    'ys.v0.json json-namespace
+   'ys.v0.pods pods-namespace
+   'ys.v0.pprint pprint-namespace
    'ys.v0.taptest taptest-namespace
    'ys.v0.yaml yaml-namespace
    'ys.v0.ys v0-ys-namespace
@@ -191,7 +196,6 @@
 
     ;; SCI-runtime-only namespaces
     {'ys.v0 v0-namespace
-     'pods    pods-namespace 'ys.pods    pods-namespace
      'babashka.pods     babashka-pods-ns
      'babashka.pods.sci babashka-pods-sci-ns
      'java-time java-time-namespace

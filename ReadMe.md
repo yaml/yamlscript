@@ -260,17 +260,18 @@ YS is supported on these operating systems:
 
 * Linux
 * macOS
-* Windows  (coming soon)
+* FreeBSD
+* Windows
 
-YS is supported on these architectures:
+Release executables are available for these platform and architecture pairs:
 
-* Intel/AMD (`x86_64`)
-* ARM (`aarch64`)
+* Linux, macOS, and Windows on `x86_64` and `aarch64`
+* FreeBSD on `x86_64`
+* WASI Preview 1 on WebAssembly
 
-For now other systems cannot be supported because `ys` and `libys` are compiled
-by GraalVM's `native-image` tool, which only supports the above systems.
-However, work is underway to have YS use alternate runtimes such as JVM, Go,
-JavaScript and WebAssembly.
+The native `ys` executable and `libys` shared library use Gloat and Glojure and
+do not require Java or a JVM.
+The WASI release contains the `ys` executable only.
 
 
 ## Usage Examples in Your Language

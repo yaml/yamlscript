@@ -15,21 +15,18 @@
   (:refer-clojure :exclude [char quot]))
 
 (defn re
-  "Expand regex template variables."
+  "Expand regex template variables without regex lookaround."
   [rgx]
   (loop [rgx (str rgx)]
-    (let [match (re-find #"\$([a-zA-Z]+)" rgx)]
-      (if match
-        (let [var (second match)
-              val (var-get
-                    (resolve
-                      (symbol (str "yamlscript.re/" var))))
-              rgx (str/replace
-                    rgx
-                    (re-pattern (str #"\$" var #"(?![a-zA-Z])"))
-                    (str/re-quote-replacement val))]
-          (recur rgx))
-        (re-pattern rgx)))))
+    (if (re-find #"\$[a-zA-Z]" rgx)
+      (recur
+        (str/replace rgx #"\$[a-zA-Z]+"
+          (fn [match]
+            (str (var-get
+                   (resolve
+                     (symbol
+                       (str "yamlscript.re/" (subs match 1)))))))))
+      (re-pattern rgx))))
 
 (def char
   "A character literal token.
@@ -47,8 +44,6 @@
       return |
       .
     ))")
-(def tend "Token ending lookahead"
-  #"(?=[\.\,\s\]\}\)]|$)")
 (def ccom #"(?:;.*(?:\n|\z))")             ; Clojure comment
 (def ignr #"(?x)
             (?:                            # Ignorables
@@ -68,9 +63,9 @@
                 \+\+ |
                 \-\- |
                 [\#\@] |
-                \$(?!\w) |
-                \> |
-                \>\>\>
+                \$(?:\B|\z) |
+                \>\>\> |
+                \>
               )
             )")
 (def dotn #"(?:\.-?\d+)")                  ; Dot operator followed by number
@@ -93,8 +88,7 @@
                 (?:
                   $xnum
                   (?:\.[0-9])?
-                  .*?
-                  (?=[\:\.\,\s\]\}\)]|$)   # End of token
+                  [^\:\.\,\s\]\}\)]*       # Rest of malformed token
                 )
               "))
 
@@ -110,24 +104,28 @@
             (?:
               => |
               // |
-              [-+*/<>] |
               \*\* |
               [=<>!]= |
               \%{1,2} |
               [&|]{2,3} |
               [=!]~~? |
-              \.{1,3}
+              \.{1,3} |
+              [-+*/<>]
             )")
 
 (def anon #"(?:\\\()")                     ; Anonymous fn start token
 (def sett #"(?:\\\{)")                     ; Set start token
 (def narg #"(?:[_%]\d+)")                  ; Numbered argument token
 (def regx #"(?x)(?:                        # Regular expression
-            / (?=\S)                         # opening slash
+            /                                # opening slash
+            (?:
+              \\. |                          # Escaped first char
+              [^\\\/\n\s]                   # Non-space first char
+            )
             (?:
               \\. |                          # Escaped char
               [^\\\/\n]                      # Any other char
-            )+/                              # Ending slash
+            )*/                              # Ending slash
             )")
 (def dstr #"(?x)(?:
             \"(?:                          # Double quoted string
@@ -146,14 +144,14 @@
 (def alph v0re/alph)                       ; Alpha
 (def anum v0re/anum)                       ; Alphanumeric
 (def symw v0re/symw)                       ; Symbol word
-(def vsym (re #"(?:\$$symw|\$(?=\.))"))    ; Variable lookup symbol
+(def vsym (re #"(?:\$$symw|\$\B)"))         ; Variable lookup symbol
 (def ssym (re #"(?:\$\$|\$\#|\$)"))        ; Special symbols
 (def keyw v0re/keyw)                       ; Keyword token
 (def jsym #"(?:~\w+)")                     ; Java interop symbol
                                            ; Dot operator word with _ allowed
-(def dots (re #"(?:(?:\.(?:$jsym|$ukey))$tend)"))
+(def dots (re #"(?:\.$ukey)"))
                                            ; Clojure symbol
-(def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+(?:\.(?=\ ))?)")
+(def csym #"(?:[-a-zA-Z0-9_*+?!<=>$]+)")
 (def ysym (re #"(?:$symw[+?!]?|_)"))       ; YS symbol token
 (def splt (re #"(?:$ysym\*)"))             ; Splat symbol
 (def asym (re #"(?:\*$symw)"))             ; Alias symbol
@@ -165,13 +163,12 @@
 (def ksym (re #"(?x)
                 (?:
                   (?:
-                    $fsym |
-                    \$? $ysym |
-                    $xnum |
-                    $ukey |
+                    (?: \$ )? [a-zA-Z_] [-a-zA-Z0-9_]* |
+                    [-+]? [0-9]+ (?: \.[0-9]+)? |
                     [\)\]\}] |
                     \.
                       (?:
+                        [a-zA-Z0-9]+ (?: _ [a-zA-Z0-9]+ )+ |
                         \d+ |
                         \# |
                         \-\- |
@@ -184,14 +181,13 @@
                     \.?
                     \:
                     (?:
-                      (?:
-                        $nspc |
-                        $symw
-                      ) /
-                    )?
                     (?:
-                      $jsym |
-                      $symw [+?!]?
+                      [a-zA-Z] [-a-zA-Z0-9]*
+                      (?: :: [a-zA-Z] [-a-zA-Z0-9]*)*
+                    ) /
+                  )?
+                  (?:
+                      ~? [a-zA-Z_] [-a-zA-Z0-9_]* [+?!]?
                     )
                   )+
                   \*?
