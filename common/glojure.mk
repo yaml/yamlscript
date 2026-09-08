@@ -23,8 +23,12 @@ GO-YAML-PREPARE := $(ROOT)/core/gloat/prepare-go-yaml-parser
 GLOJURE-SRC-DIR := $(ROOT)/.cache/glojure-src
 GLOJURE-PREPARED-STAMP := $(GLOJURE-SRC-DIR)/.prepared
 GLOJURE-SRC-PREPARE := $(ROOT)/core/gloat/prepare-clojure-source
-GLOJURE-STDLIB-DIR := \
-  $(GLOAT-DIR)/.cache/local/cache/glojure-$(GLOJURE-VERSION)/pkg/stdlib
+GLOJURE-REF ?= v$(GLOJURE-VERSION)
+GLOJURE-REPO ?= https://github.com/glojurelang/glojure
+GLOJURE-UPSTREAM-DIR := \
+  $(ROOT)/.cache/glojure-source/glojure-$(GLOJURE-VERSION)
+GLOJURE-UPSTREAM-STAMP := $(GLOJURE-UPSTREAM-DIR)/.fetched
+GLOJURE-STDLIB-DIR := $(GLOJURE-UPSTREAM-DIR)/pkg/stdlib
 TOOLS-CLI-VERSION := 1.0.219
 TOOLS-CLI-JAR := \
   $(LOCAL-CACHE)/tools.cli-$(TOOLS-CLI-VERSION).jar
@@ -94,6 +98,17 @@ GLOJURE-SRCS := \
   $(ROOT)/core/src-glojure/yamlscript/compiler.clj \
   $(ROOT)/core/src-glojure/yamlscript/runtime.clj
 
+$(GLOJURE-UPSTREAM-STAMP):
+	rm -rf '$(GLOJURE-UPSTREAM-DIR).tmp'
+	mkdir -p $(dir $(GLOJURE-UPSTREAM-DIR))
+	git init '$(GLOJURE-UPSTREAM-DIR).tmp'
+	git -C '$(GLOJURE-UPSTREAM-DIR).tmp' fetch --depth=1 \
+	  '$(GLOJURE-REPO)' '$(GLOJURE-REF)'
+	git -C '$(GLOJURE-UPSTREAM-DIR).tmp' checkout --detach FETCH_HEAD
+	rm -rf '$(GLOJURE-UPSTREAM-DIR)'
+	mv '$(GLOJURE-UPSTREAM-DIR).tmp' '$(GLOJURE-UPSTREAM-DIR)'
+	touch '$@'
+
 $(GO-YAML-STAMP):
 	rm -rf '$(GO-YAML-SRC-DIR).tmp'
 	mkdir -p $(dir $(GO-YAML-SRC-DIR))
@@ -136,14 +151,14 @@ $(GLOJURE-TAPTEST-SRC): \
 
 $(GLOJURE-DEPS-CLJC-SRCS): \
   $(GLOJURE-SRC-DIR)/vendor/%.clj: \
-  $(GLOAT) $(GLOJURE-SRC-PREPARE) $(PERL) \
+  $(GLOJURE-UPSTREAM-STAMP) $(GLOJURE-SRC-PREPARE) $(PERL) \
   $(ROOT)/common/glojure.mk
 	test -f $(GLOJURE-STDLIB-DIR)/$*.cljc
 	$(PERL) $(GLOJURE-SRC-PREPARE) \
 	  $(GLOJURE-STDLIB-DIR)/$*.cljc $@
 
 $(GLOJURE-DEPS-FACADE): \
-  $(GLOAT) $(GLOJURE-SRC-PREPARE) $(PERL) \
+  $(GLOJURE-UPSTREAM-STAMP) $(GLOJURE-SRC-PREPARE) $(PERL) \
   $(ROOT)/common/glojure.mk
 	test -f $(GLOJURE-STDLIB-DIR)/glojure/deps.clj
 	mkdir -p $(dir $@)

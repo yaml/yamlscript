@@ -1,6 +1,6 @@
 include $(COMMON)/version.mk
-GLOAT-VERSION := 0.1.80
-GLOJURE-VERSION := 0.7.15
+GLOAT-VERSION := 0.1.81
+GLOJURE-VERSION := 0.7.16
 YAMLSCRIPT_ENGINE ?= glojure
 DATA-JSON-VERSION := 2.4.0
 include $(MAKES)/graalvm.mk

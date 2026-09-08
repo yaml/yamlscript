@@ -73,7 +73,7 @@ use clojure::math::combinatorics:
 use mathy:
   :from 'gist:ingydotnet/f70409675d234aa4f2fe379cd975a4f5/mathy.clj'
 use grenadine::require-deps:
-  :from 'github:clojurestar/grenadine/v0.1.7/src/grenadine/require_deps.cljc'
+  :from 'github:clojurestar/grenadine/v0.1.12/src/grenadine/require_deps.cljc'
 ```
 
 The module name on the left must match the namespace provided by `:from`.
