@@ -6,7 +6,7 @@ ROOT := $(shell \
 YAMLSCRIPT_VERSION := 0.2.32
 
 YS-FILES := $(filter-out %-build-report.html,\
-	$(wildcard ys ys.exe ys-[0-9]* ys-sh-[0-9]*))
+	$(wildcard ys ys.exe ys-[0-9]*))
 YS := $(firstword $(YS-FILES))
 LIBYS := $(firstword $(wildcard libys.so* libys.dylib* libys.dll))
 LIBYS-FILES := $(wildcard libys.so* libys.dylib* libys.dll)
@@ -26,7 +26,7 @@ ifneq (,$(wildcard m2/repository))
 ifneq (0,$(M2))
 	@if [[ $$(id -u) == 0 ]]; then \
 	  echo "Not installing the ys.v0 jars into ~/.m2 (running as root)."; \
-	  echo "Run 'ys-sh-$(YAMLSCRIPT_VERSION) --install-m2' as a normal"; \
+	  echo "Run 'ys --install-m2' as a normal"; \
 	  echo "user to enable java free 'ys -T bb' scripts."; \
 	else \
 	  mkdir -p $$HOME/.m2/repository; \

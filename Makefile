@@ -659,7 +659,6 @@ ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
 else
 	ln -fs $(notdir $(CLI-BIN)) $</ys-$(API_VERSION)
 	ln -fs $(notdir $(CLI-BIN)) $</ys
-	cp -p $(CLI-BIN-BASH:%=ys/%) $</
 endif
 else
 	cp -p $(CLI-BIN:%=ys/%) $</ys.wasm

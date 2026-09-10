@@ -16,9 +16,9 @@ CLI-BIN := $(if $(filter graalvm,$(YAMLSCRIPT_ENGINE)),\
 CLI-OUT := $(CLI-BIN)
 CLI-SRC := \
   src/yamlscript/cli.clj \
+  src/yamlscript/util/install.clj \
+  src/yamlscript/util_platform.clj \
 
-CLI-BIN-BASH := bin/ys-sh-$(YS_VERSION)
-CLI-BIN-BASH-SRC := share/ys-0.bash
 
 CLI-JAR := \
   target/uberjar/yamlscript.cli-$(YS_VERSION)-SNAPSHOT-standalone.jar
@@ -31,9 +31,7 @@ CLI-JAR-DEPS += \
   $(CORE-INSTALLED) \
   $(CLI-SRC) \
 
-CLI-DEPS := \
-  $(CLI-BIN) \
-  $(CLI-BIN-BASH) \
+CLI-DEPS := $(CLI-BIN)
 
 ifdef YS_NATIVE_BUILD_STATIC
 ifeq (true,$(IS-LINUX))

@@ -9,6 +9,8 @@
    [yamlscript.global :as global]
    [yamlscript.module.pprint :as pprint]
    [yamlscript.process :as process]
+   [yamlscript.util.install :as util]
+   [yamlscript.util-platform :as util-platform]
    [yamlscript.module.csv :as csv]
    [ys.v0.global :as v0-global]
    [ys.v0.ipc :as ipc]
@@ -43,7 +45,8 @@
     "  -S, --stack-trace        Print full stack traces for errors\n"
     "  -x, --xtrace             Trace expressions before evaluation\n\n"
     "      --install            Install the libys shared library\n"
-    "      --upgrade            Upgrade ys and libys\n\n"
+    "      --upgrade            Upgrade ys and libys\n"
+    "      --install-m2         Install the ys.v0 jars into ~/.m2\n\n"
     "      --version            Print version and exit\n"
     "  -h, --help               Print this help and exit"))
 
@@ -105,7 +108,7 @@
    "--unordered" :unordered "--clojure" :clojure
    "--stack-trace" :stack-trace "--xtrace" :xtrace
    "--help" :help "--version" :version "--install" :install
-   "--upgrade" :upgrade})
+   "--upgrade" :upgrade "--install-m2" :install-m2})
 
 (def long-values
   {"--eval" :eval "--file" :file "--output" :output
@@ -162,12 +165,12 @@
         (option-name (second enabled)) " are mutually exclusive."))))
 
 (def all-options
-  #{:clojure :compile :debug :debug-stage :eval :file :help :install
+  #{:clojure :compile :debug :debug-stage :eval :file :help :install :install-m2
     :json :load :mode :output :print :stack-trace :stream :to :unordered
     :upgrade :version :xtrace :yaml})
 
 (def action-options
-  #{:compile :help :install :load :upgrade :version})
+  #{:compile :help :install :install-m2 :load :upgrade :version})
 
 (def format-options #{:json :to :yaml})
 
@@ -182,6 +185,11 @@
                (empty? (:eval opts)) (dissoc :eval)
                (empty? (:debug-stage opts)) (dissoc :debug-stage))]
     (or
+    (when (and (some opts [:install :upgrade :install-m2])
+               (seq (:arguments opts)))
+      "Installation commands do not accept file arguments.")
+    (some #(conflicts-with opts % (disj all-options % :stack-trace))
+      [:install :upgrade :install-m2])
     (when (and (code-formats (:to opts)) (:clojure opts))
       (str "Options --to=" (:to opts)
         " and --clojure are mutually exclusive."))
@@ -192,11 +200,11 @@
     (conflict opts format-options)
     (conflicts-with opts :help (disj all-options :help))
     (conflicts-with opts :version (disj all-options :version))
-    (conflicts-with opts :mode #{:help :install :upgrade :version})
-    (conflicts-with opts :eval #{:help :install :upgrade :version})
+    (conflicts-with opts :mode #{:help :install :install-m2 :upgrade :version})
+    (conflicts-with opts :eval #{:help :install :install-m2 :upgrade :version})
     (conflicts-with opts :print
-      #{:compile :help :install :load :upgrade :version})
-    (conflicts-with opts :to #{:help :install :upgrade :version})
+      #{:compile :help :install :install-m2 :load :upgrade :version})
+    (conflicts-with opts :to #{:help :install :install-m2 :upgrade :version})
     (when (and (:to opts)
            (not ((into data-formats code-formats) (:to opts))))
       (str "--to must be one of:\n"
@@ -502,13 +510,8 @@
     (finally
       (runtime/unload-pods))))
 
-(defn run-installer [option]
-  (let [[executable error] (os.Executable)]
-    (when-not (nil? error) (throw error))
-    (let [installer (path:filepath.Join
-                      (path:filepath.Dir executable)
-                      (str "ys-sh-" yamlscript-version))]
-      (ipc/exec installer option))))
+(defn run-installer [command]
+  (util/run-installer (util-platform/context) command yamlscript-version))
 
 (defn main* [argv]
   (let [opts (-> (parse-args argv)
@@ -535,8 +538,9 @@
       (:help opts) (println usage-text)
       (:version opts)
       (println (str "YS (YAMLScript) " yamlscript-version))
-      (:install opts) (run-installer "--install")
-      (:upgrade opts) (run-installer "--upgrade")
+      (:install opts) (run-installer :install)
+      (:upgrade opts) (run-installer :upgrade)
+      (:install-m2 opts) (run-installer :install-m2)
       (and (empty? argv) (not (:load opts))) (println usage-text)
       :else
       (let [info (input-info opts)

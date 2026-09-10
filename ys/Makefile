@@ -48,8 +48,6 @@ ifneq ($(OS-NAME),windows)
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%-$(API_VERSION))
 	ln -fs $(notdir $(CLI-BIN)) \
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%)
-	install -m 755 $(CLI-BIN-BASH) \
-	  $(PREFIX)/bin/
 endif
 # The -T bb/clj/star compile targets need the ys.v0 and data.json
 # jars in ~/.m2:
@@ -63,6 +61,13 @@ test-all: test-unit test-run
 
 test-unit: $(LEIN) $(CORE-INSTALLED)
 	lein test $(lein-test)
+
+test-install: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED)
+ifeq ($(YAMLSCRIPT_ENGINE),graalvm)
+	$(MAKE) build-glojure
+endif
+	YS_INSTALL_TEST_BIN=$(abspath $(CLI-BIN)) \
+	  lein test yamlscript.util-test yamlscript.install-cli-test
 
 ifdef YS_RELEASE_USE_INSTALLED_YS
 TEST-RUN-DEPS := $(PERL) $(BPAN-LOCAL)
@@ -140,6 +145,8 @@ else ifeq ($(YAMLSCRIPT_ENGINE),glojure)
 
 GLOAT-CLI-SRCS := \
   $(GLOJURE-SRCS) \
+  src/yamlscript/util/install.clj \
+  gloat/src/yamlscript/util_platform.clj \
   gloat/src/yamlscript/cli.clj
 
 $(CLI-BIN-GLOJURE): \
@@ -161,11 +168,6 @@ endif
 else
 $(error Unknown YAMLSCRIPT_ENGINE '$(YAMLSCRIPT_ENGINE)')
 endif
-
-$(CLI-BIN-BASH): $(CLI-BIN-BASH-SRC)
-	mkdir -p $(dir $@)
-	cp $< $@
-	chmod 755 $@
 
 $(CLI-JAR): $(LEIN) $(CLI-JAR-DEPS)
 	lein uberjar

@@ -88,7 +88,7 @@ defn download-releases(version):
 defn release-shas(version):
   reduce _ hash-map() release-files(version):
     fn(shas file):
-      shas.assoc(file sha256(file))
+      shas.put(file sha256(file))
 
 
 defn sha256(file):
@@ -148,14 +148,13 @@ defn ys-formula(version class shas):
         bin.install "ys"
         bin.install "ys-0"
         bin.install "ys-#{version}"
-        bin.install "ys-sh-#{version}"
       end
 
       def caveats
         <<~EOS
           To run 'ys -T bb' compiled scripts under babashka
           without java, install the ys.v0 jars into ~/.m2 with:
-            ys-sh-#{version} --install-m2
+            ys --install-m2
         EOS
       end
 

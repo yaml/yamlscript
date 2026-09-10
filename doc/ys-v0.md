@@ -56,7 +56,7 @@ when run as root (system installs), and you can install them per user at
 any time with:
 
 ```bash
-$ ys-sh-0.2.32 --install-m2
+$ ys --install-m2
 ```
 
 (Homebrew installs print this as a caveat, since brew cannot write to

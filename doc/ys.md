@@ -54,6 +54,7 @@ Options:
 
       --install            Install the libys shared library
       --upgrade            Upgrade both ys and libys
+      --install-m2         Install the ys.v0 jars into ~/.m2
 
       --version            Print version and exit
   -h, --help               Print this help and exit

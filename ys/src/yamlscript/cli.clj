@@ -8,7 +8,7 @@
   (:gen-class)
   (:require
    [babashka.fs :as fs]
-   [babashka.process :refer [check exec process]]
+   [babashka.process :refer [check process]]
    [clj-yaml.core :as yaml]
    [clojure.data.csv :as csv]
    [clojure.data.json :as json]
@@ -22,7 +22,9 @@
    [ys.v0.global :refer [env]]
    [yamlscript.compiler :as compiler]
    [yamlscript.global :as global]
-   [yamlscript.runtime :as runtime])
+   [yamlscript.runtime :as runtime]
+   [yamlscript.util.install :as util]
+   [yamlscript.util-platform :as util-platform])
   (:refer-clojure))
 
 (def yamlscript-version "0.2.32")
@@ -156,6 +158,8 @@
     "Install the libys shared library"]
    [nil "--upgrade"
     "Upgrade both ys and libys"]
+   [nil "--install-m2"
+    "Install the ys.v0 jars into ~/.m2"]
 
    [nil "--version"
     "Print version and exit"]
@@ -171,21 +175,8 @@
 
 (declare add-ys-mode-tag)
 
-(defn get-ys-sh-path []
-  (let [path (-> (java.lang.ProcessHandle/current) .info .command .get)
-        cmd (if (re-find #"-openjdk-" path)
-              (str "ys-sh-" yamlscript-version)
-              (str/replace path #"/[^/]*$"
-                (str "/ys-sh-" yamlscript-version)))]
-    [cmd path]))
-
-(defn do-install [_opts _args]
-  (let [[cmd] (get-ys-sh-path)]
-    (exec cmd "--install")))
-
-(defn do-upgrade [_opts _args]
-  (let [[cmd] (get-ys-sh-path)]
-    (exec cmd "--upgrade")))
+(defn run-installer [command]
+  (util/run-installer (util-platform/context) command yamlscript-version))
 
 (defn do-version []
   (println (str "YS (YAMLScript) " yamlscript-version)))
@@ -560,11 +551,11 @@ Options:
     :mode :clojure
     ;:repl :nrepl :kill
     :debug-stage :stack-trace :xtrace
-    :install :upgrade
+    :install :upgrade :install-m2
     :version :help})
 
 (def action-opts
-  #{:run :load :compile
+  #{:run :load :compile :install :upgrade :install-m2
     :repl :nrepl :kill
     :version :help})
 
@@ -594,6 +585,8 @@ Options:
 (defn validate-opts [opts]
   (let [opts (elide-empty opts :eval :debug-stage)]
     (or
+      (some #(mutex1 opts % (set/difference all-opts #{% :stack-trace}))
+        [:install :upgrade :install-m2])
       (mutex opts action-opts)
       (mutex opts format-opts)
       (mutex1 opts :help (set/difference all-opts #{:help}))
@@ -622,8 +615,9 @@ Options:
       (condp #(%1 %2) opts
         :help (do-help help)
         :version (do-version)
-        :install (do-install opts args)
-        :upgrade (do-upgrade opts args)
+        :install (run-installer :install)
+        :upgrade (run-installer :upgrade)
+        :install-m2 (run-installer :install-m2)
         :run (do-run opts args)
         :compile (do-compile opts args)
         :load (do-run opts args)
@@ -727,7 +721,12 @@ Options:
                (and (not (seq (:eval opts))) (:load opts) "-"))
         opts (if file (assoc opts :file file) opts)
         args (if filed (rest args) args)
-        args (vec args)]
+        args (vec args)
+        error (or error
+                (when (some opts [:install :upgrade :install-m2])
+                  (or (validate-opts opts)
+                      (when (or file (seq args))
+                        "Installation commands do not accept file arguments."))))]
     (when (env "YS_SHOW_OPTS")
       (println (yaml/generate-string{:opts opts :args args})))
     [opts args error errs help]))
@@ -742,7 +741,7 @@ Options:
   (let [[opts args error errs help] (get-opts argv)
         out (:output opts)]
     (reset! global/opts opts)
-    (if out
+    (if (and out (not error) (empty? errs))
       (with-open [out (io/writer out)]
         (binding [*out* out]
           (do-main opts args help error errs)))

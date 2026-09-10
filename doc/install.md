@@ -79,6 +79,39 @@ in.
 -->
 
 
+### Install and Upgrade with `ys`
+
+Once `ys` is installed, it can install or upgrade release files directly:
+
+```bash
+ys --install                         # Install libys
+ys --upgrade                         # Upgrade ys and libys
+ys --install-m2                      # Install runtime jars for ys -T bb
+VERSION=0.2.32 ys --upgrade           # Select a release
+PREFIX=/tmp/yamlscript ys --upgrade  # Select an installation prefix
+```
+
+These commands support Linux and macOS on x64 and ARM64.
+They use system tools such as `curl` and `tar`, without running an installer
+script or an archive's Makefile.
+Upgrades install the default Glojure build, including upgrades from GraalVM.
+
+`VERSION` defaults to the latest published release.
+`PREFIX` defaults to the installation containing the running executable.
+Relative prefixes are resolved from the current directory.
+`BIN=1` selects only `ys`; otherwise `LIB=1` selects only `libys`.
+`TARBALL=/path/to/release.tar.xz` installs a local release archive instead of
+downloading one, selecting `ys` or `libys` from the archive name.
+`QUIET=1` suppresses installation messages.
+
+Installing `ys` also installs its bundled Maven resources into `~/.m2`, unless
+`M2=0` is set or the installer is running as root.
+Run `ys --install-m2` as your normal user to install missing runtime JARs and
+POMs for the running `ys` version.
+This command preserves existing files and extracts the runtime JAR when
+`unzip` is available.
+
+
 ### Download and Install
 
 All the binary pre-built release files are
