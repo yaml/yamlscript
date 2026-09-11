@@ -24,6 +24,7 @@
    [yamlscript.global :as global]
    [yamlscript.runtime :as runtime]
    [yamlscript.util.install :as util]
+   [yamlscript.util.compile :as build]
    [yamlscript.util-platform :as util-platform])
   (:refer-clojure))
 
@@ -65,7 +66,7 @@
 ;; Data output formats for --load:
 (def to-fmts #{"json" "yaml" "csv" "tsv" "edn"})
 ;; Code targets for --compile:
-(def to-code-fmts #{"bb" "clj" "star"})
+(def to-code-fmts build/targets)
 
 (def stages
   {"parse" true
@@ -91,7 +92,7 @@
     "Explicitly indicate input file"]
 
    ["-c" "--compile"
-    "Compile YS to Clojure"]
+    "Compile YS to source or an artifact"]
 
    ["-p" "--print"
     "Print the final evaluation result value"]
@@ -104,12 +105,12 @@
     "Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, star"
+                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm"
     :validate
-    [#(contains? (set/union to-fmts to-code-fmts) %1)
+    [#(or (contains? to-fmts %1) (build/code-target? %1))
      (str "must be one of:\n"
        "  json, yaml, csv, tsv, edn (for --load)\n"
-       "  bb, clj, star (for --compile)")]]
+       "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)")]]
    ["-J" "--json"
     "Output (pretty) JSON for --load"]
    ["-Y" "--yaml"
@@ -399,7 +400,7 @@ Options:
 
 ;; Resolve the ys.v0 dependency through the dialect-neutral clojurestar.deps
 ;; API shared by compatible Clojure runtimes.
-(def v0-star-header
+(def v0-clj-plus-header
   (str
     "(when-not (find-ns 'ys.v0)\n"
     "  (require 'clojurestar.deps)\n"
@@ -410,7 +411,7 @@ Options:
 (def to-code-headers
   {"bb" v0-bb-header
    "clj" v0-clj-header
-   "star" v0-star-header})
+   "clj+" v0-clj-plus-header})
 
 (defn v0-bb-script?
   "Is the compiled output an executable babashka script file?"
@@ -429,13 +430,17 @@ Options:
     clojure))
 
 (defn do-compile [opts args]
-  (let [[code _ _ #_file #_args] (get-compiled-code opts)
-        clojure (pretty-clojure code)
-        clojure (compiled-output opts clojure)]
-    (println clojure)
-    (when (v0-bb-script? opts)
-      (.setExecutable (io/file (:output opts)) true false))
-    (System/exit 0)))
+  (try
+    (let [ctx (util-platform/context)
+          _ (build/check-outputs! ctx opts)
+          [code file _] (get-compiled-code opts)
+          clojure (pretty-clojure code)]
+      (if (build/gloat-targets (:to opts))
+        (build/compile! ctx opts
+          (build/gloat-source clojure yamlscript-version) file)
+        (build/write-source! ctx opts (str (compiled-output opts clojure) "\n")))
+      (System/exit 0))
+    (catch Exception e (err e))))
 
 (def line (str (str/join (repeat 80 "-")) "\n"))
 
@@ -574,7 +579,7 @@ Options:
 (defn to-code-conflict
   "A code target --to value conflicts with data output options."
   [opts]
-  (when (contains? to-code-fmts (:to opts))
+  (when (build/code-target? (:to opts))
     (some
       (fn [key]
         (when (key opts)
@@ -662,7 +667,7 @@ Options:
         opts (if (env "YS_STREAM")
                (assoc opts :stream (env "YS_STREAM")) opts)
         opts (if (and
-                   out
+                   out (not (:compile opts))
                    (re-find #"\.(?:yml|yaml|json|csv|tsv|edn)$" out)
                    (not (:to opts)))
                (let [to (str/replace out #".*\.(\w+)$" "$1")
@@ -673,7 +678,7 @@ Options:
         ;; --compile:
         opts (if (contains? to-fmts (:to opts))
                (assoc opts :load true) opts)
-        opts (if (contains? to-code-fmts (:to opts))
+        opts (if (build/code-target? (:to opts))
                (assoc opts :compile true) opts)
         opts (if (env "YS_PRINT") (assoc opts :print true) opts)
         opts (if (and (env "YS_PRINT_EVAL")
@@ -718,8 +723,9 @@ Options:
                         [(first args) (rest args)]
                         [nil args]))
         file (or file
-               (and (not (seq (:eval opts))) (:load opts) "-"))
+               (and (not (seq (:eval opts))) (or (:load opts) (:compile opts)) "-"))
         opts (if file (assoc opts :file file) opts)
+        opts (build/resolve-options opts)
         args (if filed (rest args) args)
         args (vec args)
         error (or error
@@ -738,10 +744,13 @@ Options:
 
 (defn -main [& argv]
   (global/reset-env nil)
-  (let [[opts args error errs help] (get-opts argv)
+  (let [[opts args error errs help]
+        (try (get-opts argv)
+          (catch Exception e
+            [{} [] (.getMessage e) nil nil]))
         out (:output opts)]
     (reset! global/opts opts)
-    (if (and out (not error) (empty? errs))
+    (if (and out (not (:compile opts)) (not error) (empty? errs))
       (with-open [out (io/writer out)]
         (binding [*out* out]
           (do-main opts args help error errs)))

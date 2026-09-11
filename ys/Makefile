@@ -7,7 +7,17 @@ include $(COMMON)/docker.mk
 include $(COMMON)/glojure.mk
 
 include $(MAKES)/perl.mk
+ifneq (,$(filter test-compile-real,$(MAKECMDGOALS)))
+export UV_CACHE_DIR := $(LOCAL-CACHE)/uv
+export UV_PYTHON_INSTALL_BIN := 0
+include $(MAKES)/python.mk
+include $(MAKES)/node.mk
+include $(MAKES)/wasmtime.mk
+endif
+
 include $(MAKES)/shell.mk
+
+YS_COMPILE_REAL_GLOAT ?= $(abspath $(GLOAT-BIN)/gloat)
 
 BPAN-LOCAL := .bpan
 BPAN-REPO-URL := https://github.com/bpan-org/bpan
@@ -49,7 +59,7 @@ ifneq ($(OS-NAME),windows)
 	ln -fs $(notdir $(CLI-BIN)) \
 	  $(PREFIX)/$(CLI-BIN:%-$(YS_VERSION)=%)
 endif
-# The -T bb/clj/star compile targets need the ys.v0 and data.json
+# The -T bb/clj/clj+ compile targets need the ys.v0 and data.json
 # jars in ~/.m2:
 	$(MAKE) -C $(ROOT)/v0 install
 
@@ -61,6 +71,18 @@ test-all: test-unit test-run
 
 test-unit: $(LEIN) $(CORE-INSTALLED)
 	lein test $(lein-test)
+
+test-compile: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED)
+	YS_COMPILE_TEST_BIN=$(abspath $(CLI-BIN)) \
+	  lein test yamlscript.compile-test
+
+test-compile-real: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED) \
+    $(GLOAT-RUN) $(PYTHON) $(NODE) $(WASMTIME)
+	YS_COMPILE_TEST_BIN=$(abspath $(CLI-BIN)) \
+	  YS_COMPILE_REAL_GLOAT=$(YS_COMPILE_REAL_GLOAT) \
+	  YS_COMPILE_PYTHON=$(PYTHON) \
+	  YS_COMPILE_NODE=$(NODE) YS_COMPILE_WASMTIME=$(WASMTIME) \
+	  lein test :only yamlscript.compile-test/real-gloat-artifacts
 
 test-install: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED)
 ifeq ($(YAMLSCRIPT_ENGINE),graalvm)
@@ -146,6 +168,7 @@ else ifeq ($(YAMLSCRIPT_ENGINE),glojure)
 GLOAT-CLI-SRCS := \
   $(GLOJURE-SRCS) \
   src/yamlscript/util/install.clj \
+  src/yamlscript/util/compile.clj \
   gloat/src/yamlscript/util_platform.clj \
   gloat/src/yamlscript/cli.clj
 

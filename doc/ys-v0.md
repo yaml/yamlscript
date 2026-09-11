@@ -96,11 +96,11 @@ $ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.2.32"}}}' \
 
 ## Portable Clojure dialects
 
-The `star` target emits a dialect-neutral dependency preamble through
+The `clj+` target emits a dialect-neutral dependency preamble through
 the `clojurestar.deps` API.
 
 ```bash
-$ ys --to=star program.ys > program.clj
+$ ys --to=clj+ program.ys > program.clj
 ```
 
 Compatible runtimes such as Glojure, Jolt, and Gobb provide that API.

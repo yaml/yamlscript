@@ -19,7 +19,7 @@ HELP =: |
     -l, --load               Output the (compact) JSON of YS evaluation
     -f, --file FILE          Explicitly indicate input file
 
-#   -c, --compile            Compile YS to Clojure
+#   -c, --compile            Compile YS to source or an artifact
 #   -p, --print              Print the final evaluation result value
 #   -o, --output FILE        Output file for --load or --compile
 #   -s, --stream             Output all results from a multi-document stream
@@ -27,7 +27,7 @@ HELP =: |
 #   -T, --to FORMAT          Output format for --load:
 #                              json, yaml, csv, tsv, edn
 #                            or target for --compile:
-#                              bb, clj, star
+#                              bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm
 #   -J, --json               Output (pretty) JSON for --load
 #   -Y, --yaml               Output YAML for --load
 #   -U, --unordered          Mappings don't preserve key order (faster)
@@ -113,7 +113,7 @@ test::
 
     (say 123)
 
-- cmnd: "ys -T star -e 'say: 123'"
+- cmnd: "ys -T clj+ -e 'say: 123'"
   want: |
     (when-not (find-ns 'ys.v0)
       (require 'clojurestar.deps)
@@ -133,21 +133,21 @@ test::
   what: err
   want: 'Error: Options --to=bb and --load are mutually exclusive.'
 
-- cmnd: "ys -T star -l -e 'say: 123'"
+- cmnd: "ys -T clj+ -l -e 'say: 123'"
   what: err
-  want: 'Error: Options --to=star and --load are mutually exclusive.'
+  want: 'Error: Options --to=clj+ and --load are mutually exclusive.'
 
 - cmnd: "ys -T frob -e 'say: 123'"
   what: err
-  have: 'bb, clj, star (for --compile)'
+  have: 'bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)'
 
 - cmnd: "ys -T jolt -e 'say: 123'"
   what: err
-  have: 'bb, clj, star (for --compile)'
+  have: 'bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)'
 
 - cmnd: "ys -T glj -e 'say: 123'"
   what: err
-  have: 'bb, clj, star (for --compile)'
+  have: 'bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)'
 
 # -T bb with -o makes an executable bb script
 - name: ys -T bb -o file

@@ -1,0 +1,6 @@
+!ys-0
+
+use: ys::json
+
+defn main(x):
+  say: json/dump([x, x])

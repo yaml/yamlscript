@@ -1,13 +1,61 @@
 package goyamlparser
 
 import (
+	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/glojurelang/glojure/pkg/lang"
 	"github.com/glojurelang/glojure/pkg/pkgmap"
 )
+
+// StartCompileProgress returns a completion callback that stops its ticker.
+func StartCompileProgress(pending, success, failure string) func(bool) {
+	started := time.Now()
+	info, err := os.Stderr.Stat()
+	terminal := err == nil && info.Mode()&os.ModeCharDevice != 0 &&
+		os.Getenv("TERM") != "dumb"
+	_, noColor := os.LookupEnv("NO_COLOR")
+	fmt.Fprint(os.Stderr, "… ", pending)
+	done, stopped := make(chan struct{}), make(chan struct{})
+	if terminal {
+		go func() {
+			defer close(stopped)
+			ticker := time.NewTicker(time.Second)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-ticker.C:
+					fmt.Fprint(os.Stderr, ".")
+				case <-done:
+					return
+				}
+			}
+		}()
+	} else {
+		fmt.Fprintln(os.Stderr)
+		close(stopped)
+	}
+	return func(ok bool) {
+		close(done)
+		<-stopped
+		marker, message, color := "X", failure, "\x1b[31m"
+		if ok {
+			marker, color = "√", "\x1b[32m"
+			message = fmt.Sprintf("%s (%.1fs)", success, time.Since(started).Seconds())
+		}
+		if terminal {
+			fmt.Fprint(os.Stderr, "\r\x1b[2K")
+			if !noColor {
+				marker = color + marker + "\x1b[0m"
+			}
+		}
+		fmt.Fprintln(os.Stderr, marker, message)
+	}
+}
 
 func init() {
 	pkgmap.Set(
@@ -18,6 +66,27 @@ func init() {
 
 func WriteTextFile(path, text string, mode int64) error {
 	return os.WriteFile(path, []byte(text), os.FileMode(mode))
+}
+
+// WriteNewTextFile writes compiled source without replacing an existing path.
+func WriteNewTextFile(path, text string, mode int64) error {
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return err
+	}
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, os.FileMode(mode))
+	if err != nil {
+		return err
+	}
+	_, writeErr := io.WriteString(f, text)
+	closeErr := f.Close()
+	if writeErr != nil || closeErr != nil {
+		os.Remove(path)
+		if writeErr != nil {
+			return writeErr
+		}
+		return closeErr
+	}
+	return nil
 }
 
 var (

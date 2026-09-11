@@ -1,0 +1,6 @@
+!ys-0
+
+EXPORT =::
+  answer: [int]
+
+defn answer(): 42

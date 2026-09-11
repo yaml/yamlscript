@@ -10,6 +10,7 @@
    [yamlscript.module.pprint :as pprint]
    [yamlscript.process :as process]
    [yamlscript.util.install :as util]
+   [yamlscript.util.compile :as build]
    [yamlscript.util-platform :as util-platform]
    [yamlscript.module.csv :as csv]
    [ys.v0.global :as v0-global]
@@ -28,13 +29,13 @@
     "                             multiple -e values are joined by newline\n"
     "  -l, --load               Output the (compact) JSON of YS evaluation\n"
     "  -f, --file FILE          Explicitly indicate input file\n\n"
-    "  -c, --compile            Compile YS to Clojure\n"
+    "  -c, --compile            Compile YS to source or an artifact\n"
     "  -p, --print              Print the final evaluation result value\n"
     "  -o, --output FILE        Write load or compile output to FILE\n"
     "  -s, --stream             Output all multi-document results\n\n"
     "  -T, --to FORMAT          Output format or compile target\n"
     "                             json, yaml, csv, tsv, edn\n"
-    "                             bb, clj, star\n"
+    "                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm\n"
     "  -J, --json               Output pretty JSON for --load\n"
     "  -Y, --yaml               Output YAML for --load\n"
     "  -U, --unordered          Do not preserve mapping key order\n\n"
@@ -51,7 +52,7 @@
     "  -h, --help               Print this help and exit"))
 
 (def data-formats #{"json" "yaml" "csv" "tsv" "edn"})
-(def code-formats #{"bb" "clj" "star"})
+(def code-formats build/targets)
 (def stages
   #{"parse" "compose" "resolve" "build" "transform" "construct" "print"})
 
@@ -209,7 +210,7 @@
            (not ((into data-formats code-formats) (:to opts))))
       (str "--to must be one of:\n"
         "  json, yaml, csv, tsv, edn (for --load)\n"
-        "  bb, clj, star (for --compile)"))
+        "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)"))
     (when (and (:mode opts) (not (seq (:eval opts))))
       "Option --mode requires --eval.")
     (when (and (:mode opts)
@@ -234,7 +235,7 @@
 
 (defn infer-output-format [opts]
   (let [output (:output opts)]
-    (if (and output (not (:to opts))
+    (if (and output (not (:compile opts)) (not (:to opts))
           (re-find #"\.(?:yml|yaml|json|csv|tsv|edn)$" output))
       (let [format (str/replace output #".*\.(\w+)$" "$1")]
         (assoc opts :to (if (= format "yml") "yaml" format)))
@@ -313,7 +314,7 @@
                  opts)]
       (str (mode-tag opts code) "\n"))))
 
-(defn input-info [opts]
+(defn input-selection [opts]
   (let [positionals (:arguments opts)
         first-arg (first positionals)
         expr-arg? (and (not (seq (:eval opts)))
@@ -327,8 +328,13 @@
                  (first positionals))
                (when-not (seq expressions) (first positionals))
                (when (and (:load opts)
-                       (or expr-arg? (not (seq expressions)))) "-"))
-        args (if file (rest positionals) positionals)
+                       (or expr-arg? (not (seq expressions)))) "-")
+               (when (and (:compile opts) (not (seq expressions))) "-"))
+        args (if file (rest positionals) positionals)]
+    {:file file :expressions expressions :args (vec args)}))
+
+(defn input-info [opts]
+  (let [{:keys [file expressions args]} (input-selection opts)
         file-code (when file
                     (str (if (= file "-")
                            (read-stdin)
@@ -376,7 +382,7 @@
     "       '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
     yamlscript-version "\"}}}))))\n"))
 
-(def v0-star-header
+(def v0-clj-plus-header
   (str
     "(when-not (find-ns 'ys.v0)\n"
     "  (require 'clojurestar.deps)\n"
@@ -408,7 +414,7 @@
     "               (try (require lib) (catch Throwable _))))))))\n"))
 
 (def code-headers
-  {"bb" v0-bb-header "clj" v0-clj-header "star" v0-star-header})
+  {"bb" v0-bb-header "clj" v0-clj-header "clj+" v0-clj-plus-header})
 
 (defn external-format [code formatter]
   (when (= runtime.GOOS "wasip1")
@@ -518,6 +524,7 @@
                (assoc :original-argv (vec argv))
                apply-environment
                infer-output-format)
+        opts (build/resolve-options opts (:file (input-selection opts)))
         positional? (positional-expression? opts)
         opts (if positional?
                (assoc opts :load true)
@@ -551,9 +558,16 @@
             (println (pretty-code code))
             (println (apply str (repeat 80 "-")))))
         (if (:compile opts)
-          (write-output
-            (compile-output opts code) opts
-            (and (= "bb" (:to opts)) (:output opts)))
+          (let [ctx (util-platform/context)]
+            (build/check-outputs! ctx opts)
+            (if (build/gloat-targets (:to opts))
+              (do
+                (when (= runtime.GOOS "wasip1")
+                  (throw (ex-info "Gloat compilation is not available in the WASI build" {})))
+                (build/compile! ctx opts
+                  (build/gloat-source (pretty-code code) yamlscript-version)
+                  (:file info)))
+              (build/write-source! ctx opts (str (compile-output opts code) "\n"))))
           (run-code opts info code))))))
 
 (defn error-message [error stack-trace?]

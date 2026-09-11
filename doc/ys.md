@@ -27,7 +27,7 @@ Options:
   -l, --load               Output the (compact) JSON of YS evaluation
   -f, --file FILE          Explicitly indicate input file
 
-  -c, --compile            Compile YS to Clojure
+  -c, --compile            Compile YS to source or an artifact
 
   -p, --print              Print the final evaluation result value
   -o, --output FILE        Output file for --load or --compile
@@ -36,7 +36,7 @@ Options:
   -T, --to FORMAT          Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, star
+                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -U, --unordered          Mappings don't preserve key order (faster)
@@ -317,3 +317,92 @@ $ ys -cd program.ys
   ([name] (greet name 1)))
 (+++ (apply main ARGS))
 ```
+
+## Compiling Programs
+
+`ys -c` writes Clojure to standard output.
+With `--output`, the filename selects the compilation target:
+
+| Output | Target | Result |
+|--------|--------|--------|
+| `foo` or `foo.exe` | `bin` | Native executable |
+| `foo.go` | `go` | Generated Go source |
+| `foo/` | `dir` | Buildable Go project |
+| `foo.so`, `foo.dylib`, `foo.dll` | `lib` | Shared library |
+| `foo.h` | `h` | FFI header |
+| `foo.js` | `js` | Browser-target Wasm bytes |
+| `foo.html` | `html` | HTML runner and companion `foo.js` |
+| `foo.wasm` | `wasm` | WASI preview 1 module |
+| `foo.clj` | `clj` | Clojure source |
+| `foo.bb` | `bb` | Executable Babashka script |
+
+An explicit `--to` selects the target regardless of the filename and implies
+`--compile`.
+Unknown extensions require `--to`.
+Binary, library, header, directory, and Wasm targets require an output path.
+For artifact targets, a `.ys` input supplies a default output in the current
+directory: its basename with the final `.ys` replaced by the target extension.
+`--to=bin` removes `.ys`; `--to=dir` creates a directory with that basename.
+`--to=wasm` writes `.wasm`, and `--to=js` writes `.js`.
+`--to=so`, `--to=dylib`, and `--to=dll` are aliases for `--to=lib` that select
+the corresponding default filename extension.
+`--to=lib` chooses `.so`, `.dylib`, or `.dll` for the target platform.
+Add `;h` to a library target to also write its matching header, for example
+`-T'so;h'` or `-T'dylib;h;darwin/amd64'`.
+An explicit header path in `--output` takes precedence over the matching name.
+`--to=h` writes `.h`; `--to=html` writes `.html` and a companion `.js`.
+This also applies to cross-compilation.
+For example, `ys sample/rosetta-code/99-bottles-of-beer.ys -cTbin` writes
+`./99-bottles-of-beer`.
+Using `-cTwasm` instead writes `./99-bottles-of-beer.wasm`.
+Text targets `go`, `clj`, `clj+`, and `bb` continue to use standard output when
+no output path is supplied.
+Existing output files, directories (even empty ones), and symlinks cause an
+error.
+Normal data output without `--compile` retains its existing behavior.
+Artifact compilation shows a progress line and elapsed time on standard error.
+In a terminal, a dot appears each second and the final status replaces the line.
+The success mark is green and the failure mark is red; `NO_COLOR` disables color.
+Gloat's build diagnostics are shown only on failure.
+
+```bash
+ys foo.ys -c -o foo
+ys foo.ys --to=bin -o foo.xyz
+ys -ce 'say: 42' -o answer
+ys -c - -o answer < foo.ys
+ys foo.ys -c -o 'foo;darwin/amd64'
+ys foo.ys --to='bin;darwin/amd64' -o foo.xyz
+ys foo.ys -c -o 'lib/foo.so;include/foo.h'
+ys foo.ys -c -o 'foo.so;.h;darwin/amd64'
+ys foo.ys -c -o 'foo.js;.html'
+ys foo.ys -c -o 'assets/foo.js;pages/foo.html'
+```
+
+Output specifications have the form `PRIMARY[;COMPANION][;OS/ARCH]`.
+Quote arguments containing semicolons so the shell passes them intact.
+An extension-only companion replaces the primary extension and keeps its
+location.
+Shared libraries publish a header only when requested.
+A standalone `.h` request builds a temporary shared library and retains its
+header, using Gloat's `EXPORT` declarations and ABI.
+Browser `.js` files contain Wasm, not JavaScript source.
+Serve the generated HTML and Wasm through an HTTP server to run them.
+HTML companions reference the final relative Wasm location.
+
+Compilation uses Gloat's Glojure engine, from either native `ys` engine.
+`YS_GLOAT` can select a specific Gloat executable.
+Otherwise `ys` looks beside its executable and on `PATH`.
+If Gloat is missing, `ys` must be installed under a writable `PREFIX/bin/`
+directory; it installs Gloat into that prefix through `https://in-1.cc`.
+The prefix restriction applies only when Gloat needs installation.
+Gloat manages build dependencies; shared-library and header cross-compilation
+also require the target C toolchain.
+
+For development, `make -C ys test-compile` runs the compiler wrapper tests.
+`make -C ys test-compile-real` also builds real artifacts, calls the shared
+library, checks cross-compilation, and runs browser-target Wasm under Node
+and WASI under Wasmtime.
+Makes provisions the test tools.
+Use `YAMLSCRIPT_ENGINE=graalvm` to select the GraalVM CLI for these checks.
+Generated project Makefiles inherit Makes' restriction on paths containing
+spaces; choose a directory without spaces when building through that Makefile.

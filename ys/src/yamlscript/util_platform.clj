@@ -19,8 +19,46 @@
       {:exit exit :out out :err (if (zero? exit) "" out)})
     (catch Exception e {:exit 1 :out "" :err (.getMessage e)})))
 
+(defn start-progress [pending success failure]
+  (let [writer *err*
+        started (System/nanoTime)
+        terminal? (and (System/console) (not= "dumb" (System/getenv "TERM")))
+        color? (and terminal? (nil? (System/getenv "NO_COLOR")))
+        emit (fn [text] (binding [*out* writer] (print text) (flush)))
+        _ (emit (str "… " pending (when-not terminal? "\n")))
+        ticker (when terminal?
+                 (doto (Thread.
+                         ^Runnable
+                         (fn []
+                           (try
+                             (loop [] (Thread/sleep 1000) (emit ".") (recur))
+                             (catch InterruptedException _))))
+                   (.setDaemon true)
+                   (.start)))]
+    (fn [ok?]
+      (when ticker (.interrupt ticker) (.join ticker))
+      (emit (str (when terminal? "\r\u001b[2K")
+              (when color? (if ok? "\u001b[32m" "\u001b[31m"))
+              (if ok? "√" "X") (when color? "\u001b[0m") " "
+              (if ok? success failure)
+              (when ok?
+                (format " (%.1fs)" (/ (- (System/nanoTime) started) 1e9)))
+              "\n")))))
+
 (defn context []
   {:run run-command
+   :start-progress start-progress
+   :write spit :read slurp
+   :exists? #(or (fs/exists? %) (fs/sym-link? %))
+   :write-source (fn [path text executable?]
+                   (fs/create-dirs (fs/parent (fs/absolutize path)))
+                   (fs/create-file path)
+                   (try
+                     (spit path text)
+                     (when executable? (.setExecutable (fs/file path) true false))
+                     (catch Exception e (fs/delete path) (throw e))))
+   :absolute #(str (fs/normalize (fs/absolutize %)))
+   :relative #(str (fs/relativize %1 %2))
    :entries #(mapv (comp str fs/file-name) (fs/list-dir %))
    :json json/read-str
    :os (System/getProperty "os.name")

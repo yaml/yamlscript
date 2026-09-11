@@ -17,6 +17,7 @@ CLI-OUT := $(CLI-BIN)
 CLI-SRC := \
   src/yamlscript/cli.clj \
   src/yamlscript/util/install.clj \
+  src/yamlscript/util/compile.clj \
   src/yamlscript/util_platform.clj \
 
 
