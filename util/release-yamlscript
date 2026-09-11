@@ -269,8 +269,7 @@ defn do-sanity-check(old new):
   say: '✓ Working tree is clean'
 
   # Validate new version format
-  when-not new =~ /^0\.[12]\.\d+$/:
-    die: "ERROR: Invalid version format: $new\nExpected: 0.X.Y"
+  check-version: new 'new'
 
   say: "✓ New version format valid: $new"
   say: '✓ All sanity checks passed'

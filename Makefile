@@ -212,6 +212,9 @@ ifdef PREFIX
 override PREFIX := $(abspath $(PREFIX))
 endif
 
+ifdef a
+export YS_RELEASE_ALLOW_BRANCH := 1
+endif
 ifdef d
 export YS_RELEASE_DRYRUN := 1
 endif
@@ -314,8 +317,11 @@ endif
 $(RELEASE-BINDINGS): release-binding-version-check $(GH)
 	$(MAKE) -C $(@:release-%=%) release
 
+# Use a=1 to release from any branch and d=1 to preview release actions.
 ifneq (,$(or $s,$(YS_RELEASE_ID),$(YS_RELEASE_NO_CHECK)))
 release: _release-yamlscript
+else ifdef d
+release: release-check _release-yamlscript
 else
 release: release-check realclean release-pull _release-yamlscript
 endif
@@ -327,8 +333,10 @@ ifndef YS_RELEASE_ALLOW_BRANCH
 	$(error Must be on branch 'main' to release)
 endif
 endif
+ifndef d
 ifeq (,$(RELEASE-AUTH))
 	$(error YS release requires GH_TOKEN or $(SECRETS) file)
+endif
 endif
 endif
 ifndef d
