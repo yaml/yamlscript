@@ -40,6 +40,36 @@ realclean::
 
 test:: $(LIBYS-SO-FQNP)
 
+ifeq ($(YAMLSCRIPT_ENGINE),glojure)
+test:: test-abi
+
+test-abi: $(LIBYS-SO-FQNP)
+
+# This target tests unpacked release artifacts without rebuilding libys.
+test-abi test-installed-abi:
+	$(CC) -Wall -Wextra -Werror $(if $(filter windows,$(OS-NAME)),,-pthread) \
+	  -I$(LIBYS-LIB) -DLIBYS_HEADER='"$(notdir $(LIBYS-API-HEADER))"' \
+	  test/abi.c $(LIBYS-SO-FQNP) -o $(LIBYS-LIB)/test-abi
+	PATH="$(LIBYS-LIB):$$PATH" $(LIBYS-LIB)/test-abi
+
+test-handles: $(GLOAT)
+	mkdir -p $(ROOT)/.cache/libys-handle-tests
+	cp gloat/native/* gloat/include/*.h $(ROOT)/.cache/libys-handle-tests/
+	printf 'module libys-handle-tests\n\ngo 1.24.0\n\nrequire github.com/glojurelang/glojure v%s\n' \
+	  $(GLOJURE-VERSION) > $(ROOT)/.cache/libys-handle-tests/go.mod
+	$(MAKE) --no-print-directory -s -C $(GLOAT-DIR) path-go \
+	  > $(ROOT)/.cache/libys-handle-tests/go-path
+	cd $(ROOT)/.cache/libys-handle-tests && \
+	  go_bin=$$(tail -n1 go-path) && \
+	  if [ -n "$$GLOJURE_DIR" ]; then \
+	    "$$go_bin" mod edit \
+	      -replace github.com/glojurelang/glojure="$$GLOJURE_DIR"; \
+	  fi && \
+	  GOPATH=$(LOCAL-CACHE)/libys-go \
+	  GOCACHE=$(LOCAL-CACHE)/libys-go-build \
+	    "$$go_bin" test -mod=mod -race -v .
+endif
+
 repl-deps:: $(LIBYS-JAR-PATH)
 
 ifeq ($(YAMLSCRIPT_ENGINE),graalvm)
@@ -73,13 +103,19 @@ GLOAT-LIBYS-SRCS := \
   $(GLOJURE-SRCS) \
   gloat/src/libys.clj
 
+GLOAT-LIBYS-NATIVE := $(wildcard gloat/native/* gloat/include/*.h)
+
 $(LIBYS-SO-GLOJURE): \
-  $(GLOAT) $(GLOJURE-PREPARED-STAMP) $(GLOAT-LIBYS-SRCS)
+  $(GLOAT) $(GLOJURE-PREPARED-STAMP) $(GLOAT-LIBYS-SRCS) \
+  $(GLOAT-LIBYS-NATIVE)
 	mkdir -p $(dir $@)
+	mkdir -p $(ROOT)/.cache/libys-native
+	cp gloat/native/* gloat/include/*.h $(ROOT)/.cache/libys-native/
 	</dev/null env -u GOROOT \
 	  GLOAT_YS_RUNTIME=all \
 	  GLOAT_MODULE=github.com/yaml/yamlscript \
 	  GLOAT_EXTRA_GO_DIR=$(GO-YAML-GENERATED-DIR) \
+	  GLOAT_EXTRA_GO_MAIN_DIR=$(ROOT)/.cache/libys-native \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
 	  $(GLOAT-LIBYS-SRCS) -o $@

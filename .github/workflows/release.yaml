@@ -147,7 +147,9 @@ jobs:
       run: make test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        make -C libys test-installed-abi
 
     - name: Run tests
       env:
@@ -198,7 +200,9 @@ jobs:
       run: make test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        make -C libys test-installed-abi
 
     - name: Run tests
       env:
@@ -245,7 +249,9 @@ jobs:
       run: make test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        make -C libys test-installed-abi
 
     - name: Run tests
       env:
@@ -302,7 +308,9 @@ jobs:
       run: make test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        make -C libys test-installed-abi
 
     - name: Run tests
       env:
@@ -355,7 +363,9 @@ jobs:
       run: make test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        make -C libys test-installed-abi
 
     - name: Run tests
       env:
@@ -410,7 +420,9 @@ jobs:
       run: make test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        make -C libys test-installed-abi
 
     - name: Run tests
       env:
@@ -987,7 +999,9 @@ jobs:
       run: gmake test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        gmake -C libys test-installed-abi
 
     - name: Add libys to PATH
       run: |
@@ -1085,7 +1099,9 @@ jobs:
       run: gmake test-core
 
     - name: Install release artifacts
-      run: util/install-release-artifacts release-artifacts
+      run: |
+        util/install-release-artifacts release-artifacts
+        gmake -C libys test-installed-abi
 
     - name: Add libys to PATH
       run: |

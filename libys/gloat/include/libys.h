@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-char *load_ys_to_json(
+LIBYS_API char *load_ys_to_json(
   graal_isolatethread_t *thread, const char *yamlscript);
 
 #ifdef __cplusplus

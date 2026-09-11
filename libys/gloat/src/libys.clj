@@ -1,27 +1,12 @@
 (ns libys
-  "Gloat EXPORT bridge for the libys C API."
+  "Evaluation implementation behind the native libys C API."
   (:require
    [yamlscript.compiler :as compiler]
    [yamlscript.glojure-runtime :as runtime]
    [ys.v0.json :as json]))
 
-(def EXPORT
-  {"graal-create-isolate"     [:int :int :int :int]
-   "graal-tear-down-isolate"  [:int :int]
-   "graal-attach-thread"      [:int :int :int]
-   "graal-detach-thread"      [:int :int]
-   "graal-get-current-thread" [:int :int]
-   "graal-get-isolate"        [:int :int]
-   "load-ys-to-json"          [:int :str :str]})
-
-;; Keep the GraalVM lifecycle ABI for existing bindings. Glojure uses a
-;; process-wide Go runtime, so there is no isolate to create or destroy.
-(defn graal-create-isolate [_params _isolate _thread] 0)
-(defn graal-tear-down-isolate [_thread] 0)
-(defn graal-attach-thread [_isolate _thread] 0)
-(defn graal-detach-thread [_thread] 0)
-(defn graal-get-current-thread [_isolate] 0)
-(defn graal-get-isolate [_thread] 0)
+;; The handwritten native main package owns the public exports.
+(def EXPORT {})
 
 (def initialized? (atom false))
 

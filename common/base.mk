@@ -5,6 +5,10 @@ SHELL := bash
 
 ROOT-MAKE := $(abspath $(dir $(lastword $(MAKEFILE_LIST)))/..)
 ROOT := $(shell cd '$(ROOT-MAKE)' && pwd -P)
+ifeq ($(OS),Windows_NT)
+ROOT := $(shell cygpath -am '$(ROOT)')
+endif
+ROOT-MAKE := $(ROOT)
 export ROOT
 
 M := $(ROOT-MAKE)/.cache/makes
@@ -20,6 +24,9 @@ COMMON := $(ROOT-MAKE)/common
 include $(COMMON)/vars.mk
 
 SUBDIR = $(shell pwd)
+ifeq ($(OS),Windows_NT)
+SUBDIR := $(shell cygpath -am '$(CURDIR)')
+endif
 SUBDIR := $(SUBDIR:$(ROOT)/%=%)
 
 export YSLANG := $(SUBDIR)
