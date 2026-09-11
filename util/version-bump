@@ -1,8 +1,9 @@
 #!/usr/bin/env ys-0
 
 use:
-  fs:
-  str:
+  ys::fs: :as fs
+  ys::str: :as str
+# use: fs str   # change when 0.3.0 is released
 
 ROOT =: ENV.ROOT ||
   die("'ROOT' env var not defined")

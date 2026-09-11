@@ -1,10 +1,11 @@
 #!/usr/bin/env ys-0
 
 use:
-  fs: :all
-  ipc: :all
-  str:
-  yaml:
+  ys::str: :as str
+  ys::yaml: :as yaml
+# use: str yaml   # change when 0.3.0 is released
+# use fs: :all   # change when 0.3.0 is released
+# use ipc: :all   # change when 0.3.0 is released
 
 # This script automates the YAMLScript release process.
 #
@@ -286,7 +287,8 @@ defn confirm(msg default='y'):
       else: "$msg [y/N]: "
 
   print: prompt-text
-  answer =: readline():trim
+  answer =: read-line():trim
+  # answer =: readline():trim   # change when 0.3.0 is released
 
   if answer.?:
     if answer =~ /^[Yy]/:
@@ -338,7 +340,8 @@ defn do-changelog(old new):
   o: "Updating 'Changes' file"
 
   when-not dryrun:
-    when-not e(changes-file):
+    when-not fs-e(changes-file):
+    # when-not e(changes-file):   # change when 0.3.0 is released
       changes =: make-changes-entry(ctx)
       write changes-file: changes
 
@@ -630,7 +633,8 @@ defn o(msg): say("\n$msg")
 
 defn prompt(msg):
   print: "$msg "
-  trim: readline()
+  trim: read-line()
+  # trim: readline()   # change when 0.3.0 is released
 
 defn file-prepend(file text):
   write file:

@@ -1,9 +1,10 @@
 #!/usr/bin/env ys-0
 
 use:
-  fs:
-  http: :all
-  ipc: :all
+  ys::fs: :as fs
+# use: fs   # change when 0.3.0 is released
+# use http: :all   # change when 0.3.0 is released
+# use ipc: :all   # change when 0.3.0 is released
 
 releases-url =: 'https://github.com/yaml/yamlscript/releases'
 brew-url =: ENV.YS_HOMEBREW_URL ||

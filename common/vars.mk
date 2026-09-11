@@ -8,7 +8,7 @@ include $(MAKES)/maven.mk
 ifeq ($(OS-NAME),windows)
 YS ?= $(ROOT)/ys/bin/ys-$(YS_VERSION).exe
 else
-include $(MAKES)/ys.mk
+include $(MAKES)/yamlscript.mk
 endif
 
 export YS_TMPDIR := $(LOCAL-TMP)

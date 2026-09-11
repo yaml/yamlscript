@@ -1,6 +1,10 @@
 #!/usr/bin/env ys-0
 
-use: fs str ys
+use:
+  ys::fs: :as fs
+  ys::str: :as str
+  ys::ys: :as ys
+# use: fs str ys   # change when 0.3.0 is released
 
 input-dir =: atom(nil)
 

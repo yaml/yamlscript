@@ -1,7 +1,7 @@
 include $(MAKES)/clojure.mk
 include $(MAKES)/lein.mk
 ifneq ($(OS-NAME),windows)
-include $(MAKES)/ys.mk
+include $(MAKES)/yamlscript.mk
 endif
 
 YAMLSCRIPT-CORE-INSTALLED := \
