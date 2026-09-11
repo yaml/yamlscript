@@ -97,8 +97,10 @@ vo =: v-old.str/replace(/\./ '\\.')
     - ai/claude/ys-skill/skills/yamlscript/SKILL.md
     - ai/codex/.agents/skills/yamlscript/SKILL.md
     - blog/2023-12-07.md
+    - ys/gloat/src/yamlscript/cli.clj
     - ys/src/yamlscript/cli.clj
     - ys/test/cli-usage.t
+    - ys/test/yamlscript/util_test.clj
 
 #------------------------------------------------------------------------------
 # These changes are very specific to not accidentally but something wrongly.
@@ -115,7 +117,6 @@ vo =: v-old.str/replace(/\./ '\\.')
     - v0/project.clj
     - ys/deps.edn
     - ys/project.clj
-    - ys/share/ys-0.bash
 
   - regx:: "(yamlscript\/core.*)${vp}(.*)"
     file:
