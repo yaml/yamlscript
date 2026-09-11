@@ -1,6 +1,6 @@
 name = "ingydotnet/yamlscript"
 
-version = "0.2.32"
+version = "0.3.0"
 
 readme = "ReadMe.md"
 

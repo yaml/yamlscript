@@ -43,8 +43,8 @@ You can install both `ys` and `libys` with a single CLI command, where:
 Examples:
 ```bash
 $ curl https://yamlscript.org/install | bash
-$ curl https://yamlscript.org/install | VERSION=0.2.32 bash
-$ curl https://yamlscript.org/install | VERSION=0.2.32 LIB=1 bash
+$ curl https://yamlscript.org/install | VERSION=0.3.0 bash
+$ curl https://yamlscript.org/install | VERSION=0.3.0 LIB=1 bash
 $ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
 ```
 
@@ -87,7 +87,7 @@ Once `ys` is installed, it can install or upgrade release files directly:
 ys --install                         # Install libys
 ys --upgrade                         # Upgrade ys and libys
 ys --install-m2                      # Install runtime jars for ys -T bb
-VERSION=0.2.32 ys --upgrade           # Select a release
+VERSION=0.3.0 ys --upgrade           # Select a release
 PREFIX=/tmp/yamlscript ys --upgrade  # Select an installation prefix
 ```
 

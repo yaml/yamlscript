@@ -22,5 +22,5 @@
   source: "src",
   tags: "",
   userCommandScript: "",
-  version: "0.2.32",
+  version: "0.3.0",
 }

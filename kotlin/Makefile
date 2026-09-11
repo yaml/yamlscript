@@ -6,7 +6,7 @@ include $(MAKES)/shell.mk
 
 export JAVA_TOOL_OPTIONS := -Djna.tmpdir=$(ROOT)/.cache/jna
 
-KOTLIN-YAMLSCRIPT-JAR := target/kotlin-yamlscript-0.2.32.jar
+KOTLIN-YAMLSCRIPT-JAR := target/kotlin-yamlscript-0.3.0.jar
 MAVEN-CENTRAL-ARTIFACT := kotlin-yamlscript
 MAVEN-CENTRAL-JAR := $(KOTLIN-YAMLSCRIPT-JAR)
 MAVEN-CENTRAL-SOURCE-FILES := \

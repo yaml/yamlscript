@@ -1,3 +1,21 @@
+- version: 0.3.0
+  date:    Fri Sep 11 02:21:00 PM EDT 2026
+  changes:
+  - release: Bound binding checks
+  - core: Rename use deps option
+  - core: Require explicit module imports
+  - core: Retire require in favor of use
+  - core: Separate side-effect modules
+  - core: Complete Glojure runtime parity
+  - core: Silence valid shadow warnings
+  - build: Update Glojure release inputs
+  - cli: Move installation into native binaries
+  - cli: Restore artifact compilation with Gloat
+  - cli: Add standard aliases to expressions
+  - build: Keep utilities compatible with 0.2.32
+  - build: Support release branch and dry-run flags
+  - build: Update version bump targets
+  - build: Preserve generated compilation helpers
 - version: 0.2.32
   date:    Tue Aug 25 09:51:51 AM EDT 2026
   changes:

@@ -42,7 +42,7 @@
    [ys.v0.yaml]
    [ys.v0.ys]))
 
-(def VERSION "0.2.32")
+(def VERSION "0.3.0")
 
 ;; Load what this runtime can provide of the optional namespaces:
 (doseq [ns-sym manifest/optional-nses]

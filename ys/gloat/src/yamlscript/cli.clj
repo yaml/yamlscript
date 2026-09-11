@@ -18,7 +18,7 @@
    [ys.v0.json :as json]
    [ys.v0.yaml :as yaml]))
 
-(def yamlscript-version "0.2.32")
+(def yamlscript-version "0.3.0")
 
 (def usage-text
   (str
