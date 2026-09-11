@@ -318,6 +318,41 @@ $ ys -cd program.ys
 (+++ (apply main ARGS))
 ```
 
+## Standard Modules in Expressions
+
+YAMLScript expressions supplied with `-e` have the standard module aliases
+available automatically, including `fs`, `http`, `json`, and `yaml`.
+Positional expression shorthand has the same behavior:
+
+```bash
+ys -pe 'json/dump({})'
+```
+
+This is runtime setup in the current namespace.
+It preserves existing aliases and lets leading `ns` and `use` declarations
+establish their own aliases first.
+The input YAML, its mode and tags, and the generated compilation output are
+unchanged; nothing is wrapped in `=>:` or inserted into the document stream.
+Raw Clojure evaluation with `-C` keeps its existing behavior.
+
+Script files and compiled programs opt in explicitly:
+
+```yaml
+!ys-0
+use: v0
+say: json/dump({})
+```
+
+`use: ys::v0` is equivalent to `use: v0`.
+The umbrella import adds aliases for available public standard modules without
+referring their functions into the current namespace.
+It skips modules disabled by `YS_MODULES` or unavailable in the runtime,
+including restricted WASI modules.
+Explicit individual imports continue to report errors for those modules.
+Repeating the umbrella import is harmless; modifiers are not supported.
+When a file is followed by `-e`, automatic imports apply only while evaluating
+the expressions, after the file has run.
+
 ## Compiling Programs
 
 `ys -c` writes Clojure to standard output.

@@ -5,6 +5,7 @@
   (:require
    [clojure.test :refer [deftest is testing]]
    [ys.v0]
+   [ys.v0.ys :as ys]
    [ys.v0.manifest :as manifest]))
 
 ;; Symbols the compiler emits that must resolve after (ys.v0/init)
@@ -19,6 +20,39 @@
     to-num to-str to-vec get+
     DBG PPP WWW XXX
     load require use])
+
+(deftest umbrella-imports
+  (doseq [spelling ['v0 'ys.v0]]
+    (let [scratch (create-ns (gensym "umbrella-test-"))]
+      (try
+        (binding [*ns* scratch]
+          (refer-clojure)
+          (ys.v0/init)
+          (ys/+use scratch [spelling])
+          (ys/+use scratch [spelling])
+          (is (= "{}" (eval '(json/dump {}))))
+          (is (= "OK" (eval '(str/upper-case "ok")))))
+        (finally (remove-ns (ns-name scratch))))))
+  (let [scratch (create-ns (gensym "umbrella-aliases-"))]
+    (try
+      (binding [*ns* scratch]
+        (refer-clojure)
+        (ys.v0/init)
+        (alias 'json 'clojure.string)
+        (ys/+use scratch '[v0])
+        (is (= "OK" (eval '(json/upper-case "ok")))))
+      (finally (remove-ns (ns-name scratch)))))
+  (doseq [allowed [#{} '#{ys.json}]]
+    (let [scratch (create-ns (gensym "umbrella-limited-"))]
+      (try
+        (binding [*ns* scratch]
+          (refer-clojure)
+          (ys.v0/init)
+          (with-redefs [ys/configured-modules (constantly allowed)]
+            (ys/+use scratch '[v0])
+            (is (= (contains? allowed 'ys.json)
+                  (contains? (ns-aliases scratch) 'json)))))
+        (finally (remove-ns (ns-name scratch)))))))
 
 (deftest init-in-fresh-namespace
   (let [err (java.io.StringWriter.)

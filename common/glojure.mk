@@ -96,6 +96,7 @@ GLOJURE-SRCS := \
   $(ROOT)/core/src-glojure/yamlscript/regex.clj \
   $(GLOJURE-COMPILER-SRCS) \
   $(ROOT)/core/src-glojure/yamlscript/compiler.clj \
+  $(ROOT)/core/src/ys/v0/imports.clj \
   $(ROOT)/core/src-glojure/yamlscript/runtime.clj
 
 $(GLOJURE-UPSTREAM-STAMP):

@@ -13,6 +13,7 @@
    [ys.v0.common :refer [get-yspath]]
    [ys.v0.global :as global]
    [ys.v0.manifest :as manifest]
+   [ys.v0.imports :as imports]
    [ys.v0.re :as re]
    [ys.v0.util :as util])
   (:refer-clojure
@@ -243,7 +244,9 @@
       (do
         (binding [*ns* target]
           (clojure.core/require host-namespace)
-          (clojure.core/alias module host-namespace))
+          (when-not (and (:preserve-aliases options)
+                      (contains? (ns-aliases target) module))
+            (clojure.core/alias module host-namespace)))
         host-namespace)
       (do
         (case kind
@@ -316,37 +319,26 @@
           :when (= 'ys.v0.std (some-> var meta :ns ns-name))]
     (ns-unmap target sym)))
 
-(defn- short-module? [module]
-  (and (symbol? module)
-    (nil? (namespace module))
-    (not (str/includes? (str module) "."))))
-
-(defn normalize-use-forms [forms]
-  (let [forms (if (every? symbol? forms)
-                (map list forms)
-                (if (symbol? (first forms)) (list forms) forms))]
-    (map
-      (fn [form]
-        (let [[module & args] form]
-          (if (short-module? module)
-            (let [public-module (symbol (str "ys." module))]
-              (if (seq args)
-                (cons public-module args)
-                (list public-module :as module)))
-            form)))
-      forms)))
+(def normalize-use-forms imports/normalize-use-forms)
 
 (defn- portable-use [ns forms]
   (when-not (seq forms)
     (util/die "use requires at least one form"))
   (doseq [form forms]
-    (let [module (first form)
-          options (parse-use-args (rest form))
+    (if (= 'ys.v0 (first form))
+      (when-let [imports (seq (imports/v0-imports
+          (into #{} (filter #(find-ns (manifest/modules %))
+                      (keys manifest/modules)))
+          (ns-aliases ns) (configured-modules)))]
+        (portable-use ns imports))
+      (let [module (first form)
+          options (assoc (parse-use-args (rest form))
+                    :preserve-aliases (:umbrella (meta form)))
           loaded-module (load-portable-module ns module options)]
       (binding [*ns* ns]
         (when (and (= module 'ys.std) (selects-vars? options))
           (clear-portable-std ns))
-        (select-portable-vars loaded-module options))))
+        (select-portable-vars loaded-module options)))))
   nil)
 
 (defn +use [ns forms]

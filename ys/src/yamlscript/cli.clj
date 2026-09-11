@@ -270,23 +270,31 @@ Options:
               (println "Warning: No input found.")))
         code (str f-code e-code)
         file (or file "NO-NAME")]
-    [code file (:load opts)]))
+    [code file (:load opts)
+     (when e-code (count (re-seq #"\n" (or f-code ""))))]))
 
 (defn compile-code [code opts]
   (if (:clojure opts)
     code
     (try
       (if (seq (:debug-stage opts))
-        (compiler/compile-with-options code)
-        (compiler/compile code))
+        (compiler/compile-with-options code (:on-document opts))
+        (compiler/compile code (:on-document opts)))
       (catch Exception e
         (global/reset-error-msg-prefix! "Compile error: ")
         (err e)))))
 
 (defn get-compiled-code [opts]
-  (let [[code file load] (get-code opts)
+  (let [[code file load expression-line] (get-code opts)
+        documents (atom [])
+        opts (if (and expression-line (not (:compile opts))
+                   (not (:clojure opts)))
+               (assoc opts :on-document
+                 #(swap! documents conj
+                    (assoc % :auto-use-v0 (>= (:source-line %) expression-line))))
+               opts)
         code (if code (compile-code code opts) "")]
-    [code file load]))
+    [code file load @documents]))
 
 (def json-options
   {:escape-unicode false
@@ -446,10 +454,10 @@ Options:
 
 (defn do-run [opts args]
   (try
-    (let [[code file load] (get-compiled-code opts)
+    (let [[code file load documents] (get-compiled-code opts)
           _ (when (env "YS_SHOW_COMPILE")
               (eprint (str line (pretty-clojure code) "\n" line)))
-          result (runtime/eval-string code file args)
+          result (runtime/eval-string code file args documents)
           results (if (and (:stream opts) (or load
                                             (seq (:eval opts))))
                     @global/stream-values

@@ -25,7 +25,7 @@
       [[]])
     (map #(remove (fn [event] (= "DOC" (subs (:+ event) 1))) %))))
 
-(defn- compile-events [events stage]
+(defn- compile-events [events stage observer]
   (let [groups (parse-events-to-groups events)
         group-count (count groups)
         context {:first nil :last nil :init nil}]
@@ -45,17 +45,23 @@
             node (stage "construct" yamlscript.constructor/construct
                    [node context])
             block (stage "print" yamlscript.printer/print [node])
+            _ (when observer
+                (observer {:code block
+                           :source-line (or (first (:< (meta (first events)))) 0)}))
             blocks (conj blocks block)]
         (if (seq remaining)
           (recur remaining context blocks (inc index))
           (str/join "" blocks))))))
 
-(defn compile [yamlscript-string]
-  (reset! global/build-xstr builder/build-xstr)
-  (compile-events
-    (yamlscript.parser/parse yamlscript-string)
-    (fn [_stage-name stage-fn input-args]
-      (apply stage-fn input-args))))
+(defn compile
+  ([yamlscript-string] (compile yamlscript-string nil))
+  ([yamlscript-string observer]
+   (reset! global/build-xstr builder/build-xstr)
+   (compile-events
+     (yamlscript.parser/parse yamlscript-string)
+     (fn [_stage-name stage-fn input-args]
+       (apply stage-fn input-args))
+     observer)))
 
 (defn stage-with-options [stage-name stage-fn input-args]
   (let [start (time.Now)
@@ -68,13 +74,15 @@
       (println))
     value))
 
-(defn compile-with-options [yamlscript-string]
-  (reset! global/build-xstr builder/build-xstr)
-  (let [events (stage-with-options
-                 "parse"
-                 yamlscript.parser/parse
-                 [yamlscript-string])]
-    (compile-events events stage-with-options)))
+(defn compile-with-options
+  ([yamlscript-string] (compile-with-options yamlscript-string nil))
+  ([yamlscript-string observer]
+   (reset! global/build-xstr builder/build-xstr)
+   (let [events (stage-with-options
+                  "parse"
+                  yamlscript.parser/parse
+                  [yamlscript-string])]
+     (compile-events events stage-with-options observer))))
 
 (defn pretty-format [code]
   (->> (read-string (str "(do " code "\n)\n"))

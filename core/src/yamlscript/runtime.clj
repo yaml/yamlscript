@@ -6,6 +6,7 @@
 
 (ns yamlscript.runtime
   (:require
+   [ys.v0.imports :as imports]
    [babashka.pods]
    [babashka.pods.sci]
    ;; The ys.v0 namespaces resolve these backend libraries lazily (so
@@ -28,6 +29,8 @@
    ; [clojure.zip]
    [java-time.api]
    [sci.core :as sci]
+   [sci.ctx-store :as sci-store]
+   [yamlscript.externals :as externals]
    [ys.v0]
    [ys.v0.common :as common]
    [ys.v0.debug]
@@ -331,6 +334,22 @@
               :yamlscript ys-version}
    :yspath (common/get-cmd-path)})
 
+(defn- eval-expression-documents [ctx documents]
+  (sci-store/with-ctx ctx
+  (sci/binding [sci/ns global/main-ns]
+    (reduce
+      (fn [_ {:keys [code auto-use-v0]}]
+        (let [reader (sci/reader code)]
+          (loop [result nil]
+            (let [form (sci/parse-next ctx reader)]
+              (if (= :sci.core/eof form)
+                result
+                (do
+                  (when (and auto-use-v0 (imports/expression-imports? form))
+                    (sci/eval-form ctx '(use v0)))
+                  (recur (sci/eval-form ctx form))))))))
+      nil documents))))
+
 (defn eval-string
   "Evaluate generated Clojure code in the YAMLScript SCI context."
   ([clj]
@@ -340,6 +359,9 @@
    (eval-string clj file []))
 
   ([clj file args]
+   (eval-string clj file args nil))
+
+  ([clj file args documents]
    (sci/alter-var-root sci/out (constantly *out*))
    (sci/alter-var-root sci/err (constantly *err*))
    (sci/alter-var-root sci/in (constantly *in*))
@@ -370,13 +392,13 @@
          global/ENV (into {} (System/getenv))
          global/FILE file
          INC (common/get-yspath file)]
-         (let [resp (sci/eval-string+
-                      @global/sci-ctx
-                      clj
-                      {:ns global/main-ns})]
-           (ys/unload-pods)
+         (let [result (if (seq documents)
+                        (eval-expression-documents @global/sci-ctx documents)
+                        (:val (sci/eval-string+
+                                @global/sci-ctx clj {:ns global/main-ns})))]
+           (externals/unload-pods)
            (shutdown-agents)
-           (:val resp)))))))
+           result))))))
 
 (sci/intern @global/sci-ctx 'clojure.core 'eval-string eval-string)
 

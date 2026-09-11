@@ -16,6 +16,34 @@
 (defn fresh-context []
   (runtime/init-context))
 
+(deftest umbrella-imports
+  (doseq [spelling ["v0" "ys.v0"]]
+    (let [ctx (fresh-context)]
+      (is (= "{}" (sci/eval-string* ctx
+                    (str "(use " spelling ") (json/dump {})"))))
+      (is (= "{}" (sci/eval-string* ctx "(use v0) (json/dump {})")))
+      (doseq [module (keys manifest/modules)]
+        (is (some? (sci/eval-string* ctx
+                     (str "(get (ns-aliases *ns*) '"
+                       (subs (str module) 3) ")")))))))
+  (let [ctx (fresh-context)]
+    (is (= "OK" (sci/eval-string* ctx
+                  "(use str :as json) (use v0) (json/upper-case \"ok\")"))))
+  (let [ctx (fresh-context)]
+    (is (= "{}" (sci/eval-string* ctx
+                  "(use ys.json) (use v0) (json/dump {})"))))
+  (doseq [allowed [#{} '#{ys.json}]]
+    (with-redefs [ys/configured-modules (constantly allowed)]
+      (let [ctx (fresh-context)]
+        (sci/eval-string* ctx "(use v0)")
+        (is (= (contains? allowed 'ys.json)
+              (boolean (sci/eval-string* ctx
+                         "(get (ns-aliases *ns*) 'json)"))))
+        (is (thrown? Exception (sci/eval-string* ctx "(use http)"))))))
+  (doseq [form ["(use v0 :all)" "(use v0 :as x)" "(use ys.v0 :none)"]]
+    (is (thrown-with-msg? Exception #"does not accept modifiers"
+          (sci/eval-string* (fresh-context) form)))))
+
 (deftest uses-public-modules
   (testing "public modules are absent from a new context"
     (let [ctx (fresh-context)]

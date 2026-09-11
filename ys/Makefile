@@ -76,6 +76,10 @@ test-compile: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED)
 	YS_COMPILE_TEST_BIN=$(abspath $(CLI-BIN)) \
 	  lein test yamlscript.compile-test
 
+test-expression: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED)
+	YS_EXPRESSION_TEST_BIN=$(abspath $(CLI-BIN)) \
+	  lein test yamlscript.expression-test
+
 test-compile-real: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED) \
     $(GLOAT-RUN) $(PYTHON) $(NODE) $(WASMTIME)
 	YS_COMPILE_TEST_BIN=$(abspath $(CLI-BIN)) \

@@ -190,10 +190,19 @@ test::
 - cmnd: "ys -e \"if RUN.os: say('has-os') say('missing-os')\""
   want: has-os
 
-- name: Public module requires import
-  cmnd: "ys -e 'ys::fs/cwd()'"
+- name: Script public module requires import
+  cmnd: >-
+    bash -c 'printf "%s\n" "!ys-0" "ys::fs/cwd()" | ys -'
   what: err
   want: 'Error: Could not resolve symbol: ys.fs/cwd'
+
+- name: Expressions have standard aliases
+  cmnd: "ys -pe 'json/dump({})'"
+  want: '"{}"'
+
+- name: Umbrella imports standard aliases
+  cmnd: "ys -e 'use: v0' -pe '=>: json/dump({})'"
+  want: '"{}"'
 
 - name: Plain use enables full module name
   cmnd: >-
@@ -336,8 +345,9 @@ test::
   what: err
   want: 'Error: ys.fs is disabled by YS_MODULES'
 
-- name: Short module name requires alias
-  cmnd: "ys -e 'fs/cwd()'"
+- name: Script short module name requires alias
+  cmnd: >-
+    bash -c 'printf "%s\n" "!ys-0" "fs/cwd()" | ys -'
   what: err
   want: 'Error: Could not resolve symbol: fs/cwd'
 

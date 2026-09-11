@@ -37,9 +37,15 @@
       [[]])
     (map #(remove (fn [ev] (= "DOC" (subs (:+ ev) 1))) %1))))
 
+(defn- record-document [observer events code]
+  (when observer
+    (observer {:code code :source-line (or (first (:< (meta (first events)))) 0)}))
+  code)
+
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
-  [^String yamlscript-string]
+  ([yamlscript-string] (compile yamlscript-string nil))
+  ([^String yamlscript-string observer]
   (when (System/getenv "YS_SHOW_PARSER_INPUT")
     (debug/WWW "parser-input" yamlscript-string))
   (let [events (yamlscript.parser/parse yamlscript-string)
@@ -57,11 +63,12 @@
                                   yamlscript.builder/build
                                   yamlscript.transformer/transform
                                   (yamlscript.constructor/construct ctx)
-                                  yamlscript.printer/print))]
+                                  yamlscript.printer/print
+                                  (#(record-document observer events %))))]
                    (if (seq groups)
                      (recur groups ctx blocks (inc i))
                      blocks)))]
-    (str/join "" blocks)))
+    (str/join "" blocks))))
 
 (defmacro value-time
   "Evaluate body and return its value with the elapsed time string."
@@ -84,7 +91,8 @@
 
 (defn compile-with-options
   "Convert YAMLScript code string to an equivalent Clojure code string."
-  [^String yamlscript-string]
+  ([yamlscript-string] (compile-with-options yamlscript-string nil))
+  ([^String yamlscript-string observer]
   (when (System/getenv "YS_SHOW_PARSER_INPUT")
     (debug/WWW "parser-input" yamlscript-string))
   (let [events (stage-with-options "parse"
@@ -112,11 +120,12 @@
                                       yamlscript.constructor/construct
                                       [%1 ctx]))
                                   (#(stage-with-options "print"
-                                      yamlscript.printer/print [%1]))))]
+                                      yamlscript.printer/print [%1]))
+                                  (#(record-document observer events %))))]
                    (if (seq groups)
                      (recur groups ctx blocks (inc i))
                      blocks)))]
-    (str/join "" blocks)))
+    (str/join "" blocks))))
 
 (defn pretty-format
   "Pretty-print generated Clojure code as separate top-level forms."

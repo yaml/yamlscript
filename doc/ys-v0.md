@@ -35,6 +35,15 @@ The `ys.v0/init` call sets up the namespace to work like the ys runtime:
 The same compiled file still runs under ys itself (`ys -C file.clj`),
 where the header is a no-op.
 
+Use `use: v0` (or `use: ys::v0`) in a YAMLScript program to install the
+standard module aliases together, including `json`, `yaml`, `fs`, and `http`.
+The umbrella preserves existing aliases and imports only modules available
+in the runtime and permitted by `YS_MODULES`.
+It does not refer module functions into the calling namespace.
+This explicit import is retained in compiled output.
+The CLI also performs umbrella setup automatically when evaluating `-e`
+expressions; that runtime-only setup does not appear in compilation output.
+
 
 ## Babashka
 

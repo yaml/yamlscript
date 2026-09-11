@@ -342,6 +342,8 @@
         expr-code (expression-code opts expressions)
         load? (or (:load opts) (and file-code expr-code))]
     {:code (str file-code expr-code)
+     :expression-line (when expr-code
+                        (count (re-seq #"\n" (or file-code ""))))
      :file (or file "NO-NAME")
      :args (vec args)
      :load load?}))
@@ -358,8 +360,8 @@
   (if (:clojure opts)
     code
     (if (or (:debug opts) (seq (:debug-stage opts)))
-      (compiler/compile-with-options code)
-      (compiler/compile code))))
+      (compiler/compile-with-options code (:on-document opts))
+      (compiler/compile code (:on-document opts)))))
 
 (def v0-header
   "(ns main (:require ys.v0))\n(ys.v0/init)\n")
@@ -491,7 +493,12 @@
   (runtime/enter-main!)
   (runtime/set-runtime! (:file info) (:args info) (:original-argv opts))
   (try
-    (let [result (runtime/eval-code code)
+    (let [result (if (seq (:documents info))
+                   (reduce (fn [_ document]
+                             (runtime/eval-code (:code document)
+                               (:auto-use-v0 document)))
+                     nil (:documents info))
+                   (runtime/eval-code code))
           results (if (and (:stream opts) (:load info))
                     @v0-global/stream-values
                     [result])]
@@ -551,7 +558,17 @@
       (and (empty? argv) (not (:load opts))) (println usage-text)
       :else
       (let [info (input-info opts)
-            code (compile-code (:code info) opts)]
+            documents (atom [])
+            expression-line (:expression-line info)
+            opts (if (and expression-line (not (:compile opts))
+                       (not (:clojure opts)))
+                   (assoc opts :on-document
+                     #(swap! documents conj
+                        (assoc % :auto-use-v0
+                          (>= (:source-line %) expression-line))))
+                   opts)
+            code (compile-code (:code info) opts)
+            info (assoc info :documents @documents)]
         (when (env "YS_SHOW_COMPILE")
           (binding [*out* *err*]
             (println (apply str (repeat 80 "-")))

@@ -3,10 +3,13 @@
 
 (ns ys.ys
   (:require
+   [ys.v0.imports :as imports]
    [clojure.java.io :as io]
    [clojure.string :as str]
    [sci.core :as sci]
+   [sci.ctx-store :as sci-store]
    [ys.v0.common :refer [abspath dirname]]
+   [ys.v0.manifest :as manifest]
    [yamlscript.compiler]
    [yamlscript.externals :as externals]
    [yamlscript.global :as global]
@@ -103,7 +106,16 @@
   (reduce (fn [_ form]
             (let [module (first form)
                   args (rest form)]
-              (externals/use-module ns module args)))
+              (if (= module 'ys.v0)
+                (let [ctx (try (sci-store/get-ctx)
+                            (catch Throwable _ @global/sci-ctx))
+                      aliases (:val (sci/eval-string+ ctx
+                                      "(ns-aliases *ns*)" {:ns ns}))]
+                  (when-let [imports (seq (imports/v0-imports
+                                           (set (keys manifest/modules)) aliases
+                                           (ys.v0.ys/configured-modules)))]
+                    (+use ns imports)))
+                (externals/use-module ns module args))))
     nil forms)
   nil)
 

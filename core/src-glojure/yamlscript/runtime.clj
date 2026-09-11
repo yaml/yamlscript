@@ -5,6 +5,7 @@
 
 (ns yamlscript.glojure-runtime
   (:require
+   [ys.v0.imports :as imports]
    [clojure.string :as str]
    [clojure.math]
    [clojure.set]
@@ -185,7 +186,15 @@
 (declare load-external-module!)
 
 (defn apply-use [target forms]
-  (doseq [[module kind public-module & args] (normalize-use-forms forms)]
+  (doseq [form (imports/normalize-use-forms forms)]
+    (if (= 'ys.v0 (first form))
+      (apply-use target
+        (imports/v0-imports
+          (into #{} (remove #(and (= runtime.GOOS "wasip1")
+                              (wasi-restricted-modules %))
+                      (keys builtin-modules)))
+          (ns-aliases target) (configured-modules)))
+      (let [[module kind public-module & args] (normalize-form form)]
     (check-module-access! public-module)
     (swap! enabled-modules conj public-module)
     (let [options (option-map args)
@@ -193,9 +202,11 @@
                    module
                    (load-external-module! target module options))]
       (binding [*ns* target]
-        (when (= kind :builtin)
+        (when (and (= kind :builtin)
+                (not (and (:umbrella (meta form))
+                       (contains? (ns-aliases target) public-module))))
           (clojure.core/alias public-module module))
-        (select-vars module options))))
+        (select-vars module options))))))
   nil)
 
 (defn- check-form-access! [form]
@@ -226,10 +237,17 @@
             :when (and (symbol? sym) (contains? refers sym))]
       (ns-unmap *ns* sym))))
 
+(def ^:dynamic *auto-use-v0* false)
+
+(defn- prepare-expression! [form]
+  (when (and *auto-use-v0* (imports/expression-imports? form))
+    (apply-use *ns* '(v0))))
+
 (defn- eval-forms [forms]
   (loop [forms forms result nil]
     (if-let [form (first forms)]
       (let [namespace-form? (and (seq? form) (= 'ns (first form)))
+            _ (prepare-expression! form)
             _ (check-form-access! form)
             _ (unmap-referred-definitions! form)
             result (eval form)]
@@ -264,19 +282,23 @@
 
     :else form))
 
-(defn eval-code [code]
+(defn eval-code
+  ([code] (eval-code code false))
+  ([code auto-use-v0]
+  (binding [*auto-use-v0* auto-use-v0]
   (loop [forms (map portable-form
                  (seq (read-string (str "[" code "\n]"))))
          result nil]
     (if-let [form (first forms)]
       (let [namespace-form? (and (seq? form) (= 'ns (first form)))
+            _ (prepare-expression! form)
             _ (check-form-access! form)
             _ (unmap-referred-definitions! form)
             result (eval-document form)]
         (when namespace-form?
           (install! *ns*))
         (recur (next forms) result))
-      result)))
+      result)))))
 
 (declare eval-yamlscript normalize-error-message)
 
