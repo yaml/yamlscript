@@ -1,5 +1,3 @@
-include $(MAKES)/graalvm.mk
-
 MVN ?= mvn --batch-mode --no-transfer-progress
 
 YAMLSCRIPT-JAVA-INSTALLED := \

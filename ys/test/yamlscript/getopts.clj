@@ -90,7 +90,13 @@
     [{:eval ["a: b"], :mode "b", :load true} []])
 
   (is (ys "-ce" "std/say: 123")
-    [{:eval ["std/say: 123"], :compile true, :mode "code"} []])
+    [{:eval ["std/say: 123"]
+      :compile true
+      :mode "code"
+      :to nil
+      :output nil
+      :build {:target nil :platform nil :outputs []}}
+     []])
 
   (is (ys "-lp") "Options --print and --load are mutually exclusive.")
 

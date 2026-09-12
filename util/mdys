@@ -15,7 +15,7 @@ defn main(input-file):
   reset! input-dir: dir
 
   mdys-lib =: "$dir/mdys.ys"
-  when fs/f(mdys-lib):
+  when fs/e(mdys-lib):
     load: mdys-lib
 
   markdown =: input-file:process:trim
@@ -96,9 +96,11 @@ defn format-mdys(text):
         error-fmt orig:
           "No function '$func-name' found"
     else:
+      text .=: replace(/^!ys-0:\n/ '')
+      source =: "identity::\n$(indent(text))"
       data =:
         try:
-          eval-string: text:ys/compile
+          eval: source
           catch e:
             error-fmt orig:
               "Failed to compile $e"
@@ -137,8 +139,9 @@ defn mdys-include(data):
   =>: +"\n" + join("\n" markdown) + "\n"
 
 defn indent(text n=2):
+  prefix =: (' ' * n)
   replace text:
-    /(?m)^(?=.)/
-    (' ' * n)
+    /(?m)^(.+)/
+    "$prefix$1"
 
 # vim: ft=yaml sw=2 lisp:

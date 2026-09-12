@@ -1,7 +1,9 @@
 include $(MAKES)/clojure.mk
 include $(MAKES)/lein.mk
 ifneq ($(OS-NAME),windows)
+ifndef YS
 include $(MAKES)/yamlscript.mk
+endif
 endif
 
 YAMLSCRIPT-CORE-INSTALLED := \
@@ -55,10 +57,6 @@ realclean:: clean
 
 distclean:: nrepl-stop
 	$(RM) -r .calva/ .clj-kondo/ .cpcache/ .lsp/ .vscode/ .portal/
-
-ifneq ($(OS-NAME),windows)
-$(LEIN):: | $(YS)
-endif
 
 # Leiningen targets
 $(LEIN-COMMANDS):: $(LEIN)

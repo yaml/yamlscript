@@ -106,7 +106,7 @@ GLOAT-LIBYS-SRCS := \
 GLOAT-LIBYS-NATIVE := $(wildcard gloat/native/* gloat/include/*.h)
 
 $(LIBYS-SO-GLOJURE): \
-  $(GLOAT) $(GLOJURE-PREPARED-STAMP) $(GLOAT-LIBYS-SRCS) \
+  $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-LIBYS-SRCS) \
   $(GLOAT-LIBYS-NATIVE)
 	mkdir -p $(dir $@)
 	mkdir -p $(ROOT)/.cache/libys-native
@@ -143,7 +143,11 @@ else
 endif
 
 $(LIBYS-JAR-PATH): $(CORE-INSTALLED)
+ifeq ($(YAMLSCRIPT_ENGINE),graalvm)
+	lein with-profile +graalvm uberjar
+else
 	lein uberjar
+endif
 	touch $@
 
 $(CORE-INSTALLED):

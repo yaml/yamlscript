@@ -81,7 +81,7 @@ test-expression: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED)
 	  lein test yamlscript.expression-test
 
 test-compile-real: $(CLI-DEPS) $(LEIN) $(CORE-INSTALLED) \
-    $(GLOAT-RUN) $(PYTHON) $(NODE) $(WASMTIME)
+    $(GLOAT) $(PYTHON) $(NODE) $(WASMTIME)
 	YS_COMPILE_TEST_BIN=$(abspath $(CLI-BIN)) \
 	  YS_COMPILE_REAL_GLOAT=$(YS_COMPILE_REAL_GLOAT) \
 	  YS_COMPILE_PYTHON=$(PYTHON) \
@@ -177,7 +177,7 @@ GLOAT-CLI-SRCS := \
   gloat/src/yamlscript/cli.clj
 
 $(CLI-BIN-GLOJURE): \
-  $(GLOAT) $(GLOJURE-PREPARED-STAMP) $(GLOAT-CLI-SRCS)
+  $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-CLI-SRCS)
 	mkdir -p $(dir $@)
 	</dev/null env -u GOROOT \
 	  GLOAT_YS_RUNTIME=all \

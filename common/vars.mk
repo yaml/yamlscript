@@ -1,14 +1,17 @@
 include $(COMMON)/version.mk
-GLOAT-VERSION := 0.1.82
-GLOJURE-VERSION := 0.7.17
 YAMLSCRIPT_ENGINE ?= glojure
-DATA-JSON-VERSION := 2.4.0
+ifeq ($(YAMLSCRIPT_ENGINE),graalvm)
 include $(MAKES)/graalvm.mk
+else
+include $(MAKES)/java.mk
+endif
 include $(MAKES)/maven.mk
 ifeq ($(OS-NAME),windows)
 YS ?= $(ROOT)/ys/bin/ys-$(YS_VERSION).exe
 else
+ifndef YS
 include $(MAKES)/yamlscript.mk
+endif
 endif
 
 export YS_TMPDIR := $(LOCAL-TMP)
@@ -108,7 +111,7 @@ endif
 # Set JAVA and GRAALVM variables:
 #------------------------------------------------------------------------------
 
-JAVA-INSTALLED := $(GRAALVM) $(MAVEN)
+JAVA-INSTALLED := $(JAVA) $(MAVEN)
 
 GRAALVM-O ?= 1
 # qbm is Quick Build Mode

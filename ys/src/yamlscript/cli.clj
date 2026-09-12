@@ -447,6 +447,7 @@ Options:
         (build/compile! ctx opts
           (build/gloat-source clojure yamlscript-version) file)
         (build/write-source! ctx opts (str (compiled-output opts clojure) "\n")))
+      (flush)
       (System/exit 0))
     (catch Exception e (err e))))
 

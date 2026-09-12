@@ -1,6 +1,7 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+DOTNET-VERSION := 8.0.415
 include $(MAKES)/dotnet.mk
 include $(MAKES)/shell.mk
 

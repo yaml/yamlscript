@@ -9,7 +9,7 @@ copyright = "Copyright 2023-2026 Ingy dot Net"
 source-dir = "src"
 
 [build]
-link = ["ys.0.3.0"]
+link = ["ys"]
 
 [[test]]
 name = "test_yamlscript"

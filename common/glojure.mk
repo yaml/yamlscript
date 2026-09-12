@@ -1,9 +1,35 @@
 include $(MAKES)/gloat.mk
 include $(MAKES)/perl.mk
 
+PERL-CMD := $(PERL)
+ifeq ($(OS-NAME),windows)
+# Makes uses $(PERL) as a system-Perl availability sentinel on Windows.
+PERL-CMD := perl
+endif
+
+GLOAT-RUN-DEPS := $(GLOAT)
 GLOAT-RUN := $(GLOAT-BIN)/gloat
 ifeq ($(OS-NAME),windows)
-GLOAT-RUN := /usr/bin/bash $(GLOAT-BIN)/gloat
+# Gloat 0.1.85 cannot find tools installed during its first Windows run.
+# Populate its managed cache and keep those directories on PATH.
+GLOAT-WINDOWS-PATH-DEPS := $(GLOAT-DIR)/.cache/.windows-path-deps
+GLOAT-RUN-DEPS += $(GLOAT-WINDOWS-PATH-DEPS)
+GLOAT-RUN := \
+  PATH="$$(cat $(GLOAT-WINDOWS-PATH-DEPS)):/usr/bin:$$PATH" \
+  /usr/bin/bash $(GLOAT-BIN)/gloat
+
+$(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT)
+	TAR_OPTIONS=--force-local \
+	  $(MAKE) --quiet --no-print-directory -C $(GLOAT-DIR) \
+	  path-bb path-go path-glj >/dev/null
+	gloat_dir=$$(cd $(GLOAT-DIR) && pwd -P); \
+	  cache_path=; \
+	  for bin_dir in "$$gloat_dir"/.cache/local/*/bin; do \
+	    [[ -d "$$bin_dir" ]] || continue; \
+	    cache_path=$${cache_path:+$$cache_path:}$$bin_dir; \
+	  done; \
+	  [[ $$cache_path ]]; \
+	  printf '%s\n' "$$cache_path" > $@
 endif
 
 GLOAT-ENGINE ?= glj
@@ -123,30 +149,30 @@ $(GO-YAML-STAMP):
 
 $(GO-YAML-GENERATED-STAMP): \
   $(GO-YAML-STAMP) $(GO-YAML-PREPARE) $(PERL)
-	PERL=$(PERL) bash $(GO-YAML-PREPARE) \
+	PERL=$(PERL-CMD) bash $(GO-YAML-PREPARE) \
 	  $(GO-YAML-SRC-DIR) $(GO-YAML-GENERATED-DIR)
 	touch '$@'
 
 $(GLOJURE-SRC-DIR)/yamlscript/%.clj: \
   $(ROOT)/core/src/yamlscript/%.clj $(GLOJURE-SRC-PREPARE) $(PERL)
-	$(PERL) $(GLOJURE-SRC-PREPARE) $< $@
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-IPC-SRC): \
   $(ROOT)/core/src/ys/v0/ipc.cljc $(GLOJURE-SRC-PREPARE) $(PERL)
-	$(PERL) $(GLOJURE-SRC-PREPARE) $< $@
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-GLOBAL-SRC): \
   $(ROOT)/core/src/ys/v0/global.clj $(GLOJURE-SRC-PREPARE) $(PERL)
-	$(PERL) $(GLOJURE-SRC-PREPARE) $< $@
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-PPRINT-SRC): \
   $(ROOT)/core/src/ys/v0/pprint.cljc $(GLOJURE-SRC-PREPARE) $(PERL)
-	$(PERL) $(GLOJURE-SRC-PREPARE) $< $@
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-TAPTEST-SRC): \
   $(ROOT)/core/src/ys/v0/taptest.clj $(GLOJURE-SRC-PREPARE) $(PERL)
 	mkdir -p $(dir $@)
-	$(PERL) -pe \
+	$(PERL-CMD) -pe \
 	  's/^\(ns ys\.v0\.taptest$$/(ns yamlscript.module.taptest/' \
 	  $< > $@
 
@@ -155,7 +181,7 @@ $(GLOJURE-DEPS-CLJC-SRCS): \
   $(GLOJURE-UPSTREAM-STAMP) $(GLOJURE-SRC-PREPARE) $(PERL) \
   $(ROOT)/common/glojure.mk
 	test -f $(GLOJURE-STDLIB-DIR)/$*.cljc
-	$(PERL) $(GLOJURE-SRC-PREPARE) \
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) \
 	  $(GLOJURE-STDLIB-DIR)/$*.cljc $@
 
 $(GLOJURE-DEPS-FACADE): \
@@ -163,10 +189,10 @@ $(GLOJURE-DEPS-FACADE): \
   $(ROOT)/common/glojure.mk
 	test -f $(GLOJURE-STDLIB-DIR)/glojure/deps.clj
 	mkdir -p $(dir $@)
-	$(PERL) -0pe \
+	$(PERL-CMD) -0pe \
 	  's/\s*\[glojure\.deps\.host :as host\]//' \
 	  $(GLOJURE-STDLIB-DIR)/glojure/deps.clj | \
-	  $(PERL) -pe 's/\bhost\//glojure.deps.host\//g' > $@
+	  $(PERL-CMD) -pe 's/\bhost\//glojure.deps.host\//g' > $@
 
 $(TOOLS-CLI-JAR):
 	$(call need-curl)
@@ -176,14 +202,14 @@ $(TOOLS-CLI-JAR):
 $(GLOJURE-TOOLS-CLI-CLJC): \
   $(TOOLS-CLI-JAR) $(ROOT)/common/glojure.mk $(PERL)
 	mkdir -p $(dir $@)
-	unzip -p $< clojure/tools/cli.cljc | \
-	  $(PERL) -0pe \
+	unzip -p $< clojure/tools/cli.cljc > $@
+	$(PERL-CMD) -0pi -e \
 	    's/\(ns\s+\^\{.*?\}\s+clojure\.tools\.cli/(ns clojure.tools.cli/s' \
-	    > $@
+	    $@
 
 $(GLOJURE-TOOLS-CLI-SRC): \
   $(GLOJURE-TOOLS-CLI-CLJC) $(GLOJURE-SRC-PREPARE) $(PERL)
-	$(PERL) $(GLOJURE-SRC-PREPARE) $< $@
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-PREPARED-STAMP): \
   $(GLOJURE-SRCS) $(GO-YAML-GENERATED-STAMP)

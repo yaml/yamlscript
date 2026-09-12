@@ -159,13 +159,13 @@ LIBYS-LOCAL := ../libys/lib/libys.so.$(YAMLSCRIPT_VERSION)
 $(LIBYS):
 	mkdir -p lib
 	if [[ -e $(LIBYS-LOCAL) ]]; then \
-	  cp -pP ../libys/lib/libys.so* lib/; \
+	  cp -pP ../libys/lib/libys*.so* lib/; \
 	else \
 	  mkdir -p .cache/libys && \
 	  curl -fsSL $(LIBYS-URL) -o .cache/$(LIBYS-ARCHIVE) && \
 	  tar -C .cache/libys --strip-components=1 \
 	    -xf .cache/$(LIBYS-ARCHIVE) && \
-	  cp -pP .cache/libys/libys.so* lib/; \
+	  cp -pP .cache/libys/libys*.so* lib/; \
 	fi
 
 .cache/image: dyalog.dockerfile

@@ -11,10 +11,8 @@ build:: build-doc
 build-doc:: ReadMe.md
 
 ifeq ($(OS-NAME),windows)
-# fpm.toml links -lys.0.2.26, which the mingw linker resolves to a
-# file named libys.0.2.26.dll; provide one as a copy of libys.dll
-# and put its directory on PATH for run time:
-LIBYS-ALIAS := .libys/libys.$(YAMLSCRIPT_VERSION).dll
+# Put a copy of libys.dll in a native Windows path for linking and run time:
+LIBYS-ALIAS := .libys/libys.dll
 
 test:: $(LIBYS-SO-FQNP) $(FPM) $(GFORTRAN) $(LIBYS-ALIAS)
 	PATH="$$PWD/.libys:$$PATH" fpm test --flag "-L.libys"

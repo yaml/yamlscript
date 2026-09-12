@@ -522,6 +522,12 @@ test::
 - cmnd:: "ys -c $ROOT/util/version-bump"
   have: apply main
 
+- note: Test running mdys with the Glojure runtime
+- cmnd:: |-
+    env ROOT=$ROOT YSLANG=erlang \
+      ys $ROOT/util/mdys $ROOT/common/readme.md
+  have: '## Erlang Usage'
+
 - note: Test 'ys' commands with and without -e
 - cmnd:: "ys -Y $DIR/animals.json -e '.0.name'"
   want: Meowsy

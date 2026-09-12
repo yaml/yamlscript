@@ -674,7 +674,7 @@ endif
 	cp common/install.mk $</Makefile
 ifeq (,$(findstring windows,$(RELEASE_PLATFORM)))
 ifeq (,$(findstring wasm,$(RELEASE_PLATFORM)))
-	$(MAKE) -C v0 install
+	$(MAKE) -C v0 install YS=$(abspath ys/$(CLI-BIN))
 	mkdir -p $</m2/repository/org/yamlscript/ys.v0 \
 	  $</m2/repository/org/clojure/data.json
 	cp -pR $(V0-M2-DIR) $</m2/repository/org/yamlscript/ys.v0/

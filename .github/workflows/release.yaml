@@ -50,6 +50,7 @@ concurrency:
 
 env:
   VERSION: ${{ inputs.version }}
+  BOOTSTRAP_YS_VERSION: '0.2.32'
   JAVA_VERSION: '17'
   YS_RELEASE_CI: '1'
   YS_RELEASE_BINDINGS: ${{ inputs.bindings }}
@@ -620,7 +621,7 @@ jobs:
         inputs.test_artifacts_run_id == ''
       }}
     needs: verify-release
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout release ref
       uses: actions/checkout@v6
@@ -632,54 +633,30 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up MSVC
-      uses: ilammy/msvc-dev-cmd@v1
+    - name: Install build dependencies
+      run: >-
+        sudo apt-get update && sudo apt-get install -y
+        build-essential curl git perl unzip xz-utils zip
 
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
-
-    - name: Install zip
-      run: choco install zip -y
-
-    - name: Install shasum shim
+    - name: Install bootstrap ys
       run: |
-        mkdir -p "$RUNNER_TEMP/bin"
-        {
-          echo '#!/usr/bin/env bash'
-          echo 'if [[ ${1:-} == -a && ${2:-} == 256 && ${3:-} == -c ]]; then'
-          echo '  sha256sum -c'
-          echo 'else'
-          echo '  echo "Unsupported shasum arguments: $*" >&2'
-          echo '  exit 2'
-          echo 'fi'
-        } > "$RUNNER_TEMP/bin/shasum"
-        chmod +x "$RUNNER_TEMP/bin/shasum"
-        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
-
-    - name: Bootstrap makes
-      run: |
-        root=$(pwd -P)
-        makes=$root/.cache/makes
-        echo "root=$root"
-        echo "makes=$makes"
-        mkdir -p "$root/.cache"
-        test -f "$makes/init.mk" || rm -rf "$makes"
-        test -f "$makes/init.mk" || \
-          git clone -q https://github.com/makeplus/makes "$makes"
-        test -f "$makes/init.mk"
+        # shellcheck disable=SC1090
+        source <(curl -sL https://in-1.cc) --local ys \
+          YAMLSCRIPT-VERSION="$BOOTSTRAP_YS_VERSION" \
+          PREFIX="$RUNNER_TEMP/ys"
+        "$RUNNER_TEMP/ys/bin/ys-0" --version
+        echo "$RUNNER_TEMP/ys/bin" >> "$GITHUB_PATH"
 
     - name: Build release archives
       run: |
-        make release-build jars
-        if ${{ inputs.graalvm }}; then
-          make release-build YAMLSCRIPT_ENGINE=graalvm
-        fi
+        make release-build-ys \
+          GLOAT_PLATFORM=windows/amd64 \
+          RELEASE_PLATFORM=windows-x64
+        make release-build-libys \
+          GLOAT_PLATFORM=windows/amd64 \
+          RELEASE_PLATFORM=windows-x64 \
+          CROSS_CC_TARGET=x86_64-windows-gnu
+        make jars
         mkdir -p python/dist/release-assets
         for archive in libys-*.tar.xz libys-*.zip; do
           [[ -e "$archive" ]] && cp "$archive" python/dist/release-assets/

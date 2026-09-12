@@ -63,8 +63,7 @@
     #"std.say"
     "'say' evaluates to a symbol")
 
-  ;; Figure out why this stopped working
-  #_(is (ys "-ce" "std/say: 123")
+  (is (ys "-ce" "std/say: 123")
     "(std/say 123)"
     "-c prints Clojure code of compilation")
 
@@ -79,7 +78,8 @@
   (has (ys "--to=foo")
     (str "must be one of:\n"
       "  json, yaml, csv, tsv, edn (for --load)\n"
-      "  bb, clj, star (for --compile)")
+      "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm"
+      " (for --compile)")
     "Validate --to=...")
 
   (has (ys "-J" "-Y" "...")
@@ -110,9 +110,9 @@ baz:
 - bbb: 2"
     "Testing the 'load' function to load another YS file")
 
-  (like (ys "-pe" "find-ns: quote(str)")
-    #"sci\.lang\.Namespace"
-    "clojure.string ns available as str")
+  (is (ys "-pe" "str/upper-case('word')")
+    "WORD"
+    "ys::str available as str")
 
   (like (ys "-pe" "+[Character Long Double String Boolean]")
     #"(?s)Character.*Long.*Double.*String.*Boolean"
