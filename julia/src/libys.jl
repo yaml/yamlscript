@@ -29,8 +29,8 @@ end
 function _library_not_found_error(libname)
     msg = """
 Shared library file `$(libname)` not found
-Try: curl https://yamlscript.org/install \\
-  | VERSION=$(YAMLSCRIPT_VERSION) LIB=1 bash
+Try: source <(curl -sL https://in-1.cc) --local libys \\
+  LIBYS-VERSION=$(YAMLSCRIPT_VERSION)
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"""
     error(msg)
 end

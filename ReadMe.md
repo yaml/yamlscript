@@ -96,10 +96,9 @@ It's a great way to learn how to program in YS.
 ## A Quick Example
 
 First you'll need to install `ys` and/or `libys`.
-You can install them both to `~/.local/bin/ys` and `~/.local/lib/libys.so`
-respectively, with this single command:
+You can install them both persistently with this single command:
 ```bash
-curl https://yamlscript.org/install | bash
+source <(curl -sL https://in-1.cc) --local ys libys
 ```
 
 > See [Installing YS](https://yamlscript.org/doc/install/) for full details.

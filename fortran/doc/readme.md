@@ -38,7 +38,7 @@ tag = "v0.3.0"
 ```
 
 ```bash
-curl -sSL https://yamlscript.org/install | LIB=1 bash
+source <(curl -sL https://in-1.cc) --local libys
 export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 ```
 

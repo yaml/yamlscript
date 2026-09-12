@@ -2,12 +2,8 @@
 # shellcheck shell=bash
 
 _yamlscript-try-ys() {
-  local tmp dir
-  tmp=${TMPDIR:-/tmp}
-  tmp=${tmp%/}
-  dir=$(mktemp -d "$tmp/yamlscript-try-ys-XXXXXXXXXX") &&
-  curl https://yamlscript.org/install | BIN=1 PREFIX=$dir bash &&
-  export PATH=$dir/bin:$PATH
+  # shellcheck disable=SC1090
+  source <(curl -sL https://in-1.cc) --temp ys
 }
 
 _yamlscript-try-ys

@@ -93,8 +93,9 @@ Ctl-C to abort
 See https://yamlscript.org/doc/run-ys for more information.
 
 ...
-    curl -s https://yamlscript.org/install |
-      BIN=1 PREFIX=$prefix VERSION=$version bash
+    # shellcheck disable=SC1090
+    source <(curl -sL https://in-1.cc) -q ys \
+      YAMLSCRIPT-VERSION="$version" PREFIX="$prefix"
     printf '%.0s-' {1..80}
     echo
   ) &> "$tty"

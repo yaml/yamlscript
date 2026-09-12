@@ -31,36 +31,33 @@ Install `libys` (`libys.so` on Linux, `libys.dylib` on macOS) when you need the
 shared library for a YS loader library in another programming language.
 
 
-### Quick Install Script for `ys` and `libys`
+### Install with in-1
 
-You can install both `ys` and `libys` with a single CLI command, where:
+You can install `ys` and `libys` persistently with
+[in-1](https://in-1.cc/install/).
 
-* `VERSION` defaults to the latest YS version.
-* `PREFIX` defaults to `$HOME/.local`.
-* `LIB=1` means only install the shared library.
-* `BIN=1` means only install the `ys` binary.
+Examples for Bash and Zsh:
 
-Examples:
 ```bash
-$ curl https://yamlscript.org/install | bash
-$ curl https://yamlscript.org/install | VERSION=0.3.0 bash
-$ curl https://yamlscript.org/install | VERSION=0.3.0 LIB=1 bash
-$ curl https://yamlscript.org/install | PREFIX=/tmp/yamlscript bash
+$ source <(curl -sL https://in-1.cc) --local ys libys
+$ source <(curl -sL https://in-1.cc) --local ys
+$ source <(curl -sL https://in-1.cc) --local libys
+$ source <(curl -sL https://in-1.cc) --local ys libys \
+    YAMLSCRIPT-VERSION=0.3.0 LIBYS-VERSION=0.3.0
+$ source <(curl -sL https://in-1.cc) --local ys libys \
+    PREFIX=/tmp/yamlscript
 ```
 
-For the `ys` command you'll need to have `PREFIX/bin` in your `PATH`, but the
-install script will tell you that.
+For Fish:
 
-For `libys`, unless you use the default `PREFIX` you'll need to add
-`PREFIX/lib` to your `LD_LIBRARY_PATH`.
+```fish
+$ curl -sL https://in-1.cc | source - --local ys libys
+```
 
-!!! note "An even shorter command to install `ys`"
-
-    ```bash
-    $ curl -sL getys.org/ys | bash
-    ```
-
-    You can use all the same options as above (before `bash`).
+`YAMLSCRIPT-VERSION` and `LIBYS-VERSION` default to the latest versions.
+`PREFIX` defaults to `$HOME/.local` for `--local` installations.
+See the in-1 installation documentation for temporary installations,
+environment setup, upgrades, and removal.
 
 
 <!--

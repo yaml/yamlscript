@@ -19,7 +19,7 @@ export TMP := $(TMPDIR)
 YS-REPO-URL := https://github.com/yaml/yamlscript
 YS-GH-API-URL := https://api.github.com/repos/yaml/yamlscript
 
-YS-INSTALL-URL := https://yamlscript.org/install
+YS-INSTALL-URL := https://in-1.cc
 
 unexport YS_FORMATTER
 

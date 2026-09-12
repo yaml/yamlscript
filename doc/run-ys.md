@@ -23,7 +23,7 @@ talk: 0
         system so that you can run the program with `ys` instead of `bash`.
 
         ```bash
-        $ curl -s https://yamlscript.org/install-ys | bash
+        $ source <(curl -sL https://in-1.cc) --local ys
         ```
 
         See the [YS Installation](install.md) page for more information.

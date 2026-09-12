@@ -34,8 +34,7 @@ Learn More About YS</a></div>
 !!! success "Zero to YS in 10 seconds!"
 
     ```bash
-    curl -s https://getys.org/ys | bash
-    # Adjust PATH if asked to.
+    source <(curl -sL https://in-1.cc) --local ys
     ys --help
     ys -e 'say: "Hello, World!"'
     ```
@@ -107,8 +106,7 @@ Learn More About YS</a></div>
   icon: material-clock-fast
   body: |
     ```bash
-    curl -s https://getys.org/ys | bash
-    # Adjust PATH if asked to.
+    source <(curl -sL https://in-1.cc) --local ys
     ys --help
     ys -e 'say: "Hello, World. I am $(ENV.USER)."'
     ```

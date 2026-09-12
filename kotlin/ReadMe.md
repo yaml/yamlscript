@@ -81,7 +81,7 @@ It's perfect for:
 * **Conditional logic** – Use if/then/else and pattern matching
 * **Data transformation** – Built-ins for transforming & manipulating data
 * **String interpolation** – Embed expressions/variables directly in strings
-* **No JVM required** – Runs as a native library despite compiling to Clojure
+* **No JVM required** – Glojure runs the compiled Clojure without Java
 
 
 ## How It Works
@@ -144,7 +144,7 @@ Add the `kotlin-yamlscript` artifact to your project and install the
 ```kotlin
 // build.gradle.kts
 repositories {
-    maven("https://repo.clojars.org")
+    mavenCentral()
 }
 dependencies {
     implementation("org.yamlscript:kotlin-yamlscript:0.3.0")
@@ -152,7 +152,7 @@ dependencies {
 ```
 
 ```bash
-curl -sSL https://yamlscript.org/install | LIB=1 bash
+source <(curl -sL https://in-1.cc) --local libys
 export LD_LIBRARY_PATH="$HOME/.local/lib:$LD_LIBRARY_PATH"
 ```
 

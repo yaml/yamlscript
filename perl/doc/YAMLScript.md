@@ -107,12 +107,10 @@ but you will need to have a system install of `libys.so`.
 One simple way to do that is with:
 
 ```bash
-curl https://yamlscript.org/install | bash
+source <(curl -sL https://in-1.cc) --local libys
 ```
 
-Note: The above command will install the latest version of the YAMLScript
-command line utility, `ys`, and the shared library, `libys.so`, into
-`~/local/bin` and `~/.local/lib` respectively.
+Note: The above command installs the latest version of `libys` persistently.
 
 See https://github.com/yaml/yamlscript?#installing-yamlscript for more info.
 

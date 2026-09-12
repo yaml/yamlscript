@@ -125,9 +125,8 @@ test: update
         mv $@.tmp $@
 
 $(YS):
-        curl -s https://getys.org/ys | \
-          PREFIX=/tmp VERSION=$(YS_VERSION) QUIET=1 bash \
-          > /dev/null
+        @source <(curl -sL https://in-1.cc) -q ys \
+          YAMLSCRIPT-VERSION=$(YS_VERSION) PREFIX=/tmp
 
 .PHONY: update test
 ```

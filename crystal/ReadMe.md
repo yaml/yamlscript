@@ -81,7 +81,7 @@ It's perfect for:
 * **Conditional logic** – Use if/then/else and pattern matching
 * **Data transformation** – Built-ins for transforming & manipulating data
 * **String interpolation** – Embed expressions/variables directly in strings
-* **No JVM required** – Runs as a native library despite compiling to Clojure
+* **No JVM required** – Glojure runs the compiled Clojure without Java
 
 
 ## How It Works
@@ -148,7 +148,7 @@ dependencies:
 shards install
 
 # Install shared library
-curl -sSL https://yamlscript.org/install | bash
+source <(curl -sL https://in-1.cc) --local libys
 ```
 
 See <https://yamlscript.org/doc/install/> for more info.

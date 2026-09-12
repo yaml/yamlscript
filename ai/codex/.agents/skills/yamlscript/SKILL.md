@@ -14,7 +14,8 @@ Ensure `ys` version 0.3.0 is available for testing:
 
 ```bash
 [[ -x /tmp/ys-skill/bin/ys-0.3.0 ]] ||
-  curl -s https://yamlscript.org/install | VERSION=0.3.0 PREFIX=/tmp/ys-skill bash
+  source <(curl -sL https://in-1.cc) --local ys \
+    YAMLSCRIPT-VERSION=0.3.0 PREFIX=/tmp/ys-skill
 YS=/tmp/ys-skill/bin/ys
 ```
 

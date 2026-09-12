@@ -31,7 +31,7 @@ impl Debug for Error {
             Self::NotFound => write!(
                 f,
                 "Shared library file 'libys.so.{0}' not found
-Try: curl https://yamlscript.org/install | VERSION={0} LIB=1 bash
+Try: source <(curl -sL https://in-1.cc) --local libys LIBYS-VERSION={0}
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript",
                 &super::LIBYS_VERSION
             ),

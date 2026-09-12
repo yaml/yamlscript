@@ -106,8 +106,8 @@ private string findLibysPath()
 
   throw new YAMLScriptException(
     "Shared library file '" ~ libysName ~ "' not found\n" ~
-    "Try: curl https://yamlscript.org/install | " ~
-    "VERSION=" ~ yamlscriptVersion ~ " LIB=1 bash\n" ~
+    "Try: source <(curl -sL https://in-1.cc) --local libys " ~
+    "LIBYS-VERSION=" ~ yamlscriptVersion ~ "\n" ~
     "See: https://github.com/yaml/yamlscript/wiki/" ~
     "Installing-YAMLScript\n");
 }

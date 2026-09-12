@@ -89,7 +89,7 @@ local function find_libys_path()
   if not libys_path then
     error(string.format([[
 Shared library file '%s' not found
-Try: curl https://yamlscript.org/install | VERSION=%s LIB=1 bash
+Try: source <(curl -sL https://in-1.cc) --local libys LIBYS-VERSION=%s
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
 ]], libys_name, yamlscript_version))
   end

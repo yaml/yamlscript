@@ -103,8 +103,8 @@ static void open_libys(void) {
   if (!find_libys(path, sizeof(path))) {
     Rf_error(
       "Shared library file '%s' not found\n"
-      "Try: curl https://yamlscript.org/install |"
-      " VERSION=%s LIB=1 bash\n"
+      "Try: source <(curl -sL https://in-1.cc) --local libys"
+      " LIBYS-VERSION=%s\n"
       "See: https://github.com/yaml/yamlscript/wiki/"
       "Installing-YAMLScript",
       LIBYS_NAME, YAMLSCRIPT_VERSION);

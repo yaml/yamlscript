@@ -11,7 +11,7 @@ JSON since [JSON is YAML](../json.md)) files much like you would with
 ??? tip "[Install `ys` Now!](install.md)"
 
     ```
-    curl -s https://getys.org/ys | bash
+    source <(curl -sL https://in-1.cc) --local ys
     ```
 
 

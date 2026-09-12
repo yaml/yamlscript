@@ -84,7 +84,7 @@ proc findLibysPath(): string =
 
   raise newException(YAMLScriptError, """
 Shared library file '$1' not found
-Try: curl https://yamlscript.org/install | VERSION=$2 LIB=1 bash
+Try: source <(curl -sL https://in-1.cc) --local libys LIBYS-VERSION=$2
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript
 """ % [libysName, yamlscriptVersion])
 

@@ -24,7 +24,7 @@ Install YAMLScript for Python and the `libys.so` shared library:
 
 ```bash
 pip install yamlscript
-curl -sSL https://yamlscript.org/install | bash
+source <(curl -sL https://in-1.cc) --local libys
 ```
 
 See <https://yamlscript.org/doc/install/> for more info.

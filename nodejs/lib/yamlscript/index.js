@@ -112,7 +112,7 @@ function findLibysPath() {
 
   throw new Error(
 `Shared library file '${libysName}' not found
-Try: curl https://yamlscript.org/install | VERSION=${yamlscriptVersion} LIB=1 bash
+Try: source <(curl -sL https://in-1.cc) --local libys LIBYS-VERSION=${yamlscriptVersion}
 See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript`);
 }
 

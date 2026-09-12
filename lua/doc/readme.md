@@ -28,7 +28,7 @@ luarocks install cffi-lua
 luarocks install lua-cjson
 
 # Install shared library
-curl -sSL https://yamlscript.org/install | bash
+source <(curl -sL https://in-1.cc) --local libys
 
 # Add to LUA_PATH
 export LUA_PATH="$(pwd)/lib/?.lua;;"

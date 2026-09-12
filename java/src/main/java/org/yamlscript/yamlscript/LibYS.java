@@ -95,8 +95,8 @@ public class LibYS {
 
         throw new RuntimeException(
             "Shared library file " + name + " not found\n" +
-            "Try: curl -sSL https://yamlscript.org/install | VERSION=" +
-            YAMLScript.YAMLSCRIPT_VERSION + " LIB=1 bash\n" +
+            "Try: source <(curl -sL https://in-1.cc) --local libys " +
+            "LIBYS-VERSION=" + YAMLScript.YAMLSCRIPT_VERSION + "\n" +
             "See: https://github.com/yaml/yamlscript/wiki/Installing-YAMLScript"
         );
     }
