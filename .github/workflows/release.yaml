@@ -636,7 +636,7 @@ jobs:
         mkdir -p "$RUNNER_TEMP/bin"
         {
           echo '#!/usr/bin/env bash'
-          printf 'exec %q --force-local "$$@"\n' "$real_tar"
+          printf 'exec %q --force-local "$@"\n' "$real_tar"
         } > "$RUNNER_TEMP/bin/tar"
         chmod +x "$RUNNER_TEMP/bin/tar"
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
