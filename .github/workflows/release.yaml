@@ -630,6 +630,17 @@ jobs:
         chmod +x "$RUNNER_TEMP/bin/shasum"
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
+    - name: Install tar shim
+      run: |
+        real_tar=$(command -v tar)
+        mkdir -p "$RUNNER_TEMP/bin"
+        {
+          echo '#!/usr/bin/env bash'
+          printf 'exec %q --force-local "$$@"\n' "$real_tar"
+        } > "$RUNNER_TEMP/bin/tar"
+        chmod +x "$RUNNER_TEMP/bin/tar"
+        echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
     - name: Bootstrap makes
       run: |
         root=$(pwd -P)
