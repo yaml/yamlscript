@@ -631,6 +631,7 @@ jobs:
         echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
 
     - name: Install tar shim
+      if: runner.os == 'Windows'
       run: |
         real_tar=$(command -v tar)
         mkdir -p "$RUNNER_TEMP/bin"
