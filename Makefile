@@ -735,6 +735,9 @@ else
 	  $</libys.$(SO).$(YAMLSCRIPT_VERSION)
 endif
 	cp -pPR libys/lib/*.h $</
+ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
+	cp -p $(LIBYS-API-HEADER) $</libys.h
+endif
 	cp common/install.mk $</Makefile
 ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
 	$(TIME) zip -r $@ $<
