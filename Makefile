@@ -539,6 +539,34 @@ endif
 	git push -f origin $(v)
 	$(MAKE) release-build-github v=$(v)
 
+# Rerun failed jobs and their downstream jobs in an existing release run.
+# Successful build jobs keep their artifacts, while the version tag moves to
+# HEAD so the rerun test and publish jobs check out the fixes. Example:
+#   make release-rerun v=0.3.0 r=12345678
+release-rerun: $(GH)
+ifndef v
+	$(error 'make release-rerun' requires v=NEW_VERSION)
+endif
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  run_id='$(r)'; \
+	  if [[ -z "$$run_id" ]]; then \
+	    run_id=$$(gh run list --workflow=release.yaml \
+	      --repo yaml/yamlscript --branch $$branch --limit=1 \
+	      --json databaseId --jq '.[0].databaseId'); \
+	  fi; \
+	  test -n "$$run_id"; \
+	  gh run view $$run_id --repo yaml/yamlscript \
+	    --json databaseId --jq .databaseId > /dev/null || { \
+	    echo "ERROR: run id '$$run_id' not found"; exit 1; }; \
+	  git push --force-with-lease origin HEAD:$$branch; \
+	  git tag -f $(v) HEAD; \
+	  git push -f origin $(v); \
+	  echo "Rerunning failed jobs of run $$run_id"; \
+	  gh run rerun $$run_id --failed --repo yaml/yamlscript; \
+	  gh run watch $$run_id --repo yaml/yamlscript \
+	    --exit-status --interval=10
+
 # Step 12: Release bindings
 release-bindings: $(if $(YS_RELEASE_CI),,$(YS))
 ifndef v

@@ -146,10 +146,10 @@
     (sci/eval-string* ctx "(use io)")
     (is (nil? (sci/eval-string* ctx "(resolve 'io/reader)")))
     (is (some? (sci/eval-string* ctx "(resolve 'io/readline)")))
-    (is (= "line\n"
+    (is (= (str "line" (System/lineSeparator))
           (sci/eval-string* ctx
             "(with-out-str (io/say \"line\"))")))
-    (is (= "nested\n"
+    (is (= (str "nested" (System/lineSeparator))
           (with-out-str
             (ys/eval "!ys-0\nsay: \"nested\"\n"))))))
 

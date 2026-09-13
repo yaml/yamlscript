@@ -1,7 +1,6 @@
 package yamlscript
 
-// #cgo !windows LDFLAGS: -lys.0.3.0
-// #cgo windows LDFLAGS: -lys
+// #cgo LDFLAGS: -lys
 // #ifdef _WIN32
 // #include <libys.h>
 // #else
