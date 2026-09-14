@@ -8,6 +8,11 @@ ROOT =: +"$DIR/../.."
 QROOT =: "'$ROOT'"
 QDIR =: "'$DIR'"
 
+SHEBANG =:
+  if RUN.os == 'windows':
+    then: 'ys test/shebang1 --version'
+    else: 'test/shebang1 --version'
+
 HELP =: |
 
   ys - The YS Command Line Tool - v$VERSION
@@ -576,7 +581,7 @@ test::
         dislikes:
         - ham
         - zucchini
-- cmnd: test/shebang1 --version
+- cmnd:: SHEBANG
   want: --version
 
 done:

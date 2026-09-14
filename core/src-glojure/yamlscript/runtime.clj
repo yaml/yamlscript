@@ -458,7 +458,7 @@
         (set-root! #'global/FILE path)
         (set-root! #'global/DIR (path:filepath.Dir path))
         (set-root! #'global/INC (get-yspath path))
-        (eval-yamlscript (slurp path) path false)
+        (eval-yamlscript (source-text path) path false)
         (finally
           (set-root! #'global/FILE saved-file)
           (set-root! #'global/DIR saved-dir)

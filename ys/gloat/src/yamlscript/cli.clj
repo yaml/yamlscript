@@ -254,7 +254,7 @@
 (defn shebang-script? [path]
   (and (file-exists? path)
     (try
-      (str/starts-with? (slurp path) "#!")
+      (str/starts-with? (util-platform/read-file path) "#!")
       (catch go/any _ false))))
 
 (defn looks-like-expression? [text]
@@ -338,7 +338,7 @@
         file-code (when file
                     (str (if (= file "-")
                            (read-stdin)
-                           (slurp file)) "\n"))
+                           (util-platform/read-file file)) "\n"))
         expr-code (expression-code opts expressions)
         load? (or (:load opts) (and file-code expr-code))]
     {:code (str file-code expr-code)

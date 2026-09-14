@@ -16,6 +16,11 @@
     (when error (throw error))
     (mapv #(.Name %) entries)))
 
+(defn read-file [path]
+  (let [[bytes error] (os.ReadFile path)]
+    (when error (throw error))
+    (fmt.Sprintf "%s" bytes)))
+
 (defn context []
   (let [[exe error] (if (= runtime.GOOS "wasip1") ["" nil] (os.Executable))]
     (when error (throw error))
@@ -32,7 +37,7 @@
                                   (github.com:yaml:yamlscript:internal:goyamlparser.WriteNewTextFile
                                     path text (if executable? 0755 0644))]
                          (throw error)))
-       :read slurp
+       :read read-file
        :write (fn [path text]
                 (when-let [error
                            (github.com:yaml:yamlscript:internal:goyamlparser.WriteTextFile
