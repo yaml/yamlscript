@@ -29,6 +29,8 @@ else
 CPANM-CMD := cpanm
 endif
 
+CPANM-ARGS := --mirror https://www.cpan.org --mirror-only
+
 #------------------------------------------------------------------------------
 
 distdir dist disttest:: $(LOCAL-LIB)
@@ -43,7 +45,7 @@ endif
 ifndef PAUSE_PASS
 	$(error 'make release' needs PAUSE_PASS set)
 endif
-	$(CPANM-CMD) -L $(LOCAL-LIB) -n CPAN::Uploader
+	$(CPANM-CMD) $(CPANM-ARGS) -L $(LOCAL-LIB) -n CPAN::Uploader
 	$(ROOT)/util/upload-perl-cpan-dist $(CPAN-DIST)
 
 clean::
@@ -55,4 +57,4 @@ realclean::
 build-doc::
 
 $(LOCAL-LIB): $(PERL) Makefile
-	$(CPANM-CMD) -L $@ -n $(CPAN-DEPS)
+	$(CPANM-CMD) $(CPANM-ARGS) -L $@ -n $(CPAN-DEPS)

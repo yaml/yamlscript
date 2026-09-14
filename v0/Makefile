@@ -14,7 +14,9 @@ export CLOJARS_PASSWORD ?= $(shell ../clojure/util/get-setting password)
 export YS_BIN ?= $(ROOT)/util/ysj
 
 ifeq ($(OS-NAME),windows)
-PROVE := $(PERL) -S prove
+PROVE-PATH := $(shell command -v prove)
+PERL-CMD := $(dir $(PROVE-PATH))perl
+PROVE := $(PERL-CMD) $(PROVE-PATH)
 else
 PROVE := prove
 endif

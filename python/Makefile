@@ -1,7 +1,6 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
-PYTHON-VER := 3.13
 PYTHON-VENV := $(ROOT)/python/.venv
 PYTHON-VENV-SETUP := \
   uv pip install --python $(PYTHON-VENV) pytest pyyaml setuptools twine wheel
@@ -44,8 +43,7 @@ RELEASE-WHEEL-ARCHIVES := \
   $(wildcard $(RELEASE-WHEEL-DIR)/libys-$(RELEASE-WHEEL-VERSION)-*.tar.xz) \
   $(wildcard $(RELEASE-WHEEL-DIR)/libys-$(RELEASE-WHEEL-VERSION)-*.zip)
 
-export PYTHONPATH := \
-  $(ROOT)/python/lib:$(PYTHON-VENV)/lib/python$(PYTHON-VER)/site-packages
+export PYTHONPATH := $(ROOT)/python/lib
 
 
 #------------------------------------------------------------------------------
@@ -62,7 +60,7 @@ test-pytest: $(PYTHON-VENV)
 	$(VENV) && \
 	  pytest $${TEST_VERBOSE:+'-v'} test/*.py
 
-test-ffi: $(LIBYS-SO-FQNP)
+test-ffi: $(PYTHON-VENV) $(LIBYS-SO-FQNP)
 	$(VENV) && \
 	  python \
 	    -c 'import yamlscript; \

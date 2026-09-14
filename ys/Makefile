@@ -23,7 +23,9 @@ BPAN-LOCAL := .bpan
 BPAN-REPO-URL := https://github.com/bpan-org/bpan
 
 ifeq ($(OS-NAME),windows)
-PROVE := $(PERL) -S prove
+PROVE-PATH := $(shell command -v prove)
+PERL-CMD := $(dir $(PROVE-PATH))perl
+PROVE := $(PERL-CMD) $(PROVE-PATH)
 else
 PROVE := prove
 endif

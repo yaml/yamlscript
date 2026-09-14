@@ -38,6 +38,8 @@ PROVE-CMD := prove
 TEST-DEPS := $(PERL) $(LOCAL-LIB) $(ALIEN-BLIB-LIB)
 endif
 
+CPANM-ARGS := --mirror https://www.cpan.org --mirror-only
+
 #------------------------------------------------------------------------------
 
 ifneq (,$(shell command -v cpanm))
@@ -67,7 +69,7 @@ endif
 ifndef PAUSE_PASS
 	$(error 'make release' needs PAUSE_PASS set)
 endif
-	$(CPANM-CMD) -L $(LOCAL-LIB) -n CPAN::Uploader
+	$(CPANM-CMD) $(CPANM-ARGS) -L $(LOCAL-LIB) -n CPAN::Uploader
 	$(ROOT)/util/upload-perl-cpan-dist $(CPAN-DIST)
 
 clean::
@@ -94,4 +96,4 @@ $(ALIEN-DIST-DIR):
 # can resolve to a host perl (e.g. perlbrew) and build XS modules
 # for the wrong perl version:
 $(LOCAL-LIB): Makefile $(PERL)
-	$(CPANM-CMD) -L $@ -n $(CPAN-DEPS)
+	$(CPANM-CMD) $(CPANM-ARGS) -L $@ -n $(CPAN-DEPS)
