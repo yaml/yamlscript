@@ -26,8 +26,13 @@ ifeq ($(OS-NAME),windows)
 PROVE-PATH := $(shell command -v prove)
 PERL-CMD := $(dir $(PROVE-PATH))perl
 PROVE := $(PERL-CMD) $(PROVE-PATH)
+PROVE-YS := $(PROVE) --exec "bash $(ROOT)/util/prove-exec \
+  $(abspath $(CLI-BIN))"
+PROVE-BASH := $(PROVE) --exec bash
 else
 PROVE := prove
+PROVE-YS := $(PROVE) --exec $(abspath $(CLI-BIN))
+PROVE-BASH := $(PROVE)
 endif
 
 test := test/
@@ -107,9 +112,9 @@ test-run: $(TEST-RUN-DEPS)
 ifdef YS_RELEASE_USE_INSTALLED_YS
 	test -f $(CLI-BIN)
 endif
-	$(PROVE) --exec $(abspath $(CLI-BIN)) \
+	$(PROVE-YS) \
 	  $${TEST_VERBOSE:+'-v'} $(TEST-RUN-YS)
-	$(PROVE) $${TEST_VERBOSE:+'-v'} $(TEST-RUN-BASH)
+	$(PROVE-BASH) $${TEST_VERBOSE:+'-v'} $(TEST-RUN-BASH)
 
 test-ysj: export DOCKER_CONFIG := $(abspath $(YSJ-DOCKER-CONFIG))
 test-ysj: export PATH := $(abspath $(YSJ-BIN-DIR)):$(PATH)

@@ -17,8 +17,10 @@ ifeq ($(OS-NAME),windows)
 PROVE-PATH := $(shell command -v prove)
 PERL-CMD := $(dir $(PROVE-PATH))perl
 PROVE := $(PERL-CMD) $(PROVE-PATH)
+PROVE-BASH := $(PROVE) --exec bash
 else
 PROVE := prove
+PROVE-BASH := $(PROVE)
 endif
 
 V0-JAR := ys.v0-$(YS_VERSION).jar
@@ -64,7 +66,7 @@ install::
 test:: test-bb
 
 test-bb: $(BB) $(PERL) install
-	$(PROVE) $${TEST_VERBOSE:+'-v'} test/
+	$(PROVE-BASH) $${TEST_VERBOSE:+'-v'} test/
 
 release: deploy
 
