@@ -12,6 +12,7 @@ trap 'rm -rf "$tmp"' EXIT
 count=0
 check() {
   local got=$1 want=$2 name=$3
+  got=${got//$'\r'/}
   count=$((count+1))
   if [[ $got == "$want" ]]; then
     echo "ok $count - $name"

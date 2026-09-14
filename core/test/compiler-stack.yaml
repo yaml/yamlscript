@@ -400,6 +400,15 @@
     "-MAP"
 
 
+- name: CRLF shebang line with ys-0 implies !ys-0
+  yamlscript: "#!/usr/bin/env ys-0\r\n\r\nsay: \"Hi\"\r\n"
+  parse: |
+    "+MAP", :! "ys-0"
+    "=VAL", := "say"
+    "=VAL", :$ "Hi"
+    "-MAP"
+
+
 - name: Shebang line with '!ys-0' and '!ys-0:' tag ignored
   yamlscript: |
     #!/usr/bin/env ys-0

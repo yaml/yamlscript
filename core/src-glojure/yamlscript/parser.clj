@@ -3,8 +3,8 @@
 
 (ns yamlscript.parser)
 
-(def shebang-ys #"^#!.*/env ys-0(?:\.\d+\.\d+)?\n")
-(def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
+(def shebang-ys #"^#!.*/env ys-0(?:\.\d+\.\d+)?\r?\n")
+(def shebang-bash #"^#!.*[/ ]bash\r?\n+source +<\(")
 
 (defn- mark [[line column index]]
   [(dec line) (dec column) index])

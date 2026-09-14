@@ -31,8 +31,8 @@
 
 (declare ys-event)
 
-(def shebang-ys #"^#!.*/env ys-0(?:\.\d+\.\d+)?\n")
-(def shebang-bash #"^#!.*[/ ]bash\n+source +<\(")
+(def shebang-ys #"^#!.*/env ys-0(?:\.\d+\.\d+)?\r?\n")
+(def shebang-bash #"^#!.*[/ ]bash\r?\n+source +<\(")
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
