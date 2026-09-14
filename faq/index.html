@@ -1207,6 +1207,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1292,6 +1298,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1768,7 +1837,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2461,26 +2530,24 @@ have the <code>.ys</code> extension.</p>
 </details>
 <details class="question" open="open">
 <summary>Clojure is a JVM language. Does YS need the JVM?</summary>
-<p>No. YS is written in Clojure and exposes the Clojure/Java runtime ecosystem, but
+<p>No. YS is written in Clojure and exposes the Clojure runtime ecosystem, but
 there is no JVM involved.
-This is thanks to the <a href="https://www.graalvm.org/">GraalVM&nbsp;<img src="/image/external-link.svg"
+This is thanks to <a href="https://github.com/gloathub/gloat">Gloat&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
-</a> project's
-<a href="https://www.graalvm.org/latest/reference-manual/native-image/">native-image&nbsp;<img src="/image/external-link.svg"
+</a> and
+<a href="https://github.com/glojurelang/glojure">Glojure&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
-</a>
-which can compile anything compiled to jar files into a standalone native binary
-executable or shared library.</p>
+</a>, which compile Clojure source
+into standalone Go executables and shared libraries.</p>
 <p>This is how the <code>ys</code> binary and the <code>libys.so</code> shared library are
 created.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Even the YS build system does not require you to have any Java or Clojure
 stuff installed.
-It simply downloads a GraalVM tarball into <code>/tmp</code>, and the Makefile takes
-care of everything without leaving any mess behind.</p>
+The Makefile downloads its managed tools under <code>./.cache/</code>.</p>
 </div>
 </details>
 <details class="question" open="open">

@@ -1214,6 +1214,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1299,6 +1305,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1783,7 +1852,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2432,7 +2501,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </a> and <a href="https://en.wikipedia.org/wiki/Tab-separated_values">TSV&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
-</a> formats.</p>
+</a> formats.
+Require it as <code>csv</code> before using the qualified names:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">use ys::csv</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:as csv</span>
+</code></pre></div>
 <ul>
 <li><code>read(S)</code> — Short name for <code>csv/read-csv(S)</code></li>
 <li><code>read-csv(s)</code> — Convert a CSV string to a list of lists</li>

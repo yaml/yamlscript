@@ -1219,6 +1219,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1547,6 +1553,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -2023,7 +2092,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2949,7 +3018,8 @@ In those cases, the original Clojure function is still available in the
      class="external-link"
      alt="External link">
 </a>
-  functions callable as <code>math/&lt;func-name&gt;</code> in YS.</li>
+  functions callable as <code>math/&lt;func-name&gt;</code> after
+  <code>use ys::math: :as math</code>.</li>
 </ul>
 <h3 id="comparison">Comparison<a class="headerlink" href="#comparison" title="Permanent link">🔗</a></h3>
 <p>Clojure Core:</p>
@@ -3087,7 +3157,8 @@ In those cases, the original Clojure function is still available in the
      class="external-link"
      alt="External link">
 </a>
-  functions callable as <code>str/&lt;func-name&gt;</code> in YS.</li>
+  functions callable as <code>str/&lt;func-name&gt;</code> after
+  <code>use: str</code>.</li>
 </ul>
 <h2 id="regular-expression">Regular Expression<a class="headerlink" href="#regular-expression" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
@@ -3609,22 +3680,7 @@ In those cases, the original Clojure function is still available in the
 <h2 id="io">I/O<a class="headerlink" href="#io" title="Permanent link">🔗</a></h2>
 <p>Clojure Core:</p>
 <ul>
-<li><a href="https://clojuredocs.org/clojure.core/print">print&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/printf">printf&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/println">println&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/pr">pr&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/prn">prn&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/print-str">print-str&nbsp;<img src="/image/external-link.svg"
+<li><a href="https://clojuredocs.org/clojure.core/print-str">print-str&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>, <a href="https://clojuredocs.org/clojure.core/println-str">println-str&nbsp;<img src="/image/external-link.svg"
@@ -3634,18 +3690,6 @@ In those cases, the original Clojure function is still available in the
      class="external-link"
      alt="External link">
 </a>, <a href="https://clojuredocs.org/clojure.core/prn-str">prn-str&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/newline">newline&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/flush">flush&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/read">read&nbsp;<img src="/image/external-link.svg"
-     class="external-link"
-     alt="External link">
-</a>, <a href="https://clojuredocs.org/clojure.core/write">write&nbsp;<img src="/image/external-link.svg"
      class="external-link"
      alt="External link">
 </a>, <a href="https://clojuredocs.org/clojure.core/with-out-str">with-out-str&nbsp;<img src="/image/external-link.svg"
@@ -3661,8 +3705,9 @@ In those cases, the original Clojure function is still available in the
 </ul>
 <p>YS Std:</p>
 <ul>
-<li><code>say</code>, <code>out</code>, <code>warn</code>, <code>pp</code></li>
+<li><code>read</code>, <code>write</code>, <code>readline</code>, <code>say</code>, <code>print</code>, <code>out</code>, <code>warn</code>, <code>err</code>, <code>pp</code></li>
 </ul>
+<p>Raw Clojure I/O functions are available from <a href="../ys-clj/"><code>ys::clj</code></a> only.</p>
 
 
 

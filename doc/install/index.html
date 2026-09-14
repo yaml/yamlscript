@@ -1180,9 +1180,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-install-script-for-ys-and-libys" class="md-nav__link">
+  <a href="#install-with-in-1" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Install Script for ys and libys
+      Install with in-1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-and-upgrade-with-ys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install and Upgrade with ys
     </span>
   </a>
   
@@ -1306,6 +1315,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1391,6 +1406,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1867,7 +1945,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2472,9 +2550,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#quick-install-script-for-ys-and-libys" class="md-nav__link">
+  <a href="#install-with-in-1" class="md-nav__link">
     <span class="md-ellipsis">
-      Quick Install Script for ys and libys
+      Install with in-1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-and-upgrade-with-ys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install and Upgrade with ys
     </span>
   </a>
   
@@ -2588,30 +2675,28 @@ brew<span class="w"> </span>upgrade<span class="w"> </span>yaml/yamlscript/libys
 </code></pre></div>
 <p>Install <code>libys</code> (<code>libys.so</code> on Linux, <code>libys.dylib</code> on macOS) when you need the
 shared library for a YS loader library in another programming language.</p>
-<h3 id="quick-install-script-for-ys-and-libys">Quick Install Script for <code>ys</code> and <code>libys</code><a class="headerlink" href="#quick-install-script-for-ys-and-libys" title="Permanent link">🔗</a></h3>
-<p>You can install both <code>ys</code> and <code>libys</code> with a single CLI command, where:</p>
-<ul>
-<li><code>VERSION</code> defaults to the latest YS version.</li>
-<li><code>PREFIX</code> defaults to <code>$HOME/.local</code>.</li>
-<li><code>LIB=1</code> means only install the shared library.</li>
-<li><code>BIN=1</code> means only install the <code>ys</code> binary.</li>
-</ul>
-<p>Examples:
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
-$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.32<span class="w"> </span>bash
-$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.2.32<span class="w"> </span><span class="nv">LIB</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash
-$<span class="w"> </span>curl<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">PREFIX</span><span class="o">=</span>/tmp/yamlscript<span class="w"> </span>bash
-</code></pre></div></p>
-<p>For the <code>ys</code> command you'll need to have <code>PREFIX/bin</code> in your <code>PATH</code>, but the
-install script will tell you that.</p>
-<p>For <code>libys</code>, unless you use the default <code>PREFIX</code> you'll need to add
-<code>PREFIX/lib</code> to your <code>LD_LIBRARY_PATH</code>.</p>
-<div class="admonition note">
-<p class="admonition-title">An even shorter command to install <code>ys</code></p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-sL<span class="w"> </span>getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+<h3 id="install-with-in-1">Install with in-1<a class="headerlink" href="#install-with-in-1" title="Permanent link">🔗</a></h3>
+<p>You can install <code>ys</code> and <code>libys</code> persistently with
+<a href="https://in-1.cc/install/">in-1&nbsp;<img src="/image/external-link.svg"
+     class="external-link"
+     alt="External link">
+</a>.</p>
+<p>Examples for Bash and Zsh:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>--local<span class="w"> </span>ys<span class="w"> </span>libys
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>--local<span class="w"> </span>ys
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>--local<span class="w"> </span>libys
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>--local<span class="w"> </span>ys<span class="w"> </span>libys<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>YAMLSCRIPT-VERSION<span class="o">=</span><span class="m">0</span>.3.0<span class="w"> </span>LIBYS-VERSION<span class="o">=</span><span class="m">0</span>.3.0
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>--local<span class="w"> </span>ys<span class="w"> </span>libys<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="nv">PREFIX</span><span class="o">=</span>/tmp/yamlscript
 </code></pre></div>
-<p>You can use all the same options as above (before <code>bash</code>).</p>
-</div>
+<p>For Fish:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">$ </span>curl -sL https://in-1.cc <span class="o">|</span> <span class="nb">source</span> - --local ys libys
+</code></pre></div>
+<p><code>YAMLSCRIPT-VERSION</code> and <code>LIBYS-VERSION</code> default to the latest versions.
+<code>PREFIX</code> defaults to <code>$HOME/.local</code> for <code>--local</code> installations.
+See the in-1 installation documentation for temporary installations,
+environment setup, upgrades, and removal.</p>
 <!--
 ### Temporary Test Install
 
@@ -2626,6 +2711,31 @@ It will only be available for the duration of the shell session that you run it
 in.
 -->
 
+<h3 id="install-and-upgrade-with-ys">Install and Upgrade with <code>ys</code><a class="headerlink" href="#install-and-upgrade-with-ys" title="Permanent link">🔗</a></h3>
+<p>Once <code>ys</code> is installed, it can install or upgrade release files directly:</p>
+<div class="highlight"><pre><span></span><code>ys<span class="w"> </span>--install<span class="w">                         </span><span class="c1"># Install libys</span>
+ys<span class="w"> </span>--upgrade<span class="w">                         </span><span class="c1"># Upgrade ys and libys</span>
+ys<span class="w"> </span>--install-m2<span class="w">                      </span><span class="c1"># Install runtime jars for ys -T bb</span>
+<span class="nv">VERSION</span><span class="o">=</span><span class="m">0</span>.3.0<span class="w"> </span>ys<span class="w"> </span>--upgrade<span class="w">           </span><span class="c1"># Select a release</span>
+<span class="nv">PREFIX</span><span class="o">=</span>/tmp/yamlscript<span class="w"> </span>ys<span class="w"> </span>--upgrade<span class="w">  </span><span class="c1"># Select an installation prefix</span>
+</code></pre></div>
+<p>These commands support Linux and macOS on x64 and ARM64.
+They use system tools such as <code>curl</code> and <code>tar</code>, without running an installer
+script or an archive's Makefile.
+Upgrades install the default Glojure build, including upgrades from GraalVM.</p>
+<p><code>VERSION</code> defaults to the latest published release.
+<code>PREFIX</code> defaults to the installation containing the running executable.
+Relative prefixes are resolved from the current directory.
+<code>BIN=1</code> selects only <code>ys</code>; otherwise <code>LIB=1</code> selects only <code>libys</code>.
+<code>TARBALL=/path/to/release.tar.xz</code> installs a local release archive instead of
+downloading one, selecting <code>ys</code> or <code>libys</code> from the archive name.
+<code>QUIET=1</code> suppresses installation messages.</p>
+<p>Installing <code>ys</code> also installs its bundled Maven resources into <code>~/.m2</code>, unless
+<code>M2=0</code> is set or the installer is running as root.
+Run <code>ys --install-m2</code> as your normal user to install missing runtime JARs and
+POMs for the running <code>ys</code> version.
+This command preserves existing files and extracts the runtime JAR when
+<code>unzip</code> is available.</p>
 <h3 id="download-and-install">Download and Install<a class="headerlink" href="#download-and-install" title="Permanent link">🔗</a></h3>
 <p>All the binary pre-built release files are
 <a href="https://github.com/yaml/yamlscript/releases">here&nbsp;<img src="/image/external-link.svg"

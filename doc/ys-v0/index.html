@@ -1217,6 +1217,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1302,6 +1308,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1852,7 +1921,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2562,11 +2631,20 @@ time.</p>
 <p>The <code>ys.v0/init</code> call sets up the namespace to work like the ys runtime:</p>
 <ul>
 <li>All of the YS standard library functions and macros are referred in</li>
-<li>The YS namespace aliases (<code>str/</code>, <code>json/</code>, <code>fs/</code>, etc) are set up</li>
+<li>The YS <code>use</code> function makes bundled <code>ys::*</code> modules available on demand</li>
+<li>The retired <code>require</code> function directs callers to use <code>use</code></li>
 <li>The YS runtime variables (<code>ARGS</code>, <code>ENV</code>, <code>FILE</code>, <code>CWD</code>, etc) are bound</li>
 </ul>
 <p>The same compiled file still runs under ys itself (<code>ys -C file.clj</code>),
 where the header is a no-op.</p>
+<p>Use <code>use: v0</code> (or <code>use: ys::v0</code>) in a YAMLScript program to install the
+standard module aliases together, including <code>json</code>, <code>yaml</code>, <code>fs</code>, and <code>http</code>.
+The umbrella preserves existing aliases and imports only modules available
+in the runtime and permitted by <code>YS_MODULES</code>.
+It does not refer module functions into the calling namespace.
+This explicit import is retained in compiled output.
+The CLI also performs umbrella setup automatically when evaluating <code>-e</code>
+expressions; that runtime-only setup does not appear in compilation output.</p>
 <h2 id="babashka">Babashka<a class="headerlink" href="#babashka" title="Permanent link">🔗</a></h2>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-T<span class="w"> </span>bb<span class="w"> </span>program.ys<span class="w"> </span><span class="p">|</span><span class="w"> </span>bb<span class="w"> </span>/dev/stdin
 </code></pre></div>
@@ -2581,7 +2659,7 @@ runs <code>java</code> once to resolve the dependencies from Clojars.</p>
 The jars are bundled in the release archive; <code>make install</code> skips them
 when run as root (system installs), and you can install them per user at
 any time with:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys-sh-0.2.32<span class="w"> </span>--install-m2
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--install-m2
 </code></pre></div>
 <p>(Homebrew installs print this as a caveat, since brew cannot write to
 your home directory.)</p>
@@ -2602,13 +2680,13 @@ resolves the dependency at run time with <code>clojure.repl.deps/add-libs</code>
 which needs Clojure 1.12 or later.
 You can also skip the runtime resolution by providing the dependency
 yourself:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.2.32&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>clojure<span class="w"> </span>-Sdeps<span class="w"> </span><span class="s1">&#39;{:deps {org.yamlscript/ys.v0 {:mvn/version &quot;0.3.0&quot;}}}&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-M<span class="w"> </span>program.clj
 </code></pre></div>
 <h2 id="portable-clojure-dialects">Portable Clojure dialects<a class="headerlink" href="#portable-clojure-dialects" title="Permanent link">🔗</a></h2>
-<p>The <code>star</code> target emits a dialect-neutral dependency preamble through
+<p>The <code>clj+</code> target emits a dialect-neutral dependency preamble through
 the <code>clojurestar.deps</code> API.</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--to<span class="o">=</span>star<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--to<span class="o">=</span>clj+<span class="w"> </span>program.ys<span class="w"> </span>&gt;<span class="w"> </span>program.clj
 </code></pre></div>
 <p>Compatible runtimes such as Glojure, Jolt, and Gobb provide that API.
 They resolve <code>org.yamlscript/ys.v0</code>, then run the same portable program
@@ -2683,13 +2761,13 @@ printed when running compiled code on other runtimes.</p>
         
         
           
-          <a href="../binary/" class="md-footer__link md-footer__link--next" aria-label="Next: Compiling YS to Binary">
+          <a href="../binary/" class="md-footer__link md-footer__link--next" aria-label="Next: Standalone YS Programs">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Compiling YS to Binary
+                Standalone YS Programs
               </div>
             </div>
             <div class="md-footer__button md-icon">

@@ -1273,6 +1273,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1358,6 +1364,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1834,7 +1903,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2776,7 +2845,7 @@ mode.</p>
 <p>Lisp term for a parenthesized list of 1 or more forms where the first form is
 a function and the rest of the forms are arguments.
 Any of the forms may themselves be s-expressions.</p>
-<div class="highlight"><pre><span></span><code>(println (* 6 7))  # =&gt; 42
+<div class="highlight"><pre><span></span><code>(say (* 6 7))  # =&gt; 42
 </code></pre></div>
 <p>YS supports s-expressions, YeS-expressions, pair-expressions and dot-chain
 expressions.</p>
@@ -2785,14 +2854,14 @@ expressions.</p>
 <p><strong>YeS-expression</strong></p>
 <p>A YS syntax where the function name comes before the opening parentheses and
 infix operator expressions are allowed:</p>
-<div class="highlight"><pre><span></span><code>println(6 * 7)
+<div class="highlight"><pre><span></span><code>say(6 * 7)
 </code></pre></div>
 </li>
 <li>
 <p><strong>Pair expression</strong></p>
 <p>A YS expression as a mapping pair where the function comes first on the LHS.
 The argument forms can be on either side of the <code>:</code>.</p>
-<div class="highlight"><pre><span></span><code>println: 6 * 7
+<div class="highlight"><pre><span></span><code>say: 6 * 7
 </code></pre></div>
 </li>
 <li>

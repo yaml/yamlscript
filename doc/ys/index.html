@@ -169,6 +169,11 @@ f.parentNode.insertBefore(j,f);
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#standard-modules-in-expressions" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -1109,6 +1114,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    ys - The YS CLI Tool
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1118,6 +1134,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#standard-modules-in-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Modules in Expressions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiling-programs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiling Programs
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1222,6 +1273,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1307,6 +1364,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1783,7 +1903,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2371,6 +2491,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#standard-modules-in-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Standard Modules in Expressions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compiling-programs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compiling Programs
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2434,7 +2580,7 @@ printed as JSON.</p>
 <p>Here's the <code>ys --help</code> output:</p>
 <div class="highlight"><pre><span></span><code>$ ys --help
 
-ys - The YS Command Line Tool - v0.2.32
+ys - The YS Command Line Tool - v0.3.0
 
 Usage: ys [&lt;option...&gt;] [&lt;file&gt;]
 
@@ -2445,17 +2591,16 @@ Options:
   -l, --load               Output the (compact) JSON of YS evaluation
   -f, --file FILE          Explicitly indicate input file
 
-  -c, --compile            Compile YS to Clojure
-  -b, --binary             Compile to a native binary executable
+  -c, --compile            Compile YS to source or an artifact
 
   -p, --print              Print the final evaluation result value
-  -o, --output FILE        Output file for --load, --compile or --binary
+  -o, --output FILE        Output file for --load or --compile
   -s, --stream             Output all results from a multi-document stream
 
   -T, --to FORMAT          Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, star
+                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -U, --unordered          Mappings don&#39;t preserve key order (faster)
@@ -2473,6 +2618,7 @@ Options:
 
       --install            Install the libys shared library
       --upgrade            Upgrade both ys and libys
+      --install-m2         Install the ys.v0 jars into ~/.m2
 
       --version            Print version and exit
   -h, --help               Print this help and exit
@@ -2559,36 +2705,6 @@ sys<span class="w"> </span>0m0.007s
 <span class="w">  </span><span class="p">([</span><span class="nv">name</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="nf">greet</span><span class="w"> </span><span class="nb">name </span><span class="mi">1</span><span class="p">)))</span>
 <span class="p">(</span><span class="nb">apply </span><span class="nv">main</span><span class="w"> </span><span class="nv">ARGS</span><span class="p">)</span>
 </code></pre></div>
-<hr />
-<p>You can compile the program to a native binary executable:</p>
-<div class="highlight"><pre><span></span><code>$ time ys -b program.ys
-* Compiling YS &#39;program.ys&#39; to &#39;program&#39; executable
-* Setting up build env in &#39;/tmp/tmp.xU8K3OPymt&#39;
-* This may take a few minutes...
-[1/8] Initializing      (2.8s @ 0.14GB)
-[2/8] Performing analysis       (9.1s @ 0.33GB)
-[3/8] Building universe     (1.2s @ 0.39GB)
-[4/8] Parsing methods       (1.4s @ 0.41GB)
-[5/8] Inlining methods      (0.9s @ 0.49GB)
-[6/8] Compiling methods     (10.6s @ 0.50GB)
-[7/8] Layouting methods     (1.0s @ 0.50GB)
-[8/8] Creating image        (1.5s @ 0.44GB)
-* Compiled YS &#39;program.ys&#39; to &#39;program&#39; executable
-
-real    0m36.340s
-user    4m34.165s
-sys 0m3.915s
-
-$ time ./program Bob 2
-1) Hello, Bob!
-2) Hello, Bob!
-
-real    0m0.007s
-user    0m0.003s
-sys 0m0.004s
-</code></pre></div>
-<p>As you can see, the native binary is faster than the interpreted version, but
-the compilation takes quite a long time.</p>
 <hr />
 <p>When debugging, you can see the output of each compilation stage by adding the
 <code>-d</code> option:</p>
@@ -2732,6 +2848,161 @@ the compilation takes quite a long time.</p>
   ([name] (greet name 1)))
 (+++ (apply main ARGS))
 </code></pre></div>
+<h2 id="standard-modules-in-expressions">Standard Modules in Expressions<a class="headerlink" href="#standard-modules-in-expressions" title="Permanent link">🔗</a></h2>
+<p>YAMLScript expressions supplied with <code>-e</code> have the standard module aliases
+available automatically, including <code>fs</code>, <code>http</code>, <code>json</code>, and <code>yaml</code>.
+Positional expression shorthand has the same behavior:</p>
+<div class="highlight"><pre><span></span><code>ys<span class="w"> </span>-pe<span class="w"> </span><span class="s1">&#39;json/dump({})&#39;</span>
+</code></pre></div>
+<p>This is runtime setup in the current namespace.
+It preserves existing aliases and lets leading <code>ns</code> and <code>use</code> declarations
+establish their own aliases first.
+The input YAML, its mode and tags, and the generated compilation output are
+unchanged; nothing is wrapped in <code>=&gt;:</code> or inserted into the document stream.
+Raw Clojure evaluation with <code>-C</code> keeps its existing behavior.</p>
+<p>Script files and compiled programs opt in explicitly:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
+<span class="nt">use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0</span>
+<span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json/dump({})</span>
+</code></pre></div>
+<p><code>use: ys::v0</code> is equivalent to <code>use: v0</code>.
+The umbrella import adds aliases for available public standard modules without
+referring their functions into the current namespace.
+It skips modules disabled by <code>YS_MODULES</code> or unavailable in the runtime,
+including restricted WASI modules.
+Explicit individual imports continue to report errors for those modules.
+Repeating the umbrella import is harmless; modifiers are not supported.
+When a file is followed by <code>-e</code>, automatic imports apply only while evaluating
+the expressions, after the file has run.</p>
+<h2 id="compiling-programs">Compiling Programs<a class="headerlink" href="#compiling-programs" title="Permanent link">🔗</a></h2>
+<p><code>ys -c</code> writes Clojure to standard output.
+With <code>--output</code>, the filename selects the compilation target:</p>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Target</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>foo</code> or <code>foo.exe</code></td>
+<td><code>bin</code></td>
+<td>Native executable</td>
+</tr>
+<tr>
+<td><code>foo.go</code></td>
+<td><code>go</code></td>
+<td>Generated Go source</td>
+</tr>
+<tr>
+<td><code>foo/</code></td>
+<td><code>dir</code></td>
+<td>Buildable Go project</td>
+</tr>
+<tr>
+<td><code>foo.so</code>, <code>foo.dylib</code>, <code>foo.dll</code></td>
+<td><code>lib</code></td>
+<td>Shared library</td>
+</tr>
+<tr>
+<td><code>foo.h</code></td>
+<td><code>h</code></td>
+<td>FFI header</td>
+</tr>
+<tr>
+<td><code>foo.js</code></td>
+<td><code>js</code></td>
+<td>Browser-target Wasm bytes</td>
+</tr>
+<tr>
+<td><code>foo.html</code></td>
+<td><code>html</code></td>
+<td>HTML runner and companion <code>foo.js</code></td>
+</tr>
+<tr>
+<td><code>foo.wasm</code></td>
+<td><code>wasm</code></td>
+<td>WASI preview 1 module</td>
+</tr>
+<tr>
+<td><code>foo.clj</code></td>
+<td><code>clj</code></td>
+<td>Clojure source</td>
+</tr>
+<tr>
+<td><code>foo.bb</code></td>
+<td><code>bb</code></td>
+<td>Executable Babashka script</td>
+</tr>
+</tbody>
+</table>
+<p>An explicit <code>--to</code> selects the target regardless of the filename and implies
+<code>--compile</code>.
+Unknown extensions require <code>--to</code>.
+Binary, library, header, directory, and Wasm targets require an output path.
+For artifact targets, a <code>.ys</code> input supplies a default output in the current
+directory: its basename with the final <code>.ys</code> replaced by the target extension.
+<code>--to=bin</code> removes <code>.ys</code>; <code>--to=dir</code> creates a directory with that basename.
+<code>--to=wasm</code> writes <code>.wasm</code>, and <code>--to=js</code> writes <code>.js</code>.
+<code>--to=so</code>, <code>--to=dylib</code>, and <code>--to=dll</code> are aliases for <code>--to=lib</code> that select
+the corresponding default filename extension.
+<code>--to=lib</code> chooses <code>.so</code>, <code>.dylib</code>, or <code>.dll</code> for the target platform.
+Add <code>;h</code> to a library target to also write its matching header, for example
+<code>-T'so;h'</code> or <code>-T'dylib;h;darwin/amd64'</code>.
+An explicit header path in <code>--output</code> takes precedence over the matching name.
+<code>--to=h</code> writes <code>.h</code>; <code>--to=html</code> writes <code>.html</code> and a companion <code>.js</code>.
+This also applies to cross-compilation.
+For example, <code>ys sample/rosetta-code/99-bottles-of-beer.ys -cTbin</code> writes
+<code>./99-bottles-of-beer</code>.
+Using <code>-cTwasm</code> instead writes <code>./99-bottles-of-beer.wasm</code>.
+Text targets <code>go</code>, <code>clj</code>, <code>clj+</code>, and <code>bb</code> continue to use standard output when
+no output path is supplied.
+Existing output files, directories (even empty ones), and symlinks cause an
+error.
+Normal data output without <code>--compile</code> retains its existing behavior.
+Artifact compilation shows a progress line and elapsed time on standard error.
+In a terminal, a dot appears each second and the final status replaces the line.
+The success mark is green and the failure mark is red; <code>NO_COLOR</code> disables color.
+Gloat's build diagnostics are shown only on failure.</p>
+<div class="highlight"><pre><span></span><code>ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo
+ys<span class="w"> </span>foo.ys<span class="w"> </span>--to<span class="o">=</span>bin<span class="w"> </span>-o<span class="w"> </span>foo.xyz
+ys<span class="w"> </span>-ce<span class="w"> </span><span class="s1">&#39;say: 42&#39;</span><span class="w"> </span>-o<span class="w"> </span>answer
+ys<span class="w"> </span>-c<span class="w"> </span>-<span class="w"> </span>-o<span class="w"> </span>answer<span class="w"> </span>&lt;<span class="w"> </span>foo.ys
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;foo;darwin/amd64&#39;</span>
+ys<span class="w"> </span>foo.ys<span class="w"> </span>--to<span class="o">=</span><span class="s1">&#39;bin;darwin/amd64&#39;</span><span class="w"> </span>-o<span class="w"> </span>foo.xyz
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;lib/foo.so;include/foo.h&#39;</span>
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;foo.so;.h;darwin/amd64&#39;</span>
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;foo.js;.html&#39;</span>
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;assets/foo.js;pages/foo.html&#39;</span>
+</code></pre></div>
+<p>Output specifications have the form <code>PRIMARY[;COMPANION][;OS/ARCH]</code>.
+Quote arguments containing semicolons so the shell passes them intact.
+An extension-only companion replaces the primary extension and keeps its
+location.
+Shared libraries publish a header only when requested.
+A standalone <code>.h</code> request builds a temporary shared library and retains its
+header, using Gloat's <code>EXPORT</code> declarations and ABI.
+Browser <code>.js</code> files contain Wasm, not JavaScript source.
+Serve the generated HTML and Wasm through an HTTP server to run them.
+HTML companions reference the final relative Wasm location.</p>
+<p>Compilation uses Gloat's Glojure engine, from either native <code>ys</code> engine.
+<code>YS_GLOAT</code> can select a specific Gloat executable.
+Otherwise <code>ys</code> looks beside its executable and on <code>PATH</code>.
+If Gloat is missing, <code>ys</code> must be installed under a writable <code>PREFIX/bin/</code>
+directory; it installs Gloat into that prefix through <code>https://in-1.cc</code>.
+The prefix restriction applies only when Gloat needs installation.
+Gloat manages build dependencies; shared-library and header cross-compilation
+also require the target C toolchain.</p>
+<p>For development, <code>make -C ys test-compile</code> runs the compiler wrapper tests.
+<code>make -C ys test-compile-real</code> also builds real artifacts, calls the shared
+library, checks cross-compilation, and runs browser-target Wasm under Node
+and WASI under Wasmtime.
+Makes provisions the test tools.
+Use <code>YAMLSCRIPT_ENGINE=graalvm</code> to select the GraalVM CLI for these checks.
+Generated project Makefiles inherit Makes' restriction on paths containing
+spaces; choose a directory without spaces when building through that Makefile.</p>
 
 
 

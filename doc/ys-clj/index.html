@@ -1219,6 +1219,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1304,6 +1310,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1825,7 +1894,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2489,8 +2558,9 @@ In general the replacements have the same intent as the original functions, but
 from a YS perspective.</p>
 <p>When you absolutely need the original Clojure functions, they are available in
 this <code>ys::clj</code> library.
-These functions are automatically available in YAMLSCript by using the <code>clj/</code>
-prefix.</p>
+Use the library with an alias before using the <code>clj/</code> prefix:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">use</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clj</span>
+</code></pre></div>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">🔗</a></h2>
 <p>The documentation for these functions is available in the Clojure documentation
 web site, so we include a link to there in each definition.</p>
@@ -2520,6 +2590,24 @@ web site, so we include a link to there in each definition.</p>
   the <code>load-file</code> function loads a Clojure file from a given file path.
   In YS it loads a YS file from a given file path.</p>
 </li>
+<li>
+<p><code>clj/load-reader</code> loads and evaluates Clojure forms from a reader.</p>
+</li>
+<li>
+<p><code>clj/line-seq</code> preserves the original Clojure reader sequence helper.</p>
+</li>
+<li>
+<p><code>clj/flush</code>, <code>clj/newline</code>, <code>clj/print</code>, <code>clj/printf</code>, <code>clj/println</code>,
+  <code>clj/pr</code>, and <code>clj/prn</code> preserve the original Clojure output functions.</p>
+</li>
+<li>
+<p><code>clj/read</code> and <code>clj/read-line</code> preserve the original Clojure input
+  functions.</p>
+</li>
+</ul>
+<p>The Clojure <code>slurp</code> and <code>spit</code> functions are not exposed.
+Use <code>read</code> and <code>write</code>, which are backed by <code>ys::fs</code>.</p>
+<ul>
 <li>
 <p><code>clj/num</code> — <a href="https://clojuredocs.org/clojure.core/num">In Clojure&nbsp;<img src="/image/external-link.svg"
      class="external-link"

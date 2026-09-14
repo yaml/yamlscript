@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-cat <<...
+cat >&2 <<'EOF'
 
---------------------------------------------------------------------------------
-ERROR: 'install-libys' has been renamed to 'install'.
+The YAMLScript curl installer has moved to in-1.
 
-Use:
+Install libys persistently with:
 
-  curl https://yamlscript.org/install | LIB=1 bash
---------------------------------------------------------------------------------
+  source <(curl -sL https://in-1.cc) --local libys
 
-...
+See https://in-1.cc/install/ for more options.
+
+EOF
+
+exit 1

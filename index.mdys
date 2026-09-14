@@ -34,8 +34,7 @@ Learn More About YS</a></div>
 !!! success "Zero to YS in 10 seconds!"
 
     ```bash
-    curl -s https://getys.org/ys | bash
-    # Adjust PATH if asked to.
+    source <(curl -sL https://in-1.cc) --local ys
     ys --help
     ys -e 'say: "Hello, World!"'
     ```
@@ -57,6 +56,7 @@ Learn More About YS</a></div>
   type: code:yaml
   body: |
     !ys-0:
+    use http: :all
     vars =: load('vars.yaml')
     json-file =: 'data.json'
 
@@ -91,7 +91,7 @@ Learn More About YS</a></div>
     * [Load YS in your programs](doc/bindings.md)
     * [Script Automation with YS](doc/examples.md)
     * [Query and Transform YAML data](doc/query.md)
-    * [Compile YS to binary executables](doc/binary.md)
+    * [Distribute standalone YS programs](doc/binary.md)
 
 - name: Learn YS Today!
   body: |
@@ -106,8 +106,7 @@ Learn More About YS</a></div>
   icon: material-clock-fast
   body: |
     ```bash
-    curl -s https://getys.org/ys | bash
-    # Adjust PATH if asked to.
+    source <(curl -sL https://in-1.cc) --local ys
     ys --help
     ys -e 'say: "Hello, World. I am $(ENV.USER)."'
     ```
@@ -195,10 +194,8 @@ your clean YAML data clean.
 Like many new languages, YS was built over an existing robust language,
 [Clojure](https://clojure.org), which in turn was built over
 [Java](https://java.com).
-The power of Clojure and Java is available to YS users via the YS runtime
-interpreter, `ys`.
-However, the `ys` command is compiled into a single standalone native binary
-executable file.
+The power of Clojure is available to YS users via the Glojure runtime in `ys`.
+The `ys` command is compiled into a single standalone executable file.
 This means that <u>No Java or JVM</u> installation is required to use YS, and
 startup/execution speed is very fast.
 
@@ -221,8 +218,8 @@ There are many ways to use YS:
   * Learn how at [Exercism](https://exercism.org/tracks/yamlscript)
 * [Script Automation with YS](doc/examples.md)
   * Many used in the [YS repository](https://github.com/yaml/yamlscript)
-* [Compile YS to binary executables](doc/binary.md)
-  * Fast, standalone, no-source software distribution
+* [Distribute standalone YS programs](doc/binary.md)
+  * Standalone executables for supported operating systems and WASI
 * [Query and Transform YAML (and JSON) data](doc/query.md)
   * Use the `ys` command line tool similar to `jq` or `yq`
 ```

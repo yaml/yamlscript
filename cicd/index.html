@@ -1324,6 +1324,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1409,6 +1415,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1885,7 +1954,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2670,7 +2739,7 @@ but you need to make sure that the YAML files are always up to date.</p>
 end in <code>.ys</code> from the corresponding <code>.yaml</code> file:</p>
 <div class="highlight"><pre><span></span><code><span class="nv">SHELL</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>bash
 
-<span class="nv">YS_VERSION</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="m">0</span>.2.32
+<span class="nv">YS_VERSION</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="m">0</span>.3.0
 <span class="nv">YS</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>/tmp/bin/ys-<span class="k">$(</span>YS_VERSION<span class="k">)</span>
 <span class="nv">YS_FILES</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s1">&#39;*.ys&#39;</span><span class="k">)</span>
 <span class="nv">YAML_FILES</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="k">$(</span>YS_FILES:.ys<span class="o">=</span>.yaml<span class="k">)</span>
@@ -2692,9 +2761,8 @@ end in <code>.ys</code> from the corresponding <code>.yaml</code> file:</p>
 <span class="w">        </span>mv<span class="w"> </span><span class="nv">$@</span>.tmp<span class="w"> </span><span class="nv">$@</span>
 
 <span class="nf">$(YS)</span><span class="o">:</span>
-<span class="w">        </span>curl<span class="w"> </span>-s<span class="w"> </span>https://getys.org/ys<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<span class="w">          </span><span class="nv">PREFIX</span><span class="o">=</span>/tmp<span class="w"> </span><span class="nv">VERSION</span><span class="o">=</span><span class="k">$(</span>YS_VERSION<span class="k">)</span><span class="w"> </span><span class="nv">QUIET</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>bash<span class="w"> </span><span class="se">\</span>
-<span class="w">          </span>&gt;<span class="w"> </span>/dev/null
+<span class="w">        </span>@source<span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>-q<span class="w"> </span>ys<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>YAMLSCRIPT-VERSION<span class="o">=</span><span class="k">$(</span>YS_VERSION<span class="k">)</span><span class="w"> </span><span class="nv">PREFIX</span><span class="o">=</span>/tmp
 
 <span class="nf">.PHONY</span><span class="o">:</span><span class="w"> </span><span class="n">update</span> <span class="n">test</span>
 </code></pre></div>

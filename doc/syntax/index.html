@@ -1206,6 +1206,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1291,6 +1297,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1767,7 +1836,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2692,8 +2761,8 @@ A missing bare key is created as a string key.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">data.user.name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Alice&#39;</span>
 </code></pre></div>
 <p>This is equivalent to rebinding <code>data</code> with an <code>assoc-in</code> call.
-The <code>std/put</code> function, also available as <code>put</code>, is a synonym for <code>assoc</code> when
-only one mapping level needs to be updated explicitly.</p>
+The <code>put</code> function is a synonym for <code>assoc</code> when only one mapping level needs
+to be updated explicitly.</p>
 <p>A call in the path computes a key from the collection at that point.
 The call is evaluated once.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">data.choose-user().name =</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Alice&#39;</span>

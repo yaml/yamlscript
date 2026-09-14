@@ -1,139 +1,15 @@
 #!/usr/bin/env bash
 
-[ -z "$BASH" ] && {
-  echo "This script must be run with 'bash' instead of '$0'." >&2
-  exit 1
-}
+cat >&2 <<'EOF'
 
-[[ ${DEBUG-} == 1 ]] && set -x
+The YAMLScript curl installer has moved to in-1.
 
-set -e -u -o pipefail
+Install ys and libys persistently with:
 
-YAMLSCRIPT_VERSION=0.2.32
-VERSION=${VERSION:-$YAMLSCRIPT_VERSION}
-export VERSION
+  source <(curl -sL https://in-1.cc) --local ys libys
 
-main() (
-  setup "$@"
+See https://in-1.cc/install/ for more options.
 
-  if [[ ${TARBALL-} ]]; then
-    case $(basename -- "$TARBALL") in
-      libys-*) install libys;;
-      ys-*) install ys;;
-      *) die "Can't tell ys from libys by tarball name: '$TARBALL'";;
-    esac
-  elif [[ ${BIN-} ]]; then
-    install ys
-  elif [[ ${LIB-} ]]; then
-    install libys
-  else
-    install ys
-    install libys
-  fi
-)
+EOF
 
-install() (
-  name=$1
-
-  if [[ ${TARBALL-} ]]; then
-    cp -- "$TARBALL" "$dir/download.tar.xz"
-  else
-    url+=/$vers/$name-$vers-$os-$arch.tar.xz
-
-    curl -s -S -L -o "$dir/download.tar.xz" "$url"
-  fi
-
-  release_dir=$dir/$name
-  mkdir -- "$release_dir"
-  tar -xf "$dir/download.tar.xz" -C "$release_dir"
-
-  (
-    CDPATH='' cd -- "$release_dir" || exit
-
-    make -s --no-print-directory -C "$name"-* install
-  )
-
-  if [[ ! ${QUIET-} &&
-        $name == ys &&
-        $PATH != *"$PREFIX"/bin*
-     ]]; then
-    echo "
-  *** WARNING: '$PREFIX/bin' is not in your PATH yet ***
-
-  You can add it by running:
-    export PATH=$PREFIX/bin:\$PATH
-
-  Make it permanent by adding the above line to your shell profile.
-
-  For full details: https://yamlscript.org/doc/install
-"
-  fi
-
-  if [[ ! ${QUIET-} &&
-        $name == libys &&
-        $PREFIX != "$HOME/.local" &&
-        $PREFIX != /usr/local &&
-        ${LD_LIBRARY_PATH-} != *"$PREFIX"/lib*
-     ]]; then
-    echo
-    echo "  *** WARNING: '$PREFIX/lib' is not in your LD_LIBRARY_PATH yet ***"
-    echo
-  fi
-)
-
-setup() {
-
-  # A local release tarball (argument or TARBALL env var) installs that
-  # file instead of downloading from GitHub. For testing releases.
-  TARBALL=${1-${TARBALL-}}
-  if [[ $TARBALL ]]; then
-    [[ -f $TARBALL ]] ||
-      die "Release tarball not found: '$TARBALL'"
-  fi
-
-  vers=${VERSION:-$DEFAULT_VERSION}
-
-  if [[ ! ${PREFIX-} ]]; then
-    if [[ $(id -u) == 0 ]]; then
-      PREFIX=/usr/local
-    else
-      PREFIX=$HOME/.local
-    fi
-  fi
-  export PREFIX
-
-  if [[ $OSTYPE == *darwin* ]]; then
-    os=macos
-  elif [[ $OSTYPE == *linux* ]]; then
-    os=linux
-  else
-    die "Unknown/unsupported OS type: '$OSTYPE'"
-  fi
-
-  if [[ $MACHTYPE == *x86_64* ]]; then
-    arch=x64
-  elif [[ $MACHTYPE == *arm64* || $MACHTYPE == *aarch64* ]]; then
-    arch=aarch64
-  else
-    die "Unknown machine/unsupported type: '$MACHTYPE'"
-  fi
-
-  url=https://github.com/yaml/yamlscript/releases/download/
-
-  if [[ ${PREFIX-} && $PREFIX != /* ]]; then
-    export PREFIX=$PWD/$PREFIX
-  fi
-
-  unset -v dir
-
-  trap '[[ ${dir-} ]] && rm -fr -- "$dir"' EXIT
-
-  dir=$(mktemp -d)
-}
-
-die() {
-  printf '%s\n' "$@" >&2
-  exit 1
-}
-
-main "$@"
+exit 1

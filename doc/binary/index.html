@@ -29,7 +29,7 @@
     
     
       
-        <title>Compiling YS to Binary - YS — YAML Done Wisely</title>
+        <title>Standalone YS Programs - YS — YAML Done Wisely</title>
       
     
     
@@ -127,7 +127,7 @@ f.parentNode.insertBefore(j,f);
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Compiling YS to Binary - YS — YAML Done Wisely" >
+        <meta  property="og:title"  content="Standalone YS Programs - YS — YAML Done Wisely" >
       
         <meta  property="og:description"  content="Program in YAML — Code is Data" >
       
@@ -143,7 +143,7 @@ f.parentNode.insertBefore(j,f);
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Compiling YS to Binary - YS — YAML Done Wisely" >
+        <meta  name="twitter:title"  content="Standalone YS Programs - YS — YAML Done Wisely" >
       
         <meta  name="twitter:description"  content="Program in YAML — Code is Data" >
       
@@ -204,7 +204,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="/">
           <span class="md-ellipsis">
             
-              Compiling YS to Binary
+              Standalone YS Programs
             
           </span>
           </a>
@@ -1212,6 +1212,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1297,6 +1303,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1782,7 +1851,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2422,76 +2491,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </a>
 
 
-  <h1>Compiling YS to Binary</h1>
+  <h1>Standalone YS Programs</h1>
 
-<p>You can compile any YS program that has a <code>main</code> function to a machine native
-binary executable.</p>
-<p>This is done using the <code>ys --compile --binary</code> command.</p>
-<p>For example, if you have a file named <code>hello.ys</code> with the following content:</p>
-<div class="highlight"><pre><span></span><code><span class="kt">!ys-0</span>
-
-<span class="l l-Scalar l-Scalar-Plain">defn main(name=&#39;world&#39;)</span><span class="p p-Indicator">:</span>
-<span class="w">  </span><span class="nt">say</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Hello,</span><span class="nv"> </span><span class="s">$name!&#39;</span>
-</code></pre></div>
-<p>You can run:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>--binary<span class="w"> </span>hello.ys
-*<span class="w"> </span>Compiling<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;hello&#39;</span><span class="w"> </span>executable
-*<span class="w"> </span>Setting<span class="w"> </span>up<span class="w"> </span>build<span class="w"> </span>env<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">&#39;/tmp/tmp.W0u4SGljdY&#39;</span>
-*<span class="w"> </span>This<span class="w"> </span>may<span class="w"> </span>take<span class="w"> </span>a<span class="w"> </span>few<span class="w"> </span>minutes...
-<span class="o">[</span><span class="m">1</span>/8<span class="o">]</span><span class="w"> </span>Initializing<span class="w">              </span><span class="o">(</span><span class="m">3</span>.1s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.24GB<span class="o">)</span>
-<span class="o">[</span><span class="m">2</span>/8<span class="o">]</span><span class="w"> </span>Performing<span class="w"> </span>analysis<span class="w">               </span><span class="o">(</span><span class="m">12</span>.2s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.64GB<span class="o">)</span>
-<span class="o">[</span><span class="m">3</span>/8<span class="o">]</span><span class="w"> </span>Building<span class="w"> </span>universe<span class="w">         </span><span class="o">(</span><span class="m">1</span>.8s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.45GB<span class="o">)</span>
-<span class="o">[</span><span class="m">4</span>/8<span class="o">]</span><span class="w"> </span>Parsing<span class="w"> </span>methods<span class="w">           </span><span class="o">(</span><span class="m">1</span>.6s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.46GB<span class="o">)</span>
-<span class="o">[</span><span class="m">5</span>/8<span class="o">]</span><span class="w"> </span>Inlining<span class="w"> </span>methods<span class="w">          </span><span class="o">(</span><span class="m">1</span>.4s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.63GB<span class="o">)</span>
-<span class="o">[</span><span class="m">6</span>/8<span class="o">]</span><span class="w"> </span>Compiling<span class="w"> </span>methods<span class="w">         </span><span class="o">(</span><span class="m">17</span>.7s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.43GB<span class="o">)</span>
-<span class="o">[</span><span class="m">7</span>/8<span class="o">]</span><span class="w"> </span>Laying<span class="w"> </span>out<span class="w"> </span>methods<span class="w">                </span><span class="o">(</span><span class="m">1</span>.0s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.49GB<span class="o">)</span>
-<span class="o">[</span><span class="m">8</span>/8<span class="o">]</span><span class="w"> </span>Creating<span class="w"> </span>image<span class="w">            </span><span class="o">(</span><span class="m">1</span>.7s<span class="w"> </span>@<span class="w"> </span><span class="m">0</span>.54GB<span class="o">)</span>
-*<span class="w"> </span>Compiled<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;hello&#39;</span><span class="w"> </span>executable
-
-real<span class="w">    </span>0m48.929s
-user<span class="w">    </span>6m44.965s
-sys<span class="w">     </span>0m5.095s
-$<span class="w"> </span>ls<span class="w"> </span>-lh<span class="w"> </span>hello
--rwxr-xr-x<span class="w"> </span><span class="m">1</span><span class="w"> </span>me<span class="w"> </span>me<span class="w"> </span>13M<span class="w"> </span>Sep<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">15</span>:04<span class="w"> </span>hello*
-</code></pre></div>
-<p>Note that the compilation takes some time and the resulting binary is quite
-large.</p>
-<p>Let's try it out:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>./hello
-Hello,<span class="w"> </span>world!
-
-real<span class="w">    </span>0m0.014s
-user<span class="w">    </span>0m0.002s
-sys<span class="w">     </span>0m0.013s
-$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>./hello<span class="w"> </span>Bob
-Hello,<span class="w"> </span>Bob!
-
-real<span class="w">    </span>0m0.014s
-user<span class="w">    </span>0m0.005s
-sys<span class="w">     </span>0m0.010s
-</code></pre></div>
-<p>Let's compare the 14ms runtime to using the <code>ys</code> interpreter with <code>-e</code>:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">time</span><span class="w"> </span>ys<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;defn main(name=&quot;world&quot;): say(&quot;Hello, $name!&quot;)&#39;</span>
-Hello,<span class="w"> </span>world!
-
-real<span class="w">    </span>0m0.034s
-user<span class="w">    </span>0m0.019s
-sys<span class="w">     </span>0m0.017s
-</code></pre></div>
-<p>The binary is about 2.5 times faster than the interpreter in this case.</p>
-<p>Note that we can even compile the one-liner if we want to:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>--compile<span class="w"> </span>--binary<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;defn main(name=&quot;world&quot;): say(&quot;Hello, $name!&quot;)&#39;</span>
-...<span class="w"> </span><span class="nb">time</span><span class="w"> </span>passes<span class="w"> </span>...
-*<span class="w"> </span>Compiled<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;-e&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;./NO-NAME&#39;</span><span class="w"> </span>executable
-</code></pre></div>
-<p>Since there is no input file, the binary is named <code>NO-NAME</code>.</p>
-<p>Optionally, you can use the <code>--output=&lt;file-name&gt;</code> to specify the output file
-name.</p>
-<p>The options listed above have short names as well:</p>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ys<span class="w"> </span>-cbo<span class="w"> </span>say-hi<span class="w"> </span>hello.ys
-*<span class="w"> </span>Compiling<span class="w"> </span>YS<span class="w"> </span><span class="s1">&#39;hello.ys&#39;</span><span class="w"> </span>to<span class="w"> </span><span class="s1">&#39;say-hi&#39;</span><span class="w"> </span>executable
-...
-</code></pre></div>
+<p>The <code>ys</code> command is distributed as a standalone executable built with Gloat
+and Glojure.
+It does not require Java or a JVM.</p>
+<p>The former <code>ys --binary</code> option for compiling an individual YAMLScript program
+with GraalVM has been retired.
+Distribute a <code>.ys</code> source file together with the appropriate <code>ys</code> release
+executable, or compile the program to portable Clojure with <code>ys --compile</code>.</p>
+<p>The release workflow publishes executables for Linux, macOS, FreeBSD, Windows,
+and WASI Preview 1.</p>
 
 
 

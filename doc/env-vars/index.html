@@ -1222,6 +1222,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1307,6 +1313,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1783,7 +1852,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2439,11 +2508,19 @@ separating words.</p>
 <p><code>YS_PATH</code> - An alternative to <code>YSPATH</code> that is used if <code>YSPATH</code> is not set.</p>
 </li>
 <li>
-<p><code>YS_MAVEN_REPOSITORY</code> - The local Maven repository used by <code>use :deps</code>.</p>
+<p><code>YS_MAVEN_REPOSITORY</code> - The local Maven repository used by <code>use :from</code>.</p>
 </li>
 <li>
-<p><code>YS_GITLIBS_DIR</code> - The cache directory used by <code>use :deps</code> for Gist and
+<p><code>YS_GITLIBS_DIR</code> - The cache directory used by <code>use :from</code> for Gist and
   GitHub source files.</p>
+</li>
+<li>
+<p><code>YS_MODULES</code> - A comma-separated or whitespace-separated allowlist of
+  bundled modules that a program may load with <code>use</code>.
+  Short names such as <code>fs</code> and full names such as <code>ys.fs</code> are accepted.
+  When unset, all modules supported by the host platform may be loaded.
+  Standard proxies such as <code>read</code>, <code>say</code>, and <code>pp</code> also require their owning
+  <code>ys::fs</code>, <code>ys::io</code>, or <code>ys::pprint</code> module to be allowed.</p>
 </li>
 <li>
 <p><code>YS_PRINT=1</code> - Same as <code>-p</code> (<code>--print</code>) command line option.</p>
@@ -2456,7 +2533,13 @@ separating words.</p>
   option.</p>
 </li>
 <li>
-<p><code>YS_FORMAT=&lt;yaml|json|edn|csv|tsv&gt;</code> - Same as <code>-t</code> ()</p>
+<p><code>YS_FORMAT=&lt;yaml|json|edn|csv|tsv&gt;</code> - Same as <code>-t</code> (<code>--to</code>).</p>
+</li>
+<li>
+<p><code>YS_FORMATTER=&lt;command&gt;</code> - Filter compiled Clojure output through an external
+  formatter command.
+  When unset, <code>ys --compile</code> uses its built-in pretty printer.
+  External formatters are not available in the WASI build.</p>
 </li>
 <li>
 <p><code>YS_UNORDERED=1</code> - Same as <code>-u</code> (<code>--unordered</code>) command line option.</p>

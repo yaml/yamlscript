@@ -1206,6 +1206,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1291,6 +1297,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../doc/ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1767,7 +1836,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2530,12 +2599,13 @@ and Raku Conference 2024 in Las Vegas.</p>
 </ul>
 <h3 id="quick-install-for-ys-and-libysso">Quick Install For ys and libys.so<a class="headerlink" href="#quick-install-for-ys-and-libysso" title="Permanent link">🔗</a></h3>
 <p>YS works on Linux and macOS. Not on Windows yet.</p>
-<p>Install ys and libys.so (in <code>~/.local/bin</code> and <code>~/.local/lib</code>):
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>https://yamlscript.org/install<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+<p>Install ys and libys.so persistently:
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>&lt;<span class="o">(</span>curl<span class="w"> </span>-sL<span class="w"> </span>https://in-1.cc<span class="o">)</span><span class="w"> </span>--local<span class="w"> </span>ys<span class="w"> </span>libys
 </code></pre></div></p>
-<p>Run that as root installs under <code>PREFIX=/usr/local</code>.</p>
-<p>Install into different directory <code>... | PREFIX=/other/dir bash</code>.
-Install specific version <code>... | VERSION=0.1.xx bash</code>.</p>
+<p>Running that as root installs under <code>PREFIX=/usr/local</code>.</p>
+<p>Use <code>PREFIX=/other/dir</code> to install into a different directory.
+Use <code>YAMLSCRIPT-VERSION=0.1.xx LIBYS-VERSION=0.1.xx</code> to install a specific
+version.</p>
 <h3 id="install-from-source">Install from Source<a class="headerlink" href="#install-from-source" title="Permanent link">🔗</a></h3>
 <p>If the quick install has problems, you can usually get it to work by building
 from source.</p>

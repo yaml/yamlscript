@@ -1220,6 +1220,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
         
       
+        
+      
+        
+      
+        
+      
     
     
       
@@ -1305,6 +1311,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   
   <span class="md-ellipsis">
     File System Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-io/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stream I/O Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-http/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    HTTP Library
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ys-ipc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Process Library
   </span>
   
 
@@ -1781,7 +1850,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
   
   <span class="md-ellipsis">
-    Compiling YS to Binary
+    Standalone YS Programs
   </span>
   
 
@@ -2456,9 +2525,11 @@ when you need to do something more advanced, <a href="https://clojuredocs.org/">
 </a> is available for you to use.</p>
 <p>Even though Clojure is a Lisp, YS code looks a lot more like Python, Ruby, Perl
 or JavaScript.
-And even though Clojure is a JVM (Java) language, YS doesn't use the JVM at all.
-YS is a fast standalone native binary, as is the <code>libys</code> shared library
-that it is used by all <a href="../loaders/">YS loader libraries</a>.</p>
+And even though Clojure is a JVM language, the default YS distribution does
+not use the JVM.
+Gloat compiles the Clojure sources for the Glojure runtime into a standalone
+<code>ys</code> executable and the <code>libys</code> shared library used by all
+<a href="../loaders/">YS loader libraries</a>.</p>
 
 
 

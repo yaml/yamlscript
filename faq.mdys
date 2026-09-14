@@ -57,12 +57,11 @@ have the `.ys` extension.
 ```mdys::question
 Clojure is a JVM language. Does YS need the JVM?
 
-No. YS is written in Clojure and exposes the Clojure/Java runtime ecosystem, but
+No. YS is written in Clojure and exposes the Clojure runtime ecosystem, but
 there is no JVM involved.
-This is thanks to the [GraalVM](https://www.graalvm.org/) project's
-[native-image](https://www.graalvm.org/latest/reference-manual/native-image/)
-which can compile anything compiled to jar files into a standalone native binary
-executable or shared library.
+This is thanks to [Gloat](https://github.com/gloathub/gloat) and
+[Glojure](https://github.com/glojurelang/glojure), which compile Clojure source
+into standalone Go executables and shared libraries.
 
 This is how the `ys` binary and the `libys.so` shared library are
 created.
@@ -70,8 +69,7 @@ created.
 !!! note
     Even the YS build system does not require you to have any Java or Clojure
     stuff installed.
-    It simply downloads a GraalVM tarball into `/tmp`, and the Makefile takes
-    care of everything without leaving any mess behind.
+    The Makefile downloads its managed tools under `./.cache/`.
 ```
 
 
