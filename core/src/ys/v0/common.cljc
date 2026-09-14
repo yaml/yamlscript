@@ -22,9 +22,11 @@
   ([path] (abspath path (cwd)))
   ([path base]
    #?(:glj
-      (if (str/starts-with? path "/")
-        path
-        (str base "/" path))
+      (let [path (if (path:filepath.IsAbs path)
+                   path
+                   (path:filepath.Join base path))
+            [path error] (path:filepath.Abs path)]
+        (if error (throw error) path))
       :default
       (if (-> path io/file .isAbsolute)
         path
@@ -50,11 +52,7 @@
   "Return the parent directory of a path, or . for no parent."
   [path]
   #?(:glj
-     (let [path (str/replace path #"/+$" "")]
-       (if (str/includes? path "/")
-         (let [parent (str/replace path #"/[^/]*$" "")]
-           (if (= "" parent) "/" parent))
-         "."))
+     (path:filepath.Dir path)
      :default
      (->
        path
@@ -105,19 +103,24 @@
        []
        (-> ^java.lang.ProcessHandle (get-process-handle) .pid))))
 
+(defn- split-yspath [yspath separator]
+  (str/split yspath (if (= separator ";") #";" #":")))
+
 (defn get-yspath
   "Return yspath for the current context."
   [base]
-  (let [yspath (or
+  (let [separator #?(:glj (if (= runtime.GOOS "windows") ";" ":")
+                     :default java.io.File/pathSeparator)
+        yspath (or
                  (get (System/getenv) "YSPATH")
-                 (when (re-matches #"/NO-NAME$" base) (cwd))
+                 (when (re-matches #".*[\\/]NO-NAME$" base) (cwd))
                  (->
                    base
                    dirname
                    abspath))
         _ (when-not yspath
             (util/die "YSPATH environment variable not set"))]
-    (str/split yspath #":")))
+    (split-yspath yspath separator)))
 
 (defn re-find+
   "Reprocess find+ for YAMLScript parsing."

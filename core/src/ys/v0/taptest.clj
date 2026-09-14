@@ -15,6 +15,11 @@
 (def error-map-hook
   (atom (fn [error] (Throwable->map error))))
 
+(def command-hook
+  (atom
+    (fn [opts command]
+      ((util/backend 'babashka.process/sh) opts command))))
+
 (defn- error-map [error]
   (@error-map-hook error))
 
@@ -121,7 +126,7 @@
         opts (if stdi
                (assoc opts :in stdi)
                opts)
-        ret ((util/backend 'babashka.process/sh) opts cmnd)]
+        ret (@command-hook opts cmnd)]
     (if (get test "form")
       ret
       (case what

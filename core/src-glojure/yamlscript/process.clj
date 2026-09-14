@@ -7,7 +7,7 @@
   (:require [clojure.string :as str]))
 
 (defn- bytes-to-str [bytes]
-  (fmt.Sprintf "%s" bytes))
+  (str/replace (fmt.Sprintf "%s" bytes) #"\r\n" "\n"))
 
 (defn- split-opts [args]
   (if (map? (first args))

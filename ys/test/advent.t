@@ -2,7 +2,7 @@
 
 use ys::taptest: :all
 
-AV =: "$DIR/../../sample/advent"
+AV =: "'$DIR/../../sample/advent'"
 
 w =: /\w+/
 

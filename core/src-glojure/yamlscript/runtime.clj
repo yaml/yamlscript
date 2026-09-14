@@ -329,6 +329,15 @@
     (when error (throw error))
     path))
 
+(defn- get-yspath [base]
+  (let [yspath (or
+                 (get (System/getenv) "YSPATH")
+                 (when (re-matches #".*[\\/]NO-NAME$" base)
+                   (System/getProperty "user.dir"))
+                 (path:filepath.Dir (absolute-path base)))
+        separator (if (= runtime.GOOS "windows") #";" #":")]
+    (str/split yspath separator)))
+
 (defn- regular-file? [path]
   (let [[info error] (os.Stat path)]
     (and (nil? error) (not (.IsDir info)))))
@@ -356,7 +365,7 @@
       (set-root! #'global/FILE file)
       (when-not (str/starts-with? file "http")
         (set-root! #'global/DIR (path:filepath.Dir file))
-        (set-root! #'global/INC (common/get-yspath file)))
+        (set-root! #'global/INC (get-yspath file)))
       (if yamlscript?
         (eval-yamlscript source file false)
         (binding [*file* file]
@@ -448,7 +457,7 @@
       (try
         (set-root! #'global/FILE path)
         (set-root! #'global/DIR (path:filepath.Dir path))
-        (set-root! #'global/INC (common/get-yspath path))
+        (set-root! #'global/INC (get-yspath path))
         (eval-yamlscript (slurp path) path false)
         (finally
           (set-root! #'global/FILE saved-file)
@@ -491,6 +500,11 @@
      :load-url load-url
      :load-pod load-pod
      :unload-pods unload-pods}))
+
+(defn- run-test-command [opts command]
+  (if (= runtime.GOOS "windows")
+    (yamlscript.process/sh opts "bash" "-c" command)
+    (yamlscript.process/sh opts command)))
 
 (defn install-process! []
   (clojure.core/require 'babashka.process)
@@ -638,6 +652,7 @@
     (intern 'ys.v0.std 'get+ std-get+)
     (intern 'ys.v0.std 'stream std-stream)
     (reset! yamlscript.module.taptest/error-map-hook glojure-error-map)
+    (reset! yamlscript.module.taptest/command-hook run-test-command)
     (intern 'ys.v0.fs 'read fs-read)
     (intern 'ys.v0.fs 'write fs-write)
     (doseq [[sym value]
@@ -730,7 +745,7 @@
     (set-root! #'global/DIR (path:filepath.Dir file))
     (set-root! #'global/FILE file)
     (set-root! #'global/INC
-      (try (common/get-yspath file) (catch go/any _ [])))
+      (try (get-yspath file) (catch go/any _ [])))
     (set-root! #'global/VERSION ys.v0/VERSION)
     (set-root! #'global/RUN
       (merge global/RUN

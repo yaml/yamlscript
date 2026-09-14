@@ -21,7 +21,11 @@ test::
   want: BAZ
 
 - code: |
-    sh({:dir '..'} 'bash -c "echo $FOO_BAR"').out:chomp
+    sh({:dir '..'} 'bash' '-c' 'echo $FOO_BAR').out:chomp
   want: BAZ
 
-done: 4
+- code: |
+    sh('bash' '-c' 'printf "one\\r\\ntwo\\r\\n"').out
+  want: "one\ntwo\n"
+
+done: 5

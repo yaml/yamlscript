@@ -325,7 +325,7 @@ test::
 - code: fs/cwd()
   want:: CWD
 - code: 'fs/which: "ys"'
-  like: /ys$
+  like: (?:/|\\)ys(?:\.exe)?$
 - code: fs/mtime(CWD).str()
   like: ^\d{13}$
 - code: 'fs/basename: "$base/test/std.t"'

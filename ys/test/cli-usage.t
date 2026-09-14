@@ -5,6 +5,8 @@ use ys::taptest: :all
 VERSION =: '0.3.0'
 
 ROOT =: +"$DIR/../.."
+QROOT =: "'$ROOT'"
+QDIR =: "'$DIR'"
 
 HELP =: |
 
@@ -366,11 +368,11 @@ test::
   want: 'Error: Options --print and --compile are mutually exclusive.'
 
 - name: ys ys/test/hello.ys
-  cmnd:: "ys $ROOT/ys/test/hello.ys"
+  cmnd:: "ys $QROOT/ys/test/hello.ys"
   want: Hello
 
 - name: ys --load ys/test/hello.ys
-  cmnd:: "ys --load $ROOT/ys/test/hello.ys"
+  cmnd:: "ys --load $QROOT/ys/test/hello.ys"
   want: |
     Hello
     12345
@@ -411,7 +413,7 @@ test::
 
 - name: ys --compile ys/test/hello.ys
   cmnd:: |-
-    ys --compile $ROOT/ys/test/hello.ys
+    ys --compile $QROOT/ys/test/hello.ys
   want: |
     (say "Hello")
     (identity 12345)
@@ -429,7 +431,7 @@ test::
 
 - name: ys -Y ys/test/loader.ys
   cmnd:: |-
-    ys -Y $ROOT/ys/test/loader.ys
+    ys -Y $QROOT/ys/test/loader.ys
   want: |
     foo: This is a string
     bar:
@@ -516,27 +518,27 @@ test::
     (TTT (apply main ARGS))
 
 - note: Test compiling YS scripts in the repo
-- cmnd:: "ys -c $ROOT/util/brew-update"
+- cmnd:: "ys -c $QROOT/util/brew-update"
   have: apply main
-- cmnd:: "ys -c $ROOT/util/mdys"
+- cmnd:: "ys -c $QROOT/util/mdys"
   have: apply main
-- cmnd:: "ys -c $ROOT/util/release-yamlscript"
+- cmnd:: "ys -c $QROOT/util/release-yamlscript"
   have: apply main
-- cmnd:: "ys -c $ROOT/util/version-bump"
+- cmnd:: "ys -c $QROOT/util/version-bump"
   have: apply main
 
 - note: Test running mdys with the Glojure runtime
 - cmnd:: |-
-    env ROOT=$ROOT YSLANG=erlang \
-      ys $ROOT/util/mdys $ROOT/common/readme.md
+    env ROOT=$QROOT YSLANG=erlang \
+      ys $QROOT/util/mdys $QROOT/common/readme.md
   have: '## Erlang Usage'
 
 - note: Test 'ys' commands with and without -e
-- cmnd:: "ys -Y $DIR/animals.json -e '.0.name'"
+- cmnd:: "ys -Y $QDIR/animals.json -e '.0.name'"
   want: Meowsy
-- cmnd:: "ys -Ye '.0.name' $DIR/animals.json"
+- cmnd:: "ys -Ye '.0.name' $QDIR/animals.json"
   want: Meowsy
-- cmnd:: "ys -Y '.0.name' $DIR/animals.json"
+- cmnd:: "ys -Y '.0.name' $QDIR/animals.json"
   want: Meowsy
 - cmnd: ys -Y '.0.name'
   stdi:: read("$DIR/animals.json")

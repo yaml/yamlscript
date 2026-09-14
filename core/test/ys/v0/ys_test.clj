@@ -6,6 +6,7 @@
    [clojure.string :as str]
    [clojure.test :refer [deftest is testing]]
    [ys.v0 :as v0]
+   [ys.v0.common :as common]
    [ys.v0.global :as global]
    [ys.v0.manifest :as manifest]
    [ys.v0.ys :as portable]))
@@ -31,6 +32,12 @@
     (doseq [sym (keys (ns-publics 'ys.v0.std))]
       (ns-unmap target sym))
     (refer 'ys.v0.std)))
+
+(deftest splits-yspath-with-platform-separator
+  (is (= ["/one" "/two"]
+        (#'common/split-yspath "/one:/two" ":")))
+  (is (= ["D:/one" "E:/two"]
+        (#'common/split-yspath "D:/one;E:/two" ";"))))
 
 (deftest parses-portable-use-options
   (is (= {:source [:path "lib"]
