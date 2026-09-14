@@ -171,7 +171,7 @@ test::
 
 - name: Debug stages include elapsed time
   cmnd: "ys -dc -e '=>: 6 * 7'"
-  have: '*** parse     *** 0.'
+  like: ^\*\*\* parse     \*\*\* \d+\.\d+ ms
 
 - name: Definitions silently shadow referred vars
   cmnd: >-
