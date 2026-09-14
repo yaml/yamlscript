@@ -5,7 +5,12 @@ use:
   ys::yaml: :as yaml
 # use: str yaml   # change when 0.3.0 is released
 # use fs: :all   # change when 0.3.0 is released
-# use ipc: :all   # change when 0.3.0 is released
+
+# ys::ipc was added in 0.3.0. Older bootstrap binaries already refer
+# these functions from the standard namespace.
+try:
+  use ys::ipc: :all
+  catch:
 
 # This script automates the YAMLScript release process.
 #

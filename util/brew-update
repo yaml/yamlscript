@@ -2,9 +2,14 @@
 
 use:
   ys::fs: :as fs
+  ys::http: :all
 # use: fs   # change when 0.3.0 is released
-# use http: :all   # change when 0.3.0 is released
-# use ipc: :all   # change when 0.3.0 is released
+
+# ys::ipc was added in 0.3.0. Older bootstrap binaries already refer
+# these functions from the standard namespace.
+try:
+  use ys::ipc: :all
+  catch:
 
 releases-url =: 'https://github.com/yaml/yamlscript/releases'
 brew-url =: ENV.YS_HOMEBREW_URL ||
@@ -256,7 +261,7 @@ defn class-name(prefix version):
 
 
 defn check-version(version):
-  when version !~ /^0\.[12]\.\d+$/:
+  when version !~ /^0\.\d+\.\d+$/:
     die: "Invalid version '$version'"
 
   try:
