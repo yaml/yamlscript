@@ -27,10 +27,21 @@ echo '1..3'
 
 cd "$root/v0" || exit 1
 
-jar=$(ls target/ys.v0-*.jar 2>/dev/null | grep -v sources | head -1)
+find_jar() {
+  local candidate
+  for candidate in target/ys.v0-*.jar; do
+    [[ $candidate == *-sources.jar ]] && continue
+    if [[ -f $candidate ]]; then
+      printf '%s\n' "$candidate"
+      return
+    fi
+  done
+}
+
+jar=$(find_jar)
 if [[ -z $jar ]]; then
   lein jar >/dev/null 2>&1
-  jar=$(ls target/ys.v0-*.jar 2>/dev/null | grep -v sources | head -1)
+  jar=$(find_jar)
 fi
 check "$([[ -n $jar ]] && echo found)" 'found' 'jar builds'
 
@@ -43,8 +54,10 @@ stray=$(unzip -l "$jar" 2>/dev/null |
 check "$stray" '0' 'jar contains only ys/v0 namespaces'
 
 # ys.v0 loads with only the jar + declared deps on the classpath
-deps=$(lein classpath 2>/dev/null | tail -1 | tr ':' '\n' |
-  grep '\.jar$' | paste -sd:)
-got=$(bb --classpath "$jar:$deps" -e \
+pathsep=:
+[[ $(uname -s) =~ ^(MINGW|MSYS) ]] && pathsep=';'
+deps=$(lein classpath 2>/dev/null | tail -1 | tr "$pathsep" '\n' |
+  grep '\.jar$' | paste -sd"$pathsep")
+got=$(bb --classpath "$jar$pathsep$deps" -e \
   "(ns main (:require ys.v0)) (ys.v0/init) (say (sum (rng 1 10)))" 2>&1)
 check "$got" '55' 'jar loads standalone under bb'

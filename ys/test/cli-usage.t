@@ -93,7 +93,8 @@ test::
                                babashka.process babashka.http-client]]
                    (try (require lib) (catch Throwable _))))))))
     (ns main (:require ys.v0))
-    (ys.v0/init)
+    (when-not (resolve 'yamlscript.glojure-runtime/use)
+      (ys.v0/init))
 
     (say (add+ 1 2))
 
@@ -109,7 +110,8 @@ test::
           ((requiring-resolve 'babashka.deps/add-deps)
            '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.0"}}}))))
     (ns main (:require ys.v0))
-    (ys.v0/init)
+    (when-not (resolve 'yamlscript.glojure-runtime/use)
+      (ys.v0/init))
 
     (say 123)
 
@@ -121,7 +123,8 @@ test::
        '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.0"}}}))
 
     (ns main (:require ys.v0))
-    (ys.v0/init)
+    (when-not (resolve 'yamlscript.glojure-runtime/use)
+      (ys.v0/init))
 
     (say 123)
 

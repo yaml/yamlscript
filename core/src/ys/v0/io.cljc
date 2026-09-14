@@ -25,7 +25,8 @@
 
 (defn say [& xs]
   (binding [*out* (global/current-output)]
-    (apply println xs)))
+    (apply println xs)
+    (flush)))
 
 (defn warn [& xs]
   (binding [*out* (global/current-error)]

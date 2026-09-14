@@ -18,7 +18,10 @@
   (flush))
 
 (defn say [& xs]
-  (apply println xs))
+  (apply println xs)
+  (try
+    (flush)
+    (catch go/any _ nil)))
 
 (defn warn [& xs]
   (binding [*out* *err*]

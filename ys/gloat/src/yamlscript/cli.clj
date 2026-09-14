@@ -364,7 +364,10 @@
       (compiler/compile code (:on-document opts)))))
 
 (def v0-header
-  "(ns main (:require ys.v0))\n(ys.v0/init)\n")
+  (str
+    "(ns main (:require ys.v0))\n"
+    "(when-not (resolve 'yamlscript.glojure-runtime/use)\n"
+    "  (ys.v0/init))\n"))
 
 (def data-json-version "2.4.0")
 
