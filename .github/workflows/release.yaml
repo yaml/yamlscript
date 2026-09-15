@@ -761,7 +761,6 @@ jobs:
 
     - name: Build release archives
       run: |
-        test "$(uname -m)" = arm64
         make release-build-ys \
           GLOAT_PLATFORM=windows/amd64 \
           RELEASE_PLATFORM=windows-x64 \
