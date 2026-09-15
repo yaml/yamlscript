@@ -225,13 +225,36 @@
         (throw error)
         nil))))
 
-(defn- load-classpath-dependency [module]
-  (try
-    (clojure.core/require module)
-    (catch Throwable _
-      (util/die
-        (str "Portable 'use :from' cannot acquire dependencies in this "
-          "runtime; put namespace '" module "' on the classpath")))))
+(defn- load-required-namespace [require-deps options coordinate]
+  (let [loader-name (gensym "ys-use-loader-")
+        loader-ns (create-ns loader-name)
+        loader-alias (gensym "module-")]
+    (try
+      (binding [*ns* loader-ns]
+        (require-deps options [coordinate :as loader-alias]))
+      (if-let [loaded-ns (get (ns-aliases loader-ns) loader-alias)]
+        (ns-name loaded-ns)
+        (util/die
+          (str "Unable to determine dependency namespace for '"
+            coordinate "'")))
+      (finally
+        (remove-ns loader-name)))))
+
+(defn- coordinate-namespace [module coordinate]
+  (if-let [[_ namespace-name]
+           (re-matches #"mvn:[^/@]+/[^/@]+@[^/]+/([^/]+)" coordinate)]
+    (symbol namespace-name)
+    module))
+
+(defn- load-classpath-dependency [module coordinate]
+  (let [module (coordinate-namespace module coordinate)]
+    (try
+      (clojure.core/require module)
+      module
+      (catch Throwable _
+        (util/die
+          (str "Portable 'use :from' cannot acquire dependencies in this "
+            "runtime; put namespace '" module "' on the classpath"))))))
 
 (defn require [& _]
   (util/die "The 'require' function is retired. Use 'use' instead."))
@@ -248,49 +271,64 @@
                       (contains? (ns-aliases target) module))
             (clojure.core/alias module host-namespace)))
         host-namespace)
-      (do
-        (case kind
-          :yspath
-          (do
-            (add-load-paths spec)
-            (clojure.core/require module))
+      (let [loaded-module
+            (case kind
+              :yspath
+              (do
+                (add-load-paths spec)
+                (clojure.core/require module)
+                module)
 
-          :path
-          (do
-            (add-load-paths [spec])
-            (clojure.core/require module))
+              :path
+              (do
+                (add-load-paths [spec])
+                (clojure.core/require module)
+                module)
 
-          :file
-          (do
-            (when (str/ends-with? spec ".ys")
-              (util/die "Portable 'use :file' does not support .ys files"))
-            (when-not (or (str/ends-with? spec ".clj")
-                        (str/ends-with? spec ".cljc"))
+              :file
+              (do
+                (when (str/ends-with? spec ".ys")
+                  (util/die
+                    "Portable 'use :file' does not support .ys files"))
+                (when-not (or (str/ends-with? spec ".clj")
+                            (str/ends-with? spec ".cljc"))
+                  (util/die
+                    (str "Invalid 'use' option ':file': expected a .clj or "
+                      ".cljc file")))
+                (clojure.core/load-file spec)
+                module)
+
+              :url
+              (do
+                (when-not (str/starts-with? spec "https://")
+                  (util/die
+                    "Invalid 'use' option ':url': expected an HTTPS URL"))
+                (load-string (slurp spec))
+                module)
+
+              :from
+              (let [dependency-options
+                    (cond-> {}
+                      (get global/ENV "YS_MAVEN_REPOSITORY")
+                      (assoc :mvn/local-repo
+                        (get global/ENV "YS_MAVEN_REPOSITORY"))
+
+                      (get global/ENV "YS_GITLIBS_DIR")
+                      (assoc :gitlibs/dir
+                        (get global/ENV "YS_GITLIBS_DIR")))]
+                (if-let [require-deps (resolve-require-deps)]
+                  (load-required-namespace
+                    require-deps dependency-options spec)
+                  (load-classpath-dependency module spec))))
+            module
+            (cond
+              (not= kind :from) module
+              (imports/short-module? module) loaded-module
+              (= loaded-module module) module
+              :else
               (util/die
-                (str "Invalid 'use' option ':file': expected a .clj or "
-                  ".cljc file")))
-            (clojure.core/load-file spec))
-
-          :url
-          (do
-            (when-not (str/starts-with? spec "https://")
-              (util/die
-                "Invalid 'use' option ':url': expected an HTTPS URL"))
-            (load-string (slurp spec)))
-
-          :from
-          (let [dependency-options
-                (cond-> {}
-                  (get global/ENV "YS_MAVEN_REPOSITORY")
-                  (assoc :mvn/local-repo
-                    (get global/ENV "YS_MAVEN_REPOSITORY"))
-
-                  (get global/ENV "YS_GITLIBS_DIR")
-                  (assoc :gitlibs/dir
-                    (get global/ENV "YS_GITLIBS_DIR")))]
-            (if-let [require-deps (resolve-require-deps)]
-              (require-deps dependency-options [spec])
-              (load-classpath-dependency module))))
+                (str "Dependency namespace '" loaded-module
+                  "' does not match use module '" module "'")))]
         (when-not (find-ns module)
           (util/die (str "Namespace not found: " module)))
         module))))
@@ -319,7 +357,8 @@
           :when (= 'ys.v0.std (some-> var meta :ns ns-name))]
     (ns-unmap target sym)))
 
-(def normalize-use-forms imports/normalize-use-forms)
+(defn normalize-use-forms [forms]
+  (imports/normalize-use-forms forms manifest/modules))
 
 (defn- portable-use [ns forms]
   (when-not (seq forms)
@@ -332,13 +371,15 @@
           (ns-aliases ns) (configured-modules)))]
         (portable-use ns imports))
       (let [module (first form)
-          options (assoc (parse-use-args (rest form))
-                    :preserve-aliases (:umbrella (meta form)))
-          loaded-module (load-portable-module ns module options)]
-      (binding [*ns* ns]
-        (when (and (= module 'ys.std) (selects-vars? options))
-          (clear-portable-std ns))
-        (select-portable-vars loaded-module options)))))
+            options (assoc
+                      (imports/with-short-from-alias
+                        module (parse-use-args (rest form)))
+                      :preserve-aliases (:umbrella (meta form)))
+            loaded-module (load-portable-module ns module options)]
+        (binding [*ns* ns]
+          (when (and (= module 'ys.std) (selects-vars? options))
+            (clear-portable-std ns))
+          (select-portable-vars loaded-module options)))))
   nil)
 
 (defn +use [ns forms]

@@ -68,6 +68,11 @@
         (portable/normalize-use-forms '(http :all))))
   (is (= '((ys.http :as web))
         (portable/normalize-use-forms '(http :as web))))
+  (is (= '((medley
+             :from "mvn:dev.weavejester/medley@1.10.0/medley.core"))
+        (portable/normalize-use-forms
+          '(medley
+             :from "mvn:dev.weavejester/medley@1.10.0/medley.core"))))
   (is (= '((foo.bar :get baz)
            (ys.http :as http)
            (xyz.abc :all))
@@ -163,17 +168,41 @@
                       (fn []
                         (fn [options libspec]
                           (reset! called [options libspec])
-                          (reset! loader-ns *ns*)))]
+                          (reset! loader-ns *ns*)
+                          (clojure.core/alias
+                            (last libspec) 'clojure.string)))]
           (#'portable/portable-use
             target
             '((clojure.string
                 :from "mvn:example/lib@1/clojure.string" :none)))))
-      (is (= [{:mvn/local-repo "/tmp/m2"
-               :gitlibs/dir "/tmp/gitlibs"}
-              ["mvn:example/lib@1/clojure.string"]]
-            @called))
+      (is (= {:mvn/local-repo "/tmp/m2"
+              :gitlibs/dir "/tmp/gitlibs"}
+            (first @called)))
+      (is (= "mvn:example/lib@1/clojure.string"
+            (first (second @called))))
+      (is (= :as (second (second @called))))
       (is (not= target @loader-ns)
-          "dependency loading does not rebind the caller namespace")))
+          "dependency loading does not rebind the caller namespace")
+      (is (nil? (find-ns (ns-name @loader-ns)))
+          "the temporary loader namespace is removed")))
+  (testing "short module names alias the namespace loaded by the coordinate"
+    (let [target (fresh-namespace)]
+      (with-redefs [portable/resolve-require-deps (constantly nil)]
+        (#'portable/portable-use
+          target
+          '((stringy :from "mvn:example/lib@1/clojure.string"
+              :get upper-case))))
+      (is (= "ALIAS" ((ns-resolve target 'stringy/upper-case) "alias")))
+      (is (= "REFER" ((ns-resolve target 'upper-case) "refer")))))
+  (testing "explicit aliases override short module names"
+    (let [target (fresh-namespace)]
+      (with-redefs [portable/resolve-require-deps (constantly nil)]
+        (#'portable/portable-use
+          target
+          '((stringy :from "mvn:example/lib@1/clojure.string"
+              :as text :none))))
+      (is (nil? (get (ns-aliases target) 'stringy)))
+      (is (= "TEXT" ((ns-resolve target 'text/upper-case) "text")))))
   (testing "JVM and BB use a dependency already on the classpath"
     (let [target (fresh-namespace)]
       (with-redefs [portable/resolve-require-deps (constantly nil)]

@@ -49,11 +49,12 @@ use:
   str:
 ```
 
-Bare short names expand into `ys::` module names and receive matching aliases.
+Bare short names that identify bundled modules expand into `ys::` module names
+and receive matching aliases.
 The scalar form `use: http fs ipc ys` loads four such aliases.
-A short name with options does not imply an alias, so `use http: :all` means
-`use ys::http: :all`.
-Fully qualified module names retain their existing behavior.
+A bundled short name with options does not imply an alias, so
+`use http: :all` means `use ys::http: :all`.
+Other short and fully qualified module names retain their existing behavior.
 
 ```yaml
 use foo::bar: :path './lib'
@@ -70,13 +71,18 @@ GitHub coordinates name one source file at a branch, tag, or commit.
 ```yaml
 use clojure::math::combinatorics:
   :from 'mvn:org.clojure/math.combinatorics@0.3.0/clojure.math.combinatorics'
+use medley:
+  :from 'mvn:dev.weavejester/medley@1.10.0/medley.core'
 use mathy:
   :from 'gist:ingydotnet/f70409675d234aa4f2fe379cd975a4f5/mathy.clj'
 use grenadine::require-deps:
   :from 'github:clojurestar/grenadine/v0.1.12/src/grenadine/require_deps.cljc'
 ```
 
-The module name on the left must match the namespace provided by `:from`.
+When the name on the left is a short name, it becomes an alias for the
+namespace provided by `:from`.
+An explicit `:as` option overrides that implicit alias.
+A qualified name on the left must match the namespace provided by `:from`.
 Generic Git repositories and dependency coordinate maps are not accepted.
 
 Use `:as` to add an alias, `:get` to refer selected names, `:all` to refer all

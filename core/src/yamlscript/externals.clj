@@ -20,6 +20,7 @@
    [yamlscript.constructor]
    [yamlscript.global :as G]
    [yamlscript.re :as re]
+   [ys.v0.imports :as imports]
    [ys.v0.manifest :as manifest]
    [ys.v0.ys :as ys])
   (:refer-clojure
@@ -290,9 +291,11 @@
   (when (not (re-matches (re/re #"(?:$nspc|$symw)")
                (str/replace (str module) #"\." "::")))
     (die (str "Invalid module name: " module)))
-  (let [module (str module)
-        modpath (str/replace module #"\." "/")
-        args (parse-args args)
+  (let [requested-module module
+        module-name (str module)
+        modpath (str/replace module-name #"\." "/")
+        args (imports/with-short-from-alias
+               requested-module (parse-args args))
         [kind spec] (or (:source args)
                       [:yspath (get-yspath (or @sci/file "/NO-NAME"))])
         loaded-namespace
@@ -302,44 +305,47 @@
           :file (do (load-file modpath spec) nil)
           :url (do (load-url modpath spec) nil)
           :from (load-deps ns modpath spec))
-        namespace-sym (symbol module)]
-    (when (and loaded-namespace (not= loaded-namespace namespace-sym))
-      (die (str "Dependency namespace '" loaded-namespace
-             "' does not match use module '" namespace-sym "'")))
-    (let [namespace-sym (symbol module)
-          namespace-object (sci/find-ns (context) namespace-sym)]
-      (when-not namespace-object
-        (die (str "Namespace not found: " namespace-sym)))
-      (when (and (= namespace-sym 'ys.std) (selects-vars? args))
-        (clear-std-refers ns))
-      (when-let [as (:as args)]
-        (sci/eval-string+ (context)
-          (str "(alias '" as " '" namespace-sym ")")
-          {:ns ns}))
-      (when-let [syms (:get args)]
-        (let [only (mapv #(if (clojure.core/namespace %1)
-                            (symbol (clojure.core/namespace %1))
-                            %1)
+        namespace-sym
+        (cond
+          (nil? loaded-namespace) requested-module
+          (imports/short-module? requested-module) loaded-namespace
+          (= loaded-namespace requested-module) requested-module
+          :else
+          (die (str "Dependency namespace '" loaded-namespace
+                 "' does not match use module '" requested-module "'")))
+        namespace-object (sci/find-ns (context) namespace-sym)]
+    (when-not namespace-object
+      (die (str "Namespace not found: " namespace-sym)))
+    (when (and (= namespace-sym 'ys.std) (selects-vars? args))
+      (clear-std-refers ns))
+    (when-let [as (:as args)]
+      (sci/eval-string+ (context)
+        (str "(alias '" as " '" namespace-sym ")")
+        {:ns ns}))
+    (when-let [syms (:get args)]
+      (let [only (mapv #(if (clojure.core/namespace %1)
+                          (symbol (clojure.core/namespace %1))
+                          %1)
+                   syms)
+            rename (into {}
+                     (keep #(when-let [old (clojure.core/namespace %1)]
+                              [(symbol old) (symbol (name %1))]))
                      syms)
-              rename (into {}
-                       (keep #(when-let [old (clojure.core/namespace %1)]
-                                [(symbol old) (symbol (name %1))]))
-                       syms)
-              code (str "(refer '" namespace-sym
-                     " :only '" (pr-str only)
-                     (when (seq rename)
-                       (str " :rename '" (pr-str rename)))
-                     ")")]
-          (sci/eval-string+ (context) code {:ns ns})))
-      (when (or (:all args) (:not args))
-        (let [syms (some->> (:not args) (map str))]
-          (sci/eval-string+ (context)
-            (str "(refer '" namespace-sym
-              (when syms
-                (str " :exclude '[" (str/join " " syms) "]"))
-              ")")
-            {:ns ns})))
-      nil)))
+            code (str "(refer '" namespace-sym
+                   " :only '" (pr-str only)
+                   (when (seq rename)
+                     (str " :rename '" (pr-str rename)))
+                   ")")]
+        (sci/eval-string+ (context) code {:ns ns})))
+    (when (or (:all args) (:not args))
+      (let [syms (some->> (:not args) (map str))]
+        (sci/eval-string+ (context)
+          (str "(refer '" namespace-sym
+            (when syms
+              (str " :exclude '[" (str/join " " syms) "]"))
+            ")")
+          {:ns ns})))
+    nil))
 
 (comment
   )

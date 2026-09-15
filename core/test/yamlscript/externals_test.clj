@@ -163,6 +163,24 @@
                 'clojure.string
                 [:from coordinate :none])))
         (is (= provider (:provider @parsed))))))
+  (testing "short names alias the namespace loaded by the coordinate"
+    (with-redefs [deps/prepare-required!
+                  (fn [_ require! _]
+                    (require! 'clojure.string)
+                    'clojure.string)]
+      (is (= ["ALIAS" "REFER"]
+            (eval-ys
+              (str "use stringy:\n"
+                "  :from 'mvn:example/lib@1/clojure.string'\n"
+                "  :get upper-case\n"
+                "=>: +[stringy/upper-case('alias') "
+                "upper-case('refer')]"))))
+      (is (= "EXPLICIT"
+            (eval-ys
+              (str "use stringy:\n"
+                "  :as text\n"
+                "  :from 'mvn:example/lib@1/clojure.string'\n"
+                "text/upper-case: 'explicit'"))))))
   (is (= "Unsupported require coordinate: https://example.com/source.clj"
         (error-message
           #(externals/use-module

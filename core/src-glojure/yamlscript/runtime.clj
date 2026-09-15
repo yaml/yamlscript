@@ -96,17 +96,8 @@
         (ex-info
           (str module " is disabled by YS_MODULES") {})))))
 
-(defn- short-module? [module]
-  (and (symbol? module)
-    (nil? (namespace module))
-    (not (str/includes? (str module) "."))))
-
 (defn- normalize-form [form]
   (let [[module & args] form
-        [module args] (if (short-module? module)
-                        [(symbol (str "ys." module))
-                         (if (seq args) args (list :as module))]
-                        [module args])
         builtin? (and (builtin-modules module)
                    (not (some source-options args)))
         public-module module
@@ -117,10 +108,8 @@
     (concat [module (if builtin? :builtin :external) public-module] args)))
 
 (defn normalize-use-forms [forms]
-  (let [forms (if (every? symbol? forms)
-                (map list forms)
-                (if (symbol? (first forms)) (list forms) forms))]
-    (map normalize-form forms)))
+  (map normalize-form
+    (imports/normalize-use-forms forms builtin-modules)))
 
 (defn- option-map [args]
   (loop [args args options {}]
@@ -186,7 +175,7 @@
 (declare load-external-module!)
 
 (defn apply-use [target forms]
-  (doseq [form (imports/normalize-use-forms forms)]
+  (doseq [form (imports/normalize-use-forms forms builtin-modules)]
     (if (= 'ys.v0 (first form))
       (apply-use target
         (imports/v0-imports
@@ -195,18 +184,19 @@
                       (keys builtin-modules)))
           (ns-aliases target) (configured-modules)))
       (let [[module kind public-module & args] (normalize-form form)]
-    (check-module-access! public-module)
-    (swap! enabled-modules conj public-module)
-    (let [options (option-map args)
-          module (if (= kind :builtin)
-                   module
-                   (load-external-module! target module options))]
-      (binding [*ns* target]
-        (when (and (= kind :builtin)
-                (not (and (:umbrella (meta form))
-                       (contains? (ns-aliases target) public-module))))
-          (clojure.core/alias public-module module))
-        (select-vars module options))))))
+        (check-module-access! public-module)
+        (swap! enabled-modules conj public-module)
+        (let [options (imports/with-short-from-alias
+                        public-module (option-map args))
+              module (if (= kind :builtin)
+                       module
+                       (load-external-module! target module options))]
+          (binding [*ns* target]
+            (when (and (= kind :builtin)
+                    (not (and (:umbrella (meta form))
+                           (contains? (ns-aliases target) public-module))))
+              (clojure.core/alias public-module module))
+            (select-vars module options))))))
   nil)
 
 (defn- check-form-access! [form]
@@ -386,14 +376,27 @@
     (let [require-deps (resolve 'clojurestar.deps/require-deps*)]
       (when-not require-deps
         (throw (ex-info "clojurestar.deps is unavailable" {})))
-      (require-deps
-        (cond-> {}
-          (get global/ENV "YS_MAVEN_REPOSITORY")
-          (assoc :mvn/local-repo
-            (get global/ENV "YS_MAVEN_REPOSITORY"))
-          (get global/ENV "YS_GITLIBS_DIR")
-          (assoc :gitlibs/dir (get global/ENV "YS_GITLIBS_DIR")))
-        [coordinate]))
+      (let [loader-name (gensym "ys-use-loader-")
+            loader-ns (create-ns loader-name)
+            loader-alias (gensym "module-")]
+        (try
+          (binding [*ns* loader-ns]
+            (require-deps
+              (cond-> {}
+                (get global/ENV "YS_MAVEN_REPOSITORY")
+                (assoc :mvn/local-repo
+                  (get global/ENV "YS_MAVEN_REPOSITORY"))
+                (get global/ENV "YS_GITLIBS_DIR")
+                (assoc :gitlibs/dir (get global/ENV "YS_GITLIBS_DIR")))
+              [coordinate :as loader-alias]))
+          (if-let [loaded-ns (get (ns-aliases loader-ns) loader-alias)]
+            (ns-name loaded-ns)
+            (throw
+              (ex-info
+                (str "Unable to determine dependency namespace for '"
+                  coordinate "'") {})))
+          (finally
+            (remove-ns loader-name)))))
     (catch go/any error
       (throw
         (ex-info
@@ -402,46 +405,63 @@
 
 (defn load-external-module! [_target module options]
   (let [[kind spec] (or (:source options) [:yspath global/INC])]
-    (case kind
-      :yspath
-      (if-let [file (find-module-file spec module)]
-        (load-module-file! file)
-        (throw (ex-info (str "Module not found: " module) {})))
+    (let [loaded-module
+          (case kind
+            :yspath
+            (if-let [file (find-module-file spec module)]
+              (do (load-module-file! file) module)
+              (throw (ex-info (str "Module not found: " module) {})))
 
-      :path
-      (if-let [file (find-module-file [spec] module)]
-        (load-module-file! file)
-        (throw
-          (ex-info (str "Module not found in ':path': " module) {})))
+            :path
+            (if-let [file (find-module-file [spec] module)]
+              (do (load-module-file! file) module)
+              (throw
+                (ex-info
+                  (str "Module not found in ':path': " module) {})))
 
-      :file
-      (let [file (absolute-path spec)]
-        (when-not (regular-file? file)
-          (throw (ex-info (str "File not found for ':file': " file) {})))
-        (when-not (some #(str/ends-with? file %1) [".clj" ".cljc" ".ys"])
-          (throw
-            (ex-info
-              (str "Invalid 'use' option ':file': expected a .ys, .clj, "
-                "or .cljc file")
-              {})))
-        (load-module-file! file))
+            :file
+            (let [file (absolute-path spec)]
+              (when-not (regular-file? file)
+                (throw
+                  (ex-info (str "File not found for ':file': " file) {})))
+              (when-not
+                (some #(str/ends-with? file %1) [".clj" ".cljc" ".ys"])
+                (throw
+                  (ex-info
+                    (str "Invalid 'use' option ':file': expected a .ys, "
+                      ".clj, or .cljc file")
+                    {})))
+              (load-module-file! file)
+              module)
 
-      :url
-      (do
-        (when-not (re-find #"^https?://" spec)
-          (throw
-            (ex-info
-              "Invalid 'use' option ':url': expected an HTTP(S) URL" {})))
-        (let [response (yamlscript.module.http/get spec)
-              source (:body response)]
-          (when-not source (throw (ex-info (str response) {})))
-          (eval-module-source! (str source) spec
-            (not (re-find #"^\s*[;()]" (str source))))))
+            :url
+            (do
+              (when-not (re-find #"^https?://" spec)
+                (throw
+                  (ex-info
+                    (str "Invalid 'use' option ':url': expected an "
+                      "HTTP(S) URL") {})))
+              (let [response (yamlscript.module.http/get spec)
+                    source (:body response)]
+                (when-not source (throw (ex-info (str response) {})))
+                (eval-module-source! (str source) spec
+                  (not (re-find #"^\s*[;()]" (str source)))))
+              module)
 
-      :from (load-from-coordinate! spec))
-    (when-not (find-ns module)
-      (throw (ex-info (str "Namespace not found: " module) {})))
-    module))
+            :from (load-from-coordinate! spec))
+          module
+          (cond
+            (not= kind :from) module
+            (imports/short-module? module) loaded-module
+            (= loaded-module module) module
+            :else
+            (throw
+              (ex-info
+                (str "Dependency namespace '" loaded-module
+                  "' does not match use module '" module "'") {})))]
+      (when-not (find-ns module)
+        (throw (ex-info (str "Namespace not found: " module) {})))
+      module)))
 
 (defn load-yamlscript [ys-file]
   (check-module-access! 'ys.fs)

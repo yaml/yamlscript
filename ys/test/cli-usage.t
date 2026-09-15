@@ -312,6 +312,14 @@ test::
   what: err
   want: 'Error: Could not resolve symbol: upper-case'
 
+- name: Short dependency name aliases loaded namespace
+  cmnd: >-
+    env YS_MAVEN_REPOSITORY=$QROOT/.cache/.local/home/.m2/repository
+    ys -e "use stringy: :from
+    'mvn:org.clojure/clojure@1.12.0/clojure.string'"
+    -e "say: stringy/upper-case('alias')"
+  want: ALIAS
+
 - name: Require directs callers to use
   cmnd: "ys -e 'require: ys::str'"
   what: err
