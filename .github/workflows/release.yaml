@@ -183,6 +183,7 @@ jobs:
          contains(inputs.tests_only, 'linux-x64')) &&
         inputs.test_artifacts_run_id != ''
       }}
+    needs: build-python-wheels-retry
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -208,17 +209,10 @@ jobs:
           --dir release-artifacts
 
     - name: Download Python wheels
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        mkdir -p release-wheels
-        gh run download "${{ inputs.test_artifacts_run_id }}" \
-          --repo "${{ github.repository }}" \
-          --name python-wheels \
-          --dir release-wheels || true
-        if ! compgen -G 'release-wheels/*.whl' >/dev/null; then
-          cp release-artifacts/*.whl release-wheels/
-        fi
+      uses: actions/download-artifact@v8
+      with:
+        name: python-wheels
+        path: release-wheels
 
     - name: Run core tests
       run: make test-core
@@ -337,6 +331,7 @@ jobs:
          contains(inputs.tests_only, 'macos-arm64')) &&
         inputs.test_artifacts_run_id != ''
       }}
+    needs: build-python-wheels-retry
     runs-on: macos-latest
     permissions:
       actions: read
@@ -361,7 +356,7 @@ jobs:
           --name macos-arm64 \
           --dir release-artifacts
 
-    - name: Download release JARs and Python wheels
+    - name: Download release JARs
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -370,14 +365,12 @@ jobs:
           --name linux-x64 \
           --dir jar-artifacts
         cp jar-artifacts/*.jar release-artifacts/
-        mkdir -p release-wheels
-        gh run download "${{ inputs.test_artifacts_run_id }}" \
-          --repo "${{ github.repository }}" \
-          --name python-wheels \
-          --dir release-wheels || true
-        if ! compgen -G 'release-wheels/*.whl' >/dev/null; then
-          cp release-artifacts/*.whl release-wheels/
-        fi
+
+    - name: Download Python wheels
+      uses: actions/download-artifact@v8
+      with:
+        name: python-wheels
+        path: release-wheels
 
     - name: Run core tests
       run: make test-core
@@ -891,6 +884,9 @@ jobs:
     needs: build-cross-platform
     runs-on: ubuntu-latest
     steps:
+    - name: Install LLVM tools
+      run: sudo apt-get update && sudo apt-get install -y llvm
+
     - name: Download FreeBSD x64 artifacts
       uses: actions/download-artifact@v8
       with:
@@ -941,8 +937,10 @@ jobs:
         file "$windows_lib" | grep -Ei 'PE32.*Aarch64'
         nm -D "$freebsd_lib" | grep -E ' graal_create_isolate$'
         nm -D "$freebsd_lib" | grep -E ' load_ys_to_json$'
-        objdump -p "$windows_lib" | grep -E 'graal_create_isolate'
-        objdump -p "$windows_lib" | grep -E 'load_ys_to_json'
+        llvm-readobj --coff-exports "$windows_lib" |
+          grep -E 'Name: graal_create_isolate$'
+        llvm-readobj --coff-exports "$windows_lib" |
+          grep -E 'Name: load_ys_to_json$'
 
   test-cross-platform-retry:
     name: Check cross-built artifact formats (retry)
@@ -958,6 +956,9 @@ jobs:
       actions: read
       contents: read
     steps:
+    - name: Install LLVM tools
+      run: sudo apt-get update && sudo apt-get install -y llvm
+
     - name: Download cross-built artifacts
       env:
         GH_TOKEN: ${{ github.token }}
@@ -1007,8 +1008,10 @@ jobs:
         file "$windows_lib" | grep -Ei 'PE32.*Aarch64'
         nm -D "$freebsd_lib" | grep -E ' graal_create_isolate$'
         nm -D "$freebsd_lib" | grep -E ' load_ys_to_json$'
-        objdump -p "$windows_lib" | grep -E 'graal_create_isolate'
-        objdump -p "$windows_lib" | grep -E 'load_ys_to_json'
+        llvm-readobj --coff-exports "$windows_lib" |
+          grep -E 'Name: graal_create_isolate$'
+        llvm-readobj --coff-exports "$windows_lib" |
+          grep -E 'Name: load_ys_to_json$'
 
   build-python-wheels:
     name: Build Python wheels
@@ -1053,6 +1056,63 @@ jobs:
       with:
         name: windows-x64
         path: python/dist/release-assets
+
+    - name: Install release build tools
+      run: util/install-release-artifacts python/dist/release-assets
+
+    - name: Build wheels from release libraries
+      run: make -C python wheels-from-release
+
+    - name: Check wheel set
+      run: |
+        test "$(find python/dist -maxdepth 1 -name '*.whl' | wc -l)" -eq 3
+        ls -lh python/dist/*.whl
+
+    - name: Upload Python wheels
+      uses: actions/upload-artifact@v7
+      with:
+        name: python-wheels
+        path: python/dist/*.whl
+        retention-days: 7
+
+  build-python-wheels-retry:
+    name: Build Python wheels (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (contains(format(' {0} ', inputs.tests_only), ' linux ') ||
+         contains(inputs.tests_only, 'linux-x64') ||
+         contains(format(' {0} ', inputs.tests_only), ' macos ') ||
+         contains(inputs.tests_only, 'macos-arm64') ||
+         contains(format(' {0} ', inputs.tests_only), ' windows ') ||
+         contains(inputs.tests_only, 'windows-x64')) &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    needs: verify-release
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ github.ref }}
+
+    - name: Download release libraries
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p python/dist/release-assets
+        for artifact in linux-x64 macos-arm64 windows-x64; do
+          gh run download "${{ inputs.test_artifacts_run_id }}" \
+            --repo "${{ github.repository }}" \
+            --name "$artifact" \
+            --dir python/dist/release-assets
+        done
+
+    - name: Install release build tools
+      run: util/install-release-artifacts python/dist/release-assets
 
     - name: Build wheels from release libraries
       run: make -C python wheels-from-release
@@ -1353,6 +1413,7 @@ jobs:
          contains(inputs.tests_only, 'windows-x64')) &&
         inputs.test_artifacts_run_id != ''
       }}
+    needs: build-python-wheels-retry
     runs-on: windows-latest
     permissions:
       actions: read
@@ -1377,7 +1438,7 @@ jobs:
           --name windows-x64 \
           --dir release-artifacts
 
-    - name: Download release JARs and Python wheels
+    - name: Download release JARs
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -1386,14 +1447,12 @@ jobs:
           --name linux-x64 \
           --dir jar-artifacts
         cp jar-artifacts/*.jar release-artifacts/
-        mkdir -p release-wheels
-        gh run download "${{ inputs.test_artifacts_run_id }}" \
-          --repo "${{ github.repository }}" \
-          --name python-wheels \
-          --dir release-wheels || true
-        if ! compgen -G 'release-wheels/*.whl' >/dev/null; then
-          cp release-artifacts/*.whl release-wheels/
-        fi
+
+    - name: Download Python wheels
+      uses: actions/download-artifact@v8
+      with:
+        name: python-wheels
+        path: release-wheels
 
     - name: Install shasum shim
       run: |
