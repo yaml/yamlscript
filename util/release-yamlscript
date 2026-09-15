@@ -612,9 +612,10 @@ defn binding-published?(dir new):
     then: false
     else:
       try:
-        shell {:extra-env {"YS_RELEASE_PUBLISHED_QUIET" "1"}}:
-          "util/release-binding-published $dir $new"
-        =>: true
+        =>:
+          ok:
+            shell {:extra-env {"YS_RELEASE_PUBLISHED_QUIET" "1"}}:
+              "util/release-binding-published $dir $new"
         catch Exception e:
           =>: false
 
