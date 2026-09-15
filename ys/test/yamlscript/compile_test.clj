@@ -67,6 +67,22 @@
           :extensions ["-Xprune"]}
         (:build (build/resolve-options
                   {:to "js,html,-Xprune,js/wasm"} "foo.ys"))))
+  (is (= {:target "html" :platform nil
+          :outputs ["./foo/index.html" "./foo/index.js"]
+          :extensions ["-Xserve"]}
+        (:build (build/resolve-options
+                  {:to "html,-Xserve"} "foo.ys"))))
+  (is (= ["./foo/index.js" "./foo/index.html"]
+        (get-in (build/resolve-options {:to "js,-Xopen"} "foo.ys")
+          [:build :outputs])))
+  (is (= ["web/app.html" "web/app.js"]
+        (get-in (build/resolve-options
+                  {:to "html,-Xserve" :output "web/app.html"} "foo.ys")
+          [:build :outputs])))
+  (is (= ["web/app.js" "web/app.html"]
+        (get-in (build/resolve-options
+                  {:to "js,-Xserve" :output "web/app.js"} "foo.ys")
+          [:build :outputs])))
   (is (thrown-with-msg? Exception #"name must follow"
         (options "foo,-X")))
   (is (thrown-with-msg? Exception #"Gloat compilation target"
@@ -85,7 +101,10 @@
     (is (thrown-with-msg? Exception #"use ',' instead"
           (options output target))))
   (doseq [target ["bin" "dir" "lib" "h" "js" "html" "wasm"]]
-    (is (thrown? Exception (options nil target)))))
+    (is (thrown? Exception (options nil target))))
+  (doseq [target ["js,-Xhtml=3" "html,-Xserve=a" "js,-Xopen=x"]]
+    (is (thrown-with-msg? Exception #"URL query"
+          (build/resolve-options {:to target} "foo.ys")))))
 
 (deftest default-binary-output
   (doseq [[source output] [["sample/rosetta-code/99-bottles-of-beer.ys"
@@ -309,6 +328,57 @@
         (build/run-gloat!
           {:run (constantly {:exit 1 :out "compiler diagnostic"})} []))))
 
+(deftest serving-progress
+  (let [events (atom [])
+        err (java.io.StringWriter.)
+        ctx {:run-observed
+             (fn [_ observe]
+               (observe "Now serving http://localhost:8000/web/index.html")
+               (observe "Now serving http://localhost:8000/ignored/index.html")
+               {:exit 0 :out "" :err ""})
+             :start-progress
+             (fn [& labels]
+               (swap! events conj (vec labels))
+               #(swap! events conj %))}]
+    (with-redefs [build/compile-artifacts!
+                  (fn [ctx _ _ _]
+                    (build/run-gloat! ctx []
+                      (fn [line]
+                        (when (str/starts-with? line "Now serving ")
+                          ((:server-ready ctx) line)))))]
+      (binding [*err* err]
+        (build/compile! ctx (options "./web/index.js" "js,-Xserve")
+          "source" nil)))
+    (is (= true (last @events)))
+    (is (= 2 (count @events)))
+    (is (= "Now serving http://localhost:8000/web/index.html\n" (str err)))))
+
+(deftest serving-writes-final-artifacts
+  (with-context [dir ctx]
+    (let [output (str dir "/web/index.js")
+          opts (options output "js,-Xserve")
+          err (java.io.StringWriter.)]
+      (binding [*err* err]
+        (build/compile! ctx opts "source" nil))
+      (is (= "js artifact\n" (slurp output)))
+      (is (fs/exists? (str dir "/web/index.html")))
+      (is (str/includes? (str err) "/web/index.html"))
+      (is (empty? (fs/glob dir ".ys-install.*"))))))
+
+(deftest serving-requires-sibling-artifacts
+  (with-context [dir ctx]
+    (let [opts (options
+                 (str dir "/assets/app.js," dir "/pages/app.html")
+                 "js,-Xserve")]
+      (is (thrown-with-msg? Exception #"same directory"
+            (build/compile! ctx opts "source" nil))))))
+
+(deftest serving-extensions
+  (doseq [extension ["-Xserve" "-Xopen"]]
+    (is (build/serving-extension? extension)))
+  (doseq [extension ["-Xserve=x" "-Xserver" "-Xopenly" "-Xprune"]]
+    (is (not (build/serving-extension? extension)))))
+
 (deftest native-compilation-progress
   (when-let [binary (System/getenv "YS_COMPILE_TEST_BIN")]
     (with-context [dir ctx]
@@ -331,6 +401,24 @@
             (do
               (is (str/includes? (:err result) "√ Compiled to native binary:"))
               (is (re-find #"\([0-9]+\.[0-9]s\)" (:err result))))))))))
+
+(deftest native-serving-progress
+  (when-let [binary (System/getenv "YS_COMPILE_TEST_BIN")]
+    (with-context [dir ctx]
+      (let [output (str dir "/web.js")
+            result (process/shell
+                     {:out :string :err :string :continue true
+                      :extra-env {"YS_GLOAT" ((:env ctx) "YS_GLOAT")}}
+                     binary "-cTjs,html,-Xserve" "-e" "say: 42"
+                     "-o" output)]
+        (is (zero? (:exit result)) (:err result))
+        (is (fs/exists? output))
+        (is (fs/exists? (str dir "/web.html")))
+        (is (str/includes? (:err result)
+              "√ Compiled to browser Wasm: '"))
+        (is (= 1 (count (re-seq #"Now serving " (:err result)))))
+        (is (str/includes? (:err result)
+              "Now serving http://localhost:8000/web.html"))))))
 
 (deftest bootstrap-installation
   (with-context [dir ctx]

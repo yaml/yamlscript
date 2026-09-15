@@ -11,6 +11,38 @@
     {:exit (if error 1 0) :out out
      :err (if error (str error "\n" out) "")}))
 
+(defn run-command-observed [argv observe]
+  (let [cmd (apply os:exec.Command (first argv) (rest argv))
+        [reader writer pipe-error] (os.Pipe)]
+    (if pipe-error
+      {:exit 1 :out "" :err (str pipe-error)}
+      (do
+        (set! (. cmd Stdout) writer)
+        (set! (. cmd Stderr) writer)
+        (let [start-error (.Start cmd)]
+          (.Close writer)
+          (if start-error
+            (do
+              (.Close reader)
+              {:exit 1 :out "" :err (str start-error)})
+            (let [scanner (bufio.NewScanner reader)
+                  output (strings.Builder.)]
+              (loop []
+                (when (.Scan scanner)
+                  (let [line (.Text scanner)]
+                    (.WriteString output (str line "\n"))
+                    (observe line)
+                    (recur))))
+              (.Close reader)
+              (let [scan-error (.Err scanner)
+                    wait-error (.Wait cmd)
+                    exit (if scan-error 1
+                           (if wait-error (.ExitCode (.ProcessState cmd)) 0))
+                    out (.String output)
+                    error (or scan-error wait-error)]
+                {:exit exit :out out
+                 :err (if error (str error "\n" out) "")}))))))))
+
 (defn directory-entries [path]
   (let [[entries error] (os.ReadDir path)]
     (when error (throw error))
@@ -26,7 +58,8 @@
     (when error (throw error))
     (let [[exe error] (if (seq exe) (path:filepath.EvalSymlinks exe) [exe nil])]
       (when error (throw error))
-      {:run run-command :entries directory-entries
+      {:run run-command :run-observed run-command-observed
+       :entries directory-entries
        :start-progress
        (fn [pending success failure]
          (github.com:yaml:yamlscript:internal:goyamlparser.StartCompileProgress

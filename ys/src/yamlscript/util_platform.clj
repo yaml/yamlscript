@@ -19,6 +19,28 @@
       {:exit exit :out out :err (if (zero? exit) "" out)})
     (catch Exception e {:exit 1 :out "" :err (.getMessage e)})))
 
+(defn run-command-observed [argv observe]
+  (try
+    (let [command (-> (ProcessBuilder. ^java.util.List argv)
+                    (.redirectErrorStream true)
+                    .start)
+          _ (.close (.getOutputStream command))
+          output (StringBuilder.)]
+      (with-open [reader (-> command
+                           .getInputStream
+                           java.io.InputStreamReader.
+                           java.io.BufferedReader.)]
+        (loop []
+          (when-let [line (.readLine reader)]
+            (.append output line)
+            (.append output "\n")
+            (observe line)
+            (recur))))
+      (let [exit (.waitFor command)
+            out (str output)]
+        {:exit exit :out out :err (if (zero? exit) "" out)}))
+    (catch Exception e {:exit 1 :out "" :err (.getMessage e)})))
+
 (defn start-progress [pending success failure]
   (let [writer *err*
         started (System/nanoTime)
@@ -47,6 +69,7 @@
 
 (defn context []
   {:run run-command
+   :run-observed run-command-observed
    :start-progress start-progress
    :write spit :read slurp
    :exists? #(or (fs/exists? %) (fs/sym-link? %))

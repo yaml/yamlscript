@@ -413,6 +413,7 @@ ys foo.ys -c -o foo.so,.h,darwin/amd64
 ys foo.ys -c -o foo.js,.html
 ys foo.ys -c -Tjs,html
 ys foo.ys -c -o assets/foo.js,pages/foo.html
+ys foo.ys -c -Thtml,-Xserve
 ys foo.ys -c -Tbin,-Xprune
 ys foo.ys -c -o foo,-Xprune
 ```
@@ -426,6 +427,15 @@ Multiple Gloat extensions must each include `-X`, for example
 `-Twasm,-Xprune,-Xgzip`.
 They are passed unchanged to Gloat, which validates their names, values, and
 target compatibility.
+`-Xserve` and `-Xopen` imply an HTML companion.
+Without an explicit output, they write persistent `foo/index.html` and
+`foo/index.js` files and serve `http://localhost:8000/foo/index.html`.
+An explicit output retains its exact name and writes its companion beside it.
+Serving rejects explicitly selected JS and HTML files in different directories.
+Program arguments belong in the page URL query, separated by commas.
+Each argument is percent-decoded, so `?one,two` passes two arguments and
+`?one%2Ctwo` passes one argument containing a comma.
+The `-Xhtml`, `-Xserve`, and `-Xopen` extensions do not accept values.
 YAMLScript publishes only the primary artifact and any declared companion.
 Use the companion syntax when an additional generated file must be retained.
 An extension-only companion replaces the primary extension and keeps its

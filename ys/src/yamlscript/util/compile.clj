@@ -59,6 +59,12 @@
 (defn extension-modifier? [value]
   (str/starts-with? value "-X"))
 
+(defn serving-extension? [extension]
+  (contains? #{"-Xserve" "-Xopen"} extension))
+
+(defn browser-extension-value? [extension]
+  (boolean (re-matches #"-X(?:html|serve|open)=.*" extension)))
+
 (defn parse-modifiers [parts]
   (reduce
     (fn [result part]
@@ -93,15 +99,20 @@
           target-companion (first target-companions)
           extensions (vec (concat (:extensions to-modifiers)
                             (:extensions out-modifiers)))
+          serving? (some serving-extension? extensions)
           target (or (first to-parts) (infer-target output))
           platform (or to-platform out-platform)
           default-ext (default-extension target platform)
+          source-stem (when (and source
+                             (str/ends-with? source ".ys")
+                             (> (count (basename source)) 3))
+                        (subs (basename source)
+                          0 (- (count (basename source)) 3)))
           output (or output
-                   (when (and default-ext source
-                           (str/ends-with? source ".ys")
-                           (> (count (basename source)) 3))
-                     (str "./" (subs (basename source)
-                                 0 (- (count (basename source)) 3)) default-ext)))
+                   (when (and default-ext source-stem)
+                     (if (and serving? (contains? #{"js" "html"} target))
+                       (str "./" source-stem "/index" default-ext)
+                       (str "./" source-stem default-ext))))
           target (if (library-aliases target) "lib" target)]
       (when (or (some str/blank? out-parts) (some str/blank? to-parts)
                 (> (count (:platforms out-modifiers)) 1)
@@ -120,6 +131,13 @@
         (fail "Conflicting compilation platforms."))
       (when (and (seq extensions) (not (gloat-targets target)))
         (fail "Gloat extensions require a Gloat compilation target."))
+      (when (and serving? (not (contains? #{"js" "html"} target)))
+        (fail "-Xserve and -Xopen are only valid with browser JS or HTML."))
+      (when-let [extension (some #(when (browser-extension-value? %) %)
+                             extensions)]
+        (fail (str "Arguments for " (first (str/split extension #"="))
+                " must be specified in the URL query,"
+                " for example '?arg1,arg2'.")))
       (when (and (contains? #{"bin" "lib" "dir" "h" "js" "html" "wasm"}
                    target) (not output))
         (fail (str "--to=" target " requires --output.")))
@@ -134,7 +152,9 @@
                                        (case target-companion
                                          "h" ".h"
                                          "html" ".html"
-                                         nil))]
+                                         nil)
+                                       (when (and (= target "js") serving?)
+                                         ".html"))]
                         (companion-path output part))]
         (when (and companion
                    (not (or (and (= target "lib") (= "h" (extension companion)))
@@ -202,11 +222,16 @@
     version "\"}}})\n"
     "(ns main (:require ys.v0))\n(ys.v0/init)\n\n" code))
 
-(defn run-gloat! [ctx argv]
-  (let [{:keys [exit out err]} ((:run ctx) argv)]
-    (when-not (= exit 0)
-      (fail (str "Gloat compilation failed: "
-              (str/trim (if (seq err) err out)))))))
+(defn run-gloat!
+  ([ctx argv] (run-gloat! ctx argv nil))
+  ([ctx argv observe]
+   (let [runner (if (and observe (:run-observed ctx))
+                  #((:run-observed ctx) % observe)
+                  (:run ctx))
+         {:keys [exit out err]} (runner argv)]
+     (when-not (= exit 0)
+       (fail (str "Gloat compilation failed: "
+               (str/trim (if (seq err) err out))))))))
 
 (defn html-reference [ctx html wasm]
   ;; The template uses a single-quoted JavaScript string containing a URL.
@@ -244,6 +269,7 @@
   (check-outputs! ctx opts)
   (let [gloat (find-gloat ctx)
         {:keys [target platform outputs extensions]} (:build opts)
+        serving? (some serving-extension? extensions)
         stage (install/temp-dir ctx (or (install/setting ctx "TMPDIR") "/tmp"))]
     (try
       (let [adapter (str stage "/compiler")
@@ -257,11 +283,22 @@
             ext (case format "lib" (if (str/starts-with? (or platform "") "windows/")
                                      ".dll" ".so")
                   "dir" "/" "js" ".js" "go" ".go" "wasm" ".wasm" "")
-            artifact (str stage "/result" ext)
             html? (or (= target "html") (and (= target "js") (= 2 (count outputs))))
+            [html-output js-output] (when html?
+                                      (if (= target "html")
+                                        outputs (reverse outputs)))
+            _ (when (and serving? html?
+                         (not= (install/parent
+                                 (normalized-path ctx html-output))
+                           (install/parent
+                             (normalized-path ctx js-output))))
+                (fail "Serving requires JS and HTML outputs in the same directory."))
+            artifact (if serving?
+                       js-output
+                       (str stage "/result" ext))
             argv (vec (concat ["env" (str "GLOAT_YS=" adapter)
-                               (str "YS_GLOAT_COMPILED=" compiled)
-                               gloat "--engine=glj" "--to" format "--out" artifact]
+                               (str "YS_GLOAT_COMPILED=" compiled)]
+                        [gloat "--engine=glj" "--to" format "--out" artifact]
                         (when platform ["--platform" platform])
                         (when html? ["--ext=html"])
                         extensions
@@ -269,7 +306,11 @@
         ((:write ctx) adapter compiler-adapter)
         ((:write ctx) compiled portable)
         (install/run! ctx "chmod" "755" adapter)
-        (run-gloat! ctx argv)
+        (run-gloat! ctx argv
+          (when-let [ready (:server-ready ctx)]
+            (fn [line]
+              (when (str/starts-with? line "Now serving ")
+                (ready line)))))
         (let [header (str stage "/result.h")
               html (str stage "/result.html")
               files (cond
@@ -278,16 +319,19 @@
                       (and (= target "lib") (= 2 (count outputs))) [artifact header]
                       html? [artifact html]
                       :else [artifact])]
-          (when html?
+          (when (and html? (not serving?))
             (let [[html-out wasm-out] (if (= target "html") outputs (reverse outputs))]
               ((:write ctx) html
                 (str/replace ((:read ctx) html) "fetch('result.js')"
                   (str "fetch('" (html-reference ctx html-out wasm-out) "')")))))
-          (doseq [file files]
+          (doseq [file (if serving? outputs files)]
             (when-not (install/test-path ctx "-e" file)
               (fail (str "Gloat did not generate: " file))))
-          (if (empty? outputs)
+          (cond
+            serving? nil
+            (empty? outputs)
             (print ((:read ctx) artifact))
+            :else
             (do
               (check-outputs! ctx opts)
               (doseq [[file output] (map vector files outputs)]
@@ -301,6 +345,7 @@
 
 (defn compile! [ctx opts portable source]
   (let [target (get-in opts [:build :target])
+        serving? (some serving-extension? (get-in opts [:build :extensions]))
         output (some-> (:output opts) (str/replace #"^\./" ""))
         description (str (target-descriptions target) ": '" output "'")
         finish (when (and output (:start-progress ctx))
@@ -310,8 +355,21 @@
                    (str "Failed to compile to "
                      (if (= target "bin") "binary" (target-descriptions target))
                      ": '" output "'")))
+        finished (atom false)
+        finish! (fn [ok?]
+                  (when (and finish (compare-and-set! finished false true))
+                    (finish ok?)))
+        announced (atom false)
+        server-ready (when serving?
+                       (fn [line]
+                         (when (compare-and-set! announced false true)
+                           (finish! true)
+                           (binding [*out* *err*]
+                             (println line)
+                             (flush)))))
+        ctx (cond-> ctx server-ready (assoc :server-ready server-ready))
         success (atom false)]
     (try
       (compile-artifacts! ctx opts portable source)
       (reset! success true)
-      (finally (when finish (finish @success))))))
+      (finally (finish! @success)))))
