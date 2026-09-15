@@ -15,6 +15,7 @@
 /issue-*
 /lib/
 /libys-*
+/release-jars/
 /release*.log
 /release-changes.txt
 /release-changes.txt.*

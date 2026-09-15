@@ -34,12 +34,6 @@ on:
           instead of building (use together with tests_only)
         required: false
         type: string
-      graalvm:
-        description: 'Also build the -graalvm CLI and library assets'
-        default: false
-        required: false
-        type: boolean
-
 defaults:
   run:
     shell: bash
@@ -50,8 +44,6 @@ concurrency:
 
 env:
   VERSION: ${{ inputs.version }}
-  BOOTSTRAP_YS_VERSION: '0.2.32'
-  JAVA_VERSION: '17'
   YS_RELEASE_CI: '1'
   YS_RELEASE_BINDINGS: ${{ inputs.bindings }}
   YS_RELEASE_BINDINGS_SKIP: ${{ inputs.bindings_skip }}
@@ -122,10 +114,13 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'linux')) &&
+         contains(format(' {0} ', inputs.tests_only), ' linux ') ||
+         contains(inputs.tests_only, 'linux-x64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: build-linux-x64
+    needs:
+    - build-linux-x64
+    - build-python-wheels
     runs-on: ubuntu-latest
     steps:
     - name: Checkout release ref
@@ -144,6 +139,12 @@ jobs:
         name: linux-x64
         path: release-artifacts
 
+    - name: Download Python wheels
+      uses: actions/download-artifact@v8
+      with:
+        name: python-wheels
+        path: release-wheels
+
     - name: Run core tests
       run: make test-core
 
@@ -151,6 +152,14 @@ jobs:
       run: |
         util/install-release-artifacts release-artifacts
         make -C libys test-installed-abi
+
+    - name: Test packaged Python wheel
+      run: |
+        python -m venv "$RUNNER_TEMP/yamlscript-wheel"
+        source "$RUNNER_TEMP/yamlscript-wheel/bin/activate"
+        python -m pip install release-wheels/*manylinux_2_31_x86_64.whl
+        python -c 'import yamlscript; assert \
+          yamlscript.YAMLScript().load("!ys-0\ninc: 41") == 42'
 
     - name: Run tests
       env:
@@ -170,7 +179,8 @@ jobs:
     if: >-
       ${{
         !inputs.publish_bindings_only &&
-        contains(inputs.tests_only, 'linux') &&
+        (contains(format(' {0} ', inputs.tests_only), ' linux ') ||
+         contains(inputs.tests_only, 'linux-x64')) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: ubuntu-latest
@@ -197,6 +207,19 @@ jobs:
           --name linux-x64 \
           --dir release-artifacts
 
+    - name: Download Python wheels
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p release-wheels
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name python-wheels \
+          --dir release-wheels || true
+        if ! compgen -G 'release-wheels/*.whl' >/dev/null; then
+          cp release-artifacts/*.whl release-wheels/
+        fi
+
     - name: Run core tests
       run: make test-core
 
@@ -204,6 +227,14 @@ jobs:
       run: |
         util/install-release-artifacts release-artifacts
         make -C libys test-installed-abi
+
+    - name: Test packaged Python wheel
+      run: |
+        python -m venv "$RUNNER_TEMP/yamlscript-wheel"
+        source "$RUNNER_TEMP/yamlscript-wheel/bin/activate"
+        python -m pip install release-wheels/*manylinux_2_31_x86_64.whl
+        python -c 'import yamlscript; assert \
+          yamlscript.YAMLScript().load("!ys-0\ninc: 41") == 42'
 
     - name: Run tests
       env:
@@ -224,7 +255,8 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'aarch64')) &&
+         contains(format(' {0} ', inputs.tests_only), ' aarch64 ') ||
+         contains(inputs.tests_only, 'linux-aarch64')) &&
         inputs.test_artifacts_run_id == ''
       }}
     needs: build-linux-aarch64
@@ -245,6 +277,15 @@ jobs:
       with:
         name: linux-aarch64
         path: release-artifacts
+
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: jar-artifacts
+
+    - name: Stage release JARs
+      run: cp jar-artifacts/*.jar release-artifacts/
 
     - name: Run core tests
       run: make test-core
@@ -278,7 +319,8 @@ jobs:
     if: >-
       ${{
         !inputs.publish_bindings_only &&
-        contains(inputs.tests_only, 'aarch64') &&
+        (contains(format(' {0} ', inputs.tests_only), ' aarch64 ') ||
+         contains(inputs.tests_only, 'linux-aarch64')) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: ubuntu-24.04-arm
@@ -304,6 +346,16 @@ jobs:
           --repo "${{ github.repository }}" \
           --name linux-aarch64 \
           --dir release-artifacts
+
+    - name: Download release JARs
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name linux-x64 \
+          --dir jar-artifacts
+        cp jar-artifacts/*.jar release-artifacts/
 
     - name: Run core tests
       run: make test-core
@@ -338,10 +390,13 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'macos')) &&
+         contains(format(' {0} ', inputs.tests_only), ' macos ') ||
+         contains(inputs.tests_only, 'macos-arm64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: build-macos-arm64
+    needs:
+    - build-macos-arm64
+    - build-python-wheels
     runs-on: macos-latest
     steps:
     - name: Checkout release ref
@@ -360,6 +415,21 @@ jobs:
         name: macos-arm64
         path: release-artifacts
 
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: jar-artifacts
+
+    - name: Download Python wheels
+      uses: actions/download-artifact@v8
+      with:
+        name: python-wheels
+        path: release-wheels
+
+    - name: Stage release JARs
+      run: cp jar-artifacts/*.jar release-artifacts/
+
     - name: Run core tests
       run: make test-core
 
@@ -367,6 +437,14 @@ jobs:
       run: |
         util/install-release-artifacts release-artifacts
         make -C libys test-installed-abi
+
+    - name: Test packaged Python wheel
+      run: |
+        python -m venv "$RUNNER_TEMP/yamlscript-wheel"
+        source "$RUNNER_TEMP/yamlscript-wheel/bin/activate"
+        python -m pip install release-wheels/*macosx_14_0_arm64.whl
+        python -c 'import yamlscript; assert \
+          yamlscript.YAMLScript().load("!ys-0\ninc: 41") == 42'
 
     - name: Run tests
       env:
@@ -390,7 +468,8 @@ jobs:
     if: >-
       ${{
         !inputs.publish_bindings_only &&
-        contains(inputs.tests_only, 'macos') &&
+        (contains(format(' {0} ', inputs.tests_only), ' macos ') ||
+         contains(inputs.tests_only, 'macos-arm64')) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: macos-latest
@@ -417,6 +496,24 @@ jobs:
           --name macos-arm64 \
           --dir release-artifacts
 
+    - name: Download release JARs and Python wheels
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name linux-x64 \
+          --dir jar-artifacts
+        cp jar-artifacts/*.jar release-artifacts/
+        mkdir -p release-wheels
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name python-wheels \
+          --dir release-wheels || true
+        if ! compgen -G 'release-wheels/*.whl' >/dev/null; then
+          cp release-artifacts/*.whl release-wheels/
+        fi
+
     - name: Run core tests
       run: make test-core
 
@@ -424,6 +521,14 @@ jobs:
       run: |
         util/install-release-artifacts release-artifacts
         make -C libys test-installed-abi
+
+    - name: Test packaged Python wheel
+      run: |
+        python -m venv "$RUNNER_TEMP/yamlscript-wheel"
+        source "$RUNNER_TEMP/yamlscript-wheel/bin/activate"
+        python -m pip install release-wheels/*macosx_14_0_arm64.whl
+        python -c 'import yamlscript; assert \
+          yamlscript.YAMLScript().load("!ys-0\ninc: 41") == 42'
 
     - name: Run tests
       env:
@@ -447,8 +552,6 @@ jobs:
     if: >-
       ${{
         !inputs.publish_bindings_only &&
-        (!inputs.tests_only ||
-         contains(inputs.tests_only, 'linux')) &&
         inputs.test_artifacts_run_id == ''
       }}
     needs: verify-release
@@ -465,15 +568,6 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
-
     - name: Install build dependencies
       run: |
         apt-get update
@@ -481,14 +575,10 @@ jobs:
 
     - name: Build release archives
       run: |
-        make release-build jars
-        if ${{ inputs.graalvm }}; then
-          make release-build YAMLSCRIPT_ENGINE=graalvm
-        fi
-        make -C python wheel
+        make release-build release-stage-jars
 
     - name: List release archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar python/dist/*.whl
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar release-jars
 
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v7
@@ -498,7 +588,7 @@ jobs:
           ys-*.tar.xz
           libys-*.tar.xz
           *.jar
-          python/dist/*.whl
+          release-jars/
         retention-days: 7
 
   build-linux-aarch64:
@@ -507,11 +597,14 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'aarch64')) &&
+         contains(format(' {0} ', inputs.tests_only), ' aarch64 ') ||
+         contains(inputs.tests_only, 'linux-aarch64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: verify-release
-    runs-on: ubuntu-24.04-arm
+    needs:
+    - verify-release
+    - build-linux-x64
+    runs-on: ubuntu-latest
     container: ubuntu:20.04
     steps:
     - name: Checkout release ref
@@ -524,14 +617,11 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
       with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
+        name: linux-x64
+        path: linux-artifacts
 
     - name: Install build dependencies
       run: |
@@ -540,13 +630,32 @@ jobs:
 
     - name: Build release archives
       run: |
-        make release-build jars
-        if ${{ inputs.graalvm }}; then
-          make release-build YAMLSCRIPT_ENGINE=graalvm
+        make release-build-ys \
+          GLOAT_PLATFORM=linux/arm64 \
+          RELEASE_PLATFORM=linux-aarch64 \
+          RELEASE_M2_SOURCE="$PWD/linux-artifacts/release-jars/m2/repository"
+        make release-build-libys \
+          GLOAT_PLATFORM=linux/arm64 \
+          RELEASE_PLATFORM=linux-aarch64 \
+          CROSS_CC_TARGET=aarch64-linux-gnu.2.31
+
+    - name: Check Linux AArch64 binaries
+      run: |
+        mkdir release-check
+        tar -xf "ys-$VERSION-linux-aarch64.tar.xz" -C release-check
+        tar -xf "libys-$VERSION-linux-aarch64.tar.xz" -C release-check
+        ys_bin="release-check/ys-$VERSION-linux-aarch64/ys-$VERSION"
+        libys="release-check/libys-$VERSION-linux-aarch64/libys-glojure.so"
+        file "$ys_bin" | grep -E 'ARM aarch64'
+        file "$libys" | grep -E 'ARM aarch64'
+        if readelf --version-info "$libys" |
+           grep -Eq 'GLIBC_(2\.(3[2-9]|[4-9][0-9])|[3-9])'; then
+          echo 'Linux AArch64 library requires glibc newer than 2.31'
+          exit 1
         fi
 
     - name: List release archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz
 
     - name: Upload Linux AArch64 artifacts
       uses: actions/upload-artifact@v7
@@ -555,7 +664,6 @@ jobs:
         path: |
           ys-*.tar.xz
           libys-*.tar.xz
-          *.jar
         retention-days: 7
 
   build-macos-arm64:
@@ -564,10 +672,17 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'macos')) &&
+         contains(format(' {0} ', inputs.tests_only), ' linux ') ||
+         contains(inputs.tests_only, 'linux-x64') ||
+         contains(format(' {0} ', inputs.tests_only), ' macos ') ||
+         contains(inputs.tests_only, 'macos-arm64') ||
+         contains(format(' {0} ', inputs.tests_only), ' windows ') ||
+         contains(inputs.tests_only, 'windows-x64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: verify-release
+    needs:
+    - verify-release
+    - build-linux-x64
     runs-on: macos-latest
     steps:
     - name: Checkout release ref
@@ -580,25 +695,20 @@ jobs:
             inputs.version
           }}
 
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
       with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
-        native-image-job-reports: 'true'
+        name: linux-x64
+        path: linux-artifacts
 
     - name: Build release archives
-      run: |
-        make release-build jars
-        if ${{ inputs.graalvm }}; then
-          make release-build YAMLSCRIPT_ENGINE=graalvm
-        fi
-        make -C python wheel
+      run: >-
+        test "$(uname -m)" = arm64 &&
+        make release-build
+        RELEASE_M2_SOURCE="$PWD/linux-artifacts/release-jars/m2/repository"
 
     - name: List release archives
-      run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar python/dist/*.whl
+      run: ls -lh ys-*.tar.xz libys-*.tar.xz
 
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v7
@@ -607,8 +717,6 @@ jobs:
         path: |
           ys-*.tar.xz
           libys-*.tar.xz
-          *.jar
-          python/dist/*.whl
         retention-days: 7
 
   build-windows-x64:
@@ -617,10 +725,17 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'windows')) &&
+         contains(format(' {0} ', inputs.tests_only), ' linux ') ||
+         contains(inputs.tests_only, 'linux-x64') ||
+         contains(format(' {0} ', inputs.tests_only), ' macos ') ||
+         contains(inputs.tests_only, 'macos-arm64') ||
+         contains(format(' {0} ', inputs.tests_only), ' windows ') ||
+         contains(inputs.tests_only, 'windows-x64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: verify-release
+    needs:
+    - verify-release
+    - build-linux-x64
     runs-on: ubuntu-latest
     steps:
     - name: Checkout release ref
@@ -638,33 +753,26 @@ jobs:
         sudo apt-get update && sudo apt-get install -y
         build-essential curl git perl unzip xz-utils zip
 
-    - name: Install bootstrap ys
-      run: |
-        # shellcheck disable=SC1090
-        source <(curl -sL https://in-1.cc) --local ys \
-          YAMLSCRIPT-VERSION="$BOOTSTRAP_YS_VERSION" \
-          PREFIX="$RUNNER_TEMP/ys"
-        "$RUNNER_TEMP/ys/bin/ys-0" --version
-        echo "$RUNNER_TEMP/ys/bin" >> "$GITHUB_PATH"
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: linux-artifacts
 
     - name: Build release archives
       run: |
+        test "$(uname -m)" = arm64
         make release-build-ys \
           GLOAT_PLATFORM=windows/amd64 \
-          RELEASE_PLATFORM=windows-x64
+          RELEASE_PLATFORM=windows-x64 \
+          RELEASE_M2_SOURCE="$PWD/linux-artifacts/release-jars/m2/repository"
         make release-build-libys \
           GLOAT_PLATFORM=windows/amd64 \
           RELEASE_PLATFORM=windows-x64 \
           CROSS_CC_TARGET=x86_64-windows-gnu
-        make jars
-        mkdir -p python/dist/release-assets
-        for archive in libys-*.tar.xz libys-*.zip; do
-          [[ -e "$archive" ]] && cp "$archive" python/dist/release-assets/
-        done
-        make -C python wheels-from-release
 
     - name: List release archives
-      run: ls -lh ys-*.zip libys-*.zip *.jar python/dist/*.whl
+      run: ls -lh ys-*.zip libys-*.zip
 
     - name: Upload Windows artifacts
       uses: actions/upload-artifact@v7
@@ -673,8 +781,6 @@ jobs:
         path: |
           ys-*.zip
           libys-*.zip
-          *.jar
-          python/dist/*.whl
         retention-days: 7
 
   build-macos-x64:
@@ -686,8 +792,10 @@ jobs:
          contains(inputs.tests_only, 'macos-x64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: verify-release
-    runs-on: macos-15-intel
+    needs:
+    - verify-release
+    - build-linux-x64
+    runs-on: macos-latest
     steps:
     - name: Checkout release ref
       uses: actions/checkout@v6
@@ -695,20 +803,22 @@ jobs:
         ref: >-
           ${{ inputs.tests_only && github.ref || inputs.version }}
 
-    - name: Set up GraalVM
-      if: ${{ inputs.graalvm }}
-      uses: graalvm/setup-graalvm@v1
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
       with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: graalvm
-        github-token: ${{ github.token }}
+        name: linux-x64
+        path: linux-artifacts
 
     - name: Build release archives
       run: |
-        make release-build jars
-        if ${{ inputs.graalvm }}; then
-          make release-build YAMLSCRIPT_ENGINE=graalvm
-        fi
+        make release-build-ys \
+          GLOAT_PLATFORM=darwin/amd64 \
+          RELEASE_PLATFORM=macos-x64 \
+          RELEASE_M2_SOURCE="$PWD/linux-artifacts/release-jars/m2/repository"
+        make release-build-libys \
+          GLOAT_PLATFORM=darwin/amd64 \
+          RELEASE_PLATFORM=macos-x64 \
+          CC='clang -arch x86_64'
 
     - name: Upload macOS x64 artifacts
       uses: actions/upload-artifact@v7
@@ -717,8 +827,106 @@ jobs:
         path: |
           ys-*.tar.xz
           libys-*.tar.xz
-          *.jar
         retention-days: 7
+
+  test-macos-x64:
+    name: Test macOS x64 under Rosetta
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'macos-x64')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: build-macos-x64
+    runs-on: macos-latest
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{ inputs.tests_only && github.ref || inputs.version }}
+
+    - name: Download macOS x64 artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: macos-x64
+        path: release-artifacts
+
+    - name: Install Rosetta
+      run: |
+        test "$(uname -m)" = arm64
+        sudo softwareupdate --install-rosetta --agree-to-license
+
+    - name: Test packaged CLI and C ABI
+      run: |
+        mkdir release-ys release-libys
+        tar -xf "release-artifacts/ys-$VERSION-macos-x64.tar.xz" \
+          -C release-ys
+        tar -xf "release-artifacts/libys-$VERSION-macos-x64.tar.xz" \
+          -C release-libys
+        ys_dir="release-ys/ys-$VERSION-macos-x64"
+        libys_dir="release-libys/libys-$VERSION-macos-x64"
+        arch -x86_64 "$ys_dir/ys-$VERSION" --version
+        test "$(printf '%s\n' '!ys-0' '=>: 6 * 7' | \
+          arch -x86_64 "$ys_dir/ys-$VERSION" -l -)" = 42
+        cp "$libys_dir/libys.$VERSION.h" "$libys_dir/libys.h"
+        clang -arch x86_64 -pthread -I"$libys_dir" \
+          libys/test/abi.c "$libys_dir/libys-glojure.dylib" \
+          -o release-libys/test-abi
+        DYLD_LIBRARY_PATH="$libys_dir" \
+          arch -x86_64 release-libys/test-abi
+
+  test-macos-x64-retry:
+    name: Test macOS x64 under Rosetta (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        contains(inputs.tests_only, 'macos-x64') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: macos-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ github.ref }}
+
+    - name: Download macOS x64 artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name macos-x64 \
+          --dir release-artifacts
+
+    - name: Install Rosetta
+      run: |
+        test "$(uname -m)" = arm64
+        sudo softwareupdate --install-rosetta --agree-to-license
+
+    - name: Test packaged CLI and C ABI
+      run: |
+        mkdir release-ys release-libys
+        tar -xf "release-artifacts/ys-$VERSION-macos-x64.tar.xz" \
+          -C release-ys
+        tar -xf "release-artifacts/libys-$VERSION-macos-x64.tar.xz" \
+          -C release-libys
+        ys_dir="release-ys/ys-$VERSION-macos-x64"
+        libys_dir="release-libys/libys-$VERSION-macos-x64"
+        arch -x86_64 "$ys_dir/ys-$VERSION" --version
+        test "$(printf '%s\n' '!ys-0' '=>: 6 * 7' | \
+          arch -x86_64 "$ys_dir/ys-$VERSION" -l -)" = 42
+        cp "$libys_dir/libys.$VERSION.h" "$libys_dir/libys.h"
+        clang -arch x86_64 -pthread -I"$libys_dir" \
+          libys/test/abi.c "$libys_dir/libys-glojure.dylib" \
+          -o release-libys/test-abi
+        DYLD_LIBRARY_PATH="$libys_dir" \
+          arch -x86_64 release-libys/test-abi
 
   build-cross-platform:
     name: Build ${{ matrix.name }}
@@ -731,7 +939,9 @@ jobs:
          contains(inputs.tests_only, 'wasm-p1')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: verify-release
+    needs:
+    - verify-release
+    - build-linux-x64
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -766,11 +976,18 @@ jobs:
         sudo apt-get update && sudo apt-get install -y
         build-essential curl git perl unzip xz-utils zip
 
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: linux-artifacts
+
     - name: Build CLI archive
       run: |
         make release-build-ys \
           GLOAT_PLATFORM="${{ matrix.gloat_platform }}" \
-          RELEASE_PLATFORM="${{ matrix.platform }}"
+          RELEASE_PLATFORM="${{ matrix.platform }}" \
+          RELEASE_M2_SOURCE="$PWD/linux-artifacts/release-jars/m2/repository"
 
     - name: Build shared library archive
       if: ${{ matrix.shared_library }}
@@ -795,6 +1012,197 @@ jobs:
       with:
         name: ${{ matrix.platform }}
         path: release-output/
+        retention-days: 7
+
+  test-cross-platform:
+    name: Check cross-built artifact formats
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(inputs.tests_only, 'freebsd-x64') ||
+         contains(inputs.tests_only, 'windows-arm64')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs: build-cross-platform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download FreeBSD x64 artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: freebsd-x64
+        path: release-artifacts/freebsd-x64
+
+    - name: Download Windows ARM64 artifacts
+      uses: actions/download-artifact@v8
+      with:
+        name: windows-arm64
+        path: release-artifacts/windows-arm64
+
+    - name: Check archives, formats, and ABI exports
+      run: |
+        mkdir release-freebsd release-windows
+        tar -tf \
+          "release-artifacts/freebsd-x64/ys-$VERSION-freebsd-x64.tar.xz" |
+          grep -Fx "ys-$VERSION-freebsd-x64/ys-$VERSION"
+        tar -tf \
+          "release-artifacts/freebsd-x64/libys-$VERSION-freebsd-x64.tar.xz" |
+          grep -Fx "libys-$VERSION-freebsd-x64/libys-glojure.so"
+        unzip -Z1 \
+          "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" |
+          grep -Fx "ys-$VERSION-windows-arm64/ys.exe"
+        unzip -Z1 \
+          "release-artifacts/windows-arm64/libys-$VERSION-windows-arm64.zip" |
+          grep -Fx "libys-$VERSION-windows-arm64/libys.dll"
+        tar -xf \
+          "release-artifacts/freebsd-x64/ys-$VERSION-freebsd-x64.tar.xz" \
+          -C release-freebsd
+        tar -xf \
+          "release-artifacts/freebsd-x64/libys-$VERSION-freebsd-x64.tar.xz" \
+          -C release-freebsd
+        unzip -q \
+          "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" \
+          -d release-windows
+        unzip -q \
+          "release-artifacts/windows-arm64/libys-$VERSION-windows-arm64.zip" \
+          -d release-windows
+        freebsd_ys="release-freebsd/ys-$VERSION-freebsd-x64/ys-$VERSION"
+        freebsd_dir="release-freebsd/libys-$VERSION-freebsd-x64"
+        freebsd_lib="$freebsd_dir/libys-glojure.so"
+        windows_ys="release-windows/ys-$VERSION-windows-arm64/ys.exe"
+        windows_lib="release-windows/libys-$VERSION-windows-arm64/libys.dll"
+        file "$freebsd_ys" | grep -E 'ELF 64-bit.*x86-64'
+        file "$freebsd_lib" | grep -E 'ELF 64-bit.*x86-64'
+        file "$windows_ys" | grep -Ei 'PE32.*Aarch64'
+        file "$windows_lib" | grep -Ei 'PE32.*Aarch64'
+        nm -D "$freebsd_lib" | grep -E ' graal_create_isolate$'
+        nm -D "$freebsd_lib" | grep -E ' load_ys_to_json$'
+        objdump -p "$windows_lib" | grep -E 'graal_create_isolate'
+        objdump -p "$windows_lib" | grep -E 'load_ys_to_json'
+
+  test-cross-platform-retry:
+    name: Check cross-built artifact formats (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (contains(inputs.tests_only, 'freebsd-x64') ||
+         contains(inputs.tests_only, 'windows-arm64')) &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Download cross-built artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        for platform in freebsd-x64 windows-arm64; do
+          gh run download "${{ inputs.test_artifacts_run_id }}" \
+            --repo "${{ github.repository }}" \
+            --name "$platform" \
+            --dir "release-artifacts/$platform"
+        done
+
+    - name: Check archives, formats, and ABI exports
+      run: |
+        mkdir release-freebsd release-windows
+        tar -tf \
+          "release-artifacts/freebsd-x64/ys-$VERSION-freebsd-x64.tar.xz" |
+          grep -Fx "ys-$VERSION-freebsd-x64/ys-$VERSION"
+        tar -tf \
+          "release-artifacts/freebsd-x64/libys-$VERSION-freebsd-x64.tar.xz" |
+          grep -Fx "libys-$VERSION-freebsd-x64/libys-glojure.so"
+        unzip -Z1 \
+          "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" |
+          grep -Fx "ys-$VERSION-windows-arm64/ys.exe"
+        unzip -Z1 \
+          "release-artifacts/windows-arm64/libys-$VERSION-windows-arm64.zip" |
+          grep -Fx "libys-$VERSION-windows-arm64/libys.dll"
+        tar -xf \
+          "release-artifacts/freebsd-x64/ys-$VERSION-freebsd-x64.tar.xz" \
+          -C release-freebsd
+        tar -xf \
+          "release-artifacts/freebsd-x64/libys-$VERSION-freebsd-x64.tar.xz" \
+          -C release-freebsd
+        unzip -q \
+          "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" \
+          -d release-windows
+        unzip -q \
+          "release-artifacts/windows-arm64/libys-$VERSION-windows-arm64.zip" \
+          -d release-windows
+        freebsd_ys="release-freebsd/ys-$VERSION-freebsd-x64/ys-$VERSION"
+        freebsd_dir="release-freebsd/libys-$VERSION-freebsd-x64"
+        freebsd_lib="$freebsd_dir/libys-glojure.so"
+        windows_ys="release-windows/ys-$VERSION-windows-arm64/ys.exe"
+        windows_lib="release-windows/libys-$VERSION-windows-arm64/libys.dll"
+        file "$freebsd_ys" | grep -E 'ELF 64-bit.*x86-64'
+        file "$freebsd_lib" | grep -E 'ELF 64-bit.*x86-64'
+        file "$windows_ys" | grep -Ei 'PE32.*Aarch64'
+        file "$windows_lib" | grep -Ei 'PE32.*Aarch64'
+        nm -D "$freebsd_lib" | grep -E ' graal_create_isolate$'
+        nm -D "$freebsd_lib" | grep -E ' load_ys_to_json$'
+        objdump -p "$windows_lib" | grep -E 'graal_create_isolate'
+        objdump -p "$windows_lib" | grep -E 'load_ys_to_json'
+
+  build-python-wheels:
+    name: Build Python wheels
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        (!inputs.tests_only ||
+         contains(format(' {0} ', inputs.tests_only), ' linux ') ||
+         contains(inputs.tests_only, 'linux-x64') ||
+         contains(format(' {0} ', inputs.tests_only), ' macos ') ||
+         contains(inputs.tests_only, 'macos-arm64') ||
+         contains(format(' {0} ', inputs.tests_only), ' windows ') ||
+         contains(inputs.tests_only, 'windows-x64')) &&
+        inputs.test_artifacts_run_id == ''
+      }}
+    needs:
+    - build-linux-x64
+    - build-macos-arm64
+    - build-windows-x64
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: >-
+          ${{ inputs.tests_only && github.ref || inputs.version }}
+
+    - name: Download Linux x64 library
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: python/dist/release-assets
+
+    - name: Download macOS ARM64 library
+      uses: actions/download-artifact@v8
+      with:
+        name: macos-arm64
+        path: python/dist/release-assets
+
+    - name: Download Windows x64 library
+      uses: actions/download-artifact@v8
+      with:
+        name: windows-x64
+        path: python/dist/release-assets
+
+    - name: Build wheels from release libraries
+      run: make -C python wheels-from-release
+
+    - name: Check wheel set
+      run: |
+        test "$(find python/dist -maxdepth 1 -name '*.whl' | wc -l)" -eq 3
+        ls -lh python/dist/*.whl
+
+    - name: Upload Python wheels
+      uses: actions/upload-artifact@v7
+      with:
+        name: python-wheels
+        path: python/dist/*.whl
         retention-days: 7
 
   test-wasm-p1:
@@ -842,6 +1250,54 @@ jobs:
             *"ys.$module is not available in the WASI build"* ]]
         done
 
+  test-wasm-p1-retry:
+    name: Test WASI Preview 1 (retry)
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        contains(inputs.tests_only, 'wasm-p1') &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+    - name: Checkout release ref
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ github.ref }}
+
+    - name: Download WASI artifact
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name wasm-p1 \
+          --dir release-artifacts
+
+    - name: Install Wasmtime
+      run: |
+        curl -sSf https://wasmtime.dev/install.sh |
+          WASMTIME_HOME="$RUNNER_TEMP/wasmtime" bash
+        echo "$RUNNER_TEMP/wasmtime/bin" >> "$GITHUB_PATH"
+
+    - name: Smoke test WASI CLI
+      run: |
+        mkdir release-wasm
+        tar -xf "release-artifacts/ys-$VERSION-wasm-p1.tar.xz" \
+          -C release-wasm
+        ys_wasm="release-wasm/ys-$VERSION-wasm-p1/ys.wasm"
+        wasmtime run "$ys_wasm" --version
+        [[ $(printf '%s\n' '!ys-0' '=>: 1 + 2' |
+          wasmtime run "$ys_wasm" -l -) == 3 ]]
+        for module in fs http ipc pods; do
+          output=$(wasmtime run "$ys_wasm" -e "use: $module" 2>&1 || true)
+          [[ $output == \
+            *"ys.$module is not available in the WASI build"* ]]
+        done
+
   create-release:
     name: Create GitHub release
     if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
@@ -856,6 +1312,9 @@ jobs:
     - build-macos-x64
     - build-windows-x64
     - build-cross-platform
+    - build-python-wheels
+    - test-cross-platform
+    - test-macos-x64
     - test-wasm-p1
     runs-on: ubuntu-latest
     permissions:
@@ -906,10 +1365,13 @@ jobs:
       ${{
         !inputs.publish_bindings_only &&
         (!inputs.tests_only ||
-         contains(inputs.tests_only, 'windows')) &&
+         contains(format(' {0} ', inputs.tests_only), ' windows ') ||
+         contains(inputs.tests_only, 'windows-x64')) &&
         inputs.test_artifacts_run_id == ''
       }}
-    needs: build-windows-x64
+    needs:
+    - build-windows-x64
+    - build-python-wheels
     runs-on: windows-latest
     steps:
     - name: Checkout release ref
@@ -927,6 +1389,21 @@ jobs:
       with:
         name: windows-x64
         path: release-artifacts
+
+    - name: Download release JARs
+      uses: actions/download-artifact@v8
+      with:
+        name: linux-x64
+        path: jar-artifacts
+
+    - name: Download Python wheels
+      uses: actions/download-artifact@v8
+      with:
+        name: python-wheels
+        path: release-wheels
+
+    - name: Stage release JARs
+      run: cp jar-artifacts/*.jar release-artifacts/
 
     - name: Install shasum shim
       run: |
@@ -980,6 +1457,14 @@ jobs:
         util/install-release-artifacts release-artifacts
         gmake -C libys test-installed-abi
 
+    - name: Test packaged Python wheel
+      run: |
+        python -m venv "$RUNNER_TEMP/yamlscript-wheel"
+        source "$RUNNER_TEMP/yamlscript-wheel/Scripts/activate"
+        python -m pip install release-wheels/*win_amd64.whl
+        python -c 'import yamlscript; assert \
+          yamlscript.YAMLScript().load("!ys-0\ninc: 41") == 42'
+
     - name: Add libys to PATH
       run: |
         cygpath -w "$PWD/libys/lib" >> "$GITHUB_PATH"
@@ -1001,7 +1486,8 @@ jobs:
     if: >-
       ${{
         !inputs.publish_bindings_only &&
-        contains(inputs.tests_only, 'windows') &&
+        (contains(format(' {0} ', inputs.tests_only), ' windows ') ||
+         contains(inputs.tests_only, 'windows-x64')) &&
         inputs.test_artifacts_run_id != ''
       }}
     runs-on: windows-latest
@@ -1028,6 +1514,24 @@ jobs:
           --name windows-x64 \
           --dir release-artifacts
 
+    - name: Download release JARs and Python wheels
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name linux-x64 \
+          --dir jar-artifacts
+        cp jar-artifacts/*.jar release-artifacts/
+        mkdir -p release-wheels
+        gh run download "${{ inputs.test_artifacts_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name python-wheels \
+          --dir release-wheels || true
+        if ! compgen -G 'release-wheels/*.whl' >/dev/null; then
+          cp release-artifacts/*.whl release-wheels/
+        fi
+
     - name: Install shasum shim
       run: |
         mkdir -p "$RUNNER_TEMP/bin"
@@ -1080,6 +1584,14 @@ jobs:
         util/install-release-artifacts release-artifacts
         gmake -C libys test-installed-abi
 
+    - name: Test packaged Python wheel
+      run: |
+        python -m venv "$RUNNER_TEMP/yamlscript-wheel"
+        source "$RUNNER_TEMP/yamlscript-wheel/Scripts/activate"
+        python -m pip install release-wheels/*win_amd64.whl
+        python -c 'import yamlscript; assert \
+          yamlscript.YAMLScript().load("!ys-0\ninc: 41") == 42'
+
     - name: Add libys to PATH
       run: |
         cygpath -w "$PWD/libys/lib" >> "$GITHUB_PATH"
@@ -1099,7 +1611,22 @@ jobs:
   upload-assets:
     name: Upload release assets
     if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
-    needs: create-release
+    needs:
+    - create-release
+    - build-linux-x64
+    - build-linux-aarch64
+    - build-macos-arm64
+    - build-macos-x64
+    - build-windows-x64
+    - build-cross-platform
+    - build-python-wheels
+    - test-linux
+    - test-linux-aarch64
+    - test-macos
+    - test-macos-x64
+    - test-windows
+    - test-cross-platform
+    - test-wasm-p1
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -1116,7 +1643,7 @@ jobs:
       run: |
         find . -type f -name '*.tar.xz' -exec mv {} . \;
         find . -type f -name '*.zip' -exec mv {} . \;
-        find . -type f -name '*.jar' -exec mv {} . \;
+        find . -type f -name '*-standalone.jar' -exec mv {} . \;
         find . -type f -name '*.whl' -exec mv {} . \;
         ls -lh ys-* libys-* *.jar *.whl
 

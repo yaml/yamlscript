@@ -34,32 +34,42 @@ export API_VERSION := 0
 export YS_VERSION := $(shell grep '^version:' $(ROOT)/Meta | cut -d' ' -f2)
 YAMLSCRIPT_VERSION := $(YS_VERSION)
 
+GLOAT-TARGET-OS := $(firstword $(subst /, ,$(GLOAT_PLATFORM)))
+TARGET-OS := $(or $(GLOAT-TARGET-OS),$(OS-NAME))
+HOST-GLOAT-OS := $(if $(filter macos,$(OS-NAME)),darwin,$(OS-NAME))
+HOST-GLOAT-ARCH := $(if $(filter int64,$(ARCH-NAME)),amd64,$(ARCH-NAME))
+HOST-GLOAT-PLATFORM := $(HOST-GLOAT-OS)/$(HOST-GLOAT-ARCH)
+GLOAT-CROSS := $(strip $(if $(GLOAT_PLATFORM),\
+  $(if $(filter $(HOST-GLOAT-PLATFORM),$(GLOAT_PLATFORM)),,1)))
+
 ifdef v
   export TEST_VERBOSE := 1
 endif
 
-ifeq ($(OS-NAME),linux)
+ifeq ($(TARGET-OS),linux)
   GCC := gcc -std=gnu99 -fPIC -shared
   SO := so
   DY :=
-else ifeq ($(OS-NAME),macos)
+else ifeq ($(TARGET-OS),darwin)
   GCC := gcc -dynamiclib
   SO := dylib
   DY := DY
-else ifeq ($(OS-NAME),windows)
+else ifeq ($(TARGET-OS),macos)
+  GCC := gcc -dynamiclib
+  SO := dylib
+  DY := DY
+else ifeq ($(TARGET-OS),windows)
   SO := dll
   DY :=
-else ifeq ($(OS-NAME),freebsd)
+else ifeq ($(TARGET-OS),freebsd)
   GCC := cc -std=gnu99 -fPIC -shared
   SO := so
   DY :=
-else
-  $(error Unsupported OSTYPE: $(OS-TYPE))
-endif
-
-ifneq (,$(filter windows/%,$(GLOAT_PLATFORM)))
-  SO := dll
+else ifeq ($(TARGET-OS),wasip1)
+  SO := wasm
   DY :=
+else
+  $(error Unsupported target OS: $(TARGET-OS))
 endif
 
 LIBZ := false

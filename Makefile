@@ -184,8 +184,10 @@ YS-JAR-PATH := \
 # The m2 jars bundled into the ys release package so that `make install`
 # can place them in the user's ~/.m2 for java free `ys -c --deps=+bb`:
 MAKES-M2 := .cache/.local/home/.m2/repository
-V0-M2-DIR := $(MAKES-M2)/org/yamlscript/ys.v0/$(YS_VERSION)
-DATA-JSON-M2-DIR := $(MAKES-M2)/org/clojure/data.json/$(DATA-JSON-VERSION)
+RELEASE-M2 := $(or $(RELEASE_M2_SOURCE),$(MAKES-M2))
+V0-M2-DIR := $(RELEASE-M2)/org/yamlscript/ys.v0/$(YS_VERSION)
+DATA-JSON-M2-DIR := \
+    $(RELEASE-M2)/org/clojure/data.json/$(DATA-JSON-VERSION)
 
 YS-RELEASE := $(RELEASE-YS-NAME).$(RELEASE-EXT)
 LYS-RELEASE := $(RELEASE-LYS-NAME).$(RELEASE-EXT)
@@ -193,6 +195,8 @@ LYS-RELEASE := $(RELEASE-LYS-NAME).$(RELEASE-EXT)
 JAR-ASSETS := \
     $(LYS-JAR-RELEASE) \
     $(YS-JAR-RELEASE) \
+
+RELEASE-JAR-DIR := release-jars
 
 ifndef JAR_ONLY
 RELEASE-ASSETS := \
@@ -381,6 +385,45 @@ release-build: release-build-ys release-build-libys
 release-build-ys: $(YS-RELEASE)
 
 release-build-libys: $(if $(CROSS_CC_TARGET),$(ZIG)) $(LYS-RELEASE)
+
+release-stage-jars: release-build-ys jars
+	$(RM) -r $(RELEASE-JAR-DIR)
+	mkdir -p $(RELEASE-JAR-DIR)/m2/repository/org/yamlscript/ys.v0 \
+	  $(RELEASE-JAR-DIR)/m2/repository/org/clojure/data.json
+	cp -p $(JAR-ASSETS) $(RELEASE-JAR-DIR)/
+	cp -pR $(V0-M2-DIR) \
+	  $(RELEASE-JAR-DIR)/m2/repository/org/yamlscript/ys.v0/
+	cp -pR $(DATA-JSON-M2-DIR) \
+	  $(RELEASE-JAR-DIR)/m2/repository/org/clojure/data.json/
+
+release-target-info:
+	@printf '%s\n' \
+	  'gloat-platform=$(GLOAT_PLATFORM)' \
+	  'release-platform=$(RELEASE_PLATFORM)' \
+	  'target-os=$(TARGET-OS)' \
+	  'cross=$(GLOAT-CROSS)' \
+	  'cc=$(CC)' \
+	  'cli=$(CLI-BIN)' \
+	  'libys=$(LIBYS-SO-ENGINE)' \
+	  'archive=$(RELEASE-EXT)'
+
+release-targets-dry-run:
+	$(MAKE) --dry-run release-target-info RELEASE_PLATFORM=linux-x64
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=linux/arm64 \
+	  RELEASE_PLATFORM=linux-aarch64 \
+	  CROSS_CC_TARGET=aarch64-linux-gnu.2.31
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=windows/amd64 \
+	  RELEASE_PLATFORM=windows-x64 CROSS_CC_TARGET=x86_64-windows-gnu
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=freebsd/amd64 \
+	  RELEASE_PLATFORM=freebsd-x64 CROSS_CC_TARGET=x86_64-freebsd
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=windows/arm64 \
+	  RELEASE_PLATFORM=windows-arm64 CROSS_CC_TARGET=aarch64-windows-gnu
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=wasip1/wasm \
+	  RELEASE_PLATFORM=wasm-p1
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=darwin/arm64 \
+	  RELEASE_PLATFORM=macos-arm64 CC='clang -arch arm64'
+	$(MAKE) --dry-run release-target-info GLOAT_PLATFORM=darwin/amd64 \
+	  RELEASE_PLATFORM=macos-x64 CC='clang -arch x86_64'
 
 #------------------------------------------------------------------------------
 # Interactive Release Workflow - Individual Step Targets
@@ -702,7 +745,9 @@ endif
 	cp common/install.mk $</Makefile
 ifeq (,$(findstring windows,$(RELEASE_PLATFORM)))
 ifeq (,$(findstring wasm,$(RELEASE_PLATFORM)))
+ifndef RELEASE_M2_SOURCE
 	$(MAKE) -C v0 install YS=$(abspath ys/$(CLI-BIN))
+endif
 	mkdir -p $</m2/repository/org/yamlscript/ys.v0 \
 	  $</m2/repository/org/clojure/data.json
 	cp -pR $(V0-M2-DIR) $</m2/repository/org/yamlscript/ys.v0/

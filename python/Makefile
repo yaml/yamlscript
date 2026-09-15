@@ -109,9 +109,10 @@ wheels-from-release: venv MANIFEST.in .long_description.md
 	    name=$${name%.zip}; \
 	    relplat=$${name#libys-$(RELEASE-WHEEL-VERSION)-}; \
 	    case "$$relplat" in \
-	      linux-aarch64) plat=manylinux_2_31_aarch64; libpat='libys.so.*' ;; \
-	      linux-x64) plat=manylinux_2_31_x86_64; libpat='libys.so.*' ;; \
-	      macos-aarch64) plat=macosx_14_0_arm64; libpat='libys.dylib.*' ;; \
+	      linux-x64) plat=manylinux_2_31_x86_64; \
+	        libpat='libys.so.$(RELEASE-WHEEL-VERSION)' ;; \
+	      macos-arm64) plat=macosx_14_0_arm64; \
+	        libpat='libys.dylib.$(RELEASE-WHEEL-VERSION)' ;; \
 	      windows-x64) plat=win_amd64; libpat='libys.dll' ;; \
 	      *) echo "Skipping unsupported Python wheel asset: $$name"; \
 	         continue ;; \
@@ -123,12 +124,12 @@ wheels-from-release: venv MANIFEST.in .long_description.md
 	      *.zip) unzip -q "$$archive" -d "$$tmp" ;; \
 	      *) tar -C "$$tmp" -xf "$$archive" ;; \
 	    esac; \
-	    lib=$$(find "$$tmp" -type f -name "$$libpat" | sort | head -n1); \
+	    lib=$$(find "$$tmp" -name "$$libpat" | sort | head -n1); \
 	    test -n "$$lib" || { \
 	      echo "No $$libpat found in $$archive"; \
 	      exit 1; \
 	    }; \
-	    cp -p "$$lib" $(WHEEL-LIBYS-DIR)/; \
+	    cp -pL "$$lib" $(WHEEL-LIBYS-DIR)/; \
 	    echo "Building Python wheel for $$relplat"; \
 	    $(VENV) && python setup.py bdist_wheel --plat-name "$$plat"; \
 	    rm -rf "$$tmp"; \

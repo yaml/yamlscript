@@ -108,10 +108,17 @@ GLOAT-LIBYS-NATIVE := $(wildcard gloat/native/* gloat/include/*.h)
 $(LIBYS-SO-GLOJURE): \
   $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-LIBYS-SRCS) \
   $(GLOAT-LIBYS-NATIVE)
+ifneq (,$(GLOAT-CROSS))
+ifeq (default,$(origin CC))
+	$(error Cross compiling libys requires CROSS_CC_TARGET or CC)
+endif
+endif
 	mkdir -p $(dir $@)
 	mkdir -p $(ROOT)/.cache/libys-native
 	cp gloat/native/* gloat/include/*.h $(ROOT)/.cache/libys-native/
 	</dev/null env -u GOROOT \
+	  CC="$(CC)" \
+	  CGO_ENABLED=1 \
 	  GLOAT_YS_RUNTIME=all \
 	  GLOAT_MODULE=github.com/yaml/yamlscript \
 	  GLOAT_EXTRA_GO_DIR=$(GO-YAML-GENERATED-DIR) \

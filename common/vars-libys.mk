@@ -11,7 +11,7 @@ LIBYS-SO-GLOJURE := $(LIBYS-SO-NAME)-glojure.$(SO)
 LIBYS-SO-GRAALVM := $(LIBYS-SO-NAME)-graalvm.$(SO)
 LIBYS-SO-ENGINE := $(if $(filter graalvm,$(YAMLSCRIPT_ENGINE)),\
   $(LIBYS-SO-GRAALVM),$(LIBYS-SO-GLOJURE))
-ifeq ($(OS-NAME),windows)
+ifeq ($(TARGET-OS),windows)
 LIBYS-SO-FQNP := $(LIBYS-SO-NAME).$(SO)
 LIBYS-SO-BASE := $(LIBYS-SO-FQNP)
 LIBYS-SO-APIP := $(LIBYS-SO-FQNP)
@@ -41,7 +41,7 @@ LIBYS-SOURCES := \
   src/libys/core.clj \
   src/libys/API.java \
 
-ifeq ($(OS-NAME),windows)
+ifeq ($(TARGET-OS),windows)
 LIBYS-API-HEADER := $(LIBYS-SO-NAME).h
 else
 LIBYS-API-HEADER := $(LIBYS-SO-NAME).$(YAMLSCRIPT_VERSION).h
