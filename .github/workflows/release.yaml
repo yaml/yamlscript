@@ -34,6 +34,12 @@ on:
           instead of building (use together with tests_only)
         required: false
         type: string
+      release_tests_run_id:
+        description: >-
+          Successful artifact-reuse test run ID whose Python wheels and
+          results should be used to resume a release without rebuilding
+        required: false
+        type: string
 defaults:
   run:
     shell: bash
@@ -95,7 +101,12 @@ jobs:
         fi
 
     - name: Check release assets are not already published
-      if: ${{ !inputs.tests_only }}
+      if: >-
+        ${{
+          !inputs.tests_only &&
+          (inputs.test_artifacts_run_id == '' ||
+           inputs.release_tests_run_id == '')
+        }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -1530,6 +1541,131 @@ jobs:
           YS_RELEASE_USE_INSTALLED_LIBYS=1 \
           YS_RELEASE_USE_INSTALLED_YS=1
 
+  resume-release:
+    name: Resume release from artifacts
+    if: >-
+      ${{
+        !inputs.publish_bindings_only &&
+        !inputs.tests_only &&
+        inputs.test_artifacts_run_id != '' &&
+        inputs.release_tests_run_id != ''
+      }}
+    needs: verify-release
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+    - name: Checkout tag
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.version }}
+
+    - name: Verify artifact-reuse tests
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        check_job() {
+          local run_id=$1 job=$2 conclusion
+          conclusion=$(gh run view "$run_id" \
+            --repo "${{ github.repository }}" --json jobs \
+            --jq ".jobs[] | select(.name == \"$job\") | .conclusion")
+          if [[ $conclusion != success ]]; then
+            echo "Required job did not succeed: $job ($conclusion)"
+            exit 1
+          fi
+        }
+
+        for job in \
+          'Test macOS x64 under Rosetta' \
+          'Test WASI Preview 1'; do
+          check_job "${{ inputs.test_artifacts_run_id }}" "$job"
+        done
+
+        for job in \
+          'Build Python wheels (retry)' \
+          'Check cross-built artifact formats (retry)' \
+          'Test Linux (retry)' \
+          'Test macOS (retry)' \
+          'Test Windows (retry)'; do
+          check_job "${{ inputs.release_tests_run_id }}" "$job"
+        done
+
+    - name: Download release artifacts
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p release-artifacts
+        for artifact in \
+          linux-x64 linux-aarch64 \
+          macos-arm64 macos-x64 \
+          windows-x64 freebsd-x64 windows-arm64 wasm-p1; do
+          gh run download "${{ inputs.test_artifacts_run_id }}" \
+            --repo "${{ github.repository }}" \
+            --name "$artifact" \
+            --dir "release-artifacts/$artifact"
+        done
+        gh run download "${{ inputs.release_tests_run_id }}" \
+          --repo "${{ github.repository }}" \
+          --name python-wheels \
+          --dir release-artifacts/python-wheels
+
+    - name: Prepare release assets
+      run: |
+        find release-artifacts -type f -name '*.tar.xz' -exec mv {} . \;
+        find release-artifacts -type f -name '*.zip' -exec mv {} . \;
+        find release-artifacts -type f -name '*-standalone.jar' \
+          -exec mv {} . \;
+        find release-artifacts -type f -name '*.whl' -exec mv {} . \;
+        test "$(find . -maxdepth 1 -name 'ys-*' -type f | wc -l)" -eq 8
+        test "$(find . -maxdepth 1 -type f \
+          \( -name 'libys-*.tar.xz' -o -name 'libys-*.zip' \) | \
+          wc -l)" -eq 7
+        test "$(find . -maxdepth 1 -name '*.jar' -type f | wc -l)" -eq 2
+        test "$(find . -maxdepth 1 -name '*.whl' -type f | wc -l)" -eq 3
+        ls -lh \
+          ./ys-*.tar.xz ./ys-*.zip \
+          ./libys-*.tar.xz ./libys-*.zip \
+          ./*.jar ./*.whl
+
+    - name: Build release notes
+      run: |
+        perl -pe 's/YS version .*/YS version $ENV{VERSION}/' \
+          common/release.md > release-notes.txt
+
+        if [[ -f Changes ]]; then
+          perl -ne '
+            if (/^- version: (\S+)/) {
+              $found = $1 eq $ENV{VERSION};
+              next;
+            }
+            if ($found && !/^\s+(?:date|changes):/) {
+              s/^  - /* /;
+              print;
+            }
+          ' Changes >> release-notes.txt
+        fi
+
+        cat release-notes.txt
+
+    - name: Create release and upload assets
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        if gh release view "$VERSION" >/dev/null 2>&1; then
+          echo "Release $VERSION already exists"
+        else
+          gh release create "$VERSION" \
+            --title "$VERSION" \
+            --notes-file release-notes.txt \
+            --draft=false \
+            --prerelease=false
+        fi
+        gh release upload "$VERSION" \
+          ./ys-*.tar.xz ./ys-*.zip ./libys-*.tar.xz ./libys-*.zip \
+          ./*.jar ./*.whl --clobber
+        gh release view "$VERSION"
+
   upload-assets:
     name: Upload release assets
     if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
@@ -1579,8 +1715,18 @@ jobs:
 
   publish-homebrew:
     name: Publish Homebrew tap
-    if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
-    needs: upload-assets
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        !inputs.publish_bindings_only &&
+        !inputs.tests_only &&
+        (needs.upload-assets.result == 'success' ||
+         needs.resume-release.result == 'success')
+      }}
+    needs:
+    - upload-assets
+    - resume-release
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -1593,10 +1739,25 @@ jobs:
         ref: ${{ inputs.version }}
 
     - name: Download Linux artifacts
+      if: ${{ needs.upload-assets.result == 'success' }}
       uses: actions/download-artifact@v8
       with:
         name: linux-x64
         path: release-artifacts
+
+    - name: Download Linux release assets
+      if: ${{ needs.resume-release.result == 'success' }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        mkdir -p release-artifacts
+        gh release download "$VERSION" \
+          --repo "${{ github.repository }}" \
+          --pattern 'ys-*-linux-x64.tar.xz' \
+          --pattern 'libys-*-linux-x64.tar.xz' \
+          --pattern '*-standalone.jar' \
+          --dir release-artifacts
+        ls -lh release-artifacts
 
     - name: Install release artifacts
       run: util/install-release-artifacts release-artifacts
@@ -1622,17 +1783,20 @@ jobs:
 
   publish-bindings:
     name: Publish language bindings
-    if: |
+    if: >-
       ${{
         always() &&
         !cancelled() &&
         !inputs.tests_only &&
         (
           inputs.publish_bindings_only ||
-          needs.upload-assets.result == 'success'
+          needs.upload-assets.result == 'success' ||
+          needs.resume-release.result == 'success'
         )
       }}
-    needs: upload-assets
+    needs:
+    - upload-assets
+    - resume-release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -1680,14 +1844,18 @@ jobs:
         fetch-depth: 0
 
     - name: Download Linux workflow artifacts
-      if: ${{ !inputs.publish_bindings_only }}
+      if: ${{ needs.upload-assets.result == 'success' }}
       uses: actions/download-artifact@v8
       with:
         name: linux-x64
         path: release-artifacts
 
     - name: Download Linux release assets
-      if: ${{ inputs.publish_bindings_only }}
+      if: >-
+        ${{
+          inputs.publish_bindings_only ||
+          needs.resume-release.result == 'success'
+        }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -1780,8 +1948,18 @@ jobs:
 
   publish-website:
     name: Publish website
-    if: ${{ !inputs.publish_bindings_only && !inputs.tests_only }}
-    needs: upload-assets
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        !inputs.publish_bindings_only &&
+        !inputs.tests_only &&
+        (needs.upload-assets.result == 'success' ||
+         needs.resume-release.result == 'success')
+      }}
+    needs:
+    - upload-assets
+    - resume-release
     runs-on: ubuntu-latest
     permissions:
       contents: write

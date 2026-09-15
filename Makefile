@@ -610,6 +610,42 @@ endif
 	  gh run watch $$run_id --repo yaml/yamlscript \
 	    --exit-status --interval=10
 
+# Resume a release with build artifacts from r=RUN_ID and successful
+# artifact-reuse tests and Python wheels from rt=RUN_ID.
+release-resume: $(GH)
+ifndef v
+	$(error 'make release-resume' requires v=NEW_VERSION)
+endif
+ifndef r
+	$(error 'make release-resume' requires r=ARTIFACT_RUN_ID)
+endif
+ifndef rt
+	$(error 'make release-resume' requires rt=RETRY_RUN_ID)
+endif
+	@set -e; \
+	  branch=$$(git branch --show-current); \
+	  gh run view $(r) --repo yaml/yamlscript \
+	    --json databaseId --jq .databaseId > /dev/null; \
+	  conclusion=$$(gh run view $(rt) --repo yaml/yamlscript \
+	    --json conclusion --jq .conclusion); \
+	  if [[ "$$conclusion" != success ]]; then \
+	    echo "ERROR: retry run $(rt) did not succeed: $$conclusion"; \
+	    exit 1; \
+	  fi; \
+	  git push --force-with-lease origin HEAD:$$branch; \
+	  git tag -f $(v) HEAD; \
+	  git push -f origin $(v); \
+	  gh workflow run release.yaml \
+	    --repo yaml/yamlscript --ref $$branch -f version=$(v) \
+	    -f test_artifacts_run_id=$(r) \
+	    -f release_tests_run_id=$(rt); \
+	  sleep 5; \
+	  run_id=$$(gh run list --workflow=release.yaml \
+	    --repo yaml/yamlscript --branch $$branch --limit=1 \
+	    --json databaseId --jq '.[0].databaseId'); \
+	  gh run watch $$run_id --repo yaml/yamlscript \
+	    --exit-status --interval=10
+
 # Step 12: Release bindings
 release-bindings: $(if $(YS_RELEASE_CI),,$(YS))
 ifndef v
