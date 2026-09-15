@@ -59,7 +59,7 @@
                                          (re-find #"^ys-0" first-tag))))
                         (assoc first-event :! "ys-0")
                         first-event)]
-      (cons first-event rest-events))))
+      (remove nil? (cons first-event rest-events)))))
 
 (defn parse-test-case [yaml-string]
   (remove (fn [event] (= "DOC" (subs (:+ event) 1)))

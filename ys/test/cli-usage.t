@@ -364,6 +364,22 @@ test::
 - cmnd: ys -Cle '{:x 123}'
   want: '{"x":123}'
 
+- name: Load empty file
+  cmnd:: "ys -l $QROOT/ys/test/empty-file"
+  want: ''
+
+- name: Load comment-only file
+  cmnd:: "ys -l $QROOT/ys/test/comment-only.yaml"
+  want: ''
+
+- name: Load empty stdin
+  cmnd: "printf '' | ys -l"
+  want: ''
+
+- name: Load comment-only stdin
+  cmnd: "printf '# comment\\n' | ys -l"
+  want: ''
+
 - cmnd: ys -pl ...
   what: err
   want: 'Error: Options --print and --load are mutually exclusive.'
