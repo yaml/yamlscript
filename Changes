@@ -1,3 +1,13 @@
+- version: 0.3.1
+  date:    Tue Sep 15 05:43:55 PM EDT 2026
+  changes:
+  - release: Honor binding check status
+  - core: Handle empty YAML input with go-yaml parser
+  - release: Cross-compile platform artifacts
+  - cli: Preserve process substitution input
+  - core: Resolve short use namespaces
+  - cli: Use comma compilation modifiers
+  - cli: Support browser serve bundles
 - version: 0.3.0
   date:    Fri Sep 11 02:21:00 PM EDT 2026
   changes:
