@@ -27,34 +27,63 @@
   (doseq [target ["so" "lib" "dylib" "dll"]]
     (is (= ["./foo.so" "./foo.h"]
           (get-in (build/resolve-options
-                    {:to (str target ";h") :output "./foo.so"} "foo.ys")
+                    {:to (str target ",h") :output "./foo.so"} "foo.ys")
             [:build :outputs]))))
   (is (= {:target "lib" :platform "darwin/amd64"
           :outputs ["./foo.dylib" "./foo.h"]}
-        (:build (build/resolve-options {:to "dylib;h;darwin/amd64"} "foo.ys"))))
+        (:build (build/resolve-options
+                  {:to "dylib,h,darwin/amd64"} "foo.ys"))))
   (is (= ["foo.so" "include/foo.h"]
-        (get-in (options "foo.so;include/foo.h" "so;h") [:build :outputs])))
-  (doseq [target ["bin;h" "so;h;bad" "so;h;linux/amd64;extra"]]
+        (get-in (options "foo.so,include/foo.h" "so,h") [:build :outputs])))
+  (doseq [target ["bin,h" "so,h,bad" "so,h,linux/amd64,extra"]]
     (is (thrown? Exception (build/resolve-options {:to target} "foo.ys"))))
   (is (= {:target "lib" :platform "darwin/amd64"
           :outputs ["lib/foo.so" "lib/foo.h"]}
-        (:build (options "lib/foo.so;.h;darwin/amd64"))))
+        (:build (options "lib/foo.so,.h,darwin/amd64"))))
   (is (= ["lib/foo.so" "include/foo.h"]
-        (get-in (options "lib/foo.so;include/foo.h") [:build :outputs])))
+        (get-in (options "lib/foo.so,include/foo.h") [:build :outputs])))
   (is (= ["foo.html" "foo.js"] (get-in (options "foo.html") [:build :outputs])))
   (is (= "darwin/amd64"
-        (get-in (options "foo.xyz" "bin;darwin/amd64") [:build :platform])))
+        (get-in (options "foo.xyz" "bin,darwin/amd64") [:build :platform])))
   (is (= ["foo.js" "../web/foo.html"]
-        (get-in (options "foo.js;../web/foo.html") [:build :outputs]))))
+        (get-in (options "foo.js,../web/foo.html") [:build :outputs])))
+  (is (= ["foo.js" "foo.html"]
+        (get-in (options "foo.js,.html") [:build :outputs])))
+  (is (= ["./foo.js" "./foo.html"]
+        (get-in (build/resolve-options {:to "js,html"} "foo.ys")
+          [:build :outputs]))))
+
+(deftest extension-selection
+  (is (= ["-Xprune"]
+        (get-in (options "foo,-Xprune") [:build :extensions])))
+  (is (= ["-Xprune"]
+        (get-in (build/resolve-options {:to "bin,-Xprune"} "foo.ys")
+          [:build :extensions])))
+  (is (= ["-Xreport=out.md" "-Xprune"]
+        (get-in (options "foo,-Xprune" "bin,-Xreport=out.md")
+          [:build :extensions])))
+  (is (= {:target "js" :platform "js/wasm"
+          :outputs ["./foo.js" "./foo.html"]
+          :extensions ["-Xprune"]}
+        (:build (build/resolve-options
+                  {:to "js,html,-Xprune,js/wasm"} "foo.ys"))))
+  (is (thrown-with-msg? Exception #"name must follow"
+        (options "foo,-X")))
+  (is (thrown-with-msg? Exception #"Gloat compilation target"
+        (options "foo.clj,-Xprune"))))
 
 (deftest invalid-selections
-  (doseq [[output target] [["foo.xyz" nil] ["foo;" nil] ["foo.so;.html" nil]
-                           ["foo.js;.h" nil] ["foo.so;.h;.h" nil]
-                           ["foo;linux/amd64" "bin;darwin/amd64"]
-                           ["foo" "bin;bad"] ["foo/" "bin"]
-                           ["foo.go;linux/amd64" nil]
-                           ["foo.js;wasip1/wasm" nil]]]
+  (doseq [[output target] [["foo.xyz" nil] ["foo," nil] ["foo.so,.html" nil]
+                           ["foo.js,.h" nil] ["foo.so,.h,.h" nil]
+                           ["foo,linux/amd64" "bin,darwin/amd64"]
+                           ["foo" "bin,bad"] ["foo/" "bin"]
+                           ["foo.go,linux/amd64" nil]
+                           ["foo.js,wasip1/wasm" nil]]]
     (is (thrown? Exception (options output target)) (str output " " target)))
+  (doseq [[output target] [["foo.js;.html" nil]
+                           ["foo" "bin;darwin/amd64"]]]
+    (is (thrown-with-msg? Exception #"use ',' instead"
+          (options output target))))
   (doseq [target ["bin" "dir" "lib" "h" "js" "html" "wasm"]]
     (is (thrown? Exception (options nil target)))))
 
@@ -63,11 +92,11 @@
                             "./99-bottles-of-beer"]
                            ["/tmp/nested/foo.bar.ys" "./foo.bar"]
                            ["nested/with spaces.ys" "./with spaces"]]]
-    (doseq [target ["bin" "bin;darwin/amd64"]]
+    (doseq [target ["bin" "bin,darwin/amd64"]]
       (let [opts (build/resolve-options {:to target} source)]
         (is (= output (:output opts)))
         (is (= [output] (get-in opts [:build :outputs])))
-        (is (= (when (str/includes? target ";") "darwin/amd64")
+        (is (= (when (str/includes? target ",") "darwin/amd64")
               (get-in opts [:build :platform]))))))
   (is (= "explicit.xyz"
         (:output (build/resolve-options
@@ -88,9 +117,9 @@
           [["wasm" ".wasm" "wasm"] ["js" ".js" "js"]
            ["html" ".html" "html"] ["h" ".h" "h"] ["dir" "/" "dir"]
            ["so" ".so" "lib"] ["dylib" ".dylib" "lib"] ["dll" ".dll" "lib"]
-           ["lib;linux/amd64" ".so" "lib"]
-           ["lib;darwin/amd64" ".dylib" "lib"]
-           ["lib;windows/amd64" ".dll" "lib"]]]
+           ["lib,linux/amd64" ".so" "lib"]
+           ["lib,darwin/amd64" ".dylib" "lib"]
+           ["lib,windows/amd64" ".dll" "lib"]]]
     (let [opts (build/resolve-options {:to target} "nested/foo.bar.ys")]
       (is (= (str "./foo.bar" suffix) (:output opts)))
       (is (= normalized (:to opts)))))
@@ -122,7 +151,7 @@
         (spit source
           (slurp "../sample/rosetta-code/99-bottles-of-beer.ys"))
         (doseq [args [["-cTbin" "nested/with spaces.v1.ys"]
-                      ["--file" source "--to=bin;darwin/amd64"]]]
+                      ["--file" source "--to=bin,darwin/amd64"]]]
           (let [result (apply run args)]
             (is (zero? (:exit result)) (:err result)))
           (is (= "bin artifact\n" (slurp output)))
@@ -130,7 +159,7 @@
           (is (= "bin artifact\n" (slurp output)))
           (fs/delete output))
         (doseq [[target suffix] [["wasm" ".wasm"] ["so" ".so"]
-                                ["dylib;h" ".dylib"] ["dll" ".dll"]
+                                ["dylib,h" ".dylib"] ["dll" ".dll"]
                                 ["html" ".html"] ["dir" "/"]]]
           (let [result (run (str "-cT" target) source)]
             (is (zero? (:exit result)) (:err result)))
@@ -149,7 +178,10 @@
   (doseq [target ["bb" "clj" "clj+" "go"]]
     (is (= target (:to (options nil target)))))
   (doseq [[argv target] [[["-c" "-o" "foo" "input.ys"] "bin"]
-                         [["-T" "bin;darwin/amd64" "-o" "foo.xyz" "input.ys"] "bin"]
+                         [["-T" "bin,darwin/amd64"
+                           "-o" "foo.xyz" "input.ys"] "bin"]
+                         [["-T" "bin,-Xprune" "input.ys"] "bin"]
+                         [["-T" "js,html" "input.ys"] "js"]
                          [["-c" "-o" "foo.clj" "input.ys"] "clj"]]]
     (let [[opts _ error errors] (cli/get-opts argv)]
       (is (nil? error)) (is (empty? errors)) (is (= target (:to opts))))))
@@ -174,17 +206,19 @@
         (is (thrown-with-msg? Exception #"already exists"
               (build/check-outputs! ctx (options path "dir")))))
       (is (thrown? Exception
-            (build/check-outputs! ctx (options (str dir "/f.h;.h") "lib"))))
+            (build/check-outputs! ctx (options (str dir "/f.h,.h") "lib"))))
       (is (= "original" (slurp file))))))
 
 (deftest selected-artifacts
   (with-context [dir ctx]
     (doseq [path ["program" "code.go" "project/" "lib.so" "header.h"
-                  "pair.so;.h" "web.js" "page.html" "module.wasm"
-                  "assets/main.js;pages/runner.html"]]
+                  "pair.so,.h" "web.js" "page.html" "module.wasm"
+                  "assets/main.js,pages/runner.html"]]
       (let [opts (options (str dir "/" path))
-            opts (if (= path "assets/main.js;pages/runner.html")
-                   (options (str dir "/assets/main.js;" dir "/pages/runner.html")) opts)]
+            opts (if (= path "assets/main.js,pages/runner.html")
+                   (options
+                     (str dir "/assets/main.js," dir "/pages/runner.html"))
+                   opts)]
         (build/compile! ctx opts "portable source" nil)
         (doseq [output (get-in opts [:build :outputs])]
           (is (fs/exists? output)))))
@@ -192,6 +226,21 @@
     (is (not (fs/exists? (str dir "/header.so"))))
     (is (= "fetch('../assets/main.js')\n" (slurp (str dir "/pages/runner.html"))))
     (is (empty? (fs/glob dir ".ys-install.*")))))
+
+(deftest forwards-gloat-extensions
+  (with-context [dir ctx]
+    (let [calls (atom [])
+          run (:run ctx)
+          ctx (assoc ctx :run
+                (fn [argv]
+                  (swap! calls conj argv)
+                  (run argv)))
+          opts (options (str dir "/program,-Xprune")
+                 "bin,-Xfuture=value")]
+      (build/compile! ctx opts "portable source" nil)
+      (let [argv (some #(when (= "env" (first %)) %) @calls)]
+        (is (= ["-Xfuture=value" "-Xprune"]
+              (filterv #(str/starts-with? % "-X") argv)))))))
 
 (deftest bootstrap-policy
   (with-context [dir ctx]
@@ -228,7 +277,7 @@
                   (if (= "env" (first argv))
                     {:exit 1 :out "" :err "intentional build failure"}
                     (run argv))))
-          opts (options (str dir "/library.so;.h"))]
+          opts (options (str dir "/library.so,.h"))]
       (is (thrown-with-msg? Exception #"intentional build failure"
             (build/compile! ctx opts "source" nil)))
       (is (not (fs/exists? (str dir "/library.so"))))
@@ -320,6 +369,11 @@
       (try
         (fs/copy original binary {:copy-attributes true})
         (let [program (str dir "/compile")
+              prune-source (str (fs/absolutize
+                                  "test/fixtures/compile-prune.ys"))
+              pruned-output (str dir "/pruned-output")
+              pruned-target-source (str dir "/pruned-target.ys")
+              pruned-target (str dir "/pruned-target")
               library (str dir "/answer.so")
               header (str dir "/answer.h")
               alone (str dir "/alone.h")
@@ -331,7 +385,16 @@
             binary "-cTbin" (str (fs/absolutize "test/fixtures/compile.ys")))
           (is (= "[7,7]\n"
                 (:out (process/shell {:out :string} program "7"))))
-          (compile "test/fixtures/compile-lib.ys" (str library ";" header))
+          (compile prune-source (str pruned-output ",-Xprune"))
+          (fs/copy prune-source pruned-target-source)
+          (process/shell
+            {:dir dir :out :string :err :string
+             :extra-env {"YS_GLOAT" gloat}}
+            binary "-cTbin,-Xprune" pruned-target-source)
+          (doseq [path [pruned-output pruned-target]]
+            (is (= "7\n"
+                  (:out (process/shell {:out :string} path "7")))))
+          (compile "test/fixtures/compile-lib.ys" (str library "," header))
           (compile "test/fixtures/compile-lib.ys" alone)
           (is (str/includes? (slurp header) "answer("))
           (is (= (slurp header) (slurp alone)))
@@ -344,11 +407,12 @@
           (compile "test/fixtures/compile.ys" (str dir "/project/"))
           (process/shell {:dir (str dir "/project") :out :string :err :string}
             "make")
-          (compile "test/fixtures/compile.ys" (str dir "/cross;darwin/amd64"))
+          (compile
+            "test/fixtures/compile.ys" (str dir "/cross,darwin/amd64"))
           (is (str/includes?
                 (:out (process/shell {:out :string} "file" (str dir "/cross")))
                 "Mach-O"))
-          (compile "test/fixtures/compile-lib.ys" (str browser ";" html))
+          (compile "test/fixtures/compile-lib.ys" (str browser "," html))
           (is (str/includes? (slurp html) "../assets/browser.js"))
           (when-let [node (System/getenv "YS_COMPILE_NODE")]
             (is (zero? (:exit (process/shell node "test/fixtures/browser-smoke.cjs" html)))))

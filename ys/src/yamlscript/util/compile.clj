@@ -28,7 +28,7 @@
               :else ".so"))
     nil))
 
-(defn target-name [value] (first (str/split (or value "") #";" -1)))
+(defn target-name [value] (first (str/split (or value "") #"," -1)))
 (defn code-target? [value] (contains? targets (target-name value)))
 (defn fail [message] (install/fail message))
 (defn basename [path] (last (str/split path #"/")))
@@ -50,21 +50,49 @@
     (str (stem output) companion)
     companion))
 
+(defn split-spec [value]
+  (when value
+    (when (str/includes? value ";")
+      (fail "Compilation specifications use ',' instead of ';'."))
+    (str/split value #"," -1)))
+
+(defn extension-modifier? [value]
+  (str/starts-with? value "-X"))
+
+(defn parse-modifiers [parts]
+  (reduce
+    (fn [result part]
+      (cond
+        (extension-modifier? part)
+        (if (= part "-X")
+          (fail "A Gloat extension name must follow '-X'.")
+          (update result :extensions conj part))
+
+        (platform? part)
+        (update result :platforms conj part)
+
+        :else
+        (update result :companions conj part)))
+    {:extensions [] :platforms [] :companions []}
+    parts))
+
 (defn resolve-options
   ([opts] (resolve-options opts (:file opts)))
   ([opts source]
   (if-not (or (:compile opts) (code-target? (:to opts)))
     opts
-    (let [out-parts (when (:output opts)
-                      (str/split (:output opts) #";" -1))
-          to-parts (when (:to opts) (str/split (:to opts) #";" -1))
+    (let [out-parts (split-spec (:output opts))
+          to-parts (split-spec (:to opts))
           output (first out-parts)
-          suffixes (vec (rest out-parts))
-          out-platform (when (and (seq suffixes) (platform? (last suffixes)))
-                         (last suffixes))
-          companions (if out-platform (vec (butlast suffixes)) suffixes)
-          to-header? (= "h" (second to-parts))
-          to-platform (nth to-parts (if to-header? 2 1) nil)
+          out-modifiers (parse-modifiers (rest out-parts))
+          to-modifiers (parse-modifiers (rest to-parts))
+          out-platform (first (:platforms out-modifiers))
+          to-platform (first (:platforms to-modifiers))
+          companions (:companions out-modifiers)
+          target-companions (:companions to-modifiers)
+          target-companion (first target-companions)
+          extensions (vec (concat (:extensions to-modifiers)
+                            (:extensions out-modifiers)))
           target (or (first to-parts) (infer-target output))
           platform (or to-platform out-platform)
           default-ext (default-extension target platform)
@@ -76,17 +104,22 @@
                                  0 (- (count (basename source)) 3)) default-ext)))
           target (if (library-aliases target) "lib" target)]
       (when (or (some str/blank? out-parts) (some str/blank? to-parts)
-                (> (count to-parts) (if to-header? 3 2))
-                (> (count companions) 1))
+                (> (count (:platforms out-modifiers)) 1)
+                (> (count (:platforms to-modifiers)) 1)
+                (> (count companions) 1)
+                (> (count target-companions) 1))
         (fail "Invalid compilation output specification."))
       (when (and target (not (targets target)))
         (fail (str "Compilation target must be one of: " target-list)))
-      (when (and to-header? (not= target "lib"))
-        (fail "The ;h target suffix requires a shared library target."))
-      (when (and to-platform (not (platform? to-platform)))
-        (fail "Platform must have the form OS/ARCH."))
+      (when (and target-companion
+                 (not (or (and (= target "lib") (= target-companion "h"))
+                       (and (= target "js") (= target-companion "html")))))
+        (fail
+          "Only library headers and browser HTML companions are supported."))
       (when (and to-platform out-platform (not= to-platform out-platform))
         (fail "Conflicting compilation platforms."))
+      (when (and (seq extensions) (not (gloat-targets target)))
+        (fail "Gloat extensions require a Gloat compilation target."))
       (when (and (contains? #{"bin" "lib" "dir" "h" "js" "html" "wasm"}
                    target) (not output))
         (fail (str "--to=" target " requires --output.")))
@@ -98,19 +131,25 @@
                  (not (and (= target "wasm") (= platform "wasip1/wasm"))))
         (fail "Platform is incompatible with the compilation target."))
       (let [companion (when-let [part (or (first companions)
-                                       (when to-header? ".h"))]
+                                       (case target-companion
+                                         "h" ".h"
+                                         "html" ".html"
+                                         nil))]
                         (companion-path output part))]
         (when (and companion
                    (not (or (and (= target "lib") (= "h" (extension companion)))
                             (and (= target "js") (= "html" (extension companion))))))
           (fail "Only library headers and browser HTML companions are supported."))
         (assoc opts :compile true :to target :output output
-          :build {:target target :platform platform
-                  :outputs (cond
-                             (= target "html") [output (str (stem output) ".js")]
-                             companion [output companion]
-                             output [output]
-                             :else [])}))))))
+          :build
+          (cond->
+            {:target target :platform platform
+             :outputs (cond
+                        (= target "html") [output (str (stem output) ".js")]
+                        companion [output companion]
+                        output [output]
+                        :else [])}
+            (seq extensions) (assoc :extensions extensions))))))))
 
 (defn normalized-path [ctx path]
   ((:absolute ctx) (str/replace path #"/+$" "")))
@@ -204,7 +243,7 @@
 (defn compile-artifacts! [ctx opts portable source]
   (check-outputs! ctx opts)
   (let [gloat (find-gloat ctx)
-        {:keys [target platform outputs]} (:build opts)
+        {:keys [target platform outputs extensions]} (:build opts)
         stage (install/temp-dir ctx (or (install/setting ctx "TMPDIR") "/tmp"))]
     (try
       (let [adapter (str stage "/compiler")
@@ -225,6 +264,7 @@
                                gloat "--engine=glj" "--to" format "--out" artifact]
                         (when platform ["--platform" platform])
                         (when html? ["--ext=html"])
+                        extensions
                         [input]))]
         ((:write ctx) adapter compiler-adapter)
         ((:write ctx) compiled portable)

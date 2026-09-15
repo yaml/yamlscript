@@ -382,10 +382,11 @@ directory: its basename with the final `.ys` replaced by the target extension.
 `--to=so`, `--to=dylib`, and `--to=dll` are aliases for `--to=lib` that select
 the corresponding default filename extension.
 `--to=lib` chooses `.so`, `.dylib`, or `.dll` for the target platform.
-Add `;h` to a library target to also write its matching header, for example
-`-T'so;h'` or `-T'dylib;h;darwin/amd64'`.
+Add `,h` to a library target to also write its matching header, for example
+`-Tso,h` or `-Tdylib,h,darwin/amd64`.
 An explicit header path in `--output` takes precedence over the matching name.
 `--to=h` writes `.h`; `--to=html` writes `.html` and a companion `.js`.
+Use `-Tjs,html` to request the same pair with `.js` as the primary output.
 This also applies to cross-compilation.
 For example, `ys sample/rosetta-code/99-bottles-of-beer.ys -cTbin` writes
 `./99-bottles-of-beer`.
@@ -405,16 +406,28 @@ ys foo.ys -c -o foo
 ys foo.ys --to=bin -o foo.xyz
 ys -ce 'say: 42' -o answer
 ys -c - -o answer < foo.ys
-ys foo.ys -c -o 'foo;darwin/amd64'
-ys foo.ys --to='bin;darwin/amd64' -o foo.xyz
-ys foo.ys -c -o 'lib/foo.so;include/foo.h'
-ys foo.ys -c -o 'foo.so;.h;darwin/amd64'
-ys foo.ys -c -o 'foo.js;.html'
-ys foo.ys -c -o 'assets/foo.js;pages/foo.html'
+ys foo.ys -c -o foo,darwin/amd64
+ys foo.ys --to=bin,darwin/amd64 -o foo.xyz
+ys foo.ys -c -o lib/foo.so,include/foo.h
+ys foo.ys -c -o foo.so,.h,darwin/amd64
+ys foo.ys -c -o foo.js,.html
+ys foo.ys -c -Tjs,html
+ys foo.ys -c -o assets/foo.js,pages/foo.html
+ys foo.ys -c -Tbin,-Xprune
+ys foo.ys -c -o foo,-Xprune
 ```
 
-Output specifications have the form `PRIMARY[;COMPANION][;OS/ARCH]`.
-Quote arguments containing semicolons so the shell passes them intact.
+Compilation specifications have the form `PRIMARY[,MODIFIER...]`.
+Modifiers can select a companion output, an `OS/ARCH` platform, or a Gloat
+processing extension written as `-Xname` or `-Xname=value`.
+Modifiers can follow either `--to` or `--output`.
+The old semicolon form is not supported.
+Multiple Gloat extensions must each include `-X`, for example
+`-Twasm,-Xprune,-Xgzip`.
+They are passed unchanged to Gloat, which validates their names, values, and
+target compatibility.
+YAMLScript publishes only the primary artifact and any declared companion.
+Use the companion syntax when an additional generated file must be retained.
 An extension-only companion replaces the primary extension and keeps its
 location.
 Shared libraries publish a header only when requested.
