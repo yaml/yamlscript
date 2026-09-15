@@ -2629,11 +2629,12 @@ The <code>:url</code> option loads an actual HTTP or HTTPS source-file URL.</p>
 <span class="w">  </span><span class="nt">fs</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">str</span><span class="p">:</span>
 </code></pre></div>
-<p>Bare short names expand into <code>ys::</code> module names and receive matching aliases.
+<p>Bare short names that identify bundled modules expand into <code>ys::</code> module names
+and receive matching aliases.
 The scalar form <code>use: http fs ipc ys</code> loads four such aliases.
-A short name with options does not imply an alias, so <code>use http: :all</code> means
-<code>use ys::http: :all</code>.
-Fully qualified module names retain their existing behavior.</p>
+A bundled short name with options does not imply an alias, so
+<code>use http: :all</code> means <code>use ys::http: :all</code>.
+Other short and fully qualified module names retain their existing behavior.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:path &#39;./lib&#39;</span>
 <span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:file &#39;./lib/foo/bar.ys&#39;</span>
 <span class="nt">use foo::bar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">:url &#39;https://example.com/foo/bar.ys&#39;</span>
@@ -2645,12 +2646,17 @@ Gist coordinates may name a file and full commit SHA.
 GitHub coordinates name one source file at a branch, tag, or commit.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">use clojure::math::combinatorics</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:from &#39;mvn:org.clojure/math.combinatorics@0.3.0/clojure.math.combinatorics&#39;</span>
+<span class="nt">use medley</span><span class="p">:</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:from &#39;mvn:dev.weavejester/medley@1.10.0/medley.core&#39;</span>
 <span class="nt">use mathy</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:from &#39;gist:ingydotnet/f70409675d234aa4f2fe379cd975a4f5/mathy.clj&#39;</span>
 <span class="nt">use grenadine::require-deps</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">:from &#39;github:clojurestar/grenadine/v0.1.12/src/grenadine/require_deps.cljc&#39;</span>
 </code></pre></div>
-<p>The module name on the left must match the namespace provided by <code>:from</code>.
+<p>When the name on the left is a short name, it becomes an alias for the
+namespace provided by <code>:from</code>.
+An explicit <code>:as</code> option overrides that implicit alias.
+A qualified name on the left must match the namespace provided by <code>:from</code>.
 Generic Git repositories and dependency coordinate maps are not accepted.</p>
 <p>Use <code>:as</code> to add an alias, <code>:get</code> to refer selected names, <code>:all</code> to refer all
 names, <code>:none</code> to refer none, and <code>:not</code> to refer all except selected names.

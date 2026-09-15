@@ -2580,7 +2580,7 @@ printed as JSON.</p>
 <p>Here's the <code>ys --help</code> output:</p>
 <div class="highlight"><pre><span></span><code>$ ys --help
 
-ys - The YS Command Line Tool - v0.3.0
+ys - The YS Command Line Tool - v0.3.1
 
 Usage: ys [&lt;option...&gt;] [&lt;file&gt;]
 
@@ -2949,10 +2949,11 @@ directory: its basename with the final <code>.ys</code> replaced by the target e
 <code>--to=so</code>, <code>--to=dylib</code>, and <code>--to=dll</code> are aliases for <code>--to=lib</code> that select
 the corresponding default filename extension.
 <code>--to=lib</code> chooses <code>.so</code>, <code>.dylib</code>, or <code>.dll</code> for the target platform.
-Add <code>;h</code> to a library target to also write its matching header, for example
-<code>-T'so;h'</code> or <code>-T'dylib;h;darwin/amd64'</code>.
+Add <code>,h</code> to a library target to also write its matching header, for example
+<code>-Tso,h</code> or <code>-Tdylib,h,darwin/amd64</code>.
 An explicit header path in <code>--output</code> takes precedence over the matching name.
 <code>--to=h</code> writes <code>.h</code>; <code>--to=html</code> writes <code>.html</code> and a companion <code>.js</code>.
+Use <code>-Tjs,html</code> to request the same pair with <code>.js</code> as the primary output.
 This also applies to cross-compilation.
 For example, <code>ys sample/rosetta-code/99-bottles-of-beer.ys -cTbin</code> writes
 <code>./99-bottles-of-beer</code>.
@@ -2970,15 +2971,37 @@ Gloat's build diagnostics are shown only on failure.</p>
 ys<span class="w"> </span>foo.ys<span class="w"> </span>--to<span class="o">=</span>bin<span class="w"> </span>-o<span class="w"> </span>foo.xyz
 ys<span class="w"> </span>-ce<span class="w"> </span><span class="s1">&#39;say: 42&#39;</span><span class="w"> </span>-o<span class="w"> </span>answer
 ys<span class="w"> </span>-c<span class="w"> </span>-<span class="w"> </span>-o<span class="w"> </span>answer<span class="w"> </span>&lt;<span class="w"> </span>foo.ys
-ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;foo;darwin/amd64&#39;</span>
-ys<span class="w"> </span>foo.ys<span class="w"> </span>--to<span class="o">=</span><span class="s1">&#39;bin;darwin/amd64&#39;</span><span class="w"> </span>-o<span class="w"> </span>foo.xyz
-ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;lib/foo.so;include/foo.h&#39;</span>
-ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;foo.so;.h;darwin/amd64&#39;</span>
-ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;foo.js;.html&#39;</span>
-ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;assets/foo.js;pages/foo.html&#39;</span>
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo,darwin/amd64
+ys<span class="w"> </span>foo.ys<span class="w"> </span>--to<span class="o">=</span>bin,darwin/amd64<span class="w"> </span>-o<span class="w"> </span>foo.xyz
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>lib/foo.so,include/foo.h
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo.so,.h,darwin/amd64
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo.js,.html
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-Tjs,html
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>assets/foo.js,pages/foo.html
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-Thtml,-Xserve
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-Tbin,-Xprune
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo,-Xprune
 </code></pre></div>
-<p>Output specifications have the form <code>PRIMARY[;COMPANION][;OS/ARCH]</code>.
-Quote arguments containing semicolons so the shell passes them intact.
+<p>Compilation specifications have the form <code>PRIMARY[,MODIFIER...]</code>.
+Modifiers can select a companion output, an <code>OS/ARCH</code> platform, or a Gloat
+processing extension written as <code>-Xname</code> or <code>-Xname=value</code>.
+Modifiers can follow either <code>--to</code> or <code>--output</code>.
+The old semicolon form is not supported.
+Multiple Gloat extensions must each include <code>-X</code>, for example
+<code>-Twasm,-Xprune,-Xgzip</code>.
+They are passed unchanged to Gloat, which validates their names, values, and
+target compatibility.
+<code>-Xserve</code> and <code>-Xopen</code> imply an HTML companion.
+Without an explicit output, they write persistent <code>foo/index.html</code> and
+<code>foo/index.js</code> files and serve <code>http://localhost:8000/foo/index.html</code>.
+An explicit output retains its exact name and writes its companion beside it.
+Serving rejects explicitly selected JS and HTML files in different directories.
+Program arguments belong in the page URL query, separated by commas.
+Each argument is percent-decoded, so <code>?one,two</code> passes two arguments and
+<code>?one%2Ctwo</code> passes one argument containing a comma.
+The <code>-Xhtml</code>, <code>-Xserve</code>, and <code>-Xopen</code> extensions do not accept values.
+YAMLScript publishes only the primary artifact and any declared companion.
+Use the companion syntax when an additional generated file must be retained.
 An extension-only companion replaces the primary extension and keeps its
 location.
 Shared libraries publish a header only when requested.
