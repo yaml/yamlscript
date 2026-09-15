@@ -439,6 +439,12 @@ test::
     (say "Hello")
     (identity 12345)
 
+- name: Compile Bash process substitution
+  cmnd: >-
+    bash -c "ys -c
+    <(printf '%s\n' '!ys-0' 'say: \"hi\"')"
+  want: (say "hi")
+
 - cmnd:: |-
     ys -ce 'say: "Hello, World!"'
   want: |

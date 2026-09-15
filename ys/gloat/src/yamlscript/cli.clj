@@ -251,8 +251,12 @@
   (let [[_ error] (os.Stat path)]
     (nil? error)))
 
+(defn regular-file? [path]
+  (let [[info error] (os.Stat path)]
+    (and (nil? error) (.IsRegular (.Mode info)))))
+
 (defn shebang-script? [path]
-  (and (file-exists? path)
+  (and (regular-file? path)
     (try
       (str/starts-with? (util-platform/read-file path) "#!")
       (catch go/any _ false))))
