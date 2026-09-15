@@ -43,7 +43,7 @@ $ source <(curl -sL https://in-1.cc) --local ys libys
 $ source <(curl -sL https://in-1.cc) --local ys
 $ source <(curl -sL https://in-1.cc) --local libys
 $ source <(curl -sL https://in-1.cc) --local ys libys \
-    YAMLSCRIPT-VERSION=0.3.0 LIBYS-VERSION=0.3.0
+    YAMLSCRIPT-VERSION=0.3.1 LIBYS-VERSION=0.3.1
 $ source <(curl -sL https://in-1.cc) --local ys libys \
     PREFIX=/tmp/yamlscript
 ```
@@ -84,7 +84,7 @@ Once `ys` is installed, it can install or upgrade release files directly:
 ys --install                         # Install libys
 ys --upgrade                         # Upgrade ys and libys
 ys --install-m2                      # Install runtime jars for ys -T bb
-VERSION=0.3.0 ys --upgrade           # Select a release
+VERSION=0.3.1 ys --upgrade           # Select a release
 PREFIX=/tmp/yamlscript ys --upgrade  # Select an installation prefix
 ```
 

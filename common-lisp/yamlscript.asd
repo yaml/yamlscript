@@ -2,6 +2,6 @@
   :description "YAMLScript language binding for Common Lisp"
   :author "YAMLScript Contributors"
   :license "MIT"
-  :version "0.3.0"
+  :version "0.3.1"
   :serial t
   :components ((:file "src/yamlscript")))

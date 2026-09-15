@@ -14,10 +14,10 @@ const
   { This value is automatically updated by 'make bump'.
     We currently only support binding to an exact version of libys. }
   {$IFDEF LINUX}
-  LIBYS = 'libys.so.0.3.0';
+  LIBYS = 'libys.so.0.3.1';
   {$ENDIF}
   {$IFDEF DARWIN}
-  LIBYS = 'libys.dylib.0.3.0';
+  LIBYS = 'libys.dylib.0.3.1';
   {$ENDIF}
   {$IFDEF WINDOWS}
   LIBYS = 'libys.dll';

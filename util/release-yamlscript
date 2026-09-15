@@ -308,6 +308,11 @@ defn confirm(msg default='y'):
 defn do-version-bump():
   o: "Running 'make bump' to update versions in all files"
   run:: make bump
+  version =:
+    bash('grep "^version:" Meta | cut -d" " -f2').out:trim
+  expected =: ENV.YS_RELEASE_VERSION_NEW
+  when version != expected:
+    die: "Version bump failed: Meta is $version, expected $expected"
   show-version-diff:
   confirm: 'Continue?'
   say: '✓ Version bump complete'

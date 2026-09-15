@@ -4,7 +4,7 @@ package yamlscript
 // #ifdef _WIN32
 // #include <libys.h>
 // #else
-// #include <libys.0.3.0.h>
+// #include <libys.0.3.1.h>
 // #endif
 // #include <stdlib.h>
 import "C"
