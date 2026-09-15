@@ -611,7 +611,11 @@ endif
 	    --exit-status --interval=10
 
 # Resume a release with build artifacts from r=RUN_ID and successful
-# artifact-reuse tests and Python wheels from rt=RUN_ID.
+# artifact-reuse tests and Python wheels from rt=RUN_ID. Use the
+# release-resume-untested target to skip platform test requirements.
+release-resume-untested: skip_release_tests := true
+release-resume-untested: release-resume
+
 release-resume: $(GH)
 ifndef v
 	$(error 'make release-resume' requires v=NEW_VERSION)
@@ -626,11 +630,15 @@ endif
 	  branch=$$(git branch --show-current); \
 	  gh run view $(r) --repo yaml/yamlscript \
 	    --json databaseId --jq .databaseId > /dev/null; \
-	  conclusion=$$(gh run view $(rt) --repo yaml/yamlscript \
-	    --json conclusion --jq .conclusion); \
-	  if [[ "$$conclusion" != success ]]; then \
-	    echo "ERROR: retry run $(rt) did not succeed: $$conclusion"; \
-	    exit 1; \
+	  gh run view $(rt) --repo yaml/yamlscript \
+	    --json databaseId --jq .databaseId > /dev/null; \
+	  if [[ "$(skip_release_tests)" != true ]]; then \
+	    conclusion=$$(gh run view $(rt) --repo yaml/yamlscript \
+	      --json conclusion --jq .conclusion); \
+	    if [[ "$$conclusion" != success ]]; then \
+	      echo "ERROR: retry run $(rt) did not succeed: $$conclusion"; \
+	      exit 1; \
+	    fi; \
 	  fi; \
 	  git push --force-with-lease origin HEAD:$$branch; \
 	  git tag -f $(v) HEAD; \
@@ -638,7 +646,8 @@ endif
 	  gh workflow run release.yaml \
 	    --repo yaml/yamlscript --ref $$branch -f version=$(v) \
 	    -f test_artifacts_run_id=$(r) \
-	    -f release_tests_run_id=$(rt); \
+	    -f release_tests_run_id=$(rt) \
+	    -f skip_release_tests=$(if $(skip_release_tests),true,false); \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
 	    --repo yaml/yamlscript --branch $$branch --limit=1 \

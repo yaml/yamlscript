@@ -36,10 +36,17 @@ on:
         type: string
       release_tests_run_id:
         description: >-
-          Successful artifact-reuse test run ID whose Python wheels and
+          Artifact-reuse run ID whose validated Python wheels and test
           results should be used to resume a release without rebuilding
         required: false
         type: string
+      skip_release_tests:
+        description: >-
+          Resume a release from validated artifacts without requiring
+          successful platform tests
+        default: false
+        required: false
+        type: boolean
 defaults:
   run:
     shell: bash
@@ -1561,7 +1568,29 @@ jobs:
       with:
         ref: ${{ inputs.version }}
 
+    - name: Verify release artifact jobs
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        check_job() {
+          local run_id=$1 job=$2 conclusion
+          conclusion=$(gh run view "$run_id" \
+            --repo "${{ github.repository }}" --json jobs \
+            --jq ".jobs[] | select(.name == \"$job\") | .conclusion")
+          if [[ $conclusion != success ]]; then
+            echo "Required job did not succeed: $job ($conclusion)"
+            exit 1
+          fi
+        }
+
+        for job in \
+          'Build Python wheels (retry)' \
+          'Check cross-built artifact formats (retry)'; do
+          check_job "${{ inputs.release_tests_run_id }}" "$job"
+        done
+
     - name: Verify artifact-reuse tests
+      if: ${{ !inputs.skip_release_tests }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -1583,8 +1612,6 @@ jobs:
         done
 
         for job in \
-          'Build Python wheels (retry)' \
-          'Check cross-built artifact formats (retry)' \
           'Test Linux (retry)' \
           'Test macOS (retry)' \
           'Test Windows (retry)'; do
