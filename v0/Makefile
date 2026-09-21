@@ -65,8 +65,13 @@ install::
 
 test:: test-bb
 
+TEST-BB := $(filter-out test/e2e-clj-plus.t,$(wildcard test/*.t))
+
 test-bb: $(BB) $(PERL) install
-	$(PROVE-BASH) $${TEST_VERBOSE:+'-v'} test/
+	$(PROVE-BASH) $${TEST_VERBOSE:+'-v'} $(TEST-BB)
+
+test-clj-plus: $(PERL)
+	$(PROVE-BASH) $${TEST_VERBOSE:+'-v'} test/e2e-clj-plus.t
 
 release: deploy
 
