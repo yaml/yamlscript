@@ -1,0 +1,44 @@
+!ys-0
+
+defn main(n=nil):
+  if n:
+    say: n:next-highest-int-from-digits
+    test:
+
+defn next-highest-int-from-digits(n):
+  ds =: n:digits
+  i =:
+    sub ds.#.--:
+      count:
+        ? for [i range(ds.#.-- 0 -1)
+              :while (ds.nth(i.--) >= ds.$i)]
+        : 1
+  if i > 0:
+    then:
+      a c =: ds.split-at(i)
+      a b =: a.split-at(a.#.--)
+      c d =: c:sort.split-with(\(b.0 >= _))
+      d e =: d.split-at(1)
+      e =: sort(b + c + e)
+      read-string: concat(a d e).map(str):join
+    else: 0
+
+# Test code:
+defn test():
+  tests =::
+    0:        0
+    9:        0
+    12:       21
+    21:       0
+    12453:    12534
+    738440:   740348
+    45072010: 45072100
+    95322020: 95322200
+    9589776899767587796600: 9589776899767587900667
+
+  reduce-kv _ nil tests:
+    fn(_ k v):
+      n =: k:next-highest-int-from-digits
+      if n == v:
+        say: "PASS - $k"
+        say: "FAIL - $n != $v"

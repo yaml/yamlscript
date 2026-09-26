@@ -1,7 +1,7 @@
 !ys-0
 
 defn main(n=100):
-  primes =: primes-up-to(n)
+  primes =: n:primes-up-to
   say: |-
     The $(primes.#) prime numbers less than $n are:
     $(text(primes):chomp)

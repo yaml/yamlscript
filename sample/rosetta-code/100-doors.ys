@@ -1,17 +1,16 @@
 !ys-0
 
 defn main():
-  say: |-
-    Open doors after 100 passes:
-    $(open-doors().join(', '))
-
-defn open-doors():
-  ? for [d n] map(vector doors() range().drop(1))
-        :when d
-  : n
-
-defn doors():
-  reduce:
-    fn(doors idx): doors.assoc(idx true)
-    into []: repeat(100 false)
-    map \(sqr(_).--): 1 .. 10
+  open =:
+    reduce _ ([true] * 100) (1 .. 100):
+      fn(doors i):
+        loop j i, doors doors:
+          if j < 100:
+            recur (j + i).++:
+              update-in doors [j]: \(doors.$j.!)
+            else: doors
+  say: +"Open doors after 100 passes:\ " +
+        (1 .. 100)
+          .map(\(_.--:open && _))
+          .filter(a)
+          .join(', ')

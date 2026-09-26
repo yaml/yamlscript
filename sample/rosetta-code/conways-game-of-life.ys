@@ -1,0 +1,42 @@
+!ys-0
+
+glider  =: \{[1 0] [2 1] [0 2] [1 2] [2 2]}
+blinker =: \{[1 2] [2 2] [3 2]}
+
+defn main():
+  game-of-life 10 40: glider
+
+defn game-of-life(size steps cells):
+  loop s steps, cells cells:
+    shell:: clear
+    print-world: cells size
+    sleep: 0.25
+    when 0 < s:
+      recur s.--: step(cells)
+
+defn print-world:
+  (cells):
+    print-world: cells 10
+
+  (cells size):
+    each y (0 .. size):
+      row =:
+        join:
+          for x (0 .. size):
+            cells([x y]).if('* ' '  ')
+      say: "| $row|"
+
+defn step(cells):
+  set:
+    ? for [cell count]
+          neighborhood.mapcat(cells):frequencies
+      :when ((3 == count) ||
+             ((2 == count) &&
+              cell.in?(cells)))
+    : cell
+
+defn neighborhood([x y]):
+  ? for dx [-1 0 1]
+        dy [-1 0 1]
+    :when [dx dy].ne([0 0])
+  : vector: (x + dx) (y + dy)

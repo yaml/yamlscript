@@ -1,0 +1,53 @@
+!ys-0
+
+inputs =::
+- abracadabra
+- seesaw
+- elk
+- grrrrrr
+- up
+- a
+
+defn main():
+  each input inputs: !:say
+    format '%s, %s, (%d)':
+      best-shuffle(input)*
+
+defn best-shuffle(s):
+  ref =: s:group-indices:cycles
+  prm =: concat((rotate + 1).map(ref)*)
+  ref =: concat(ref*)
+
+  map(vector ref prm):
+    .sort-by(first _)
+    .map(second)
+    .map(get + s)
+    .str(*)
+    .call(\([s _ s.score(_)]) _)
+
+defn score(before after):
+  map(== before after)
+    .filter(true?).#
+
+defn group-indices(s):
+  map-indexed(vector s)
+    .merge-vecs({}):vals
+    .sort-by(count _):reverse
+
+defn cycles(coll):
+  n =: coll.0.#
+  cycle =: range(n):cycle
+  coll =: concat(coll*)
+  map(vector coll cycle):
+    .merge-vecs([])
+
+defn rotate(n coll):
+  c =: coll.#
+  n =: (c + n) % c
+  concat coll.drop(n): coll.take(n)
+
+defn merge-vecs(vecs init):
+  reduce _ init vecs:
+    fn(counts [index x]):
+      assoc counts x:
+        counts.$x.or([]).conj(index)

@@ -1,0 +1,18 @@
+!ys-0
+
+input =: |
+  1 2 3 4 5 6 7 8 7 6 5 4 3 2 1
+  1.5 0.5 3.5 2.5 5.5 4.5 7.5 6.5
+
+defn main():
+  each line input:lines:
+    say: line:words.map(N):sparkline
+
+defn sparkline(nums):
+  sparks =: '▁▂▃▄▅▆▇█'
+  high =: max(nums*)
+  low =: min(nums*)
+  spread =: high - low
+  quantize =:
+    \(round(sparks.#.-- * ((_ - low) / spread)))
+  join: nums.map(\(nth sparks quantize(_)))

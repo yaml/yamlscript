@@ -1,0 +1,8 @@
+!ys-0
+
+defn main(x=24 y=42):
+  say:
+    cond:
+      x < y: "$x is less than $y"
+      x > y: "$x is greater than $y"
+      else : "$x is equal to $y"

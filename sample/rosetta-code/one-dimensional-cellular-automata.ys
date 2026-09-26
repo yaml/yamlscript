@@ -1,0 +1,17 @@
+!ys-0
+
+defn main():
+  each line generate(10 '_###_##_#_#_#_#__#__'):
+    say: line
+
+defn generate(n cells):
+  when n.?:
+    cons cells:
+      generate n.--:
+        loop cs cells, ncs subs(cells 0 1):
+          if cs.# >= 3:
+            recur cs.subs(1):
+              ncs +:
+                filter(\(_:S == '#') cs.subs(0 3))
+                  .#.eq(2).if('#' '_')
+            else: ncs + cs.subs(1)

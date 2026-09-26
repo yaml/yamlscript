@@ -1,18 +1,31 @@
 !ys-0
 
-say: 'Hello, world!'
+# The whole walkthrough is one '|' block scalar, so the layout is
+# literal; ys prints to the terminal, so the final step is shown by
+# running the example for real right below the instructions.
 
-=>: (say 'Hello, world!')
+defn main():
+  say: |
+    How to run "Hello world!" in YAMLScript (ys):
 
-=>: say('Hello, world!')
+    1. Install ys (Linux or macOS):
 
-say:
-  +'Hello, ' +: 'world!'
+           curl -s https://yamlscript.org/install | bash
 
-say: +'Hello, ' + 'world!'
+       This installs ys into ~/.local/bin by default; make sure that
+       directory is in your PATH. Full instructions, including other
+       platforms and prefixes, are at
+       https://yamlscript.org/doc/install/
 
-say: +'Hello,' 'world!'
+    2. Using any plain text editor (nano, vim, Notepad, ...), create
+       a file named hello.ys containing these two lines:
 
-say 'Hello,': 'world!'
+           !ys-0
+           say: 'Hello world!'
 
-say 'Hello,' 'world!':
+    3. Run it from your terminal:
+
+           ys hello.ys
+
+       The output appears right there in the terminal, like this:
+  say: 'Hello world!'

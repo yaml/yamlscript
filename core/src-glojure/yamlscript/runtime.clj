@@ -72,6 +72,7 @@
 (declare set-root!)
 
 (def enabled-modules (atom #{}))
+(def allowed-local-modules (atom #{}))
 
 (def wasi-restricted-modules
   '#{ys.fs ys.http ys.ipc ys.pods})
@@ -84,17 +85,23 @@
               (symbol (str "ys." %1))))
       (remove str/blank? (str/split value #"[,\s]+")))))
 
-(defn- check-module-access! [module]
-  (when (and (= runtime.GOOS "wasip1")
-          (wasi-restricted-modules module))
-    (throw
-      (ex-info
-        (str module " is not available in the WASI build") {})))
-  (when-let [allowed (configured-modules)]
-    (when-not (allowed module)
-      (throw
-        (ex-info
-          (str module " is disabled by YS_MODULES") {})))))
+(defn- check-module-access!
+  ([module]
+   (check-module-access! module nil))
+  ([module options]
+   (when (and (= runtime.GOOS "wasip1")
+           (wasi-restricted-modules module))
+     (throw
+       (ex-info
+         (str module " is not available in the WASI build") {})))
+   (when-let [allowed (configured-modules)]
+     (let [source (first (:source options))
+           local? (and (@allowed-local-modules module)
+                    (not (#{:url :from} source)))]
+       (when-not (or (allowed module) local?)
+         (throw
+           (ex-info
+             (str module " is disabled by YS_MODULES") {})))))))
 
 (defn- normalize-form [form]
   (let [[module & args] form
@@ -184,10 +191,10 @@
                       (keys builtin-modules)))
           (ns-aliases target) (configured-modules)))
       (let [[module kind public-module & args] (normalize-form form)]
-        (check-module-access! public-module)
-        (swap! enabled-modules conj public-module)
         (let [options (imports/with-short-from-alias
                         public-module (option-map args))
+              _access (check-module-access! public-module options)
+              _enabled (swap! enabled-modules conj public-module)
               module (if (= kind :builtin)
                        module
                        (load-external-module! target module options))]

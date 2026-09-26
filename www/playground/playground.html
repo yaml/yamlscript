@@ -1,0 +1,136 @@
+<section class="ys-playground"
+         data-ys-playground
+         data-variant="__YS_PLAYGROUND_VARIANT__"__YS_PLAYGROUND_CYCLE__
+         data-collapsed="__YS_PLAYGROUND_COLLAPSED__"
+         data-version="0.3.1"
+         data-worker-url="/assets/playground/playground-worker.js"
+         data-runtime-url="/assets/playground/runtime.wasm"
+         data-support-url="/assets/playground/wasm_exec.js">
+  <div class="ys-playground__intro">
+    <div>
+      <p><span class="ys-playground__eyebrow">Try YAMLScript now</span>
+      <em>(Edit and evaluate these examples)</em></p>
+    </div>
+__YS_PLAYGROUND_ACTIONS__
+  </div>
+
+  <div id="ys-playground-demo" data-collapsible__YS_PLAYGROUND_HIDDEN__>
+  <div class="ys-playground__tabs" role="tablist"
+       aria-label="YAMLScript demos">
+    <button type="button" role="tab" data-category="code"
+            aria-selected="true">
+      Dynamic YAML
+    </button>
+    <button type="button" role="tab" data-category="program"
+            aria-selected="false" tabindex="-1">
+      Program in YS
+    </button>
+  </div>
+
+  <div class="ys-playground__toolbar">
+__YS_PLAYGROUND_RUN__
+    <div class="ys-playground__inputs">
+__YS_PLAYGROUND_SHOWCASE__
+      <label class="ys-playground__examples">
+        <select data-example aria-label="YAMLScript example"></select>
+      </label>
+__YS_PLAYGROUND_DESCRIPTION__
+      <label class="ys-playground__args" data-args-row hidden>
+        <input type="text" data-args aria-label="Optional main arguments"
+               placeholder="Optional main args">
+      </label>
+    </div>
+    <div class="ys-playground__tools">
+__YS_PLAYGROUND_TOOLS__
+    </div>
+  </div>
+
+  <div class="ys-playground__workbench">
+    <section class="ys-playground__pane">
+      <div class="ys-playground__pane-head ys-playground__source-head">
+        <div class="ys-playground__pane-label">
+          <h3><span data-source-label>YAML</span>
+          <a class="ys-playground__source" data-source-link
+             target="_blank" rel="noopener noreferrer" hidden>
+            Source</a></h3>
+          <div class="ys-playground__file-tabs" data-file-tabs
+               role="tablist" aria-label="Project files" hidden></div>
+        </div>
+      </div>
+      <div class="ys-playground__editor" data-panel="source"></div>
+    </section>
+    <section class="ys-playground__pane ys-playground__result">
+      <div class="ys-playground__pane-head">
+        <div class="ys-playground__pane-label">
+          <h3>Evaluation</h3>
+          <span class="ys-playground__status" data-status
+                role="status" aria-live="polite">
+            Preparing demo
+          </span>
+        </div>
+__YS_PLAYGROUND_RESULT_TABS__
+      </div>
+      <div class="ys-playground__evaluation"
+           data-output="evaluation"></div>
+      <div class="ys-playground__compiled"
+           data-output="compiled" hidden></div>
+    </section>
+  </div>
+
+  </div>
+
+  <dialog class="ys-playground__config-dialog" data-config-dialog>
+    <form method="dialog">
+      <div class="ys-playground__config-head">
+        <h2>Settings</h2>
+        <button type="submit" value="close">Close</button>
+      </div>
+      <div class="ys-playground__config-fields">
+        <label>
+          <input type="checkbox" data-auto-run checked>
+          Auto evaluate changes
+        </label>
+        <label class="ys-playground__timeout">
+          <select data-timeout>
+            <option value="1000">1 second</option>
+            <option value="2000">2 seconds</option>
+            <option value="5000" selected>5 seconds</option>
+            <option value="10000">10 seconds</option>
+            <option value="30000">30 seconds</option>
+          </select>
+          Evaluation timeout
+        </label>
+      </div>
+      <div class="ys-playground__config-foot">
+        <button type="button" data-factory-reset>Factory Reset</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="ys-playground-help"
+          class="ys-playground__config-dialog ys-playground__help-dialog"
+          data-help-dialog aria-labelledby="ys-playground-help-title">
+    <form method="dialog">
+      <div class="ys-playground__config-head">
+        <h2 id="ys-playground-help-title">Help</h2>
+        <button type="submit" value="close">Close</button>
+      </div>
+      <div class="ys-playground__help-body">
+        <ul>
+__YS_PLAYGROUND_HELP__
+        </ul>
+      </div>
+    </form>
+  </dialog>
+
+  <noscript>
+    <p class="ys-playground__fallback">
+      JavaScript is required for the browser demo.
+      <a href="/doc/install/">Install YS</a> to try it locally.
+    </p>
+  </noscript>
+
+  <script type="application/json">
+__YS_PLAYGROUND_EXAMPLES__
+  </script>
+</section>

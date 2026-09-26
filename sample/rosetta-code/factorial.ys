@@ -1,7 +1,12 @@
 !ys-0
 
-defn main(n=10):
-  say: "$n! -> $factorial(n)"
+tests =:: 0 1 2 3 4 5 6 7 8
+
+defn main(ns=tests):
+  each n ns:words.map(N):
+    say: "$n! -> $factorial(n)"
 
 defn factorial(x):
-  2 .. x: .mul(*)
+  if x <= 2:
+    (x ||| 1)
+    (2 .. x).mul(*)

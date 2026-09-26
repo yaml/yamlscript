@@ -2,6 +2,8 @@
 /site/
 /.cache/
 /.venv/
+/node_modules/
+/src/assets/playground/
 
 /mkdocs.yml
 /sample

@@ -1,0 +1,291 @@
+- id: yaml-to-pretty-json
+  home: true
+  featured: true
+  label: YAML to Pretty JSON
+  description: >-
+    Load an external YAML file and print it as compact, readable JSON.
+  entry: main.ys
+  source: |
+    !ys-0
+
+    use: json yaml pretty-json
+
+    defn main():
+      data =: read('file.yaml'):yaml/load
+      text =: data:json/dump
+      say: text:pretty-json/format
+  files:
+    file.yaml: |
+      services:
+      - name: orders-api
+        image: ghcr.io/acme/orders:1.4
+        labels:
+          app: orders
+          team: platform
+      - name: orders-worker
+        image: ghcr.io/acme/orders:1.4
+        labels:
+          app: orders
+          team: platform
+    pretty-json.ys: |
+      !ys-0
+
+      ns: pretty-json
+
+      use: json
+
+      defn format(text):
+        text:json/load.format-value(0)
+          .tighten-array-indentation()
+          .tighten-json()
+
+      defn- format-value(value indent):
+        cond:
+          map?(value): format-map(value indent)
+          vector?(value): format-list(value indent)
+          else: json/dump(value)
+
+      defn- format-map(value indent):
+        if value.!:
+          then: '{}'
+          else:
+            outer =: :' ' * indent
+            inner =: :' ' * (indent + 2)
+            lines =:
+              for key keys(value):
+                item =: format-value(value.$key (indent + 2))
+                str: inner json/dump(key) ':' ' ' item
+            body =: lines.join(",\n")
+            =>: "{\n$body\n$outer}"
+
+      defn- format-list(value indent):
+        if value.!:
+          then: '[]'
+          else:
+            outer =: :' ' * indent
+            inner =: :' ' * (indent + 2)
+            lines =:
+              for item value:
+                =>: "$inner$(format-value(item (indent + 2)))"
+            body =: lines.join(",\n")
+            =>: "[\n$body\n$outer]"
+
+      defn- tighten-array-indentation(pretty):
+        input =: pretty:lines
+        loop lines input, arrays [], output []:
+          if lines.!:
+            then: output.join("\n")
+            else:
+              line =: lines.0
+              trimmed =: line:trim
+              closing-array =:
+                trimmed.eq(']') || trimmed.eq('],')
+              arrays :if closing-array .=: pop()
+              indent =: line.# - line:triml.#
+              reduction =:
+                arrays.filter(\(_.compact)).# * 2
+              spaces =: :' ' * max(0 (indent - reduction))
+              output .=: conj(spaces + trimmed)
+              next-line =: lines.1 || ''
+              compact =: next-line:trim.eq('{')
+              array-open =:
+                trimmed.eq('[') || trimmed.ends?(':\ [')
+              arrays :if array-open .=: conj({:compact compact})
+              recur: lines:rest, arrays, output
+
+      defn- tighten-json(pretty):
+        output =:
+          loop lines pretty:lines, output []:
+            if lines.!:
+              then: output
+              else:
+                line =: lines.0
+                trimmed =: line:trim
+                opening =: trimmed.eq('{') || trimmed.eq('[')
+                closing =:
+                  trimmed.in?(['}' '},' ']' '],'])
+                next-output =:
+                  cond:
+                    opening && output.?:
+                      last =: output.$
+                      separator =:
+                        if trimmed.eq('{') && last.ends?('['): :'' ' '
+                      output: .pop().conj(last + separator + trimmed)
+                    closing && output.?:
+                      last =: output.$
+                      closed =:
+                        last.ends?('}') || last.ends?(']')
+                      separator =:
+                        if closed: :'' ' '
+                      output: .pop().conj(
+                        last + separator + trimmed)
+                    else: output.conj(line)
+                recur: lines:rest, next-output
+        root =: output.0.eq('{') || output.0.eq('[')
+        if (output.# > 1) && root:
+          then:
+            first =: output.0 + ' ' + output.1:triml
+            join "\n": cons(first output.drop(2))
+          else: output.join("\n")
+  expected: |
+    { "services": [{
+        "name": "orders-api",
+        "image": "ghcr.io/acme/orders:1.4",
+        "labels": {
+          "app": "orders",
+          "team": "platform" }}, {
+        "name": "orders-worker",
+        "image": "ghcr.io/acme/orders:1.4",
+        "labels": {
+          "app": "orders",
+          "team": "platform" }}]}
+- file: 100-doors
+  id: hundred-doors
+  label: 100 Doors
+  description: Toggle 100 doors through repeated passes to find the open ones.
+  page: 100_doors
+- file: 100-prisoners
+  label: 100 Prisoners
+  description: Simulate two search strategies for the 100 prisoners problem.
+  page: 100_prisoners
+- file: 99-bottles-of-beer
+  id: ninety-nine-bottles
+  label: 99 Bottles of Beer
+  description: Display the complete lyrics of 99 Bottles of Beer on the Wall.
+  home: true
+  page: 99_bottles_of_beer
+- file: array-length
+  label: Array Length
+  description: Determine the length of several kinds of sequences.
+  page: Array_length
+- file: average-loop-length
+  label: Average Loop Length
+  description: Compare simulated and analytical permutation cycle lengths.
+  disable: true
+  page: Average_loop_length
+- file: best-shuffle
+  label: Best Shuffle
+  description: Rearrange text to minimize characters left in place.
+  page: Best_shuffle
+- file: conways-game-of-life
+  label: Conway's Game of Life
+  description: Evolve Conway's cellular automaton and display its generations.
+  home: true
+  page: Conway%27s_Game_of_Life
+  ignore-terminal-effects: true
+- file: dragon-curve
+  label: Dragon Curve
+  description: Create and display the self-similar Dragon curve fractal.
+  home: true
+  page: Dragon_curve
+- file: even-or-odd
+  label: Even or Odd
+  description: Determine whether each integer is even or odd.
+  page: Even_or_odd
+- file: factorial
+  label: Factorial
+  description: Return the product of every positive integer from n to one.
+  home: true
+  page: Factorial
+- file: fibonacci-sequence
+  label: Fibonacci Sequence
+  description: Generate numbers by summing the previous two values.
+  home: true
+  page: Fibonacci_sequence
+- file: fizzbuzz
+  label: FizzBuzz
+  description: Replace multiples of three and five with Fizz and Buzz.
+  home: true
+  page: FizzBuzz
+- file: floyds-triangle
+  label: Floyd's Triangle
+  description: Arrange natural numbers in a growing left-aligned triangle.
+  home: true
+  page: Floyd%27s_triangle
+- file: function-definition
+  label: Function Definition
+  description: Define and call a function with several arities.
+  page: Function_definition
+- file: greatest-common-divisor
+  label: Greatest Common Divisor
+  description: Compute a greatest common divisor with Euclid's algorithm.
+  page: Greatest_common_divisor
+- file: hello-world
+  label: Hello World/Newbie
+  description: Walk a new user through installing and running YAMLScript.
+  page: Hello_world/Newbie
+- file: hello-world-text
+  label: Hello World/Text
+  description: Print Hello, world using several YAMLScript forms.
+  page: Hello_world/Text
+- file: integer-comparison
+  label: Integer Comparison
+  description: Compare two integers and report their relative order.
+  page: Integer_comparison
+- file: jortsort
+  label: JortSort
+  description: Report whether each list is already sorted.
+  page: JortSort
+- file: leap-year
+  label: Leap Year
+  description: Apply Gregorian calendar rules to identify leap years.
+  page: Leap_year
+- file: luhn-test-of-credit-card-numbers
+  label: Luhn Test of Credit Card Numbers
+  description: Validate identification numbers with the Luhn checksum.
+  page: Luhn_test_of_credit_card_numbers
+- file: next-highest-int-from-digits
+  label: Next Highest Int From Digits
+  description: Rearrange digits to find the next larger integer.
+  page: Next_highest_int_from_digits
+- file: one-dimensional-cellular-automata
+  label: One-dimensional Cellular Automata
+  description: Evolve and display generations of a one-dimensional automaton.
+  page: One-dimensional_cellular_automata
+- file: palindrome-detection
+  label: Palindrome Detection
+  description: Detect whether a value reads the same in reverse.
+  page: Palindrome_detection
+- file: rot-13
+  label: ROT-13
+  description: Rotate letters 13 places while preserving case and punctuation.
+  home: true
+  page: Rot-13
+- file: sieve-of-eratosthenes
+  label: Sieve of Eratosthenes
+  description: Find prime numbers below a limit with the classic sieve.
+  home: true
+  page: Sieve_of_Eratosthenes
+- file: sparkline-in-unicode
+  label: Sparkline in Unicode
+  description: Render numerical series as compact Unicode sparklines.
+  page: Sparkline_in_unicode
+- file: tokenize-a-string
+  label: Tokenize a String
+  description: Split a delimited string into tokens and join them again.
+  page: Tokenize_a_string
+- file: validate-international-securities-identification-number
+  label: Validate International Securities Identification Number
+  description: Validate ISIN structure and its checksum digit.
+  page: Validate_International_Securities_Identification_Number
+- file: van-der-corput-sequence
+  label: Van der Corput Sequence
+  description: Generate a low-discrepancy Van der Corput sequence.
+  page: Van_der_Corput_sequence
+- file: weird-numbers
+  label: Weird Numbers
+  description: Find abundant numbers that are not semiperfect.
+  page: Weird_numbers
+- file: xiaolin-wus-line-algorithm
+  label: Xiaolin Wu's Line Algorithm
+  description: Draw an antialiased line with Xiaolin Wu's algorithm.
+  disable: true
+  page: Xiaolin_Wu%27s_line_algorithm
+- file: yellowstone-sequence
+  label: Yellowstone Sequence
+  description: Generate terms using alternating coprime divisor constraints.
+  page: Yellowstone_sequence
+- file: yin-and-yang
+  label: Yin and Yang
+  description: Draw the taijitu at two sizes using terminal characters.
+  page: Yin_and_yang

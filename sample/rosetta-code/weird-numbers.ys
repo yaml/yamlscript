@@ -1,7 +1,7 @@
 !ys-0
 
 defn main(max=16500):
-  weird =: sieve(max)
+  weird =: max:sieve
   numbers =:
     filter \(nth weird _): range(2 max 2)
   say: |
@@ -15,7 +15,7 @@ defn sieve(limit):
       recur (i + 2):
         or _ weirds:
           when weirds.$i:
-            divs =: divisors(i)
+            divs =: i:divisors
             if abundant(i divs):
               when semiperfect(i divs):
                 loop j i, weirds weirds:
@@ -31,7 +31,7 @@ defn divisors(number):
     mapcat _ range(1 sqrt(number)):
       fn(n):
         when 0 == (number % n):
-          vector: n (number / n)
+          V+: n (number / n)
   divisors: .distinct().sort(gt _):rest
 
 defn abundant(n divs):

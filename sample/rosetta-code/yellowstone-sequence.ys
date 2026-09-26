@@ -1,0 +1,24 @@
+!ys-0
+
+defn main(n=30):
+  say: n:yellow
+
+defn yellow(n):
+  a =: +[1 2 3]
+  b =: (1 .. 3).zipmap([true]:cycle)
+  i =: 4
+  loop a a, b b, i i:
+    if n > a.#:
+      ? if b.$i.! &&
+           (i.gcd(a.$) == 1) &&
+           (i.gcd(a:butlast.$) > 1)
+      : recur:
+          a.conj(i), b.assoc(i true), 5
+        recur: a, b, i.++
+      =>: a
+
+defn gcd(a b):
+  loop a a, b b:
+    if b.?:
+      recur b: a % b
+      else: a

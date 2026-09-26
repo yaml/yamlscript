@@ -1,0 +1,13 @@
+!ys-0
+
+exprs =::
+- '+["apple" "orange"]'
+- 'ARGS'
+- '10 .. 20'
+- 'range(10 20)'
+- '\\A .. \\Z'
+- '"Hello, world!"'
+
+each expr exprs:
+  len =: expr:eval:count
+  say: "The length of '$expr' is $len"

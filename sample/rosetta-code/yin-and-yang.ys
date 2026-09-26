@@ -1,0 +1,36 @@
+!ys-0
+
+defn main():
+  yin-yang: 9
+  say:
+  yin-yang: 6
+
+defn- yin-yang(r):
+  neg-r =: 0 - r
+  neg-2r =: 0 - (2 * r)
+  pos-2r =: 2 * r
+  each y (neg-r .. r):
+    row =:
+      map _ (neg-2r .. pos-2r):
+        fn(x): pixel((x / 2.0) y r)
+    say: join(row '')
+
+defn- pixel(x y r):
+  d2 =: (x * x) + (y * y)
+  if d2 > (r * r):
+    then: ' '
+    else: half-pixel(x y r)
+
+defn- half-pixel(x y r):
+  half =: r / 2.0
+  small =: (r * r) / 36.0
+  big =: (r * r) / 4.0
+  top-d =: (x * x) + ((y + half) * (y + half))
+  bot-d =: (x * x) + ((y - half) * (y - half))
+  cond:
+    top-d < small: '#'
+    bot-d < small: '.'
+    top-d < big: '.'
+    bot-d < big: '#'
+    x < 0: '.'
+    else: '#'

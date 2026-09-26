@@ -135,7 +135,7 @@ INSTALL-DIRS := \
 BUILD := $(BUILD-DIRS:%=build-%)
 BUILD-DOC := $(BINDINGS:%=build-doc-%)
 INSTALL := $(INSTALL-DIRS:%=install-%)
-TEST := $(DIRS:%=test-%)
+TEST := $(DIRS:%=test-%) test-www
 TEST-BINDINGS := $(BINDINGS:%=test-%)
 PUBLISH := $(DIRS:%=publish-%)
 CLEAN := $(DIRS:%=clean-%)
@@ -303,6 +303,8 @@ test-unit:
 	$(TIME) $(MAKE) -C core test v=$v
 	$(TIME) $(MAKE) -C ys test v=$v
 test-bindings: $(TEST-BINDINGS)
+
+serve: serve-www
 
 serve-www:
 	$(MAKE) -C www serve

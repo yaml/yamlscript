@@ -1,0 +1,9 @@
+!ys-0
+
+tests =:: 42 99
+
+defn main(xs=tests):
+  each x xs:words.map(N):
+    if x:even?:
+      say: "$x is even"
+      say: "$x is odd"

@@ -1,7 +1,10 @@
 !ys-0
 
+tests =:: 3 4 5
+
 # Main function definition with variable arguments:
-defn main(*args):
+defn main(args=tests):
+  args =: args:words.map(N)
   say: "multiply($(args.join(', ')))
         -> $multiply(args*)"
 

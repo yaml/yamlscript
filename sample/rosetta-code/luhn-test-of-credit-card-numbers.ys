@@ -1,0 +1,16 @@
+!ys-0
+
+tests =::
+  49927398716
+  49927398717
+  1234567812345678
+  1234567812345670
+
+defn main(nums=tests):
+  each cc nums:words.map(S):
+    say: "$cc - $if(cc:luhn? 'valid' 'invalid')"
+
+defn luhn?(cc):
+  map(mul cc:digits:reverse [1 2]:cycle)
+    .map(\((_ // 10) + (_ %% 10))):sum
+    .mod(10):zero?

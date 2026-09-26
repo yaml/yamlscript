@@ -41,7 +41,9 @@ docs_dir: src
 edit_uri:: "$(Meta.devel.git)/edit/website"
 
 nav:
+- About YS: about.md
 - Using YS:: load('config/use.yaml')
+- Playground: play.md
 - Documentation:: load('config/doc.yaml')
 - Blog:
   - blog: blog/index.md
@@ -49,7 +51,6 @@ nav:
 - Get Involved:: load('config/community.yaml')
 - FAQ: faq.md
 
-# - Playground: play.md # load('config/play.yaml')
 # - About:: load('config/about.yaml')
 # - Start:: load('config/start.yaml')
 # - Learn:: load('config/learn.yaml')
@@ -62,6 +63,7 @@ extra_css:
 - css/theme.css
 extra_javascript:
 - javascript/extra.js
+- assets/playground/playground.js
 
 # See theme/main.html for Google Tag Manager setup code
 extra:

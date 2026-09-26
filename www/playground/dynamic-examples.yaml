@@ -1,0 +1,871 @@
+- id: dry-application-configuration
+  home: true
+  label: DRY Application Configuration
+  description:
+    Shared values drive multiple service settings without repeated YAML.
+  source: |
+    !ys-0:
+
+    # Define shared application data once.
+    app =::
+      name: orders
+      version: '1.4'
+      team: platform
+    roles =:: [api, worker]
+
+    # Generate a configuration for every role.
+    services::
+      for role roles::
+        name:: "$(app.name)-$role"
+        image:: "ghcr.io/acme/$(app.name):$(app.version)"
+        labels:
+          app:: app.name
+          team:: app.team
+  expected: |
+    services:
+    - name: orders-api
+      image: ghcr.io/acme/orders:1.4
+      labels:
+        app: orders
+        team: platform
+    - name: orders-worker
+      image: ghcr.io/acme/orders:1.4
+      labels:
+        app: orders
+        team: platform
+
+- id: environment-overrides
+  home: true
+  label: Environment Overrides
+  description:
+    A base map is merged with the selected environment configuration.
+  environment: |
+    SHELL=/bin/bash
+    USER=alice
+    HOME=/home/alice
+    APP_ENV=production
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    vars =: load('vars.yaml')
+    environment =: ENV.APP_ENV
+    # A variable can select a mapping key dynamically.
+    config =: vars.defaults +
+              vars.overrides.$environment
+
+    # The expanded data mapping:
+    environment:: environment
+    service:: config
+  files:
+    vars.yaml: |
+      defaults:
+        replicas: 1
+        timeout-seconds: 10
+        log-level: info
+      overrides:
+        development:
+          log-level: debug
+        production:
+          replicas: 3
+          timeout-seconds: 30
+  expected: |
+    environment: production
+    service:
+      replicas: 3
+      timeout-seconds: 30
+      log-level: info
+
+- id: generated-service-catalog
+  home: true
+  label: Generated Service Catalog
+  description:
+    A source list is filtered and transformed into normalized endpoints.
+  source: |
+    !ys-0:
+
+    services =::
+    - name: Orders API
+      port: 8080
+      enabled: true
+    - name: Billing Worker
+      port: 8081
+      enabled: false
+    - name: User Portal
+      port: 8082
+      enabled: true
+
+    # Keep enabled services and turn each one into an endpoint.
+    enabled =: services.filter(\(_.enabled))
+    catalog =:
+      for service enabled:
+        slug =: service.name:trim:lc.replace(/\s+/ '-')
+        =>::
+          name:: slug
+          url:: "https://$slug.example.com:$(service.port)"
+
+    services:: catalog
+  expected: |
+    services:
+    - name: orders-api
+      url: https://orders-api.example.com:8080
+    - name: user-portal
+      url: https://user-portal.example.com:8082
+
+- id: smart-configuration-function
+  home: true
+  label: Smart Configuration Function
+  description:
+    A helper function inspects mappings and adds appropriate default ports.
+  source: |
+    !ys-0:
+
+    # Define functions inline under `::` key at top.
+    ::
+      defn with-port(config):
+        config +::
+          port::
+            if config.driver == 'postgres':
+              then: 5432
+              else: 8080
+
+    server =::
+      name: api
+      host: localhost
+    database =::
+      name: app
+      driver: postgres
+
+    server:: with-port(server)
+    database:: with-port(database)
+  expected: |
+    server:
+      name: api
+      host: localhost
+      port: 8080
+    database:
+      name: app
+      driver: postgres
+      port: 5432
+
+- id: generated-kubernetes-deployment
+  home: true
+  label: Generated Kubernetes Deployment
+  description:
+    A compact application model expands into a complete Kubernetes Deployment.
+  environment: |
+    SHELL=/bin/bash
+    USER=alice
+    HOME=/home/alice
+    LOG_LEVEL=debug
+  source: |
+    !ys-0:
+
+    app =::
+      name: orders
+      image: acme/orders:1.4
+      replicas: 3
+    values =::
+      LOG_LEVEL:: ENV.LOG_LEVEL || 'info'
+      REGION:: ENV.REGION || 'us-east-1'
+
+    # Generate Kubernetes environment entries from one mapping.
+    environment =:
+      for name keys(values)::
+        name:: name
+        value:: values.$name
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name:: app.name
+    spec:
+      replicas:: app.replicas
+      template:
+        spec:
+          containers:
+          - name:: app.name
+            image:: app.image
+            env:: environment
+  expected: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: orders
+    spec:
+      replicas: 3
+      template:
+        spec:
+          containers:
+          - name: orders
+            image: acme/orders:1.4
+            env:
+            - name: LOG_LEVEL
+              value: debug
+            - name: REGION
+              value: us-east-1
+
+- id: helmys-service-account
+  home: true
+  label: HelmYS Service Account
+  description:
+    A real HelmYS pattern conditionally generates a Kubernetes ServiceAccount.
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    # Load the context that HelmYS provides to every chart.
+    ::load: 'helm-init.ys'
+
+    account-name =:
+      Values.serviceAccount.name |||
+      "$(Release.Name)-$(Chart.name)"
+    labels =::
+      app.kubernetes.io/name:: Chart.name
+      app.kubernetes.io/instance:: Release.Name
+
+    :when Values.serviceAccount.create::
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name:: account-name
+        labels:: labels
+        :when+ Values.serviceAccount.annotations.?::
+         annotations:: _
+  files:
+    helm-init.ys: |
+      !ys-0
+
+      # HelmYS provides these values in a chart.
+      Values =::
+        serviceAccount:
+          create: true
+          name: ''
+          annotations:
+            owner: platform
+      Chart =:: {name: orders}
+      Release =:: {Name: production}
+  expected: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: production-orders
+      labels:
+        app.kubernetes.io/name: orders
+        app.kubernetes.io/instance: production
+      annotations:
+        owner: platform
+
+- id: generated-github-actions-matrix
+  home: true
+  label: GitHub Actions Matrix
+  description:
+    Data and comprehensions generate a multi-platform workflow matrix.
+  source: |
+    !ys-0:
+
+    versions =:: [20, 22]
+    # Generate one build configuration for every Node version.
+    builds =:
+      for version versions:
+        os =:
+          if version == 22: +
+            'macos-latest'
+            'ubuntu-latest'
+        =>::
+          node:: version
+          os:: os
+          experimental:: version == 22
+
+    name: Test
+    on: [push]
+    jobs:
+      test:
+        strategy:
+          matrix:
+            include:: builds
+        runs-on: ${{ matrix.os }}
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: ${{ matrix.node }}
+        - run: npm test
+  expected: |
+    name: Test
+    'on':
+    - push
+    jobs:
+      test:
+        strategy:
+          matrix:
+            include:
+            - node: 20
+              os: ubuntu-latest
+              experimental: false
+            - node: 22
+              os: macos-latest
+              experimental: true
+        runs-on: ${{ matrix.os }}
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: ${{ matrix.node }}
+        - run: npm test
+
+- id: import-yamlscript-module
+  home: true
+  label: Import a YAMLScript Module
+  description: Import functions from a namespaced .ys module with use.
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    # Import a namespaced YAMLScript module.
+    ::use: service
+
+    application:
+      name:: service/display-name('orders-api')
+  files:
+    service.ys: |
+      !ys-0
+
+      ns: service
+
+      defn display-name(name):
+        name.split('-').map(uc1):joins
+  expected: |
+    application:
+      name: Orders Api
+
+- id: load-yamlscript-file
+  home: true
+  label: Load a YAMLScript File
+  description: Evaluate a .ys file in the current namespace with load.
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    # Load definitions into the current namespace.
+    ::load: 'settings.ys'
+
+    application:
+      owner:: owner
+      replicas:: replicas
+  files:
+    settings.ys: |
+      !ys-0
+
+      owner =: 'platform'
+      replicas =: 3
+  expected: |
+    application:
+      owner: platform
+      replicas: 3
+
+- id: import-clojure-module
+  home: true
+  label: Import a Clojure Module
+  description: Import functions from a local .clj module with use.
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    # Import a local Clojure namespace.
+    ::use image: :file './image.clj'
+
+    application:
+      image:: image/image-name('orders' '1.4')
+  files:
+    image.clj: |
+      (ns image)
+
+      (defn image-name [name version]
+        (str "ghcr.io/acme/" name ":" version))
+  expected: |
+    application:
+      image: ghcr.io/acme/orders:1.4
+
+- id: load-yaml-file
+  home: true
+  label: Load a YAML Data File
+  description: Read and parse ordinary YAML data from a companion file.
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    # Read and parse a YAML data file.
+    ::use: yaml
+
+    service =: yaml/load(read('service.yaml'))
+
+    service:: service
+  files:
+    service.yaml: |
+      name: orders-api
+      port: 8080
+  expected: |
+    service:
+      name: orders-api
+      port: 8080
+
+- id: load-json-file
+  home: true
+  label: Load a JSON Data File
+  description: Read and parse ordinary JSON data from a companion file.
+  entry: main.yaml
+  source: |
+    !ys-0:
+
+    # Read and parse a JSON data file.
+    ::use: json
+
+    release =: json/load(read('release.json'))
+
+    release:: release
+  files:
+    release.json: |
+      {
+        "version": "1.4",
+        "replicas": 3
+      }
+  expected: |
+    release:
+      version: "1.4"
+      replicas: 3
+
+- id: using-variables
+  label: Using Variables
+  description: Bind reusable values and place them in ordinary YAML data.
+  source: |
+    !ys-0:
+    # A !ys-0 or !ys-0: tag is required at top in order to use code.
+    # The !ys-0: tag starts out in "data mode".
+
+    # Bind symbols to values.
+    name =: 'orders'
+    replicas =: 3
+
+    # Normal YAML data:
+    service:
+      # Keys are strings.
+      # The `::` toggles to "code mode".
+      name:: name
+      replicas:: replicas
+  expected: |
+    service:
+      name: orders
+      replicas: 3
+
+- id: string-interpolation
+  label: String Interpolation
+  description: Build YAML strings by interpolating variables.
+  source: |
+    !ys-0:
+
+    app =: 'orders'
+    version =: '1.4'
+
+    # Double-quoted strings interpolate variables.
+    image:: "acme/$app:$version"
+  expected: |
+    image: acme/orders:1.4
+
+- id: arithmetic-expressions
+  label: Arithmetic Expressions
+  description: Compute numeric configuration values with infix arithmetic.
+  source: |
+    !ys-0:
+
+    workers =: 3
+
+    # Computed values with infix arithmetic expressions.
+    memory-mb:: workers * 256
+    timeout-seconds:: workers * 10
+  expected: |
+    memory-mb: 768
+    timeout-seconds: 30
+
+- id: nested-data-lookups
+  label: Nested Data Lookups
+  description: Read nested values with concise property lookups.
+  source: |
+    !ys-0:
+
+    app =::
+      name: orders
+      image:
+        repository: acme/orders
+        tag: 1.4
+    # Concise nested property lookup:
+    repo =: app.image.repository
+
+    name:: app.name
+    # Interpolate expressions with `$(...)`:
+    image:: "$repo:$(app.image.tag)"
+  expected: |
+    name: orders
+    image: acme/orders:1.4
+
+- id: conditional-values
+  label: Conditional Values
+  description: Choose configuration values with inline conditionals.
+  environment: |
+    SHELL=/bin/bash
+    USER=alice
+    HOME=/home/alice
+    APP_ENV=production
+  source: |
+    !ys-0:
+
+    # Choose a value with an inline conditional
+    # using an environment variable:
+    environment =: ENV.APP_ENV
+    replicas =:
+      if environment == 'production': 3 1
+
+    environment:: environment
+    replicas:: replicas
+  expected: |
+    environment: production
+    replicas: 3
+
+- id: optional-fields
+  label: Optional Fields
+  description: Omit falsey fields from generated YAML.
+  source: |
+    !ys-0:
+
+    # The `:?:` marker omits a field when its value is falsey.
+    debug =: nil
+
+    service:
+      name: api
+      debug:?: debug
+  expected: |
+    service:
+      name: api
+
+- id: generated-ranges
+  label: Generated Ranges
+  description: Generate inclusive numeric sequences with the range operator.
+  source: |
+    !ys-0:
+
+    # The `..` operator creates an inclusive integer range.
+    allowed-ports:: 8000 .. 8003
+  expected: |
+    allowed-ports:
+    - 8000
+    - 8001
+    - 8002
+    - 8003
+
+- id: computed-list-items
+  label: Computed List Items
+  description: Evaluate individual expressions inside YAML sequences.
+  source: |
+    !ys-0:
+
+    # `!` evaluates one item inside a data sequence.
+    stages:
+    - build
+    - ! uc('test')
+    - deploy
+  expected: |
+    stages:
+    - build
+    - TEST
+    - deploy
+
+- id: list-splicing
+  label: List Splicing
+  description: Insert generated sequences into ordinary YAML lists.
+  source: |
+    !ys-0:
+
+    # `- ::` splices every value from an expression into a list.
+    ports:
+    - 80
+    - :: 8080 .. 8082
+    - 443
+  expected: |
+    ports:
+    - 80
+    - 8080
+    - 8081
+    - 8082
+    - 443
+
+- id: code-value-collections
+  label: Code-Value Collections
+  description: Evaluate every scalar in a YAML collection as code.
+  source: |
+    !ys-0:
+
+    # `:::` evaluates every scalar value in the collection.
+    base =: 8000
+
+    service:::
+      port: base
+      health-port: base.++
+      replicas: 2 * 2
+  expected: |
+    service:
+      port: 8000
+      health-port: 8001
+      replicas: 4
+
+- id: chained-transformations
+  label: Chained Transformations
+  description: Transform values through readable function chains.
+  source: |
+    !ys-0:
+
+    # Chains pass a value through each transformation.
+    raw =: '  Orders API  '
+
+    label:: raw:trim:lc.replace(/\s+/ '-')
+  expected: |
+    label: orders-api
+
+- id: regular-expression-replacement
+  label: Regular Expression Replacement
+  description: Normalize strings with regular expression replacements.
+  source: |
+    !ys-0:
+
+    # Regular expressions can normalize generated identifiers.
+    branch =: 'feature/Add-Help'
+    tag =: branch:lc.replace(/[^a-z0-9]+/ '-')
+
+    tag:: tag.replace(/^-|-$/)
+  expected: |
+    tag: feature-add-help
+
+- id: mapping-lists
+  label: Mapping Lists
+  description: Produce a new value for every item in a list.
+  source: |
+    !ys-0:
+
+    # `map` computes one new value for every list item.
+    ports =:: [8000, 8001, 8002]
+    labels =: ports.map(\('tcp-' + _))
+
+    listeners:: labels
+  expected: |
+    listeners:
+    - tcp-8000
+    - tcp-8001
+    - tcp-8002
+
+- id: filtering-lists
+  label: Filtering Lists
+  description: Keep only list items that match a predicate.
+  source: |
+    !ys-0:
+
+    # `filter` keeps only values matching a predicate.
+    ports =:: [80, 443, 8080, 8443]
+    public =: ports.filter(lt(1000))
+
+    ports:: public
+  expected: |
+    ports:
+    - 80
+    - 443
+
+- id: reducing-lists
+  label: Reducing Lists
+  description: Combine list items into one accumulated value.
+  source: |
+    !ys-0:
+
+    # `reduce` combines a list into one value.
+    costs =:: [12, 8, 5]
+    total =: costs.reduce(add 0)
+
+    total:: total
+  expected: |
+    total: 25
+
+- id: list-comprehensions
+  label: List Comprehensions
+  description: Generate lists with concise for comprehensions.
+  source: |
+    !ys-0:
+
+    # `for` builds a list from each input value.
+    environments =: qw(dev stage prod)
+
+    targets::
+      for environment environments:
+        "$environment.example.com"
+  expected: |
+    targets:
+    - dev.example.com
+    - stage.example.com
+    - prod.example.com
+
+- id: merging-defaults
+  label: Merging Defaults
+  description: Overlay configuration overrides onto reusable defaults.
+  source: |
+    !ys-0:
+
+    # `merge` overlays values while preserving other defaults.
+    defaults =::
+      retries: 3
+      timeout: 10
+    config =:
+      merge defaults::
+        timeout: 30
+
+    service:: config
+  expected: |
+    service:
+      retries: 3
+      timeout: 30
+
+- id: destructuring-assignment
+  label: Destructuring Assignment
+  description: Bind several names from one sequence.
+  source: |
+    !ys-0:
+
+    # Destructuring assigns list items to several names at once.
+    size =:: [1280, 720]
+    width height =: size
+
+    viewport:
+      width:: width
+      height:: height
+  expected: |
+    viewport:
+      width: 1280
+      height: 720
+
+- id: dotted-updates
+  label: Dotted Updates
+  description: Update deeply nested data with dotted assignment.
+  source: |
+    !ys-0:
+
+    # A dotted assignment updates a value deep inside a data structure.
+    config =::
+      service:
+        port: 80
+    updated =:
+      do:
+        config.service.port =: 8080
+        =>: config
+
+    service:: updated.service
+  expected: |
+    service:
+      port: 8080
+
+- id: helper-functions
+  label: Helper Functions
+  description: Define and call reusable functions inside dynamic YAML.
+  source: |
+    !ys-0:
+
+    # `::` enters code mode, which is required for function definitions.
+    ::
+      defn image(name version): "$name:$version"
+
+    containers:
+    - name: api
+      image:: image('acme/api' '1.2')
+    - name: worker
+      image:: image('acme/worker' '1.2')
+  expected: |
+    containers:
+    - name: api
+      image: acme/api:1.2
+    - name: worker
+      image: acme/worker:1.2
+
+- id: kubernetes-deployment
+  label: Kubernetes Deployment
+  description: Fill a Kubernetes Deployment from shared application data.
+  source: |
+    !ys-0:
+
+    app =::
+      name: orders
+      image: acme/orders:1.4
+      port: 8080
+      replicas: 3
+
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name:: app.name
+    spec:
+      replicas:: app.replicas
+      template:
+        spec:
+          containers:
+          - name:: app.name
+            image:: app.image
+            ports:
+            - containerPort:: app.port
+  expected: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: orders
+    spec:
+      replicas: 3
+      template:
+        spec:
+          containers:
+          - name: orders
+            image: acme/orders:1.4
+            ports:
+            - containerPort: 8080
+
+- id: github-actions-matrix
+  label: GitHub Actions Matrix
+  description: Generate a test matrix from a list of runtime versions.
+  source: |
+    !ys-0:
+
+    node-versions =:: [20, 22]
+
+    name: Test
+    on: [push]
+    jobs:
+      test:
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node:: node-versions
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: ${{ matrix.node }}
+        - run: npm test
+  expected: |
+    name: Test
+    'on':
+    - push
+    jobs:
+      test:
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            node:
+            - 20
+            - 22
+        steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v4
+          with:
+            node-version: ${{ matrix.node }}
+        - run: npm test

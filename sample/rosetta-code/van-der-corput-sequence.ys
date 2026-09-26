@@ -1,0 +1,18 @@
+!ys-0
+
+defn main(b=6):
+  each n range(10):
+    say:
+      format '%.6f':
+        vdc: n b
+
+defn vdc(n b):
+  loop n n, d 1, vdc 0.0:
+    if n > 0:
+      then:
+        d *=: b
+        r =: n % b
+        n .=: quot(b)
+        vdc +=: r / d
+        recur: n, d, vdc
+      else: vdc

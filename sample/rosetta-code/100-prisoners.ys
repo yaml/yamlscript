@@ -50,7 +50,7 @@ defn try-luck(drawers drawer-searching-function):
   loop prisoners range(100):
     if prisoners.?:
       if prisoners.0.drawer-searching-function(drawers):
-        recur: rest(prisoners)
+        recur: prisoners:rest
         else: 0
       else: 1
 

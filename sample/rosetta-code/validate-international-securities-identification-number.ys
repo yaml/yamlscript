@@ -1,0 +1,27 @@
+!ys-0
+
+nums =::
+- US0378331005
+- US0373831005
+- U50378331005
+- US03378331005
+- AU0000XVGZA3
+- AU0000VXGZA3
+- FR0000988040
+
+defn main():
+  each isin nums:
+    say: "$isin - $if(isin:isin? 'valid' 'invalid')"
+
+defn isin?(isin):
+  isin.re-matches(/[A-Z]{2}[A-Z0-9]{9}[0-9]/) &&
+  isin.map(b36-10):join:luhn?
+
+defn b36-10(c):
+  c =: c:I - 48
+  if c > 9: (c - 7) c
+
+defn luhn?(cc):
+  map(mul cc:digits:reverse [1 2]:cycle)
+    .map(\(I(_ / 10) + (_ % 10))):sum
+    .mod(10):zero?

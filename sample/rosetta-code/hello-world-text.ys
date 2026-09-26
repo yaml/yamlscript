@@ -4,7 +4,7 @@ say: "Hello, world!"
 
 =>: (say "Hello, world!")
 
-=>: say("Hello, world!")
+say: "Hello, world!"
 
 say:
   =>: "Hello, world!"

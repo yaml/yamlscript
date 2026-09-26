@@ -1,0 +1,52 @@
+!ys-0
+
+defn main():
+  draw-line: 0 1 10 2
+
+defn draw-line(x0 y0 x1 y1):
+  plot x0 x1 y0 y1 =:
+    if abs(y1 - y0) > abs(x1 - x0): +
+      [\(plot(y0 x0 x1)) y0 x0 y1 x1]
+      [plot x0 x1 y0 y1]
+
+  x0 x1 y0 y1 =:
+    if x0 > x1: +
+      [x1 x0 y1 y0]
+      [x0 x1 y0 y1]
+
+  dx =: x1 - x0
+  dy =: y1 - y0
+  gradient =: dy / dx
+
+  intery xends =:
+    loop intery 0, xends [], [[x y] *xys] [[x0 y0] [x1 y1]]:
+      xend =: x:round
+      yend =: y + (gradient * (xend - x))
+      xgap =: rfpart(x + 0.5)
+
+      x-pixel =: xend
+      y-pixel =: yend:to-int
+      xends =: xends.conj(x-pixel)
+
+      plot: x-pixel y-pixel (rfpart(yend) * xgap)
+      plot: x-pixel y-pixel.++ (fpart(yend) * xgap)
+      intery |||=: yend + gradient
+
+      if xys.?:
+        recur: intery, xends, xys
+        vector: intery, xends
+
+  loop intery intery, [x *xs] (xends.0.++ .. xends.1.--):
+    plot: x intery:I    rfpart(intery)
+    plot: x intery:I.++ fpart(intery)
+    when xs.?:
+      recur (intery + gradient): xs
+
+defn plot(x y c):
+  when c != 0.0:
+    say:
+      format 'plot %d %d %.1f': x y c:F
+
+defn fpart(x): x - x:to-int
+
+defn rfpart(x): 1 - fpart(x)
