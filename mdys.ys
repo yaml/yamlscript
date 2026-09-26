@@ -19,19 +19,20 @@ defn mdys-question(text, marker='???+'):
 defn mdys-question-expand(text):
   mdys-question: text, '???'
 
-defn playground-dynamic-examples(file, listed=true):
+defn playground-dynamic-examples(home=false):
   path =:
     fs/abs:
-      "$(input-dir:deref)/../playground/$file"
+      "$(input-dir:deref)/../playground/dynamic-examples.yaml"
   examples =: yaml/load(path:read)
   examples .=: remove(\(_.disable))
+  examples :if home .=: filter(\(_.home))
   for example examples:
     demo =::
       id:: example.id
       category: code
       label:: example.label
       description:: example.description || ''
-      listed:: listed
+      listed:: home || not(example.home)
       mode: load
       format: yaml
       source:: example.source:trimr:lines
@@ -196,16 +197,12 @@ defn mdys-playground(data):
   template =: template-path:read
   programs =: playground-rosetta-programs()
   home-programs =: playground-rosetta-programs(true)
-  home-examples =:
-    playground-dynamic-examples('home-dynamic-examples.yaml')
+  home-examples =: playground-dynamic-examples(true)
   examples =:
     if variant == 'home':
       then: home-examples + home-programs
       else:
-        playground-dynamic-examples('dynamic-examples.yaml') +
-          playground-dynamic-examples(
-            'home-dynamic-examples.yaml' false) +
-          programs
+        playground-dynamic-examples() + programs
   examples-json =: examples:json/dump
   actions =:
     if variant == 'home':
