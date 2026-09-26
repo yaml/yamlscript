@@ -1,5 +1,9 @@
 !ys-0
 
+use:
+  ys::json: :as json
+  ys::yaml: :as yaml
+
 defn mdys-question(text, marker='???+'):
   m =:
     text =~ /^(.*)\n\n((?s:\S.+))/ ||:
@@ -13,3 +17,45 @@ defn mdys-question(text, marker='???+'):
 
 defn mdys-question-expand(text):
   mdys-question: text, '???'
+
+defn mdys-dynamic-examples(data):
+  path =:
+    fs/abs:
+      "$(input-dir:deref)/../playground/$(data.file)"
+  examples =: yaml/load(path:fs/read)
+  demos =:
+    for example examples:
+      demo =::
+        id:: example.id
+        category: code
+        label:: example.label
+        mode: load
+        format: yaml
+        source:: example.source:trimr:lines
+        expected:: example.expected:trimr:lines
+      =>: demo
+  json =: demos:json/dump
+  json: .replace(/^\[/ '').replace(/\]$/ '')
+
+defn mdys-rosetta-programs(infos):
+  programs =:
+    for info infos:
+      path =:
+        fs/abs:
+          "$(input-dir:deref)/../../sample/rosetta-code/$(info.file).ys"
+      source =: path:fs/read:lines
+      program =::
+        id:: info.id || info.file
+        category: program
+        label:: info.label
+        sourceUrl:: "https://rosettacode.org/wiki/$(info.page)#YAMLScript"
+        mode: run
+        format: text
+        source:: source
+        expected:: +["Click Do to evaluate $(info.label)."]
+        ignoreTerminalEffects::
+          info.'ignore-terminal-effects' || false
+      =>: program
+  json =: programs:json/dump
+  json =: +",\n" + json.replace(/^\[/ '').replace(/\]$/ '')
+  =>: json

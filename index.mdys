@@ -8,8 +8,14 @@ hide:
 ---
 
 <h1 class="headline">
-YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
+YS <small><a href="/faq/">(say "wise")</a></small> makes YAML
+<span class="headline__fully">fully </span>dynamic
 </h1>
+
+<p class="ys-home-lede">
+Add code (variables, functions, imports, transformations, interpolations, etc)
+to ordinary YAML. It loads as data like YAML or JSON.
+</p>
 
 <section class="ys-playground"
          data-ys-playground
@@ -24,7 +30,6 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
       <em>(Edit and evaluate these examples)</em></p>
     </div>
     <div class="ys-playground__actions">
-      <button type="button" data-share>Share</button>
       <button type="button" data-collapse
               aria-controls="ys-playground-demo" hidden>
         Collapse
@@ -54,17 +59,26 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
             data-state="ready">
       Do
     </button>
-    <label class="ys-playground__examples">
-      <select data-example aria-label="YAMLScript example"></select>
-    </label>
-    <label class="ys-playground__args" data-args-row hidden>
-      <input type="text" data-args aria-label="Optional main arguments"
-             placeholder="Optional main args">
-    </label>
-    <button type="button" class="ys-playground__config"
-            data-config-open>
-      Settings
-    </button>
+    <div class="ys-playground__inputs">
+      <label class="ys-playground__examples">
+        <select data-example aria-label="YAMLScript example"></select>
+      </label>
+      <label class="ys-playground__args" data-args-row hidden>
+        <input type="text" data-args aria-label="Optional main arguments"
+               placeholder="Optional main args">
+      </label>
+    </div>
+    <div class="ys-playground__tools">
+      <button type="button" class="ys-playground__help"
+              data-help-open aria-haspopup="dialog"
+              aria-controls="ys-playground-help">Help</button>
+      <button type="button" class="ys-playground__share"
+              data-share>Share</button>
+      <button type="button" class="ys-playground__config"
+              data-config-open>
+        Settings
+      </button>
+    </div>
   </div>
 
   <div class="ys-playground__workbench">
@@ -87,7 +101,7 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
         <div class="ys-playground__result-tabs" role="tablist"
              aria-label="Evaluation views">
           <button type="button" role="tab" data-result-tab="evaluation"
-                  aria-selected="true">
+                  data-evaluation-tab aria-selected="true">
             Evaluation
           </button>
           <button type="button" role="tab" data-result-tab="compiled"
@@ -102,9 +116,6 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
     </section>
   </div>
 
-  <p class="ys-playground__shortcut">
-    Press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Enter</kbd> to run.
-  </p>
   </div>
 
   <dialog class="ys-playground__config-dialog" data-config-dialog>
@@ -118,10 +129,44 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
           <input type="checkbox" data-auto-run checked>
           Auto evaluate changes
         </label>
-        <label>
-          <input type="checkbox" data-random checked>
-          Random example on reload
-        </label>
+        <div class="ys-playground__reload-mode"
+             role="radiogroup" aria-labelledby="ys-reload-mode-label">
+          <span id="ys-reload-mode-label">Reload to:</span>
+          <label>
+            <input type="radio" name="ys-reload-mode"
+                   value="next" data-reload-mode checked>
+            Next
+          </label>
+          <label>
+            <input type="radio" name="ys-reload-mode"
+                   value="random" data-reload-mode>
+            Random
+          </label>
+          <label>
+            <input type="radio" name="ys-reload-mode"
+                   value="same" data-reload-mode>
+            Same
+          </label>
+        </div>
+        <div class="ys-playground__eval-format"
+             role="radiogroup" aria-labelledby="ys-eval-format-label">
+          <span id="ys-eval-format-label">Eval to:</span>
+          <label>
+            <input type="radio" name="ys-eval-format"
+                   value="yaml" data-eval-format checked>
+            YAML
+          </label>
+          <label>
+            <input type="radio" name="ys-eval-format"
+                   value="json" data-eval-format>
+            JSON
+          </label>
+          <label>
+            <input type="radio" name="ys-eval-format"
+                   value="edn" data-eval-format>
+            EDN
+          </label>
+        </div>
         <label class="ys-playground__timeout">
           <select data-timeout>
             <option value="1000">1 second</option>
@@ -139,6 +184,31 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
     </form>
   </dialog>
 
+  <dialog id="ys-playground-help"
+          class="ys-playground__config-dialog ys-playground__help-dialog"
+          data-help-dialog aria-labelledby="ys-playground-help-title">
+    <form method="dialog">
+      <div class="ys-playground__config-head">
+        <h2 id="ys-playground-help-title">Help</h2>
+        <button type="submit" value="close">Close</button>
+      </div>
+      <div class="ys-playground__help-body">
+        <ul>
+        <li>Edit the YAML or YAMLScript in the left pane.</li>
+        <li><strong>Do</strong> evaluates it immediately.</li>
+        <li>Choose examples from the menu. Selecting one resets the editor.</li>
+        <li>Reload page to go to next or random example. See Settings.</li>
+        <li><strong>Optional main args</strong> passes values to a program.</li>
+        <li>Select <strong>Compilation</strong> tab for the generated
+            Clojure code.</li>
+        <li><strong>Share</strong> copies a URL containing your edits.</li>
+        <li>Press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Enter</kbd>
+            to evaluate.</li>
+        </ul>
+      </div>
+    </form>
+  </dialog>
+
   <noscript>
     <p class="ys-playground__fallback">
       JavaScript is required for the browser demo.
@@ -148,591 +218,316 @@ YS <small><a href="/faq/">(say "wise")</a></small> makes YAML fully dynamic
 
   <script type="application/json">
   [
-    {
-      "id": "kubernetes-deployment",
-      "category": "code",
-      "label": "Kubernetes Deployment",
-      "format": "yaml",
-      "mode": "load",
-      "source": [
-        "!ys-0:",
-        "",
-        "app =::",
-        "  name: orders",
-        "  image: acme/orders:1.4",
-        "  port: 8080",
-        "  replicas: 3",
-        "",
-        "apiVersion: apps/v1",
-        "kind: Deployment",
-        "metadata:",
-        "  name:: app.name",
-        "spec:",
-        "  replicas:: app.replicas",
-        "  template:",
-        "    spec:",
-        "      containers:",
-        "      - name:: app.name",
-        "        image:: app.image",
-        "        ports:",
-        "        - containerPort:: app.port"
-      ],
-      "expected": [
-        "apiVersion: apps/v1",
-        "kind: Deployment",
-        "metadata:",
-        "  name: orders",
-        "spec:",
-        "  replicas: 3",
-        "  template:",
-        "    spec:",
-        "      containers:",
-        "      - name: orders",
-        "        image: acme/orders:1.4",
-        "        ports:",
-        "        - containerPort: 8080"
-      ]
-    },
-    {
-      "id": "github-actions-matrix",
-      "category": "code",
-      "label": "GitHub Actions Matrix",
-      "mode": "load",
-      "format": "yaml",
-      "source": [
-        "!ys-0:",
-        "",
-        "node-versions =:: [20, 22]",
-        "",
-        "name: Test",
-        "on: [push]",
-        "jobs:",
-        "  test:",
-        "    runs-on: ubuntu-latest",
-        "    strategy:",
-        "      matrix:",
-        "        node:: node-versions",
-        "    steps:",
-        "    - uses: actions/checkout@v4",
-        "    - uses: actions/setup-node@v4",
-        "      with:",
-        "        node-version: ${{ matrix.node }}",
-        "    - run: npm test"
-      ],
-      "expected": [
-        "name: Test",
-        "'on':",
-        "- push",
-        "jobs:",
-        "  test:",
-        "    runs-on: ubuntu-latest",
-        "    strategy:",
-        "      matrix:",
-        "        node:",
-        "        - 20",
-        "        - 22",
-        "    steps:",
-        "    - uses: actions/checkout@v4",
-        "    - uses: actions/setup-node@v4",
-        "      with:",
-        "        node-version: ${{ matrix.node }}",
-        "    - run: npm test"
-      ]
-    },
-    {
-      "id": "fibonacci-sequence",
-      "category": "program",
-      "label": "Fibonacci Sequence",
-      "sourceUrl": "https://rosettacode.org/wiki/Fibonacci_sequence#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "defn main(n=10):",
-        "  loop a 0, b 1, i 1:",
-        "    say: a",
-        "    when i < n:",
-        "      recur: b, (a + b), i.++",
-        ""
-      ],
-      "expected": [
-        "0", "1", "1", "2", "3",
-        "5", "8", "13", "21", "34"
-      ]
-    },
-    {
-      "id": "fizzbuzz",
-      "category": "program",
-      "label": "FizzBuzz",
-      "sourceUrl": "https://rosettacode.org/wiki/FizzBuzz#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "defn main(n=100):",
-        "  each x (1 .. n): !:say",
-        "    or? _ x:",
-        "      str ((x % 3).! &&& 'Fizz'):",
-        "          ((x % 5).! &&& 'Buzz')",
-        ""
-      ],
-      "expected": [
-        "Eval to run FizzBuzz from 1 through 100."
-      ],
-      "verify": "nonempty"
-    },
-    {
-      "id": "floyds-triangle",
-      "category": "program",
-      "label": "Floyd's Triangle",
-      "sourceUrl": "https://rosettacode.org/wiki/Floyd%27s_triangle#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "defn main(n=14):",
-        "  nums =: range().map(inc).map(str)",
-        "  rows =:",
-        "    loop row-n 1, nums nums, rows []:",
-        "      if rows.# < n:",
-        "        recur: row-n.++ nums.drop(row-n)",
-        "          conj(rows nums.take(row-n))",
-        "        else: rows",
-        "  width =: rows:last:last:len",
-        "  fmt =: \\((' ' * (width - _:len)) + _)",
-        "  each row rows: say(row.map(fmt):joins)",
-        ""
-      ],
-      "expected": [
-        "  1",
-        "  2   3",
-        "  4   5   6",
-        "  7   8   9  10",
-        " 11  12  13  14  15",
-        " 16  17  18  19  20  21",
-        " 22  23  24  25  26  27  28",
-        " 29  30  31  32  33  34  35  36",
-        " 37  38  39  40  41  42  43  44  45",
-        " 46  47  48  49  50  51  52  53  54  55",
-        " 56  57  58  59  60  61  62  63  64  65  66",
-        " 67  68  69  70  71  72  73  74  75  76  77  78",
-        " 79  80  81  82  83  84  85  86  87  88  89  90  91",
-        " 92  93  94  95  96  97  98  99 100 101 102 103 104 105"
-      ]
-    },
-    {
-      "id": "dragon-curve",
-      "category": "program",
-      "label": "Dragon Curve",
-      "sourceUrl": "https://rosettacode.org/wiki/Dragon_curve#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "defn main(steps=511):",
-        "  data [minx maxx miny maxy] =:",
-        "    loop i 0 [x y], [0 0], data {}, [minx maxx miny maxy] [0 0 0 0]:",
-        "      dir =: i:i-to-dir",
-        "      nx ny =: +",
-        "        [(x + condp(== dir 0 1 2 -1 0))",
-        "         (y + condp(== dir 1 1 3 -1 0))]",
-        "      ob ib =: dir.nth([[8 4][2 1][4 8][1 2]])",
-        "      data =: update-in(data [y x] safe-bit-or ob)",
-        "             .update-in([ny nx] safe-bit-or ib)",
-        "      bbox =: +",
-        "        [min(minx nx) max(maxx nx)",
-        "         min(miny ny) max(maxy ny)]",
-        "      if i < steps:",
-        "        recur: i.++, [nx ny], data, bbox",
-        "        vector: data bbox",
-        "",
-        "  each y (miny .. maxy):",
-        "    say: !:join",
-        "      each x (minx .. maxx):",
-        "        get-in(data [y x] 0).nth(\" ╵╷│╴┘┐┤╶└┌├─┴┬┼\")",
-        "",
-        "defn i-to-dir(n):",
-        "  n.bit-xor(bit-shift-right(n 1)):Long/bitCount % 4",
-        "",
-        "defn safe-bit-or(v bit):",
-        "  (v || 0).bit-or(bit)",
-        ""
-      ],
-      "expected": [
-        "Eval to draw the default 511-step Dragon Curve."
-      ],
-      "verify": "nonempty"
-    },
-    {
-      "id": "conways-game-of-life",
-      "category": "program",
-      "label": "Conway's Game of Life",
-    "sourceUrl": "https://rosettacode.org/wiki/Conway's_Game_of_Life#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "ignoreTerminalEffects": true,
-      "source": [
-        "!ys-0",
-        "",
-        "glider  =: \\{[1 0] [2 1] [0 2] [1 2] [2 2]}",
-        "blinker =: \\{[1 2] [2 2] [3 2]}",
-        "",
-        "defn main():",
-        "  game-of-life 10 40: glider",
-        "",
-        "defn game-of-life(size steps cells):",
-        "  loop s steps, cells cells:",
-        "    shell:: clear",
-        "    print-world: cells size",
-        "    sleep: 0.25",
-        "    when 0 < s:",
-        "      recur s.--: step(cells)",
-        "",
-        "defn print-world:",
-        "  (cells):",
-        "    print-world: cells 10",
-        "",
-        "  (cells size):",
-        "    each y (0 .. size):",
-        "      row =:",
-        "        join:",
-        "          for x (0 .. size):",
-        "            cells([x y]).if('* ' '  ')",
-        "      say: \"| $row|\"",
-        "",
-        "defn step(cells):",
-        "  set:",
-        "    ? for [cell count]",
-        "          neighborhood.mapcat(cells):frequencies",
-        "      :when ((3 == count) ||",
-        "             ((2 == count) &&",
-        "              cell.in?(cells)))",
-        "    : cell",
-        "",
-        "defn neighborhood([x y]):",
-        "  ? for dx [-1 0 1]",
-        "        dy [-1 0 1]",
-        "    :when [dx dy].ne([0 0])",
-        "  : vector: (x + dx) (y + dy)",
-        ""
-      ],
-      "expected": [
-        "Eval to run Conway's Game of Life."
-      ],
-      "verify": "nonempty"
-    },
-    {
-      "id": "hundred-doors",
-      "category": "program",
-      "label": "100 Doors",
-      "sourceUrl": "https://rosettacode.org/wiki/100_doors#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "defn main():",
-        "  open =:",
-        "    reduce _ ([true] * 100) (1 .. 100):",
-        "      fn(doors i):",
-        "        loop j i, doors doors:",
-        "          if j < 100:",
-        "            recur (j + i).++:",
-        "              update-in doors [j]: \\(doors.$j.!)",
-        "            else: doors",
-        "  say: +\"Open doors after 100 passes:\\ \" +",
-        "        (1 .. 100)",
-        "          .map(\\(_.--:open && _))",
-        "          .filter(a)",
-        "          .join(', ')",
-        ""
-      ],
-      "expected": [
-        "Open doors after 100 passes: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100"
-      ]
-    },
-    {
-      "id": "ninety-nine-bottles",
-      "category": "program",
-      "label": "99 Bottles of Beer",
-      "sourceUrl": "https://rosettacode.org/wiki/99_bottles_of_beer#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "defn main(number=99):",
-        "  each num (number .. 1):",
-        "    say: |",
-        "      $bottles(num) of beer on the wall,",
-        "      $bottles(num) of beer.",
-        "      Take one down, pass it around.",
-        "      $bottles(num.--) of beer on the wall.",
-        "",
-        "defn bottles(n):",
-        "  condp eq n:",
-        "    0    :: No more bottles",
-        "    1    :: 1 bottle",
-        "    else :  \"$n bottles\"",
-        ""
-      ],
-      "expected": [
-        "Eval to sing 99 Bottles of Beer."
-      ],
-      "verify": "nonempty"
-    },
-    {
-      "id": "factorial",
-      "category": "program",
-      "label": "Factorial",
-      "sourceUrl": "https://rosettacode.org/wiki/Factorial#YAMLScript",
-      "mode": "run",
-      "format": "text",
-      "source": [
-        "!ys-0",
-        "",
-        "tests =:: 0 1 2 3 4 5 6 7 8",
-        "",
-        "defn main(ns=tests):",
-        "  each n ns:words.map(N):",
-        "    say: \"$n! -> $factorial(n)\"",
-        "",
-        "defn factorial(x):",
-        "  if x <= 2:",
-        "    (x ||| 1)",
-        "    (2 .. x).mul(*)",
-        ""
-      ],
-      "expected": [
-        "0! -> 1",
-        "1! -> 1",
-        "2! -> 2",
-        "3! -> 6",
-        "4! -> 24",
-        "5! -> 120",
-        "6! -> 720",
-        "7! -> 5040",
-        "8! -> 40320"
-      ]
-    }
+```mdys:dynamic-examples
+file: dynamic-examples.yaml
+```
+```mdys:rosetta-programs
+- file: 100-doors
+  id: hundred-doors
+  label: 100 Doors
+  page: 100_doors
+- file: 100-prisoners
+  label: 100 Prisoners
+  page: 100_prisoners
+- file: 99-bottles-of-beer
+  id: ninety-nine-bottles
+  label: 99 Bottles of Beer
+  page: 99_bottles_of_beer
+- file: array-length
+  label: Array Length
+  page: Array_length
+- file: average-loop-length
+  label: Average Loop Length
+  page: Average_loop_length
+- file: best-shuffle
+  label: Best Shuffle
+  page: Best_shuffle
+- file: conways-game-of-life
+  label: Conway's Game of Life
+  page: Conway%27s_Game_of_Life
+  ignore-terminal-effects: true
+- file: dragon-curve
+  label: Dragon Curve
+  page: Dragon_curve
+- file: even-or-odd
+  label: Even or Odd
+  page: Even_or_odd
+- file: factorial
+  label: Factorial
+  page: Factorial
+- file: fibonacci-sequence
+  label: Fibonacci Sequence
+  page: Fibonacci_sequence
+- file: fizzbuzz
+  label: FizzBuzz
+  page: FizzBuzz
+- file: floyds-triangle
+  label: Floyd's Triangle
+  page: Floyd%27s_triangle
+- file: function-definition
+  label: Function Definition
+  page: Function_definition
+- file: greatest-common-divisor
+  label: Greatest Common Divisor
+  page: Greatest_common_divisor
+- file: hello-world
+  label: Hello World/Newbie
+  page: Hello_world/Newbie
+- file: hello-world-text
+  label: Hello World/Text
+  page: Hello_world/Text
+- file: integer-comparison
+  label: Integer Comparison
+  page: Integer_comparison
+- file: jortsort
+  label: JortSort
+  page: JortSort
+- file: leap-year
+  label: Leap Year
+  page: Leap_year
+- file: luhn-test-of-credit-card-numbers
+  label: Luhn Test of Credit Card Numbers
+  page: Luhn_test_of_credit_card_numbers
+- file: next-highest-int-from-digits
+  label: Next Highest Int From Digits
+  page: Next_highest_int_from_digits
+- file: one-dimensional-cellular-automata
+  label: One-dimensional Cellular Automata
+  page: One-dimensional_cellular_automata
+- file: palindrome-detection
+  label: Palindrome Detection
+  page: Palindrome_detection
+- file: rot-13
+  label: ROT-13
+  page: Rot-13
+- file: sieve-of-eratosthenes
+  label: Sieve of Eratosthenes
+  page: Sieve_of_Eratosthenes
+- file: sparkline-in-unicode
+  label: Sparkline in Unicode
+  page: Sparkline_in_unicode
+- file: tokenize-a-string
+  label: Tokenize a String
+  page: Tokenize_a_string
+- file: validate-international-securities-identification-number
+  label: Validate International Securities Identification Number
+  page: Validate_International_Securities_Identification_Number
+- file: van-der-corput-sequence
+  label: Van der Corput Sequence
+  page: Van_der_Corput_sequence
+- file: weird-numbers
+  label: Weird Numbers
+  page: Weird_numbers
+- file: xiaolin-wus-line-algorithm
+  label: Xiaolin Wu's Line Algorithm
+  page: Xiaolin_Wu%27s_line_algorithm
+- file: yellowstone-sequence
+  label: Yellowstone Sequence
+  page: Yellowstone_sequence
+```
   ]
   </script>
 </section>
 
-```mdys:cards
-- name: AI-Assisted YS with Claude Code
-  icon: material-robot-outline
-  body: |
-    Install the [Claude Code](https://claude.ai/code) plugin to write
-    idiomatic YAMLScript with AI assistance:
+<section class="ys-home-section ys-home-install" markdown>
 
-    ```bash
-    /plugin marketplace add yaml/yamlscript
-    /plugin install ys-skill@yamlscript
-    ```
-    [:octicons-arrow-right-24: Learn More](
-      https://github.com/yaml/yamlscript/tree/v0/ai/claude)
-```
+<div class="ys-home-install__grid" markdown>
 
-<!--
-!!! success "Zero to YS in 10 seconds!"
+<div class="ys-home-install__run" markdown>
 
-    ```bash
-    source <(curl -sL https://in-1.cc) --local ys
-    ys --help
-    ys -e 'say: "Hello, World!"'
-    ```
-    [:octicons-arrow-right-24: Learn More](about.md)
--->
+## Install YS instantly
 
-```mdys:cards
-- name: Take Full Control of Your YAML
-  body: |
-    * **YS** is always 100% valid [YAML](https://yaml.org)
-        * Lint, Query, Validate w/ existing tools
-    * Created by [YAML inventor/maintainer](ingydotnet.md)
-    * [YS has YAML Loaders for all languages](doc/bindings.md)  
-      Same Capabilities, Features, Bugs and Fixes
-    * A Common & Consistent YAML Experience  
-      (with or without using YS logic features)
+Install the native `ys` binary for immediate use.
 
-- name: YAML Made Functional
-  type: code:yaml
-  body: |
-    !ys-0:
-    use http: :all
-    vars =: load('vars.yaml')
-    json-file =: 'data.json'
+<div class="highlight ys-home-terminal"><pre><code>$ source &lt;(curl -sL in-1.cc) ys
+<span class="ys-home-terminal__success">√</span> ys v0.3.1 installed to /tmp/in-1/bin/ys (0.23s)
+$ ys --version
+YS (YAMLScript) 0.3.1
+$ ys --help
+</code></pre></div>
 
-    a normal key: and normal value
-    name:: ENV.USER:uc1
-    color:: vars.colors:shuffle.0
-    some stuff::
-      curl("https://example.com/$json-file")
-        .stuff.take(rand-int(5).++)
-    :when ENV.DEBUG_VARS::
-      debug:: vars
+[:octicons-arrow-right-24: Installation guide](doc/install.md)
 
-- name: Simplify your existing YAML
-  body: |
-    * Refactor, Deduplicate, DRY
-    * Over 1000 standard functions built in
-    * Dozens of built in libraries
-    * External libraries as well
-    * Define your own functions and libraries
-    * Limit YS capabilities to your exact needs
-
-- name: Plays Well with DevOps Tools
-  body: |
-    * [HelmYS for Kubernetes Helm charts](helmys.md)
-    * CI/CD, Docker, Ansible, etc.
-    * Your existing YAML files are valid YS!
-    * [Take them to the next level](
-      doc/ys4yaml.md)
-
-- name: Import, Transform, Interpolate and More
-  body: |
-    * [Load YS in your programs](doc/bindings.md)
-    * [Script Automation with YS](doc/examples.md)
-    * [Query and Transform YAML data](doc/query.md)
-    * [Distribute standalone YS programs](doc/binary.md)
-
-- name: Learn YS Today!
-  body: |
-    * [YS Exercism Track](https://exercism.org/tracks/yamlscript)
-    * [KubeCon 2024 YS Tutorial](https://yamlscript.org/kubeys24)
-    * [YS on Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
-    * [YS Documentation](https://yamlscript.org/doc)
-```
-
-```mdys:cards
-- name: '"Zero to YS in 10 seconds!"'
-  icon: material-clock-fast
-  body: |
-    ```bash
-    source <(curl -sL https://in-1.cc) --local ys
-    ys --help
-    ys -e 'say: "Hello, World. I am $(ENV.USER)."'
-    ```
-    [:octicons-arrow-right-24: Installing YS](doc/install.md)
-```
-
-```mdys:YS-CODE
-defn mdys-cards(o): |
-  <div class="grid cards" markdown>
-
-  $(o.map(mdys-card).map(chomp).join("\n\n"))
-
-  </div>
-
-defn mdys-card(o):
-  name type body more =: o.slice(qw(name type body more))
-  body =:
-    if type == 'code:yaml':
-      then: "```yaml {.code}\n$body\n```"
-      else: body
-  icon =: o.icon || "material-owl"
-
-  card =:
-    ":$icon:{.lg .middle} __$name__\n\n\
-     ----\n\n$body\n"
-
-  card =:
-    if o.more:
-      card +: |
-        <br/>
-        [:octicons-arrow-right-24: Learn More]($(o.more))
-      else: card
-
-  replace1 card:indent4 /^./: '-'
-
-defn indent4(text):
-  text.replace(/(?m)^(.)/ "    $1")
-```
-
-
-
-
-
-
-
-```mdys:ignore
-<h1 class="empty"></h1><!-- disable auto title -->
-
-**YS** (pronounced "wise", aka YAMLScript) is a functional programming
-language with a clean syntax that is also 100% valid **[YAML](
-https://yaml.org)**.
-It was designed to be easily embedded into existing YAML files in order to
-provide the logic, interpolation and data transformation capabilities that many
-YAML users need.
-Created by YAML inventor and lead maintainer, Ingy döt Net, YS solves these
-needs beautifully for all YAML users and uses.
-
-!!! note "YS Exercism Track"
-
-    YS is now available as a programming language learning track on
-    **[Exercism](https://exercism.org/tracks/yamlscript)**.
-    It's a great way to learn YS and get feedback from experienced mentors.
-    Check it out!
-
-If you work with apps and frameworks that use YAML for configuration, you can
-simplify your complex YAML files using YS, even if the app or framework
-does not support it natively.
-YS lets you include data from external files and other sources, make use of
-hundreds of existing standard functions, and even define your own variables and
-functions.
-You can filter, map, merge, reduce, generate, concatenate, interpolate and
-manipulate your data as you wish.
-YS provides these things with syntax that is minimal and unobtrusive, keeping
-your clean YAML data clean.
-
-!!! note "YAMLScript at KubeCon 2024"
-
-    Slides and information from Ingy's [KubeCon 2024 talk](
-    https://www.youtube.com/watch?v=Cdi3Q4Wrt48)
-    are available [here](https://yamlscript.org/kubeys24).
-    The highlight was [HelmYS](https://github.com/kubeys/helmys) a new Helm
-    post-renderer that lets you template Helm charts with YS (which is actual
-    YAML).
-
-Like many new languages, YS was built over an existing robust language,
-[Clojure](https://clojure.org), which in turn was built over
-[Java](https://java.com).
-The power of Clojure is available to YS users via the Glojure runtime in `ys`.
-The `ys` command is compiled into a single standalone executable file.
-This means that <u>No Java or JVM</u> installation is required to use YS, and
-startup/execution speed is very fast.
-
-YS also produces the `libys.so` shared library.
-It has [binding modules for 32 programming languages](doc/bindings.md)
-including Ada, Dyalog APL, Erlang, F#, Go, JavaScript, PowerShell, Python,
-Rust, Scala and Swift, with many more on the way.
-These modules can be used in your programs to load normal YAML files as well as
-YS enhanced ones.
-
-There are many ways to use YS:
-
-* Simplify your existing YAML configs
-  * Works great with CI/CD, Helm, Docker, Ansible, etc.
-  * Check out [HelmYS](https://github.com/kubeys/helmys), a tool for using
-    YS in Kubernetes Helm chart templates painlessly.
-* [Load YS (or YAML) in your programs](doc/bindings.md)
-  * Available in 32 programming languages (and counting)
-* Program in YS
-  * Learn how at [Exercism](https://exercism.org/tracks/yamlscript)
-* [Script Automation with YS](doc/examples.md)
-  * Many used in the [YS repository](https://github.com/yaml/yamlscript)
-* [Distribute standalone YS programs](doc/binary.md)
-  * Standalone executables for supported operating systems and WASI
-* [Query and Transform YAML (and JSON) data](doc/query.md)
-  * Use the `ys` command line tool similar to `jq` or `yq`
-```
-
-
-<div class="fill-500">
-<br/><br/><br/>
 </div>
+
+<div class="ys-home-install__compile" markdown>
+
+## Compile YS everywhere
+
+Compile/cross-compile YS programs to standalone native binaries and shared
+libraries for **25+** OS/Architecture targets including WebAssembly.
+
+<div class="highlight ys-home-terminal"><pre><code>$ ys app.ys -c -o app,darwin/arm64
+<span class="ys-home-terminal__success">√</span> Compiled to native binary: 'app' (1.4s)
+$ ys -e 'say: "Hello, world!"' -c -o hi.wasm
+<span class="ys-home-terminal__success">√</span> Compiled to WASI Wasm: 'hi.wasm' (1.8s)
+</code></pre></div>
+
+[:octicons-arrow-right-24: Compilation guide](doc/ys.md#compiling-programs)
+
+</div>
+
+</div>
+
+</section>
+
+<section class="ys-home-section ys-home-ai" markdown>
+
+## Write YAMLScript with AI
+
+**It works really well!** The YAMLScript skills teach coding agents write and
+validate idiomatic YS code for your use case.
+
+<div class="ys-home-ai__grid" markdown>
+
+<article class="ys-home-ai__agent" markdown>
+
+### Claude Code
+
+Install the YAMLScript plugin from its marketplace:
+
+```text
+/plugin marketplace add yaml/yamlscript
+/plugin install ys-skill@yamlscript
+```
+
+[:octicons-arrow-right-24: Claude Code setup](ai/claude.md)
+
+</article>
+
+<article class="ys-home-ai__agent" markdown>
+
+### Codex
+
+Copy the YAMLScript skill into your global or repository-local agent skills
+directory.
+
+The skill packages focused instructions and a YAMLScript linter for Codex.
+
+[:octicons-arrow-right-24: Codex setup](ai/codex.md)
+
+</article>
+
+</div>
+
+</section>
+
+<section class="ys-home-section ys-home-binding-section" markdown>
+
+## Use YS from 32 programming languages
+
+Load ordinary YAML or fully dynamic YAMLScript through the same API using the
+native package for your language.
+
+<div class="ys-home-bindings" markdown>
+
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">A</span> Ada](
+https://alire.ada.dev/crates/yamlscript.html)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-dotnet: C#](https://www.nuget.org/packages/YAMLScript/)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-clojure: Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-crystal: Crystal](https://shardbox.org/shards/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-d: D](https://code.dlang.org/packages/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-dart: Dart](https://pub.dev/packages/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-delphi: Delphi](https://github.com/yaml/yamlscript-delphi)
+</div>
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">APL</span> Dyalog](
+https://tatin.dev/v1/packages/versions/yaml-yamlscript-0)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-elixir: Elixir](https://hex.pm/packages/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-erlang: Erlang](https://hex.pm/packages/yamlscript_erlang)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-fsharp: F#](https://www.nuget.org/packages/YAMLScript.FSharp)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-fortran: Fortran](https://github.com/yaml/yamlscript-fortran)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-go: Go](https://github.com/yaml/yamlscript-go)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-haskell: Haskell](https://hackage.haskell.org/package/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:fontawesome-brands-java: Java](
+https://central.sonatype.com/artifact/org.yamlscript/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-julia: Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-kotlin: Kotlin](
+https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-lua: Lua](https://luarocks.org/modules/ingy/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">M</span> MoonBit](
+https://mooncakes.io/docs/ingydotnet/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-nim: Nim](https://github.com/yaml/yamlscript-nim)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-nodedotjs: NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-perl: Perl](https://metacpan.org/pod/YAMLScript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-php: PHP](https://packagist.org/packages/yaml/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:material-powershell: PowerShell](
+https://www.powershellgallery.com/packages/YAMLScript/)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-python: Python](https://pypi.org/project/yamlscript/)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-r: R](https://github.com/yaml/yamlscript-r)
+</div>
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">R</span> Raku](
+https://raku.land/zef:ingy/YAMLScript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-ruby: Ruby](https://rubygems.org/gems/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-rust: Rust](https://crates.io/crates/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-scala: Scala](
+https://central.sonatype.com/artifact/org.yamlscript/scala-yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-swift: Swift](https://github.com/yaml/yamlscript-swift)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-zig: Zig](https://github.com/yaml/yamlscript-zig)
+</div>
+
+</div>
+
+[:octicons-arrow-right-24: More about the binding libraries](doc/bindings.md)
+
+</section>

@@ -214,11 +214,11 @@ h1.empty {
 }
 
 .ys-playground__intro {
-  align-items: flex-start;
+  align-items: center;
   display: flex;
   gap: 1rem;
   justify-content: space-between;
-  padding: 1.5rem 1.5rem 1rem;
+  padding: .8rem 1.5rem .4rem;
 }
 
 .ys-playground__intro p {
@@ -241,13 +241,11 @@ h1.empty {
   gap: .25rem;
 }
 
-.ys-playground__actions [data-share],
 .ys-playground__actions [data-collapse],
 .ys-playground__actions [data-expand] {
   position: relative;
 }
 
-.ys-playground__actions [data-share]::after,
 .ys-playground__actions [data-collapse]::after,
 .ys-playground__actions [data-expand]::after {
   background: #252525;
@@ -268,10 +266,6 @@ h1.empty {
   z-index: 10;
 }
 
-.ys-playground__actions [data-share]::after {
-  content: 'Copy this demo URL to the clipboard';
-}
-
 .ys-playground__actions [data-expand]::after {
   content: 'Expand the demo panel';
 }
@@ -280,8 +274,6 @@ h1.empty {
   content: 'Collapse the demo panel';
 }
 
-.ys-playground__actions [data-share]:hover::after,
-.ys-playground__actions [data-share]:focus-visible::after,
 .ys-playground__actions [data-collapse]:hover::after,
 .ys-playground__actions [data-collapse]:focus-visible::after,
 .ys-playground__actions [data-expand]:hover::after,
@@ -350,17 +342,29 @@ h1.empty {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
-  margin-top: .75rem;
-  padding: .7rem 1.5rem;
+  margin-top: .35rem;
+  padding: .45rem 1.5rem;
+}
+
+.ys-playground .ys-playground__run,
+.ys-playground__args input,
+.ys-playground__examples select {
+  box-sizing: border-box;
+  height: 1.7rem;
 }
 
 .ys-playground .ys-playground__run,
 .ys-playground .ys-playground__run:hover {
+  align-items: center;
   background: #1976d2;
   color: white;
+  display: inline-flex;
+  justify-content: center;
   min-width: 3rem;
+  padding-bottom: 0;
   padding-left: .65rem;
   padding-right: .65rem;
+  padding-top: 0;
   position: relative;
 }
 
@@ -388,23 +392,32 @@ h1.empty {
 }
 
 .ys-playground__args,
-.ys-playground__examples {
+.ys-playground__examples,
+.ys-playground__inputs,
+.ys-playground__tools {
   align-items: center;
   display: flex;
   font-size: .68rem;
   gap: .35rem;
 }
 
-.ys-playground__config {
+.ys-playground__tools {
   margin-left: auto;
+  white-space: nowrap;
+}
+
+.ys-playground__config,
+.ys-playground__help,
+.ys-playground__share {
   position: relative;
 }
 
-.ys-playground__config::after {
+.ys-playground__config::after,
+.ys-playground__help::after,
+.ys-playground__share::after {
   background: #252525;
   border-radius: 4px;
   color: white;
-  content: 'Open demo settings';
   font-size: .6rem;
   font-weight: 400;
   opacity: 0;
@@ -419,8 +432,24 @@ h1.empty {
   z-index: 10;
 }
 
+.ys-playground__config::after {
+  content: 'Open demo settings';
+}
+
+.ys-playground__help::after {
+  content: 'Open demo help';
+}
+
+.ys-playground__share::after {
+  content: 'Copy this demo URL to the clipboard';
+}
+
 .ys-playground__config:hover::after,
-.ys-playground__config:focus-visible::after {
+.ys-playground__config:focus-visible::after,
+.ys-playground__help:hover::after,
+.ys-playground__help:focus-visible::after,
+.ys-playground__share:hover::after,
+.ys-playground__share:focus-visible::after {
   opacity: 1;
   visibility: visible;
 }
@@ -472,6 +501,24 @@ h1.empty {
   margin: 0;
 }
 
+.ys-playground__help-dialog {
+  width: 24rem;
+}
+
+.ys-playground__help-body {
+  font-size: .7rem;
+  padding: .4rem .8rem .7rem;
+}
+
+.ys-playground__help-body ul {
+  margin: .4rem 0;
+  padding-left: 1rem;
+}
+
+.ys-playground__help-body li + li {
+  margin-top: .35rem;
+}
+
 .ys-playground__config-head {
   align-items: center;
   border-bottom: 1px solid var(--md-default-fg-color--lightest);
@@ -496,6 +543,19 @@ h1.empty {
   display: flex;
   font-size: .72rem;
   gap: .45rem;
+}
+
+.ys-playground__eval-format,
+.ys-playground__reload-mode {
+  align-items: center;
+  display: flex;
+  font-size: .72rem;
+  gap: .65rem;
+}
+
+.ys-playground__eval-format label,
+.ys-playground__reload-mode label {
+  gap: .25rem;
 }
 
 .ys-playground__timeout {
@@ -702,28 +762,319 @@ h1.empty {
   padding: .8rem;
 }
 
-.ys-playground__shortcut {
-  border-top: 1px solid var(--md-default-fg-color--lightest);
-  color: var(--md-default-fg-color--light);
-  font-size: .62rem;
-  margin: 0;
-  padding: .55rem 1.5rem;
-  text-align: right;
-}
-
-.ys-playground__shortcut kbd {
-  background: var(--md-code-bg-color);
-  border: 1px solid var(--md-default-fg-color--lightest);
-  border-radius: 3px;
-  box-shadow: 0 1px 0 var(--md-default-fg-color--lighter);
-  padding: .05rem .25rem;
-}
-
 .ys-playground__fallback {
   padding: 1rem 1.5rem;
 }
 
-@media screen and (max-width: 44.984375em) {
+.ys-home-lede {
+  color: var(--md-default-fg-color--light);
+  font-size: .9rem;
+  margin: -.35rem 0 1.5rem;
+}
+
+.ys-home-section {
+  margin: 3rem 0;
+}
+
+.ys-home-section h2 {
+  color: var(--md-primary-fg-color);
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.ys-home-install {
+  background: #33572308;
+  border: 1px solid #33572340;
+  border-left: 5px solid var(--md-primary-fg-color);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.ys-home-install__grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ys-home-install__run,
+.ys-home-install__compile {
+  min-width: 0;
+}
+
+.ys-home-install__compile {
+  border-left: 1px solid var(--md-default-fg-color--lightest);
+  padding-left: 1.5rem;
+}
+
+[data-md-color-scheme='slate'] .ys-home-install {
+  background: #33572324;
+}
+
+.ys-home-install .highlight {
+  margin-bottom: .8rem;
+}
+
+.ys-home-install .ys-home-terminal code,
+.ys-home-install .ys-home-terminal code span {
+  color: var(--md-code-fg-color);
+}
+
+.ys-home-install .ys-home-terminal code .ys-home-terminal__success {
+  color: #2eaa46;
+}
+
+.ys-home-ai__grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.25rem;
+}
+
+.ys-home-ai__agent {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  box-shadow: 0 5px 18px #1b2a1514;
+  min-width: 0;
+  padding: 1rem 1.2rem;
+}
+
+.ys-home-ai__agent h3 {
+  color: var(--md-default-fg-color);
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.ys-home-ai__agent .highlight {
+  margin-bottom: .8rem;
+}
+
+.ys-home-bindings {
+  display: flex;
+  flex-flow: row wrap;
+  gap: .65rem;
+  margin: 1.25rem 0;
+}
+
+.ys-home-binding {
+  --ys-binding-accent: #335723;
+  flex: 0 0 calc((100% - 4.55rem) / 8);
+  min-width: 0;
+}
+
+.ys-home-binding:nth-child(1) {
+  --ys-binding-accent: #336b2e; /* Ada */
+}
+
+.ys-home-binding:nth-child(2) {
+  --ys-binding-accent: #512bd4; /* C# and .NET */
+}
+
+.ys-home-binding:nth-child(3) {
+  --ys-binding-accent: #5881d8; /* Clojure */
+}
+
+.ys-home-binding:nth-child(4) {
+  --ys-binding-accent: #111827; /* Crystal */
+}
+
+.ys-home-binding:nth-child(5) {
+  --ys-binding-accent: #b03931; /* D */
+}
+
+.ys-home-binding:nth-child(6) {
+  --ys-binding-accent: #0175c2; /* Dart */
+}
+
+.ys-home-binding:nth-child(7) {
+  --ys-binding-accent: #e62431; /* Delphi */
+}
+
+.ys-home-binding:nth-child(8) {
+  --ys-binding-accent: #d31f26; /* Dyalog */
+}
+
+.ys-home-binding:nth-child(9) {
+  --ys-binding-accent: #4b275f; /* Elixir */
+}
+
+.ys-home-binding:nth-child(10) {
+  --ys-binding-accent: #a90533; /* Erlang */
+}
+
+.ys-home-binding:nth-child(11) {
+  --ys-binding-accent: #378bba; /* F# */
+}
+
+.ys-home-binding:nth-child(12) {
+  --ys-binding-accent: #734f96; /* Fortran */
+}
+
+.ys-home-binding:nth-child(13) {
+  --ys-binding-accent: #007d9c; /* Go */
+}
+
+.ys-home-binding:nth-child(14) {
+  --ys-binding-accent: #5d4f85; /* Haskell */
+}
+
+.ys-home-binding:nth-child(15) {
+  --ys-binding-accent: #e76f00; /* Java */
+}
+
+.ys-home-binding:nth-child(16) {
+  --ys-binding-accent: #9558b2; /* Julia */
+}
+
+.ys-home-binding:nth-child(17) {
+  --ys-binding-accent: #7f52ff; /* Kotlin */
+}
+
+.ys-home-binding:nth-child(18) {
+  --ys-binding-accent: #000080; /* Lua */
+}
+
+.ys-home-binding:nth-child(19) {
+  --ys-binding-accent: #5b5bd6; /* MoonBit */
+}
+
+.ys-home-binding:nth-child(20) {
+  --ys-binding-accent: #b58900; /* Nim */
+}
+
+.ys-home-binding:nth-child(21) {
+  --ys-binding-accent: #5fa04e; /* NodeJS */
+}
+
+.ys-home-binding:nth-child(22) {
+  --ys-binding-accent: #0073a1; /* Perl */
+}
+
+.ys-home-binding:nth-child(23) {
+  --ys-binding-accent: #777bb4; /* PHP */
+}
+
+.ys-home-binding:nth-child(24) {
+  --ys-binding-accent: #012456; /* PowerShell */
+}
+
+.ys-home-binding:nth-child(25) {
+  --ys-binding-accent: #3776ab; /* Python */
+}
+
+.ys-home-binding:nth-child(26) {
+  --ys-binding-accent: #276dc3; /* R */
+}
+
+.ys-home-binding:nth-child(27) {
+  --ys-binding-accent: #6c2dc7; /* Raku */
+}
+
+.ys-home-binding:nth-child(28) {
+  --ys-binding-accent: #cc342d; /* Ruby */
+}
+
+.ys-home-binding:nth-child(29) {
+  --ys-binding-accent: #ce422b; /* Rust */
+}
+
+.ys-home-binding:nth-child(30) {
+  --ys-binding-accent: #dc322f; /* Scala */
+}
+
+.ys-home-binding:nth-child(31) {
+  --ys-binding-accent: #f05138; /* Swift */
+}
+
+.ys-home-binding:nth-child(32) {
+  --ys-binding-accent: #c87800; /* Zig */
+}
+
+.ys-home-binding > p {
+  height: 100%;
+  margin: 0;
+}
+
+.ys-home-binding a {
+  align-items: center;
+  background: color-mix(
+    in srgb,
+    var(--ys-binding-accent) 7%,
+    transparent
+  );
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 7px;
+  border-top: 3px solid var(--ys-binding-accent);
+  box-sizing: border-box;
+  color: var(--md-default-fg-color);
+  display: flex;
+  flex-direction: column;
+  font-size: .7rem;
+  font-weight: 600;
+  gap: .4rem;
+  height: 100%;
+  justify-content: center;
+  min-height: 4.6rem;
+  padding: .6rem .4rem;
+  position: relative;
+  text-align: center;
+  transition: border-color 120ms ease, box-shadow 120ms ease,
+    transform 120ms ease;
+}
+
+.ys-home-binding a svg {
+  fill: currentColor;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.ys-home-binding a .twemoji,
+.ys-home-bindings__mark {
+  color: var(--ys-binding-accent);
+}
+
+.ys-home-binding a .external-link {
+  display: none;
+}
+
+.ys-home-bindings__mark {
+  align-items: center;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  display: inline-flex;
+  font-size: .55rem;
+  height: 1.5rem;
+  justify-content: center;
+  letter-spacing: -.02em;
+  width: 1.5rem;
+}
+
+@media (hover: hover) {
+  .ys-home-binding a:hover {
+    border-color: var(--ys-binding-accent);
+    box-shadow: 0 5px 14px #1b2a1520;
+    color: var(--ys-binding-accent);
+    transform: translateY(-2px);
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1100px) {
+  .ys-home-binding {
+    flex-basis: calc((100% - 1.95rem) / 4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ys-home-binding a {
+    transition: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .headline small,
+  .headline__fully {
+    display: none;
+  }
+
   .ys-playground {
     border-left-width: 0;
     border-radius: 0;
@@ -733,18 +1084,26 @@ h1.empty {
   }
 
   .ys-playground__intro {
-    display: block;
-    padding: 1rem;
-  }
-
-  .ys-playground__actions {
-    margin-top: .75rem;
+    padding: .75rem 1rem .4rem;
   }
 
   .ys-playground__tabs,
   .ys-playground__toolbar {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+
+  .ys-playground__run {
+    order: 1;
+  }
+
+  .ys-playground__tools {
+    order: 2;
+  }
+
+  .ys-playground__inputs {
+    flex-basis: 100%;
+    order: 3;
   }
 
   .ys-playground__workbench {
@@ -762,9 +1121,6 @@ h1.empty {
     min-height: 14rem;
   }
 
-}
-
-@media screen and (max-width: 499px) {
   .ys-playground {
     overflow: visible;
   }
@@ -773,7 +1129,6 @@ h1.empty {
     display: none;
   }
 
-  .ys-playground__actions [data-share]::after,
   .ys-playground__actions [data-collapse]::after,
   .ys-playground__actions [data-expand]::after {
     left: 0;
@@ -783,5 +1138,39 @@ h1.empty {
     transform: none;
     white-space: normal;
     width: max-content;
+  }
+
+  .ys-home-lede {
+    margin-bottom: 1.25rem;
+  }
+
+  .ys-home-section {
+    margin: 2.25rem 0;
+  }
+
+  .ys-home-install {
+    border-radius: 0;
+    margin-left: -.8rem;
+    margin-right: -.8rem;
+    padding: 1rem;
+  }
+
+  .ys-home-install__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ys-home-install__compile {
+    border-left: 0;
+    border-top: 1px solid var(--md-default-fg-color--lightest);
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+
+  .ys-home-ai__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ys-home-binding {
+    flex-basis: calc((100% - .65rem) / 2);
   }
 }
