@@ -1,3 +1,9 @@
+- version: 0.3.2
+  date:    Sun Sep 27 09:52:44 PM EDT 2026
+  changes:
+  - v0: Test clj+ across native dialects
+  - cli: Simplify clj+ runtime setup
+  - runtime: Disable unsupported host inliners
 - version: 0.3.1
   date:    Tue Sep 15 05:43:55 PM EDT 2026
   changes:

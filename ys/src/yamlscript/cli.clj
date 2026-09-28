@@ -28,7 +28,7 @@
    [yamlscript.util-platform :as util-platform])
   (:refer-clojure))
 
-(def yamlscript-version "0.3.1")
+(def yamlscript-version "0.3.2")
 
 (def testing (atom false))
 
