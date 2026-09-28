@@ -7,224 +7,219 @@ hide:
 - toc
 ---
 
-<h1 class="headline">YS <small><a href="/faq/">(say "wise")</a></small> is the
-best way to work with YAML</h1>
+<h1 class="headline">
+YS <small><a href="/faq/">(say "wise")</a></small> makes YAML
+<span class="headline__fully">fully </span>dynamic
+</h1>
 
-<div class="subtitle" markdown>
-<a href="/about/">
-:octicons-arrow-right-24:
-Learn More About YS</a></div>
+<p class="ys-home-lede">
+Add code (variables, functions, imports, transformations, interpolations, etc)
+to ordinary YAML. It loads as data like YAML or JSON.
+</p>
 
-```mdys:cards
-- name: AI-Assisted YS with Claude Code
-  icon: material-robot-outline
-  body: |
-    Install the [Claude Code](https://claude.ai/code) plugin to write
-    idiomatic YAMLScript with AI assistance:
-
-    ```bash
-    /plugin marketplace add yaml/yamlscript
-    /plugin install ys-skill@yamlscript
-    ```
-    [:octicons-arrow-right-24: Learn More](
-      https://github.com/yaml/yamlscript/tree/v0/ai/claude)
+```mdys:playground
+variant: home
 ```
 
-<!--
-!!! success "Zero to YS in 10 seconds!"
+<section class="ys-home-section ys-home-install" markdown>
 
-    ```bash
-    source <(curl -sL https://in-1.cc) --local ys
-    ys --help
-    ys -e 'say: "Hello, World!"'
-    ```
-    [:octicons-arrow-right-24: Learn More](about.md)
--->
+<div class="ys-home-install__grid" markdown>
 
-```mdys:cards
-- name: Take Full Control of Your YAML
-  body: |
-    * **YS** is always 100% valid [YAML](https://yaml.org)
-        * Lint, Query, Validate w/ existing tools
-    * Created by [YAML inventor/maintainer](ingydotnet.md)
-    * [YS has YAML Loaders for all languages](doc/bindings.md)  
-      Same Capabilities, Features, Bugs and Fixes
-    * A Common & Consistent YAML Experience  
-      (with or without using YS logic features)
+<div class="ys-home-install__run" markdown>
 
-- name: YAML Made Functional
-  type: code:yaml
-  body: |
-    !ys-0:
-    use http: :all
-    vars =: load('vars.yaml')
-    json-file =: 'data.json'
+## Install YS instantly
 
-    a normal key: and normal value
-    name:: ENV.USER:uc1
-    color:: vars.colors:shuffle.0
-    some stuff::
-      curl("https://example.com/$json-file")
-        .stuff.take(rand-int(5).++)
-    :when ENV.DEBUG_VARS::
-      debug:: vars
+Install the native `ys` binary for immediate use.
 
-- name: Simplify your existing YAML
-  body: |
-    * Refactor, Deduplicate, DRY
-    * Over 1000 standard functions built in
-    * Dozens of built in libraries
-    * External libraries as well
-    * Define your own functions and libraries
-    * Limit YS capabilities to your exact needs
+<div class="highlight ys-home-terminal"><pre><code>$ source &lt;(curl -sL in-1.cc) ys
+<span class="ys-home-terminal__success">√</span> ys v0.3.1 installed to /tmp/in-1/bin/ys (0.23s)
+$ ys --version
+YS (YAMLScript) 0.3.1
+$ ys --help
+</code></pre></div>
 
-- name: Plays Well with DevOps Tools
-  body: |
-    * [HelmYS for Kubernetes Helm charts](helmys.md)
-    * CI/CD, Docker, Ansible, etc.
-    * Your existing YAML files are valid YS!
-    * [Take them to the next level](
-      doc/ys4yaml.md)
+[:octicons-arrow-right-24: Installation guide](doc/install.md)
 
-- name: Import, Transform, Interpolate and More
-  body: |
-    * [Load YS in your programs](doc/bindings.md)
-    * [Script Automation with YS](doc/examples.md)
-    * [Query and Transform YAML data](doc/query.md)
-    * [Distribute standalone YS programs](doc/binary.md)
-
-- name: Learn YS Today!
-  body: |
-    * [YS Exercism Track](https://exercism.org/tracks/yamlscript)
-    * [KubeCon 2024 YS Tutorial](https://yamlscript.org/kubeys24)
-    * [YS on Rosetta Code](https://rosettacode.org/wiki/Category:YAMLScript)
-    * [YS Documentation](https://yamlscript.org/doc)
-```
-
-```mdys:cards
-- name: '"Zero to YS in 10 seconds!"'
-  icon: material-clock-fast
-  body: |
-    ```bash
-    source <(curl -sL https://in-1.cc) --local ys
-    ys --help
-    ys -e 'say: "Hello, World. I am $(ENV.USER)."'
-    ```
-    [:octicons-arrow-right-24: Installing YS](doc/install.md)
-```
-
-```mdys:YS-CODE
-defn mdys-cards(o): |
-  <div class="grid cards" markdown>
-
-  $(o.map(mdys-card).map(chomp).join("\n\n"))
-
-  </div>
-
-defn mdys-card(o):
-  name type body more =: o.slice(qw(name type body more))
-  body =:
-    if type == 'code:yaml':
-      then: "```yaml {.code}\n$body\n```"
-      else: body
-  icon =: o.icon || "material-owl"
-
-  card =:
-    ":$icon:{.lg .middle} __$name__\n\n\
-     ----\n\n$body\n"
-
-  card =:
-    if o.more:
-      card +: |
-        <br/>
-        [:octicons-arrow-right-24: Learn More]($(o.more))
-      else: card
-
-  replace1 card:indent4 /^./: '-'
-
-defn indent4(text):
-  text.replace(/(?m)^(.)/ "    $1")
-```
-
-
-
-
-
-
-
-```mdys:ignore
-<h1 class="empty"></h1><!-- disable auto title -->
-
-**YS** (pronounced "wise", aka YAMLScript) is a functional programming
-language with a clean syntax that is also 100% valid **[YAML](
-https://yaml.org)**.
-It was designed to be easily embedded into existing YAML files in order to
-provide the logic, interpolation and data transformation capabilities that many
-YAML users need.
-Created by YAML inventor and lead maintainer, Ingy döt Net, YS solves these
-needs beautifully for all YAML users and uses.
-
-!!! note "YS Exercism Track"
-
-    YS is now available as a programming language learning track on
-    **[Exercism](https://exercism.org/tracks/yamlscript)**.
-    It's a great way to learn YS and get feedback from experienced mentors.
-    Check it out!
-
-If you work with apps and frameworks that use YAML for configuration, you can
-simplify your complex YAML files using YS, even if the app or framework
-does not support it natively.
-YS lets you include data from external files and other sources, make use of
-hundreds of existing standard functions, and even define your own variables and
-functions.
-You can filter, map, merge, reduce, generate, concatenate, interpolate and
-manipulate your data as you wish.
-YS provides these things with syntax that is minimal and unobtrusive, keeping
-your clean YAML data clean.
-
-!!! note "YAMLScript at KubeCon 2024"
-
-    Slides and information from Ingy's [KubeCon 2024 talk](
-    https://www.youtube.com/watch?v=Cdi3Q4Wrt48)
-    are available [here](https://yamlscript.org/kubeys24).
-    The highlight was [HelmYS](https://github.com/kubeys/helmys) a new Helm
-    post-renderer that lets you template Helm charts with YS (which is actual
-    YAML).
-
-Like many new languages, YS was built over an existing robust language,
-[Clojure](https://clojure.org), which in turn was built over
-[Java](https://java.com).
-The power of Clojure is available to YS users via the Glojure runtime in `ys`.
-The `ys` command is compiled into a single standalone executable file.
-This means that <u>No Java or JVM</u> installation is required to use YS, and
-startup/execution speed is very fast.
-
-YS also produces the `libys.so` shared library.
-It has [binding modules for 32 programming languages](doc/bindings.md)
-including Ada, Dyalog APL, Erlang, F#, Go, JavaScript, PowerShell, Python,
-Rust, Scala and Swift, with many more on the way.
-These modules can be used in your programs to load normal YAML files as well as
-YS enhanced ones.
-
-There are many ways to use YS:
-
-* Simplify your existing YAML configs
-  * Works great with CI/CD, Helm, Docker, Ansible, etc.
-  * Check out [HelmYS](https://github.com/kubeys/helmys), a tool for using
-    YS in Kubernetes Helm chart templates painlessly.
-* [Load YS (or YAML) in your programs](doc/bindings.md)
-  * Available in 32 programming languages (and counting)
-* Program in YS
-  * Learn how at [Exercism](https://exercism.org/tracks/yamlscript)
-* [Script Automation with YS](doc/examples.md)
-  * Many used in the [YS repository](https://github.com/yaml/yamlscript)
-* [Distribute standalone YS programs](doc/binary.md)
-  * Standalone executables for supported operating systems and WASI
-* [Query and Transform YAML (and JSON) data](doc/query.md)
-  * Use the `ys` command line tool similar to `jq` or `yq`
-```
-
-
-<div class="fill-500">
-<br/><br/><br/>
 </div>
+
+<div class="ys-home-install__compile" markdown>
+
+## Compile YS everywhere
+
+Compile/cross-compile YS programs to standalone native binaries and shared
+libraries for **25+** OS/Architecture targets including WebAssembly.
+
+<div class="highlight ys-home-terminal"><pre><code>$ ys app.ys -c -o app,darwin/arm64
+<span class="ys-home-terminal__success">√</span> Compiled to native binary: 'app' (1.4s)
+$ ys -e 'say: "Hello, world!"' -c -o hi.wasm
+<span class="ys-home-terminal__success">√</span> Compiled to WASI Wasm: 'hi.wasm' (1.8s)
+</code></pre></div>
+
+[:octicons-arrow-right-24: Compilation guide](doc/ys.md#compiling-programs)
+
+</div>
+
+</div>
+
+</section>
+
+<section class="ys-home-section ys-home-ai" markdown>
+
+## Write YAMLScript with AI
+
+**It works really well!** The YAMLScript skills teach coding agents write and
+validate idiomatic YS code for your use case.
+
+<div class="ys-home-ai__grid" markdown>
+
+<article class="ys-home-ai__agent" markdown>
+
+### Claude Code
+
+Install the YAMLScript plugin from its marketplace:
+
+```text
+/plugin marketplace add yaml/yamlscript
+/plugin install ys-skill@yamlscript
+```
+
+[:octicons-arrow-right-24: Claude Code setup](ai/claude.md)
+
+</article>
+
+<article class="ys-home-ai__agent" markdown>
+
+### Codex
+
+Copy the YAMLScript skill into your global or repository-local agent skills
+directory.
+
+The skill packages focused instructions and a YAMLScript linter for Codex.
+
+[:octicons-arrow-right-24: Codex setup](ai/codex.md)
+
+</article>
+
+</div>
+
+</section>
+
+<section class="ys-home-section ys-home-binding-section" markdown>
+
+## Use YS from 32 programming languages
+
+Load ordinary YAML or fully dynamic YAMLScript through the same API using the
+native package for your language.
+
+<div class="ys-home-bindings" markdown>
+
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">A</span> Ada](
+https://alire.ada.dev/crates/yamlscript.html)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-dotnet: C#](https://www.nuget.org/packages/YAMLScript/)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-clojure: Clojure](https://clojars.org/org.yamlscript/clj-yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-crystal: Crystal](https://shardbox.org/shards/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-d: D](https://code.dlang.org/packages/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-dart: Dart](https://pub.dev/packages/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-delphi: Delphi](https://github.com/yaml/yamlscript-delphi)
+</div>
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">APL</span> Dyalog](
+https://tatin.dev/v1/packages/versions/yaml-yamlscript-0)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-elixir: Elixir](https://hex.pm/packages/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-erlang: Erlang](https://hex.pm/packages/yamlscript_erlang)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-fsharp: F#](https://www.nuget.org/packages/YAMLScript.FSharp)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-fortran: Fortran](https://github.com/yaml/yamlscript-fortran)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-go: Go](https://github.com/yaml/yamlscript-go)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-haskell: Haskell](https://hackage.haskell.org/package/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:fontawesome-brands-java: Java](
+https://central.sonatype.com/artifact/org.yamlscript/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-julia: Julia](https://juliahub.com/ui/Packages/General/YAMLScript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-kotlin: Kotlin](
+https://central.sonatype.com/artifact/org.yamlscript/kotlin-yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-lua: Lua](https://luarocks.org/modules/ingy/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">M</span> MoonBit](
+https://mooncakes.io/docs/ingydotnet/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-nim: Nim](https://github.com/yaml/yamlscript-nim)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-nodedotjs: NodeJS](https://www.npmjs.com/package/@yaml/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-perl: Perl](https://metacpan.org/pod/YAMLScript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-php: PHP](https://packagist.org/packages/yaml/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:material-powershell: PowerShell](
+https://www.powershellgallery.com/packages/YAMLScript/)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-python: Python](https://pypi.org/project/yamlscript/)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-r: R](https://github.com/yaml/yamlscript-r)
+</div>
+<div class="ys-home-binding" markdown>
+[<span class="ys-home-bindings__mark">R</span> Raku](
+https://raku.land/zef:ingy/YAMLScript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-ruby: Ruby](https://rubygems.org/gems/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-rust: Rust](https://crates.io/crates/yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-scala: Scala](
+https://central.sonatype.com/artifact/org.yamlscript/scala-yamlscript)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-swift: Swift](https://github.com/yaml/yamlscript-swift)
+</div>
+<div class="ys-home-binding" markdown>
+[:simple-zig: Zig](https://github.com/yaml/yamlscript-zig)
+</div>
+
+</div>
+
+[:octicons-arrow-right-24: More about the binding libraries](doc/bindings.md)
+
+</section>

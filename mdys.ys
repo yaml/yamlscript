@@ -1,5 +1,10 @@
 !ys-0
 
+use:
+  ys::fs: :as fs
+  ys::json: :as json
+  ys::yaml: :as yaml
+
 defn mdys-question(text, marker='???+'):
   m =:
     text =~ /^(.*)\n\n((?s:\S.+))/ ||:
@@ -13,3 +18,280 @@ defn mdys-question(text, marker='???+'):
 
 defn mdys-question-expand(text):
   mdys-question: text, '???'
+
+defn playground-dynamic-examples(home=false):
+  path =:
+    fs/abs:
+      "$(input-dir:deref)/../playground/dynamic-examples.yaml"
+  examples =: yaml/load(path:read)
+  examples .=: remove(\(_.disable))
+  examples :if home .=: filter(\(_.home))
+  for example examples:
+    demo =::
+      id:: example.id
+      category: code
+      label:: example.label
+      description:: example.description || ''
+      listed:: home || not(example.home)
+      mode: load
+      format: yaml
+      entry:: example.entry || 'main.yaml'
+      files:: example.files || {}
+      source:: example.source:trimr:lines
+      expected:: example.expected:trimr:lines
+    =>: demo
+
+defn playground-rosetta-programs(home=false):
+  info-path =:
+    fs/abs:
+      "$(input-dir:deref)/../playground/program-examples.yaml"
+  infos =: yaml/load(info-path:read)
+  infos .=: remove(\(_.disable))
+  infos :if home .=: filter(\(_.home))
+  for info infos:
+    path =:
+      fs/abs:
+        "$(input-dir:deref)/../../sample/rosetta-code/$(info.file).ys"
+    source =: path:read:lines
+    program =::
+      id:: info.id || info.file
+      category: program
+      label:: info.label
+      description:: info.description || ''
+      sourceUrl:: "https://rosettacode.org/wiki/$(info.page)#YAMLScript"
+      mode: run
+      format: text
+      entry:: "$(info.file).ys"
+      source:: source
+      expected:: +["Evaluating $(info.label)..."]
+      ignoreTerminalEffects::
+        info.'ignore-terminal-effects' || false
+    =>: program
+
+defn playground-featured-programs(home=false):
+  info-path =:
+    fs/abs:
+      "$(input-dir:deref)/../playground/featured-programs.yaml"
+  infos =: yaml/load(info-path:read)
+  infos :if home .=: filter(\(_.home))
+  for info infos:
+    program =::
+      id:: info.id
+      category: program
+      featured: true
+      label:: info.label
+      description:: info.description || ''
+      mode: run
+      format: text
+      entry:: info.entry || 'main.ys'
+      files:: info.files || {}
+      source:: info.source:trimr:lines
+      expected:: info.expected:trimr:lines
+      ignoreTerminalEffects::
+        info.'ignore-terminal-effects' || false
+    =>: program
+
+defn playground-home-actions():
+  =>: |
+    <div class="ys-playground__actions">
+      <a class="ys-playground__full" data-open-playground
+         href="/play/"><span class="ys-playground__full-prefix">Full
+         </span>Playground</a>
+      <button type="button" data-collapse
+              aria-controls="ys-playground-demo" hidden>
+        Collapse
+      </button>
+      <button type="button" data-expand
+              aria-controls="ys-playground-demo">
+        Expand
+      </button>
+    </div>
+
+defn playground-home-tools():
+  =>: |
+    <button type="button" class="ys-playground__help"
+            data-help-open aria-haspopup="dialog"
+            aria-controls="ys-playground-help">Help</button>
+
+defn playground-full-actions():
+  =>: |
+    <div class="ys-playground__actions">
+      <button type="button" class="ys-playground__help"
+              data-help-open aria-haspopup="dialog"
+              aria-controls="ys-playground-help">Help</button>
+      <button type="button" class="ys-playground__share"
+              data-share>Share</button>
+      <button type="button" class="ys-playground__config"
+              data-config-open>
+        Settings
+      </button>
+    </div>
+
+defn playground-home-showcase():
+  =>: |
+    <div class="ys-playground__showcase" data-showcase hidden>
+      <button type="button" class="ys-playground__nav"
+              data-example-previous aria-label="Previous example">&lt;</button>
+      <button type="button" class="ys-playground__nav"
+              data-example-next aria-label="Next example">&gt;</button>
+      <button type="button" class="ys-playground__run" data-run
+              data-state="ready" aria-label="Evaluate YAMLScript">
+        ▶
+      </button>
+      <div class="ys-playground__summary">
+        <strong data-example-title></strong>
+        <span data-example-description></span>
+      </div>
+    </div>
+
+defn playground-run-button():
+  =>: |
+    <button type="button" class="ys-playground__nav"
+            data-example-previous aria-label="Previous example">&lt;</button>
+    <button type="button" class="ys-playground__nav"
+            data-example-next aria-label="Next example">&gt;</button>
+    <button type="button" class="ys-playground__run" data-run
+            data-state="ready" aria-label="Evaluate YAMLScript">
+      ▶
+    </button>
+
+defn playground-full-description():
+  =>: |
+    <span class="ys-playground__example-description"
+          data-example-description></span>
+
+defn playground-home-result-tabs():
+  =>: |
+    <div class="ys-playground__result-tabs" role="tablist"
+         aria-label="Evaluation format">
+      <button type="button" role="tab" data-home-format="yaml"
+              aria-selected="true">
+        YAML
+      </button>
+      <button type="button" role="tab" data-home-format="json"
+              aria-selected="false" tabindex="-1">
+        JSON
+      </button>
+    </div>
+
+defn playground-full-result-tabs():
+  =>: |
+    <div class="ys-playground__result-tabs" role="tablist"
+         aria-label="Output view">
+      <button type="button" role="tab" data-result-tab="evaluation"
+              data-result-format="yaml" data-tooltip="Show YAML output"
+              aria-label="Show YAML output" aria-selected="true">
+        YAML
+      </button>
+      <button type="button" role="tab" data-result-tab="evaluation"
+              data-result-format="json" data-tooltip="Show JSON output"
+              aria-label="Show JSON output" aria-selected="false"
+              tabindex="-1">
+        JSON
+      </button>
+      <button type="button" role="tab" data-result-tab="compiled"
+              data-result-format="glj" data-tooltip="Show compiled Glojure"
+              aria-label="Show compiled Glojure"
+              aria-selected="false" tabindex="-1">
+        GLJ
+      </button>
+    </div>
+
+defn playground-home-help():
+  =>: |
+    <li>Edit the YAML or YAMLScript in the left pane.</li>
+    <li>Use filename tabs to edit each file in a project.</li>
+    <li>Edits evaluate automatically.</li>
+    <li>Use <strong>&lt;</strong> and <strong>&gt;</strong>
+        to browse examples.</li>
+    <li>Examples advance every five seconds until you interact.</li>
+    <li>For Dynamic YAML, select YAML or JSON output.</li>
+    <li>Press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Enter</kbd>
+        to evaluate.</li>
+
+defn playground-full-help():
+  =>: |
+    <li>Edit the YAML or YAMLScript in the left pane.</li>
+    <li>Use filename tabs to edit each file in a project.</li>
+    <li><strong>Run</strong> evaluates it immediately.</li>
+    <li>Choose examples from the menu or use <strong>&lt;</strong> and
+        <strong>&gt;</strong>. Selecting one resets the editor.</li>
+    <li><strong>Optional main args</strong> passes values to a program.</li>
+    <li>For Dynamic YAML, select <strong>YAML</strong>,
+        <strong>JSON</strong>, or <strong>GLJ</strong>.</li>
+    <li>For programs, select <strong>OUT</strong> or
+        <strong>GLJ</strong>.</li>
+    <li><strong>Share</strong> copies a URL containing your edits.</li>
+    <li>Press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>Enter</kbd>
+        to evaluate.</li>
+
+defn mdys-playground(data):
+  variant =: data.variant || 'home'
+  when not(variant.in?(qw(home full))):
+    die: "Invalid playground variant: $variant"
+
+  template-path =:
+    fs/abs:
+      "$(input-dir:deref)/../playground/playground.html"
+  template =: template-path:read
+  programs =:
+    playground-featured-programs() + playground-rosetta-programs()
+  home-programs =:
+    playground-featured-programs(true) +
+    playground-rosetta-programs(true)
+  home-examples =: playground-dynamic-examples(true)
+  examples =:
+    if variant == 'home':
+      then: home-examples + home-programs
+      else:
+        playground-dynamic-examples() + programs
+  examples-json =: examples:json/dump
+  actions =:
+    if variant == 'home':
+      playground-home-actions() playground-full-actions()
+  tools =:
+    if variant == 'home':
+      playground-home-tools() ''
+  description =:
+    if variant == 'full':
+      playground-full-description() ''
+  result-tabs =:
+    if variant == 'home':
+      playground-home-result-tabs() playground-full-result-tabs()
+  help =:
+    if variant == 'home':
+      playground-home-help() playground-full-help()
+  collapsed =:
+    if variant == 'home':
+      then: 'true'
+      else: 'false'
+  hidden =:
+    if variant == 'home':
+      then: ' hidden'
+      else: ''
+  showcase =:
+    if variant == 'home':
+      then: playground-home-showcase()
+      else: ''
+  run =:
+    if variant == 'full':
+      then: playground-run-button()
+      else: ''
+  cycle =:
+    if variant == 'home':
+      then: ' data-cycle-ms="5000"'
+      else: ''
+
+  template:
+    .replace('__YS_PLAYGROUND_VARIANT__' variant)
+    .replace('__YS_PLAYGROUND_CYCLE__' cycle)
+    .replace('__YS_PLAYGROUND_COLLAPSED__' collapsed)
+    .replace('__YS_PLAYGROUND_ACTIONS__' actions)
+    .replace('__YS_PLAYGROUND_TOOLS__' tools)
+    .replace('__YS_PLAYGROUND_RESULT_TABS__' result-tabs)
+    .replace('__YS_PLAYGROUND_HELP__' help)
+    .replace('__YS_PLAYGROUND_SHOWCASE__' showcase)
+    .replace('__YS_PLAYGROUND_RUN__' run)
+    .replace('__YS_PLAYGROUND_DESCRIPTION__' description)
+    .replace('__YS_PLAYGROUND_HIDDEN__' hidden)
+    .replace('__YS_PLAYGROUND_EXAMPLES__' examples-json)
