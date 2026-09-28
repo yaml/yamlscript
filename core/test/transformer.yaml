@@ -11,22 +11,38 @@
     (use (foo :as f) (bar :as b))
 
 
-- name: Retired require compiles to its diagnostic call
+- name: Retired require form fails during compilation
   yamlscript: |
     !ys-0
     require foo::bar: :as fb
-  clojure: |
-    (require)
+  error: |
+    The 'require' function is retired. Use 'use' instead.
 
 
-- name: Retired grouped require compiles to its diagnostic call
+- name: Retired grouped require fails during compilation
   yamlscript: |
     !ys-0
     require:
       foo: :as f
       bar: :get one
+  error: |
+    The 'require' function is retired. Use 'use' instead.
+
+
+- name: Retired require call fails during compilation
+  yamlscript: |
+    !ys-0
+    =>: require('ys.str')
+  error: |
+    The 'require' function is retired. Use 'use' instead.
+
+
+- name: Bare require symbol remains valid
+  yamlscript: |
+    !ys-0
+    loader =: require
   clojure: |
-    (require)
+    (def loader require)
 
 
 - name: Allow => as else for cond

@@ -29,7 +29,8 @@
 
 (test/load-yaml-test-files
   ["test/compiler.yaml"
-   "test/literals.yaml"]
+   "test/literals.yaml"
+   "test/transformer.yaml"]
   {:add-tests true
    :pick #(test/has-keys? [:yamlscript :error] %1)
    :test (fn [test]

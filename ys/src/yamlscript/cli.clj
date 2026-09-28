@@ -410,15 +410,16 @@ Options:
 ;; API shared by compatible Clojure runtimes.
 (def v0-clj-plus-header
   (str
+    "(ns main (:require [clojurestar.deps :refer [require-deps]]))\n"
     "(when-not (find-ns 'ys.v0)\n"
-    "  (require 'clojurestar.deps)\n"
-    "  ((resolve 'clojurestar.deps/add-deps)\n"
-    "   '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
-    yamlscript-version "\"}}}))\n\n"))
+    "  (require-deps\n"
+    "    [\"mvn:org.yamlscript/ys.v0@"
+    yamlscript-version "/ys.v0\" :as ys.v0]))\n"
+    "(ys.v0/init)\n"))
 
 (def to-code-headers
-  {"bb" v0-bb-header
-   "clj" v0-clj-header
+  {"bb" (str v0-bb-header v0-header)
+   "clj" (str v0-clj-header v0-header)
    "clj+" v0-clj-plus-header})
 
 (defn v0-bb-script?
@@ -434,7 +435,7 @@ Options:
       (when (v0-bb-script? opts)
         "#!/usr/bin/env bb\n")
       deps-header
-      v0-header "\n" clojure)
+      "\n" clojure)
     clojure))
 
 (defn do-compile [opts args]

@@ -116,15 +116,28 @@
       (is (= "mixed" (eval '(downcase "MIXED"))))
       (is (nil? (ns-resolve scratch 'upper-case))))))
 
-(deftest require-is-retired
+(deftest init-preserves-core-require
   (let [scratch (create-ns 'ys.v0-test.retired-require-scratch)]
     (binding [*ns* scratch]
       (refer-clojure)
       (ys.v0/init)
-      (is (thrown-with-msg?
-            Exception
-            #"The 'require' function is retired\. Use 'use' instead\."
-            (eval '(require 'ys.str)))))))
+      (is (= #'clojure.core/require (ns-resolve scratch 'require))))))
+
+(deftest init-is-a-no-op-under-native-yamlscript
+  (let [runtime-ns (create-ns 'yamlscript.glojure-runtime)
+        scratch (create-ns 'ys.v0-test.native-runtime-scratch)]
+    (try
+      (intern runtime-ns 'use identity)
+      (binding [*ns* scratch]
+        (refer-clojure)
+        (ns-unmap scratch 'use)
+        (intern scratch 'use :native-use)
+        (ys.v0/init)
+        (is (= :native-use @(ns-resolve scratch 'use)))
+        (is (nil? (ns-resolve scratch 'say))))
+      (finally
+        (remove-ns (ns-name scratch))
+        (remove-ns (ns-name runtime-ns))))))
 
 (deftest init-twice-is-idempotent
   (let [err (java.io.StringWriter.)

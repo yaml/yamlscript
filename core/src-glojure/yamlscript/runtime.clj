@@ -27,7 +27,7 @@
    [ys.v0.pprint]
    [ys.v0.re :as re]
    [ys.v0.ys :as ys])
-  (:refer-clojure :exclude [load require use]))
+  (:refer-clojure :exclude [load use]))
 
 (def builtin-modules
   '{ys.std     ys.v0.std
@@ -535,10 +535,6 @@
 (defmacro use [& forms]
   `(apply-use *ns* '~forms))
 
-(defn require [& _]
-  (throw
-    (ex-info "The 'require' function is retired. Use 'use' instead.\n" {})))
-
 (defn load [ys-file]
   (load-yamlscript ys-file))
 
@@ -663,9 +659,18 @@
 (def runtime-vars
   '[_ ARGS ARGV CWD DIR ENV FILE INC PUN RUN VERSION])
 
+(declare install!)
+
+(defn native-init
+  ([] (native-init nil))
+  ([_]
+   (install! *ns*)
+   nil))
+
 (defn install! [target]
   (do
     (intern 'clojure.core 're-pattern compatible-re-pattern)
+    (intern 'ys.v0 'init native-init)
     (let [var (intern 'ys.v0.std 'qw (var-get #'compatible-qw))]
       (alter-meta! var assoc :macro true))
     (intern 'ys.v0.std '+++* std-document)
@@ -709,9 +714,9 @@
     (refer 'ys.v0.global :only (vec runtime-vars))
     (doseq [sym hidden-core]
       (ns-unmap target sym))
-    (doseq [sym '[load require use]]
+    (doseq [sym '[load use]]
       (ns-unmap target sym))
-    (refer 'yamlscript.glojure-runtime :only '[load require use])
+    (refer 'yamlscript.glojure-runtime :only '[load use])
     nil))
 
 (defn enter-main! []
@@ -727,6 +732,13 @@
     (install-process!)
     (install! target)
     (install-hooks!)))
+
+(defn prepare-clojure! []
+  (let [target *ns*]
+    (doseq [[sym current] (ns-refers target)
+            :let [core (ns-resolve 'clojure.core sym)]
+            :when (and core (not= current core))]
+      (ns-unmap target sym))))
 
 (defn- set-root! [var value]
   (alter-var-root var (constantly value)))

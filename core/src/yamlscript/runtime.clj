@@ -85,7 +85,6 @@
 
               ;; clojure.core functions overridden by YS
               'load (sci/copy-var ys.ys/load-file nil)
-              'require (sci/copy-var ys.v0.ys/require nil)
               'use (sci/copy-var ys.ys/use nil)}
 
         ;; clojure.core functions not added by SCI
@@ -114,6 +113,21 @@
 
 (def cli-namespace
   (sci/copy-ns clojure.tools.cli (sci/create-ns 'cli)))
+
+(defn- unsupported-require-deps [& _]
+  (throw
+    (ex-info "clojurestar.deps is unavailable under the ys runtime" {})))
+
+(defmacro guarded-require-deps [& _]
+  '(clojurestar.deps/require-deps*))
+
+(def clojurestar-deps-namespace
+  (let [target (sci/create-ns 'clojurestar.deps)]
+    {'require-deps
+     (sci/copy-var guarded-require-deps target {:name 'require-deps})
+     'require-deps*
+     (sci/copy-var unsupported-require-deps target
+       {:name 'require-deps*})}))
 (def clj-namespace
   (sci/copy-ns ys.v0.clj (sci/create-ns 'clj)))
 (def csv-namespace
@@ -199,6 +213,7 @@
 
     ;; SCI-runtime-only namespaces
     {'ys.v0 v0-namespace
+     'clojurestar.deps clojurestar-deps-namespace
      'babashka.pods     babashka-pods-ns
      'babashka.pods.sci babashka-pods-sci-ns
      'java-time java-time-namespace

@@ -62,7 +62,8 @@
   (System/getenv name))
 
 (defn die [message]
-  (fmt.Fprintln os.Stderr (str "Error: " message))
+  (fmt.Fprintln os.Stderr (str @global/error-msg-prefix message))
+  (global/reset-error-msg-prefix!)
   (os.Exit 1))
 
 (defn need-value [option more inline]
@@ -363,15 +364,16 @@
      :unordered (:unordered opts)})
   (if (:clojure opts)
     code
-    (if (or (:debug opts) (seq (:debug-stage opts)))
-      (compiler/compile-with-options code (:on-document opts))
-      (compiler/compile code (:on-document opts)))))
+    (try
+      (if (or (:debug opts) (seq (:debug-stage opts)))
+        (compiler/compile-with-options code (:on-document opts))
+        (compiler/compile code (:on-document opts)))
+      (catch go/any error
+        (global/reset-error-msg-prefix! "Compile error: ")
+        (throw error)))))
 
 (def v0-header
-  (str
-    "(ns main (:require ys.v0))\n"
-    "(when-not (resolve 'yamlscript.glojure-runtime/use)\n"
-    "  (ys.v0/init))\n"))
+  "(ns main (:require ys.v0))\n(ys.v0/init)\n")
 
 (def data-json-version "2.4.0")
 
@@ -393,11 +395,12 @@
 
 (def v0-clj-plus-header
   (str
+    "(ns main (:require [clojurestar.deps :refer [require-deps]]))\n"
     "(when-not (find-ns 'ys.v0)\n"
-    "  (require 'clojurestar.deps)\n"
-    "  ((resolve 'clojurestar.deps/add-deps)\n"
-    "   '{:deps {org.yamlscript/ys.v0 {:mvn/version \""
-    yamlscript-version "\"}}}))\n\n"))
+    "  (require-deps\n"
+    "    [\"mvn:org.yamlscript/ys.v0@"
+    yamlscript-version "/ys.v0\" :as ys.v0]))\n"
+    "(ys.v0/init)\n"))
 
 (def v0-clj-header
   (str
@@ -423,7 +426,9 @@
     "               (try (require lib) (catch Throwable _))))))))\n"))
 
 (def code-headers
-  {"bb" v0-bb-header "clj" v0-clj-header "clj+" v0-clj-plus-header})
+  {"bb" (str v0-bb-header v0-header)
+   "clj" (str v0-clj-header v0-header)
+   "clj+" v0-clj-plus-header})
 
 (defn external-format [code formatter]
   (when (= runtime.GOOS "wasip1")
@@ -451,7 +456,7 @@
     (if-let [header (code-headers target)]
       (str (when (and (= target "bb") (:output opts))
              "#!/usr/bin/env bb\n")
-        header v0-header "\n" code)
+        header "\n" code)
       code)))
 
 (declare pretty-json)
@@ -498,6 +503,8 @@
 
 (defn run-code [opts info code]
   (runtime/enter-main!)
+  (when (:clojure opts)
+    (runtime/prepare-clojure!))
   (runtime/set-runtime! (:file info) (:args info) (:original-argv opts))
   (try
     (let [result (if (seq (:documents info))

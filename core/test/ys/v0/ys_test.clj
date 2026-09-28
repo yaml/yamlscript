@@ -138,10 +138,6 @@
     (#'portable/portable-use target '((ys.std :none)))
     (is (= :local (var-get (ns-resolve target 'read))))))
 
-(deftest require-is-retired
-  (is (= "The 'require' function is retired. Use 'use' instead."
-        (error-message #(portable/require 'ys.str)))))
-
 (deftest validates-portable-file-and-url-sources
   (let [target (fresh-namespace)]
     (is (= "Portable 'use :file' does not support .ys files"

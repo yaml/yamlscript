@@ -104,8 +104,8 @@ For example, `use std: :not read write` keeps all standard names except file
 input and output, while preserving user definitions with those names.
 Bare `use: std` only creates the `std` alias.
 
-The former `require` function is retired and reports an error directing callers
-to `use`.
+The former `require` function is retired.
+Calls to it fail during compilation with an error directing callers to `use`.
 
 
 ## Macro Wrapper Functions

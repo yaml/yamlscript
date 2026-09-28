@@ -172,14 +172,11 @@
       (finally
         (.delete file)))))
 
-(deftest require-is-retired
+(deftest raw-clojure-require-is-available
   (let [ctx (fresh-context)]
-    (is (= "The 'require' function is retired. Use 'use' instead."
-          (try
-            (sci/eval-string* ctx "(require 'ys.str)")
-            nil
-            (catch Throwable error
-              (str/trimr (ex-message error))))))))
+    (is (nil? (sci/eval-string* ctx "(require 'clojure.string)")))
+    (is (= "ABC"
+          (sci/eval-string* ctx "(clojure.string/upper-case \"abc\")")))))
 
 (test/load-yaml-test-files
   ["test/runtime.yaml"]

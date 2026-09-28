@@ -60,7 +60,8 @@ check() {
 }
 
 run_dialect() {
-  local name=$1 executable=$2 output status
+  local name=$1 executable=$2 input=${3:--} output status
+  shift 3
   local error=$tmp/${name,,}.err
   output=$(
     cd "$tmp" || exit 1
@@ -72,7 +73,8 @@ run_dialect() {
       JOLT_MAVEN_REPOSITORY="$m2" \
       GOBB_MAVEN_REPOSITORY="$m2" \
       JOLT_QUIET=1 \
-      "$executable" - <"$tmp/program.clj" 2>"$error"
+      "$executable" "$@" "$input" \
+        <"$tmp/program.clj" 2>"$error"
   )
   status=$?
   check "$status" 0 "$name exits successfully"
@@ -80,7 +82,9 @@ run_dialect() {
   check "$(<"$error")" '' "$name has no diagnostics"
 }
 
-echo '1..9'
-run_dialect Jolt "$jolt"
-run_dialect Glojure "$glj"
-run_dialect Gobb "$gobb"
+echo '1..15'
+run_dialect Jolt "$jolt" -
+run_dialect Glojure "$glj" -
+run_dialect Gobb "$gobb" -
+run_dialect Gobb-dev-stdin "$gobb" /dev/stdin
+run_dialect YAMLScript "$ys" - -C

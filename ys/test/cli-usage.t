@@ -100,8 +100,7 @@ test::
                                babashka.process babashka.http-client]]
                    (try (require lib) (catch Throwable _))))))))
     (ns main (:require ys.v0))
-    (when-not (resolve 'yamlscript.glojure-runtime/use)
-      (ys.v0/init))
+    (ys.v0/init)
 
     (say (add+ 1 2))
 
@@ -117,21 +116,17 @@ test::
           ((requiring-resolve 'babashka.deps/add-deps)
            '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.1"}}}))))
     (ns main (:require ys.v0))
-    (when-not (resolve 'yamlscript.glojure-runtime/use)
-      (ys.v0/init))
+    (ys.v0/init)
 
     (say 123)
 
 - cmnd: "ys -T clj+ -e 'say: 123'"
   want: |
+    (ns main (:require [clojurestar.deps :refer [require-deps]]))
     (when-not (find-ns 'ys.v0)
-      (require 'clojurestar.deps)
-      ((resolve 'clojurestar.deps/add-deps)
-       '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.1"}}}))
-
-    (ns main (:require ys.v0))
-    (when-not (resolve 'yamlscript.glojure-runtime/use)
-      (ys.v0/init))
+      (require-deps
+        ["mvn:org.yamlscript/ys.v0@0.3.1/ys.v0" :as ys.v0]))
+    (ys.v0/init)
 
     (say 123)
 
@@ -320,10 +315,15 @@ test::
     -e "say: stringy/upper-case('alias')"
   want: ALIAS
 
-- name: Require directs callers to use
+- name: Require form fails during compilation
   cmnd: "ys -e 'require: ys::str'"
   what: err
-  want: "Error: The 'require' function is retired. Use 'use' instead."
+  want: "Compile error: The 'require' function is retired. Use 'use' instead."
+
+- name: Require call fails during compilation
+  cmnd: "ys -ce '=>: require(\"ys.str\")'"
+  what: err
+  want: "Compile error: The 'require' function is retired. Use 'use' instead."
 
 - name: Deps use option is retired
   cmnd: "ys -e 'use foo::bar: :deps \"unused\"'"

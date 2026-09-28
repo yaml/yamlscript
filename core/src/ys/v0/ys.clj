@@ -20,7 +20,6 @@
    :exclude [compile
              eval
              load-file
-             require
              use]))
 
 (def hooks
@@ -255,9 +254,6 @@
         (util/die
           (str "Portable 'use :from' cannot acquire dependencies in this "
             "runtime; put namespace '" module "' on the classpath"))))))
-
-(defn require [& _]
-  (util/die "The 'require' function is retired. Use 'use' instead."))
 
 (defn- load-portable-module [target module options]
   (check-module-access! module)

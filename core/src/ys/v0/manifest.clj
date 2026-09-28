@@ -33,9 +33,8 @@
     pr prn printf println read-line slurp spit])
 
 ;; clojure.core functions overridden by the ys runtime with YS behavior.
-;; require is retained only to report its migration error.
 (def runtime-overrides
-  '[load require use])
+  '[load use])
 
 ;; Namespaces that some Clojure runtimes lack (glojure bundles neither
 ;; the clojure.* ones nor the babashka.fs backend that ys.v0.fs and

@@ -312,6 +312,8 @@
 (defn transform-list
   "Transform every child node in a list AST node."
   [node]
+  (when (= 'require (get-in node [:Lst 0 :Sym]))
+    (yamlscript.transformers/retired-require!))
   (assoc node :Lst
     (mapv
       transform-node

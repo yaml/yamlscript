@@ -310,10 +310,13 @@ defn x():
 ;; retired require
 ;;-----------------------------------------------------------------------------
 
+(defn retired-require! []
+  (util/die "The 'require' function is retired. Use 'use' instead."))
+
 (defn transform_require
-  "Compile every former require form as a call to its retirement stub."
+  "Reject every former require mapping form during compilation."
   [lhs _]
-  [(if (vector? lhs) (first lhs) lhs) []])
+  (retired-require!))
 
 (comment
   )

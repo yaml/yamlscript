@@ -12,8 +12,7 @@ To do that, the compiled code needs the YS standard library.
 It is published to Clojars as
 [`org.yamlscript/ys.v0`](https://clojars.org/org.yamlscript/ys.v0).
 
-Use the `-T` / `--to` option with a code target (`bb`, `clj`, `jolt` or
-`glj`)
+Use the `-T` / `--to` option with a code target (`bb`, `clj` or `clj+`)
 and ys will compile (no `-c` needed; a code target implies it) with this
 header added to the output:
 
@@ -22,14 +21,15 @@ header added to the output:
 (ys.v0/init)
 ```
 
-plus a target specific form that resolves the ys.v0 dependency at run
+plus a target-specific form that resolves the ys.v0 dependency at run
 time.
 
 The `ys.v0/init` call sets up the namespace to work like the ys runtime:
 
 * All of the YS standard library functions and macros are referred in
 * The YS `use` function makes bundled `ys::*` modules available on demand
-* The retired `require` function directs callers to use `use`
+* Calls to the retired `require` function fail during compilation and direct
+  callers to use `use`
 * The YS runtime variables (`ARGS`, `ENV`, `FILE`, `CWD`, etc) are bound
 
 The same compiled file still runs under ys itself (`ys -C file.clj`),
@@ -106,15 +106,15 @@ $ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.1"}}}' \
 ## Portable Clojure dialects
 
 The `clj+` target emits a dialect-neutral dependency preamble through
-the `clojurestar.deps` API.
+the `clojurestar.deps/require-deps` API.
 
 ```bash
 $ ys --to=clj+ program.ys > program.clj
 ```
 
 Compatible runtimes such as Glojure, Jolt, and Gobb provide that API.
-They resolve `org.yamlscript/ys.v0`, then run the same portable program
-body.
+It resolves and loads `org.yamlscript/ys.v0`, then runs the same portable
+program body.
 
 
 ## Limitations

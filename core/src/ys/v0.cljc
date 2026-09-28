@@ -12,8 +12,9 @@
 ;; (silently replacing any clojure.core mappings, so no replace warnings),
 ;; installs the YS runtime functions and binds the YS runtime variables.
 ;;
-;; Under the ys runtime this namespace is shadowed by a no-op SCI stub, so
-;; the same compiled code runs identically there.
+;; Under the SCI ys runtime this namespace is shadowed by a no-op stub.
+;; Under the Glojure ys runtime init detects the native runtime and is a no-op,
+;; so the same compiled code runs identically in both.
 ;;
 ;; Namespaces some runtimes lack (see manifest/optional-nses) load via
 ;; guarded requires.
@@ -63,12 +64,9 @@
         (refer ns-sym)
         (refer ns-sym :only (vec syms)))))
   ;; The YS runtime overrides clojure.core load and use with YS versions.
-  ;; require is replaced by a migration error.
   (doseq [sym manifest/runtime-overrides]
     (ns-unmap target sym))
-  (refer 'ys.v0.ys
-    :only '[load-file require use]
-    :rename '{load-file load}))
+  (refer 'ys.v0.ys :only '[load-file use] :rename '{load-file load}))
 
 (defn- refer-runtime-vars [target]
   (doseq [sym manifest/runtime-vars]
@@ -149,16 +147,17 @@
   "Set up the calling namespace to run YS compiled code."
   ([] (init nil))
   ([opts]
-   (let [target *ns*]
-     (refer-exports target)
-     (refer-runtime-vars target)
-     (bind-runtime-vars)
-     (when-let [v (:v opts)]
-       (when (not= v VERSION)
-         (binding [*out* *err*]
-           (println (str "WARNING: code compiled by ys " v
-                      " running with ys.v0 " VERSION)))))
-     nil)))
+   (when-not (find-ns 'yamlscript.glojure-runtime)
+     (let [target *ns*]
+       (refer-exports target)
+       (refer-runtime-vars target)
+       (bind-runtime-vars)
+       (when-let [v (:v opts)]
+         (when (not= v VERSION)
+           (binding [*out* *err*]
+             (println (str "WARNING: code compiled by ys " v
+                        " running with ys.v0 " VERSION)))))))
+   nil))
 
 (comment
   )
