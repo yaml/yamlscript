@@ -77,6 +77,9 @@ test::
 - cmnd: "ys -ce '=>: 1 + 2'"
   want: (add+ 1 2)
 
+- cmnd: "ys -e 'say: abs(-123)'"
+  want: '123'
+
 # -T clj emits the portable ys.v0 header with a JVM Clojure deps
 # bootstrap (and implies -c)
 - cmnd: "ys -T clj -e 'say: 1 + 2'"

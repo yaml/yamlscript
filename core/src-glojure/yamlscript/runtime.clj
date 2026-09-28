@@ -659,6 +659,9 @@
 (def runtime-vars
   '[_ ARGS ARGV CWD DIR ENV FILE INC PUN RUN VERSION])
 
+(def host-inline-core
+  '[abs infinite? NaN?])
+
 (declare install!)
 
 (defn native-init
@@ -670,6 +673,10 @@
 (defn install! [target]
   (do
     (intern 'clojure.core 're-pattern compatible-re-pattern)
+    (doseq [sym host-inline-core
+            :let [var (ns-resolve 'clojure.core sym)]
+            :when var]
+      (alter-meta! var dissoc :inline :inline-arities))
     (intern 'ys.v0 'init native-init)
     (let [var (intern 'ys.v0.std 'qw (var-get #'compatible-qw))]
       (alter-meta! var assoc :macro true))
