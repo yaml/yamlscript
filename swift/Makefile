@@ -1,9 +1,12 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+ifeq ($(OS-NAME),macos)
+SWIFT := /usr/bin/swift
+else
 SWIFT-VERSION := 6.3.3
-
 include $(MAKES)/swift.mk
+endif
 include $(MAKES)/shell.mk
 
 SWIFT-FLAGS := --cache-path $(ROOT)/.cache/swiftpm
