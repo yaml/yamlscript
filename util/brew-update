@@ -2,7 +2,7 @@
 
 use:
   ys::fs: :as fs
-  ys::http: :all
+  ys::http: :as http
 # use: fs   # change when 0.3.0 is released
 
 # ys::ipc was added in 0.3.0. Older bootstrap binaries already refer
@@ -105,17 +105,17 @@ defn release-files(version): +
   [
     "ys-${version}-linux-aarch64.tar.xz"
     "ys-${version}-linux-x64.tar.xz"
-    "ys-${version}-macos-aarch64.tar.xz"
+    "ys-${version}-macos-arm64.tar.xz"
     "libys-${version}-linux-aarch64.tar.xz"
     "libys-${version}-linux-x64.tar.xz"
-    "libys-${version}-macos-aarch64.tar.xz"
+    "libys-${version}-macos-arm64.tar.xz"
   ]
 
 
 defn ys-formula(version class shas):
   lin-arm-file =: "ys-${version}-linux-aarch64.tar.xz"
   lin-int-file =: "ys-${version}-linux-x64.tar.xz"
-  mac-file =: "ys-${version}-macos-aarch64.tar.xz"
+  mac-file =: "ys-${version}-macos-arm64.tar.xz"
   lin-arm =: shas.$lin-arm-file
   lin-int =: shas.$lin-int-file
   mac =: shas.$mac-file
@@ -143,7 +143,7 @@ defn ys-formula(version class shas):
       on_macos do
         if Hardware::CPU.arm?
           url "https://github.com/yaml/yamlscript/releases/download/" \
-            "#{version}/ys-#{version}-macos-aarch64.tar.xz"
+            "#{version}/ys-#{version}-macos-arm64.tar.xz"
           sha256 "MACOS_SHA"
         else
           odie "YAMLScript is not available for this macOS architecture"
@@ -180,7 +180,7 @@ defn ys-formula(version class shas):
 defn libys-formula(version class shas):
   lin-arm-file =: "libys-${version}-linux-aarch64.tar.xz"
   lin-int-file =: "libys-${version}-linux-x64.tar.xz"
-  mac-file =: "libys-${version}-macos-aarch64.tar.xz"
+  mac-file =: "libys-${version}-macos-arm64.tar.xz"
   lin-arm =: shas.$lin-arm-file
   lin-int =: shas.$lin-int-file
   mac =: shas.$mac-file
@@ -208,7 +208,7 @@ defn libys-formula(version class shas):
       on_macos do
         if Hardware::CPU.arm?
           url "https://github.com/yaml/yamlscript/releases/download/" \
-            "#{version}/libys-#{version}-macos-aarch64.tar.xz"
+            "#{version}/libys-#{version}-macos-arm64.tar.xz"
           sha256 "MACOS_SHA"
         else
           odie "libys is not available for this macOS architecture"
@@ -265,6 +265,6 @@ defn check-version(version):
     die: "Invalid version '$version'"
 
   try:
-    curl: "$releases-url/tag/$version"
+    http/curl: "$releases-url/tag/$version"
     catch:
       die: "No YS release for version '$version'"
