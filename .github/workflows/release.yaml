@@ -1583,11 +1583,10 @@ jobs:
           fi
         }
 
-        for job in \
-          'Build Python wheels (retry)' \
-          'Check cross-built artifact formats (retry)'; do
-          check_job "${{ inputs.release_tests_run_id }}" "$job"
-        done
+        check_job "${{ inputs.release_tests_run_id }}" \
+          'Build Python wheels (retry)'
+        check_job "${{ inputs.test_artifacts_run_id }}" \
+          'Check cross-built artifact formats'
 
     - name: Verify artifact-reuse tests
       if: ${{ !inputs.skip_release_tests }}
