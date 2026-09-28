@@ -4,7 +4,7 @@ use ys::taptest: :all
 
 AV =: "'$DIR/../../sample/advent'"
 
-w =: /\w+/
+w =: /\w/
 
 
 test::

@@ -1,6 +1,8 @@
 include ../common/base.mk
 include $(COMMON)/binding.mk
 
+SWIFT-VERSION := 6.3.3
+
 include $(MAKES)/swift.mk
 include $(MAKES)/shell.mk
 

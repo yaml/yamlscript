@@ -451,6 +451,7 @@ test::
     (identity 12345)
 
 - name: Compile Bash process substitution
+  SKIP:: RUN.os == 'windows'
   cmnd: >-
     bash -c "ys -c
     <(printf '%s\n' '!ys-0' 'say: \"hi\"')"
