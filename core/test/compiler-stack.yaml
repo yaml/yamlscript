@@ -1175,7 +1175,7 @@
   resolve: |
     {:map
      ({:expr "=>"}
-      {:expr "foo()"}
+      {:xmap [{:expr "=>"} {:expr "foo()"}]}
       {:str "a"}
       {:map [{:nil ""} {:expr "bar()"}]})}
   transform: |
@@ -1251,6 +1251,35 @@
     (use "module1")
     (use "module2")
     {"x" 1}
+
+
+- name: Top level data mode preamble forms can be interleaved
+  yamlscript: |
+    !ys-0:
+    a =: 40
+    ::use: fs json
+    ::
+      b =: a.++
+    c =: b.++
+    ::use: str
+    ::
+      d =: c.++
+    answer:: d
+    file:: fs/basename('/tmp/data.json')
+    payload:: json/load('{"ok":true}')
+    upper:: str/upper-case('ok')
+  clojure: |
+    (def a 40)
+    (use fs json)
+    (def b (inc+ a))
+    (def c (inc+ b))
+    (use str)
+    (def d (inc+ c))
+    (+++
+     {"answer" d,
+      "file" (fs/basename "/tmp/data.json"),
+      "payload" (json/load "{\"ok\":true}"),
+      "upper" (str/upper-case "ok")})
 
 
 - name: Shorthand syntax for conditionals in data mappings

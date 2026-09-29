@@ -71,6 +71,7 @@
   resolve-data-node
   resolve-data-node-top
   resolve-bare-node
+  check-code-top-preamble-forms
 
   resolve-data-mapping
   resolve-data-sequence
@@ -100,7 +101,7 @@
   (let [mode (:+ node)
         node (dissoc node :+)]
     (case mode
-      "code" (resolve-node node :code)
+      "code" (resolve-node (check-code-top-preamble-forms node) :code)
       "data" (resolve-node node :data-top)
       "bare" (resolve-node node :bare))))
 
@@ -180,6 +181,63 @@
                 val (assoc val :! "")]
             [key val])))
       [key val])))
+
+(defn compact-code-key?
+  "Return true when a plain mapping key starts with compact code syntax."
+  [key-text]
+  (and key-text
+    (> (count key-text) 2)
+    (str/starts-with? key-text "::")))
+
+(defn compact-assignment-key?
+  "Return true when a compact code key contains an assignment."
+  [key-text]
+  (and (compact-code-key? key-text)
+    (re-matches re/defk (subs key-text 2))))
+
+(defn die-compact-assignment
+  "Reject a redundant compact assignment with its canonical spelling."
+  [key-text]
+  (util/die "Compact assignment '" key-text
+    ":' is not allowed; use '" (subs key-text 2) ":' instead"))
+
+(defn die-compact-code-pair
+  "Reject compact code syntax outside a top-level data preamble."
+  [key-text]
+  (util/die "Compact code pair '" key-text
+    ":' is only allowed in a data-mode preamble"))
+
+(defn check-code-preamble-key
+  "Reject data-preamble-only forms while resolving code mode."
+  [key]
+  (when-let [key-text (:= key)]
+    (cond
+      (= key-text ":")
+      (util/die "Standalone '::' is only allowed in data mode")
+
+      (compact-assignment-key? key-text)
+      (die-compact-assignment key-text)
+
+      (compact-code-key? key-text)
+      (die-compact-code-pair key-text)))
+  key)
+
+(defn check-code-top-preamble-forms
+  "Reject data-preamble-only forms at the top level of code mode."
+  [node]
+  (doseq [[key _] (partition 2 (or (:% node) (:%% node)))]
+    (check-code-preamble-key key))
+  node)
+
+(defn check-data-compact-key
+  "Reject compact code syntax that is not consumed by the preamble."
+  [key]
+  (when-let [key-text (:= key)]
+    (when (compact-code-key? key-text)
+      (if (compact-assignment-key? key-text)
+        (die-compact-assignment key-text)
+        (die-compact-code-pair key-text))))
+  key)
 
 (defn check-code-value-mode
   "Detect the code-value mode marker encoded in a mapping key."
@@ -288,7 +346,10 @@
 (defn resolve-code-pair
   "Resolve one mapping pair while in code mode."
   [key val]
-  (let [; assert key is scalar
+  (let [key-text (:= key)
+        _ (when (compact-assignment-key? key-text)
+            (die-compact-assignment key-text))
+        ; assert key is scalar
         [key val code-value?] (check-code-value-mode key val)
         [key val] (if code-value?
                     [key val]
@@ -491,7 +552,8 @@
          {:map
           (vec (mapcat
                  (fn [[key val]]
-                   (let [[key val code-value?]
+                   (let [_ (check-data-compact-key key)
+                         [key val code-value?]
                          (check-code-value-mode key val)
                          okey key
                          conditional? (and (not code-value?)
@@ -625,19 +687,49 @@
       ,
       :else (util/die "Invalid tag for data mode node: " (tagp tag)))))
 
-;; XXX Replace this with assignment in data mode
+(defn data-preamble-pair?
+  "Return true when a mapping pair belongs to a data-mode preamble."
+  [[key _]]
+  (let [key-text (:= key)]
+    (or
+      (some #{":" "=>"} [key-text])
+      (and key-text (re-matches re/defk key-text))
+      (compact-code-key? key-text))))
+
+(defn resolve-data-preamble-pair
+  "Resolve one top-level data preamble pair as code."
+  [[key val]]
+  (let [key-text (:= key)]
+    (cond
+      (some #{":" "=>"} [key-text])
+      (let [val (resolve-code-node val)]
+        (or (:xmap val) [{:expr "=>"} val]))
+
+      (compact-code-key? key-text)
+      (resolve-code-pair (assoc key := (subs key-text 2)) val)
+
+      :else
+      (resolve-code-pair key val))))
+
 (defn resolve-data-node-top
-  "Resolve the top data-mode node with assignment compatibility."
+  "Resolve a top data-mode node, including its code preamble."
   [node]
-  (if-lets [xmap (or (:% node) (:%% node))
-            key-str (get-in xmap [0 :=])
-            _ (some #{":" "=>"} [key-str])
-            [_ val & rest] xmap
-            key {:= "=>"}]
-    {:map (vec (concat
-                 [(resolve-code-node key)]
-                 [(resolve-code-node val)]
-                 (:map (resolve-data-node {:% rest}))))}
+  (if-let [nodes (or (:% node) (:%% node))]
+    (let [node-key (if (:% node) :% :%%)
+          pairs (mapv vec (partition 2 nodes))
+          _ (doseq [[key _] pairs
+                    :let [key-text (:= key)]
+                    :when (compact-assignment-key? key-text)]
+              (die-compact-assignment key-text))
+          [preamble data] (split-with data-preamble-pair? pairs)]
+      (if (seq preamble)
+        (let [code (vec (mapcat resolve-data-preamble-pair preamble))
+              data-node (assoc node node-key (vec (mapcat identity data)))
+              data-map (:map (resolve-data-node data-node))]
+          {:map (vec (concat
+                       [{:expr "=>"} {:xmap code}]
+                       data-map))})
+        (resolve-data-node node)))
     (if-lets [list (or (:- node) (:-- node))
               key-str (get-in list [0 :% 0 :=])
               _ (= "=>" key-str)

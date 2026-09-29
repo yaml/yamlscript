@@ -178,6 +178,27 @@
     (is (= "ABC"
           (sci/eval-string* ctx "(clojure.string/upper-case \"abc\")")))))
 
+(deftest evaluates-data-mode-preamble-before-data
+  (let [ctx (fresh-context)
+        source (str "!ys-0:\n"
+                 "a =: 40\n"
+                 "::use: fs json\n"
+                 "::\n"
+                 "  b =: a.++\n"
+                 "c =: b.++\n"
+                 "::use: str\n"
+                 "::\n"
+                 "  d =: c.++\n"
+                 "answer:: d\n"
+                 "file:: fs/basename('/tmp/data.json')\n"
+                 "payload:: json/load('{\"ok\":true}')\n"
+                 "upper:: str/upper-case('ok')\n")]
+    (is (= {"answer" 43
+            "file" "data.json"
+            "payload" {"ok" true}
+            "upper" "OK"}
+          (sci/eval-string* ctx (compiler/compile source))))))
+
 (test/load-yaml-test-files
   ["test/runtime.yaml"]
   {:pick #(test/has-keys? [:ys :eval] %1)

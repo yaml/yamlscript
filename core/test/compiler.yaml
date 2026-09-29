@@ -530,6 +530,91 @@
     {"foo" (get+ d 'bar)}
 
 
+- name: Keyed data mode switch remains valid in code mode
+  yamlscript: |
+    !ys-0
+    foo:: a(1)
+  clojure: |
+    (foo "a(1)")
+
+
+- name: Standalone inline data mode switch is invalid in code mode
+  yamlscript: |
+    !ys-0
+    :: a(1)
+  error: |
+    ~~ Standalone '::' is only allowed in data mode
+
+
+- name: Standalone scalar data mode switch is invalid in code mode
+  yamlscript: |
+    !ys-0
+    ::
+      a(1)
+  error: |
+    ~~ Standalone '::' is only allowed in data mode
+
+
+- name: Standalone mapping data mode switch is invalid in code mode
+  yamlscript: |
+    !ys-0
+    ::
+      use: json
+  error: |
+    ~~ Standalone '::' is only allowed in data mode
+
+
+- name: Empty standalone data mode switch is invalid in code mode
+  yamlscript: |
+    !ys-0
+    ::
+  error: |
+    ~~ Standalone '::' is only allowed in data mode
+
+
+- name: Compact preamble pair is invalid in code mode
+  yamlscript: |
+    !ys-0
+    ::use: fs json
+  error: |
+    ~~ Compact code pair '::use:' is only allowed in a data-mode preamble
+
+
+- name: Compact assignment is invalid in code mode
+  yamlscript: |
+    !ys-0
+    ::foo =: 123
+  error: >-
+    ~~ Compact assignment '::foo =:' is not allowed; use 'foo =:' instead
+
+
+- name: Compact assignment is invalid in nested code mode
+  yamlscript: |
+    !ys-0
+    defn foo():
+      ::bar =: 123
+  error: >-
+    ~~ Compact assignment '::bar =:' is not allowed; use 'bar =:' instead
+
+
+- name: Compact assignment is invalid in a data-mode preamble
+  yamlscript: |
+    !ys-0:
+    ::foo =: 123
+    answer: 42
+  error: >-
+    ~~ Compact assignment '::foo =:' is not allowed; use 'foo =:' instead
+
+
+- name: Compact code pair after data is not in the preamble
+  yamlscript: |
+    !ys-0:
+    answer: 42
+    ::use: json
+  error: |
+    ~~ Compact code pair '::use:' is only allowed in a data-mode preamble
+
+
 - name: Switch modes with '::' for def/let '=::'
   yamlscript: |
     !ys-0

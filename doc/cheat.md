@@ -33,6 +33,12 @@ talk: 0
   * Nested mappings and sequences stay in code-value mode
   * Use `key:: value` or `- ! value` for a data subtree
   * The value after `:::` must be a mapping or sequence
+* A top-level data-mode preamble runs before the document data is constructed
+  * `a =: 40` adds an assignment
+  * `::` introduces a block of code pairs
+  * `::use: fs json` introduces one code pair
+  * These forms can be repeated in any order until the first data pair
+  * `::a =: 40` is invalid; assignments need no `::` prefix
 * Use `=>: x` to write `x` as a mapping pair in code mode
 
 The following examples are in code mode unless otherwise noted.

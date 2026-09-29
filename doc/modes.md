@@ -160,6 +160,33 @@ count:: [red, green, blue]')
 ```
 
 
+## Data Mode Preambles
+
+A data-mode document can start with a contiguous code preamble.
+The preamble runs before YS constructs the document's data value.
+
+Three forms are allowed in the preamble, in any order and any number of times:
+
+```yaml
+!ys-0:
+a =: 40
+::use: fs json
+::
+  b =: a.++
+answer:: b
+file:: fs/basename('/tmp/data.json')
+```
+
+An assignment such as `a =: 40` is already code and needs no `::` prefix.
+The standalone `::` form introduces a block of code pairs.
+The compact `::use: fs json` form introduces one code pair.
+
+The first ordinary data pair ends the preamble.
+A compact code pair after that point is an error.
+The redundant compact assignment `::a =: 40` is also an error; write
+`a =: 40` instead.
+
+
 ## Code Values in Data Collections
 
 Use `:::` when a mapping or sequence contains mostly computed values.
