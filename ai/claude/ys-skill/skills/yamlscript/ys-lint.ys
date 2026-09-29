@@ -62,7 +62,7 @@ ARROW-COMPOUND-RE =:
   /(\(|[A-Za-z0-9_?!.$)\]]:[A-Za-z_]|\.[A-Za-z_])/
 # These compound-looking forms are nevertheless single values with no
 # useful pair rewrite.
-ARROW-DATA-RE =: /^\+\s*[\[{]/
+ARROW-DATA-RE =: /^(?:\+\s*|:)[\[{]/
 ARROW-LAMBDA-RE =: /^\\\(/
 ARROW-REGEX-RE =: /^\/(?:\\.|[^\/])*\/[a-z]*$/
 ARROW-INTEROP-RE =: /^\(\.\s/
@@ -94,7 +94,7 @@ REQUIRE-RE =: /^\s*require(?:\s|:)/
 
 THEN-NIL-MSG =: 'then: nil -> use when'
 ELSE-NIL-MSG =: 'else: nil -> use when-not'
-VECTOR-LIT-MSG =: 'vector(...) -> +[...]'
+VECTOR-LIT-MSG =: 'vector(...) -> [...] (use :[...] at value start)'
 APPLY-CALL-MSG =: 'apply(...) -> call target directly with splatted args'
 APPLY-PAIR-MSG =: 'apply ...: -> direct call with collection* when practical'
 
@@ -412,7 +412,9 @@ defn- fmt-zero-arg(m):
   format '%s.%s() -> %s:%s': m.1 m.2 m.1 m.2
 
 defn- fmt-constructor-call(m):
-  (m.1 == 'V').if('V+(...) -> +[...]' 'M+(...) -> +{...}')
+  (m.1 == 'V')
+    .if('V+(...) -> [...] (use :[...] at value start)'
+        'M+(...) -> {...} (use :{...} at value start)')
 
 defn- fmt-slurp-spit(m):
   repl =: (m.1 == 'slurp').if('read' 'write')

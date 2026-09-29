@@ -55,8 +55,8 @@ support, and docs:
    see because they vanish at the AST stage: `.nth(N)` vs `.N`,
    `.nth(var)` vs `.$var`, `x + 1` vs `.++`, `x - 1` vs `.--`,
    `.first()` / `.last()` vs `.0` / `.$` (or `:first` / `:last`),
-   `vector(...)` and inline `V+(...)` vs `+[...]`, inline `M+(...)`
-   vs `+{...}`, avoidable `apply` calls vs direct splats (`f(xs*)` /
+   `vector(...)` and inline `V+(...)` vs `:[...]`, inline `M+(...)`
+   vs `:{...}`, avoidable `apply` calls vs direct splats (`f(xs*)` /
    `f: xs*`), `str(bareVar)` vs `bareVar:S`,
    `quot(a b)` and `a.quot(b)` vs `a // b`, `rem(a b)` vs `a % b`,
    parenthesized simple integer-looking divisions such as `(n / d)` vs
@@ -215,7 +215,7 @@ genuinely cannot be written as a pair.
 - bare numeric/literal atoms: `=>: 42`, `=>: nil`, `=>: true`,
   `=>: :foo`
 - bare interpolated strings: `=>: "$s$check"`
-- bare data-collection literals: `=>: +[1 2 3]`, `=>: +{a: 1}`
+- bare data-collection literals: `=>: :[1 2 3]`, `=>: :{a: 1}`
 
 **Never use `=>:` as a direct branch key of an `if` construct.**
 Even when the branch result is an atom that would normally allow
@@ -345,39 +345,39 @@ to the same thing for vectors, so when in doubt use the dot form.
 same thing. Always prefer vector syntax — it reads as a literal, not
 a function call.
 
-Use `+[...]` only when the vector literal is the entire YAML value
-plain scalar and therefore needs the leading `+` escape:
+Use `:[...]` only when the vector literal is the entire YAML value
+plain scalar and therefore needs the leading `:` escape:
 
-- `vector(a b c d)` → `+[a b c d]`
-- `vector(nt ny)` → `+[nt ny]`
-- `vector()` → `+[]`
+- `vector(a b c d)` → `:[a b c d]`
+- `vector(nt ny)` → `:[nt ny]`
+- `vector()` → `:[]`
 
 Inside YeS expressions, function arguments, lambdas, method calls, or
 any other expression context where `[` is not the first character of
-the YAML value, use bare `[...]` with no `+`:
+the YAML value, use bare `[...]` with no escape:
 
 - `digits.map(\(vector(_ s)))` → `digits.map(\([_ s]))`
 - `rest.conj(vector(v ns))` → `rest.conj([v ns])`
 
-Never write `\(+[...])`, `foo(+[...])`, or `obj.method(+[...])`.
-There `+` is not an escape; it is parsed as addition/concatenation.
+Never write `\(:[...])`, `foo(:[...])`, or `obj.method(:[...])`.
+There `:` is not an escape; it is parsed as syntax in the expression.
 
 Use `vec(coll)` only when you're *converting* an existing collection,
 not when listing elements.
 
-### Prefer `+[]` / `+{}` for collection literals
+### Prefer `:[]` / `:{}` for collection literals
 
-Use `+[...]` and `+{...}` for collection literals when the literal
+Use `:[...]` and `:{...}` for collection literals when the literal
 starts the YAML value. They read as literals and should be the default
 for short vectors and maps in value position, including maps with
 computed values:
 
 ```
-pair =: +[name score]
-node =: +{:char ch :freq freq}
+pair =: :[name score]
+node =: :{:char ch :freq freq}
 ```
 
-If the literal is inside a YeS expression, drop the `+` because the
+If the literal is inside a YeS expression, drop the `:` because the
 literal no longer starts the YAML value:
 
 ```
@@ -398,7 +398,7 @@ V+:
   item-c
 ```
 
-Avoid inline `V+(...)` / `M+(...)` when a `+[...]` / `+{...}` literal
+Avoid inline `V+(...)` / `M+(...)` when a `:[...]` / `:{...}` literal
 is equally clear.
 
 ### Avoid defensive `:V`
@@ -761,15 +761,34 @@ Two args fit fine on one line.
     variable lookup (quoted `'hello'` is already literal either way)
   - `say:: |` — data mode: literal block scalar (no interpolation)
   - `json/dump::` with indented YAML — build data structures
-    natively instead of `json/dump: +{...}` with escaped maps
+    natively instead of `json/dump: :{...}` with escaped maps
   - `http/post url::` — pass YAML maps as options
   - Inside a `::` data block, `key:: expr` toggles back to code:
     `model:: model` = YAML key `model` with the value of
     *variable* `model`
   - `content:: |` with `$var` — block scalar with interpolation
-  - `::` only works on mapping pair values (key-value syntax).
+  - Outside a data-mode preamble, `::` only works on mapping pair
+    values (key-value syntax).
     For sequence entries, use the explicit `!` tag:
     `- ! expr` to evaluate `expr` as code within data mode
+- A `!ys-0:` data-mode document can start with a contiguous code
+  preamble that runs before the document data is constructed:
+  ```yaml
+  !ys-0:
+  a =: 40
+  ::use: fs json
+  ::
+    b =: a.++
+  answer:: b
+  ```
+  The three forms are a normal assignment, a compact code pair such as
+  `::use:`, and a standalone `::` block of code pairs.
+  They may occur repeatedly and in any order before the first ordinary
+  data pair, which ends the preamble.
+  A compact code pair after data is invalid.
+  Never write a compact assignment such as `::a =: 40`; assignments
+  are already code and need no `::` prefix.
+  Standalone `::` and compact `::use:` forms are invalid in code mode.
 - `:::` enters code-value mode for a mapping or sequence value.
   Collection structure and mapping keys are data, while scalar values
   and sequence elements are code:
@@ -1286,53 +1305,55 @@ pairs =: words:frequencies.sort-by(val):reverse
 
 ### Values & Data
 - For purely literal collections (no code inside), prefer the
-  data-mode toggle `=::` over `+`-escaped code-mode literals.
+  data-mode toggle `=::` over escaped code-mode literals.
   YAML is good at data; let it do that work:
-  - `a =:: [1, 2, 3]` — flow seq, data mode (preferred for literals)
-  - `a =: +[1 2 3]` — code-mode vector literal (use when the
-    collection mixes in computed values, e.g. `+[0] + row`)
-- **`+` escape** — needed only when the first non-space character of a
-  YAML value would otherwise be a YAML syntax character (`[`, `{`,
-  `"`, `'`, `|`, `>`, `!`, `&`, `*`). It forces the entire value to
-  parse as a single plain scalar; YS then strips the `+` and reads the
-  rest as code. The `+` escape must be at the front of the value and
-  must be followed, possibly after whitespace, by one of those YAML
-  syntax characters. If the next meaningful character is a letter,
-  digit, `_`, `(`, or other expression character, the `+` is not an
-  escape; it is just the plus operator.
+  - `a =:: [1, 2, 3]`: flow seq, data mode (preferred for literals)
+  - `a =: :[1 2 3]`: code-mode vector literal (use when the
+    collection mixes in computed values, e.g. `:[0] + row`)
+- **Plain-scalar escapes** are needed only when the first character of a
+  YAML value would otherwise be YAML syntax. For new code, prefer `:`
+  immediately before the syntax character. It forces the entire value
+  to parse as one plain scalar; YS strips the `:` and reads the rest as
+  code. The `:` form supports single quote, double quote, `{`, `[`,
+  `|`, `>`, `*`, `&`, backtick, `!`, `@`, `#`, `%`, and `?`.
 
-  Two distinct reasons `+` may be needed:
-  1. **YAML-invalid without it.** `key: 'a' 'b'` — YAML sees `'a'` end
-     and `'b'` dangle. `key: +'a' 'b'` makes the whole `+'a' 'b'` a
+  The `:` escape cannot have whitespace after it. Use `+` when spacing
+  or a multiline layout is useful. The `+` escape may have whitespace
+  before the escaped syntax character. Preserve existing `+` escapes
+  unless the task specifically includes a style migration.
+
+  Two distinct reasons an escape may be needed:
+  1. **YAML-invalid without it.** `key: 'a' 'b'`: YAML sees `'a'` end
+     and `'b'` dangle. `key: :'a' 'b'` makes the whole `:'a' 'b'` a
      plain scalar.
-  2. **YAML-valid but YS-rejected.** `key: [b c]` — valid YAML (flow
+  2. **YAML-valid but YS-rejected.** `key: [b c]` is valid YAML (flow
      sequence value), but YAMLScript **forbids flow collections and
      block sequences at code-mode value positions by design**. Code
      mode only needs scalars and block mappings; flow forms are
-     reserved for use as vector/map literals *via* `+`-escape. So
-     `key: +[b c]` is the canonical form.
+     reserved for use as vector/map literals via an escape. So
+     `key: :[b c]` is the canonical form.
 
-  **`+` is only needed at the START of a value.** Once the value is a
-  plain scalar expression, flow forms inside it are fine as arguments:
+  **An escape is only needed at the START of a value.** Once the value
+  is a plain scalar expression, flow forms inside it are fine as
+  arguments:
   `foo([b c])`, `map(double [1 2 3])`, `assoc(m :k [1 2])` all parse
-  without `+`. The brackets are mid-expression, not at the value start.
-  Do not carry the `+` from `+[...]` into YeS expression position.
+  without an escape. The brackets are mid-expression, not at the value
+  start. Do not carry the `:` from `:[...]` into YeS expression
+  position.
 
-  `+` works ONLY at the very start of a value plain scalar — anywhere
-  else in an expression, `+` is addition/concatenation:
-  - `+[1 2 3]` — escape: vector literal
-  - `+"hello" + "world"` — escape on leading `"`, then `+` is concat
-  - `+[0] + row` — escape on leading `[`, then `+` is concat
-  - `f([1 2 3])` — no escape needed inside the call
-  - `f(+[1 2 3])` — WRONG: `+` is addition, not an escape
-  - `sieve(xs) +[]` — NOT an escape: means `sieve(xs) + []`
-    (vector addition, a no-op)
-  - Whitespace after `+` is fine — useful for multi-line expressions:
+  `:` works as an escape only at the very start of a value plain scalar:
+  - `:[1 2 3]`: escape for a vector literal
+  - `:"hello" + "world"`: escape on leading `"`, then `+` is concat
+  - `:[0] + row`: escape on leading `[`, then `+` is concat
+  - `f([1 2 3])`: no escape needed inside the call
+  - `f(:[1 2 3])`: WRONG because `:` is not an escape mid-expression
+  - `: [1 2 3]`: WRONG because whitespace disables the `:` escape
+  - Use `+` when whitespace is useful for a multiline expression:
     ```
     foo =: +
       [a] + [b]
     ```
-- Keyword keys need `:` prefix: `+{:name "Alice", :age 30}`
+- Keyword keys need `:` prefix: `:{:name "Alice", :age 30}`
 - Flow maps need commas: `{a: 1, b: 2}`
 - **Set literals**: write `\{a b c}`, not Clojure's `#{a b c}` (the
   `#` starts a YAML comment). Use `\{}` for an empty set. `hash-set(...)`
@@ -1358,13 +1379,13 @@ pairs =: words:frequencies.sort-by(val):reverse
   `L+`, `M+`, `O+`, `V+` are variadic variants that build the
   collection from multiple args. Prefer single-letter cast forms over
   long Clojure names: `I(sqrt(n))` is idiomatic. For collection
-  literals, prefer `+[]` / `+{}` over inline `V+(...)` / `M+(...)`
+  literals, prefer `:[]` / `:{}` over inline `V+(...)` / `M+(...)`
   unless the constructor is clearer as the pair key (`V+:` / `M+:`).
 - `=:` for assignment (replaces `def`/`let`)
 - `x y =: 6 7` for multiple assignment
 - `=>:` only when no pair form works: bare identifiers, atoms,
-  interpolated strings, data-collection literals (`+[1 2 3]`,
-  `+{a: 1}`). For compound expressions, restructure into a pair —
+  interpolated strings, data-collection literals (`:[1 2 3]`,
+  `:{a: 1}`). For compound expressions, restructure into a pair:
   fn-call `f: args`, chain `x: .m(a)`, or op `a +: b`. See Common
   Mistakes. Exception: never use `=>:` as a direct `if` branch key;
   write `then:` or `else:` instead.
@@ -1393,24 +1414,42 @@ pairs =: words:frequencies.sort-by(val):reverse
   input.
 
 ### I/O, System & Namespaces
-- Bundled namespaces such as `ys::fs`, `ys::str`, `ys::http`, and
-  `ys::yaml` are unavailable until loaded with `use`.
+- Script files and compiled programs must explicitly load bundled
+  namespaces such as `ys::fs`, `ys::str`, `ys::http`, and `ys::yaml`
+  with `use`.
   Never use `require`; it is retired and only reports a migration error.
+- Expressions evaluated with `ys -e` or positional expression shorthand
+  automatically receive the available standard module aliases, including
+  `fs`, `http`, `json`, and `yaml`.
+  This runtime setup does not change the source or compiled output.
+  Raw Clojure evaluation with `-C` does not receive these aliases.
+  Do not let an expression-only test hide a missing `use` in a script.
 - A host can set `YS_MODULES` to a comma-separated or whitespace-separated
   allowlist of bundled modules.
   Code must handle a disabled module as unavailable.
   WASI builds always disable `ys::fs`, `ys::http`, `ys::ipc`, and
   `ys::pods`.
+- `use: v0` or `use: ys::v0` installs the available, permitted standard
+  module aliases without referring their functions into the namespace.
+  The umbrella accepts no modifiers, skips unavailable or disabled
+  modules, and may be repeated safely.
+  Prefer explicit imports for normal scripts so their dependencies remain
+  clear; use the umbrella only when a full standard environment is wanted.
 - Prefer one grouped mapping when loading multiple modules:
   ```yaml
   use:
     fs:
     str:
   ```
-- A bare short name expands under `ys::` and receives the same alias.
+- A bare short name expands under `ys::` only when it identifies a
+  bundled module, and receives the same alias.
   `use: http fs ipc ys` loads four aliases.
-  A short name with options does not imply an alias, so
+  A bundled short name with options does not imply an alias, so
   `use http: :all` imports all of `ys::http` without an `http` alias.
+- A short name with `:from` becomes an implicit alias for the namespace
+  loaded by the Maven, Gist, or GitHub coordinate.
+  An explicit `:as` overrides that alias.
+  A qualified name with `:from` must match the namespace it loads.
 - Plain `use ys::str:` loads the module for qualified access as
   `ys::str/upper-case` without referring its names.
   Use `:as` for an alias, `:get` for selected names, `:all` to refer all
@@ -1512,18 +1551,18 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Do NOT use `%`, `%1`, `%2`, etc. as anonymous-function arguments.
   Use `_`, `_1`, `_2`, etc. (`%` remains the remainder operator).
 - Do NOT start a value with `[`, `{`, `"`, `'`, `|`, `>`, `!`, `&`, `*`
-  without a `+` prefix. Either YAML rejects it, or YAML accepts it but
-  YS rejects flow collections / block sequences at code-mode value
-  positions (by design — see Values & Data). Use `+[...]` / `+{...}`
+  without an escape. Either YAML rejects it, or YAML accepts it but YS
+  rejects flow collections / block sequences at code-mode value
+  positions (by design; see Values & Data). Prefer `:[...]` / `:{...}`
   for code-mode literals. Note: this only applies at the START of a
-  value — `foo([b c])` is fine because the `[` is mid-expression.
-- Do NOT use inline `V+(...)` / `M+(...)` when a `+[...]` / `+{...}`
+  value; `foo([b c])` is fine because the `[` is mid-expression.
+- Do NOT use inline `V+(...)` / `M+(...)` when a `:[...]` / `:{...}`
   literal is equally clear. Reserve `V+:` / `M+:` for pair-key and
   block-form construction.
 - Do NOT add defensive `:V`. First remove it and run the program;
   keep it only when vector behavior is needed or semantics change.
-- Do NOT use `+` mid-expression to "escape" — `+` is only an escape
-  at the start of a value plain scalar; elsewhere it means addition.
+- Do NOT use `:` or `+` mid-expression to escape. Escapes only work at
+  the start of a value plain scalar. Elsewhere, `+` means addition.
   `sieve(xs) +[]` is vector addition (a no-op), not an escaped `[]`
 - Do NOT use `!yamlscript/v0` — use `!ys-0`
 - Do NOT use named comparison operators (`ge`, `lt`, etc.) for simple
@@ -1535,7 +1574,7 @@ pairs =: words:frequencies.sort-by(val):reverse
 - Do NOT guess without testing — run `$YS -pe` or `$YS -c -` first
 - Do NOT define helpers before `main` — `main` must always be first;
   define helpers below in call order (top-down style)
-- Do NOT use `+{...}` to build maps passed to functions — use
+- Do NOT use `:{...}` to build maps passed to functions; use
   `fn::` data mode when the map is static or mostly static
 - Do NOT use `str()` for multi-line text — use `:: |` block scalar
   with `$var` interpolation
