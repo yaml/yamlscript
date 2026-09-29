@@ -389,7 +389,8 @@
   [_]
   (util/die "Sequences (block and flow) not allowed in code mode"))
 
-(def esc #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
+(def plus-esc #"^\+\ *[\`\!\@\#\%\&\*\-\{\[\|\:\'\"\,\?\>]")
+(def colon-esc #"^:[\`\!\@\#\%\&\*\{\[\|\'\"\?\>]")
 (defn resolve-code-scalar
   "Resolve a scalar as a code-mode expression or string."
   [node type style]
@@ -398,7 +399,8 @@
     (let [val (style node)]
       (case style
         := (let [ ;; Remove leading escape character from value
-                 node (if (re-find esc val)
+                 node (if (or (re-find plus-esc val)
+                              (re-find colon-esc val))
                         (assoc node := (subs val 1))
                         node)]
              (set/rename-keys node {style :expr}))

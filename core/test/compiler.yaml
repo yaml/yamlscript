@@ -1085,6 +1085,22 @@
     (foo || bar)
 
 
+- name: Colon escaping of YAML syntax
+  yamlscript: |
+    !ys-0
+    =>: :'foo' * 3
+    =>: :"foo" * 3
+    =>: :[foo] + [bar]
+    =>: :{foo 1} + {bar 2}
+    foo: :|| bar
+  clojure: |
+    (mul+ "foo" 3)
+    (mul+ "foo" 3)
+    (add+ [foo] [bar])
+    (add+ {foo 1} {bar 2})
+    (foo || bar)
+
+
 - name: Star in the middle
   yamlscript: |
     !ys-0
