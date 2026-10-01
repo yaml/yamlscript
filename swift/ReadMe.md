@@ -152,7 +152,7 @@ In your `Package.swift`:
 dependencies: [
     .package(
         url: "https://github.com/yaml/yamlscript-swift",
-        from: "0.3.3"),
+        from: "0.3.4"),
 ],
 targets: [
     .executableTarget(

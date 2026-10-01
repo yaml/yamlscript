@@ -6,7 +6,7 @@ include $(MAKES)/shell.mk
 
 export JAVA_TOOL_OPTIONS := -Djna.tmpdir=$(ROOT)/.cache/jna
 
-YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.3.3.jar
+YAMLSCRIPT-JAVA-JAR := target/yamlscript-0.3.4.jar
 MAVEN-CENTRAL-ARTIFACT := yamlscript
 MAVEN-CENTRAL-JAR := $(YAMLSCRIPT-JAVA-JAR)
 MAVEN-CENTRAL-SOURCE-FILES := \

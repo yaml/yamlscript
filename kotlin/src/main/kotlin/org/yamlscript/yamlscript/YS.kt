@@ -17,7 +17,7 @@ import org.json.JSONObject
 
 object YS {
     // This value is automatically updated by 'make bump'.
-    const val YAMLSCRIPT_VERSION = "0.3.3"
+    const val YAMLSCRIPT_VERSION = "0.3.4"
 
     /** Compile and eval a YAMLScript string and return the result. */
     fun load(input: String): Any? {

@@ -1,6 +1,6 @@
 {application, yamlscript, [
   {description, "YAMLScript language binding for Erlang"},
-  {vsn, "0.3.3"},
+  {vsn, "0.3.4"},
   {pkg_name, yamlscript_erlang},
   {licenses, ["MIT"]},
   {links, [

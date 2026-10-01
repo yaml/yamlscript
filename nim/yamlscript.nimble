@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.3.3"
+version       = "0.3.4"
 author        = "Ingy dot Net"
 description   = "Load YAML files with optional YS functional programming"
 license       = "MIT"

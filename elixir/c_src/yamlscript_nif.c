@@ -22,7 +22,7 @@
 
 // This value is automatically updated by 'make bump'.
 // We currently only support binding to an exact version of libys:
-#define YAMLSCRIPT_VERSION "0.3.3"
+#define YAMLSCRIPT_VERSION "0.3.4"
 
 #ifdef __APPLE__
 #define LIBYS_NAME "libys.dylib." YAMLSCRIPT_VERSION
