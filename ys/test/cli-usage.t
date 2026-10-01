@@ -34,7 +34,8 @@ HELP =: |
 #   -T, --to FORMAT          Output format for --load:
 #                              json, yaml, csv, tsv, edn
 #                            or target for --compile:
-#                              bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm
+#                              bb, clj, clj+, bin, go, dir, lib, so,
+#                              dylib, dll, h, js, html, wasm, serve
 #   -J, --json               Output (pretty) JSON for --load
 #   -Y, --yaml               Output YAML for --load
 #   -U, --unordered          Mappings don't preserve key order (faster)
@@ -147,15 +148,15 @@ test::
 
 - cmnd: "ys -T frob -e 'say: 123'"
   what: err
-  have: 'bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)'
+  have: 'wasm, serve (for --compile)'
 
 - cmnd: "ys -T jolt -e 'say: 123'"
   what: err
-  have: 'bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)'
+  have: 'wasm, serve (for --compile)'
 
 - cmnd: "ys -T glj -e 'say: 123'"
   what: err
-  have: 'bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)'
+  have: 'wasm, serve (for --compile)'
 
 # -T bb with -o makes an executable bb script
 - name: ys -T bb -o file

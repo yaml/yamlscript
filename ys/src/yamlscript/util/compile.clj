@@ -6,12 +6,13 @@
             [yamlscript.util.install :as install]))
 
 (def targets #{"bb" "clj" "clj+" "bin" "go" "dir" "lib" "so" "dylib" "dll" "h"
-               "js" "html" "wasm"})
+               "js" "html" "wasm" "serve"})
 (def gloat-targets #{"bin" "go" "dir" "lib" "h" "js" "html" "wasm"})
 (def extensions {"bb" "bb" "clj" "clj" "go" "go" "exe" "bin"
                  "so" "lib" "dylib" "lib" "dll" "lib" "h" "h"
                  "js" "js" "html" "html" "wasm" "wasm"})
-(def target-list "bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm")
+(def target-list
+  "bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm, serve")
 
 (def library-aliases #{"so" "dylib" "dll"})
 
@@ -62,27 +63,39 @@
 (defn extension-modifier? [value]
   (str/starts-with? value "-X"))
 
-(defn serving-extension? [extension]
-  (contains? #{"-Xserve" "-Xopen"} extension))
-
 (defn browser-extension-value? [extension]
-  (boolean (re-matches #"-X(?:html|serve|open)=.*" extension)))
+  (boolean (re-matches #"-Xhtml=.*" extension)))
 
 (defn parse-modifiers [parts]
   (reduce
     (fn [result part]
       (cond
         (extension-modifier? part)
-        (if (= part "-X")
+        (cond
+          (= part "-X")
           (fail "A Gloat extension name must follow '-X'.")
+
+          (re-matches #"-Xserve(?:=.*)?" part)
+          (fail (str part " is not supported; use the 'serve' modifier."))
+
+          (re-matches #"-Xopen(?:=.*)?" part)
+          (fail (str part " is not supported."))
+
+          :else
           (update result :extensions conj part))
+
+        (= part "serve")
+        (update result :serve inc)
+
+        (= part "open")
+        (fail "The 'open' compilation modifier is not supported.")
 
         (platform? part)
         (update result :platforms conj part)
 
         :else
         (update result :companions conj part)))
-    {:extensions [] :platforms [] :companions []}
+    {:extensions [] :platforms [] :companions [] :serve 0}
     parts))
 
 (defn resolve-options
@@ -100,10 +113,15 @@
           companions (:companions out-modifiers)
           target-companions (:companions to-modifiers)
           target-companion (first target-companions)
+          serve-count (+ (:serve to-modifiers)
+                        (if (= "serve" (first to-parts)) 1 0))
+          serving? (= serve-count 1)
+          raw-target (or (first to-parts) (infer-target output))
+          target (if serving?
+                   (if (= "html" (some-> output extension)) "html" "js")
+                   raw-target)
           extensions (vec (concat (:extensions to-modifiers)
                             (:extensions out-modifiers)))
-          serving? (some serving-extension? extensions)
-          target (or (first to-parts) (infer-target output))
           platform (or to-platform out-platform)
           default-ext (default-extension target platform)
           source-stem (when (and source
@@ -123,6 +141,19 @@
                 (> (count companions) 1)
                 (> (count target-companions) 1))
         (fail "Invalid compilation output specification."))
+      (when (pos? (:serve out-modifiers))
+        (fail "The 'serve' modifier must be specified with --to."))
+      (when (> serve-count 1)
+        (fail "The 'serve' compilation modifier may only be specified once."))
+      (when (and serving?
+                 (not (or (and (= raw-target "serve")
+                               (empty? target-companions))
+                       (and (= raw-target "html")
+                            (empty? target-companions))
+                       (and (= raw-target "js")
+                            (or (empty? target-companions)
+                                (= ["html"] target-companions))))))
+        (fail "The 'serve' modifier requires js, html, or js,html."))
       (when (and target (not (targets target)))
         (fail (str "Compilation target must be one of: " target-list)))
       (when (and target-companion
@@ -134,8 +165,6 @@
         (fail "Conflicting compilation platforms."))
       (when (and (seq extensions) (not (gloat-targets target)))
         (fail "Gloat extensions require a Gloat compilation target."))
-      (when (and serving? (not (contains? #{"js" "html"} target)))
-        (fail "-Xserve and -Xopen are only valid with browser JS or HTML."))
       (when-let [extension (some #(when (browser-extension-value? %) %)
                              extensions)]
         (fail (str "Arguments for " (first (str/split extension #"="))
@@ -172,10 +201,20 @@
                         companion [output companion]
                         output [output]
                         :else [])}
+            serving? (assoc :serve true)
             (seq extensions) (assoc :extensions extensions))))))))
 
 (defn normalized-path [ctx path]
   ((:absolute ctx) (str/replace path #"/+$" "")))
+
+(defn prepare-directory! [ctx dir]
+  (when-not (install/test-path ctx "-d" dir)
+    (let [parent (install/parent dir)]
+      (when-not (= parent dir)
+        (prepare-directory! ctx parent)))
+    (when (or ((:exists? ctx) dir) (install/test-path ctx "-L" dir))
+      (install/run! ctx "rm" "-f" dir))
+    (install/run! ctx "mkdir" "-p" dir)))
 
 (defn check-outputs! [ctx opts]
   (let [replace? (replace-outputs? opts)
@@ -274,11 +313,11 @@
     (print text)))
 
 (defn compile-artifacts! [ctx opts portable source]
-  (let [{:keys [target platform outputs extensions]} (:build opts)
+  (let [{:keys [target platform outputs extensions serve]} (:build opts)
         replace? (replace-outputs? opts)
         _ (check-outputs! ctx opts)
         gloat (find-gloat ctx)
-        serving? (some serving-extension? extensions)
+        serving? (boolean serve)
         stage (install/temp-dir ctx (or (install/setting ctx "TMPDIR") "/tmp"))]
     (try
       (let [adapter (str stage "/compiler")
@@ -311,11 +350,15 @@
                          "--out" artifact]
                         (when platform ["--platform" platform])
                         (when html? ["--ext=html"])
+                        (when serving? ["-Xserve"])
                         extensions
                         [input]))]
         ((:write ctx) adapter compiler-adapter)
         ((:write ctx) compiled portable)
         (install/run! ctx "chmod" "755" adapter)
+        (when serving?
+          (prepare-directory! ctx
+            (install/parent (normalized-path ctx (first outputs)))))
         (run-gloat! ctx argv
           (when-let [ready (:server-ready ctx)]
             (fn [line]
@@ -355,7 +398,7 @@
 
 (defn compile! [ctx opts portable source]
   (let [target (get-in opts [:build :target])
-        serving? (some serving-extension? (get-in opts [:build :extensions]))
+        serving? (get-in opts [:build :serve])
         output (some-> (:output opts) (str/replace #"^\./" ""))
         description (str (target-descriptions target) ": '" output "'")
         finish (when (and output (:start-progress ctx))

@@ -102,15 +102,17 @@
     "Output all results from a multi-document stream"]
 
    ["-T" "--to FORMAT"
-    "Output format for --load:
-                             json, yaml, csv, tsv, edn
-                           or target for --compile:
-                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm"
+    (str "Output format for --load:\n"
+      "                             json, yaml, csv, tsv, edn\n"
+      "                           or target for --compile:\n"
+      "                             bb, clj, clj+, bin, go, dir, lib, so,\n"
+      "                             dylib, dll, h, js, html, wasm, serve")
     :validate
     [#(or (contains? to-fmts %1) (build/code-target? %1))
      (str "must be one of:\n"
        "  json, yaml, csv, tsv, edn (for --load)\n"
-       "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)")]]
+       "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html,"
+       " wasm, serve (for --compile)")]]
    ["-J" "--json"
     "Output (pretty) JSON for --load"]
    ["-Y" "--yaml"

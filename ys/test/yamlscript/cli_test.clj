@@ -78,8 +78,8 @@
   (has (ys "--to=foo")
     (str "must be one of:\n"
       "  json, yaml, csv, tsv, edn (for --load)\n"
-      "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm"
-      " (for --compile)")
+      "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html,"
+      " wasm, serve (for --compile)")
     "Validate --to=...")
 
   (has (ys "-J" "-Y" "...")

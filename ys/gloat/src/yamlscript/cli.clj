@@ -35,7 +35,8 @@
     "  -s, --stream             Output all multi-document results\n\n"
     "  -T, --to FORMAT          Output format or compile target\n"
     "                             json, yaml, csv, tsv, edn\n"
-    "                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm\n"
+    "                             bb, clj, clj+, bin, go, dir, lib, so,\n"
+    "                             dylib, dll, h, js, html, wasm, serve\n"
     "  -J, --json               Output pretty JSON for --load\n"
     "  -Y, --yaml               Output YAML for --load\n"
     "  -U, --unordered          Do not preserve mapping key order\n\n"
@@ -211,7 +212,8 @@
            (not ((into data-formats code-formats) (:to opts))))
       (str "--to must be one of:\n"
         "  json, yaml, csv, tsv, edn (for --load)\n"
-        "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm (for --compile)"))
+        "  bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html,"
+        " wasm, serve (for --compile)"))
     (when (and (:mode opts) (not (seq (:eval opts))))
       "Option --mode requires --eval.")
     (when (and (:mode opts)

@@ -36,7 +36,8 @@ Options:
   -T, --to FORMAT          Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm
+                             bb, clj, clj+, bin, go, dir, lib, so, dylib,
+                             dll, h, js, html, wasm, serve
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -U, --unordered          Mappings don't preserve key order (faster)
@@ -373,6 +374,7 @@ With `--output`, the filename selects the compilation target:
 
 An explicit `--to` selects the target regardless of the filename and implies
 `--compile`.
+`-Tserve` selects a browser bundle and local server.
 Unknown extensions require `--to`.
 Binary, library, header, directory, and Wasm targets require an output path.
 For artifact targets, a `.ys` input supplies a default output in the current
@@ -395,6 +397,7 @@ Text targets `go`, `clj`, `clj+`, and `bb` continue to use standard output when
 no output path is supplied.
 Existing file artifacts are replaced when compilation succeeds.
 Existing directory targets and directories at file output paths cause an error.
+Serving may replace a non-directory file that blocks its bundle directory.
 Source targets written with `--output` continue to reject existing paths.
 Normal data output without `--compile` retains its existing behavior.
 Artifact compilation shows a progress line and elapsed time on standard error.
@@ -414,7 +417,7 @@ ys foo.ys -c -o foo.so,.h,darwin/amd64
 ys foo.ys -c -o foo.js,.html
 ys foo.ys -c -Tjs,html
 ys foo.ys -c -o assets/foo.js,pages/foo.html
-ys foo.ys -c -Thtml,-Xserve
+ys foo.ys -Tserve
 ys foo.ys -c -Tbin,-Xprune
 ys foo.ys -c -o foo,-Xprune
 ```
@@ -423,20 +426,27 @@ Compilation specifications have the form `PRIMARY[,MODIFIER...]`.
 Modifiers can select a companion output, an `OS/ARCH` platform, or a Gloat
 processing extension written as `-Xname` or `-Xname=value`.
 Modifiers can follow either `--to` or `--output`.
+The `serve` modifier is only valid with `--to`.
 The old semicolon form is not supported.
 Multiple Gloat extensions must each include `-X`, for example
 `-Twasm,-Xprune,-Xgzip`.
 They are passed unchanged to Gloat, which validates their names, values, and
 target compatibility.
-`-Xserve` and `-Xopen` imply an HTML companion.
-Without an explicit output, they write persistent `foo/index.html` and
-`foo/index.js` files and serve `http://localhost:8000/foo/index.html`.
-An explicit output retains its exact name and writes its companion beside it.
+`-Tserve`, `-Thtml,serve`, `-Tjs,serve`, and `-Tjs,html,serve` are equivalent.
+They write persistent `foo/index.js` and `foo/index.html` files and serve
+`http://localhost:8000/foo/index.html`.
+If `foo` is a file or non-directory symlink, YAMLScript replaces it with the
+bundle directory.
+An existing directory is retained.
+With an explicit output, `.html` selects the HTML primary; any other name
+selects the browser Wasm primary.
+The same-stem companion is written beside it.
 Serving rejects explicitly selected JS and HTML files in different directories.
 Program arguments belong in the page URL query, separated by commas.
 Each argument is percent-decoded, so `?one,two` passes two arguments and
 `?one%2Ctwo` passes one argument containing a comma.
-The `-Xhtml`, `-Xserve`, and `-Xopen` extensions do not accept values.
+YAMLScript does not support `-Xserve`, `-Xopen`, or an `open` modifier.
+The `-Xhtml` extension does not accept a value.
 YAMLScript publishes only the primary artifact and any declared companion.
 Use the companion syntax when an additional generated file must be retained.
 An extension-only companion replaces the primary extension and keeps its
