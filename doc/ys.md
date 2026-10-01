@@ -393,8 +393,9 @@ For example, `ys sample/rosetta-code/99-bottles-of-beer.ys -cTbin` writes
 Using `-cTwasm` instead writes `./99-bottles-of-beer.wasm`.
 Text targets `go`, `clj`, `clj+`, and `bb` continue to use standard output when
 no output path is supplied.
-Existing output files, directories (even empty ones), and symlinks cause an
-error.
+Existing file artifacts are replaced when compilation succeeds.
+Existing directory targets and directories at file output paths cause an error.
+Source targets written with `--output` continue to reject existing paths.
 Normal data output without `--compile` retains its existing behavior.
 Artifact compilation shows a progress line and elapsed time on standard error.
 In a terminal, a dot appears each second and the final status replaces the line.

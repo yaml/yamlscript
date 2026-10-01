@@ -30,6 +30,9 @@
 
 (defn target-name [value] (first (str/split (or value "") #"," -1)))
 (defn code-target? [value] (contains? targets (target-name value)))
+(defn replace-outputs? [opts]
+  (let [target (get-in opts [:build :target])]
+    (and (gloat-targets target) (not= target "dir"))))
 (defn fail [message] (install/fail message))
 (defn basename [path] (last (str/split path #"/")))
 (defn extension [path] (second (re-find #"\.([^.\/]+)$" (basename path))))
@@ -175,11 +178,13 @@
   ((:absolute ctx) (str/replace path #"/+$" "")))
 
 (defn check-outputs! [ctx opts]
-  (let [paths (mapv #(normalized-path ctx %) (get-in opts [:build :outputs]))]
+  (let [replace? (replace-outputs? opts)
+        paths (mapv #(normalized-path ctx %) (get-in opts [:build :outputs]))]
     (when-not (= (count paths) (count (distinct paths)))
       (fail "Compilation outputs must have different paths."))
     (doseq [path paths]
-      (when ((:exists? ctx) path)
+      (when (and ((:exists? ctx) path)
+                 (or (not replace?) (install/test-path ctx "-d" path)))
         (fail (str "Output already exists: " path)))
       (when (some #(str/starts-with? path (str % "/")) paths)
         (fail "Compilation outputs may not contain one another.")))))
@@ -243,20 +248,23 @@
     (str/replace "\n" "%0A") (str/replace "\r" "%0D")
     (str/replace "<" "%3C") (str/replace ">" "%3E")))
 
-(defn publish! [ctx file output]
+(defn publish! [ctx file output replace?]
   (let [output (normalized-path ctx output)]
-    (install/run! ctx "mkdir" "-p" (install/parent output))
-    (when (or (install/test-path ctx "-e" output)
-              (install/test-path ctx "-L" output))
-      (fail (str "Output already exists: " output)))
-    (let [stage (install/temp-dir ctx (install/parent output))
-          payload (str stage "/payload")]
-      (try
-        (install/run! ctx "cp" "-pR" file payload)
-        (install/run! ctx "mv" "-n" payload output)
-        (when (install/test-path ctx "-e" payload)
+    (if replace?
+      (install/install-file ctx file output)
+      (do
+        (install/run! ctx "mkdir" "-p" (install/parent output))
+        (when (or (install/test-path ctx "-e" output)
+                  (install/test-path ctx "-L" output))
           (fail (str "Output already exists: " output)))
-        (finally (install/cleanup ctx stage))))))
+        (let [stage (install/temp-dir ctx (install/parent output))
+              payload (str stage "/payload")]
+          (try
+            (install/run! ctx "cp" "-pR" file payload)
+            (install/run! ctx "mv" "-n" payload output)
+            (when (install/test-path ctx "-e" payload)
+              (fail (str "Output already exists: " output)))
+            (finally (install/cleanup ctx stage))))))))
 
 (defn write-source! [ctx opts text]
   (if-let [output (:output opts)]
@@ -266,9 +274,10 @@
     (print text)))
 
 (defn compile-artifacts! [ctx opts portable source]
-  (check-outputs! ctx opts)
-  (let [gloat (find-gloat ctx)
-        {:keys [target platform outputs extensions]} (:build opts)
+  (let [{:keys [target platform outputs extensions]} (:build opts)
+        replace? (replace-outputs? opts)
+        _ (check-outputs! ctx opts)
+        gloat (find-gloat ctx)
         serving? (some serving-extension? extensions)
         stage (install/temp-dir ctx (or (install/setting ctx "TMPDIR") "/tmp"))]
     (try
@@ -298,7 +307,8 @@
                        (str stage "/result" ext))
             argv (vec (concat ["env" (str "GLOAT_YS=" adapter)
                                (str "YS_GLOAT_COMPILED=" compiled)]
-                        [gloat "--engine=glj" "--to" format "--out" artifact]
+                        [gloat "--force" "--engine=glj" "--to" format
+                         "--out" artifact]
                         (when platform ["--platform" platform])
                         (when html? ["--ext=html"])
                         extensions
@@ -335,7 +345,7 @@
             (do
               (check-outputs! ctx opts)
               (doseq [[file output] (map vector files outputs)]
-                (publish! ctx file output))))))
+                (publish! ctx file output replace?))))))
       (finally (install/cleanup ctx stage)))))
 
 (def target-descriptions

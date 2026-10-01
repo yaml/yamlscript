@@ -171,10 +171,9 @@
           (slurp "../sample/rosetta-code/99-bottles-of-beer.ys"))
         (doseq [args [["-cTbin" "nested/with spaces.v1.ys"]
                       ["--file" source "--to=bin,darwin/amd64"]]]
-          (let [result (apply run args)]
-            (is (zero? (:exit result)) (:err result)))
-          (is (= "bin artifact\n" (slurp output)))
-          (is (str/includes? (:err (apply run args)) "already exists"))
+          (dotimes [_ 2]
+            (let [result (apply run args)]
+              (is (zero? (:exit result)) (:err result))))
           (is (= "bin artifact\n" (slurp output)))
           (fs/delete output))
         (doseq [[target suffix] [["wasm" ".wasm"] ["so" ".so"]
@@ -240,7 +239,13 @@
                    opts)]
         (build/compile! ctx opts "portable source" nil)
         (doseq [output (get-in opts [:build :outputs])]
-          (is (fs/exists? output)))))
+          (is (fs/exists? output)))
+        (when-not (= path "project/")
+          (doseq [output (get-in opts [:build :outputs])]
+            (spit output "stale artifact\n"))
+          (build/compile! ctx opts "replacement source" nil)
+          (doseq [output (get-in opts [:build :outputs])]
+            (is (not= "stale artifact\n" (slurp output)))))))
     (is (not (fs/exists? (str dir "/lib.h"))))
     (is (not (fs/exists? (str dir "/header.so"))))
     (is (= "fetch('../assets/main.js')\n" (slurp (str dir "/pages/runner.html"))))
@@ -258,6 +263,7 @@
                  "bin,-Xfuture=value")]
       (build/compile! ctx opts "portable source" nil)
       (let [argv (some #(when (= "env" (first %)) %) @calls)]
+        (is (some #{"--force"} argv))
         (is (= ["-Xfuture=value" "-Xprune"]
               (filterv #(str/starts-with? % "-X") argv)))))))
 
@@ -280,7 +286,7 @@
             output (str dir "/program")]
         (is (zero? (:exit (run "-ce" "say: 42" "-o" output))))
         (is (fs/exists? output))
-        (is (not (zero? (:exit (run "-ce" "say: 42" "-o" output)))))
+        (is (zero? (:exit (run "-ce" "say: 42" "-o" output))))
         (is (= "bin artifact\n" (slurp output)))
         (doseq [args [["-ce" "say: 42" "-o" (str dir "/bad.xyz")]
                       ["-Tstar" "-e" "say: 42"]
@@ -518,17 +524,17 @@
           (process/shell {:out :string :err :string} "chmod" "-R" "u+wx" dir)
           (fs/delete-tree dir))))))
 
-(deftest compilation-errors-are-reported
+(deftest directory-collision-errors-are-reported
   (with-context [dir ctx]
     (let [path (str dir "/existing")
           errors (java.io.StringWriter.)]
-      (spit path "original")
+      (fs/create-dirs path)
       (with-redefs [cli/exit (constantly nil)]
         (binding [*err* errors]
           (cli/do-compile (options path) [])))
       (is (str/includes? (str errors) "Output already exists:"))
       (is (not (str/includes? (str errors) "Exception in thread")))
-      (is (= "original" (slurp path))))))
+      (is (fs/directory? path)))))
 
 (deftest source-output-without-subprocesses
   (with-context [dir ctx]
