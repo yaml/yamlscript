@@ -173,10 +173,11 @@ $(GLOJURE-PPRINT-SRC): \
 	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-TAPTEST-SRC): \
-  $(ROOT)/core/src/ys/v0/taptest.clj $(GLOJURE-SRC-PREPARE) $(PERL)
+  $(ROOT)/core/src/ys/v0/taptest.clj $(GLOJURE-SRC-PREPARE) $(PERL) \
+  $(ROOT)/common/glojure.mk
 	mkdir -p $(dir $@)
 	$(PERL-CMD) -pe \
-	  's/^\(ns ys\.v0\.taptest$$/(ns yamlscript.module.taptest/' \
+	  's/^\(ns ys\.v0\.taptest\b/(ns yamlscript.module.taptest/' \
 	  $< > $@
 
 $(GLOJURE-DEPS-CLJC-SRCS): \
