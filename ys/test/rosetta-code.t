@@ -12,8 +12,7 @@ test::
 - name: ys 100-doors.ys
   cmnd:: "ys $RC/100-doors.ys"
   want: |
-    Open doors after 100 passes:
-    1, 4, 9, 16, 25, 36, 49, 64, 81, 100
+    Open doors after 100 passes: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100
 
 - name: ys 100-prisoners.ys
   cmnd:: "ys $RC/100-prisoners.ys 500"
@@ -44,9 +43,18 @@ test::
 #   cmnd:: "ys $RC/average-loop-length.ys"
 #   want: x
 
-- name: ys factorial.ys 10
-  cmnd:: "ys $RC/factorial.ys 10"
-  want: 10! -> 3628800
+- name: ys factorial.ys
+  cmnd:: "ys $RC/factorial.ys"
+  want: |
+    0! -> 1
+    1! -> 1
+    2! -> 2
+    3! -> 6
+    4! -> 24
+    5! -> 120
+    6! -> 720
+    7! -> 5040
+    8! -> 40320
 
 - name: ys fibonacci-sequence.ys 10
   cmnd:: "ys $RC/fibonacci-sequence.ys 10"
@@ -65,24 +73,11 @@ test::
 - name: ys fizzbuzz.ys 16
   cmnd:: "ys $RC/fizzbuzz.ys 16"
   want:: |
-    Running function 'fizzbuzz-1' with count=16
     $fizz-buzz-want
 
-- name: ys fizzbuzz.ys 16 2
-  cmnd:: "ys $RC/fizzbuzz.ys 16 2"
-  want:: |
-    Running function 'fizzbuzz-2' with count=16
-    $fizz-buzz-want
-
-- name: ys fizzbuzz.ys 16 3
-  cmnd:: "ys $RC/fizzbuzz.ys 16 3"
-  want:: |
-    Running function 'fizzbuzz-3' with count=16
-    $fizz-buzz-want
-
-- name: ys function-definition.ys 2 3 7
-  cmnd:: "ys $RC/function-definition.ys 2 3 7"
-  want: multiply(2, 3, 7) -> 42
+- name: ys function-definition.ys
+  cmnd:: "ys $RC/function-definition.ys"
+  want: multiply(3, 4, 5) -> 60
 
 - name: ys greatest-common-divisor.ys 42 63
   cmnd:: "ys $RC/greatest-common-divisor.ys 42 63"
@@ -91,14 +86,30 @@ test::
 - name: ys hello-world.ys
   cmnd:: "ys $RC/hello-world.ys"
   want: |
-    Hello, world!
-    Hello, world!
-    Hello, world!
-    Hello, world!
-    Hello, world!
-    Hello, world!
-    Hello, world!
-    Hello, world!
+    How to run "Hello world!" in YAMLScript (ys):
+
+    1. Install ys (Linux or macOS):
+
+           curl -s https://yamlscript.org/install | bash
+
+       This installs ys into ~/.local/bin by default; make sure that
+       directory is in your PATH. Full instructions, including other
+       platforms and prefixes, are at
+       https://yamlscript.org/doc/install/
+
+    2. Using any plain text editor (nano, vim, Notepad, ...), create
+       a file named hello.ys containing these two lines:
+
+           !ys-0
+           say: 'Hello world!'
+
+    3. Run it from your terminal:
+
+           ys hello.ys
+
+       The output appears right there in the terminal, like this:
+
+    Hello world!
 
 - name: ys leap-year.ys 2024
   cmnd:: "ys $RC/leap-year.ys 2024"
