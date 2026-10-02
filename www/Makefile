@@ -279,6 +279,7 @@ src/%.md: src/%.mdys src/mdys.ys ../util/mdys
 	mdys-md $< $@
 
 src/index.md src/play.md: \
+    ../Meta \
     playground/dynamic-examples.yaml \
     playground/playground.html \
     playground/program-examples.yaml

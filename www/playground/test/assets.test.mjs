@@ -116,8 +116,11 @@ test("homepage carries curated code and program examples", () => {
     ].join("\n"),
   );
   const clojureModule = projects.get("import-clojure-module");
-  assert.match(clojureModule.source.join("\n"), /a: 123 \.>/);
-  assert.match(clojureModule.source.join("\n"), /warn: 'oops'/);
+  assert.match(
+    clojureModule.source.join("\n"),
+    /image\/image-name\('orders' '1\.4'\)/,
+  );
+  assert.match(clojureModule.files["image.clj"], /\(defn image-name/);
   for (const demo of code) {
     assert.equal(demo.mode, "load");
     assert.equal(demo.format, "yaml");
@@ -164,9 +167,9 @@ test("homepage carries curated code and program examples", () => {
   const featuredSource = featured.source.join("\n");
   assert.match(featuredSource, /^use: json yaml pretty-json$/m);
   assert.match(featured.files["pretty-json.ys"], /^use: json$/m);
-  assert.match(featuredSource, /yaml\/load\(read\('file\.yaml'\)\)/);
-  assert.match(featuredSource, /json\/dump\(data\)/);
-  assert.match(featuredSource, /pretty-json\/format\(text\)/);
+  assert.match(featuredSource, /read\('file\.yaml'\):yaml\/load/);
+  assert.match(featuredSource, /data:json\/dump/);
+  assert.match(featuredSource, /text:pretty-json\/format/);
   assert.equal("sourceUrl" in featured, false);
   for (const demo of programs.slice(1)) {
     assert.match(demo.sourceUrl, /^https:\/\/rosettacode\.org\/wiki\//);

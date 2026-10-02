@@ -930,6 +930,9 @@ jobs:
           "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" |
           grep -Fx "ys-$VERSION-windows-arm64/ys.exe"
         unzip -Z1 \
+          "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" |
+          grep -Fx "ys-$VERSION-windows-arm64/ys-0.exe"
+        unzip -Z1 \
           "release-artifacts/windows-arm64/libys-$VERSION-windows-arm64.zip" |
           grep -Fx "libys-$VERSION-windows-arm64/libys.dll"
         tar -xf \
@@ -1000,6 +1003,9 @@ jobs:
         unzip -Z1 \
           "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" |
           grep -Fx "ys-$VERSION-windows-arm64/ys.exe"
+        unzip -Z1 \
+          "release-artifacts/windows-arm64/ys-$VERSION-windows-arm64.zip" |
+          grep -Fx "ys-$VERSION-windows-arm64/ys-0.exe"
         unzip -Z1 \
           "release-artifacts/windows-arm64/libys-$VERSION-windows-arm64.zip" |
           grep -Fx "libys-$VERSION-windows-arm64/libys.dll"

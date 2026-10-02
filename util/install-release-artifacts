@@ -100,6 +100,9 @@ mkdir -p ys/bin ys/target/uberjar libys/lib libys/target
 mkdir -p "$(dirname "$core_installed")"
 
 cp -pP "$ys_dir"/ys* ys/bin/
+if [[ -f ys/bin/ys.exe && ! -f ys/bin/ys-0.exe ]]; then
+  cp -p ys/bin/ys.exe ys/bin/ys-0.exe
+fi
 cp -pP "$libys_dir"/libys* libys/lib/
 cp -pP "$libys_dir"/*.h libys/lib/
 cp -p "$ys_jar" \

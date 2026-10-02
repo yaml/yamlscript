@@ -781,6 +781,7 @@ $(YS-RELEASE): \
 	cp -p $(CLI-BIN:%=ys/%) $</
 ifeq (,$(findstring wasm,$(RELEASE_PLATFORM)))
 ifneq (,$(findstring windows,$(RELEASE_PLATFORM)))
+	cp -p $(CLI-BIN:%=ys/%) $</ys-$(API_VERSION).exe
 	cp -p $(CLI-BIN:%=ys/%) $</ys.exe
 else
 	ln -fs $(notdir $(CLI-BIN)) $</ys-$(API_VERSION)

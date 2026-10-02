@@ -10,15 +10,15 @@ endif
 GLOAT-RUN-DEPS := $(GLOAT)
 GLOAT-RUN := $(GLOAT-BIN)/gloat
 ifeq ($(OS-NAME),windows)
-# Gloat 0.1.85 cannot find tools installed during its first Windows run.
-# Populate its managed cache and keep those directories on PATH.
+# Gloat cannot find tools installed during its first Windows run.
+# Populate its managed cache and prepare its Glojure binary for Windows.
 GLOAT-WINDOWS-PATH-DEPS := $(GLOAT-DIR)/.cache/.windows-path-deps
 GLOAT-RUN-DEPS += $(GLOAT-WINDOWS-PATH-DEPS)
 GLOAT-RUN := \
   PATH="$$(cat $(GLOAT-WINDOWS-PATH-DEPS)):/usr/bin:$$PATH" \
   /usr/bin/bash $(GLOAT-BIN)/gloat
 
-$(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT)
+$(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT) $(ROOT)/common/glojure.mk
 	TAR_OPTIONS=--force-local \
 	  $(MAKE) --quiet --no-print-directory -C $(GLOAT-DIR) \
 	  path-bb path-go path-glj >/dev/null
@@ -26,6 +26,9 @@ $(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT)
 	  cache_path=; \
 	  for bin_dir in "$$gloat_dir"/.cache/local/*/bin; do \
 	    [[ -d "$$bin_dir" ]] || continue; \
+	    if [[ -f "$$bin_dir/glj" ]]; then \
+	      cp -p "$$bin_dir/glj" "$$bin_dir/glj.exe"; \
+	    fi; \
 	    cache_path=$${cache_path:+$$cache_path:}$$bin_dir; \
 	  done; \
 	  [[ $$cache_path ]]; \
