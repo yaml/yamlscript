@@ -23,7 +23,7 @@ GLOAT-RUN := \
 $(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT) $(ROOT)/common/glojure.mk
 	$(PERL-CMD) -0pi -e \
 	  's{\Q(str/replace "/" ".")\E}' \
-	  -e '{(str/replace \\\\ \\.) (str/replace \\/ \\.)}' \
+	  -e '{q!(str/replace \\\\ \.) (str/replace \/ \.)!}e' \
 	  $(GLOAT-DIR)/src/gloat.clj
 	grep -F '(str/replace \\ \.)' \
 	  $(GLOAT-DIR)/src/gloat.clj >/dev/null
