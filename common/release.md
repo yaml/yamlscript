@@ -14,7 +14,7 @@ The following architectures are currently supported:
 Run this command to install `~/.local/bin/ys`:
 
 ```
-$ source <(curl -sL https://in-1.cc) --local ys
+source <(curl -sL in-1.cc) --local ys
 ```
 
 See [Installing YS](https://yamlscript.org/doc/install/) for more detailed information about installing YS things.
