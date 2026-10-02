@@ -9,7 +9,7 @@ Object.defineProperty(globalThis, "fs", {
   value: undefined,
   writable: true,
 });
-vm.runInThisContext(fs.readFileSync(supportPath, "utf8"));
+vm.runInNewContext(fs.readFileSync(supportPath, "utf8"), globalThis);
 
 let stdout = "";
 let stderr = "";
