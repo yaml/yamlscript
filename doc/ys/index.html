@@ -2654,7 +2654,7 @@ printed as JSON.</p>
 <p>Here's the <code>ys --help</code> output:</p>
 <div class="highlight"><pre><span></span><code>$ ys --help
 
-ys - The YS Command Line Tool - v0.3.3
+ys - The YS Command Line Tool - v0.3.4
 
 Usage: ys [&lt;option...&gt;] [&lt;file&gt;]
 
@@ -2674,7 +2674,8 @@ Options:
   -T, --to FORMAT          Output format for --load:
                              json, yaml, csv, tsv, edn
                            or target for --compile:
-                             bb, clj, clj+, bin, go, dir, lib, so, dylib, dll, h, js, html, wasm
+                             bb, clj, clj+, bin, go, dir, lib, so, dylib,
+                             dll, h, js, html, wasm, serve
   -J, --json               Output (pretty) JSON for --load
   -Y, --yaml               Output YAML for --load
   -U, --unordered          Mappings don&#39;t preserve key order (faster)
@@ -3014,6 +3015,7 @@ With <code>--output</code>, the filename selects the compilation target:</p>
 </table>
 <p>An explicit <code>--to</code> selects the target regardless of the filename and implies
 <code>--compile</code>.
+<code>-Tserve</code> selects a browser bundle and local server.
 Unknown extensions require <code>--to</code>.
 Binary, library, header, directory, and Wasm targets require an output path.
 For artifact targets, a <code>.ys</code> input supplies a default output in the current
@@ -3034,8 +3036,10 @@ For example, <code>ys sample/rosetta-code/99-bottles-of-beer.ys -cTbin</code> wr
 Using <code>-cTwasm</code> instead writes <code>./99-bottles-of-beer.wasm</code>.
 Text targets <code>go</code>, <code>clj</code>, <code>clj+</code>, and <code>bb</code> continue to use standard output when
 no output path is supplied.
-Existing output files, directories (even empty ones), and symlinks cause an
-error.
+Existing file artifacts are replaced when compilation succeeds.
+Existing directory targets and directories at file output paths cause an error.
+Serving may replace a non-directory file that blocks its bundle directory.
+Source targets written with <code>--output</code> continue to reject existing paths.
 Normal data output without <code>--compile</code> retains its existing behavior.
 Artifact compilation shows a progress line and elapsed time on standard error.
 In a terminal, a dot appears each second and the final status replaces the line.
@@ -3052,7 +3056,7 @@ ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </spa
 ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo.js,.html
 ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-Tjs,html
 ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>assets/foo.js,pages/foo.html
-ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-Thtml,-Xserve
+ys<span class="w"> </span>foo.ys<span class="w"> </span>-Tserve
 ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-Tbin,-Xprune
 ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </span>-o<span class="w"> </span>foo,-Xprune
 </code></pre></div>
@@ -3060,20 +3064,27 @@ ys<span class="w"> </span>foo.ys<span class="w"> </span>-c<span class="w"> </spa
 Modifiers can select a companion output, an <code>OS/ARCH</code> platform, or a Gloat
 processing extension written as <code>-Xname</code> or <code>-Xname=value</code>.
 Modifiers can follow either <code>--to</code> or <code>--output</code>.
+The <code>serve</code> modifier is only valid with <code>--to</code>.
 The old semicolon form is not supported.
 Multiple Gloat extensions must each include <code>-X</code>, for example
 <code>-Twasm,-Xprune,-Xgzip</code>.
 They are passed unchanged to Gloat, which validates their names, values, and
 target compatibility.
-<code>-Xserve</code> and <code>-Xopen</code> imply an HTML companion.
-Without an explicit output, they write persistent <code>foo/index.html</code> and
-<code>foo/index.js</code> files and serve <code>http://localhost:8000/foo/index.html</code>.
-An explicit output retains its exact name and writes its companion beside it.
+<code>-Tserve</code>, <code>-Thtml,serve</code>, <code>-Tjs,serve</code>, and <code>-Tjs,html,serve</code> are equivalent.
+They write persistent <code>foo/index.js</code> and <code>foo/index.html</code> files and serve
+<code>http://localhost:8000/foo/index.html</code>.
+If <code>foo</code> is a file or non-directory symlink, YAMLScript replaces it with the
+bundle directory.
+An existing directory is retained.
+With an explicit output, <code>.html</code> selects the HTML primary; any other name
+selects the browser Wasm primary.
+The same-stem companion is written beside it.
 Serving rejects explicitly selected JS and HTML files in different directories.
 Program arguments belong in the page URL query, separated by commas.
 Each argument is percent-decoded, so <code>?one,two</code> passes two arguments and
 <code>?one%2Ctwo</code> passes one argument containing a comma.
-The <code>-Xhtml</code>, <code>-Xserve</code>, and <code>-Xopen</code> extensions do not accept values.
+YAMLScript does not support <code>-Xserve</code>, <code>-Xopen</code>, or an <code>open</code> modifier.
+The <code>-Xhtml</code> extension does not accept a value.
 YAMLScript publishes only the primary artifact and any declared companion.
 Use the companion syntax when an additional generated file must be retained.
 An extension-only companion replaces the primary extension and keeps its

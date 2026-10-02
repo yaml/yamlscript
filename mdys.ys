@@ -75,7 +75,7 @@ defn playground-rosetta-program(info):
     mode: run
     format: text
     entry:: "$(info.file).ys"
-    source:: path:read:lines
+    source:: path:read.replace(/\r\n?/ "\n"):lines
     expected:: +["Evaluating $(info.label)..."]
     ignoreTerminalEffects::
       info.'ignore-terminal-effects' || false
@@ -238,6 +238,8 @@ defn mdys-playground(data):
     fs/abs:
       "$(input-dir:deref)/../playground/playground.html"
   template =: template-path:read
+  meta-path =: fs/abs("$(input-dir:deref)/../../Meta")
+  meta =: yaml/load(meta-path:read)
   programs =: playground-programs()
   home-programs =: playground-programs(true)
   home-examples =: playground-dynamic-examples(true)
@@ -285,6 +287,7 @@ defn mdys-playground(data):
 
   template:
     .replace('__YS_PLAYGROUND_VARIANT__' variant)
+    .replace('__YS_PLAYGROUND_VERSION__' meta.version)
     .replace('__YS_PLAYGROUND_CYCLE__' cycle)
     .replace('__YS_PLAYGROUND_COLLAPSED__' collapsed)
     .replace('__YS_PLAYGROUND_ACTIONS__' actions)
