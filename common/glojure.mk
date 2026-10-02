@@ -18,7 +18,14 @@ GLOAT-RUN := \
   PATH="$$(cat $(GLOAT-WINDOWS-PATH-DEPS)):/usr/bin:$$PATH" \
   /usr/bin/bash $(GLOAT-BIN)/gloat
 
+# Gloat 0.1.89 only normalizes Unix separators in stdlib paths.
+# Patch its managed clone until a release includes the Windows fix.
 $(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT) $(ROOT)/common/glojure.mk
+	$(PERL-CMD) -0pi -e \
+	  's{\Q(str/replace "/" ".")\E}{(str/replace #"[\\\\/]" ".")}' \
+	  $(GLOAT-DIR)/src/gloat.clj
+	grep -F '(str/replace #"[\\/]" ".")' \
+	  $(GLOAT-DIR)/src/gloat.clj >/dev/null
 	TAR_OPTIONS=--force-local \
 	  $(MAKE) --quiet --no-print-directory -C $(GLOAT-DIR) \
 	  path-bb path-go path-glj >/dev/null

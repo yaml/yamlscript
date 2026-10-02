@@ -1542,17 +1542,10 @@ jobs:
       run: |
         cygpath -w "$PWD/libys/lib" >> "$GITHUB_PATH"
 
-    - name: Run tests
-      env:
-        YS_RELEASE_BINDINGS_SKIP: >-
-          elixir erlang haskell lua perl-alien swift
-          ${{ inputs.bindings_skip }}
-      run: |
-        gmake -k test-all \
-          YS_RELEASE_SKIP_CORE_TESTS=1 \
-          YS_RELEASE_SKIP_LIBYS_TESTS=1 \
-          YS_RELEASE_USE_INSTALLED_LIBYS=1 \
-          YS_RELEASE_USE_INSTALLED_YS=1
+    # TODO: Restore the full test-all command after the Windows website
+    # failures are resolved.
+    - name: Run website tests
+      run: gmake test-www
 
   resume-release:
     name: Resume release from artifacts
