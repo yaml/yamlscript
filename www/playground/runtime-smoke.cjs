@@ -3,6 +3,12 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 
 const [wasmPath, supportPath] = process.argv.slice(2);
+// Make the Go support script install its mutable browser filesystem shim.
+Object.defineProperty(globalThis, "fs", {
+  configurable: true,
+  value: undefined,
+  writable: true,
+});
 vm.runInThisContext(fs.readFileSync(supportPath, "utf8"));
 
 let stdout = "";
