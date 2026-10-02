@@ -3,21 +3,26 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 
 const [wasmPath, supportPath] = process.argv.slice(2);
-// Make the Go support script install its mutable browser filesystem shim.
-Object.defineProperty(globalThis, "fs", {
-  configurable: true,
-  value: undefined,
-  writable: true,
-});
-vm.runInNewContext(fs.readFileSync(supportPath, "utf8"), globalThis);
+// Load Go's browser support in an isolated, mutable runtime global.
+const runtime = {
+  clearTimeout,
+  console,
+  crypto: globalThis.crypto,
+  performance,
+  setTimeout,
+  TextDecoder,
+  TextEncoder,
+  WebAssembly,
+};
+vm.runInNewContext(fs.readFileSync(supportPath, "utf8"), runtime);
 
 let stdout = "";
 let stderr = "";
 let streams = [];
 let virtualFs = null;
 let projectModules = null;
-const originalWrite = globalThis.fs.writeSync.bind(globalThis.fs);
-globalThis.fs.writeSync = (fd, buffer) => {
+const originalWrite = runtime.fs.writeSync.bind(runtime.fs);
+runtime.fs.writeSync = (fd, buffer) => {
   const text = new TextDecoder().decode(buffer);
   const previous = streams.at(-1);
   if (previous?.fd === fd) {
@@ -56,7 +61,7 @@ function request(values) {
     source: files[project.entry],
   };
   delete runtimeValues.project;
-  const response = globalThis.gloat.exports.run(
+  const response = runtime.gloat.exports.run(
     JSON.stringify(runtimeValues),
   );
   return {response, stdout, stderr, streams};
@@ -81,9 +86,9 @@ function playgroundPresets() {
 async function main() {
   const {installVirtualFileSystem} = await import("./virtual-fs.js");
   ({projectModules} = await import("./project.js"));
-  virtualFs = installVirtualFileSystem(globalThis.fs);
-  globalThis.process.cwd = () => "/playground";
-  const go = new Go();
+  virtualFs = installVirtualFileSystem(runtime.fs);
+  runtime.process.cwd = () => "/playground";
+  const go = new runtime.Go();
   go.argv = ["ys-playground-test"];
   go.env = {
     YS_MODULES: "std,clj,csv,fs,json,math,set,str,walk,yaml",
@@ -238,7 +243,7 @@ async function main() {
   });
   assert.equal(result.response.ok, false);
   assert.match(result.response.error, /vars\.yaml/);
-  const compilation = globalThis.gloat.exports["compile-source"](
+  const compilation = runtime.gloat.exports["compile-source"](
     missingFileSource,
   );
   assert.equal(compilation.ok, true, compilation.error);
