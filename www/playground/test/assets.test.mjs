@@ -2,19 +2,22 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
 
-const claudeSetup = fs.readFileSync("src/ai/claude.md", "utf8");
-const codexSetup = fs.readFileSync("src/ai/codex.md", "utf8");
-const homepage = fs.readFileSync("src/index.md", "utf8");
-const playPage = fs.readFileSync("src/play.md", "utf8");
-const makefile = fs.readFileSync("Makefile", "utf8");
-const rootMakefile = fs.readFileSync("../Makefile", "utf8");
-const meta = fs.readFileSync("../Meta", "utf8");
-const mdys = fs.readFileSync("src/mdys.ys", "utf8");
-const mkdocs = fs.readFileSync("mkdocs.ys", "utf8");
-const playgroundJs = fs.readFileSync("playground/playground.js", "utf8");
-const sitecustomize = fs.readFileSync("python/sitecustomize.py", "utf8");
-const themeCss = fs.readFileSync("src/css/theme.css", "utf8");
-const worker = fs.readFileSync("playground/playground-worker.js", "utf8");
+const normalizeNewlines = (text) => text.replace(/\r\n?/g, "\n");
+const readText = (path) => normalizeNewlines(fs.readFileSync(path, "utf8"));
+
+const claudeSetup = readText("src/ai/claude.md");
+const codexSetup = readText("src/ai/codex.md");
+const homepage = readText("src/index.md");
+const playPage = readText("src/play.md");
+const makefile = readText("Makefile");
+const rootMakefile = readText("../Makefile");
+const meta = readText("../Meta");
+const mdys = readText("src/mdys.ys");
+const mkdocs = readText("mkdocs.ys");
+const playgroundJs = readText("playground/playground.js");
+const sitecustomize = readText("python/sitecustomize.py");
+const themeCss = readText("src/css/theme.css");
+const worker = readText("playground/playground-worker.js");
 
 const rosettaIds = {
   "100-doors": "hundred-doors",
@@ -25,6 +28,10 @@ const disabledPrograms = new Set([
   "average-loop-length",
   "xiaolin-wus-line-algorithm",
 ]);
+
+test("text fixtures normalize native line endings", () => {
+  assert.equal(normalizeNewlines("one\r\ntwo\rthree\n"), "one\ntwo\nthree\n");
+});
 
 function playground(page) {
   return page
@@ -503,8 +510,7 @@ test("dedicated playground keeps focused and handoff examples", () => {
     const name = file.replace(/\.ys$/, "");
     const id = rosettaIds[name] || name;
     const program = programs.find((item) => item.id === id);
-    const source = fs.readFileSync(`../sample/rosetta-code/${file}`, "utf8")
-      .trimEnd();
+    const source = readText(`../sample/rosetta-code/${file}`).trimEnd();
     assert.ok(program, file);
     assert.equal(program.source.join("\n"), source, file);
   }
@@ -790,7 +796,7 @@ test("playground assets do not load code from a CDN", () => {
     "playground/playground.js",
     "playground/playground-worker.js",
   ]) {
-    const source = fs.readFileSync(file, "utf8");
+    const source = readText(file);
     assert.doesNotMatch(source, /https?:\/\//);
   }
 });
