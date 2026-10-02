@@ -244,10 +244,8 @@ $(PLAYGROUND-RUNTIME-STAMP): \
 	  --out=$(PLAYGROUND-ASSETS)/runtime.js \
 	  $(PLAYGROUND-RUNTIME-SRC) $(GLOJURE-SRCS)
 	mv $(PLAYGROUND-ASSETS)/runtime.js $(PLAYGROUND-WASM)
-	$(PERL) -0777 -ne \
-	  'm{<script>\s*(.*?)\s*</script>}s or die "runtime script not found\n"; \
-	  print $$1' \
-	  $(PLAYGROUND-ASSETS)/runtime.html > $(PLAYGROUND-SUPPORT).tmp
+	cp $(GLOAT-DIR)/.cache/local/go-*/lib/wasm/wasm_exec.js \
+	  $(PLAYGROUND-SUPPORT).tmp
 	mv $(PLAYGROUND-SUPPORT).tmp $(PLAYGROUND-SUPPORT)
 	$(RM) $(PLAYGROUND-ASSETS)/runtime.html
 	touch $@
