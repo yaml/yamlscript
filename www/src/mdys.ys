@@ -75,7 +75,7 @@ defn playground-rosetta-program(info):
     mode: run
     format: text
     entry:: "$(info.file).ys"
-    source:: path:read:lines
+    source:: path:read.replace(/\r\n?/ "\n"):lines
     expected:: +["Evaluating $(info.label)..."]
     ignoreTerminalEffects::
       info.'ignore-terminal-effects' || false
