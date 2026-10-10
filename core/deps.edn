@@ -6,7 +6,7 @@
   clj-commons/clj-yaml {:mvn/version "1.0.27"},
   cc.clojure/grenadine {:mvn/version "0.1.12"},
   org.flatland/ordered {:mvn/version "1.15.11"},
-  org.snakeyaml/snakeyaml-engine {:mvn/version "2.7"},
+  org.yamlscript/snakeyaml-engine {:mvn/version "3.2.1"},
   babashka/babashka.pods {:mvn/version "0.2.0"},
   babashka/fs {:mvn/version "0.5.26"},
   babashka/process {:mvn/version "0.6.23"},
