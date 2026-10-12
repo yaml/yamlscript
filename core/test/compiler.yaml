@@ -2148,7 +2148,7 @@
      __)
 
 
-- name: Later deferred values are still nil
+- name: Deferred dependencies are reordered before their dependents
   yamlscript: |
     !ys-0:
     a:: *.b
@@ -2159,9 +2159,72 @@
      [__
       {"a" nil, "b" nil, "c" 4}
       __
-      (assoc __ "a" (get __ "b"))
+      (assoc __ "b" (get __ "c"))
       __
-      (assoc __ "b" (get __ "c"))]
+      (assoc __ "a" (get __ "b"))]
+     __)
+
+
+- name: Deferred dependency chains are ordered transitively
+  yamlscript: |
+    !ys-0:
+    a:: *.b + 2
+    b:: *.c * 3
+    c:: *.d - 2
+    d: 6
+  clojure: |
+    (let
+     [__
+      {"a" nil, "b" nil, "c" nil, "d" 6}
+      __
+      (assoc __ "c" (sub+ (get __ "d") 2))
+      __
+      (assoc __ "b" (mul+ (get __ "c") 3))
+      __
+      (assoc __ "a" (add+ (get __ "b") 2))]
+     __)
+
+
+- name: Shared deferred dependencies precede both dependents
+  yamlscript: |
+    !ys-0:
+    total:: *.left + *.right
+    left:: *.base + 2
+    right:: *.base * 3
+    base:: *.seed * 2
+    seed: 4
+  clojure: |
+    (let
+     [__
+      {"total" nil, "left" nil, "right" nil, "base" nil, "seed" 4}
+      __
+      (assoc __ "base" (mul+ (get __ "seed") 2))
+      __
+      (assoc __ "left" (add+ (get __ "base") 2))
+      __
+      (assoc __ "right" (mul+ (get __ "base") 3))
+      __
+      (assoc __ "total" (add+ (get __ "left") (get __ "right")))]
+     __)
+
+
+- name: Ready deferred expressions are selected in source order
+  yamlscript: |
+    !ys-0:
+    a:: *.b * 2
+    independent:: *.seed + 3
+    b:: *.seed + 2
+    seed: 4
+  clojure: |
+    (let
+     [__
+      {"a" nil, "independent" nil, "b" nil, "seed" 4}
+      __
+      (assoc __ "independent" (add+ (get __ "seed") 3))
+      __
+      (assoc __ "b" (add+ (get __ "seed") 2))
+      __
+      (assoc __ "a" (mul+ (get __ "b") 2))]
      __)
 
 
@@ -2619,6 +2682,54 @@
     =>: 6 *7
   error: |
     Binary operator '*' must be surrounded by whitespace
+
+
+- name: Error on mutually dependent deferred values
+  yamlscript: |
+    !ys-0:
+    a:: 2 + *.b
+    b:: 2 - *.a
+  error: |
+    Circular deferred dependency: /a -> /b -> /a
+
+
+- name: Error on self-dependent deferred value
+  yamlscript: |
+    !ys-0:
+    a:: 2 * *.a
+  error: |
+    Circular deferred dependency: /a -> /a
+
+
+- name: Error on longer deferred dependency cycle
+  yamlscript: |
+    !ys-0:
+    a:: 2 + *.b
+    b:: 2 - *.c
+    c:: 2 * *.a
+  error: |
+    Circular deferred dependency: /a -> /b -> /c -> /a
+
+
+- name: Error on deferred cycle excludes unrelated values
+  yamlscript: |
+    !ys-0:
+    seed: 3
+    unrelated:: 2 * *.seed
+    a:: 2 + *.b
+    b:: 2 - *.a
+  error: |
+    Circular deferred dependency: /a -> /b -> /a
+
+
+- name: Error on deferred cycle excludes blocked dependents
+  yamlscript: |
+    !ys-0:
+    blocked:: 2 + *.a
+    a:: 2 + *.b
+    b:: 2 - *.a
+  error: |
+    Circular deferred dependency: /a -> /b -> /a
 
 
 - name: Error when reference exceeds ancestor depth

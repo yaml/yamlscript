@@ -275,7 +275,7 @@
     {"a" 4, "b" 4}
 
 
-- name: Later deferred values are nil in earlier snapshots
+- name: Deferred dependencies are reordered before their dependents
   raw: true
   ys: |
     !ys-0:
@@ -283,7 +283,44 @@
     b:: *.c
     c: 4
   eval: |
-    {"a" nil, "b" 4, "c" 4}
+    {"a" 4, "b" 4, "c" 4}
+
+
+- name: Deferred dependency chains are ordered transitively
+  raw: true
+  ys: |
+    !ys-0:
+    a:: *.b + 2
+    b:: *.c * 3
+    c:: *.d - 2
+    d: 6
+  eval: |
+    {"a" 14, "b" 12, "c" 4, "d" 6}
+
+
+- name: Shared deferred dependencies precede both dependents
+  raw: true
+  ys: |
+    !ys-0:
+    total:: *.left + *.right
+    left:: *.base + 2
+    right:: *.base * 3
+    base:: *.seed * 2
+    seed: 4
+  eval: |
+    {"total" 34, "left" 10, "right" 24, "base" 8, "seed" 4}
+
+
+- name: Ready deferred expressions are selected in source order
+  raw: true
+  ys: |
+    !ys-0:
+    a:: *.b * 2
+    independent:: *.seed + 3
+    b:: *.seed + 2
+    seed: 4
+  eval: |
+    {"a" 12, "independent" 7, "b" 6, "seed" 4}
 
 
 - name: Ancestor and root references compose
