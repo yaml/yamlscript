@@ -2194,7 +2194,7 @@
   clojure: |
     (let
      [__
-      (merge-omap (if-let [_ (some? nil)] {"a" _} {}) {"b" nil})
+      (merge-omap (if-let [_ (truey? nil)] {"a" _} {}) {"b" nil})
       __
       (assoc __ "b" (get __ "a"))]
      __)
@@ -2631,7 +2631,7 @@
       (update
        __
        "value"
-       (fn [value] (merge-omap (get __ "defaults") value)))]
+       (fn [value] (merge-omap value (get __ "defaults") value)))]
      __)
 
 
@@ -2675,7 +2675,7 @@
     =>::
       copy: *base
   clojure: |
-    (+++ (% "base" (% "x" 1)))
+    (+++ {"base" {"x" 1}})
     (+++
      (let
       [__
@@ -2699,8 +2699,8 @@
     --- !ys
     =>: merge.apply(**)
   clojure: |
-    (+++ (% "name" "first" "value" 10))
-    (+++ (% "name" "second" "some" "thing"))
+    (+++ {"name" "first", "value" 10})
+    (+++ {"name" "second", "some" "thing"})
     (+++ (+apply merge (stream)))
 
 

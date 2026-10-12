@@ -824,8 +824,13 @@
         {:int "4"}],
        :! "+merge"}]}
   clojure: |
-    {"default" (_& 'default {"foo" 1, "bar" 2}),
-      "foo" (+merge {:-<< (_** 'default), "foo" 3, "baz" 4})}
+    (let
+     [__
+      {"default" {"foo" 1, "bar" 2}, "foo" {"foo" 3, "baz" 4}}
+      __
+      (update __ "foo"
+        (fn [value] (merge-omap value (get __ "default") value)))]
+     __)
 
 
 - name: Code assignment in data mode mapping

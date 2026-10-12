@@ -26,6 +26,7 @@
    [ys.v0.ipc]
    [ys.v0.pprint]
    [ys.v0.re :as re]
+   [ys.v0.reference :as reference]
    [ys.v0.ys :as ys])
   (:refer-clojure :exclude [load use]))
 
@@ -667,9 +668,14 @@
   '[_ ARGS ARGV CWD DIR ENV FILE INC PUN RUN VERSION])
 
 (def host-inline-core
-  '[abs infinite? NaN?])
+  '[abs infinite? NaN? nil?])
 
 (declare install!)
+
+(defn- std-alias [anchors name scope]
+  (if (contains? anchors name)
+    (ys.v0.std/+merge (get anchors name))
+    (throw (ex-info (str scope " Anchor not found: &" name "\n") {}))))
 
 (defn native-init
   ([] (native-init nil))
@@ -690,6 +696,13 @@
     (intern 'ys.v0.std '+++* std-document)
     (intern 'ys.v0.std 'get+ std-get+)
     (intern 'ys.v0.std 'stream std-stream)
+    (intern 'ys.v0.std '_*
+            #(std-alias @global/doc-anchors_ %1 "1"))
+    (intern 'ys.v0.std '_**
+            #(std-alias @global/stream-anchors_ %1 "2"))
+    (intern 'ys.v0.util 'reference-mark reference/mark)
+    (intern 'ys.v0.util 'reference-positions reference/positions)
+    (intern 'ys.v0.util 'reference-sibling reference/sibling)
     (reset! yamlscript.module.taptest/error-map-hook glojure-error-map)
     (reset! yamlscript.module.taptest/command-hook run-test-command)
     (intern 'ys.v0.fs 'read fs-read)

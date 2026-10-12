@@ -10,6 +10,7 @@
    [yamlscript.global :as global]
    [yamlscript.parser]
    [yamlscript.printer]
+   [yamlscript.references :as references]
    [yamlscript.resolver]
    [yamlscript.transformer]
    [yamlscript.module.pprint :as pprint])
@@ -26,42 +27,58 @@
     (map #(remove (fn [event] (= "DOC" (subs (:+ event) 1))) %))))
 
 (defn- compile-events [events stage observer]
-  (let [groups (parse-events-to-groups events)
-        group-count (count groups)
-        context {:first nil :last nil :init nil}]
-    (loop [[events & remaining] groups
-           context context
-           blocks []
-           index 1]
-      (let [context (assoc context
-                      :first (= index 1)
-                      :last (>= index group-count))
-            [node context] (stage "compose"
-                             yamlscript.composer/compose
-                             [events context])
-            node (stage "resolve" yamlscript.resolver/resolve [node])
-            node (stage "build" yamlscript.builder/build [node])
-            node (stage "transform" yamlscript.transformer/transform [node])
-            node (stage "construct" yamlscript.constructor/construct
-                   [node context])
-            block (stage "print" yamlscript.printer/print [node])
-            _ (when observer
-                (observer {:code block
-                           :source-line (or (first (:< (meta (first events)))) 0)}))
-            blocks (conj blocks block)]
-        (if (seq remaining)
-          (recur remaining context blocks (inc index))
-          (str/join "" blocks))))))
+  (binding [references/*anchors* (atom {})]
+    (let [groups (parse-events-to-groups events)
+          group-count (count groups)
+          context {:first nil :last nil :init nil}]
+      (loop [[events & remaining] groups
+             context context
+             blocks []
+             index 1]
+        (let [context (assoc context
+                             :first (= index 1)
+                             :last (>= index group-count))
+              [node context] (stage "compose"
+                                    yamlscript.composer/compose
+                                    [events context])
+              node (stage "resolve" yamlscript.resolver/resolve [node])
+              node (stage "build" yamlscript.builder/build [node])
+              node (binding [references/*document*
+                             (references/document-position blocks)
+                             references/*stream-size-known?*
+                             (some? (references/known-stream-size blocks))
+                             references/*used-anchors*
+                             (set (mapcat
+                                   (fn [event]
+                                     (concat (when (:* event) [(:* event)])
+                                             (map second
+                                                  (re-seq
+                                                   #"\*([A-Za-z0-9_][A-Za-z0-9_-]*)"
+                                                   (or (:= event) "")))))
+                                   (mapcat identity
+                                           (cons events remaining))))]
+                     (stage "transform"
+                            yamlscript.transformer/transform [node]))
+              node (stage "construct" yamlscript.constructor/construct
+                          [node context])
+              block (stage "print" yamlscript.printer/print [node])
+              _ (when observer
+                  (observer {:code block
+                             :source-line (or (first (:< (meta (first events)))) 0)}))
+              blocks (conj blocks block)]
+          (if (seq remaining)
+            (recur remaining context blocks (inc index))
+            (str/join "" blocks)))))))
 
 (defn compile
   ([yamlscript-string] (compile yamlscript-string nil))
   ([yamlscript-string observer]
    (reset! global/build-xstr builder/build-xstr)
    (compile-events
-     (yamlscript.parser/parse yamlscript-string)
-     (fn [_stage-name stage-fn input-args]
-       (apply stage-fn input-args))
-     observer)))
+    (yamlscript.parser/parse yamlscript-string)
+    (fn [_stage-name stage-fn input-args]
+      (apply stage-fn input-args))
+    observer)))
 
 (defn stage-with-options [stage-name stage-fn input-args]
   (let [start (time.Now)
@@ -79,9 +96,9 @@
   ([yamlscript-string observer]
    (reset! global/build-xstr builder/build-xstr)
    (let [events (stage-with-options
-                  "parse"
-                  yamlscript.parser/parse
-                  [yamlscript-string])]
+                 "parse"
+                 yamlscript.parser/parse
+                 [yamlscript-string])]
      (compile-events events stage-with-options observer))))
 
 (defn pretty-format [code]

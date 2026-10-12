@@ -1,7 +1,8 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns ys.v0.util)
+(ns ys.v0.util
+  (:require [ys.v0.reference :as reference]))
 
 (defn die
   "Throw a YAMLScript exception with a normalized trailing newline.
@@ -20,6 +21,10 @@
   `(try
      ~expr
      (catch #?(:glj go/any :default Exception) e# ~fallback)))
+
+(def reference-mark reference/mark)
+(def reference-positions reference/positions)
+(def reference-sibling reference/sibling)
 
 (defn backend
   "Resolve a backend library var at call time, so that Clojure runtimes

@@ -23,7 +23,7 @@
    [clj-commons/clj-yaml "1.0.27"]
    [cc.clojure/grenadine "0.1.12"]
    [org.flatland/ordered "1.15.11"]
-   [org.yamlscript/snakeyaml-engine "3.2.1"]
+   [org.yamlscript/snakeyaml-engine "3.2.2"]
    [babashka/babashka.pods "0.2.0"]
    [babashka/fs "0.5.26"]
    [babashka/process "0.6.23"]

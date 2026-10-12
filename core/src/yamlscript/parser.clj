@@ -12,7 +12,7 @@
    [ys.v0.common])
   (:import
    (java.util Optional)
-   (org.snakeyaml.engine.v2.api LoadSettings)
+   (org.snakeyaml.engine.v2.api LoadSettings YamlScriptSetting)
    (org.snakeyaml.engine.v2.api.lowlevel Parse)
    (org.snakeyaml.engine.v2.exceptions Mark)
    (org.snakeyaml.engine.v2.events
@@ -36,7 +36,10 @@
 (defn parse
   "Parse a YAML string into a sequence of event objects."
   [yaml-string]
-  (let [parser (new Parse (.build (LoadSettings/builder)))
+  (let [parser (new Parse
+                 (-> (LoadSettings/builder)
+                   (.setCustomProperty YamlScriptSetting/REFERENCES true)
+                   .build))
         has-code-mode-shebang (or
                                 (re-find shebang-ys yaml-string)
                                 (re-find shebang-bash yaml-string))
