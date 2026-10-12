@@ -8,6 +8,7 @@
    [clojure.test :refer [deftest is testing]]
    [sci.core :as sci]
    [yamlscript.compiler :as compiler]
+   [yamlscript.global :as global]
    [yamlscript.runtime :as runtime]
    [ys.v0.manifest :as manifest]
    [ys.v0.ys :as ys]
@@ -203,9 +204,12 @@
   ["test/runtime.yaml"]
   {:pick #(test/has-keys? [:ys :eval] %1)
    :test (fn [test]
+           (reset! global/stream-anchors_ {})
+           (reset! global/doc-anchors_ {})
+           (reset! global/stream-values [])
            (-> test
              :ys
-             (->> (str "!ys-0\n"))
+             (->> (str (when-not (:raw test) "!ys-0\n")))
              compiler/compile
              runtime/eval-string))
    :want (fn [test]

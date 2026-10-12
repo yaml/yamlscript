@@ -20,11 +20,13 @@
    "test/transformer.yaml"]
   {:pick #(test/has-keys? [:yamlscript :clojure] %1)
    :test (fn [test]
-           (-> test
-             :yamlscript
-             compiler/compile
-             compiler/pretty-format
-             testing-fix-clojure))
+           (let [code (-> test
+                        :yamlscript
+                        compiler/compile
+                        compiler/pretty-format)]
+             (if (:document-wrappers test)
+               code
+               (testing-fix-clojure code))))
    :want :clojure})
 
 (test/load-yaml-test-files
