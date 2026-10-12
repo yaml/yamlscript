@@ -1,7 +1,8 @@
 ;; Copyright 2023-2026 Ingy dot Net
 ;; This code is licensed under MIT license (See License for details)
 
-(ns yamlscript.parser)
+(ns yamlscript.parser
+  (:require [clojure.string :as str]))
 
 (def shebang-ys #"^#!.*/env ys-0(?:\.\d+\.\d+)?\r?\n")
 (def shebang-bash #"^#!.*[/ ]bash\r?\n+source +<\(")
@@ -45,11 +46,38 @@
     (with-meta normalized (event-meta event))))
 
 (defn parse [yaml-string]
-  (let [[events error]
+  (let [marker (loop [codepoint 57344]
+                 (let [marker (str (char codepoint))]
+                   (if (str/includes? yaml-string marker)
+                     (recur (inc codepoint)) marker)))
+        ;; The Go parser's alias rules predate expression references.
+        ;; A private character makes their prefixes plain scalars, including
+        ;; tagged flow entries. Restore it before composing the document.
+        masked (str/replace yaml-string
+                            #"(^|[ \t\n\[\{,:])\*([^\s])"
+                            #(str (second %1) marker (nth %1 2)))
+        [events error]
         (github.com:yaml:yamlscript:internal:goyamlparser.ParseYAMLScriptEvents
-          yaml-string)]
+         masked)]
     (when error (throw error))
-    (let [events (map normalize-event (rest events))
+    (let [events (map
+                  #(let [normalized
+                         (reduce-kv
+                          (fn [event key value]
+                            (assoc event key
+                                   (if (string? value)
+                                     (str/replace value marker "*") value)))
+                          (empty %1) %1)
+                         value (:= normalized)
+                         normalized
+                         (if (and value
+                                  (re-find #"^\*[A-Za-z0-9_]" value))
+                           (-> normalized
+                               (dissoc :=)
+                               (assoc :+ "=ALI" :* (subs value 1)))
+                           normalized)]
+                     (with-meta normalized (meta %1)))
+                  (map normalize-event (rest events)))
           [first-event & rest-events] events
           shebang? (or (re-find shebang-ys yaml-string)
                        (re-find shebang-bash yaml-string))

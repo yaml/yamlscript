@@ -28,12 +28,14 @@
   [node]
   (if-lets [[key val & rest] (:map node)
             _ (re-matches #":.*[^-\w].*" (str (:expr key)))]
-    {:map
-     (concat
-       [{:expr "=>"}
-        {:xmap [{:expr (subs (:expr key) 1)}
-                (if (= {:nil ""} val) {:expr ""} val)]}]
-       rest)}
+    (with-meta
+      {:map
+       (concat
+         [{:expr "=>"}
+          {:xmap [{:expr (subs (:expr key) 1)}
+                  (if (= {:nil ""} val) {:expr ""} val)]}]
+         rest)}
+      (meta node))
     node))
 
 (defn build
@@ -349,7 +351,8 @@
 (defn build-node
   "Dispatch a resolved node to the matching AST builder."
   [node]
-  (let [anchor (:& node)
+  (let [metadata (meta node)
+        anchor (:& node)
         ytag (:! node)
         cond-pair (:|? node)
         node (dissoc node :! :& :|?)
@@ -379,9 +382,8 @@
         node (if cond-pair
                (assoc node :|? cond-pair)
                node)]
-    (if ytag
-      (assoc node :! ytag)
-      node)))
+    (let [node (if ytag (assoc node :! ytag) node)]
+      (if (map? node) (with-meta node metadata) node))))
 
 (comment
   )

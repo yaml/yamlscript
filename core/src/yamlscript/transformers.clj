@@ -253,14 +253,17 @@ defn x():
 (defn transform-vec-destructure
   "Rewrite YAMLScript vector rest destructuring to Clojure form."
   [vec-form]
-  (if-lets [vect (:Vec vec-form)
-            form (last vect)
-            list (:Lst form)
-            _ (= 2 (count list))
-            _ (= {:Sym '_**} (first list))
-            sym (:Qts (second list))]
-    (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
-    vec-form))
+  (if-let [name (get-in vec-form [:Vec (dec (count (:Vec vec-form)))
+                                :Ref :name])]
+    (Vec (conj (pop (:Vec vec-form)) (Sym '&) (Sym name)))
+    (if-lets [vect (:Vec vec-form)
+              form (last vect)
+              list (:Lst form)
+              _ (= 2 (count list))
+              _ (= {:Sym '_**} (first list))
+              sym (:Qts (second list))]
+      (Vec (conj (vec (drop-last vect)) (Sym '&) (Sym sym)))
+      vec-form)))
 
 
 ;;-----------------------------------------------------------------------------

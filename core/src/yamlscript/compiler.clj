@@ -20,6 +20,7 @@
    [yamlscript.global]
    [yamlscript.parser]
    [yamlscript.printer]
+   [yamlscript.references :as references]
    [yamlscript.resolver]
    [yamlscript.transformer]
    [ys.v0.debug :as debug])
@@ -42,33 +43,50 @@
     (observer {:code code :source-line (or (first (:< (meta (first events)))) 0)}))
   code)
 
+(defn used-anchor-names [events]
+  (set (mapcat
+        (fn [event]
+          (concat (when (:* event) [(:* event)])
+                  (map second
+                       (re-seq #"\*([A-Za-z0-9_][A-Za-z0-9_-]*)"
+                               (or (:= event) ""))))) events)))
+
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."
   ([yamlscript-string] (compile yamlscript-string nil))
   ([^String yamlscript-string observer]
-  (when (System/getenv "YS_SHOW_PARSER_INPUT")
-    (debug/WWW "parser-input" yamlscript-string))
-  (let [events (yamlscript.parser/parse yamlscript-string)
-        groups (parse-events-to-groups events)
-        n (count groups)
-        ctx {:first nil :last nil :init nil}
-        blocks (loop [[events & groups] groups, ctx ctx, blocks [], i 1]
-                 (let [ctx (assoc ctx
-                             :first (= i 1)
-                             :last (>= i n))
-                       [node ctx] (yamlscript.composer/compose events ctx)
-                       blocks (conj blocks
-                                (-> node
-                                  yamlscript.resolver/resolve
-                                  yamlscript.builder/build
-                                  yamlscript.transformer/transform
-                                  (yamlscript.constructor/construct ctx)
-                                  yamlscript.printer/print
-                                  (#(record-document observer events %))))]
-                   (if (seq groups)
-                     (recur groups ctx blocks (inc i))
-                     blocks)))]
-    (str/join "" blocks))))
+   (when (System/getenv "YS_SHOW_PARSER_INPUT")
+     (debug/WWW "parser-input" yamlscript-string))
+   (binding [references/*anchors* (atom {})]
+     (let [events (yamlscript.parser/parse yamlscript-string)
+           groups (parse-events-to-groups events)
+           n (count groups)
+           ctx {:first nil :last nil :init nil}
+           blocks (loop [[events & groups] groups, ctx ctx, blocks [], i 1]
+                    (let [ctx (assoc ctx
+                                     :first (= i 1)
+                                     :last (>= i n))
+                          [node ctx] (yamlscript.composer/compose events ctx)
+                          blocks (conj blocks
+                                       (binding [references/*document*
+                                                 (references/document-position blocks)
+                                                 references/*stream-size-known?*
+                                                 (some? (references/known-stream-size blocks))
+                                                 references/*used-anchors*
+                                                 (used-anchor-names
+                                                  (mapcat identity
+                                                          (cons events groups)))]
+                                         (-> node
+                                             yamlscript.resolver/resolve
+                                             yamlscript.builder/build
+                                             yamlscript.transformer/transform
+                                             (yamlscript.constructor/construct ctx)
+                                             yamlscript.printer/print
+                                             (#(record-document observer events %)))))]
+                      (if (seq groups)
+                        (recur groups ctx blocks (inc i))
+                        blocks)))]
+       (str/join "" blocks)))))
 
 (defmacro value-time
   "Evaluate body and return its value with the elapsed time string."
@@ -93,39 +111,48 @@
   "Convert YAMLScript code string to an equivalent Clojure code string."
   ([yamlscript-string] (compile-with-options yamlscript-string nil))
   ([^String yamlscript-string observer]
-  (when (System/getenv "YS_SHOW_PARSER_INPUT")
-    (debug/WWW "parser-input" yamlscript-string))
-  (let [events (stage-with-options "parse"
-                 yamlscript.parser/parse [yamlscript-string])
-        groups (parse-events-to-groups events)
-        n (count groups)
-        ctx {:first nil :last nil :init nil}
-        blocks (loop [[events & groups] groups, ctx ctx, blocks [], i 1]
-                 (let [ctx (assoc ctx
-                             :first (= i 1)
-                             :last (>= i n))
-                       [node ctx]
-                       (stage-with-options "compose"
-                         yamlscript.composer/compose
-                         [events ctx])
-                       blocks (conj blocks
-                                (-> node
-                                  (#(stage-with-options "resolve"
-                                      yamlscript.resolver/resolve [%1]))
-                                  (#(stage-with-options "build"
-                                      yamlscript.builder/build [%1]))
-                                  (#(stage-with-options "transform"
-                                      yamlscript.transformer/transform [%1]))
-                                  (#(stage-with-options "construct"
-                                      yamlscript.constructor/construct
-                                      [%1 ctx]))
-                                  (#(stage-with-options "print"
-                                      yamlscript.printer/print [%1]))
-                                  (#(record-document observer events %))))]
-                   (if (seq groups)
-                     (recur groups ctx blocks (inc i))
-                     blocks)))]
-    (str/join "" blocks))))
+   (when (System/getenv "YS_SHOW_PARSER_INPUT")
+     (debug/WWW "parser-input" yamlscript-string))
+   (binding [references/*anchors* (atom {})]
+     (let [events (stage-with-options "parse"
+                                      yamlscript.parser/parse [yamlscript-string])
+           groups (parse-events-to-groups events)
+           n (count groups)
+           ctx {:first nil :last nil :init nil}
+           blocks (loop [[events & groups] groups, ctx ctx, blocks [], i 1]
+                    (let [ctx (assoc ctx
+                                     :first (= i 1)
+                                     :last (>= i n))
+                          [node ctx]
+                          (stage-with-options "compose"
+                                              yamlscript.composer/compose
+                                              [events ctx])
+                          blocks (conj blocks
+                                       (binding [references/*document*
+                                                 (references/document-position blocks)
+                                                 references/*stream-size-known?*
+                                                 (some? (references/known-stream-size blocks))
+                                                 references/*used-anchors*
+                                                 (used-anchor-names
+                                                  (mapcat identity
+                                                          (cons events groups)))]
+                                         (-> node
+                                             (#(stage-with-options "resolve"
+                                                                   yamlscript.resolver/resolve [%1]))
+                                             (#(stage-with-options "build"
+                                                                   yamlscript.builder/build [%1]))
+                                             (#(stage-with-options "transform"
+                                                                   yamlscript.transformer/transform [%1]))
+                                             (#(stage-with-options "construct"
+                                                                   yamlscript.constructor/construct
+                                                                   [%1 ctx]))
+                                             (#(stage-with-options "print"
+                                                                   yamlscript.printer/print [%1]))
+                                             (#(record-document observer events %)))))]
+                      (if (seq groups)
+                        (recur groups ctx blocks (inc i))
+                        blocks)))]
+       (str/join "" blocks)))))
 
 (defn pretty-format
   "Pretty-print generated Clojure code as separate top-level forms."

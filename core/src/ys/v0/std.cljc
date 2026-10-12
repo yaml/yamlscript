@@ -866,14 +866,16 @@
   val)
 
 (defn _* [sym]
-  (or
-    (+merge (get @global/doc-anchors_ sym))
-    (util/die "1 Anchor not found: &" sym)))
+  (let [anchors @global/doc-anchors_]
+    (if (contains? anchors sym)
+      (+merge (get anchors sym))
+      (util/die "1 Anchor not found: &" sym))))
 
 (defn _** [sym]
-  (or
-    (+merge (get @global/stream-anchors_ sym))
-    (util/die "2 Anchor not found: &" sym)))
+  (let [anchors @global/stream-anchors_]
+    (if (contains? anchors sym)
+      (+merge (get anchors sym))
+      (util/die "2 Anchor not found: &" sym))))
 
 
 ;;------------------------------------------------------------------------------

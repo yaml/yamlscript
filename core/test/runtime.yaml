@@ -244,6 +244,86 @@
     {"a" 3, "b" 4, "c" 12}
 
 
+- name: Conditional values preserve zero and false
+  raw: true
+  ys: |
+    !ys-0:
+    zero:?: 0
+    false-value:?: false
+    absent:?: nil
+  eval: |
+    {"zero" 0, "false-value" false}
+
+
+- name: Conditional values evaluate once
+  ys: |
+    counter =: atom(0)
+    value =::
+      optional:?: swap(counter inc)
+    =>: +[value deref(counter)]
+  eval: |
+    [{"optional" 1} 1]
+
+
+- name: Shared deferred dependencies evaluate once
+  ys: |
+    counter =: atom(0)
+    value =::
+      total:: *.left + *.right
+      left:: *.base + 2
+      right:: *.base * 3
+      base:: do(swap(counter inc) (*.seed * 2))
+      seed: 4
+    =>: +[value deref(counter)]
+  eval: |
+    [{"total" 34, "left" 10, "right" 24, "base" 8, "seed" 4} 1]
+
+
+- name: Deferred dependencies preserve nil results
+  raw: true
+  ys: |
+    !ys-0:
+    a:: *.b
+    b:: *.c
+    c: null
+  eval: |
+    {"a" nil, "b" nil, "c" nil}
+
+
+- name: Counting a deferred collection depends on its evaluation
+  raw: true
+  ys: |
+    !ys-0:
+    count:: count(*.items)
+    items:: 1 .. *.size
+    size: 4
+  eval: |
+    {"count" 4, "items" [1 2 3 4], "size" 4}
+
+
+- name: Counting filtered contents depends on deferred entries
+  raw: true
+  ys: |
+    !ys-0:
+    count:: count(filter(even? *.items))
+    items:
+    - ! *^.seed
+    seed: 2
+  eval: |
+    {"count" 1, "items" [2], "seed" 2}
+
+
+- name: Bare anchors and aliases retain punctuation
+  raw: true
+  ys: |
+    - &a'b 42
+    - *a'b
+    - &a*b 7
+    - *a*b
+  eval: |
+    [42 42 7 7]
+
+
 - name: Deferred references preserve absent conditional keys
   raw: true
   ys: |
@@ -434,11 +514,35 @@
     [6 7 7]
 
 
+- name: Dotted relative siblings skip omitted sequence entries
+  raw: true
+  ys: |
+    !ys-0:
+    - 6
+    - :when false: 100
+    - ! *.-1
+    - :when false: 200
+    - 7
+  eval: |
+    [6 6 7]
+
+
+- name: Conditional sibling references retain path suffixes
+  raw: true
+  ys: |
+    !ys-0:
+    - {value: 6}
+    - :when false: 100
+    - ! *-.value
+  eval: |
+    [{"value" 6} 6]
+
+
 - name: Mapping siblings skip omitted conditional entries
   raw: true
   ys: |
     !ys-0:
-    :when false:
+    :when false::
       skipped: 5
     a: 6
     b:: *-
@@ -505,7 +609,7 @@
      "items" [1 2 3],
      "count" 3,
      "last" 3,
-     "truey" true,
+     "truey" [1 2 3],
      "falsey" false,
      "boolean" true,
      "not" false,
@@ -568,6 +672,31 @@
      "current" {"index" 0}}
 
 
+- name: Stream indexes skip empty code documents
+  raw: true
+  ys: |
+    !ys-0
+    ---
+    value: 6
+    --- !ys:
+    previous:: **.-1.value
+  eval: |
+    {"previous" 6}
+
+
+- name: Stream indexes account for code document results
+  raw: true
+  ys: |
+    !ys-0
+    defn stream-helper(): 123
+    --- !ys:
+    value: 6
+    --- !ys:
+    previous:: **.-1.value
+  eval: |
+    {"previous" 6}
+
+
 - name: Data aliases resolve paths in completed documents
   raw: true
   ys: |
@@ -580,6 +709,25 @@
       copy: *base
   eval: |
     {"copy" {"x" 1}}
+
+
+- name: Completed anchors survive uncollected code documents
+  raw: true
+  ys: |
+    !ys-0
+    defn helper(): 123
+    --- !ys:
+    base: &base
+      x: 1
+      y:: *.x + 1
+    zero: &zero false
+    empty: &empty null
+    --- !ys:
+    copy: *base
+    zero: *zero
+    empty: *empty
+  eval: |
+    {"copy" {"x" 1, "y" 2}, "zero" false, "empty" nil}
 
 
 - name: Code documents read the completed stream with double star

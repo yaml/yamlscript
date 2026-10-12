@@ -602,7 +602,7 @@
                    (assoc mapping :& anchor)
                    mapping)
          mapping (if merge (assoc mapping :! "+merge") mapping)]
-     mapping)))
+     (with-meta mapping {:yamlscript/data true}))))
 
 (defn resolve-data-sequence
   "Resolve a YAML sequence while preserving data-mode shape."
@@ -610,9 +610,11 @@
   (let [sequence
         {:seq (map resolve-data-node
                 (or (:- node) (:-- node)))}]
-    (if-let [anchor (:& node)]
-      (assoc sequence :& anchor)
-      sequence)))
+    (with-meta
+      (if-let [anchor (:& node)]
+        (assoc sequence :& anchor)
+        sequence)
+      {:yamlscript/data true})))
 
 (defn resolve-data-scalar
   "Resolve a scalar according to data-mode YAML typing rules."
@@ -728,9 +730,11 @@
         (let [code (vec (mapcat resolve-data-preamble-pair preamble))
               data-node (assoc node node-key (vec (mapcat identity data)))
               data-map (:map (resolve-data-node data-node))]
-          {:map (vec (concat
-                       [{:expr "=>"} {:xmap code}]
-                       data-map))})
+          (with-meta
+            {:map (vec (concat
+                         [{:expr "=>"} {:xmap code}]
+                         data-map))}
+            {:yamlscript/data true}))
         (resolve-data-node node)))
     (if-lets [list (or (:- node) (:-- node))
               key-str (get-in list [0 :% 0 :=])

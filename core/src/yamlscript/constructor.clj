@@ -383,8 +383,8 @@
   [key-node val-node ctx]
   (let [key-str (or (:Str key-node) (str key-node))
         val (construct-node val-node ctx)]
-    (Lst [(Sym 'if-let)
-          (Vec [(Sym '_) (Lst [(Sym 'some?) val])])
+    (Lst [(Sym 'if-some)
+          (Vec [(Sym '_) val])
           (ast/MapNode [(Str key-str) (Sym '_)])
           (ast/MapNode [])])))
 
@@ -539,7 +539,9 @@
 (defn construct-alias
   "Construct a document-local YAML alias lookup."
   [node]
-  (Lst [(Sym '_*) (Qts (:ali node))]))
+  (Lst [(Sym '_*)
+        ((if (re-matches #"[A-Za-z0-9_][A-Za-z0-9_-]*" (:ali node))
+           Qts Str) (:ali node))]))
 
 (defn construct-stream-alias
   "Construct a stream-level YAML alias lookup."
@@ -594,7 +596,11 @@
                 (let [node (if (vector? node)
                              (first node)
                              node)]
-                  (Lst [(Sym '_&) (Qts anchor) node]))
+                  (Lst [(Sym '_&)
+                        ((if (re-matches
+                               #"[A-Za-z0-9_][A-Za-z0-9_-]*" anchor)
+                           Qts Str) anchor)
+                        node]))
                 node)
          node (if tag
                 (construct-tag-call node tag)

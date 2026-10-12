@@ -71,11 +71,12 @@ GLOJURE-TOOLS-CLI-CLJC := \
 GLOJURE-TOOLS-CLI-SRC := \
   $(GLOJURE-SRC-DIR)/vendor/clojure/tools/cli.clj
 GLOJURE-COMPILER-NAMES := \
-  re ast composer resolver ysreader builder transformers transformer \
+  re ast composer resolver references ysreader builder transformers transformer \
   constructor printer
 GLOJURE-COMPILER-SRCS := \
   $(GLOJURE-COMPILER-NAMES:%=$(GLOJURE-SRC-DIR)/yamlscript/%.clj)
 GLOJURE-IPC-SRC := $(GLOJURE-SRC-DIR)/ys/v0/ipc.clj
+GLOJURE-REFERENCE-SRC := $(GLOJURE-SRC-DIR)/ys/v0/reference.clj
 GLOJURE-GLOBAL-SRC := $(GLOJURE-SRC-DIR)/ys/v0/global.clj
 GLOJURE-PPRINT-SRC := $(GLOJURE-SRC-DIR)/ys/v0/pprint.clj
 GLOJURE-TAPTEST-SRC := \
@@ -111,6 +112,7 @@ GLOJURE-SRCS := \
   $(GLOJURE-DEPS-SRCS) \
   $(GLOJURE-GLOBAL-SRC) \
   $(GLOJURE-IPC-SRC) \
+  $(GLOJURE-REFERENCE-SRC) \
   $(GLOJURE-PPRINT-SRC) \
   $(GLOJURE-TAPTEST-SRC) \
   $(ROOT)/core/src-glojure/yamlscript/module/csv.clj \
@@ -162,6 +164,10 @@ $(GLOJURE-SRC-DIR)/yamlscript/%.clj: \
 
 $(GLOJURE-IPC-SRC): \
   $(ROOT)/core/src/ys/v0/ipc.cljc $(GLOJURE-SRC-PREPARE) $(PERL)
+	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
+
+$(GLOJURE-REFERENCE-SRC): \
+  $(ROOT)/core/src/ys/v0/reference.cljc $(GLOJURE-SRC-PREPARE) $(PERL)
 	$(PERL-CMD) $(GLOJURE-SRC-PREPARE) $< $@
 
 $(GLOJURE-GLOBAL-SRC): \

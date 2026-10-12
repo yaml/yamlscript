@@ -14,6 +14,7 @@
    [ys.v0.common]
    [yamlscript.global :as global]
    [yamlscript.re :as re]
+   [yamlscript.references :as references]
    [ys.v0.debug :as debug]
    [ys.v0.util :as util])
   (:refer-clojure :exclude [Map Set read-string]))
@@ -169,6 +170,7 @@
     (?:
       $ccom |                 # Clojure comment
       $icom |                 # Inline comment
+      \*(?:\([^)]*\)|[^\s,\]\}\)(])+ | # Expression reference
                               # Symbols and operators
       $ksym |                   # Colon chain calls
       $quot |                   # Quote token
@@ -271,7 +273,7 @@
   (reduce (fn [acc token]
             (cond
               (= token "+++")
-              (vec (concat acc ["(" "ys::v0::std/stream" ")"]))
+              (util/die "Invalid symbol: '+++'")
               ,
               (is-colon-calls? token)
               (vec (concat acc (re-lex-tokens (split-colon-calls token))))
@@ -287,11 +289,43 @@
 (defn lex-tokens
   "Lex tokens into YAMLScript tokens."
   [expr]
-  (let [tokens (->> expr
-                 (re-seq re-tokenize)
-                 (remove #(or (str/blank? %1)
+  (let [raw (vec (re-seq re-tokenize expr))
+        _ (doseq [[index token] (map-indexed vector raw)]
+            (let [previous (last (remove str/blank? (take index raw)))
+                  following (nth raw (inc index) "")
+                  trailing (when (re-matches #"[0-9]+[/*]" token)
+                             (subs token (dec (count token))))
+                  operator (or trailing
+                             (when (and (#{"/" "*" "+" "-" "**"} token)
+                                     previous
+                                     (not (or (#{"(" "[" "{"} previous)
+                                            (str/ends-with? previous "("))))
+                               token)
+                             (when (and (re-matches #"\*[0-9]+" token)
+                                     previous
+                                     (re-matches #"[0-9]+" previous)) "*"))]
+              (when (and operator
+                      (or trailing
+                        (re-matches #"\*[0-9]+" token)
+                        (not (str/blank? following))
+                        (not (str/blank? (nth raw (dec index) "")))))
+                (util/die "Binary operator '" operator
+                  "' must be surrounded by whitespace"))))
+        raw (map-indexed
+              (fn [index token]
+                (if (and (str/starts-with? token "*")
+                      (> (count token) 1)
+                      (not (and (= token "**")
+                             (pos? index) (< (inc index) (count raw))
+                             (str/blank? (nth raw (dec index)))
+                             (str/blank? (nth raw (inc index))))))
+                  (references/parse-reference token)
+                  token)) raw)
+        tokens (->> raw
+                 (remove #(and (string? %1)
+                            (or (str/blank? %1)
                               (= "," %1)
-                              (re-matches re/ignr %1)))
+                              (re-matches re/ignr %1))))
                  re-lex-tokens)]
     ;; XXX Might be too hot of a path to check here:
     (if (System/getenv "YS_SHOW_LEX")

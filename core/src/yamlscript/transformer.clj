@@ -7,6 +7,7 @@
 (ns yamlscript.transformer
   (:require
    [yamlscript.ast :refer [Key Lst Sym QSym Vec]]
+   [yamlscript.references :as references]
    [ys.v0.common]
    [yamlscript.transformers]
    [ys.v0.dwim]
@@ -20,7 +21,7 @@
 (defn transform
   "Transform special rules for YS AST."
   [node]
-  (transform-node-top node))
+  (references/transform (transform-node-top node)))
 
 (def transformers-ns (the-ns 'yamlscript.transformers))
 
@@ -346,7 +347,8 @@
 (defn transform-node
   "Dispatch one AST node through the transformer stage."
   [node]
-  (let [anchor (:& node)
+  (let [metadata (meta node)
+        anchor (:& node)
         tag (:! node)
         node (condf node
                :xmap (transform-xmap node)
@@ -361,7 +363,7 @@
                node)
         node (if anchor (assoc node :& anchor) node)
         node (if tag (assoc node :! tag) node)]
-    node))
+    (if (map? node) (with-meta node metadata) node)))
 
 (defn transform-node-top
   "Transform the top-level AST form and initialize context."
@@ -371,12 +373,14 @@
       (when-lets [[key val & rest] (:Map node)
                   _ (= key {:Sym '=>})
                   val (or (:xmap val) [{:Sym '=>} val])]
-        {:xmap (vec (concat val [{:Sym '=>} {:Map rest}]))})
+        {:xmap (vec (concat val [{:Sym '=>}
+                                (with-meta {:Map rest} (meta node))]))})
 
       (when-lets [[key val & rest] (:dmap node)
                   _ (= key {:Sym '=>})
                   val (or (:xmap val) [{:Sym '=>} val])]
-        {:xmap (vec (concat val [{:Sym '=>} {:dmap rest}]))})
+        {:xmap (vec (concat val [{:Sym '=>}
+                                (with-meta {:dmap rest} (meta node))]))})
 
       (when-lets [[first & rest] (:Vec node)
                   val (get-in first [:xmap 1 :xmap])]
