@@ -11,7 +11,7 @@ yaml1 =: |
   foo: boom
   ---
   !data
-  bar:: +++.$.foo
+  bar:: **.-1.foo
   baz: 123
 
 test::

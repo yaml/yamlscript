@@ -231,3 +231,332 @@
     identity({'y' false}.y)
   eval: |
     false
+
+
+- name: Deferred references evaluate mapping values
+  raw: true
+  ys: |
+    !ys-0:
+    a: 3
+    b: 4
+    c:: *.a * *.b
+  eval: |
+    {"a" 3, "b" 4, "c" 12}
+
+
+- name: Deferred references preserve absent conditional keys
+  raw: true
+  ys: |
+    !ys-0:
+    a:?: nil
+    b:: *.a
+  eval: |
+    {"b" nil}
+
+
+- name: Nested mapping references use the document snapshot
+  raw: true
+  ys: |
+    !ys-0:
+    a:
+      b:: 3 + *.c
+      c: 4
+  eval: |
+    {"a" {"b" 7, "c" 4}}
+
+
+- name: Later base values are visible to deferred references
+  raw: true
+  ys: |
+    !ys-0:
+    a:: *.b
+    b: 4
+  eval: |
+    {"a" 4, "b" 4}
+
+
+- name: Later deferred values are nil in earlier snapshots
+  raw: true
+  ys: |
+    !ys-0:
+    a:: *.b
+    b:: *.c
+    c: 4
+  eval: |
+    {"a" nil, "b" 4, "c" 4}
+
+
+- name: Ancestor and root references compose
+  raw: true
+  ys: |
+    !ys-0:
+    top: 2
+    nested:
+      a: 3
+      b:: *.a * *^.top
+    root-copy:: */top
+  eval: |
+    {"top" 2,
+     "nested" {"a" 3, "b" 6},
+     "root-copy" 2}
+
+
+- name: Container ancestors include intervening sequences
+  raw: true
+  ys: |
+    !ys-0:
+    outer: 6
+    items:
+    - one-caret:: *^.outer
+      two-carets:: *^^.outer
+  eval: |
+    {"outer" 6,
+     "items" [{"one-caret" nil, "two-carets" 6}]}
+
+
+- name: Root references evaluate sequence entries
+  raw: true
+  ys: |
+    !ys-0:
+    - 7
+    - ! */0
+  eval: |
+    [7 7]
+
+
+- name: Containing collection call forms are equivalent
+  raw: true
+  ys: |
+    !ys-0:
+    - 1
+    - 2
+    - ! count(*.)
+    - ! *:count
+  eval: |
+    [1 2 4 4]
+
+
+- name: Sequence sibling reference forms
+  raw: true
+  ys: |
+    !ys-0:
+    - 111
+    - 6
+    - ! (*.-1 * *.+1)
+    - 7
+    - ! (*- * *+)
+    - 6
+    - ! (*.1 * *.$)
+    - 7
+  eval: |
+    [111 6 42 7 42 6 42 7]
+
+
+- name: Mapping siblings use insertion order
+  raw: true
+  ys: |
+    !ys-0:
+    a: 6
+    b:: *- * *+
+    c: 7
+  eval: |
+    {"a" 6, "b" 42, "c" 7}
+
+
+- name: Ancestor sibling references select collection siblings
+  raw: true
+  ys: |
+    !ys-0:
+    - [10]
+    - [20, ! *^-, ! *^+]
+    - [30]
+  eval: |
+    [[10] [20 [10] [30]] [30]]
+
+
+- name: Sibling bounds return nil
+  raw: true
+  ys: |
+    !ys-0:
+    - ! *-
+    - middle
+    - ! *+
+  eval: |
+    [nil "middle" nil]
+
+
+- name: Relative siblings use evaluated sequence positions
+  raw: true
+  ys: |
+    !ys-0:
+    - :when false: 100
+    - 6
+    - ! *+
+    - 7
+  eval: |
+    [6 7 7]
+
+
+- name: Mapping siblings skip omitted conditional entries
+  raw: true
+  ys: |
+    !ys-0:
+    :when false:
+      skipped: 5
+    a: 6
+    b:: *-
+  eval: |
+    {"a" 6, "b" 6}
+
+
+- name: Numeric and repeated ancestor depths are equivalent
+  raw: true
+  ys: |
+    !ys-0:
+    root-value: 42
+    a:
+      b:
+        c:
+          d:
+            e:
+              numeric:: *^5.root-value
+              repeated:: *^^^^^.root-value
+  eval: |
+    {"root-value" 42,
+     "a" {"b" {"c" {"d" {"e" {"numeric" 42, "repeated" 42}}}}}}
+
+
+- name: Bare mode aliases remain immediate
+  raw: true
+  ys: |
+    - &answer 42
+    - *answer
+  eval: |
+    [42 42]
+
+
+- name: Data aliases observe current anchored paths
+  raw: true
+  ys: |
+    !ys-0:
+    base: &base
+      x: 1
+      y:: *.x + 1
+    copy: *base
+  eval: |
+    {"base" {"x" 1, "y" 2},
+     "copy" {"x" 1, "y" 2}}
+
+
+- name: Alias references evaluate special dot operators
+  raw: true
+  ys: |
+    !ys-0:
+    number: &number 2
+    items: &items [1, 2, 3]
+    count:: *items.#
+    last:: *items.$
+    truey:: *items.?
+    falsey:: *items.!
+    boolean:: *items.??
+    not:: *items.!!
+    increment:: *number.++
+    decrement:: *number.--
+    embedded:: (*number.++ * 2)
+  eval: |
+    {"number" 2,
+     "items" [1 2 3],
+     "count" 3,
+     "last" 3,
+     "truey" true,
+     "falsey" false,
+     "boolean" true,
+     "not" false,
+     "increment" 3,
+     "decrement" 1,
+     "embedded" 6}
+
+
+- name: Expression alias names use the restricted base grammar
+  raw: true
+  ys: |
+    !ys-0:
+    one: &123 1
+    two: &_foo 2
+    three: &foo-bar 3
+    sum:: (*123 + *_foo + *foo-bar)
+  eval: |
+    {"one" 1, "two" 2, "three" 3, "sum" 6}
+
+
+- name: Alias references evaluate predicate colon calls
+  raw: true
+  ys: |
+    !ys-0:
+    items: &items []
+    empty:: *items:empty?
+  eval: |
+    {"items" [], "empty" true}
+
+
+- name: Data merge aliases are deferred
+  raw: true
+  ys: |
+    !ys-0:
+    defaults: &defaults
+      x: 1
+      y: 2
+    value:
+      <<: *defaults
+      y: 3
+  eval: |
+    {"defaults" {"x" 1, "y" 2},
+     "value" {"x" 1, "y" 3}}
+
+
+- name: Stream references see completed documents
+  raw: true
+  ys: |
+    !ys-0
+    =>::
+      index:: **:count
+    --- !ys
+    =>::
+      index:: **:count
+      previous:: **.-1
+      current:: **.$
+  eval: |
+    {"index" 1,
+     "previous" {"index" 0},
+     "current" {"index" 0}}
+
+
+- name: Data aliases resolve paths in completed documents
+  raw: true
+  ys: |
+    !ys-0
+    =>::
+      base: &base
+        x: 1
+    --- !ys
+    =>::
+      copy: *base
+  eval: |
+    {"copy" {"x" 1}}
+
+
+- name: Code documents read the completed stream with double star
+  raw: true
+  ys: |
+    !ys-0
+    =>::
+      name: first
+      value: 10
+    --- !ys
+    =>::
+      name: second
+      some: thing
+    --- !ys
+    =>: merge.apply(**)
+  eval: |
+    {"name" "second", "value" 10, "some" "thing"}

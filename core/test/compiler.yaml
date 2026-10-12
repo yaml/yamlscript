@@ -2071,3 +2071,637 @@
     value =::: inc(41)
   error: |
     Code-value mode requires a mapping or sequence
+
+
+- name: Deferred reference to mapping values
+  yamlscript: |
+    !ys-0:
+    a: 3
+    b: 4
+    c:: *.a * *.b
+  clojure: |
+    (let
+     [__
+      {"a" 3, "b" 4, "c" nil}
+      __
+      (assoc __ "c" (mul+ (get __ "a") (get __ "b")))]
+     __)
+
+
+- name: Deferred references use source ordered snapshots
+  yamlscript: |
+    !ys-0:
+    a: 3
+    b:: *.a * 2
+    c:: *.b * 2
+  clojure: |
+    (let
+     [__
+      {"a" 3, "b" nil, "c" nil}
+      __
+      (assoc __ "b" (mul+ (get __ "a") 2))
+      __
+      (assoc __ "c" (mul+ (get __ "b") 2))]
+     __)
+
+
+- name: Nested mapping reference uses the document snapshot
+  yamlscript: |
+    !ys-0:
+    a:
+      b:: 3 + *.c
+      c: 4
+  clojure: |
+    (let
+     [__
+      {"a" {"b" nil, "c" 4}}
+      __
+      (assoc-in __ ["a" "b"] (add+ 3 (get-in __ ["a" "c"])))]
+     __)
+
+
+- name: Deferred references preserve an absent conditional key
+  yamlscript: |
+    !ys-0:
+    a:?: nil
+    b:: *.a
+  clojure: |
+    (let
+     [__
+      (merge-omap (if-let [_ (some? nil)] {"a" _} {}) {"b" nil})
+      __
+      (assoc __ "b" (get __ "a"))]
+     __)
+
+
+- name: Deferred references allow later base values
+  yamlscript: |
+    !ys-0:
+    a:: *.b
+    b: 4
+  clojure: |
+    (let
+     [__
+      {"a" nil, "b" 4}
+      __
+      (assoc __ "a" (get __ "b"))]
+     __)
+
+
+- name: Later deferred values are still nil
+  yamlscript: |
+    !ys-0:
+    a:: *.b
+    b:: *.c
+    c: 4
+  clojure: |
+    (let
+     [__
+      {"a" nil, "b" nil, "c" 4}
+      __
+      (assoc __ "a" (get __ "b"))
+      __
+      (assoc __ "b" (get __ "c"))]
+     __)
+
+
+- name: Caret reference selects a container ancestor
+  yamlscript: |
+    !ys-0:
+    top: 2
+    nested:
+      a: 3
+      b:: *.a * *^.top
+  clojure: |
+    (let
+     [__
+      {"top" 2, "nested" {"a" 3, "b" nil}}
+      __
+      (assoc-in
+       __
+       ["nested" "b"]
+       (mul+
+        (get-in __ ["nested" "a"])
+        (get __ "top")))]
+     __)
+
+
+- name: Container ancestors include intervening sequences
+  yamlscript: |
+    !ys-0:
+    outer: 6
+    items:
+    - value:: *^.outer
+  clojure: |
+    (let
+     [__
+      {"outer" 6, "items" [{"value" nil}]}
+      __
+      (assoc-in
+       __
+       ["items" 0 "value"]
+       (get-in __ ["items" "outer"]))]
+     __)
+
+
+- name: Two carets cross an intervening sequence
+  yamlscript: |
+    !ys-0:
+    outer: 6
+    items:
+    - value:: *^^.outer
+  clojure: |
+    (let
+     [__
+      {"outer" 6, "items" [{"value" nil}]}
+      __
+      (assoc-in
+       __
+       ["items" 0 "value"]
+       (get __ "outer"))]
+     __)
+
+
+- name: Root reference supports keys and indexes
+  yamlscript: |
+    !ys-0:
+    a: [0, 1, 2, 3]
+    b:: */a.3
+  clojure: |
+    (let
+     [__
+      {"a" [0 1 2 3], "b" nil}
+      __
+      (assoc __ "b" (get-in __ ["a" 3]))]
+     __)
+
+
+- name: Containing reference supports receiver calls
+  yamlscript: |
+    !ys-0:
+    a: 21
+    b:: *.a:double
+  clojure: |
+    (let
+     [__
+      {"a" 21, "b" nil}
+      __
+      (assoc __ "b" (double (get __ "a")))]
+     __)
+
+
+- name: Root reference supports sequence indexes
+  yamlscript: |
+    !ys-0:
+    - 7
+    - ! */0
+  clojure: |
+    (let
+     [__
+      [7 nil]
+      __
+      (assoc __ 1 (nth __ 0))]
+     __)
+
+
+- name: Containing collection call forms are equivalent
+  yamlscript: |
+    !ys-0:
+    - 1
+    - 2
+    - ! count(*.)
+    - ! *:count
+  clojure: |
+    (let
+     [__
+      [1 2 nil nil]
+      __
+      (assoc __ 2 (count __))
+      __
+      (assoc __ 3 (count __))]
+     __)
+
+
+- name: Sequence sibling reference forms
+  yamlscript: |
+    !ys-0:
+    - 111
+    - 6
+    - ! (*.-1 * *.+1)
+    - 7
+    - ! (*- * *+)
+    - 6
+    - ! (*.1 * *.$)
+    - 7
+  clojure: |
+    (let
+     [__
+      [111 6 nil 7 nil 6 nil 7]
+      __
+      (assoc __ 2 (mul+ (nth __ 1) (nth __ 3)))
+      __
+      (assoc __ 4 (mul+ (nth __ 3) (nth __ 5)))
+      __
+      (assoc __ 6 (mul+ (nth __ 1) (nth __ 7)))]
+     __)
+
+
+- name: Mapping sibling reference forms
+  yamlscript: |
+    !ys-0:
+    a: 6
+    b:: *- * *+
+    c: 7
+  clojure: |
+    (let
+     [__
+      {"a" 6, "b" nil, "c" 7}
+      __
+      (assoc __ "b" (mul+ (get __ "a") (get __ "c")))]
+     __)
+
+
+- name: Ancestor sibling references select collection siblings
+  yamlscript: |
+    !ys-0:
+    - [10]
+    - [20, ! *^-, ! *^+]
+    - [30]
+  clojure: |
+    (let
+     [__
+      [[10] [20 nil nil] [30]]
+      __
+      (assoc-in __ [1 1] (nth __ 0))
+      __
+      (assoc-in __ [1 2] (nth __ 2))]
+     __)
+
+
+- name: Numeric and repeated ancestor depths are equivalent
+  yamlscript: |
+    !ys-0:
+    root-value: 42
+    a:
+      b:
+        c:
+          d:
+            e:
+              numeric:: *^5.root-value
+              repeated:: *^^^^^.root-value
+  clojure: |
+    (let
+     [__
+      {"root-value" 42,
+       "a"
+       {"b"
+        {"c"
+         {"d" {"e" {"numeric" nil, "repeated" nil}}}}}}
+      __
+      (assoc-in
+       __
+       ["a" "b" "c" "d" "e" "numeric"]
+       (get __ "root-value"))
+      __
+      (assoc-in
+       __
+       ["a" "b" "c" "d" "e" "repeated"]
+       (get __ "root-value"))]
+     __)
+
+
+- name: Data aliases use current anchored paths
+  yamlscript: |
+    !ys-0:
+    base: &base
+      x: 1
+      y:: *.x + 1
+    copy: *base
+  clojure: |
+    (let
+     [__
+      {"base" {"x" 1, "y" nil}, "copy" nil}
+      __
+      (assoc-in
+       __
+       ["base" "y"]
+       (add+ (get-in __ ["base" "x"]) 1))
+      __
+      (assoc __ "copy" (get __ "base"))]
+     __)
+
+
+- name: Alias references support special dot operators
+  yamlscript: |
+    !ys-0:
+    number: &number 2
+    items: &items [1, 2, 3]
+    count:: *items.#
+    last:: *items.$
+    truey:: *items.?
+    falsey:: *items.!
+    boolean:: *items.??
+    not:: *items.!!
+    increment:: *number.++
+    decrement:: *number.--
+    dereference:: *number.@
+    debug:: *number.>
+    debug-all:: *number.>>>
+    embedded:: (*number.++ * 2)
+  clojure: |
+    (let
+     [__
+      {"number" 2,
+       "items" [1 2 3],
+       "count" nil,
+       "last" nil,
+       "truey" nil,
+       "falsey" nil,
+       "boolean" nil,
+       "not" nil,
+       "increment" nil,
+       "decrement" nil,
+       "dereference" nil,
+       "debug" nil,
+       "debug-all" nil,
+       "embedded" nil}
+      __
+      (assoc __ "count" (count (get __ "items")))
+      __
+      (assoc __ "last" (last (get __ "items")))
+      __
+      (assoc __ "truey" (truey? (get __ "items")))
+      __
+      (assoc __ "falsey" (falsey? (get __ "items")))
+      __
+      (assoc __ "boolean" (boolean (get __ "items")))
+      __
+      (assoc __ "not" (not (get __ "items")))
+      __
+      (assoc __ "increment" (inc+ (get __ "number")))
+      __
+      (assoc __ "decrement" (dec+ (get __ "number")))
+      __
+      (assoc __ "dereference" (deref (get __ "number")))
+      __
+      (assoc __ "debug" (DBG (get __ "number")))
+      __
+      (assoc __ "debug-all" (DBG (get __ "number")))
+      __
+      (assoc __ "embedded" (mul+ (inc+ (get __ "number")) 2))]
+     __)
+
+
+- name: Expression alias names have a restricted base grammar
+  yamlscript: |
+    !ys-0:
+    one: &123 1
+    two: &_foo 2
+    three: &foo-bar 3
+    sum:: (*123 + *_foo + *foo-bar)
+  clojure: |
+    (let
+     [__
+      {"one" 1, "two" 2, "three" 3, "sum" nil}
+      __
+      (assoc
+       __
+       "sum"
+       (add+ (get __ "one") (get __ "two") (get __ "three")))]
+     __)
+
+
+- name: Alias references support predicate colon calls
+  yamlscript: |
+    !ys-0:
+    items: &items []
+    empty:: *items:empty?
+  clojure: |
+    (let
+     [__
+      {"items" [], "empty" nil}
+      __
+      (assoc __ "empty" (empty? (get __ "items")))]
+     __)
+
+
+- name: Data merge aliases are deferred container patches
+  yamlscript: |
+    !ys-0:
+    defaults: &defaults
+      x: 1
+      y: 2
+    value:
+      <<: *defaults
+      y: 3
+  clojure: |
+    (let
+     [__
+      {"defaults" {"x" 1, "y" 2}, "value" {"y" 3}}
+      __
+      (update
+       __
+       "value"
+       (fn [value] (merge-omap (get __ "defaults") value)))]
+     __)
+
+
+- name: Deferred stream references see completed documents
+  document-wrappers: true
+  yamlscript: |
+    !ys-0
+    =>::
+      index:: **:count
+    --- !ys
+    =>::
+      index:: **:count
+      previous:: **.-1
+      current:: **.$
+  clojure: |
+    (+++
+     (let
+      [__ {"index" nil} __ (assoc __ "index" (count (stream)))]
+      __))
+    (+++
+     (let
+      [__
+       {"index" nil, "previous" nil, "current" nil}
+       __
+       (assoc __ "index" (count (stream)))
+       __
+       (assoc __ "previous" (nth (stream) 0))
+       __
+       (assoc __ "current" (last (stream)))]
+      __))
+
+
+- name: Data aliases resolve paths in completed documents
+  document-wrappers: true
+  yamlscript: |
+    !ys-0
+    =>::
+      base: &base
+        x: 1
+    --- !ys
+    =>::
+      copy: *base
+  clojure: |
+    (+++ (% "base" (% "x" 1)))
+    (+++
+     (let
+      [__
+       {"copy" nil}
+       __
+       (assoc __ "copy" (get-in (stream) [0 "base"]))]
+      __))
+
+
+- name: Code documents read the completed stream with double star
+  document-wrappers: true
+  yamlscript: |
+    !ys-0
+    =>::
+      name: first
+      value: 10
+    --- !ys
+    =>::
+      name: second
+      some: thing
+    --- !ys
+    =>: merge.apply(**)
+  clojure: |
+    (+++ (% "name" "first" "value" 10))
+    (+++ (% "name" "second" "some" "thing"))
+    (+++ (+apply merge (stream)))
+
+
+- name: Binary operators require surrounding whitespace
+  yamlscript: |
+    !ys-0
+    =>: 6 / 7
+    =>: 6 * -7
+    =>: a(* b)
+    x +: y
+  clojure: |
+    (div+ 6 7)
+    (mul+ 6 -7)
+    (a * b)
+    (add+ x y)
+
+
+- name: Error on binary operator missing left whitespace
+  yamlscript: |
+    !ys-0
+    =>: 6/ 7
+  error: |
+    Binary operator '/' must be surrounded by whitespace
+
+
+- name: Error on binary operator missing right whitespace
+  yamlscript: |
+    !ys-0
+    =>: 6 /7
+  error: |
+    Binary operator '/' must be surrounded by whitespace
+
+
+- name: Error on star operator missing left whitespace
+  yamlscript: |
+    !ys-0
+    =>: 6* 7
+  error: |
+    Binary operator '*' must be surrounded by whitespace
+
+
+- name: Error on star operator missing right whitespace
+  yamlscript: |
+    !ys-0
+    =>: 6 *7
+  error: |
+    Binary operator '*' must be surrounded by whitespace
+
+
+- name: Error when reference exceeds ancestor depth
+  yamlscript: |
+    !ys-0:
+    a:
+      b:: *^^.x
+  error: |
+    Reference exceeds available ancestor depth: *^^.x
+
+
+- name: Error on reference outside a data collection
+  yamlscript: |
+    !ys-0
+    say: *.a
+  error: |
+    Reference requires a containing data collection: *.a
+
+
+- name: Error on removed triple plus stream syntax
+  yamlscript: |
+    !ys-0
+    say: +++
+  error: |
+    Invalid symbol: '+++'
+
+
+- name: Error on parenthesized call in a reference
+  yamlscript: |
+    !ys-0:
+    bad:: (*.count())
+  error: |
+    Invalid reference syntax: *.count()
+
+
+- name: Error on bang colon call in a reference
+  yamlscript: |
+    !ys-0:
+    value: &value 1
+    bad:: (*value:empty! * 2)
+  error: |
+    Invalid reference syntax: *value:empty!
+
+
+- name: Error on leading hyphen in an expression alias name
+  yamlscript: |
+    !ys-0:
+    bad:: (*-foo)
+  error: |
+    Invalid reference syntax: *-foo
+
+
+- name: Error on quoted path in a reference
+  yamlscript: |
+    !ys-0:
+    value: &value 1
+    bad:: *value.'key'
+  error: |
+    Invalid reference syntax: *value.'key'
+
+
+- name: Error on double quoted path in a reference
+  yamlscript: |
+    !ys-0:
+    value: &value 1
+    bad:: *value."key"
+  error: |
+    Invalid reference syntax: *value."key"
+
+
+- name: Error on backtick path in a reference
+  yamlscript: |
+    !ys-0:
+    value: &value 1
+    bad:: *value.`key
+  error: |
+    Invalid reference syntax: *value.`key
+
+
+- name: Error on arbitrary hash in a reference
+  yamlscript: |
+    !ys-0:
+    value: &value 1
+    bad:: *value.#key
+  error: |
+    Invalid reference syntax: *value.#key
