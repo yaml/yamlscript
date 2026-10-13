@@ -533,11 +533,11 @@
 
 - id: optional-fields
   label: Optional Fields
-  description: Omit falsey fields from generated YAML.
+  description: Omit null fields from generated YAML.
   source: |
     !ys-0:
 
-    # The `:?:` marker omits a field when its value is falsey.
+    # The `:?:` marker omits a field when its value is null.
     debug =: nil
 
     service:

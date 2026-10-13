@@ -383,8 +383,8 @@
   [key-node val-node ctx]
   (let [key-str (or (:Str key-node) (str key-node))
         val (construct-node val-node ctx)]
-    (Lst [(Sym 'if-let)
-          (Vec [(Sym '_) (Lst [(Sym 'some?) val])])
+    (Lst [(Sym 'if-some)
+          (Vec [(Sym '_) val])
           (ast/MapNode [(Str key-str) (Sym '_)])
           (ast/MapNode [])])))
 

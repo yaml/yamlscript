@@ -2026,17 +2026,14 @@
     !ys-0:
     foo:?: bar
   clojure: |
-    (if-let [_ (some? bar)] {"foo" _} {})
+    (if-some [_ bar] {"foo" _} {})
 
 - name: Conditional pair with dot access
   yamlscript: |
     !ys-0:
     annotations:?: Values.podAnnotations
   clojure: |
-    (if-let
-      [_ (some? (get+ Values 'podAnnotations))]
-      {"annotations" _}
-      {})
+    (if-some [_ (get+ Values 'podAnnotations)] {"annotations" _} {})
 
 - name: Conditional pair mixed with regular pairs
   yamlscript: |
@@ -2045,16 +2042,14 @@
     b:?: c
     d: 2
   clojure: |
-    (merge-omap
-      (merge-omap {"a" 1} (if-let [_ (some? c)] {"b" _} {}))
-      {"d" 2})
+    (merge-omap (merge-omap {"a" 1} (if-some [_ c] {"b" _} {})) {"d" 2})
 
-- name: Conditional pair only (edge case - returns {} not nil when falsy)
+- name: Conditional pair only returns empty mapping when nil
   yamlscript: |
     !ys-0:
     foo:?: nil
   clojure: |
-    (if-let [_ (some? nil)] {"foo" _} {})
+    (if-some [_ nil] {"foo" _} {})
 
 - name: Error on invalid key suffix with exclamation
   yamlscript: |
