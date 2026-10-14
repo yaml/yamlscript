@@ -1099,6 +1099,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#conditional-data-pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional Data Pairs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#code-values-in-data-collections" class="md-nav__link">
     <span class="md-ellipsis">
       Code Values in Data Collections
@@ -1833,6 +1842,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a href="#data-mode-preambles" class="md-nav__link">
     <span class="md-ellipsis">
       Data Mode Preambles
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-data-pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional Data Pairs
     </span>
   </a>
   
@@ -2662,6 +2680,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </li>
       
         <li class="md-nav__item">
+  <a href="#conditional-data-pairs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conditional Data Pairs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#code-values-in-data-collections" class="md-nav__link">
     <span class="md-ellipsis">
       Code Values in Data Collections
@@ -2861,6 +2888,69 @@ The compact <code>::use: fs json</code> form introduces one code pair.</p>
 A compact code pair after that point is an error.
 The redundant compact assignment <code>::a =: 40</code> is also an error; write
 <code>a =: 40</code> instead.</p>
+<h2 id="conditional-data-pairs">Conditional Data Pairs<a class="headerlink" href="#conditional-data-pairs" title="Permanent link">🔗</a></h2>
+<p>Use <code>:?:</code> or <code>:??:</code> to include a data pair only when its code value meets a
+condition.
+Both forms evaluate the value once and preserve the original included value.
+The suffix is removed from the resulting key.</p>
+<ul>
+<li><code>:?:</code> uses <code>truey?</code>, like <code>value.?</code>.
+  It omits null, false, zero, and empty strings or collections.</li>
+<li><code>:??:</code> checks whether the value is non-null.
+  It preserves false, zero, and empty strings or collections.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th><code>:?:</code></th>
+<th><code>:??:</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Null</td>
+<td>Omit</td>
+<td>Omit</td>
+</tr>
+<tr>
+<td>False</td>
+<td>Omit</td>
+<td>Include false</td>
+</tr>
+<tr>
+<td>Zero</td>
+<td>Omit</td>
+<td>Include zero</td>
+</tr>
+<tr>
+<td>Empty string or collection</td>
+<td>Omit</td>
+<td>Include unchanged</td>
+</tr>
+<tr>
+<td>Other values</td>
+<td>Include unchanged</td>
+<td>Include unchanged</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="nt">!ys-0</span><span class="p">:</span>
+<span class="nt">retries =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="nt">debug =</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="l l-Scalar l-Scalar-Plain">retries:?</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retries</span>
+<span class="l l-Scalar l-Scalar-Plain">retries_kept:??</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retries</span>
+<span class="l l-Scalar l-Scalar-Plain">debug:?</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span>
+<span class="l l-Scalar l-Scalar-Plain">debug_kept:??</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">debug</span>
+<span class="l l-Scalar l-Scalar-Plain">missing:??</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nil</span>
+</code></pre></div>
+<p>This produces:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">retries_kept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="nt">debug_kept</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<p>Conditional pairs also work in code-value collections entered with <code>:::</code>.
+Quote a key ending in <code>:?</code> or <code>:??</code> when the suffix should be literal.</p>
 <h2 id="code-values-in-data-collections">Code Values in Data Collections<a class="headerlink" href="#code-values-in-data-collections" title="Permanent link">🔗</a></h2>
 <p>Use <code>:::</code> when a mapping or sequence contains mostly computed values.
 It keeps the collection structure and mapping keys in data mode while treating
