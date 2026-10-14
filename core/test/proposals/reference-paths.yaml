@@ -1,0 +1,172 @@
+# Copyright 2023-2026 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+# Runtime reference regression fixtures. See README.md for semantics.
+
+- name: Mixed string keys and a numeric index
+  path: [foo, 42, bar]
+  path-string: /foo/42/bar
+  serialized: {'*': /foo/42/bar}
+
+- name: A numeric string key is quoted
+  path: [foo, '42', bar]
+  path-string: /foo/'42'/bar
+  serialized: {'*': /foo/'42'/bar}
+
+- name: Index zero is not a numeric string key
+  path: [0]
+  path-string: /0
+  serialized: {'*': /0}
+
+- name: String zero is not an index
+  path: ['0']
+  path-string: /'0'
+  serialized: {'*': /'0'}
+
+- name: Numeric-looking string keys preserve leading zeroes
+  path: ['0042']
+  path-string: /'0042'
+  serialized: {'*': /'0042'}
+
+- name: Numeric-looking string keys preserve a minus sign
+  path: ['-42']
+  path-string: /'-42'
+  serialized: {'*': /'-42'}
+
+- name: Numeric-looking string keys preserve a plus sign
+  path: ['+42']
+  path-string: /'+42'
+  serialized: {'*': /'+42'}
+
+- name: Decimal-looking string keys are quoted
+  path: ['4.2']
+  path-string: /'4.2'
+  serialized: {'*': /'4.2'}
+
+- name: Exponent-looking string keys are quoted
+  path: ['4e2']
+  path-string: /'4e2'
+  serialized: {'*': /'4e2'}
+
+- name: Digits within a nonnumeric key do not need quoting
+  path: [item42, 0, 42items]
+  path-string: /item42/0/42items
+  serialized: {'*': /item42/0/42items}
+
+- name: A slash inside a key does not split the component
+  path: [foo/bar, 42, baz]
+  path-string: '/foo\u002Fbar/42/baz'
+  serialized: {'*': '/foo\u002Fbar/42/baz'}
+
+- name: A slash-only key is not an empty component
+  path: [/]
+  path-string: '/\u002F'
+  serialized: {'*': '/\u002F'}
+
+- name: Literal Unicode-escape text is not decoded as a slash
+  path: ['foo\u002Fbar']
+  path-string: '/foo\\u002Fbar'
+  serialized: {'*': '/foo\\u002Fbar'}
+
+- name: Backslashes have JSON string semantics
+  path: ['foo\bar']
+  path-string: '/foo\\bar'
+  serialized: {'*': '/foo\\bar'}
+
+- name: Double quotes have JSON string semantics
+  path: ['say "hello"']
+  path-string: '/say \"hello\"'
+  serialized: {'*': '/say \"hello\"'}
+
+- name: Newlines are escaped rather than literal path line breaks
+  path: ["line\nbreak"]
+  path-string: '/line\nbreak'
+  serialized: {'*': '/line\nbreak'}
+
+- name: Tabs are escaped rather than literal path whitespace
+  path: ["tab\tkey"]
+  path-string: '/tab\tkey'
+  serialized: {'*': '/tab\tkey'}
+
+- name: Control characters use JSON escapes
+  path: ["nul\u0000key"]
+  path-string: '/nul\u0000key'
+  serialized: {'*': '/nul\u0000key'}
+
+- name: Ordinary Unicode keys do not require enclosing quotes
+  path: [café, 雪, 😀]
+  path-string: /café/雪/😀
+  serialized: {'*': /café/雪/😀}
+
+- name: Spaces are ordinary JSON string contents
+  path: [two words]
+  path-string: /two words
+  serialized: {'*': /two words}
+
+- name: An interior apostrophe does not quote a key
+  path: [O'Reilly]
+  path-string: /O'Reilly
+  serialized: {'*': /O'Reilly}
+
+- name: Literal apostrophe delimiters do not impersonate numeric quoting
+  path: ["'42'"]
+  path-string: '/\u002742\u0027'
+  serialized: {'*': '/\u002742\u0027'}
+
+- name: Empty keys retain an empty component
+  decision: empty-key
+  path: [foo, '', bar]
+  path-string: /foo/''/bar
+  serialized: {'*': /foo/''/bar}
+
+- name: A final empty key has an explicit empty component
+  decision: empty-key
+  path: [foo, '']
+  path-string: /foo/''
+  serialized: {'*': /foo/''}
+
+- name: An empty-string root key differs from the document root
+  decision: empty-key
+  path: ['']
+  path-string: /''
+  serialized: {'*': /''}
+
+- name: The document root has no path components
+  path: []
+  path-string: /
+  serialized: {'*': /}
+
+- name: A stream path begins with a document number
+  document: 0
+  path: [foo, 42, bar]
+  path-string: //0/foo/42/bar
+  serialized: {'*': //0/foo/42/bar}
+
+- name: The stream document number is not a quoted key
+  document: 0
+  path: ['42']
+  path-string: //0/'42'
+  serialized: {'*': //0/'42'}
+
+- name: A stream document root needs no trailing separator
+  document: 0
+  path: []
+  path-string: //0
+  serialized: {'*': //0}
+
+- name: Another stream document has a different prefix
+  document: 1
+  path: [foo]
+  path-string: //1/foo
+  serialized: {'*': //1/foo}
+
+- name: Stream document numbers can have multiple digits
+  document: 42
+  path: [foo]
+  path-string: //42/foo
+  serialized: {'*': //42/foo}
+
+- name: Stream paths use the same key escaping rules
+  document: 0
+  path: [foo/bar, '42', "line\nbreak"]
+  path-string: '//0/foo\u002Fbar/''42''/line\nbreak'
+  serialized: {'*': '//0/foo\u002Fbar/''42''/line\nbreak'}

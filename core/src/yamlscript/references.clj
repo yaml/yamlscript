@@ -5,7 +5,7 @@
   (:require
    [clojure.string :as str]
    [clojure.set :as set]
-   [yamlscript.ast :as ast :refer [Lst Sym Str Vec Nil]]
+   [yamlscript.ast :as ast :refer [Key Lst Sym Str Vec Nil]]
    [ys.v0.util :as util]))
 
 (def ^:dynamic *anchors* nil)
@@ -205,6 +205,21 @@
             (Lst [(Sym 'last) (actual-path path ctx)])])
       (Lst [(Sym 'get-in) doc-symbol (actual-path path ctx)]))))
 
+(defn link-expression [value]
+  (let [[function base key] (:Lst value)]
+    (case (:Sym function)
+      (get nth) (Lst [(Sym 'ys.v0.util/reference-link) base (Vec [key])])
+      get-in (Lst [(Sym 'ys.v0.util/reference-link) base key])
+      ys.v0.util/reference-sibling
+      (update-in value [:Lst 0] (constantly (Sym 'ys.v0.util/reference-sibling-link)))
+      (Lst [(Sym 'ys.v0.util/reference-link) value (Vec [])]))))
+
+(defn plain-reference? [node]
+  (let [ref (or (:Ref node)
+                (when (:Ali node) (:Ref (parse-reference (str "*" (:Ali node))))))]
+    (and ref (empty? (:calls ref))
+         (not-any? #(or (= "$" %) (contains? special-calls %)) (:parts ref)))))
+
 (defn lower-reference [ref ctx shape?]
   (let [target (resolve-reference ref ctx)
         {:keys [parts calls kind]} ref
@@ -278,8 +293,10 @@
                      (not foreign?) (not (:stream target))
                      (not (:missing target)))
             (swap! (:reads ctx) conj path))]
-    (reduce #(Lst [(Sym %2) %1]) value
-            (concat ops (map symbol calls)))))
+    (if (:link ctx)
+      (link-expression value)
+      (reduce #(Lst [(Sym %2) %1]) value
+              (concat ops (map symbol calls))))))
 
 (defn lower-node
   ([node ctx] (lower-node node ctx false))
@@ -316,19 +333,22 @@
                     (reverse (sort (set/intersection remaining
                                                      (:deps (nth tasks id))))))))))))
 
-(defn dependency-order [tasks]
-  (loop [remaining (set (range (count tasks))) done #{} order []]
-    (if (empty? remaining)
-      order
-      (if-let [ready (first (filter
-                             #(set/subset? (:deps (nth tasks %1)) done)
-                             (sort remaining)))]
-        (recur (disj remaining ready) (conj done ready) (conj order ready))
-        (let [cycle (cycle-path tasks remaining)]
-          (util/die "Circular deferred dependency: "
-                    (str/join " -> "
-                              (map #(str "/" (str/join "/" (:path (nth tasks %1))))
-                                   cycle))))))))
+(defn dependency-order
+  ([tasks] (dependency-order tasks true))
+  ([tasks fail?]
+   (loop [remaining (set (range (count tasks))) done #{} order []]
+     (if (empty? remaining)
+       order
+       (if-let [ready (first (filter
+                              #(set/subset? (:deps (nth tasks %1)) done)
+                              (sort remaining)))]
+         (recur (disj remaining ready) (conj done ready) (conj order ready))
+         (when fail?
+           (let [cycle (cycle-path tasks remaining)]
+             (util/die "Circular deferred dependency: "
+                       (str/join " -> "
+                                 (map #(str "/" (str/join "/" (:path (nth tasks %1))))
+                                      cycle))))))))))
 
 (defn lower-document [node]
   (let [{:keys [schema anchors]} (index-document node)
@@ -402,7 +422,7 @@
                                        (assoc ctx :path (:path task)
                                               :containers (:containers task)
                                               :marks @marks :reads reads))]
-                 (assoc task :value value :reads @reads))) @tasks)
+                 (assoc task :source (:value task) :value value :reads @reads))) @tasks)
             tasks (mapv
                    (fn [task]
                      (assoc task :deps
@@ -417,6 +437,18 @@
                                                            %1))))
                                            (:reads task)) index)) tasks))))
                    tasks)
+            runtime? (some (fn [task]
+                             (and (not (:merge task))
+                                  (not (plain-reference? (:source task)))
+                                  (some
+                                   (fn [path]
+                                     (and (contains? schema path)
+                                          (some #(= path (vec (take (count path)
+                                                                    (:path %))))
+                                                tasks)))
+                                   (:reads task))))
+                           tasks)
+            order (when-not runtime? (dependency-order tasks false))
             bindings
             (mapcat
              (fn [index]
@@ -441,7 +473,7 @@
                                          (if single? 'assoc 'assoc-in)))
                                   doc-symbol key value]))]
                  [doc-symbol form]))
-             (dependency-order tasks))
+             order)
             ;; An arbitrary code document may or may not join the stream.
             ;; When its index is unknown, keep completed anchor snapshots
             ;; for later documents rather than guessing an absolute index.
@@ -461,9 +493,37 @@
                       [(Vec [doc-symbol (Sym '__positions)])
                        (Lst [(Sym 'ys.v0.util/reference-positions) base])]
                       [doc-symbol base])]
-        (if (seq tasks)
+        (cond
+          (empty? tasks) base
+          (some? order)
           (Lst [(Sym 'let) (Vec (concat initial bindings anchors)) doc-symbol])
-          base)))))
+          :else
+          (let [evaluators
+                (mapv
+                 (fn [task]
+                   (let [alias? (and (not (:merge task))
+                                     (plain-reference? (:source task)))
+                         value (lower-node (:source task)
+                                           (assoc ctx :path (:path task)
+                                                  :containers (:containers task)
+                                                  :marks @marks :link alias?))
+                         value (if (:merge task)
+                                 (let [local (read-path (Sym '__base) (:path task))]
+                                   (Lst [(Sym 'merge-omap) local value local]))
+                                 value)]
+                     (ast/MapNode
+                      (concat
+                       [(Key :path) (actual-path (:path task) {:marks @marks})]
+                       (when alias? [(Key :alias) {:Bln true}])
+                       [(Key :eval)
+                        (Lst [(Sym 'fn) (Vec [doc-symbol]) value])])))) tasks)]
+            (Lst [(Sym 'let)
+                  (Vec (concat initial [(Sym '__base) doc-symbol]
+                               [doc-symbol
+                                (Lst [(Sym 'ys.v0.util/reference-document)
+                                      doc-symbol (Vec evaluators)])]
+                               anchors))
+                  doc-symbol])))))))
 
 (defn transform
   ([node] (transform node true))

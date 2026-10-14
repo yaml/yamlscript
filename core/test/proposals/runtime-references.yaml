@@ -1,0 +1,628 @@
+# Copyright 2023-2026 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+# Runtime reference regression fixtures. See README.md for semantics.
+
+- name: Forward dependencies resolve at runtime
+  ys: |
+    !ys-0:
+    a:: *.b
+    b:: *.c
+    c: 4
+  serialized:
+    a: 4
+    b: 4
+    c: 4
+
+- name: A user function can inspect its containing collection
+  ys: |
+    !ys-0
+    defn collection-size(node):
+      count: node
+    =>::
+      value: 42
+      size:: collection-size(*.)
+  serialized:
+    value: 42
+    size: 2
+
+- name: A user function can enumerate keys without forcing values
+  ys: |
+    !ys-0
+    defn names(node):
+      sort: node:keys
+    =>::
+      value: 42
+      names:: names(*.)
+  serialized:
+    value: 42
+    names: [names, value]
+
+- name: A user function can read siblings without reading itself
+  ys: |
+    !ys-0
+    defn total(node):
+      node.a +: node.b
+    =>::
+      a: 3
+      b: 4
+      total:: total(*.)
+  serialized:
+    a: 3
+    b: 4
+    total: 7
+
+- name: Computed lookups discover forward dependencies
+  ys: |
+    !ys-0
+    defn selected(node):
+      key =: node.which
+      get: node key
+    =>::
+      value:: selected(*.)
+      which: later
+      later:: *.seed * 2
+      seed: 21
+  serialized:
+    value: 42
+    which: later
+    later: 42
+    seed: 21
+
+- name: An unused branch does not introduce a circular dependency
+  ys: |
+    !ys-0
+    defn chosen(node):
+      if node.use-b:
+        then: node.b
+        else: 7
+    =>::
+      a:: chosen(*.)
+      b:: *.a * 2
+      use-b: false
+  serialized:
+    a: 7
+    b: 14
+    use-b: false
+
+- name: Suspending a function does not repeat earlier side effects
+  ys: |
+    !ys-0
+    calls =: atom(0)
+    defn selected(node):
+      swap: calls inc
+      key =: node.which
+      get: node key
+    doc =::
+      value:: selected(*.)
+      which: later
+      later:: *.seed * 2
+      seed: 21
+    V+: doc.value deref(calls)
+  serialized: [42, 1]
+
+- name: Suspending functions preserves output bindings and effect order
+  ys: |
+    !ys-0
+    defn selected(node):
+      say: 'before'
+      value =: node.next
+      say: 'after'
+      =>: value
+    defn ready(value):
+      say: 'dependency'
+      =>: value
+    doc =::
+      first:: selected(*.)
+      next:: ready(*.seed)
+      seed: 42
+    doc: .first
+  serialized: 42
+  stdout: |
+    before
+    dependency
+    after
+
+- name: Shared dependencies evaluate once
+  ys: |
+    !ys-0
+    calls =: atom(0)
+    defn twice(value):
+      swap: calls inc
+      value *: 2
+    doc =::
+      total:: *.left + *.right
+      left:: *.base + 2
+      right:: *.base * 3
+      base:: twice(*.seed)
+      seed: 4
+    V+: doc.total deref(calls)
+  serialized: [34, 1]
+
+- name: A completed null is cached rather than retried
+  ys: |
+    !ys-0
+    calls =: atom(0)
+    defn cached(value):
+      swap: calls inc
+      =>: value
+    doc =::
+      value:: cached(*.seed)
+      seed: null
+    V+: doc.value doc.value deref(calls)
+  serialized: [null, null, 1]
+
+- name: A completed false is cached rather than retried
+  ys: |
+    !ys-0
+    calls =: atom(0)
+    defn cached(value):
+      swap: calls inc
+      =>: value
+    doc =::
+      value:: cached(*.seed)
+      seed: false
+    V+: doc.value doc.value deref(calls)
+  serialized: [false, false, 1]
+
+- name: A mapping can refer to itself
+  ys: |
+    !ys-0:
+    foo:
+      value: 42
+      self:: *.
+  serialized:
+    foo:
+      value: 42
+      self: {'*': /foo}
+
+- name: A function can preserve a circular reference
+  ys: |
+    !ys-0:
+    foo:
+      value: 42
+      self:: identity(*.)
+  serialized:
+    foo:
+      value: 42
+      self: {'*': /foo}
+
+- name: A collection function can produce a cyclic lazy sequence
+  ys: |
+    !ys-0:
+    value: 42
+    values:: vals(*.)
+  serialized:
+    value: 42
+    values:
+    - 42
+    - {'*': /values}
+
+- name: Selecting a scalar does not traverse a cyclic sibling
+  ys: |
+    !ys-0
+    defn selected(node):
+      node: .value
+    =>::
+      foo:
+        value: 42
+        self:: *.
+      selected:: selected(*.foo)
+  serialized:
+    foo:
+      value: 42
+      self: {'*': /foo}
+    selected: 42
+
+- name: A function can remove a circular edge
+  ys: |
+    !ys-0
+    defn without-self(node):
+      node: .del('self')
+    =>::
+      foo:
+        value: 42
+        self:: *.
+      copy:: without-self(*.foo)
+  serialized:
+    foo:
+      value: 42
+      self: {'*': /foo}
+    copy:
+      value: 42
+
+- name: Type predicates see a referenced mapping rather than an output marker
+  ys: |
+    !ys-0
+    defn mapping?(node):
+      map?: node
+    =>::
+      foo:
+        self:: *.
+      mapping:: mapping?(*.foo)
+  serialized:
+    foo:
+      self: {'*': /foo}
+    mapping: true
+
+- name: A user function can select an element of a cyclic sequence
+  ys: |
+    !ys-0
+    defn first-item(items):
+      first: items
+    =>::
+      items:
+      - 42
+      - ! *.
+      selected:: first-item(*.items)
+  serialized:
+    items:
+    - 42
+    - {'*': /items}
+    selected: 42
+
+- name: A key-value reducer can inspect a referenced mapping
+  ys: |
+    !ys-0
+    defn sum-values(node):
+      reduce-kv _ 0 node:
+        fn(total key value):
+          total +: value
+    =>::
+      values: {a: 3, b: 4}
+      total:: sum-values(*.values)
+      self:: *.
+  serialized:
+    values: {a: 3, b: 4}
+    total: 7
+    self: {'*': /}
+
+- name: A key-value reducer can inspect a referenced sequence
+  ys: |
+    !ys-0
+    defn sum-indexed(items):
+      reduce-kv _ 0 items:
+        fn(total index value):
+          total +: index + value
+    =>::
+      items: [3, 4]
+      total:: sum-indexed(*.items)
+      self:: *.
+  serialized:
+    items: [3, 4]
+    total: 8
+    self: {'*': /}
+
+- name: Shared acyclic nodes are expanded rather than marked circular
+  ys: |
+    !ys-0:
+    base:
+      value: 42
+    first:: *.base
+    second:: *.base
+  serialized:
+    base: {value: 42}
+    first: {value: 42}
+    second: {value: 42}
+
+- name: Shared cyclic nodes retain the original target path
+  ys: |
+    !ys-0:
+    base:
+      value: 42
+      self:: *.
+    first:: *.base
+    second:: *.base
+  serialized:
+    base:
+      value: 42
+      self: {'*': /base}
+    first:
+      value: 42
+      self: {'*': /base}
+    second:
+      value: 42
+      self: {'*': /base}
+
+- name: Two collections can refer to each other
+  ys: |
+    !ys-0:
+    a:
+      value: 1
+      next:: */b
+    b:
+      value: 2
+      next:: */a
+  serialized:
+    a:
+      value: 1
+      next:
+        value: 2
+        next: {'*': /a}
+    b:
+      value: 2
+      next:
+        value: 1
+        next: {'*': /b}
+
+- name: Reference paths include sequence indexes
+  ys: |
+    !ys-0:
+    foo:
+    - bar:
+        self:: *.
+  serialized:
+    foo:
+    - bar:
+        self: {'*': /foo/0/bar}
+
+- name: Reference paths distinguish numeric string keys from indexes
+  ys: |
+    !ys-0:
+    '42':
+      self:: *.
+  serialized:
+    '42':
+      self: {'*': /'42'}
+
+- name: Slashes in reference target keys are escaped
+  ys: |
+    !ys-0:
+    a/b:
+      self:: *.
+  serialized:
+    a/b:
+      self: {'*': '/a\u002Fb'}
+
+- name: A sequence can refer to the document root
+  ys: |
+    !ys-0:
+    - 42
+    - ! *.
+  serialized:
+  - 42
+  - {'*': /}
+
+- name: A child can refer to the document root
+  ys: |
+    !ys-0:
+    foo:
+      root:: */
+  serialized:
+    foo:
+      root: {'*': /}
+
+- name: A cyclic node from a completed document uses a stream path
+  ys: |
+    !ys-0:
+    foo:
+      value: 42
+      self:: *.
+    --- !ys:
+    copy:: **.0.foo
+  serialized:
+    copy:
+      value: 42
+      self: {'*': //0/foo}
+
+- name: A completed document root uses only its stream document number
+  ys: |
+    !ys-0:
+    value: 42
+    self:: */
+    --- !ys:
+    copy:: **.0
+  serialized:
+    copy:
+      value: 42
+      self: {'*': //0}
+
+- name: Returning a previous document directly keeps its stream identity
+  ys: |
+    !ys-0:
+    value: 42
+    self:: */
+    --- !ys
+    =>: **.0
+  serialized:
+    value: 42
+    self: {'*': //0}
+
+- name: Stream reference paths retain sequence indexes
+  ys: |
+    !ys-0:
+    foo:
+    - bar:
+        self:: *.
+    --- !ys:
+    copy:: **.0.foo.0.bar
+  serialized:
+    copy:
+      self: {'*': //0/foo/0/bar}
+
+- name: Stream reference paths distinguish numeric string keys
+  ys: |
+    !ys-0:
+    '42':
+      self:: *.
+    --- !ys:
+    copy:: get(**.0 '42')
+  serialized:
+    copy:
+      self: {'*': //0/'42'}
+
+- name: Stream references can select a later completed document
+  ys: |
+    !ys-0:
+    value: first
+    --- !ys:
+    foo:
+      self:: *.
+    --- !ys:
+    copy:: **.1.foo
+  serialized:
+    copy:
+      self: {'*': //1/foo}
+
+- name: Local and completed-document references keep distinct prefixes
+  ys: |
+    !ys-0:
+    foo:
+      self:: *.
+    --- !ys:
+    foo:
+      self:: *.
+    previous:: **.0.foo
+  serialized:
+    foo:
+      self: {'*': /foo}
+    previous:
+      self: {'*': //0/foo}
+
+- name: Stream document numbers skip code without a collected result
+  ys: |
+    !ys-0
+    defn helper(): 123
+    --- !ys:
+    foo:
+      self:: *.
+    --- !ys:
+    copy:: **.0.foo
+  serialized:
+    copy:
+      self: {'*': //0/foo}
+
+- name: Anchors retain cyclic graph identity after uncollected code
+  ys: |
+    !ys-0
+    defn helper(): 123
+    --- !ys:
+    foo: &foo
+      value: 42
+      self:: *.
+    --- !ys:
+    copy: *foo
+  serialized:
+    copy:
+      value: 42
+      self: {'*': //0/foo}
+
+- name: A pure reference loop retains its original target edges
+  decision: reference-loop-targets
+  ys: |
+    !ys-0:
+    a:: *.b
+    b:: *.a
+  serialized:
+    a: {'*': /b}
+    b: {'*': /a}
+
+- name: An unresolved scalar self-reference retains its target
+  decision: reference-loop-targets
+  ys: |
+    !ys-0:
+    a:: *.a
+  serialized:
+    a: {'*': /a}
+
+- name: Circular calculations retain unresolved result paths
+  decision: circular-calculation
+  ys: |
+    !ys-0:
+    a:: *.b + 2
+    b:: *.a - 2
+  serialized:
+    a: {'*': /a}
+    b: {'*': /b}
+
+- name: A self-dependent calculation retains its result path
+  decision: circular-calculation
+  ys: |
+    !ys-0:
+    a:: *.a * 2
+  serialized:
+    a: {'*': /a}
+
+- name: Adding one to a self-reference is detected at runtime
+  ys: |
+    !ys-0:
+    a:: *.a + 1
+  serialized:
+    a: {'*': /a}
+
+- name: A chosen branch can introduce a runtime calculation cycle
+  ys: |
+    !ys-0
+    defn chosen(node):
+      if node.use-b:
+        then: node.b
+        else: 7
+    =>::
+      a:: chosen(*.)
+      b:: *.a * 2
+      use-b: true
+  serialized:
+    a: {'*': /a}
+    b: {'*': /b}
+    use-b: true
+
+- name: A runtime cycle does not change data merge precedence
+  ys: |
+    !ys-0:
+    defaults: &defaults
+      x: 1
+      y: 2
+    value:
+      <<: *defaults
+      y: 3
+    circular:: *.circular * 2
+  serialized:
+    defaults: {x: 1, y: 2}
+    value: {x: 1, y: 3}
+    circular: {'*': /circular}
+
+- name: Missing keys remain ordinary null results
+  ys: |
+    !ys-0:
+    value:: *.missing
+  serialized:
+    value: null
+
+- name: Literal reference-shaped mappings remain ordinary user data
+  ys: |
+    !ys-0:
+    literal: {'*': /not/a/reference}
+  serialized:
+    literal: {'*': /not/a/reference}
+
+- name: Standard output converts cyclic references before printing
+  ys: |
+    !ys-0
+    doc =::
+      foo:
+        self:: *.
+    say: doc
+    =>: 42
+  serialized: 42
+  stdout-contains: ['*', /foo]
+
+- name: Explicit JSON output converts cyclic references before encoding
+  ys: |
+    !ys-0
+    use ys::json: :as json
+    --- !ys
+    doc =::
+      foo:
+        self:: *.
+    json/load: json/dump(doc)
+  serialized:
+    foo:
+      self: {'*': /foo}
+
+- name: Function argument errors are not converted to reference mappings
+  ys: |
+    !ys-0:
+    text: hello
+    value:: even?(*.text)
+  error:
+    stage: evaluation
+    contains: Argument must be an integer

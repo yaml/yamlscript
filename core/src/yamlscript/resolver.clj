@@ -152,7 +152,7 @@
    The pair is only merged into the map if the value is not nil."
   [key val]
   (let [key-text (:= key)]
-    (if (re-find #":\?$" key-text)
+    (if (and key-text (re-find #":\?$" key-text))
       (if (:! val)
         (util/die "Can't specify tag on value of ':?' pair")
         (let [key (assoc key := (str/replace key-text #"\s*:\?$" ""))

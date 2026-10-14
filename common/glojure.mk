@@ -48,6 +48,7 @@ GO-YAML-STAMP := $(GO-YAML-SRC-DIR)/.fetched
 GO-YAML-GENERATED-DIR := $(ROOT)/internal/goyamlparser
 GO-YAML-GENERATED-STAMP := $(GO-YAML-GENERATED-DIR)/.generated
 GO-YAML-PREPARE := $(ROOT)/core/gloat/prepare-go-yaml-parser
+GO-REFERENCE-SUPPORT := $(ROOT)/core/gloat/reference-support.go
 
 GLOJURE-SRC-DIR := $(ROOT)/.cache/glojure-src
 GLOJURE-PREPARED-STAMP := $(GLOJURE-SRC-DIR)/.prepared
@@ -153,7 +154,7 @@ $(GO-YAML-STAMP):
 	touch '$@'
 
 $(GO-YAML-GENERATED-STAMP): \
-  $(GO-YAML-STAMP) $(GO-YAML-PREPARE) $(PERL)
+  $(GO-YAML-STAMP) $(GO-YAML-PREPARE) $(GO-REFERENCE-SUPPORT) $(PERL)
 	PERL=$(PERL-CMD) bash $(GO-YAML-PREPARE) \
 	  $(GO-YAML-SRC-DIR) $(GO-YAML-GENERATED-DIR)
 	touch '$@'

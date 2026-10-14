@@ -72,9 +72,14 @@ endif
 
 jar: $(CLI-JAR)
 
-test: test-run
+test: test-run test-references
 
-test-all: test-unit test-run
+test-all: test-unit test-run test-references
+
+test-references: $(CLI-DEPS) $(LEIN)
+	YS_REFERENCE_TEST_BIN=$(abspath $(CLI-BIN)) \
+	  $(MAKE) -C $(ROOT)/core shell \
+	  CMD='lein test yamlscript.reference-runtime-test'
 
 test-unit: $(LEIN) $(CORE-INSTALLED)
 	lein test $(lein-test)

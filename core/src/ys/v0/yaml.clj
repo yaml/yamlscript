@@ -46,7 +46,7 @@
 
 (defn dump [data]
   (generate-string
-    data
+    (util/reference-serialize data)
     :dumper-options
     {:flow-style :block}))
 

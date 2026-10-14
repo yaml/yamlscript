@@ -25,6 +25,12 @@
 (def reference-mark reference/mark)
 (def reference-positions reference/positions)
 (def reference-sibling reference/sibling)
+(def reference-link reference/link)
+(def reference-sibling-link reference/sibling-link)
+(def reference-document reference/document)
+(def reference-serialize reference/serialize)
+(def reference-register-document reference/register-document)
+(def reference-path-string reference/path-string)
 
 (defn backend
   "Resolve a backend library var at call time, so that Clojure runtimes

@@ -16,6 +16,7 @@
    [ys.v0.global :as v0-global]
    [ys.v0.ipc :as ipc]
    [ys.v0.json :as json]
+   [ys.v0.reference :as reference]
    [ys.v0.yaml :as yaml]))
 
 (def yamlscript-version "0.3.4")
@@ -485,14 +486,17 @@
         (str "[\n" (str/join ",\n" rows) "\n" (indent level) "]")))
     :else (json/dump value)))
 
-(defn format-result [value format pretty?]
-  (case format
-    "yaml" (str/trim-newline (yaml/dump value))
-    "csv" (str/trim-newline (csv/write-csv value))
-    "tsv" (str/trim-newline (csv/write-tsv value))
-    "edn" (pprint/write value :stream nil)
-    "json" (if pretty? (pretty-json value 0) (json/dump value))
-    (json/dump value)))
+(defn format-result
+  ([value format pretty?] (format-result value format pretty? nil))
+  ([raw-value format pretty? document]
+  (let [value (reference/serialize raw-value document)]
+    (case format
+      "yaml" (str/trim-newline (yaml/dump value))
+      "csv" (str/trim-newline (csv/write-csv value))
+      "tsv" (str/trim-newline (csv/write-tsv value))
+      "edn" (pprint/write value :stream nil)
+      "json" (if pretty? (pretty-json value 0) (json/dump value))
+      (json/dump value)))))
 
 (defn write-output [text opts executable?]
   (if-let [path (:output opts)]
@@ -520,17 +524,21 @@
                     [result])]
       (cond
         (:print opts)
-        (write-output (pprint/write result :stream nil) opts false)
+        (write-output (pprint/write (reference/serialize result) :stream nil)
+                      opts false)
 
         (:load info)
         (let [values (remove nil? results)
               count (count values)
-              texts (map #(let [text (format-result %1
+              texts (map-indexed
+                     (fn [index value]
+                       (let [text (format-result value
                                         (or (:to opts) "json")
-                                        (:json opts))]
+                                        (:json opts)
+                                        (when (:stream opts) index))]
                             (if (and (= (:to opts) "yaml") (> count 1))
                               (str "---\n" text)
-                              text))
+                              text)))
                       values)]
           (when (seq texts)
             (write-output (str/join "\n" texts) opts false)))

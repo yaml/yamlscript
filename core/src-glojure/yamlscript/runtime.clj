@@ -24,9 +24,11 @@
    [ys.v0.common :as common]
    [ys.v0.global :as global]
    [ys.v0.ipc]
+   [ys.v0.json :as json]
    [ys.v0.pprint]
    [ys.v0.re :as re]
    [ys.v0.reference :as reference]
+   [ys.v0.yaml :as yaml]
    [ys.v0.ys :as ys])
   (:refer-clojure :exclude [load use]))
 
@@ -69,6 +71,9 @@
 
 (def legacy-use ys/+use)
 (def legacy-get+ ys.v0.std/get+)
+(def legacy-json-dump json/dump)
+(def legacy-json-pretty json/pretty)
+(def legacy-yaml-dump yaml/dump)
 
 (declare set-root!)
 
@@ -589,6 +594,7 @@
 (defn std-document [value]
   (reset! global/doc-anchors_ {})
   (when ((some-fn map? seqable? number? string?) value)
+    (reference/register-document value (count @global/stream-values))
     (set-root! #'global/_ value)
     (swap! global/stream-values conj value))
   value)
@@ -668,7 +674,7 @@
   '[_ ARGS ARGV CWD DIR ENV FILE INC PUN RUN VERSION])
 
 (def host-inline-core
-  '[abs infinite? NaN? nil?])
+  '[abs infinite? NaN? nil? keys vals])
 
 (declare install!)
 
@@ -676,6 +682,14 @@
   (if (contains? anchors name)
     (ys.v0.std/+merge (get anchors name))
     (throw (ex-info (str scope " Anchor not found: &" name "\n") {}))))
+
+(defn- std-anchor [name value]
+  (when (> (count (str (reference/serialize value))) ys.v0.std/_max-alias-size)
+    (throw (ex-info (str "Anchored node &" name " exceeds max size of "
+                        ys.v0.std/_max-alias-size "\n") {})))
+  (swap! global/stream-anchors_ assoc name value)
+  (swap! global/doc-anchors_ assoc name value)
+  value)
 
 (defn native-init
   ([] (native-init nil))
@@ -696,6 +710,7 @@
     (intern 'ys.v0.std '+++* std-document)
     (intern 'ys.v0.std 'get+ std-get+)
     (intern 'ys.v0.std 'stream std-stream)
+    (intern 'ys.v0.std '_& std-anchor)
     (intern 'ys.v0.std '_*
             #(std-alias @global/doc-anchors_ %1 "1"))
     (intern 'ys.v0.std '_**
@@ -703,6 +718,17 @@
     (intern 'ys.v0.util 'reference-mark reference/mark)
     (intern 'ys.v0.util 'reference-positions reference/positions)
     (intern 'ys.v0.util 'reference-sibling reference/sibling)
+    (intern 'ys.v0.util 'reference-link reference/link)
+    (intern 'ys.v0.util 'reference-sibling-link reference/sibling-link)
+    (intern 'ys.v0.util 'reference-document reference/document)
+    (intern 'ys.v0.util 'reference-serialize reference/serialize)
+    (intern 'ys.v0.util 'reference-register-document reference/register-document)
+    (intern 'ys.v0.util 'reference-path-string reference/path-string)
+    (intern 'ys.v0.json 'dump #(legacy-json-dump (reference/serialize %1)))
+    (intern 'ys.v0.json 'pretty #(legacy-json-pretty (reference/serialize %1)))
+    (intern 'ys.v0.yaml 'dump #(legacy-yaml-dump (reference/serialize %1)))
+    (intern 'clojure.core 'keys reference/collection-keys)
+    (intern 'clojure.core 'vals reference/collection-vals)
     (reset! yamlscript.module.taptest/error-map-hook glojure-error-map)
     (reset! yamlscript.module.taptest/command-hook run-test-command)
     (intern 'ys.v0.fs 'read fs-read)

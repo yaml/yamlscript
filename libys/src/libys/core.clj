@@ -9,7 +9,8 @@
    [sci.core :as sci]
    [ys.v0.common]
    [yamlscript.compiler :as compiler]
-   [yamlscript.runtime :as runtime])
+   [yamlscript.runtime :as runtime]
+   [ys.v0.reference :as reference])
   (:gen-class
    :methods [^:static [loadYsToJson [String] String]]))
 
@@ -37,7 +38,7 @@
 
 (defn json-write-str [data]
   (json/write-str
-    data
+    (reference/serialize data)
     {:escape-unicode false
      :escape-js-separators false
      :escape-slash false}))

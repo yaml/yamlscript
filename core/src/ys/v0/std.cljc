@@ -859,7 +859,7 @@
 ;; YAML anchor and alias functions
 ;;------------------------------------------------------------------------------
 (defn _& [sym val]
-  (when (> (count (str val)) _max-alias-size)
+  (when (> (count (str (util/reference-serialize val))) _max-alias-size)
     (util/die "Anchored node &" sym " exceeds max size of " _max-alias-size))
   (swap! global/stream-anchors_ assoc sym val)
   (swap! global/doc-anchors_ assoc sym val)
@@ -940,6 +940,7 @@
 (defn +++* [value]
   (reset! global/doc-anchors_ {})
   (when ((some-fn map? seqable? number? string?) value)
+    (util/reference-register-document value (count @global/stream-values))
     (global/set-underscore value)
     (swap! global/stream-values conj value))
   value)

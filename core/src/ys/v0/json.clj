@@ -14,11 +14,11 @@
   ((util/backend 'clojure.data.json/read-str) str))
 
 (defn dump [data]
-  ((util/backend 'clojure.data.json/write-str) data))
+  ((util/backend 'clojure.data.json/write-str) (util/reference-serialize data)))
 
 (defn pretty [data]
   (with-out-str
-    ((util/backend 'clojure.data.json/pprint) data)))
+    ((util/backend 'clojure.data.json/pprint) (util/reference-serialize data))))
 
 (comment
   )

@@ -6,7 +6,8 @@
 (ns ys.v0.pprint
   (:require
    [clojure.string :as str]
-   [ys.v0.global :as global]))
+   [ys.v0.global :as global]
+   [ys.v0.reference :as reference]))
 
 (def ^:dynamic *right-margin* 72)
 (def ^:dynamic *miser-width* 40)
@@ -135,7 +136,8 @@
       options)))
 
 (defn write [value & args]
-  (let [options (parse-options args)
+  (let [value (reference/serialize value)
+        options (parse-options args)
         text (render value 0 0 options)
         stream (:stream options)]
     (if (nil? stream)

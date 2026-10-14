@@ -2684,52 +2684,60 @@
     Binary operator '*' must be surrounded by whitespace
 
 
-- name: Error on mutually dependent deferred values
+- name: Mutually dependent values compile for runtime resolution
   yamlscript: |
     !ys-0:
     a:: 2 + *.b
     b:: 2 - *.a
-  error: |
-    Circular deferred dependency: /a -> /b -> /a
+  runtime-serialized:
+    a: {'*': /a}
+    b: {'*': /b}
 
 
-- name: Error on self-dependent deferred value
+- name: Self-dependent values compile for runtime resolution
   yamlscript: |
     !ys-0:
     a:: 2 * *.a
-  error: |
-    Circular deferred dependency: /a -> /a
+  runtime-serialized:
+    a: {'*': /a}
 
 
-- name: Error on longer deferred dependency cycle
+- name: Longer cycles compile for runtime resolution
   yamlscript: |
     !ys-0:
     a:: 2 + *.b
     b:: 2 - *.c
     c:: 2 * *.a
-  error: |
-    Circular deferred dependency: /a -> /b -> /c -> /a
+  runtime-serialized:
+    a: {'*': /a}
+    b: {'*': /b}
+    c: {'*': /c}
 
 
-- name: Error on deferred cycle excludes unrelated values
+- name: Runtime cycles leave unrelated values resolvable
   yamlscript: |
     !ys-0:
     seed: 3
     unrelated:: 2 * *.seed
     a:: 2 + *.b
     b:: 2 - *.a
-  error: |
-    Circular deferred dependency: /a -> /b -> /a
+  runtime-serialized:
+    seed: 3
+    unrelated: 6
+    a: {'*': /a}
+    b: {'*': /b}
 
 
-- name: Error on deferred cycle excludes blocked dependents
+- name: Values blocked by a runtime cycle retain their own paths
   yamlscript: |
     !ys-0:
     blocked:: 2 + *.a
     a:: 2 + *.b
     b:: 2 - *.a
-  error: |
-    Circular deferred dependency: /a -> /b -> /a
+  runtime-serialized:
+    blocked: {'*': /blocked}
+    a: {'*': /a}
+    b: {'*': /b}
 
 
 - name: Error when reference exceeds ancestor depth

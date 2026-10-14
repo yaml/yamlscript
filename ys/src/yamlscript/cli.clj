@@ -20,6 +20,7 @@
    [clojure.tools.cli :as cli]
    [ys.v0.common]
    [ys.v0.global :refer [env]]
+   [ys.v0.reference :as reference]
    [yamlscript.compiler :as compiler]
    [yamlscript.global :as global]
    [yamlscript.runtime :as runtime]
@@ -467,10 +468,13 @@ Options:
                     @global/stream-values
                     [result])]
       (if (:print opts)
-        (pp/pprint result)
+        (pp/pprint (reference/serialize result))
         (when (and load (not (= "" code)))
           (doall
-            (for [result (remove nil? results)]
+            (for [[index raw-result] (map-indexed vector results)
+                  :when (some? raw-result)
+                  :let [result (reference/serialize raw-result
+                                                   (when (:stream opts) index))]]
               (case (:to opts)
                 "yaml" (println
                          (str

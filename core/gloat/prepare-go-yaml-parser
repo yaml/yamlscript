@@ -5,6 +5,7 @@ set -euo pipefail
 src=${1:?source go-yaml directory required}
 dst=${2:?destination package directory required}
 perl=${PERL:-perl}
+script_dir=$(cd "$(dirname "$0")" && pwd)
 
 pkg_src=$src/internal/libyaml
 for file in yaml.go errors.go reader.go scanner.go parser.go; do
@@ -12,11 +13,13 @@ for file in yaml.go errors.go reader.go scanner.go parser.go; do
 done
 test -f "$src/LICENSE"
 test -f "$src/NOTICE"
+test -f "$script_dir/reference-support.go"
 
 rm -rf "$dst"
 mkdir -p "$dst"
 
 cp "$src/LICENSE" "$src/NOTICE" "$dst/"
+cp "$script_dir/reference-support.go" "$dst/references.go"
 
 for file in yaml.go errors.go reader.go scanner.go parser.go; do
   "$perl" -0pe 's/\bpackage libyaml\b/package goyamlparser/' \
