@@ -1,3 +1,10 @@
+- version: 0.3.5
+  date:    Wed Oct 14 09:48:36 AM EDT 2026
+  changes:
+  - release: Update installer command
+  - core: Preserve values in conditional pairs
+  - core: Add truey and non-nil conditional pairs
+  - build: Use Makes defaults for Glojure
 - version: 0.3.4
   date:    Thu Oct  1 07:55:05 PM EDT 2026
   changes:
