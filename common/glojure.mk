@@ -1,4 +1,5 @@
 include $(MAKES)/gloat.mk
+include $(MAKES)/glojure.mk
 include $(MAKES)/perl.mk
 
 PERL-CMD := $(PERL)
