@@ -148,15 +148,14 @@
 
 ;; Only called in data mode
 (defn check-conditional-pair
-  "In data mode pairs with a key ending in :? are conditional pairs.
-   The pair is only merged into the map if the value is not nil."
+  "Resolve :? pairs with truey semantics and :?? pairs with non-nil semantics."
   [key val]
   (let [key-text (:= key)]
-    (if (re-find #":\?$" key-text)
+    (if-let [suffix (when key-text (re-find #":\?\??$" key-text))]
       (if (:! val)
-        (util/die "Can't specify tag on value of ':?' pair")
-        (let [key (assoc key := (str/replace key-text #"\s*:\?$" ""))
-              key (assoc key :|? true)
+        (util/die "Can't specify tag on value of '" suffix "' pair")
+        (let [key (assoc key := (str/replace key-text #"\s*:\?\??$" ""))
+              key (assoc key :|? (if (= suffix ":??") :some :truey))
               ;; Mark value for code mode like check-mode-swap does
               val (assoc val :! "")]
           [key val]))
@@ -560,7 +559,7 @@
                          okey key
                          conditional? (and (not code-value?)
                                         (when-let [text (:= key)]
-                                          (re-find #":\?$" text)))
+                                          (re-find #":\?\??$" text)))
                          [key val] (if code-value?
                                      [key val]
                                      (check-conditional-pair key val))

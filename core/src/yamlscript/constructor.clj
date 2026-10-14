@@ -379,11 +379,13 @@
     result))
 
 (defn construct-conditional-pair
-  "Construct a data-map pair that appears only when its value is non-nil."
+  "Construct a pair using its truey or non-nil inclusion condition."
   [key-node val-node ctx]
   (let [key-str (or (:Str key-node) (str key-node))
-        val (construct-node val-node ctx)]
-    (Lst [(Sym 'if-some)
+        val (construct-node val-node ctx)
+        non-nil? (= :some (:|? key-node))
+        val (if non-nil? val (Lst [(Sym 'truey?) val]))]
+    (Lst [(Sym (if non-nil? 'if-some 'if-let))
           (Vec [(Sym '_) val])
           (ast/MapNode [(Str key-str) (Sym '_)])
           (ast/MapNode [])])))
@@ -428,7 +430,7 @@
                                   (pairs->map regular-pairs ctx)))
                          cond-form
                            (construct-conditional-pair
-                             (dissoc k :|?) v ctx)]
+                             k v ctx)]
                      (recur rest [] (merge-maps base cond-form)))
 
                    :else
@@ -445,7 +447,7 @@
                                (:|? (first part)))
                            (let [[key-node val-node] part
                                  cond-form (construct-conditional-pair
-                                             (dissoc key-node :|?)
+                                             key-node
                                              val-node
                                              ctx)]
                              (merge-maps cond-form dmap))

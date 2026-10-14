@@ -2026,14 +2026,17 @@
     !ys-0:
     foo:?: bar
   clojure: |
-    (if-some [_ bar] {"foo" _} {})
+    (if-let [_ (truey? bar)] {"foo" _} {})
 
 - name: Conditional pair with dot access
   yamlscript: |
     !ys-0:
     annotations:?: Values.podAnnotations
   clojure: |
-    (if-some [_ (get+ Values 'podAnnotations)] {"annotations" _} {})
+    (if-let
+      [_ (truey? (get+ Values 'podAnnotations))]
+      {"annotations" _}
+      {})
 
 - name: Conditional pair mixed with regular pairs
   yamlscript: |
@@ -2042,14 +2045,58 @@
     b:?: c
     d: 2
   clojure: |
-    (merge-omap (merge-omap {"a" 1} (if-some [_ c] {"b" _} {})) {"d" 2})
+    (merge-omap
+      (merge-omap {"a" 1} (if-let [_ (truey? c)] {"b" _} {}))
+      {"d" 2})
 
-- name: Conditional pair only returns empty mapping when nil
+- name: Truey conditional pair only returns empty mapping when falsey
   yamlscript: |
     !ys-0:
     foo:?: nil
   clojure: |
+    (if-let [_ (truey? nil)] {"foo" _} {})
+
+- name: Non-nil conditional pair basic
+  yamlscript: |
+    !ys-0:
+    foo:??: bar
+  resolve: |
+    {:map [{:str "foo", :|? :some} {:expr "bar"}]}
+  build: |
+    {:dmap [{:Str "foo", :|? :some} {:Sym bar}]}
+  clojure: |
+    (if-some [_ bar] {"foo" _} {})
+
+- name: Mixed conditional pairs around embedded code
+  yamlscript: |
+    !ys-0:
+    a: 1
+    b:??: false
+    x =: 0
+    c:?: x
+    d:??: x
+  clojure: |
+    (merge-omap
+      {"a" 1, "b" false}
+      (let
+       [x 0]
+       (merge-omap
+        (if-let [_ (truey? x)] {"c" _} {})
+        (if-some [_ x] {"d" _} {}))))
+
+- name: Non-nil conditional pair only returns empty mapping when nil
+  yamlscript: |
+    !ys-0:
+    foo:??: nil
+  clojure: |
     (if-some [_ nil] {"foo" _} {})
+
+- name: Error on tagged conditional pair value
+  yamlscript: |
+    !ys-0:
+    foo:??: !str bar
+  error: |
+    Can't specify tag on value of ':??' pair
 
 - name: Error on invalid key suffix with exclamation
   yamlscript: |

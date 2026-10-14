@@ -533,19 +533,23 @@
 
 - id: optional-fields
   label: Optional Fields
-  description: Omit null fields from generated YAML.
+  description: Include optional fields using truey or non-null checks.
   source: |
     !ys-0:
 
-    # The `:?:` marker omits a field when its value is null.
+    # `:?:` omits null, false, zero, and empty values.
+    # `:??:` omits only null, preserving zero and false.
     debug =: nil
+    retries =: 0
 
     service:
       name: api
       debug:?: debug
+      retries:??: retries
   expected: |
     service:
       name: api
+      retries: 0
 
 - id: generated-ranges
   label: Generated Ranges

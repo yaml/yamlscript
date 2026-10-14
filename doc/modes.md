@@ -187,6 +187,49 @@ The redundant compact assignment `::a =: 40` is also an error; write
 `a =: 40` instead.
 
 
+## Conditional Data Pairs
+
+Use `:?:` or `:??:` to include a data pair only when its code value meets a
+condition.
+Both forms evaluate the value once and preserve the original included value.
+The suffix is removed from the resulting key.
+
+* `:?:` uses `truey?`, like `value.?`.
+  It omits null, false, zero, and empty strings or collections.
+* `:??:` checks whether the value is non-null.
+  It preserves false, zero, and empty strings or collections.
+
+| Value | `:?:` | `:??:` |
+| ----- | ----- | ------ |
+| Null | Omit | Omit |
+| False | Omit | Include false |
+| Zero | Omit | Include zero |
+| Empty string or collection | Omit | Include unchanged |
+| Other values | Include unchanged | Include unchanged |
+
+```yaml
+!ys-0:
+retries =: 0
+debug =: false
+
+retries:?: retries
+retries_kept:??: retries
+debug:?: debug
+debug_kept:??: debug
+missing:??: nil
+```
+
+This produces:
+
+```yaml
+retries_kept: 0
+debug_kept: false
+```
+
+Conditional pairs also work in code-value collections entered with `:::`.
+Quote a key ending in `:?` or `:??` when the suffix should be literal.
+
+
 ## Code Values in Data Collections
 
 Use `:::` when a mapping or sequence contains mostly computed values.
