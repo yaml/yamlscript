@@ -6,6 +6,7 @@ include $(COMMON)/docker.mk
 
 include $(MAKES)/gh.mk
 include $(MAKES)/wasmtime.mk
+include $(COMMON)/speed-diff.mk
 ifdef CROSS_CC_TARGET
 include $(MAKES)/zig.mk
 export CC := $(ZIG) cc -target $(CROSS_CC_TARGET)

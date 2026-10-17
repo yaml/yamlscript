@@ -364,6 +364,10 @@ When run at the top level, many `make` targets like `test`, `build`, `install`,
 Given that this repository has so few dependencies, you should be able to clone
 it and run `make` targets (try `make test`) without any problems.
 
+Use `make speed-diff` to compare Glojure `HEAD^` and `HEAD` against GraalVM
+across loading, compilation, execution, and output workloads.
+See the [comparison guide](doc/speed-diff.md) for setup and other revisions.
+
 
 ### Contributing to YS
 
