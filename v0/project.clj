@@ -19,11 +19,11 @@
    :tag "v0"
    :dir ".."}
 
-  ;; The sources live in core/src; only the portable ys.v0 namespaces go
-  ;; in this jar. META-INF stays: consumers like jolt read the pom.xml
-  ;; inside the jar for transitive dependencies.
+  ;; The sources live in core/src. Package the portable ys.v0 namespaces
+  ;; and the regex definitions used by taptest. META-INF stays: consumers
+  ;; like jolt read the pom.xml inside the jar for transitive dependencies.
   :source-paths ["../core/src"]
-  :jar-exclusions [#"^(?!ys/v0|META-INF)"]
+  :jar-exclusions [#"^(?!ys/v0|yamlscript/regex\.cljc$|META-INF)"]
 
   :dependencies
   [[org.clojure/clojure "1.12.0"]

@@ -4,14 +4,14 @@
 ;; This is the YS standard library.
 
 ;; The :glj reader conditionals keep this namespace loadable on
-;; glojure, which lacks the clojure.math/pprint/data namespaces, Java
+;; glojure, which lacks the clojure.pprint/data namespaces, Java
 ;; class imports and the babashka.fs backed ys.v0.fs namespace.
 (ns ys.v0.std
   (:require
    #?@(:glj []
        :default [[clojure.data :as data]
-                 [clojure.math :as math]
                  [ys.v0.fs :as fs]])
+   [clojure.math :as math]
    [clojure.set :as cset]
    [clojure.string :as str]
    [ys.v0.common :as common :refer
@@ -339,44 +339,32 @@
       (for [d n]
         (- (byte d) 48)))))
 
-;; On glojure the math functions come from Go's math package (there is
-;; no clojure.math namespace there yet):
 (def max-long 9223372036854775807)
 
-(defn- pow* [x y]
-  #?(:glj (math.Pow (double x) (double y))
-     :default (math/pow x y)))
-
-(intern 'ys.v0.std 'floor
-  #?(:glj (fn [x] (math.Floor (double x)))
-     :default math/floor))
+(defn floor [x] (math/floor x))
 
 (defn pow
   ([x] #(pow %1 x))
   ([x y]
    (if (and (integer? x) (integer? y) (>= y 0))
-     (let [a (pow* x y)]
+     (let [a (math/pow x y)]
        (if (<= a max-long)
          (long a)
          a))
-     (pow* x y)))
+     (math/pow x y)))
 
   ([x y & xs]
    (let [[& xs] (clojure.core/reverse (conj xs y x))]
      (reduce #(pow %2 %1) 1 xs))))
 
-(intern 'ys.v0.std 'round
-  #?(:glj (fn [x] (long (math.Round (double x))))
-     :default math/round))
+(defn round [x] (math/round x))
 
 (defn sum [xs]
   (reduce + 0 (filter identity xs)))
 
 (defn sqr  [N] (pow N 2))
 (defn cube [N] (pow N 3))
-(intern 'ys.v0.std 'sqrt
-  #?(:glj (fn [x] (math.Sqrt (double x)))
-     :default math/sqrt))
+(defn sqrt [x] (math/sqrt x))
 
 (defn- op-error
   ([op x]

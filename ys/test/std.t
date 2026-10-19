@@ -106,6 +106,28 @@ test::
 #-------------------------------------------------------------------------------
 - note: Math functions
 
+- code: floor(-1.5)
+  want: -2.0
+- code: round(-1.5)
+  want: -1
+- code: round(-0.5)
+  want: 0
+- code: round(1.5)
+  want: 2
+- code: pow(2 10)
+  want: 1024
+- code: integer?(pow(2 10))
+- code: pow(4 0.5)
+  want: 2.0
+- code: pow(2 -3)
+  want: 0.125
+- code: pow(2 3 2)
+  want: 512
+- code: sqrt(81)
+  want: 9.0
+- code: sqrt(0.25)
+  want: 0.5
+
 - code: 4 ** 3 ** 2
   want: 262144
 
