@@ -107,16 +107,19 @@ GLOAT-LIBYS-NATIVE := $(wildcard gloat/native/* gloat/include/*.h)
 
 $(LIBYS-SO-GLOJURE): \
   $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-LIBYS-SRCS) \
-  $(GLOAT-LIBYS-NATIVE)
+  $(GLOAT-LIBYS-NATIVE) $(YS-V0-GLJ-PREPARED)
+	+$(GLOAT-PINNED-MAKE) _build-glojure-libys
+
+_build-glojure-libys:
 ifneq (,$(GLOAT-CROSS))
 ifeq (default,$(origin CC))
 	$(error Cross compiling libys requires CROSS_CC_TARGET or CC)
 endif
 endif
-	mkdir -p $(dir $@)
+	mkdir -p $(dir $(LIBYS-SO-GLOJURE))
 	mkdir -p $(ROOT)/.cache/libys-native
 	cp gloat/native/* gloat/include/*.h $(ROOT)/.cache/libys-native/
-	</dev/null env -u GOROOT \
+	</dev/null env -u GOROOT -u ROOT \
 	  CC="$(CC)" \
 	  CGO_ENABLED=1 \
 	  GLOAT_YS_RUNTIME=all \
@@ -125,8 +128,8 @@ endif
 	  GLOAT_EXTRA_GO_MAIN_DIR=$(ROOT)/.cache/libys-native \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
-	  $(GLOAT-LIBYS-SRCS) -o $@
-	test -f $@
+	  $(GLOAT-LIBYS-SRCS) -o $(LIBYS-SO-GLOJURE)
+	test -f $(LIBYS-SO-GLOJURE)
 
 else
 $(error Unknown YAMLSCRIPT_ENGINE '$(YAMLSCRIPT_ENGINE)')

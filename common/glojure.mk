@@ -1,6 +1,12 @@
+GLOAT-VERSION := 0.1.91
 include $(MAKES)/gloat.mk
 GLOJURE-VERSION := 0.7.24
 include $(MAKES)/glojure.mk
+GO-VERSION := 1.24.0
+ifdef IS-MACOS
+GO-VERSION := 1.25.7
+endif
+include $(MAKES)/go.mk
 include $(MAKES)/perl.mk
 
 PERL-CMD := $(PERL)
@@ -22,7 +28,7 @@ GLOAT-RUN := \
 
 $(GLOAT-WINDOWS-PATH-DEPS): $(GLOAT) $(ROOT)/common/glojure.mk
 	TAR_OPTIONS=--force-local \
-	  $(MAKE) --quiet --no-print-directory -C $(GLOAT-DIR) \
+	  $(GLOAT-PINNED-MAKE) --quiet -C $(GLOAT-DIR) \
 	  path-bb path-go path-glj >/dev/null
 	gloat_dir=$$(cd $(GLOAT-DIR) && pwd -P); \
 	  cache_path=; \
@@ -60,6 +66,68 @@ GLOJURE-UPSTREAM-DIR := \
   $(ROOT)/.cache/glojure-source/glojure-$(GLOJURE-VERSION)
 GLOJURE-UPSTREAM-STAMP := $(GLOJURE-UPSTREAM-DIR)/.fetched
 GLOJURE-STDLIB-DIR := $(GLOJURE-UPSTREAM-DIR)/pkg/stdlib
+
+# Always prepare the runtime from this YAMLScript checkout. This picks up
+# the version bump performed by make release without needing a published JAR.
+YS-V0-GLJ-REF := 5d9391ae4d8adc449fe20c28e3b64cf6d876ad29
+YS-V0-GLJ-REPO ?= https://github.com/gloathub/ys-v0-glj
+YS-V0-SOURCE ?= $(ROOT)/core/src
+GLOJURE-BUILD-DIR := $(or $(GLOJURE_DIR),$(GLOJURE-UPSTREAM-DIR))
+GLOJURE-BUILD-REF := $(if $(GLOJURE_DIR),$(shell \
+  git -C '$(GLOJURE_DIR)' rev-parse HEAD),$(GLOJURE-VERSION))
+GLOJURE-BUILD-GLJ := $(or $(wildcard \
+  $(GLOJURE_DIR)/bin/$(subst /,_,$(HOST-GLOAT-PLATFORM))/glj \
+  $(GLOJURE_DIR)/bin/$(subst /,_,$(HOST-GLOAT-PLATFORM))/glj.exe),$(GLJ))
+YS-V0-GLJ-CACHE-KEY := $(YS-V0-GLJ-REF)-$(YS_VERSION)-$(GLOJURE-BUILD-REF)
+YS-V0-GLJ-DIR ?= $(ROOT)/.cache/ys-v0-glj/$(YS-V0-GLJ-CACHE-KEY)
+YS-V0-GLJ-FETCHED := $(YS-V0-GLJ-DIR)/.fetched
+YS-V0-GLJ-PREPARED := $(YS-V0-GLJ-DIR)/.prepared
+YS-V0-SOURCES := \
+  $(wildcard $(YS-V0-SOURCE)/ys/*.clj*) \
+  $(wildcard $(YS-V0-SOURCE)/ys/v0/*.clj*) \
+  $(YS-V0-SOURCE)/yamlscript/regex.cljc
+
+# Explicit command-line variables are inherited by Gloat's own make process.
+# Keep these overrides on the compiler invocation, not on unrelated submakes.
+GLOAT-PINNED-MAKE = $(MAKE) --no-print-directory \
+  GLOJURE-VERSION=$(GLOJURE-VERSION) \
+  GLOJURE_DIR='$(GLOJURE-BUILD-DIR)' \
+  YS-V0-GLJ-DIR='$(YS-V0-GLJ-DIR)' \
+  YS-V0-GLJ-DEV-DIR='$(YS-V0-GLJ-DIR)'
+
+$(YS-V0-GLJ-FETCHED):
+	rm -rf '$(YS-V0-GLJ-DIR).tmp'
+	mkdir -p '$(dir $(YS-V0-GLJ-DIR))'
+	git init '$(YS-V0-GLJ-DIR).tmp'
+	git -C '$(YS-V0-GLJ-DIR).tmp' fetch --depth=1 \
+	  '$(YS-V0-GLJ-REPO)' '$(YS-V0-GLJ-REF)'
+	test "$$(git -C '$(YS-V0-GLJ-DIR).tmp' rev-parse FETCH_HEAD)" \
+	  = '$(YS-V0-GLJ-REF)'
+	git -C '$(YS-V0-GLJ-DIR).tmp' checkout --detach FETCH_HEAD
+	rm -rf '$(YS-V0-GLJ-DIR)'
+	mv '$(YS-V0-GLJ-DIR).tmp' '$(YS-V0-GLJ-DIR)'
+	touch '$@'
+
+$(YS-V0-GLJ-PREPARED): $(YS-V0-GLJ-FETCHED) $(YS-V0-SOURCES) \
+  $(GLOJURE-UPSTREAM-STAMP) $(GLOJURE-BUILD-GLJ) $(GO) $(PERL) \
+  $(ROOT)/Meta $(ROOT)/common/glojure.mk
+	cd '$(YS-V0-GLJ-DIR)' && env -u GOROOT -u ROOT \
+	  GLJ='$(abspath $(GLOJURE-BUILD-GLJ))' \
+	  GLOJURE_SRC='$(GLOJURE-BUILD-DIR)' \
+	  GO='$(abspath $(GO))' PERL='$(PERL-CMD)' \
+	  YS_V0_VERSION='$(YS_VERSION)' YS_V0_SOURCE='$(YS-V0-SOURCE)' \
+	  bash script/generate
+	printf '%s\n' 'gloat=$(GLOAT-VERSION)' \
+	  'glojure=$(GLOJURE-VERSION)' 'ys-v0-glj=$(YS-V0-GLJ-REF)' \
+	  'yamlscript=$(YS_VERSION)' > '$@'
+
+prepare-glojure-runtime: $(YS-V0-GLJ-PREPARED)
+
+glojure-build-info: $(YS-V0-GLJ-PREPARED)
+	@cat '$(YS-V0-GLJ-PREPARED)'
+	@printf '%s\n' 'runtime-dir=$(YS-V0-GLJ-DIR)' \
+	  'glojure-dir=$(GLOJURE-BUILD-DIR)'
+
 TOOLS-CLI-VERSION := 1.0.219
 TOOLS-CLI-JAR := \
   $(LOCAL-CACHE)/tools.cli-$(TOOLS-CLI-VERSION).jar

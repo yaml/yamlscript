@@ -453,6 +453,9 @@ jobs:
       run: |
         make release-build release-stage-jars
 
+    - name: Verify pinned runtime build inputs
+      run: make -C ys test-glojure-build-inputs
+
     - name: List release archives
       run: ls -lh ys-*.tar.xz libys-*.tar.xz *.jar release-jars
 

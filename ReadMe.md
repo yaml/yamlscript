@@ -272,6 +272,32 @@ The native `ys` executable and `libys` shared library use Gloat and Glojure and
 do not require Java or a JVM.
 The WASI release contains the `ys` executable only.
 
+### Building the native runtime
+
+The native builds pin Gloat, Glojure, and the `ys-v0-glj` source revision in
+`common/glojure.mk`.
+They fetch the inputs into `.cache/` and regenerate the runtime from this
+checkout's `core/src` before compiling either `ys` or `libys`.
+This automatically includes the version bump performed by `make release` and
+does not require publishing the new `ys.v0` JAR before building the release.
+
+```bash
+make -C ys build
+make -C libys build
+make -C ys glojure-build-info
+make -C ys test-glojure-build-inputs
+```
+
+The runtime cache includes its source revision, YAMLScript version, and
+Glojure version.
+Changes to the standard-library sources also trigger regeneration.
+Release CI must be able to fetch the pinned runtime commit from its public
+repository.
+For local testing of a commit that is not available there yet, pass an
+explicit fetch URL with `YS-V0-GLJ-REPO=/path/to/ys-v0-glj`.
+The build still checks out the pinned commit rather than using that working
+tree's files.
+
 
 ## Usage Examples in Your Language
 

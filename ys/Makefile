@@ -102,6 +102,14 @@ endif
 	YS_INSTALL_TEST_BIN=$(abspath $(CLI-BIN)) \
 	  lein test yamlscript.util-test yamlscript.install-cli-test
 
+test-glojure-build-inputs: $(CLI-DEPS) $(PERL)
+	YS_TEST_GO='$(abspath $(GO))' \
+	  YS_TEST_CLI='$(abspath $(CLI-BIN-GLOJURE))' \
+	  YS_TEST_VERSION='$(YS_VERSION)' \
+	  YS_TEST_GLJ_VERSION='$(GLOJURE-VERSION)' \
+	  YS_TEST_RUNTIME_REF='$(YS-V0-GLJ-REF)' \
+	  bash test/glojure-build-inputs.bash
+
 ifdef YS_RELEASE_USE_INSTALLED_YS
 TEST-RUN-DEPS := $(PERL) $(BPAN-LOCAL)
 else
@@ -184,8 +192,12 @@ GLOAT-CLI-SRCS := \
   gloat/src/yamlscript/cli.clj
 
 $(CLI-BIN-GLOJURE): \
-  $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-CLI-SRCS)
-	mkdir -p $(dir $@)
+  $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-CLI-SRCS) \
+  $(YS-V0-GLJ-PREPARED)
+	+$(GLOAT-PINNED-MAKE) _build-glojure-cli
+
+_build-glojure-cli:
+	mkdir -p $(dir $(CLI-BIN-GLOJURE))
 	</dev/null env -u GOROOT -u ROOT \
 	  CGO_ENABLED=0 \
 	  GLOAT_YS_RUNTIME=all \
@@ -193,11 +205,13 @@ $(CLI-BIN-GLOJURE): \
 	  GLOAT_EXTRA_GO_DIR=$(GO-YAML-GENERATED-DIR) \
 	  GLOAT_ENGINE=$(GLOAT-ENGINE) \
 	  $(GLOAT-RUN) --force $(GLOAT-PLATFORM-OPT) \
-	  $(GLOAT-CLI-SRCS) -o $@
-	test -x $@
+	  $(GLOAT-CLI-SRCS) -o $(CLI-BIN-GLOJURE)
+	test -x $(CLI-BIN-GLOJURE)
 ifeq (,$(GLOAT-WINDOWS-TARGET)$(GLOAT-WASI-TARGET))
-	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%-$(API_VERSION))
-	ln -fs $(notdir $@) $(@:%-$(YS_VERSION)=%)
+	ln -fs $(notdir $(CLI-BIN-GLOJURE)) \
+	  $(CLI-BIN-GLOJURE:%-$(YS_VERSION)=%-$(API_VERSION))
+	ln -fs $(notdir $(CLI-BIN-GLOJURE)) \
+	  $(CLI-BIN-GLOJURE:%-$(YS_VERSION)=%)
 endif
 
 else
