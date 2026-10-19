@@ -27,6 +27,10 @@ separating words.
   Standard proxies such as `read`, `say`, and `pp` also require their owning
   `ys::fs`, `ys::io`, or `ys::pprint` module to be allowed.
 
+* `YS_DATA_MODE_TAG` - An additional document-root tag that means `!ys-0:`.
+  For example, set `YS_DATA_MODE_TAG=!!yaml:netboxlabs.com/designs/v1` to
+  evaluate documents starting with that tag in YAMLScript data mode.
+
 * `YS_PRINT=1` - Same as `-p` (`--print`) command line option.
 
 * `YS_STREAM=1` - Same as `-s` (`--stream`) command line option.

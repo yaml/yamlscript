@@ -49,6 +49,10 @@
   [node]
   (if-let [tag (some-> (:! node) str)]
     (cond
+      (= tag (some-> (System/getenv "YS_DATA_MODE_TAG")
+               (str/replace-first #"^!!" "tag:yaml.org,2002:")))
+      ["ys-0:" (dissoc node :!)]
+
       (contains?
         #{"ys" "ys:" "ys-0" "ys-0:" "YS-v0" "YS-v0:"
           "bare" "data" "code" "yamlscript/v0"
