@@ -186,7 +186,7 @@ GLOAT-CLI-SRCS := \
 $(CLI-BIN-GLOJURE): \
   $(GLOAT-RUN-DEPS) $(GLOJURE-PREPARED-STAMP) $(GLOAT-CLI-SRCS)
 	mkdir -p $(dir $@)
-	</dev/null env -u GOROOT \
+	</dev/null env -u GOROOT -u ROOT \
 	  CGO_ENABLED=0 \
 	  GLOAT_YS_RUNTIME=all \
 	  GLOAT_MODULE=github.com/yaml/yamlscript \

@@ -22,7 +22,31 @@
       foo(x)
       bar(x)
   clojure: |
-    (if (> x 10) (foo x) (bar x))
+    (if (gt x 10) (foo x) (bar x))
+
+
+- name: Polymorphic comparison chains
+  yamlscript: |
+    !ys-0
+    say: a < b < c
+    say: a <= b <= c
+    say: a > b > c
+    say: a >= b >= c
+  clojure: |
+    (say (lt a b c))
+    (say (le a b c))
+    (say (gt a b c))
+    (say (ge a b c))
+
+
+- name: Explicit prefix comparisons retain Clojure operators
+  yamlscript: |
+    !ys-0
+    say: (< a b)
+    say: (> a b)
+  clojure: |
+    (say (< a b))
+    (say (> a b))
 
 
 - name: Double quoted string
@@ -817,7 +841,7 @@
       (a < d): e
       else: f
   clojure: |
-    (cond (> a b) c (< a d) e :else f)
+    (cond (gt a b) c (lt a d) e :else f)
 
 
 - name: Single quoted string
@@ -1386,7 +1410,7 @@
     e :if (f.g > h) =: i
   clojure: |
     (def a (if (get+ b 'c) d a))
-    (def e (if (> (get+ f 'g) h) i e))
+    (def e (if (gt (get+ f 'g) h) i e))
 
 
 - name: Support conditional def operators with dot condition
@@ -1687,7 +1711,7 @@
     !ys-0
     when a.-- > b.++: c
   clojure: |
-    (when (> (dec+ a) (inc+ b)) c)
+    (when (gt (dec+ a) (inc+ b)) c)
 
 
 - name: Anonymous function with only a regex
@@ -1936,7 +1960,7 @@
       - bar
     - baz
   clojure: |
-    (+concat ["foo"] (when (> (rand 2) 1) ["bar"]) ["baz"])
+    (+concat ["foo"] (when (gt (rand 2) 1) ["bar"]) ["baz"])
 
 
 - name: Fix bug in seq insertion in data mode

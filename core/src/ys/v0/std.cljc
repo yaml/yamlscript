@@ -12,6 +12,7 @@
        :default [[clojure.data :as data]
                  [clojure.math :as math]
                  [ys.v0.fs :as fs]])
+   [clojure.set :as cset]
    [clojure.string :as str]
    [ys.v0.common :as common :refer
     [atom? re-find+ regex?]]
@@ -401,16 +402,26 @@
         number? (dec n)
         (op-error "dec+" x)))))
 
+(defn- set-pair? [x y]
+  (and (or (set? x) (set? y))
+    (or (set? x) (sequential? x))
+    (or (set? y) (sequential? y))))
+
+(defn- filter-members [x y keep?]
+  (let [members (to-set y)
+        values (filter #(= keep? (contains? members %1)) x)]
+    (if (vector? x) (vec values) values)))
+
 (defn add+
   ([x y]
    (condf x
      number? (+ (to-num x 0) (to-num y 0))
      string? (str x y)
      map? (merge (to-map x) (to-map y))
-     set? (into (to-set x) (to-set y))
+     set? (cset/union x (to-set y))
      vector? (vec (concat (to-vec x)
-                    (if (sequential? y)
-                      (to-list y)
+                    (if (or (sequential? y) (set? y))
+                      (seq y)
                       (list y))))
      char? (if (number? y)
              (char (+ (int x) y))
@@ -418,8 +429,8 @@
      fn? (partial x y)
      nil? (util/die "Can't add+ to a nil value")
      seqable? (concat (to-list x)
-                (if (sequential? y)
-                  (to-list y)
+                (if (or (sequential? y) (set? y))
+                  (seq y)
                   (list y)))
      (+ (to-num x 0) (to-num y 0))))
 
@@ -431,6 +442,9 @@
 (defn mul+
   ([x y]
    (cond
+     (set-pair? x y) (if (set? x)
+                       (cset/intersection x (to-set y))
+                       (filter-members x y true))
      (and (string? x) (number? y)) (apply str (repeat y x))
      (and (number? x) (string? y)) (apply str (repeat x y))
      (and (vector? x) (number? y)) (vec (apply concat (repeat y x)))
@@ -446,19 +460,23 @@
 
 (defn sub+
   ([x y]
-   (condf x
-     string? (str/replace x (str y) "")
-     map? (dissoc x y)
-     set? (disj x y)
-     vector? (vec (remove #(= y %1) x))
-     number? (- x (to-num y 0))
-     char? (condf y
-             number? (char (- (long x) y))
-             char? (- (long x) (long y))
-             (op-error "sub" x y))
-     nil? (util/die "Can't sub+ to a nil value")
-     seqable? (remove #(= y %1) x)
-     (+ (to-num x 0) (to-num y 0))))
+   (if (set-pair? x y)
+     (if (set? x)
+       (cset/difference x (to-set y))
+       (filter-members x y false))
+     (condf x
+       string? (str/replace x (str y) "")
+       map? (dissoc x y)
+       set? (disj x y)
+       vector? (vec (remove #(= y %1) x))
+       number? (- x (to-num y 0))
+       char? (condf y
+               number? (char (- (long x) y))
+               char? (- (long x) (long y))
+               (op-error "sub" x y))
+       nil? (util/die "Can't sub+ to a nil value")
+       seqable? (remove #(= y %1) x)
+       (+ (to-num x 0) (to-num y 0)))))
 
   ([x y & xs]
    (reduce sub+ (sub+ x y) xs)))
@@ -645,25 +663,41 @@
   ([x y] (not= x y))
   ([x y & xs] (apply not= x y xs)))
 
+(defn- compare-chain [compare x y xs]
+  (loop [x x y y xs xs]
+    (if (compare x y)
+      (if (seq xs)
+        (recur y (first xs) (next xs))
+        true)
+      false)))
+
 (defn gt
-  ([x] #(> %1 x))
-  ([x y] (> x y))
-  ([x y & xs] (apply > x y xs)))
+  ([x] #(gt %1 x))
+  ([x y] (if (and (set? x) (set? y))
+           (and (not= x y) (cset/superset? x y))
+           (> x y)))
+  ([x y & xs] (compare-chain gt x y xs)))
 
 (defn ge
-  ([x] #(>= %1 x))
-  ([x y] (>= x y))
-  ([x y & xs] (apply >= x y xs)))
+  ([x] #(ge %1 x))
+  ([x y] (if (and (set? x) (set? y))
+           (cset/superset? x y)
+           (>= x y)))
+  ([x y & xs] (compare-chain ge x y xs)))
 
 (defn lt
-  ([x] #(< %1 x))
-  ([x y] (< x y))
-  ([x y & xs] (apply < x y xs)))
+  ([x] #(lt %1 x))
+  ([x y] (if (and (set? x) (set? y))
+           (and (not= x y) (cset/subset? x y))
+           (< x y)))
+  ([x y & xs] (compare-chain lt x y xs)))
 
 (defn le
-  ([x] #(<= %1 x))
-  ([x y] (<= x y))
-  ([x y & xs] (apply <= x y xs)))
+  ([x] #(le %1 x))
+  ([x y] (if (and (set? x) (set? y))
+           (cset/subset? x y)
+           (<= x y)))
+  ([x y & xs] (compare-chain le x y xs)))
 
 
 ;;------------------------------------------------------------------------------

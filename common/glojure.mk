@@ -1,4 +1,5 @@
 include $(MAKES)/gloat.mk
+GLOJURE-VERSION := 0.7.23
 include $(MAKES)/glojure.mk
 include $(MAKES)/perl.mk
 
@@ -107,7 +108,6 @@ GLOJURE-DEPS-SRCS := \
 
 GLOJURE-SRCS := \
   $(ROOT)/core/src-glojure/clojure/math.clj \
-  $(ROOT)/core/src-glojure/clojure/set.clj \
   $(GLOJURE-TOOLS-CLI-SRC) \
   $(GLOJURE-DEPS-SRCS) \
   $(GLOJURE-GLOBAL-SRC) \

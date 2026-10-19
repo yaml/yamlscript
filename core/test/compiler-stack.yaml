@@ -315,7 +315,7 @@
       foo(a b)
       bar(a b)
   print: |
-    (if (> a b) (foo a b) (bar a b))
+    (if (gt a b) (foo a b) (bar a b))
 
 
 - name: Top level scalar in data mode
@@ -474,13 +474,13 @@
     {:Top
      [{:Lst
        [{:Sym foo}
-        {:Lst [{:Sym >} {:Sym a} {:Sym b}]}
+        {:Lst [{:Sym gt} {:Sym a} {:Sym b}]}
         {:Sym c}
-        {:Lst [{:Sym <} {:Sym a} {:Sym d}]}
+        {:Lst [{:Sym lt} {:Sym a} {:Sym d}]}
         {:Sym e}
         {:Sym f}]}]}
   print: |
-    (foo (> a b) c (< a d) e f)
+    (foo (gt a b) c (lt a d) e f)
 
 
 - name: Support default fn arguments
@@ -1063,7 +1063,7 @@
          {:Sym y}
          {:Lst [{:Sym add+} {:Sym x} {:Int 1}]}]
         [{:xmap
-          [[{:Sym when} {:Lst [{:Sym >} {:Sym x} {:Int 1}]}]
+          [[{:Sym when} {:Lst [{:Sym gt} {:Sym x} {:Int 1}]}]
            {:Map
             [{:Str "aaa"}
              {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
@@ -1093,7 +1093,7 @@
            [{:Sym merge-omap}
             {:Lst
              [{:Sym when}
-              {:Lst [{:Sym >} {:Sym x} {:Int 1}]}
+              {:Lst [{:Sym gt} {:Sym x} {:Int 1}]}
               {:Map
                [{:Str "aaa"}
                 {:Lst [{:Sym mul+} {:Sym x} {:Sym y}]}
@@ -1109,7 +1109,7 @@
       (let
        [x (rand 2) y (add+ x 1)]
        (merge-omap
-        (when (> x 1) {"aaa" (mul+ x y), "bbb" 333})
+        (when (gt x 1) {"aaa" (mul+ x y), "bbb" 333})
         {"baz" "the baz"}))))
 
 
@@ -1120,7 +1120,7 @@
       when x > 1::
         aaa: bbb
   clojure: |
-    (when (> x 1) {"aaa" "bbb"})
+    (when (gt x 1) {"aaa" "bbb"})
     {}
 
 
@@ -1313,7 +1313,7 @@
       {:Int 3}]}
   clojure: |
     (use module1)
-    (merge-omap {"x" 1} (merge-omap (when (> x 1) {"y" 2}) {:z 3}))
+    (merge-omap {"x" 1} (merge-omap (when (gt x 1) {"y" 2}) {:z 3}))
 
 
 - name: Shorthand syntax for conditionals in data mappings 2

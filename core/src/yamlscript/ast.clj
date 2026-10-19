@@ -157,6 +157,8 @@
    (Sym '/)   (Sym 'div+)
    (Sym "//") (Sym 'quot)
    (Sym '!=)  (Sym 'not=)
+   (Sym '<)   (Sym 'lt)
+   (Sym '>)   (Sym 'gt)
    (Sym "<=") (Sym 'le)
    (Sym ">=") (Sym 'ge)
    (Sym '||)  (Sym 'or)

@@ -40,7 +40,7 @@ sets and functions!
 
 * `+` - Addition - Infix works on strings, sequences, and mappings or else casts
   arguments to numbers.
-* `-` - Subtraction - Works on numbers.
+* `-` - Subtraction - Infix also removes matching text or collection members.
 * `*` - Multiplication - Infix works on numbers or `str * num`, `num * str`,
   `seq * num`, `num * seq`.
 * `/` - Division - Works on numbers. Infix returns a double in the cases where
@@ -51,14 +51,54 @@ sets and functions!
 * `**` - Exponentiation - Works on numbers and has right associativity.
 
 
+## Set Operations
+
+Sets use `\{...}` syntax; `\(...)` creates an anonymous function.
+
+| Operator | Set operation |
+|---|---|
+| `+` | Union |
+| `-` | Difference |
+| `*` | Intersection |
+| `<`, `<=` | Proper subset, subset |
+| `>`, `>=` | Proper superset, superset |
+
+Arithmetic accepts two sets, or a set and a vector or sequence in either order.
+The result has the left operand's collection family: set, vector, or sequence.
+Vector and sequence results preserve left-side order and duplicates.
+Addition appends the right collection's elements, whose order is unspecified
+when the right operand is a set.
+
+```yaml
+!ys-0
+say: \{1 2 3} + [3 4 5]    # #{1 2 3 4 5}, in unspecified order
+say: ([3 1 3 2] - \{2})    # [3 1 3]
+say: ([3 1 3 2] * \{3})    # [3 3]
+say: \{1} < \{1 2}        # true
+say: \{1} < \{1}          # false
+say: \{1} <= \{1}         # true
+```
+
+Subset and superset comparisons require two sets.
+They test membership, rather than comparing collection sizes.
+Comparisons can be chained, such as `\{} < \{1} < \{1 2}`.
+The named functions `lt`, `le`, `gt`, and `ge` support the same behavior.
+
+Subtracting a scalar from a set still removes that single member.
+Subtracting a collection removes its members.
+To remove a collection-valued member, wrap it in a set:
+`\{[1 2] 3} - \{[1 2]}` produces `\{3}`.
+Operations do not recursively flatten nested collections.
+
+
 ## Comparison Operators
 
 * `==` - Equal To - Works on any comparable values.
 * `!=` - Not Equal To - Works on any comparable values.
-* `>` - Greater Than - Works on numbers. Supports `a > b > c`.
-* `>=` - Greater Than or Equal To - Works on numbers.
-* `<` - Less Than - Works on numbers.
-* `<=` - Less Than or Equal To - Works on numbers.
+* `>` - Greater Than - Works on numbers and sets. Supports `a > b > c`.
+* `>=` - Greater Than or Equal To - Works on numbers and sets.
+* `<` - Less Than - Works on numbers and sets.
+* `<=` - Less Than or Equal To - Works on numbers and sets.
 
 These operators have the respective named functions: `eq`, `ne`, `gt`, `ge`,
 `lt`, `le` for use in places where a function makes more sense than an operator.

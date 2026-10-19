@@ -53,7 +53,7 @@
       (a < d): e
       =>: f
   clojure: |
-    (cond (> a b) c (< a d) e :else f)
+    (cond (gt a b) c (lt a d) e :else f)
 
 
 - name: Wrap multiple scalar forms in a cond body

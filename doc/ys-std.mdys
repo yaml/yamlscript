@@ -120,7 +120,7 @@ Math functions:
   sub+(X+) X: Polymorphic subtraction function|
     Subtracts numbers, strings, chars, sequences, maps and sets
   mul+(X+) X: Polymorphic multiplication function|
-    Multiplies numbers, strings and sequences
+    Multiplies numbers, strings and sequences; intersects sets and collections
   digits(Str) [Int]: Convert a string of digits to a sequence of numbers
   floor(Num) Num: Alias of CM/floor |
     Round down to the nearest integer
