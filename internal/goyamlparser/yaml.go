@@ -20,6 +20,11 @@ type VersionDirective struct {
 	minor int8 // The minor version number.
 }
 
+// NewVersionDirective creates YAML version directive data.
+func NewVersionDirective(major, minor int) *VersionDirective {
+	return &VersionDirective{major: int8(major), minor: int8(minor)}
+}
+
 // Major returns the major version number.
 func (v *VersionDirective) Major() int { return int(v.major) }
 
@@ -30,6 +35,11 @@ func (v *VersionDirective) Minor() int { return int(v.minor) }
 type TagDirective struct {
 	handle []byte // The tag handle.
 	prefix []byte // The tag prefix.
+}
+
+// NewTagDirective creates YAML tag directive data.
+func NewTagDirective(handle, prefix string) TagDirective {
+	return TagDirective{handle: []byte(handle), prefix: []byte(prefix)}
 }
 
 // GetHandle returns the tag handle.
@@ -346,6 +356,33 @@ type Token struct {
 	major, minor int8
 }
 
+// GetEncoding returns the stream encoding carried by a STREAM-START token.
+func (t *Token) GetEncoding() Encoding { return t.encoding }
+
+// SetEncoding sets the stream encoding carried by a STREAM-START token.
+func (t *Token) SetEncoding(encoding Encoding) { t.encoding = encoding }
+
+// GetSuffix returns the suffix carried by a TAG token.
+func (t *Token) GetSuffix() string { return string(t.suffix) }
+
+// SetSuffix sets the suffix carried by a TAG token.
+func (t *Token) SetSuffix(suffix string) { t.suffix = []byte(suffix) }
+
+// GetPrefix returns the prefix carried by a TAG-DIRECTIVE token.
+func (t *Token) GetPrefix() string { return string(t.prefix) }
+
+// SetPrefix sets the prefix carried by a TAG-DIRECTIVE token.
+func (t *Token) SetPrefix(prefix string) { t.prefix = []byte(prefix) }
+
+// GetVersion returns the version carried by a VERSION-DIRECTIVE token.
+func (t *Token) GetVersion() (int, int) { return int(t.major), int(t.minor) }
+
+// SetVersion sets the version carried by a VERSION-DIRECTIVE token.
+func (t *Token) SetVersion(major, minor int) {
+	t.major = int8(major)
+	t.minor = int8(minor)
+}
+
 // Events
 
 // EventType represents the type of a parsing or emitting event.
@@ -453,6 +490,10 @@ func (e *Event) GetVersionDirective() *VersionDirective { return e.versionDirect
 
 // GetTagDirectives returns the tag directives (for DOCUMENT_START_EVENT).
 func (e *Event) GetTagDirectives() []TagDirective { return e.tagDirectives }
+
+// GetQuotedImplicit reports whether a scalar tag may be omitted for a
+// non-plain scalar style.
+func (e *Event) GetQuotedImplicit() bool { return e.quoted_implicit }
 
 // Nodes
 const (

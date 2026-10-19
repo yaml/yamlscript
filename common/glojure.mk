@@ -43,9 +43,9 @@ GLOAT-PLATFORM-OPT := \
 GLOAT-WINDOWS-TARGET := $(filter windows/%,$(GLOAT_PLATFORM))
 GLOAT-WASI-TARGET := $(filter wasip1/wasm,$(GLOAT_PLATFORM))
 
-GO-YAML-REF ?= 643e93b9c9bec2be8ae2b842a3492c54532549c9
+GO-YAML-REF ?= 14f6a7261be3104f473c4ca93e3abf304c29a740
 GO-YAML-REPO ?= https://github.com/yaml/go-yaml
-GO-YAML-SRC-DIR := $(ROOT)/.cache/glojure-parser/go-yaml
+GO-YAML-SRC-DIR := $(ROOT)/.cache/glojure-parser/go-yaml-$(GO-YAML-REF)
 GO-YAML-STAMP := $(GO-YAML-SRC-DIR)/.fetched
 GO-YAML-GENERATED-DIR := $(ROOT)/internal/goyamlparser
 GO-YAML-GENERATED-STAMP := $(GO-YAML-GENERATED-DIR)/.generated

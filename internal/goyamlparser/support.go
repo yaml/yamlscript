@@ -15,6 +15,35 @@ type DepthContext struct {
 	Kind DepthKind
 }
 
+type IndentMode string
+
+const (
+	IndentModeAuto IndentMode = "auto"
+	IndentModeTabs IndentMode = "tabs"
+)
+
+type IndentStyle string
+
+const (
+	IndentStyleAuto   IndentStyle = "auto"
+	IndentStyleSpaces IndentStyle = "spaces"
+	IndentStyleTabs   IndentStyle = "tabs"
+)
+
+type IndentScope string
+
+const (
+	IndentScopeDocument IndentScope = "document"
+	IndentScopeStream   IndentScope = "stream"
+)
+
+type IndentConfig struct {
+	Mode      IndentMode
+	LoadStyle IndentStyle
+	DumpStyle IndentStyle
+	Scope     IndentScope
+}
+
 func DefaultDepthCheck(depth int, ctx *DepthContext) error {
 	const maxDepth = 10000
 	if depth > maxDepth {
