@@ -230,12 +230,16 @@ $(PLAYGROUND-RUNTIME-STAMP): \
     Makefile \
     $(GLOAT-RUN-DEPS) \
     $(GLOJURE-PREPARED-STAMP) \
+    $(YS-V0-GLJ-PREPARED) \
     $(PLAYGROUND-RUNTIME-SRC)
-	mkdir -p $(@D)
-	$(RM) $@ $(PLAYGROUND-WASM) $(PLAYGROUND-SUPPORT) \
+	+$(GLOAT-PINNED-MAKE) _build-playground-runtime
+
+_build-playground-runtime:
+	mkdir -p $(dir $(PLAYGROUND-RUNTIME-STAMP))
+	$(RM) $(PLAYGROUND-RUNTIME-STAMP) $(PLAYGROUND-WASM) $(PLAYGROUND-SUPPORT) \
 	  $(PLAYGROUND-ASSETS)/runtime.js
 	$(RM) -r $(PLAYGROUND-ASSETS)/runtime.html
-	</dev/null env -u GOROOT \
+	</dev/null env -u GOROOT -u ROOT \
 	  CGO_ENABLED=0 \
 	  GLOAT_YS_RUNTIME=all \
 	  GLOAT_MODULE=github.com/yaml/yamlscript \
@@ -248,7 +252,7 @@ $(PLAYGROUND-RUNTIME-STAMP): \
 	  $(PLAYGROUND-SUPPORT).tmp
 	mv $(PLAYGROUND-SUPPORT).tmp $(PLAYGROUND-SUPPORT)
 	$(RM) $(PLAYGROUND-ASSETS)/runtime.html
-	touch $@
+	touch $(PLAYGROUND-RUNTIME-STAMP)
 
 # YS doesn't support !!python tags yet.
 # This hack is a workaround to preserve them.

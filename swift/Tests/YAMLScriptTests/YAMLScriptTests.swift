@@ -22,7 +22,7 @@ final class YAMLScriptTests: XCTestCase {
 
     func testLoadError() throws {
         let ys = try YAMLScript()
-        XCTAssertThrowsError(try ys.load(":"))
+        XCTAssertThrowsError(try ys.load("["))
         XCTAssertNotNil(ys.error)
     }
 

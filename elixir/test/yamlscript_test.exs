@@ -14,13 +14,13 @@ defmodule YAMLScriptTest do
   end
 
   test "load error returns cause" do
-    assert {:error, cause} = YAMLScript.load(":")
+    assert {:error, cause} = YAMLScript.load("[")
     assert is_binary(cause)
   end
 
   test "load! raises" do
     assert_raise YAMLScript.Error, fn ->
-      YAMLScript.load!(":")
+      YAMLScript.load!("[")
     end
   end
 

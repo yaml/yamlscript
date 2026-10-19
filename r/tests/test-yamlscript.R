@@ -28,7 +28,7 @@ check(data$foo == "bar", "load plain yaml")
 # Load invalid input raises:
 threw <- tryCatch(
   {
-    yamlscript_load(":")
+    yamlscript_load("[")
     FALSE
   },
   error = function(e) TRUE

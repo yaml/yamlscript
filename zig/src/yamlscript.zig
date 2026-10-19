@@ -271,7 +271,7 @@ test "load error" {
     var ys = try YAMLScript.init(std.testing.allocator);
     defer ys.deinit();
 
-    try std.testing.expectError(Error.YAMLScriptError, ys.load(":"));
+    try std.testing.expectError(Error.YAMLScriptError, ys.load("["));
     try std.testing.expect(ys.error_cause != null);
 }
 

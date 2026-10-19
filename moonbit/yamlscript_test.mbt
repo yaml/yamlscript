@@ -26,5 +26,5 @@ test "load plain YAML" {
 
 ///|
 test "load error raises" {
-  @test.assert_raise(() => @yamlscript.load(":"))
+  @test.assert_raise(() => @yamlscript.load("["))
 }

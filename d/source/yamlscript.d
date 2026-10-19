@@ -230,7 +230,7 @@ unittest
   // Load invalid input throws and sets error:
   bool threw = false;
   try
-    ys.load(":");
+    ys.load("[");
   catch (YAMLScriptException)
     threw = true;
   assert(threw);

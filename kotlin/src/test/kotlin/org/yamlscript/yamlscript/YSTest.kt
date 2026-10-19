@@ -23,7 +23,7 @@ class YSTest {
     @Test
     fun loadErrorThrows() {
         assertFailsWith<RuntimeException> {
-            YS.load(":")
+            YS.load("[")
         }
     }
 

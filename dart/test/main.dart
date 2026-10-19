@@ -30,7 +30,7 @@ void main() {
 
   var threw = false;
   try {
-    ys.load(':');
+    ys.load('[');
   } on YAMLScriptError {
     threw = true;
   }

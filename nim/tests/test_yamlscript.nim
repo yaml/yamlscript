@@ -29,7 +29,7 @@ check(data["foo"].getStr == "bar", "load plain yaml")
 # Load invalid input raises and sets error:
 var threw = false
 try:
-  discard ys.load(":")
+  discard ys.load("[")
 except YAMLScriptError:
   threw = true
 check(threw, "load error raises")

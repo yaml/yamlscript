@@ -54,7 +54,7 @@ begin
     { Load invalid input raises }
     threw := False;
     try
-      data := ys.Load(':');
+      data := ys.Load('[');
       data.Free;
     except
       on EYAMLScriptException do

@@ -7,7 +7,7 @@ import (
 )
 
 func TestYamlScript(t *testing.T) {
-	_, err := yamlscript.Load(":")
+	_, err := yamlscript.Load("[")
 	if err == nil {
 		t.Fatal("expected error for invalid YAMLScript")
 	}

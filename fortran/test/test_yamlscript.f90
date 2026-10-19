@@ -28,7 +28,7 @@ program test_yamlscript
     'load plain yaml')
 
   ! Load invalid input returns an error response:
-  result = ys%load(':')
+  result = ys%load('[')
   call check(index(result, '"error"') > 0, 'load error response')
 
   ! Load multiple times on one instance:

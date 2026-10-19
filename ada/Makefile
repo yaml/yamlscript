@@ -25,6 +25,14 @@ ADA-GITHUB-TOKEN := \
   $(shell ys -e '.github.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
 endif
 
+ifeq ($(OS-NAME),macos)
+# GNAT's bundled linker cannot read the current Apple SDK's arm64e.x1 stubs.
+# Use Apple's linker and its matching SDK.
+GNAT-LINK-OPTS := \
+  -B$(dir $(shell xcrun --find ld)) \
+  -isysroot "$(shell xcrun --sdk macosx --show-sdk-path)"
+endif
+
 #------------------------------------------------------------------------------
 build:: build-doc obj/yamlscript.o
 
@@ -36,7 +44,7 @@ obj/yamlscript.o: src/yamlscript.adb src/yamlscript.ads | obj
 test:: $(LIBYS-SO-FQNP) $(GNATMAKE) | obj
 	gnatmake -Dobj -Isrc test/test_yamlscript.adb \
 	    -o test/test_yamlscript \
-	    -largs -L$(ROOT)/libys/lib -lys
+	    -largs $(GNAT-LINK-OPTS) -L$(ROOT)/libys/lib -lys
 	test/test_yamlscript
 
 release: $(ALR) test build-doc
