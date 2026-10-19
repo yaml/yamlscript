@@ -48,7 +48,7 @@ check "$(printf '%s\n' "$entries" | grep -Fcx yamlscript/regex.cljc)" \
 pathsep=:
 [[ $(uname -s) =~ ^(MINGW|MSYS) ]] && pathsep=';'
 deps=$(lein classpath 2>/dev/null | tail -1 | tr "$pathsep" '\n' |
-  grep '\.jar$' | paste -sd"$pathsep")
+  grep '\.jar$' | paste -sd"$pathsep" -)
 program='(require (quote [clojure.java.io :as io])
                   (quote ys.v0) (quote ys.v0.taptest))
   (doseq [path ["ys/v0/std.cljc" "yamlscript/regex.cljc"]]
