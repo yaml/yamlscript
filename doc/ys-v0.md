@@ -98,7 +98,7 @@ You can also skip the runtime resolution by providing the dependency
 yourself:
 
 ```bash
-$ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.5"}}}' \
+$ clojure -Sdeps '{:deps {org.yamlscript/ys.v0 {:mvn/version "0.3.6"}}}' \
     -M program.clj
 ```
 

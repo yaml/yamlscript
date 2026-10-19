@@ -23,7 +23,7 @@ trait LibYS extends Library:
   def load_ys_to_json(thread: Pointer, input: String): String
 
 object YAMLScript:
-  val version = "0.3.5"
+  val version = "0.3.6"
 
   def load(input: String): ujson.Value =
     val resp = ujson.read(loadJson(input))
