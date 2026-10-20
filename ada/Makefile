@@ -3,6 +3,7 @@ include $(COMMON)/binding.mk
 
 include $(MAKES)/gnat.mk
 include $(MAKES)/alire.mk
+include $(MAKES)/gh.mk
 include $(MAKES)/clean.mk
 include $(MAKES)/shell.mk
 
@@ -47,7 +48,7 @@ test:: $(LIBYS-SO-FQNP) $(GNATMAKE) | obj
 	    -largs $(GNAT-LINK-OPTS) -L$(ROOT)/libys/lib -lys
 	test/test_yamlscript
 
-release: $(ALR) test build-doc
+release: $(ALR) $(GH) test build-doc
 ifndef ALR
 	$(error 'alr' is required to publish the Ada binding)
 endif
@@ -62,9 +63,19 @@ ifndef ADA-GITHUB-TOKEN
 endif
 	mkdir -p $(XDG_RUNTIME_DIR)
 	$(ALR) settings --global --set user.github_login $(ADA-GITHUB-USER)
-	@GH_TOKEN=$(ADA-GITHUB-TOKEN) \
-	  $(ALR) publish --manifest $(ADA-MANIFEST) \
-	    $(ADA-ORIGIN) $(ADA-RELEASE-COMMIT)
+	@set -eu; \
+	  pr=$$(GH_TOKEN=$(ADA-GITHUB-TOKEN) $(GH) pr list \
+	    --repo alire-project/alire-index \
+	    --state open --author $(ADA-GITHUB-USER) \
+	    --head release/yamlscript-$(v) \
+	    --json number --jq '.[0].number // empty'); \
+	  if [ -z "$$pr" ]; then \
+	    GH_TOKEN=$(ADA-GITHUB-TOKEN) \
+	      $(ALR) publish --manifest $(ADA-MANIFEST) \
+	        $(ADA-ORIGIN) $(ADA-RELEASE-COMMIT); \
+	  else \
+	    echo "Alire index PR #$$pr already exists"; \
+	  fi
 	@GH_TOKEN=$(ADA-GITHUB-TOKEN) \
 	  $(ROOT)/util/release-ada-ready \
 	    $(ADA-GITHUB-USER) $(v)
