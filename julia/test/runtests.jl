@@ -1,7 +1,8 @@
 module TestYAMLScript
 
 using Test
-import YAMLScript as YS
+import YAMLScript
+const YS = YAMLScript
 
 @testset "load" begin
     function load(script)

@@ -1,6 +1,6 @@
 module libys
 
-import Base.Libc: Libdl
+import Libdl
 
 const YAMLSCRIPT_VERSION = "0.3.6"
 const libys_name = Sys.iswindows() ?
