@@ -13,7 +13,7 @@ NPM-TOKEN := $(NPM_TOKEN)
 endif
 ifeq (,$(NPM-TOKEN))
 NPM-TOKEN := \
-  $(shell ys -e '.npm.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+  $(shell ys -e '.nodejs.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
 endif
 
 #------------------------------------------------------------------------------
@@ -37,8 +37,10 @@ update: $(NODE) package.json
 endif
 	npm install
 
+release: export NODE_AUTH_TOKEN := $(NPM-TOKEN)
+release: export NPM_TOKEN := $(NPM-TOKEN)
 release: $(NODE)
-	NODE_AUTH_TOKEN=$(NPM-TOKEN) npm publish --access public
+	npm publish --access public
 
 clean::
 	$(RM) package-lock.json strace.txt bad
