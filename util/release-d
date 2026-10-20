@@ -6,18 +6,12 @@ source "${YAMLSCRIPT_ROOT?}/util/release-repo.bash"
 
 dub_secret() {
   local secret=${DUB_UPDATE_SECRET:-}
-  if [[ -z $secret ]]; then
+  local secrets_file=${YS_SECRETS_FILE:-$HOME/.yamlscript-secrets.yaml}
+  if [[ -z $secret && -r $secrets_file ]]; then
     secret=$(
-      awk '
-        $1 == "dlang:" { in_dlang = 1; next }
-        in_dlang && $0 ~ /^[^[:space:]]/ { in_dlang = 0 }
-        in_dlang && $1 == "token:" {
-          sub(/^[[:space:]]*token:[[:space:]]*/, "")
-          gsub(/^'\''|'\''$/, "")
-          print
-          exit
-        }
-      ' ~/.yamlscript-secrets.yaml 2>/dev/null || true
+      YS_SECRETS_FILE=$secrets_file "${YS:-ys}" -e \
+        'say: yaml/load(read(ENV.YS_SECRETS_FILE)).dlang.token.yamlscript || ""' \
+        2>/dev/null || true
     )
   fi
   printf '%s' "$secret"
@@ -47,14 +41,20 @@ after_release() (
   fi
 
   [[ $secret ]] || {
-    echo 'Error: DUB_UPDATE_SECRET or .dlang.token must be set' >&2
+    echo 'Error: DUB_UPDATE_SECRET or .dlang.token.yamlscript must be set' >&2
     exit 1
   }
 
-  curl -fsS -X POST \
-    https://code.dlang.org/api/packages/yamlscript/update \
-    -H 'Content-Type: application/json' \
-    -d "$(jq -cn --arg secret "$secret" '{secret: $secret}')"
+  local response
+  response=$(curl --fail-with-body -sS -X POST \
+      https://code.dlang.org/api/packages/yamlscript/update \
+      -H 'Content-Type: application/json' \
+      -d "$(jq -cn --arg secret "$secret" '{secret: $secret}')")
+  if [[ $response == *'Invalid secret'* ]]; then
+    echo 'Error: code.dlang.org rejected DUB_UPDATE_SECRET' >&2
+    return 1
+  fi
+  printf '%s\n' "$response"
 )
 
 main "$@"

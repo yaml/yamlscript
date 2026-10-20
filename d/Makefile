@@ -5,6 +5,7 @@ include $(MAKES)/d.mk
 include $(MAKES)/shell.mk
 
 export DUB_HOME := $(ROOT)/.cache/dub
+export YS
 
 DUB := $(LDC-BIN)/dub
 
@@ -17,7 +18,7 @@ build-doc:: ReadMe.md
 test:: $(LIBYS-SO-FQNP) $(LDC)
 	dub test
 
-release:
+release: $(YS)
 	$(ROOT)/util/release-d
 
 clean::

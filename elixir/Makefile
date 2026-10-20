@@ -17,11 +17,19 @@ include $(MAKES)/shell.mk
 
 ELIXIR-IMAGE ?= ghcr.io/yaml/yamlscript-elixir-test
 
+HEX-API-KEY ?= $(HEX_API_KEY)
+ifeq (,$(HEX-API-KEY))
+HEX-API-KEY := \
+  $(shell ys -e '.hex.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+endif
+
 
 #------------------------------------------------------------------------------
 build:: build-doc
 
 build-doc:: ReadMe.md
+
+release: export HEX_API_KEY := $(HEX-API-KEY)
 
 # Run the tests in the prebaked container when docker is available
 # (locally and on CI Linux runners); erlang never compiles:
@@ -49,6 +57,9 @@ docker-image-push: docker-image-build
 # Publish from the container too (the toolchain path would compile
 # Erlang/OTP from source); hex reads HEX_API_KEY from the env:
 release: docker-image
+ifeq (,$(HEX-API-KEY))
+	$(error Can't determine Hex API key)
+endif
 	docker run --rm \
 	  --user $(USER-UID):$(USER-GID) \
 	  --env HOME=/tmp/home \
@@ -65,6 +76,9 @@ test:: $(LIBYS-SO-FQNP) $(ERL) $(ELIXIR)
 
 # Hex requires the file names README.md and a LICENSE:
 release: $(ERL) $(ELIXIR) README.md
+ifeq (,$(HEX-API-KEY))
+	$(error Can't determine Hex API key)
+endif
 	mix local.hex --force --if-missing
 	mix deps.get
 	mix hex.publish --yes

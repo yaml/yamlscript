@@ -4,22 +4,25 @@ include $(COMMON)/binding.mk
 PERL := /usr/bin/perl
 export PERL
 
+REBAR3-VERSION ?= 3.27.3
+
 ifneq (,$(wildcard /.dockerenv))
 ERLANG-DOCKER-INNER := true
-ERL := erl
+# Reuse the container's Erlang with the Makes-managed Rebar executable.
+ERLANG-LOADED := true
+ERL := $(shell command -v erl)
 ERLC := erlc
-REBAR3 := rebar3
 ERLANG-DEPS :=
 ERLANG-ROOT := $(shell erl -noshell \
   -eval 'io:format("~s", [code:root_dir()]).' -s init stop)
 ERLANG-INCLUDE := $(ERLANG-ROOT)/usr/include
 else
 include $(MAKES)/erlang.mk
-include $(MAKES)/rebar3.mk
 ERLANG-DEPS := $(ERL)
 ERLANG-INCLUDE := $(ERLANG-LOCAL)/lib/erlang/usr/include
 endif
 
+include $(MAKES)/rebar3.mk
 include $(MAKES)/shell.mk
 
 export REBAR_CACHE_DIR := $(ROOT)/.cache/rebar3
@@ -71,8 +74,8 @@ test:: $(LIBYS-SO-FQNP) $(ERLANG-DEPS) build
 	erl -noshell -pa ebin -eval 'yamlscript_test:run().' -s init stop
 endif
 
-ifneq (,$(ERLANG-DOCKER-OUTER))
 release: export HEX_API_KEY := $(HEX-API-KEY)
+ifneq (,$(ERLANG-DOCKER-OUTER))
 release: docker-image
 	docker run --rm \
 	  --user $(USER-UID):$(USER-GID) \
@@ -83,14 +86,11 @@ release: docker-image
 	  $(ERLANG-IMAGE) \
 	  make release
 else
-release: build-doc
+release: build-doc $(REBAR3)
 ifndef HEX-API-KEY
 	$(error Can't determine Hex API key)
 endif
-	@command -v $(REBAR3) >/dev/null || \
-	  { echo "'$(REBAR3)' is required to publish the Erlang binding" >&2; \
-	    exit 2; }
-	HEX_API_KEY=$(HEX-API-KEY) $(REBAR3) \
+	$(REBAR3) \
 	  hex publish package --repo hexpm --yes
 endif
 
