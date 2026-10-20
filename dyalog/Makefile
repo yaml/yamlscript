@@ -89,7 +89,10 @@ ifeq (,$(DYALOG-RELEASE-VERSION))
 endif
 	mkdir -p $(TATIN-BUILD-DIR)
 	chmod a+w $(TATIN-BUILD-DIR)
-	$(TATIN-RUN) 'dyalogscript tools/tatin-release.apls'
+	@set -e; \
+	  chmod a+r $(TATIN-CLIENT); \
+	  trap 'chmod 600 $(TATIN-CLIENT)' EXIT; \
+	  $(TATIN-RUN) 'dyalogscript tools/tatin-release.apls'
 
 $(TATIN-CLIENT): FORCE
 	@set -e; \
