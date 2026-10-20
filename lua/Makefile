@@ -30,7 +30,7 @@ LUA-ROCKSPEC := \
 LUAROCKS-API-KEY ?= $(LUAROCKS_API_KEY)
 ifeq (,$(LUAROCKS-API-KEY))
 LUAROCKS-API-KEY := \
-  $(shell ys -e '.luarocks.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
+  $(shell ys -e '.lua.token:say' ~/.yamlscript-secrets.yaml 2>/dev/null)
 endif
 
 
@@ -76,7 +76,7 @@ ifeq (nil,$(LUAROCKS-API-KEY))
 	@exit 1
 endif
 	$(ROOT)/util/release-lua
-	$(LUAROCKS) upload --api-key '$(LUAROCKS-API-KEY)' $(LUA-ROCKSPEC)
+	@$(LUAROCKS) upload --temp-key '$(LUAROCKS-API-KEY)' $(LUA-ROCKSPEC)
 
 clean::
 	$(RM) yamlscript-*.rock
