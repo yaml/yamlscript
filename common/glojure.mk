@@ -1,4 +1,4 @@
-GLOAT-VERSION := 0.1.91
+GLOAT-VERSION := 0.1.93
 include $(MAKES)/gloat.mk
 GLOJURE-VERSION := 0.7.24
 include $(MAKES)/glojure.mk
@@ -69,7 +69,7 @@ GLOJURE-STDLIB-DIR := $(GLOJURE-UPSTREAM-DIR)/pkg/stdlib
 
 # Always prepare the runtime from this YAMLScript checkout. This picks up
 # the version bump performed by make release without needing a published JAR.
-YS-V0-GLJ-REF := 5d9391ae4d8adc449fe20c28e3b64cf6d876ad29
+YS-V0-GLJ-REF := 62e6ef1df74de2aaaa510a5428a71b5379b8ec90
 YS-V0-GLJ-REPO ?= https://github.com/gloathub/ys-v0-glj
 YS-V0-SOURCE ?= $(ROOT)/core/src
 GLOJURE-BUILD-DIR := $(or $(GLOJURE_DIR),$(GLOJURE-UPSTREAM-DIR))
