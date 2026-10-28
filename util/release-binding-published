@@ -217,9 +217,9 @@ case $binding in
       published=true
     ;;
   powershell)
-    url='https://www.powershellgallery.com/packages/YAMLScript'
-    url="$url/$version"
-    url-exists "$url" &&
+    url='https://www.powershellgallery.com/api/v2'
+    url="$url/Packages(Id='YAMLScript',Version='$version')"
+    curl -A yamlscript-release -fsL "$url" >/dev/null 2>&1 &&
       published=true
     ;;
   scala)
