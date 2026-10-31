@@ -14,6 +14,8 @@
 (def ^:dynamic *document-result?* true)
 (def ^:dynamic *stream-size-known?* true)
 
+(def re-anchor #"\*~?([A-Za-z0-9_][A-Za-z0-9_-]*)")
+
 (defn known-stream-size [blocks]
   (reduce
    (fn [size block]
@@ -32,10 +34,22 @@
   {"#" 'count "?" 'truey? "!" 'falsey? "??" 'boolean "!!" 'not
    "--" 'dec+ "++" 'inc+ "@" 'deref ">" 'DBG ">>>" 'DBG})
 
+(def re-reference-step
+  (re-pattern
+   (str "\\.(?:[A-Za-z0-9_][A-Za-z0-9_-]*|[+-][0-9]+|"
+        "\\$|#|\\?\\??|!{1,2}|--|\\+\\+|@|>>>|>)"
+        "|:[A-Za-z_][A-Za-z0-9_-]*\\??")))
+
 (defn parse-reference
   "Parse the restricted expression-reference grammar."
   [source]
-  (let [invalid #(util/die "Invalid reference syntax: " source)
+  (let [original source
+        snapshot? (str/starts-with? source "*~")
+        source (if snapshot?
+                 (if (= source "*~") "*." (str "*" (subs source 2)))
+                 source)
+        invalid #(util/die "Invalid reference syntax: " original)
+        _ (when (and snapshot? (str/starts-with? source "**")) (invalid))
         [kind name level offset body]
         (cond
           (str/starts-with? source "**")
@@ -57,23 +71,26 @@
                    (re-matches #"\*([A-Za-z0-9_][A-Za-z0-9_-]*)(.*)" source)]
             [:alias name 0 nil body]
             (invalid)))
-        [path & calls] (str/split (or body "") #":" -1)
-        _ (when-not (and
-                     (or (empty? path) (= path ".")
-                         (re-matches
-                          #"(?:\.(?:[A-Za-z0-9_][A-Za-z0-9_-]*|[+-][0-9]+|\$|#|\?\??|!{1,2}|--|\+\+|@|>>>|>))+"
-                          path))
-                     (every? #(re-matches
-                               #"[A-Za-z_][A-Za-z0-9_-]*\??" %1) calls))
-            (invalid))
-        parts (if (or (empty? path) (= path "."))
-                [] (vec (str/split (subs path 1) #"\.")))]
-    {:Ref {:source source :kind kind :name name :level level
-           :offset (when offset
-                     (if (#{"+" "-"} offset)
-                       (if (= offset "+") 1 -1)
-                       (parse-long offset)))
-           :parts parts :calls calls}}))
+        body (if (or (= body ".") (str/starts-with? body ".:"))
+               (subs body 1) body)
+        tokens (re-seq re-reference-step body)
+        _ (when-not (= body (apply str tokens)) (invalid))
+        steps (mapv (fn [token]
+                      (let [part (subs token 1)]
+                        (cond
+                          (str/starts-with? token ":") [:call (symbol part)]
+                          (special-calls part) [:call (special-calls part)]
+                          (= part "$") [:last nil]
+                          :else [:lookup part])))
+                    tokens)]
+    {:Ref (cond->
+           {:source original :kind kind :name name :level level
+            :offset (when offset
+                      (if (#{"+" "-"} offset)
+                        (if (= offset "+") 1 -1)
+                        (parse-long offset)))
+            :steps steps}
+            snapshot? (assoc :snapshot true))}))
 
 (defn data? [node] (:yamlscript/data (meta node)))
 (defn node-key [node]
@@ -205,9 +222,9 @@
             (Lst [(Sym 'last) (actual-path path ctx)])])
       (Lst [(Sym 'get-in) doc-symbol (actual-path path ctx)]))))
 
-(defn lower-reference [ref ctx shape?]
+(defn lower-reference [ref ctx]
   (let [target (resolve-reference ref ctx)
-        {:keys [parts calls kind]} ref
+        {:keys [steps kind]} ref
         foreign? (and (:document target)
                       (not= (:document target) *document*))
         base (cond
@@ -219,20 +236,17 @@
                 (into [(:document target)] (:path target))
                 (:path target))
         result
-        (loop [parts parts path start ops [] target target first? true]
-          (if-let [part (first parts)]
+        ;; Resolve only the initial document path before applying operations.
+        ;; This path also determines dependencies for ordinary references.
+        (loop [steps steps path start target target first? true]
+          (let [[op part] (first steps)]
             (cond
-              (special-calls part)
-              (recur (rest parts) path (conj ops (special-calls part))
+              (and (= op :last) (= kind :container)
+                   (= :seq (:kind (get (:schema ctx) path))))
+              (recur (rest steps)
+                     (conj path (dec (:size (get (:schema ctx) path))))
                      target false)
-              (= part "$")
-              (if (and (= kind :container)
-                       (= :seq (:kind (get (:schema ctx) path))))
-                (recur (rest parts)
-                       (conj path (dec (:size (get (:schema ctx) path))))
-                       ops target false)
-                (recur (rest parts) path (conj ops 'last) target false))
-              :else
+              (= op :lookup)
               (let [number (when (re-matches #"[+-]?[0-9]+" part)
                              (parse-long part))
                     relative? (and first? (= kind :container) number
@@ -247,11 +261,11 @@
                             :else (or number part))]
                 (if relative?
                   (let [target (sibling-path (:path ctx) number (:schema ctx))]
-                    (recur (rest parts) (:path target) ops target false))
-                  (recur (rest parts) (conj (vec path) index)
-                         ops target false))))
-            {:path path :ops ops :target target}))
-        {:keys [path ops]} result
+                    (recur (rest steps) (:path target) target false))
+                  (recur (rest steps) (conj (vec path) index)
+                         target false)))
+              :else {:path path :steps steps :target target})))
+        {:keys [path steps]} result
         target (:target result)
         dynamic (:dynamic target)
         value
@@ -271,39 +285,35 @@
                          (if (integer? %2) (literal %2)
                              (ast/QSym (symbol %2)))]) base path)
           :else (local-read path ctx))
-        shape? (and (or shape? (= 'count (first ops))
-                        (and (empty? ops) (= "count" (first calls))))
-                    (contains? (:schema ctx) path))
-        _ (when (and (:reads ctx) (not shape?) path
+        _ (when (and (:reads ctx) (not (:snapshot ref)) path
                      (not foreign?) (not (:stream target))
                      (not (:missing target)))
             (swap! (:reads ctx) conj path))]
-    (reduce #(Lst [(Sym %2) %1]) value
-            (concat ops (map symbol calls)))))
+    (reduce (fn [value [op part]]
+              (case op
+                :call (Lst [(Sym part) value])
+                :last (Lst [(Sym 'last) value])
+                :lookup
+                (Lst [(Sym 'get+) value
+                      (if (re-matches #"[+-]?[0-9]+" part)
+                        (literal (parse-long part))
+                        (ast/QSym (symbol part)))])))
+            value steps)))
 
-(defn lower-node
-  ([node ctx] (lower-node node ctx false))
-  ([node ctx shape?]
-   (cond
-     (:Ref node) (lower-reference (:Ref node) ctx shape?)
-     (:Ali node)
-     (lower-node (parse-reference (str "*" (:Ali node))) ctx shape?)
-     (map? node)
-     (let [count? (= 'count (get-in node [:Lst 0 :Sym]))]
-       (with-meta
-         (reduce-kv
-          (fn [node key value]
-            (assoc node key
-                   (cond
-                     (#{:& :!} key) value
-                     (and count? (= key :Lst))
-                     (mapv #(lower-node %2 ctx (= %1 1)) (range) value)
-                     :else (lower-node value ctx))))
-          (empty node) node)
-         (meta node)))
-     (vector? node) (mapv #(lower-node %1 ctx) node)
-     (seq? node) (doall (map #(lower-node %1 ctx) node))
-     :else node)))
+(defn lower-node [node ctx]
+  (cond
+    (:Ref node) (lower-reference (:Ref node) ctx)
+    (:Ali node) (lower-node (parse-reference (str "*" (:Ali node))) ctx)
+    (map? node)
+    (with-meta
+      (reduce-kv
+       (fn [node key value]
+         (assoc node key (if (#{:& :!} key) value (lower-node value ctx))))
+       (empty node) node)
+      (meta node))
+    (vector? node) (mapv #(lower-node %1 ctx) node)
+    (seq? node) (doall (map #(lower-node %1 ctx) node))
+    :else node))
 
 (defn cycle-path [tasks remaining]
   (loop [todo (mapv #(vector %1 [] #{}) (reverse (sort remaining)))]

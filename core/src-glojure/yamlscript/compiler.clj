@@ -53,8 +53,11 @@
                                      (concat (when (:* event) [(:* event)])
                                              (map second
                                                   (re-seq
-                                                   #"\*([A-Za-z0-9_][A-Za-z0-9_-]*)"
-                                                   (or (:= event) "")))))
+                                                   references/re-anchor
+                                                   (or (:= event)
+                                                       (when (:* event)
+                                                         (str "*" (:* event)))
+                                                       "")))))
                                    (mapcat identity
                                            (cons events remaining))))]
                      (stage "transform"

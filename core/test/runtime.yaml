@@ -550,14 +550,14 @@
     [7 7]
 
 
-- name: Containing collection call forms are equivalent
+- name: Containing snapshot call forms are equivalent
   raw: true
   ys: |
     !ys-0:
     - 1
     - 2
-    - ! count(*.)
-    - ! *:count
+    - ! count(*~.)
+    - ! *~:count
   eval: |
     [1 2 4 4]
 

@@ -48,8 +48,10 @@
         (fn [event]
           (concat (when (:* event) [(:* event)])
                   (map second
-                       (re-seq #"\*([A-Za-z0-9_][A-Za-z0-9_-]*)"
-                               (or (:= event) ""))))) events)))
+                       (re-seq references/re-anchor
+                               (or (:= event)
+                                   (when (:* event) (str "*" (:* event)))
+                                   ""))))) events)))
 
 (defn compile
   "Convert YAMLScript code string to an equivalent Clojure code string."

@@ -54,6 +54,30 @@ int main(void) {
     assert(isolate && graal_get_current_thread(isolate) == thread);
     assert(graal_attach_thread(isolate, &attached) == 0 && attached == thread);
     evaluate(thread);
+    char *snapshot = load_ys_to_json(thread,
+        "!ys-0:\n"
+        "early:: *~.value\n"
+        "value:: *.seed * 2\n"
+        "late:: *~.value\n"
+        "seed: 3\n"
+        "size:: count(*~)\n");
+    assert(snapshot && strstr(snapshot, "\"early\":null"));
+    assert(strstr(snapshot, "\"value\":6"));
+    assert(strstr(snapshot, "\"late\":6"));
+    assert(strstr(snapshot, "\"size\":5"));
+    free(snapshot);
+    char *chain = load_ys_to_json(thread,
+        "!ys-0:\n"
+        "a: 1\n"
+        "b: 2\n"
+        "keys:: *~:keys.#\n"
+        "result:: *.b:vector.#.++\n");
+    assert(chain && strstr(chain, "\"keys\":4"));
+    assert(strstr(chain, "\"result\":2"));
+    free(chain);
+    error = load_ys_to_json(thread, "!ys-0:\na:: *.a\n");
+    assert(error && strstr(error, "Circular deferred dependency"));
+    free(error);
     error = load_ys_to_json(thread, "!ys-0\nmissing-function()\n");
     assert(error && strstr(error, "\"error\""));
     free(error);

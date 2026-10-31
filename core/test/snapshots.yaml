@@ -1,0 +1,322 @@
+# Copyright 2023-2026 Ingy dot Net
+# This code is licensed under MIT license (See License for details)
+
+- name: Containing snapshot count forms are equivalent
+  ys: |
+    !ys-0:
+    - 1
+    - ! count(*~)
+    - ! count(*~.)
+    - ! *~:count
+    - ! *~.#
+  want: [1, 5, 5, 5, 5]
+  clojure: |
+    (let [__ [1 nil nil nil nil]
+          __ (assoc __ 1 (count __))
+          __ (assoc __ 2 (count __))
+          __ (assoc __ 3 (count __))
+          __ (assoc __ 4 (count __))]
+      __)
+
+- name: Snapshots observe already evaluated entries
+  ys: |
+    !ys-0:
+    early:: *~.value
+    value:: *.seed * 2
+    late:: *~.value
+    seed: 3
+  want: {early: null, value: 6, late: 6, seed: 3}
+
+- name: A whole containing snapshot retains its own placeholder
+  ys: |
+    !ys-0:
+    copy:: *~
+  want: {copy: {copy: null}}
+
+- name: Leading snapshot expressions can include arithmetic
+  ys: |
+    !ys-0:
+    seed: 7
+    twice:: *~.seed * 2
+  want: {seed: 7, twice: 14}
+
+- name: Collection snapshots stay immutable
+  ys: |
+    !ys-0:
+    saved:: *~.items
+    items:
+      value:: *^.seed * 2
+    seed: 3
+  want:
+    saved: {value: null}
+    items: {value: 6}
+    seed: 3
+
+- name: Snapshots preserve ready expression ordering
+  ys: |
+    !ys-0:
+    first:: *.later
+    snapshot:: *~.later
+    later:: *.seed * 2
+    seed: 3
+  want: {first: 6, snapshot: null, later: 6, seed: 3}
+
+- name: Ordinary reads still order mixed expressions
+  ys: |
+    !ys-0:
+    observed:: :[*~.later *.later]
+    later:: *.seed * 2
+    seed: 3
+  want: {observed: [6, 6], later: 6, seed: 3}
+
+- name: Snapshot functions do not need compiler privileges
+  ys: |
+    !ys-0
+    defn measure(value): value:count
+    =>::
+      seed: 3
+      size:: measure(*~)
+  want: {seed: 3, size: 2}
+
+- name: A shadowed count receives an ordinary snapshot
+  ys: |
+    !ys-0
+    let count \(_.seed):
+      =>::
+        seed: 7
+        result:: count(*~)
+  want: {seed: 7, result: 7}
+
+- name: Independent collection counts wait for deferred contents
+  ys: |
+    !ys-0:
+    size:: *.items.#
+    items:
+    - ! *^.seed
+    seed: 2
+  want: {size: 1, items: [2], seed: 2}
+
+- name: Snapshot aliases do not wait for deferred descendants
+  ys: |
+    !ys-0:
+    saved:: *~base
+    base: &base
+      value:: *^.seed * 2
+    seed: 3
+  want: {saved: {value: null}, base: {value: 6}, seed: 3}
+
+- name: Root and ancestor snapshots support paths
+  ys: |
+    !ys-0:
+    seed: 7
+    nested:
+      parent:: *~^.seed
+      root:: *~/seed
+  want: {seed: 7, nested: {parent: 7, root: 7}}
+
+- name: Snapshot siblings use evaluated positions
+  ys: |
+    !ys-0:
+    - :when false: 100
+    - 6
+    - ! *~-
+    - ! *~.+1
+    - ! */1 * 2
+  want: [6, 6, null, 12]
+
+- name: Snapshot ancestor siblings select collections
+  ys: |
+    !ys-0:
+    - [10]
+    - [20, ! *~^-]
+  want: [[10], [20, [10]]]
+
+- name: Falsey postfix operators retain their meaning
+  ys: |
+    !ys-0:
+    empty: []
+    regular:: *.empty.!
+    snapshot:: *~.empty.!
+  want: {empty: [], regular: true, snapshot: true}
+
+- name: Code-value collections support snapshots
+  ys: |
+    !ys-0
+    =>:::
+      seed: 7
+      size: count(*~)
+  want: {seed: 7, size: 2}
+
+- name: Bare YAML retains tilde anchor names
+  ys: |
+    - &~ 6
+    - *~
+    - &~foo 7
+    - *~foo
+    - &~. 8
+    - *~.
+  want: [6, 6, 7, 7, 8, 8]
+
+- name: Quoted snapshot spellings stay strings
+  ys: |
+    !ys-0:
+    single: '*~'
+    double: "*~foo.bar"
+  want: {single: '*~', double: '*~foo.bar'}
+
+- name: Snapshot anchors work across mixed document streams
+  ys: |
+    !ys-0
+    defn helper(): 123
+    --- !ys:
+    base: &base
+      value: 7
+    --- !ys:
+    copy:: *~base.value
+    documents:: **:count
+  want: {copy: 7, documents: 1}
+
+- name: Ordinary containing count remains self dependent
+  ys: |
+    !ys-0:
+    size:: count(*.)
+  error: 'Circular deferred dependency: /size -> /size'
+
+- name: Ordinary containing postfix count remains self dependent
+  ys: |
+    !ys-0:
+    size:: *.#
+  error: 'Circular deferred dependency: /size -> /size'
+
+- name: Ordinary containing colon count remains self dependent
+  ys: |
+    !ys-0:
+    size:: *:count
+  error: 'Circular deferred dependency: /size -> /size'
+
+- name: A shadowed count does not bypass ordinary dependencies
+  ys: |
+    !ys-0
+    let count \(_.seed):
+      =>::
+        seed: 7
+        result:: count(*.)
+  error: 'Circular deferred dependency: /result -> /result'
+
+- name: Snapshot modifiers cannot occur inside paths
+  ys: |
+    !ys-0:
+    base: &base {bar: 7}
+    bad:: *base.~bar
+  error: 'Invalid reference syntax: *base.~bar'
+
+- name: Snapshot modifiers cannot repeat
+  ys: |
+    !ys-0:
+    bad:: *~~
+  error: 'Invalid reference syntax: *~~'
+
+- name: Stream snapshots are not introduced
+  ys: |
+    !ys-0:
+    bad:: *~*
+  error: 'Invalid reference syntax: *~*'
+
+- name: Snapshot calls can precede postfix operators
+  ys: |
+    !ys-0:
+    a: 1
+    b: 2
+    k:: *~:keys.#
+  want: {a: 1, b: 2, k: 3}
+  clojure: |
+    (let [__ (% "a" 1 "b" 2 "k" nil)
+          __ (assoc __ "k" (count (keys __)))] __)
+
+- name: Snapshot paths calls and postfixes retain written order
+  ys: |
+    !ys-0:
+    a: 1
+    b: 2
+    k:: *~.b:vector.#.++
+  want: {a: 1, b: 2, k: 2}
+  clojure: |
+    (let [__ (% "a" 1 "b" 2 "k" nil)
+          __ (assoc __ "k" (inc+ (count (vector (get __ "b")))))] __)
+
+- name: Ordinary chains retain dependencies before calls
+  ys: |
+    !ys-0:
+    size:: *.value:vector.#
+    value:: *.seed.++
+    seed: 4
+  want: {size: 1, value: 5, seed: 4}
+  clojure: |
+    (let [__ (% "size" nil "value" nil "seed" 4)
+          __ (assoc __ "value" (inc+ (get __ "seed")))
+          __ (assoc __ "size" (count (vector (get __ "value"))))] __)
+
+- name: Lookups after calls use the intermediate result
+  ys: |
+    !ys-0:
+    value: 7
+    result:: *.value:vector.0.++:vector.#
+  want: {value: 7, result: 1}
+  clojure: |
+    (let [__ (% "value" 7 "result" nil)
+          __ (assoc __ "result"
+                    (count (vector (inc+ (get+ (vector (get __ "value"))
+                                              0)))))] __)
+
+- name: Lookups after postfixes use the intermediate result
+  ys: |
+    !ys-0:
+    items: [{name: first}, {name: last}]
+    result:: *.items.$.name:vector.#
+  want: {items: [{name: first}, {name: last}], result: 1}
+
+- name: Snapshot anchors support interleaved operations
+  ys: |
+    !ys-0:
+    value: &value {items: [3, 7]}
+    result:: *~value.items:reverse.$.++:vector.0
+  want: {value: {items: [3, 7]}, result: 4}
+
+- name: Stream operations can precede lookups and postfixes
+  ys: |
+    !ys-0:
+    value: 7
+    --- !ys:
+    result:: **:last.value:vector.#.++
+  want: {result: 2}
+
+- name: Interleaved calls do not bypass ordinary cycles
+  ys: |
+    !ys-0:
+    size:: *:keys.#
+  error: 'Circular deferred dependency: /size -> /size'
+
+- name: Empty calls after postfixes remain invalid
+  ys: |
+    !ys-0:
+    value:: (*~.seed.#:)
+    seed: [4]
+  error: 'Invalid reference syntax: *~.seed.#:'
+
+- name: Explicit containing and root markers retain colon calls
+  ys: |
+    !ys-0:
+    a: 1
+    container:: *~.:keys.#
+    root:: *~/:keys.#
+  want: {a: 1, container: 3, root: 3}
+
+- name: Ancestor and sibling references support mixed chains
+  ys: |
+    !ys-0:
+    seed: 4
+    nested:
+      ancestor:: *^.seed:vector.#.++
+      before: [6, 7]
+      sibling:: *-:last.++:vector.0
+  want: {seed: 4, nested: {ancestor: 2, before: [6, 7], sibling: 8}}

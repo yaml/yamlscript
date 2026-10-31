@@ -2393,13 +2393,13 @@
      __)
 
 
-- name: Containing collection call forms are equivalent
+- name: Containing snapshot call forms are equivalent
   yamlscript: |
     !ys-0:
     - 1
     - 2
-    - ! count(*.)
-    - ! *:count
+    - ! count(*~.)
+    - ! *~:count
   clojure: |
     (let
      [__

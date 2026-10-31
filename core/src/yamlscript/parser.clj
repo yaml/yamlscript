@@ -46,6 +46,14 @@
         events (->> yaml-string
                  (.parseString parser)
                  (map ys-event)
+                 ;; Keep single-token snapshot spellings as aliases until
+                 ;; resolution selects code/data or ordinary bare YAML mode.
+                 (map #(if (and (:= %)
+                                (re-matches #"\*~[^\s,\[\]{}]*" (:= %)))
+                         (-> %
+                             (dissoc :=)
+                             (assoc :+ "=ALI" :* (subs (:= %) 1)))
+                         %))
                  (remove nil?)
                  rest)
         [first-event & rest-events] events

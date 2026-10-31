@@ -71,7 +71,8 @@
                          value (:= normalized)
                          normalized
                          (if (and value
-                                  (re-find #"^\*[A-Za-z0-9_]" value))
+                                  (or (re-find #"^\*[A-Za-z0-9_]" value)
+                                      (re-matches #"\*~[^\s,\[\]{}]*" value)))
                            (-> normalized
                                (dissoc :=)
                                (assoc :+ "=ALI" :* (subs value 1)))

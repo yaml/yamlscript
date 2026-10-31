@@ -72,9 +72,14 @@ endif
 
 jar: $(CLI-JAR)
 
-test: test-run
+test: test-run test-snapshots
 
-test-all: test-unit test-run
+test-all: test-unit test-run test-snapshots
+
+test-snapshots: $(CLI-DEPS) $(LEIN)
+	YS_SNAPSHOT_TEST_BIN=$(abspath $(CLI-BIN)) \
+	  $(MAKE) -C $(ROOT)/core shell \
+	  CMD='lein test yamlscript.snapshots-test'
 
 test-unit: $(LEIN) $(CORE-INSTALLED)
 	lein test $(lein-test)
