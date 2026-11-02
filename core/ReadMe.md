@@ -74,6 +74,6 @@ The earlier experiment is preserved on `parent-references-runtime-cycles`.
 * `make -C ../ys test-snapshots`
 
   This runs the shared snapshot fixtures on the JVM and rebuilt native CLI.
-  JVM validation currently requires the local SnakeYAML fork installed from
-  `../repos/snakeyaml-engine`.
-  Publishing that dependency remains a separate release prerequisite.
+  JVM validation uses the shared `org.yamlstar/snakeyaml-engine` dependency
+  from Maven Central.
+  No local fork installation is required.
