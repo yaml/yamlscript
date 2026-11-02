@@ -1,3 +1,21 @@
+- version: 0.3.7
+  date:    Sun Nov  1 09:22:28 PM EST 2026
+  changes:
+  - release: Make Ada publication retries reliable
+  - release: Align release credentials and Hex tooling
+  - release: Restore compatibility with older Julia
+  - release: Fix Julia registration credentials
+  - release: Fix Lua credentials and prerequisites
+  - release: Fix Node.js publishing credentials
+  - release: Include Dyalog publishing in CI
+  - core: Use the released JSON performance fix
+  - release: Check exact PowerShell versions
+  - core: Use YAMLScript SnakeYAML fork
+  - test: Define parent reference behavior
+  - test: Cover deferred dependency ordering
+  - core: Implement deferred node references
+  - core: Support snapshot reference chains
+  - core: Use the shared SnakeYAML fork
 - version: 0.3.6
   date:    Mon Oct 19 04:11:09 PM EDT 2026
   changes:
