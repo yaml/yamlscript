@@ -957,8 +957,8 @@ jobs:
         windows_lib="release-windows/libys-$VERSION-windows-arm64/libys.dll"
         file "$freebsd_ys" | grep -E 'ELF 64-bit.*x86-64'
         file "$freebsd_lib" | grep -E 'ELF 64-bit.*x86-64'
-        file "$windows_ys" | grep -Ei 'PE32.*Aarch64'
-        file "$windows_lib" | grep -Ei 'PE32.*Aarch64'
+        file "$windows_ys" | grep -Ei 'PE32.*(Aarch64|ARM64)'
+        file "$windows_lib" | grep -Ei 'PE32.*(Aarch64|ARM64)'
         nm -D "$freebsd_lib" | grep -E ' graal_create_isolate$'
         nm -D "$freebsd_lib" | grep -E ' load_ys_to_json$'
         llvm-readobj --coff-exports "$windows_lib" |
@@ -1031,8 +1031,8 @@ jobs:
         windows_lib="release-windows/libys-$VERSION-windows-arm64/libys.dll"
         file "$freebsd_ys" | grep -E 'ELF 64-bit.*x86-64'
         file "$freebsd_lib" | grep -E 'ELF 64-bit.*x86-64'
-        file "$windows_ys" | grep -Ei 'PE32.*Aarch64'
-        file "$windows_lib" | grep -Ei 'PE32.*Aarch64'
+        file "$windows_ys" | grep -Ei 'PE32.*(Aarch64|ARM64)'
+        file "$windows_lib" | grep -Ei 'PE32.*(Aarch64|ARM64)'
         nm -D "$freebsd_lib" | grep -E ' graal_create_isolate$'
         nm -D "$freebsd_lib" | grep -E ' load_ys_to_json$'
         llvm-readobj --coff-exports "$windows_lib" |
