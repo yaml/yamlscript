@@ -5,6 +5,7 @@ include $(COMMON)/java.mk
 include $(COMMON)/docker.mk
 
 include $(MAKES)/gh.mk
+include $(MAKES)/perl.mk
 include $(MAKES)/wasmtime.mk
 include $(COMMON)/speed-diff.mk
 ifdef CROSS_CC_TARGET
@@ -277,7 +278,7 @@ install-%: % build-%
 $(TEST):
 test:
 	$(TIME) $(MAKE) test-all
-test-all: $(TEST)
+test-all: $(TEST) test-release-resume
 	@echo
 	@echo 'ALL TESTS PASSED!'
 test-core:
@@ -613,50 +614,75 @@ endif
 	  gh run watch $$run_id --repo yaml/yamlscript \
 	    --exit-status --interval=10
 
-# Resume a release with build artifacts from r=RUN_ID and successful
-# artifact-reuse tests and Python wheels from rt=RUN_ID. Use the
+# Resume a release with build artifacts from r=RUN_ID. Reuse successful
+# checks from rt=RUN_ID when supplied, and rerun any missing checks before
+# automatically continuing publication. Use the
 # release-resume-untested target to skip platform test requirements.
+# Example: make release-resume v=0.3.7 r=41377415509
+# Successful binary builds and Python wheels are not rebuilt.
 release-resume-untested: skip_release_tests := true
 release-resume-untested: release-resume
 
-release-resume: $(GH)
+release-resume: $(GH) $(PERL)
 ifndef v
 	$(error 'make release-resume' requires v=NEW_VERSION)
 endif
 ifndef r
 	$(error 'make release-resume' requires r=ARTIFACT_RUN_ID)
 endif
-ifndef rt
-	$(error 'make release-resume' requires rt=RETRY_RUN_ID)
-endif
 	@set -e; \
 	  branch=$$(git branch --show-current); \
-	  gh run view $(r) --repo yaml/yamlscript \
-	    --json databaseId --jq .databaseId > /dev/null; \
-	  gh run view $(rt) --repo yaml/yamlscript \
-	    --json databaseId --jq .databaseId > /dev/null; \
-	  if [[ "$(skip_release_tests)" != true ]]; then \
-	    conclusion=$$(gh run view $(rt) --repo yaml/yamlscript \
-	      --json conclusion --jq .conclusion); \
-	    if [[ "$$conclusion" != success ]]; then \
-	      echo "ERROR: retry run $(rt) did not succeed: $$conclusion"; \
-	      exit 1; \
-	    fi; \
+	  test -n "$$branch"; \
+	  if [[ -n $$(git status --porcelain) ]]; then \
+	    echo 'ERROR: commit changes before resuming the release'; exit 1; \
 	  fi; \
-	  git push --force-with-lease origin HEAD:$$branch; \
+	  skip=$(if $(filter true,$(skip_release_tests)),true,false); \
+	  validation_run='$(rt)'; \
+	  pending=$$($(PERL) $(ROOT)/util/release-resume \
+	    platforms '$(v)' '$(r)' "$$validation_run" "$$skip"); \
+	  platforms=$$($(PERL) $(ROOT)/util/release-resume \
+	    retry-platforms '$(v)' '$(r)' "$$validation_run" "$$skip"); \
+	  wheels=$$($(PERL) $(ROOT)/util/release-resume \
+	    wheels '$(v)' '$(r)' "$$validation_run" "$$skip"); \
+	  git push --force-with-lease origin HEAD:"$$branch"; \
 	  git tag -f $(v) HEAD; \
 	  git push -f origin $(v); \
+	  if [[ -n "$$pending" ]]; then \
+	    echo "Validating existing artifacts: $$platforms"; \
+	    gh workflow run release.yaml \
+	      --repo yaml/yamlscript --ref "$$branch" -f version=$(v) \
+	      -f test_artifacts_run_id=$(r) -f tests_only="$$platforms" \
+	      -f python_wheels_run_id="$$wheels"; \
+	    sleep 5; \
+	    validation_run=$$(gh run list --workflow=release.yaml \
+	      --repo yaml/yamlscript --branch "$$branch" --limit=1 \
+	      --json databaseId --jq '.[0].databaseId'); \
+	    test -n "$$validation_run"; \
+	    test "$$validation_run" != '$(r)'; \
+	    mkdir -p .cache; \
+	    printf '%s\n' "$$validation_run" > \
+	      .cache/release-resume-tests-run-id; \
+	    gh run watch "$$validation_run" --repo yaml/yamlscript \
+	      --exit-status --interval=10; \
+	  fi; \
+	  validation_run=$${validation_run:-$(r)}; \
+	  $(PERL) $(ROOT)/util/release-resume verify \
+	    '$(v)' '$(r)' "$$validation_run" "$$skip"; \
+	  echo 'Checks passed; continuing release publication'; \
 	  gh workflow run release.yaml \
-	    --repo yaml/yamlscript --ref $$branch -f version=$(v) \
+	    --repo yaml/yamlscript --ref "$$branch" -f version=$(v) \
 	    -f test_artifacts_run_id=$(r) \
-	    -f release_tests_run_id=$(rt) \
-	    -f skip_release_tests=$(if $(skip_release_tests),true,false); \
+	    -f release_tests_run_id="$$validation_run" \
+	    -f skip_release_tests="$$skip"; \
 	  sleep 5; \
 	  run_id=$$(gh run list --workflow=release.yaml \
-	    --repo yaml/yamlscript --branch $$branch --limit=1 \
+	    --repo yaml/yamlscript --branch "$$branch" --limit=1 \
 	    --json databaseId --jq '.[0].databaseId'); \
-	  gh run watch $$run_id --repo yaml/yamlscript \
+	  gh run watch "$$run_id" --repo yaml/yamlscript \
 	    --exit-status --interval=10
+
+test-release-resume: $(PERL)
+	$(PERL) test/release-resume.t
 
 # Step 12: Release bindings
 release-bindings: $(if $(YS_RELEASE_CI),,$(YS))

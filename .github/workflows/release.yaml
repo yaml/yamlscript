@@ -40,6 +40,12 @@ on:
           results should be used to resume a release without rebuilding
         required: false
         type: string
+      python_wheels_run_id:
+        description: >-
+          Existing Python-wheel artifacts to reuse during artifact-based
+          tests instead of rebuilding wheels
+        required: false
+        type: string
       skip_release_tests:
         description: >-
           Resume a release from validated artifacts without requiring
@@ -125,6 +131,32 @@ jobs:
             "$VERSION"
           exit 1
         fi
+
+  artifact-provenance:
+    name: Record reused artifact source
+    if: >-
+      ${{
+        !inputs.publish_bindings_only && inputs.tests_only &&
+        inputs.test_artifacts_run_id != ''
+      }}
+    needs: verify-release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Record artifact source and release version
+      env:
+        ARTIFACT_RUN_ID: ${{ inputs.test_artifacts_run_id }}
+      run: |
+        perl -MJSON::PP -e '
+          print encode_json({version => $ENV{VERSION},
+            artifact_run_id => $ENV{ARTIFACT_RUN_ID}})
+        ' > release-provenance.json
+
+    - name: Upload artifact provenance
+      uses: actions/upload-artifact@v7
+      with:
+        name: release-provenance
+        path: release-provenance.json
+        retention-days: 7
 
   test-linux:
     name: Test Linux
@@ -1112,7 +1144,8 @@ jobs:
          contains(format(' {0} ', inputs.tests_only), ' macos ') ||
          contains(inputs.tests_only, 'macos-arm64') ||
          contains(format(' {0} ', inputs.tests_only), ' windows ') ||
-         contains(inputs.tests_only, 'windows-x64')) &&
+         contains(inputs.tests_only, 'windows-x64') ||
+         (inputs.tests_only && inputs.python_wheels_run_id != '')) &&
         inputs.test_artifacts_run_id != ''
       }}
     needs: verify-release
@@ -1127,6 +1160,7 @@ jobs:
         ref: ${{ github.ref }}
 
     - name: Download release libraries
+      if: ${{ inputs.python_wheels_run_id == '' }}
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
@@ -1139,10 +1173,22 @@ jobs:
         done
 
     - name: Install release build tools
+      if: ${{ inputs.python_wheels_run_id == '' }}
       run: util/install-release-artifacts python/dist/release-assets
 
     - name: Build wheels from release libraries
+      if: ${{ inputs.python_wheels_run_id == '' }}
       run: make -C python wheels-from-release
+
+    - name: Reuse existing Python wheels
+      if: ${{ inputs.python_wheels_run_id != '' }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+        WHEELS_RUN_ID: ${{ inputs.python_wheels_run_id }}
+      run: |
+        gh run download "$WHEELS_RUN_ID" \
+          --repo "${{ github.repository }}" \
+          --name python-wheels --dir python/dist
 
     - name: Check wheel set
       run: |
@@ -1570,58 +1616,21 @@ jobs:
       with:
         ref: ${{ inputs.version }}
 
-    - name: Verify release artifact jobs
+    - name: Verify release artifact jobs and completed checks
+      id: checks
       env:
         GH_TOKEN: ${{ github.token }}
+        ARTIFACT_RUN_ID: ${{ inputs.test_artifacts_run_id }}
+        TEST_RUN_ID: ${{ inputs.release_tests_run_id }}
+        SKIP_TESTS: ${{ inputs.skip_release_tests }}
       run: |
-        check_job() {
-          local run_id=$1 job=$2 conclusion
-          conclusion=$(gh run view "$run_id" \
-            --repo "${{ github.repository }}" --json jobs \
-            --jq ".jobs[] | select(.name == \"$job\") | .conclusion")
-          if [[ $conclusion != success ]]; then
-            echo "Required job did not succeed: $job ($conclusion)"
-            exit 1
-          fi
-        }
-
-        check_job "${{ inputs.release_tests_run_id }}" \
-          'Build Python wheels (retry)'
-        check_job "${{ inputs.test_artifacts_run_id }}" \
-          'Check cross-built artifact formats'
-
-    - name: Verify artifact-reuse tests
-      if: ${{ !inputs.skip_release_tests }}
-      env:
-        GH_TOKEN: ${{ github.token }}
-      run: |
-        check_job() {
-          local run_id=$1 job=$2 conclusion
-          conclusion=$(gh run view "$run_id" \
-            --repo "${{ github.repository }}" --json jobs \
-            --jq ".jobs[] | select(.name == \"$job\") | .conclusion")
-          if [[ $conclusion != success ]]; then
-            echo "Required job did not succeed: $job ($conclusion)"
-            exit 1
-          fi
-        }
-
-        for job in \
-          'Test macOS x64 under Rosetta' \
-          'Test WASI Preview 1'; do
-          check_job "${{ inputs.test_artifacts_run_id }}" "$job"
-        done
-
-        for job in \
-          'Test Linux (retry)' \
-          'Test macOS (retry)' \
-          'Test Windows (retry)'; do
-          check_job "${{ inputs.release_tests_run_id }}" "$job"
-        done
+        perl util/release-resume verify \
+          "$VERSION" "$ARTIFACT_RUN_ID" "$TEST_RUN_ID" "$SKIP_TESTS"
 
     - name: Download release artifacts
       env:
         GH_TOKEN: ${{ github.token }}
+        WHEELS_RUN_ID: ${{ steps.checks.outputs.wheels_run_id }}
       run: |
         mkdir -p release-artifacts
         for artifact in \
@@ -1633,7 +1642,7 @@ jobs:
             --name "$artifact" \
             --dir "release-artifacts/$artifact"
         done
-        gh run download "${{ inputs.release_tests_run_id }}" \
+        gh run download "$WHEELS_RUN_ID" \
           --repo "${{ github.repository }}" \
           --name python-wheels \
           --dir release-artifacts/python-wheels

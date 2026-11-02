@@ -76,9 +76,17 @@ test: test-run test-snapshots
 
 test-all: test-unit test-run test-snapshots
 
-test-snapshots: $(CLI-DEPS) $(LEIN)
+ifdef YS_RELEASE_USE_INSTALLED_YS
+SNAPSHOT-TEST-DEPS := $(LEIN)
+else
+SNAPSHOT-TEST-DEPS := $(CLI-DEPS) $(LEIN)
+endif
+
+test-snapshots: $(SNAPSHOT-TEST-DEPS)
+	test -f $(CLI-BIN)
 	YS_SNAPSHOT_TEST_BIN=$(abspath $(CLI-BIN)) \
 	  $(MAKE) -C $(ROOT)/core shell \
+	  YS=$(abspath $(CLI-BIN)) \
 	  CMD='lein test yamlscript.snapshots-test'
 
 test-unit: $(LEIN) $(CORE-INSTALLED)

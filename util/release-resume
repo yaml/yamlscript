@@ -1,0 +1,136 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use JSON::PP qw(decode_json encode_json);
+use MIME::Base64 qw(decode_base64);
+use File::Spec;
+use File::Temp qw(tempdir);
+
+sub fail { die "$_[0]\n" }
+
+my ($mode, $version, $build_id, $test_id, $skip) = @ARGV;
+$mode //= '';
+$version //= '';
+$build_id //= '';
+$test_id //= '';
+$skip //= 'false';
+$mode =~ /\A(?:plan|platforms|retry-platforms|wheels|verify)\z/
+    or fail('Usage: release-resume MODE VERSION BUILD_RUN [TEST_RUN] [SKIP]');
+$version =~ /\A0\.[0-9]+\.[0-9]+\z/ or fail('Invalid release version');
+$build_id =~ /\A[0-9]+\z/ or fail('Invalid artifact run ID');
+!length($test_id) || $test_id =~ /\A[0-9]+\z/
+    or fail('Invalid validation run ID');
+$skip =~ /\A(?:true|false)\z/ or fail('Invalid skip_release_tests value');
+my $gh = $ENV{YS_RELEASE_GH} // 'gh';
+
+sub gh_output {
+    open my $output, '-|', $gh, @_
+        or fail('Cannot start GitHub CLI');
+    local $/;
+    my $result = <$output> // '';
+    close $output or fail('Cannot inspect release run on GitHub');
+    return $result;
+}
+
+sub run_jobs {
+    my ($id) = @_;
+    my $run = decode_json(gh_output('run', 'view', $id,
+        '--repo', 'yaml/yamlscript', '--json', 'status,jobs,headSha'));
+    ($run->{status} // '') eq 'completed'
+        or fail("Workflow run $id is not complete");
+    my $sha = $run->{headSha} // '';
+    $sha =~ /\A[0-9a-f]{40}\z/ or fail("Invalid source SHA for run $id");
+    my $meta = decode_base64(gh_output('api',
+        "repos/yaml/yamlscript/contents/Meta?ref=$sha", '--jq', '.content'));
+    $meta =~ /^version: \Q$version\E\s*$/m
+        or fail("Workflow run $id is not for version $version");
+    my %jobs;
+    for my $job (@{$run->{jobs} // []}) {
+        my $name = $job->{name};
+        exists $jobs{$name} and fail("Ambiguous job in run $id: $name");
+        $jobs{$name} = $job->{conclusion} // '';
+    }
+    return \%jobs;
+}
+
+sub passed { return ($_[0]{$_[1]} // '') eq 'success' }
+
+sub check_provenance {
+    my ($id) = @_;
+    my $directory = tempdir(CLEANUP => 1);
+    gh_output('run', 'download', $id, '--repo', 'yaml/yamlscript',
+        '--name', 'release-provenance', '--dir', $directory);
+    my $path = File::Spec->catfile($directory, 'release-provenance.json');
+    open my $input, '<', $path
+        or fail("Validation run $id has no artifact provenance");
+    local $/;
+    my $provenance = decode_json(<$input>);
+    close $input or fail('Cannot read artifact provenance');
+    ($provenance->{artifact_run_id} // '') eq $build_id
+        && ($provenance->{version} // '') eq $version
+        or fail("Validation run $id tested different release artifacts");
+}
+
+my $build = run_jobs($build_id);
+for my $job ('Build Linux x64', 'Build Linux AArch64',
+        'Build macOS ARM64', 'Build macOS x64', 'Build Windows x64',
+        'Build FreeBSD x64', 'Build Windows ARM64', 'Build WASI Preview 1') {
+    passed($build, $job) or fail("Required build did not succeed: $job");
+}
+my $tests = length($test_id) && $test_id ne $build_id
+    ? run_jobs($test_id) : {};
+check_provenance($test_id) if length($test_id) && $test_id ne $build_id;
+my $wheels = passed($tests, 'Build Python wheels (retry)')
+    ? $test_id : $build_id;
+($wheels eq $test_id && passed($tests, 'Build Python wheels (retry)'))
+    || passed($build, 'Build Python wheels')
+    or fail('Required Python-wheel build did not succeed');
+
+my @checks = (
+    ['linux', 'Test Linux', 'Test Linux (retry)'],
+    ['macos', 'Test macOS', 'Test macOS (retry)'],
+    ['windows', 'Test Windows', 'Test Windows (retry)'],
+    ['macos-x64', 'Test macOS x64 under Rosetta',
+        'Test macOS x64 under Rosetta (retry)'],
+    ['wasm-p1', 'Test WASI Preview 1', 'Test WASI Preview 1 (retry)'],
+    ['freebsd-x64', 'Check cross-built artifact formats',
+        'Check cross-built artifact formats (retry)'],
+);
+my (@missing, @retry, @names);
+for my $check (@checks) {
+    my ($platform, $normal, $retry) = @$check;
+    next if $skip eq 'true' && $platform ne 'freebsd-x64';
+    my $prior = $tests->{$retry} // 'skipped';
+    my $ok = $prior eq 'skipped' ? passed($build, $normal)
+        : $prior eq 'success';
+    if (!$ok) {
+        push @missing, $platform;
+        push @names, $normal;
+    }
+    # A new retry run must cover all gaps in the original build run.
+    # Successful checks in a separate, older retry cannot be lost.
+    push @retry, $platform if !passed($build, $normal) || !$ok;
+}
+
+my $plan = {
+    platforms => join(' ', @missing),
+    retry_platforms => join(' ', @retry),
+    wheels_run_id => $wheels,
+};
+if ($mode eq 'verify') {
+    @names and fail('Release checks still required: ' . join(', ', @names));
+    if (my $path = $ENV{GITHUB_OUTPUT}) {
+        open my $output, '>>', $path or fail("$path: $!");
+        print {$output} "wheels_run_id=$wheels\n";
+        close $output or fail("$path: $!");
+    }
+    print "All required release checks passed\n";
+} elsif ($mode eq 'platforms') {
+    print "$plan->{platforms}\n";
+} elsif ($mode eq 'retry-platforms') {
+    print "$plan->{retry_platforms}\n";
+} elsif ($mode eq 'wheels') {
+    print "$wheels\n";
+} else {
+    print encode_json($plan), "\n";
+}

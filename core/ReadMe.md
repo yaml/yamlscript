@@ -77,3 +77,5 @@ The earlier experiment is preserved on `parent-references-runtime-cycles`.
   JVM validation uses the shared `org.yamlstar/snakeyaml-engine` dependency
   from Maven Central.
   No local fork installation is required.
+  With `YS_RELEASE_USE_INSTALLED_YS=1`, it tests the installed CLI without
+  rebuilding it or downloading a separate bootstrap executable.
